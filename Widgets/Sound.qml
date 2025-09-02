@@ -54,7 +54,7 @@ Rectangle {
 		acceptedButtons: Qt.MiddleButton | Qt.LeftButton
 		anchors.fill: parent
 
-		onClicked: function (mevent) {
+		onClicked: mevent => {
 			if (mevent.button === Qt.MiddleButton) {
 				Audio.toggleMute(root.node);
 			} else if (mevent.button === Qt.LeftButton) {
