@@ -10,23 +10,19 @@ Rectangle {
 	property var parentScreen: null
 	property real widgetHeight: 30
 	readonly property real horizontalPadding: Appearance.spacing.normal
-	readonly property int calculatedWidth: SystemTray.items.values.length > 0 ? SystemTray.items.values.length * 24 + horizontalPadding * 2 : 0
+	readonly property int calculatedWidth: SystemTray.items.values.length > 0 ? SystemTray.items.values.length * Appearance.spacing.large + horizontalPadding * 2 : 0
 
 	width: calculatedWidth
 	height: widgetHeight
 	radius: Appearance.rounding.small
-	color: {
-		if (SystemTray.items.values.length === 0)
-			return "transparent";
-		const baseColor = Appearance.colors.primary;
-		return Qt.rgba(baseColor.r, baseColor.g, baseColor.b, baseColor.a * 0.9);
-	}
+	border.color: Appearance.colors.on_background
+	color: Appearance.colors.background
 	visible: SystemTray.items.values.length > 0
 
 	Row {
 		id: systemTrayRow
 		anchors.centerIn: parent
-		spacing: 0
+		spacing: 5
 
 		Repeater {
 			model: SystemTray.items.values
@@ -58,10 +54,10 @@ Rectangle {
 					color: trayItemArea.containsMouse ? Appearance.colors.primary : "transparent"
 					Behavior on color {
 						enabled: trayItemArea.containsMouse !== undefined
-						ColorAnimation {
-							duration: Appearance.animations.durations.small
+						NumberAnimation {
+							duration: Appearance.animation.durations.normal
 							easing.type: Easing.BezierSpline
-							easing.bezierCurve: Appearance.animations.curves.standard
+							easing.bezierCurve: Appearance.animation.curves.standard
 						}
 					}
 				}
