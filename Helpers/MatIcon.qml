@@ -10,30 +10,23 @@ Text {
 	required property string icon
 
 	font.family: Appearance.fonts.family_Material
-	font.hintingPreference: Font.PreferNoHinting
-	layer.enabled: true
+	font.hintingPreference: Font.PreferFullHinting
+	// layer.enabled: true
 
-	onTargetFillChanged: updateTimer.restart()
-
-	Timer {
-		id: updateTimer
-		interval: 16
-		onTriggered: root.fill = root.targetFill
-	}
 
 	font.variableAxes: {
+		"FILL": Math.round(fill * 10) / 10,
 		"opsz": root.fontInfo.pixelSize,
 		"wght": root.fontInfo.weight
 	}
 
-	renderType: Text.QtRendering
+	renderType: Text.NativeRendering
 	text: root.icon
 
 	Behavior on fill {
 		NumberAnimation {
-			duration: Appearance.animations.durations.small
-			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.standard
+			duration: 50
+			easing.type: Easing.InQuad
 		}
 	}
 }

@@ -1,6 +1,8 @@
 import qs.Widgets
+import qs.Data
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Services.SystemTray
 
@@ -9,9 +11,9 @@ Item {
 		anchors.fill: parent
 		anchors.rightMargin: 8
 		layoutDirection: Qt.RightToLeft
-		spacing: 8
+		spacing: Appearance.spacing.small
 		
-		Session {
+		Clock {
 			Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 		}
 		Tray {

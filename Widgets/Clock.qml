@@ -9,8 +9,9 @@ Rectangle {
 
 	Layout.fillHeight: true
 	color: Appearance.colors.withAlpha(Appearance.colors.background, 0.79)
+	border.color: Appearance.colors.on_background
 	implicitWidth: timeContainer.width + padding
-	radius: 5
+	radius: Appearance.rounding.small
 
 	Dots {
 		id: timeContainer
@@ -27,7 +28,7 @@ Rectangle {
 
 			color: Appearance.colors.on_background
 			font.pointSize: 11
-			text: Qt.formatDateTime(Time?.date, "h:mm:ss AP")
+			text: Qt.formatDateTime(Time?.date, "h:mm AP")
 		}
 	}
 }
