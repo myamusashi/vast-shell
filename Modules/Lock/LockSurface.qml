@@ -1,5 +1,3 @@
-pragma ComponentBehavior: Bound
-
 import qs.Data
 
 import QtQuick
@@ -37,7 +35,7 @@ WlSessionLockSurface {
 		Process {
 			id: wallPath
 			running: true
-			command: ["sh", "-c", "caelestia wallpaper"]
+			command: ["sh", "-c", "qs -c lock ipc call img get"]
 			stdout: StdioCollector {
 				onStreamFinished: {
 					surface.path = text.trim();
@@ -46,11 +44,16 @@ WlSessionLockSurface {
 		}
 		Image {
 			id: wall
+			antialiasing: true
+			asynchronous: true
+			retainWhileLoading: true
+			smooth: true
 			source: `${surface.path}`
-			sourceSize: parent
-			fillMode: Image.PreserveAspectFit
+			fillMode: Image.PreserveAspectCrop
 			visible: false
 			opacity: 0
+			width: parent.width
+			height: parent.width
 
 			onStatusChanged: root.isWallReady = true
 		}
@@ -69,7 +72,7 @@ WlSessionLockSurface {
 				NumberAnimation {
 					duration: Appearance.animations.durations.small * 1.2
 					easing.type: Easing.BezierSpline
-					easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+					easing.bezierCurve: Appearance.animations.curves.standardAccel
 				}
 			}
 		}
@@ -218,7 +221,7 @@ WlSessionLockSurface {
 		to: 0
 		duration: Appearance.animations.durations.small * 1.2
 		easing.type: Easing.BezierSpline
-		easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+		easing.bezierCurve: Appearance.animations.curves.standardAccel
 
 		onFinished: {
 			outAnim.start();
@@ -235,7 +238,7 @@ WlSessionLockSurface {
 			to: 0
 			duration: Appearance.animations.durations.large
 			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+			easing.bezierCurve: Appearance.animations.curves.standardAccel
 		}
 
 		NumberAnimation {
@@ -245,7 +248,7 @@ WlSessionLockSurface {
 			to: 0
 			duration: Appearance.animations.durations.normal
 			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+			easing.bezierCurve: Appearance.animations.curves.standardAccel
 		}
 
 		PropertyAction {
@@ -253,8 +256,6 @@ WlSessionLockSurface {
 			property: "locked"
 			value: false
 		}
-
-		
 	}
 
 	NumberAnimation {
@@ -263,9 +264,9 @@ WlSessionLockSurface {
 		property: "opacity"
 		from: 0
 		to: 1
-		duration: Appearance.animations.durations.small * 1.2
+		duration: Appearance.animations.durations.small
 		easing.type: Easing.BezierSpline
-		easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+		easing.bezierCurve: Appearance.animations.curves.standardAccel
 		onFinished: {
 			initAnim.start();
 		}
@@ -281,7 +282,7 @@ WlSessionLockSurface {
 			to: 1
 			duration: Appearance.animations.durations.large
 			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+			easing.bezierCurve: Appearance.animations.curves.standardAccel
 		}
 
 		NumberAnimation {
@@ -289,9 +290,9 @@ WlSessionLockSurface {
 			property: "opacity"
 			from: 0
 			to: 1
-			duration: Appearance.animations.durations.normal
+			duration: Appearance.animations.durations.large
 			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+			easing.bezierCurve: Appearance.animations.curves.standardAccel
 		}
 	}
 }
