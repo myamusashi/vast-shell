@@ -37,7 +37,6 @@ Singleton {
 					newList.push(popupNotifications[i]);
 
 			popupNotifications = newList;
-			notification.dismiss();
 		}
 
 		function removeListNotification(notification) {
