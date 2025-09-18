@@ -171,11 +171,11 @@ Rectangle {
 				height: monthGrid.cellHeight
 
 				color: {
-					if (dayItem.model.today) {
+					if (dayItem.model.today)
 						return Appearance.colors.primary;
-					} else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth) {
+					else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
 						return Appearance.colors.surface_variant;
-					}
+
 					return "transparent";
 				}
 
@@ -198,23 +198,21 @@ Rectangle {
 					anchors.centerIn: parent
 					text: Qt.formatDate(dayItem.model.date, "d")
 					color: {
-						if (dayItem.model.today) {
+						if (dayItem.model.today)
 							return Appearance.colors.on_primary;
-						} else if (dayItem.model.month === root.currentMonth) {
+						else if (dayItem.model.month === root.currentMonth)
 							return Appearance.colors.on_surface;
-						} else {
+						else
 							return Appearance.colors.outline;
-						}
 					}
 					font.pixelSize: Appearance.fonts.small * 1.3
 					font.weight: {
-						if (dayItem.model.today) {
+						if (dayItem.model.today)
 							return 1000;
-						} else if (dayItem.model.month === root.currentMonth) {
+						else if (dayItem.model.month === root.currentMonth)
 							return 600;
-						} else {
+						else
 							return 100;
-						}
 					}
 					horizontalAlignment: Text.AlignHCenter
 					verticalAlignment: Text.AlignVCenter
