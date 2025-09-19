@@ -74,9 +74,6 @@ Rectangle {
 							}
 
 							StyledSlide {
-								onPositionChanged: {
-									console.log("Position:", mediaContainer.player.position, "Length:", mediaContainer.player.length);
-								}
 								value: mediaContainer.player.length > 0 ? mediaContainer.player.position / mediaContainer.player.length : 0
 
 								handleHeight: 0
@@ -84,10 +81,16 @@ Rectangle {
 								Layout.preferredWidth: parent.width
 								Layout.preferredHeight: 5
 
-								FrameAnimation {
+								Timer {
 									running: mediaContainer.player.playbackState === MprisPlaybackState.Playing
+									interval: 500
+									repeat: true
 									onTriggered: mediaContainer.player.positionChanged()
 								}
+								// FrameAnimation {
+								// 	running: mediaContainer.player.playbackState === MprisPlaybackState.Playing
+								// 	onTriggered: mediaContainer.player.positionChanged()
+								// }
 
 								onMoved: mediaContainer.player.position = value * mediaContainer.player.length
 
