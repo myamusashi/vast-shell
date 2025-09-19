@@ -8,6 +8,8 @@ Slider {
 	id: root
 
 	hoverEnabled: true
+	property int handleHeight: 15
+	property int handleWidth: 15
 	Layout.alignment: Qt.AlignHCenter
 
 	background: Item {
@@ -40,8 +42,8 @@ Slider {
 
 		x: root.leftPadding + root.visualPosition * (root.availableWidth - width)
 		y: root.topPadding + root.availableHeight / 2 - height / 2
-		implicitWidth: 15
-		implicitHeight: 15
+		implicitWidth: root.handleHeight
+		implicitHeight: root.handleWidth
 		radius: width / 2
 		color: root.pressed ? Appearance.colors.primary : Appearance.colors.on_surface
 
