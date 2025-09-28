@@ -8,6 +8,7 @@ import qs.Modules.Launcher
 import qs.Modules.Notifications
 import qs.Modules.Dashboard
 import qs.Modules.BigClock
+import qs.Modules.OSD
 
 import QtQuick
 import Quickshell
@@ -22,6 +23,7 @@ ShellRoot {
 	Notifications {}
 	Dashboard {}
 	Clock {}
+	OSD {}
 
 	Connections {
 		function onReloadCompleted() {

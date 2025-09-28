@@ -34,15 +34,20 @@
       pkgs,
       system,
     }: rec {
-      neofuturism-shell = let
-        dependencies = [pkgs.cava quickshell.packages.${system}.default];
+      shell = let
+        dependencies = [
+          pkgs.material-symbols
+          pkgs.nerd-fonts.hack
+          pkgs.inter
+          quickshell.packages.${system}.default
+        ];
       in
-        pkgs.writeShellScriptBin "neoshell" ''
+        pkgs.writeShellScriptBin "shell" ''
           export PATH="${lib.makeBinPath dependencies}:$PATH"
           export QML2_IMPORT_PATH="${qmlPath pkgs}"
           ${quickshell.packages.${system}.default}/bin/quickshell $@
         '';
-      default = neofuturism-shell;
+      default = shell;
     });
     devShells = perSystem ({
       pkgs,
