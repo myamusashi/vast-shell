@@ -9,11 +9,20 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 
 import qs.Data
+import qs.Components
 
 Scope {
+	id: scope
+
+	property real scaleFactor: 0.2
+	property real borderWidth: 2
+	property bool wallpaperEnabled: true
+	property bool iconsEnabled: true
+	property bool isOverviewOpen: false
+
 	GlobalShortcut {
 		name: "overview"
-		onPressed: lazyloader.active = !lazyloader.active
+		onPressed: scope.isOverviewOpen = !scope.isOverviewOpen
 	}
 
 	Connections {
@@ -29,42 +38,50 @@ Scope {
 	LazyLoader {
 		id: lazyloader
 
-		active: false
+		activeAsync: scope.isOverviewOpen
 
-		PanelWindow {
+		component: PanelWindow {
 			id: root
 
-			property real scaleFactor: 0.2
+			property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
+			property real workspaceWidth: (root.monitor.width - (root.reserved[0] + root.reserved[2])) * scope.scaleFactor
+			property real workspaceHeight: (root.monitor.height - (root.reserved[1] + root.reserved[3])) * scope.scaleFactor
+			property real containerWidth: workspaceWidth + scope.borderWidth * 2
+			property real containerHeight: workspaceHeight + scope.borderWidth * 2
+			property list<int> reserved: monitor.lastIpcObject?.reserved
 
 			implicitWidth: contentGrid.implicitWidth + 24
 			implicitHeight: contentGrid.implicitHeight + 24
+			color: "transparent"
+			WlrLayershell.namespace: "shell:overview"
 			WlrLayershell.layer: WlrLayer.Overlay
-
-			FileView {
-				id: wallid
-				path: Qt.resolvedUrl(Quickshell.env("HOME") + "/.cache/wall/path.txt")
-
-				watchChanges: true
-				onFileChanged: reload()
-			}
-
-			property string imgsrc: wallid.text()
+			WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
 			Rectangle {
-				anchors.fill: parent
-				color: Appearance.colors.withAlpha(Appearance.colors.background, 0.9)
-				border.color: Appearance.colors.outline
-				border.width: 2
+				color: Appearance.colors.background
+				anchors.fill: contentGrid
+				anchors.margins: -12
 			}
 
+			// Overlay Layer
+			Rectangle {
+				id: overLayer
+				color: "transparent"
+				z: 1
+				anchors.fill: parent
+			}
+
+			// Workspaces Grid
 			GridLayout {
 				id: contentGrid
+
 				rows: 2
 				columns: 4
 				rowSpacing: 12
 				columnSpacing: 12
 				anchors.centerIn: parent
 
+				// Workspaces Containers
 				Repeater {
 					model: 8
 
@@ -73,33 +90,45 @@ Scope {
 
 						required property int index
 						property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
-						property HyprlandMonitor monitor: Hyprland.monitors.values[0]
-
 						property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
 						property bool hasMaximized: !!(workspace?.toplevels?.values.some(t => t.wayland?.maximized))
-						property int reservedX: hasFullscreen ? 0 : monitor.lastIpcObject?.reserved?.[0]
-						property int reservedY: hasFullscreen ? 0 : monitor.lastIpcObject?.reserved?.[1]
+						property int reservedX: hasFullscreen ? 0 : root.monitor.lastIpcObject?.reserved?.[0]
+						property int reservedY: hasFullscreen ? 0 : root.monitor.lastIpcObject?.reserved?.[1]
 
-						implicitWidth: (monitor.width - reservedX) * root.scaleFactor * 0.9
-						implicitHeight: (monitor.height - reservedY) * root.scaleFactor * 0.9
+						implicitWidth: root.containerWidth
+						implicitHeight: root.containerHeight
 
-						color: "transparent"
+						color: Appearance.colors.on_background
 						border.width: 2
-						border.color: hasMaximized ? Appearance.colors.on_error : color
+						border.color: hasMaximized ? "red" : workspace?.focused ? Appearance.colors.primary : Appearance.colors.on_primary
+						clip: true
 
-						Image {
-							anchors.fill: parent
+						FileView {
+							id: wallid
 
-							antialiasing: false
-							asynchronous: true
-							mipmap: true
-							smooth: true
+							path: Qt.resolvedUrl(Quickshell.env("HOME") + "/.cache/wall/path.txt")
 
-							source: root.imgsrc.trim()
-
-							z: -1
+							watchChanges: true
+							onFileChanged: reload()
 						}
 
+						Loader {
+							active: scope.wallpaperEnabled
+							visible: active
+							anchors.centerIn: parent
+
+							sourceComponent: Image {
+								source: wallid.text().trim()
+								sourceSize.width: root.workspaceWidth
+								width: root.workspaceWidth
+								height: root.workspaceHeight
+								fillMode: Image.PreserveAspectCrop
+								smooth: false
+								cache: true
+							}
+						}
+
+						// Toplevel DropArea
 						DropArea {
 							anchors.fill: parent
 
@@ -120,11 +149,13 @@ Scope {
 
 						MouseArea {
 							anchors.fill: parent
-							onClicked: Hyprland.dispatch(`workspace ${workspaceContainer.index + 1}`)
+							onClicked: if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
+								Hyprland.dispatch(`workspace ${parent.index + 1}`)
 						}
 
+						// Toplevels
 						Repeater {
-							model: workspaceContainer.workspace?.toplevels
+							model: parent.workspace?.toplevels
 
 							delegate: ScreencopyView {
 								id: toplevel
@@ -132,34 +163,92 @@ Scope {
 								required property HyprlandToplevel modelData
 								property Toplevel waylandHandle: modelData?.wayland
 								property var toplevelData: modelData.lastIpcObject
+								property int initX: toplevelData.at?.[0] ?? 0
+								property int initY: toplevelData.at?.[1] ?? 0
+								property Rectangle originalParent: workspaceContainer
+								property Rectangle visualParent: overLayer
+								property bool isCaught: false
 
 								captureSource: waylandHandle
 								live: true
 
-								anchors.centerIn: parent
+								width: sourceSize.width * scope.scaleFactor
+								height: sourceSize.height * scope.scaleFactor
+								scale: (Drag.active && !toplevelData?.floating) ? 0.75 : 1
 
-								width: sourceSize.width * root.scaleFactor * 0.9 - 5
-								height: sourceSize.height * root.scaleFactor * 0.9 - 5
+								x: (toplevelData?.at?.[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) + scope.borderWidth
+								y: (toplevelData?.at?.[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * scope.scaleFactor + scope.borderWidth
+								z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
 
-								x: (toplevelData.at?.[0] - workspaceContainer.reservedX) * root.scaleFactor * 0
-								y: (toplevelData.at?.[1] - workspaceContainer.reservedY) * root.scaleFactor * 0
-								z: (waylandHandle.fullscreen || waylandHandle.maximized) ? 2 : toplevelData.floating
+								Drag.active: mouseArea.drag.active
+								Drag.hotSpot.x: width / 2
+								Drag.hotSpot.y: height / 2
+								Drag.onActiveChanged: {
+									if (Drag.active) {
+										parent = visualParent;
+									} else {
+										var mapped = mapToItem(originalParent, 0, 0);
+										parent = originalParent;
+
+										// fix this ugly shit
+										if (toplevelData?.floating) {
+											x = mapped.x;
+											y = mapped.y;
+										} else if (!toplevelData?.floating) {
+											x = !isCaught ? mapped.x : (toplevelData?.at?.[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * scope.scaleFactor + scope.borderWidth;
+											y = !isCaught ? mapped.y : (toplevelData?.at?.[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * scope.scaleFactor + scope.borderWidth;
+										}
+									}
+								}
+
+								Behavior on scale {
+									NumbAnim {}
+								}
 
 								IconImage {
-									source: Quickshell.iconPath(DesktopEntries.heuristicLookup(toplevel.toplevelData?.class)?.icon, "image-missing")
+									source: Quickshell.iconPath(DesktopEntries.heuristicLookup(toplevel.waylandHandle?.appId)?.icon, "image-missing")
 									implicitSize: 48
+									backer.cache: true
+									backer.asynchronous: true
 									anchors.centerIn: parent
 								}
 
 								MouseArea {
+									id: mouseArea
+
+									property bool dragged: false
+
+									drag.target: (toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized) ? undefined : toplevel
 									acceptedButtons: Qt.LeftButton | Qt.RightButton
 									anchors.fill: parent
 
+									onPressed: {
+										dragged = false;
+									}
+
+									onPositionChanged: {
+										if (drag.active)
+											dragged = true;
+									}
+
 									onClicked: mouse => {
-										if (mouse.button === Qt.LeftButton)
-											toplevel.waylandHandle.activate();
-										else if (mouse.button === Qt.RightButton)
-											toplevel.waylandHandle.close();
+										if (!dragged) {
+											if (mouse.button === Qt.LeftButton)
+												toplevel.waylandHandle.activate();
+											else if (mouse.button === Qt.RightButton)
+												toplevel.waylandHandle.close();
+										}
+									}
+
+									onReleased: {
+										if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
+											const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
+											const x = Math.round(mapped.x / scope.scaleFactor + root.reserved[0]);
+											const y = Math.round(mapped.y / scope.scaleFactor + root.reserved[1]);
+
+											Hyprland.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
+											toplevel.Drag.drop();
+										}
 									}
 								}
 							}
