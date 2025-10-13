@@ -6,49 +6,47 @@ mkdir -p "$SCREENSHOT_DIR"
 
 IMG="$SCREENSHOT_DIR/$(date +%Y-%m-%d_%H-%m-%s).png"
 
-
 goto_link() {
-    if [ -z "$IMG" ]; then
-        echo "ERROR: IMG variable is empty or not set"
-        return 1
-    fi
-    
-    if [ ! -f "$IMG" ]; then
-        echo "ERROR: File $IMG does not exist"
-        return 1
-    fi
-    
-    ACTION=$(notify-send -a "screengrab" \
-                        --action="default=open link" \
-                        -i "$IMG" \
-                        "Screenshot Taken" \
-                        "${IMG}" \
-                        --wait)
-    
-    
-    case "$ACTION" in
-        "default")
-            if command -v foot >/dev/null 2>&1; then
-                if command -v yazi >/dev/null 2>&1; then
-                    echo "DEBUG: Executing: footclient yazi '$IMG'"
-                    footclient yazi "$IMG" &
-                    echo "DEBUG: Command executed with PID: $!"
-                else
-                    echo "ERROR: yazi command not found"
-                    xdg-open "$(dirname "$IMG")" &
-                fi
-            else
-                echo "ERROR: foot command not found"
-                xdg-open "$IMG" &
-            fi
-            ;;
-        "")
-            echo "DEBUG: No action taken (notification dismissed or timeout)"
-            ;;
-        *)
-            echo "DEBUG: Unexpected action: '$ACTION'"
-            ;;
-    esac
+	if [ -z "$IMG" ]; then
+		echo "ERROR: IMG variable is empty or not set"
+		return 1
+	fi
+
+	if [ ! -f "$IMG" ]; then
+		echo "ERROR: File $IMG does not exist"
+		return 1
+	fi
+
+	ACTION=$(notify-send -a "screengrab" \
+		--action="default=open link" \
+		-i "$IMG" \
+		"Screenshot Taken" \
+		"${IMG}" \
+		--wait)
+
+	case "$ACTION" in
+	"default")
+		if command -v foot >/dev/null 2>&1; then
+			if command -v yazi >/dev/null 2>&1; then
+				echo "DEBUG: Executing: footclient yazi '$IMG'"
+				footclient yazi "$IMG" &
+				echo "DEBUG: Command executed with PID: $!"
+			else
+				echo "ERROR: yazi command not found"
+				xdg-open "$(dirname "$IMG")" &
+			fi
+		else
+			echo "ERROR: foot command not found"
+			xdg-open "$IMG" &
+		fi
+		;;
+	"")
+		echo "DEBUG: No action taken (notification dismissed or timeout)"
+		;;
+	*)
+		echo "DEBUG: Unexpected action: '$ACTION'"
+		;;
+	esac
 }
 
 case "$1" in
@@ -61,6 +59,7 @@ case "$1" in
 	else
 		notify-send -u critical -i dialog-error -a "Screen Capture" "Screenshot Failed" "Failed to take screenshot."
 	fi
+	exit
 	;;
 "--screenshot-selection")
 	grim -g "$(slurp)" "$IMG"
@@ -71,6 +70,7 @@ case "$1" in
 	else
 		notify-send -u critical -i dialog-error -a "Screen Capture" "Screenshot Failed" "Failed to take screenshot."
 	fi
+	exit
 	;;
 "--screenshot-eDP-1")
 	sleep 2
@@ -81,6 +81,7 @@ case "$1" in
 	else
 		notify-send -u critical -i dialog-error -a "Screen Capture" "Screenshot Failed" "Failed to take screenshot on eDP-1."
 	fi
+
 	;;
 "--screenshot-HDMI-A-2")
 	sleep 2
@@ -91,6 +92,7 @@ case "$1" in
 	else
 		notify-send -u critical -i dialog-error -a "Screen Capture" "Screenshot Failed" "Failed to take screenshot on HDMI-A-2."
 	fi
+
 	;;
 "--screenshot-both-screens")
 	sleep 2
@@ -107,6 +109,7 @@ case "$1" in
 	else
 		notify-send -u critical -i dialog-error -a "Screen Capture" "Screenshot Failed" "Failed to take screenshot on both screens."
 	fi
+
 	;;
 *)
 	# User cancelled or no selection
