@@ -1,0 +1,50 @@
+import QtQuick
+import Quickshell
+import Quickshell.Wayland
+
+import qs.Data
+import qs.Helpers
+import qs.Components
+
+LazyLoader {
+	id: numLockOsdLoader
+
+	required property bool numLockOSDStatus
+
+	active: numLockOSDStatus
+	component: PanelWindow {
+		anchors.bottom: true
+		WlrLayershell.namespace: "shell:osd:numlock"
+		color: "transparent"
+		exclusionMode: ExclusionMode.Ignore
+		focusable: false
+		implicitWidth: 350
+		implicitHeight: 50
+		exclusiveZone: 0
+		margins.bottom: 150
+		mask: Region {}
+
+		StyledRect {
+			anchors.fill: parent
+			radius: height / 2
+			color: Colors.colors.background
+
+			Row {
+				anchors.centerIn: parent
+				spacing: 10
+
+				StyledText {
+					text: "Num Lock"
+					color: Colors.colors.on_background
+					font.pixelSize: Appearance.fonts.large * 1.5
+				}
+
+				MatIcon {
+					icon: KeyLockState.numLockState ? "lock" : "lock_open_right"
+					color: KeyLockState.numLockState ? Colors.colors.primary : Colors.colors.tertiary
+					font.pixelSize: Appearance.fonts.large * 1.5
+				}
+			}
+		}
+	}
+}
