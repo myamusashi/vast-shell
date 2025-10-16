@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell.Wayland
@@ -34,6 +33,7 @@ WlSessionLockSurface {
 
 			anchors.fill: parent
 			captureSource: root.screen
+			opacity: 1
 			visible: true
 		}
 
@@ -74,50 +74,6 @@ WlSessionLockSurface {
 				bottomMargin: Appearance.spacing.large * 4
 			}
 
-			StyledRect {
-				id: errorContainer
-
-				Layout.alignment: Qt.AlignHCenter
-				Layout.preferredHeight: errorLabel.implicitHeight + Appearance.padding.normal * 2
-				Layout.preferredWidth: Math.max(errorLabel.implicitWidth + Appearance.padding.large * 2, 200)
-
-				color: Colors.colors.error_container
-				radius: Appearance.rounding.normal
-				visible: root.pam ? root.pam.showFailure : false
-				opacity: 0
-				scale: 0.8
-
-				Label {
-					id: errorLabel
-					anchors.centerIn: parent
-					text: "Incorrect password"
-					color: Colors.colors.on_error_container
-					font.pixelSize: Appearance.fonts.medium
-					font.family: Appearance.fonts.family_Sans
-				}
-
-				Behavior on opacity {
-					enabled: root.pam && root.pam.showFailure
-					SequentialAnimation {
-						PropertyAnimation {
-							duration: Appearance.animations.durations.expressiveEffects
-							easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-							properties: "opacity,scale"
-							to: 1
-						}
-						PauseAnimation {
-							duration: 2000
-						}
-						PropertyAnimation {
-							duration: Appearance.animations.durations.normal
-							easing.bezierCurve: Appearance.animations.curves.standard
-							properties: "opacity,scale"
-							to: 0
-						}
-					}
-				}
-			}
-
 			InputField {
 				pam: root.pam
 			}
@@ -132,7 +88,7 @@ WlSessionLockSurface {
 				target: wallEffect
 				from: 1
 				to: 0
-				easing.bezierCurve: Appearance.animations.curves.standardAccel
+				easing.bezierCurve: Appearance.animations.curves.standardDecel
 				duration: Appearance.animations.durations.extraLarge
 			}
 
@@ -172,22 +128,22 @@ WlSessionLockSurface {
 				target: wallEffect
 				from: 0
 				to: 1
-				easing.bezierCurve: Appearance.animations.curves.standardDecel
-				duration: Appearance.animations.durations.extraLarge
-			}
-
-			PropertyAnimation {
-				target: clockContainer
-				properties: "opacity,scale"
-				from: 0
-				to: 1
-				duration: Appearance.animations.durations.expressiveDefaultSpatial
-				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+				easing.bezierCurve: Appearance.animations.curves.standardAccel
+				duration: Appearance.animations.durations.large
 			}
 
 			SequentialAnimation {
 				PauseAnimation {
 					duration: Appearance.animations.durations.small
+				}
+
+				PropertyAnimation {
+					target: clockContainer
+					properties: "opacity,scale"
+					from: 0
+					to: 1
+					duration: Appearance.animations.durations.expressiveDefaultSpatial
+					easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
 				}
 
 				PropertyAnimation {
@@ -222,7 +178,7 @@ WlSessionLockSurface {
 			to: -8
 			duration: Appearance.animations.durations.small * 0.8
 			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatialChanged
+			easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
 		}
 		PropertyAnimation {
 			target: inputContainer
@@ -249,7 +205,7 @@ WlSessionLockSurface {
 			to: 0
 			duration: Appearance.animations.durations.small * 0.8
 			easing.type: Easing.BezierSpline
-			easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatialChanged
+			easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
 		}
 	}
 }
