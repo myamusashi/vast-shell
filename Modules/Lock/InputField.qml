@@ -79,16 +79,16 @@ RowLayout {
 
 		inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
 
-		placeholderText: "Enter password"
-		placeholderTextColor: Colors.colors.on_surface_variant
+		placeholderText: root.pam.showFailure ? "Password invalid" : "Enter password"
+		placeholderTextColor: root.pam.showFailure ? Colors.colors.error : Colors.colors.on_surface_variant
+		font.bold: root.pam.showFailure ? true : false
 
-		selectionColor: Colors.withAlpha(Colors.dark.primary, 0.24)
+		selectionColor: Colors.withAlpha(Colors.dark.on_surface, 0.16)
 		selectedTextColor: Colors.colors.on_primary
 
 		onAccepted: {
-			if (root.pam && text.length > 0) {
+			if (root.pam && text.length > 0)
 				root.pam.tryUnlock();
-			}
 		}
 
 		onTextChanged: {
@@ -143,6 +143,19 @@ RowLayout {
 			color: Colors.colors.primary
 			visible: root.pam.unlockInProgress
 			opacity: visible ? 1 : 0
+
+			SequentialAnimation on color {
+				ColAnim {
+					to: Colors.colors.primary
+				}
+				ColAnim {
+					to: Colors.colors.secondary
+				}
+				ColAnim {
+					to: Colors.colors.tertiary
+				}
+				loops: Animation.Infinite
+			}
 
 			// RotationAnimator {
 			// 	target: root
