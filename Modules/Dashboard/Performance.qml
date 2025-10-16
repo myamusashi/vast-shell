@@ -5,8 +5,7 @@ import qs.Data
 import qs.Components
 
 Loader {
-	active: dashboardLoader.activeAsync
-	asynchronous: true
+	active: true
 
 	anchors.centerIn: parent
 

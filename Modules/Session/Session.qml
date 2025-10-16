@@ -17,7 +17,7 @@ Scope {
 	property bool isSessionOpen: false
 
 	LazyLoader {
-		activeAsync: session.isSessionOpen
+		active: session.isSessionOpen
 
 		component: PanelWindow {
 			id: sessionWindow

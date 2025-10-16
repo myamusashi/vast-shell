@@ -6,8 +6,7 @@ import qs.Data
 import qs.Components
 
 Loader {
-	active: dashboardLoader
-	asynchronous: true
+	active: true
 
 	sourceComponent: StyledRect {
 		id: root

@@ -11,8 +11,7 @@ import qs.Helpers
 import qs.Components
 
 Loader {
-	active: dashboardLoader.activeAsync
-	asynchronous: true
+	active: true
 
 	anchors.fill: parent
 

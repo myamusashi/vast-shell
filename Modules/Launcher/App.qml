@@ -36,7 +36,7 @@ Scope {
 	LazyLoader {
 		id: appLoader
 
-		activeAsync: root.isLauncherOpen
+		active: root.isLauncherOpen
 
 		component: PanelWindow {
 			id: launcher

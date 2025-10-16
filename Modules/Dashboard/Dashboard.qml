@@ -31,7 +31,7 @@ Scope {
 	LazyLoader {
 		id: dashboardLoader
 
-		activeAsync: root.isDashboardOpen
+		active: root.isDashboardOpen
 
 		component: PanelWindow {
 			id: dashboard

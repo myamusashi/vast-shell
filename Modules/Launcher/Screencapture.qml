@@ -18,7 +18,7 @@ Scope {
 	property string scriptPath: `${Quickshell.shellDir}/Assets/screen-capture.sh`
 
 	LazyLoader {
-		activeAsync: screencapture.isScreencaptureOpen
+		active: screencapture.isScreencaptureOpen
 
 		component: PanelWindow {
 			id: captureWindow

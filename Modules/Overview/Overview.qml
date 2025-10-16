@@ -40,7 +40,7 @@ Scope {
 	LazyLoader {
 		id: lazyloader
 
-		activeAsync: scope.isOverviewOpen
+		active: scope.isOverviewOpen
 
 		component: PanelWindow {
 			id: root
@@ -48,12 +48,12 @@ Scope {
 			property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
 			property real workspaceWidth: (root.monitor.width - (root.reserved[0] + root.reserved[2])) * scope.scaleFactor
 			property real workspaceHeight: (root.monitor.height - (root.reserved[1] + root.reserved[3])) * scope.scaleFactor
-			property real containerWidth: workspaceWidth + scope.borderWidth * 2
-			property real containerHeight: workspaceHeight + scope.borderWidth * 2
+			property real containerWidth: workspaceWidth + scope.borderWidth
+			property real containerHeight: workspaceHeight + scope.borderWidth
 			property list<int> reserved: monitor.lastIpcObject?.reserved
 
-			implicitWidth: contentGrid.implicitWidth + 24
-			implicitHeight: contentGrid.implicitHeight + 24
+			implicitWidth: contentGrid.implicitWidth * 2.5
+			implicitHeight: contentGrid.implicitHeight * 2.5
 			color: "transparent"
 			WlrLayershell.namespace: "shell:overview"
 			WlrLayershell.layer: WlrLayer.Overlay
@@ -61,6 +61,7 @@ Scope {
 
 			StyledRect {
 				color: Colors.colors.background
+				border.color: Colors.colors.outline
 				anchors.fill: contentGrid
 				anchors.margins: -12
 			}
@@ -94,13 +95,11 @@ Scope {
 						property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
 						property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
 						property bool hasMaximized: !!(workspace?.toplevels?.values.some(t => t.wayland?.maximized))
-						property int reservedX: hasFullscreen ? 0 : root.monitor.lastIpcObject?.reserved?.[0]
-						property int reservedY: hasFullscreen ? 0 : root.monitor.lastIpcObject?.reserved?.[1]
 
-						implicitWidth: root.containerWidth
-						implicitHeight: root.containerHeight
+						implicitWidth: root.containerWidth + 25
+						implicitHeight: root.containerHeight + 25
 
-						color: Colors.colors.on_background
+						color: "transparent"
 						border.width: 2
 						border.color: hasMaximized ? "red" : workspace?.focused ? Colors.colors.primary : Colors.colors.on_primary
 						clip: true
@@ -178,8 +177,8 @@ Scope {
 								height: sourceSize.height * scope.scaleFactor
 								scale: (Drag.active && !toplevelData?.floating) ? 0.75 : 1
 
-								x: (toplevelData?.at?.[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) + scope.borderWidth
-								y: (toplevelData?.at?.[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * scope.scaleFactor + scope.borderWidth
+								x: (toplevelData?.at?.[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * scope.scaleFactor + scope.borderWidth + 12
+								y: (toplevelData?.at?.[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * scope.scaleFactor + scope.borderWidth + 12
 								z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
 
 								Drag.active: mouseArea.drag.active

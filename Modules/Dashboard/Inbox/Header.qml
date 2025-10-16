@@ -7,7 +7,7 @@ import qs.Helpers
 import qs.Components
 
 Loader {
-	active: dashboardLoader.activeAsync
+	active: true
 
 	anchors.fill: parent
 
