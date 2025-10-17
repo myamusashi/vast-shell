@@ -7,6 +7,7 @@ import qs.Components
 
 RowLayout {
 	id: root
+
 	required property var pam
 
 	TextField {

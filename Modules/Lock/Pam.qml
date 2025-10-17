@@ -1,7 +1,5 @@
 pragma ComponentBehavior: Bound
 
-import qs.Data
-
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
