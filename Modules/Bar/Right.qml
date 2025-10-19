@@ -8,72 +8,73 @@ import qs.Widgets
 import qs.Components
 
 Loader {
-    active: true
-    asynchronous: true
+	active: true
+	asynchronous: true
 
-    sourceComponent: StyledRect {
-        color: "transparent"
-        RowLayout {
-            anchors.fill: parent
-            anchors.rightMargin: 8
-            layoutDirection: Qt.RightToLeft
-            spacing: Appearance.spacing.small
+	sourceComponent: StyledRect {
+		color: "transparent"
+		RowLayout {
+			anchors.fill: parent
 
-            Clock {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.maximumWidth: implicitWidth
-            }
-            Tray {
-                Layout.alignment: Qt.AlignVCenter
-            }
-            PowerProfiles {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.maximumWidth: implicitWidth
-            }
-            StyledRect {
-                Layout.alignment: Qt.AlignVCenter
-                Layout.preferredWidth: controlCenterLayout.implicitWidth * 1.1
-                Layout.preferredHeight: 25
-                color: mArea.containsPress ? Colors.withAlpha(Colors.colors.on_surface, 0.08) :
-                                             mArea.containsMouse ? Colors.withAlpha(Colors.colors.on_surface,
-                                                                                    0.16) : Colors.withAlpha(
-                                                                       Colors.colors.on_surface, 0.20)
-                radius: Appearance.rounding.normal
+			anchors.rightMargin: 8
+			layoutDirection: Qt.RightToLeft
+			spacing: Appearance.spacing.small
 
-                Behavior on color {
-                    ColAnim {}
-                }
+			Clock {
+				Layout.alignment: Qt.AlignVCenter
+				Layout.maximumWidth: implicitWidth
+			}
+			Tray {
+				Layout.alignment: Qt.AlignVCenter
+			}
+			PowerProfiles {
+				Layout.alignment: Qt.AlignVCenter
+				Layout.maximumWidth: implicitWidth
+			}
+			StyledRect {
+				Layout.alignment: Qt.AlignVCenter
+				Layout.preferredWidth: controlCenterLayout.implicitWidth * 1.1
+				Layout.preferredHeight: 25
+				color: mArea.containsPress ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : mArea.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.16) : Colors.withAlpha(Colors.colors.on_surface, 0.20)
+				radius: Appearance.rounding.normal
 
-                RowLayout {
-                    id: controlCenterLayout
-                    anchors.fill: parent
-                    spacing: Appearance.spacing.small
+				Behavior on color {
+					ColAnim {}
+				}
 
-                    Sound {
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.fillHeight: true
-                    }
-                    Battery {
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.fillHeight: true
-                    }
-                }
+				RowLayout {
+					id: controlCenterLayout
+					anchors.fill: parent
 
-                MouseArea {
-                    id: mArea
+					spacing: Appearance.spacing.small
 
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: controlCenter.opened = !controlCenter.opened
-                }
-            }
-        }
+					Sound {
+						Layout.alignment: Qt.AlignVCenter
+						Layout.fillHeight: true
+					}
+					Battery {
+						Layout.alignment: Qt.AlignVCenter
+						Layout.fillHeight: true
+					}
+				}
 
-        ControlCenter {
-            id: controlCenter
+				MouseArea {
+					id: mArea
 
-            opened: false
-        }
-    }
+					anchors.fill: parent
+
+					hoverEnabled: true
+
+					cursorShape: Qt.PointingHandCursor
+					onClicked: controlCenter.opened = !controlCenter.opened
+				}
+			}
+		}
+
+		ControlCenter {
+			id: controlCenter
+
+			opened: false
+		}
+	}
 }

@@ -9,226 +9,230 @@ import qs.Helpers
 import qs.Components
 
 RowLayout {
-    id: root
+	id: root
 
-    property bool isOpen
+	property bool isOpen
 
-    ColumnLayout {
-        Layout.alignment: Qt.AlignCenter
+	ColumnLayout {
+		Layout.alignment: Qt.AlignCenter
 
-        StyledRect {
-            id: mainButton
+		StyledRect {
+			id: mainButton
 
-            Layout.preferredWidth: 56 + propertySplitButton.width
-            Layout.preferredHeight: 56
+			Layout.preferredWidth: 56 + propertySplitButton.width
+			Layout.preferredHeight: 56
 
-            color: {
-                if (mouseAreaMain.containsPress)
-                Colors.withAlpha(Colors.colors.primary, 0.08);
-                else if (mouseAreaMain.containsMouse)
-                Colors.withAlpha(Colors.colors.primary, 0.1);
-                else
-                Colors.colors.primary;
-            }
+			color: {
+				if (mouseAreaMain.containsPress)
+					Colors.withAlpha(Colors.colors.primary, 0.08);
+				else if (mouseAreaMain.containsMouse)
+					Colors.withAlpha(Colors.colors.primary, 0.1);
+				else
+					Colors.colors.primary;
+			}
 
-            radius: Appearance.rounding.full
+			radius: Appearance.rounding.full
 
-            RowLayout {
-                id: propertySplitButton
+			RowLayout {
+				id: propertySplitButton
 
-                anchors.centerIn: parent
-                spacing: Appearance.spacing.small
+				anchors.centerIn: parent
+				spacing: Appearance.spacing.small
 
-                MatIcon {
-                    icon: "power_settings_circle"
-                    color: {
-                        if (mouseAreaMain.containsPress)
-                        Colors.withAlpha(Colors.colors.on_primary, 0.08);
-                        else if (mouseAreaMain.containsMouse)
-                        Colors.withAlpha(Colors.colors.on_primary, 0.1);
-                        else
-                        Colors.colors.on_primary;
-                    }
-                    font.pixelSize: Appearance.fonts.extraLarge
-                }
+				MatIcon {
+					icon: "power_settings_circle"
+					color: {
+						if (mouseAreaMain.containsPress)
+							Colors.withAlpha(Colors.colors.on_primary, 0.08);
+						else if (mouseAreaMain.containsMouse)
+							Colors.withAlpha(Colors.colors.on_primary, 0.1);
+						else
+							Colors.colors.on_primary;
+					}
+					font.pixelSize: Appearance.fonts.extraLarge
+				}
 
-                StyledText {
-                    text: "Shutdown"
-                    color: {
-                        if (mouseAreaMain.containsPress)
-                        Colors.withAlpha(Colors.colors.on_primary, 0.08);
-                        else if (mouseAreaMain.containsMouse)
-                        Colors.withAlpha(Colors.colors.on_primary, 0.1);
-                        else
-                        Colors.colors.on_primary;
-                    }
-                    font.pixelSize: Appearance.fonts.large
-                }
-            }
+				StyledText {
+					text: "Shutdown"
+					color: {
+						if (mouseAreaMain.containsPress)
+							Colors.withAlpha(Colors.colors.on_primary, 0.08);
+						else if (mouseAreaMain.containsMouse)
+							Colors.withAlpha(Colors.colors.on_primary, 0.1);
+						else
+							Colors.colors.on_primary;
+					}
+					font.pixelSize: Appearance.fonts.large
+				}
+			}
 
-            MouseArea {
-                id: mouseAreaMain
+			MouseArea {
+				id: mouseAreaMain
 
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: {
-                    Quickshell.execDetached({
-                                                command: ["sh", "-c", "systemctl poweroff"]
-                                            });
-                }
-            }
-        }
+				anchors.fill: parent
 
-        Repeater {
-            model: [
-                {
-                    icon: "restart_alt",
-                    name: "Reboot",
-                    action: () => {
-                        Quickshell.execDetached({
-                                                    command: ["sh", "-c", "systemctl reboot"]
-                                                });
-                    }
-                },
-                {
-                    icon: "sleep",
-                    name: "Sleep",
-                    action: () => {
-                        Quickshell.execDetached({
-                                                    command: ["sh", "-c", "systemctl suspend"]
-                                                });
-                    }
-                },
-                {
-                    icon: "door_open",
-                    name: "Logout",
-                    action: () => {
-                        Quickshell.execDetached({
-                                                    command: ["sh", "-c", "hyprctl dispatch exit"]
-                                                });
-                    }
-                },
-            ]
+				hoverEnabled: true
 
-            delegate: StyledRect {
-                id: buttonDelegate
+				cursorShape: Qt.PointingHandCursor
+				onClicked: {
+					Quickshell.execDetached({
+						command: ["sh", "-c", "systemctl poweroff"]
+					});
+				}
+			}
+		}
 
-                required property var modelData
+		Repeater {
+			model: [
+				{
+					icon: "restart_alt",
+					name: "Reboot",
+					action: () => {
+						Quickshell.execDetached({
+							command: ["sh", "-c", "systemctl reboot"]
+						});
+					}
+				},
+				{
+					icon: "sleep",
+					name: "Sleep",
+					action: () => {
+						Quickshell.execDetached({
+							command: ["sh", "-c", "systemctl suspend"]
+						});
+					}
+				},
+				{
+					icon: "door_open",
+					name: "Logout",
+					action: () => {
+						Quickshell.execDetached({
+							command: ["sh", "-c", "hyprctl dispatch exit"]
+						});
+					}
+				},
+			]
 
-                Layout.preferredWidth: mainButton.width
-                Layout.preferredHeight: root.isOpen ? 56 : 0
+			delegate: StyledRect {
+				id: buttonDelegate
 
-                color: mouseArea.pressed ? Colors.withAlpha(Colors.colors.primary, 0.08) :
-                                           mouseArea.containsMouse ? Colors.withAlpha(Colors.colors.primary,
-                                                                                      0.1) : Colors.colors.primary
+				required property var modelData
 
-                radius: Appearance.rounding.full
+				Layout.preferredWidth: mainButton.width
+				Layout.preferredHeight: root.isOpen ? 56 : 0
 
-                visible: root.isOpen || Layout.bottomMargin > -height
+				color: mouseArea.pressed ? Colors.withAlpha(Colors.colors.primary, 0.08) : mouseArea.containsMouse ? Colors.withAlpha(Colors.colors.primary, 0.1) : Colors.colors.primary
 
-                Layout.topMargin: root.isOpen ? Appearance.spacing.normal : 0
+				radius: Appearance.rounding.full
 
-                Behavior on Layout.preferredHeight {
-                    NumbAnim {
-                        duration: Appearance.animations.durations.small
-                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                    }
-                }
+				visible: root.isOpen || Layout.bottomMargin > -height
 
-                Behavior on opacity {
-                    NumbAnim {
-                        duration: Appearance.animations.durations.small
-                    }
-                }
+				Layout.topMargin: root.isOpen ? Appearance.spacing.normal : 0
 
-                Behavior on Layout.topMargin {
-                    NumbAnim {
-                        duration: Appearance.animations.durations.small
-                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                    }
-                }
+				Behavior on Layout.preferredHeight {
+					NumbAnim {
+						duration: Appearance.animations.durations.small
+						easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+					}
+				}
 
-                RowLayout {
-                    id: propertyButton
+				Behavior on opacity {
+					NumbAnim {
+						duration: Appearance.animations.durations.small
+					}
+				}
 
-                    anchors.centerIn: parent
-                    spacing: Appearance.spacing.small
+				Behavior on Layout.topMargin {
+					NumbAnim {
+						duration: Appearance.animations.durations.small
+						easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+					}
+				}
 
-                    MatIcon {
-                        icon: buttonDelegate.modelData.icon
-                        color: Colors.colors.on_primary
-                        font.pixelSize: Appearance.fonts.extraLarge
-                    }
+				RowLayout {
+					id: propertyButton
 
-                    StyledText {
-                        text: buttonDelegate.modelData.name
-                        color: Colors.colors.on_primary
-                        font.pixelSize: Appearance.fonts.large
-                    }
-                }
+					anchors.centerIn: parent
+					spacing: Appearance.spacing.small
 
-                MouseArea {
-                    id: mouseArea
+					MatIcon {
+						icon: buttonDelegate.modelData.icon
+						color: Colors.colors.on_primary
+						font.pixelSize: Appearance.fonts.extraLarge
+					}
 
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: buttonDelegate.modelData.action()
-                }
-            }
-        }
-    }
+					StyledText {
+						text: buttonDelegate.modelData.name
+						color: Colors.colors.on_primary
+						font.pixelSize: Appearance.fonts.large
+					}
+				}
 
-    StyledRect {
-        id: toggleButton
+				MouseArea {
+					id: mouseArea
 
-        Layout.alignment: Qt.AlignBottom
+					anchors.fill: parent
 
-        Layout.preferredWidth: 56
-        Layout.preferredHeight: 56
+					hoverEnabled: true
 
-        color: {
-            if (mouseAreaToggle.containsPress)
-            Colors.withAlpha(Colors.colors.primary, 0.08);
-            else if (mouseAreaToggle.containsMouse)
-            Colors.withAlpha(Colors.colors.primary, 0.1);
-            else
-            Colors.colors.primary;
-        }
+					cursorShape: Qt.PointingHandCursor
+					onClicked: buttonDelegate.modelData.action()
+				}
+			}
+		}
+	}
 
-        radius: Appearance.rounding.full
+	StyledRect {
+		id: toggleButton
 
-        MatIcon {
-            id: arrowIcon
+		Layout.alignment: Qt.AlignBottom
 
-            anchors.centerIn: parent
-            icon: root.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_up"
-            color: Colors.colors.on_primary
-            font.pixelSize: Appearance.fonts.extraLarge
+		Layout.preferredWidth: 56
+		Layout.preferredHeight: 56
 
-            RotationAnimator on rotation {
-                id: rotateArrowIcon
+		color: {
+			if (mouseAreaToggle.containsPress)
+				Colors.withAlpha(Colors.colors.primary, 0.08);
+			else if (mouseAreaToggle.containsMouse)
+				Colors.withAlpha(Colors.colors.primary, 0.1);
+			else
+				Colors.colors.primary;
+		}
 
-                from: 0
-                to: 180
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-                running: false
-            }
-        }
+		radius: Appearance.rounding.full
 
-        MouseArea {
-            id: mouseAreaToggle
+		MatIcon {
+			id: arrowIcon
 
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                root.isOpen = !root.isOpen;
-                rotateArrowIcon.running = !rotateArrowIcon.running;
-            }
-        }
-    }
+			anchors.centerIn: parent
+			icon: root.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_up"
+			color: Colors.colors.on_primary
+			font.pixelSize: Appearance.fonts.extraLarge
+
+			RotationAnimator on rotation {
+				id: rotateArrowIcon
+
+				from: 0
+				to: 180
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
+				running: false
+			}
+		}
+
+		MouseArea {
+			id: mouseAreaToggle
+
+			anchors.fill: parent
+
+			hoverEnabled: true
+
+			cursorShape: Qt.PointingHandCursor
+			onClicked: {
+				root.isOpen = !root.isOpen;
+				rotateArrowIcon.running = !rotateArrowIcon.running;
+			}
+		}
+	}
 }

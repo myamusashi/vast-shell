@@ -6,68 +6,71 @@ import Quickshell.Wayland
 import QtQuick
 
 Scope {
-    id: root
+	id: root
 
-    FileView {
-        id: wallid
-        path: Qt.resolvedUrl(Quickshell.env("HOME") + "/.cache/wall/path.txt")
+	FileView {
+		id: wallid
+		path: Qt.resolvedUrl(Quickshell.env("HOME") + "/.cache/wall/path.txt")
 
-        watchChanges: true
-        onFileChanged: reload()
-        onAdapterUpdated: writeAdapter()
-    }
+		watchChanges: true
 
-    property string wallSrc: wallid.text()
+		onFileChanged: reload()
+		onAdapterUpdated: writeAdapter()
+	}
 
-    Variants {
-        model: Quickshell.screens
+	property string wallSrc: wallid.text()
 
-        delegate: WlrLayershell {
-            id: wall
+	Variants {
+		model: Quickshell.screens
 
-            required property ShellScreen modelData
+		delegate: WlrLayershell {
+			id: wall
 
-            anchors {
-                left: true
-                right: true
-                top: true
-                bottom: true
-            }
+			required property ShellScreen modelData
 
-            color: "transparent"
-            screen: modelData
-            layer: WlrLayer.Background
-            focusable: false
-            exclusiveZone: 1
-            surfaceFormat.opaque: false
+			anchors {
+				left: true
+				right: true
+				top: true
+				bottom: true
+			}
 
-            Image {
-                id: img
+			color: "transparent"
+			screen: modelData
+			layer: WlrLayer.Background
+			focusable: false
 
-                antialiasing: true
-                asynchronous: true
-                mipmap: true
-                smooth: true
+			exclusiveZone: 1
+			surfaceFormat.opaque: false
 
-                source: root.wallSrc.trim()
+			Image {
+				id: img
 
-                fillMode: Image.PreserveAspectFit
-                width: parent.width
-                height: parent.height
-            }
-        }
-    }
-    IpcHandler {
-        target: "img"
+				antialiasing: true
 
-        function set(path: string): void {
-            Quickshell.execDetached({
-                                        command: ["sh", "-c", `echo ${path} > ${Quickshell.env("HOME")
-                                            + "/.cache/wall/path.txt"}`]
-                                    });
-        }
-        function get(): string {
-            return root.wallSrc.trim();
-        }
-    }
+				asynchronous: true
+
+				mipmap: true
+				smooth: true
+
+				source: root.wallSrc.trim()
+
+				fillMode: Image.PreserveAspectFit
+				width: parent.width
+				height: parent.height
+			}
+		}
+	}
+	IpcHandler {
+		target: "img"
+
+		function set(path: string): void {
+			Quickshell.execDetached({
+				command: ["sh", "-c", "echo" + path + ">" + Quickshell.env("HOME") + "/.cache/wall/path.txt"]
+			});
+		}
+		function get(): string {
+			return root.wallSrc.trim();
+		}
+	}
 }

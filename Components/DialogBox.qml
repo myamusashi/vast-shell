@@ -7,102 +7,105 @@ import Quickshell
 import qs.Data
 
 Loader {
-    id: root
+	id: root
 
-    required property string header
-    required property string body
-    signal yesClicked
-    signal noClicked
+	required property string header
+	required property string body
+	signal yesClicked
+	signal noClicked
 
-    active: false
+	active: false
 
-    sourceComponent: PanelWindow {
-        anchors {
-            left: true
-            right: true
-            top: true
-            bottom: true
-        }
-        color: "transparent"
+	sourceComponent: PanelWindow {
+		anchors {
+			left: true
+			right: true
+			top: true
+			bottom: true
+		}
+		color: "transparent"
 
-        StyledRect {
-            anchors.centerIn: parent
-            implicitWidth: 400
-            implicitHeight: bodyText.lineCount > 4 ? bodyText.implicitHeight + 50 : 200
-            radius: Appearance.rounding.large
-            color: Colors.colors.surface_container_high
-            border.color: Colors.colors.outline
-            border.width: 2
+		StyledRect {
+			anchors.centerIn: parent
+			implicitWidth: 400
+			implicitHeight: bodyText.lineCount > 4 ? bodyText.implicitHeight + 50 : 200
+			radius: Appearance.rounding.large
+			color: Colors.colors.surface_container_high
+			border.color: Colors.colors.outline
+			border.width: 2
 
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 20
-                spacing: 20
+			ColumnLayout {
+				anchors.fill: parent
 
-                StyledText {
-                    id: headerText
+				anchors.margins: 20
 
-                    text: root.header
-                    color: Colors.colors.on_surface
-                    elide: Qt.ElideMiddle
-                    font.pixelSize: Appearance.fonts.extraLarge
-                    font.bold: true
-                    Layout.fillWidth: true
-                }
+				StyledText {
+					id: headerText
 
-                Rectangle {
-                    implicitHeight: 1
-                    implicitWidth: parent * 0.7
+					text: root.header
+					color: Colors.colors.on_surface
+					elide: Qt.ElideMiddle
+					font.pixelSize: Appearance.fonts.extraLarge
+					font.bold: true
 
-                    clip: true
+					Layout.fillWidth: true
+				}
 
-                    color: Colors.withAlpha(Colors.colors.outline, 0.3)
-                }
+				Rectangle {
+					implicitHeight: 1
+					implicitWidth: parent * 0.7
 
-                StyledText {
-                    id: bodyText
+					color: Colors.withAlpha(Colors.colors.outline, 0.3)
+				}
 
-                    text: root.body
-                    color: Colors.colors.on_background
-                    font.pixelSize: Appearance.fonts.large
-                    wrapMode: Text.WordWrap
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
+				StyledText {
+					id: bodyText
 
-                Rectangle {
-                    implicitHeight: 1
-                    implicitWidth: parent * 0.7
+					text: root.body
+					color: Colors.colors.on_background
+					font.pixelSize: Appearance.fonts.large
+					wrapMode: Text.WordWrap
+					Layout.fillWidth: true
+					Layout.fillHeight: true
+				}
 
-                    clip: true
+				Rectangle {
+					implicitHeight: 1
+					implicitWidth: parent * 0.7
 
-                    color: Colors.withAlpha(Colors.colors.outline, 0.3)
-                }
+					color: Colors.withAlpha(Colors.colors.outline, 0.3)
+				}
 
-                RowLayout {
-                    Layout.alignment: Qt.AlignRight
-                    Layout.fillWidth: true
-                    spacing: 10
+				RowLayout {
+					Layout.alignment: Qt.AlignRight
+					Layout.fillWidth: true
+					spacing: 10
 
-                    StyledButton {
-                        iconButton: "cancel"
-                        buttonTitle: "No"
-                        buttonColor: "transparent"
-                        buttonHoverColor: "transparent"
-                        buttonPressedColor: "transparent"
-                        onClicked: root.noClicked()
-                    }
+					StyledButton {
+						iconButton: "cancel"
 
-                    StyledButton {
-                        iconButton: "check"
-                        buttonTitle: "Yes"
-                        buttonColor: "transparent"
-                        buttonHoverColor: "transparent"
-                        buttonPressedColor: "transparent"
-                        onClicked: root.yesClicked()
-                    }
-                }
-            }
-        }
-    }
+						buttonTitle: "No"
+
+						buttonColor: "transparent"
+
+						buttonHoverColor: "transparent"
+						buttonPressedColor: "transparent"
+						onClicked: root.noClicked()
+					}
+
+					StyledButton {
+						iconButton: "check"
+
+						buttonTitle: "Yes"
+
+						buttonColor: "transparent"
+
+						buttonHoverColor: "transparent"
+						buttonPressedColor: "transparent"
+						onClicked: root.yesClicked()
+					}
+				}
+			}
+		}
+	}
 }

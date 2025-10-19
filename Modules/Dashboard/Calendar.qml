@@ -9,222 +9,230 @@ import qs.Helpers
 import qs.Components
 
 Loader {
-    active: true
+	active: true
 
-    anchors.fill: parent
+	anchors.fill: parent
 
-    sourceComponent: StyledRect {
-        anchors.fill: parent
-        color: Colors.colors.background
-        radius: Appearance.rounding.normal
-        border.color: Colors.colors.outline
-        border.width: 2
+	sourceComponent: StyledRect {
+		anchors.fill: parent
 
-        ColumnLayout {
-            id: root
+		color: Colors.colors.background
+		radius: Appearance.rounding.normal
+		border.color: Colors.colors.outline
+		border.width: 2
 
-            anchors.fill: parent
-            anchors.margins: Appearance.margin.normal
-            spacing: Appearance.spacing.normal
+		ColumnLayout {
+			id: root
 
-            property date currentDate: new Date()
-            property int currentYear: currentDate.getFullYear()
-            property int currentMonth: currentDate.getMonth()
-            property int cellWidth: Math.floor((width - anchors.margins * 2) / 7.2)
+			anchors.fill: parent
 
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 48
-                spacing: Appearance.spacing.normal
+			anchors.margins: Appearance.margin.normal
+			spacing: Appearance.spacing.normal
 
-                StyledRect {
-                    Layout.preferredWidth: 40
-                    Layout.preferredHeight: 40
-                    radius: Appearance.rounding.full
-                    color: {
-                        if (prevMouseArea.containsMouse && prevMouseArea.containsPress)
-                        return Colors.withAlpha(Colors.dark.primary, 0.12);
-                        else if (prevMouseArea.containsMouse)
-                        return Colors.withAlpha(Colors.dark.primary, 0.08);
-                        else
-                        return "transparent";
-                    }
+			property date currentDate: new Date()
+			property int currentYear: currentDate.getFullYear()
+			property int currentMonth: currentDate.getMonth()
+			property int cellWidth: Math.floor((width - anchors.margins * 2) / 7.2)
 
-                    MatIcon {
-                        id: prevIcon
+			RowLayout {
+				Layout.fillWidth: true
+				Layout.preferredHeight: 48
+				spacing: Appearance.spacing.normal
 
-                        anchors.centerIn: parent
-                        icon: "chevron_left"
-                        font.pixelSize: Appearance.fonts.large * 2
-                        color: Colors.colors.on_primary_container
-                    }
+				StyledRect {
+					Layout.preferredWidth: 40
+					Layout.preferredHeight: 40
+					radius: Appearance.rounding.full
+					color: {
+						if (prevMouseArea.containsMouse && prevMouseArea.containsPress)
+							return Colors.withAlpha(Colors.dark.primary, 0.12);
+						else if (prevMouseArea.containsMouse)
+							return Colors.withAlpha(Colors.dark.primary, 0.08);
+						else
+							return "transparent";
+					}
 
-                    MouseArea {
-                        id: prevMouseArea
+					MatIcon {
+						id: prevIcon
 
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        hoverEnabled: true
-                        onClicked: {
-                            root.currentMonth = root.currentMonth - 1;
-                            if (root.currentMonth < 0) {
-                                root.currentMonth = 11;
-                                root.currentYear = root.currentYear - 1;
-                            }
-                        }
-                    }
-                }
+						anchors.centerIn: parent
+						icon: "chevron_left"
+						font.pixelSize: Appearance.fonts.large * 2
+						color: Colors.colors.on_primary_container
+					}
 
-                StyledText {
-                    Layout.fillWidth: true
-                    text: {
-                        const monthNames = Array.from({
-                                                          length: 12
-                                                      }, (_, i) => Qt.locale().monthName(i, Qt.locale(
-                                                                                             ).LongFormat));
-                        return monthNames[root.currentMonth] + " " + root.currentYear;
-                    }
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.weight: 600
-                    color: Colors.colors.on_background
-                    font.pixelSize: Appearance.fonts.large
-                }
+					MouseArea {
+						id: prevMouseArea
 
-                StyledRect {
-                    Layout.preferredWidth: 40
-                    Layout.preferredHeight: 40
-                    radius: Appearance.rounding.full
-                    color: {
-                        if (nextMouseArea.containsMouse && nextMouseArea.containsPress)
-                        return Colors.withAlpha(Colors.dark.primary, 0.12);
-                        else if (nextMouseArea.containsMouse)
-                        return Colors.withAlpha(Colors.dark.primary, 0.08);
-                        else
-                        return "transparent";
-                    }
+						anchors.fill: parent
 
-                    MatIcon {
-                        id: nextIcon
-                        anchors.centerIn: parent
-                        icon: "chevron_right"
-                        font.pixelSize: Appearance.fonts.large * 2
-                        color: Colors.colors.primary
-                    }
+						cursorShape: Qt.PointingHandCursor
+						hoverEnabled: true
 
-                    MouseArea {
-                        id: nextMouseArea
+						onClicked: {
+							root.currentMonth = root.currentMonth - 1;
+							if (root.currentMonth < 0) {
+								root.currentMonth = 11;
+								root.currentYear = root.currentYear - 1;
+							}
+						}
+					}
+				}
 
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        hoverEnabled: true
-                        onClicked: {
-                            root.currentMonth = root.currentMonth + 1;
-                            if (root.currentMonth > 11) {
-                                root.currentMonth = 0;
-                                root.currentYear = root.currentYear + 1;
-                            }
-                        }
-                    }
-                }
-            }
+				StyledText {
+					Layout.fillWidth: true
+					text: {
+						const monthNames = Array.from({
+							length: 12
+						}, (_, i) => Qt.locale().monthName(i, Qt.locale().LongFormat));
+						return monthNames[root.currentMonth] + " " + root.currentYear;
+					}
+					horizontalAlignment: Text.AlignHCenter
+					verticalAlignment: Text.AlignVCenter
+					font.weight: 600
 
-            DayOfWeekRow {
-                Layout.fillWidth: true
-                Layout.topMargin: Appearance.spacing.small
-                Layout.preferredHeight: 32
+					color: Colors.colors.on_background
+					font.pixelSize: Appearance.fonts.large
+				}
 
-                delegate: StyledRect {
-                    id: daysOfWeekDelegate
+				StyledRect {
+					Layout.preferredWidth: 40
+					Layout.preferredHeight: 40
+					radius: Appearance.rounding.full
+					color: {
+						if (nextMouseArea.containsMouse && nextMouseArea.containsPress)
+							return Colors.withAlpha(Colors.dark.primary, 0.12);
+						else if (nextMouseArea.containsMouse)
+							return Colors.withAlpha(Colors.dark.primary, 0.08);
+						else
+							return "transparent";
+					}
 
-                    required property var model
+					MatIcon {
+						id: nextIcon
+						anchors.centerIn: parent
+						icon: "chevron_right"
+						font.pixelSize: Appearance.fonts.large * 2
+						color: Colors.colors.primary
+					}
 
-                    implicitWidth: root.cellWidth
-                    implicitHeight: 32
-                    color: "transparent"
+					MouseArea {
+						id: nextMouseArea
 
-                    StyledText {
-                        anchors.centerIn: parent
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        text: daysOfWeekDelegate.model.shortName
-                        color: Colors.colors.on_surface_variant
-                        font.pixelSize: Appearance.fonts.small * 1.2
-                        font.weight: 600
-                    }
-                }
-            }
+						anchors.fill: parent
 
-            MonthGrid {
-                id: monthGrid
+						cursorShape: Qt.PointingHandCursor
+						hoverEnabled: true
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.topMargin: Appearance.spacing.small
+						onClicked: {
+							root.currentMonth = root.currentMonth + 1;
+							if (root.currentMonth > 11) {
+								root.currentMonth = 0;
+								root.currentYear = root.currentYear + 1;
+							}
+						}
+					}
+				}
+			}
 
-                property int cellWidth: root.cellWidth
-                property int cellHeight: Math.floor(height / 7)
+			DayOfWeekRow {
+				Layout.fillWidth: true
+				Layout.topMargin: Appearance.spacing.small
+				Layout.preferredHeight: 32
 
-                month: root.currentMonth
-                year: root.currentYear
+				delegate: StyledRect {
+					id: daysOfWeekDelegate
 
-                delegate: StyledRect {
-                    id: dayItem
+					required property var model
 
-                    required property var model
+					implicitWidth: root.cellWidth
+					implicitHeight: 32
+					color: "transparent"
 
-                    width: monthGrid.cellWidth
-                    height: monthGrid.cellHeight
+					StyledText {
+						anchors.centerIn: parent
+						horizontalAlignment: Text.AlignHCenter
+						verticalAlignment: Text.AlignVCenter
+						text: daysOfWeekDelegate.model.shortName
+						color: Colors.colors.on_surface_variant
+						font.pixelSize: Appearance.fonts.small * 1.2
+						font.weight: 600
+					}
+				}
+			}
 
-                    color: {
-                        if (dayItem.model.today)
-                        return Colors.colors.primary;
-                        else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
-                        return Colors.colors.surface_variant;
+			MonthGrid {
+				id: monthGrid
 
-                        return "transparent";
-                    }
+				Layout.fillWidth: true
+				Layout.fillHeight: true
+				Layout.topMargin: Appearance.spacing.small
 
-                    radius: Appearance.rounding.small
+				property int cellWidth: root.cellWidth
+				property int cellHeight: Math.floor(height / 7)
 
-                    implicitWidth: 40
-                    implicitHeight: 40
+				month: root.currentMonth
+				year: root.currentYear
 
-                    MouseArea {
-                        id: mouseArea
+				delegate: StyledRect {
+					id: dayItem
 
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        visible: dayItem.model.month === root.currentMonth
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {}
-                    }
+					required property var model
 
-                    StyledText {
-                        anchors.centerIn: parent
-                        text: Qt.formatDate(dayItem.model.date, "d")
-                        color: {
-                            if (dayItem.model.today)
-                            return Colors.colors.on_primary;
-                            else if (dayItem.model.month === root.currentMonth)
-                            return Colors.colors.on_surface;
-                            else
-                            return Colors.colors.outline;
-                        }
-                        font.pixelSize: Appearance.fonts.small * 1.3
-                        font.weight: {
-                            if (dayItem.model.today)
-                            return 1000;
-                            else if (dayItem.model.month === root.currentMonth)
-                            return 600;
-                            else
-                            return 100;
-                        }
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                }
-            }
-        }
-    }
+					width: monthGrid.cellWidth
+					height: monthGrid.cellHeight
+
+					color: {
+						if (dayItem.model.today)
+							return Colors.colors.primary;
+						else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
+							return Colors.colors.surface_variant;
+
+						return "transparent";
+					}
+
+					radius: Appearance.rounding.small
+
+					implicitWidth: 40
+					implicitHeight: 40
+
+					MouseArea {
+						id: mouseArea
+
+						anchors.fill: parent
+
+						hoverEnabled: true
+
+						visible: dayItem.model.month === root.currentMonth
+						cursorShape: Qt.PointingHandCursor
+						onClicked: {}
+					}
+
+					StyledText {
+						anchors.centerIn: parent
+						text: Qt.formatDate(dayItem.model.date, "d")
+						color: {
+							if (dayItem.model.today)
+								return Colors.colors.on_primary;
+							else if (dayItem.model.month === root.currentMonth)
+								return Colors.colors.on_surface;
+							else
+								return Colors.colors.outline;
+						}
+						font.pixelSize: Appearance.fonts.small * 1.3
+						font.weight: {
+							if (dayItem.model.today)
+								return 1000;
+							else if (dayItem.model.month === root.currentMonth)
+								return 600;
+							else
+								return 100;
+						}
+						horizontalAlignment: Text.AlignHCenter
+						verticalAlignment: Text.AlignVCenter
+					}
+				}
+			}
+		}
+	}
 }

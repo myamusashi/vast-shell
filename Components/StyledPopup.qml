@@ -5,33 +5,33 @@ import Quickshell.Widgets
 import qs.Data
 
 PopupWindow {
-    id: root
+	id: root
 
-    property bool opened: false
-    required property Component content
+	property bool opened: false
+	required property Component content
 
-    color: "transparent"
+	color: "transparent"
 
-    visible: opened ? true : false
+	visible: opened ? true : false
 
-    implicitWidth: background.width
-    implicitHeight: background.height
+	implicitWidth: background.width
+	implicitHeight: background.height
 
-    StyledRect {
-        id: background
+	StyledRect {
+		id: background
 
-        width: 300
-        height: 50
+		width: 300
+		height: 50
 
-        opacity: root.opened ? 1 : 0
+		opacity: root.opened ? 1 : 0
 
-        Behavior on opacity {
-            NumbAnim {}
-        }
+		Behavior on opacity {
+			NumbAnim {}
+		}
 
-        Loader {
-            active: root.visible
-            sourceComponent: root.content
-        }
-    }
+		Loader {
+			active: root.visible
+			sourceComponent: root.content
+		}
+	}
 }
