@@ -12,23 +12,23 @@ import qs.Helpers
 import qs.Components
 
 StyledPopup {
-    id: root
+	id: root
 
-    property PwNode node: Pipewire.defaultAudioSink
-    PwObjectTracker {
-        objects: [root.node]
-    }
+	property PwNode node: Pipewire.defaultAudioSink
+	PwObjectTracker {
+		objects: [root.node]
+	}
 
-    content: Control {}
+	content: Control {}
 
-    component Control: RowLayout {
-        anchors.fill: parent
+	component Control: RowLayout {
+		anchors.fill: parent
 
-        StyledText {
-            text: "test"
-            color: Colors.colors.on_background
-        }
-    }
+		StyledText {
+			text: "test"
+			color: Colors.colors.on_background
+		}
+	}
 }
 
 // LazyLoader {

@@ -12,80 +12,84 @@ import qs.Data
 import qs.Components
 
 Scope {
-    id: root
+	id: root
 
-    property bool isBarOpen: true
+	property bool isBarOpen: true
 
-    Variants {
-        model: Quickshell.screens
-        delegate: PanelWindow {
-            id: bar
+	Variants {
+		model: Quickshell.screens
+		delegate: PanelWindow {
+			id: bar
 
-            required property ShellScreen modelData
+			required property ShellScreen modelData
 
-            anchors {
-                left: true
-                right: true
-                top: true
-            }
-            color: "transparent"
-            WlrLayershell.namespace: "shell:bar"
-            screen: modelData
-            exclusionMode: ExclusionMode.Auto
-            focusable: false
-            implicitHeight: 40
-            exclusiveZone: 1
-            surfaceFormat.opaque: false
-            margins.top: 2
-            margins.left: 2
-            margins.right: 2
-            visible: root.isBarOpen
+			anchors {
+				left: true
+				right: true
+				top: true
+			}
+			color: "transparent"
+			WlrLayershell.namespace: "shell:bar"
+			screen: modelData
+			exclusionMode: ExclusionMode.Auto
+			focusable: false
 
-            Loader {
-                active: root.isBarOpen
-                asynchronous: true
+			implicitHeight: 40
+			exclusiveZone: 1
+			surfaceFormat.opaque: false
+			margins.top: 2
 
-                anchors.fill: parent
+			margins.left: 2
 
-                sourceComponent: StyledRect {
-                    id: base
+			margins.right: 2
+			visible: root.isBarOpen
 
-                    color: Colors.colors.background
-                    radius: Appearance.rounding.large
-                    anchors.fill: parent
-                    anchors.margins: 4
+			Loader {
+				active: root.isBarOpen
+				asynchronous: true
 
-                    RowLayout {
-                        width: parent.width
-                        anchors.fill: parent
+				anchors.fill: parent
 
-                        Left {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                        }
+				sourceComponent: StyledRect {
+					id: base
 
-                        Middle {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignCenter
-                        }
+					color: Colors.colors.background
+					radius: Appearance.rounding.large
+					anchors.fill: parent
 
-                        Right {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                        }
-                    }
-                }
-            }
-        }
-    }
-    IpcHandler {
-        target: "layerShell"
+					anchors.margins: 4
 
-        function toggle(): void {
-            root.isBarOpen = !root.isBarOpen;
-        }
-    }
+					RowLayout {
+						width: parent.width
+						anchors.fill: parent
+
+						Left {
+							Layout.fillHeight: true
+							Layout.preferredWidth: parent.width / 6
+							Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+						}
+
+						Middle {
+							Layout.fillHeight: true
+							Layout.preferredWidth: parent.width / 6
+							Layout.alignment: Qt.AlignCenter
+						}
+
+						Right {
+							Layout.fillHeight: true
+							Layout.preferredWidth: parent.width / 6
+							Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+						}
+					}
+				}
+			}
+		}
+	}
+	IpcHandler {
+		target: "layerShell"
+
+		function toggle(): void {
+			root.isBarOpen = !root.isBarOpen;
+		}
+	}
 }

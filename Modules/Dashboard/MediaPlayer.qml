@@ -11,322 +11,335 @@ import qs.Helpers
 import qs.Components
 
 Loader {
-    active: true
+	active: true
 
-    anchors.fill: parent
+	anchors.fill: parent
 
-    sourceComponent: StyledRect {
-        id: root
+	sourceComponent: StyledRect {
+		id: root
 
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        color: Player.active == null ? Colors.withAlpha(Colors.colors.background, 0.8) : Colors.withAlpha(
-                                           Colors.colors.background, 0.5)
-        radius: Appearance.rounding.normal
-        border.color: Colors.colors.outline
-        border.width: 2
-        clip: true
+		Layout.fillWidth: true
+		Layout.fillHeight: true
+		color: Player.active == null ? Colors.withAlpha(Colors.colors.background, 0.8) : Colors.withAlpha(Colors.colors.background, 0.5)
+		radius: Appearance.rounding.normal
+		border.color: Colors.colors.outline
+		border.width: 2
 
-        StyledRect {
-            id: wallCover
+		clip: true
 
-            anchors.fill: parent
-            color: "transparent"
-            z: -1
+		StyledRect {
+			id: wallCover
 
-            Loader {
+			anchors.fill: parent
 
-                active: Player.active == null
-                asynchronous: true
+			color: "transparent"
+			z: -1
 
-                anchors.fill: parent
-                sourceComponent: AnimatedImage {
-                    id: coverNull
+			Loader {
 
-                    anchors.fill: parent
+				active: Player.active == null
+				asynchronous: true
 
-                    visible: Player.active == null
-                    source: Qt.resolvedUrl("root:/Assets/kuru.gif")
-                }
-            }
+				anchors.fill: parent
 
-            Loader {
-                id: coverImageLoader
-                active: Player.active !== null
-                asynchronous: true
-                anchors.fill: parent
-                sourceComponent: Image {
-                    id: coverSource
+				sourceComponent: AnimatedImage {
+					id: coverNull
 
-                    anchors.fill: parent
+					anchors.fill: parent
 
-                    visible: false
-                    source: Player.active.trackArtUrl
-                    fillMode: Image.PreserveAspectCrop
+					visible: Player.active == null
+					source: Qt.resolvedUrl("root:/Assets/kuru.gif")
+				}
+			}
 
-                    layer.enabled: true
-                    layer.effect: MultiEffect {
-                        autoPaddingEnabled: false
+			Loader {
+				id: coverImageLoader
+				active: Player.active !== null
+				asynchronous: true
 
-                        blurEnabled: true
-                        blurMax: 40
-                        blur: 0.7
+				anchors.fill: parent
 
-                        source: coverSource
-                        anchors.fill: parent
-                        maskEnabled: true
-                        maskSource: maskWallCover
-                    }
-                }
-            }
+				sourceComponent: Image {
+					id: coverSource
 
-            // MultiEffect {
-            // 	autoPaddingEnabled: false
-            //
-            // 	blurEnabled: true
-            // 	blurMax: 40
-            // 	blur: 0.7
-            //
-            // 	source:
-            // 	anchors.fill: parent
-            // 	maskEnabled: true
-            // 	maskSource: maskWallCover
-            // }
+					anchors.fill: parent
 
-            Item {
-                id: maskWallCover
+					visible: false
+					source: Player.active.trackArtUrl
+					fillMode: Image.PreserveAspectCrop
 
-                anchors.fill: parent
-                layer.enabled: true
-                visible: false
-                StyledRect {
-                    width: wallCover.width
-                    height: wallCover.height
-                    radius: root.radius
-                }
-            }
-        }
+					layer.enabled: true
+					layer.effect: MultiEffect {
+						autoPaddingEnabled: false
 
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
+						blurEnabled: true
 
-            if (hours > 0)
-                return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+						blurMax: 40
+						blur: 0.7
 
-            return `${minutes}:${secs.toString().padStart(2, '0')}`;
-        }
+						source: coverSource
+						anchors.fill: parent
 
-        ColumnLayout {
-            anchors.fill: parent
+						maskEnabled: true
 
-            Item {
-                id: mprisControll
+						maskSource: maskWallCover
+					}
+				}
+			}
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+			// MultiEffect {
+			// 	autoPaddingEnabled: false
+			//
+			// 	blurEnabled: true
+			// 	blurMax: 40
+			// 	blur: 0.7
+			//
+			// 	source:
+			// 	anchors.fill: parent
+			// 	maskEnabled: true
+			// 	maskSource: maskWallCover
+			// }
 
-                StyledRect {
-                    anchors.fill: parent
-                    color: "transparent"
+			Item {
+				id: maskWallCover
 
-                    Column {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.top: parent.top
-                        anchors.topMargin: 60
-                        spacing: Appearance.spacing.large
+				anchors.fill: parent
 
-                        Item {
-                            id: coverContainer
+				layer.enabled: true
+				visible: false
+				StyledRect {
+					width: wallCover.width
+					height: wallCover.height
+					radius: root.radius
+				}
+			}
+		}
 
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            width: 100
-                            height: 100
+		function formatTime(seconds) {
+			const hours = Math.floor(seconds / 3600);
+			const minutes = Math.floor((seconds % 3600) / 60);
+			const secs = Math.floor(seconds % 60);
 
-                            Image {
-                                id: cover
+			if (hours > 0)
+				return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-                                anchors.centerIn: parent
+			return `${minutes}:${secs.toString().padStart(2, '0')}`;
+		}
 
-                                property string notFoundImage: Qt.resolvedUrl(Quickshell.shellDir
-                                                                              + "/Assets/image_not_found.svg")
+		ColumnLayout {
+			anchors.fill: parent
 
-                                visible: false
-                                source: Player.active == null ? notFoundImage : Qt.resolvedUrl(
-                                                                    Player.active.trackArtUrl)
-                                fillMode: Image.PreserveAspectCrop
-                            }
+			Item {
+				id: mprisControll
 
-                            MultiEffect {
-                                source: cover
-                                anchors.fill: parent
-                                maskEnabled: true
-                                maskSource: maskCover
-                            }
+				Layout.fillWidth: true
+				Layout.fillHeight: true
 
-                            Item {
-                                id: maskCover
+				StyledRect {
+					anchors.fill: parent
 
-                                anchors.fill: parent
-                                layer.enabled: true
-                                visible: false
-                                StyledRect {
-                                    anchors.fill: parent
-                                    radius: width / 2
-                                }
-                            }
-                        }
+					color: "transparent"
 
-                        Column {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            spacing: Appearance.spacing.small
+					Column {
+						anchors.horizontalCenter: parent.horizontalCenter
+						anchors.top: parent.top
+						anchors.topMargin: 60
+						spacing: Appearance.spacing.large
 
-                            StyledText {
-                                id: titleText
+						Item {
+							id: coverContainer
 
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: Player.active == null ? "null" : Player.active.trackTitle
-                                color: Colors.colors.on_background
-                                font.pixelSize: Appearance.fonts.medium * 1.5
-                                font.bold: true
-                                horizontalAlignment: Text.AlignHCenter
-                                wrapMode: Text.WordWrap
-                                width: Math.min(implicitWidth, 300)
-                            }
+							anchors.horizontalCenter: parent.horizontalCenter
+							width: 100
+							height: 100
 
-                            StyledText {
-                                id: artistText
+							Image {
+								id: cover
 
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: Player.active == null ? "null" : Player.active.trackArtist
-                                color: Colors.colors.on_background
-                                font.pixelSize: Appearance.fonts.medium * 1.1
-                                opacity: 0.8
-                                horizontalAlignment: Text.AlignHCenter
-                                wrapMode: Text.WordWrap
-                                width: Math.min(implicitWidth, 300)
-                            }
-                        }
+								anchors.centerIn: parent
 
-                        Row {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            spacing: Appearance.spacing.large
+								property string notFoundImage: Qt.resolvedUrl(Quickshell.shellDir + "/Assets/image_not_found.svg")
 
-                            Repeater {
-                                model: [
-                                    {
-                                        icon: "skip_previous",
-                                        action: () => {
-                                            if (!Player.active.canGoPrevious) {
-                                                console.log("Can't go back");
-                                                return;
-                                            }
-                                            Player.active.previous();
-                                        }
-                                    },
-                                    {
-                                        icon: Player.active.playbackState === MprisPlaybackState.Playing
-                                              ? "pause_circle" : "play_circle",
-                                        action: () => {
-                                            Player.active.togglePlaying();
-                                        }
-                                    },
-                                    {
-                                        icon: "skip_next",
-                                        action: () => {
-                                            Player.active.next();
-                                        }
-                                    }
-                                ]
+								visible: false
+								source: Player.active == null ? notFoundImage : Qt.resolvedUrl(Player.active.trackArtUrl)
+								fillMode: Image.PreserveAspectCrop
+							}
 
-                                delegate: Item {
-                                    id: delegateController
+							MultiEffect {
+								source: cover
+								anchors.fill: parent
 
-                                    required property var modelData
-                                    width: 44
-                                    height: 44
+								maskEnabled: true
 
-                                    StyledRect {
-                                        id: bgCon
+								maskSource: maskCover
+							}
 
-                                        anchors.fill: parent
-                                        anchors.margins: 4
-                                        color: Colors.colors.primary
-                                        radius: Appearance.rounding.small
-                                        opacity: clickArea.containsMouse ? 1 : 0.7
-                                        scale: clickArea.pressed ? 0.95 : 1.0
+							Item {
+								id: maskCover
 
-                                        Behavior on opacity {
-                                            NumbAnim {}
-                                        }
+								anchors.fill: parent
 
-                                        Behavior on scale {
-                                            NumbAnim {}
-                                        }
-                                    }
+								layer.enabled: true
+								visible: false
+								StyledRect {
+									anchors.fill: parent
 
-                                    MouseArea {
-                                        id: clickArea
+									radius: width / 2
+								}
+							}
+						}
 
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        hoverEnabled: true
-                                        onClicked: delegateController.modelData.action()
-                                    }
+						Column {
+							anchors.horizontalCenter: parent.horizontalCenter
+							spacing: Appearance.spacing.small
 
-                                    MatIcon {
-                                        anchors.centerIn: parent
-                                        color: Colors.colors.on_primary
-                                        font.pixelSize: Appearance.fonts.large * 1.5
-                                        icon: delegateController.modelData.icon
-                                    }
-                                }
-                            }
-                        }
+							StyledText {
+								id: titleText
 
-                        Column {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            spacing: 8
+								anchors.horizontalCenter: parent.horizontalCenter
+								text: Player.active == null ? "null" : Player.active.trackTitle
+								color: Colors.colors.on_background
+								font.pixelSize: Appearance.fonts.medium * 1.5
+								font.bold: true
 
-                            StyledText {
-                                id: timeTrack
+								horizontalAlignment: Text.AlignHCenter
+								wrapMode: Text.WordWrap
+								width: Math.min(implicitWidth, 300)
+							}
 
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                text: Player.active == null ? "00:00" : root.formatTime(
-                                                                  Player.active.position)
-                                color: Colors.colors.on_background
+							StyledText {
+								id: artistText
 
-                                Timer {
-                                    running: Player.active.playbackState == MprisPlaybackState.Playing
-                                    interval: 100
-                                    repeat: true
-                                    onTriggered: Player.active.positionChanged()
-                                }
-                            }
+								anchors.horizontalCenter: parent.horizontalCenter
+								text: Player.active == null ? "null" : Player.active.trackArtist
+								color: Colors.colors.on_background
+								font.pixelSize: Appearance.fonts.medium * 1.1
+								opacity: 0.8
+								horizontalAlignment: Text.AlignHCenter
+								wrapMode: Text.WordWrap
+								width: Math.min(implicitWidth, 300)
+							}
+						}
 
-                            StyledSlide {
-                                id: barSlide
+						Row {
+							anchors.horizontalCenter: parent.horizontalCenter
+							spacing: Appearance.spacing.large
 
-                                value: Player.active.length > 0 ? Player.active.position
-                                                                  / Player.active.length : 0
+							Repeater {
+								model: [
+									{
+										icon: "skip_previous",
+										action: () => {
+											if (!Player.active.canGoPrevious) {
+												console.log("Can't go back");
+												return;
+											}
+											Player.active.previous();
+										}
+									},
+									{
+										icon: Player.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle",
+										action: () => {
+											Player.active.togglePlaying();
+										}
+									},
+									{
+										icon: "skip_next",
+										action: () => {
+											Player.active.next();
+										}
+									}
+								]
 
-                                valueWidth: 300
-                                valueHeight: 10
+								delegate: Item {
+									id: delegateController
 
-                                FrameAnimation {
-                                    running: Player.active.playbackState == MprisPlaybackState.Playing
-                                    onTriggered: {
-                                        Player.active.positionChanged();
-                                    }
-                                }
+									required property var modelData
+									width: 44
+									height: 44
 
-                                onMoved: Player.active.position = value * Player.active.length
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+									StyledRect {
+										id: bgCon
+
+										anchors.fill: parent
+
+										anchors.margins: 4
+										color: Colors.colors.primary
+										radius: Appearance.rounding.small
+										opacity: clickArea.containsMouse ? 1 : 0.7
+										scale: clickArea.pressed ? 0.95 : 1.0
+
+										Behavior on opacity {
+											NumbAnim {}
+										}
+
+										Behavior on scale {
+											NumbAnim {}
+										}
+									}
+
+									MouseArea {
+										id: clickArea
+
+										anchors.fill: parent
+
+										cursorShape: Qt.PointingHandCursor
+										hoverEnabled: true
+
+										onClicked: delegateController.modelData.action()
+									}
+
+									MatIcon {
+										anchors.centerIn: parent
+										color: Colors.colors.on_primary
+										font.pixelSize: Appearance.fonts.large * 1.5
+										icon: delegateController.modelData.icon
+									}
+								}
+							}
+						}
+
+						Column {
+							anchors.horizontalCenter: parent.horizontalCenter
+							spacing: 8
+
+							StyledText {
+								id: timeTrack
+
+								anchors.horizontalCenter: parent.horizontalCenter
+								text: Player.active == null ? "00:00" : root.formatTime(Player.active.position)
+								color: Colors.colors.on_background
+
+								Timer {
+									running: Player.active.playbackState == MprisPlaybackState.Playing
+									interval: 100
+									repeat: true
+									onTriggered: Player.active.positionChanged()
+								}
+							}
+
+							StyledSlide {
+								id: barSlide
+
+								value: Player.active.length > 0 ? Player.active.position / Player.active.length : 0
+
+								valueWidth: 300
+
+								valueHeight: 10
+
+								FrameAnimation {
+									running: Player.active.playbackState == MprisPlaybackState.Playing
+									onTriggered: {
+										Player.active.positionChanged();
+									}
+								}
+
+								onMoved: Player.active.position = value * Player.active.length
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

@@ -9,246 +9,249 @@ import qs.Helpers
 import qs.Components
 
 StyledRect {
-    Layout.fillHeight: true
-    clip: true
-    color: "transparent"
-    // color: Colors.colors.withAlpha(Colors.colors.background, 0.79)
-    implicitWidth: container.width
-    radius: Appearance.rounding.small
+	Layout.fillHeight: true
+	clip: true
+	color: "transparent"
+	// color: Colors.colors.withAlpha(Colors.colors.background, 0.79)
+	implicitWidth: container.width
+	radius: Appearance.rounding.small
 
-    Behavior on implicitWidth {
-        NumbAnim {}
-    }
+	Behavior on implicitWidth {
+		NumbAnim {}
+	}
 
-    MouseArea {
-        id: mArea
+	MouseArea {
+		id: mArea
 
-        anchors.fill: parent
-        hoverEnabled: true
+		anchors.fill: parent
 
-        RowLayout {
-            id: container
+		hoverEnabled: true
 
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.top: parent.top
-            clip: true
+		RowLayout {
+			id: container
 
-            Repeater {
-                model: [
-                    {
-                        icon: "energy_savings_leaf",
-                        profile: PowerProfile.PowerSaver
-                    },
-                    {
-                        icon: "balance",
-                        profile: PowerProfile.Balanced
-                    },
-                    {
-                        icon: "rocket_launch",
-                        profile: PowerProfile.Performance
-                    },
-                ]
+			anchors.bottom: parent.bottom
+			anchors.left: parent.left
+			anchors.top: parent.top
+			clip: true
 
-                delegate: Item {
-                    id: delegateRoot
+			Repeater {
+				model: [
+					{
+						icon: "energy_savings_leaf",
+						profile: PowerProfile.PowerSaver
+					},
+					{
+						icon: "balance",
+						profile: PowerProfile.Balanced
+					},
+					{
+						icon: "rocket_launch",
+						profile: PowerProfile.Performance
+					},
+				]
 
-                    required property int index
-                    required property var modelData
+				delegate: Item {
+					id: delegateRoot
 
-                    property bool isAnimating: false
+					required property int index
+					required property var modelData
 
-                    Layout.fillHeight: true
-                    implicitWidth: this.height ? this.height : 1
+					property bool isAnimating: false
 
-                    StyledRect {
-                        id: bgCon
-                        anchors.fill: parent
-                        anchors.margins: 2
-                        color: Colors.colors.primary
-                        radius: Appearance.rounding.small
-                        visible: delegateRoot.modelData.profile == PowerProfiles.profile
+					Layout.fillHeight: true
+					implicitWidth: this.height ? this.height : 1
 
-                        Behavior on visible {
-                            enabled: !delegateRoot.isAnimating
-                            NumbAnim {}
-                        }
+					StyledRect {
+						id: bgCon
+						anchors.fill: parent
 
-                        SequentialAnimation {
-                            id: selectionPulse
-                            loops: 1
-                            running: false
+						anchors.margins: 2
+						color: Colors.colors.primary
+						radius: Appearance.rounding.small
+						visible: delegateRoot.modelData.profile == PowerProfiles.profile
 
-                            ParallelAnimation {
-                                ScaleAnimator {
-                                    target: bgCon
-                                    from: 1.0
-                                    to: 1.15
-                                    duration: Appearance.animations.durations.small
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-                                }
-                                NumbAnim {
-                                    target: bgCon
-                                    property: "opacity"
-                                    from: 1.0
-                                    to: 0.7
-                                }
-                            }
+						Behavior on visible {
+							enabled: !delegateRoot.isAnimating
+							NumbAnim {}
+						}
 
-                            ParallelAnimation {
-                                ScaleAnimator {
-                                    target: bgCon
-                                    from: 1.15
-                                    to: 1.0
-                                    duration: Appearance.animations.durations.normal
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-                                }
-                                NumbAnim {
-                                    target: bgCon
-                                    property: "opacity"
-                                    from: 0.7
-                                    to: 1.0
-                                    easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-                                }
-                            }
-                        }
-                    }
+						SequentialAnimation {
+							id: selectionPulse
+							loops: 1
+							running: false
 
-                    MArea {
-                        id: clickArea
-                        anchors.margins: 4
-                        layerColor: fgText.color
-                        cursorShape: Qt.PointingHandCursor
-                        layerRadius: 5
-                        visible: !bgCon.visible
+							ParallelAnimation {
+								ScaleAnimator {
+									target: bgCon
+									from: 1.0
+									to: 1.15
+									duration: Appearance.animations.durations.small
+									easing.type: Easing.BezierSpline
+									easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+								}
+								NumbAnim {
+									target: bgCon
+									property: "opacity"
+									from: 1.0
+									to: 0.7
+								}
+							}
 
-                        StyledRect {
-                            id: rippleEffect
-                            anchors.centerIn: parent
-                            width: 0
-                            height: width
-                            radius: width / 2
-                            color: Colors.colors.primary
-                            opacity: 0
+							ParallelAnimation {
+								ScaleAnimator {
+									target: bgCon
+									from: 1.15
+									to: 1.0
+									duration: Appearance.animations.durations.normal
+									easing.type: Easing.BezierSpline
+									easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+								}
+								NumbAnim {
+									target: bgCon
+									property: "opacity"
+									from: 0.7
+									to: 1.0
+									easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+								}
+							}
+						}
+					}
 
-                            ParallelAnimation {
-                                id: rippleAnimation
-                                running: false
+					MArea {
+						id: clickArea
+						anchors.margins: 4
+						layerColor: fgText.color
+						cursorShape: Qt.PointingHandCursor
+						layerRadius: 5
 
-                                NumbAnim {
-                                    target: rippleEffect
-                                    property: "width"
-                                    from: 0
-                                    to: Math.max(clickArea.width, clickArea.height) * 2
-                                    duration: Appearance.animations.durations.large
-                                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                                }
-                                SequentialAnimation {
-                                    NumbAnim {
-                                        target: rippleEffect
-                                        property: "opacity"
-                                        from: 0
-                                        to: 0.3
-                                        duration: Appearance.animations.durations.small
-                                        easing.bezierCurve: Appearance.animations.curves.standardAccel
-                                    }
-                                    NumbAnim {
-                                        target: rippleEffect
-                                        property: "opacity"
-                                        from: 0.3
-                                        to: 0
-                                        easing.bezierCurve: Appearance.animations.curves.standardDecel
-                                    }
-                                }
-                            }
-                        }
+						visible: !bgCon.visible
 
-                        SequentialAnimation {
-                            id: clickAnimation
-                            running: false
+						StyledRect {
+							id: rippleEffect
+							anchors.centerIn: parent
+							width: 0
+							height: width
+							radius: width / 2
+							color: Colors.colors.primary
+							opacity: 0
 
-                            onStarted: delegateRoot.isAnimating = true
-                            onFinished: delegateRoot.isAnimating = false
+							ParallelAnimation {
+								id: rippleAnimation
+								running: false
 
-                            ParallelAnimation {
-                                ScaleAnimator {
-                                    target: delegateRoot
-                                    from: 1.0
-                                    to: 0.95
-                                    duration: Appearance.animations.durations.small
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-                                }
+								NumbAnim {
+									target: rippleEffect
+									property: "width"
+									from: 0
+									to: Math.max(clickArea.width, clickArea.height) * 2
+									duration: Appearance.animations.durations.large
+									easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+								}
+								SequentialAnimation {
+									NumbAnim {
+										target: rippleEffect
+										property: "opacity"
+										from: 0
+										to: 0.3
+										duration: Appearance.animations.durations.small
+										easing.bezierCurve: Appearance.animations.curves.standardAccel
+									}
+									NumbAnim {
+										target: rippleEffect
+										property: "opacity"
+										from: 0.3
+										to: 0
+										easing.bezierCurve: Appearance.animations.curves.standardDecel
+									}
+								}
+							}
+						}
 
-                                ScaleAnimator {
-                                    target: fgText
-                                    from: 1.0
-                                    to: 0.9
-                                    duration: Appearance.animations.durations.small
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.emphasized
-                                }
+						SequentialAnimation {
+							id: clickAnimation
+							running: false
 
-                                ScriptAction {
-                                    script: rippleAnimation.start()
-                                }
-                            }
+							onStarted: delegateRoot.isAnimating = true
+							onFinished: delegateRoot.isAnimating = false
 
-                            ParallelAnimation {
-                                ScaleAnimator {
-                                    target: delegateRoot
-                                    from: 0.95
-                                    to: 1.0
-                                    duration: Appearance.animations.durations.expressiveFastSpatial
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                                }
+							ParallelAnimation {
+								ScaleAnimator {
+									target: delegateRoot
+									from: 1.0
+									to: 0.95
+									duration: Appearance.animations.durations.small
+									easing.type: Easing.BezierSpline
+									easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+								}
 
-                                ScaleAnimator {
-                                    target: fgText
-                                    from: 0.9
-                                    to: 1.0
-                                    duration: Appearance.animations.durations.expressiveFastSpatial
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                                }
-                            }
+								ScaleAnimator {
+									target: fgText
+									from: 1.0
+									to: 0.9
+									duration: Appearance.animations.durations.small
+									easing.type: Easing.BezierSpline
+									easing.bezierCurve: Appearance.animations.curves.emphasized
+								}
 
-                            PauseAnimation {
-                                duration: Appearance.animations.durations.small
-                            }
+								ScriptAction {
+									script: rippleAnimation.start()
+								}
+							}
 
-                            ScriptAction {
-                                script: {
-                                    if (delegateRoot.modelData.profile == PowerProfiles.profile)
-                                    selectionPulse.start();
-                                }
-                            }
-                        }
+							ParallelAnimation {
+								ScaleAnimator {
+									target: delegateRoot
+									from: 0.95
+									to: 1.0
+									duration: Appearance.animations.durations.expressiveFastSpatial
+									easing.type: Easing.BezierSpline
+									easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+								}
 
-                        onClicked: {
-                            PowerProfiles.profile = delegateRoot.modelData.profile;
-                            clickAnimation.start();
-                        }
-                    }
+								ScaleAnimator {
+									target: fgText
+									from: 0.9
+									to: 1.0
+									duration: Appearance.animations.durations.expressiveFastSpatial
+									easing.type: Easing.BezierSpline
+									easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+								}
+							}
 
-                    MatIcon {
-                        id: fgText
+							PauseAnimation {
+								duration: Appearance.animations.durations.small
+							}
 
-                        anchors.centerIn: parent
-                        color: bgCon.visible ? Colors.colors.on_primary : Colors.colors.on_background
-                        font.pixelSize: Appearance.fonts.large * 1.2
-                        icon: delegateRoot.modelData.icon
+							ScriptAction {
+								script: {
+									if (delegateRoot.modelData.profile == PowerProfiles.profile)
+										selectionPulse.start();
+								}
+							}
+						}
 
-                        Behavior on color {
-                            enabled: !delegateRoot.isAnimating
-                            ColAnim {}
-                        }
-                    }
-                }
-            }
-        }
-    }
+						onClicked: {
+							PowerProfiles.profile = delegateRoot.modelData.profile;
+							clickAnimation.start();
+						}
+					}
+
+					MatIcon {
+						id: fgText
+
+						anchors.centerIn: parent
+						color: bgCon.visible ? Colors.colors.on_primary : Colors.colors.on_background
+						font.pixelSize: Appearance.fonts.large * 1.2
+						icon: delegateRoot.modelData.icon
+
+						Behavior on color {
+							enabled: !delegateRoot.isAnimating
+							ColAnim {}
+						}
+					}
+				}
+			}
+		}
+	}
 }

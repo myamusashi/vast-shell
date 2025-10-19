@@ -14,291 +14,291 @@ import qs.Components
 import qs.Helpers
 
 Scope {
-    id: root
+	id: root
 
-    property int currentIndex: 0
-    property bool isLauncherOpen: false
+	property int currentIndex: 0
+	property bool isLauncherOpen: false
 
-    // Thx caelestia
-    function launch(entry: DesktopEntry): void {
-        if (entry.runInTerminal)
-        Quickshell.execDetached({
-                                    command: ["app2unit", "--", "foot", `${Quickshell.shellDir
-                                        }/Assets/wrap_term_launch.sh`, ...entry.command],
-                                    workingDirectory: entry.workingDirectory
-                                });
-        else
-        Quickshell.execDetached({
-                                    command: ["app2unit", "--", ...entry.command],
-                                    workingDirectory: entry.workingDirectory
-                                });
-    }
+	// Thx caelestia
+	function launch(entry: DesktopEntry): void {
+		if (entry.runInTerminal)
+			Quickshell.execDetached({
+				command: ["app2unit", "--", "foot", `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
+				workingDirectory: entry.workingDirectory
+			});
+		else
+			Quickshell.execDetached({
+				command: ["app2unit", "--", ...entry.command],
+				workingDirectory: entry.workingDirectory
+			});
+	}
 
-    LazyLoader {
-        id: appLoader
+	LazyLoader {
+		id: appLoader
 
-        active: root.isLauncherOpen
+		active: root.isLauncherOpen
 
-        component: PanelWindow {
-            id: launcher
+		component: PanelWindow {
+			id: launcher
 
-            property ShellScreen modelData
+			property ShellScreen modelData
 
-            anchors {
-                left: true
-                right: true
-            }
+			anchors {
+				left: true
+				right: true
+			}
 
-            WlrLayershell.namespace: "shell:app"
+			WlrLayershell.namespace: "shell:app"
 
-            property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-            property int monitorWidth: monitor.width / monitor.scale
-            property int monitorHeight: monitor.height / monitor.scale
+			property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
+			property int monitorWidth: monitor.width / monitor.scale
+			property int monitorHeight: monitor.height / monitor.scale
 
-            visible: root.isLauncherOpen
-            focusable: true
-            color: "transparent"
-            screen: modelData
-            exclusiveZone: 0
-            implicitWidth: monitorWidth * 0.3
-            implicitHeight: monitorHeight * 0.5
-            margins.left: monitorWidth * 0.3
-            margins.right: margins.left
+			visible: root.isLauncherOpen
+			focusable: true
 
-            StyledRect {
-                id: rectLauncher
+			color: "transparent"
+			screen: modelData
+			exclusiveZone: 0
+			implicitWidth: monitorWidth * 0.3
+			implicitHeight: monitorHeight * 0.5
+			margins.left: monitorWidth * 0.3
+			margins.right: margins.left
 
-                anchors.fill: parent
+			StyledRect {
+				id: rectLauncher
 
-                radius: Appearance.rounding.large
-                color: Colors.colors.background
-                border.color: Colors.colors.outline
-                border.width: 2
+				anchors.fill: parent
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: Appearance.padding.normal
-                    spacing: Appearance.spacing.normal
+				radius: Appearance.rounding.large
+				color: Colors.colors.background
+				border.color: Colors.colors.outline
+				border.width: 2
 
-                    TextField {
-                        id: search
+				ColumnLayout {
+					anchors.fill: parent
 
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 60
-                        placeholderText: "  Search"
-                        font.family: Appearance.fonts.family_Sans
-                        focus: true
-                        font.pixelSize: Appearance.fonts.large * 1.2
-                        color: Colors.colors.on_surface
-                        placeholderTextColor: Colors.colors.on_surface_variant
+					anchors.margins: Appearance.padding.normal
+					spacing: Appearance.spacing.normal
 
-                        background: StyledRect {
-                            radius: Appearance.rounding.small
-                            color: Colors.withAlpha(Colors.dark.surface, 0)
-                            // border.color: Colors.colors.on_background
-                            // border.width: 2
-                        }
+					TextField {
+						id: search
 
-                        onTextChanged: {
-                            root.currentIndex = 0;
-                        }
+						Layout.fillWidth: true
+						Layout.preferredHeight: 60
+						placeholderText: "  Search"
+						font.family: Appearance.fonts.family_Sans
+						focus: true
+						font.pixelSize: Appearance.fonts.large * 1.2
+						color: Colors.colors.on_surface
+						placeholderTextColor: Colors.colors.on_surface_variant
 
-                        Keys.onPressed: function (event) {
-                            switch (event.key) {
-                            case Qt.Key_Return:
-                            case Qt.Key_Tab:
-                            case Qt.Key_Enter:
-                                listView.focus = true;
-                                event.accepted = true;
-                                break;
-                            case Qt.Key_Escape:
-                                root.isLauncherOpen = false;
-                                event.accepted = true;
-                                break;
-                            case Qt.Key_Down:
-                                listView.focus = true;
-                                event.accepted = true;
-                                break;
-                            }
-                        }
-                    }
+						background: StyledRect {
+							radius: Appearance.rounding.small
+							color: Colors.withAlpha(Colors.dark.surface, 0)
+							// border.color: Colors.colors.on_background
+							// border.width: 2
+						}
 
-                    ListView {
-                        id: listView
+						onTextChanged: {
+							root.currentIndex = 0;
+						}
 
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 400
+						Keys.onPressed: function (event) {
+							switch (event.key) {
+							case Qt.Key_Return:
+							case Qt.Key_Tab:
+							case Qt.Key_Enter:
+								listView.focus = true;
+								event.accepted = true;
+								break;
+							case Qt.Key_Escape:
+								root.isLauncherOpen = false;
+								event.accepted = true;
+								break;
+							case Qt.Key_Down:
+								listView.focus = true;
+								event.accepted = true;
+								break;
+							}
+						}
+					}
 
-                        model: ScriptModel {
-                            values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name")
-                        }
+					ListView {
+						id: listView
 
-                        keyNavigationWraps: false
-                        currentIndex: root.currentIndex
-                        maximumFlickVelocity: 3000
-                        orientation: Qt.Vertical
-                        clip: true
+						Layout.fillWidth: true
+						Layout.fillHeight: true
+						Layout.preferredHeight: 400
 
-                        boundsBehavior: Flickable.DragAndOvershootBounds
-                        flickDeceleration: 1500
+						model: ScriptModel {
+							values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name")
+						}
 
-                        Behavior on currentIndex {
-                            NumbAnim {}
-                        }
+						keyNavigationWraps: false
+						currentIndex: root.currentIndex
+						maximumFlickVelocity: 3000
+						orientation: Qt.Vertical
+						clip: true
 
-                        onModelChanged: {
-                            if (root.currentIndex >= model.values.length)
-                            root.currentIndex = Math.max(0, model.values.length - 1);
-                        }
+						boundsBehavior: Flickable.DragAndOvershootBounds
+						flickDeceleration: 1500
 
-                        delegate: MouseArea {
-                            id: entryMouseArea
+						Behavior on currentIndex {
+							NumbAnim {}
+						}
 
-                            required property DesktopEntry modelData
-                            required property int index
+						onModelChanged: {
+							if (root.currentIndex >= model.values.length)
+								root.currentIndex = Math.max(0, model.values.length - 1);
+						}
 
-                            property bool keyboardActive: listView.activeFocus
-                            property real itemScale: 1.0
+						delegate: MouseArea {
+							id: entryMouseArea
 
-                            width: listView.width
-                            height: 60
-                            hoverEnabled: !keyboardActive
+							required property DesktopEntry modelData
+							required property int index
 
-                            Behavior on itemScale {
-                                NumbAnim {}
-                            }
+							property bool keyboardActive: listView.activeFocus
+							property real itemScale: 1.0
 
-                            onEntered: {
-                                root.currentIndex = index;
-                            }
+							width: listView.width
+							height: 60
+							hoverEnabled: !keyboardActive
 
-                            onClicked: {
-                                root.isLauncherOpen = false;
-                                root.launch(modelData);
-                            }
+							Behavior on itemScale {
+								NumbAnim {}
+							}
 
-                            Keys.onPressed: kevent => {
-                                switch (kevent.key) {
-                                    case Qt.Key_Escape:
-                                    root.isLauncherOpen = false;
-                                    break;
-                                    case Qt.Key_Enter:
-                                    case Qt.Key_Return:
-                                    root.launch(modelData);
-                                    root.isLauncherOpen = false;
-                                    break;
-                                    case Qt.Key_Up:
-                                    if (index === 0) {
-                                        search.focus = true;
-                                    }
-                                    break;
-                                }
-                            }
+							onEntered: {
+								root.currentIndex = index;
+							}
 
-                            StyledRect {
-                                anchors.fill: parent
-                                anchors.margins: 2
+							onClicked: {
+								root.isLauncherOpen = false;
+								root.launch(modelData);
+							}
 
-                                transform: Scale {
-                                    xScale: entryMouseArea.itemScale
-                                    yScale: entryMouseArea.itemScale
-                                    origin.x: width / 2
-                                    origin.y: height / 2
-                                }
+							Keys.onPressed: kevent => {
+								switch (kevent.key) {
+								case Qt.Key_Escape:
+									root.isLauncherOpen = false;
+									break;
+								case Qt.Key_Enter:
+								case Qt.Key_Return:
+									root.launch(modelData);
+									root.isLauncherOpen = false;
+									break;
+								case Qt.Key_Up:
+									if (index === 0) {
+										search.focus = true;
+									}
+									break;
+								}
+							}
 
-                                readonly property bool selected: entryMouseArea.containsMouse || (
-                                                                     listView.currentIndex
-                                                                     === entryMouseArea.index
-                                                                     && listView.activeFocus)
-                                color: selected ? Colors.withAlpha(Colors.dark.on_surface, 0.1) :
-                                                  "transparent"
-                                radius: Appearance.rounding.normal
+							StyledRect {
+								anchors.fill: parent
 
-                                Behavior on color {
-                                    ColorAnimation {
-                                        duration: Appearance.animations.durations.small
-                                        easing.bezierCurve: Appearance.animations.curves.standard
-                                    }
-                                }
+								anchors.margins: 2
 
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: Appearance.padding.small
-                                    spacing: Appearance.spacing.normal
+								transform: Scale {
+									xScale: entryMouseArea.itemScale
+									yScale: entryMouseArea.itemScale
+									origin.x: width / 2
+									origin.y: height / 2
+								}
 
-                                    Loader {
-                                        active: root.isLauncherOpen
-                                        asynchronous: true
+								readonly property bool selected: entryMouseArea.containsMouse || (listView.currentIndex === entryMouseArea.index && listView.activeFocus)
+								color: selected ? Colors.withAlpha(Colors.dark.on_surface, 0.1) : "transparent"
+								radius: Appearance.rounding.normal
 
-                                        Layout.preferredWidth: 40
-                                        Layout.preferredHeight: 40
+								Behavior on color {
+									ColorAnimation {
+										duration: Appearance.animations.durations.small
+										easing.bezierCurve: Appearance.animations.curves.standard
+									}
+								}
 
-                                        sourceComponent: IconImage {
-                                            Layout.alignment: Qt.AlignVCenter
-                                            Layout.preferredWidth: 40
-                                            Layout.preferredHeight: 40
-                                            asynchronous: true
-                                            source: Quickshell.iconPath(entryMouseArea.modelData.icon) || ""
+								RowLayout {
+									anchors.fill: parent
 
-                                            opacity: 0
-                                            Component.onCompleted: {
-                                                opacity = 1;
-                                            }
-                                            Behavior on opacity {
-                                                NumbAnim {}
-                                            }
-                                        }
-                                    }
+									anchors.margins: Appearance.padding.small
+									spacing: Appearance.spacing.normal
 
-                                    StyledText {
-                                        Layout.fillWidth: true
-                                        Layout.alignment: Qt.AlignVCenter
-                                        text: entryMouseArea.modelData.name || ""
-                                        font.pixelSize: Appearance.fonts.normal
-                                        color: Colors.colors.on_background
-                                        elide: Text.ElideRight
+									Loader {
+										active: root.isLauncherOpen
+										asynchronous: true
 
-                                        opacity: 0
-                                        Component.onCompleted: {
-                                            opacity = 1;
-                                        }
-                                        Behavior on opacity {
-                                            NumbAnim {}
-                                        }
-                                    }
-                                }
-                            }
-                        }
+										Layout.preferredWidth: 40
+										Layout.preferredHeight: 40
 
-                        highlightFollowsCurrentItem: true
-                        highlightResizeDuration: Appearance.animations.durations.small
-                        highlightMoveDuration: Appearance.animations.durations.small
-                        highlight: StyledRect {
-                            color: Colors.colors.primary
-                            radius: Appearance.rounding.normal
-                            opacity: 0.06
+										sourceComponent: IconImage {
+											Layout.alignment: Qt.AlignVCenter
+											Layout.preferredWidth: 40
+											Layout.preferredHeight: 40
+											asynchronous: true
 
-                            scale: 0.95
-                            Behavior on scale {
-                                NumbAnim {}
-                            }
+											source: Quickshell.iconPath(entryMouseArea.modelData.icon) || ""
 
-                            Component.onCompleted: {
-                                scale = 1.0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+											opacity: 0
+											Component.onCompleted: {
+												opacity = 1;
+											}
+											Behavior on opacity {
+												NumbAnim {}
+											}
+										}
+									}
 
-    IpcHandler {
-        target: "launcher"
+									StyledText {
+										Layout.fillWidth: true
+										Layout.alignment: Qt.AlignVCenter
+										text: entryMouseArea.modelData.name || ""
+										font.pixelSize: Appearance.fonts.normal
+										color: Colors.colors.on_background
+										elide: Text.ElideRight
 
-        function toggle(): void {
-            root.isLauncherOpen = !root.isLauncherOpen;
-        }
-    }
+										opacity: 0
+										Component.onCompleted: {
+											opacity = 1;
+										}
+										Behavior on opacity {
+											NumbAnim {}
+										}
+									}
+								}
+							}
+						}
+
+						highlightFollowsCurrentItem: true
+						highlightResizeDuration: Appearance.animations.durations.small
+						highlightMoveDuration: Appearance.animations.durations.small
+						highlight: StyledRect {
+							color: Colors.colors.primary
+							radius: Appearance.rounding.normal
+							opacity: 0.06
+
+							scale: 0.95
+							Behavior on scale {
+								NumbAnim {}
+							}
+
+							Component.onCompleted: {
+								scale = 1.0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	IpcHandler {
+		target: "launcher"
+
+		function toggle(): void {
+			root.isLauncherOpen = !root.isLauncherOpen;
+		}
+	}
 }

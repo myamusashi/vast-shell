@@ -11,211 +11,209 @@ import qs.Helpers
 import qs.Components
 
 Scope {
-    id: session
+	id: session
 
-    property int currentIndex: 0
-    property bool isSessionOpen: false
-    property bool showConfirmDialog: false
-    property var pendingAction: null
-    property string pendingActionName: ""
+	property int currentIndex: 0
+	property bool isSessionOpen: false
+	property bool showConfirmDialog: false
+	property var pendingAction: null
+	property string pendingActionName: ""
 
-    LazyLoader {
-        active: session.isSessionOpen
+	LazyLoader {
+		active: session.isSessionOpen
 
-        component: PanelWindow {
-            id: sessionWindow
+		component: PanelWindow {
+			id: sessionWindow
 
-            visible: session.isSessionOpen
-            focusable: true
-            anchors.right: true
-            margins.right: 10
-            exclusiveZone: 0
-            implicitWidth: 80
-            implicitHeight: 550
-            WlrLayershell.namespace: "shell:session"
-            color: "transparent"
+			visible: session.isSessionOpen
+			focusable: true
 
-            Item {
-                anchors.fill: parent
+			anchors.right: true
+			margins.right: 10
+			exclusiveZone: 0
+			implicitWidth: 80
+			implicitHeight: 550
+			WlrLayershell.namespace: "shell:session"
+			color: "transparent"
 
-                StyledRect {
-                    anchors.fill: parent
-                    radius: Appearance.rounding.normal
-                    color: Colors.colors.background
-                    border.color: Colors.colors.outline
-                    border.width: 2
+			Item {
+				anchors.fill: parent
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 10
-                        spacing: 5
+				StyledRect {
+					anchors.fill: parent
 
-                        Repeater {
-                            model: [
-                                {
-                                    icon: "power_settings_circle",
-                                    name: "Shutdown",
-                                    action: () => {
-                                        Quickshell.execDetached({
-                                                                    command: ["sh", "-c",
-                                                                        "systemctl poweroff"]
-                                                                });
-                                    }
-                                },
-                                {
-                                    icon: "restart_alt",
-                                    name: "Reboot",
-                                    action: () => {
-                                        Quickshell.execDetached({
-                                                                    command: ["sh", "-c", "systemctl reboot"]
-                                                                });
-                                    }
-                                },
-                                {
-                                    icon: "sleep",
-                                    name: "Sleep",
-                                    action: () => {
-                                        Quickshell.execDetached({
-                                                                    command: ["sh", "-c", "systemctl suspend"]
-                                                                });
-                                    }
-                                },
-                                {
-                                    icon: "door_open",
-                                    name: "Logout",
-                                    action: () => {
-                                        Quickshell.execDetached({
-                                                                    command: ["sh", "-c",
-                                                                        "hyprctl dispatch exit"]
-                                                                });
-                                    }
-                                },
-                                {
-                                    icon: "lock",
-                                    name: "Lockscreen",
-                                    action: () => {
-                                        Quickshell.execDetached({
-                                                                    command: ["sh", "-c",
-                                                                        "qs -c lock ipc call lock lock"]
-                                                                });
-                                    }
-                                }
-                            ]
+					radius: Appearance.rounding.normal
+					color: Colors.colors.background
+					border.color: Colors.colors.outline
+					border.width: 2
 
-                            delegate: StyledRect {
-                                id: rectDelegate
+					ColumnLayout {
+						anchors.fill: parent
 
-                                required property var modelData
-                                required property int index
-                                property bool isHighlighted: mouseArea.containsMouse || (iconDelegate.focus
-                                                                                         && rectDelegate.index
-                                                                                         === session.currentIndex)
+						anchors.margins: 10
+						spacing: 5
 
-                                Layout.alignment: Qt.AlignHCenter
-                                Layout.preferredWidth: 60
-                                Layout.preferredHeight: 70
+						Repeater {
+							model: [
+								{
+									icon: "power_settings_circle",
+									name: "Shutdown",
+									action: () => {
+										Quickshell.execDetached({
+											command: ["sh", "-c", "systemctl poweroff"]
+										});
+									}
+								},
+								{
+									icon: "restart_alt",
+									name: "Reboot",
+									action: () => {
+										Quickshell.execDetached({
+											command: ["sh", "-c", "systemctl reboot"]
+										});
+									}
+								},
+								{
+									icon: "sleep",
+									name: "Sleep",
+									action: () => {
+										Quickshell.execDetached({
+											command: ["sh", "-c", "systemctl suspend"]
+										});
+									}
+								},
+								{
+									icon: "door_open",
+									name: "Logout",
+									action: () => {
+										Quickshell.execDetached({
+											command: ["sh", "-c", "hyprctl dispatch exit"]
+										});
+									}
+								},
+								{
+									icon: "lock",
+									name: "Lockscreen",
+									action: () => {
+										Quickshell.execDetached({
+											command: ["sh", "-c", "qs -c lock ipc call lock lock"]
+										});
+									}
+								}
+							]
 
-                                radius: Appearance.rounding.normal
-                                color: isHighlighted ? Colors.withAlpha(Colors.colors.secondary, 0.2) :
-                                                       "transparent"
+							delegate: StyledRect {
+								id: rectDelegate
 
-                                Behavior on color {
-                                    ColAnim {}
-                                }
+								required property var modelData
+								required property int index
+								property bool isHighlighted: mouseArea.containsMouse || (iconDelegate.focus && rectDelegate.index === session.currentIndex)
 
-                                MatIcon {
-                                    id: iconDelegate
+								Layout.alignment: Qt.AlignHCenter
+								Layout.preferredWidth: 60
+								Layout.preferredHeight: 70
 
-                                    anchors.centerIn: parent
-                                    color: Colors.colors.primary
-                                    font.pixelSize: Appearance.fonts.large * 4
-                                    icon: rectDelegate.modelData.icon
+								radius: Appearance.rounding.normal
+								color: isHighlighted ? Colors.withAlpha(Colors.colors.secondary, 0.2) : "transparent"
 
-                                    focus: rectDelegate.index === session.currentIndex
+								Behavior on color {
+									ColAnim {}
+								}
 
-                                    Keys.onEnterPressed: handleAction()
-                                    Keys.onReturnPressed: handleAction()
-                                    Keys.onUpPressed: {
-                                        if (session.currentIndex > 0)
-                                        session.currentIndex--;
-                                    }
-                                    Keys.onDownPressed: {
-                                        if (session.currentIndex < 4)
-                                        session.currentIndex++;
-                                    }
-                                    Keys.onEscapePressed: session.isSessionOpen = false
+								MatIcon {
+									id: iconDelegate
 
-                                    scale: mouseArea.pressed ? 0.95 : 1.0
+									anchors.centerIn: parent
+									color: Colors.colors.primary
+									font.pixelSize: Appearance.fonts.large * 4
+									icon: rectDelegate.modelData.icon
 
-                                    Behavior on scale {
-                                        NumbAnim {}
-                                    }
+									focus: rectDelegate.index === session.currentIndex
 
-                                    function handleAction() {
-                                        session.pendingAction = rectDelegate.modelData.action;
-                                        session.pendingActionName = rectDelegate.modelData.name + "?";
-                                        session.showConfirmDialog = true;
-                                    }
+									Keys.onEnterPressed: handleAction()
+									Keys.onReturnPressed: handleAction()
+									Keys.onUpPressed: {
+										if (session.currentIndex > 0)
+											session.currentIndex--;
+									}
+									Keys.onDownPressed: {
+										if (session.currentIndex < 4)
+											session.currentIndex++;
+									}
+									Keys.onEscapePressed: session.isSessionOpen = false
 
-                                    MouseArea {
-                                        id: mouseArea
+									scale: mouseArea.pressed ? 0.95 : 1.0
 
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        hoverEnabled: true
+									Behavior on scale {
+										NumbAnim {}
+									}
 
-                                        onClicked: {
-                                            parent.focus = true;
-                                            session.currentIndex = rectDelegate.index;
-                                            parent.handleAction();
-                                        }
+									function handleAction() {
+										session.pendingAction = rectDelegate.modelData.action;
+										session.pendingActionName = rectDelegate.modelData.name + "?";
+										session.showConfirmDialog = true;
+									}
 
-                                        onEntered: {
-                                            parent.focus = true;
-                                            session.currentIndex = rectDelegate.index;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+									MouseArea {
+										id: mouseArea
 
-                DialogBox {
-                    id: boxConfirmation
+										anchors.fill: parent
 
-                    anchors.centerIn: parent
-                    z: 100
+										cursorShape: Qt.PointingHandCursor
+										hoverEnabled: true
 
-                    header: "Session"
-                    body: `Do you want to ${session.pendingActionName.toLowerCase()}`
-                    active: session.showConfirmDialog
+										onClicked: {
+											parent.focus = true;
+											session.currentIndex = rectDelegate.index;
+											parent.handleAction();
+										}
 
-                    onYesClicked: {
-                        if (session.pendingAction)
-                        session.pendingAction();
+										onEntered: {
+											parent.focus = true;
+											session.currentIndex = rectDelegate.index;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 
-                        session.showConfirmDialog = false;
-                        session.isSessionOpen = false;
-                        session.pendingAction = null;
-                        session.pendingActionName = "";
-                    }
+				DialogBox {
+					id: boxConfirmation
 
-                    onNoClicked: {
-                        session.showConfirmDialog = false;
-                        session.pendingAction = null;
-                        session.pendingActionName = "";
-                    }
-                }
-            }
-        }
-    }
+					anchors.centerIn: parent
+					z: 100
 
-    IpcHandler {
-        target: "session"
+					header: "Session"
+					body: "Do you want to " + session.pendingActionName.toLowerCase()
+					active: session.showConfirmDialog
 
-        function toggle(): void {
-            session.isSessionOpen = !session.isSessionOpen;
-        }
-    }
+					onYesClicked: {
+						if (session.pendingAction)
+							session.pendingAction();
+
+						session.showConfirmDialog = false;
+						session.isSessionOpen = false;
+						session.pendingAction = null;
+						session.pendingActionName = "";
+					}
+
+					onNoClicked: {
+						session.showConfirmDialog = false;
+						session.pendingAction = null;
+						session.pendingActionName = "";
+					}
+				}
+			}
+		}
+	}
+
+	IpcHandler {
+		target: "session"
+
+		function toggle(): void {
+			session.isSessionOpen = !session.isSessionOpen;
+		}
+	}
 }
