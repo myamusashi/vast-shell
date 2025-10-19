@@ -9,42 +9,42 @@ import qs.Helpers
 import qs.Components
 
 LazyLoader {
-	id: numLockOSDLoader
+    id: numLockOSDLoader
 
-	active: false
-	component: PanelWindow {
-		anchors.bottom: true
-		WlrLayershell.namespace: "shell:osd:numlock"
-		color: "transparent"
-		exclusionMode: ExclusionMode.Ignore
-		focusable: false
-		implicitWidth: 350
-		implicitHeight: 50
-		exclusiveZone: 0
-		margins.bottom: 150
-		mask: Region {}
+    active: false
+    component: PanelWindow {
+        anchors.bottom: true
+        WlrLayershell.namespace: "shell:osd:numlock"
+        color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
+        focusable: false
+        implicitWidth: 350
+        implicitHeight: 50
+        exclusiveZone: 0
+        margins.bottom: 150
+        mask: Region {}
 
-		StyledRect {
-			anchors.fill: parent
-			radius: height / 2
-			color: Colors.colors.background
+        StyledRect {
+            anchors.fill: parent
+            radius: height / 2
+            color: Colors.colors.background
 
-			Row {
-				anchors.centerIn: parent
-				spacing: 10
+            Row {
+                anchors.centerIn: parent
+                spacing: 10
 
-				StyledText {
-					text: "Num Lock"
-					color: Colors.colors.on_background
-					font.pixelSize: Appearance.fonts.large * 1.5
-				}
+                StyledText {
+                    text: "Num Lock"
+                    color: Colors.colors.on_background
+                    font.pixelSize: Appearance.fonts.large * 1.5
+                }
 
-				MatIcon {
-					icon: numLockOSDLoader.active ? "lock" : "lock_open_right"
-					color: numLockOSDLoader.active ? Colors.colors.primary : Colors.colors.tertiary
-					font.pixelSize: Appearance.fonts.large * 1.5
-				}
-			}
-		}
-	}
+                MatIcon {
+                    icon: KeyLockState.numLockState ? "lock" : "lock_open_right"
+                    color: KeyLockState.numLockState ? Colors.colors.primary : Colors.colors.tertiary
+                    font.pixelSize: Appearance.fonts.large * 1.5
+                }
+            }
+        }
+    }
 }

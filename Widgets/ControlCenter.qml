@@ -11,35 +11,55 @@ import qs.Data
 import qs.Helpers
 import qs.Components
 
-LazyLoader {
-	id: loader
+StyledPopup {
+    id: root
 
-	required property bool controlCenterShow
-	property PwNode node: Pipewire.defaultAudioSink
+    property PwNode node: Pipewire.defaultAudioSink
+    PwObjectTracker {
+        objects: [root.node]
+    }
 
-	active: controlCenterShow
+    content: Control {}
 
-	component: PopupWindow {
-		anchor.window: root.isBarOpen
+    component Control: RowLayout {
+        anchors.fill: parent
 
-		mask: Region {}
-
-		PwObjectTracker {
-			objects: [loader.node]
-		}
-		visible: true
-
-		StyledRect {
-			anchors.fill: parent
-			color: Colors.colors.background
-
-			StyledText {
-				text: "test"
-				color: Colors.colors.on_background
-			}
-		}
-	}
+        StyledText {
+            text: "test"
+            color: Colors.colors.on_background
+        }
+    }
 }
+
+// LazyLoader {
+// 	id: loader
+//
+// 	required property bool controlCenterShow
+// 	property PwNode node: Pipewire.defaultAudioSink
+//
+// 	active: controlCenterShow
+//
+// 	component: PopupWindow {
+// 		anchor.window: root.isBarOpen
+//
+// 		mask: Region {}
+//
+// 		PwObjectTracker {
+// 			objects: [loader.node]
+// 		}
+// 		visible: true
+//
+// 		StyledRect {
+// 			anchors.fill: parent
+// 			color: Colors.colors.background
+//
+// 			StyledText {
+// 				text: "test"
+// 				color: Colors.colors.on_background
+// 			}
+// 		}
+// 	}
+// }
 
 // StyledPopup {
 // 	RowLayout {

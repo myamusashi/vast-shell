@@ -4,33 +4,33 @@ import qs.Data
 import qs.Components
 
 Text {
-	id: root
+    id: root
 
-	required property string icon
-	property int grad: 0
+    required property string icon
+    property int grad: 0
 
-	layer.enabled: true
-	layer.samples: 0
+    layer.enabled: true
+    layer.samples: 0
 
-	font.family: Appearance.fonts.family_Material
-	font.pixelSize: Appearance.fonts.medium
-	font.hintingPreference: Font.PreferNoHinting
+    font.family: Appearance.fonts.family_Material
+    font.pixelSize: Appearance.fonts.medium
+    font.hintingPreference: Font.PreferNoHinting
 
-	antialiasing: true
+    antialiasing: true
 
-	verticalAlignment: Text.AlignVCenter
-	horizontalAlignment: Text.AlignHCenter
+    verticalAlignment: Text.AlignVCenter
+    horizontalAlignment: Text.AlignHCenter
 
-	color: "transparent"
+    color: "transparent"
 
-	renderType: Text.NativeRendering
-	text: root.icon
+    renderType: Text.NativeRendering
+    text: root.icon
 
-	Behavior on color {
-		ColAnim {}
-	}
+    Behavior on color {
+        ColAnim {}
+    }
 
-	Behavior on opacity {
-		NumbAnim {}
-	}
+    Behavior on opacity {
+        NumbAnim {}
+    }
 }

@@ -7,42 +7,42 @@ import qs.Helpers
 import qs.Components
 
 LazyLoader {
-	id: capsLockOsdLoader
+    id: capsLockOsdLoader
 
-	active: false
-	component: PanelWindow {
-		anchors.bottom: true
-		WlrLayershell.namespace: "shell:osd:capslock"
-		color: "transparent"
-		exclusionMode: ExclusionMode.Ignore
-		focusable: false
-		implicitWidth: 350
-		implicitHeight: 50
-		exclusiveZone: 0
-		margins.bottom: 90
-		mask: Region {}
+    active: false
+    component: PanelWindow {
+        anchors.bottom: true
+        WlrLayershell.namespace: "shell:osd:capslock"
+        color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
+        focusable: false
+        implicitWidth: 350
+        implicitHeight: 50
+        exclusiveZone: 0
+        margins.bottom: 90
+        mask: Region {}
 
-		StyledRect {
-			anchors.fill: parent
-			radius: height / 2
-			color: Colors.colors.background
+        StyledRect {
+            anchors.fill: parent
+            radius: height / 2
+            color: Colors.colors.background
 
-			Row {
-				anchors.centerIn: parent
-				spacing: 10
+            Row {
+                anchors.centerIn: parent
+                spacing: 10
 
-				StyledText {
-					text: "Caps Lock"
-					color: Colors.colors.on_background
-					font.pixelSize: Appearance.fonts.large * 1.5
-				}
+                StyledText {
+                    text: "Caps Lock"
+                    color: Colors.colors.on_background
+                    font.pixelSize: Appearance.fonts.large * 1.5
+                }
 
-				MatIcon {
-					icon: KeyLockState.capsLockState ? "lock" : "lock_open_right"
-					color: KeyLockState.capsLockState ? Colors.colors.primary : Colors.colors.tertiary
-					font.pixelSize: Appearance.fonts.large * 1.5
-				}
-			}
-		}
-	}
+                MatIcon {
+                    icon: KeyLockState.capsLockState ? "lock" : "lock_open_right"
+                    color: KeyLockState.capsLockState ? Colors.colors.primary : Colors.colors.tertiary
+                    font.pixelSize: Appearance.fonts.large * 1.5
+                }
+            }
+        }
+    }
 }

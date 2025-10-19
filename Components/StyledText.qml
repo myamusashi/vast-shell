@@ -2,34 +2,34 @@ import QtQuick
 import qs.Data
 
 Text {
-	id: root
+    id: root
 
-	property alias textContent: root.text
+    property alias textContent: root.text
 
-	font.family: Appearance.fonts.family_Sans
-	font.pixelSize: Appearance.fonts.medium
-	font.hintingPreference: Font.PreferDefaultHinting
+    font.family: Appearance.fonts.family_Sans
+    font.pixelSize: Appearance.fonts.medium
+    font.hintingPreference: Font.PreferDefaultHinting
 
-	color: "transparent"
-	renderType: Text.NativeRendering
-	textFormat: Text.PlainText
-	antialiasing: true
+    color: "transparent"
+    renderType: Text.NativeRendering
+    textFormat: Text.PlainText
+    antialiasing: true
 
-	verticalAlignment: Text.AlignVCenter
-	horizontalAlignment: Text.AlignLeft
+    verticalAlignment: Text.AlignVCenter
+    horizontalAlignment: Text.AlignLeft
 
-	elide: Text.ElideRight
-	wrapMode: Text.NoWrap
+    elide: Text.ElideRight
+    wrapMode: Text.NoWrap
 
-	Behavior on color {
-		ColAnim {}
-	}
+    Behavior on color {
+        ColAnim {}
+    }
 
-	Behavior on opacity {
-		NumbAnim {}
-	}
+    Behavior on opacity {
+        NumbAnim {}
+    }
 
-	Behavior on font.pixelSize {
-		NumbAnim {}
-	}
+    Behavior on font.pixelSize {
+        NumbAnim {}
+    }
 }

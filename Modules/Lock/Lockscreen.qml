@@ -6,40 +6,40 @@ import Quickshell.Io
 import Quickshell.Wayland
 
 Scope {
-	property alias lock: lock
+    property alias lock: lock
 
-	WlSessionLock {
-		id: lock
+    WlSessionLock {
+        id: lock
 
-		signal unlock
+        signal unlock
 
-		Surface {
-			id: surface
+        Surface {
+            id: surface
 
-			lock: lock
-			pam: pam
-		}
-	}
+            lock: lock
+            pam: pam
+        }
+    }
 
-	Pam {
-		id: pam
+    Pam {
+        id: pam
 
-		lock: lock
-	}
+        lock: lock
+    }
 
-	IpcHandler {
-		target: "lock"
+    IpcHandler {
+        target: "lock"
 
-		function lock(): void {
-			lock.locked = true;
-		}
+        function lock(): void {
+            lock.locked = true;
+        }
 
-		function unlock(): void {
-			lock.unlock();
-		}
+        function unlock(): void {
+            lock.unlock();
+        }
 
-		function isLocked(): bool {
-			return lock.locked;
-		}
-	}
+        function isLocked(): bool {
+            return lock.locked;
+        }
+    }
 }

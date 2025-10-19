@@ -17,27 +17,27 @@ import QtQuick
 import Quickshell
 
 ShellRoot {
-	Bar {}
-	Lockscreen {}
-	Wall {}
-	Session {}
-	App {}
-	Screencapture {}
-	Notifications {}
-	Dashboard {}
-	// Clock {}
-	OSD {}
-	Overview {}
+    Bar {}
+    Lockscreen {}
+    Wall {}
+    Session {}
+    App {}
+    Screencapture {}
+    Notifications {}
+    Dashboard {}
+    // Clock {}
+    OSD {}
+    Overview {}
 
-	Connections {
-		function onReloadCompleted() {
-			Quickshell.inhibitReloadPopup();
-		}
+    Connections {
+        function onReloadCompleted() {
+            Quickshell.inhibitReloadPopup();
+        }
 
-		function onReloadFailed() {
-			Quickshell.inhibitReloadPopup();
-		}
+        function onReloadFailed() {
+            Quickshell.inhibitReloadPopup();
+        }
 
-		target: Quickshell
-	}
+        target: Quickshell
+    }
 }

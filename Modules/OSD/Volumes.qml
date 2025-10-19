@@ -9,72 +9,72 @@ import qs.Helpers
 import qs.Components
 
 LazyLoader {
-	id: volumeOsdLoader
+    id: volumeOsdLoader
 
-	active: false
-	component: PanelWindow {
-		id: root
+    active: false
+    component: PanelWindow {
+        id: root
 
-		anchors.bottom: true
-		WlrLayershell.namespace: "shell:osd:volume"
-		color: "transparent"
-		exclusionMode: ExclusionMode.Ignore
-		focusable: false
-		implicitWidth: 350
-		implicitHeight: 50
-		exclusiveZone: 0
-		margins.bottom: 30
-		mask: Region {}
+        anchors.bottom: true
+        WlrLayershell.namespace: "shell:osd:volume"
+        color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
+        focusable: false
+        implicitWidth: 350
+        implicitHeight: 50
+        exclusiveZone: 0
+        margins.bottom: 30
+        mask: Region {}
 
-		property string icon: Audio.getIcon(root.node)
-		property PwNode node: Pipewire.defaultAudioSink
+        property string icon: Audio.getIcon(root.node)
+        property PwNode node: Pipewire.defaultAudioSink
 
-		StyledRect {
-			anchors.fill: parent
-			radius: height / 2
-			color: Colors.colors.background
+        StyledRect {
+            anchors.fill: parent
+            radius: height / 2
+            color: Colors.colors.background
 
-			RowLayout {
-				anchors {
-					fill: parent
-					leftMargin: 10
-					rightMargin: 15
-				}
+            RowLayout {
+                anchors {
+                    fill: parent
+                    leftMargin: 10
+                    rightMargin: 15
+                }
 
-				MatIcon {
-					color: Colors.dark.on_background
-					icon: root.icon
-					Layout.alignment: Qt.AlignVCenter
-					font.pixelSize: Appearance.fonts.extraLarge * 1.2
-				}
+                MatIcon {
+                    color: Colors.dark.on_background
+                    icon: root.icon
+                    Layout.alignment: Qt.AlignVCenter
+                    font.pixelSize: Appearance.fonts.extraLarge * 1.2
+                }
 
-				StyledText {
-					text: Math.round(Pipewire.defaultAudioSink?.audio.volume * 100)
-					color: Colors.colors.on_background
-					font.pixelSize: Appearance.fonts.large
-				}
+                StyledText {
+                    text: Math.round(Pipewire.defaultAudioSink?.audio.volume * 100)
+                    color: Colors.colors.on_background
+                    font.pixelSize: Appearance.fonts.large
+                }
 
-				StyledRect {
-					Layout.fillWidth: true
+                StyledRect {
+                    Layout.fillWidth: true
 
-					implicitHeight: 10
-					radius: 20
-					color: Colors.withAlpha(Colors.dark.primary, 0.3)
+                    implicitHeight: 10
+                    radius: 20
+                    color: Colors.withAlpha(Colors.dark.primary, 0.3)
 
-					StyledRect {
-						anchors {
-							left: parent.left
-							top: parent.top
-							bottom: parent.bottom
-						}
+                    StyledRect {
+                        anchors {
+                            left: parent.left
+                            top: parent.top
+                            bottom: parent.bottom
+                        }
 
-						color: Colors.dark.primary
+                        color: Colors.dark.primary
 
-						implicitWidth: parent.width * (Pipewire.defaultAudioSink?.audio.volume ?? 0)
-						radius: parent.radius
-					}
-				}
-			}
-		}
-	}
+                        implicitWidth: parent.width * (Pipewire.defaultAudioSink?.audio.volume ?? 0)
+                        radius: parent.radius
+                    }
+                }
+            }
+        }
+    }
 }

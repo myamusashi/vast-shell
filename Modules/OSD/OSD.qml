@@ -7,56 +7,56 @@ import Quickshell.Services.Pipewire
 import qs.Data
 
 Scope {
-	id: root
+    id: root
 
-	property bool isVolumeOSDShow: false
-	property bool isCapsLockOSDShow: false
-	property bool isNumLockOSDShow: false
+    property bool isVolumeOSDShow: false
+    property bool isCapsLockOSDShow: false
+    property bool isNumLockOSDShow: false
 
-	Connections {
-		target: KeyLockState
-		function onCapsLockStateChanged() {
-			root.isCapsLockOSDShow = true;
-			hideOSDTimer.restart();
-		}
-		function onNumLockStateChanged() {
-			root.isNumLockOSDShow = true;
-			hideOSDTimer.restart();
-		}
-	}
+    Connections {
+        target: KeyLockState
+        function onCapsLockStateChanged() {
+            root.isCapsLockOSDShow = true;
+            hideOSDTimer.restart();
+        }
+        function onNumLockStateChanged() {
+            root.isNumLockOSDShow = true;
+            hideOSDTimer.restart();
+        }
+    }
 
-	PwObjectTracker {
-		objects: [Pipewire.defaultAudioSink]
-	}
+    PwObjectTracker {
+        objects: [Pipewire.defaultAudioSink]
+    }
 
-	Connections {
-		target: Pipewire.defaultAudioSink.audio
-		function onVolumeChanged() {
-			root.isVolumeOSDShow = true;
-			hideOSDTimer.restart();
-		}
-	}
+    Connections {
+        target: Pipewire.defaultAudioSink.audio
+        function onVolumeChanged() {
+            root.isVolumeOSDShow = true;
+            hideOSDTimer.restart();
+        }
+    }
 
-	Timer {
-		id: hideOSDTimer
+    Timer {
+        id: hideOSDTimer
 
-		interval: 2000
-		onTriggered: {
-			root.isVolumeOSDShow = false;
-			root.isCapsLockOSDShow = false;
-			root.isNumLockOSDShow = false;
-		}
-	}
+        interval: 2000
+        onTriggered: {
+            root.isVolumeOSDShow = false;
+            root.isCapsLockOSDShow = false;
+            root.isNumLockOSDShow = false;
+        }
+    }
 
-	Volumes {
-		active: root.isVolumeOSDShow
-	}
+    Volumes {
+        active: root.isVolumeOSDShow
+    }
 
-	CapsLockWidget {
-		active: root.isCapsLockOSDShow
-	}
+    CapsLockWidget {
+        active: root.isCapsLockOSDShow
+    }
 
-	NumLockWidget {
-		active: root.isNumLockOSDShow
-	}
+    NumLockWidget {
+        active: root.isNumLockOSDShow
+    }
 }
