@@ -59,7 +59,7 @@ LazyLoader {
 
 					implicitHeight: 10
 					radius: 20
-					color: Colors.withAlpha(Colors.dark.primary, 0.3)
+					color: Colors.colors.secondary_container
 
 					StyledRect {
 						anchors {
@@ -68,7 +68,7 @@ LazyLoader {
 							bottom: parent.bottom
 						}
 
-						color: Colors.dark.primary
+						color: Colors.colors.primary
 
 						implicitWidth: parent.width * (Pipewire.defaultAudioSink?.audio.volume ?? 0)
 						radius: parent.radius
