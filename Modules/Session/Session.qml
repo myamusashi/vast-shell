@@ -183,13 +183,12 @@ Scope {
 					id: boxConfirmation
 
 					anchors.centerIn: parent
-					z: 100
 
 					header: "Session"
 					body: "Do you want to " + session.pendingActionName.toLowerCase()
 					active: session.showConfirmDialog
 
-					onYesClicked: {
+					onAccepted: {
 						if (session.pendingAction)
 							session.pendingAction();
 
@@ -199,7 +198,7 @@ Scope {
 						session.pendingActionName = "";
 					}
 
-					onNoClicked: {
+					onRejected: {
 						session.showConfirmDialog = false;
 						session.pendingAction = null;
 						session.pendingActionName = "";
