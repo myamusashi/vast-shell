@@ -11,8 +11,8 @@ Loader {
 
 	required property string header
 	required property string body
-	signal yesClicked
-	signal noClicked
+	signal accepted
+	signal rejected
 
 	active: false
 
@@ -25,10 +25,15 @@ Loader {
 		}
 		color: "transparent"
 
+		MouseArea {
+			anchors.fill: parent
+			onClicked: root.rejected()
+		}
+
 		StyledRect {
 			anchors.centerIn: parent
 			implicitWidth: 400
-			implicitHeight: bodyText.lineCount > 4 ? bodyText.implicitHeight + 50 : 200
+			implicitHeight: bodyText.implicitHeight + 150
 			radius: Appearance.rounding.large
 			color: Colors.colors.surface_container_high
 			border.color: Colors.colors.outline
@@ -36,7 +41,6 @@ Loader {
 
 			ColumnLayout {
 				anchors.fill: parent
-
 				anchors.margins: 20
 
 				StyledText {
@@ -53,9 +57,9 @@ Loader {
 
 				Rectangle {
 					implicitHeight: 1
-					implicitWidth: parent * 0.7
+					implicitWidth: parent.width
 
-					color: Colors.withAlpha(Colors.colors.outline, 0.3)
+					color: Colors.colors.outline_variant
 				}
 
 				StyledText {
@@ -64,16 +68,17 @@ Loader {
 					text: root.body
 					color: Colors.colors.on_background
 					font.pixelSize: Appearance.fonts.large
-					wrapMode: Text.WordWrap
+					wrapMode: Text.Wrap
+
 					Layout.fillWidth: true
 					Layout.fillHeight: true
 				}
 
 				Rectangle {
 					implicitHeight: 1
-					implicitWidth: parent * 0.7
+					implicitWidth: parent.width
 
-					color: Colors.withAlpha(Colors.colors.outline, 0.3)
+					color: Colors.colors.outline_variant
 				}
 
 				RowLayout {
@@ -83,26 +88,20 @@ Loader {
 
 					StyledButton {
 						iconButton: "cancel"
-
 						buttonTitle: "No"
-
 						buttonColor: "transparent"
-
 						buttonHoverColor: "transparent"
 						buttonPressedColor: "transparent"
-						onClicked: root.noClicked()
+						onClicked: root.rejected()
 					}
 
 					StyledButton {
 						iconButton: "check"
-
 						buttonTitle: "Yes"
-
 						buttonColor: "transparent"
-
 						buttonHoverColor: "transparent"
 						buttonPressedColor: "transparent"
-						onClicked: root.yesClicked()
+						onClicked: root.accepted()
 					}
 				}
 			}
