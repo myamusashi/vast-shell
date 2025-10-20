@@ -110,9 +110,8 @@ Scope {
 							id: wallid
 
 							path: Qt.resolvedUrl(Quickshell.env("HOME") + "/.cache/wall/path.txt")
-
 							watchChanges: true
-
+							blockLoading: true
 							onFileChanged: reload()
 						}
 

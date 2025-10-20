@@ -30,8 +30,8 @@ Scope {
 
 			margins.top: 20
 
-			width: 120
-			height: 250
+			implicitWidth: 120
+			implicitHeight: 250
 			screen: modelData
 			color: Colors.colors.background
 			visible: root.isMenuOpen

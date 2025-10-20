@@ -12,7 +12,7 @@ Loader {
 	active: true
 	asynchronous: true
 
-	anchors.centerIn: parent
+	Layout.alignment: Qt.AlignCenter
 
 	sourceComponent: StyledRect {
 		id: root

@@ -24,7 +24,6 @@ StyledRect {
 		id: mArea
 
 		anchors.fill: parent
-
 		hoverEnabled: true
 
 		RowLayout {
@@ -33,7 +32,6 @@ StyledRect {
 			anchors.bottom: parent.bottom
 			anchors.left: parent.left
 			anchors.top: parent.top
-			clip: true
 
 			Repeater {
 				model: [
@@ -60,12 +58,12 @@ StyledRect {
 					property bool isAnimating: false
 
 					Layout.fillHeight: true
-					implicitWidth: this.height ? this.height : 1
+					implicitWidth: height ? height : 1
 
 					StyledRect {
 						id: bgCon
-						anchors.fill: parent
 
+						anchors.fill: parent
 						anchors.margins: 2
 						color: Colors.colors.primary
 						radius: Appearance.rounding.small
@@ -75,51 +73,11 @@ StyledRect {
 							enabled: !delegateRoot.isAnimating
 							NumbAnim {}
 						}
-
-						SequentialAnimation {
-							id: selectionPulse
-							loops: 1
-							running: false
-
-							ParallelAnimation {
-								ScaleAnimator {
-									target: bgCon
-									from: 1.0
-									to: 1.15
-									duration: Appearance.animations.durations.small
-									easing.type: Easing.BezierSpline
-									easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-								}
-								NumbAnim {
-									target: bgCon
-									property: "opacity"
-									from: 1.0
-									to: 0.7
-								}
-							}
-
-							ParallelAnimation {
-								ScaleAnimator {
-									target: bgCon
-									from: 1.15
-									to: 1.0
-									duration: Appearance.animations.durations.normal
-									easing.type: Easing.BezierSpline
-									easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-								}
-								NumbAnim {
-									target: bgCon
-									property: "opacity"
-									from: 0.7
-									to: 1.0
-									easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-								}
-							}
-						}
 					}
 
 					MArea {
 						id: clickArea
+
 						anchors.margins: 4
 						layerColor: fgText.color
 						cursorShape: Qt.PointingHandCursor
@@ -129,6 +87,7 @@ StyledRect {
 
 						StyledRect {
 							id: rippleEffect
+
 							anchors.centerIn: parent
 							width: 0
 							height: width
@@ -138,6 +97,7 @@ StyledRect {
 
 							ParallelAnimation {
 								id: rippleAnimation
+
 								running: false
 
 								NumbAnim {
@@ -170,6 +130,7 @@ StyledRect {
 
 						SequentialAnimation {
 							id: clickAnimation
+
 							running: false
 
 							onStarted: delegateRoot.isAnimating = true
@@ -179,19 +140,9 @@ StyledRect {
 								ScaleAnimator {
 									target: delegateRoot
 									from: 1.0
-									to: 0.95
-									duration: Appearance.animations.durations.small
+									to: 0.3
 									easing.type: Easing.BezierSpline
 									easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-								}
-
-								ScaleAnimator {
-									target: fgText
-									from: 1.0
-									to: 0.9
-									duration: Appearance.animations.durations.small
-									easing.type: Easing.BezierSpline
-									easing.bezierCurve: Appearance.animations.curves.emphasized
 								}
 
 								ScriptAction {
@@ -202,18 +153,8 @@ StyledRect {
 							ParallelAnimation {
 								ScaleAnimator {
 									target: delegateRoot
-									from: 0.95
+									from: 0.3
 									to: 1.0
-									duration: Appearance.animations.durations.expressiveFastSpatial
-									easing.type: Easing.BezierSpline
-									easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-								}
-
-								ScaleAnimator {
-									target: fgText
-									from: 0.9
-									to: 1.0
-									duration: Appearance.animations.durations.expressiveFastSpatial
 									easing.type: Easing.BezierSpline
 									easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
 								}
@@ -221,13 +162,6 @@ StyledRect {
 
 							PauseAnimation {
 								duration: Appearance.animations.durations.small
-							}
-
-							ScriptAction {
-								script: {
-									if (delegateRoot.modelData.profile == PowerProfiles.profile)
-										selectionPulse.start();
-								}
 							}
 						}
 
@@ -242,13 +176,8 @@ StyledRect {
 
 						anchors.centerIn: parent
 						color: bgCon.visible ? Colors.colors.on_primary : Colors.colors.on_background
-						font.pixelSize: Appearance.fonts.large * 1.2
+						font.pixelSize: Appearance.fonts.larger + 2
 						icon: delegateRoot.modelData.icon
-
-						Behavior on color {
-							enabled: !delegateRoot.isAnimating
-							ColAnim {}
-						}
 					}
 				}
 			}

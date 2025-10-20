@@ -324,7 +324,6 @@ Loader {
 								value: Player.active.length > 0 ? Player.active.position / Player.active.length : 0
 
 								valueWidth: 300
-
 								valueHeight: 10
 
 								FrameAnimation {

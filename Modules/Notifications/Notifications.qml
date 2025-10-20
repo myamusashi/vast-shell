@@ -56,9 +56,8 @@ LazyLoader {
 			anchors.top: parent.top
 			anchors.fill: parent
 
-			anchors.margins: 5
 			spacing: Appearance.spacing.normal
-			clip: false
+			clip: true
 			model: ScriptModel {
 				values: [...Notifs.notifications.popupNotifications.map(a => a)].reverse()
 			}
@@ -484,16 +483,6 @@ LazyLoader {
 											font.weight: actionMouse.containsMouse ? Font.Medium : Font.Normal
 											color: actionMouse.containsMouse ? Colors.colors.on_primary_container : Colors.colors.on_surface
 											elide: Text.ElideRight
-										}
-
-										Behavior on color {
-											NumbAnim {}
-										}
-										Behavior on border.color {
-											ColAnim {}
-										}
-										Behavior on border.width {
-											NumbAnim {}
 										}
 									}
 								}

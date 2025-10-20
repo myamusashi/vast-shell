@@ -97,16 +97,6 @@ RowLayout {
 								backer.cache: true
 
 								backer.asynchronous: true
-
-								MouseArea {
-									anchors.fill: parent
-
-									hoverEnabled: true
-
-									cursorShape: Qt.PointingHandCursor
-
-									// onClicked:
-								}
 							}
 						}
 					}
