@@ -123,8 +123,8 @@ Scope {
 							sourceComponent: Image {
 								source: wallid.text().trim()
 								sourceSize.width: root.workspaceWidth
-								width: root.workspaceWidth
-								height: root.workspaceHeight
+								width: workspaceContainer.width - 10
+								height: workspaceContainer.height - 10
 								fillMode: Image.PreserveAspectCrop
 								smooth: false
 								cache: true
@@ -224,6 +224,7 @@ Scope {
 									property bool dragged: false
 
 									drag.target: (toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized) ? undefined : toplevel
+									cursorShape: dragged ? Qt.DragMoveCursor : Qt.ArrowCursor
 									acceptedButtons: Qt.LeftButton | Qt.RightButton
 									anchors.fill: parent
 
