@@ -36,80 +36,54 @@ Loader {
 			z: -1
 
 			Loader {
-
 				active: Player.active == null
-				asynchronous: true
 
 				anchors.fill: parent
-
 				sourceComponent: AnimatedImage {
 					id: coverNull
 
 					anchors.fill: parent
-
 					visible: Player.active == null
 					source: Qt.resolvedUrl("root:/Assets/kuru.gif")
 				}
 			}
 
 			Loader {
-				id: coverImageLoader
 				active: Player.active !== null
-				asynchronous: true
 
 				anchors.fill: parent
-
 				sourceComponent: Image {
 					id: coverSource
 
 					anchors.fill: parent
-
-					visible: false
+					visible: true
 					source: Player.active.trackArtUrl
 					fillMode: Image.PreserveAspectCrop
-
 					layer.enabled: true
 					layer.effect: MultiEffect {
 						autoPaddingEnabled: false
-
 						blurEnabled: true
-
 						blurMax: 40
 						blur: 0.7
 
-						source: coverSource
-						anchors.fill: parent
-
 						maskEnabled: true
-
 						maskSource: maskWallCover
+						maskThresholdMin: 0.5
+						maskSpreadAtMin: 0.0
 					}
 				}
 			}
-
-			// MultiEffect {
-			// 	autoPaddingEnabled: false
-			//
-			// 	blurEnabled: true
-			// 	blurMax: 40
-			// 	blur: 0.7
-			//
-			// 	source:
-			// 	anchors.fill: parent
-			// 	maskEnabled: true
-			// 	maskSource: maskWallCover
-			// }
 
 			Item {
 				id: maskWallCover
 
 				anchors.fill: parent
-
 				layer.enabled: true
 				visible: false
+
 				StyledRect {
-					width: wallCover.width
-					height: wallCover.height
+					anchors.fill: parent
+					color: "white"
 					radius: root.radius
 				}
 			}
