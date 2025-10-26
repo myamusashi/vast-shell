@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Io
 import Quickshell
@@ -8,6 +9,7 @@ import QtQuick.Layouts
 
 import qs.Data
 import qs.Helpers
+import qs.Widgets
 import qs.Components
 
 Scope {
@@ -17,11 +19,20 @@ Scope {
 	property bool isScreencaptureOpen: false
 	property string scriptPath: `${Quickshell.shellDir}/Assets/screen-capture.sh`
 
+	GlobalShortcut {
+		name: "screencaptureLauncher"
+		onPressed: screencapture.isScreencaptureOpen = !screencapture.isScreencaptureOpen
+	}
+
 	LazyLoader {
 		active: screencapture.isScreencaptureOpen
 
 		component: PanelWindow {
 			id: captureWindow
+
+			property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
+			property real monitorWidth: monitor.width / monitor.scale
+			property real monitorHeight: monitor.height / monitor.scale
 
 			visible: screencapture.isScreencaptureOpen
 			focusable: true
@@ -33,13 +44,14 @@ Scope {
 
 			WlrLayershell.namespace: "shell:capture"
 
-			exclusiveZone: 0
-			implicitWidth: 400
-			implicitHeight: 350
-			margins.left: 450
+			implicitWidth: monitorWidth * 0.18
+			implicitHeight: monitorHeight * 0.35
+			margins.right: monitorWidth * 0.41
+			margins.left: monitorWidth * 0.41
 
-			margins.right: 450
 			color: "transparent"
+
+			property int activeTab: 0
 
 			Item {
 				anchors.fill: parent
@@ -52,148 +64,334 @@ Scope {
 					border.color: Colors.colors.outline
 					border.width: 2
 
-					property int padding: Appearance.spacing.large
+					property int padding: Appearance.spacing.normal
 
 					ColumnLayout {
 						anchors.fill: parent
-
 						anchors.margins: parent.padding
 						spacing: Appearance.spacing.small
 
-						Repeater {
-							model: [
-								{
-									name: "Screenshot window apps",
-									icon: "select_window_2",
-									action: () => {
-										Quickshell.execDetached({
-											command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
-										});
-									}
-								},
-								{
-									name: "Screenshot selection",
-									icon: "select",
-									action: () => {
-										Quickshell.execDetached({
-											command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-										});
-									}
-								},
-								{
-									name: "Screenshot eDP-1",
-									icon: "monitor",
-									action: () => {
-										Quickshell.execDetached({
-											command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-eDP-1"]
-										});
-									}
-								},
-								{
-									name: "Screenshot HDMI-A-2",
-									icon: "monitor",
-									action: () => {
-										Quickshell.execDetached({
-											command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-HDMI-A-2"]
-										});
-									}
-								},
-								{
-									name: "Screenshot both screen",
-									icon: "dual_screen",
-									action: () => {
-										Quickshell.execDetached({
-											command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-both-screens"]
-										});
-									}
-								},
-							]
+						RowLayout {
+							Layout.fillWidth: true
+							spacing: 0
 
-							delegate: StyledRect {
-								id: iconDelegate
+							Repeater {
+								model: ["Screenshot", "Screen record"]
 
-								required property var modelData
-								required property int index
+								delegate: StyledRect {
+									id: tabButton
 
-								Layout.preferredHeight: 45
+									required property string modelData
+									required property int index
 
-								RowLayout {
-									id: rowIndex
+									Layout.fillWidth: true
+									Layout.preferredHeight: 32
 
-									anchors.fill: parent
+									radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
 
-									Layout.alignment: Qt.AlignCenter
-									spacing: Appearance.spacing.normal
-
-									focus: iconDelegate.index === screencapture.currentIndex
-									Keys.onEnterPressed: {
-										iconDelegate.modelData.action();
-										screencapture.isScreencaptureOpen = false;
-									}
-									Keys.onReturnPressed: {
-										iconDelegate.modelData.action();
-										screencapture.isScreencaptureOpen = false;
-									}
-									Keys.onUpPressed: screencapture.currentIndex > 0 ? screencapture.currentIndex-- : ""
-									Keys.onDownPressed: screencapture.currentIndex < 4 ? screencapture.currentIndex++ : ""
-									Keys.onEscapePressed: screencapture.isScreencaptureOpen = !screencapture.isScreencaptureOpen
-
-									transform: Scale {
-										id: scaleTransform
-
-										origin.x: rowIndex.width / 2
-										origin.y: rowIndex.height / 2
-										xScale: iconDelegate.index === screencapture.currentIndex ? 1.05 : 1.0
-										yScale: iconDelegate.index === screencapture.currentIndex ? 1.05 : 1.0
-
-										Behavior on xScale {
-											NumbAnim {
-												easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-											}
-										}
-										Behavior on yScale {
-											NumbAnim {
-												easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-											}
-										}
-									}
-
-									MatIcon {
-										id: icon
-
-										icon: iconDelegate.modelData.icon
-										color: iconDelegate.index === screencapture.currentIndex ? Colors.colors.primary : Colors.colors.outline
-										font.pixelSize: Appearance.fonts.large * 1.1
-										Layout.margins: Appearance.spacing.small
-										Layout.alignment: Qt.AlignVCenter
-
-										Behavior on color {
-											ColAnim {
-												easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-											}
-										}
-									}
+									color: captureWindow.activeTab === index ? Colors.colors.primary : Colors.colors.surface
 
 									StyledText {
-										id: name
-
-										color: iconDelegate.index === screencapture.currentIndex ? Colors.colors.primary : Colors.colors.outline
-										font.pixelSize: Appearance.fonts.large * 1.1
-										Layout.margins: Appearance.spacing.small
-										text: iconDelegate.modelData.name
+										anchors.centerIn: parent
+										text: tabButton.modelData
+										color: captureWindow.activeTab === tabButton.index ? Colors.colors.on_primary : Colors.colors.outline
+										font.pixelSize: Appearance.fonts.normal * 0.9
+										font.bold: captureWindow.activeTab === tabButton.index
 									}
 
 									MouseArea {
-										id: mArea
-
+										anchors.fill: parent
 										cursorShape: Qt.PointingHandCursor
-										hoverEnabled: true
+										onClicked: captureWindow.activeTab = tabButton.index
+									}
 
-										onClicked: {
-											icon.focus = true;
-											iconDelegate.modelData.action();
+									Behavior on color {
+										ColAnim {
+											easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
 										}
-										onEntered: parent.focus = true
+									}
+								}
+							}
+						}
+
+						StackLayout {
+							Layout.fillWidth: true
+							Layout.fillHeight: true
+							currentIndex: captureWindow.activeTab
+
+							ColumnLayout {
+								spacing: Appearance.spacing.small
+
+								Repeater {
+									model: [
+										{
+											name: "Window",
+											icon: "select_window_2",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
+												});
+											}
+										},
+										{
+											name: "Selection",
+											icon: "select",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
+												});
+											}
+										},
+										{
+											name: "eDP-1",
+											icon: "monitor",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-eDP-1"]
+												});
+											}
+										},
+										{
+											name: "HDMI-A-2",
+											icon: "monitor",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-HDMI-A-2"]
+												});
+											}
+										},
+										{
+											name: "Both Screens",
+											icon: "dual_screen",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-both-screens"]
+												});
+											}
+										}
+									]
+
+									delegate: StyledRect {
+										id: iconDelegate1
+
+										required property var modelData
+										required property int index
+
+										Layout.preferredHeight: 38
+										Layout.fillWidth: true
+
+										RowLayout {
+											id: rowIndex1
+
+											anchors.fill: parent
+											anchors.leftMargin: Appearance.spacing.small
+											anchors.rightMargin: Appearance.spacing.small
+
+											spacing: Appearance.spacing.normal
+
+											focus: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0
+											Keys.onEnterPressed: {
+												iconDelegate1.modelData.action();
+												screencapture.isScreencaptureOpen = false;
+											}
+											Keys.onReturnPressed: {
+												iconDelegate1.modelData.action();
+												screencapture.isScreencaptureOpen = false;
+											}
+											Keys.onUpPressed: screencapture.currentIndex > 0 ? screencapture.currentIndex-- : ""
+											Keys.onDownPressed: screencapture.currentIndex < 4 ? screencapture.currentIndex++ : ""
+											Keys.onEscapePressed: screencapture.isScreencaptureOpen = !screencapture.isScreencaptureOpen
+
+											transform: Scale {
+												id: scaleTransform1
+
+												origin.x: rowIndex1.width / 2
+												origin.y: rowIndex1.height / 2
+												xScale: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? 1.03 : 1.0
+												yScale: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? 1.03 : 1.0
+
+												Behavior on xScale {
+													NumbAnim {
+														easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+													}
+												}
+												Behavior on yScale {
+													NumbAnim {
+														easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+													}
+												}
+											}
+
+											MatIcon {
+												id: icon1
+
+												icon: iconDelegate1.modelData.icon
+												color: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? Colors.colors.primary : Colors.colors.outline
+												font.pixelSize: Appearance.fonts.large
+												Layout.alignment: Qt.AlignVCenter
+
+												Behavior on color {
+													ColAnim {
+														easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+													}
+												}
+											}
+
+											StyledText {
+												id: name1
+
+												color: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? Colors.colors.primary : Colors.colors.outline
+												font.pixelSize: Appearance.fonts.normal
+												text: iconDelegate1.modelData.name
+												Layout.fillWidth: true
+											}
+
+											MouseArea {
+												id: mArea1
+
+												Layout.fillWidth: true
+												Layout.fillHeight: true
+												cursorShape: Qt.PointingHandCursor
+												hoverEnabled: true
+
+												onClicked: {
+													icon1.focus = true;
+													iconDelegate1.modelData.action();
+													screencapture.isScreencaptureOpen = false;
+												}
+												onEntered: parent.focus = true
+											}
+										}
+									}
+								}
+							}
+
+							ColumnLayout {
+								spacing: Appearance.spacing.small
+
+								Repeater {
+									model: [
+										{
+											name: "Selection",
+											icon: "select",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+												});
+											}
+										},
+										{
+											name: "eDP-1",
+											icon: "monitor",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-eDP-1"]
+												});
+											}
+										},
+										{
+											name: "HDMI-A-2",
+											icon: "monitor",
+											action: () => {
+												Quickshell.execDetached({
+													command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-HDMI-A-2"]
+												});
+											}
+										}
+									]
+
+									delegate: StyledRect {
+										id: iconDelegate2
+
+										required property var modelData
+										required property int index
+
+										Layout.preferredHeight: 38
+										Layout.fillWidth: true
+
+										RowLayout {
+											id: rowIndex2
+
+											anchors.fill: parent
+											anchors.leftMargin: Appearance.spacing.small
+											anchors.rightMargin: Appearance.spacing.small
+
+											spacing: Appearance.spacing.normal
+
+											focus: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1
+											Keys.onEnterPressed: {
+												iconDelegate2.modelData.action();
+												screencapture.isScreencaptureOpen = false;
+											}
+											Keys.onReturnPressed: {
+												iconDelegate2.modelData.action();
+												screencapture.isScreencaptureOpen = false;
+											}
+											Keys.onUpPressed: screencapture.currentIndex > 0 ? screencapture.currentIndex-- : ""
+											Keys.onDownPressed: screencapture.currentIndex < 2 ? screencapture.currentIndex++ : ""
+											Keys.onEscapePressed: screencapture.isScreencaptureOpen = !screencapture.isScreencaptureOpen
+
+											transform: Scale {
+												id: scaleTransform2
+
+												origin.x: rowIndex2.width / 2
+												origin.y: rowIndex2.height / 2
+												xScale: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? 1.03 : 1.0
+												yScale: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? 1.03 : 1.0
+
+												Behavior on xScale {
+													NumbAnim {
+														easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+													}
+												}
+												Behavior on yScale {
+													NumbAnim {
+														easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+													}
+												}
+											}
+
+											MatIcon {
+												id: icon2
+
+												icon: iconDelegate2.modelData.icon
+												color: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? Colors.colors.primary : Colors.colors.outline
+												font.pixelSize: Appearance.fonts.large
+												Layout.alignment: Qt.AlignVCenter
+
+												Behavior on color {
+													ColAnim {
+														easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+													}
+												}
+											}
+
+											StyledText {
+												id: name2
+
+												color: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? Colors.colors.primary : Colors.colors.outline
+												font.pixelSize: Appearance.fonts.normal
+												text: iconDelegate2.modelData.name
+												Layout.fillWidth: true
+											}
+
+											MouseArea {
+												id: mArea2
+
+												Layout.fillWidth: true
+												Layout.fillHeight: true
+												cursorShape: Qt.PointingHandCursor
+												hoverEnabled: true
+
+												onClicked: {
+													icon2.focus = true;
+													iconDelegate2.modelData.action();
+													recordControl.isRecordingControlOpen = true;
+													screencapture.isScreencaptureOpen = false;
+												}
+												onEntered: parent.focus = true
+											}
+										}
 									}
 								}
 							}
@@ -202,6 +400,10 @@ Scope {
 				}
 			}
 		}
+	}
+
+	RecordControl {
+		id: recordControl
 	}
 
 	IpcHandler {
