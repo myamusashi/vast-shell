@@ -92,7 +92,7 @@ StyledRect {
 							width: 0
 							height: width
 							radius: width / 2
-							color: Colors.colors.primary
+							color: Colors.colors.on_primary
 							opacity: 0
 
 							ParallelAnimation {

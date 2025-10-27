@@ -41,27 +41,13 @@ RowLayout {
 
 				MatIcon {
 					icon: "power_settings_circle"
-					color: {
-						if (mouseAreaMain.containsPress)
-							Colors.withAlpha(Colors.colors.on_primary, 0.08);
-						else if (mouseAreaMain.containsMouse)
-							Colors.withAlpha(Colors.colors.on_primary, 0.1);
-						else
-							Colors.colors.on_primary;
-					}
+					color: Colors.colors.on_primary
 					font.pixelSize: Appearance.fonts.extraLarge
 				}
 
 				StyledText {
 					text: "Shutdown"
-					color: {
-						if (mouseAreaMain.containsPress)
-							Colors.withAlpha(Colors.colors.on_primary, 0.08);
-						else if (mouseAreaMain.containsMouse)
-							Colors.withAlpha(Colors.colors.on_primary, 0.1);
-						else
-							Colors.colors.on_primary;
-					}
+					color: Colors.colors.on_primary
 					font.pixelSize: Appearance.fonts.large
 				}
 			}

@@ -33,7 +33,7 @@ ColumnLayout {
 		Layout.alignment: Qt.AlignHCenter
 		Layout.preferredWidth: 320 + hours.width
 		Layout.preferredHeight: 320
-		color: Qt.rgba(Colors.colors.secondary.r, Colors.colors.secondary.g, Colors.colors.secondary.b, 0.12)
+		color: Colors.withAlpha(Colors.colors.secondary, 0.12)
 		radius: width / 2
 
 		StyledRect {
@@ -42,7 +42,7 @@ ColumnLayout {
 			color: "transparent"
 			radius: parent.radius - 2
 			border.width: 1
-			border.color: Qt.rgba(Colors.colors.secondary.r, Colors.colors.secondary.g, Colors.colors.secondary.b, 0.08)
+			border.color: Colors.withAlpha(Colors.colors.secondary, 0.8)
 		}
 
 		ColumnLayout {
@@ -69,7 +69,7 @@ ColumnLayout {
 				Layout.alignment: Qt.AlignHCenter
 				Layout.preferredWidth: 60
 				Layout.preferredHeight: 32
-				color: Qt.rgba(Colors.colors.on_surface.r, Colors.colors.on_surface.g, Colors.colors.on_surface.b, 0.15)
+				color: Colors.withAlpha(Colors.colors.on_surface, 0.15)
 				radius: 16
 
 				Label {
