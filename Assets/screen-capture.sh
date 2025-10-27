@@ -105,17 +105,18 @@ start_recording() {
 	fi
 
 	VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mkv"
-
+	HW_ACCEL_OPTS="-c h264_vaapi -d /dev/dri/renderD128"
+	
 	if [ -n "$geometry" ]; then
-		wf-recorder -g "$geometry" -f "$VID" &
+		wf-recorder -g "$geometry" "$HW_ACCEL_OPTS" -f "$VID" &
 	elif [ -n "$output" ]; then
-		wf-recorder -o "$output" -f "$VID" &
+		wf-recorder -o "$output" "$HW_ACCEL_OPTS" -f "$VID" &
 	else
-		wf-recorder -f "$VID" &
+		wf-recorder "$HW_ACCEL_OPTS" -f "$VID" &
 	fi
 
 	echo $! >"$RECORD_PID_FILE"
-	echo "$VID" >"$RECORD_VIDEO_FILE" # Simpan path video
+	echo "$VID" >"$RECORD_VIDEO_FILE"
 	notify-send -a "screenrecord" "Recording Started" "Press the same keybind again to stop recording."
 }
 
@@ -123,7 +124,6 @@ stop_recording() {
 	if [ -f "$RECORD_PID_FILE" ]; then
 		PID=$(cat "$RECORD_PID_FILE")
 
-		# Baca path video yang tersimpan
 		if [ -f "$RECORD_VIDEO_FILE" ]; then
 			VID=$(cat "$RECORD_VIDEO_FILE")
 		else
@@ -140,7 +140,6 @@ stop_recording() {
 
 			sleep 1
 
-			# Gunakan nama file video untuk thumbnail
 			VIDEO_BASENAME=$(basename "$VID" .mkv)
 			THUMB_PATH="$THUMBNAIL_DIR/${VIDEO_BASENAME}.png"
 
