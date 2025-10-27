@@ -24,6 +24,11 @@ LazyLoader {
 			right: true
 		}
 
+		margins {
+			right: 5
+			top: 5
+		}
+
 		WlrLayershell.namespace: "shell:notification"
 		exclusiveZone: 0
 		color: "transparent"
@@ -79,10 +84,11 @@ LazyLoader {
 
 				property bool hasImage: modelData.image.length > 0
 				property bool hasAppIcon: modelData.appIcon.length > 0
+				property bool isShowMoreBody: false
 				property bool isPaused: false
 
 				implicitWidth: notifListView.width
-				implicitHeight: contentLayout.implicitHeight * 1.3
+				implicitHeight: contentLayout.implicitHeight + 32
 				boundsBehavior: Flickable.DragAndOvershootBounds
 				flickableDirection: Flickable.HorizontalFlick
 
@@ -91,6 +97,10 @@ LazyLoader {
 
 					object: delegateNotif.modelData
 					locked: true
+				}
+
+				Behavior on width {
+					NumbAnim {}
 				}
 
 				Behavior on x {
@@ -128,17 +138,26 @@ LazyLoader {
 				StyledRect {
 					anchors.fill: parent
 
-					color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.on_error : Colors.colors.surface
+					color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error_container : Colors.colors.surface_container_low
 
-					radius: 8
-					border.color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : Colors.colors.outline
-					border.width: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? 3 : 1
+					radius: Appearance.rounding.large
+
+					layer.enabled: true
+					layer.effect: MultiEffect {
+						shadowEnabled: true
+						shadowColor: Colors.withAlpha(Colors.colors.shadow, 0.15)
+						shadowBlur: 0.4
+						shadowVerticalOffset: 2
+						shadowHorizontalOffset: 0
+					}
+
+					border.color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : "transparent"
+					border.width: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
 
 					MouseArea {
 						id: delegateMouseNotif
 
 						anchors.fill: parent
-
 						hoverEnabled: true
 
 						onEntered: {
@@ -172,14 +191,18 @@ LazyLoader {
 						id: contentLayout
 
 						anchors.fill: parent
+						anchors.margins: 16
+						spacing: Appearance.spacing.larger
 
-						anchors.margins: 10
-						spacing: Appearance.spacing.large * 1.5
+						Behavior on width {
+							NumbAnim {}
+						}
 
 						Item {
-							Layout.alignment: Qt.AlignCenter
-							Layout.preferredWidth: 65
-							Layout.preferredHeight: 65
+							Layout.alignment: Qt.AlignTop
+							Layout.topMargin: 4
+							Layout.preferredWidth: 40
+							Layout.preferredHeight: 40
 
 							Loader {
 								id: appIcon
@@ -187,13 +210,13 @@ LazyLoader {
 								active: delegateNotif.hasAppIcon || !delegateNotif.hasImage
 
 								anchors.centerIn: parent
-								width: 65
-								height: 65
+								width: 40
+								height: 40
 								sourceComponent: StyledRect {
-									width: 65
-									height: 65
+									width: 40
+									height: 40
 									radius: Appearance.rounding.full
-									color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Colors.colors.surface_container_highest : Colors.colors.secondary_container
+									color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Colors.colors.secondary_container : Colors.colors.primary_container
 
 									Loader {
 										id: icon
@@ -201,8 +224,8 @@ LazyLoader {
 										active: delegateNotif.hasAppIcon
 
 										anchors.centerIn: parent
-										width: 65
-										height: 65
+										width: 24
+										height: 24
 										sourceComponent: IconImage {
 											anchors.centerIn: parent
 											source: Quickshell.iconPath(delegateNotif.modelData.appIcon)
@@ -213,12 +236,10 @@ LazyLoader {
 										active: !delegateNotif.hasAppIcon
 
 										anchors.centerIn: parent
-										anchors.horizontalCenterOffset: -Appearance.fonts.large * 0.02
-										anchors.verticalCenterOffset: Appearance.fonts.large * 0.02
 										sourceComponent: MatIcon {
-											text: "release_alert"
-											color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.on_error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Colors.colors.on_surface : Colors.colors.on_secondary_container
-											font.pointSize: Appearance.fonts.large
+											text: "notifications_active"
+											color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.on_error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Colors.colors.on_secondary_container : Colors.colors.on_primary_container
+											font.pointSize: Appearance.fonts.normal
 										}
 									}
 								}
@@ -231,28 +252,27 @@ LazyLoader {
 
 								anchors.right: parent.right
 								anchors.bottom: parent.bottom
-								anchors.rightMargin: -5
-								anchors.bottomMargin: -5
-								width: 28
-								height: 28
+								anchors.rightMargin: -4
+								anchors.bottomMargin: -4
+								width: 20
+								height: 20
 								z: 1
 								sourceComponent: StyledRect {
-									width: 28
-									height: 28
-									radius: width / 2
-									color: "white"
-									border.color: Colors.colors.surface
-									border.width: 2
+									width: 20
+									height: 20
+									radius: 10
+									color: Colors.colors.surface
+									border.color: Colors.colors.outline_variant
+									border.width: 1.5
 
 									ClippingRectangle {
 										anchors.centerIn: parent
-										radius: width / 2
-										width: 24
-										height: 24
+										radius: 8
+										width: 16
+										height: 16
 
 										Image {
 											anchors.fill: parent
-
 											source: Qt.resolvedUrl(delegateNotif.modelData.image)
 											fillMode: Image.PreserveAspectCrop
 											cache: false
@@ -261,11 +281,10 @@ LazyLoader {
 											layer.enabled: true
 											layer.effect: MultiEffect {
 												maskEnabled: true
-
 												maskSource: StyledRect {
-													width: 24
-													height: 24
-													radius: width / 2
+													width: 16
+													height: 16
+													radius: 8
 												}
 											}
 										}
@@ -276,40 +295,92 @@ LazyLoader {
 
 						ColumnLayout {
 							Layout.fillWidth: true
-							spacing: 4
+							spacing: Appearance.spacing.small
 
 							RowLayout {
 								Layout.fillWidth: true
-								Layout.alignment: Qt.AlignTop
+								spacing: Appearance.spacing.small
 
-								StyledText {
-									id: appName
-
+								Item {
 									Layout.fillWidth: true
-									text: delegateNotif.modelData.appName
-									font.pixelSize: Appearance.fonts.small * 0.9
-									color: Colors.colors.on_background
-									elide: Text.ElideRight
+									RowLayout {
+										y: -10
+										Layout.alignment: Qt.AlignTop
+										StyledText {
+											id: appName
+
+											Layout.fillWidth: true
+											text: delegateNotif.modelData.appName
+											font.pixelSize: Appearance.fonts.large
+											font.weight: Font.Medium
+											color: Colors.colors.on_surface_variant
+											elide: Text.ElideRight
+										}
+
+										StyledText {
+											id: dots
+
+											text: "•"
+											color: Colors.colors.on_surface_variant
+											font.pixelSize: Appearance.fonts.large
+										}
+
+										StyledText {
+											id: whenTime
+
+											text: {
+												const now = new Date();
+												return TimeAgo.timeAgoWithIfElse(now);
+											}
+											color: Colors.colors.on_surface_variant
+										}
+									}
 								}
 
-								MatIcon {
-									Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-									icon: "close"
-									font.pixelSize: Appearance.fonts.normal * 1.7
-									color: mArea.containsMouse ? Colors.withAlpha(Colors.colors.error, 0.4) : Colors.colors.error
+								StyledRect {
+									id: expandButton
+
+									Layout.preferredWidth: 32
+									Layout.preferredHeight: 32
+
+									radius: Appearance.rounding.large
+									color: expandButtonMouse.pressed ? Colors.colors.secondary_container : expandButtonMouse.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : "transparent"
+
+									Behavior on color {
+										ColorAnimation {
+											duration: 100
+										}
+									}
+
+									MatIcon {
+										id: expandIcon
+
+										anchors.centerIn: parent
+										icon: delegateNotif.isShowMoreBody ? "expand_less" : "expand_more"
+										font.pixelSize: Appearance.fonts.large + 5
+										color: Colors.colors.on_surface_variant
+
+										RotationAnimator on rotation {
+											id: rotateArrowIcon
+
+											from: 0
+											to: 180
+											duration: Appearance.animations.durations.normal
+											easing.type: Easing.BezierSpline
+											easing.bezierCurve: Appearance.animations.curves.standard
+											running: false
+										}
+									}
 
 									MouseArea {
-										id: mArea
+										id: expandButtonMouse
 
 										anchors.fill: parent
-
 										hoverEnabled: true
-
-										onClicked: mevent => {
-											if (mevent.button === Qt.LeftButton) {
-												Notifs.notifications.removePopupNotification(delegateNotif.modelData);
-												Notifs.notifications.removeListNotification(delegateNotif.modelData);
-											}
+										cursorShape: Qt.PointingHandCursor
+										onClicked: {
+											delegateNotif.isShowMoreBody = !delegateNotif.isShowMoreBody;
+											rotateArrowIcon.running = !rotateArrowIcon.running;
 										}
 									}
 								}
@@ -320,12 +391,12 @@ LazyLoader {
 
 								Layout.fillWidth: true
 								text: delegateNotif.modelData.summary
-								font.pixelSize: Appearance.fonts.normal
-								color: Colors.colors.on_background
-								font.bold: true
-
+								font.pixelSize: Appearance.fonts.normal * 1.1
+								font.weight: Font.DemiBold // MD3 title style
+								color: Colors.colors.on_surface
 								elide: Text.ElideRight
-								wrapMode: Text.WordWrap
+								wrapMode: Text.Wrap
+								maximumLineCount: 2
 							}
 
 							StyledText {
@@ -333,13 +404,26 @@ LazyLoader {
 
 								Layout.fillWidth: true
 								text: delegateNotif.modelData.body || ""
-								font.pixelSize: Appearance.fonts.small * 1.2
-								color: Colors.colors.on_background
-								textFormat: Text.MarkdownText
-								maximumLineCount: 4
+								font.pixelSize: Appearance.fonts.small * 1.1
+								lineHeight: 1.4 // MD3 line height
+								color: Colors.colors.on_surface_variant
 								Layout.preferredWidth: parent.width
-								wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+								elide: Text.ElideRight
+								textFormat: delegateNotif.isShowMoreBody ? Text.MarkdownText : Text.StyledText
+								wrapMode: delegateNotif.isShowMoreBody ? Text.WrapAtWordBoundaryOrAnywhere : Text.Wrap
+								maximumLineCount: delegateNotif.isShowMoreBody ? 0 : 1
 								visible: text.length > 0
+								clip: true
+
+								transformOrigin: Item.Top
+
+								opacity: delegateNotif.isShowMoreBody ? 1.0 : 0.92
+								Behavior on opacity {
+									NumberAnimation {
+										duration: Appearance.animations.durations.short * 0.8
+										easing.type: Easing.OutQuad
+									}
+								}
 							}
 
 							RowLayout {
@@ -355,34 +439,38 @@ LazyLoader {
 										id: actionButton
 
 										Layout.fillWidth: true
-										Layout.preferredHeight: 36
+										Layout.preferredHeight: 40
 
 										required property NotificationAction modelData
 
-										color: actionMouse.pressed ? Colors.colors.primary_container : actionMouse.containsMouse ? Colors.colors.surface_container_highest : Colors.colors.surface_container_high
+										color: actionMouse.pressed ? Colors.colors.secondary_container : actionMouse.containsMouse ? Colors.colors.secondary_container : Colors.colors.surface_container_high
 
-										border.color: actionMouse.containsMouse ? Colors.colors.primary : Colors.colors.outline
-										border.width: actionMouse.containsMouse ? 2 : 1
-										radius: 6
+										radius: Appearance.rounding.full
+
+										Behavior on color {
+											ColorAnimation {
+												duration: Appearance.animations.durations.short
+												easing.type: Easing.OutCubic
+											}
+										}
 
 										StyledRect {
 											anchors.fill: parent
-
-											anchors.topMargin: 1
-											color: "transparent"
-											border.color: Colors.withAlpha(Colors.colors.background, 0.01)
-											border.width: actionMouse.pressed ? 0 : 1
 											radius: parent.radius
-											visible: !actionMouse.pressed
+											color: actionMouse.pressed ? Colors.withAlpha(Colors.colors.on_secondary_container, 0.12) : actionMouse.containsMouse ? Colors.withAlpha(Colors.colors.on_secondary_container, 0.08) : "transparent"
+
+											Behavior on color {
+												ColorAnimation {
+													duration: 100
+												}
+											}
 										}
 
 										MouseArea {
 											id: actionMouse
 
 											anchors.fill: parent
-
 											hoverEnabled: true
-
 											cursorShape: Qt.PointingHandCursor
 
 											onClicked: {
@@ -390,65 +478,14 @@ LazyLoader {
 												Notifs.notifications.removePopupNotification(delegateNotif.modelData);
 												Notifs.notifications.removeListNotification(delegateNotif.modelData);
 											}
-
-											StyledRect {
-												id: ripple
-
-												anchors.centerIn: parent
-												width: 0
-												height: 0
-												radius: width / 2
-												color: Colors.withAlpha(Colors.colors.primary, 03)
-												visible: false
-
-												SequentialAnimation {
-													id: rippleAnimation
-
-													PropertyAnimation {
-														target: ripple
-														property: "width"
-														to: Math.max(actionButton.width, actionButton.height) * 2
-														duration: Appearance.animations.durations.normal * 1.2
-														easing.type: Easing.BezierSpline
-														easing.bezierCurve: Appearance.animations.curves.standard
-													}
-													PropertyAnimation {
-														target: ripple
-														property: "height"
-														to: ripple.width
-														duration: 0
-													}
-													PropertyAnimation {
-														target: ripple
-														property: "opacity"
-														to: 0
-														duration: 200
-													}
-													onStarted: {
-														ripple.visible = true;
-														ripple.opacity = 1;
-													}
-													onFinished: {
-														ripple.visible = false;
-														ripple.width = 0;
-														ripple.height = 0;
-													}
-												}
-
-												Component.onCompleted: {
-													actionMouse.clicked.connect(rippleAnimation.start);
-												}
-											}
 										}
 
 										StyledText {
-											id: actionText
-
 											anchors.centerIn: parent
 											text: actionButton.modelData.text
-											font.pixelSize: Appearance.fonts.small * 1.1
-											font.weight: actionMouse.containsMouse ? Font.Medium : Font.Normal
-											color: actionMouse.containsMouse ? Colors.colors.on_primary_container : Colors.colors.on_surface
+											font.pixelSize: Appearance.fonts.small * 1.05
+											font.weight: Font.Medium // MD3 button text is medium weight
+											color: Colors.colors.on_secondary_container
 											elide: Text.ElideRight
 										}
 									}
