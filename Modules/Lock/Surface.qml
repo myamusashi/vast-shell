@@ -3,6 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
+import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 
 import qs.Data
@@ -22,6 +24,14 @@ WlSessionLockSurface {
 		}
 	}
 
+	FileView {
+		id: wallFile
+
+		path: Quickshell.env("HOME") + "/.cache/wall/path.txt"
+		watchChanges: true
+		onFileChanged: reload()
+	}
+
 	StyledRect {
 		id: surface
 
@@ -29,27 +39,70 @@ WlSessionLockSurface {
 
 		color: Colors.colors.surface_container_lowest
 
-		ScreencopyView {
+		Image {
 			id: wallpaper
 
 			anchors.fill: parent
-
-			captureSource: root.screen
+			antialiasing: true
+			asynchronous: true
+			retainWhileLoading: true
+			smooth: true
 			opacity: 1
-			visible: true
+			fillMode: Image.PreserveAspectCrop
+			source: wallFile.text().trim()
+			layer.enabled: true
+			layer.effect: MultiEffect {
+				id: wallBlur
+
+				autoPaddingEnabled: false
+				blurEnabled: true
+
+				NumbAnim on blur {
+					easing.type: Easing.Linear
+					from: 0
+					to: 0.69
+				}
+
+				NumbAnim {
+					easing.type: Easing.Linear
+					duration: Appearance.animations.durations.large
+					property: "blur"
+					running: root.lock.locked
+					target: wallBlur
+					to: 0
+				}
+			}
 		}
 
-		MultiEffect {
-			id: wallEffect
-
-			source: wallpaper
-			anchors.fill: parent
-
-			blurEnabled: true
-
-			blurMax: 64
-			blur: 1.0
-		}
+		// ScreencopyView {
+		// 	id: wallpaper
+		//
+		// 	anchors.fill: parent
+		//
+		// 	captureSource: root.screen
+		// 	opacity: 1
+		// 	visible: true
+		// 	layer.enabled: true
+		// 	layer.effect: MultiEffect {
+		// 		id: wallBlur
+		//
+		// 		autoPaddingEnabled: false
+		// 		blurEnabled: true
+		//
+		// 		NumbAnim on blur {
+		// 			from: 0
+		// 			to: 0.69
+		// 		}
+		//
+		// 		NumbAnim {
+		// 			duration: Appearance.animations.durations.large
+		// 			property: "blur"
+		// 			running: root.lock.locked
+		// 			target: wallBlur
+		// 			to: 0
+		// 		}
+		// 	}
+		// }
 
 		ColumnLayout {
 			id: clockContainer
@@ -104,14 +157,6 @@ WlSessionLockSurface {
 		id: unlockSequence
 
 		ParallelAnimation {
-			OpacityAnimator {
-				target: wallEffect
-				from: 1
-				to: 0
-				easing.bezierCurve: Appearance.animations.curves.standardDecel
-				duration: Appearance.animations.durations.extraLarge
-			}
-
 			PropertyAnimation {
 				target: clockContainer
 				properties: "opacity,scale"
@@ -156,14 +201,6 @@ WlSessionLockSurface {
 		running: true
 
 		ParallelAnimation {
-			OpacityAnimator {
-				target: wallEffect
-				from: 0
-				to: 1
-				easing.bezierCurve: Appearance.animations.curves.standardAccel
-				duration: Appearance.animations.durations.large
-			}
-
 			SequentialAnimation {
 				PauseAnimation {
 					duration: Appearance.animations.durations.small
