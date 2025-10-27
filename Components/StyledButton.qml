@@ -11,8 +11,8 @@ Button {
 	required property string buttonTitle
 	property string iconButton: ""
 	property color buttonColor: Colors.colors.surface_container_high
-	property color buttonHoverColor: Colors.withAlpha(Colors.colors.primary, 0.08)
-	property color buttonPressedColor: Colors.withAlpha(Colors.colors.primary, 0.1)
+	property color buttonHoverColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.08)
+	property color buttonPressedColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.1)
 	property color buttonTextColor: Colors.colors.primary
 	property color buttonHoverTextColor: Colors.withAlpha(Colors.colors.primary, 0.08)
 	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.primary, 0.1)

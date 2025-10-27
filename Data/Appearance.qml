@@ -3,13 +3,14 @@ pragma Singleton
 import Quickshell
 import QtQuick
 
+// Yoink this from Caelestia
 Singleton {
 	id: root
 
 	component FontsComponent: QtObject {
 		readonly property string family_Material: "Material Symbols Rounded"
 		readonly property string family_Mono: "Liga SFMono Nerd Font"
-		readonly property string family_Sans: "SF Pro Display"
+		readonly property string family_Sans: "SF Pro"
 
 		readonly property real small: 12
 		readonly property real medium: 13

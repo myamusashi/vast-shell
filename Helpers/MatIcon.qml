@@ -14,6 +14,7 @@ Text {
 
 	font.family: Appearance.fonts.family_Material
 	font.pixelSize: Appearance.fonts.medium
+	font.weight: 600
 	font.hintingPreference: Font.PreferNoHinting
 
 	antialiasing: true

@@ -35,7 +35,7 @@ Loader {
 			implicitWidth: 400
 			implicitHeight: bodyText.implicitHeight + 150
 			radius: Appearance.rounding.large
-			color: Colors.colors.surface_container_high
+			color: Colors.colors.surface
 			border.color: Colors.colors.outline
 			border.width: 2
 
@@ -98,9 +98,6 @@ Loader {
 					StyledButton {
 						iconButton: "check"
 						buttonTitle: "Yes"
-						buttonColor: "transparent"
-						buttonHoverColor: "transparent"
-						buttonPressedColor: "transparent"
 						onClicked: root.accepted()
 					}
 				}

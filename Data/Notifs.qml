@@ -24,7 +24,6 @@ Singleton {
 			persistenceSupported: true
 			onNotification: function (notification) {
 				notification.tracked = true;
-				console.log("Dapet notifikasi", notification.appName, "-", notification.summary);
 				root.listNotifications.push(notification);
 				root.popupNotifications.push(notification);
 			}

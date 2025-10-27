@@ -91,7 +91,7 @@ RowLayout {
 							delegate: IconImage {
 								required property HyprlandToplevel modelData
 								property Toplevel waylandHandle: modelData?.wayland
-								source: Quickshell.iconPath(DesktopEntries.heuristicLookup(waylandHandle.appId).icon, "image-missing")
+								source: Quickshell.iconPath(DesktopEntries.heuristicLookup(waylandHandle?.appId)?.icon, "image-missing")
 								Layout.preferredWidth: 16
 								Layout.preferredHeight: 16
 								backer.cache: true
