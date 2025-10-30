@@ -38,7 +38,7 @@ LazyLoader {
 				}
 
 				MatIcon {
-					icon: KeyLockState.capsLockState ? "lock" : "lock_open_right"
+					icon: KeyLockState.capsLockState ? "lock_open_right" : "lock" 
 					color: KeyLockState.capsLockState ? Colors.colors.primary : Colors.colors.tertiary
 					font.pixelSize: Appearance.fonts.large * 1.5
 				}

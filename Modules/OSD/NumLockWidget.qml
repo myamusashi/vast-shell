@@ -13,6 +13,8 @@ LazyLoader {
 
 	active: false
 	component: PanelWindow {
+		id: root
+
 		anchors.bottom: true
 		WlrLayershell.namespace: "shell:osd:numlock"
 		color: "transparent"
@@ -42,7 +44,7 @@ LazyLoader {
 				}
 
 				MatIcon {
-					icon: KeyLockState.numLockState ? "lock" : "lock_open_right"
+					icon: KeyLockState.numLockState ? "lock_open_right" : "lock"
 					color: KeyLockState.numLockState ? Colors.colors.primary : Colors.colors.tertiary
 					font.pixelSize: Appearance.fonts.large * 1.5
 				}
