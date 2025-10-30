@@ -7,21 +7,31 @@ import Quickshell.Io
 Singleton {
 	id: root
 
-	// This is the easiest way to get lock state with a little bit performance usage
+	property bool numLockState: false
+
+	Keys.onPressed: event => {
+		if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
+			numLockState = true;
+		}
+	}
+
+	Component.onCompleted: {
+		console.log(numLockState);
+	}
+
 	Process {
 		id: lockStateProcess
 
 		running: true
-		command: [Quickshell.shellDir + "/Assets/lockState"]
+		command: [Quickshell.shellDir + "/Assets/keystate"]
 	}
 
 	property bool capsLockState: false
-	property bool numLockState: false
 
 	FileView {
 		id: capsLockStateFile
 
-		path: Quickshell.env("HOME") + "/.cache/hyprlandKeyState/capslockState"
+		path: Quickshell.env("HOME") + "/.cache/keystate/capslock"
 		watchChanges: true
 
 		onFileChanged: {
@@ -35,7 +45,7 @@ Singleton {
 	FileView {
 		id: numLockStateFile
 
-		path: Quickshell.env("HOME") + "/.cache/hyprlandKeyState/numlockState"
+		path: Quickshell.env("HOME") + "/.cache/keystate/numlock"
 		watchChanges: true
 
 		onFileChanged: {
