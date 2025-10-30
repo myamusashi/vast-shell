@@ -12,7 +12,6 @@ Text {
 	font.weight: 600
 
 	color: "transparent"
-	renderType: Text.NativeRendering
 	textFormat: Text.PlainText
 	antialiasing: true
 
