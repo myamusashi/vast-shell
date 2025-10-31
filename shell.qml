@@ -12,6 +12,7 @@ import qs.Modules.Dashboard
 // import qs.Modules.BigClock
 import qs.Modules.OSD
 import qs.Modules.Overview
+import qs.Modules.Polkit
 
 import QtQuick
 import Quickshell
@@ -26,6 +27,7 @@ ShellRoot {
 	Session {
 		id: session
 	}
+	Polkit {}
 	App {
 		id: appLauncher
 	}
