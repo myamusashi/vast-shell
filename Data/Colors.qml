@@ -20,6 +20,21 @@ Singleton {
 		onAdapterUpdated: writeAdapter()
 	}
 
+	function parseRGBA(color) {
+		const values = color.slice(color.indexOf("(") + 1, color.indexOf(")")).split(",");
+
+		if (values.length === 4) {
+			const r = parseInt(values[0].trim(), 10);
+			const g = parseInt(values[1].trim(), 10);
+			const b = parseInt(values[2].trim(), 10);
+			const a = parseFloat(values[3].trim(), 10);
+
+			return `${r},${g},${b},${a}`;
+		}
+
+		return null;
+	}
+
 	function withAlpha(color, alpha) {
 		return Qt.rgba(color.r, color.g, color.b, alpha);
 	}
@@ -74,6 +89,48 @@ Singleton {
 		readonly property color tertiary_container: root.dark.tertiary_container
 		readonly property color tertiary_fixed: root.dark.tertiary_fixed
 		readonly property color tertiary_fixed_dim: root.dark.tertiary_fixed_dim
+
+		readonly property color primary_dimmed: root.parseRGBA(root.dark.primary_dimmed)
+		readonly property color primary_bright: root.parseRGBA(root.dark.primary_bright)
+		readonly property color secondary_dimmed: root.parseRGBA(root.dark.secondary_dimmed)
+		readonly property color secondary_bright: root.parseRGBA(root.dark.secondary_bright)
+
+		readonly property color primary_hover: root.parseRGBA(root.dark.primary_hover)
+		readonly property color secondary_hover: root.parseRGBA(root.dark.secondary_hover)
+		readonly property color tertiary_hover: root.parseRGBA(root.dark.tertiary_hover)
+		readonly property color surface_hover: root.parseRGBA(root.dark.surface_hover)
+		readonly property color surface_container_hover: root.parseRGBA(root.dark.surface_container_hover)
+
+		readonly property color primary_pressed: root.parseRGBA(root.dark.primary_pressed)
+		readonly property color secondary_pressed: root.parseRGBA(root.dark.secondary_pressed)
+		readonly property color tertiary_pressed: root.parseRGBA(root.dark.tertiary_pressed)
+		readonly property color surface_pressed: root.parseRGBA(root.dark.surface_pressed)
+		readonly property color surface_container_pressed: root.parseRGBA(root.dark.surface_pressed)
+
+		readonly property color primary_container_pressed: root.parseRGBA(root.dark.primary_container_pressed)
+		readonly property color secondary_container_pressed: root.parseRGBA(root.dark.secondary_container_pressed)
+		readonly property color tertiary_container_pressed: root.parseRGBA(root.dark.tertiary_container_pressed)
+
+		readonly property color primary_focus: root.parseRGBA(root.dark.primary_focus)
+		readonly property color secondary_focus: root.parseRGBA(root.dark.secondary_focus)
+		readonly property color tertiary_focus: root.parseRGBA(root.dark.tertiary_focus)
+
+		readonly property color primary_overlay: root.parseRGBA(root.dark.primary_overlay)
+		readonly property color secondary_overlay: root.parseRGBA(root.dark.secondary_overlay)
+		readonly property color surface_overlay: root.parseRGBA(root.dark.surface_overlay)
+		readonly property color on_surface_overlay: root.parseRGBA(root.dark.on_surface_overlay)
+
+		readonly property color scrim_light: root.parseRGBA(root.dark.scrim_light)
+		readonly property color scrim_medium: root.parseRGBA(root.dark.scrim_medium)
+		readonly property color scrim_heavy: root.parseRGBA(root.dark.scrim_heavy)
+
+		readonly property color on_surface_disabled: root.parseRGBA(root.dark.on_surface_disabled)
+		readonly property color on_surface_variant_disabled: root.parseRGBA(root.dark.on_surface_variant_disabled)
+		readonly property color primary_disabled: root.parseRGBA(root.dark.primary_disabled)
+		readonly property color on_primary_disabled: root.parseRGBA(root.dark.on_primary_disabled)
+
+		readonly property color surface_dragged: root.parseRGBA(root.dark.surface_dragged)
+		readonly property color primary_dragged: root.parseRGBA(root.dark.primary_dragged)
 	}
 
 	readonly property ColorsComponent colors: ColorsComponent {}
