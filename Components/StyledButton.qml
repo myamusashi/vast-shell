@@ -10,22 +10,31 @@ Button {
 
 	required property string buttonTitle
 	property string iconButton: ""
+
 	property color buttonColor: Colors.colors.surface_container_high
 	property color buttonHoverColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.08)
-	property color buttonPressedColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.1)
+	property color buttonPressedColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.12)
 	property color buttonTextColor: Colors.colors.primary
 	property color buttonHoverTextColor: Colors.withAlpha(Colors.colors.primary, 0.08)
-	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.primary, 0.1)
+	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.primary, 0.12)
+
+	property int buttonHeight: 40
+	property int iconTextSpacing: 8
+
+	implicitWidth: contentItem.implicitWidth + horizontalPadding * 2
+	implicitHeight: buttonHeight
 
 	hoverEnabled: true
 
 	contentItem: RowLayout {
-		anchors.centerIn: parent
+		spacing: root.iconTextSpacing
 
 		MatIcon {
+			id: icon
 			icon: root.iconButton
-			font.pixelSize: 24
+			font.pixelSize: Appearance.fonts.large * 1.2
 			font.bold: true
+			visible: root.iconButton !== ""
 			color: {
 				if (root.pressed)
 					root.buttonPressedTextColor;
@@ -34,12 +43,14 @@ Button {
 				else
 					root.buttonTextColor;
 			}
+			Layout.alignment: Qt.AlignVCenter
 		}
 
 		StyledText {
+			id: title
 			text: root.buttonTitle
-			font.pixelSize: 14
-			font.bold: true
+			font.pixelSize: Appearance.fonts.large
+			font.weight: Font.Medium
 			color: {
 				if (root.pressed)
 					root.buttonPressedTextColor;
@@ -48,11 +59,14 @@ Button {
 				else
 					root.buttonTextColor;
 			}
+			Layout.alignment: Qt.AlignVCenter
 		}
 	}
 
 	background: StyledRect {
-		radius: Appearance.rounding.large
+		implicitWidth: root.implicitWidth
+		implicitHeight: root.implicitHeight
+		radius: root.buttonHeight / 2
 		color: {
 			if (root.pressed)
 				root.buttonPressedColor;
@@ -60,6 +74,20 @@ Button {
 				root.buttonHoverColor;
 			else
 				root.buttonColor;
+		}
+
+		Behavior on color {
+			ColAnim {
+				duration: Appearance.animations.durations.small
+				easing.type: Easing.OutCubic
+			}
+		}
+	}
+
+	Behavior on opacity {
+		NumbAnim {
+			duration: Appearance.animations.durations.small
+			easing.type: Easing.OutCubic
 		}
 	}
 }
