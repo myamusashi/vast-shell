@@ -19,13 +19,17 @@ Scope {
 	property int currentIndex: 0
 	property int cpuUsage: 0
 	property int ramUsage: 0
+
 	function toggleDashboard(): void {
 		isDashboardOpen = !isDashboardOpen;
 	}
+
+
 	LazyLoader {
 		id: dashboardLoader
 
 		active: root.isDashboardOpen
+
 		component: PanelWindow {
 			id: dashboard
 			property ShellScreen modelData

@@ -7,6 +7,7 @@ import qs.Components
 
 Loader {
 	anchors.fill: parent
+	active: false
 
 	sourceComponent: StyledRect {
 		id: root

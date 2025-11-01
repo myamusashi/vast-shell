@@ -17,13 +17,23 @@ Scope {
 	property string currentWallpaper: Paths.currentWallpaper
 	property var wallpaperList: []
 	property string searchQuery: ""
+	property string debouncedSearchQuery: ""
+
+	Timer {
+		id: searchDebounceTimer
+		interval: 300
+		repeat: false
+		onTriggered: scope.debouncedSearchQuery = scope.searchQuery
+	}
+
 	property var filteredWallpaperList: {
-		if (searchQuery === "")
+		if (debouncedSearchQuery === "")
 			return wallpaperList;
 
+		const query = debouncedSearchQuery.toLowerCase();
 		return wallpaperList.filter(path => {
 			const fileName = path.split('/').pop().toLowerCase();
-			return fileName.includes(searchQuery.toLowerCase());
+			return fileName.includes(query);
 		});
 	}
 
@@ -45,6 +55,14 @@ Scope {
 		id: loader
 
 		active: scope.isWallpaperSwitcherOpen
+		onActiveChanged: {
+			if (!active) {
+				scope.searchQuery = "";
+				scope.debouncedSearchQuery = "";
+
+				cleanupTimer.start();
+			}
+		}
 
 		component: PanelWindow {
 			id: root
@@ -89,6 +107,8 @@ Scope {
 
 						onTextChanged: {
 							scope.searchQuery = text;
+							searchDebounceTimer.restart();
+
 							if (pathView.count > 0) {
 								pathView.currentIndex = 0;
 							}
@@ -113,7 +133,9 @@ Scope {
 
 						model: scope.filteredWallpaperList
 						clip: true
-						pathItemCount: Math.min(5, scope.filteredWallpaperList.length)
+
+						pathItemCount: Math.min(3, scope.filteredWallpaperList.length)
+						cacheItemCount: 2
 
 						Component.onCompleted: {
 							const currentIndex = scope.wallpaperList.indexOf(Paths.currentWallpaper);
@@ -121,6 +143,7 @@ Scope {
 								pathView.currentIndex = currentIndex;
 							}
 						}
+
 						delegate: Item {
 							id: delegateItem
 
@@ -162,16 +185,59 @@ Scope {
 										Layout.fillWidth: true
 										Layout.fillHeight: true
 
-										Image {
+										Loader {
+											id: imageLoader
 											anchors.fill: parent
-											source: "file://" + delegateItem.modelData
-											sourceSize.width: width
-											sourceSize.height: height
-											fillMode: Image.PreserveAspectCrop
+
+											active: delegateItem.isCurrentItem
 											asynchronous: true
-											smooth: false
-											antialiasing: false
-											cache: false
+
+											sourceComponent: Image {
+												id: previewImage
+												anchors.fill: parent
+												source: "file://" + delegateItem.modelData
+
+												sourceSize.width: 200
+												sourceSize.height: 150
+
+												fillMode: Image.PreserveAspectCrop
+												asynchronous: true
+												smooth: true
+												cache: true
+												mipmap: true
+
+												Rectangle {
+													anchors.fill: parent
+													color: Colors.colors.surface_container
+													visible: previewImage.status === Image.Loading
+
+													StyledText {
+														anchors.centerIn: parent
+														text: "Loading..."
+														color: Colors.colors.on_surface
+														font.pixelSize: Appearance.fonts.small
+													}
+												}
+
+												Rectangle {
+													anchors.fill: parent
+													color: Colors.colors.error_container
+													visible: previewImage.status === Image.Error
+
+													StyledText {
+														anchors.centerIn: parent
+														text: "Error"
+														color: Colors.colors.on_error_container
+														font.pixelSize: Appearance.fonts.small
+													}
+												}
+											}
+
+											onActiveChanged: {
+												if (!active && item) {
+													item.source = "";
+												}
+											}
 										}
 
 										MouseArea {
@@ -278,6 +344,16 @@ Scope {
 					}
 				}
 			}
+		}
+	}
+
+	Timer {
+		id: cleanupTimer
+
+		interval: 500
+		repeat: false
+		onTriggered: {
+			gc();
 		}
 	}
 }

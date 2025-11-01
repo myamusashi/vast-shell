@@ -12,6 +12,7 @@ import qs.Components
 
 Loader {
 	anchors.fill: parent
+	active: false
 
 	sourceComponent: StyledRect {
 		id: root
@@ -44,12 +45,15 @@ Loader {
 					visible: Player.active == null
 					source: Qt.resolvedUrl("root:/Assets/kuru.gif")
 					cache: false
-
 					onVisibleChanged: {
 						if (!visible)
 							source: "";
 						else
 							source: Qt.resolvedUrl("root:/Assets/kuru.gif");
+					}
+
+					Component.onDestruction: {
+						coverNull.source = "";
 					}
 				}
 			}
@@ -76,6 +80,10 @@ Loader {
 						maskSource: maskWallCover
 						maskThresholdMin: 0.5
 						maskSpreadAtMin: 0.0
+					}
+
+					Component.onDestruction: {
+						coverSource.source = "";
 					}
 				}
 			}
@@ -291,7 +299,7 @@ Loader {
 								color: Colors.colors.on_background
 
 								Timer {
-									running: Player.active.playbackState == MprisPlaybackState.Playing
+									running: Player.active && Player.active.playbackState == MprisPlaybackState.Playing
 									interval: 100
 									repeat: true
 									onTriggered: Player.active.positionChanged()
@@ -307,7 +315,7 @@ Loader {
 								valueHeight: 10
 
 								FrameAnimation {
-									running: Player.active.playbackState == MprisPlaybackState.Playing
+									running: Player.active && Player.active.playbackState == MprisPlaybackState.Playing
 									onTriggered: {
 										Player.active.positionChanged();
 									}

@@ -24,14 +24,6 @@ WlSessionLockSurface {
 		}
 	}
 
-	FileView {
-		id: wallFile
-
-		path: Paths.currentWallpaper
-		watchChanges: true
-		onFileChanged: reload()
-	}
-
 	StyledRect {
 		id: surface
 
@@ -49,7 +41,7 @@ WlSessionLockSurface {
 			smooth: true
 			opacity: 1
 			fillMode: Image.PreserveAspectCrop
-			source: wallFile.text().trim()
+			source: Paths.currentWallpaper
 			// layer.enabled: true
 			// layer.effect: MultiEffect {
 			// 	id: wallBlur

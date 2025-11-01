@@ -13,6 +13,7 @@ import qs.Components
 
 Loader {
 	anchors.fill: parent
+	active: false
 
 	sourceComponent: StyledRect {
 		id: root
@@ -278,13 +279,11 @@ Loader {
 										id: mIcon
 
 										anchors.fill: parent
-
 										hoverEnabled: true
 
 										onClicked: mevent => {
-											if (mevent.button === Qt.LeftButton) {
+											if (mevent.button === Qt.LeftButton)
 												Notifs.notifications.removeListNotification(flickDelegate.modelData);
-											}
 										}
 									}
 								}
@@ -408,10 +407,6 @@ Loader {
 														ripple.width = 0;
 														ripple.height = 0;
 													}
-												}
-
-												Component.onCompleted: {
-													actionMouse.clicked.connect(rippleAnimation.start);
 												}
 											}
 										}
