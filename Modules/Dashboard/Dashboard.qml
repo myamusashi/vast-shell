@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Layouts
 
 import Quickshell
@@ -77,17 +76,19 @@ Scope {
 								Layout.fillWidth: true
 								Layout.preferredHeight: parent.height * 0.06
 								active: root.isDashboardOpen
-								asynchronous: true
 
-								sourceComponent: Inbox.Header {}
+								sourceComponent: Inbox.Header {
+									active: root.isDashboardOpen
+								}
 							}
 							Loader {
 								Layout.fillWidth: true
 								Layout.preferredHeight: parent.height - 70
 								active: root.isDashboardOpen
-								asynchronous: true
 
-								sourceComponent: Inbox.Notification {}
+								sourceComponent: Inbox.Notification {
+									active: root.isDashboardOpen
+								}
 							}
 						}
 						ColumnLayout {
@@ -103,7 +104,10 @@ Scope {
 								Layout.fillWidth: true
 								Layout.preferredHeight: 400
 								active: root.isDashboardOpen
-								sourceComponent: Performance {}
+
+								sourceComponent: Performance {
+									active: root.isDashboardOpen
+								}
 							}
 							Loader {
 								id: weatherLoader
@@ -112,9 +116,10 @@ Scope {
 								Layout.preferredHeight: 350
 								Layout.topMargin: 8
 								active: root.isDashboardOpen
-								asynchronous: true
 
 								sourceComponent: WeatherWidget {
+									active: root.isDashboardOpen
+
 									Layout.fillWidth: true
 									Layout.preferredHeight: 350
 									Layout.topMargin: 8
@@ -133,9 +138,10 @@ Scope {
 								Layout.fillWidth: true
 								Layout.fillHeight: true
 								active: root.isDashboardOpen
-								asynchronous: true
 
-								sourceComponent: MediaPlayer {}
+								sourceComponent: MediaPlayer {
+									active: root.isDashboardOpen
+								}
 							}
 							Loader {
 								id: calendarLoader
@@ -143,9 +149,10 @@ Scope {
 								Layout.fillWidth: true
 								Layout.preferredHeight: 370
 								active: root.isDashboardOpen
-								asynchronous: true
 
 								sourceComponent: Calendar {
+									active: root.isDashboardOpen
+
 									Layout.fillWidth: true
 									Layout.preferredHeight: 370
 								}
