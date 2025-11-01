@@ -10,18 +10,6 @@ import qs.Data
 Scope {
 	id: root
 
-	FileView {
-		id: wallid
-		path: Qt.resolvedUrl(Paths.currentWallpaper)
-
-		watchChanges: true
-
-		onFileChanged: reload()
-		onAdapterUpdated: writeAdapter()
-	}
-
-	property string wallSrc: wallid.text()
-
 	Variants {
 		model: Quickshell.screens
 
@@ -49,13 +37,11 @@ Scope {
 				id: img
 
 				antialiasing: true
-
 				asynchronous: true
-
 				mipmap: true
 				smooth: true
 
-				source: root.wallSrc.trim()
+				source: Paths.currentWallpaper
 
 				fillMode: Image.PreserveAspectFit
 				width: parent.width
@@ -68,7 +54,7 @@ Scope {
 
 		function set(path: string): void {
 			Quickshell.execDetached({
-				command: ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaper]
+				command: ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaperFile + " 2>/dev/null" + " && " + `matugen image ${path}`]
 			});
 		}
 		function get(): string {

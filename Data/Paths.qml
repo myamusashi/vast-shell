@@ -1,6 +1,7 @@
 pragma Singleton
 
 import Quickshell
+import Quickshell.Io
 import QtQuick
 
 Singleton {
@@ -14,9 +15,19 @@ Singleton {
 	readonly property string shellDir: `${configDir}/shell`
 
 	readonly property string cacheDir: Quickshell.env("XDG_CACHE_DIR") || `${home}/.cache`
-	readonly property string currentWallpaper: `${cacheDir}/wall/path.txt`
+	readonly property string currentWallpaperFile: `${cacheDir}/wall/path.txt`
+	readonly property string currentWallpaper: wallpaperPath.text().trim()
 
 	readonly property string wallpaperDir: `${pictures}/wallpapers` || `${pictures}/Wallpapers`
 
 	readonly property string recordDir: `${videos}/Shell`
+
+
+	FileView {
+		id: wallpaperPath
+
+		path: `${root.cacheDir}/wall/path.txt`
+		watchChanges: true
+		onFileChanged: reload()
+	}
 }

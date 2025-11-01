@@ -24,6 +24,9 @@ ShellRoot {
 	}
 	Lockscreen {}
 	Wall {}
+	WallpaperSelector {
+		id: ws
+	}
 	Session {
 		id: session
 	}
@@ -57,6 +60,11 @@ ShellRoot {
 	GlobalShortcut {
 		name: "bar"
 		onPressed: bar.isBarOpen = !bar.isBarOpen
+	}
+
+	GlobalShortcut {
+		name: "wallpaperSelector"
+		onPressed: ws.isWallpaperSwitcherOpen = !ws.isWallpaperSwitcherOpen
 	}
 
 	GlobalShortcut {

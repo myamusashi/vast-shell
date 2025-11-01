@@ -15,10 +15,6 @@ Singleton {
 		}
 	}
 
-	Component.onCompleted: {
-		console.log(numLockState);
-	}
-
 	Process {
 		id: lockStateProcess
 
