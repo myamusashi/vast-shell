@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import Quickshell.Io
 import Quickshell.Hyprland
-import Quickshell.Wayland
 import Quickshell
 import QtQuick.Layouts
 import QtQuick
@@ -20,7 +19,7 @@ Scope {
 	FileView {
 		id: pidStatusRecording
 
-		path: "/tmp/gpu-screen-recorder.pid"
+		path: "/tmp/wl-screenrec.pid"
 		watchChanges: true
 		blockLoading: true
 		onFileChanged: {
