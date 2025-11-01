@@ -110,7 +110,7 @@ Scope {
 						FileView {
 							id: wallid
 
-							path: Qt.resolvedUrl(Paths.currentWallpaper)
+							path: Qt.resolvedUrl(Paths.currentWallpaperFile)
 							watchChanges: true
 							blockLoading: true
 							onFileChanged: reload()
