@@ -3,14 +3,14 @@
 SCREENSHOT_DIR="$HOME/Pictures/screenshot"
 VIDEO_DIR="$HOME/Videos/Shell"
 THUMBNAIL_DIR="$HOME/.cache/thumbnails/normal"
-RECORD_PID_FILE="/tmp/gpu-screen-recorder.pid"
+RECORD_PID_FILE="/tmp/wl-screenrec.pid"
 
 mkdir -p "$SCREENSHOT_DIR"
 mkdir -p "$VIDEO_DIR"
 mkdir -p "$THUMBNAIL_DIR"
 
 IMG="$SCREENSHOT_DIR/$(date +%Y-%m-%d_%H-%M-%S).png"
-VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mkv"
+VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mp4"
 
 create_thumbnail() {
 	local file="$1"
@@ -92,8 +92,8 @@ goto_link() {
 	esac
 }
 
-RECORD_PID_FILE="/tmp/gpu-screen-recorder.pid"
-RECORD_VIDEO_FILE="/tmp/gpu-screen-recorder.video"
+RECORD_PID_FILE="/tmp/wl-screenrec.pid"
+RECORD_VIDEO_FILE="/tmp/wl-screenrec.video"
 
 start_recording() {
 	local geometry="$1"
@@ -105,13 +105,13 @@ start_recording() {
 	fi
 
 	VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mkv"
-	
+
 	if [ -n "$geometry" ]; then
-		gpu-screen-recorder -k av1 -w region -region "$geometry" -o "$VID" &
+		wl-screenrec --codec hevc -g "$geometry" -f "$VID" &
 	elif [ -n "$output" ]; then
-		gpu-screen-recorder -k av1 -w "$output" -o "$VID" &
+		wl-screenrec --codec hevc -o "$output" -f "$VID" &
 	else
-		gpu-screen-recorder -k av1 -w screen -o "$VID" &
+		wl-screenrec --codec hevc -f "$VID" &
 	fi
 
 	echo $! >"$RECORD_PID_FILE"
@@ -228,7 +228,7 @@ case "$1" in
 		stop_recording
 	else
 		sleep 2
-		GEOMETRY=$(slurp -f "%wx%h+%x+%y")
+		GEOMETRY=$(slurp)
 		if [ $? -eq 0 ]; then
 			start_recording "$GEOMETRY" ""
 		else
