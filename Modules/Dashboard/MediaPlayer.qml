@@ -226,7 +226,7 @@ Loader {
 										}
 									},
 									{
-										icon: Player.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle",
+										icon: Player.active === null ? "nah" : Player.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle",
 										action: () => {
 											Player.active.togglePlaying();
 										}
@@ -299,7 +299,7 @@ Loader {
 								color: Colors.colors.on_background
 
 								Timer {
-									running: Player.active && Player.active.playbackState == MprisPlaybackState.Playing
+									running: Player.active === null ? false : Player.active && Player.active.playbackState == MprisPlaybackState.Playing
 									interval: 100
 									repeat: true
 									onTriggered: Player.active.positionChanged()
@@ -309,7 +309,7 @@ Loader {
 							StyledSlide {
 								id: barSlide
 
-								value: Player.active.length > 0 ? Player.active.position / Player.active.length : 0
+								value: Player.active === null ? 0 : Player.active.length > 0 ? Player.active.position / Player.active.length : 0
 
 								valueWidth: 300
 								valueHeight: 10

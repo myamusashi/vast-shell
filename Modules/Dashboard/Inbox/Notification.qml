@@ -25,7 +25,6 @@ Loader {
 		border.color: Colors.colors.outline
 		border.width: 2
 
-		// Lmao just copy the code from Notifications.qml
 		ListView {
 			id: listViewNotifs
 
@@ -72,8 +71,8 @@ Loader {
 
 				required property Notification modelData
 
-				property bool hasImage: modelData.image.length > 0
-				property bool hasAppIcon: modelData.appIcon.length > 0
+				property bool hasImage: modelData?.image.length > 0
+				property bool hasAppIcon: modelData?.appIcon.length > 0
 
 				Behavior on width {
 					NumbAnim {}
@@ -110,7 +109,7 @@ Loader {
 
 					width: listViewNotifs.width
 					height: Math.max(120, contentLayout.implicitHeight + 32)
-					color: flickDelegate.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error_container : Colors.colors.surface_container_low
+					color: flickDelegate.modelData?.urgency === NotificationUrgency.Critical ? Colors.colors.error_container : Colors.colors.surface_container_low
 					radius: Appearance.rounding.normal
 
 					MouseArea {
@@ -166,12 +165,12 @@ Loader {
 									width: 65
 									height: 65
 									radius: Appearance.rounding.full
-									color: flickDelegate.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : flickDelegate.modelData.urgency === NotificationUrgency.Low ? Colors.colors.surface_container_highest : Colors.colors.secondary_container
+									color: flickDelegate.modelData?.urgency === NotificationUrgency.Critical ? Colors.colors.error : flickDelegate.modelData?.urgency === NotificationUrgency.Low ? Colors.colors.surface_container_highest : Colors.colors.secondary_container
 
 									Loader {
 										id: icon
 
-										active: flickDelegate.hasAppIcon
+										active: flickDelegate?.hasAppIcon
 										asynchronous: true
 
 										anchors.centerIn: parent
@@ -179,7 +178,7 @@ Loader {
 										height: 65
 										sourceComponent: IconImage {
 											anchors.centerIn: parent
-											source: Quickshell.iconPath(flickDelegate.modelData.appIcon)
+											source: Quickshell.iconPath(flickDelegate.modelData?.appIcon)
 										}
 									}
 
@@ -192,7 +191,7 @@ Loader {
 										anchors.verticalCenterOffset: Appearance.fonts.large * 0.02
 										sourceComponent: MatIcon {
 											text: "release_alert"
-											color: flickDelegate.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.on_error : flickDelegate.modelData.urgency === NotificationUrgency.Low ? Colors.colors.on_surface : Colors.colors.on_secondary_container
+											color: flickDelegate.modelData?.urgency === NotificationUrgency.Critical ? Colors.colors.on_error : flickDelegate.modelData?.urgency === NotificationUrgency.Low ? Colors.colors.on_surface : Colors.colors.on_secondary_container
 											font.pointSize: Appearance.fonts.large
 										}
 									}
@@ -229,7 +228,7 @@ Loader {
 										Image {
 											anchors.fill: parent
 
-											source: Qt.resolvedUrl(flickDelegate.modelData.image)
+											source: Qt.resolvedUrl(flickDelegate.modelData?.image)
 											fillMode: Image.PreserveAspectCrop
 											cache: false
 											asynchronous: true
@@ -264,7 +263,7 @@ Loader {
 									id: appName
 
 									Layout.fillWidth: true
-									text: flickDelegate.modelData.appName
+									text: flickDelegate.modelData?.appName
 									font.pixelSize: Appearance.fonts.small * 0.9
 									color: Colors.colors.on_background
 									elide: Text.ElideRight
@@ -293,7 +292,7 @@ Loader {
 								id: summary
 
 								Layout.fillWidth: true
-								text: flickDelegate.modelData.summary
+								text: flickDelegate.modelData?.summary
 								font.pixelSize: Appearance.fonts.normal
 								color: Colors.colors.on_background
 								font.bold: true
@@ -306,7 +305,7 @@ Loader {
 								id: body
 
 								Layout.fillWidth: true
-								text: flickDelegate.modelData.body || ""
+								text: flickDelegate.modelData?.body || ""
 								font.pixelSize: Appearance.fonts.small * 1.2
 								color: Colors.colors.on_background
 								textFormat: Text.MarkdownText
@@ -320,7 +319,7 @@ Loader {
 								Layout.rightMargin: 8
 								Layout.bottomMargin: 15
 								spacing: 8
-								visible: flickDelegate.modelData?.actions && flickDelegate.modelData.actions.length > 0
+								visible: flickDelegate.modelData?.actions && flickDelegate.modelData?.actions.length > 0
 
 								Repeater {
 									model: flickDelegate.modelData?.actions
@@ -361,7 +360,7 @@ Loader {
 												actionButton.modelData.invoke();
 												Notifs.notifications.removePopupNotification(flickDelegate.modelData);
 												Notifs.notifications.removeListNotification(flickDelegate.modelData);
-												flickDelegate.modelData.dismiss();
+												flickDelegate.modelData?.dismiss();
 											}
 
 											StyledRect {
