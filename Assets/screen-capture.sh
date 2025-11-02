@@ -167,6 +167,7 @@ case "$1" in
 	sleep 2
 	output=$(hyprshot -m window -d -s -o "$HOME/Pictures/screenshot/" -f "$(date +%Y-%m-%d_%H-%M-%S).png")
 	if ! [[ "$output" =~ "selection cancelled" ]]; then
+		THUMB_PATH="$IMG"
 		wl-copy <"$IMG"
 		goto_link "$IMG"
 	else
