@@ -14,12 +14,12 @@ Scope {
 	property bool isNumLockOSDShow: false
 
 	Connections {
-		target: KeyLockState
-		function onCapsLockStateChanged() {
+		target: KeyLockState.state
+		function oncapsLockChanged() {
 			root.isCapsLockOSDShow = true;
 			hideOSDTimer.restart();
 		}
-		function onNumLockStateChanged() {
+		function onnumLockChanged() {
 			root.isNumLockOSDShow = true;
 			hideOSDTimer.restart();
 		}

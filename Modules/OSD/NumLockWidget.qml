@@ -44,8 +44,8 @@ LazyLoader {
 				}
 
 				MatIcon {
-					icon: KeyLockState.numLockState ? "lock_open_right" : "lock"
-					color: KeyLockState.numLockState ? Colors.colors.primary : Colors.colors.tertiary
+					icon: KeyLockState.state.numLock ? "lock" : "lock_open_right"
+					color: KeyLockState.state.numLock ? Colors.colors.primary : Colors.colors.tertiary
 					font.pixelSize: Appearance.fonts.large * 1.5
 				}
 			}

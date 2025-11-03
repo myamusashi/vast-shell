@@ -7,15 +7,17 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
   };
 
   outputs = {
     self,
     nixpkgs,
     quickshell,
+    apple-fonts,
   }: let
     lib = nixpkgs.lib;
-    src = ./.;
+
     perSystem = package: (lib.listToAttrs (lib.map (a: {
       name = a;
       value = package {
@@ -27,33 +29,15 @@
     packages = perSystem ({
       pkgs,
       system,
-    }: rec {
-      shell = pkgs.writeShellScriptBin "shell" ''
-        ${quickshell.packages.${system}.default}/bin/quickshell
-      '';
-      default = shell;
+    }:
+      import ./nix/default.nix {
+        inherit pkgs system lib quickshell;
+      });
 
-      systemd.user.services.shell = {
-        Unit = {
-          Description = "Shell widget using quickshell";
-          After = ["hyprland-session.target"];
-        };
-        Service = {
-          Type = "exec";
-          ExecStart = "${default}/bin/shell -p ${src}";
-          Restart = "on-failure";
-          Slice = "app-graphical.slice";
-        };
-        Install = {
-          WantedBy = ["hyprland-session.target"];
-        };
-      };
+    homeManagerModules.default = import ./nix/hm-modules.nix {
+      inherit self apple-fonts;
+    };
 
-      prePatch = ''
-        substituteInPlace shell.qml \
-        	--replace-fail 'ShellRoot {' 'ShellRoot {  settings.watchFiles: false'
-      '';
-    });
     devShells = perSystem ({
       pkgs,
       system,
@@ -61,7 +45,25 @@
       default = pkgs.mkShell {
         packages = [
           self.packages.${system}.default
+          quickshell.packages.${system}.default
+          pkgs.go
+          pkgs.matugen
+          pkgs.playerctl
+          pkgs.wl-clipboard
+          pkgs.libnotify
+          pkgs.wl-screenrec
+          pkgs.ffmpeg
+          pkgs.foot
+          pkgs.polkit
+          apple-fonts.packages.${system}.sf-pro
+          apple-fonts.packages.${system}.sf-pro-nerd
+          apple-fonts.packages.${system}.sf-mono
+          apple-fonts.packages.${system}.sf-mono-nerd
         ];
+
+        shellHook = ''
+          echo "Quickshell Development Environment"
+        '';
       };
     });
   };

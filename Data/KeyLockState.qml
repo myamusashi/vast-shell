@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -7,48 +8,28 @@ import Quickshell.Io
 Singleton {
 	id: root
 
-	property bool numLockState: false
-
-	Keys.onPressed: event => {
-		if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
-			numLockState = true;
-		}
-	}
+	readonly property var keystate: JSON.parse(keyStateFile.text().trim())
 
 	Process {
 		id: lockStateProcess
 
 		running: true
-		command: [Quickshell.shellDir + "/Assets/keystate"]
-	}
-
-	property bool capsLockState: false
-
-	FileView {
-		id: capsLockStateFile
-
-		path: Quickshell.env("HOME") + "/.cache/keystate/capslock"
-		watchChanges: true
-
-		onFileChanged: {
-			reload();
-			let newState = text().trim() === "true";
-			if (root.capsLockState !== newState)
-				root.capsLockState = newState;
-		}
+		command: [Quickshell.shellDir + "/Assets/keystate-bin"]
 	}
 
 	FileView {
-		id: numLockStateFile
+		id: keyStateFile
 
-		path: Quickshell.env("HOME") + "/.cache/keystate/numlock"
+		path: "/tmp/keystate.json"
 		watchChanges: true
-
-		onFileChanged: {
-			reload();
-			let newState = text().trim() === "true";
-			if (root.numLockState !== newState)
-				root.numLockState = newState;
-		}
+		blockLoading: true
+		onFileChanged: reload()
 	}
+
+	component KeyStateComponent: QtObject {
+		readonly property bool numLock: root.keystate.numLock
+		readonly property bool capsLock: root.keystate.capsLock
+	}
+
+	readonly property KeyStateComponent state: KeyStateComponent {}
 }
