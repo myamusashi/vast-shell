@@ -127,31 +127,29 @@ in rec {
     '';
 
     installPhase = ''
-             mkdir -p $out/share/quickshell
-             cp -r Components $out/share/quickshell/
-             cp -r Data $out/share/quickshell/
-             cp -r Helpers $out/share/quickshell/
-             cp -r Modules $out/share/quickshell/
-             cp -r Widgets $out/share/quickshell/
-             cp -r Assets $out/share/quickshell/
-             cp shell.qml $out/share/quickshell/
+      mkdir -p $out/share/quickshell
+      cp -r Components $out/share/quickshell/
+      cp -r Configs $out/share/quickshell/
+      cp -r Data $out/share/quickshell/
+      cp -r Helpers $out/share/quickshell/
+      cp -r Modules $out/share/quickshell/
+      cp -r Widgets $out/share/quickshell/
+      cp -r Assets $out/share/quickshell/
+      cp shell.qml $out/share/quickshell/
 
-             mkdir -p $out/share/quickshell/Assets
-             cp -r ${keystate-bin}/bin/keystate-bin $out/share/quickshell/Assets/keystate-bin
+      mkdir -p $out/share/quickshell/Assets
+      cp -r ${keystate-bin}/bin/keystate-bin $out/share/quickshell/Assets/keystate-bin
 
-             mkdir -p $out/share/quickshell/Configs
-             cp Configs/*.json $out/share/quickshell/Configs/
-
-             mkdir -p $out/bin
-             cp -r ${app2unit}/bin/app2unit $out/bin/app2unit
-          cp -r ${keystate-bin}/bin/keystate-bin $out/bin/keystate-bin
-             makeWrapper ${quickshell.packages.${system}.default}/bin/quickshell $out/bin/shell \
-               --add-flags "-p $out/share/quickshell" \
-               --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
-               --suffix PATH : ${lib.makeBinPath runtimeDeps} \
-      --suffix PATH : /run/current-system/sw/bin \
-      --suffix PATH : /etc/profiles/per-user/$USER/bin \
-      --suffix PATH : $HOME/.nix-profile/bin
+      mkdir -p $out/bin
+      cp -r ${app2unit}/bin/app2unit $out/bin/app2unit
+      cp -r ${keystate-bin}/bin/keystate-bin $out/bin/keystate-bin
+      makeWrapper ${quickshell.packages.${system}.default}/bin/quickshell $out/bin/shell \
+        --add-flags "-p $out/share/quickshell" \
+        --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
+        --suffix PATH : ${lib.makeBinPath runtimeDeps} \
+        --suffix PATH : /run/current-system/sw/bin \
+        --suffix PATH : /etc/profiles/per-user/$USER/bin \
+        --suffix PATH : $HOME/.nix-profile/bin
     '';
   };
 

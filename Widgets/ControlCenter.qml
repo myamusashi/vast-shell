@@ -22,13 +22,13 @@ Scope {
 	readonly property int diskProp: SysUsage.diskUsed / 1048576
 	readonly property int memProp: SysUsage.memUsed / 1048576
 
-	function toggleDashboard(): void {
+	function toggleControlCenter(): void {
 		isControlCenterOpen = !isControlCenterOpen;
 	}
 
 	GlobalShortcut {
 		name: "ControlCenter"
-		onPressed: scope.toggleDashboard()
+		onPressed: scope.toggleControlCenter()
 	}
 
 	LazyLoader {
@@ -72,135 +72,63 @@ Scope {
 						spacing: 15
 						width: parent.width * 0.95
 
-						StyledButton {
-							id: settingButton
+						Repeater {
+							id: tabRepeater
 
-							buttonTitle: "Settings"
-							Layout.fillWidth: true
-							highlighted: scope.state === 0
-							flat: scope.state !== 0
-							onClicked: scope.state = 0
+							model: [
+								{
+									title: "Settings",
+									icon: "settings",
+									index: 0
+								},
+								{
+									title: "Volumes",
+									icon: "speaker",
+									index: 1
+								},
+								{
+									title: "Performance",
+									icon: "speed",
+									index: 2
+								},
+								{
+									title: "Weather",
+									icon: "cloud",
+									index: 3
+								}
+							]
 
-							background: Rectangle {
-								color: scope.state === 0 ? Colors.colors.primary : Colors.colors.surface_container
-								radius: 5
-							}
+							StyledButton {
+								required property var modelData
+								required property int index
 
-							contentItem: RowLayout {
-								id: buttonSettingsContent
+								buttonTitle: modelData.title
+								Layout.fillWidth: true
+								highlighted: scope.state === modelData.index
+								flat: scope.state !== modelData.index
+								onClicked: scope.state = modelData.index
 
-								anchors.centerIn: parent
-								spacing: 5
-								MatIcon {
-									icon: "settings"
-									color: scope.state === 0 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.extraLarge * root.scaleFactor
+								background: Rectangle {
+									color: scope.state === index ? Colors.colors.primary : Colors.colors.surface_container
+									radius: 5
 								}
 
-								StyledText {
-									text: "Settings"
-									color: scope.state === 0 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.large * 1.2 * root.scaleFactor
-									elide: Text.ElideRight
-								}
-							}
-						}
+								contentItem: RowLayout {
+									anchors.centerIn: parent
+									spacing: 5
 
-						StyledButton {
-							id: volumeControlButton
+									MatIcon {
+										icon: modelData.icon
+										color: scope.state === index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+										font.pixelSize: Appearance.fonts.extraLarge * root.scaleFactor
+									}
 
-							buttonTitle: "Volumes"
-							Layout.fillWidth: true
-							highlighted: scope.state === 1
-							flat: scope.state !== 1
-							onClicked: scope.state = 1
-
-							background: Rectangle {
-								color: scope.state === 1 ? Colors.colors.primary : Colors.colors.surface_container
-								radius: 5
-							}
-
-							contentItem: RowLayout {
-								id: buttonVolumeControlContent
-
-								anchors.centerIn: parent
-								spacing: 5
-								MatIcon {
-									icon: "speaker"
-									color: scope.state === 1 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.extraLarge * root.scaleFactor
-								}
-
-								StyledText {
-									text: "Volumes"
-									color: scope.state === 1 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.large * 1.2 * root.scaleFactor
-								}
-							}
-						}
-
-						StyledButton {
-							id: performanceButton
-
-							buttonTitle: "Performance"
-							Layout.fillWidth: true
-							highlighted: scope.state === 2
-							flat: scope.state !== 2
-							onClicked: scope.state = 2
-
-							background: Rectangle {
-								color: scope.state === 2 ? Colors.colors.primary : Colors.colors.surface_container
-								radius: 5
-							}
-
-							contentItem: RowLayout {
-								id: buttonPerformanceContent
-
-								anchors.centerIn: parent
-								spacing: 5
-								MatIcon {
-									icon: "speed"
-									color: scope.state === 2 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.extraLarge * root.scaleFactor
-								}
-
-								StyledText {
-									text: "Performance"
-									color: scope.state === 2 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.large * 1.2 * root.scaleFactor
-								}
-							}
-						}
-
-						StyledButton {
-							id: weatherButton
-
-							buttonTitle: "Weather"
-							Layout.fillWidth: true
-							highlighted: scope.state === 3
-							flat: scope.state !== 3
-							onClicked: scope.state = 3
-
-							background: Rectangle {
-								color: scope.state === 3 ? Colors.colors.primary : Colors.colors.surface_container
-								radius: 5
-							}
-
-							contentItem: RowLayout {
-								id: buttonWeatherContent
-
-								anchors.centerIn: parent
-								spacing: 5
-								MatIcon {
-									icon: "cloud"
-									color: scope.state === 3 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.extraLarge * root.scaleFactor
-								}
-
-								StyledText {
-									text: "Weather"
-									color: scope.state === 3 ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-									font.pixelSize: Appearance.fonts.large * 1.2 * root.scaleFactor
+									StyledText {
+										text: modelData.title
+										color: scope.state === index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+										font.pixelSize: Appearance.fonts.large * 1.2 * root.scaleFactor
+										elide: Text.ElideRight
+									}
 								}
 							}
 						}
@@ -214,99 +142,52 @@ Scope {
 					Layout.fillHeight: true
 					currentIndex: scope.state
 
-					StyledRect {
-						color: Colors.colors.surface_container_high
-						bottomLeftRadius: Appearance.rounding.normal
-						bottomRightRadius: Appearance.rounding.normal
+					// Settings Tab
+					Loader {
+						active: scope.state === 0
+						asynchronous: true
 
-						GridLayout {
-							anchors.fill: parent
-							columns: 2
+						sourceComponent: StyledRect {
+							color: Colors.colors.surface_container_high
+							bottomLeftRadius: Appearance.rounding.normal
+							bottomRightRadius: Appearance.rounding.normal
 
-							ColumnLayout {
-								Layout.fillHeight: true
-								Layout.preferredWidth: 200
-								Layout.topMargin: 20
-								Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-
-								StyledRect {
-									id: profile
-
-									Layout.alignment: Qt.AlignCenter
-									Layout.preferredWidth: 200
-									Layout.leftMargin: 20
-									Layout.preferredHeight: profileImage.height + width * 0.4
-									color: Colors.colors.surface_container_low
-									radius: Appearance.rounding.normal
-
-									Image {
-										id: profileImage
-
-										anchors.top: parent.top
-										anchors.horizontalCenter: parent.horizontalCenter
-										anchors.topMargin: 15
-										source: Paths.home + "/.face"
-										sourceSize.width: 120
-										sourceSize.height: 120
-									}
-
-									StyledLabel {
-										id: profileUsername
-
-										text: "Gilang Ramadhan"
-										color: Colors.colors.on_surface
-										font.pixelSize: Appearance.fonts.large * 1.2
-										anchors.bottomMargin: 20
-										anchors.bottom: parent.bottom
-										anchors.horizontalCenter: parent.horizontalCenter
-									}
-								}
-							}
-						}
-					}
-
-					StyledRect {
-						color: Colors.colors.surface_container_high
-						bottomLeftRadius: Appearance.rounding.normal
-						bottomRightRadius: Appearance.rounding.normal
-
-						ScrollView {
-							anchors.fill: parent
-							contentWidth: availableWidth
-
-							RowLayout {
+							GridLayout {
 								anchors.fill: parent
-								Layout.margins: 15
-								spacing: 20
+								columns: 2
 
 								ColumnLayout {
-									id: volumeControlLayout
+									Layout.fillHeight: true
+									Layout.preferredWidth: 200
+									Layout.topMargin: 20
+									Layout.alignment: Qt.AlignLeft | Qt.AlignTop
 
-									Layout.margins: 10
-									Layout.alignment: Qt.AlignTop
+									StyledRect {
+										Layout.alignment: Qt.AlignCenter
+										Layout.preferredWidth: 200
+										Layout.leftMargin: 20
+										Layout.preferredHeight: 175
+										color: Colors.colors.surface_container_low
+										radius: Appearance.rounding.normal
 
-									PwNodeLinkTracker {
-										id: linkTracker
+										Image {
+											anchors.top: parent.top
+											anchors.horizontalCenter: parent.horizontalCenter
+											anchors.topMargin: 15
+											source: Paths.home + "/.face"
+											sourceSize.width: 120
+											sourceSize.height: 120
+											asynchronous: true
+											cache: true
+										}
 
-										node: Pipewire.defaultAudioSink
-									}
-
-									MixerEntry {
-										node: Pipewire.defaultAudioSink
-									}
-
-									Rectangle {
-										Layout.fillWidth: true
-										color: palette.active.text
-										implicitHeight: 1
-									}
-
-									Repeater {
-										model: linkTracker.linkGroups
-
-										MixerEntry {
-											required property PwLinkGroup modelData
-											node: modelData.source
+										StyledLabel {
+											text: "Gilang Ramadhan"
+											color: Colors.colors.on_surface
+											font.pixelSize: Appearance.fonts.large * 1.2
+											anchors.bottomMargin: 20
+											anchors.bottom: parent.bottom
+											anchors.horizontalCenter: parent.horizontalCenter
 										}
 									}
 								}
@@ -314,57 +195,98 @@ Scope {
 						}
 					}
 
-					StyledRect {
-						color: Colors.colors.surface_container_high
+					// Volumes Tab
+					Loader {
+						active: scope.state === 1
+						asynchronous: true
 
-						GridLayout {
-							anchors.centerIn: parent
-							columns: 3
-							rowSpacing: Appearance.spacing.large * 2
+						sourceComponent: StyledRect {
+							color: Colors.colors.surface_container_high
+							bottomLeftRadius: Appearance.rounding.normal
+							bottomRightRadius: Appearance.rounding.normal
 
-							Item {
-								id: memItem
+							ScrollView {
+								anchors.fill: parent
+								contentWidth: availableWidth
+								clip: true
 
-								Layout.alignment: Qt.AlignCenter
-								Layout.preferredWidth: childrenRect.width
-								Layout.preferredHeight: childrenRect.height
+								RowLayout {
+									anchors.fill: parent
+									Layout.margins: 15
+									spacing: 20
 
+									ColumnLayout {
+										Layout.margins: 10
+										Layout.alignment: Qt.AlignTop
+
+										PwNodeLinkTracker {
+											id: linkTracker
+
+											node: Pipewire.defaultAudioSink
+										}
+
+										MixerEntry {
+											node: Pipewire.defaultAudioSink
+										}
+
+										Rectangle {
+											Layout.fillWidth: true
+											color: palette.active.text
+											implicitHeight: 1
+										}
+
+										Repeater {
+											model: linkTracker.linkGroups
+
+											MixerEntry {
+												required property PwLinkGroup modelData
+												node: modelData.source
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					// Performance Tab
+					Loader {
+						active: scope.state === 2
+						asynchronous: true
+
+						sourceComponent: StyledRect {
+							color: Colors.colors.surface_container_high
+
+							GridLayout {
+								anchors.centerIn: parent
+								columns: 3
+								rowSpacing: Appearance.spacing.large * 2
+
+								// Memory Usage
 								ColumnLayout {
-									anchors.centerIn: parent
+									Layout.alignment: Qt.AlignCenter
 									spacing: Appearance.spacing.normal
 
 									Circular {
-										id: mem
-
 										value: Math.round(SysUsage.memUsed / SysUsage.memTotal * 100)
 										size: 0
 										text: value + "%"
 									}
 
 									StyledText {
-										id: memText
-
 										Layout.alignment: Qt.AlignHCenter
-										text: "RAM usage" + "\n" + scope.memProp + " GB"
+										text: "RAM usage\n" + scope.memProp + " GB"
 										color: Colors.colors.on_surface
+										horizontalAlignment: Text.AlignHCenter
 									}
 								}
-							}
 
-							Item {
-								id: cpuItem
-
-								Layout.alignment: Qt.AlignVCenter
-								Layout.preferredWidth: childrenRect.width
-								Layout.preferredHeight: childrenRect.height
-
+								// CPU Usage
 								ColumnLayout {
-									anchors.centerIn: parent
+									Layout.alignment: Qt.AlignVCenter
 									spacing: Appearance.spacing.normal
 
 									Circular {
-										id: cpu
-
 										Layout.alignment: Qt.AlignHCenter
 										value: SysUsage.cpuPerc
 										size: 40
@@ -372,282 +294,239 @@ Scope {
 									}
 
 									StyledText {
-										id: cpuText
-
 										Layout.alignment: Qt.AlignHCenter
 										text: "CPU usage"
 										color: Colors.colors.on_surface
 									}
 								}
-							}
 
-							Item {
-								Layout.alignment: Qt.AlignCenter
-								Layout.preferredWidth: childrenRect.width
-								Layout.preferredHeight: childrenRect.height
-
+								// Disk Usage
 								ColumnLayout {
-									anchors.centerIn: parent
+									Layout.alignment: Qt.AlignCenter
 									spacing: Appearance.spacing.normal
 
 									Circular {
-										id: disk
-
 										value: Math.round(SysUsage.diskUsed / SysUsage.diskTotal * 100)
 										text: value + "%"
 										size: 0
 									}
 
 									StyledText {
-										id: diskText
-
 										Layout.alignment: Qt.AlignHCenter
-										text: "Disk usage" + "\n" + scope.diskProp + " GB"
+										text: "Disk usage\n" + scope.diskProp + " GB"
 										color: Colors.colors.on_surface
+										horizontalAlignment: Text.AlignHCenter
 									}
 								}
-							}
 
-							Item {
-								Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-								Layout.preferredWidth: 160
-								Layout.preferredHeight: childrenRect.height
-
+								// Network Speed
 								ColumnLayout {
-									anchors.top: parent.top
-									anchors.horizontalCenter: parent.horizontalCenter
+									Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+									Layout.preferredWidth: 160
 									spacing: Appearance.spacing.small
-									width: parent.width
 
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wired Download:\n" + SysUsage.formatSpeed(SysUsage.wiredDownloadSpeed)
-										color: Colors.colors.on_surface
-									}
+									Repeater {
+										model: [
+											{
+												label: "Wired Download",
+												value: SysUsage.formatSpeed(SysUsage.wiredDownloadSpeed)
+											},
+											{
+												label: "Wired Upload",
+												value: SysUsage.formatSpeed(SysUsage.wiredUploadSpeed)
+											},
+											{
+												label: "Wireless Download",
+												value: SysUsage.formatSpeed(SysUsage.wirelessDownloadSpeed)
+											},
+											{
+												label: "Wireless Upload",
+												value: SysUsage.formatSpeed(SysUsage.wirelessUploadSpeed)
+											}
+										]
 
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wired Upload:\n" + SysUsage.formatSpeed(SysUsage.wiredUploadSpeed)
-										color: Colors.colors.on_surface
-									}
-
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wireless Download:\n" + SysUsage.formatSpeed(SysUsage.wirelessDownloadSpeed)
-										color: Colors.colors.on_surface
-									}
-
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wireless Upload:\n" + SysUsage.formatSpeed(SysUsage.wirelessUploadSpeed)
-										color: Colors.colors.on_surface
+										StyledText {
+											required property var modelData
+											Layout.alignment: Qt.AlignHCenter
+											Layout.fillWidth: true
+											horizontalAlignment: Text.AlignHCenter
+											text: modelData.label + ":\n" + modelData.value
+											color: Colors.colors.on_surface
+										}
 									}
 								}
-							}
 
-							Item {
-								Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-								Layout.preferredWidth: 160
-								Layout.preferredHeight: childrenRect.height
-
+								// Network Usage
 								ColumnLayout {
-									anchors.top: parent.top
-									anchors.horizontalCenter: parent.horizontalCenter
+									Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+									Layout.preferredWidth: 160
 									spacing: Appearance.spacing.small
-									width: parent.width
 
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wired download usage:\n" + SysUsage.formatUsage(SysUsage.totalWiredDownloadUsage)
-										color: Colors.colors.on_surface
-									}
+									Repeater {
+										model: [
+											{
+												label: "Wired download usage",
+												value: SysUsage.formatUsage(SysUsage.totalWiredDownloadUsage)
+											},
+											{
+												label: "Wired upload usage",
+												value: SysUsage.formatUsage(SysUsage.totalWiredUploadUsage)
+											},
+											{
+												label: "Wireless download usage",
+												value: SysUsage.formatUsage(SysUsage.totalWirelessDownloadUsage)
+											},
+											{
+												label: "Wireless upload usage",
+												value: SysUsage.formatUsage(SysUsage.totalWirelessUploadUsage)
+											}
+										]
 
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wired upload usage:\n" + SysUsage.formatUsage(SysUsage.totalWiredUploadUsage)
-										color: Colors.colors.on_surface
-									}
-
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wireless download usage:\n" + SysUsage.formatUsage(SysUsage.totalWirelessDownloadUsage)
-										color: Colors.colors.on_surface
-									}
-
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wireless upload usage:\n" + SysUsage.formatUsage(SysUsage.totalWirelessUploadUsage)
-										color: Colors.colors.on_surface
+										StyledText {
+											required property var modelData
+											Layout.alignment: Qt.AlignHCenter
+											Layout.fillWidth: true
+											horizontalAlignment: Text.AlignHCenter
+											text: modelData.label + ":\n" + modelData.value
+											color: Colors.colors.on_surface
+										}
 									}
 								}
-							}
 
-							Item {
-								Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-								Layout.preferredWidth: 160
-								Layout.preferredHeight: childrenRect.height
-
+								// Network Interfaces
 								ColumnLayout {
-									anchors.top: parent.top
-									anchors.horizontalCenter: parent.horizontalCenter
+									Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+									Layout.preferredWidth: 160
 									spacing: Appearance.spacing.small
-									width: parent.width
 
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wired interface:\n" + SysUsage.wiredInterface
-										color: Colors.colors.on_surface
-									}
+									Repeater {
+										model: [
+											{
+												label: "Wired interface",
+												value: SysUsage.wiredInterface
+											},
+											{
+												label: "Wireless interface",
+												value: SysUsage.wirelessInterface
+											}
+										]
 
-									StyledText {
-										Layout.alignment: Qt.AlignHCenter
-										Layout.fillWidth: true
-										horizontalAlignment: Text.AlignHCenter
-										text: "Wireless interface:\n" + SysUsage.wirelessInterface
-										color: Colors.colors.on_surface
+										StyledText {
+											required property var modelData
+											Layout.alignment: Qt.AlignHCenter
+											Layout.fillWidth: true
+											horizontalAlignment: Text.AlignHCenter
+											text: modelData.label + ":\n" + modelData.value
+											color: Colors.colors.on_surface
+										}
 									}
 								}
 							}
 						}
 					}
 
-					// About Page
-					StyledRect {
-						color: Colors.colors.surface_container_high
+					// Weather Tab
+					Loader {
+						active: scope.state === 3
+						asynchronous: true
 
-						ColumnLayout {
-							anchors.fill: parent
-							anchors.margins: Appearance.margin.normal
-							spacing: Appearance.spacing.normal
+						sourceComponent: StyledRect {
+							color: Colors.colors.surface_container_high
 
-							StyledText {
-								Layout.alignment: Qt.AlignHCenter
-								text: Weather.cityData
-
-								color: Colors.colors.on_surface
-								font.pixelSize: Appearance.fonts.large * 1.2
-								font.weight: Font.Bold
-							}
-
-							RowLayout {
-								Layout.fillWidth: false
-								Layout.alignment: Qt.AlignHCenter
-								Layout.topMargin: 10
-								Layout.bottomMargin: 10
+							ColumnLayout {
+								anchors.fill: parent
+								anchors.margins: Appearance.margin.normal
 								spacing: Appearance.spacing.normal
 
-								MatIcon {
-									id: weatherIcon
-
+								StyledText {
 									Layout.alignment: Qt.AlignHCenter
-									font.pixelSize: Appearance.fonts.extraLarge * 4
-									color: Colors.colors.primary
-									icon: "air"
+									text: Weather.cityData
+									color: Colors.colors.on_surface
+									font.pixelSize: Appearance.fonts.large * 1.2
+									font.weight: Font.Bold
+								}
+
+								RowLayout {
+									Layout.fillWidth: false
+									Layout.alignment: Qt.AlignHCenter
+									Layout.topMargin: 10
+									Layout.bottomMargin: 10
+									spacing: Appearance.spacing.normal
+
+									MatIcon {
+										Layout.alignment: Qt.AlignHCenter
+										font.pixelSize: Appearance.fonts.extraLarge * 4
+										color: Colors.colors.primary
+										icon: "air"
+									}
+
+									StyledText {
+										Layout.alignment: Qt.AlignVCenter
+										text: Weather.tempData + "°C"
+										color: Colors.colors.primary
+										font.pixelSize: Appearance.fonts.extraLarge * 2.5
+										font.weight: Font.Light
+									}
 								}
 
 								StyledText {
-									Layout.alignment: Qt.AlignVCenter
-									text: Weather.tempData + "°C"
-									color: Colors.colors.primary
-									font.pixelSize: Appearance.fonts.extraLarge * 2.5
-									font.weight: Font.Light
+									Layout.alignment: Qt.AlignHCenter
+									text: Weather.weatherDescriptionData.charAt(0).toUpperCase() + Weather.weatherDescriptionData.slice(1)
+									color: Colors.colors.on_surface_variant
+									font.pixelSize: Appearance.fonts.normal * 1.5
+									wrapMode: Text.WordWrap
+									horizontalAlignment: Text.AlignHCenter
 								}
-							}
 
-							StyledText {
-								Layout.alignment: Qt.AlignHCenter
-								text: Weather.weatherDescriptionData.charAt(0).toUpperCase() + Weather.weatherDescriptionData.slice(1)
-								color: Colors.colors.on_surface_variant
-								font.pixelSize: Appearance.fonts.normal * 1.5
-								wrapMode: Text.WordWrap
-								horizontalAlignment: Text.AlignHCenter
-							}
+								Item {
+									Layout.fillWidth: true
+								}
 
-							Item {
-								Layout.fillWidth: true
-							}
+								StyledRect {
+									Layout.fillWidth: true
+									Layout.preferredHeight: 80
+									color: "transparent"
 
-							StyledRect {
-								Layout.fillWidth: true
-								Layout.preferredHeight: 80
-								color: "transparent"
+									RowLayout {
+										anchors.centerIn: parent
+										spacing: Appearance.spacing.large * 5
 
-								RowLayout {
-									anchors.centerIn: parent
-									spacing: Appearance.spacing.large * 5
+										Repeater {
+											model: [
+												{
+													value: Weather.tempMinData + "° / " + Weather.tempMaxData + "°",
+													label: "Min / Max"
+												},
+												{
+													value: Weather.humidityData + "%",
+													label: "Kelembapan"
+												},
+												{
+													value: Weather.windSpeedData + " m/s",
+													label: "Angin"
+												}
+											]
 
-									ColumnLayout {
-										Layout.fillWidth: true
-										spacing: Appearance.spacing.small
+											ColumnLayout {
+												required property var modelData
+												Layout.fillWidth: true
+												spacing: 5
 
-										StyledText {
-											Layout.alignment: Qt.AlignHCenter
-											text: Weather.tempMinData + "° / " + Weather.tempMaxData + "°"
-											color: Colors.colors.on_surface
-											font.weight: Font.Bold
-											font.pixelSize: Appearance.fonts.small * 1.5
-										}
-										StyledText {
-											Layout.alignment: Qt.AlignHCenter
-											text: "Min / Max"
-											color: Colors.colors.on_surface_variant
-											font.pixelSize: Appearance.fonts.small * 1.2
-										}
-									}
+												StyledText {
+													Layout.alignment: Qt.AlignHCenter
+													text: modelData.value
+													color: Colors.colors.on_surface
+													font.weight: Font.Bold
+													font.pixelSize: Appearance.fonts.small * 1.5
+												}
 
-									ColumnLayout {
-										Layout.fillWidth: true
-										spacing: 5
-
-										StyledText {
-											Layout.alignment: Qt.AlignHCenter
-											text: Weather.humidityData + "%"
-											color: Colors.colors.on_surface
-											font.weight: Font.Bold
-											font.pixelSize: Appearance.fonts.small * 1.5
-										}
-										StyledText {
-											Layout.alignment: Qt.AlignHCenter
-											text: "Kelembapan"
-											color: Colors.colors.on_surface_variant
-											font.pixelSize: Appearance.fonts.small * 1.2
-										}
-									}
-
-									ColumnLayout {
-										Layout.fillWidth: true
-										spacing: 5
-
-										StyledText {
-											Layout.alignment: Qt.AlignHCenter
-											text: Weather.windSpeedData + " m/s"
-											color: Colors.colors.on_surface
-											font.weight: Font.Bold
-											font.pixelSize: Appearance.fonts.small * 1.5
-										}
-										StyledText {
-											Layout.alignment: Qt.AlignHCenter
-											text: "Angin"
-											color: Colors.colors.on_surface_variant
-											font.pixelSize: Appearance.fonts.small * 1.2
+												StyledText {
+													Layout.alignment: Qt.AlignHCenter
+													text: modelData.label
+													color: Colors.colors.on_surface_variant
+													font.pixelSize: Appearance.fonts.small * 1.2
+												}
+											}
 										}
 									}
 								}
@@ -660,9 +539,9 @@ Scope {
 	}
 
 	IpcHandler {
-		target: "dashboard"
+		target: "controlCenter"
 		function toggle(): void {
-			scope.toggleDashboard();
+			scope.toggleControlCenter();
 		}
 	}
 }

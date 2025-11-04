@@ -15,6 +15,18 @@
     quickshell = null;
   };
   runtimeDeps = packages.runtimeDeps;
+
+  material-symbols = pkgs.material-symbols.overrideAttrs (oldAttrs: {
+    version = "4.0.0-unstable-2025-04-11";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "google";
+      repo = "material-design-icons";
+      rev = "bb04090f930e272697f2a1f0d7b352d92dfeee43";
+      hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
+      sparseCheckout = ["variablefont"];
+    };
+  });
 in {
   options.programs.quickshell-shell = {
     enable = lib.mkEnableOption "quickshell shell";
@@ -45,10 +57,8 @@ in {
       ++ cfg.extraPackages
       ++ lib.optionals cfg.installFonts [
         apple-fonts.packages.${system}.sf-pro
-        apple-fonts.packages.${system}.sf-pro-nerd
-        apple-fonts.packages.${system}.sf-mono
         apple-fonts.packages.${system}.sf-mono-nerd
-        (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+        material-symbols
       ];
 
     fonts.fontconfig.enable = lib.mkDefault true;
@@ -64,9 +74,6 @@ in {
         ExecStart = "${cfg.package}/bin/shell";
         Restart = "on-failure";
         Slice = "session.slice";
-        Environment = [
-          # "PATH=${lib.makeBinPath ([cfg.package] ++ runtimeDeps ++ cfg.extraPackages)}"
-        ];
       };
       Install = {
         WantedBy = ["graphical-session.target"];
