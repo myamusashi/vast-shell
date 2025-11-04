@@ -78,6 +78,9 @@
         pkgs.ffmpeg
         pkgs.foot
         pkgs.polkit
+		pkgs.coreutils
+		pkgs.networkmanager
+		pkgs.gawk
       ]}
     '';
   };

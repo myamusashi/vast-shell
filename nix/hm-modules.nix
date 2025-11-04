@@ -54,14 +54,11 @@ in {
         (pkgs.nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
       ];
 
-    # Enable fontconfig
     fonts.fontconfig.enable = lib.mkDefault true;
 
-    # Copy config files to user directory
-    home.file.".config/shell/colors.json".source = "${cfg.package}/share/quickshell/Configs/colors.json";
-    home.file.".config/shell/configurations.json".source = "${cfg.package}/share/quickshell/Configs/configurations.json";
+    # home.file.".config/shell/colors.json".source = "${cfg.package}/share/quickshell/Configs/colors.json";
+    # home.file.".config/shell/configurations.json".source = "${cfg.package}/share/quickshell/Configs/configurations.json";
 
-    # Systemd service
     systemd.user.services.quickshell-shell = {
       Unit = {
         Description = "Shell widget using quickshell";
