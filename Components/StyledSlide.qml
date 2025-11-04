@@ -8,14 +8,14 @@ Slider {
 	id: root
 
 	hoverEnabled: true
-	property int handleHeight: 15
-	property int handleWidth: 15
-	required property int valueWidth
-	required property int valueHeight
-	property int sliderOrientation: Qt.Horizontal
 	Layout.alignment: Qt.AlignHCenter
 
-	orientation: sliderOrientation
+	property bool dotEnd: true
+	property int progressBackgroundHeight: 24
+	property int handleHeight: 44
+	property int handleWidth: 4
+	property int valueWidth
+	property int valueHeight
 
 	background: Item {
 		implicitWidth: root.valueWidth
@@ -28,24 +28,34 @@ Slider {
 		StyledRect {
 			id: unprogressBackground
 
-			width: root.sliderOrientation === Qt.Horizontal ? parent.width : parent.height
-			height: root.sliderOrientation === Qt.Horizontal ? parent.height : parent.width
-			x: root.sliderOrientation === Qt.Horizontal ? 0 : (parent.width - width) / 2
-			y: root.sliderOrientation === Qt.Horizontal ? (parent.height - height) / 2 : 0
-			color: Colors.colors.secondary_container
+			width: parent.width
+			height: root.progressBackgroundHeight
+			x: 0
+			y: (parent.height - height) / 2
+			color: Colors.colors.surface_container_highest
 			radius: Appearance.rounding.small
+
+			StyledRect {
+				id: endDot
+
+				visible: root.dotEnd
+				width: 6
+				height: 6
+				radius: 3
+				anchors.verticalCenter: parent.verticalCenter
+				anchors.right: parent.right
+				anchors.rightMargin: (parent.height - height) / 2
+				color: Colors.colors.on_surface
+			}
 		}
 
 		StyledRect {
 			id: progressBackground
 
-			width: root.sliderOrientation === Qt.Horizontal ? parent.width * root.visualPosition : unprogressBackground.width
-
-			height: root.sliderOrientation === Qt.Horizontal ? unprogressBackground.height : parent.height * root.visualPosition
-
-			x: root.sliderOrientation === Qt.Horizontal ? 0 : (parent.width - width) / 2
-			y: root.sliderOrientation === Qt.Horizontal ? (parent.height - height) / 2 : parent.height - height
-
+			width: parent.width * root.visualPosition
+			height: unprogressBackground.height
+			x: 0
+			y: (parent.height - height) / 2
 			color: Colors.colors.primary
 			radius: Appearance.rounding.small
 		}
@@ -54,24 +64,24 @@ Slider {
 	handle: StyledRect {
 		id: sliderHandle
 
-		x: root.sliderOrientation === Qt.Horizontal ? root.leftPadding + root.visualPosition * (root.availableWidth - width) : root.leftPadding + root.availableWidth / 2 - width / 2
-
-		y: root.sliderOrientation === Qt.Horizontal ? root.topPadding + root.availableHeight / 2 - height / 2 : root.topPadding + (1 - root.visualPosition) * (root.availableHeight - height)
+		x: root.leftPadding + root.visualPosition * (root.availableWidth - width)
+		y: root.topPadding + root.availableHeight / 2 - height / 2
 		implicitWidth: root.handleWidth
 		implicitHeight: root.handleHeight
-		radius: width / 2
-		color: root.pressed ? Colors.colors.primary : Colors.colors.on_surface
+		width: root.hovered || root.pressed ? 6 : root.handleWidth
+		height: root.hovered || root.pressed ? 48 : root.handleHeight
+		color: Colors.colors.primary
+		radius: Appearance.rounding.small
 
-		StyledRect {
-			anchors.centerIn: parent
-			width: root.pressed ? 28 : (root.hovered ? 24 : 0)
-			height: width
-			radius: width / 2
-			color: Colors.withAlpha(Colors.colors.primary, 0.1)
-			visible: root.pressed || root.hovered
+		Behavior on width {
+			NumbAnim {
+				duration: Appearance.animations.durations.small
+			}
+		}
 
-			Behavior on width {
-				NumbAnim {}
+		Behavior on height {
+			NumbAnim {
+				duration: Appearance.animations.durations.small
 			}
 		}
 	}

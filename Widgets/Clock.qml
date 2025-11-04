@@ -33,4 +33,16 @@ StyledRect {
 			text: Qt.formatDateTime(Time?.date, "h:mm AP")
 		}
 	}
+	MouseArea {
+		id: mArea
+
+		anchors.fill: timeContainer
+		hoverEnabled: true
+		cursorShape: Qt.PointingHandCursor
+		onClicked: cal.isCalendarShow = !cal.isCalendarShow
+	}
+
+	Calendar {
+		id: cal
+	}
 }

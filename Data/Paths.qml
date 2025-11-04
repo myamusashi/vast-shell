@@ -22,7 +22,6 @@ Singleton {
 
 	readonly property string recordDir: `${videos}/Shell`
 
-
 	FileView {
 		id: wallpaperPath
 

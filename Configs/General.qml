@@ -13,5 +13,4 @@ JsonObject {
 	property int rounding: 1
 	property int spacing: 1
 	property int padding: 1
-
 }

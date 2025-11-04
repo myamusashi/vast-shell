@@ -15,11 +15,11 @@ Scope {
 
 	Connections {
 		target: KeyLockState.state
-		function oncapsLockChanged() {
+		function onCapsLockChanged() {
 			root.isCapsLockOSDShow = true;
 			hideOSDTimer.restart();
 		}
-		function onnumLockChanged() {
+		function onNumLockChanged() {
 			root.isNumLockOSDShow = true;
 			hideOSDTimer.restart();
 		}

@@ -38,8 +38,8 @@
     '';
   };
 
-  shell-config = pkgs.stdenv.mkDerivation {
-    pname = "quickshell-config";
+  shell = pkgs.stdenv.mkDerivation {
+    pname = "shell";
     version = "0.1.0";
     src = ../.;
     nativeBuildInputs = [pkgs.makeWrapper];
@@ -82,5 +82,5 @@
     '';
   };
 
-  default = shell-config;
+  default = shell;
 }

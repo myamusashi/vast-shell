@@ -48,10 +48,10 @@ Singleton {
 		}
 
 		function dismiss() {
-			for ( var i = 0; i <= popupNotifications.length; i++ ) {
+			for (var i = 0; i <= popupNotifications.length; i++) {
 				popupNotifications[i === 0].dismiss();
 			}
-			for ( var i = 0; i <= listNotifications.length; i++ ) {
+			for (var i = 0; i <= listNotifications.length; i++) {
 				listNotifications[i === 0].dismiss();
 			}
 		}

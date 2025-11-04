@@ -99,10 +99,6 @@ LazyLoader {
 					locked: true
 				}
 
-				Behavior on width {
-					NumbAnim {}
-				}
-
 				Behavior on x {
 					NumbAnim {
 						duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -141,15 +137,6 @@ LazyLoader {
 					color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error_container : Colors.colors.surface_container_low
 
 					radius: Appearance.rounding.large
-
-					layer.enabled: true
-					layer.effect: MultiEffect {
-						shadowEnabled: true
-						shadowColor: Colors.withAlpha(Colors.colors.shadow, 0.15)
-						shadowBlur: 0.4
-						shadowVerticalOffset: 2
-						shadowHorizontalOffset: 0
-					}
 
 					border.color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : "transparent"
 					border.width: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
@@ -303,9 +290,11 @@ LazyLoader {
 
 								Item {
 									Layout.fillWidth: true
+
 									RowLayout {
 										y: -10
 										Layout.alignment: Qt.AlignTop
+
 										StyledText {
 											id: appName
 
@@ -447,23 +436,10 @@ LazyLoader {
 
 										radius: Appearance.rounding.full
 
-										Behavior on color {
-											ColorAnimation {
-												duration: Appearance.animations.durations.small
-												easing.type: Easing.OutCubic
-											}
-										}
-
 										StyledRect {
 											anchors.fill: parent
 											radius: parent.radius
 											color: actionMouse.pressed ? Colors.withAlpha(Colors.colors.on_secondary_container, 0.12) : actionMouse.containsMouse ? Colors.withAlpha(Colors.colors.on_secondary_container, 0.08) : "transparent"
-
-											Behavior on color {
-												ColorAnimation {
-													duration: 100
-												}
-											}
 										}
 
 										MouseArea {

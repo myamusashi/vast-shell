@@ -4,5 +4,4 @@ import Quickshell
 
 Singleton {
 	id: root
-
 }

@@ -213,13 +213,6 @@ Scope {
 								color: selected ? Colors.withAlpha(Colors.colors.on_surface, 0.1) : "transparent"
 								radius: Appearance.rounding.normal
 
-								Behavior on color {
-									ColorAnimation {
-										duration: Appearance.animations.durations.small
-										easing.bezierCurve: Appearance.animations.curves.standard
-									}
-								}
-
 								RowLayout {
 									anchors.fill: parent
 

@@ -24,6 +24,9 @@ Loader {
 				Layout.alignment: Qt.AlignVCenter
 				Layout.maximumWidth: implicitWidth
 			}
+			NotificationDots {
+				Layout.alignment: Qt.AlignVCenter
+			}
 			Tray {
 				Layout.alignment: Qt.AlignVCenter
 			}
@@ -66,15 +69,13 @@ Loader {
 					hoverEnabled: true
 
 					cursorShape: Qt.PointingHandCursor
-					onClicked: controlCenter.opened = !controlCenter.opened
+					onClicked: controlCenter.isControlCenterOpen = !controlCenter.isControlCenterOpen
 				}
 			}
 		}
 
 		ControlCenter {
 			id: controlCenter
-
-			opened: false
 		}
 	}
 }

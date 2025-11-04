@@ -8,7 +8,6 @@ import qs.Modules.Wallpaper
 import qs.Modules.Session
 import qs.Modules.Launcher
 import qs.Modules.Notifications
-import qs.Modules.Dashboard
 // import qs.Modules.BigClock
 import qs.Modules.OSD
 import qs.Modules.Overview
@@ -38,9 +37,6 @@ ShellRoot {
 		id: screencapture
 	}
 	Notifications {}
-	Dashboard {
-		id: dashboard
-	}
 	// Clock {}
 	OSD {}
 	Overview {}
@@ -80,10 +76,5 @@ ShellRoot {
 	GlobalShortcut {
 		name: "screencapture"
 		onPressed: screencapture.isScreencaptureOpen = !screencapture.isScreencaptureOpen
-	}
-
-	GlobalShortcut {
-		name: "dashboard"
-		onPressed: dashboard.isDashboardOpen = !dashboard.isDashboardOpen
 	}
 }

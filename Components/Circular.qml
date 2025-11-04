@@ -37,7 +37,7 @@ StyledRect {
 
 			ctx.beginPath();
 			ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-			ctx.strokeStyle = Colors.colors.on_primary;
+			ctx.strokeStyle = Colors.colors.secondary_container;
 			ctx.lineWidth = 8;
 			ctx.stroke();
 

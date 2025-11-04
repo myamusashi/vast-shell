@@ -17,9 +17,13 @@ Button {
 	property color buttonTextColor: Colors.colors.primary
 	property color buttonHoverTextColor: Colors.withAlpha(Colors.colors.primary, 0.08)
 	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.primary, 0.12)
-
+	property color buttonBorderColor: Colors.colors.outline
+	property int buttonBorderWidth: 2
 	property int buttonHeight: 40
 	property int iconTextSpacing: 8
+	property bool isButtonFullRound: true
+	property bool isButtonUseBorder: false
+	property real backgroundRounding: 0
 
 	implicitWidth: contentItem.implicitWidth + horizontalPadding * 2
 	implicitHeight: buttonHeight
@@ -66,7 +70,11 @@ Button {
 	background: StyledRect {
 		implicitWidth: root.implicitWidth
 		implicitHeight: root.implicitHeight
-		radius: root.buttonHeight / 2
+		border {
+			color: root.isButtonUseBorder ? root.buttonBorderColor : "transparent"
+			width: root.isButtonUseBorder ? root.buttonBorderWidth : 0
+		}
+		radius: root.isButtonFullRound ? root.buttonHeight / 2 : root.backgroundRounding
 		color: {
 			if (root.pressed)
 				root.buttonPressedColor;
