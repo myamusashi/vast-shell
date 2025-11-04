@@ -15,7 +15,7 @@ Singleton {
 	FileView {
 		id: colorsFile
 
-		path: Paths.shellDir + "/colors.json"
+		path: Paths.home + "/.config/shell/colors.json"
 		watchChanges: true
 		blockLoading: true
 		onFileChanged: reload()

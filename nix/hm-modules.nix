@@ -9,6 +9,12 @@
 }: let
   cfg = config.programs.quickshell-shell;
   system = pkgs.system;
+
+  packages = import ./default.nix {
+    inherit pkgs system lib;
+    quickshell = null;
+  };
+  runtimeDeps = packages.runtimeDeps;
 in {
   options.programs.quickshell-shell = {
     enable = lib.mkEnableOption "quickshell shell";
@@ -22,7 +28,7 @@ in {
     installFonts = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Whether to install required fonts";
+      description = "install required fonts";
     };
 
     extraPackages = lib.mkOption {
@@ -34,17 +40,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages =
-      [
-        cfg.package
-        pkgs.matugen
-        pkgs.playerctl
-        pkgs.wl-clipboard
-        pkgs.libnotify
-        pkgs.wl-screenrec
-        pkgs.ffmpeg
-        pkgs.foot
-        pkgs.polkit
-      ]
+      [cfg.package]
+      ++ runtimeDeps
       ++ cfg.extraPackages
       ++ lib.optionals cfg.installFonts [
         apple-fonts.packages.${system}.sf-pro
@@ -55,9 +52,6 @@ in {
       ];
 
     fonts.fontconfig.enable = lib.mkDefault true;
-
-    # home.file.".config/shell/colors.json".source = "${cfg.package}/share/quickshell/Configs/colors.json";
-    # home.file.".config/shell/configurations.json".source = "${cfg.package}/share/quickshell/Configs/configurations.json";
 
     systemd.user.services.quickshell-shell = {
       Unit = {
@@ -71,18 +65,7 @@ in {
         Restart = "on-failure";
         Slice = "session.slice";
         Environment = [
-          "PATH=${lib.makeBinPath ([
-              cfg.package
-              pkgs.matugen
-              pkgs.playerctl
-              pkgs.wl-clipboard
-              pkgs.libnotify
-              pkgs.wl-screenrec
-              pkgs.ffmpeg
-              pkgs.foot
-              pkgs.polkit
-            ]
-            ++ cfg.extraPackages)}"
+          # "PATH=${lib.makeBinPath ([cfg.package] ++ runtimeDeps ++ cfg.extraPackages)}"
         ];
       };
       Install = {

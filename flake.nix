@@ -41,28 +41,29 @@
     devShells = perSystem ({
       pkgs,
       system,
-    }: {
+    }: let
+      packages = import ./nix/default.nix {
+        inherit pkgs system lib;
+        quickshell = quickshell;
+      };
+    in {
       default = pkgs.mkShell {
-        packages = [
-          self.packages.${system}.default
-          quickshell.packages.${system}.default
-          pkgs.go
-          pkgs.matugen
-          pkgs.playerctl
-          pkgs.wl-clipboard
-          pkgs.libnotify
-          pkgs.wl-screenrec
-          pkgs.ffmpeg
-          pkgs.foot
-          pkgs.polkit
-          apple-fonts.packages.${system}.sf-pro
-          apple-fonts.packages.${system}.sf-pro-nerd
-          apple-fonts.packages.${system}.sf-mono
-          apple-fonts.packages.${system}.sf-mono-nerd
-        ];
+        packages =
+          [
+            packages.default
+            quickshell.packages.${system}.default
+            pkgs.go
+          ]
+          ++ packages.runtimeDeps
+          ++ [
+            apple-fonts.packages.${system}.sf-pro
+            apple-fonts.packages.${system}.sf-pro-nerd
+            apple-fonts.packages.${system}.sf-mono
+            apple-fonts.packages.${system}.sf-mono-nerd
+          ];
 
         shellHook = ''
-          echo "Quickshell Development Environment"
+          shell development
         '';
       };
     });

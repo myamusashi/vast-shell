@@ -49,7 +49,7 @@ Scope {
 							name: "Dashboard",
 							action: () => {
 								Quickshell.execDetached({
-									command: ["sh", "-c", "qs -c lock ipc call dashboard toggle"]
+									command: ["sh", "-c", "shell ipc call dashboard toggle"]
 								});
 							}
 						},
@@ -58,7 +58,7 @@ Scope {
 							name: "App launcher",
 							action: () => {
 								Quickshell.execDetached({
-									command: ["sh", "-c", "qs -c lock ipc call launcher toggle"]
+									command: ["sh", "-c", "shell call launcher toggle"]
 								});
 							}
 						},
@@ -67,7 +67,7 @@ Scope {
 							name: "Screen capture",
 							action: () => {
 								Quickshell.execDetached({
-									command: ["sh", "-c", "qs -c lock ipc call screencapture toggle"]
+									command: ["sh", "-c", "shell ipc call screencapture toggle"]
 								});
 							}
 						},
@@ -76,7 +76,7 @@ Scope {
 							name: "Session",
 							action: () => {
 								Quickshell.execDetached({
-									command: ["sh", "-c", "qs -c lock ipc call session toggle"]
+									command: ["sh", "-c", "shell ipc call session toggle"]
 								});
 							}
 						},

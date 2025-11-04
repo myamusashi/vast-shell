@@ -3,7 +3,84 @@
   system,
   lib,
   quickshell,
-}: rec {
+}: let
+  app2unit = pkgs.stdenvNoCC.mkDerivation rec {
+    pname = "app2unit";
+    version = "1.0.3";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "Vladimir-csp";
+      repo = "app2unit";
+      tag = "v${version}";
+      hash = "sha256-7eEVjgs+8k+/NLteSBKgn4gPaPLHC+3Uzlmz6XB0930=";
+    };
+
+    nativeBuildInputs = [pkgs.makeWrapper];
+
+    buildInputs = with pkgs; [
+      bash
+      systemd
+      coreutils
+      findutils
+      gnugrep
+      gnused
+      gawk
+      scdoc
+      git
+      libnotify
+    ];
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/bin
+      cp app2unit $out/bin/
+      chmod +x $out/bin/app2unit
+
+      wrapProgram $out/bin/app2unit \
+        --prefix PATH : ${lib.makeBinPath [
+        pkgs.bash
+        pkgs.systemd
+        pkgs.coreutils
+        pkgs.findutils
+        pkgs.gnugrep
+        pkgs.gnused
+        pkgs.gawk
+        pkgs.scdoc
+        pkgs.git
+        pkgs.libnotify
+      ]}
+
+      runHook postInstall
+    '';
+  };
+
+  runtimeDeps = with pkgs; [
+    coreutils
+    findutils
+    gnugrep
+    gawk
+    gnused
+    bash
+    util-linux
+    networkmanager
+    matugen
+    playerctl
+    wl-clipboard
+    libnotify
+    wl-screenrec
+    ffmpeg
+    foot
+    polkit
+    hyprland
+    systemd
+    app2unit
+  ];
+in rec {
+  inherit runtimeDeps;
+
   keystate-bin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "keystate-bin";
     version = "0.1.0";
@@ -50,38 +127,31 @@
     '';
 
     installPhase = ''
-      mkdir -p $out/share/quickshell
-      cp -r Components $out/share/quickshell/
-      cp -r Data $out/share/quickshell/
-      cp -r Helpers $out/share/quickshell/
-      cp -r Modules $out/share/quickshell/
-      cp -r Widgets $out/share/quickshell/
-      cp -r Assets $out/share/quickshell/
-      cp shell.qml $out/share/quickshell/
+             mkdir -p $out/share/quickshell
+             cp -r Components $out/share/quickshell/
+             cp -r Data $out/share/quickshell/
+             cp -r Helpers $out/share/quickshell/
+             cp -r Modules $out/share/quickshell/
+             cp -r Widgets $out/share/quickshell/
+             cp -r Assets $out/share/quickshell/
+             cp shell.qml $out/share/quickshell/
 
-      mkdir -p $out/share/quickshell/Assets
-      cp -r ${keystate-bin}/bin/keystate-bin $out/share/quickshell/Assets/
+             mkdir -p $out/share/quickshell/Assets
+             cp -r ${keystate-bin}/bin/keystate-bin $out/share/quickshell/Assets/keystate-bin
 
-      mkdir -p $out/share/quickshell/Configs
-      cp Configs/*.json $out/share/quickshell/Configs/
+             mkdir -p $out/share/quickshell/Configs
+             cp Configs/*.json $out/share/quickshell/Configs/
 
-      mkdir -p $out/bin
-      makeWrapper ${quickshell.packages.${system}.default}/bin/quickshell $out/bin/shell \
-        --add-flags "-p $out/share/quickshell" \
-        --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
-        --prefix PATH : ${lib.makeBinPath [
-        pkgs.matugen
-        pkgs.playerctl
-        pkgs.wl-clipboard
-        pkgs.libnotify
-        pkgs.wl-screenrec
-        pkgs.ffmpeg
-        pkgs.foot
-        pkgs.polkit
-		pkgs.coreutils
-		pkgs.networkmanager
-		pkgs.gawk
-      ]}
+             mkdir -p $out/bin
+             cp -r ${app2unit}/bin/app2unit $out/bin/app2unit
+          cp -r ${keystate-bin}/bin/keystate-bin $out/bin/keystate-bin
+             makeWrapper ${quickshell.packages.${system}.default}/bin/quickshell $out/bin/shell \
+               --add-flags "-p $out/share/quickshell" \
+               --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
+               --suffix PATH : ${lib.makeBinPath runtimeDeps} \
+      --suffix PATH : /run/current-system/sw/bin \
+      --suffix PATH : /etc/profiles/per-user/$USER/bin \
+      --suffix PATH : $HOME/.nix-profile/bin
     '';
   };
 

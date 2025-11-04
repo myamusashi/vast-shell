@@ -11,6 +11,7 @@ Singleton {
 	readonly property string pictures: Quickshell.env("XDG_PICTURES_DIR") || `${home}/Pictures`
 	readonly property string videos: Quickshell.env("XDG_VIDEOS_DIR") || `${home}/Videos`
 
+	readonly property string rootDir: Quickshell.shellDir
 	readonly property string configDir: Quickshell.env("XDG_CONFIG_DIR") || `${home}/.config`
 	readonly property string shellDir: `${configDir}/shell`
 

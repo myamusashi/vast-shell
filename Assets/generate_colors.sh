@@ -16,7 +16,7 @@ if [ ! -f "$QML_FILE" ]; then
     exit 1
 fi
 
-NEW_COLORS=$(matugen image "$(qs -c lock ipc call img get)" -t scheme-tonal-spot -j hex | jq '.colors.dark')
+NEW_COLORS=$(matugen image "$(shell ipc call img get)" -t scheme-tonal-spot -j hex | jq '.colors.dark')
 
 if [ -z "$NEW_COLORS" ] || [ "$NEW_COLORS" = "null" ]; then
     echo "Error: generate colors from matugen"

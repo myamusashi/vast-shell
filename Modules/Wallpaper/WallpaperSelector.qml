@@ -103,6 +103,7 @@ Scope {
 						placeholderText: "Search wallpapers..."
 						text: scope.searchQuery
 						font.pixelSize: Appearance.fonts.medium
+						color: Colors.colors.on_surface
 						focus: true
 
 						onTextChanged: {
@@ -247,7 +248,7 @@ Scope {
 											onClicked: {
 												pathView.currentIndex = delegateItem.index;
 												Quickshell.execDetached({
-													command: ["sh", "-c", `qs -c lock ipc call img set ${delegateItem.modelData}`]
+													command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
 												});
 											}
 										}
@@ -317,7 +318,7 @@ Scope {
 						Keys.onPressed: event => {
 							if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
 								Quickshell.execDetached({
-									command: ["sh", "-c", `qs -c lock ipc call img set ${model[currentIndex]}`]
+									command: ["sh", "-c", `shell ipc call img set ${model[currentIndex]}`]
 								});
 							}
 

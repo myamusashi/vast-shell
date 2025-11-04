@@ -97,7 +97,7 @@ Scope {
 									name: "Lockscreen",
 									action: () => {
 										Quickshell.execDetached({
-											command: ["sh", "-c", "qs -c lock ipc call lock lock"]
+											command: ["sh", "-c", "shell ipc call lock lock"]
 										});
 									}
 								}
