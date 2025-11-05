@@ -21,6 +21,7 @@ Scope {
 
 	Timer {
 		id: searchDebounceTimer
+
 		interval: 300
 		repeat: false
 		onTriggered: scope.debouncedSearchQuery = scope.searchQuery
@@ -68,8 +69,6 @@ Scope {
 			id: root
 
 			anchors {
-				right: true
-				top: true
 				bottom: true
 			}
 
@@ -79,10 +78,10 @@ Scope {
 			property real monitorWidth: monitor.width / monitor.scale
 			property real monitorHeight: monitor.height / monitor.scale
 
-			implicitWidth: monitorWidth * 0.15
-			margins.top: monitorHeight * 0.1
-			margins.bottom: monitorHeight * 0.1
-			exclusiveZone: 1
+			implicitWidth: monitorWidth * 0.8
+			implicitHeight: monitorHeight * 0.35
+			margins.bottom: monitorHeight * 0.05
+			exclusiveZone: 0
 			color: "transparent"
 
 			StyledRect {
@@ -101,6 +100,7 @@ Scope {
 						Layout.fillWidth: true
 						Layout.preferredHeight: 40
 						placeholderText: "Search wallpapers..."
+						placeholderTextColor: Colors.colors.surface_variant
 						text: scope.searchQuery
 						font.pixelSize: Appearance.fonts.medium
 						color: Colors.colors.on_surface
@@ -110,9 +110,8 @@ Scope {
 							scope.searchQuery = text;
 							searchDebounceTimer.restart();
 
-							if (pathView.count > 0) {
+							if (pathView.count > 0)
 								pathView.currentIndex = 0;
-							}
 						}
 
 						background: StyledRect {
@@ -135,28 +134,28 @@ Scope {
 						model: scope.filteredWallpaperList
 						clip: true
 
-						pathItemCount: Math.min(3, scope.filteredWallpaperList.length)
-						cacheItemCount: 2
+						pathItemCount: Math.min(7, scope.filteredWallpaperList.length)
+						cacheItemCount: 7
 
 						Component.onCompleted: {
 							const currentIndex = scope.wallpaperList.indexOf(Paths.currentWallpaper);
-							if (currentIndex !== -1) {
+							if (currentIndex !== -1)
 								pathView.currentIndex = currentIndex;
-							}
 						}
 
 						delegate: Item {
 							id: delegateItem
 
-							width: pathView.width * 1
-							height: pathView.height * 0.2
+							width: pathView.height * 0.7
+							height: pathView.height * 0.85
 
 							required property var modelData
 							required property int index
 							property bool isCurrentItem: PathView.isCurrentItem
 
-							scale: isCurrentItem ? 1.0 : 0.5
-							opacity: isCurrentItem ? 1.0 : 0.5
+							// Linear scaling based on position
+							scale: isCurrentItem ? 1.0 : 0.75
+							opacity: isCurrentItem ? 1.0 : 0.6
 
 							Behavior on scale {
 								NumbAnim {
@@ -165,6 +164,12 @@ Scope {
 							}
 
 							Behavior on opacity {
+								NumbAnim {
+									duration: Appearance.animations.durations.small
+								}
+							}
+
+							Behavior on y {
 								NumbAnim {
 									duration: Appearance.animations.durations.small
 								}
@@ -186,59 +191,20 @@ Scope {
 										Layout.fillWidth: true
 										Layout.fillHeight: true
 
-										Loader {
-											id: imageLoader
+										Image {
+											id: previewImage
+
 											anchors.fill: parent
+											source: "file://" + delegateItem.modelData
 
-											active: delegateItem.isCurrentItem
+											sourceSize.width: 150
+											sourceSize.height: 150
+
+											fillMode: Image.PreserveAspectCrop
 											asynchronous: true
-
-											sourceComponent: Image {
-												id: previewImage
-												anchors.fill: parent
-												source: "file://" + delegateItem.modelData
-
-												sourceSize.width: 200
-												sourceSize.height: 150
-
-												fillMode: Image.PreserveAspectCrop
-												asynchronous: true
-												smooth: true
-												cache: true
-												mipmap: true
-
-												Rectangle {
-													anchors.fill: parent
-													color: Colors.colors.surface_container
-													visible: previewImage.status === Image.Loading
-
-													StyledText {
-														anchors.centerIn: parent
-														text: "Loading..."
-														color: Colors.colors.on_surface
-														font.pixelSize: Appearance.fonts.small
-													}
-												}
-
-												Rectangle {
-													anchors.fill: parent
-													color: Colors.colors.error_container
-													visible: previewImage.status === Image.Error
-
-													StyledText {
-														anchors.centerIn: parent
-														text: "Error"
-														color: Colors.colors.on_error_container
-														font.pixelSize: Appearance.fonts.small
-													}
-												}
-											}
-
-											onActiveChanged: {
-												if (!active && item) {
-													item.source = "";
-												}
-											}
+											smooth: true
+											cache: true
+											mipmap: true
 										}
 
 										MouseArea {
@@ -271,16 +237,12 @@ Scope {
 						}
 
 						path: Path {
-							startX: pathView.width / 2
-							startY: 0
+							startX: 0
+							startY: pathView.height / 2
 
 							PathAttribute {
 								name: "z"
 								value: 0
-							}
-							PathAttribute {
-								name: "scale"
-								value: 0.7
 							}
 
 							PathLine {
@@ -292,23 +254,15 @@ Scope {
 								name: "z"
 								value: 10
 							}
-							PathAttribute {
-								name: "scale"
-								value: 1.0
-							}
 
 							PathLine {
-								x: pathView.width / 2
-								y: pathView.height
+								x: pathView.width
+								y: pathView.height / 2
 							}
 
 							PathAttribute {
 								name: "z"
 								value: 0
-							}
-							PathAttribute {
-								name: "scale"
-								value: 0.7
 							}
 						}
 
@@ -325,10 +279,10 @@ Scope {
 							if (event.key === Qt.Key_Escape)
 								scope.isWallpaperSwitcherOpen = false;
 
-							if (event.key === Qt.Key_Up)
+							if (event.key === Qt.Key_Left)
 								decrementCurrentIndex();
 
-							if (event.key === Qt.Key_Down)
+							if (event.key === Qt.Key_Right)
 								incrementCurrentIndex();
 
 							if (event.key === Qt.Key_Tab)
