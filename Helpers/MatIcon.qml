@@ -7,10 +7,6 @@ Text {
 	id: root
 
 	required property string icon
-	property int grad: 0
-
-	layer.enabled: true
-	layer.samples: 0
 
 	font.family: Appearance.fonts.family_Material
 	font.pixelSize: Appearance.fonts.medium
