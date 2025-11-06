@@ -69,14 +69,14 @@ Scope {
 			StyledRect {
 				id: container
 
-				width: parent.width
-				height: contentLayout.implicitHeight + 50  // Add padding
-				implicitHeight: height
+				implicitWidth: parent.width
+				implicitHeight: contentLayout.implicitHeight + 15
 				color: Colors.colors.surface_container_high
 				radius: Appearance.rounding.normal
 
 				RowLayout {
 					id: contentLayout
+
 					anchors.fill: parent
 					anchors.margins: 10
 					spacing: Appearance.spacing.normal
@@ -98,9 +98,10 @@ Scope {
 									id: coverArt
 
 									anchors.fill: parent
-									source: Player.active ? Player.active.trackArtUrl : ""
+									source: Player.active && Player.active.trackArtUrl !== "" ? Player.active.trackArtUrl : "root:/Assets/kuru.gif"
 									fillMode: Image.PreserveAspectCrop
 									visible: Player.active !== null
+									opacity: 0.5
 									cache: false
 									asynchronous: true
 
@@ -109,6 +110,20 @@ Scope {
 										maskEnabled: true
 										maskSource: mask
 									}
+
+									Component.onCompleted: {
+										console.log(Player.active.trackArtUrl);
+									}
+								}
+
+								StyledText {
+									anchors.centerIn: parent
+									width: 120
+									text: "Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG."
+									wrapMode: Text.Wrap
+									elide: Text.ElideRight
+									color: Colors.colors.on_surface
+									visible: Player.active && Player.active.trackArtUrl === ""
 								}
 
 								AnimatedImage {
@@ -139,8 +154,9 @@ Scope {
 					}
 
 					ColumnLayout {
+						id: controlLayout
+
 						Layout.fillWidth: true
-						Layout.preferredHeight: 0
 
 						Column {
 							Layout.fillWidth: true
@@ -159,6 +175,27 @@ Scope {
 							RowLayout {
 								Layout.preferredWidth: 50
 
+								StyledText {
+									width: parent.width
+									text: Player.active ? Player.active.trackArtist : ""
+									color: Colors.colors.on_background
+									font.pixelSize: Appearance.fonts.small
+									wrapMode: Text.NoWrap
+									elide: Text.ElideRight
+								}
+
+								StyledText {
+									text: "•"
+									color: Colors.colors.on_background
+									font.pixelSize: Appearance.fonts.extraLarge
+								}
+
+								StyledText {
+									text: Player.active ? "Watched on " : ""
+									color: Colors.colors.on_background
+									font.pixelSize: Appearance.fonts.small
+								}
+
 								IconImage {
 									source: Quickshell.iconPath(Player.active.desktopEntry)
 									asynchronous: true
@@ -171,14 +208,6 @@ Scope {
 										cursorShape: Qt.PointingHandCursor
 										onClicked: Qt.openUrlExternally(root.url)
 									}
-								}
-								StyledText {
-									width: parent.width
-									text: Player.active ? Player.active.trackArtist : ""
-									color: Colors.colors.on_background
-									font.pixelSize: Appearance.fonts.small
-									wrapMode: Text.NoWrap
-									elide: Text.ElideRight
 								}
 							}
 						}
