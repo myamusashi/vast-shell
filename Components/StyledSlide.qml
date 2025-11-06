@@ -36,6 +36,30 @@ Slider {
 			radius: Appearance.rounding.small
 
 			StyledRect {
+				id: startDot
+
+				visible: root.dotEnd
+				width: 6
+				height: 6
+				radius: 3
+				anchors.verticalCenter: parent.verticalCenter
+				anchors.leftMargin: (parent.height - height) / 2
+				anchors.left: parent.left
+				color: Colors.colors.on_surface
+			}
+
+			StyledRect {
+				id: centerDot
+
+				visible: root.dotEnd
+				width: 6
+				height: 6
+				radius: 3
+				anchors.centerIn: parent
+				color: Colors.colors.on_surface
+			}
+
+			StyledRect {
 				id: endDot
 
 				visible: root.dotEnd
@@ -68,7 +92,7 @@ Slider {
 		y: root.topPadding + root.availableHeight / 2 - height / 2
 		implicitWidth: root.handleWidth
 		implicitHeight: root.handleHeight
-		width: root.hovered || root.pressed ? 6 : root.handleWidth
+		width: root.hovered || root.pressed ? 8 : root.handleWidth
 		height: root.hovered || root.pressed ? 48 : root.handleHeight
 		color: Colors.colors.primary
 		radius: Appearance.rounding.small
