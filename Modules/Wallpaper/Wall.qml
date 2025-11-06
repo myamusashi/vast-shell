@@ -36,19 +36,18 @@ Scope {
 			Image {
 				id: img
 
+				anchors.fill: parent
 				antialiasing: true
 				asynchronous: true
-				mipmap: true
+				cache: false
+				mipmap: false
 				smooth: true
-
 				source: Paths.currentWallpaper
-
 				fillMode: Image.PreserveAspectFit
-				width: parent.width
-				height: parent.height
 			}
 		}
 	}
+
 	IpcHandler {
 		target: "img"
 
