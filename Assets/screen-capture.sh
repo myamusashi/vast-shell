@@ -104,7 +104,7 @@ start_recording() {
 		return 1
 	fi
 
-	VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mkv"
+	VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mp4"
 
 	if [ -n "$geometry" ]; then
 		wl-screenrec --codec hevc -g "$geometry" -f "$VID" &
@@ -139,7 +139,7 @@ stop_recording() {
 
 			sleep 1
 
-			VIDEO_BASENAME=$(basename "$VID" .mkv)
+			VIDEO_BASENAME=$(basename "$VID" .mp4)
 			THUMB_PATH="$THUMBNAIL_DIR/${VIDEO_BASENAME}.png"
 
 			if create_thumbnail "$VID" "$THUMB_PATH"; then
