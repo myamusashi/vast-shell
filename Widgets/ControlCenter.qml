@@ -22,6 +22,52 @@ Scope {
 	readonly property int diskProp: SysUsage.diskUsed / 1048576
 	readonly property int memProp: SysUsage.memUsed / 1048576
 
+	readonly property bool batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
+	readonly property string batIcon: {
+		if (batPercentage > 0.95)
+			return "battery_android_full";
+		if (batPercentage > 0.85)
+			return "battery_android_6";
+		if (batPercentage > 0.65)
+			return "battery_android_5";
+		if (batPercentage > 0.55)
+			return "battery_android_4";
+		if (batPercentage > 0.45)
+			return "battery_android_3";
+		if (batPercentage > 0.35)
+			return "battery_android_2";
+		if (batPercentage > 0.15)
+			return "battery_android_1";
+		if (batPercentage > 0.05)
+			return "battery_android_0";
+		return "battery_android_0";
+	}
+	readonly property list<string> batIcons: ["battery_android_full"    // 96-100%
+		, "battery_android_6",
+		// 86-95%
+		"battery_android_5",
+		// 66-85%
+		"battery_android_4",
+		// 56-65%
+		"battery_android_3",
+		// 46-55%
+		"battery_android_2",
+		// 36-45%
+		"battery_android_1",
+		// 16-35%
+		"battery_android_0",
+		// 6-15%
+		"battery_android_0",
+		// 6-15%
+		"battery_android_0",
+		// 6-15%
+		"battery_android_alert"
+		// 0-5% (only when not charging)
+	]
+	readonly property real batPercentage: UPower.displayDevice.percentage
+	readonly property string chargeIcon: batIcons[10 - chargeIconIndex]
+	property int chargeIconIndex: 0
+
 	function toggleControlCenter(): void {
 		isControlCenterOpen = !isControlCenterOpen;
 	}
@@ -63,8 +109,6 @@ Scope {
 				StyledRect {
 					Layout.fillWidth: true
 					Layout.preferredHeight: 60
-					topLeftRadius: Appearance.rounding.normal
-					topRightRadius: Appearance.rounding.normal
 					color: Colors.colors.surface_container
 
 					RowLayout {
@@ -99,6 +143,8 @@ Scope {
 							]
 
 							StyledButton {
+								id: settingButton
+
 								required property var modelData
 								required property int index
 
@@ -109,24 +155,24 @@ Scope {
 								onClicked: scope.state = modelData.index
 
 								background: Rectangle {
-									color: scope.state === index ? Colors.colors.primary : Colors.colors.surface_container
-									radius: 5
+									color: scope.state === settingButton.index ? Colors.colors.primary : Colors.colors.surface_container
+									radius: Appearance.rounding.small
 								}
 
 								contentItem: RowLayout {
 									anchors.centerIn: parent
-									spacing: 5
+									spacing: Appearance.spacing.small
 
 									MatIcon {
-										icon: modelData.icon
-										color: scope.state === index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-										font.pixelSize: Appearance.fonts.extraLarge * root.scaleFactor
+										icon: settingButton.modelData.icon
+										color: scope.state === settingButton.index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+										font.pixelSize: Appearance.fonts.large * root.scaleFactor + 10
 									}
 
 									StyledText {
-										text: modelData.title
-										color: scope.state === index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
-										font.pixelSize: Appearance.fonts.large * 1.2 * root.scaleFactor
+										text: settingButton.modelData.title
+										color: scope.state === settingButton.index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+										font.pixelSize: Appearance.fonts.large * root.scaleFactor
 										elide: Text.ElideRight
 									}
 								}
@@ -142,15 +188,12 @@ Scope {
 					Layout.fillHeight: true
 					currentIndex: scope.state
 
-					// Settings Tab
 					Loader {
 						active: scope.state === 0
 						asynchronous: true
 
 						sourceComponent: StyledRect {
 							color: Colors.colors.surface_container_high
-							bottomLeftRadius: Appearance.rounding.normal
-							bottomRightRadius: Appearance.rounding.normal
 
 							GridLayout {
 								anchors.fill: parent
@@ -158,36 +201,144 @@ Scope {
 
 								ColumnLayout {
 									Layout.fillHeight: true
-									Layout.preferredWidth: 200
-									Layout.topMargin: 20
+									Layout.preferredWidth: 220
+									Layout.margins: 15
 									Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+									spacing: Appearance.spacing.small
 
 									StyledRect {
-										Layout.alignment: Qt.AlignCenter
-										Layout.preferredWidth: 200
-										Layout.leftMargin: 20
-										Layout.preferredHeight: 175
+										Layout.preferredWidth: 250
+										Layout.preferredHeight: 140
 										color: Colors.colors.surface_container_low
 										radius: Appearance.rounding.normal
 
-										Image {
-											anchors.top: parent.top
-											anchors.horizontalCenter: parent.horizontalCenter
-											anchors.topMargin: 15
-											source: Paths.home + "/.face"
-											sourceSize.width: 120
-											sourceSize.height: 120
-											asynchronous: true
-											cache: true
+										ColumnLayout {
+											anchors.fill: parent
+											anchors.rightMargin: 10
+											anchors.leftMargin: 10
+											anchors.bottomMargin: 10
+											spacing: Appearance.spacing.small
+
+											Item {
+												Layout.fillWidth: true
+												Layout.preferredHeight: 60
+
+												MatIcon {
+													id: batteryIcon
+													anchors.centerIn: parent
+													icon: scope.batCharging ? scope.chargeIcon : scope.batIcon
+													color: scope.batCharging ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+													font.pixelSize: Appearance.fonts.extraLarge * 3
+												}
+
+												RowLayout {
+													anchors.centerIn: parent
+													spacing: 4
+
+													MatIcon {
+														icon: "bolt"
+														color: Colors.colors.primary
+														visible: scope.batCharging
+														font.pixelSize: Appearance.fonts.medium
+													}
+
+													StyledText {
+														text: (UPower.displayDevice.percentage * 100).toFixed(0)
+														color: Colors.colors.surface
+														font.pixelSize: Appearance.fonts.large
+														font.bold: true
+													}
+												}
+											}
+
+											GridLayout {
+												Layout.fillWidth: true
+												rows: 2
+
+												ColumnLayout {
+													Layout.fillWidth: true
+													spacing: Appearance.spacing.small
+
+													RowLayout {
+														Layout.fillWidth: true
+														spacing: Appearance.spacing.small
+
+														StyledText {
+															text: "Current capacity:"
+															color: Colors.colors.on_background
+															font.pixelSize: Appearance.fonts.small
+														}
+
+														Item {
+															Layout.fillWidth: true
+														}
+
+														StyledText {
+															text: UPower.displayDevice.energy.toFixed(2) + " Wh"
+															color: Colors.colors.on_background
+															font.pixelSize: Appearance.fonts.small
+															font.bold: true
+														}
+													}
+
+													RowLayout {
+														Layout.fillWidth: true
+														spacing: Appearance.spacing.small
+
+														StyledText {
+															text: "Full capacity:"
+															color: Colors.colors.on_background
+															font.pixelSize: Appearance.fonts.small
+														}
+
+														Item {
+															Layout.fillWidth: true
+														}
+
+														StyledText {
+															text: UPower.displayDevice.energyCapacity.toFixed(2) + " Wh"
+															color: Colors.colors.on_background
+															font.pixelSize: Appearance.fonts.small
+															font.bold: true
+														}
+													}
+
+													RowLayout {
+														Layout.fillWidth: true
+														spacing: Appearance.spacing.small
+
+														StyledText {
+															text: "Battery Health:"
+															color: Colors.colors.on_background
+															font.pixelSize: Appearance.fonts.small
+														}
+
+														Item {
+															Layout.fillWidth: true
+														}
+
+														StyledText {
+															text: ((UPower.displayDevice.energy / UPower.displayDevice.energyCapacity) * 100).toFixed(1) + "%"
+															color: {
+																var health = (UPower.displayDevice.energy / UPower.displayDevice.energyCapacity) * 100;
+																return health > 80 ? Colors.colors.primary : health > 50 ? Colors.colors.secondary : Colors.colors.error;
+															}
+															font.pixelSize: Appearance.fonts.small
+															font.bold: true
+														}
+													}
+												}
+											}
 										}
 
-										StyledLabel {
-											text: "Gilang Ramadhan"
-											color: Colors.colors.on_surface
-											font.pixelSize: Appearance.fonts.large * 1.2
-											anchors.bottomMargin: 20
-											anchors.bottom: parent.bottom
-											anchors.horizontalCenter: parent.horizontalCenter
+										Timer {
+											interval: 600
+											repeat: true
+											running: scope.batCharging
+											triggeredOnStart: true
+											onTriggered: {
+												scope.chargeIconIndex = (scope.chargeIconIndex % 10) + 1;
+											}
 										}
 									}
 								}
@@ -195,15 +346,12 @@ Scope {
 						}
 					}
 
-					// Volumes Tab
 					Loader {
 						active: scope.state === 1
 						asynchronous: true
 
 						sourceComponent: StyledRect {
 							color: Colors.colors.surface_container_high
-							bottomLeftRadius: Appearance.rounding.normal
-							bottomRightRadius: Appearance.rounding.normal
 
 							ScrollView {
 								anchors.fill: parent
@@ -249,7 +397,6 @@ Scope {
 						}
 					}
 
-					// Performance Tab
 					Loader {
 						active: scope.state === 2
 						asynchronous: true
@@ -262,7 +409,6 @@ Scope {
 								columns: 3
 								rowSpacing: Appearance.spacing.large * 2
 
-								// Memory Usage
 								ColumnLayout {
 									Layout.alignment: Qt.AlignCenter
 									spacing: Appearance.spacing.normal
@@ -281,7 +427,6 @@ Scope {
 									}
 								}
 
-								// CPU Usage
 								ColumnLayout {
 									Layout.alignment: Qt.AlignVCenter
 									spacing: Appearance.spacing.normal
@@ -300,7 +445,6 @@ Scope {
 									}
 								}
 
-								// Disk Usage
 								ColumnLayout {
 									Layout.alignment: Qt.AlignCenter
 									spacing: Appearance.spacing.normal
@@ -319,7 +463,6 @@ Scope {
 									}
 								}
 
-								// Network Speed
 								ColumnLayout {
 									Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 									Layout.preferredWidth: 160
@@ -356,7 +499,6 @@ Scope {
 									}
 								}
 
-								// Network Usage
 								ColumnLayout {
 									Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 									Layout.preferredWidth: 160
@@ -393,7 +535,6 @@ Scope {
 									}
 								}
 
-								// Network Interfaces
 								ColumnLayout {
 									Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 									Layout.preferredWidth: 160
@@ -425,7 +566,6 @@ Scope {
 						}
 					}
 
-					// Weather Tab
 					Loader {
 						active: scope.state === 3
 						asynchronous: true
@@ -442,8 +582,7 @@ Scope {
 									Layout.alignment: Qt.AlignHCenter
 									text: Weather.cityData
 									color: Colors.colors.on_surface
-									font.pixelSize: Appearance.fonts.large * 1.2
-									font.weight: Font.Bold
+									font.pixelSize: Appearance.fonts.extraLarge
 								}
 
 								RowLayout {
@@ -457,7 +596,7 @@ Scope {
 										Layout.alignment: Qt.AlignHCenter
 										font.pixelSize: Appearance.fonts.extraLarge * 4
 										color: Colors.colors.primary
-										icon: "air"
+										icon: Weather.weatherIconData
 									}
 
 									StyledText {
@@ -465,7 +604,7 @@ Scope {
 										text: Weather.tempData + "°C"
 										color: Colors.colors.primary
 										font.pixelSize: Appearance.fonts.extraLarge * 2.5
-										font.weight: Font.Light
+										font.weight: Font.Bold
 									}
 								}
 
@@ -508,13 +647,15 @@ Scope {
 											]
 
 											ColumnLayout {
+												id: weatherPage
+
 												required property var modelData
 												Layout.fillWidth: true
 												spacing: 5
 
 												StyledText {
 													Layout.alignment: Qt.AlignHCenter
-													text: modelData.value
+													text: weatherPage.modelData.value
 													color: Colors.colors.on_surface
 													font.weight: Font.Bold
 													font.pixelSize: Appearance.fonts.small * 1.5
@@ -522,7 +663,7 @@ Scope {
 
 												StyledText {
 													Layout.alignment: Qt.AlignHCenter
-													text: modelData.label
+													text: weatherPage.modelData.label
 													color: Colors.colors.on_surface_variant
 													font.pixelSize: Appearance.fonts.small * 1.2
 												}
