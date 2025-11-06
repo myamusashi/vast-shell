@@ -37,64 +37,33 @@ WlSessionLockSurface {
 			anchors.fill: parent
 			antialiasing: true
 			asynchronous: true
-			retainWhileLoading: true
 			smooth: true
-			opacity: 1
-			fillMode: Image.PreserveAspectCrop
+			fillMode: Image.PreserveAspectFit
 			source: Paths.currentWallpaper
-			// layer.enabled: true
-			// layer.effect: MultiEffect {
-			// 	id: wallBlur
-			//
-			// 	autoPaddingEnabled: false
-			// 	blurEnabled: true
-			//
-			// 	NumbAnim on blur {
-			// 		easing.type: Easing.Linear
-			// 		from: 0
-			// 		to: 0.69
-			// 	}
-			//
-			// 	NumbAnim {
-			// 		easing.type: Easing.Linear
-			// 		duration: Appearance.animations.durations.large
-			// 		property: "blur"
-			// 		running: root.lock.locked
-			// 		target: wallBlur
-			// 		to: 0
-			// 	}
-			// }
-		}
+			layer.enabled: true
+			layer.effect: MultiEffect {
+				id: wallBlur
 
-		// ScreencopyView {
-		// 	id: wallpaper
-		//
-		// 	anchors.fill: parent
-		//
-		// 	captureSource: root.screen
-		// 	opacity: 1
-		// 	visible: true
-		// 	layer.enabled: true
-		// 	layer.effect: MultiEffect {
-		// 		id: wallBlur
-		//
-		// 		autoPaddingEnabled: false
-		// 		blurEnabled: true
-		//
-		// 		NumbAnim on blur {
-		// 			from: 0
-		// 			to: 0.69
-		// 		}
-		//
-		// 		NumbAnim {
-		// 			duration: Appearance.animations.durations.large
-		// 			property: "blur"
-		// 			running: root.lock.locked
-		// 			target: wallBlur
-		// 			to: 0
-		// 		}
-		// 	}
-		// }
+				autoPaddingEnabled: false
+				blurEnabled: true
+
+				NumbAnim on blur {
+					duration: Appearance.animations.durations.expressiveDefaultSpatial
+					easing.type: Easing.Linear
+					from: 0
+					to: 0.69
+				}
+
+				NumbAnim {
+					duration: Appearance.animations.durations.expressiveDefaultSpatial * 1.5
+					easing.type: Easing.Linear
+					property: "blur"
+					running: root.lock.locked
+					target: wallBlur
+					to: 0
+				}
+			}
+		}
 
 		ColumnLayout {
 			id: clockContainer
