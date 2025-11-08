@@ -477,29 +477,25 @@ Scope {
 											Layout.preferredHeight: 48
 
 											from: 0
-											to: Brightness.maxValue
-											value: Brightness.value
-											stepSize: Math.max(1, Math.floor(Brightness.maxValue / 100))
+											to: Brightness.maxValue || 1
+											value: 0
 
-											// Prevent binding loop
-											Binding on value {
-												when: !brightnessSlider.pressed
-												value: Brightness.value
-												restoreMode: Binding.RestoreBinding
+											Connections {
+												target: Brightness
+												function onAvailableChanged() {
+													if (Brightness.available) {
+														brightnessSlider.value = Brightness.value;
+													}
+												}
 											}
 
-											// Debounce timer to avoid too many writes
-											onMoved: {
-												debounceTimer.restart();
-											}
+											onMoved: debounceTimer.restart()
 
 											Timer {
 												id: debounceTimer
 												interval: 150
 												repeat: false
-												onTriggered: {
-													Brightness.setBrightness(brightnessSlider.value);
-												}
+												onTriggered: Brightness.setBrightness(brightnessSlider.value)
 											}
 										}
 									}
