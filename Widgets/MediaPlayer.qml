@@ -110,10 +110,6 @@ Scope {
 										maskEnabled: true
 										maskSource: mask
 									}
-
-									Component.onCompleted: {
-										console.log(Player.active.trackArtUrl);
-									}
 								}
 
 								StyledText {
@@ -301,14 +297,13 @@ Scope {
 								value: Player.active === null ? 0 : Player.active.length > 0 ? Player.active.position / Player.active.length : 0
 
 								Layout.fillWidth: true
+								Layout.preferredHeight: 48
 								valueWidth: 0
 								valueHeight: 0
 
 								FrameAnimation {
 									running: Player.active && Player.active.playbackState == MprisPlaybackState.Playing
-									onTriggered: {
-										Player.active.positionChanged();
-									}
+									onTriggered: Player.active.positionChanged()
 								}
 
 								onMoved: Player.active ? Player.active.position = value * Player.active.length : {}

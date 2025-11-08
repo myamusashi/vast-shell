@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Effects
 
 import qs.Data
 
@@ -12,12 +13,14 @@ Slider {
 
 	property bool dotEnd: true
 	property int progressBackgroundHeight: 24
-	property int handleHeight: 44
+	property int handleHeight: 40
 	property int handleWidth: 4
 	property int valueWidth
 	property int valueHeight
 
 	background: Item {
+		id: progressItem
+
 		implicitWidth: root.valueWidth
 		implicitHeight: root.valueHeight
 		width: root.availableWidth
@@ -33,7 +36,7 @@ Slider {
 			x: 0
 			y: (parent.height - height) / 2
 			color: Colors.colors.surface_container_highest
-			radius: Appearance.rounding.small
+			radius: Appearance.rounding.small * 0.5
 
 			StyledRect {
 				id: startDot
@@ -81,31 +84,38 @@ Slider {
 			x: 0
 			y: (parent.height - height) / 2
 			color: Colors.colors.primary
-			radius: Appearance.rounding.small
+			radius: Appearance.rounding.small * 0.5
 		}
 	}
 
-	handle: StyledRect {
-		id: sliderHandle
+	handle: Item {
+		id: handleContainer
+		x: root.leftPadding + root.visualPosition * (root.availableWidth - root.handleWidth)
+		y: root.topPadding + root.availableHeight / 2 - root.handleHeight / 2
+		width: root.handleWidth
+		height: root.handleHeight
 
-		x: root.leftPadding + root.visualPosition * (root.availableWidth - width)
-		y: root.topPadding + root.availableHeight / 2 - height / 2
-		implicitWidth: root.handleWidth
-		implicitHeight: root.handleHeight
-		width: root.hovered || root.pressed ? 8 : root.handleWidth
-		height: root.hovered || root.pressed ? 48 : root.handleHeight
-		color: Colors.colors.primary
-		radius: Appearance.rounding.small
-
-		Behavior on width {
-			NumbAnim {
-				duration: Appearance.animations.durations.small
-			}
+		StyledRect {
+			anchors.centerIn: parent
+			width: 15
+			height: root.handleHeight
+			color: Colors.colors.surface_container_high
+			z: 1
+			radius: Appearance.rounding.full
 		}
 
-		Behavior on height {
-			NumbAnim {
-				duration: Appearance.animations.durations.small
+		StyledRect {
+			anchors.centerIn: parent
+			z: 2
+			width: root.hovered || root.pressed ? 8 : root.handleWidth
+			height: root.handleHeight
+			color: Colors.colors.primary
+			radius: Appearance.rounding.small
+
+			Behavior on width {
+				NumbAnim {
+					duration: Appearance.animations.durations.small
+				}
 			}
 		}
 	}
