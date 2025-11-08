@@ -7,51 +7,96 @@ import QtQuick
 Singleton {
 	id: root
 
-	property int value: parseInt(brightnessFile.text().trim())
-	property int maxValue: parseInt(brightnessMaxFile.text().trim())
+	property int value: 0
+	property int maxValue: 100
+	property bool available: false
 
 	Process {
-		command: ["sh", "-c", "echo /sys/class/backlight/*/brightness"]
+		id: getBrightness
+		command: ["brightnessctl", "info"]
 		running: true
+
 		stdout: StdioCollector {
-			id: brPath
+			onStreamFinished: {
+				const lines = this.text.trim().split("\n");
+				for (let line of lines) {
+					if (line.includes("Current brightness:")) {
+						const match = line.match(/Current brightness:\s*(\d+)\s*\((\d+)%\)/);
+						if (match) {
+							root.value = parseInt(match[1]);
+						}
+					} else if (line.includes("Max brightness:")) {
+						const match = line.match(/Max brightness:\s*(\d+)/);
+						if (match) {
+							root.maxValue = parseInt(match[1]);
+						}
+					}
+				}
+				root.available = true;
+			}
+		}
+
+		stderr: StdioCollector {
+			onStreamFinished: {
+				if (this.text.trim() !== "") {
+					console.warn("brightnessctl error:", this.text.trim());
+					root.available = false;
+				}
+			}
 		}
 	}
 
-	Process {
-		command: ["sh", "-c", "echo /sys/class/backlight/*/max_brightness"]
-		running: true
-		stdout: StdioCollector {
-			id: brMaxPath
-		}
-	}
 
-	FileView {
-		id: brightnessFile
-
-		path: brPath.text.split("\n")[0]
-		watchChanges: true
-		blockLoading: true
-		onFileChanged: this.reload()
-	}
-
-	FileView {
-		id: brightnessMaxFile
-
-		path: brMaxPath.text.trim()
-		blockLoading: true
-		onFileChanged: this.reload()
+	function updateBrightness() {
+		if (getBrightness.running)
+			return;
+		getBrightness.running = true;
 	}
 
 	function setBrightness(newValue) {
-		if (brightnessPath === "")
+		if (!root.available)
 			return;
-		setBrightnessProcess.command = ["sh", "-c", "echo " + Math.round(newValue) + " > " + brightnessPath];
+		const clampedValue = Math.max(0, Math.min(root.maxValue, Math.round(newValue)));
+
+		setBrightnessProcess.command = ["brightnessctl", "set", clampedValue.toString()];
+		setBrightnessProcess.running = true;
+	}
+
+	function setBrightnessPercent(percent) {
+		if (!root.available)
+			return;
+		const clampedPercent = Math.max(0, Math.min(100, Math.round(percent)));
+
+		setBrightnessProcess.command = ["brightnessctl", "set", clampedPercent.toString() + "%"];
+		setBrightnessProcess.running = true;
+	}
+
+	function increaseBrightness(amount) {
+		if (!root.available)
+			return;
+		setBrightnessProcess.command = ["brightnessctl", "set", Math.round(amount).toString() + "%+"];
+		setBrightnessProcess.running = true;
+	}
+
+	function decreaseBrightness(amount) {
+		if (!root.available)
+			return;
+		setBrightnessProcess.command = ["brightnessctl", "set", Math.round(amount).toString() + "%-"];
 		setBrightnessProcess.running = true;
 	}
 
 	Process {
 		id: setBrightnessProcess
 		running: false
+
+		stdout: StdioCollector {}
+
+		stderr: StdioCollector {
+			onStreamFinished: {
+				if (this.text.trim() !== "") {
+					console.warn("Failed to set brightness:", this.text.trim());
+				}
+			}
+		}
 	}
 }
