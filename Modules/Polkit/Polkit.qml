@@ -118,48 +118,8 @@ Scope {
 						id: okButton
 
 						buttonTitle: "Authenticate"
-						buttonTextColor: Colors.colors.on_primary
-						buttonColor: Colors.colors.primary
-						buttonHoverColor: Colors.colors.primary
-						buttonPressedColor: Colors.colors.primary
 						Layout.preferredHeight: 40
 						enabled: passwordInput.text.length > 0 || !!polkitAgent?.flow?.isResponseRequired
-
-						background: Rectangle {
-							implicitWidth: okButton.implicitWidth
-							implicitHeight: 40
-							radius: Appearance.rounding.large
-							color: okButton.enabled ? Colors.colors.primary : Colors.withAlpha(Colors.colors.on_surface, 0.12)
-
-							Rectangle {
-								anchors.fill: parent
-								radius: parent.radius
-								color: {
-									if (!okButton.enabled)
-										return "transparent";
-									else if (okButton.pressed)
-										return Colors.withAlpha(Colors.colors.on_primary, 0.12);
-									else if (okButton.hovered)
-										return Colors.withAlpha(Colors.colors.on_primary, 0.08);
-									else
-										return "transparent";
-								}
-
-								Behavior on color {
-									ColAnim {
-										duration: Appearance.animations.durations.small
-										easing.type: Easing.OutCubic
-									}
-								}
-							}
-
-							Behavior on color {
-								ColAnim {
-									duration: Appearance.animations.durations.small
-									easing.type: Easing.OutCubic
-								}
-							}
-						}
 
 						onClicked: {
 							polkitAgent?.flow?.submit(passwordInput.text);
