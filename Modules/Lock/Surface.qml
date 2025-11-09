@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 
 import qs.Data
@@ -37,8 +35,9 @@ WlSessionLockSurface {
 			anchors.fill: parent
 			antialiasing: true
 			asynchronous: true
+			fillMode: Image.PreserveAspectCrop
+			retainWhileLoading: true
 			smooth: true
-			fillMode: Image.PreserveAspectFit
 			source: Paths.currentWallpaper
 			layer.enabled: true
 			layer.effect: MultiEffect {
@@ -120,31 +119,69 @@ WlSessionLockSurface {
 		ParallelAnimation {
 			PropertyAnimation {
 				target: clockContainer
-				properties: "opacity,scale"
-
+				property: "opacity"
 				from: 1
 				to: 0
-				duration: Appearance.animations.durations.expressiveFastSpatial
-				easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+				duration: Appearance.animations.durations.small
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
 			}
+			PropertyAnimation {
+				target: clockContainer
+				property: "scale"
+				from: 1
+				to: 0.9
+				duration: Appearance.animations.durations.small
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+			}
+			PropertyAnimation {
+				target: clockContainer
+				property: "y"
+				from: clockContainer.y
+				to: clockContainer.y - 20
+				duration: Appearance.animations.durations.small
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+			}
+		}
 
+		ParallelAnimation {
 			PropertyAnimation {
 				target: inputContainer
-				properties: "opacity,scale"
-
+				property: "opacity"
 				from: 1
 				to: 0
 				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+			}
+			PropertyAnimation {
+				target: inputContainer
+				property: "scale"
+				from: 1
+				to: 0.85
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
 				easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
 			}
 
 			PropertyAnimation {
 				target: sessionContainer
-				properties: "opacity,scale"
-
+				property: "opacity"
 				from: 1
 				to: 0
 				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+			}
+			PropertyAnimation {
+				target: sessionContainer
+				property: "scale"
+				from: 1
+				to: 0.85
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
 				easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
 			}
 		}
@@ -158,44 +195,93 @@ WlSessionLockSurface {
 
 	SequentialAnimation {
 		id: entrySequence
-
 		running: true
 
 		ParallelAnimation {
-			SequentialAnimation {
-				PauseAnimation {
-					duration: Appearance.animations.durations.small
-				}
+			PropertyAnimation {
+				target: clockContainer
+				property: "opacity"
+				from: 0
+				to: 1
+				duration: Appearance.animations.durations.expressiveDefaultSpatial
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+			}
+			PropertyAnimation {
+				target: clockContainer
+				property: "scale"
+				from: 0.8
+				to: 1
+				duration: Appearance.animations.durations.expressiveDefaultSpatial
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+			}
+			PropertyAnimation {
+				target: clockContainer
+				property: "y"
+				from: clockContainer.y + 30
+				to: clockContainer.y
+				duration: Appearance.animations.durations.expressiveDefaultSpatial
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+			}
+		}
 
-				PropertyAnimation {
-					target: clockContainer
-					properties: "opacity,scale"
+		ParallelAnimation {
+			PropertyAnimation {
+				target: inputContainer
+				property: "opacity"
+				from: 0
+				to: 1
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
+			}
+			PropertyAnimation {
+				target: inputContainer
+				property: "scale"
+				from: 0.9
+				to: 1
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
+			}
+			PropertyAnimation {
+				target: inputContainer
+				property: "y"
+				from: inputContainer.y + 20
+				to: inputContainer.y
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
+			}
 
-					from: 0
-					to: 1
-					duration: Appearance.animations.durations.expressiveDefaultSpatial
-					easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-				}
-
-				PropertyAnimation {
-					target: inputContainer
-					properties: "opacity,scale"
-
-					from: 0
-					to: 1
-					duration: Appearance.animations.durations.normal
-					easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-				}
-
-				PropertyAnimation {
-					target: sessionContainer
-					properties: "opacity,scale"
-
-					from: 0
-					to: 1
-					duration: Appearance.animations.durations.normal
-					easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-				}
+			PropertyAnimation {
+				target: sessionContainer
+				property: "opacity"
+				from: 0
+				to: 1
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
+			}
+			PropertyAnimation {
+				target: sessionContainer
+				property: "scale"
+				from: 0.9
+				to: 1
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
+			}
+			PropertyAnimation {
+				target: sessionContainer
+				property: "y"
+				from: sessionContainer.y + 20
+				to: sessionContainer.y
+				duration: Appearance.animations.durations.normal
+				easing.type: Easing.BezierSpline
+				easing.bezierCurve: Appearance.animations.curves.standard
 			}
 		}
 	}
