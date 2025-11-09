@@ -7,12 +7,23 @@ import QtQuick
 Singleton {
 	id: root
 
-	property int value: 0
+	property int value: parseInt(brValue.text.trim())
 	property int maxValue: 100
 	property bool available: false
 
 	Process {
+		id: getBrightnessValue
+
+		command: ["brightnessctl", "g"]
+		running: true
+		stdout: StdioCollector {
+			id: brValue
+		}
+	}
+
+	Process {
 		id: getBrightness
+
 		command: ["brightnessctl", "info"]
 		running: true
 
@@ -22,14 +33,12 @@ Singleton {
 				for (let line of lines) {
 					if (line.includes("Current brightness:")) {
 						const match = line.match(/Current brightness:\s*(\d+)\s*\((\d+)%\)/);
-						if (match) {
+						if (match)
 							root.value = parseInt(match[1]);
-						}
 					} else if (line.includes("Max brightness:")) {
 						const match = line.match(/Max brightness:\s*(\d+)/);
-						if (match) {
+						if (match)
 							root.maxValue = parseInt(match[1]);
-						}
 					}
 				}
 				root.available = true;
@@ -46,20 +55,13 @@ Singleton {
 		}
 	}
 
-
-	function updateBrightness() {
-		if (getBrightness.running)
-			return;
-		getBrightness.running = true;
-	}
-
 	function setBrightness(newValue) {
 		if (!root.available)
 			return;
 		const clampedValue = Math.max(0, Math.min(root.maxValue, Math.round(newValue)));
-
 		setBrightnessProcess.command = ["brightnessctl", "set", clampedValue.toString()];
 		setBrightnessProcess.running = true;
+		root.value = clampedValue;
 	}
 
 	function setBrightnessPercent(percent) {
@@ -93,9 +95,8 @@ Singleton {
 
 		stderr: StdioCollector {
 			onStreamFinished: {
-				if (this.text.trim() !== "") {
+				if (this.text.trim() !== "")
 					console.warn("Failed to set brightness:", this.text.trim());
-				}
 			}
 		}
 	}
