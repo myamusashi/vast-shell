@@ -2,12 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import Quickshell.Services.Mpris
 
 import qs.Data
 import qs.Helpers
 import qs.Components
+import qs.Modules.MediaPlayer
 
 Loader {
 	active: true

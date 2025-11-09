@@ -31,10 +31,6 @@ Loader {
 			Tray {
 				Layout.alignment: Qt.AlignVCenter
 			}
-			PowerProfiles {
-				Layout.alignment: Qt.AlignVCenter
-				Layout.maximumWidth: implicitWidth
-			}
 			StyledRect {
 				Layout.alignment: Qt.AlignVCenter
 				Layout.preferredWidth: quickSettingsLayout.implicitWidth * 1.1
