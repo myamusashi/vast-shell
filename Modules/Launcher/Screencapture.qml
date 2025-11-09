@@ -9,7 +9,7 @@ import QtQuick.Layouts
 
 import qs.Data
 import qs.Helpers
-import qs.Widgets
+import "../RecordControl"
 import qs.Components
 
 Scope {

@@ -51,21 +51,13 @@ Scope {
 
 			title: "Recording Widgets"
 
-			// anchors {
-			// 	right: true
-			// 	bottom: true
-			// }
-
 			visible: true
 			property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
 			property real monitorWidth: monitor.width / monitor.scale
 			property real monitorHeight: monitor.height / monitor.scale
 
-			// exclusiveZone: 0
 			implicitWidth: monitorWidth * 0.15
 			implicitHeight: monitorWidth * 0.12
-			// margins.right: Appearance.spacing.large
-			// margins.bottom: Appearance.spacing.large
 
 			color: "transparent"
 
