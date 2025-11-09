@@ -227,7 +227,7 @@ ColumnLayout {
 
 					Rectangle {
 						Layout.preferredWidth: 50
-						Layout.fillHeight: true
+						Layout.preferredHeight: 50
 						color: wifi.activeNetwork ? Colors.colors.primary : Colors.withAlpha(Colors.colors.on_surface, 0.1)
 						radius: Appearance.rounding.small
 
@@ -237,7 +237,7 @@ ColumnLayout {
 								if (wifi.activeNetwork) {
 									var strength = wifi.activeNetwork.strength;
 									if (strength >= 80)
-										return "network_wifi_4_bar";
+										return "network_wifi";
 									else if (strength >= 50)
 										return "network_wifi_3_bar";
 									else if (strength >= 30)
@@ -251,6 +251,8 @@ ColumnLayout {
 								}
 							}
 							color: wifi.activeNetwork ? Colors.colors.on_primary : Colors.withAlpha(Colors.colors.on_surface, 0.38)
+							width: 32
+							height: 32
 							font.pixelSize: Appearance.fonts.extraLarge
 						}
 					}
