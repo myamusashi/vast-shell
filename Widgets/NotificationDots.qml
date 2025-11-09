@@ -3,6 +3,7 @@ import QtQuick
 import qs.Data
 import qs.Helpers
 import qs.Components
+import qs.Modules.Notifications
 
 StyledRect {
 	implicitWidth: root.width
