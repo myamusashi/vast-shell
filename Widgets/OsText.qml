@@ -21,18 +21,6 @@ StyledRect {
 			font.family: Appearance.fonts.family_Mono
 			font.pixelSize: Appearance.fonts.large * 1.7
 			icon: "󱄅"
-
-			MouseArea {
-				id: mArea
-
-				anchors.fill: parent
-				hoverEnabled: true
-				cursorShape: Qt.PointingHandCursor
-				onClicked: menu.isMenuOpen = !menu.isMenuOpen
-			}
 		}
-	}
-	Menu {
-		id: menu
 	}
 }
