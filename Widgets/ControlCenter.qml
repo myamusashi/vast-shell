@@ -416,33 +416,27 @@ Scope {
 														color: wifi.activeNetwork ? Colors.colors.primary : Colors.withAlpha(Colors.colors.on_surface, 0.1)
 														radius: Appearance.rounding.small
 
-														Repeater {
-															model: NetworkManager.networks
-
-															delegate: MatIcon {
-																id: wifiStrength
-
-																required property var modelData
-
-																anchors.centerIn: parent
-																icon: {
-																	if (wifi.activeNetwork) {
-																		if (wifiStrength.modelData.strength >= 80)
-																			return "network_wifi_4_bar";
-																		else if (wifiStrength.modelData.strength >= 50)
-																			return "network_wifi_3_bar";
-																		else if (wifiStrength.modelData.strength >= 30)
-																			return "network_wifi_2_bar";
-																		else if (wifiStrength.modelData.strength >= 15)
-																			return "network_wifi_1_bar";
-																		else
-																			return "signal_wifi_0_bar";
-																	} else
-																		return "wifi_off";
+														MatIcon {
+															anchors.centerIn: parent
+															icon: {
+																if (wifi.activeNetwork) {
+																	var strength = wifi.activeNetwork.strength;
+																	if (strength >= 80)
+																		return "network_wifi_4_bar";
+																	else if (strength >= 50)
+																		return "network_wifi_3_bar";
+																	else if (strength >= 30)
+																		return "network_wifi_2_bar";
+																	else if (strength >= 15)
+																		return "network_wifi_1_bar";
+																	else
+																		return "signal_wifi_0_bar";
+																} else {
+																	return "wifi_off";
 																}
-																color: wifi.activeNetwork ? Colors.colors.on_primary : Colors.withAlpha(Colors.colors.on_surface, 0.38)
-																font.pixelSize: Appearance.fonts.extraLarge
 															}
+															color: wifi.activeNetwork ? Colors.colors.on_primary : Colors.withAlpha(Colors.colors.on_surface, 0.38)
+															font.pixelSize: Appearance.fonts.extraLarge
 														}
 													}
 
