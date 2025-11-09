@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import QtQuick.Effects
 
 import qs.Data
+import qs.Helpers
 
 Slider {
 	id: root
@@ -13,10 +13,12 @@ Slider {
 
 	property bool dotEnd: true
 	property int progressBackgroundHeight: 24
-	property int handleHeight: 40
-	property int handleWidth: 4
+	property int handleHeight: 15 + progressBackgroundHeight * 1
+	property int handleWidth: 6
 	property int valueWidth
 	property int valueHeight
+	property string icon
+	property int iconSize
 
 	background: Item {
 		id: progressItem
@@ -27,6 +29,18 @@ Slider {
 		height: root.availableHeight
 		x: root.leftPadding
 		y: root.topPadding
+
+		MatIcon {
+			anchors {
+				left: parent.left
+				leftMargin: 10
+				verticalCenter: unprogressBackground.verticalCenter
+			}
+			icon: root.icon || ""
+			color: Colors.colors.on_primary
+			font.pixelSize: root.iconSize || 0
+			z: 3
+		}
 
 		StyledRect {
 			id: unprogressBackground
@@ -97,7 +111,7 @@ Slider {
 
 		StyledRect {
 			anchors.centerIn: parent
-			width: 15
+			width: 20
 			height: root.handleHeight
 			color: Colors.colors.surface_container_high
 			z: 1

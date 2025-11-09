@@ -11,12 +11,12 @@ Button {
 	required property string buttonTitle
 	property string iconButton: ""
 
-	property color buttonColor: Colors.colors.surface_container_high
-	property color buttonHoverColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.08)
-	property color buttonPressedColor: Colors.withAlpha(Colors.colors.surface_container_high, 0.12)
-	property color buttonTextColor: Colors.colors.primary
-	property color buttonHoverTextColor: Colors.withAlpha(Colors.colors.primary, 0.08)
-	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.primary, 0.12)
+	property color buttonColor: Colors.colors.primary
+	property color buttonHoverColor: Colors.withAlpha(Colors.colors.primary, 0.08)
+	property color buttonPressedColor: Colors.withAlpha(Colors.colors.primary, 0.12)
+	property color buttonTextColor: Colors.colors.on_primary
+	property color buttonHoverTextColor: Colors.withAlpha(Colors.colors.on_primary, 0.08)
+	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.on_primary, 0.12)
 	property color buttonBorderColor: Colors.colors.outline
 	property int buttonBorderWidth: 2
 	property int buttonHeight: 40
@@ -32,6 +32,8 @@ Button {
 
 	contentItem: RowLayout {
 		spacing: root.iconTextSpacing
+		Layout.fillWidth: true
+		Layout.alignment: Qt.AlignHCenter
 
 		MatIcon {
 			id: icon
@@ -64,6 +66,8 @@ Button {
 					root.buttonTextColor;
 			}
 			Layout.alignment: Qt.AlignVCenter
+			Layout.preferredWidth: text === "" ? 0 : implicitWidth
+			visible: text !== ""
 		}
 	}
 
