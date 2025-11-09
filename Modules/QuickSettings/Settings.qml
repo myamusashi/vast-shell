@@ -174,13 +174,13 @@ ColumnLayout {
 					Rectangle {
 						Layout.preferredWidth: 50
 						Layout.fillHeight: true
-						color: Colors.colors.primary_container
+						color: SysUsage.statusWiredInterface === "connected" ? Colors.colors.primary : Colors.withAlpha(Colors.colors.on_surface, 0.1)
 						radius: Appearance.rounding.small
 
 						MatIcon {
 							anchors.centerIn: parent
 							icon: "settings_ethernet"
-							color: Colors.colors.on_primary
+							color: SysUsage.statusWiredInterface === "connected" ? Colors.colors.on_primary : Colors.withAlpha(Colors.colors.on_surface, 0.38)
 							font.pixelSize: Appearance.fonts.extraLarge
 						}
 					}
@@ -189,15 +189,27 @@ ColumnLayout {
 						Layout.fillWidth: true
 						spacing: 2
 
-						StyledText {
-							text: "Ethernet"
-							font.pixelSize: Appearance.fonts.normal
-							font.weight: Font.Medium
-							color: Colors.colors.on_surface
+						RowLayout {
+							Layout.fillWidth: true
+							spacing: Appearance.spacing.small
+
+							StyledText {
+								text: "Ethernet"
+								font.pixelSize: Appearance.fonts.normal
+								font.weight: Font.Medium
+								color: Colors.colors.on_surface
+							}
+
+							StyledText {
+								text: SysUsage.statusVPNInterface !== "" ? `(${SysUsage.statusVPNInterface})` : ""
+								visible: SysUsage.statusVPNInterface === "" ? false : true
+								font.pixelSize: Appearance.fonts.small
+								color: Colors.colors.on_surface
+							}
 						}
 
 						StyledText {
-							text: "Not Connected"
+							text: SysUsage.statusWiredInterface === "connected" ? "Connected" : "Not Connected"
 							font.pixelSize: Appearance.fonts.small
 							color: Colors.colors.on_surface_variant
 						}

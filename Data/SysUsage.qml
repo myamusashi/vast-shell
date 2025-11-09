@@ -17,6 +17,9 @@ Singleton {
 	property string wiredInterface
 	property string wirelessInterface
 
+	readonly property string statusWiredInterface: statusWired.text.trim()
+	readonly property string statusVPNInterface: statusVPN.text.trim()
+
 	property var previousData: ({})
 	property var lastUpdateTime: 0
 
@@ -50,6 +53,24 @@ Singleton {
 		onLoaded: {
 			const data = text();
 			root.calculateNetworkStats(data);
+		}
+	}
+
+	Process {
+		id: statusWiredInterface
+
+		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f3"]
+		stdout: StdioCollector {
+			id: statusWired
+		}
+	}
+
+	Process {
+		id: statusVPNInterface
+
+		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep -E '^(wg0|CloudflareWARP):' | cut -d: -f1 | sed 's/ (externally)//'"]
+		stdout: StdioCollector {
+			id: statusVPN
 		}
 	}
 
@@ -255,11 +276,13 @@ Singleton {
 
 	Timer {
 		running: true
-		interval: 3000
+		interval: 2000
 		repeat: true
 		triggeredOnStart: true
 		onTriggered: {
 			diskinfo.running = true;
+			statusWiredInterface.running = true;
+			statusVPNInterface.running = true;
 			networkWiredInterfacesState.started();
 			networkWirelessInterfacesState.started();
 			stat.reload();
