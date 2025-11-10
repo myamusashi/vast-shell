@@ -60,7 +60,7 @@ Singleton {
 	Process {
 		id: wiredStateProc
 
-		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f3"]
+		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f3 | sed 's/ (externally)//'"]
 		running: true
 		stdout: StdioCollector {
 			onStreamFinished: {
