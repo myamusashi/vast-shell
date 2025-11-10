@@ -29,16 +29,9 @@ WlSessionLockSurface {
 
 		color: Colors.colors.surface_container_lowest
 
-		Image {
+		Wallpaper {
 			id: wallpaper
 
-			anchors.fill: parent
-			antialiasing: true
-			asynchronous: true
-			fillMode: Image.PreserveAspectCrop
-			retainWhileLoading: true
-			smooth: true
-			source: Paths.currentWallpaper
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				id: wallBlur
