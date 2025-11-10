@@ -1,6 +1,7 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell.Services.Pipewire
 
 import qs.Data
@@ -32,12 +33,15 @@ ColumnLayout {
 		Loader {
 			active: true
 
+			Layout.fillWidth: true
+			Layout.fillHeight: true
+			Layout.alignment: Qt.AlignCenter
 			sourceComponent: root.useCustomProperties ? root.customProperty : defaultNode
 		}
 
 		Component {
 			id: defaultNode
-			
+
 			StyledLabel {
 				text: {
 					const app = root.node.properties["application.name"] ?? (root.node.description != "" ? root.node.description : root.node.name);
