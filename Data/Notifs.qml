@@ -44,7 +44,6 @@ Singleton {
 					newList.push(listNotifications[i]);
 
 			listNotifications = newList;
-			notification.dismiss();
 		}
 
 		function dismiss() {
