@@ -6,58 +6,99 @@ import Quickshell.Wayland
 import QtQuick
 
 import qs.Data
+import qs.Components
 
-Scope {
-	id: root
+Variants {
+	model: Quickshell.screens
 
-	Variants {
-		model: Quickshell.screens
+	delegate: WlrLayershell {
+		id: root
 
-		delegate: WlrLayershell {
-			id: wall
+		required property ShellScreen modelData
 
-			required property ShellScreen modelData
+		anchors {
+			left: true
+			right: true
+			top: true
+			bottom: true
+		}
 
-			anchors {
-				left: true
-				right: true
-				top: true
-				bottom: true
+		color: "transparent"
+		screen: modelData
+		layer: WlrLayer.Background
+		focusable: false
+		exclusiveZone: 1
+		exclusionMode: ExclusionMode.Ignore
+		surfaceFormat.opaque: false
+		namespace: "shell:wallpaper"
+
+		Wallpaper {
+			id: img
+
+			anchors.fill: parent
+			source: ""
+
+			Component.onCompleted: {
+				source = Paths.currentWallpaper;
+
+				Paths.currentWallpaperChanged.connect(() => {
+					if (walAnimation.running)
+						walAnimation.complete();
+					animatingWal.source = Paths.currentWallpaper;
+				});
+				animatingWal.statusChanged.connect(() => {
+					if (animatingWal.status == Image.Ready)
+						walAnimation.start();
+				});
+
+				walAnimation.finished.connect(() => {
+					img.source = animatingWal.source;
+					animatingWal.source = "";
+					animatinRect.width = 0;
+				});
 			}
+		}
 
+		Rectangle {
+			id: animatinRect
+
+			anchors.right: parent.right
+			clip: true
 			color: "transparent"
-			screen: modelData
-			layer: WlrLayer.Background
-			focusable: false
+			height: root.screen.height
+			width: 0
 
-			exclusiveZone: 1
-			surfaceFormat.opaque: false
+			NumbAnim {
+				id: walAnimation
 
-			Image {
-				id: img
+				duration: Appearance.animations.durations.expressiveDefaultSpatial * 5
+				from: 0
+				property: "width"
+				target: animatinRect
+				to: Math.max(root.screen.width)
+			}
 
-				anchors.fill: parent
-				antialiasing: true
-				asynchronous: true
-				cache: false
-				mipmap: false
-				smooth: true
-				source: Paths.currentWallpaper
-				fillMode: Image.PreserveAspectFit
+			Wallpaper {
+				id: animatingWal
+
+				anchors.right: parent.right
+				height: root.height
+				source: ""
+				width: root.width
 			}
 		}
-	}
 
-	IpcHandler {
-		target: "img"
+		IpcHandler {
+			target: "img"
 
-		function set(path: string): void {
-			Quickshell.execDetached({
-				command: ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaperFile + " && " + `matugen image ${path}`]
-			});
-		}
-		function get(): string {
-			return root.wallSrc.trim();
+			function set(path: string): void {
+				Quickshell.execDetached({
+					command: ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaperFile + " && " + `matugen image ${path}`]
+				});
+			}
+			function get(): string {
+				return Paths.currentWallpaper;
+			}
 		}
 	}
 }
