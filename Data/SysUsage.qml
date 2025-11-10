@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -17,8 +18,8 @@ Singleton {
 	property string wiredInterface
 	property string wirelessInterface
 
-	readonly property string statusWiredInterface: statusWired.text.trim()
-	readonly property string statusVPNInterface: statusVPN.text.trim()
+	property string statusWiredInterface
+	property string statusVPNInterface
 
 	property var previousData: ({})
 	property var lastUpdateTime: 0
@@ -47,7 +48,7 @@ Singleton {
 	readonly property int memProp: memUsed / 1048576
 
 	FileView {
-		id: networkInfo
+		id: netDevFileView
 
 		path: "/proc/net/dev"
 		onLoaded: {
@@ -57,25 +58,31 @@ Singleton {
 	}
 
 	Process {
-		id: statusWiredInterface
+		id: wiredStateProc
 
 		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f3"]
+		running: true
 		stdout: StdioCollector {
-			id: statusWired
+			onStreamFinished: {
+				root.statusWiredInterface = text.trim();
+			}
 		}
 	}
 
 	Process {
-		id: statusVPNInterface
+		id: vpnStateProc
 
 		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep -E '^(wg0|CloudflareWARP):' | cut -d: -f1 | sed 's/ (externally)//'"]
+		running: true
 		stdout: StdioCollector {
-			id: statusVPN
+			onStreamFinished: {
+				root.statusVPNInterface = text.trim();
+			}
 		}
 	}
 
 	Process {
-		id: networkWiredInterfacesState
+		id: wiredDevProc
 
 		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f1"]
 		running: true
@@ -87,7 +94,7 @@ Singleton {
 	}
 
 	Process {
-		id: networkWirelessInterfacesState
+		id: wifiDevProc
 
 		command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':wifi:' | head -1 | cut -d ':' -f1"]
 		running: true
@@ -180,7 +187,7 @@ Singleton {
 	}
 
 	FileView {
-		id: meminfo
+		id: meminfoFileView
 
 		path: "/proc/meminfo"
 		onLoaded: {
@@ -196,7 +203,7 @@ Singleton {
 
 	// Thx caelestia
 	Process {
-		id: diskinfo
+		id: diskDfProc
 
 		command: ["sh", "-c", "df | grep '^/dev/' | awk '{print $1, $3, $4}'"]
 		stdout: StdioCollector {
@@ -238,7 +245,7 @@ Singleton {
 	}
 
 	FileView {
-		id: stat
+		id: cpuStatFileView
 
 		path: "/proc/stat"
 		onLoaded: {
@@ -280,14 +287,14 @@ Singleton {
 		repeat: true
 		triggeredOnStart: true
 		onTriggered: {
-			diskinfo.running = true;
-			statusWiredInterface.running = true;
-			statusVPNInterface.running = true;
-			networkWiredInterfacesState.started();
-			networkWirelessInterfacesState.started();
-			stat.reload();
-			meminfo.reload();
-			networkInfo.reload();
+			diskDfProc.running = true;
+			wiredStateProc.started();
+			vpnStateProc.started();
+			wiredDevProc.started();
+			wifiDevProc.started();
+			cpuStatFileView.reload();
+			meminfoFileView.reload();
+			netDevFileView.reload();
 		}
 	}
 }
