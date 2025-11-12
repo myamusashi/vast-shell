@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -12,19 +14,42 @@ Slider {
 	Layout.alignment: Qt.AlignHCenter
 
 	property bool dotEnd: true
-	property int progressBackgroundHeight: 24
-	property int handleHeight: 15 + progressBackgroundHeight * 1
-	property int handleWidth: 6
+	property real trackHeightDiff: 15
+	property real handleGap: 6
+	property real trackDotSize: 4
+	property bool useAnim: true
 	property int valueWidth
 	property int valueHeight
 	property string icon
 	property int iconSize
 
+	implicitWidth: valueWidth || 200
+	implicitHeight: valueHeight || 40
+
+	component TrackDot: StyledRect {
+		required property int index
+		property real stepValue: root.from + (index * root.stepSize)
+		property real normalizedValue: (stepValue - root.from) / (root.to - root.from)
+		anchors.verticalCenter: parent.verticalCenter
+		x: root.handleGap + (normalizedValue * (parent.width - root.handleGap * 2)) - root.trackDotSize / 2
+		width: root.trackDotSize
+		height: root.trackDotSize
+		radius: root.trackDotSize / 2
+		visible: root.dotEnd && index > 0 && index < (root.to - root.from) / root.stepSize
+		color: normalizedValue > root.visualPosition ? Colors.colors.on_secondary_container : Colors.colors.on_primary
+	}
+
+	MouseArea {
+		anchors.fill: parent
+		onPressed: mouse => mouse.accepted = false
+		cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
+	}
+
 	background: Item {
 		id: progressItem
 
-		implicitWidth: root.valueWidth
-		implicitHeight: root.valueHeight
+		implicitWidth: root.valueWidth || 200
+		implicitHeight: root.valueHeight || 40
 		width: root.availableWidth
 		height: root.availableHeight
 		x: root.leftPadding
@@ -34,7 +59,7 @@ Slider {
 			anchors {
 				left: parent.left
 				leftMargin: 10
-				verticalCenter: unprogressBackground.verticalCenter
+				verticalCenter: parent.verticalCenter
 			}
 			icon: root.icon || ""
 			color: Colors.colors.on_primary
@@ -43,94 +68,51 @@ Slider {
 		}
 
 		StyledRect {
-			id: unprogressBackground
+			id: progressBackground
 
-			width: parent.width
-			height: root.progressBackgroundHeight
-			x: 0
-			y: (parent.height - height) / 2
-			color: Colors.colors.surface_container_highest
-			radius: Appearance.rounding.small * 0.5
-
-			StyledRect {
-				id: startDot
-
-				visible: root.dotEnd
-				width: 6
-				height: 6
-				radius: 3
-				anchors.verticalCenter: parent.verticalCenter
-				anchors.leftMargin: (parent.height - height) / 2
-				anchors.left: parent.left
-				color: Colors.colors.on_surface
+			anchors {
+				verticalCenter: parent.verticalCenter
+				left: parent.left
 			}
-
-			StyledRect {
-				id: centerDot
-
-				visible: root.dotEnd
-				width: 6
-				height: 6
-				radius: 3
-				anchors.centerIn: parent
-				color: Colors.colors.on_surface
-			}
-
-			StyledRect {
-				id: endDot
-
-				visible: root.dotEnd
-				width: 6
-				height: 6
-				radius: 3
-				anchors.verticalCenter: parent.verticalCenter
-				anchors.right: parent.right
-				anchors.rightMargin: (parent.height - height) / 2
-				color: Colors.colors.on_surface
-			}
+			width: root.handleGap + (root.visualPosition * (parent.width - root.handleGap * 2)) - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
+			height: parent.height - root.trackHeightDiff
+			color: Colors.colors.primary
+			radius: Appearance.rounding.full
+			topRightRadius: Appearance.rounding.small * 0.5
+			bottomRightRadius: Appearance.rounding.small * 0.5
 		}
 
 		StyledRect {
-			id: progressBackground
+			id: unprogressBackground
 
-			width: parent.width * root.visualPosition
-			height: unprogressBackground.height
-			x: 0
-			y: (parent.height - height) / 2
-			color: Colors.colors.primary
-			radius: Appearance.rounding.small * 0.5
+			anchors {
+				verticalCenter: parent.verticalCenter
+				right: parent.right
+			}
+			width: root.handleGap + ((1 - root.visualPosition) * (parent.width - root.handleGap * 2)) - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
+			height: parent.height - root.trackHeightDiff
+			color: Colors.colors.surface_container_highest
+			radius: Appearance.rounding.full
+			topLeftRadius: Appearance.rounding.small * 0.5
+			bottomLeftRadius: Appearance.rounding.small * 0.5
+		}
+
+		// Track dots
+		Repeater {
+			model: root.stepSize > 0 ? Math.floor((root.to - root.from) / root.stepSize) + 1 : 0
+			TrackDot {
+				required property int modelData
+				index: modelData
+			}
 		}
 	}
 
-	handle: Item {
-		id: handleContainer
-		x: root.leftPadding + root.visualPosition * (root.availableWidth - root.handleWidth)
-		y: root.topPadding + root.availableHeight / 2 - root.handleHeight / 2
-		width: root.handleWidth
-		height: root.handleHeight
-
-		StyledRect {
-			anchors.centerIn: parent
-			width: 20
-			height: root.handleHeight
-			color: Colors.colors.surface_container_high
-			z: 1
-			radius: Appearance.rounding.full
-		}
-
-		StyledRect {
-			anchors.centerIn: parent
-			z: 2
-			width: root.hovered || root.pressed ? 8 : root.handleWidth
-			height: root.handleHeight
-			color: Colors.colors.primary
-			radius: Appearance.rounding.small
-
-			Behavior on width {
-				NumbAnim {
-					duration: Appearance.animations.durations.small
-				}
-			}
-		}
+	handle: StyledRect {
+		width: 5
+		height: root.height
+		x: root.handleGap + (root.visualPosition * (root.availableWidth - root.handleGap * 2)) - width / 2
+		anchors.verticalCenter: parent.verticalCenter
+		radius: Appearance.rounding.full
+		color: Colors.colors.primary
 	}
 }
