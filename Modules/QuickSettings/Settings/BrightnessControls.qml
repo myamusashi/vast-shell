@@ -18,7 +18,6 @@ RowLayout {
 		from: 0
 		to: Brightness.maxValue || 1
 		value: Brightness.value
-		progressBackgroundHeight: 44
 
 		onMoved: debounceTimer.restart()
 
