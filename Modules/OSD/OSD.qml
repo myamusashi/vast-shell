@@ -25,10 +25,6 @@ Scope {
 		}
 	}
 
-	PwObjectTracker {
-		objects: [Pipewire.defaultAudioSink]
-	}
-
 	Connections {
 		target: Pipewire.defaultAudioSink.audio
 		function onVolumeChanged() {
@@ -50,6 +46,7 @@ Scope {
 
 	Volumes {
 		active: root.isVolumeOSDShow
+		node: Pipewire.defaultAudioSink
 	}
 
 	CapsLockWidget {

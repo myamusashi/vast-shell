@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -6,6 +8,7 @@ import Quickshell.Services.Pipewire
 
 import qs.Data
 import qs.Helpers
+import qs.Widgets
 import qs.Components
 
 LazyLoader {
@@ -18,23 +21,27 @@ LazyLoader {
 		anchors.bottom: true
 		WlrLayershell.namespace: "shell:osd:volume"
 		color: "transparent"
-		exclusionMode: ExclusionMode.Ignore
 		focusable: false
-		implicitWidth: 350
-		implicitHeight: 50
+		implicitWidth: content.implicitWidth * 1.5
+		implicitHeight: content.implicitHeight * 1.5
 		exclusiveZone: 0
-		margins.bottom: 30
-		mask: Region {}
+		margins.bottom: 15
 
-		property string icon: Audio.getIcon(root.node)
-		property PwNode node: Pipewire.defaultAudioSink
+		required property PwNode node
+		PwObjectTracker {
+			objects: [root.node]
+		}
+
+		property string icon: Audio.getIcon(volumeOsdLoader.node)
 
 		StyledRect {
 			anchors.fill: parent
-			radius: height / 2
+			radius: Appearance.rounding.full
 			color: Colors.colors.background
 
 			RowLayout {
+				id: content
+
 				anchors {
 					fill: parent
 					leftMargin: 10
@@ -48,30 +55,29 @@ LazyLoader {
 					font.pixelSize: Appearance.fonts.extraLarge * 1.2
 				}
 
-				StyledText {
-					text: Math.round(Pipewire.defaultAudioSink?.audio.volume * 100)
-					color: Colors.colors.on_background
-					font.pixelSize: Appearance.fonts.large
-				}
-
-				StyledRect {
+				ColumnLayout {
 					Layout.fillWidth: true
+					Layout.fillHeight: true
 
-					implicitHeight: 10
-					radius: 20
-					color: Colors.colors.secondary_container
-
-					StyledRect {
-						anchors {
-							left: parent.left
-							top: parent.top
-							bottom: parent.bottom
+					RowLayout {
+						Layout.fillWidth: true
+						Layout.alignment: Qt.AlignLeft
+						StyledText {
+							text: "Volumes:"
+							color: Colors.colors.on_background
+							font.pixelSize: Appearance.fonts.large
 						}
-
-						color: Colors.colors.primary
-
-						implicitWidth: parent.width * (Pipewire.defaultAudioSink?.audio.volume ?? 0)
-						radius: parent.radius
+						StyledText {
+							text: `${Math.round(Pipewire.defaultAudioSink?.audio.volume * 100)}%`
+							color: Colors.colors.on_background
+							font.pixelSize: Appearance.fonts.normal
+						}
+					}
+					StyledSlide {
+						Layout.fillWidth: true
+						Layout.preferredHeight: 32
+						value: parent.width * (Pipewire.defaultAudioSink?.audio.volume ?? 0)
+						onValueChanged: root.node.audio.volume = value
 					}
 				}
 			}

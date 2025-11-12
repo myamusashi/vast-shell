@@ -9,7 +9,7 @@ StyledRect {
 	implicitWidth: root.width
 	implicitHeight: parent.height
 	color: mArea.containsPress ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : mArea.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.16) : "transparent"
-
+	
 	Dots {
 		id: root
 
@@ -29,6 +29,7 @@ StyledRect {
 					Colors.colors.on_surface;
 			}
 			font.pixelSize: Appearance.fonts.large * 1.3
+			anchors.verticalCenter: parent.verticalCenter
 			anchors.horizontalCenter: parent.horizontalCenter
 			icon: {
 				if (root.notificationCount > 0 && root.notificationCount !== null && root.isDndEnable !== true)
@@ -38,16 +39,15 @@ StyledRect {
 				else
 					"notifications";
 			}
-
-			MouseArea {
-				id: mArea
-
-				anchors.fill: parent
-				hoverEnabled: true
-				cursorShape: Qt.PointingHandCursor
-				onClicked: notificationCenter.isNotificationCenterOpen = !notificationCenter.isNotificationCenterOpen
-			}
 		}
+	}
+	MouseArea {
+		id: mArea
+
+		anchors.fill: parent
+		hoverEnabled: true
+		cursorShape: Qt.PointingHandCursor
+		onClicked: notificationCenter.isNotificationCenterOpen = !notificationCenter.isNotificationCenterOpen
 	}
 
 	NotificationCenter {
