@@ -52,65 +52,66 @@ Scope {
 					anchors.fill: parent
 					spacing: Appearance.spacing.normal
 
-					RowLayout {
+					StyledRect {
 						Layout.fillWidth: true
 						Layout.preferredHeight: 60
-						Layout.margins: 10
+						Layout.margins: 5
 						Layout.alignment: Qt.AlignTop
+						color: Colors.colors.surface_container
 
-						StyledRect {
+						RowLayout {
 							anchors.fill: parent
-							color: Colors.colors.surface_container_low
-						}
+							anchors.margins: 10
 
-						StyledText {
-							Layout.fillWidth: true
-							text: "Notifications"
-							color: Colors.colors.on_background
-							font.pixelSize: Appearance.fonts.large * 1.2
-							font.weight: Font.Medium
-						}
+							StyledText {
+								Layout.fillWidth: true
+								text: "Notifications"
+								color: Colors.colors.on_background
+								font.pixelSize: Appearance.fonts.large * 1.2
+								font.weight: Font.Medium
+							}
 
-						Repeater {
-							model: [
-								{
-									icon: "clear_all",
-									action: () => {
-										Notifs.notifications.dismissAll();
+							Repeater {
+								model: [
+									{
+										icon: "clear_all",
+										action: () => {
+											Notifs.notifications.dismissAll();
+										}
+									},
+									{
+										icon: Notifs.notifications.disabledDnD ? "notifications_off" : "notifications_active",
+										action: () => {
+											Notifs.notifications.disabledDnD = !Notifs.notifications.disabledDnD;
+										}
 									}
-								},
-								{
-									icon: Notifs.notifications.disabledDnD ? "notifications_off" : "notifications_active",
-									action: () => {
-										Notifs.notifications.disabledDnD = !Notifs.notifications.disabledDnD;
+								]
+
+								delegate: StyledRect {
+									id: notifHeaderDelegate
+
+									Layout.preferredWidth: 32
+									Layout.preferredHeight: 32
+									radius: 6
+									color: iconMouse.containsMouse ? Colors.colors.surface_container_high : "transparent"
+
+									required property var modelData
+
+									MatIcon {
+										anchors.centerIn: parent
+										icon: notifHeaderDelegate.modelData.icon
+										font.pixelSize: Appearance.fonts.large * 1.6
+										color: Colors.colors.on_surface
 									}
-								}
-							]
 
-							delegate: StyledRect {
-								id: notifHeaderDelegate
+									MouseArea {
+										id: iconMouse
 
-								Layout.preferredWidth: 32
-								Layout.preferredHeight: 32
-								radius: 6
-								color: iconMouse.containsMouse ? Colors.colors.surface_container_high : "transparent"
-
-								required property var modelData
-
-								MatIcon {
-									anchors.centerIn: parent
-									icon: notifHeaderDelegate.modelData.icon
-									font.pixelSize: Appearance.fonts.large * 1.6
-									color: Colors.colors.on_surface
-								}
-
-								MouseArea {
-									id: iconMouse
-
-									anchors.fill: parent
-									cursorShape: Qt.PointingHandCursor
-									hoverEnabled: true
-									onClicked: notifHeaderDelegate.modelData.action()
+										anchors.fill: parent
+										cursorShape: Qt.PointingHandCursor
+										hoverEnabled: true
+										onClicked: notifHeaderDelegate.modelData.action()
+									}
 								}
 							}
 						}
