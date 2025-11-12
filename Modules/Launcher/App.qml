@@ -71,8 +71,8 @@ Scope {
 				anchors.fill: parent
 
 				radius: Appearance.rounding.large
-				color: Colors.colors.background
-				border.color: Colors.colors.outline
+				color: Themes.colors.background
+				border.color: Themes.colors.outline
 				border.width: 2
 
 				ColumnLayout {
@@ -90,13 +90,13 @@ Scope {
 						font.family: Appearance.fonts.family_Sans
 						focus: true
 						font.pixelSize: Appearance.fonts.large * 1.2
-						color: Colors.colors.on_surface
-						placeholderTextColor: Colors.colors.on_surface_variant
+						color: Themes.colors.on_surface
+						placeholderTextColor: Themes.colors.on_surface_variant
 
 						background: StyledRect {
 							radius: Appearance.rounding.small
-							color: Colors.withAlpha(Colors.colors.surface, 0)
-							// border.color: Colors.colors.on_background
+							color: Themes.withAlpha(Themes.colors.surface, 0)
+							// border.color: Themes.colors.on_background
 							// border.width: 2
 						}
 
@@ -210,7 +210,7 @@ Scope {
 								}
 
 								readonly property bool selected: entryMouseArea.containsMouse || (listView.currentIndex === entryMouseArea.index && listView.activeFocus)
-								color: selected ? Colors.withAlpha(Colors.colors.on_surface, 0.1) : "transparent"
+								color: selected ? Themes.withAlpha(Themes.colors.on_surface, 0.1) : "transparent"
 								radius: Appearance.rounding.normal
 
 								RowLayout {
@@ -249,7 +249,7 @@ Scope {
 										Layout.alignment: Qt.AlignVCenter
 										text: entryMouseArea.modelData.name || ""
 										font.pixelSize: Appearance.fonts.normal
-										color: Colors.colors.on_background
+										color: Themes.colors.on_background
 										elide: Text.ElideRight
 
 										opacity: 0
@@ -268,7 +268,7 @@ Scope {
 						highlightResizeDuration: Appearance.animations.durations.small
 						highlightMoveDuration: Appearance.animations.durations.small
 						highlight: StyledRect {
-							color: Colors.colors.primary
+							color: Themes.colors.primary
 							radius: Appearance.rounding.normal
 							opacity: 0.06
 

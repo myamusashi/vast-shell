@@ -31,7 +31,7 @@ LazyLoader {
 			anchors.fill: parent
 
 			radius: height / 2
-			color: Colors.colors.background
+			color: Themes.colors.background
 
 			Row {
 				anchors.centerIn: parent
@@ -39,13 +39,13 @@ LazyLoader {
 
 				StyledText {
 					text: "Num Lock"
-					color: Colors.colors.on_background
+					color: Themes.colors.on_background
 					font.pixelSize: Appearance.fonts.large * 1.5
 				}
 
 				MatIcon {
 					icon: KeyLockState.state.numLock ? "lock" : "lock_open_right"
-					color: KeyLockState.state.numLock ? Colors.colors.primary : Colors.colors.tertiary
+					color: KeyLockState.state.numLock ? Themes.colors.primary : Themes.colors.tertiary
 					font.pixelSize: Appearance.fonts.large * 1.5
 				}
 			}

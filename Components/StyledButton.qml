@@ -11,13 +11,13 @@ Button {
 	required property string buttonTitle
 	property string iconButton: ""
 
-	property color buttonColor: Colors.colors.primary
-	property color buttonHoverColor: Colors.withAlpha(Colors.colors.primary, 0.08)
-	property color buttonPressedColor: Colors.withAlpha(Colors.colors.primary, 0.12)
-	property color buttonTextColor: Colors.colors.on_primary
-	property color buttonHoverTextColor: Colors.withAlpha(Colors.colors.on_primary, 0.08)
-	property color buttonPressedTextColor: Colors.withAlpha(Colors.colors.on_primary, 0.12)
-	property color buttonBorderColor: Colors.colors.outline
+	property color buttonColor: Themes.colors.primary
+	property color buttonHoverColor: Themes.withAlpha(Themes.colors.primary, 0.08)
+	property color buttonPressedColor: Themes.withAlpha(Themes.colors.primary, 0.12)
+	property color buttonTextColor: Themes.colors.on_primary
+	property color buttonHoverTextColor: Themes.withAlpha(Themes.colors.on_primary, 0.08)
+	property color buttonPressedTextColor: Themes.withAlpha(Themes.colors.on_primary, 0.12)
+	property color buttonBorderColor: Themes.colors.outline
 	property int buttonBorderWidth: 2
 	property int buttonHeight: 40
 	property int iconTextSpacing: 8

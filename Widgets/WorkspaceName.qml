@@ -12,7 +12,7 @@ StyledRect {
 
 	Layout.fillHeight: true
 	clip: true
-	// color: Colors.colors.withAlpha(Colors.colors.background, 0.79)
+	// color: Themes.colors.withAlpha(Themes.colors.background, 0.79)
 	color: "transparent"
 	implicitWidth: windowNameText.contentWidth
 	radius: 5
@@ -31,7 +31,7 @@ StyledRect {
 		readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
 
 		anchors.centerIn: parent
-		color: Colors.colors.on_background
+		color: Themes.colors.on_background
 		elide: Text.ElideMiddle
 		font.pixelSize: Appearance.fonts.medium
 		horizontalAlignment: Text.AlignHCenter

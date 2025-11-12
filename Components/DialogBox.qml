@@ -35,8 +35,8 @@ Loader {
 			implicitWidth: 400
 			implicitHeight: bodyText.implicitHeight + 150
 			radius: Appearance.rounding.large
-			color: Colors.colors.surface
-			border.color: Colors.colors.outline
+			color: Themes.colors.surface
+			border.color: Themes.colors.outline
 			border.width: 2
 
 			ColumnLayout {
@@ -47,7 +47,7 @@ Loader {
 					id: headerText
 
 					text: root.header
-					color: Colors.colors.on_surface
+					color: Themes.colors.on_surface
 					elide: Qt.ElideMiddle
 					font.pixelSize: Appearance.fonts.extraLarge
 					font.bold: true
@@ -59,14 +59,14 @@ Loader {
 					implicitHeight: 1
 					implicitWidth: parent.width
 
-					color: Colors.colors.outline_variant
+					color: Themes.colors.outline_variant
 				}
 
 				StyledText {
 					id: bodyText
 
 					text: root.body
-					color: Colors.colors.on_background
+					color: Themes.colors.on_background
 					font.pixelSize: Appearance.fonts.large
 					wrapMode: Text.Wrap
 
@@ -78,7 +78,7 @@ Loader {
 					implicitHeight: 1
 					implicitWidth: parent.width
 
-					color: Colors.colors.outline_variant
+					color: Themes.colors.outline_variant
 				}
 
 				RowLayout {

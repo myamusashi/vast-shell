@@ -57,12 +57,12 @@ ColumnLayout {
 		StyledButton {
 			buttonTitle: root.node.audio.muted ? "unmute" : "mute"
 			onClicked: root.node.audio.muted = !root.node.audio.muted
-			buttonTextColor: Colors.colors.on_surface
-			buttonHoverTextColor: Colors.withAlpha(Colors.colors.on_surface, 0.12)
-			buttonPressedTextColor: Colors.withAlpha(Colors.colors.on_surface, 0.08)
-			buttonColor: Colors.colors.surface_container
-			buttonHoverColor: Colors.withAlpha(Colors.colors.surface_container, 0.12)
-			buttonPressedColor: Colors.withAlpha(Colors.colors.surface_container, 0.08)
+			buttonTextColor: Themes.colors.on_surface
+			buttonHoverTextColor: Themes.withAlpha(Themes.colors.on_surface, 0.12)
+			buttonPressedTextColor: Themes.withAlpha(Themes.colors.on_surface, 0.08)
+			buttonColor: Themes.colors.surface_container
+			buttonHoverColor: Themes.withAlpha(Themes.colors.surface_container, 0.12)
+			buttonPressedColor: Themes.withAlpha(Themes.colors.surface_container, 0.08)
 			isButtonFullRound: false
 			backgroundRounding: 15
 		}

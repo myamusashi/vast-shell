@@ -44,8 +44,8 @@ Scope {
 					anchors.fill: parent
 
 					radius: Appearance.rounding.normal
-					color: Colors.colors.background
-					border.color: Colors.colors.outline
+					color: Themes.colors.background
+					border.color: Themes.colors.outline
 					border.width: 2
 
 					ColumnLayout {
@@ -115,7 +115,7 @@ Scope {
 								Layout.preferredHeight: 70
 
 								radius: Appearance.rounding.normal
-								color: isHighlighted ? Colors.withAlpha(Colors.colors.secondary, 0.2) : "transparent"
+								color: isHighlighted ? Themes.withAlpha(Themes.colors.secondary, 0.2) : "transparent"
 
 								Behavior on color {
 									ColAnim {}
@@ -125,7 +125,7 @@ Scope {
 									id: iconDelegate
 
 									anchors.centerIn: parent
-									color: Colors.colors.primary
+									color: Themes.colors.primary
 									font.pixelSize: Appearance.fonts.large * 4
 									icon: rectDelegate.modelData.icon
 

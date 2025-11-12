@@ -134,11 +134,11 @@ LazyLoader {
 				StyledRect {
 					anchors.fill: parent
 
-					color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error_container : Colors.colors.surface_container_low
+					color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.error_container : Themes.colors.surface_container_low
 
 					radius: Appearance.rounding.large
 
-					border.color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : "transparent"
+					border.color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.error : "transparent"
 					border.width: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
 
 					MouseArea {
@@ -203,7 +203,7 @@ LazyLoader {
 									width: 40
 									height: 40
 									radius: Appearance.rounding.full
-									color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Colors.colors.secondary_container : Colors.colors.primary_container
+									color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Themes.colors.secondary_container : Themes.colors.primary_container
 
 									Loader {
 										id: icon
@@ -225,7 +225,7 @@ LazyLoader {
 										anchors.centerIn: parent
 										sourceComponent: MatIcon {
 											text: "notifications_active"
-											color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Colors.colors.on_error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Colors.colors.on_secondary_container : Colors.colors.on_primary_container
+											color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.on_error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Themes.colors.on_secondary_container : Themes.colors.on_primary_container
 											font.pointSize: Appearance.fonts.normal
 										}
 									}
@@ -248,8 +248,8 @@ LazyLoader {
 									width: 20
 									height: 20
 									radius: 10
-									color: Colors.colors.surface
-									border.color: Colors.colors.outline_variant
+									color: Themes.colors.surface
+									border.color: Themes.colors.outline_variant
 									border.width: 1.5
 
 									ClippingRectangle {
@@ -302,7 +302,7 @@ LazyLoader {
 											text: delegateNotif.modelData.appName
 											font.pixelSize: Appearance.fonts.large
 											font.weight: Font.Medium
-											color: Colors.colors.on_surface_variant
+											color: Themes.colors.on_surface_variant
 											elide: Text.ElideRight
 										}
 
@@ -310,7 +310,7 @@ LazyLoader {
 											id: dots
 
 											text: "•"
-											color: Colors.colors.on_surface_variant
+											color: Themes.colors.on_surface_variant
 											font.pixelSize: Appearance.fonts.large
 										}
 
@@ -321,7 +321,7 @@ LazyLoader {
 												const now = new Date();
 												return TimeAgo.timeAgoWithIfElse(now);
 											}
-											color: Colors.colors.on_surface_variant
+											color: Themes.colors.on_surface_variant
 										}
 									}
 								}
@@ -333,7 +333,7 @@ LazyLoader {
 									Layout.preferredHeight: 32
 
 									radius: Appearance.rounding.large
-									color: expandButtonMouse.pressed ? Colors.colors.secondary_container : expandButtonMouse.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : "transparent"
+									color: expandButtonMouse.pressed ? Themes.colors.secondary_container : expandButtonMouse.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : "transparent"
 
 									Behavior on color {
 										ColorAnimation {
@@ -347,7 +347,7 @@ LazyLoader {
 										anchors.centerIn: parent
 										icon: delegateNotif.isShowMoreBody ? "expand_less" : "expand_more"
 										font.pixelSize: Appearance.fonts.large + 5
-										color: Colors.colors.on_surface_variant
+										color: Themes.colors.on_surface_variant
 
 										RotationAnimator on rotation {
 											id: rotateArrowIcon
@@ -382,7 +382,7 @@ LazyLoader {
 								text: delegateNotif.modelData.summary
 								font.pixelSize: Appearance.fonts.normal * 1.1
 								font.weight: Font.DemiBold
-								color: Colors.colors.on_surface
+								color: Themes.colors.on_surface
 								elide: Text.ElideRight
 								wrapMode: Text.Wrap
 								maximumLineCount: 2
@@ -395,7 +395,7 @@ LazyLoader {
 								text: delegateNotif.modelData.body || ""
 								font.pixelSize: Appearance.fonts.small * 1.1
 								lineHeight: 1.4
-								color: Colors.colors.on_surface_variant
+								color: Themes.colors.on_surface_variant
 								Layout.preferredWidth: parent.width
 								elide: Text.ElideRight
 								textFormat: delegateNotif.isShowMoreBody ? Text.MarkdownText : Text.StyledText
@@ -432,14 +432,14 @@ LazyLoader {
 
 										required property NotificationAction modelData
 
-										color: actionMouse.pressed ? Colors.colors.secondary_container : actionMouse.containsMouse ? Colors.colors.secondary_container : Colors.colors.surface_container_high
+										color: actionMouse.pressed ? Themes.colors.secondary_container : actionMouse.containsMouse ? Themes.colors.secondary_container : Themes.colors.surface_container_high
 
 										radius: Appearance.rounding.full
 
 										StyledRect {
 											anchors.fill: parent
 											radius: parent.radius
-											color: actionMouse.pressed ? Colors.withAlpha(Colors.colors.on_secondary_container, 0.12) : actionMouse.containsMouse ? Colors.withAlpha(Colors.colors.on_secondary_container, 0.08) : "transparent"
+											color: actionMouse.pressed ? Themes.withAlpha(Themes.colors.on_secondary_container, 0.12) : actionMouse.containsMouse ? Themes.withAlpha(Themes.colors.on_secondary_container, 0.08) : "transparent"
 										}
 
 										MouseArea {
@@ -461,7 +461,7 @@ LazyLoader {
 											text: actionButton.modelData.text
 											font.pixelSize: Appearance.fonts.small * 1.05
 											font.weight: Font.Medium
-											color: Colors.colors.on_secondary_container
+											color: Themes.colors.on_secondary_container
 											elide: Text.ElideRight
 										}
 									}

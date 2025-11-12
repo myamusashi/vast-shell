@@ -13,7 +13,7 @@ ColumnLayout {
 	StyledText {
 		Layout.alignment: Qt.AlignHCenter
 		text: Weather.cityData
-		color: Colors.colors.on_surface
+		color: Themes.colors.on_surface
 		font.pixelSize: Appearance.fonts.extraLarge
 	}
 
@@ -27,14 +27,14 @@ ColumnLayout {
 		MatIcon {
 			Layout.alignment: Qt.AlignHCenter
 			font.pixelSize: Appearance.fonts.extraLarge * 4
-			color: Colors.colors.primary
+			color: Themes.colors.primary
 			icon: Weather.weatherIconData
 		}
 
 		StyledText {
 			Layout.alignment: Qt.AlignVCenter
 			text: Weather.tempData + "°C"
-			color: Colors.colors.primary
+			color: Themes.colors.primary
 			font.pixelSize: Appearance.fonts.extraLarge * 2.5
 			font.weight: Font.Bold
 		}
@@ -43,7 +43,7 @@ ColumnLayout {
 	StyledText {
 		Layout.alignment: Qt.AlignHCenter
 		text: Weather.weatherDescriptionData.charAt(0).toUpperCase() + Weather.weatherDescriptionData.slice(1)
-		color: Colors.colors.on_surface_variant
+		color: Themes.colors.on_surface_variant
 		font.pixelSize: Appearance.fonts.normal * 1.5
 		wrapMode: Text.WordWrap
 		horizontalAlignment: Text.AlignHCenter
@@ -88,7 +88,7 @@ ColumnLayout {
 					StyledText {
 						Layout.alignment: Qt.AlignHCenter
 						text: weatherPage.modelData.value
-						color: Colors.colors.on_surface
+						color: Themes.colors.on_surface
 						font.weight: Font.Bold
 						font.pixelSize: Appearance.fonts.small * 1.5
 					}
@@ -96,7 +96,7 @@ ColumnLayout {
 					StyledText {
 						Layout.alignment: Qt.AlignHCenter
 						text: weatherPage.modelData.label
-						color: Colors.colors.on_surface_variant
+						color: Themes.colors.on_surface_variant
 						font.pixelSize: Appearance.fonts.small * 1.2
 					}
 				}

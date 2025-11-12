@@ -38,7 +38,7 @@ ScrollView {
 
 			Rectangle {
 				Layout.fillWidth: true
-				color: Colors.colors.outline
+				color: Themes.colors.outline
 				implicitHeight: 1
 			}
 
@@ -83,13 +83,13 @@ ScrollView {
 					background: Rectangle {
 						implicitWidth: 350
 						radius: 4
-						color: Colors.withAlpha(Colors.colors.surface_container, 0.9)
+						color: Themes.withAlpha(Themes.colors.surface_container, 0.9)
 
 						Rectangle {
 							x: 12
 							y: 0
 							height: 2
-							color: Colors.colors.on_background
+							color: Themes.colors.on_background
 							visible: true
 						}
 					}
@@ -98,7 +98,7 @@ ScrollView {
 						leftPadding: Appearance.padding.normal
 						rightPadding: profilesComboBox.indicator.width + profilesComboBox.spacing
 						text: profilesComboBox.displayText
-						color: Colors.colors.on_background
+						color: Themes.colors.on_background
 						verticalAlignment: Text.AlignVCenter
 						elide: Text.ElideRight
 					}
@@ -112,12 +112,12 @@ ScrollView {
 						padding: Appearance.padding.normal
 
 						background: StyledRect {
-							color: itemDelegate.highlighted ? Colors.colors.primary : itemDelegate.hovered ? itemDelegate.modelData.available !== "yes" ? "transparent" : Colors.withAlpha(Colors.colors.primary, 0.1) : "transparent"
+							color: itemDelegate.highlighted ? Themes.colors.primary : itemDelegate.hovered ? itemDelegate.modelData.available !== "yes" ? "transparent" : Themes.withAlpha(Themes.colors.primary, 0.1) : "transparent"
 						}
 
 						contentItem: StyledText {
 							text: itemDelegate.modelData.readable
-							color: itemDelegate.modelData.available !== "yes" ? Colors.colors.outline_variant : Colors.colors.on_background
+							color: itemDelegate.modelData.available !== "yes" ? Themes.colors.outline_variant : Themes.colors.on_background
 							verticalAlignment: Text.AlignVCenter
 							elide: Text.ElideRight
 						}
@@ -154,7 +154,7 @@ ScrollView {
 								context.lineTo(width, 0);
 								context.lineTo(width / 2, height);
 								context.closePath();
-								context.fillStyle = Colors.colors.on_background;
+								context.fillStyle = Themes.colors.on_background;
 								context.fill();
 							}
 						}
@@ -164,7 +164,7 @@ ScrollView {
 							width: 40
 							height: 40
 							radius: Appearance.rounding.large
-							color: Colors.colors.primary
+							color: Themes.colors.primary
 							opacity: profilesComboBox.pressed ? 0.12 : profilesComboBox.hovered ? 0.08 : 0
 
 							Behavior on opacity {
@@ -181,7 +181,7 @@ ScrollView {
 						padding: Appearance.padding.normal
 
 						background: StyledRect {
-							color: Colors.colors.surface_container_low
+							color: Themes.colors.surface_container_low
 							radius: Appearance.rounding.small
 						}
 
@@ -195,7 +195,7 @@ ScrollView {
 								contentItem: StyledRect {
 									implicitWidth: 4
 									radius: Appearance.rounding.small
-									color: Colors.withAlpha(Colors.colors.primary, 0.1)
+									color: Themes.withAlpha(Themes.colors.primary, 0.1)
 								}
 							}
 						}

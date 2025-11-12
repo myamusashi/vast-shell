@@ -66,7 +66,7 @@ StyledRect {
 					width: 25
 					height: 25
 					radius: Appearance.rounding.normal
-					color: trayItemArea.containsMouse ? Colors.colors.primary : "transparent"
+					color: trayItemArea.containsMouse ? Themes.colors.primary : "transparent"
 
 					Behavior on color {
 						ColAnim {}

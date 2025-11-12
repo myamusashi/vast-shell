@@ -39,7 +39,7 @@ LazyLoader {
 
 			anchors.fill: parent
 
-			color: Colors.colors.background
+			color: Themes.colors.background
 			radius: Appearance.rounding.normal
 
 			ColumnLayout {
@@ -66,9 +66,9 @@ LazyLoader {
 						radius: Appearance.rounding.full
 						color: {
 							if (prevMouseArea.containsMouse && prevMouseArea.containsPress)
-								return Colors.withAlpha(Colors.colors.primary, 0.12);
+								return Themes.withAlpha(Themes.colors.primary, 0.12);
 							else if (prevMouseArea.containsMouse)
-								return Colors.withAlpha(Colors.colors.primary, 0.08);
+								return Themes.withAlpha(Themes.colors.primary, 0.08);
 							else
 								return "transparent";
 						}
@@ -79,7 +79,7 @@ LazyLoader {
 							anchors.centerIn: parent
 							icon: "chevron_left"
 							font.pixelSize: Appearance.fonts.large * 2
-							color: Colors.colors.on_primary_container
+							color: Themes.colors.on_primary_container
 						}
 
 						MouseArea {
@@ -112,7 +112,7 @@ LazyLoader {
 						verticalAlignment: Text.AlignVCenter
 						font.weight: 600
 
-						color: Colors.colors.on_background
+						color: Themes.colors.on_background
 						font.pixelSize: Appearance.fonts.large
 					}
 
@@ -122,9 +122,9 @@ LazyLoader {
 						radius: Appearance.rounding.full
 						color: {
 							if (nextMouseArea.containsMouse && nextMouseArea.containsPress)
-								return Colors.withAlpha(Colors.colors.primary, 0.12);
+								return Themes.withAlpha(Themes.colors.primary, 0.12);
 							else if (nextMouseArea.containsMouse)
-								return Colors.withAlpha(Colors.colors.primary, 0.08);
+								return Themes.withAlpha(Themes.colors.primary, 0.08);
 							else
 								return "transparent";
 						}
@@ -134,7 +134,7 @@ LazyLoader {
 							anchors.centerIn: parent
 							icon: "chevron_right"
 							font.pixelSize: Appearance.fonts.large * 2
-							color: Colors.colors.primary
+							color: Themes.colors.primary
 						}
 
 						MouseArea {
@@ -177,9 +177,9 @@ LazyLoader {
 							text: daysOfWeekDelegate.model.shortName
 							color: {
 								if (daysOfWeekDelegate.model.shortName === "Sun" || daysOfWeekDelegate.model.shortName === "Sat")
-									return Colors.colors.error;
+									return Themes.colors.error;
 								else
-									return Colors.colors.on_surface;
+									return Themes.colors.on_surface;
 							}
 							font.pixelSize: Appearance.fonts.small * 1.2
 							font.weight: 600
@@ -212,9 +212,9 @@ LazyLoader {
 
 						color: {
 							if (dayItem.model.today)
-								return Colors.colors.primary;
+								return Themes.colors.primary;
 							else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
-								return Colors.colors.surface_variant;
+								return Themes.colors.surface_variant;
 
 							return "transparent";
 						}
@@ -241,16 +241,16 @@ LazyLoader {
 							text: Qt.formatDate(dayItem.model.date, "d")
 							color: {
 								if (dayItem.model.today)
-									return Colors.colors.on_primary;
+									return Themes.colors.on_primary;
 								else if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-									return Colors.colors.error;
+									return Themes.colors.error;
 								else if (dayItem.model.month === root.currentMonth)
-									return Colors.colors.on_surface;
+									return Themes.colors.on_surface;
 								else {
 									if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-										return Colors.withAlpha(Colors.colors.error, 0.2);
+										return Themes.withAlpha(Themes.colors.error, 0.2);
 									else
-										return Colors.withAlpha(Colors.colors.on_surface, 0.2);
+										return Themes.withAlpha(Themes.colors.on_surface, 0.2);
 								}
 							}
 							font.pixelSize: Appearance.fonts.small * 1.3

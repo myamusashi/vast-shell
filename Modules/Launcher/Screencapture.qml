@@ -60,8 +60,8 @@ Scope {
 					anchors.fill: parent
 
 					radius: Appearance.rounding.large
-					color: Colors.colors.background
-					border.color: Colors.colors.outline
+					color: Themes.colors.background
+					border.color: Themes.colors.outline
 					border.width: 2
 
 					property int padding: Appearance.spacing.normal
@@ -89,12 +89,12 @@ Scope {
 
 									radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
 
-									color: captureWindow.activeTab === index ? Colors.colors.primary : Colors.colors.surface
+									color: captureWindow.activeTab === index ? Themes.colors.primary : Themes.colors.surface
 
 									StyledText {
 										anchors.centerIn: parent
 										text: tabButton.modelData
-										color: captureWindow.activeTab === tabButton.index ? Colors.colors.on_primary : Colors.colors.outline
+										color: captureWindow.activeTab === tabButton.index ? Themes.colors.on_primary : Themes.colors.outline
 										font.pixelSize: Appearance.fonts.normal * 0.9
 										font.bold: captureWindow.activeTab === tabButton.index
 									}
@@ -226,7 +226,7 @@ Scope {
 												id: icon1
 
 												icon: iconDelegate1.modelData.icon
-												color: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? Colors.colors.primary : Colors.colors.outline
+												color: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? Themes.colors.primary : Themes.colors.outline
 												font.pixelSize: Appearance.fonts.large
 												Layout.alignment: Qt.AlignVCenter
 
@@ -240,7 +240,7 @@ Scope {
 											StyledText {
 												id: name1
 
-												color: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? Colors.colors.primary : Colors.colors.outline
+												color: iconDelegate1.index === screencapture.currentIndex && captureWindow.activeTab === 0 ? Themes.colors.primary : Themes.colors.outline
 												font.pixelSize: Appearance.fonts.normal
 												text: iconDelegate1.modelData.name
 												Layout.fillWidth: true
@@ -355,7 +355,7 @@ Scope {
 												id: icon2
 
 												icon: iconDelegate2.modelData.icon
-												color: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? Colors.colors.primary : Colors.colors.outline
+												color: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? Themes.colors.primary : Themes.colors.outline
 												font.pixelSize: Appearance.fonts.large
 												Layout.alignment: Qt.AlignVCenter
 
@@ -369,7 +369,7 @@ Scope {
 											StyledText {
 												id: name2
 
-												color: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? Colors.colors.primary : Colors.colors.outline
+												color: iconDelegate2.index === screencapture.currentIndex && captureWindow.activeTab === 1 ? Themes.colors.primary : Themes.colors.outline
 												font.pixelSize: Appearance.fonts.normal
 												text: iconDelegate2.modelData.name
 												Layout.fillWidth: true

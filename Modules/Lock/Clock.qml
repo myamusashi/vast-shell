@@ -35,13 +35,13 @@ ColumnLayout {
 		Layout.preferredWidth: 340 + hours.width
 		Layout.preferredHeight: 340
 
-		color: Colors.withAlpha(Colors.colors.surface_container_highest, 0.15)
+		color: Themes.withAlpha(Themes.colors.surface_container_highest, 0.15)
 		radius: width / 2
 
 		layer.enabled: true
 		layer.effect: MultiEffect {
 			shadowEnabled: true
-			shadowColor: Colors.withAlpha(Colors.colors.shadow, 0.4)
+			shadowColor: Themes.withAlpha(Themes.colors.shadow, 0.4)
 			shadowBlur: 0.8
 			shadowVerticalOffset: 4
 			shadowHorizontalOffset: 0
@@ -53,17 +53,17 @@ ColumnLayout {
 			color: "transparent"
 			radius: parent.radius - 3
 			border.width: 1
-			border.color: Colors.withAlpha(Colors.colors.primary, 0.2)
+			border.color: Themes.withAlpha(Themes.colors.primary, 0.2)
 		}
 
 		StyledRect {
 			anchors.fill: parent
 			anchors.margins: 2
-			color: Colors.withAlpha(Colors.colors.surface_bright, 0.05)
+			color: Themes.withAlpha(Themes.colors.surface_bright, 0.05)
 			radius: parent.radius - 2
 
 			border.width: 2
-			border.color: Colors.withAlpha(Colors.colors.outline_variant, 0.3)
+			border.color: Themes.withAlpha(Themes.colors.outline_variant, 0.3)
 		}
 
 		ColumnLayout {
@@ -76,7 +76,7 @@ ColumnLayout {
 				font.pixelSize: Appearance.fonts.extraLarge * 5
 				font.family: Appearance.fonts.family_Sans
 				font.weight: Font.Medium
-				color: Colors.colors.on_surface
+				color: Themes.colors.on_surface
 				renderType: Text.NativeRendering
 				text: {
 					const hours = root.currentDate.getHours().toString().padStart(2, '0');
@@ -88,7 +88,7 @@ ColumnLayout {
 				layer.enabled: true
 				layer.effect: MultiEffect {
 					shadowEnabled: true
-					shadowColor: Colors.withAlpha(Colors.colors.scrim, 0.3)
+					shadowColor: Themes.withAlpha(Themes.colors.scrim, 0.3)
 					shadowBlur: 0.5
 					shadowVerticalOffset: 2
 				}
@@ -99,16 +99,16 @@ ColumnLayout {
 				Layout.preferredWidth: 70
 				Layout.preferredHeight: 36
 
-				color: Colors.withAlpha(Colors.colors.primary_container, 0.15)
+				color: Themes.withAlpha(Themes.colors.primary_container, 0.15)
 				radius: 18
 
 				border.width: 1
-				border.color: Colors.withAlpha(Colors.colors.primary, 0.2)
+				border.color: Themes.withAlpha(Themes.colors.primary, 0.2)
 
 				layer.enabled: true
 				layer.effect: MultiEffect {
 					shadowEnabled: true
-					shadowColor: Colors.withAlpha(Colors.colors.shadow, 0.25)
+					shadowColor: Themes.withAlpha(Themes.colors.shadow, 0.25)
 					shadowBlur: 0.4
 					shadowVerticalOffset: 2
 				}
@@ -118,7 +118,7 @@ ColumnLayout {
 					font.pixelSize: Appearance.fonts.medium * 1.6
 					font.family: Appearance.fonts.family_Mono
 					font.weight: Font.Medium
-					color: Colors.colors.on_surface
+					color: Themes.colors.on_surface
 					renderType: Text.NativeRendering
 					text: root.currentDate.getSeconds().toString().padStart(2, '0')
 				}
@@ -139,16 +139,16 @@ ColumnLayout {
 			Layout.preferredWidth: dayStyledLabel.width + 24
 			Layout.preferredHeight: 40
 
-			color: Colors.withAlpha(Colors.colors.surface_container_high, 0.6)
+			color: Themes.withAlpha(Themes.colors.surface_container_high, 0.6)
 			radius: 20
 
 			border.width: 1
-			border.color: Colors.withAlpha(Colors.colors.outline, 0.2)
+			border.color: Themes.withAlpha(Themes.colors.outline, 0.2)
 
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				shadowEnabled: true
-				shadowColor: Colors.withAlpha(Colors.colors.shadow, 0.4)
+				shadowColor: Themes.withAlpha(Themes.colors.shadow, 0.4)
 				shadowBlur: 0.8
 				shadowVerticalOffset: 4
 				shadowHorizontalOffset: 0
@@ -160,7 +160,7 @@ ColumnLayout {
 				font.pixelSize: Appearance.fonts.medium * 2.2
 				font.family: Appearance.fonts.family_Sans
 				font.weight: Font.Medium
-				color: Colors.colors.on_surface
+				color: Themes.colors.on_surface
 				renderType: Text.NativeRendering
 				text: root.getDayName(root.currentDate.getDay())
 			}
@@ -171,16 +171,16 @@ ColumnLayout {
 			Layout.preferredWidth: dateStyledLabel.width + 20
 			Layout.preferredHeight: 36
 
-			color: Colors.withAlpha(Colors.colors.surface_container, 0.6)
+			color: Themes.withAlpha(Themes.colors.surface_container, 0.6)
 			radius: 18
 
 			border.width: 1
-			border.color: Colors.withAlpha(Colors.colors.outline_variant, 0.15)
+			border.color: Themes.withAlpha(Themes.colors.outline_variant, 0.15)
 
 			layer.enabled: true
 			layer.effect: MultiEffect {
 				shadowEnabled: true
-				shadowColor: Colors.withAlpha(Colors.colors.shadow, 0.4)
+				shadowColor: Themes.withAlpha(Themes.colors.shadow, 0.4)
 				shadowBlur: 0.8
 				shadowVerticalOffset: 4
 				shadowHorizontalOffset: 0
@@ -193,7 +193,7 @@ ColumnLayout {
 				font.pixelSize: Appearance.fonts.medium * 1.8
 				font.family: Appearance.fonts.family_Sans
 				font.weight: Font.Normal
-				color: Colors.colors.on_surface
+				color: Themes.colors.on_surface
 				renderType: Text.NativeRendering
 				text: `${root.currentDate.getDate()} ${root.getMonthName(root.currentDate.getMonth())}`
 			}

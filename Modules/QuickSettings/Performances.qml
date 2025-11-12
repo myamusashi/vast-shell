@@ -22,7 +22,7 @@ GridLayout {
 		StyledText {
 			Layout.alignment: Qt.AlignHCenter
 			text: "RAM usage\n" + SysUsage.memProp + " GB"
-			color: Colors.colors.on_surface
+			color: Themes.colors.on_surface
 			horizontalAlignment: Text.AlignHCenter
 		}
 	}
@@ -41,7 +41,7 @@ GridLayout {
 		StyledText {
 			Layout.alignment: Qt.AlignHCenter
 			text: "CPU usage"
-			color: Colors.colors.on_surface
+			color: Themes.colors.on_surface
 		}
 	}
 
@@ -58,7 +58,7 @@ GridLayout {
 		StyledText {
 			Layout.alignment: Qt.AlignHCenter
 			text: "Disk usage\n" + SysUsage.diskProp + " GB"
-			color: Colors.colors.on_surface
+			color: Themes.colors.on_surface
 			horizontalAlignment: Text.AlignHCenter
 		}
 	}
@@ -94,7 +94,7 @@ GridLayout {
 				Layout.fillWidth: true
 				horizontalAlignment: Text.AlignHCenter
 				text: modelData.label + ":\n" + modelData.value
-				color: Colors.colors.on_surface
+				color: Themes.colors.on_surface
 			}
 		}
 	}
@@ -130,7 +130,7 @@ GridLayout {
 				Layout.fillWidth: true
 				horizontalAlignment: Text.AlignHCenter
 				text: modelData.label + ":\n" + modelData.value
-				color: Colors.colors.on_surface
+				color: Themes.colors.on_surface
 			}
 		}
 	}
@@ -158,7 +158,7 @@ GridLayout {
 				Layout.fillWidth: true
 				horizontalAlignment: Text.AlignHCenter
 				text: modelData.label + ":\n" + modelData.value
-				color: Colors.colors.on_surface
+				color: Themes.colors.on_surface
 			}
 		}
 	}

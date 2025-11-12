@@ -8,7 +8,7 @@ import qs.Components
 
 StyledRect {
 	Layout.preferredHeight: 140
-	color: Colors.colors.surface_container_low
+	color: Themes.colors.surface_container_low
 	radius: Appearance.rounding.normal
 
 	// Use RowLayout instead of GridLayout for horizontal arrangement
@@ -25,7 +25,7 @@ StyledRect {
 			MatIcon {
 				anchors.centerIn: parent
 				icon: Battery.charging ? Battery.chargeIcon : Battery.icon
-				color: Battery.charging ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+				color: Battery.charging ? Themes.colors.on_primary : Themes.colors.on_surface_variant
 				font.pixelSize: Appearance.fonts.extraLarge * 3
 			}
 
@@ -35,14 +35,14 @@ StyledRect {
 
 				MatIcon {
 					icon: "bolt"
-					color: Battery.charging ? Colors.colors.primary : Colors.colors.surface
+					color: Battery.charging ? Themes.colors.primary : Themes.colors.surface
 					visible: Battery.charging
 					font.pixelSize: Appearance.fonts.large
 				}
 
 				StyledText {
 					text: (UPower.displayDevice.percentage * 100).toFixed(0)
-					color: Battery.charging ? Colors.colors.primary : Colors.colors.surface
+					color: Battery.charging ? Themes.colors.primary : Themes.colors.surface
 					font.pixelSize: Appearance.fonts.large
 					font.bold: true
 				}
@@ -71,17 +71,17 @@ StyledRect {
 			{
 				label: "Battery found:",
 				value: Battery.foundBattery,
-				color: Colors.colors.on_background
+				color: Themes.colors.on_background
 			},
 			{
 				label: "Current capacity:",
 				value: UPower.displayDevice.energy.toFixed(2) + " Wh",
-				color: Colors.colors.on_background
+				color: Themes.colors.on_background
 			},
 			{
 				label: "Full capacity:",
 				value: UPower.displayDevice.energyCapacity.toFixed(2) + " Wh",
-				color: Colors.colors.on_background
+				color: Themes.colors.on_background
 			},
 			{
 				label: "Battery Health:",
@@ -92,10 +92,10 @@ StyledRect {
 
 		function getHealthColor(health) {
 			if (health > 80)
-				return Colors.colors.primary;
+				return Themes.colors.primary;
 			if (health > 50)
-				return Colors.colors.secondary;
-			return Colors.colors.error;
+				return Themes.colors.secondary;
+			return Themes.colors.error;
 		}
 
 		Repeater {
@@ -109,7 +109,7 @@ StyledRect {
 
 				StyledText {
 					text: parent.modelData.label
-					color: Colors.colors.on_background
+					color: Themes.colors.on_background
 					font.pixelSize: Appearance.fonts.small
 				}
 

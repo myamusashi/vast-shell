@@ -17,7 +17,7 @@ RowLayout {
 		focus: true
 		enabled: !root.pam.unlockInProgress
 
-		color: root.pam.unlockInProgress ? Colors.colors.on_surface_variant : Colors.colors.on_surface
+		color: root.pam.unlockInProgress ? Themes.colors.on_surface_variant : Themes.colors.on_surface
 
 		font.family: Appearance.fonts.family_Sans
 		font.pixelSize: Appearance.fonts.large
@@ -25,15 +25,15 @@ RowLayout {
 		background: StyledRect {
 			anchors.fill: parent
 
-			color: passwordBox.activeFocus ? Colors.colors.surface_container_high : Colors.colors.surface_container
+			color: passwordBox.activeFocus ? Themes.colors.surface_container_high : Themes.colors.surface_container
 
 			border.color: {
 				if (!passwordBox.enabled)
-					return Colors.withAlpha(Colors.colors.outline, 0.12);
+					return Themes.withAlpha(Themes.colors.outline, 0.12);
 				else if (passwordBox.activeFocus)
-					return Colors.colors.primary;
+					return Themes.colors.primary;
 				else
-					return Colors.colors.outline;
+					return Themes.colors.outline;
 			}
 
 			border.width: passwordBox.activeFocus ? 2 : 1
@@ -81,11 +81,11 @@ RowLayout {
 		inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
 
 		placeholderText: root.pam.showFailure ? "Password invalid" : "Enter password"
-		placeholderTextColor: root.pam.showFailure ? Colors.colors.error : Colors.colors.on_surface_variant
+		placeholderTextColor: root.pam.showFailure ? Themes.colors.error : Themes.colors.on_surface_variant
 		font.bold: root.pam.showFailure ? true : false
 
-		selectionColor: Colors.withAlpha(Colors.colors.on_surface, 0.16)
-		selectedTextColor: Colors.colors.on_primary
+		selectionColor: Themes.withAlpha(Themes.colors.on_surface, 0.16)
+		selectedTextColor: Themes.colors.on_primary
 
 		onAccepted: {
 			if (root.pam && text.length > 0)
@@ -141,19 +141,19 @@ RowLayout {
 			width: 20
 			height: 20
 			radius: 10
-			color: Colors.colors.primary
+			color: Themes.colors.primary
 			visible: root.pam.unlockInProgress
 			opacity: visible ? 1 : 0
 
 			SequentialAnimation on color {
 				ColAnim {
-					to: Colors.colors.primary
+					to: Themes.colors.primary
 				}
 				ColAnim {
-					to: Colors.colors.secondary
+					to: Themes.colors.secondary
 				}
 				ColAnim {
-					to: Colors.colors.tertiary
+					to: Themes.colors.tertiary
 				}
 				loops: Animation.Infinite
 			}

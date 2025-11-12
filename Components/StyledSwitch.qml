@@ -13,9 +13,9 @@ Switch {
 		x: root.leftPadding
 		y: parent.height / 2 - height / 2
 		radius: Appearance.rounding.full
-		color: root.checked ? Colors.colors.primary : Colors.colors.surface_container_highest
+		color: root.checked ? Themes.colors.primary : Themes.colors.surface_container_highest
 		border.width: 2
-		border.color: Colors.colors.outline
+		border.color: Themes.colors.outline
 
 		StyledRect {
 			id: handle
@@ -27,11 +27,11 @@ Switch {
 			width: root.down ? 24 : root.checked ? 24 : 16
 			height: root.down ? 28 : root.checked ? 24 : 16
 			radius: Appearance.rounding.full
-			color: root.down ? Colors.colors.on_primary : root.checked ? Colors.colors.on_primary : Colors.colors.outline
+			color: root.down ? Themes.colors.on_primary : root.checked ? Themes.colors.on_primary : Themes.colors.outline
 
 			MatIcon {
 				icon: "check"
-				color: root.checked ? Colors.colors.on_background : Colors.colors.surface_container_highest
+				color: root.checked ? Themes.colors.on_background : Themes.colors.surface_container_highest
 				visible: root.checked ? true : false
 				font.pixelSize: Appearance.fonts.large
 				anchors.centerIn: handle

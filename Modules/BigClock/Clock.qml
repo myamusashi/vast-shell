@@ -50,7 +50,7 @@ Scope {
 						font.pixelSize: Appearance.fonts.extraLarge * 2.5
 						font.bold: true
 						antialiasing: true
-						color: Colors.colors.secondary
+						color: Themes.colors.secondary
 					}
 
 					RowLayout {
@@ -61,7 +61,7 @@ Scope {
 
 							text: Qt.formatDateTime(Time?.date, "dddd")
 							font.pixelSize: Appearance.fonts.large
-							color: Colors.withAlpha(Colors.colors.secondary, 1)
+							color: Themes.withAlpha(Themes.colors.secondary, 1)
 							antialiasing: true
 						}
 
@@ -70,7 +70,7 @@ Scope {
 
 							text: Qt.formatDateTime(Time?.date, "MMMM")
 							font.pixelSize: Appearance.fonts.large
-							color: Colors.withAlpha(Colors.colors.secondary, 1)
+							color: Themes.withAlpha(Themes.colors.secondary, 1)
 							antialiasing: true
 						}
 
@@ -79,7 +79,7 @@ Scope {
 
 							text: Qt.formatDateTime(Time?.date, "yyyy")
 							font.pixelSize: Appearance.fonts.large
-							color: Colors.withAlpha(Colors.colors.secondary, 1)
+							color: Themes.withAlpha(Themes.colors.secondary, 1)
 							antialiasing: true
 						}
 
@@ -98,7 +98,7 @@ Scope {
 
 							text: Weather.tempData + "°"
 							font.pixelSize: Appearance.fonts.large
-							color: Colors.withAlpha(Colors.colors.secondary, 1)
+							color: Themes.withAlpha(Themes.colors.secondary, 1)
 							antialiasing: true
 						}
 
@@ -106,7 +106,7 @@ Scope {
 							id: huy
 							icon: "humidity_low"
 							font.pixelSize: Appearance.fonts.large
-							color: Colors.withAlpha(Colors.colors.secondary, 1)
+							color: Themes.withAlpha(Themes.colors.secondary, 1)
 							antialiasing: true
 						}
 
@@ -115,7 +115,7 @@ Scope {
 
 							text: Weather.humidityData + "%"
 							font.pixelSize: Appearance.fonts.large
-							color: Colors.withAlpha(Colors.colors.secondary, 1)
+							color: Themes.withAlpha(Themes.colors.secondary, 1)
 							antialiasing: true
 						}
 					}

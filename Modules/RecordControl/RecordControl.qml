@@ -74,9 +74,9 @@ Scope {
 
 			StyledRect {
 				anchors.fill: parent
-				color: Colors.colors.surface_container_high
+				color: Themes.colors.surface_container_high
 				radius: Appearance.rounding.large
-				border.color: Colors.colors.outline
+				border.color: Themes.colors.outline
 				border.width: 1
 
 				ColumnLayout {
@@ -94,7 +94,7 @@ Scope {
 							Layout.preferredWidth: 12
 							Layout.preferredHeight: 12
 							radius: 6
-							color: Colors.colors.error
+							color: Themes.colors.error
 
 							SequentialAnimation on opacity {
 								loops: Animation.Infinite
@@ -114,7 +114,7 @@ Scope {
 							id: header
 
 							text: "Screen Recording"
-							color: Colors.colors.on_surface
+							color: Themes.colors.on_surface
 							font.pixelSize: Appearance.fonts.normal
 							font.bold: true
 						}
@@ -129,7 +129,7 @@ Scope {
 							Layout.preferredWidth: 28
 							Layout.preferredHeight: 28
 							radius: Appearance.rounding.large
-							color: closeButtonMouse.pressed ? Colors.colors.secondary_container : closeButtonMouse.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : "transparent"
+							color: closeButtonMouse.pressed ? Themes.colors.secondary_container : closeButtonMouse.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : "transparent"
 
 							Behavior on color {
 								ColAnim {
@@ -143,7 +143,7 @@ Scope {
 								anchors.centerIn: parent
 								icon: "close"
 								font.pixelSize: Appearance.fonts.large
-								color: Colors.colors.on_surface_variant
+								color: Themes.colors.on_surface_variant
 							}
 
 							MouseArea {
@@ -166,7 +166,7 @@ Scope {
 							Layout.fillWidth: true
 							Layout.preferredHeight: 45
 							radius: Appearance.rounding.normal
-							color: Colors.colors.surface_container
+							color: Themes.colors.surface_container
 
 							RowLayout {
 								anchors.centerIn: parent
@@ -175,12 +175,12 @@ Scope {
 								MatIcon {
 									icon: "schedule"
 									font.pixelSize: Appearance.fonts.large
-									color: Colors.colors.primary
+									color: Themes.colors.primary
 								}
 
 								StyledText {
 									text: root.formatTime(scope.recordingSeconds)
-									color: Colors.colors.on_surface
+									color: Themes.colors.on_surface
 									font.pixelSize: Appearance.fonts.large * 1.2
 									font.bold: true
 									font.family: Appearance.fonts.family_Mono
@@ -194,7 +194,7 @@ Scope {
 							Layout.preferredWidth: 100
 							Layout.preferredHeight: 45
 							radius: Appearance.rounding.normal
-							color: stopButtonMouse.pressed ? Colors.withAlpha(Colors.colors.error, 0.8) : stopButtonMouse.containsMouse ? Colors.colors.error : Colors.withAlpha(Colors.colors.error, 0.9)
+							color: stopButtonMouse.pressed ? Themes.withAlpha(Themes.colors.error, 0.8) : stopButtonMouse.containsMouse ? Themes.colors.error : Themes.withAlpha(Themes.colors.error, 0.9)
 
 							Behavior on color {
 								ColAnim {
@@ -228,12 +228,12 @@ Scope {
 								MatIcon {
 									icon: "stop"
 									font.pixelSize: Appearance.fonts.large
-									color: Colors.colors.on_error
+									color: Themes.colors.on_error
 								}
 
 								StyledText {
 									text: "Stop"
-									color: Colors.colors.on_error
+									color: Themes.colors.on_error
 									font.pixelSize: Appearance.fonts.normal
 									font.bold: true
 								}

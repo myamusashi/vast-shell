@@ -53,7 +53,7 @@ Scope {
 				sourceComponent: StyledRect {
 					id: base
 
-					color: Colors.colors.background
+					color: Themes.colors.background
 					radius: Appearance.rounding.large
 					anchors.fill: parent
 

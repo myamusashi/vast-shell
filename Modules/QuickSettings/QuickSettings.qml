@@ -87,7 +87,7 @@ Scope {
 						id: contentView
 
 						StyledRect {
-							color: Colors.colors.surface_container
+							color: Themes.colors.surface_container
 
 							property int viewIndex: 0
 

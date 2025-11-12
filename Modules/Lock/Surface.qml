@@ -27,7 +27,7 @@ WlSessionLockSurface {
 
 		anchors.fill: parent
 
-		color: Colors.colors.surface_container_lowest
+		color: Themes.colors.surface_container_lowest
 
 		Wallpaper {
 			id: wallpaper

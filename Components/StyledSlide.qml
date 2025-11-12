@@ -36,7 +36,7 @@ Slider {
 		height: root.trackDotSize
 		radius: Appearance.rounding.normal
 		visible: root.dotEnd && index > 0 && index < (root.to - root.from) / root.stepSize
-		color: normalizedValue > root.visualPosition ? Colors.colors.on_secondary_container : Colors.colors.on_primary
+		color: normalizedValue > root.visualPosition ? Themes.colors.on_secondary_container : Themes.colors.on_primary
 	}
 
 	MouseArea {
@@ -62,7 +62,7 @@ Slider {
 				verticalCenter: parent.verticalCenter
 			}
 			icon: root.icon || ""
-			color: Colors.colors.on_primary
+			color: Themes.colors.on_primary
 			font.pixelSize: root.iconSize || 0
 			z: 3
 		}
@@ -76,7 +76,7 @@ Slider {
 			}
 			width: root.handleGap + (root.visualPosition * (parent.width - root.handleGap * 2)) - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
 			height: parent.height - root.trackHeightDiff
-			color: Colors.colors.primary
+			color: Themes.colors.primary
 			radius: Appearance.rounding.normal
 			topRightRadius: Appearance.rounding.small * 0.5
 			bottomRightRadius: Appearance.rounding.small * 0.5
@@ -91,7 +91,7 @@ Slider {
 			}
 			width: root.handleGap + ((1 - root.visualPosition) * (parent.width - root.handleGap * 2)) - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
 			height: parent.height - root.trackHeightDiff
-			color: Colors.colors.surface_container_highest
+			color: Themes.colors.surface_container_highest
 			radius: Appearance.rounding.normal
 			topLeftRadius: Appearance.rounding.small * 0.5
 			bottomLeftRadius: Appearance.rounding.small * 0.5
@@ -113,7 +113,7 @@ Slider {
 		x: root.handleGap + (root.visualPosition * (root.availableWidth - root.handleGap * 2)) - width / 2
 		anchors.verticalCenter: parent.verticalCenter
 		radius: Appearance.rounding.normal
-		color: Colors.colors.primary
+		color: Themes.colors.primary
 
 		Behavior on width {
 			NumbAnim {

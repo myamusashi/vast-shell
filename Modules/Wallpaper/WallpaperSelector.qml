@@ -89,7 +89,7 @@ Scope {
 
 			StyledRect {
 				anchors.fill: parent
-				color: Colors.colors.surface
+				color: Themes.colors.surface
 				radius: Appearance.rounding.large
 
 				ColumnLayout {
@@ -103,10 +103,10 @@ Scope {
 						Layout.fillWidth: true
 						Layout.preferredHeight: 40
 						placeholderText: "Search wallpapers..."
-						placeholderTextColor: Colors.colors.surface_variant
+						placeholderTextColor: Themes.colors.surface_variant
 						text: scope.searchQuery
 						font.pixelSize: Appearance.fonts.medium
-						color: Colors.colors.on_surface
+						color: Themes.colors.on_surface
 						focus: true
 
 						onTextChanged: {
@@ -118,9 +118,9 @@ Scope {
 						}
 
 						background: StyledRect {
-							color: Colors.withAlpha(Colors.colors.surface_container_high, 0.12)
+							color: Themes.withAlpha(Themes.colors.surface_container_high, 0.12)
 							radius: Appearance.rounding.normal
-							border.color: searchField.activeFocus ? Colors.colors.primary : Colors.colors.outline_variant
+							border.color: searchField.activeFocus ? Themes.colors.primary : Themes.colors.outline_variant
 							border.width: searchField.activeFocus ? 2 : 1
 						}
 
@@ -182,7 +182,7 @@ Scope {
 								anchors.fill: parent
 								color: "transparent"
 								radius: Appearance.rounding.normal
-								border.color: delegateItem.isCurrentItem ? searchField.focus ? Colors.withAlpha(Colors.colors.primary, 0.4) : Colors.colors.primary : mArea.containsPress ? Colors.colors.secondary : Colors.colors.outline_variant
+								border.color: delegateItem.isCurrentItem ? searchField.focus ? Themes.withAlpha(Themes.colors.primary, 0.4) : Themes.colors.primary : mArea.containsPress ? Themes.colors.secondary : Themes.colors.outline_variant
 								border.width: delegateItem.isCurrentItem ? 3 : 1
 
 								ColumnLayout {
@@ -297,7 +297,7 @@ Scope {
 						Layout.alignment: Qt.AlignHCenter
 						Layout.bottomMargin: Appearance.spacing.small
 						text: pathView.count > 0 ? (pathView.currentIndex + 1) + " / " + pathView.count : "0 / 0"
-						color: Colors.colors.on_surface
+						color: Themes.colors.on_surface
 						font.pixelSize: Appearance.fonts.small
 					}
 				}

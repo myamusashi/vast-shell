@@ -17,7 +17,7 @@ StyledRect {
 
 	Layout.fillWidth: true
 	Layout.preferredHeight: 60
-	color: Colors.colors.surface_container
+	color: Themes.colors.surface_container
 
 	RowLayout {
 		anchors.centerIn: parent
@@ -63,7 +63,7 @@ StyledRect {
 				onClicked: root.tabClicked(settingButton.index)
 
 				background: Rectangle {
-					color: root.state === settingButton.index ? Colors.colors.primary : Colors.colors.surface_container
+					color: root.state === settingButton.index ? Themes.colors.primary : Themes.colors.surface_container
 					radius: Appearance.rounding.small
 				}
 
@@ -73,13 +73,13 @@ StyledRect {
 
 					MatIcon {
 						icon: settingButton.modelData.icon
-						color: root.state === settingButton.index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+						color: root.state === settingButton.index ? Themes.colors.on_primary : Themes.colors.on_surface_variant
 						font.pixelSize: Appearance.fonts.large * root.scaleFactor + 10
 					}
 
 					StyledText {
 						text: settingButton.modelData.title
-						color: root.state === settingButton.index ? Colors.colors.on_primary : Colors.colors.on_surface_variant
+						color: root.state === settingButton.index ? Themes.colors.on_primary : Themes.colors.on_surface_variant
 						font.pixelSize: Appearance.fonts.large * root.scaleFactor
 						elide: Text.ElideRight
 					}

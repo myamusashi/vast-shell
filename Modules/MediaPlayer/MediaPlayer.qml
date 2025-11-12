@@ -71,7 +71,7 @@ Scope {
 
 				implicitWidth: parent.width
 				implicitHeight: contentLayout.implicitHeight + 15
-				color: Colors.colors.surface_container_high
+				color: Themes.colors.surface_container_high
 				radius: Appearance.rounding.normal
 
 				RowLayout {
@@ -118,7 +118,7 @@ Scope {
 									text: "Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG."
 									wrapMode: Text.Wrap
 									elide: Text.ElideRight
-									color: Colors.colors.on_surface
+									color: Themes.colors.on_surface
 									visible: Player.active && Player.active.trackArtUrl === ""
 								}
 
@@ -162,7 +162,7 @@ Scope {
 							StyledLabel {
 								width: parent.width
 								text: Player.active ? Player.active.trackTitle : ""
-								color: Colors.colors.on_background
+								color: Themes.colors.on_background
 								font.pixelSize: Appearance.fonts.large
 								wrapMode: Text.NoWrap
 								elide: Text.ElideRight
@@ -174,7 +174,7 @@ Scope {
 								StyledText {
 									width: parent.width
 									text: Player.active ? Player.active.trackArtist : ""
-									color: Colors.colors.on_background
+									color: Themes.colors.on_background
 									font.pixelSize: Appearance.fonts.small
 									wrapMode: Text.NoWrap
 									elide: Text.ElideRight
@@ -182,13 +182,13 @@ Scope {
 
 								StyledText {
 									text: "•"
-									color: Colors.colors.on_background
+									color: Themes.colors.on_background
 									font.pixelSize: Appearance.fonts.extraLarge
 								}
 
 								StyledText {
 									text: Player.active ? "Watched on " : ""
-									color: Colors.colors.on_background
+									color: Themes.colors.on_background
 									font.pixelSize: Appearance.fonts.small
 								}
 
@@ -223,7 +223,7 @@ Scope {
 
 								text: Player.active == null ? "00:00" : `${root.formatTime(Player.active?.position)} / ${root.formatTime(Player.active?.length)}`
 								font.pixelSize: Appearance.fonts.large
-								color: Colors.colors.on_background
+								color: Themes.colors.on_background
 
 								Timer {
 									running: Player.active !== null && Player.active.playbackState == MprisPlaybackState.Playing
@@ -243,11 +243,11 @@ Scope {
 								icon: Player.active === null ? "pause_circle" : Player.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
 								color: {
 									if (pauseMouseArea.pressed)
-										return Colors.withAlpha(Colors.colors.primary, 0.08);
+										return Themes.withAlpha(Themes.colors.primary, 0.08);
 									else if (pauseMouseArea.containsMouse)
-										return Colors.withAlpha(Colors.colors.primary, 0.12);
+										return Themes.withAlpha(Themes.colors.primary, 0.12);
 									else
-										return Colors.colors.primary;
+										return Themes.colors.primary;
 								}
 								font.pixelSize: Appearance.fonts.extraLarge * 1.5
 
@@ -273,11 +273,11 @@ Scope {
 								icon: "skip_previous"
 								color: {
 									if (prevMouseArea.pressed)
-										return Colors.withAlpha(Colors.colors.primary, 0.08);
+										return Themes.withAlpha(Themes.colors.primary, 0.08);
 									else if (prevMouseArea.containsMouse)
-										return Colors.withAlpha(Colors.colors.primary, 0.12);
+										return Themes.withAlpha(Themes.colors.primary, 0.12);
 									else
-										return Colors.colors.primary;
+										return Themes.colors.primary;
 								}
 								font.pixelSize: Appearance.fonts.large * 1.8
 
@@ -315,11 +315,11 @@ Scope {
 								icon: "skip_next"
 								color: {
 									if (nextMouseArea.pressed)
-										return Colors.withAlpha(Colors.colors.primary, 0.08);
+										return Themes.withAlpha(Themes.colors.primary, 0.08);
 									else if (nextMouseArea.containsMouse)
-										return Colors.withAlpha(Colors.colors.primary, 0.12);
+										return Themes.withAlpha(Themes.colors.primary, 0.12);
 									else
-										return Colors.colors.primary;
+										return Themes.colors.primary;
 								}
 								font.pixelSize: Appearance.fonts.large * 1.8
 

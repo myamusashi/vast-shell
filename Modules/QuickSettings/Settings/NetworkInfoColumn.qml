@@ -20,7 +20,7 @@ ColumnLayout {
 
 		Layout.fillWidth: true
 		Layout.preferredHeight: 65
-		color: Colors.colors.surface_container
+		color: Themes.colors.surface_container
 		radius: Appearance.rounding.normal
 
 		readonly property bool isConnected: SysUsage.statusWiredInterface === "connected"
@@ -33,13 +33,13 @@ ColumnLayout {
 			Rectangle {
 				Layout.preferredWidth: 50
 				Layout.fillHeight: true
-				color: ethernetCard.isConnected ? Colors.colors.primary : Colors.withAlpha(Colors.colors.on_surface, 0.1)
+				color: ethernetCard.isConnected ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
 				radius: Appearance.rounding.small
 
 				MatIcon {
 					anchors.centerIn: parent
 					icon: "settings_ethernet"
-					color: ethernetCard.isConnected ? Colors.colors.on_primary : Colors.withAlpha(Colors.colors.on_surface, 0.38)
+					color: ethernetCard.isConnected ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
 					font.pixelSize: Appearance.fonts.extraLarge
 				}
 			}
@@ -55,21 +55,21 @@ ColumnLayout {
 						text: "Ethernet"
 						font.pixelSize: Appearance.fonts.normal
 						font.weight: Font.Medium
-						color: Colors.colors.on_surface
+						color: Themes.colors.on_surface
 					}
 
 					StyledText {
 						text: `(${SysUsage.statusVPNInterface})`
 						visible: SysUsage.statusVPNInterface !== ""
 						font.pixelSize: Appearance.fonts.small
-						color: Colors.colors.on_surface
+						color: Themes.colors.on_surface
 					}
 				}
 
 				StyledText {
 					text: SysUsage.statusWiredInterface === "connected" ? "Connected" : "Not Connected"
 					font.pixelSize: Appearance.fonts.small * 0.8
-					color: Colors.colors.on_surface_variant
+					color: Themes.colors.on_surface_variant
 				}
 			}
 		}
@@ -80,7 +80,7 @@ ColumnLayout {
 
 		Layout.fillWidth: true
 		Layout.preferredHeight: 65
-		color: Colors.colors.surface_container
+		color: Themes.colors.surface_container
 		radius: Appearance.rounding.normal
 
 		readonly property var activeNetwork: {
@@ -122,13 +122,13 @@ ColumnLayout {
 			Rectangle {
 				Layout.preferredWidth: 50
 				Layout.preferredHeight: 50
-				color: wifiCard.activeNetwork ? Colors.colors.primary : Colors.withAlpha(Colors.colors.on_surface, 0.1)
+				color: wifiCard.activeNetwork ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
 				radius: Appearance.rounding.small
 
 				MatIcon {
 					anchors.centerIn: parent
 					icon: wifiCard.activeNetwork ? wifiCard.getWiFiIcon(wifiCard.activeNetwork.strength) : "wifi_off"
-					color: wifiCard.activeNetwork ? Colors.colors.on_primary : Colors.withAlpha(Colors.colors.on_surface, 0.38)
+					color: wifiCard.activeNetwork ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
 					font.pixelSize: Appearance.fonts.extraLarge
 				}
 			}
@@ -140,7 +140,7 @@ ColumnLayout {
 				StyledText {
 					text: "Internet"
 					font.pixelSize: Appearance.fonts.normal
-					color: Colors.colors.on_surface_variant
+					color: Themes.colors.on_surface_variant
 				}
 
 				StyledText {
@@ -149,7 +149,7 @@ ColumnLayout {
 					font.weight: Font.Medium
 					width: parent.width
 					elide: Text.ElideRight
-					color: Colors.colors.on_surface
+					color: Themes.colors.on_surface
 				}
 			}
 		}

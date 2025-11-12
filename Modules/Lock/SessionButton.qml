@@ -24,11 +24,11 @@ RowLayout {
 
 			color: {
 				if (mouseAreaMain.containsPress)
-					Colors.withAlpha(Colors.colors.primary, 0.08);
+					Themes.withAlpha(Themes.colors.primary, 0.08);
 				else if (mouseAreaMain.containsMouse)
-					Colors.withAlpha(Colors.colors.primary, 0.1);
+					Themes.withAlpha(Themes.colors.primary, 0.1);
 				else
-					Colors.colors.primary;
+					Themes.colors.primary;
 			}
 
 			radius: Appearance.rounding.full
@@ -41,13 +41,13 @@ RowLayout {
 
 				MatIcon {
 					icon: "power_settings_circle"
-					color: Colors.colors.on_primary
+					color: Themes.colors.on_primary
 					font.pixelSize: Appearance.fonts.extraLarge
 				}
 
 				StyledText {
 					text: "Shutdown"
-					color: Colors.colors.on_primary
+					color: Themes.colors.on_primary
 					font.pixelSize: Appearance.fonts.large
 				}
 			}
@@ -107,7 +107,7 @@ RowLayout {
 				Layout.preferredWidth: mainButton.width
 				Layout.preferredHeight: root.isOpen ? 56 : 0
 
-				color: mouseArea.pressed ? Colors.withAlpha(Colors.colors.primary, 0.08) : mouseArea.containsMouse ? Colors.withAlpha(Colors.colors.primary, 0.1) : Colors.colors.primary
+				color: mouseArea.pressed ? Themes.withAlpha(Themes.colors.primary, 0.08) : mouseArea.containsMouse ? Themes.withAlpha(Themes.colors.primary, 0.1) : Themes.colors.primary
 
 				radius: Appearance.rounding.full
 
@@ -143,13 +143,13 @@ RowLayout {
 
 					MatIcon {
 						icon: buttonDelegate.modelData.icon
-						color: Colors.colors.on_primary
+						color: Themes.colors.on_primary
 						font.pixelSize: Appearance.fonts.extraLarge
 					}
 
 					StyledText {
 						text: buttonDelegate.modelData.name
-						color: Colors.colors.on_primary
+						color: Themes.colors.on_primary
 						font.pixelSize: Appearance.fonts.large
 					}
 				}
@@ -178,11 +178,11 @@ RowLayout {
 
 		color: {
 			if (mouseAreaToggle.containsPress)
-				Colors.withAlpha(Colors.colors.primary, 0.08);
+				Themes.withAlpha(Themes.colors.primary, 0.08);
 			else if (mouseAreaToggle.containsMouse)
-				Colors.withAlpha(Colors.colors.primary, 0.1);
+				Themes.withAlpha(Themes.colors.primary, 0.1);
 			else
-				Colors.colors.primary;
+				Themes.colors.primary;
 		}
 
 		radius: Appearance.rounding.full
@@ -192,7 +192,7 @@ RowLayout {
 
 			anchors.centerIn: parent
 			icon: root.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_up"
-			color: Colors.colors.on_primary
+			color: Themes.colors.on_primary
 			font.pixelSize: Appearance.fonts.extraLarge
 
 			RotationAnimator on rotation {

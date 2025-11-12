@@ -45,13 +45,13 @@ Loader {
 			MatIcon {
 				icon: Player.active === null ? "question_mark" : Player.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
 				font.pixelSize: Appearance.fonts.medium * 1.8
-				color: Colors.colors.on_background
+				color: Themes.colors.on_background
 			}
 
 			ColumnLayout {
 				StyledText {
 					text: Player.active === null ? "null" : Player.active.trackArtist
-					color: Colors.colors.on_background
+					color: Themes.colors.on_background
 				}
 
 				StyledSlide {

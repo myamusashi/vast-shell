@@ -9,10 +9,10 @@ import qs.Components
 Scope {
 	id: root
 
-	property color colorTextField: Colors.colors.on_surface
-	property color backgroundColorTextField: Colors.colors.surface_container_high
+	property color colorTextField: Themes.colors.on_surface
+	property color backgroundColorTextField: Themes.colors.surface_container_high
 	property int backgroundRadius: Appearance.rounding.large
-	property color backgroundBorderColor: Colors.colors.outline
+	property color backgroundBorderColor: Themes.colors.outline
 	property int backgroundBorderWidth
 	property real backgroundOpacity
 	property bool selectByMouse: false
@@ -41,11 +41,11 @@ Scope {
 
 			border.color: {
 				if (!textFieldBox.enabled)
-					return Colors.withAlpha(Colors.colors.outline, 0.12);
+					return Themes.withAlpha(Themes.colors.outline, 0.12);
 				else if (textFieldBox.activeFocus)
-					return Colors.colors.primary;
+					return Themes.colors.primary;
 				else
-					return Colors.colors.outline;
+					return Themes.colors.outline;
 			}
 
 			border.width: textFieldBox.activeFocus ? 2 : 1
@@ -90,8 +90,8 @@ Scope {
 		topPadding: Appearance.padding.large
 		bottomPadding: Appearance.padding.large
 
-		selectionColor: Colors.withAlpha(Colors.colors.on_surface, 0.16)
-		selectedTextColor: Colors.colors.on_primary
+		selectionColor: Themes.withAlpha(Themes.colors.on_surface, 0.16)
+		selectedTextColor: Themes.colors.on_primary
 
 		Layout.alignment: Qt.AlignVCenter
 
@@ -125,19 +125,19 @@ Scope {
 			width: 20
 			height: 20
 			radius: 10
-			color: Colors.colors.primary
+			color: Themes.colors.primary
 			visible: root.pam.unlockInProgress
 			opacity: visible ? 1 : 0
 
 			SequentialAnimation on color {
 				ColAnim {
-					to: Colors.colors.primary
+					to: Themes.colors.primary
 				}
 				ColAnim {
-					to: Colors.colors.secondary
+					to: Themes.colors.secondary
 				}
 				ColAnim {
-					to: Colors.colors.tertiary
+					to: Themes.colors.tertiary
 				}
 				loops: Animation.Infinite
 			}

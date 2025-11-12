@@ -20,10 +20,10 @@ TextField {
 	verticalAlignment: TextInput.AlignVCenter
 	leftPadding: 16
 	rightPadding: 16
-	color: Colors.colors.on_surface
+	color: Themes.colors.on_surface
 
 	placeholderText: "Enter password"
-	placeholderTextColor: Colors.colors.on_surface_variant
+	placeholderTextColor: Themes.colors.on_surface_variant
 
 	background: Rectangle {
 		anchors.fill: parent
@@ -32,11 +32,11 @@ TextField {
 
 		border.color: {
 			if (!passwordInput.enabled)
-				return Colors.withAlpha(Colors.colors.outline, 0.38);
+				return Themes.withAlpha(Themes.colors.outline, 0.38);
 			else if (passwordInput.activeFocus)
-				return Colors.colors.primary;
+				return Themes.colors.primary;
 			else
-				return Colors.colors.outline;
+				return Themes.colors.outline;
 		}
 		border.width: passwordInput.activeFocus ? 2 : 1
 
@@ -47,7 +47,7 @@ TextField {
 				if (!passwordInput.enabled)
 					return "transparent";
 				else if (passwordInput.activeFocus)
-					return Colors.withAlpha(Colors.colors.primary, 0.08);
+					return Themes.withAlpha(Themes.colors.primary, 0.08);
 				else
 					return "transparent";
 			}
@@ -75,8 +75,8 @@ TextField {
 		}
 	}
 
-	selectionColor: Colors.withAlpha(Colors.colors.primary, 0.24)
-	selectedTextColor: Colors.colors.on_surface
+	selectionColor: Themes.withAlpha(Themes.colors.primary, 0.24)
+	selectedTextColor: Themes.colors.on_surface
 
 	onAccepted: okButton.clicked()
 }

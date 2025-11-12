@@ -19,7 +19,7 @@ Scope {
 			title: "Authentication Required"
 			visible: polkitAgent.isActive
 			implicitHeight: contentColumn.implicitHeight + 48
-			color: Colors.colors.surface_container_high
+			color: Themes.colors.surface_container_high
 
 			ColumnLayout {
 				id: contentColumn
@@ -33,7 +33,7 @@ Scope {
 					Layout.preferredHeight: 64
 					Layout.topMargin: 8
 					radius: Appearance.rounding.full
-					color: Colors.withAlpha(Colors.colors.primary, 0.12)
+					color: Themes.withAlpha(Themes.colors.primary, 0.12)
 
 					IconImage {
 						id: appIcon
@@ -53,7 +53,7 @@ Scope {
 					horizontalAlignment: Text.AlignHCenter
 					font.pixelSize: Appearance.fonts.extraLarge
 					font.weight: Font.Bold
-					color: Colors.colors.on_surface
+					color: Themes.colors.on_surface
 				}
 
 				StyledLabel {
@@ -64,7 +64,7 @@ Scope {
 					horizontalAlignment: Text.AlignHCenter
 					font.pixelSize: Appearance.fonts.large
 					font.weight: Font.Normal
-					color: Colors.colors.on_surface
+					color: Themes.colors.on_surface
 				}
 
 				StyledLabel {
@@ -74,7 +74,7 @@ Scope {
 					horizontalAlignment: Text.AlignHCenter
 					font.pixelSize: Appearance.fonts.medium
 					font.weight: Font.Normal
-					color: Colors.colors.on_surface_variant
+					color: Themes.colors.on_surface_variant
 					lineHeight: 1.4
 				}
 
@@ -85,7 +85,7 @@ Scope {
 					wrapMode: Text.Wrap
 					font.pixelSize: Appearance.fonts.medium
 					font.weight: Font.Medium
-					color: Colors.colors.on_surface_variant
+					color: Themes.colors.on_surface_variant
 				}
 
 				InputField {
@@ -96,7 +96,7 @@ Scope {
 				StyledLabel {
 					Layout.fillWidth: true
 					text: "Authentication failed. Please try again."
-					color: Colors.colors.error
+					color: Themes.colors.error
 					visible: polkitAgent.flow?.failed || 0
 					font.pixelSize: 12
 					font.weight: Font.Medium
@@ -130,10 +130,10 @@ Scope {
 
 					StyledButton {
 						buttonTitle: "Cancel"
-						buttonTextColor: Colors.colors.primary
+						buttonTextColor: Themes.colors.primary
 						buttonColor: "transparent"
-						buttonHoverColor: Colors.withAlpha(Colors.colors.primary, 0.08)
-						buttonPressedColor: Colors.withAlpha(Colors.colors.primary, 0.12)
+						buttonHoverColor: Themes.withAlpha(Themes.colors.primary, 0.08)
+						buttonPressedColor: Themes.withAlpha(Themes.colors.primary, 0.12)
 						Layout.preferredHeight: 40
 						visible: polkitAgent.isActive
 
