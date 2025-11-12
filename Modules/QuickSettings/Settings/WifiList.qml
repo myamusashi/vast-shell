@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -31,15 +33,15 @@ Loader {
 					spacing: Appearance.spacing.normal
 
 					Item {
-						width: iconBack.width
-						height: iconBack.height
+						implicitWidth: iconBack.width
+						implicitHeight: iconBack.height
 
 						MatIcon {
 							id: iconBack
 
 							anchors.centerIn: parent
 							icon: "arrow_back"
-							color: mIconBackArea.containsPressed ? Colors.withAlpha(Colors.colors.on_background, 0.1) : mIconBackArea.containsMouse ? Colors.withAlpha(Colors.colors.on_background, 0.08) : Colors.colors.on_background
+							color: mIconBackArea.containsPress ? Colors.withAlpha(Colors.colors.on_background, 0.1) : mIconBackArea.containsMouse ? Colors.withAlpha(Colors.colors.on_background, 0.08) : Colors.colors.on_background
 							font.pixelSize: Appearance.fonts.extraLarge
 						}
 
@@ -67,8 +69,8 @@ Loader {
 					}
 
 					Item {
-						width: wifiToggle.width
-						height: wifiToggle.height
+						implicitWidth: wifiToggle.width
+						implicitHeight: wifiToggle.height
 
 						StyledSwitch {
 							id: wifiToggle
@@ -81,15 +83,15 @@ Loader {
 					}
 
 					Item {
-						width: iconRefresh.width
-						height: iconRefresh.height
+						implicitWidth: iconRefresh.width
+						implicitHeight: iconRefresh.height
 
 						MatIcon {
 							id: iconRefresh
 
 							anchors.centerIn: parent
 							icon: "refresh"
-							color: mRefreshArea.containsPressed ? Colors.withAlpha(Colors.colors.on_background, 0.1) : mRefreshArea.containsMouse ? Colors.withAlpha(Colors.colors.on_background, 0.08) : Colors.colors.on_background
+							color: mRefreshArea.containsPress ? Colors.withAlpha(Colors.colors.on_background, 0.1) : mRefreshArea.containsMouse ? Colors.withAlpha(Colors.colors.on_background, 0.08) : Colors.colors.on_background
 							font.pixelSize: Appearance.fonts.extraLarge
 							opacity: NetworkManager.wifiEnabled ? 1.0 : 0.5
 
@@ -121,7 +123,7 @@ Loader {
 				StyledRect {
 					Layout.fillWidth: true
 					color: Colors.colors.outline
-					height: 1
+					implicitHeight: 1
 				}
 
 				StyledRect {
@@ -139,13 +141,13 @@ Loader {
 						spacing: Appearance.spacing.normal
 
 						MatIcon {
-							icon: NetworkManager.active ? getWiFiIcon(NetworkManager.active.strength) : "wifi_off"
+							icon: NetworkManager.active ? root.getWiFiIcon(NetworkManager.active.strength) : "wifi_off"
 							color: Colors.colors.primary
 							font.pixelSize: Appearance.fonts.extraLarge
 						}
 
 						ColumnLayout {
-							spacing: Appearnce.spacing.small
+							spacing: Appearance.spacing.small
 
 							StyledLabel {
 								text: NetworkManager.active ? NetworkManager.active.ssid : "Not connected"
@@ -162,16 +164,16 @@ Loader {
 						}
 
 						Item {
-							anchors.right: parent.right
-							width: disconnectBtn.width
-							height: disconnectBtn.height
+							Layout.alignment: Qt.AlignRight
+							implicitWidth: disconnectBtn.width
+							implicitHeight: disconnectBtn.height
 
 							MatIcon {
 								id: disconnectBtn
 								
 								anchors.centerIn: parent
 								icon: "close"
-								color: disconnectArea.containsPressed ? Colors.withAlpha(Colors.colors.error, 0.1) : disconnectArea.containsMouse ? Colors.withAlpha(Colors.colors.error, 0.8) : Colors.colors.on_surface_variant
+								color: disconnectArea.containsPress ? Colors.withAlpha(Colors.colors.error, 0.1) : disconnectArea.containsMouse ? Colors.withAlpha(Colors.colors.error, 0.8) : Colors.colors.on_surface_variant
 								font.pixelSize: Appearance.fonts.large * 1.5
 							}
 
@@ -239,7 +241,7 @@ Loader {
 						id: networkListView
 
 						model: NetworkManager.networks
-						spacing: Appearnce.spacing.small
+						spacing: Appearance.spacing.small
 
 						delegate: StyledRect {
 							id: delegateWifi
@@ -249,7 +251,7 @@ Loader {
 
 							width: ListView.view.width
 							implicitHeight: networkLayout.implicitHeight + 20
-							color: mouseArea.containsPressed ? Colors.withAlpha(Colors.colors.primary, 0.12) : mouseArea.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : modelData.active ? Colors.withAlpha(Colors.colors.primary, 0.08) : Colors.colors.surface_container
+							color: mouseArea.containsPress ? Colors.withAlpha(Colors.colors.primary, 0.12) : mouseArea.containsMouse ? Colors.withAlpha(Colors.colors.on_surface, 0.08) : modelData.active ? Colors.withAlpha(Colors.colors.primary, 0.08) : Colors.colors.surface_container
 							radius: Appearance.rounding.normal
 
 							RowLayout {
@@ -260,8 +262,8 @@ Loader {
 								spacing: Appearance.spacing.normal
 
 								MatIcon {
-									icon: getWiFiIcon(modelData.strength)
-									color: modelData.active ? Colors.colors.primary : Colors.colors.on_surface
+									icon: root.getWiFiIcon(delegateWifi.modelData.strength)
+									color: delegateWifi.modelData.active ? Colors.colors.primary : Colors.colors.on_surface
 									font.pixelSize: Appearance.fonts.extraLarge
 								}
 
@@ -273,30 +275,30 @@ Loader {
 										spacing: 6
 
 										StyledLabel {
-											text: modelData.ssid || "(Hidden Network)"
+											text: delegateWifi.modelData.ssid || "(Hidden Network)"
 											color: Colors.colors.on_background
 											font.pixelSize: Appearance.fonts.medium
-											font.bold: modelData.active
+											font.bold: delegateWifi.modelData.active
 										}
 
 										MatIcon {
 											icon: "lock"
 											color: Colors.colors.on_surface_variant
 											font.pixelSize: Appearance.fonts.small
-											visible: modelData.isSecure
+											visible: delegateWifi.modelData.isSecure
 										}
 									}
 
 									StyledLabel {
 										text: {
 											let details = [];
-											if (modelData.active) {
+											if (delegateWifi.modelData.active) {
 												details.push("Connected");
 											}
-											if (modelData.security && modelData.security !== "--") {
-												details.push(modelData.security);
+											if (delegateWifi.modelData.security && delegateWifi.modelData.security !== "--") {
+												details.push(delegateWifi.modelData.security);
 											}
-											details.push(modelData.frequency + " MHz");
+											details.push(delegateWifi.modelData.frequency + " MHz");
 											return details.join(" • ");
 										}
 										color: Colors.colors.on_surface_variant
@@ -305,7 +307,7 @@ Loader {
 								}
 
 								StyledLabel {
-									text: modelData.strength + "%"
+									text: delegateWifi.modelData.strength + "%"
 									color: Colors.colors.on_surface_variant
 									font.pixelSize: Appearance.fonts.small
 								}
@@ -314,7 +316,7 @@ Loader {
 									icon: "chevron_right"
 									color: Colors.colors.on_surface_variant
 									font.pixelSize: Appearance.fonts.medium
-									visible: !modelData.active
+									visible: !delegateWifi.modelData.active
 								}
 							}
 
@@ -325,8 +327,8 @@ Loader {
 								hoverEnabled: true
 								cursorShape: Qt.PointingHandCursor
 								onClicked: {
-									if (!modelData.active) {
-										NetworkManager.connectToNetwork(modelData.ssid, "");
+									if (!delegateWifi.modelData.active) {
+										NetworkManager.connectToNetwork(delegateWifi.modelData.ssid, "");
 									}
 								}
 							}
