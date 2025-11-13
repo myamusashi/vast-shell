@@ -14,16 +14,12 @@ import qs.Helpers
 RowLayout {
 	id: root
 
-	property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-
 	StyledRect {
 		id: workspaceBar
 
 		Layout.preferredWidth: workspaceRow.width + 20
 		implicitHeight: 25
-		// border.color: Themes.colors.on_background
-		// radius: Appearance.rounding.small
-		color: workspaceMBarArea.containsPress ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : workspaceMBarArea.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.16) : Themes.withAlpha(Themes.colors.on_surface, 0.20)
+		color: workspaceMBarArea.containsPress ? Themes.withAlpha(Themes.colors.surface_container_highest, 0.08) : workspaceMBarArea.containsMouse ? Themes.withAlpha(Themes.colors.surface_container_highest, 0.1) : Themes.colors.surface_container
 
 		MouseArea {
 			id: workspaceMBarArea
@@ -44,12 +40,12 @@ RowLayout {
 			id: workspaceRow
 
 			anchors.centerIn: parent
-			spacing: 15
+			spacing: Appearance.spacing.small
 
 			Repeater {
 				model: Workspaces.maxWorkspace || 1
 
-				Item {
+				delegate: Item {
 					id: wsItem
 
 					required property int index
@@ -90,12 +86,11 @@ RowLayout {
 							model: iconGrid.workspace?.toplevels
 							delegate: IconImage {
 								required property HyprlandToplevel modelData
-								property Toplevel waylandHandle: modelData?.wayland
+								readonly property Toplevel waylandHandle: modelData?.wayland
 								source: Quickshell.iconPath(DesktopEntries.heuristicLookup(waylandHandle?.appId)?.icon, "image-missing")
 								Layout.preferredWidth: 16
 								Layout.preferredHeight: 16
 								backer.cache: true
-
 								backer.asynchronous: true
 							}
 						}

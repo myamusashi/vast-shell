@@ -48,30 +48,9 @@ Loader {
 				color: Themes.colors.on_background
 			}
 
-			ColumnLayout {
-				StyledText {
-					text: Player.active === null ? "null" : Player.active.trackArtist
-					color: Themes.colors.on_background
-				}
-
-				StyledSlide {
-					id: barSlider
-
-					value: Player.active.length > 0 ? Player.active.position / Player.active.length : 0
-
-					dotEnd: false
-					valueWidth: parent.width
-					valueHeight: 5
-
-					Timer {
-						running: Player.active.playbackState == MprisPlaybackState.Playing
-						repeat: true
-						onTriggered: Player.active.positionChanged()
-					}
-
-					Layout.preferredWidth: parent.width
-					Layout.preferredHeight: 5
-				}
+			StyledText {
+				text: Player.active === null ? "null" : Player.active.trackArtist
+				color: Themes.colors.on_background
 			}
 		}
 

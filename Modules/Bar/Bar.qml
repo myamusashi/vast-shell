@@ -37,11 +37,11 @@ Scope {
 			implicitHeight: 40
 			exclusiveZone: 1
 			surfaceFormat.opaque: false
-			margins.top: 2
-
-			margins.left: 2
-
-			margins.right: 2
+			margins {
+				top: 2
+				left: 2
+				right: 2
+			}
 			visible: root.isBarOpen
 
 			Loader {
@@ -56,7 +56,6 @@ Scope {
 					color: Themes.colors.background
 					radius: Appearance.rounding.large
 					anchors.fill: parent
-
 					anchors.margins: 4
 
 					RowLayout {

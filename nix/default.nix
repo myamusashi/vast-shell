@@ -77,6 +77,7 @@
     hyprland
     systemd
     app2unit
+	kdePackages.qtgraphs
   ];
 in rec {
   inherit runtimeDeps;

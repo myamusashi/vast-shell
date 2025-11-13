@@ -46,7 +46,7 @@ Scope {
 				id: container
 
 				anchors.fill: parent
-				color: Themes.colors.surface_container_high
+				color: Themes.colors.surface
 
 				ColumnLayout {
 					anchors.fill: parent
@@ -54,12 +54,14 @@ Scope {
 
 					StyledRect {
 						Layout.fillWidth: true
-						Layout.preferredHeight: 60
+						implicitHeight: header.height + 30
 						Layout.margins: 5
 						Layout.alignment: Qt.AlignTop
-						color: Themes.colors.surface_container
+						color: "transparent"
 
 						RowLayout {
+							id: header
+
 							anchors.fill: parent
 							anchors.margins: 10
 
@@ -115,6 +117,12 @@ Scope {
 								}
 							}
 						}
+					}
+
+					StyledRect {
+						color: Themes.colors.outline_variant
+						Layout.fillWidth: true
+						height: 1
 					}
 
 					StyledRect {

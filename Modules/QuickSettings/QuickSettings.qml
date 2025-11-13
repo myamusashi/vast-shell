@@ -49,9 +49,7 @@ Scope {
 			exclusiveZone: 1
 			color: "transparent"
 
-			margins {
-				right: (monitorWidth - implicitWidth) / 5.5
-			}
+			margins.right: (monitorWidth - implicitWidth) / 5.5
 
 			ColumnLayout {
 				anchors.fill: parent
@@ -59,6 +57,7 @@ Scope {
 
 				TabRows {
 					id: tabBar
+
 					state: scope.state
 					scaleFactor: root.scaleFactor
 
@@ -66,6 +65,12 @@ Scope {
 						scope.state = index;
 						controlCenterStackView.currentItem.viewIndex = index;
 					}
+				}
+
+				StyledRect {
+					Layout.fillWidth: true
+					height: 1
+					color: Themes.colors.outline_variant
 				}
 
 				StackView {
@@ -77,7 +82,6 @@ Scope {
 					property Component viewComponent: contentView
 
 					initialItem: viewComponent
-
 					onCurrentItemChanged: {
 						if (currentItem)
 							currentItem.viewIndex = scope.state;
@@ -87,8 +91,9 @@ Scope {
 						id: contentView
 
 						StyledRect {
-							color: Themes.colors.surface_container
-
+							color: Themes.colors.surface
+							topLeftRadius: 5
+							topRightRadius: 5
 							property int viewIndex: 0
 
 							Loader {

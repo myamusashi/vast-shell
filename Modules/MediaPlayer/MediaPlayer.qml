@@ -60,10 +60,10 @@ Scope {
 			property real monitorHeight: monitor.height / monitor.scale
 			implicitWidth: monitorWidth * 0.25
 			implicitHeight: container.implicitHeight
-			exclusiveZone: 1
+			exclusiveZone: 0
 
 			margins.right: (monitorWidth - implicitWidth) / 2
-			margins.left: (monitorWidth - implicitWidth) / 2
+
 			color: "transparent"
 
 			StyledRect {
@@ -71,7 +71,7 @@ Scope {
 
 				implicitWidth: parent.width
 				implicitHeight: contentLayout.implicitHeight + 15
-				color: Themes.colors.surface_container_high
+				color: Themes.colors.surface_container
 				radius: Appearance.rounding.normal
 
 				RowLayout {
@@ -87,7 +87,7 @@ Scope {
 						color: "transparent"
 
 						Loader {
-							active: true
+							active: root.isMediaPlayerOpen
 							anchors.centerIn: parent
 							width: 120
 							height: 120
@@ -129,7 +129,7 @@ Scope {
 									visible: Player.active === null
 									asynchronous: true
 									cache: false
-									source: "root:/Assets/kuru.gif"
+									source: Player.active === null ? "root:/Assets/kuru.gif" : ""
 								}
 
 								Item {
@@ -172,7 +172,7 @@ Scope {
 								Layout.preferredWidth: 50
 
 								StyledText {
-									width: parent.width
+									Layout.preferredWidth: width
 									text: Player.active ? Player.active.trackArtist : ""
 									color: Themes.colors.on_background
 									font.pixelSize: Appearance.fonts.small
@@ -181,7 +181,7 @@ Scope {
 								}
 
 								StyledText {
-									text: "•"
+									text: Player.active ? "•" : ""
 									color: Themes.colors.on_background
 									font.pixelSize: Appearance.fonts.extraLarge
 								}
@@ -195,8 +195,8 @@ Scope {
 								IconImage {
 									source: Quickshell.iconPath(Player.active.desktopEntry)
 									asynchronous: true
-									width: 20
-									height: 20
+									implicitWidth: 20
+									implicitHeight: 20
 
 									MouseArea {
 										anchors.fill: parent
@@ -265,30 +265,12 @@ Scope {
 						RowLayout {
 							Layout.fillWidth: true
 							Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-							spacing: 10
+							spacing: Appearance.spacing.normal
 
-							MatIcon {
-								id: prevButton
-
-								icon: "skip_previous"
-								color: {
-									if (prevMouseArea.pressed)
-										return Themes.withAlpha(Themes.colors.primary, 0.08);
-									else if (prevMouseArea.containsMouse)
-										return Themes.withAlpha(Themes.colors.primary, 0.12);
-									else
-										return Themes.colors.primary;
-								}
-								font.pixelSize: Appearance.fonts.large * 1.8
-
-								MouseArea {
-									id: prevMouseArea
-
-									anchors.fill: parent
-									hoverEnabled: true
-									cursorShape: Qt.PointingHandCursor
-									onClicked: Player.active ? Player.active.previous() : {}
-								}
+							StyledButton {
+								iconButton: "skip_previous"
+								iconSize: 10
+								onClicked: Player.active ? Player.active.previous() : {}
 							}
 
 							StyledSlide {
@@ -309,28 +291,10 @@ Scope {
 								onMoved: Player.active ? Player.active.position = value * Player.active.length : {}
 							}
 
-							MatIcon {
-								id: nextButton
-
-								icon: "skip_next"
-								color: {
-									if (nextMouseArea.pressed)
-										return Themes.withAlpha(Themes.colors.primary, 0.08);
-									else if (nextMouseArea.containsMouse)
-										return Themes.withAlpha(Themes.colors.primary, 0.12);
-									else
-										return Themes.colors.primary;
-								}
-								font.pixelSize: Appearance.fonts.large * 1.8
-
-								MouseArea {
-									id: nextMouseArea
-
-									anchors.fill: parent
-									hoverEnabled: true
-									cursorShape: Qt.PointingHandCursor
-									onClicked: Player.active ? Player.active.next() : {}
-								}
+							StyledButton {
+								iconButton: "skip_next"
+								iconSize: 10
+								onClicked: Player.active ? Player.active.next() : {}
 							}
 						}
 					}

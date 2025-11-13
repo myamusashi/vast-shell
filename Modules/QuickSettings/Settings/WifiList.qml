@@ -22,7 +22,8 @@ Loader {
 
 		StyledRect {
 			anchors.fill: parent
-			color: Themes.colors.surface_container
+			radius: 0
+			color: Themes.colors.surface
 
 			ColumnLayout {
 				anchors.fill: parent
@@ -52,9 +53,7 @@ Loader {
 							anchors.fill: parent
 							hoverEnabled: true
 							cursorShape: Qt.PointingHandCursor
-							onClicked: {
-								loader.active = false;
-							}
+							onClicked: loader.active = false
 						}
 					}
 
@@ -77,9 +76,7 @@ Loader {
 							id: wifiToggle
 
 							checked: NetworkManager.wifiEnabled
-							onToggled: {
-								NetworkManager.toggleWifi();
-							}
+							onToggled: NetworkManager.toggleWifi()
 						}
 					}
 
@@ -136,7 +133,7 @@ Loader {
 
 					RowLayout {
 						id: currentNetLayout
-						
+
 						anchors.fill: parent
 						anchors.margins: 10
 						spacing: Appearance.spacing.normal
@@ -171,7 +168,7 @@ Loader {
 
 							MatIcon {
 								id: disconnectBtn
-								
+
 								anchors.centerIn: parent
 								icon: "close"
 								color: disconnectArea.containsPress ? Themes.withAlpha(Themes.colors.error, 0.1) : disconnectArea.containsMouse ? Themes.withAlpha(Themes.colors.error, 0.8) : Themes.colors.on_surface_variant
@@ -180,7 +177,7 @@ Loader {
 
 							MouseArea {
 								id: disconnectArea
-								
+
 								anchors.fill: parent
 								hoverEnabled: true
 								cursorShape: Qt.PointingHandCursor
@@ -198,6 +195,10 @@ Loader {
 					font.pixelSize: Appearance.fonts.normal
 					font.bold: true
 					visible: NetworkManager.wifiEnabled
+				}
+
+				Progress {
+					condition: NetworkManager.scanning
 				}
 
 				Item {
@@ -246,18 +247,18 @@ Loader {
 
 						delegate: StyledRect {
 							id: delegateWifi
-							
+
 							required property var modelData
 							required property int index
 
 							width: ListView.view.width
 							implicitHeight: networkLayout.implicitHeight + 20
-							color: mouseArea.containsPress ? Themes.withAlpha(Themes.colors.primary, 0.12) : mouseArea.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : modelData.active ? Themes.withAlpha(Themes.colors.primary, 0.08) : Themes.colors.surface_container
+							color: mouseArea.containsPress ? Themes.withAlpha(Themes.colors.surface_container, 0.12) : mouseArea.containsMouse ? Themes.withAlpha(Themes.colors.surface_container, 0.08) : modelData.active ? Themes.withAlpha(Themes.colors.surface_container, 0.08) : Themes.colors.surface_container
 							radius: Appearance.rounding.normal
 
 							RowLayout {
 								id: networkLayout
-								
+
 								anchors.fill: parent
 								anchors.margins: 10
 								spacing: Appearance.spacing.normal
@@ -270,10 +271,10 @@ Loader {
 
 								ColumnLayout {
 									Layout.fillWidth: true
-									spacing: 2
+									spacing: Appearance.spacing.small
 
 									RowLayout {
-										spacing: 6
+										spacing: Appearance.spacing.smaller
 
 										StyledLabel {
 											text: delegateWifi.modelData.ssid || "(Hidden Network)"
@@ -323,7 +324,7 @@ Loader {
 
 							MouseArea {
 								id: mouseArea
-								
+
 								anchors.fill: parent
 								hoverEnabled: true
 								cursorShape: Qt.PointingHandCursor

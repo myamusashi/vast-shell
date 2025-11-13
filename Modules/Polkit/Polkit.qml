@@ -132,8 +132,6 @@ Scope {
 						buttonTitle: "Cancel"
 						buttonTextColor: Themes.colors.primary
 						buttonColor: "transparent"
-						buttonHoverColor: Themes.withAlpha(Themes.colors.primary, 0.08)
-						buttonPressedColor: Themes.withAlpha(Themes.colors.primary, 0.12)
 						Layout.preferredHeight: 40
 						visible: polkitAgent.isActive
 

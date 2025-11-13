@@ -17,9 +17,12 @@ StyledRect {
 
 	Layout.fillWidth: true
 	Layout.preferredHeight: 60
-	color: Themes.colors.surface_container
+	bottomLeftRadius: 5
+	bottomRightRadius: 5
+	color: Themes.colors.surface
 
 	RowLayout {
+		id: tabLayout
 		anchors.centerIn: parent
 		spacing: 15
 		width: parent.width * 0.95
@@ -58,33 +61,60 @@ StyledRect {
 
 				buttonTitle: modelData.title
 				Layout.fillWidth: true
+				buttonColor: "transparent"
 				highlighted: root.state === modelData.index
 				flat: root.state !== modelData.index
 				onClicked: root.tabClicked(settingButton.index)
 
-				background: Rectangle {
-					color: root.state === settingButton.index ? Themes.colors.primary : Themes.colors.surface_container
-					radius: Appearance.rounding.small
-				}
-
 				contentItem: RowLayout {
+					id: content
+
 					anchors.centerIn: parent
 					spacing: Appearance.spacing.small
 
 					MatIcon {
 						icon: settingButton.modelData.icon
-						color: root.state === settingButton.index ? Themes.colors.on_primary : Themes.colors.on_surface_variant
+						color: root.state === settingButton.index ? Themes.colors.primary : Themes.colors.on_surface_variant
 						font.pixelSize: Appearance.fonts.large * root.scaleFactor + 10
 					}
 
 					StyledText {
 						text: settingButton.modelData.title
-						color: root.state === settingButton.index ? Themes.colors.on_primary : Themes.colors.on_surface_variant
+						color: root.state === settingButton.index ? Themes.colors.primary : Themes.colors.on_surface_variant
 						font.pixelSize: Appearance.fonts.large * root.scaleFactor
 						elide: Text.ElideRight
 					}
 				}
 			}
 		}
+	}
+
+	StyledRect {
+		id: indicator
+
+		anchors.bottom: tabLayout.bottom
+		width: tabRepeater.itemAt(root.state) ? tabRepeater.itemAt(root.state).width : 0
+		height: 2
+		color: Themes.colors.primary
+		radius: Appearance.rounding.large
+
+		x: {
+			if (tabRepeater.itemAt(root.state)) {
+				return tabRepeater.itemAt(root.state).x + tabLayout.x;
+			}
+			return 0;
+		}
+
+		Behavior on x {
+			NumbAnim {}
+		}
+
+		Behavior on width {
+			NumbAnim {}
+		}
+	}
+
+	Component.onCompleted: {
+		indicator.x = tabRepeater.itemAt(root.state) ? tabRepeater.itemAt(root.state).x + tabLayout.x : 0;
 	}
 }
