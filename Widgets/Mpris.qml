@@ -10,64 +10,61 @@ import qs.Components
 import qs.Modules.MediaPlayer
 
 Loader {
-	active: true
-	asynchronous: true
+    active: true
+    asynchronous: true
 
-	Layout.alignment: Qt.AlignCenter
+    Layout.alignment: Qt.AlignCenter
 
-	sourceComponent: StyledRect {
-		id: root
+    sourceComponent: StyledRect {
+        id: root
 
-		anchors.centerIn: parent
+        anchors.centerIn: parent
 
-		color: "transparent"
+        color: "transparent"
 
-		readonly property int index: 0
-		property bool playerControlShow: false
+        readonly property int index: 0
+        property bool playerControlShow: false
 
-		function formatTime(seconds) {
-			const hours = Math.floor(seconds / 3600);
-			const minutes = Math.floor((seconds % 3600) / 60);
-			const secs = Math.floor(seconds % 60);
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
 
-			if (hours > 0)
-				return hours + ":" + minutes.toString().padStart(2, '0') + ":" + secs.toString().padStart(2,
-																										  '0');
+            if (hours > 0)
+                return hours + ":" + minutes.toString().padStart(2, '0') + ":" + secs.toString().padStart(2, '0');
 
+            return minutes + ":" + secs.toString().padStart(2, '0');
+        }
 
-			return minutes + ":" + secs.toString().padStart(2, '0');
-		}
+        RowLayout {
+            id: mediaInfo
 
-		RowLayout {
-			id: mediaInfo
+            anchors.centerIn: parent
+            spacing: Appearance.spacing.small
 
-			anchors.centerIn: parent
-			spacing: Appearance.spacing.small
+            MatIcon {
+                icon: Player.active === null ? "question_mark" : Player.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
+                font.pixelSize: Appearance.fonts.medium * 1.8
+                color: Themes.colors.on_background
+            }
 
-			MatIcon {
-				icon: Player.active === null ? "question_mark" : Player.active.playbackState
-											   === MprisPlaybackState.Playing ? "genres" : "play_circle"
-				font.pixelSize: Appearance.fonts.medium * 1.8
-				color: Themes.colors.on_background
-			}
+            StyledText {
+                text: Player.active === null ? "null" : Player.active.trackArtist
+                color: Themes.colors.on_background
+            }
+        }
 
-			StyledText {
-				text: Player.active === null ? "null" : Player.active.trackArtist
-				color: Themes.colors.on_background
-			}
-		}
+        MArea {
+            anchors.fill: mediaInfo
 
-		MArea {
-			anchors.fill: mediaInfo
+            cursorShape: Qt.PointingHandCursor
+            hoverEnabled: true
 
-			cursorShape: Qt.PointingHandCursor
-			hoverEnabled: true
+            onClicked: root.playerControlShow = !root.playerControlShow
+        }
 
-			onClicked: root.playerControlShow = !root.playerControlShow
-		}
-
-		MediaPlayer {
-			isMediaPlayerOpen: root.playerControlShow
-		}
-	}
+        MediaPlayer {
+            isMediaPlayerOpen: root.playerControlShow
+        }
+    }
 }

@@ -7,43 +7,43 @@ import qs.Components
 import qs.Modules.Calendar
 
 StyledRect {
-	Layout.fillHeight: true
-	color: "transparent"
-	// color: Themes.colors.withAlpha(Themes.colors.background, 0.79)
-	implicitWidth: timeContainer.width + 15
-	radius: Appearance.rounding.small
+    Layout.fillHeight: true
+    color: "transparent"
+    // color: Themes.colors.withAlpha(Themes.colors.background, 0.79)
+    implicitWidth: timeContainer.width + 15
+    radius: Appearance.rounding.small
 
-	Dots {
-		id: timeContainer
+    Dots {
+        id: timeContainer
 
-		MatIcon {
-			id: icon
+        MatIcon {
+            id: icon
 
-			color: Themes.colors.on_background
-			font.bold: true
-			font.pixelSize: Appearance.fonts.large * 1.2
-			icon: "schedule"
-		}
+            color: Themes.colors.on_background
+            font.bold: true
+            font.pixelSize: Appearance.fonts.large * 1.2
+            icon: "schedule"
+        }
 
-		StyledText {
-			id: text
+        StyledText {
+            id: text
 
-			color: Themes.colors.on_background
-			font.bold: true
-			font.pixelSize: Appearance.fonts.medium
-			text: Qt.formatDateTime(Time?.date, "h:mm AP")
-		}
-	}
-	MArea {
-		id: mArea
+            color: Themes.colors.on_background
+            font.bold: true
+            font.pixelSize: Appearance.fonts.medium
+            text: Qt.formatDateTime(Time?.date, "h:mm AP")
+        }
+    }
+    MArea {
+        id: mArea
 
-		anchors.fill: timeContainer
-		hoverEnabled: true
-		cursorShape: Qt.PointingHandCursor
-		onClicked: cal.isCalendarShow = !cal.isCalendarShow
-	}
+        anchors.fill: timeContainer
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: cal.isCalendarShow = !cal.isCalendarShow
+    }
 
-	Calendar {
-		id: cal
-	}
+    Calendar {
+        id: cal
+    }
 }

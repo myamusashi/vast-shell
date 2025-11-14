@@ -6,46 +6,46 @@ import Quickshell.Wayland
 import Quickshell.Services.Pam
 
 Scope {
-	id: root
+    id: root
 
-	required property WlSessionLock lock
+    required property WlSessionLock lock
 
-	property string currentText: ""
-	property bool showFailure: false
-	property bool unlockInProgress: false
-	property bool unlocking: false
+    property string currentText: ""
+    property bool showFailure: false
+    property bool unlockInProgress: false
+    property bool unlocking: false
 
-	onCurrentTextChanged: showFailure = false
+    onCurrentTextChanged: showFailure = false
 
-	function tryUnlock() {
-		if (currentText === "")
-			return;
+    function tryUnlock() {
+        if (currentText === "")
+            return;
 
-		unlockInProgress = true;
-		pam.start();
-	}
+        unlockInProgress = true;
+        pam.start();
+    }
 
-	PamContext {
-		id: pam
+    PamContext {
+        id: pam
 
-		config: "password.conf"
-		configDirectory: "root:/Assets/pam.d"
+        config: "password.conf"
+        configDirectory: "root:/Assets/pam.d"
 
-		onPamMessage: {
-			if (this.responseRequired) {
-				this.respond(root.currentText);
-			}
-		}
+        onPamMessage: {
+            if (this.responseRequired) {
+                this.respond(root.currentText);
+            }
+        }
 
-		onCompleted: result => {
-			if (result === PamResult.Success) {
-				root.lock.unlock();
-			} else {
-				root.currentText = "";
-				root.showFailure = true;
-			}
+        onCompleted: result => {
+            if (result === PamResult.Success) {
+                root.lock.unlock();
+            } else {
+                root.currentText = "";
+                root.showFailure = true;
+            }
 
-			root.unlockInProgress = false;
-		}
-	}
+            root.unlockInProgress = false;
+        }
+    }
 }

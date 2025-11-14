@@ -9,57 +9,57 @@ import qs.Helpers
 import qs.Components
 
 StyledRect {
-	id: root
+    id: root
 
-	property string icon: Audio.getIcon(root.node)
-	property PwNode node: Pipewire.defaultAudioSink
+    property string icon: Audio.getIcon(root.node)
+    property PwNode node: Pipewire.defaultAudioSink
 
-	Layout.fillHeight: true
-	// color: Themes.colors.withAlpha(Themes.colors.background, 0.79)
-	color: "transparent"
-	implicitWidth: container.width
-	radius: 5
+    Layout.fillHeight: true
+    // color: Themes.colors.withAlpha(Themes.colors.background, 0.79)
+    color: "transparent"
+    implicitWidth: container.width
+    radius: 5
 
-	Behavior on implicitWidth {
-		NumbAnim {}
-	}
+    Behavior on implicitWidth {
+        NumbAnim {}
+    }
 
-	PwObjectTracker {
-		objects: [root.node]
-	}
+    PwObjectTracker {
+        objects: [root.node]
+    }
 
-	Dots {
-		id: container
+    Dots {
+        id: container
 
-		spacing: 5
+        spacing: 5
 
-		MatIcon {
-			color: Themes.colors.on_background
-			icon: root.icon
-			Layout.alignment: Qt.AlignVCenter
-			font.pixelSize: Appearance.fonts.large * 1.2
-			font.variableAxes: {
-				"FILL": 10
-			}
-		}
+        MatIcon {
+            color: Themes.colors.on_background
+            icon: root.icon
+            Layout.alignment: Qt.AlignVCenter
+            font.pixelSize: Appearance.fonts.large * 1.2
+            font.variableAxes: {
+                "FILL": 10
+            }
+        }
 
-		StyledText {
-			color: Themes.colors.on_background
-			text: (root.node.audio.volume * 100).toFixed(0) + "%"
-			Layout.alignment: Qt.AlignVCenter
-			font.pixelSize: Appearance.fonts.medium
-		}
-	}
+        StyledText {
+            color: Themes.colors.on_background
+            text: (root.node.audio.volume * 100).toFixed(0) + "%"
+            Layout.alignment: Qt.AlignVCenter
+            font.pixelSize: Appearance.fonts.medium
+        }
+    }
 
-	MArea {
-		acceptedButtons: Qt.MiddleButton | Qt.LeftButton
-		anchors.fill: parent
+    MArea {
+        acceptedButtons: Qt.MiddleButton | Qt.LeftButton
+        anchors.fill: parent
 
-		onClicked: mevent => {
-			if (mevent.button === Qt.MiddleButton)
-			Audio.toggleMute(root.node);
-		}
+        onClicked: mevent => {
+            if (mevent.button === Qt.MiddleButton)
+                Audio.toggleMute(root.node);
+        }
 
-		onWheel: mevent => Audio.wheelAction(mevent, root.node)
-	}
+        onWheel: mevent => Audio.wheelAction(mevent, root.node)
+    }
 }
