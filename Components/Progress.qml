@@ -33,14 +33,14 @@ StyledRect {
 
 			NumbAnim {
 				from: 0
-				to: parent.width - loadingBar.width
+				to: root.width - loadingBar.width
 				duration: 300
 				easing.amplitude: 1.0
 				easing.period: 0.5
 				easing.type: Easing.OutBounce
 			}
 			NumbAnim {
-				from: parent.width - loadingBar.width
+				from: root.width - loadingBar.width
 				to: 0
 				duration: 300
 				easing.amplitude: 1.0

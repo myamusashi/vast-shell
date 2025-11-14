@@ -6,71 +6,71 @@ import qs.Data
 import qs.Components
 
 PopupWindow {
-	id: root
+    id: root
 
-	property bool opened: false
-	property int animationDuration: 200
-	property alias margins: background.margin
-	property alias backgroundColor: background.color
-	property alias radius: background.radius
-	required property Component content
+    property bool opened: false
+    property int animationDuration: 200
+    property alias margins: background.margin
+    property alias backgroundColor: background.color
+    property alias radius: background.radius
+    required property Component content
 
-	color: "transparent"
+    color: "transparent"
 
-	implicitWidth: background.width
-	implicitHeight: background.height
+    implicitWidth: background.width
+    implicitHeight: background.height
 
-	function toggle() {
-		background.state = background.state == "opened" ? "closed" : "opened";
-	}
+    function toggle() {
+        background.state = background.state == "opened" ? "closed" : "opened";
+    }
 
-	WrapperRectangle {
-		id: background
+    WrapperRectangle {
+        id: background
 
-		color: Themes.colors.background
+        color: Themes.colors.background
 
-		opacity: 0
-		Behavior on opacity {
-			NumbAnim {
-				duration: root.animationDuration
-			}
-		}
+        opacity: 0
+        Behavior on opacity {
+            NumbAnim {
+                duration: root.animationDuration
+            }
+        }
 
-		states: State {
-			name: "opened"
-			when: root.opened
-			PropertyChanges {
-				background {
-					opacity: 1
-				}
-			}
-		}
+        states: State {
+            name: "opened"
+            when: root.opened
+            PropertyChanges {
+                background {
+                    opacity: 1
+                }
+            }
+        }
 
-		transitions: [
-			Transition {
-				from: ""
-				to: "opened"
-				ScriptAction {
-					script: root.visible = true
-				}
-			},
-			Transition {
-				from: "opened"
-				to: ""
-				SequentialAnimation {
-					PauseAnimation {
-						duration: root.animationDuration
-					}
-					ScriptAction {
-						script: root.visible = false
-					}
-				}
-			}
-		]
+        transitions: [
+            Transition {
+                from: ""
+                to: "opened"
+                ScriptAction {
+                    script: root.visible = true
+                }
+            },
+            Transition {
+                from: "opened"
+                to: ""
+                SequentialAnimation {
+                    PauseAnimation {
+                        duration: root.animationDuration
+                    }
+                    ScriptAction {
+                        script: root.visible = false
+                    }
+                }
+            }
+        ]
 
-		Loader {
-			active: root.visible
-			sourceComponent: root.content
-		}
-	}
+        Loader {
+            active: root.visible
+            sourceComponent: root.content
+        }
+    }
 }
