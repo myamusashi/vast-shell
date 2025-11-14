@@ -1,24 +1,30 @@
 import QtQuick
+import QtQuick.Layouts
+import Quickshell
 import Quickshell.Services.UPower
 
 import qs.Data
+import qs.Helpers
 import qs.Components
 
 Item {
-    id: root
+	id: root
 
-    readonly property bool batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
-    readonly property real batPercentage: UPower.displayDevice.percentage
-    readonly property real batFill: (batteryBody.width - 4) * (batPercentage / 100.0)
-    readonly property real chargeFill: (batteryBody.width - 4) * (chargeFillIndex / 100.0)
-    property int chargeFillIndex: 0
-    property int widthBattery: 26
-    property int heightBattery: 12
+	readonly property bool batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
+	readonly property real batPercentage: UPower.displayDevice.percentage
+	readonly property list<int> batFill: [(batteryBody.width - 4) * 1.0, (batteryBody.width - 4) * 0.9, (
+			batteryBody.width - 4) * 0.8, (batteryBody.width - 4) * 0.7, (batteryBody.width - 4) * 0.6, (
+			batteryBody.width - 4) * 0.5, (batteryBody.width - 4) * 0.4, (batteryBody.width - 4) * 0.3, (
+			batteryBody.width - 4) * 0.2, (batteryBody.width - 4) * 0.1, (batteryBody.width - 4) * 0]
+	readonly property real chargeFill: batFill[10 - chargeFillIndex]
+	property int chargeFillIndex: 0
+	property int widthBattery: 26
+	property int heightBattery: 12
 
-    width: widthBattery + 4
-    height: heightBattery
+	width: widthBattery + 4
+	height: heightBattery
 
-    StyledRect {
+	StyledRect {
         id: batteryBody
 
         width: root.widthBattery
@@ -79,13 +85,13 @@ Item {
         bottomRightRadius: 1
     }
 
-    Timer {
-        interval: 600
-        repeat: true
-        running: root.batCharging
-        triggeredOnStart: true
-        onTriggered: {
-            root.chargeFillIndex = (root.chargeFillIndex % 10) + 1;
-        }
-    }
+	Timer {
+		interval: 600
+		repeat: true
+		running: root.batCharging
+		triggeredOnStart: true
+		onTriggered: {
+			root.chargeFillIndex = (root.chargeFillIndex % 10) + 1;
+		}
+	}
 }
