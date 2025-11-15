@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
 import qs.Data
+import qs.Helpers
 import qs.Components
 
 ColumnLayout {
@@ -12,23 +13,21 @@ ColumnLayout {
 
     required property bool useCustomProperties
     property Component customProperty
-    required property PwNode node
+	required property PwNode node
+	property string icon: Audio.getIcon(node)
 
     PwObjectTracker {
         objects: [root.node]
     }
 
-    RowLayout {
-        Image {
-            visible: source !== ""
-            source: {
-                const icon = root.node.properties["application.icon-name"]
-                ?? "audio-volume-high-symbolic"
-                return `image://icon/${icon}`
-            }
-
-            sourceSize.width: 20
-            sourceSize.height: 20
+	RowLayout {
+		Layout.alignment: Qt.AlignLeft
+		MatIcon {
+			Layout.alignment: Qt.AlignLeft
+            visible: icon !== ""
+			icon: root.icon
+			color: Themes.colors.on_surface
+			font.pixelSize: Appearance.fonts.extraLarge
         }
 
         Loader {

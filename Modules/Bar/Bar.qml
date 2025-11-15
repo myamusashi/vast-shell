@@ -2,9 +2,11 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import Quickshell.Widgets
 import Quickshell.Wayland
 
 import qs.Data
@@ -21,6 +23,7 @@ Scope {
             id: bar
 
             required property ShellScreen modelData
+            property real cornerRadius: 12
 
             anchors {
                 left: true
@@ -30,31 +33,29 @@ Scope {
             color: "transparent"
             WlrLayershell.namespace: "shell:bar"
             screen: modelData
-            exclusionMode: ExclusionMode.Auto
+            exclusionMode: ExclusionMode.Ignore
             focusable: false
-
             implicitHeight: 40
-            exclusiveZone: 1
+            exclusiveZone: -1
             surfaceFormat.opaque: false
-            margins {
-                top: 2
-                left: 2
-                right: 2
-            }
             visible: root.isBarOpen
 
-            Loader {
-                active: root.isBarOpen
-                asynchronous: true
+			Cornery {
+				visible: bar.visible
+				exclusiveZone: -1
+				barColor: Themes.colors.background
+                exclusionMode: ExclusionMode.Ignore
+            }
+
+            Item {
                 anchors.fill: parent
 
-                sourceComponent: StyledRect {
+                StyledRect {
                     id: base
 
-                    color: Themes.colors.background
-                    radius: Appearance.rounding.large
+                    color: "transparent"
                     anchors.fill: parent
-                    anchors.margins: 3
+                    radius: 0
 
                     RowLayout {
                         width: parent.width
@@ -63,19 +64,16 @@ Scope {
                             rightMargin: 5
                         }
                         anchors.fill: parent
-
                         Left {
                             Layout.fillHeight: true
                             Layout.preferredWidth: parent.width / 6
                             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                         }
-
                         Middle {
                             Layout.fillHeight: true
                             Layout.preferredWidth: parent.width / 6
                             Layout.alignment: Qt.AlignCenter
                         }
-
                         Right {
                             Layout.fillHeight: true
                             Layout.preferredWidth: parent.width / 6
@@ -86,11 +84,11 @@ Scope {
             }
         }
     }
+
     IpcHandler {
         target: "layerShell"
-
         function toggle(): void {
-            root.isBarOpen = !root.isBarOpen
+            root.isBarOpen = !root.isBarOpen;
         }
     }
 }
