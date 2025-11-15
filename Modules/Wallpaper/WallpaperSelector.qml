@@ -180,17 +180,6 @@ Scope {
                                     radius: Appearance.rounding.small
                                     border.width: wallpaperGrid.currentIndex === delegateItem.index ? 3 : 1
                                     border.color: wallpaperGrid.currentIndex === delegateItem.index ? Themes.colors.primary : Themes.colors.outline_variant
-
-                                    Behavior on border.width {
-                                        NumbAnim {
-                                            duration: 200
-                                        }
-                                    }
-                                    Behavior on border.color {
-                                        ColorAnimation {
-                                            duration: 200
-                                        }
-                                    }
                                 }
 
                                 MArea {

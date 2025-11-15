@@ -122,7 +122,7 @@ Scope {
                             case Qt.Key_Return:
                             case Qt.Key_Tab:
                             case Qt.Key_Enter:
-                                listView.focus = true;
+                                gridView.focus = true;
                                 event.accepted = true;
                                 break;
                             case Qt.Key_Escape:
@@ -130,72 +130,59 @@ Scope {
                                 event.accepted = true;
                                 break;
                             case Qt.Key_Down:
-                                listView.focus = true;
+                                gridView.focus = true;
                                 event.accepted = true;
                                 break;
                             }
                         }
                     }
 
-                    ListView {
-                        id: listView
+                    GridView {
+                        id: gridView
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        Layout.preferredHeight: 400
 
                         model: ScriptModel {
                             values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name")
                         }
 
-                        keyNavigationWraps: false
-                        currentIndex: root.currentIndex
-                        maximumFlickVelocity: 3000
-                        orientation: Qt.Vertical
+                        cellWidth: 100
+                        cellHeight: 120
                         clip: true
 
-                        boundsBehavior: Flickable.DragAndOvershootBounds
-                        flickDeceleration: 1500
-
-                        Behavior on currentIndex {
-                            NumbAnim {}
-                        }
-
-                        onModelChanged: {
-                            if (root.currentIndex >= model.values.length)
-                                root.currentIndex = Math.max(0, model.values.length - 1);
-                        }
-
                         delegate: ItemDelegate {
-                            id: entryDelegate
+                            id: delegateItem
+
                             required property DesktopEntry modelData
                             required property int index
 
-                            width: listView.width
-                            height: 60
+                            width: gridView.cellWidth
+                            height: gridView.cellHeight
 
-                            highlighted: ListView.isCurrentItem
+                            contentItem: ColumnLayout {
+                                StyledRect {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    Layout.preferredWidth: 56
+                                    Layout.preferredHeight: 56
 
-                            onClicked: {
-                                root.isLauncherOpen = false;
-                                root.launch(modelData);
-                            }
+                                    color: "transparent"
+                                    border.width: gridView.currentIndex === delegateItem.index ? 3 : 1
+                                    border.color: gridView.currentIndex === delegateItem.index ? Themes.colors.primary : Themes.colors.outline_variant
 
-                            Keys.onPressed: kevent => {
-                                switch (kevent.key) {
-                                case Qt.Key_Escape:
-                                    root.isLauncherOpen = false;
-                                    break;
-                                case Qt.Key_Enter:
-                                case Qt.Key_Return:
-                                    root.launch(modelData);
-                                    root.isLauncherOpen = false;
-                                    break;
-                                case Qt.Key_Up:
-                                    if (index === 0)
-                                        search.focus = true;
+                                    IconImage {
+                                        anchors.centerIn: parent
+                                        width: 48
+                                        height: 48
+                                        source: Quickshell.iconPath(delegateItem.modelData.icon) || ""
+                                    }
+                                }
 
-                                    break;
+                                StyledText {
+                                    Layout.fillWidth: true
+                                    text: delegateItem.modelData.name || "a"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    elide: Text.ElideRight
                                 }
                             }
 
@@ -204,49 +191,27 @@ Scope {
                                 cursorShape: Qt.PointingHandCursor
                                 hoverEnabled: true
 
-                                onClicked: root.launch()
+                                onClicked: root.launch(delegateItem.modelData)
                                 onEntered: search.focus = true
                             }
 
-                            contentItem: RowLayout {
-                                spacing: Appearance.spacing.normal
-
-                                IconImage {
-                                    Layout.preferredWidth: 40
-                                    Layout.preferredHeight: 40
-                                    source: Quickshell.iconPath(entryDelegate.modelData.icon) || ""
+                            Keys.onPressed: function (event) {
+                                switch (event.key) {
+                                case Qt.Key_Return:
+                                case Qt.Key_Tab:
+                                case Qt.Key_Enter:
+                                    gridView.focus = true;
+                                    event.accepted = true;
+                                    break;
+                                case Qt.Key_Escape:
+                                    root.isLauncherOpen = false;
+                                    event.accepted = true;
+                                    break;
+                                case Qt.Key_Down:
+                                    gridView.focus = true;
+                                    event.accepted = true;
+                                    break;
                                 }
-
-                                StyledText {
-                                    Layout.fillWidth: true
-                                    text: entryDelegate.modelData.name || ""
-                                    font.pixelSize: Appearance.fonts.normal
-                                    color: Themes.colors.on_background
-                                    elide: Text.ElideRight
-                                }
-                            }
-
-                            background: StyledRect {
-                                color: entryDelegate.highlighted ? Themes.withAlpha(Themes.colors.on_surface, 0.1) : "transparent"
-                                radius: Appearance.rounding.normal
-                            }
-                        }
-
-                        highlightFollowsCurrentItem: true
-                        highlightResizeDuration: Appearance.animations.durations.small
-                        highlightMoveDuration: Appearance.animations.durations.small
-                        highlight: StyledRect {
-                            color: Themes.colors.primary
-                            radius: Appearance.rounding.normal
-                            opacity: 0.06
-
-                            scale: 0.95
-                            Behavior on scale {
-                                NumbAnim {}
-                            }
-
-                            Component.onCompleted: {
-                                scale = 1.0;
                             }
                         }
                     }
