@@ -72,7 +72,7 @@ Scope {
 
                 implicitWidth: parent.width
                 implicitHeight: contentLayout.implicitHeight + 15
-                color: Themes.colors.surface_container
+                color: Themes.colors.surface
                 radius: Appearance.rounding.normal
 
                 RowLayout {
@@ -101,7 +101,6 @@ Scope {
                                     anchors.fill: parent
                                     source: Player.active
                                             && Player.active.trackArtUrl !== "" ? Player.active.trackArtUrl : "root:/Assets/kuru.gif"
-
                                     fillMode: Image.PreserveAspectCrop
                                     visible: Player.active !== null
                                     opacity: 0.5

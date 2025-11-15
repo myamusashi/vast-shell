@@ -13,21 +13,21 @@ ColumnLayout {
 
     required property bool useCustomProperties
     property Component customProperty
-	required property PwNode node
-	property string icon: Audio.getIcon(node)
+    required property PwNode node
+    property string icon: Audio.getIcon(node)
 
     PwObjectTracker {
         objects: [root.node]
     }
 
-	RowLayout {
-		Layout.alignment: Qt.AlignLeft
-		MatIcon {
-			Layout.alignment: Qt.AlignLeft
+    RowLayout {
+        Layout.alignment: Qt.AlignLeft
+        MatIcon {
+            Layout.alignment: Qt.AlignLeft
             visible: icon !== ""
-			icon: root.icon
-			color: Themes.colors.on_surface
-			font.pixelSize: Appearance.fonts.extraLarge
+            icon: root.icon
+            color: Themes.colors.on_surface
+            font.pixelSize: Appearance.fonts.extraLarge
         }
 
         Loader {

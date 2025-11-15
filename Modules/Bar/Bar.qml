@@ -40,10 +40,10 @@ Scope {
             surfaceFormat.opaque: false
             visible: root.isBarOpen
 
-			Cornery {
-				visible: bar.visible
-				exclusiveZone: -1
-				barColor: Themes.colors.background
+            Cornery {
+                visible: bar.visible
+                exclusiveZone: -1
+                barColor: Themes.colors.background
                 exclusionMode: ExclusionMode.Ignore
             }
 
@@ -88,7 +88,7 @@ Scope {
     IpcHandler {
         target: "layerShell"
         function toggle(): void {
-            root.isBarOpen = !root.isBarOpen;
+            root.isBarOpen = !root.isBarOpen
         }
     }
 }
