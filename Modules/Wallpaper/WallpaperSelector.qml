@@ -31,14 +31,13 @@ Scope {
 
     property var filteredWallpaperList: {
         if (debouncedSearchQuery === "")
-        return wallpaperList
+            return wallpaperList;
 
-        const query = debouncedSearchQuery.toLowerCase()
+        const query = debouncedSearchQuery.toLowerCase();
         return wallpaperList.filter(path => {
-                                        const fileName = path.split('/').pop(
-                                            ).toLowerCase()
-                                        return fileName.includes(query)
-                                    })
+            const fileName = path.split('/').pop().toLowerCase();
+            return fileName.includes(query);
+        });
     }
 
     Process {
@@ -49,9 +48,8 @@ Scope {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const wallList = text.trim().split('\n').filter(
-                    path => path.length > 0)
-                scope.wallpaperList = wallList
+                const wallList = text.trim().split('\n').filter(path => path.length > 0);
+                scope.wallpaperList = wallList;
             }
         }
     }
@@ -62,10 +60,10 @@ Scope {
         active: scope.isWallpaperSwitcherOpen
         onActiveChanged: {
             if (!active) {
-                scope.searchQuery = ""
-                scope.debouncedSearchQuery = ""
+                scope.searchQuery = "";
+                scope.debouncedSearchQuery = "";
 
-                cleanupTimer.start()
+                cleanupTimer.start();
             }
         }
 
@@ -82,8 +80,8 @@ Scope {
             property real monitorWidth: monitor.width / monitor.scale
             property real monitorHeight: monitor.height / monitor.scale
 
-            implicitWidth: monitorWidth * 0.8
-            implicitHeight: monitorHeight * 0.35
+            implicitWidth: monitorWidth * 0.5
+            implicitHeight: monitorHeight * 0.5
             margins.bottom: monitorHeight * 0.05
             exclusiveZone: 0
             WlrLayershell.layer: WlrLayer.Overlay
@@ -113,201 +111,119 @@ Scope {
                         focus: true
 
                         onTextChanged: {
-                            scope.searchQuery = text
-                            searchDebounceTimer.restart()
+                            scope.searchQuery = text;
+                            searchDebounceTimer.restart();
 
-                            if (pathView.count > 0)
-                            pathView.currentIndex = 0
+                            if (wallpaperGrid.count > 0)
+                                wallpaperGrid.currentIndex = 0;
                         }
 
                         background: StyledRect {
-                            color: Themes.withAlpha(
-                                       Themes.colors.surface_container_high,
-                                       0.12)
+                            color: Themes.withAlpha(Themes.colors.surface_container_high, 0.12)
                             radius: Appearance.rounding.normal
                             border.color: searchField.activeFocus ? Themes.colors.primary : Themes.colors.outline_variant
                             border.width: searchField.activeFocus ? 2 : 1
                         }
 
-                        Keys.onDownPressed: pathView.focus = true
+                        Keys.onDownPressed: wallpaperGrid.focus = true
                         Keys.onEscapePressed: scope.isWallpaperSwitcherOpen = false
                     }
 
-                    PathView {
-                        id: pathView
+                    GridView {
+                        id: wallpaperGrid
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
                         model: scope.filteredWallpaperList
-                        clip: true
 
-                        pathItemCount: Math.min(
-                                           7,
-                                           scope.filteredWallpaperList.length)
-                        cacheItemCount: 7
+                        cellWidth: width / 3
+                        cellHeight: height / 3
+
+                        clip: true
+                        cacheBuffer: 0
 
                         Component.onCompleted: {
-                            const currentIndex = scope.wallpaperList.indexOf(
-                                Paths.currentWallpaper)
-                            if (currentIndex !== -1)
-                            pathView.currentIndex = currentIndex
+                            const idx = scope.wallpaperList.indexOf(Paths.currentWallpaper);
+                            currentIndex = idx !== -1 ? idx : 0;
                         }
 
                         delegate: Item {
                             id: delegateItem
 
-                            width: pathView.height * 0.7
-                            height: pathView.height * 0.85
+                            width: wallpaperGrid.cellWidth
+                            height: wallpaperGrid.cellHeight
 
                             required property var modelData
                             required property int index
-                            property bool isCurrentItem: PathView.isCurrentItem
 
-                            // Linear scaling based on position
-                            scale: isCurrentItem ? 1.0 : 0.75
-                            opacity: isCurrentItem ? 1.0 : 0.6
-
-                            Behavior on scale {
-                                NumbAnim {
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
-
-                            Behavior on opacity {
-                                NumbAnim {
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
-
-                            Behavior on y {
-                                NumbAnim {
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
-
-                            StyledRect {
+                            Rectangle {
                                 anchors.fill: parent
+                                anchors.margins: 4
                                 color: "transparent"
-                                radius: Appearance.rounding.normal
-                                border.color: delegateItem.isCurrentItem ? searchField.focus ? Themes.withAlpha(Themes.colors.primary, 0.4) : Themes.colors.primary : mArea.containsPress ? Themes.colors.secondary : Themes.colors.outline_variant
-                                border.width: delegateItem.isCurrentItem ? 3 : 1
 
-                                ColumnLayout {
+                                Image {
                                     anchors.fill: parent
-                                    anchors.margins: 4
-                                    spacing: Appearance.spacing.small
+                                    source: "file://" + delegateItem.modelData
+                                    fillMode: Image.PreserveAspectCrop
+                                    asynchronous: true
+                                    smooth: true
+                                    cache: true
 
-                                    Item {
-                                        Layout.fillWidth: true
-                                        Layout.fillHeight: true
+                                    layer.enabled: true
+                                    layer.smooth: true
+                                }
 
-                                        Image {
-                                            id: previewImage
+                                StyledRect {
+                                    anchors.fill: parent
+                                    color: wallpaperGrid.currentIndex === delegateItem.index ? "transparent" : Themes.withAlpha(Themes.colors.surface, 0.7)
+                                    radius: Appearance.rounding.small
+                                    border.width: wallpaperGrid.currentIndex === delegateItem.index ? 3 : 1
+                                    border.color: wallpaperGrid.currentIndex === delegateItem.index ? Themes.colors.primary : Themes.colors.outline_variant
 
-                                            anchors.fill: parent
-                                            source: "file://" + delegateItem.modelData
-
-                                            sourceSize.width: 150
-                                            sourceSize.height: 150
-
-                                            fillMode: Image.PreserveAspectCrop
-                                            asynchronous: true
-                                            smooth: true
-                                            cache: true
-                                            mipmap: true
-                                        }
-
-                                        MArea {
-                                            id: mArea
-
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                pathView.currentIndex = delegateItem.index
-                                                Quickshell.execDetached({
-                                                                            "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                                                                        })
-                                            }
+                                    Behavior on border.width {
+                                        NumbAnim {
+                                            duration: 200
                                         }
                                     }
+                                    Behavior on border.color {
+                                        ColorAnimation {
+                                            duration: 200
+                                        }
+                                    }
+                                }
 
-                                    StyledLabel {
-                                        Layout.fillWidth: true
-                                        Layout.preferredHeight: 20
-                                        Layout.margins: 4
-                                        text: delegateItem.modelData.split(
-                                                  '/').pop()
-                                        color: "white"
-                                        elide: Text.ElideMiddle
-                                        font.pixelSize: Appearance.fonts.small
-                                        style: Text.Outline
-                                        styleColor: "black"
-                                        horizontalAlignment: Text.AlignHCenter
+                                MArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+
+                                    onClicked: {
+                                        wallpaperGrid.currentIndex = delegateItem.index;
+                                        Quickshell.execDetached({
+                                            command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                                        });
                                     }
                                 }
                             }
                         }
-
-                        path: Path {
-                            startX: 0
-                            startY: pathView.height / 2
-
-                            PathAttribute {
-                                name: "z"
-                                value: 0
-                            }
-
-                            PathLine {
-                                x: pathView.width / 2
-                                y: pathView.height / 2
-                            }
-
-                            PathAttribute {
-                                name: "z"
-                                value: 10
-                            }
-
-                            PathLine {
-                                x: pathView.width
-                                y: pathView.height / 2
-                            }
-
-                            PathAttribute {
-                                name: "z"
-                                value: 0
-                            }
-                        }
-
-                        preferredHighlightBegin: 0.5
-                        preferredHighlightEnd: 0.5
 
                         Keys.onPressed: event => {
-                            if (event.key === Qt.Key_Return
-                                || event.key === Qt.Key_Enter) {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                 Quickshell.execDetached({
-                                                            "command": ["sh", "-c", `shell ipc call img set ${model[currentIndex]}`]
-                                                        })
+                                    command: ["sh", "-c", `shell ipc call img set ${scope.filteredWallpaperList[currentIndex]}`]
+                                });
                             }
-
                             if (event.key === Qt.Key_Escape)
-                            scope.isWallpaperSwitcherOpen = false
-
-                            if (event.key === Qt.Key_Left)
-                            decrementCurrentIndex()
-
-                            if (event.key === Qt.Key_Right)
-                            incrementCurrentIndex()
-
+                                scope.isWallpaperSwitcherOpen = false;
                             if (event.key === Qt.Key_Tab)
-                            searchField.focus = true
+                                searchField.focus = true;
                         }
                     }
 
                     StyledLabel {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.bottomMargin: Appearance.spacing.small
-                        text: pathView.count > 0 ? (pathView.currentIndex + 1)
-                                                   + " / " + pathView.count : "0 / 0"
+                        text: wallpaperGrid.count > 0 ? (wallpaperGrid.currentIndex + 1) + " / " + wallpaperGrid.count : "0 / 0"
                         color: Themes.colors.on_surface
                         font.pixelSize: Appearance.fonts.small
                     }
@@ -322,7 +238,7 @@ Scope {
         interval: 500
         repeat: false
         onTriggered: {
-            gc()
+            gc();
         }
     }
 }

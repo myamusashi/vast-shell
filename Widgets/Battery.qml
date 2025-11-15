@@ -29,9 +29,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         border {
             width: 2
-            color: root.batPercentage <= 0.2
-                   && !root.batCharging ? Themes.colors.error : Themes.withAlpha(
-                                              Themes.colors.outline, 0.5)
+            color: root.batPercentage <= 0.2 && !root.batCharging ? Themes.colors.error : Themes.withAlpha(Themes.colors.outline, 0.5)
         }
         color: "transparent"
         radius: 6
@@ -42,17 +40,15 @@ Item {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            width: root.batCharging ? (parent.width - 4) * (root.chargeFillIndex
-                                                            / 100.0) : (parent.width - 4)
-                                      * root.batPercentage
+            width: root.batCharging ? (parent.width - 4) * (root.chargeFillIndex / 100.0) : (parent.width - 4) * root.batPercentage
             color: {
                 if (root.batCharging)
-                    return Themes.colors.green
+                    return Themes.colors.green;
                 if (root.batPercentage <= 0.2)
-                    return Themes.colors.red
+                    return Themes.colors.red;
                 if (root.batPercentage <= 0.5)
-                    return Themes.colors.yellow
-                return Themes.colors.on_surface
+                    return Themes.colors.yellow;
+                return Themes.colors.on_surface;
             }
             radius: parent.radius
 
@@ -79,9 +75,7 @@ Item {
         anchors.left: batteryBody.right
         anchors.leftMargin: 0.5
         anchors.verticalCenter: parent.verticalCenter
-        color: root.batPercentage <= 0.2
-               && !root.batCharging ? Themes.colors.error : Themes.withAlpha(
-                                          Themes.colors.outline, 0.5)
+        color: root.batPercentage <= 0.2 && !root.batCharging ? Themes.colors.error : Themes.withAlpha(Themes.colors.outline, 0.5)
         topRightRadius: 1
         bottomRightRadius: 1
     }
@@ -149,7 +143,7 @@ Item {
         }
 
         onStopped: {
-            root.chargeFillIndex = 0
+            root.chargeFillIndex = 0;
         }
     }
 }

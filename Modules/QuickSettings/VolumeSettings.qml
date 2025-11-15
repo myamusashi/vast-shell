@@ -64,12 +64,11 @@ ScrollView {
                     implicitWidth: 350
                     currentIndex: {
                         for (var i = 0; i < AudioProfiles.models.length; i++) {
-                            if (AudioProfiles.models[i].index
-                                === AudioProfiles.activeProfileIndex) {
-                                return i
+                            if (AudioProfiles.models[i].index === AudioProfiles.activeProfileIndex) {
+                                return i;
                             }
                         }
-                        return -1
+                        return -1;
                     }
                     height: contentItem.implicitHeight * 2
 
@@ -85,8 +84,7 @@ ScrollView {
                     background: Rectangle {
                         implicitWidth: 350
                         radius: 4
-                        color: Themes.withAlpha(
-                                   Themes.colors.surface_container, 0.9)
+                        color: Themes.withAlpha(Themes.colors.surface_container, 0.9)
 
                         Rectangle {
                             x: 12
@@ -120,8 +118,7 @@ ScrollView {
 
                         contentItem: StyledText {
                             text: itemDelegate.modelData.readable
-                            color: itemDelegate.modelData.available
-                                   !== "yes" ? Themes.colors.outline_variant : Themes.colors.on_background
+                            color: itemDelegate.modelData.available !== "yes" ? Themes.colors.outline_variant : Themes.colors.on_background
                             verticalAlignment: Text.AlignVCenter
                             elide: Text.ElideRight
                         }
@@ -131,8 +128,7 @@ ScrollView {
 
                     indicator: Item {
                         x: profilesComboBox.width - width - 12
-                        y: profilesComboBox.topPadding
-                           + (profilesComboBox.availableHeight - height) / 2
+                        y: profilesComboBox.topPadding + (profilesComboBox.availableHeight - height) / 2
                         width: 24
                         height: 24
 
@@ -147,20 +143,20 @@ ScrollView {
                             Connections {
                                 target: profilesComboBox
                                 function onPressedChanged() {
-                                    canvas.requestPaint()
+                                    canvas.requestPaint();
                                 }
                             }
 
                             Component.onCompleted: requestPaint()
 
                             onPaint: {
-                                context.reset()
-                                context.moveTo(0, 0)
-                                context.lineTo(width, 0)
-                                context.lineTo(width / 2, height)
-                                context.closePath()
-                                context.fillStyle = Themes.colors.on_background
-                                context.fill()
+                                context.reset();
+                                context.moveTo(0, 0);
+                                context.lineTo(width, 0);
+                                context.lineTo(width / 2, height);
+                                context.closePath();
+                                context.fillStyle = Themes.colors.on_background;
+                                context.fill();
                             }
                         }
 
@@ -200,8 +196,7 @@ ScrollView {
                                 contentItem: StyledRect {
                                     implicitWidth: 4
                                     radius: Appearance.rounding.small
-                                    color: Themes.withAlpha(
-                                               Themes.colors.primary, 0.1)
+                                    color: Themes.withAlpha(Themes.colors.primary, 0.1)
                                 }
                             }
                         }
@@ -234,13 +229,12 @@ ScrollView {
                     }
 
                     onActivated: index => {
-                        const profile = AudioProfiles.models[index]
+                        const profile = AudioProfiles.models[index];
                         if (profile && profile.available === "yes") {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", `pw-cli set-param
-                                                            ${AudioProfiles.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
-                                                    })
-                            AudioProfiles.activeProfileIndex = profile.index
+                                command: ["sh", "-c", `pw-cli set-param ${AudioProfiles.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
+                            });
+                            AudioProfiles.activeProfileIndex = profile.index;
                         }
                     }
                 }

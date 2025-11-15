@@ -35,11 +35,23 @@ Scope {
         }
     }
 
+    Timer {
+        id: cleanup
+
+        interval: 500
+        repeat: false
+        onTriggered: {
+            gc();
+        }
+    }
+
     LazyLoader {
         id: lazyloader
 
         active: false
-
+        onActiveChanged: {
+            cleanup.start();
+        }
         component: PanelWindow {
             id: root
 
@@ -208,9 +220,9 @@ Scope {
                                 Drag.hotSpot.x: width / 2
                                 Drag.hotSpot.y: height / 2
                                 Drag.onActiveChanged: {
-                                    if (Drag.active) {
+                                    if (Drag.active)
                                         parent = visualParent;
-                                    } else {
+                                    else {
                                         var mapped = mapToItem(originalParent, 0, 0);
                                         parent = originalParent;
 
@@ -243,9 +255,7 @@ Scope {
                                     acceptedButtons: Qt.LeftButton | Qt.RightButton
                                     anchors.fill: parent
 
-                                    onPressed: {
-                                        dragged = false;
-                                    }
+                                    onPressed: dragged = false
 
                                     onPositionChanged: {
                                         if (drag.active)
@@ -267,9 +277,7 @@ Scope {
                                             const x = Math.round(mapped.x / scope.scaleFactor + root.reserved[0]);
                                             const y = Math.round(mapped.y / scope.scaleFactor + root.reserved[1]);
 
-                                            Hyprland.dispatch(`movewindowpixel exact ${x} ${y}, address:0x
-
-                                                ${toplevel.modelData.address}`);
+                                            Hyprland.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
                                             toplevel.Drag.drop();
                                         }
                                     }

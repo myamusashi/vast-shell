@@ -17,8 +17,7 @@ MouseArea {
     hoverEnabled: true
 
     onContainsMouseChanged: layer.opacity = (area.containsMouse) ? area.hoverOpacity : 0
-    onContainsPressChanged: layer.opacity
-                            = (area.containsPress) ? area.clickOpacity : area.hoverOpacity
+    onContainsPressChanged: layer.opacity = (area.containsPress) ? area.clickOpacity : area.hoverOpacity
 
     StyledRect {
         id: layer

@@ -7,7 +7,6 @@ import qs.Modules.Wallpaper
 import qs.Modules.Session
 import qs.Modules.Launcher
 import qs.Modules.Notifications
-// import qs.Modules.BigClock
 import qs.Modules.OSD
 import qs.Modules.Overview
 import qs.Modules.Polkit
@@ -36,7 +35,6 @@ ShellRoot {
         id: screencapture
     }
     Notifications {}
-    // Clock {}
     OSD {}
     Overview {}
 
@@ -74,6 +72,6 @@ ShellRoot {
 
     GlobalShortcut {
         name: "screencapture"
-        onPressed: screencapture.isScreencaptureOpen = !screencapture.isScreencaptureOpen
+        onPressed: screencapture.isOpen = !screencapture.isOpen
     }
 }

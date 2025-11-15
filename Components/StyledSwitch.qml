@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 
@@ -6,8 +8,11 @@ import qs.Helpers
 
 Switch {
     id: root
+    property bool isUseIcon: true
+    property string onIcon: "check"
+    property string offIcon: "close"
 
-    indicator: Rectangle {
+    indicator: StyledRect {
         implicitWidth: 52
         implicitHeight: 32
         x: root.leftPadding
@@ -15,24 +20,14 @@ Switch {
         radius: Appearance.rounding.full
         color: root.checked ? Themes.colors.primary : Themes.colors.surface_container_highest
         border.width: 2
-        border.color: Themes.colors.outline
+        border.color: root.checked ? "transparent" : Themes.colors.outline
 
-        Behavior on color {
-            ColorAnimation {
-                duration: 200
-                easing.type: Easing.OutCubic
-            }
-        }
-
-        Rectangle {
+        StyledRect {
             id: handle
-
-            readonly property int margin: 5
+            readonly property int margin: 4
             readonly property bool isActive: root.down || root.checked
-
-            readonly property int targetX: root.checked ? parent.width - targetWidth
-                                                          - margin : margin
-            readonly property int targetWidth: isActive ? 24 : 16
+            readonly property int targetX: root.checked ? parent.width - targetWidth - margin : margin
+            readonly property int targetWidth: isActive ? 28 : 16
             readonly property int targetHeight: root.down ? 28 : (root.checked ? 24 : 16)
 
             x: targetX
@@ -42,47 +37,32 @@ Switch {
             radius: Appearance.rounding.full
             color: isActive ? Themes.colors.on_primary : Themes.colors.outline
 
-            ParallelAnimation {
-                id: handleAnimation
-                running: false
-
+            Behavior on x {
                 NumbAnim {
-                    target: handle
-                    property: "x"
-                    to: handle.targetX
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
                     duration: Appearance.animations.durations.small
                 }
+            }
+            Behavior on height {
                 NumbAnim {
-                    target: handle
-                    property: "width"
-                    to: handle.targetWidth
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
                     duration: Appearance.animations.durations.small
                 }
+            }
+            Behavior on width {
                 NumbAnim {
-                    target: handle
-                    property: "height"
-                    to: handle.targetHeight
-                    duration: Appearance.animations.durations.small
-                }
-                ColAnim {
-                    target: handle
-                    property: "color"
-                    to: handle.isActive ? Themes.colors.on_primary : Themes.colors.outline
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
                     duration: Appearance.animations.durations.small
                 }
             }
 
-            onTargetXChanged: handleAnimation.restart()
-            onTargetWidthChanged: handleAnimation.restart()
-            onTargetHeightChanged: handleAnimation.restart()
-
             Loader {
-                active: root.checked
+                active: root.isUseIcon
                 anchors.centerIn: parent
                 asynchronous: true
                 sourceComponent: MatIcon {
-                    icon: "check"
-                    color: Themes.colors.on_background
+                    icon: root.checked ? root.onIcon : root.offIcon
+                    color: root.checked ? Themes.colors.on_primary_container : Themes.colors.surface_container_highest
                     font.pixelSize: Appearance.fonts.large
                 }
             }

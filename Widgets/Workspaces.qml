@@ -19,9 +19,7 @@ RowLayout {
 
         Layout.preferredWidth: workspaceRow.width + 20
         implicitHeight: 25
-        color: workspaceMBarArea.containsPress ? Themes.withAlpha(
-                                                     Themes.colors.surface_container_highest,
-                                                     0.08) : workspaceMBarArea.containsMouse ? Themes.withAlpha(Themes.colors.surface_container_highest, 0.1) : Themes.colors.surface_container
+        color: workspaceMBarArea.containsPress ? Themes.withAlpha(Themes.colors.surface_container_highest, 0.08) : workspaceMBarArea.containsMouse ? Themes.withAlpha(Themes.colors.surface_container_highest, 0.1) : Themes.colors.surface_container
 
         MArea {
             id: workspaceMBarArea
@@ -33,8 +31,8 @@ RowLayout {
             cursorShape: Qt.PointingHandCursor
             onClicked: () => {
                 Quickshell.execDetached({
-                                            "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
-                                        })
+                    command: ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
+                });
             }
         }
 
@@ -51,8 +49,7 @@ RowLayout {
                     id: wsItem
 
                     required property int index
-                    property bool focused: Hyprland.focusedMonitor?.activeWorkspace?.id
-                                           === (index + 1)
+                    property bool focused: Hyprland.focusedMonitor?.activeWorkspace?.id === (index + 1)
                     width: workspaceText.width + iconGrid.width + 5
                     height: Math.max(workspaceText.height, iconGrid.height)
 
@@ -64,11 +61,11 @@ RowLayout {
                         text: (wsItem.index + 1).toString()
                         color: {
                             if (workspaceMArea.containsMouse)
-                            return Themes.withAlpha(Themes.colors.primary, 0.5)
+                                return Themes.withAlpha(Themes.colors.primary, 0.5);
                             if (wsItem.focused)
-                            return Themes.colors.primary
+                                return Themes.colors.primary;
                             else
-                            return Themes.colors.on_background
+                                return Themes.colors.on_background;
                         }
                         font.pixelSize: Appearance.fonts.medium * 1.3
                         font.bold: wsItem.focused
@@ -77,9 +74,7 @@ RowLayout {
                     GridLayout {
                         id: iconGrid
 
-                        property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(
-                                                                  w => w.id === index + 1)
-                                                              ?? null
+                        property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
                         columns: 6
                         anchors.left: workspaceText.right
                         anchors.leftMargin: 5
@@ -92,10 +87,7 @@ RowLayout {
                             delegate: IconImage {
                                 required property HyprlandToplevel modelData
                                 readonly property Toplevel waylandHandle: modelData?.wayland
-                                source: Quickshell.iconPath(
-                                            DesktopEntries.heuristicLookup(
-                                                waylandHandle?.appId)?.icon,
-                                            "image-missing")
+                                source: Quickshell.iconPath(DesktopEntries.heuristicLookup(waylandHandle?.appId)?.icon, "image-missing")
                                 Layout.preferredWidth: 16
                                 Layout.preferredHeight: 16
                                 backer.cache: true

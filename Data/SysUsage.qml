@@ -1,5 +1,4 @@
 pragma ComponentBehavior: Bound
-
 pragma Singleton
 
 import QtQuick
@@ -71,17 +70,16 @@ Singleton {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const lines = text.trim().split('\n')
+                const lines = text.trim().split('\n');
                 for (const line of lines) {
                     if (line.startsWith("WIRED_DEV:")) {
-                        root.wiredInterface = line.substring(10).trim()
+                        root.wiredInterface = line.substring(10).trim();
                     } else if (line.startsWith("WIRED_STATE:")) {
-                        root.statusWiredInterface = line.substring(12).replace(
-                            " (externally)", "").trim()
+                        root.statusWiredInterface = line.substring(12).replace(" (externally)", "").trim();
                     } else if (line.startsWith("WIFI_DEV:")) {
-                        root.wirelessInterface = line.substring(9).trim()
+                        root.wirelessInterface = line.substring(9).trim();
                     } else if (line.startsWith("VPN_DEV:")) {
-                        root.statusVPNInterface = line.substring(8).trim()
+                        root.statusVPNInterface = line.substring(8).trim();
                     }
                 }
             }
@@ -89,113 +87,108 @@ Singleton {
     }
 
     function parseNetworkData(data) {
-        const lines = data.split('\n')
-        const interfaces = {}
+        const lines = data.split('\n');
+        const interfaces = {};
 
         for (var i = 2; i < lines.length; i++) {
-            const line = lines[i].trim()
+            const line = lines[i].trim();
             if (!line)
-                continue
-
-            const parts = line.split(/\s+/)
+                continue;
+            const parts = line.split(/\s+/);
             if (parts.length < 17)
-                continue
-            const ifaceName = parts[0].replace(':', '')
+                continue;
+            const ifaceName = parts[0].replace(':', '');
 
-            if (ifaceName !== root.wirelessInterface
-                    && ifaceName !== root.wiredInterface) {
-                continue
+            if (ifaceName !== root.wirelessInterface && ifaceName !== root.wiredInterface) {
+                continue;
             }
 
             interfaces[ifaceName] = {
                 "rxBytes": parseInt(parts[1]) || 0,
                 "txBytes": parseInt(parts[9]) || 0
-            }
+            };
         }
 
-        return interfaces
+        return interfaces;
     }
 
     // Thx claude
     function calculateNetworkStats(data) {
-        const currentTime = Date.now()
-        const currentData = parseNetworkData(data)
+        const currentTime = Date.now();
+        const currentData = parseNetworkData(data);
 
         // Update total usage (these are cheap calculations)
-        const wirelessData = currentData[wirelessInterface]
-        const wiredData = currentData[wiredInterface]
+        const wirelessData = currentData[wirelessInterface];
+        const wiredData = currentData[wiredInterface];
 
         if (wirelessData) {
-            totalWirelessDownloadUsage = wirelessData.rxBytes
-                    / 1048576 // Use constant instead of 1024*1024
-            totalWirelessUploadUsage = wirelessData.txBytes / 1048576
+            totalWirelessDownloadUsage = wirelessData.rxBytes / 1048576; // Use constant instead of 1024*1024
+            totalWirelessUploadUsage = wirelessData.txBytes / 1048576;
         }
 
         if (wiredData) {
-            totalWiredDownloadUsage = wiredData.rxBytes / 1048576
-            totalWiredUploadUsage = wiredData.txBytes / 1048576
+            totalWiredDownloadUsage = wiredData.rxBytes / 1048576;
+            totalWiredUploadUsage = wiredData.txBytes / 1048576;
         }
 
         // Speed calculation only if we have previous data
         if (previousData && lastUpdateTime > 0) {
-            const timeDiffSec = (currentTime - lastUpdateTime) / 1000
+            const timeDiffSec = (currentTime - lastUpdateTime) / 1000;
 
             if (timeDiffSec > 0.1) {
                 // Minimum 100ms between updates
-                const prevWireless = previousData[wirelessInterface]
-                const prevWired = previousData[wiredInterface]
+                const prevWireless = previousData[wirelessInterface];
+                const prevWired = previousData[wiredInterface];
 
                 if (wirelessData && prevWireless) {
-                    const rxDiff = wirelessData.rxBytes - prevWireless.rxBytes
-                    const txDiff = wirelessData.txBytes - prevWireless.txBytes
+                    const rxDiff = wirelessData.rxBytes - prevWireless.rxBytes;
+                    const txDiff = wirelessData.txBytes - prevWireless.txBytes;
 
-                    wirelessDownloadSpeed = Math.max(
-                                0, rxDiff / 1048576 / timeDiffSec)
-                    wirelessUploadSpeed = Math.max(
-                                0, txDiff / 1048576 / timeDiffSec)
+                    wirelessDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec);
+                    wirelessUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec);
                 }
 
                 if (wiredData && prevWired) {
-                    const rxDiff = wiredData.rxBytes - prevWired.rxBytes
-                    const txDiff = wiredData.txBytes - prevWired.txBytes
+                    const rxDiff = wiredData.rxBytes - prevWired.rxBytes;
+                    const txDiff = wiredData.txBytes - prevWired.txBytes;
 
-                    wiredDownloadSpeed = Math.max(
-                                0, rxDiff / 1048576 / timeDiffSec)
-                    wiredUploadSpeed = Math.max(0,
-                                                txDiff / 1048576 / timeDiffSec)
+                    wiredDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec);
+                    wiredUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec);
                 }
             }
         }
 
         // Store only relevant data (not deep clone of everything)
-        previousData = currentData
-        lastUpdateTime = currentTime
+        previousData = currentData;
+        lastUpdateTime = currentTime;
     }
 
     // OPTIMIZATION: Use lookup table for common speeds
-    readonly property var speedThresholds: [{
+    readonly property var speedThresholds: [
+        {
             "limit": 0.01,
             "format": () => "0.00 MB/s"
-        }, {
+        },
+        {
             "limit": 1,
             "format": s => (s * 1024).toFixed(2) + " KB/s"
-        }, {
+        },
+        {
             "limit": Infinity,
             "format": s => s.toFixed(2) + " MB/s"
-        }]
+        }
+    ]
 
     function formatSpeed(speedMBps) {
         for (const threshold of speedThresholds) {
             if (speedMBps < threshold.limit) {
-                return threshold.format(speedMBps)
+                return threshold.format(speedMBps);
             }
         }
     }
 
     function formatUsage(usageMB) {
-        return usageMB < 1024 ? usageMB.toFixed(
-                                    2) + " MB" : (usageMB / 1024).toFixed(
-                                    2) + " GB"
+        return usageMB < 1024 ? usageMB.toFixed(2) + " MB" : (usageMB / 1024).toFixed(2) + " GB";
     }
 
     FileView {
@@ -203,12 +196,11 @@ Singleton {
 
         path: "/proc/meminfo"
         onLoaded: {
-            const data = text()
-            const memMatch = data.match(
-                /MemTotal:\s+(\d+)[\s\S]*?MemAvailable:\s+(\d+)/)
+            const data = text();
+            const memMatch = data.match(/MemTotal:\s+(\d+)[\s\S]*?MemAvailable:\s+(\d+)/);
             if (memMatch) {
-                root.memTotal = parseInt(memMatch[1], 10)
-                root.memUsed = root.memTotal - parseInt(memMatch[2], 10)
+                root.memTotal = parseInt(memMatch[1], 10);
+                root.memUsed = root.memTotal - parseInt(memMatch[2], 10);
             }
         }
     }
@@ -220,40 +212,37 @@ Singleton {
         command: ["sh", "-c", "df | grep '^/dev/' | awk '{print $1, $3, $4}'"]
         stdout: StdioCollector {
             onStreamFinished: {
-                const deviceMap = new Map()
+                const deviceMap = new Map();
 
                 for (const line of text.trim().split("\n")) {
                     if (line.trim() === "")
-                    continue
-                    const parts = line.trim().split(/\s+/)
+                        continue;
+                    const parts = line.trim().split(/\s+/);
                     if (parts.length >= 3) {
-                        const device = parts[0]
-                        const used = parseInt(parts[1], 10) || 0
-                        const avail = parseInt(parts[2], 10) || 0
+                        const device = parts[0];
+                        const used = parseInt(parts[1], 10) || 0;
+                        const avail = parseInt(parts[2], 10) || 0;
 
                         // Only keep the entry with the largest total space for each device
-                        if (!deviceMap.has(device)
-                            || (used + avail) > (deviceMap.get(
-                                                     device).used + deviceMap.get(
-                                                     device).avail)) {
+                        if (!deviceMap.has(device) || (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
                             deviceMap.set(device, {
-                                              "used": used,
-                                              "avail": avail
-                                          })
+                                "used": used,
+                                "avail": avail
+                            });
                         }
                     }
                 }
 
-                let totalUsed = 0
-                let totalAvail = 0
+                let totalUsed = 0;
+                let totalAvail = 0;
 
                 for (const stats of deviceMap.values()) {
-                    totalUsed += stats.used
-                    totalAvail += stats.avail
+                    totalUsed += stats.used;
+                    totalAvail += stats.avail;
                 }
 
-                root.diskUsed = totalUsed
-                root.diskTotal = totalUsed + totalAvail
+                root.diskUsed = totalUsed;
+                root.diskTotal = totalUsed + totalAvail;
             }
         }
     }
@@ -263,41 +252,40 @@ Singleton {
 
         path: "/proc/stat"
         onLoaded: {
-            const data = text()
+            const data = text();
             // OPTIMIZATION: More specific regex, early match
-            const match = data.match(
-                /^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m)
+            const match = data.match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m);
 
             if (!match)
-            return
+                return;
 
             // Parse only what we need
-            const user = parseInt(match[1], 10)
-            const nice = parseInt(match[2], 10)
-            const system = parseInt(match[3], 10)
-            const idle = parseInt(match[4], 10)
-            const iowait = parseInt(match[5], 10) || 0
+            const user = parseInt(match[1], 10);
+            const nice = parseInt(match[2], 10);
+            const system = parseInt(match[3], 10);
+            const idle = parseInt(match[4], 10);
+            const iowait = parseInt(match[5], 10) || 0;
 
-            const total = user + nice + system + idle + iowait
-            const idleTotal = idle + iowait
+            const total = user + nice + system + idle + iowait;
+            const idleTotal = idle + iowait;
 
             if (!root.initialized) {
-                root.lastCpuTotal = total
-                root.lastCpuIdle = idleTotal
-                root.initialized = true
-                return
+                root.lastCpuTotal = total;
+                root.lastCpuIdle = idleTotal;
+                root.initialized = true;
+                return;
             }
 
-            const totalDiff = total - root.lastCpuTotal
-            const idleDiff = idleTotal - root.lastCpuIdle
+            const totalDiff = total - root.lastCpuTotal;
+            const idleDiff = idleTotal - root.lastCpuIdle;
 
             if (totalDiff > 0) {
-                const usage = (totalDiff - idleDiff) / totalDiff
-                root.cpuPerc = Math.round(Math.max(0, Math.min(1, usage)) * 100)
+                const usage = (totalDiff - idleDiff) / totalDiff;
+                root.cpuPerc = Math.round(Math.max(0, Math.min(1, usage)) * 100);
             }
 
-            root.lastCpuTotal = total
-            root.lastCpuIdle = idleTotal
+            root.lastCpuTotal = total;
+            root.lastCpuIdle = idleTotal;
         }
     }
 
@@ -311,25 +299,25 @@ Singleton {
         property int updateCycle: 0
 
         onTriggered: {
-            cpuStatFileView.reload()
-            meminfoFileView.reload()
-            netDevFileView.reload()
-            diskDfProc.started()
+            cpuStatFileView.reload();
+            meminfoFileView.reload();
+            netDevFileView.reload();
+            diskDfProc.started();
 
-            updateCycle = (updateCycle + 1) % 3
+            updateCycle = (updateCycle + 1) % 3;
 
             switch (updateCycle) {
-                case 0:
-                networkInfoProc.running = true
-                break
-                case 1:
-                diskDfProc.running = true
-                break
+            case 0:
+                networkInfoProc.running = true;
+                break;
+            case 1:
+                diskDfProc.running = true;
+                break;
             }
         }
     }
 
     Component.onDestruction: {
-        previousData = null
+        previousData = null;
     }
 }

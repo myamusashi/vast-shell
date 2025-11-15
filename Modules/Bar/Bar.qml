@@ -17,6 +17,16 @@ Scope {
 
     property bool isBarOpen: true
 
+    Timer {
+        id: cleanup
+
+        interval: 500
+        repeat: false
+        onTriggered: {
+            gc();
+        }
+    }
+
     Variants {
         model: Quickshell.screens
         delegate: PanelWindow {
@@ -68,16 +78,28 @@ Scope {
                             Layout.fillHeight: true
                             Layout.preferredWidth: parent.width / 6
                             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+
+                            onActiveChanged: {
+                                cleanup.start();
+                            }
                         }
                         Middle {
                             Layout.fillHeight: true
                             Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignCenter
+							Layout.alignment: Qt.AlignCenter
+
+							onActiveChanged: {
+                                cleanup.start();
+                            }
                         }
                         Right {
                             Layout.fillHeight: true
                             Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+							Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
+							onActiveChanged: {
+                                cleanup.start();
+                            }
                         }
                     }
                 }
@@ -88,7 +110,7 @@ Scope {
     IpcHandler {
         target: "layerShell"
         function toggle(): void {
-            root.isBarOpen = !root.isBarOpen
+            root.isBarOpen = !root.isBarOpen;
         }
     }
 }

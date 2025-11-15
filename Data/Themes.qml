@@ -1,5 +1,4 @@
 pragma ComponentBehavior: Bound
-
 pragma Singleton
 
 import Quickshell
@@ -24,23 +23,22 @@ Singleton {
     }
 
     function parseRGBA(color) {
-        const values = color.slice(color.indexOf("(") + 1,
-                                   color.indexOf(")")).split(",")
+        const values = color.slice(color.indexOf("(") + 1, color.indexOf(")")).split(",");
 
         if (values.length === 4) {
-            const r = parseInt(values[0].trim(), 10)
-            const g = parseInt(values[1].trim(), 10)
-            const b = parseInt(values[2].trim(), 10)
-            const a = parseFloat(values[3].trim(), 10)
+            const r = parseInt(values[0].trim(), 10);
+            const g = parseInt(values[1].trim(), 10);
+            const b = parseInt(values[2].trim(), 10);
+            const a = parseFloat(values[3].trim(), 10);
 
-            return `${r},${g},${b},${a}`
+            return `${r},${g},${b},${a}`;
         }
 
-        return null
+        return null;
     }
 
     function withAlpha(color, alpha) {
-        return Qt.rgba(color.r, color.g, color.b, alpha)
+        return Qt.rgba(color.r, color.g, color.b, alpha);
     }
 
     component ColorsComponent: QtObject {

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -64,7 +66,6 @@ Button {
         Behavior on opacity {
             NumberAnimation {
                 duration: Appearance.animations.durations.small
-                easing.type: Easing.OutCubic
             }
         }
     }

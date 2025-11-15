@@ -23,20 +23,33 @@ Scope {
     function launch(entry: DesktopEntry): void {
         if (entry.runInTerminal)
             Quickshell.execDetached({
-                                        "command": ["app2unit", "--", "foot", `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
-                                        "workingDirectory": entry.workingDirectory
-                                    })
+                command: ["app2unit", "--", "foot", `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
+                workingDirectory: entry.workingDirectory
+            });
         else
             Quickshell.execDetached({
-                                        "command": ["app2unit", "--", ...entry.command],
-                                        "workingDirectory": entry.workingDirectory
-                                    })
+                command: ["app2unit", "--", ...entry.command],
+                workingDirectory: entry.workingDirectory
+            });
+    }
+
+    Timer {
+        id: cleanup
+
+        interval: 500
+        repeat: false
+        onTriggered: {
+            gc();
+        }
     }
 
     LazyLoader {
         id: appLoader
 
         active: root.isLauncherOpen
+        onActiveChanged: {
+            cleanup.start();
+        }
 
         component: PanelWindow {
             id: launcher
@@ -101,7 +114,7 @@ Scope {
                         }
 
                         onTextChanged: {
-                            root.currentIndex = 0
+                            root.currentIndex = 0;
                         }
 
                         Keys.onPressed: function (event) {
@@ -109,17 +122,17 @@ Scope {
                             case Qt.Key_Return:
                             case Qt.Key_Tab:
                             case Qt.Key_Enter:
-                                listView.focus = true
-                                event.accepted = true
-                                break
+                                listView.focus = true;
+                                event.accepted = true;
+                                break;
                             case Qt.Key_Escape:
-                                root.isLauncherOpen = false
-                                event.accepted = true
-                                break
+                                root.isLauncherOpen = false;
+                                event.accepted = true;
+                                break;
                             case Qt.Key_Down:
-                                listView.focus = true
-                                event.accepted = true
-                                break
+                                listView.focus = true;
+                                event.accepted = true;
+                                break;
                             }
                         }
                     }
@@ -132,9 +145,7 @@ Scope {
                         Layout.preferredHeight: 400
 
                         model: ScriptModel {
-                            values: Fuzzy.fuzzySearch(
-                                        DesktopEntries.applications.values,
-                                        search.text, "name")
+                            values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name")
                         }
 
                         keyNavigationWraps: false
@@ -152,125 +163,72 @@ Scope {
 
                         onModelChanged: {
                             if (root.currentIndex >= model.values.length)
-                            root.currentIndex = Math.max(
-                                0, model.values.length - 1)
+                                root.currentIndex = Math.max(0, model.values.length - 1);
                         }
 
-                        delegate: MouseArea {
-                            id: entryMArea
-
+                        delegate: ItemDelegate {
+                            id: entryDelegate
                             required property DesktopEntry modelData
                             required property int index
 
-                            property bool keyboardActive: listView.activeFocus
-                            property real itemScale: 1.0
-
                             width: listView.width
                             height: 60
-                            hoverEnabled: !keyboardActive
 
-                            Behavior on itemScale {
-                                NumbAnim {}
-                            }
-
-                            onEntered: {
-                                root.currentIndex = index
-                            }
+                            highlighted: ListView.isCurrentItem
 
                             onClicked: {
-                                root.isLauncherOpen = false
-                                root.launch(modelData)
+                                root.isLauncherOpen = false;
+                                root.launch(modelData);
                             }
 
                             Keys.onPressed: kevent => {
                                 switch (kevent.key) {
-                                    case Qt.Key_Escape:
-                                    root.isLauncherOpen = false
-                                    break
-                                    case Qt.Key_Enter:
-                                    case Qt.Key_Return:
-                                    root.launch(modelData)
-                                    root.isLauncherOpen = false
-                                    break
-                                    case Qt.Key_Up:
-                                    if (index === 0) {
-                                        search.focus = true
-                                    }
-                                    break
+                                case Qt.Key_Escape:
+                                    root.isLauncherOpen = false;
+                                    break;
+                                case Qt.Key_Enter:
+                                case Qt.Key_Return:
+                                    root.launch(modelData);
+                                    root.isLauncherOpen = false;
+                                    break;
+                                case Qt.Key_Up:
+                                    if (index === 0)
+                                        search.focus = true;
+
+                                    break;
                                 }
                             }
 
-                            StyledRect {
+                            MArea {
                                 anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                hoverEnabled: true
 
-                                anchors.margins: 2
+                                onClicked: root.launch()
+                                onEntered: search.focus = true
+                            }
 
-                                transform: Scale {
-                                    xScale: entryMArea.itemScale
-                                    yScale: entryMArea.itemScale
-                                    origin.x: width / 2
-                                    origin.y: height / 2
+                            contentItem: RowLayout {
+                                spacing: Appearance.spacing.normal
+
+                                IconImage {
+                                    Layout.preferredWidth: 40
+                                    Layout.preferredHeight: 40
+                                    source: Quickshell.iconPath(entryDelegate.modelData.icon) || ""
                                 }
 
-                                readonly property bool selected: entryMArea.containsMouse
-                                                                 || (listView.currentIndex
-                                                                     === entryMArea.index
-                                                                     && listView.activeFocus)
-                                color: selected ? Themes.withAlpha(
-                                                      Themes.colors.on_surface,
-                                                      0.1) : "transparent"
+                                StyledText {
+                                    Layout.fillWidth: true
+                                    text: entryDelegate.modelData.name || ""
+                                    font.pixelSize: Appearance.fonts.normal
+                                    color: Themes.colors.on_background
+                                    elide: Text.ElideRight
+                                }
+                            }
+
+                            background: StyledRect {
+                                color: entryDelegate.highlighted ? Themes.withAlpha(Themes.colors.on_surface, 0.1) : "transparent"
                                 radius: Appearance.rounding.normal
-
-                                RowLayout {
-                                    anchors.fill: parent
-
-                                    anchors.margins: Appearance.padding.small
-                                    spacing: Appearance.spacing.normal
-
-                                    Loader {
-                                        active: root.isLauncherOpen
-                                        asynchronous: true
-
-                                        Layout.preferredWidth: 40
-                                        Layout.preferredHeight: 40
-
-                                        sourceComponent: IconImage {
-                                            Layout.alignment: Qt.AlignVCenter
-                                            Layout.preferredWidth: 40
-                                            Layout.preferredHeight: 40
-                                            asynchronous: true
-
-                                            source: Quickshell.iconPath(
-                                                        entryMArea.modelData.icon)
-                                                    || ""
-
-                                            opacity: 0
-                                            Component.onCompleted: {
-                                                opacity = 1
-                                            }
-                                            Behavior on opacity {
-                                                NumbAnim {}
-                                            }
-                                        }
-                                    }
-
-                                    StyledText {
-                                        Layout.fillWidth: true
-                                        Layout.alignment: Qt.AlignVCenter
-                                        text: entryMArea.modelData.name || ""
-                                        font.pixelSize: Appearance.fonts.normal
-                                        color: Themes.colors.on_background
-                                        elide: Text.ElideRight
-
-                                        opacity: 0
-                                        Component.onCompleted: {
-                                            opacity = 1
-                                        }
-                                        Behavior on opacity {
-                                            NumbAnim {}
-                                        }
-                                    }
-                                }
                             }
                         }
 
@@ -288,7 +246,7 @@ Scope {
                             }
 
                             Component.onCompleted: {
-                                scale = 1.0
+                                scale = 1.0;
                             }
                         }
                     }
@@ -301,7 +259,7 @@ Scope {
         target: "launcher"
 
         function toggle(): void {
-            root.isLauncherOpen = !root.isLauncherOpen
+            root.isLauncherOpen = !root.isLauncherOpen;
         }
     }
 }

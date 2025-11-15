@@ -50,14 +50,36 @@ Scope {
 
     Volumes {
         active: root.isVolumeOSDShow
-        node: Pipewire.defaultAudioSink
+		node: Pipewire.defaultAudioSink
+
+		onActiveChanged: {
+			cleanup.start();
+		}
     }
 
     CapsLockWidget {
-        active: root.isCapsLockOSDShow
+		active: root.isCapsLockOSDShow
+
+		onActiveChanged: {
+			cleanup.start();
+		}
     }
 
     NumLockWidget {
-        active: root.isNumLockOSDShow
+		active: root.isNumLockOSDShow
+
+		onActiveChanged: {
+			cleanup.start();
+		}
+	}
+
+	Timer {
+        id: cleanup
+
+        interval: 500
+        repeat: false
+        onTriggered: {
+            gc();
+        }
     }
 }

@@ -29,8 +29,7 @@ Slider {
     readonly property real availableTrackWidth: availableWidth - handleGap * 2
     readonly property real trackHeight: height - trackHeightDiff
     readonly property real handleWidth: pressed ? 2 : 4
-    readonly property int dotCount: stepSize > 0 ? Math.floor(
-                                                       (to - from) / stepSize) + 1 : 0
+    readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
 
     component TrackDot: Rectangle {
         required property int index
@@ -49,7 +48,7 @@ Slider {
         color: isActive ? Themes.colors.on_primary : Themes.colors.on_secondary_container
     }
 
-    MouseArea {
+    MArea {
         anchors.fill: parent
         onPressed: mouse => mouse.accepted = false
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
@@ -77,13 +76,12 @@ Slider {
             }
         }
 
-        Rectangle {
+        StyledRect {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
-            width: root.handleGap + (root.visualPosition * root.availableTrackWidth)
-                   - (root.handleWidth / 2 + root.handleGap)
+            width: root.handleGap + (root.visualPosition * root.availableTrackWidth) - (root.handleWidth / 2 + root.handleGap)
             height: root.trackHeight
             color: Themes.colors.primary
             radius: Appearance.rounding.normal
@@ -92,13 +90,12 @@ Slider {
             bottomRightRadius: Appearance.rounding.small * 0.5
         }
 
-        Rectangle {
+        StyledRect {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            width: root.handleGap + ((1 - root.visualPosition) * root.availableTrackWidth)
-                   - (root.handleWidth / 2 + root.handleGap)
+            width: root.handleGap + ((1 - root.visualPosition) * root.availableTrackWidth) - (root.handleWidth / 2 + root.handleGap)
             height: root.trackHeight
             color: Themes.colors.surface_container_highest
             radius: Appearance.rounding.normal
@@ -116,7 +113,7 @@ Slider {
         }
     }
 
-    handle: Rectangle {
+    handle: StyledRect {
         width: root.handleWidth
         height: root.height
         x: root.handleGap + (root.visualPosition * root.availableTrackWidth) - width / 2

@@ -54,9 +54,8 @@ Scope {
             opacity: textFieldBox.enabled ? 1 : 0.38
 
             Behavior on border.color {
-                ColorAnimation {
+                ColAnim {
                     duration: Appearance.animations.durations.small
-                    easing.bezierCurve: Appearance.animations.curves.standard
                 }
             }
 
@@ -68,9 +67,8 @@ Scope {
             }
 
             Behavior on color {
-                ColorAnimation {
+                ColAnim {
                     duration: Appearance.animations.durations.small
-                    easing.bezierCurve: Appearance.animations.curves.standard
                 }
             }
 

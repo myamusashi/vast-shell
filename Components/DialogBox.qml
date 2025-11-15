@@ -61,7 +61,7 @@ Loader {
                     Layout.fillWidth: true
                 }
 
-                Rectangle {
+                StyledRect {
                     implicitHeight: 1
                     color: Themes.colors.outline_variant
                     Layout.fillWidth: true
@@ -76,7 +76,7 @@ Loader {
                     Layout.fillHeight: true
                 }
 
-                Rectangle {
+                StyledRect {
                     implicitHeight: 1
                     color: Themes.colors.outline_variant
                     Layout.fillWidth: true

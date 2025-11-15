@@ -1,5 +1,4 @@
 pragma ComponentBehavior: Bound
-
 pragma Singleton
 
 import Quickshell.Services.Notifications
@@ -24,45 +23,45 @@ Singleton {
             imageSupported: true
             persistenceSupported: true
             onNotification: function (notification) {
-                notification.tracked = true
-                root.listNotifications.push(notification)
-                root.popupNotifications.push(notification)
+                notification.tracked = true;
+                root.listNotifications.push(notification);
+                root.popupNotifications.push(notification);
             }
         }
         function removePopupNotification(notification) {
-            var newList = []
+            var newList = [];
             for (var i = 0; i < popupNotifications.length; i++)
                 if (popupNotifications[i] !== notification)
-                    newList.push(popupNotifications[i])
+                    newList.push(popupNotifications[i]);
 
-            popupNotifications = newList
+            popupNotifications = newList;
         }
 
         function removeListNotification(notification) {
-            var newList = []
+            var newList = [];
             for (var i = 0; i < listNotifications.length; i++)
                 if (listNotifications[i] !== notification)
-                    newList.push(listNotifications[i])
+                    newList.push(listNotifications[i]);
 
-            listNotifications = newList
+            listNotifications = newList;
         }
 
         function dismiss() {
             if (popupNotifications.length > 0)
-                popupNotifications[0].dismiss()
+                popupNotifications[0].dismiss();
             if (listNotifications.length > 0)
-                listNotifications[0].dismiss()
+                listNotifications[0].dismiss();
         }
 
         function dismissAll() {
             for (var i = 0; i < popupNotifications.length; i++)
-                popupNotifications[i].dismiss()
+                popupNotifications[i].dismiss();
 
             for (var i = 0; i < listNotifications.length; i++)
-                listNotifications[i].dismiss()
+                listNotifications[i].dismiss();
 
-            popupNotifications = []
-            listNotifications = []
+            popupNotifications = [];
+            listNotifications = [];
         }
     }
 
