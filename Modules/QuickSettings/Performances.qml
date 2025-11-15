@@ -21,7 +21,7 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "RAM usage\n" + SysUsage.memProp + " GB"
+            text: "RAM usage\n" + SysUsage.memProp.toFixed(0) + " GB"
             color: Themes.colors.on_surface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -50,14 +50,14 @@ GridLayout {
         spacing: Appearance.spacing.normal
 
         Circular {
-            value: Math.round(SysUsage.diskUsed / SysUsage.diskTotal * 100)
+            value: SysUsage.diskPercent.toFixed(0)
             text: value + "%"
             size: 0
         }
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "Disk usage\n" + SysUsage.diskProp + " GB"
+            text: "Disk usage\n" + SysUsage.diskProp.toFixed(0) + " GB"
             color: Themes.colors.on_surface
             horizontalAlignment: Text.AlignHCenter
         }

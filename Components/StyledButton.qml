@@ -21,38 +21,45 @@ Button {
     property bool isButtonUseBorder: false
     property real backgroundRounding: 0
 
+    readonly property real contentOpacity: pressed ? 0.12 : hovered ? 0.08 : 1.0
+
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: buttonHeight
     hoverEnabled: true
 
     contentItem: RowLayout {
         spacing: root.iconTextSpacing
+        opacity: root.contentOpacity
 
-        MatIcon {
-            icon: root.iconButton
-            font.pixelSize: Appearance.fonts.large * 1.2 + root.iconSize
-            font.bold: true
-            visible: root.iconButton !== ""
-            color: root.buttonTextColor
-            opacity: root.pressed ? 0.12 : root.hovered ? 0.08 : 1.0
+        Loader {
+            active: root.iconButton !== ""
+            sourceComponent: MatIcon {
+                icon: root.iconButton
+                font.pixelSize: Appearance.fonts.large * 1.2 + root.iconSize
+                font.bold: true
+                color: root.buttonTextColor
+            }
         }
 
-        StyledText {
-            text: root.buttonTitle
-            font.pixelSize: Appearance.fonts.large
-            font.weight: Font.Medium
-            color: root.buttonTextColor
-            opacity: root.pressed ? 0.12 : root.hovered ? 0.08 : 1.0
-            visible: text !== ""
+        Loader {
+            active: root.buttonTitle !== ""
+            sourceComponent: Text {
+                text: root.buttonTitle
+                font.pixelSize: Appearance.fonts.large
+                font.weight: Font.Medium
+                font.family: Appearance.fonts.family_Sans
+                color: root.buttonTextColor
+                renderType: Text.NativeRendering
+            }
         }
     }
 
-    background: StyledRect {
+    background: Rectangle {
         border.color: root.isButtonUseBorder ? root.buttonBorderColor : "transparent"
         border.width: root.isButtonUseBorder ? root.buttonBorderWidth : 0
         radius: Appearance.rounding.full
         color: root.buttonColor
-        opacity: root.pressed ? 0.12 : root.hovered ? 0.08 : 1.0
+        opacity: root.contentOpacity
 
         Behavior on opacity {
             NumberAnimation {

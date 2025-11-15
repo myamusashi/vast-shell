@@ -10,11 +10,10 @@ Text {
 
     font.family: Appearance.fonts.family_Material
     font.pixelSize: Appearance.fonts.medium
-    font.hintingPreference: Font.PreferNoHinting
+    font.hintingPreference: Font.PreferDefaultHinting
 
     antialiasing: true
 
-    horizontalAlignment: Text.AlignHCenter
     verticalAlignment: Text.AlignVCenter
 
     color: "transparent"

@@ -12,44 +12,50 @@ Loader {
 
     required property string header
     required property string body
+
     signal accepted
     signal rejected
 
     active: false
+    asynchronous: true
 
     sourceComponent: PanelWindow {
-        anchors {
-            left: true
-            right: true
-            top: true
-            bottom: true
-        }
-        color: "transparent"
+        anchors.left: true
+        anchors.right: true
+        anchors.top: true
+        anchors.bottom: true
+
+        color: "#80000000"
 
         MArea {
             anchors.fill: parent
             onClicked: root.rejected()
+
+            propagateComposedEvents: false
         }
 
         StyledRect {
             anchors.centerIn: parent
             implicitWidth: 400
-            implicitHeight: bodyText.implicitHeight + 150
+
+            readonly property real contentHeight: column.implicitHeight + 40
+            implicitHeight: contentHeight
+
             radius: Appearance.rounding.large
             color: Themes.colors.surface
             border.color: Themes.colors.outline
             border.width: 2
 
             ColumnLayout {
+                id: column
                 anchors.fill: parent
                 anchors.margins: 20
+                spacing: Appearance.spacing.large
 
                 StyledText {
-                    id: headerText
-
                     text: root.header
                     color: Themes.colors.on_surface
-                    elide: Qt.ElideMiddle
+                    elide: Text.ElideMiddle
                     font.pixelSize: Appearance.fonts.extraLarge
                     font.bold: true
                     Layout.fillWidth: true
@@ -57,13 +63,11 @@ Loader {
 
                 Rectangle {
                     implicitHeight: 1
-                    implicitWidth: parent.width
                     color: Themes.colors.outline_variant
+                    Layout.fillWidth: true
                 }
 
                 StyledText {
-                    id: bodyText
-
                     text: root.body
                     color: Themes.colors.on_background
                     font.pixelSize: Appearance.fonts.large
@@ -74,14 +78,13 @@ Loader {
 
                 Rectangle {
                     implicitHeight: 1
-                    implicitWidth: parent.width
                     color: Themes.colors.outline_variant
+                    Layout.fillWidth: true
                 }
 
                 RowLayout {
                     Layout.alignment: Qt.AlignRight
-                    Layout.fillWidth: true
-                    spacing: 10
+                    spacing: Appearance.spacing.normal
 
                     StyledButton {
                         iconButton: "cancel"

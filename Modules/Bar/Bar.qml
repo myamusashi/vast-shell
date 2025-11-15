@@ -36,7 +36,7 @@ Scope {
             exclusionMode: ExclusionMode.Ignore
             focusable: false
             implicitHeight: 40
-            exclusiveZone: -1
+            exclusiveZone: 1
             surfaceFormat.opaque: false
             visible: root.isBarOpen
 

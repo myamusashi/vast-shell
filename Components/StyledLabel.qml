@@ -9,6 +9,5 @@ Label {
     color: Themes.colors.on_surface
     font.hintingPreference: Font.PreferVerticalHinting
     font.letterSpacing: -0.2
-    font.kerning: true
     renderType: Text.NativeRendering
 }

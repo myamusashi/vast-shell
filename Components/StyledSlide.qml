@@ -26,31 +26,36 @@ Slider {
     implicitWidth: valueWidth || 200
     implicitHeight: valueHeight || 40
 
-    component TrackDot: StyledRect {
+    readonly property real availableTrackWidth: availableWidth - handleGap * 2
+    readonly property real trackHeight: height - trackHeightDiff
+    readonly property real handleWidth: pressed ? 2 : 4
+    readonly property int dotCount: stepSize > 0 ? Math.floor(
+                                                       (to - from) / stepSize) + 1 : 0
+
+    component TrackDot: Rectangle {
         required property int index
-        property real stepValue: root.from + (index * root.stepSize)
-        property real normalizedValue: (stepValue - root.from) / (root.to - root.from)
+
+        readonly property real stepValue: root.from + (index * root.stepSize)
+        readonly property real normalizedValue: (stepValue - root.from) / (root.to - root.from)
+        readonly property bool isActive: normalizedValue <= root.visualPosition
+
         anchors.verticalCenter: parent.verticalCenter
-        x: root.handleGap + (normalizedValue * (parent.width - root.handleGap
-                                                * 2)) - root.trackDotSize / 2
+        x: root.handleGap + (normalizedValue * root.availableTrackWidth) - root.trackDotSize / 2
 
         width: root.trackDotSize
         height: root.trackDotSize
         radius: Appearance.rounding.normal
-        visible: root.dotEnd && index > 0
-                 && index < (root.to - root.from) / root.stepSize
-        color: normalizedValue > root.visualPosition ? Themes.colors.on_secondary_container : Themes.colors.on_primary
+        visible: root.dotEnd && index > 0 && index < root.dotCount - 1
+        color: isActive ? Themes.colors.on_primary : Themes.colors.on_secondary_container
     }
 
-    MArea {
+    MouseArea {
         anchors.fill: parent
         onPressed: mouse => mouse.accepted = false
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
     }
 
     background: Item {
-        id: progressItem
-
         implicitWidth: root.valueWidth || 200
         implicitHeight: root.valueHeight || 40
         width: root.availableWidth
@@ -58,55 +63,52 @@ Slider {
         x: root.leftPadding
         y: root.topPadding
 
-        MatIcon {
+        Loader {
+            active: root.icon !== ""
             anchors {
                 left: parent.left
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            icon: root.icon || ""
-            color: Themes.colors.on_primary
-            font.pixelSize: root.iconSize || 0
-            z: 3
+            sourceComponent: MatIcon {
+                icon: root.icon
+                color: Themes.colors.on_primary
+                font.pixelSize: root.iconSize || Appearance.fonts.medium
+            }
         }
 
-        StyledRect {
-            id: progressBackground
-
+        Rectangle {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
             }
-            width: root.handleGap + (root.visualPosition * (parent.width - root.handleGap * 2))
-                   - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
-            height: parent.height - root.trackHeightDiff
+            width: root.handleGap + (root.visualPosition * root.availableTrackWidth)
+                   - (root.handleWidth / 2 + root.handleGap)
+            height: root.trackHeight
             color: Themes.colors.primary
             radius: Appearance.rounding.normal
+
             topRightRadius: Appearance.rounding.small * 0.5
             bottomRightRadius: Appearance.rounding.small * 0.5
         }
 
-        StyledRect {
-            id: unprogressBackground
-
+        Rectangle {
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
             }
-            width: root.handleGap + ((1 - root.visualPosition)
-                                     * (parent.width - root.handleGap * 2))
-                   - ((root.pressed ? 1.5 : 3) / 2 + root.handleGap)
-            height: parent.height - root.trackHeightDiff
+            width: root.handleGap + ((1 - root.visualPosition) * root.availableTrackWidth)
+                   - (root.handleWidth / 2 + root.handleGap)
+            height: root.trackHeight
             color: Themes.colors.surface_container_highest
             radius: Appearance.rounding.normal
+
             topLeftRadius: Appearance.rounding.small * 0.5
             bottomLeftRadius: Appearance.rounding.small * 0.5
         }
 
-        // Track dots
         Repeater {
-            model: root.stepSize > 0 ? Math.floor(
-                                           (root.to - root.from) / root.stepSize) + 1 : 0
+            model: root.dotCount
             TrackDot {
                 required property int modelData
                 index: modelData
@@ -114,18 +116,18 @@ Slider {
         }
     }
 
-    handle: StyledRect {
-        width: root.pressed ? 2 : 4
+    handle: Rectangle {
+        width: root.handleWidth
         height: root.height
-        x: root.handleGap + (root.visualPosition * (root.availableWidth
-                                                    - root.handleGap * 2)) - width / 2
+        x: root.handleGap + (root.visualPosition * root.availableTrackWidth) - width / 2
         anchors.verticalCenter: parent.verticalCenter
         radius: Appearance.rounding.normal
         color: Themes.colors.primary
 
         Behavior on width {
-            NumbAnim {
+            NumberAnimation {
                 duration: Appearance.animations.durations.small
+                easing.type: Easing.OutCubic
             }
         }
     }

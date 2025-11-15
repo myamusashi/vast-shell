@@ -10,98 +10,80 @@ Singleton {
     id: root
 
     // Memory and disk
-    property real memTotal
-    property real memUsed
-    property real diskUsed
-    property real diskTotal
+    property int memTotal: 0
+    property int memUsed: 0
+    property int diskUsed: 0
+    property int diskTotal: 0
 
-    // Networking
-    property string wiredInterface
-    property string wirelessInterface
+    readonly property real diskProp: diskUsed / 1048576
+    readonly property real memProp: memUsed / 1048576
+    readonly property real diskPercent: diskTotal > 0 ? (diskUsed / diskTotal) * 100 : 0
+    readonly property real memPercent: memTotal > 0 ? (memUsed / memTotal) * 100 : 0
 
-    property string statusWiredInterface
-    property string statusVPNInterface
+    property string wiredInterface: ""
+    property string wirelessInterface: ""
+    property string statusWiredInterface: ""
+    property string statusVPNInterface: ""
 
-    property var previousData: ({})
-    property var lastUpdateTime: 0
+    property double wirelessUploadSpeed: 0
+    property double wirelessDownloadSpeed: 0
+    property double totalWirelessDownloadUsage: 0
+    property double totalWirelessUploadUsage: 0
 
-    // Wireless
-    property real wirelessUploadSpeed
-    property real wirelessDownloadSpeed
+    property double wiredUploadSpeed: 0
+    property double wiredDownloadSpeed: 0
+    property double totalWiredDownloadUsage: 0
+    property double totalWiredUploadUsage: 0
 
-    property real totalWirelessDownloadUsage
-    property real totalWirelessUploadUsage
+    property int cpuPerc: 0
 
-    // Wired
-    property real wiredUploadSpeed
-    property real wiredDownloadSpeed
-
-    property real totalWiredDownloadUsage
-    property real totalWiredUploadUsage
-
-    // CPU
-    property real cpuPerc: 0
-    property real lastCpuIdle: 0
-    property real lastCpuTotal: 0
+    property var previousData: null
+    property double lastUpdateTime: 0
+    property int lastCpuIdle: 0
+    property int lastCpuTotal: 0
     property bool initialized: false
-
-    readonly property int diskProp: diskUsed / 1048576
-    readonly property int memProp: memUsed / 1048576
 
     FileView {
         id: netDevFileView
 
         path: "/proc/net/dev"
-        onLoaded: {
-            const data = text()
-            root.calculateNetworkStats(data)
-        }
+        onLoaded: root.calculateNetworkStats(text())
     }
 
     Process {
-        id: wiredStateProc
-
-        command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f3 | sed 's/ (externally)//'"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                root.statusWiredInterface = text.trim()
+        id: networkInfoProc
+        command: ["sh", "-c", `
+            nmcli -t -f DEVICE,TYPE,STATE device status | awk -F: '
+            /ethernet/ && !eth_found {
+            print "WIRED_DEV:" $1;
+            print "WIRED_STATE:" $3;
+            eth_found=1
             }
-        }
-    }
-
-    Process {
-        id: vpnStateProc
-
-        command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep -E '^(wg0|CloudflareWARP):' | cut -d: -f1 | sed 's/ (externally)//'"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                root.statusVPNInterface = text.trim()
+            /wifi/ && !wifi_found {
+            print "WIFI_DEV:" $1;
+            wifi_found=1
             }
-        }
-    }
-
-    Process {
-        id: wiredDevProc
-
-        command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':ethernet:' | head -1 | cut -d ':' -f1"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                root.wiredInterface = text.trim()
+            /^(wg0|CloudflareWARP):/ {
+            print "VPN_DEV:" $1
             }
-        }
-    }
-
-    Process {
-        id: wifiDevProc
-
-        command: ["sh", "-c", "nmcli -t -f DEVICE,TYPE,STATE device status | grep ':wifi:' | head -1 | cut -d ':' -f1"]
-        running: true
+            '
+            `]
+        running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                root.wirelessInterface = text.trim()
+                const lines = text.trim().split('\n')
+                for (const line of lines) {
+                    if (line.startsWith("WIRED_DEV:")) {
+                        root.wiredInterface = line.substring(10).trim()
+                    } else if (line.startsWith("WIRED_STATE:")) {
+                        root.statusWiredInterface = line.substring(12).replace(
+                            " (externally)", "").trim()
+                    } else if (line.startsWith("WIFI_DEV:")) {
+                        root.wirelessInterface = line.substring(9).trim()
+                    } else if (line.startsWith("VPN_DEV:")) {
+                        root.statusVPNInterface = line.substring(8).trim()
+                    }
+                }
             }
         }
     }
@@ -112,20 +94,22 @@ Singleton {
 
         for (var i = 2; i < lines.length; i++) {
             const line = lines[i].trim()
-            if (line === '')
+            if (!line)
                 continue
 
             const parts = line.split(/\s+/)
             if (parts.length < 17)
                 continue
+            const ifaceName = parts[0].replace(':', '')
 
-            const interfaceName = parts[0].replace(':', '')
+            if (ifaceName !== root.wirelessInterface
+                    && ifaceName !== root.wiredInterface) {
+                continue
+            }
 
-            interfaces[interfaceName] = {
+            interfaces[ifaceName] = {
                 "rxBytes": parseInt(parts[1]) || 0,
-                "rxPackets": parseInt(parts[2]) || 0,
-                "txBytes": parseInt(parts[9]) || 0,
-                "txPackets": parseInt(parts[10]) || 0
+                "txBytes": parseInt(parts[9]) || 0
             }
         }
 
@@ -137,65 +121,81 @@ Singleton {
         const currentTime = Date.now()
         const currentData = parseNetworkData(data)
 
-        if (currentData[wirelessInterface]) {
-            totalWirelessDownloadUsage = currentData[wirelessInterface].rxBytes / (1024 * 1024)
-            totalWirelessUploadUsage = currentData[wirelessInterface].txBytes / (1024 * 1024)
+        // Update total usage (these are cheap calculations)
+        const wirelessData = currentData[wirelessInterface]
+        const wiredData = currentData[wiredInterface]
+
+        if (wirelessData) {
+            totalWirelessDownloadUsage = wirelessData.rxBytes
+                    / 1048576 // Use constant instead of 1024*1024
+            totalWirelessUploadUsage = wirelessData.txBytes / 1048576
         }
 
-        if (currentData[wiredInterface]) {
-            totalWiredDownloadUsage = currentData[wiredInterface].rxBytes / (1024 * 1024)
-            totalWiredUploadUsage = currentData[wiredInterface].txBytes / (1024 * 1024)
+        if (wiredData) {
+            totalWiredDownloadUsage = wiredData.rxBytes / 1048576
+            totalWiredUploadUsage = wiredData.txBytes / 1048576
         }
 
-        if (previousData && Object.keys(previousData).length > 0
-                && lastUpdateTime > 0) {
-            const timeDiff = (currentTime - lastUpdateTime) / 1000
+        // Speed calculation only if we have previous data
+        if (previousData && lastUpdateTime > 0) {
+            const timeDiffSec = (currentTime - lastUpdateTime) / 1000
 
-            if (timeDiff > 0) {
-                if (currentData[wirelessInterface]
-                        && previousData[wirelessInterface]) {
-                    const wirelessRxDiff = currentData[wirelessInterface].rxBytes
-                                         - previousData[wirelessInterface].rxBytes
-                    const wirelessTxDiff = currentData[wirelessInterface].txBytes
-                                         - previousData[wirelessInterface].txBytes
+            if (timeDiffSec > 0.1) {
+                // Minimum 100ms between updates
+                const prevWireless = previousData[wirelessInterface]
+                const prevWired = previousData[wiredInterface]
+
+                if (wirelessData && prevWireless) {
+                    const rxDiff = wirelessData.rxBytes - prevWireless.rxBytes
+                    const txDiff = wirelessData.txBytes - prevWireless.txBytes
 
                     wirelessDownloadSpeed = Math.max(
-                                0, wirelessRxDiff / (1024 * 1024) / timeDiff)
+                                0, rxDiff / 1048576 / timeDiffSec)
                     wirelessUploadSpeed = Math.max(
-                                0, wirelessTxDiff / (1024 * 1024) / timeDiff)
+                                0, txDiff / 1048576 / timeDiffSec)
                 }
 
-                if (currentData[wiredInterface]
-                        && previousData[wiredInterface]) {
-                    const wiredRxDiff = currentData[wiredInterface].rxBytes
-                                      - previousData[wiredInterface].rxBytes
-                    const wiredTxDiff = currentData[wiredInterface].txBytes
-                                      - previousData[wiredInterface].txBytes
+                if (wiredData && prevWired) {
+                    const rxDiff = wiredData.rxBytes - prevWired.rxBytes
+                    const txDiff = wiredData.txBytes - prevWired.txBytes
 
                     wiredDownloadSpeed = Math.max(
-                                0, wiredRxDiff / (1024 * 1024) / timeDiff)
-                    wiredUploadSpeed = Math.max(
-                                0, wiredTxDiff / (1024 * 1024) / timeDiff)
+                                0, rxDiff / 1048576 / timeDiffSec)
+                    wiredUploadSpeed = Math.max(0,
+                                                txDiff / 1048576 / timeDiffSec)
                 }
             }
         }
 
-        previousData = JSON.parse(JSON.stringify(currentData))
+        // Store only relevant data (not deep clone of everything)
+        previousData = currentData
         lastUpdateTime = currentTime
     }
 
+    // OPTIMIZATION: Use lookup table for common speeds
+    readonly property var speedThresholds: [{
+            "limit": 0.01,
+            "format": () => "0.00 MB/s"
+        }, {
+            "limit": 1,
+            "format": s => (s * 1024).toFixed(2) + " KB/s"
+        }, {
+            "limit": Infinity,
+            "format": s => s.toFixed(2) + " MB/s"
+        }]
+
     function formatSpeed(speedMBps) {
-        if (speedMBps < 0.01)
-            return "0.00 MB/s"
-        if (speedMBps < 1)
-            return (speedMBps * 1024).toFixed(2) + " KB/s"
-        return speedMBps.toFixed(2) + " MB/s"
+        for (const threshold of speedThresholds) {
+            if (speedMBps < threshold.limit) {
+                return threshold.format(speedMBps)
+            }
+        }
     }
 
     function formatUsage(usageMB) {
-        if (usageMB < 1024)
-            return usageMB.toFixed(2) + " MB"
-        return (usageMB / 1024).toFixed(2) + " GB"
+        return usageMB < 1024 ? usageMB.toFixed(
+                                    2) + " MB" : (usageMB / 1024).toFixed(
+                                    2) + " GB"
     }
 
     FileView {
@@ -204,12 +204,11 @@ Singleton {
         path: "/proc/meminfo"
         onLoaded: {
             const data = text()
-            const memTotalMatch = data.match(/MemTotal:\s+(\d+)/)
-            const memAvailableMatch = data.match(/MemAvailable:\s+(\d+)/)
-            if (memTotalMatch && memAvailableMatch) {
-                root.memTotal = parseInt(memTotalMatch[1], 10)
-                root.memUsed = root.memTotal - parseInt(memAvailableMatch[1],
-                                                        10)
+            const memMatch = data.match(
+                /MemTotal:\s+(\d+)[\s\S]*?MemAvailable:\s+(\d+)/)
+            if (memMatch) {
+                root.memTotal = parseInt(memMatch[1], 10)
+                root.memUsed = root.memTotal - parseInt(memMatch[2], 10)
             }
         }
     }
@@ -226,7 +225,6 @@ Singleton {
                 for (const line of text.trim().split("\n")) {
                     if (line.trim() === "")
                     continue
-
                     const parts = line.trim().split(/\s+/)
                     if (parts.length >= 3) {
                         const device = parts[0]
@@ -266,55 +264,72 @@ Singleton {
         path: "/proc/stat"
         onLoaded: {
             const data = text()
-            // Idk what the fuck is this
+            // OPTIMIZATION: More specific regex, early match
             const match = data.match(
-                /^cpu\s+(\d+)(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?(?:\s+(\d+))?/m)
+                /^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m)
 
-            if (match) {
-                const stats = match.slice(1).filter(
-                    val => val !== undefined).map(n => parseInt(n, 10))
+            if (!match)
+            return
 
-                if (stats.length >= 4) {
-                    const total = stats.reduce((a, b) => a + b, 0)
-                    const idle = stats[3] + (stats[4] || 0)
+            // Parse only what we need
+            const user = parseInt(match[1], 10)
+            const nice = parseInt(match[2], 10)
+            const system = parseInt(match[3], 10)
+            const idle = parseInt(match[4], 10)
+            const iowait = parseInt(match[5], 10) || 0
 
-                    if (!root.initialized) {
-                        root.lastCpuTotal = total
-                        root.lastCpuIdle = idle
-                        root.initialized = true
-                    } else {
-                        const totalDiff = total - root.lastCpuTotal
-                        const idleDiff = idle - root.lastCpuIdle
+            const total = user + nice + system + idle + iowait
+            const idleTotal = idle + iowait
 
-                        if (totalDiff > 0) {
-                            const cpuUsage = Math.max(
-                                0, Math.min(1,
-                                            (totalDiff - idleDiff) / totalDiff))
-                            root.cpuPerc = Math.round(cpuUsage * 100)
-                        }
-
-                        root.lastCpuTotal = total
-                        root.lastCpuIdle = idle
-                    }
-                }
+            if (!root.initialized) {
+                root.lastCpuTotal = total
+                root.lastCpuIdle = idleTotal
+                root.initialized = true
+                return
             }
+
+            const totalDiff = total - root.lastCpuTotal
+            const idleDiff = idleTotal - root.lastCpuIdle
+
+            if (totalDiff > 0) {
+                const usage = (totalDiff - idleDiff) / totalDiff
+                root.cpuPerc = Math.round(Math.max(0, Math.min(1, usage)) * 100)
+            }
+
+            root.lastCpuTotal = total
+            root.lastCpuIdle = idleTotal
         }
     }
 
     Timer {
+        id: mainTimer
         running: true
         interval: 2000
         repeat: true
         triggeredOnStart: true
+
+        property int updateCycle: 0
+
         onTriggered: {
-            diskDfProc.running = true
-            wiredStateProc.started()
-            vpnStateProc.started()
-            wiredDevProc.started()
-            wifiDevProc.started()
             cpuStatFileView.reload()
             meminfoFileView.reload()
             netDevFileView.reload()
+            diskDfProc.started()
+
+            updateCycle = (updateCycle + 1) % 3
+
+            switch (updateCycle) {
+                case 0:
+                networkInfoProc.running = true
+                break
+                case 1:
+                diskDfProc.running = true
+                break
+            }
         }
+    }
+
+    Component.onDestruction: {
+        previousData = null
     }
 }

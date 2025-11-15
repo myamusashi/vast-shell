@@ -2,18 +2,18 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Data
-import qs.Components
 
-StyledRect {
+Rectangle {
     id: root
 
     property bool condition: false
+
     Layout.fillWidth: true
     height: 2
     visible: condition
     color: "transparent"
 
-    StyledRect {
+    Rectangle {
         id: loadingBar
 
         width: parent.width * 0.3
@@ -21,31 +21,28 @@ StyledRect {
         radius: height / 2
         color: Themes.colors.primary
 
-        SequentialAnimation on color {
-            loops: Animation.Infinite
-
-            ColAnim {}
-        }
-
         SequentialAnimation on x {
             loops: Animation.Infinite
             running: root.condition
 
-            NumbAnim {
+            XAnimator {
+                duration: Appearance.animations.durations.normal
+                easing.bezierCurve: Appearance.animations.curves.standard
+                easing.type: Easing.BezierSpline
+                easing.amplitude: 1.0
+                easing.period: 0.5
                 from: 0
                 to: root.width - loadingBar.width
-                duration: 300
+            }
+
+            XAnimator {
+                duration: Appearance.animations.durations.normal
+                easing.bezierCurve: Appearance.animations.curves.standard
+                easing.type: Easing.BezierSpline
                 easing.amplitude: 1.0
                 easing.period: 0.5
-                easing.type: Easing.OutBounce
-            }
-            NumbAnim {
                 from: root.width - loadingBar.width
                 to: 0
-                duration: 300
-                easing.amplitude: 1.0
-                easing.period: 0.5
-                easing.type: Easing.OutBounce
             }
         }
     }

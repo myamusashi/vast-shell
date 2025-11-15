@@ -25,37 +25,16 @@ PanelWindow {
         bottom: true
     }
 
-    // Inline Components
     component Corner: WrapperItem {
         id: root
 
-        property int corner
+        required property int corner
         property real radius: 20
-        property color color
+        required property color color
 
-        Component.onCompleted: {
-            switch (corner) {
-                case 0:
-                anchors.left = parent.left
-                anchors.top = parent.top
-                break
-                case 1:
-                anchors.top = parent.top
-                anchors.right = parent.right
-                rotation = 90
-                break
-                case 2:
-                anchors.right = parent.right
-                anchors.bottom = parent.bottom
-                rotation = 180
-                break
-                case 3:
-                anchors.left = parent.left
-                anchors.bottom = parent.bottom
-                rotation = -90
-                break
-            }
-        }
+        x: (corner === 0 || corner === 3) ? 0 : parent.width - radius
+        y: (corner === 0 || corner === 1) ? 0 : parent.height - radius
+        rotation: corner * 90
 
         Shape {
             preferredRendererType: Shape.CurveRenderer
@@ -92,7 +71,6 @@ PanelWindow {
         WlrLayershell.namespace: `quickshell:${name}ExclusionZone`
     }
 
-    // Exclusions
     Scope {
         Exclusion {
             name: "left"
