@@ -22,9 +22,9 @@ Scope {
     GlobalShortcut {
         name: "screencaptureLauncher"
         onPressed: root.isOpen = !root.isOpen
-	}
+    }
 
-	Timer {
+    Timer {
         id: cleanup
 
         interval: 500
@@ -35,10 +35,10 @@ Scope {
     }
 
     LazyLoader {
-		active: root.isOpen
-		onActiveChanged: {
-			cleanup.start();
-		}
+        active: root.isOpen
+        onActiveChanged: {
+            cleanup.start();
+        }
 
         component: PanelWindow {
             id: window
@@ -101,7 +101,9 @@ Scope {
                                     readonly property bool isSelected: window.selectedTab === index
 
                                     Layout.fillWidth: true
-                                    Layout.preferredHeight: 32
+									Layout.preferredHeight: 32
+
+									Keys.onTabPressed: window.selectedTab = tabItem.index
 
                                     radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
 
@@ -143,45 +145,45 @@ Scope {
 
                                     model: [
                                         {
-                                            "name": "Window",
-                                            "icon": "select_window_2",
-                                            "action": () => {
+                                            name: "Window",
+                                            icon: "select_window_2",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
                                                 });
                                             }
                                         },
                                         {
-                                            "name": "Selection",
-                                            "icon": "select",
-                                            "action": () => {
+                                            name: "Selection",
+                                            icon: "select",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
                                                 });
                                             }
                                         },
                                         {
-                                            "name": "eDP-1",
-                                            "icon": "monitor",
-                                            "action": () => {
+                                            name: "eDP-1",
+                                            icon: "monitor",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-eDP-1"]
                                                 });
                                             }
                                         },
                                         {
-                                            "name": "HDMI-A-2",
-                                            "icon": "monitor",
-                                            "action": () => {
+                                            name: "HDMI-A-2",
+                                            icon: "monitor",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-HDMI-A-2"]
                                                 });
                                             }
                                         },
                                         {
-                                            "name": "Both Screens",
-                                            "icon": "dual_screen",
-                                            "action": () => {
+                                            name: "Both Screens",
+                                            icon: "dual_screen",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-both-screens"]
                                                 });
@@ -189,17 +191,20 @@ Scope {
                                         }
                                     ]
 
-									delegate: CaptureItem {
-										required property var modelData
-										required property int index
+                                    delegate: CaptureItem {
+                                        required property var modelData
+                                        required property int index
 
                                         Layout.preferredHeight: 38
                                         Layout.fillWidth: true
-
                                         optionData: modelData
                                         optionIndex: index
                                         isSelected: index === root.selectedIndex && window.selectedTab === 0
                                         maxIndex: 4
+
+                                        onIndexModel: function (idx) {
+                                            root.selectedIndex = idx;
+                                        }
 
                                         onClosed: root.isOpen = false
                                     }
@@ -214,27 +219,27 @@ Scope {
 
                                     model: [
                                         {
-                                            "name": "Selection",
-                                            "icon": "select",
-                                            "action": () => {
+                                            name: "Selection",
+                                            icon: "select",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
                                                 });
                                             }
                                         },
                                         {
-                                            "name": "eDP-1",
-                                            "icon": "monitor",
-                                            "action": () => {
+                                            name: "eDP-1",
+                                            icon: "monitor",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-eDP-1"]
                                                 });
                                             }
                                         },
                                         {
-                                            "name": "HDMI-A-2",
-                                            "icon": "monitor",
-                                            "action": () => {
+                                            name: "HDMI-A-2",
+                                            icon: "monitor",
+                                            action: () => {
                                                 Quickshell.execDetached({
                                                     command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-HDMI-A-2"]
                                                 });
@@ -242,22 +247,20 @@ Scope {
                                         }
                                     ]
 
-									delegate: CaptureItem {
-										required property var modelData
-										required property int index
-
+                                    delegate: CaptureItem {
+                                        required property var modelData
+                                        required property int index
                                         Layout.preferredHeight: 38
                                         Layout.fillWidth: true
-
                                         optionData: modelData
                                         optionIndex: index
-                                        isSelected: index === root.selectedIndex && window.selectedTab === 1
-                                        maxIndex: 2
+                                        isSelected: index === root.selectedIndex && window.selectedTab === 0
+                                        maxIndex: 3
 
-                                        onExecuted: {
-                                            recordControl.isOpen = true;
-                                            root.isOpen = false;
+                                        onIndexModel: function (idx) {
+                                            root.selectedIndex = idx;
                                         }
+
                                         onClosed: root.isOpen = false
                                     }
                                 }

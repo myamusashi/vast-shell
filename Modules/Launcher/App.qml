@@ -86,7 +86,7 @@ Scope {
                 anchors.fill: parent
 
                 radius: Appearance.rounding.large
-                color: Themes.colors.background
+                color: Themes.colors.surface
                 border.color: Themes.colors.outline
                 border.width: 2
 
@@ -105,12 +105,12 @@ Scope {
                         font.family: Appearance.fonts.family_Sans
                         focus: true
                         font.pixelSize: Appearance.fonts.large * 1.2
-                        color: Themes.colors.on_surface
+                        color: Themes.colors.on_background
                         placeholderTextColor: Themes.colors.on_surface_variant
 
                         background: StyledRect {
                             radius: Appearance.rounding.small
-                            color: Themes.withAlpha(Themes.colors.surface, 0)
+                            color: Themes.colors.surface
                             // border.color: Themes.colors.on_background
                             // border.width: 2
                         }
