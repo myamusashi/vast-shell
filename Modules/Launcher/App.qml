@@ -73,10 +73,12 @@ Scope {
             color: "transparent"
             screen: modelData
             exclusiveZone: 0
-            implicitWidth: monitorWidth * 0.3
+            implicitWidth: monitorWidth * 0.5
             implicitHeight: monitorHeight * 0.5
-            margins.left: monitorWidth * 0.3
-            margins.right: monitorWidth * 0.3
+            margins.left: monitorWidth * 0.2
+            margins.right: monitorWidth * 0.2
+            WlrLayershell.layer: WlrLayer.Overlay
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
             StyledRect {
                 id: rectLauncher
@@ -147,8 +149,8 @@ Scope {
                             values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name")
                         }
 
-                        cellWidth: 100
-                        cellHeight: 120
+                        cellWidth: 160
+                        cellHeight: 160
                         clip: true
 
                         delegate: ItemDelegate {
@@ -163,8 +165,8 @@ Scope {
                             contentItem: ColumnLayout {
                                 StyledRect {
                                     Layout.alignment: Qt.AlignHCenter
-                                    Layout.preferredWidth: 56
-                                    Layout.preferredHeight: 56
+                                    Layout.preferredWidth: 68
+                                    Layout.preferredHeight: 68
 
                                     color: "transparent"
                                     border.width: gridView.currentIndex === delegateItem.index ? 3 : 1
@@ -172,13 +174,13 @@ Scope {
 
                                     IconImage {
                                         anchors.centerIn: parent
-                                        width: 48
-                                        height: 48
+                                        width: 50
+                                        height: 50
                                         source: Quickshell.iconPath(delegateItem.modelData.icon) || ""
                                     }
                                 }
 
-                                StyledText {
+                                StyledLabel {
                                     Layout.fillWidth: true
                                     text: delegateItem.modelData.name || "a"
                                     horizontalAlignment: Text.AlignHCenter
@@ -200,15 +202,11 @@ Scope {
                                 case Qt.Key_Return:
                                 case Qt.Key_Tab:
                                 case Qt.Key_Enter:
-                                    gridView.focus = true;
+                                    search.focus = true;
                                     event.accepted = true;
                                     break;
                                 case Qt.Key_Escape:
                                     root.isLauncherOpen = false;
-                                    event.accepted = true;
-                                    break;
-                                case Qt.Key_Down:
-                                    gridView.focus = true;
                                     event.accepted = true;
                                     break;
                                 }
