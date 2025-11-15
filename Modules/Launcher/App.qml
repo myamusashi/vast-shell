@@ -170,7 +170,7 @@ Scope {
 
                                     color: "transparent"
                                     border.width: gridView.currentIndex === delegateItem.index ? 3 : 1
-                                    border.color: gridView.currentIndex === delegateItem.index ? Themes.colors.primary : Themes.colors.outline_variant
+                                    border.color: gridView.currentIndex === delegateItem.index && search.focus !== true ? Themes.colors.primary : Themes.colors.outline_variant
 
                                     IconImage {
                                         anchors.centerIn: parent
@@ -199,10 +199,13 @@ Scope {
 
                             Keys.onPressed: function (event) {
                                 switch (event.key) {
-                                case Qt.Key_Return:
                                 case Qt.Key_Tab:
-                                case Qt.Key_Enter:
                                     search.focus = true;
+                                    event.accepted = true;
+                                    break;
+                                case Qt.Key_Return:
+                                case Qt.Key_Enter:
+                                    root.launch(delegateItem.modelData);
                                     event.accepted = true;
                                     break;
                                 case Qt.Key_Escape:
