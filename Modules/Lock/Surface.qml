@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Wayland
 
 import qs.Data
+import qs.Helpers
 import qs.Components
 
 WlSessionLockSurface {
@@ -14,11 +15,29 @@ WlSessionLockSurface {
     required property WlSessionLock lock
     required property Pam pam
 
+    property string inputBuffer: ""
+    property string maskedBuffer: ""
+    property bool showErrorMessage: false
+    property bool isAllSelected: false
+    readonly property list<string> maskChars: ["m", "y", "a", "m", "u", "s", "a", "s", "h", "i"]
+
     Connections {
         target: root.lock
 
         function onUnlock(): void {
-            unlockSequence.start()
+            unlockSequence.start();
+        }
+    }
+
+    Connections {
+        target: root.pam
+        enabled: root.pam !== null
+
+        function onShowFailureChanged() {
+            if (root.pam.showFailure) {
+                root.showErrorMessage = true;
+                errorShakeAnimation.start();
+            }
         }
     }
 
@@ -26,8 +45,68 @@ WlSessionLockSurface {
         id: surface
 
         anchors.fill: parent
+        focus: true
 
         color: Themes.colors.surface_container_lowest
+
+        Keys.onPressed: kevent => {
+            if (root.showErrorMessage && kevent.text) {
+                root.showErrorMessage = false;
+            }
+
+            if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
+                root.pam.currentText = root.inputBuffer;
+                root.pam.tryUnlock();
+                root.inputBuffer = "";
+                root.maskedBuffer = "";
+                passwordBuffer.color = Themes.colors.on_surface_variant;
+                return;
+            }
+
+            if (kevent.key === Qt.Key_A && (kevent.modifiers & Qt.ControlModifier)) {
+                passwordBuffer.color = Themes.colors.blue;
+                root.isAllSelected = true;
+                kevent.accepted = true;
+                return;
+            }
+
+            if (kevent.key === Qt.Key_Backspace) {
+                if (kevent.modifiers & Qt.ControlModifier) {
+                    passwordBuffer.color = Themes.colors.on_background;
+                    root.inputBuffer = "";
+                    root.maskedBuffer = "";
+                    root.isAllSelected = false;
+                    return;
+                }
+
+                if (root.isAllSelected) {
+                    root.inputBuffer = "";
+                    root.maskedBuffer = "";
+                    passwordBuffer.color = Themes.colors.on_surface_variant;
+                    root.isAllSelected = false;
+                    return;
+                }
+
+                root.inputBuffer = root.inputBuffer.slice(0, -1);
+                root.maskedBuffer = root.maskedBuffer.slice(0, -1);
+
+                if (root.maskedBuffer === "") {
+                    passwordBuffer.color = Themes.colors.on_surface_variant;
+                }
+                return;
+            }
+
+            if (kevent.text) {
+                if (passwordBuffer.color === Themes.colors.blue || passwordBuffer.color === Themes.colors.on_background) {
+                    passwordBuffer.color = root.maskedBuffer ? Themes.colors.on_surface : Themes.colors.on_surface_variant;
+                }
+
+                root.inputBuffer += kevent.text;
+                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+
+                typingAnimation.restart();
+            }
+        }
 
         Wallpaper {
             id: wallpaper
@@ -50,7 +129,7 @@ WlSessionLockSurface {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial * 1.5
                     easing.type: Easing.Linear
                     property: "blur"
-                    running: root.lock.locked
+                    running: !root.lock.locked
                     target: wallBlur
                     to: 0
                 }
@@ -60,32 +139,51 @@ WlSessionLockSurface {
         ColumnLayout {
             id: clockContainer
 
-            anchors {
-                centerIn: parent
-                verticalCenterOffset: -80
-            }
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: -80
             spacing: Appearance.spacing.normal
             opacity: 0
             scale: 0.8
 
+            z: 1
+
             Clock {}
         }
 
-        ColumnLayout {
-            id: inputContainer
+        StyledLabel {
+            id: errorLabel
 
-            spacing: Appearance.spacing.larger
-            opacity: 0
-            scale: 0.95
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: -60
+            text: "WRONG"
+            color: Themes.colors.error
+            font.pointSize: Appearance.fonts.large * 5
+            opacity: root.showErrorMessage ? 1 : 0
+            visible: opacity > 0
 
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                bottom: parent.bottom
-                bottomMargin: Appearance.spacing.large * 4
+            z: 2
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Appearance.animations.durations.small
+                }
             }
+        }
 
-            InputField {
-                pam: root.pam
+        StyledLabel {
+            id: passwordBuffer
+
+            anchors.centerIn: parent
+            text: root.showErrorMessage ? "" : root.maskedBuffer
+            color: root.maskedBuffer ? (root.pam.showFailure ? Themes.colors.on_error_container : Themes.colors.on_surface) : Themes.colors.on_surface_variant
+            font.pointSize: Appearance.fonts.extraLarge * 5
+
+            z: 0
+
+            Behavior on color {
+                ColAnim {
+                    duration: Appearance.animations.durations.small
+                }
             }
         }
 
@@ -96,13 +194,12 @@ WlSessionLockSurface {
             opacity: 0
             scale: 0.8
 
-            anchors {
-                right: parent.right
-                bottom: parent.bottom
-                margins: Appearance.spacing.large
-            }
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: Appearance.spacing.large
 
             SessionButton {}
+            z: 1
         }
     }
 
@@ -130,52 +227,12 @@ WlSessionLockSurface {
             }
             PropertyAnimation {
                 target: clockContainer
-                property: "y"
-                from: clockContainer.y
-                to: clockContainer.y - 20
+                property: "anchors.verticalCenterOffset"
+                from: -80
+                to: -100
                 duration: Appearance.animations.durations.small
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
-            }
-        }
-
-        ParallelAnimation {
-            PropertyAnimation {
-                target: inputContainer
-                property: "opacity"
-                from: 1
-                to: 0
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-            PropertyAnimation {
-                target: inputContainer
-                property: "scale"
-                from: 1
-                to: 0.85
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-
-            PropertyAnimation {
-                target: sessionContainer
-                property: "opacity"
-                from: 1
-                to: 0
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-            PropertyAnimation {
-                target: sessionContainer
-                property: "scale"
-                from: 1
-                to: 0.85
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
             }
         }
 
@@ -203,89 +260,21 @@ WlSessionLockSurface {
             PropertyAnimation {
                 target: clockContainer
                 property: "scale"
-                from: 0.8
+                from: 0.9
                 to: 1
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
             }
             PropertyAnimation {
-                target: clockContainer
-                property: "y"
-                from: clockContainer.y + 30
-                to: clockContainer.y
+                target: sessionContainer
+                property: "opacity"
+                from: 0
+                to: 1
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.type: Easing.BezierSpline
                 easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
             }
-        }
-
-        ParallelAnimation {
-            PropertyAnimation {
-                target: inputContainer
-                property: "opacity"
-                from: 0
-                to: 1
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-            PropertyAnimation {
-                target: inputContainer
-                property: "scale"
-                from: 0.9
-                to: 1
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-            PropertyAnimation {
-                target: inputContainer
-                property: "y"
-                from: inputContainer.y + 20
-                to: inputContainer.y
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-
-            PropertyAnimation {
-                target: sessionContainer
-                property: "opacity"
-                from: 0
-                to: 1
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-            PropertyAnimation {
-                target: sessionContainer
-                property: "scale"
-                from: 0.9
-                to: 1
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-            PropertyAnimation {
-                target: sessionContainer
-                property: "y"
-                from: sessionContainer.y + 20
-                to: sessionContainer.y
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-        }
-    }
-
-    Connections {
-        target: root.pam
-        enabled: root.pam !== null
-
-        function onShowFailureChanged() {
-            if (root.pam.showFailure)
-                errorShakeAnimation.start()
         }
     }
 
@@ -293,7 +282,7 @@ WlSessionLockSurface {
         id: errorShakeAnimation
 
         PropertyAnimation {
-            target: inputContainer
+            target: errorLabel
             property: "anchors.horizontalCenterOffset"
             from: 0
             to: -8
@@ -302,7 +291,7 @@ WlSessionLockSurface {
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
         PropertyAnimation {
-            target: inputContainer
+            target: errorLabel
             property: "anchors.horizontalCenterOffset"
             from: -8
             to: 8
@@ -311,7 +300,7 @@ WlSessionLockSurface {
             easing.bezierCurve: Appearance.animations.curves.standardAccel
         }
         PropertyAnimation {
-            target: inputContainer
+            target: errorLabel
             property: "anchors.horizontalCenterOffset"
             from: 8
             to: -4
@@ -320,13 +309,36 @@ WlSessionLockSurface {
             easing.bezierCurve: Appearance.animations.curves.standardAccel
         }
         PropertyAnimation {
-            target: inputContainer
+            target: errorLabel
             property: "anchors.horizontalCenterOffset"
             from: -4
             to: 0
             duration: Appearance.animations.durations.small * 0.8
             easing.type: Easing.BezierSpline
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+        }
+    }
+
+    SequentialAnimation {
+		id: typingAnimation
+
+        ParallelAnimation {
+            NumbAnim {
+                target: passwordBuffer
+                property: "scale"
+                from: 0.9
+                to: 1.0
+                duration: Appearance.animations.durations.small
+                easing.type: Easing.Linear
+            }
+            NumbAnim {
+                target: passwordBuffer
+                property: "opacity"
+                from: 0.5
+                to: 1.0
+                duration: Appearance.animations.durations.small
+                easing.type: Easing.Linear
+            }
         }
     }
 }
