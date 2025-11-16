@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Effects
 
 import qs.Data
 import qs.Helpers
@@ -32,9 +33,11 @@ Button {
     contentItem: RowLayout {
         spacing: root.iconTextSpacing
         opacity: root.contentOpacity
+        anchors.centerIn: parent
 
         Loader {
             active: root.iconButton !== ""
+            Layout.alignment: Qt.AlignCenter
             sourceComponent: MatIcon {
                 icon: root.iconButton
                 font.pixelSize: Appearance.fonts.large * 1.2 + root.iconSize
@@ -45,6 +48,7 @@ Button {
 
         Loader {
             active: root.buttonTitle !== ""
+            Layout.alignment: Qt.AlignCenter
             sourceComponent: Text {
                 text: root.buttonTitle
                 font.pixelSize: Appearance.fonts.large
@@ -64,7 +68,7 @@ Button {
         opacity: root.contentOpacity
 
         Behavior on opacity {
-            NumberAnimation {
+            NumbAnim {
                 duration: Appearance.animations.durations.small
             }
         }
