@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import Quickshell.Wayland
 
 import qs.Data
-import qs.Helpers
 import qs.Components
 
 WlSessionLockSurface {
@@ -19,7 +18,7 @@ WlSessionLockSurface {
     property string maskedBuffer: ""
     property bool showErrorMessage: false
     property bool isAllSelected: false
-    readonly property list<string> maskChars: ["m", "y", "a", "m", "u", "s", "a", "s", "h", "i"]
+    readonly property list<string> maskChars: ["6", "7"]
 
     Connections {
         target: root.lock
@@ -50,60 +49,70 @@ WlSessionLockSurface {
         color: Themes.colors.surface_container_lowest
 
         Keys.onPressed: kevent => {
-            if (root.showErrorMessage && kevent.text) {
+            // Hide error message on any text input
+            if (root.showErrorMessage && kevent.text)
                 root.showErrorMessage = false;
-            }
 
+            // Handle Enter key - submit password
             if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                 root.pam.currentText = root.inputBuffer;
                 root.pam.tryUnlock();
                 root.inputBuffer = "";
                 root.maskedBuffer = "";
+                root.isAllSelected = false;
                 passwordBuffer.color = Themes.colors.on_surface_variant;
                 return;
             }
 
+            // Handle Ctrl+A - select all
             if (kevent.key === Qt.Key_A && (kevent.modifiers & Qt.ControlModifier)) {
-                passwordBuffer.color = Themes.colors.blue;
-                root.isAllSelected = true;
+                if (root.maskedBuffer) {
+                    passwordBuffer.color = Themes.colors.blue;
+                    root.isAllSelected = true;
+                }
                 kevent.accepted = true;
                 return;
             }
 
+            // Handle Backspace
             if (kevent.key === Qt.Key_Backspace) {
+                // Ctrl+Backspace - clear all
                 if (kevent.modifiers & Qt.ControlModifier) {
-                    passwordBuffer.color = Themes.colors.on_background;
                     root.inputBuffer = "";
                     root.maskedBuffer = "";
                     root.isAllSelected = false;
+                    passwordBuffer.color = Themes.colors.on_surface_variant;
                     return;
                 }
 
-                if (root.isAllSelected) {
-                    root.inputBuffer = "";
-                    root.maskedBuffer = "";
-                    passwordBuffer.color = Themes.colors.on_surface_variant;
-                    root.isAllSelected = false;
-                    return;
-                }
-
-                root.inputBuffer = root.inputBuffer.slice(0, -1);
-                root.maskedBuffer = root.maskedBuffer.slice(0, -1);
-
-                if (root.maskedBuffer === "") {
-                    passwordBuffer.color = Themes.colors.on_surface_variant;
+                // Clear selection or delete last character
+                if (root.isAllSelected || root.maskedBuffer) {
+                    if (root.isAllSelected) {
+                        root.inputBuffer = "";
+                        root.maskedBuffer = "";
+                        root.isAllSelected = false;
+                    } else {
+                        root.inputBuffer = root.inputBuffer.slice(0, -1);
+                        root.maskedBuffer = root.maskedBuffer.slice(0, -1);
+                    }
+                    passwordBuffer.color = root.maskedBuffer ? Themes.colors.on_surface : Themes.colors.on_surface_variant;
                 }
                 return;
             }
 
+            // Handle text input
             if (kevent.text) {
-                if (passwordBuffer.color === Themes.colors.blue || passwordBuffer.color === Themes.colors.on_background) {
-                    passwordBuffer.color = root.maskedBuffer ? Themes.colors.on_surface : Themes.colors.on_surface_variant;
+                if (root.isAllSelected) {
+                    root.inputBuffer = "";
+                    root.maskedBuffer = "";
+                    root.isAllSelected = false;
                 }
 
+                // Add new character
                 root.inputBuffer += kevent.text;
                 root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
 
+                passwordBuffer.color = Themes.colors.on_surface;
                 typingAnimation.restart();
             }
         }
@@ -124,15 +133,6 @@ WlSessionLockSurface {
                     from: 0
                     to: 0.69
                 }
-
-                NumbAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial * 1.5
-                    easing.type: Easing.Linear
-                    property: "blur"
-                    running: !root.lock.locked
-                    target: wallBlur
-                    to: 0
-                }
             }
         }
 
@@ -144,7 +144,6 @@ WlSessionLockSurface {
             spacing: Appearance.spacing.normal
             opacity: 0
             scale: 0.8
-
             z: 1
 
             Clock {}
@@ -160,7 +159,6 @@ WlSessionLockSurface {
             font.pointSize: Appearance.fonts.large * 5
             opacity: root.showErrorMessage ? 1 : 0
             visible: opacity > 0
-
             z: 2
 
             Behavior on opacity {
@@ -177,7 +175,6 @@ WlSessionLockSurface {
             text: root.showErrorMessage ? "" : root.maskedBuffer
             color: root.maskedBuffer ? (root.pam.showFailure ? Themes.colors.on_error_container : Themes.colors.on_surface) : Themes.colors.on_surface_variant
             font.pointSize: Appearance.fonts.extraLarge * 5
-
             z: 0
 
             Behavior on color {
@@ -320,7 +317,7 @@ WlSessionLockSurface {
     }
 
     SequentialAnimation {
-		id: typingAnimation
+        id: typingAnimation
 
         ParallelAnimation {
             NumbAnim {
@@ -330,6 +327,7 @@ WlSessionLockSurface {
                 to: 1.0
                 duration: Appearance.animations.durations.small
                 easing.type: Easing.Linear
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             }
             NumbAnim {
                 target: passwordBuffer
@@ -338,6 +336,7 @@ WlSessionLockSurface {
                 to: 1.0
                 duration: Appearance.animations.durations.small
                 easing.type: Easing.Linear
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             }
         }
     }

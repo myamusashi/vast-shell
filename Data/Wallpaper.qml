@@ -1,8 +1,11 @@
 import QtQuick
+import QtQuick.Effects
 
 import qs.Data
 
 Image {
+	id: wallpaper
+
     anchors.fill: parent
     source: Paths.currentWallpaper
     fillMode: Image.PreserveAspectCrop
@@ -10,11 +13,10 @@ Image {
     antialiasing: true
     asynchronous: true
     smooth: true
-
     onStatusChanged: {
         if (this.status == Image.Error) {
-            console.log("[ERROR] Wallpaper source invalid")
-            console.log("[INFO] Please disable set wallpaper if not required")
+            console.log("[ERROR] Wallpaper source invalid");
+            console.log("[INFO] Please disable set wallpaper if not required");
         }
     }
 }
