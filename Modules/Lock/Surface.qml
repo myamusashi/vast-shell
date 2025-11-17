@@ -18,7 +18,9 @@ WlSessionLockSurface {
     property string maskedBuffer: ""
     property bool showErrorMessage: false
     property bool isAllSelected: false
-    readonly property list<string> maskChars: ["6", "7"]
+    readonly property list<string> maskChars: ["m", "y", "a", "m", "u", "s", "a", "s", "h", "i"]
+    property int fakeTypingTimer: 0
+    property var lastKeystrokeTime: 0
 
     Connections {
         target: root.lock
@@ -49,58 +51,54 @@ WlSessionLockSurface {
         color: Themes.colors.surface_container_lowest
 
         Keys.onPressed: kevent => {
-            // Hide error message on any text input
             if (root.showErrorMessage && kevent.text)
                 root.showErrorMessage = false;
 
-            // Handle Enter key - submit password
             if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                 root.pam.currentText = root.inputBuffer;
                 root.pam.tryUnlock();
                 root.inputBuffer = "";
                 root.maskedBuffer = "";
-                root.isAllSelected = false;
                 passwordBuffer.color = Themes.colors.on_surface_variant;
+                root.lastKeystrokeTime = 0;
                 return;
             }
 
-            // Handle Ctrl+A - select all
             if (kevent.key === Qt.Key_A && (kevent.modifiers & Qt.ControlModifier)) {
-                if (root.maskedBuffer) {
-                    passwordBuffer.color = Themes.colors.blue;
-                    root.isAllSelected = true;
-                }
+                passwordBuffer.color = Themes.colors.blue;
+                root.isAllSelected = true;
                 kevent.accepted = true;
                 return;
             }
 
-            // Handle Backspace
             if (kevent.key === Qt.Key_Backspace) {
-                // Ctrl+Backspace - clear all
                 if (kevent.modifiers & Qt.ControlModifier) {
+                    passwordBuffer.color = Themes.colors.on_background;
                     root.inputBuffer = "";
                     root.maskedBuffer = "";
                     root.isAllSelected = false;
-                    passwordBuffer.color = Themes.colors.on_surface_variant;
                     return;
                 }
 
-                // Clear selection or delete last character
-                if (root.isAllSelected || root.maskedBuffer) {
-                    if (root.isAllSelected) {
-                        root.inputBuffer = "";
-                        root.maskedBuffer = "";
-                        root.isAllSelected = false;
-                    } else {
-                        root.inputBuffer = root.inputBuffer.slice(0, -1);
-                        root.maskedBuffer = root.maskedBuffer.slice(0, -1);
-                    }
-                    passwordBuffer.color = root.maskedBuffer ? Themes.colors.on_surface : Themes.colors.on_surface_variant;
+                if (root.isAllSelected) {
+                    root.inputBuffer = "";
+                    root.maskedBuffer = "";
+                    passwordBuffer.color = Themes.colors.on_surface_variant;
+                    root.isAllSelected = false;
+                    return;
                 }
+
+                root.inputBuffer = root.inputBuffer.slice(0, -1);
+
+                const randomRemove = Math.min(Math.floor(Math.random() * 3) + 1, root.maskedBuffer.length);
+                root.maskedBuffer = root.maskedBuffer.slice(0, -randomRemove);
+
+                if (root.maskedBuffer === "")
+                    passwordBuffer.color = Themes.colors.on_surface_variant;
+
                 return;
             }
 
-            // Handle text input
             if (kevent.text) {
                 if (root.isAllSelected) {
                     root.inputBuffer = "";
@@ -108,12 +106,55 @@ WlSessionLockSurface {
                     root.isAllSelected = false;
                 }
 
-                // Add new character
-                root.inputBuffer += kevent.text;
-                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                if (passwordBuffer.color === Themes.colors.blue || passwordBuffer.color === Themes.colors.on_background)
+                    passwordBuffer.color = root.maskedBuffer ? Themes.colors.on_surface : Themes.colors.on_surface_variant;
 
-                passwordBuffer.color = Themes.colors.on_surface;
+                root.inputBuffer += kevent.text;
+
+                const randomLength = Math.floor(Math.random() * 3) + 1;
+                for (let i = 0; i < randomLength; i++)
+                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+
+                const currentTime = Date.now();
+                if (root.lastKeystrokeTime > 0) {
+                    const timeDelta = currentTime - root.lastKeystrokeTime;
+                    if (timeDelta < 50) {
+                        fakeDelayTimer.interval = Math.random() * 30 + 10;
+                        fakeDelayTimer.restart();
+                    }
+                }
+                root.lastKeystrokeTime = currentTime;
+
                 typingAnimation.restart();
+            }
+        }
+
+        Timer {
+            id: fakeDelayTimer
+
+            interval: 20
+            repeat: false
+            onTriggered: {
+                passwordBuffer.opacity = 0.99;
+                passwordBuffer.opacity = 1.0;
+            }
+        }
+
+        Timer {
+            id: fakeTypingTimer
+
+            interval: Math.random() * 3000 + 2000
+            repeat: true
+            running: root.lock.locked && root.maskedBuffer.length > 0
+
+            onTriggered: {
+                // Randomly add or remove fake characters when idle
+                if (Math.random() > 0.5 && root.maskedBuffer.length < 50) {
+                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                } else if (root.maskedBuffer.length > root.inputBuffer.length * 3) {
+                    root.maskedBuffer = root.maskedBuffer.slice(0, -1);
+                }
+                interval = Math.random() * 3000 + 2000;
             }
         }
 
@@ -177,9 +218,43 @@ WlSessionLockSurface {
             font.pointSize: Appearance.fonts.extraLarge * 5
             z: 0
 
+            property real randomXOffset: 0
+            property real randomYOffset: 0
+
+            transform: Translate {
+                x: passwordBuffer.randomXOffset
+                y: passwordBuffer.randomYOffset
+            }
+
+            Timer {
+                interval: 100
+                repeat: true
+                running: root.lock.locked && root.maskedBuffer.length > 0
+                onTriggered: {
+                    passwordBuffer.randomXOffset = (Math.random() - 0.5) * 4;
+                    passwordBuffer.randomYOffset = (Math.random() - 0.5) * 4;
+                }
+            }
+
             Behavior on color {
                 ColAnim {
                     duration: Appearance.animations.durations.small
+                }
+            }
+
+            Behavior on font.pointSize {
+                NumbAnim {
+                    duration: 100
+                }
+            }
+
+            Timer {
+                interval: 200
+                repeat: true
+                running: root.lock.locked && root.maskedBuffer.length > 0
+                onTriggered: {
+                    const baseFontSize = Appearance.fonts.extraLarge * 5;
+                    passwordBuffer.font.pointSize = baseFontSize * (0.95 + Math.random() * 0.1);
                 }
             }
         }
