@@ -68,7 +68,7 @@
       runHook preInstall
 
       mkdir -p $out/share/quickshell
-      cp -r Components Configs Data Helpers Modules Widgets Assets shell.qml \
+      cp -r * \
         $out/share/quickshell/
 
       install -Dm755 ${keystate-bin}/bin/keystate-bin \
