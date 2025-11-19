@@ -8,7 +8,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 

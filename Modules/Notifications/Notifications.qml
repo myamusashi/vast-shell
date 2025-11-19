@@ -9,8 +9,9 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import Quickshell.Services.Notifications
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
+import qs.Services
 import qs.Components
 
 LazyLoader {
@@ -37,11 +38,10 @@ LazyLoader {
         implicitHeight: Math.min(600, notifListView.contentHeight + 20)
 
         visible: {
-            if (!Notifs.notifications.disabledDnD
-                && Notifs.notifications.popupNotifications.length > 0)
-            return true
+            if (!Notifs.notifications.disabledDnD && Notifs.notifications.popupNotifications.length > 0)
+                return true;
             else
-            return false
+                return false;
         }
 
         ListView {
@@ -54,8 +54,7 @@ LazyLoader {
             spacing: Appearance.spacing.normal
             clip: true
             model: ScriptModel {
-                values: [...Notifs.notifications.popupNotifications.map(
-                        a => a)].reverse()
+                values: [...Notifs.notifications.popupNotifications.map(a => a)].reverse()
             }
 
             add: Transition {
@@ -125,28 +124,21 @@ LazyLoader {
                 Timer {
                     id: closePopups
 
-                    interval: delegateNotif.modelData.urgency
-                              === NotificationUrgency.Critical ? 10000 : 5000
+                    interval: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? 10000 : 5000
                     running: true
 
-                    onTriggered: {
-                        Notifs.notifications.removePopupNotification(
-                            delegateNotif.modelData)
-                    }
+                    onTriggered: Notifs.notifications.removePopupNotification(delegateNotif.modelData)
                 }
 
                 StyledRect {
                     anchors.fill: parent
 
-                    color: delegateNotif.modelData.urgency
-                           === NotificationUrgency.Critical ? Themes.colors.error_container : Themes.colors.surface_container_low
+                    color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.error_container : Themes.colors.surface_container_low
 
                     radius: Appearance.rounding.large
 
-                    border.color: delegateNotif.modelData.urgency
-                                  === NotificationUrgency.Critical ? Themes.colors.error : "transparent"
-                    border.width: delegateNotif.modelData.urgency
-                                  === NotificationUrgency.Critical ? 1 : 0
+                    border.color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.error : "transparent"
+                    border.width: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
 
                     MArea {
                         id: delegateMouseNotif
@@ -155,13 +147,13 @@ LazyLoader {
                         hoverEnabled: true
 
                         onEntered: {
-                            delegateNotif.isPaused = true
-                            closePopups.stop()
+                            delegateNotif.isPaused = true;
+                            closePopups.stop();
                         }
 
                         onExited: {
-                            delegateNotif.isPaused = false
-                            closePopups.start()
+                            delegateNotif.isPaused = false;
+                            closePopups.start();
                         }
 
                         drag {
@@ -170,16 +162,12 @@ LazyLoader {
 
                             onActiveChanged: {
                                 if (delegateMouseNotif.drag.active)
-                                return
-
-                                if (Math.abs(
-                                        delegateNotif.x) > (delegateNotif.width * 0.45)) {
-                                    Notifs.notifications.removePopupNotification(
-                                        delegateNotif.modelData)
-                                    Notifs.notifications.removeListNotification(
-                                        delegateNotif.modelData)
+                                    return;
+                                if (Math.abs(delegateNotif.x) > (delegateNotif.width * 0.45)) {
+                                    Notifs.notifications.removePopupNotification(delegateNotif.modelData);
+                                    Notifs.notifications.removeListNotification(delegateNotif.modelData);
                                 } else
-                                delegateNotif.x = 0
+                                    delegateNotif.x = 0;
                             }
                         }
                     }
@@ -204,8 +192,7 @@ LazyLoader {
                             Loader {
                                 id: appIcon
 
-                                active: delegateNotif.hasAppIcon
-                                        || !delegateNotif.hasImage
+                                active: delegateNotif.hasAppIcon || !delegateNotif.hasImage
 
                                 anchors.centerIn: parent
                                 width: 40
@@ -214,8 +201,7 @@ LazyLoader {
                                     width: 40
                                     height: 40
                                     radius: Appearance.rounding.full
-                                    color: delegateNotif.modelData.urgency
-                                           === NotificationUrgency.Critical ? Themes.colors.error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Themes.colors.secondary_container : Themes.colors.primary_container
+                                    color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Themes.colors.secondary_container : Themes.colors.primary_container
 
                                     Loader {
                                         id: icon
@@ -227,8 +213,7 @@ LazyLoader {
                                         height: 24
                                         sourceComponent: IconImage {
                                             anchors.centerIn: parent
-                                            source: Quickshell.iconPath(
-                                                        delegateNotif.modelData.appIcon)
+                                            source: Quickshell.iconPath(delegateNotif.modelData.appIcon)
                                         }
                                     }
 
@@ -273,8 +258,7 @@ LazyLoader {
 
                                         Image {
                                             anchors.fill: parent
-                                            source: Qt.resolvedUrl(
-                                                        delegateNotif.modelData.image)
+                                            source: Qt.resolvedUrl(delegateNotif.modelData.image)
                                             fillMode: Image.PreserveAspectCrop
                                             cache: false
                                             asynchronous: true
@@ -332,9 +316,8 @@ LazyLoader {
                                             id: whenTime
 
                                             text: {
-                                                const now = new Date()
-                                                return TimeAgo.timeAgoWithIfElse(
-                                                    now)
+                                                const now = new Date();
+                                                return TimeAgo.timeAgoWithIfElse(now);
                                             }
                                             color: Themes.colors.on_surface_variant
                                         }
@@ -349,12 +332,6 @@ LazyLoader {
 
                                     radius: Appearance.rounding.large
                                     color: expandButtonMouse.pressed ? Themes.colors.secondary_container : expandButtonMouse.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : "transparent"
-
-                                    Behavior on color {
-                                        ColorAnimation {
-                                            duration: 100
-                                        }
-                                    }
 
                                     MaterialIcon {
                                         id: expandIcon
@@ -383,9 +360,8 @@ LazyLoader {
                                         hoverEnabled: true
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: {
-                                            delegateNotif.isShowMoreBody
-                                            = !delegateNotif.isShowMoreBody
-                                            rotateArrowIcon.running = !rotateArrowIcon.running
+                                            delegateNotif.isShowMoreBody = !delegateNotif.isShowMoreBody;
+                                            rotateArrowIcon.running = !rotateArrowIcon.running;
                                         }
                                     }
                                 }
@@ -419,7 +395,6 @@ LazyLoader {
                                 maximumLineCount: delegateNotif.isShowMoreBody ? 0 : 1
                                 visible: text.length > 0
                                 clip: true
-
                                 transformOrigin: Item.Top
 
                                 opacity: delegateNotif.isShowMoreBody ? 1.0 : 0.92
@@ -434,9 +409,8 @@ LazyLoader {
                             RowLayout {
                                 Layout.fillWidth: true
                                 Layout.topMargin: 8
-                                spacing: 8
-                                visible: delegateNotif.modelData?.actions
-                                         && delegateNotif.modelData.actions.length > 0
+                                spacing: Appearance.spacing.normal
+                                visible: delegateNotif.modelData?.actions && delegateNotif.modelData.actions.length > 0
 
                                 Repeater {
                                     model: delegateNotif.modelData?.actions
@@ -467,11 +441,9 @@ LazyLoader {
                                             cursorShape: Qt.PointingHandCursor
 
                                             onClicked: {
-                                                actionButton.modelData.invoke()
-                                                Notifs.notifications.removePopupNotification(
-                                                    delegateNotif.modelData)
-                                                Notifs.notifications.removeListNotification(
-                                                    delegateNotif.modelData)
+                                                actionButton.modelData.invoke();
+                                                Notifs.notifications.removePopupNotification(delegateNotif.modelData);
+                                                Notifs.notifications.removeListNotification(delegateNotif.modelData);
                                             }
                                         }
 

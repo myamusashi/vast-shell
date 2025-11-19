@@ -6,7 +6,7 @@ import Quickshell
 import QtQuick.Layouts
 import QtQuick
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
@@ -197,7 +197,7 @@ Scope {
                                     color: Themes.colors.on_surface
                                     font.pixelSize: Appearance.fonts.large * 1.2
                                     font.bold: true
-                                    font.family: Appearance.fonts.family_Mono
+                                    font.family: Appearance.fonts.familyMono
                                 }
                             }
                         }

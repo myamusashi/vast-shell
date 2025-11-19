@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Components
 
 GridLayout {
@@ -14,14 +15,14 @@ GridLayout {
         spacing: Appearance.spacing.normal
 
         Circular {
-            value: Math.round(SysUsage.memUsed / SysUsage.memTotal * 100)
+            value: Math.round(SystemUsage.memUsed / SystemUsage.memTotal * 100)
             size: 0
             text: value + "%"
         }
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "RAM usage\n" + SysUsage.memProp.toFixed(0) + " GB"
+            text: "RAM usage\n" + SystemUsage.memProp.toFixed(0) + " GB"
             color: Themes.colors.on_surface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -33,7 +34,7 @@ GridLayout {
 
         Circular {
             Layout.alignment: Qt.AlignHCenter
-            value: SysUsage.cpuPerc
+            value: SystemUsage.cpuPerc
             size: 40
             text: value + "%"
         }
@@ -50,14 +51,14 @@ GridLayout {
         spacing: Appearance.spacing.normal
 
         Circular {
-            value: SysUsage.diskPercent.toFixed(0)
+            value: SystemUsage.diskPercent.toFixed(0)
             text: value + "%"
             size: 0
         }
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "Disk usage\n" + SysUsage.diskProp.toFixed(0) + " GB"
+            text: "Disk usage\n" + SystemUsage.diskProp.toFixed(0) + " GB"
             color: Themes.colors.on_surface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -69,20 +70,24 @@ GridLayout {
         spacing: Appearance.spacing.small
 
         Repeater {
-            model: [{
+            model: [
+                {
                     "label": "Wired Download",
-                    "value": SysUsage.formatSpeed(SysUsage.wiredDownloadSpeed)
-                }, {
+                    "value": SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed)
+                },
+                {
                     "label": "Wired Upload",
-                    "value": SysUsage.formatSpeed(SysUsage.wiredUploadSpeed)
-                }, {
+                    "value": SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed)
+                },
+                {
                     "label": "Wireless Download",
-                    "value": SysUsage.formatSpeed(
-                                 SysUsage.wirelessDownloadSpeed)
-                }, {
+                    "value": SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)
+                },
+                {
                     "label": "Wireless Upload",
-                    "value": SysUsage.formatSpeed(SysUsage.wirelessUploadSpeed)
-                }]
+                    "value": SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed)
+                }
+            ]
 
             StyledText {
                 required property var modelData
@@ -101,23 +106,24 @@ GridLayout {
         spacing: Appearance.spacing.small
 
         Repeater {
-            model: [{
+            model: [
+                {
                     "label": "Wired download usage",
-                    "value": SysUsage.formatUsage(
-                                 SysUsage.totalWiredDownloadUsage)
-                }, {
+                    "value": SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
+                },
+                {
                     "label": "Wired upload usage",
-                    "value": SysUsage.formatUsage(
-                                 SysUsage.totalWirelessUploadUsage)
-                }, {
+                    "value": SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
+                },
+                {
                     "label": "Wireless download usage",
-                    "value": SysUsage.formatUsage(
-                                 SysUsage.totalWirelessDownloadUsage)
-                }, {
+                    "value": SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
+                },
+                {
                     "label": "Wireless upload usage",
-                    "value": SysUsage.formatUsage(
-                                 SysUsage.totalWirelessUploadUsage)
-                }]
+                    "value": SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
+                }
+            ]
 
             StyledText {
                 required property var modelData
@@ -136,13 +142,16 @@ GridLayout {
         spacing: Appearance.spacing.small
 
         Repeater {
-            model: [{
+            model: [
+                {
                     "label": "Wired interface",
-                    "value": SysUsage.wiredInterface
-                }, {
+                    "value": SystemUsage.wiredInterface
+                },
+                {
                     "label": "Wireless interface",
-                    "value": SysUsage.wirelessInterface
-                }]
+                    "value": SystemUsage.wirelessInterface
+                }
+            ]
 
             StyledText {
                 required property var modelData

@@ -5,7 +5,8 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 
-import qs.Data
+import qs.Configs
+import qs.Helpers
 import qs.Components
 
 Variants {

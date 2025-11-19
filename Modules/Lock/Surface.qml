@@ -5,7 +5,7 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell.Wayland
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 WlSessionLockSurface {

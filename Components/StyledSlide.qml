@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 
 Slider {

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 import qs.Modules.Calendar

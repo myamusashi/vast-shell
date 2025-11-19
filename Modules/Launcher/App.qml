@@ -9,7 +9,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
@@ -101,7 +101,7 @@ Scope {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 60
                         placeholderText: "  Search"
-                        font.family: Appearance.fonts.family_Sans
+                        font.family: Appearance.fonts.familySans
                         focus: true
                         font.pixelSize: Appearance.fonts.large * 1.2
                         color: Themes.colors.on_background

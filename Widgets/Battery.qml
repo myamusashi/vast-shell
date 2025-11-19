@@ -1,10 +1,7 @@
 import QtQuick
-import QtQuick.Layouts
-import Quickshell
 import Quickshell.Services.UPower
 
-import qs.Data
-import qs.Helpers
+import qs.Configs
 import qs.Components
 
 Item {

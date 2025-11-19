@@ -2,20 +2,19 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Components
 
 TextField {
     id: passwordInput
 
-    required property var polkitAgent
-
     Layout.fillWidth: true
     Layout.preferredHeight: 56
 
-    font.family: Appearance.fonts.family_Sans
+    font.family: Appearance.fonts.familySans
     font.pixelSize: Appearance.fonts.large * 1.2
-    echoMode: polkitAgent?.flow?.responseVisible ? TextInput.Normal : TextInput.Password
+    echoMode: PolAgent.agent?.flow?.responseVisible ? TextInput.Normal : TextInput.Password
     selectByMouse: true
     verticalAlignment: TextInput.AlignVCenter
     leftPadding: 16

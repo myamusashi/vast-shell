@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 Scope {

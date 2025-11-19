@@ -4,7 +4,8 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Helpers
 import qs.Components
 

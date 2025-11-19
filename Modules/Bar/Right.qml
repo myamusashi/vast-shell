@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
 import qs.Widgets
 import qs.Helpers
 import qs.Components

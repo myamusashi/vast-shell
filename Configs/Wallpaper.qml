@@ -1,6 +1,6 @@
 import Quickshell.Io
 
-import qs.Data
+import qs.Helpers
 
 JsonObject {
     property bool enabledWallpaper: true

@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Components
 
 RowLayout {

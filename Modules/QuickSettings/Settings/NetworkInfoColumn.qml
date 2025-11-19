@@ -3,8 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
+import qs.Services
 import qs.Components
 
 ColumnLayout {
@@ -23,7 +24,7 @@ ColumnLayout {
         color: Themes.colors.surface_container
         radius: Appearance.rounding.normal
 
-        readonly property bool isConnected: SysUsage.statusWiredInterface === "connected"
+        readonly property bool isConnected: SystemUsage.statusWiredInterface === "connected"
 
         RowLayout {
             anchors.fill: parent
@@ -59,15 +60,15 @@ ColumnLayout {
                     }
 
                     StyledText {
-                        text: `(${SysUsage.statusVPNInterface})`
-                        visible: SysUsage.statusVPNInterface !== ""
+                        text: `(${SystemUsage.statusVPNInterface})`
+                        visible: SystemUsage.statusVPNInterface !== ""
                         font.pixelSize: Appearance.fonts.small
                         color: Themes.colors.on_surface
                     }
                 }
 
                 StyledText {
-                    text: SysUsage.statusWiredInterface === "connected" ? "Connected" : "Not Connected"
+                    text: SystemUsage.statusWiredInterface === "connected" ? "Connected" : "Not Connected"
                     font.pixelSize: Appearance.fonts.normal
                     color: Themes.colors.on_surface_variant
                 }
@@ -84,9 +85,9 @@ ColumnLayout {
         radius: Appearance.rounding.normal
 
         readonly property var activeNetwork: {
-            for (var i = 0; i < NetworkManager.networks.length; i++)
-                if (NetworkManager.networks[i].active)
-                    return NetworkManager.networks[i];
+            for (var i = 0; i < Network.networks.length; i++)
+                if (Network.networks[i].active)
+                    return Network.networks[i];
 
             return null;
         }

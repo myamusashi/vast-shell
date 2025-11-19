@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
@@ -106,14 +106,11 @@ RowLayout {
 
                 Layout.preferredWidth: mainButton.width
                 Layout.preferredHeight: root.isOpen ? 56 : 0
+				Layout.topMargin: root.isOpen ? Appearance.spacing.normal : 0
 
                 color: mouseArea.pressed ? Themes.withAlpha(Themes.colors.primary, 0.08) : mouseArea.containsMouse ? Themes.withAlpha(Themes.colors.primary, 0.1) : Themes.colors.primary
-
                 radius: Appearance.rounding.full
-
                 visible: root.isOpen || Layout.bottomMargin > -height
-
-                Layout.topMargin: root.isOpen ? Appearance.spacing.normal : 0
 
                 Behavior on Layout.preferredHeight {
                     NAnim {
@@ -172,7 +169,6 @@ RowLayout {
         id: toggleButton
 
         Layout.alignment: Qt.AlignBottom
-
         Layout.preferredWidth: 56
         Layout.preferredHeight: 56
 
@@ -211,9 +207,7 @@ RowLayout {
             id: mouseAreaToggle
 
             anchors.fill: parent
-
             hoverEnabled: true
-
             cursorShape: Qt.PointingHandCursor
             onClicked: {
                 root.isOpen = !root.isOpen;

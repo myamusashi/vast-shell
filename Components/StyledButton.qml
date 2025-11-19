@@ -3,9 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import QtQuick.Effects
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 
 Button {

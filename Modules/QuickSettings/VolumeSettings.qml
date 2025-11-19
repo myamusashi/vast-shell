@@ -6,9 +6,10 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.Pipewire
 
-import qs.Data
+import qs.Configs
 import qs.Widgets
 import qs.Helpers
+import qs.Services
 import qs.Components
 
 ScrollView {
@@ -27,6 +28,7 @@ ScrollView {
 
             PwNodeLinkTracker {
                 id: linkTracker
+
                 node: Pipewire.defaultAudioSink
             }
 
@@ -59,12 +61,12 @@ ScrollView {
                 ComboBox {
                     id: profilesComboBox
 
-                    model: AudioProfiles.models
+                    model: Audio.models
                     textRole: "readable"
                     implicitWidth: 350
                     currentIndex: {
-                        for (var i = 0; i < AudioProfiles.models.length; i++) {
-                            if (AudioProfiles.models[i].index === AudioProfiles.activeProfileIndex) {
+                        for (var i = 0; i < Audio.models.length; i++) {
+                            if (Audio.models[i].index === Audio.activeProfileIndex) {
                                 return i;
                             }
                         }
@@ -229,12 +231,12 @@ ScrollView {
                     }
 
                     onActivated: index => {
-                        const profile = AudioProfiles.models[index];
+                        const profile = Audio.models[index];
                         if (profile && profile.available === "yes") {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", `pw-cli set-param ${AudioProfiles.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
+                                command: ["sh", "-c", `pw-cli set-param ${Audio.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
                             });
-                            AudioProfiles.activeProfileIndex = profile.index;
+                            Audio.activeProfileIndex = profile.index;
                         }
                     }
                 }

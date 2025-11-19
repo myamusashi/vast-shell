@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 

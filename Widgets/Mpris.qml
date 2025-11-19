@@ -4,8 +4,9 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
+import qs.Services as Player
 import qs.Components
 import qs.Modules.MediaPlayer
 
@@ -43,13 +44,13 @@ Loader {
             spacing: Appearance.spacing.small
 
             MaterialIcon {
-                icon: Player.active === null ? "question_mark" : Player.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
+                icon: Player.Mpris.active === null ? "question_mark" : Player.Mpris.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
                 font.pointSize: Appearance.fonts.large
                 color: Themes.colors.on_background
             }
 
             StyledText {
-                text: Player.active === null ? "null" : Player.active.trackArtist
+                text: Player.Mpris.active === null ? "null" : Player.Mpris.active.trackArtist
                 color: Themes.colors.on_background
             }
         }

@@ -1,8 +1,9 @@
 import QtQuick
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
+import qs.Services
 import qs.Modules.Notifications
 
 StyledRect {

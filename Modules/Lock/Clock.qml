@@ -1,9 +1,8 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Effects
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 ColumnLayout {
@@ -74,7 +73,7 @@ ColumnLayout {
                 id: hours
 
                 font.pixelSize: Appearance.fonts.extraLarge * 5
-                font.family: Appearance.fonts.family_Sans
+                font.family: Appearance.fonts.familySans
                 font.weight: Font.Medium
                 color: Themes.colors.on_surface
                 renderType: Text.NativeRendering
@@ -118,7 +117,7 @@ ColumnLayout {
                 StyledLabel {
                     anchors.centerIn: parent
                     font.pixelSize: Appearance.fonts.medium * 1.6
-                    font.family: Appearance.fonts.family_Mono
+                    font.family: Appearance.fonts.familyMono
                     font.weight: Font.Medium
                     color: Themes.colors.on_surface
                     renderType: Text.NativeRendering
@@ -161,7 +160,7 @@ ColumnLayout {
                 id: dayStyledLabel
                 anchors.centerIn: parent
                 font.pixelSize: Appearance.fonts.medium * 2.2
-                font.family: Appearance.fonts.family_Sans
+                font.family: Appearance.fonts.familySans
                 font.weight: Font.Medium
                 color: Themes.colors.on_surface
                 renderType: Text.NativeRendering
@@ -194,7 +193,7 @@ ColumnLayout {
 
                 anchors.centerIn: parent
                 font.pixelSize: Appearance.fonts.medium * 1.8
-                font.family: Appearance.fonts.family_Sans
+                font.family: Appearance.fonts.familySans
                 font.weight: Font.Normal
                 color: Themes.colors.on_surface
                 renderType: Text.NativeRendering

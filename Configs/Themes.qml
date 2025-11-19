@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
-import qs.Data
+import qs.Helpers
 
 Singleton {
     id: root

@@ -9,7 +9,8 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell.Services.Mpris
 
-import qs.Data
+import qs.Configs
+import qs.Services as Player
 import qs.Helpers
 import qs.Components
 
@@ -112,9 +113,9 @@ Scope {
                                     id: coverArt
 
                                     anchors.fill: parent
-                                    source: Player.active && Player.active.trackArtUrl !== "" ? Player.active.trackArtUrl : "root:/Assets/kuru.gif"
+                                    source: Player.Mpris.active && Player.Mpris.active.trackArtUrl !== "" ? Player.Mpris.active.trackArtUrl : "root:/Assets/kuru.gif"
                                     fillMode: Image.PreserveAspectCrop
-                                    visible: Player.active !== null
+                                    visible: Player.Mpris.active !== null
                                     opacity: 0.5
                                     cache: false
                                     asynchronous: true
@@ -133,17 +134,17 @@ Scope {
                                     wrapMode: Text.Wrap
                                     elide: Text.ElideRight
                                     color: Themes.colors.on_surface
-                                    visible: Player.active && Player.active.trackArtUrl === ""
+                                    visible: Player.Mpris.active && Player.Mpris.active.trackArtUrl === ""
                                 }
 
                                 AnimatedImage {
                                     id: coverNullArt
 
                                     anchors.fill: parent
-                                    visible: Player.active === null
+                                    visible: Player.Mpris.active === null
                                     asynchronous: true
                                     cache: false
-                                    source: Player.active === null ? "root:/Assets/kuru.gif" : ""
+                                    source: Player.Mpris.active === null ? "root:/Assets/kuru.gif" : ""
                                 }
 
                                 Item {
@@ -175,7 +176,7 @@ Scope {
 
                             StyledLabel {
                                 width: parent.width
-                                text: Player.active ? Player.active.trackTitle : ""
+                                text: Player.Mpris.active ? Player.Mpris.active.trackTitle : ""
                                 color: Themes.colors.on_background
                                 font.pixelSize: Appearance.fonts.large
                                 wrapMode: Text.NoWrap
@@ -187,7 +188,7 @@ Scope {
 
                                 StyledText {
                                     Layout.preferredWidth: width
-                                    text: Player.active ? Player.active.trackArtist : ""
+                                    text: Player.Mpris.active ? Player.Mpris.active.trackArtist : ""
                                     color: Themes.colors.on_background
                                     font.pixelSize: Appearance.fonts.small
                                     wrapMode: Text.NoWrap
@@ -195,19 +196,19 @@ Scope {
                                 }
 
                                 StyledText {
-                                    text: Player.active ? "•" : ""
+                                    text: Player.Mpris.active ? "•" : ""
                                     color: Themes.colors.on_background
                                     font.pixelSize: Appearance.fonts.extraLarge
                                 }
 
                                 StyledText {
-                                    text: Player.active ? "Watched on " : ""
+                                    text: Player.Mpris.active ? "Watched on " : ""
                                     color: Themes.colors.on_background
                                     font.pixelSize: Appearance.fonts.small
                                 }
 
                                 IconImage {
-                                    source: Quickshell.iconPath(Player.active.desktopEntry)
+                                    source: Quickshell.iconPath(Player.Mpris.active.desktopEntry)
                                     asynchronous: true
                                     implicitWidth: 20
                                     implicitHeight: 20
@@ -235,16 +236,16 @@ Scope {
                             StyledText {
                                 id: timeTrack
 
-                                text: Player.active == null ? "00:00" : `${root.formatTime(Player.active?.position)}
-                                ${root.formatTime(Player.active?.length)}`
+                                text: Player.Mpris.active == null ? "00:00" : `${root.formatTime(Player.Mpris.active?.position)}
+                                ${root.formatTime(Player.Mpris.active?.length)}`
                                 font.pixelSize: Appearance.fonts.large
                                 color: Themes.colors.on_background
 
                                 Timer {
-                                    running: Player.active !== null && Player.active.playbackState == MprisPlaybackState.Playing
+                                    running: Player.Mpris.active !== null && Player.Mpris.active.playbackState == MprisPlaybackState.Playing
                                     interval: 1000
                                     repeat: true
-                                    onTriggered: Player.active.positionChanged()
+                                    onTriggered: Player.Mpris.active.positionChanged()
                                 }
                             }
 
@@ -255,7 +256,7 @@ Scope {
                             MaterialIcon {
                                 id: pauseButton
 
-                                icon: Player.active === null ? "pause_circle" : Player.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
+                                icon: Player.Mpris.active === null ? "pause_circle" : Player.Mpris.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
                                 color: {
                                     if (pauseMArea.pressed)
                                         return Themes.withAlpha(Themes.colors.primary, 0.08);
@@ -272,7 +273,7 @@ Scope {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: Player.active ? Player.active.togglePlaying() : ""
+                                    onClicked: Player.Mpris.active ? Player.Mpris.active.togglePlaying() : ""
                                 }
                             }
                         }
@@ -285,13 +286,13 @@ Scope {
                             StyledButton {
                                 iconButton: "skip_previous"
                                 iconSize: 10
-                                onClicked: Player.active ? Player.active.previous() : {}
+                                onClicked: Player.Mpris.active ? Player.Mpris.active.previous() : {}
                             }
 
                             StyledSlide {
                                 id: barSlide
 
-                                value: Player.active === null ? 0 : Player.active.length > 0 ? Player.active.position / Player.active.length : 0
+                                value: Player.Mpris.active === null ? 0 : Player.Mpris.active.length > 0 ? Player.Mpris.active.position / Player.Mpris.active.length : 0
 
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 40
@@ -299,17 +300,17 @@ Scope {
                                 valueHeight: 0
 
                                 FrameAnimation {
-                                    running: Player.active && Player.active.playbackState == MprisPlaybackState.Playing
-                                    onTriggered: Player.active.positionChanged()
+                                    running: Player.Mpris.active && Player.Mpris.active.playbackState == MprisPlaybackState.Playing
+                                    onTriggered: Player.Mpris.active.positionChanged()
                                 }
 
-                                onMoved: Player.active ? Player.active.position = value * Player.active.length : {}
+                                onMoved: Player.Mpris.active ? Player.Mpris.active.position = value * Player.Mpris.active.length : {}
                             }
 
                             StyledButton {
                                 iconButton: "skip_next"
                                 iconSize: 10
-                                onClicked: Player.active ? Player.active.next() : {}
+                                onClicked: Player.Mpris.active ? Player.Mpris.active.next() : {}
                             }
                         }
                     }

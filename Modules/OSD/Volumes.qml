@@ -6,8 +6,9 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pipewire
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
+import qs.Services
 import qs.Components
 
 Scope {

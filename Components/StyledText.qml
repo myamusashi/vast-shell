@@ -1,8 +1,8 @@
 import QtQuick
-import qs.Data
+import qs.Configs
 
 Text {
-    font.family: Appearance.fonts.family_Sans
+    font.family: Appearance.fonts.familySans
     font.pixelSize: Appearance.fonts.medium
     font.hintingPreference: Font.PreferFullHinting
     font.letterSpacing: 0

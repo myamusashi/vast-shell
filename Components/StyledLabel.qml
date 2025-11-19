@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
 
 Label {
-    font.family: Appearance.fonts.family_Sans
+    font.family: Appearance.fonts.familySans
     font.hintingPreference: Font.PreferFullHinting
     font.letterSpacing: 0
     renderType: Text.NativeRendering
