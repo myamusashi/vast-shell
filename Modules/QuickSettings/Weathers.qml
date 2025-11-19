@@ -24,7 +24,7 @@ ColumnLayout {
         Layout.bottomMargin: 10
         spacing: Appearance.spacing.normal
 
-        MatIcon {
+        MaterialIcon {
             Layout.alignment: Qt.AlignHCenter
             font.pointSize: Appearance.fonts.extraLarge * 4
             color: Themes.colors.primary

@@ -19,7 +19,7 @@ StyledRect {
         implicitWidth: 50
         implicitHeight: parent.height - 5
 
-        MatIcon {
+        MaterialIcon {
             color: {
                 if (root.notificationCount > 0 && root.notificationCount !== null && root.isDndEnable !== true)
                     Themes.colors.primary;

@@ -44,7 +44,7 @@ LazyLoader {
                     font.pixelSize: Appearance.fonts.large * 1.5
                 }
 
-                MatIcon {
+                MaterialIcon {
                     icon: KeyLockState.state.numLock ? "lock" : "lock_open_right"
                     color: KeyLockState.state.numLock ? Themes.colors.primary : Themes.colors.tertiary
                     font.pointSize: Appearance.fonts.large * 1.5

@@ -110,7 +110,7 @@ Scope {
                                     color: isSelected ? Themes.colors.primary : Themes.colors.surface
 
                                     Behavior on color {
-                                        ColAnim {
+                                        CAnim {
                                             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                                         }
                                     }

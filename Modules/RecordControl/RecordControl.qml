@@ -113,11 +113,11 @@ Scope {
                                 loops: Animation.Infinite
                                 running: pidStatusRecording.text().trim() !== ""
 
-                                NumbAnim {
+                                NAnim {
                                     to: 0.3
                                     duration: Appearance.animations.durations.extraLarge
                                 }
-                                NumbAnim {
+                                NAnim {
                                     to: 1.0
                                     duration: Appearance.animations.durations.extraLarge
                                 }
@@ -146,12 +146,12 @@ Scope {
                             color: closeButtonMouse.pressed ? Themes.colors.secondary_container : closeButtonMouse.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : "transparent"
 
                             Behavior on color {
-                                ColAnim {
+                                CAnim {
                                     duration: Appearance.animations.durations.small * 0.8
                                 }
                             }
 
-                            MatIcon {
+                            MaterialIcon {
                                 id: closeIcon
 
                                 anchors.centerIn: parent
@@ -186,7 +186,7 @@ Scope {
                                 anchors.centerIn: parent
                                 spacing: Appearance.spacing.small
 
-                                MatIcon {
+                                MaterialIcon {
                                     icon: "schedule"
                                     font.pointSize: Appearance.fonts.large
                                     color: Themes.colors.primary
@@ -211,7 +211,7 @@ Scope {
                             color: stopButtonMouse.pressed ? Themes.withAlpha(Themes.colors.error, 0.8) : stopButtonMouse.containsMouse ? Themes.colors.error : Themes.withAlpha(Themes.colors.error, 0.9)
 
                             Behavior on color {
-                                ColAnim {
+                                CAnim {
                                     duration: Appearance.animations.durations.small
                                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                                 }
@@ -224,12 +224,12 @@ Scope {
                                 yScale: stopButtonMouse.pressed ? 0.95 : 1.0
 
                                 Behavior on xScale {
-                                    NumbAnim {
+                                    NAnim {
                                         duration: 100
                                     }
                                 }
                                 Behavior on yScale {
-                                    NumbAnim {
+                                    NAnim {
                                         duration: 100
                                     }
                                 }
@@ -239,7 +239,7 @@ Scope {
                                 anchors.centerIn: parent
                                 spacing: Appearance.spacing.small
 
-                                MatIcon {
+                                MaterialIcon {
                                     icon: "stop"
                                     font.pointSize: Appearance.fonts.large
                                     color: Themes.colors.on_error

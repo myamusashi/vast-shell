@@ -26,7 +26,7 @@ Scope {
         focus: true
 
         color: root.colorTextField
-        font.family: Appearance.fonts.family_Sans
+        font.family: Appearance.fonts.familySans
         font.pixelSize: Appearance.fonts.large
 
         echoMode: root.echoMode
@@ -54,7 +54,7 @@ Scope {
             opacity: textFieldBox.enabled ? 1 : 0.38
 
             Behavior on border.color {
-                ColAnim {
+                CAnim {
                     duration: Appearance.animations.durations.small
                 }
             }
@@ -67,7 +67,7 @@ Scope {
             }
 
             Behavior on color {
-                ColAnim {
+                CAnim {
                     duration: Appearance.animations.durations.small
                 }
             }
@@ -128,13 +128,13 @@ Scope {
             opacity: visible ? 1 : 0
 
             SequentialAnimation on color {
-                ColAnim {
+                CAnim {
                     to: Themes.colors.primary
                 }
-                ColAnim {
+                CAnim {
                     to: Themes.colors.secondary
                 }
-                ColAnim {
+                CAnim {
                     to: Themes.colors.tertiary
                 }
                 loops: Animation.Infinite

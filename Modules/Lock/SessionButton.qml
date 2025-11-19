@@ -39,7 +39,7 @@ RowLayout {
                 anchors.centerIn: parent
                 spacing: Appearance.spacing.small
 
-                MatIcon {
+                MaterialIcon {
                     icon: "power_settings_circle"
                     color: Themes.colors.on_primary
                     font.pointSize: Appearance.fonts.extraLarge
@@ -116,20 +116,20 @@ RowLayout {
                 Layout.topMargin: root.isOpen ? Appearance.spacing.normal : 0
 
                 Behavior on Layout.preferredHeight {
-                    NumbAnim {
+                    NAnim {
                         duration: Appearance.animations.durations.small
                         easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     }
                 }
 
                 Behavior on opacity {
-                    NumbAnim {
+                    NAnim {
                         duration: Appearance.animations.durations.small
                     }
                 }
 
                 Behavior on Layout.topMargin {
-                    NumbAnim {
+                    NAnim {
                         duration: Appearance.animations.durations.small
                         easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     }
@@ -141,7 +141,7 @@ RowLayout {
                     anchors.centerIn: parent
                     spacing: Appearance.spacing.small
 
-                    MatIcon {
+                    MaterialIcon {
                         icon: buttonDelegate.modelData.icon
                         color: Themes.colors.on_primary
                         font.pointSize: Appearance.fonts.extraLarge
@@ -187,7 +187,7 @@ RowLayout {
 
         radius: Appearance.rounding.full
 
-        MatIcon {
+        MaterialIcon {
             id: arrowIcon
 
             anchors.centerIn: parent

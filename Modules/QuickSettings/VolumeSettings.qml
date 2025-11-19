@@ -169,7 +169,7 @@ ScrollView {
                             opacity: profilesComboBox.pressed ? 0.12 : profilesComboBox.hovered ? 0.08 : 0
 
                             Behavior on opacity {
-                                NumbAnim {}
+                                NAnim {}
                             }
                         }
                     }
@@ -202,12 +202,12 @@ ScrollView {
                         }
 
                         enter: Transition {
-                            NumbAnim {
+                            NAnim {
                                 property: "opacity"
                                 from: 0.0
                                 to: 1.0
                             }
-                            NumbAnim {
+                            NAnim {
                                 property: "scale"
                                 from: 0.9
                                 to: 1.0
@@ -215,12 +215,12 @@ ScrollView {
                         }
 
                         exit: Transition {
-                            NumbAnim {
+                            NAnim {
                                 property: "scale"
                                 from: 1.0
                                 to: 0.9
                             }
-                            NumbAnim {
+                            NAnim {
                                 property: "opacity"
                                 from: 1.0
                                 to: 0.0

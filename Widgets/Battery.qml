@@ -54,7 +54,7 @@ Item {
 
             Behavior on width {
                 enabled: !root.batCharging
-                NumbAnim {}
+                NAnim {}
             }
         }
 
@@ -88,7 +88,7 @@ Item {
             duration: Appearance.animations.durations.normal
         }
 
-        NumbAnim {
+        NAnim {
             target: root
             property: "chargeFillIndex"
             from: 0
@@ -96,7 +96,7 @@ Item {
             duration: Appearance.animations.durations.normal
             easing.type: Easing.Linear
         }
-        NumbAnim {
+        NAnim {
             target: root
             property: "chargeFillIndex"
             from: 20
@@ -104,7 +104,7 @@ Item {
             duration: Appearance.animations.durations.normal
             easing.type: Easing.Linear
         }
-        NumbAnim {
+        NAnim {
             target: root
             property: "chargeFillIndex"
             from: 40
@@ -112,7 +112,7 @@ Item {
             duration: Appearance.animations.durations.normal
             easing.type: Easing.Linear
         }
-        NumbAnim {
+        NAnim {
             target: root
             property: "chargeFillIndex"
             from: 60
@@ -120,7 +120,7 @@ Item {
             duration: Appearance.animations.durations.normal
             easing.type: Easing.Linear
         }
-        NumbAnim {
+        NAnim {
             target: root
             property: "chargeFillIndex"
             from: 80
@@ -133,7 +133,7 @@ Item {
             duration: Appearance.animations.durations.extraLarge
         }
 
-        NumbAnim {
+        NAnim {
             target: root
             property: "chargeFillIndex"
             from: 100

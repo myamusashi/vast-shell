@@ -46,7 +46,7 @@ Scope {
                         rightMargin: 15
                     }
 
-                    MatIcon {
+                    MaterialIcon {
                         color: Themes.colors.on_background
                         icon: root.icon
                         Layout.alignment: Qt.AlignVCenter

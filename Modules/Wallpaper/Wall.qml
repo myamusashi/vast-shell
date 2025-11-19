@@ -67,7 +67,7 @@ Variants {
             height: root.screen.height
             width: 0
 
-            NumbAnim {
+            NAnim {
                 id: walAnimation
 
                 duration: Appearance.animations.durations.expressiveDefaultSpatial * 2

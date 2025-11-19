@@ -53,7 +53,7 @@ TextField {
             }
 
             Behavior on color {
-                ColAnim {
+                CAnim {
                     duration: Appearance.animations.durations.small
                     easing.type: Easing.OutCubic
                 }
@@ -61,7 +61,7 @@ TextField {
         }
 
         Behavior on border.color {
-            ColAnim {
+            CAnim {
                 duration: Appearance.animations.durations.small
                 easing.type: Easing.OutCubic
             }

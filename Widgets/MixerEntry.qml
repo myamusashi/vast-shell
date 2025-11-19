@@ -22,7 +22,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.alignment: Qt.AlignLeft
-        MatIcon {
+        MaterialIcon {
             Layout.alignment: Qt.AlignLeft
             visible: icon !== ""
             icon: root.icon

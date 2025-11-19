@@ -9,7 +9,7 @@ Text {
     required property string icon
 
 	font {
-		family: Appearance.fonts.family_Material
+		family: Appearance.fonts.familyMaterial
 		pointSize: Appearance.fonts.medium
 		hintingPreference: Font.PreferNoHinting
 		variableAxes: {
@@ -27,10 +27,10 @@ Text {
     text: root.icon
 
     Behavior on color {
-        ColAnim {}
+        CAnim {}
     }
 
     Behavior on opacity {
-        NumbAnim {}
+        NAnim {}
     }
 }

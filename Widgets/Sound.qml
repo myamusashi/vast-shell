@@ -21,7 +21,7 @@ StyledRect {
     radius: 5
 
     Behavior on implicitWidth {
-        NumbAnim {}
+        NAnim {}
     }
 
     PwObjectTracker {
@@ -33,7 +33,7 @@ StyledRect {
 
         spacing: 5
 
-        MatIcon {
+        MaterialIcon {
             color: Themes.colors.on_background
             icon: root.icon
             Layout.alignment: Qt.AlignVCenter

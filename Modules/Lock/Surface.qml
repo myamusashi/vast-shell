@@ -168,7 +168,7 @@ WlSessionLockSurface {
                 autoPaddingEnabled: false
                 blurEnabled: true
 
-                NumbAnim on blur {
+                NAnim on blur {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
                     easing.type: Easing.Linear
                     from: 0
@@ -215,7 +215,8 @@ WlSessionLockSurface {
             anchors.centerIn: parent
             text: root.showErrorMessage ? "" : root.maskedBuffer
             color: root.maskedBuffer ? (root.pam.showFailure ? Themes.colors.on_error_container : Themes.colors.on_surface) : Themes.colors.on_surface_variant
-            font.pointSize: Appearance.fonts.extraLarge * 5
+			font.pointSize: Appearance.fonts.extraLarge * 5
+			font.family: Appearance.fonts.familyMono
             z: 0
 
             property real randomXOffset: 0
@@ -237,13 +238,13 @@ WlSessionLockSurface {
             }
 
             Behavior on color {
-                ColAnim {
+                CAnim {
                     duration: Appearance.animations.durations.small
                 }
             }
 
             Behavior on font.pointSize {
-                NumbAnim {
+                NAnim {
                     duration: 100
                 }
             }
@@ -395,7 +396,7 @@ WlSessionLockSurface {
         id: typingAnimation
 
         ParallelAnimation {
-            NumbAnim {
+            NAnim {
                 target: passwordBuffer
                 property: "scale"
                 from: 0.9
@@ -404,7 +405,7 @@ WlSessionLockSurface {
                 easing.type: Easing.Linear
                 easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             }
-            NumbAnim {
+            NAnim {
                 target: passwordBuffer
                 property: "opacity"
                 from: 0.5

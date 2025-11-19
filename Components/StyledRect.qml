@@ -7,10 +7,10 @@ Rectangle {
     radius: Appearance.rounding.normal
 
     Behavior on color {
-        ColAnim {}
+        CAnim {}
     }
 
     Behavior on border.color {
-        ColAnim {}
+        CAnim {}
     }
 }

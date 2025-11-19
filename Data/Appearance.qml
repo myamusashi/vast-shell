@@ -8,10 +8,9 @@ Singleton {
     id: root
 
     component FontsComponent: QtObject {
-        readonly property string family_Material: "Material Symbols Rounded"
-        readonly property string family_Mono: "Hack"
-        readonly property string family_Sans: "Google Sans Flex"
-
+        readonly property string familyMaterial: "Material Symbols Rounded"
+        readonly property string familyMono: "Hack"
+        readonly property string familySans: "Google Sans Flex"
         readonly property int small: 12
         readonly property int medium: 13
         readonly property int normal: 14
@@ -33,13 +32,13 @@ Singleton {
     }
 
     component AnimationDurationsComponent: QtObject {
-        property int expressiveDefaultSpatial: 500
-        property int expressiveEffects: 200
-        property int expressiveFastSpatial: 350
-        property int extraLarge: 1000
-        property int large: 600
-        property int normal: 400
-        property int small: 200
+        readonly property int expressiveDefaultSpatial: 500
+        readonly property int expressiveEffects: 200
+        readonly property int expressiveFastSpatial: 350
+        readonly property int extraLarge: 1000
+        readonly property int large: 600
+        readonly property int normal: 400
+        readonly property int small: 200
     }
 
     component AnimationsComponent: QtObject {
@@ -48,34 +47,34 @@ Singleton {
     }
 
     component RoundingComponent: QtObject {
-        property int small: 12
-        property int normal: 17
-        property int large: 25
-        property int full: 1000
+        readonly property int small: 12
+        readonly property int normal: 17
+        readonly property int large: 25
+        readonly property int full: 1000
     }
 
     component SpacingComponent: QtObject {
-        property int small: 7
-        property int smaller: 10
-        property int normal: 12
-        property int larger: 15
-        property int large: 20
+        readonly property int small: 7
+        readonly property int smaller: 10
+        readonly property int normal: 12
+        readonly property int larger: 15
+        readonly property int large: 20
     }
 
     component PaddingComponent: QtObject {
-        property int small: 5
-        property int smaller: 7
-        property int normal: 10
-        property int larger: 12
-        property int large: 15
+        readonly property int small: 5
+        readonly property int smaller: 7
+        readonly property int normal: 10
+        readonly property int larger: 12
+        readonly property int large: 15
     }
 
     component MarginComponent: QtObject {
-        property int small: 5
-        property int smaller: 7
-        property int normal: 10
-        property int larger: 12
-        property int large: 15
+        readonly property int small: 5
+        readonly property int smaller: 7
+        readonly property int normal: 10
+        readonly property int larger: 12
+        readonly property int large: 15
     }
 
     readonly property FontsComponent fonts: FontsComponent {}

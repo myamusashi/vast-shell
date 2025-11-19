@@ -59,7 +59,7 @@ LazyLoader {
             }
 
             add: Transition {
-                NumbAnim {
+                NAnim {
                     properties: "opacity"
                     from: 0
                     to: 1
@@ -67,14 +67,14 @@ LazyLoader {
             }
 
             remove: Transition {
-                NumbAnim {
+                NAnim {
                     properties: "opacity"
                     to: 0
                 }
             }
 
             displaced: Transition {
-                NumbAnim {
+                NAnim {
                     properties: "y"
                 }
             }
@@ -102,21 +102,21 @@ LazyLoader {
                 }
 
                 Behavior on x {
-                    NumbAnim {
+                    NAnim {
                         duration: Appearance.animations.durations.expressiveDefaultSpatial
                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                     }
                 }
 
                 Behavior on y {
-                    NumbAnim {
+                    NAnim {
                         duration: Appearance.animations.durations.expressiveDefaultSpatial
                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                     }
                 }
 
                 Behavior on opacity {
-                    NumbAnim {
+                    NAnim {
                         duration: Appearance.animations.durations.small
                         easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
                     }
@@ -192,7 +192,7 @@ LazyLoader {
                         spacing: Appearance.spacing.larger
 
                         Behavior on width {
-                            NumbAnim {}
+                            NAnim {}
                         }
 
                         Item {
@@ -236,7 +236,7 @@ LazyLoader {
                                         active: !delegateNotif.hasAppIcon
 
                                         anchors.centerIn: parent
-                                        sourceComponent: MatIcon {
+                                        sourceComponent: MaterialIcon {
                                             text: "notifications_active"
                                             color: delegateNotif.modelData.urgency === NotificationUrgency.Critical ? Themes.colors.on_error : delegateNotif.modelData.urgency === NotificationUrgency.Low ? Themes.colors.on_secondary_container : Themes.colors.on_primary_container
                                             font.pointSize: Appearance.fonts.normal
@@ -356,7 +356,7 @@ LazyLoader {
                                         }
                                     }
 
-                                    MatIcon {
+                                    MaterialIcon {
                                         id: expandIcon
 
                                         anchors.centerIn: parent
@@ -424,7 +424,7 @@ LazyLoader {
 
                                 opacity: delegateNotif.isShowMoreBody ? 1.0 : 0.92
                                 Behavior on opacity {
-                                    NumbAnim {
+                                    NAnim {
                                         duration: Appearance.animations.durations.small
                                         easing.type: Easing.OutQuad
                                     }

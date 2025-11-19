@@ -67,7 +67,7 @@ StyledRect {
                     anchors.centerIn: parent
                     spacing: Appearance.spacing.small
 
-                    MatIcon {
+                    MaterialIcon {
                         icon: settingButton.modelData.icon
                         color: root.state === settingButton.index ? Themes.colors.primary : Themes.colors.on_surface_variant
 
@@ -104,13 +104,13 @@ StyledRect {
         }
 
         Behavior on x {
-            NumbAnim {
+            NAnim {
                 duration: Appearance.animations.durations.small
             }
         }
 
         Behavior on width {
-            NumbAnim {
+            NAnim {
                 easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             }
         }

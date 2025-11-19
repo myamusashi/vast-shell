@@ -73,7 +73,7 @@ LazyLoader {
                                 return "transparent";
                         }
 
-                        MatIcon {
+                        MaterialIcon {
                             id: prevIcon
 
                             anchors.centerIn: parent
@@ -129,7 +129,7 @@ LazyLoader {
                                 return "transparent";
                         }
 
-                        MatIcon {
+                        MaterialIcon {
 							id: nextIcon
 
                             anchors.centerIn: parent

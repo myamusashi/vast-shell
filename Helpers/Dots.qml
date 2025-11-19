@@ -23,7 +23,7 @@ RowLayout {
             id: icon
 
             anchors.centerIn: parent
-            font.family: Appearance.fonts.family_Material
+            font.family: Appearance.fonts.familyMaterial
             font.pixelSize: Appearance.fonts.medium
         }
     }
@@ -38,7 +38,7 @@ RowLayout {
             id: text
 
             anchors.centerIn: parent
-            font.family: Appearance.fonts.family_Mono
+            font.family: Appearance.fonts.familyMono
             font.pixelSize: Appearance.fonts.small
         }
     }
