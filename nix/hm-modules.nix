@@ -1,4 +1,4 @@
-{self, apple-fonts}: {
+{self}: {
   config,
   lib,
   pkgs,
@@ -7,8 +7,6 @@
   cfg = config.programs.quickshell-shell;
   system = pkgs.system;
 
-  runtimeDeps = self.packages.${system}.runtimeDeps;
-  
   material-symbols = pkgs.callPackage ./material-symbols.nix {};
 in {
   options.programs.quickshell-shell = {
@@ -38,9 +36,8 @@ in {
       [cfg.package]
       ++ cfg.extraPackages
       ++ lib.optionals cfg.installFonts [
-        lib.optionals apple-fonts.packages.${system}.sf-pro
-        lib.optionals apple-fonts.packages.${system}.sf-mono-nerd
-        lib.optionals material-symbols
+        lib.optionals
+        material-symbols
       ];
 
     fonts.fontconfig.enable = lib.mkDefault true;

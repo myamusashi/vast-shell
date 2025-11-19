@@ -7,14 +7,12 @@
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
   };
 
   outputs = {
     self,
     nixpkgs,
     quickshell,
-    apple-fonts,
   }: let
     systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
 
@@ -34,7 +32,7 @@
       });
 
     homeManagerModules.default = import ./nix/hm-modules.nix {
-      inherit self apple-fonts;
+      inherit self;
     };
 
     devShells = forAllSystems (system: let
@@ -49,17 +47,14 @@
             packages.default
             quickshell.packages.${system}.default
             pkgs.go
+            pkgs.roboto
+            pkgs.roboto-flex
             (pkgs.callPackage ./nix/qmlfmt.nix {})
           ]
-          ++ packages.runtimeDeps
-          ++ [
-            apple-fonts.packages.${system}.sf-pro
-            apple-fonts.packages.${system}.sf-pro-nerd
-            apple-fonts.packages.${system}.sf-mono
-            apple-fonts.packages.${system}.sf-mono-nerd
-          ];
+          ++ packages.runtimeDeps;
 
         shellHook = ''
+		  go build -o ./Assets/keystate-bin ./Assets/keystate.go
           echo "Quickshell development environment"
         '';
       };

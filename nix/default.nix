@@ -21,6 +21,8 @@
   hyprland,
   qt6,
   callPackage,
+  roboto-flex,
+  roboto-mono,
 }: let
   runtimeDeps = [
     findutils
@@ -38,6 +40,8 @@
     foot
     polkit
     hyprland
+    roboto-flex
+    roboto-mono
     qt6.qtgraphs
   ];
 
