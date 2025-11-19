@@ -40,19 +40,19 @@ Switch {
             color: isActive ? Themes.colors.on_primary : Themes.colors.outline
 
             Behavior on x {
-                NumbAnim {
+                NAnim {
                     easing.bezierCurve: Appearance.animations.curves.emphasized
                     duration: Appearance.animations.durations.small
                 }
             }
             Behavior on height {
-                NumbAnim {
+                NAnim {
                     easing.bezierCurve: Appearance.animations.curves.emphasized
                     duration: Appearance.animations.durations.small
                 }
             }
             Behavior on width {
-                NumbAnim {
+                NAnim {
                     easing.bezierCurve: Appearance.animations.curves.emphasized
                     duration: Appearance.animations.durations.small
                 }
@@ -62,7 +62,7 @@ Switch {
                 active: root.isUseIcon
                 anchors.centerIn: parent
                 asynchronous: true
-                sourceComponent: MatIcon {
+                sourceComponent: MaterialIcon {
                     icon: root.checked ? root.onIcon : root.offIcon
                     color: root.checked ? Themes.colors.on_primary_container : Themes.colors.surface_container_highest
                     font.pointSize: Appearance.fonts.medium

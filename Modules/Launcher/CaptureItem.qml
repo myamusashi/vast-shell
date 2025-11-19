@@ -56,25 +56,25 @@ StyledRect {
             yScale: root.isSelected ? 1.03 : 1.0
 
             Behavior on xScale {
-                NumbAnim {
+                NAnim {
                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 }
             }
             Behavior on yScale {
-                NumbAnim {
+                NAnim {
                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 }
             }
         }
 
-        MatIcon {
+        MaterialIcon {
             icon: root.optionData.icon
             color: root.isSelected ? Themes.colors.primary : Themes.colors.outline
             font.pixelSize: Appearance.fonts.large
             Layout.alignment: Qt.AlignVCenter
 
             Behavior on color {
-                ColAnim {
+                CAnim {
                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 }
             }

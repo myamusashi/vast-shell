@@ -36,7 +36,7 @@ ColumnLayout {
                 color: ethernetCard.isConnected ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
                 radius: Appearance.rounding.small
 
-                MatIcon {
+                MaterialIcon {
                     anchors.centerIn: parent
                     icon: "settings_ethernet"
                     color: ethernetCard.isConnected ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
@@ -125,7 +125,7 @@ ColumnLayout {
                 color: wifiCard.activeNetwork ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
                 radius: Appearance.rounding.small
 
-                MatIcon {
+                MaterialIcon {
                     anchors.centerIn: parent
                     icon: wifiCard.activeNetwork ? wifiCard.getWiFiIcon(wifiCard.activeNetwork.strength) : "wifi_off"
                     color: wifiCard.activeNetwork ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)

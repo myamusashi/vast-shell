@@ -15,7 +15,7 @@ StyledRect {
     implicitWidth: windowNameText.contentWidth
 
     Behavior on implicitWidth {
-        NumbAnim {
+        NAnim {
             duration: Appearance.animations.durations.small
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }

@@ -38,7 +38,7 @@ Loader {
                         implicitWidth: iconBack.width
                         implicitHeight: iconBack.height
 
-                        MatIcon {
+                        MaterialIcon {
                             id: iconBack
 
                             anchors.centerIn: parent
@@ -84,7 +84,7 @@ Loader {
                         implicitWidth: iconRefresh.width
                         implicitHeight: iconRefresh.height
 
-                        MatIcon {
+                        MaterialIcon {
                             id: iconRefresh
 
                             anchors.centerIn: parent
@@ -144,7 +144,7 @@ Loader {
                         anchors.margins: 10
                         spacing: Appearance.spacing.normal
 
-                        MatIcon {
+                        MaterialIcon {
                             icon: NetworkManager.active ? root.getWiFiIcon(NetworkManager.active.strength) : "wifi_off"
                             color: Themes.colors.primary
                             font.pointSize: Appearance.fonts.extraLarge
@@ -172,7 +172,7 @@ Loader {
                             implicitWidth: disconnectBtn.width
                             implicitHeight: disconnectBtn.height
 
-                            MatIcon {
+                            MaterialIcon {
                                 id: disconnectBtn
 
                                 anchors.centerIn: parent
@@ -214,7 +214,7 @@ Loader {
                         anchors.centerIn: parent
                         spacing: Appearance.spacing.normal
 
-                        MatIcon {
+                        MaterialIcon {
                             Layout.alignment: Qt.AlignHCenter
                             icon: "wifi_off"
                             color: Themes.colors.on_surface_variant
@@ -267,7 +267,7 @@ Loader {
                                 anchors.margins: 10
                                 spacing: Appearance.spacing.normal
 
-                                MatIcon {
+                                MaterialIcon {
                                     icon: root.getWiFiIcon(delegateWifi.modelData.strength)
                                     color: delegateWifi.modelData.active ? Themes.colors.primary : Themes.colors.on_surface
                                     font.pointSize: Appearance.fonts.extraLarge
@@ -287,7 +287,7 @@ Loader {
                                             font.bold: delegateWifi.modelData.active
                                         }
 
-                                        MatIcon {
+                                        MaterialIcon {
                                             icon: "lock"
                                             color: Themes.colors.on_surface_variant
                                             font.pointSize: Appearance.fonts.small
@@ -318,7 +318,7 @@ Loader {
                                     font.pixelSize: Appearance.fonts.small
                                 }
 
-                                MatIcon {
+                                MaterialIcon {
                                     icon: "chevron_right"
                                     color: Themes.colors.on_surface_variant
                                     font.pointSize: Appearance.fonts.large
@@ -350,7 +350,7 @@ Loader {
                         anchors.centerIn: parent
                         spacing: Appearance.spacing.normal
 
-                        MatIcon {
+                        MaterialIcon {
                             Layout.alignment: Qt.AlignHCenter
                             icon: "wifi_off"
                             color: Themes.colors.on_surface_variant

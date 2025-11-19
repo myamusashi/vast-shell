@@ -252,7 +252,7 @@ Scope {
                                 Layout.fillWidth: true
                             }
 
-                            MatIcon {
+                            MaterialIcon {
                                 id: pauseButton
 
                                 icon: Player.active === null ? "pause_circle" : Player.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"

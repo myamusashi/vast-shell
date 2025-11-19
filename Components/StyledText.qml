@@ -12,6 +12,6 @@ Text {
     elide: Text.ElideRight
     
     Behavior on color {
-        ColAnim {}
+        CAnim {}
     }
 }

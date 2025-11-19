@@ -16,7 +16,7 @@ StyledRect {
     Dots {
         id: timeContainer
 
-        MatIcon {
+        MaterialIcon {
             id: icon
 
             color: Themes.colors.on_background

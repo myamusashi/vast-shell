@@ -69,7 +69,7 @@ Slider {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            sourceComponent: MatIcon {
+            sourceComponent: MaterialIcon {
                 icon: root.icon
                 color: Themes.colors.on_primary
                 font.pointSize: root.iconSize || Appearance.fonts.medium

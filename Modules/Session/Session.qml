@@ -129,10 +129,10 @@ Scope {
                                 color: isHighlighted ? Themes.withAlpha(Themes.colors.secondary, 0.2) : "transparent"
 
                                 Behavior on color {
-                                    ColAnim {}
+                                    CAnim {}
                                 }
 
-                                MatIcon {
+                                MaterialIcon {
                                     id: iconDelegate
 
                                     anchors.centerIn: parent
@@ -157,7 +157,7 @@ Scope {
                                     scale: mouseArea.pressed ? 0.95 : 1.0
 
                                     Behavior on scale {
-                                        NumbAnim {}
+                                        NAnim {}
                                     }
 
                                     function handleAction() {

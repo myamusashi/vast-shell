@@ -25,7 +25,7 @@ StyledRect {
     visible: SystemTray.items.values.length > 0
 
     Behavior on Layout.preferredWidth {
-        NumbAnim {}
+        NAnim {}
     }
 
     Row {
@@ -69,7 +69,7 @@ StyledRect {
                     color: trayItemArea.containsMouse ? Themes.colors.primary : "transparent"
 
                     Behavior on color {
-                        ColAnim {}
+                        CAnim {}
                     }
                 }
 

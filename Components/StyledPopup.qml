@@ -31,7 +31,7 @@ PopupWindow {
 
         opacity: 0
         Behavior on opacity {
-            NumbAnim {
+            NAnim {
                 duration: root.animationDuration
             }
         }

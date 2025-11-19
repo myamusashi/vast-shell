@@ -11,6 +11,7 @@ import Quickshell.Hyprland
 
 import qs.Data
 import qs.Helpers
+import qs.Services
 import qs.Components
 
 Scope {
@@ -25,24 +26,12 @@ Scope {
         onPressed: lazyloader.active = !lazyloader.active
     }
 
-    Connections {
-        target: Hyprland
-
-        function onRawEvent() {
-            Hyprland.refreshMonitors();
-            Hyprland.refreshWorkspaces();
-            Hyprland.refreshToplevels();
-        }
-    }
-
     Timer {
         id: cleanup
 
         interval: 500
         repeat: false
-        onTriggered: {
-            gc();
-        }
+        onTriggered: gc()
     }
 
     LazyLoader {
@@ -55,12 +44,11 @@ Scope {
         component: PanelWindow {
             id: root
 
-            property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-            property real workspaceWidth: (root.monitor.width - (root.reserved[0] + root.reserved[2])) * scope.scaleFactor / root.monitor.scale
-            property real workspaceHeight: (root.monitor.height - (root.reserved[1] + root.reserved[3])) * scope.scaleFactor / root.monitor.scale
+            property real workspaceWidth: (Hypr.focusedMonitor.width - (root.reserved[0] + root.reserved[2])) * scope.scaleFactor / Hypr.focusedMonitor.scale
+            property real workspaceHeight: (Hypr.focusedMonitor.height - (root.reserved[1] + root.reserved[3])) * scope.scaleFactor / Hypr.focusedMonitor.scale
             property real containerWidth: workspaceWidth + scope.borderWidth
             property real containerHeight: workspaceHeight + scope.borderWidth
-            property list<int> reserved: monitor.lastIpcObject?.reserved
+            property list<int> reserved: Hypr.focusedMonitor.lastIpcObject?.reserved
 
             implicitWidth: contentGrid.implicitWidth * 2.5
             implicitHeight: contentGrid.implicitHeight * 2.5
@@ -155,8 +143,8 @@ Scope {
 
                                 if (toplevel.modelData.workspace !== workspaceContainer.workspace) {
                                     const address = toplevel.modelData.address;
-                                    Hyprland.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`);
-                                    Hyprland.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`);
+                                    Hypr.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`);
+                                    Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`);
                                 }
                             }
                         }
@@ -165,7 +153,7 @@ Scope {
                             anchors.fill: parent
 
                             onClicked: if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                                Hyprland.dispatch("workspace" + parent.index + 1)
+                                Hypr.dispatch("workspace" + parent.index + 1)
                         }
 
                         // Toplevels
@@ -187,8 +175,8 @@ Scope {
                                 captureSource: waylandHandle
                                 live: true
 
-                                width: sourceSize.width * scope.scaleFactor / root.monitor.scale
-                                height: sourceSize.height * scope.scaleFactor / root.monitor.scale
+                                width: sourceSize.width * scope.scaleFactor / Hypr.focusedMonitor.scale
+                                height: sourceSize.height * scope.scaleFactor / Hypr.focusedMonitor.scale
                                 scale: (Drag.active && !toplevelData?.floating) ? 0.75 : 1
 
                                 x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * scope.scaleFactor + scope.borderWidth + 12
@@ -196,21 +184,21 @@ Scope {
                                 z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
 
                                 Behavior on x {
-                                    NumbAnim {
+                                    NAnim {
                                         easing.bezierCurve: Appearance.animations.curves.emphasized
                                         duration: Appearance.animations.durations.normal
                                     }
                                 }
 
                                 Behavior on scale {
-                                    NumbAnim {
+                                    NAnim {
                                         easing.bezierCurve: Appearance.animations.curves.emphasized
                                         duration: Appearance.animations.durations.normal
                                     }
                                 }
 
                                 Behavior on y {
-                                    NumbAnim {
+                                    NAnim {
                                         easing.bezierCurve: Appearance.animations.curves.emphasized
                                         duration: Appearance.animations.durations.normal
                                     }
@@ -277,7 +265,7 @@ Scope {
                                             const x = Math.round(mapped.x / scope.scaleFactor + root.reserved[0]);
                                             const y = Math.round(mapped.y / scope.scaleFactor + root.reserved[1]);
 
-                                            Hyprland.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
+                                            Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
                                             toplevel.Drag.drop();
                                         }
                                     }

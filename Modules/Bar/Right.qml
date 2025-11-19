@@ -36,7 +36,7 @@ Loader {
             radius: Appearance.rounding.normal
 
             Behavior on color {
-                ColAnim {}
+                CAnim {}
             }
 
             RowLayout {

@@ -99,7 +99,7 @@ Scope {
 
                                     required property var modelData
 
-                                    MatIcon {
+                                    MaterialIcon {
                                         anchors.centerIn: parent
                                         icon: notifHeaderDelegate.modelData.icon
                                         font.pointSize: Appearance.fonts.extraLarge * 0.6
@@ -144,7 +144,7 @@ Scope {
                             }
 
                             add: Transition {
-                                NumbAnim {
+                                NAnim {
                                     properties: "opacity"
                                     from: 0
                                     to: 1
@@ -152,14 +152,14 @@ Scope {
                             }
 
                             remove: Transition {
-                                NumbAnim {
+                                NAnim {
                                     properties: "opacity"
                                     to: 0
                                 }
                             }
 
                             displaced: Transition {
-                                NumbAnim {
+                                NAnim {
                                     properties: "y"
                                 }
                             }
@@ -183,21 +183,21 @@ Scope {
                                 property bool hasAppIcon: modelData?.appIcon.length > 0
 
                                 Behavior on x {
-                                    NumbAnim {
+                                    NAnim {
                                         duration: Appearance.animations.durations.small
                                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                                     }
                                 }
 
                                 Behavior on y {
-                                    NumbAnim {
+                                    NAnim {
                                         duration: Appearance.animations.durations.small
                                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                                     }
                                 }
 
                                 Behavior on opacity {
-                                    NumbAnim {
+                                    NAnim {
                                         duration: Appearance.animations.durations.small
                                         easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
                                     }
@@ -217,7 +217,7 @@ Scope {
                                     radius: Appearance.rounding.normal
 
                                     Behavior on implicitWidth {
-                                        NumbAnim {}
+                                        NAnim {}
                                     }
 
                                     MArea {
@@ -295,7 +295,7 @@ Scope {
                                                         anchors.centerIn: parent
                                                         anchors.horizontalCenterOffset: -Appearance.fonts.large * 0.02
                                                         anchors.verticalCenterOffset: Appearance.fonts.large * 0.02
-                                                        sourceComponent: MatIcon {
+                                                        sourceComponent: MaterialIcon {
                                                             text: "release_alert"
                                                             color: flickDelegate.modelData?.urgency === NotificationUrgency.Critical ? Themes.colors.on_error : flickDelegate.modelData?.urgency === NotificationUrgency.Low ? Themes.colors.on_surface : Themes.colors.on_secondary_container
                                                             font.pointSize: Appearance.fonts.large
@@ -416,7 +416,7 @@ Scope {
                                                     radius: Appearance.rounding.large
                                                     color: expandButtonMouse.pressed ? Themes.colors.secondary_container : expandButtonMouse.containsMouse ? Themes.withAlpha(Themes.colors.on_surface, 0.08) : "transparent"
 
-                                                    MatIcon {
+                                                    MaterialIcon {
                                                         id: expandIcon
 
                                                         anchors.centerIn: parent
@@ -479,7 +479,7 @@ Scope {
 
                                                 opacity: flickDelegate.isShowMoreBody ? 1.0 : 0.92
                                                 Behavior on opacity {
-                                                    NumbAnim {
+                                                    NAnim {
                                                         duration: Appearance.animations.durations.small
                                                         easing.type: Easing.OutQuad
                                                     }
@@ -588,13 +588,13 @@ Scope {
                                                         }
 
                                                         Behavior on color {
-                                                            ColAnim {}
+                                                            CAnim {}
                                                         }
                                                         Behavior on border.color {
-                                                            ColAnim {}
+                                                            CAnim {}
                                                         }
                                                         Behavior on border.width {
-                                                            NumbAnim {}
+                                                            NAnim {}
                                                         }
                                                     }
                                                 }

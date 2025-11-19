@@ -42,7 +42,7 @@ Loader {
             anchors.centerIn: parent
             spacing: Appearance.spacing.small
 
-            MatIcon {
+            MaterialIcon {
                 icon: Player.active === null ? "question_mark" : Player.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
                 font.pointSize: Appearance.fonts.large
                 color: Themes.colors.on_background

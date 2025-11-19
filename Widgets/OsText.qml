@@ -15,7 +15,7 @@ StyledRect {
     Dots {
         id: container
 
-        MatIcon {
+        MaterialIcon {
             Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
             color: Themes.colors.tertiary
             font.family: Appearance.fonts.family_Mono

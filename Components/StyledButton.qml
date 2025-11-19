@@ -38,7 +38,7 @@ Button {
         Loader {
             active: root.iconButton !== ""
             Layout.alignment: Qt.AlignCenter
-            sourceComponent: MatIcon {
+            sourceComponent: MaterialIcon {
                 icon: root.iconButton
                 font.pointSize: Appearance.fonts.large
                 font.bold: true
@@ -53,7 +53,7 @@ Button {
                 text: root.buttonTitle
                 font.pixelSize: Appearance.fonts.large
                 font.weight: Font.Medium
-                font.family: Appearance.fonts.family_Sans
+                font.family: Appearance.fonts.familySans
                 color: root.buttonTextColor
                 renderType: Text.NativeRendering
             }
@@ -68,7 +68,7 @@ Button {
         opacity: root.contentOpacity
 
         Behavior on opacity {
-            NumbAnim {
+            NAnim {
                 duration: Appearance.animations.durations.small
             }
         }
