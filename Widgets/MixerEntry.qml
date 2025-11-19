@@ -27,7 +27,7 @@ ColumnLayout {
             visible: icon !== ""
             icon: root.icon
             color: Themes.colors.on_surface
-            font.pixelSize: Appearance.fonts.extraLarge
+            font.pointSize: Appearance.fonts.extraLarge
         }
 
         Loader {

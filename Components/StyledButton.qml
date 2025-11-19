@@ -40,7 +40,7 @@ Button {
             Layout.alignment: Qt.AlignCenter
             sourceComponent: MatIcon {
                 icon: root.iconButton
-                font.pixelSize: Appearance.fonts.large * 1.2 + root.iconSize
+                font.pointSize: Appearance.fonts.large
                 font.bold: true
                 color: root.buttonTextColor
             }

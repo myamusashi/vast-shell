@@ -44,7 +44,7 @@ Loader {
                             anchors.centerIn: parent
                             icon: "arrow_back"
                             color: mIconBackArea.containsPress ? Themes.withAlpha(Themes.colors.on_background, 0.1) : mIconBackArea.containsMouse ? Themes.withAlpha(Themes.colors.on_background, 0.08) : Themes.colors.on_background
-                            font.pixelSize: Appearance.fonts.extraLarge
+                            font.pointSize: Appearance.fonts.extraLarge * 0.8
                         }
 
                         MArea {
@@ -90,7 +90,7 @@ Loader {
                             anchors.centerIn: parent
                             icon: "refresh"
                             color: mRefreshArea.containsPress ? Themes.withAlpha(Themes.colors.on_background, 0.1) : mRefreshArea.containsMouse ? Themes.withAlpha(Themes.colors.on_background, 0.08) : Themes.colors.on_background
-                            font.pixelSize: Appearance.fonts.extraLarge
+                            font.pointSize: Appearance.fonts.extraLarge * 0.8
                             opacity: NetworkManager.wifiEnabled ? 1.0 : 0.5
                             antialiasing: true
                             smooth: true
@@ -147,7 +147,7 @@ Loader {
                         MatIcon {
                             icon: NetworkManager.active ? root.getWiFiIcon(NetworkManager.active.strength) : "wifi_off"
                             color: Themes.colors.primary
-                            font.pixelSize: Appearance.fonts.extraLarge
+                            font.pointSize: Appearance.fonts.extraLarge
                         }
 
                         ColumnLayout {
@@ -178,7 +178,7 @@ Loader {
                                 anchors.centerIn: parent
                                 icon: "close"
                                 color: disconnectArea.containsPress ? Themes.withAlpha(Themes.colors.error, 0.1) : disconnectArea.containsMouse ? Themes.withAlpha(Themes.colors.error, 0.8) : Themes.colors.on_surface_variant
-                                font.pixelSize: Appearance.fonts.large * 1.5
+                                font.pointSize: Appearance.fonts.extraLarge * 0.8
                             }
 
                             MArea {
@@ -187,9 +187,7 @@ Loader {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    NetworkManager.disconnectFromNetwork();
-                                }
+                                onClicked: NetworkManager.disconnectFromNetwork()
                             }
                         }
                     }
@@ -220,7 +218,7 @@ Loader {
                             Layout.alignment: Qt.AlignHCenter
                             icon: "wifi_off"
                             color: Themes.colors.on_surface_variant
-                            font.pixelSize: Appearance.fonts.extraLarge
+                            font.pointSize: Appearance.fonts.extraLarge * 0.8
                         }
 
                         StyledLabel {
@@ -272,7 +270,7 @@ Loader {
                                 MatIcon {
                                     icon: root.getWiFiIcon(delegateWifi.modelData.strength)
                                     color: delegateWifi.modelData.active ? Themes.colors.primary : Themes.colors.on_surface
-                                    font.pixelSize: Appearance.fonts.extraLarge
+                                    font.pointSize: Appearance.fonts.extraLarge
                                 }
 
                                 ColumnLayout {
@@ -292,7 +290,7 @@ Loader {
                                         MatIcon {
                                             icon: "lock"
                                             color: Themes.colors.on_surface_variant
-                                            font.pixelSize: Appearance.fonts.small
+                                            font.pointSize: Appearance.fonts.small
                                             visible: delegateWifi.modelData.isSecure
                                         }
                                     }
@@ -300,12 +298,12 @@ Loader {
                                     StyledLabel {
                                         text: {
                                             let details = [];
-                                            if (delegateWifi.modelData.active) {
+                                            if (delegateWifi.modelData.active)
                                                 details.push("Connected");
-                                            }
-                                            if (delegateWifi.modelData.security && delegateWifi.modelData.security !== "--") {
+
+                                            if (delegateWifi.modelData.security && delegateWifi.modelData.security !== "--")
                                                 details.push(delegateWifi.modelData.security);
-                                            }
+
                                             details.push(delegateWifi.modelData.frequency + " MHz");
                                             return details.join(" • ");
                                         }
@@ -323,7 +321,7 @@ Loader {
                                 MatIcon {
                                     icon: "chevron_right"
                                     color: Themes.colors.on_surface_variant
-                                    font.pixelSize: Appearance.fonts.medium
+                                    font.pointSize: Appearance.fonts.large
                                     visible: !delegateWifi.modelData.active
                                 }
                             }
@@ -335,9 +333,8 @@ Loader {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    if (!delegateWifi.modelData.active) {
+                                    if (!delegateWifi.modelData.active)
                                         NetworkManager.connectToNetwork(delegateWifi.modelData.ssid, "");
-                                    }
                                 }
                             }
                         }
@@ -357,7 +354,7 @@ Loader {
                             Layout.alignment: Qt.AlignHCenter
                             icon: "wifi_off"
                             color: Themes.colors.on_surface_variant
-                            font.pixelSize: 48
+                            font.pointSize: Appearance.fonts.extraLarge * 0.8
                         }
 
                         StyledLabel {

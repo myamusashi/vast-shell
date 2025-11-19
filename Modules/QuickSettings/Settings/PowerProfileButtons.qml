@@ -8,19 +8,23 @@ import qs.Components
 RowLayout {
     spacing: Appearance.spacing.small
 
-    readonly property var profiles: [{
+    readonly property var profiles: [
+        {
             "icon": "energy_savings_leaf",
             "name": "Power save",
             "profile": PowerProfile.PowerSaver
-        }, {
+        },
+        {
             "icon": "balance",
             "name": "Balanced",
             "profile": PowerProfile.Balanced
-        }, {
+        },
+        {
             "icon": "rocket_launch",
             "name": "Performance",
             "profile": PowerProfile.Performance
-        }]
+        }
+    ]
 
     Repeater {
         model: parent.profiles
@@ -30,15 +34,9 @@ RowLayout {
 
             iconButton: modelData.icon
             buttonTitle: modelData.name
-            buttonColor: modelData.profile
-                         === PowerProfiles.profile ? Themes.colors.primary : Themes.withAlpha(
-                                                         Themes.colors.on_surface,
-                                                         0.1)
+            buttonColor: modelData.profile === PowerProfiles.profile ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
 
-            buttonTextColor: modelData.profile
-                             === PowerProfiles.profile ? Themes.colors.on_primary : Themes.withAlpha(
-                                                             Themes.colors.on_surface,
-                                                             0.38)
+            buttonTextColor: modelData.profile === PowerProfiles.profile ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
             onClicked: PowerProfiles.profile = modelData.profile
         }
     }

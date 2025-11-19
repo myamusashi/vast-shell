@@ -264,7 +264,7 @@ Scope {
                                     else
                                         return Themes.colors.primary;
                                 }
-                                font.pixelSize: Appearance.fonts.extraLarge * 1.5
+                                font.pointSize: Appearance.fonts.extraLarge * 1.5
 
                                 MArea {
                                     id: pauseMArea

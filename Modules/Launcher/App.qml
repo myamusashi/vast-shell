@@ -84,7 +84,6 @@ Scope {
                 id: rectLauncher
 
                 anchors.fill: parent
-
                 radius: Appearance.rounding.large
                 color: Themes.colors.surface
                 border.color: Themes.colors.outline
@@ -168,7 +167,7 @@ Scope {
                                     Layout.preferredWidth: 68
                                     Layout.preferredHeight: 68
 
-                                    color: "transparent"
+                                    color: rectLauncher.color
                                     border.width: gridView.currentIndex === delegateItem.index ? 3 : 1
                                     border.color: gridView.currentIndex === delegateItem.index && search.focus !== true ? Themes.colors.primary : Themes.colors.outline_variant
 

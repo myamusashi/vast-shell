@@ -72,7 +72,7 @@ Slider {
             sourceComponent: MatIcon {
                 icon: root.icon
                 color: Themes.colors.on_primary
-                font.pixelSize: root.iconSize || Appearance.fonts.medium
+                font.pointSize: root.iconSize || Appearance.fonts.medium
             }
         }
 

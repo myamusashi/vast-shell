@@ -137,7 +137,7 @@ Scope {
 
                                     anchors.centerIn: parent
                                     color: Themes.colors.primary
-                                    font.pixelSize: Appearance.fonts.large * 4
+                                    font.pointSize: Appearance.fonts.large * 4
                                     icon: rectDelegate.modelData.icon
 
                                     focus: rectDelegate.index === session.currentIndex

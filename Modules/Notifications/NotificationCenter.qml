@@ -74,18 +74,20 @@ Scope {
                             }
 
                             Repeater {
-                                model: [{
+                                model: [
+                                    {
                                         "icon": "clear_all",
                                         "action": () => {
-                                            Notifs.notifications.dismissAll()
+                                            Notifs.notifications.dismissAll();
                                         }
-                                    }, {
+                                    },
+                                    {
                                         "icon": Notifs.notifications.disabledDnD ? "notifications_off" : "notifications_active",
                                         "action": () => {
-                                            Notifs.notifications.disabledDnD
-                                            = !Notifs.notifications.disabledDnD
+                                            Notifs.notifications.disabledDnD = !Notifs.notifications.disabledDnD;
                                         }
-                                    }]
+                                    }
+                                ]
 
                                 delegate: StyledRect {
                                     id: notifHeaderDelegate
@@ -100,7 +102,7 @@ Scope {
                                     MatIcon {
                                         anchors.centerIn: parent
                                         icon: notifHeaderDelegate.modelData.icon
-                                        font.pixelSize: Appearance.fonts.large * 1.6
+                                        font.pointSize: Appearance.fonts.extraLarge * 0.6
                                         color: Themes.colors.on_surface
                                     }
 
@@ -138,8 +140,7 @@ Scope {
                             anchors.margins: 15
 
                             model: ScriptModel {
-                                values: [...Notifs.notifications.listNotifications.map(
-                                        a => a)].reverse()
+                                values: [...Notifs.notifications.listNotifications.map(a => a)].reverse()
                             }
 
                             add: Transition {
@@ -169,9 +170,7 @@ Scope {
                                 property bool isShowMoreBody: false
 
                                 width: listViewNotifs.width
-                                height: Math.max(
-                                            120,
-                                            contentLayout.implicitHeight + 32)
+                                height: Math.max(120, contentLayout.implicitHeight + 32)
 
                                 implicitWidth: listViewNotifs.width
                                 contentHeight: contentLayout.implicitHeight
@@ -213,11 +212,8 @@ Scope {
                                     id: rectNotification
 
                                     width: listViewNotifs.width
-                                    height: Math.max(
-                                                120,
-                                                contentLayout.implicitHeight + 32)
-                                    color: flickDelegate.modelData?.urgency
-                                           === NotificationUrgency.Critical ? Themes.colors.error_container : Themes.colors.surface_container_low
+                                    height: Math.max(120, contentLayout.implicitHeight + 32)
+                                    color: flickDelegate.modelData?.urgency === NotificationUrgency.Critical ? Themes.colors.error_container : Themes.colors.surface_container_low
                                     radius: Appearance.rounding.normal
 
                                     Behavior on implicitWidth {
@@ -236,16 +232,12 @@ Scope {
 
                                             onActiveChanged: {
                                                 if (delegateMouseNotif.drag.active)
-                                                return
-
-                                                if (Math.abs(flickDelegate.x)
-                                                    > (flickDelegate.width * 0.45)) {
-                                                    Notifs.notifications.removePopupNotification(
-                                                        flickDelegate.modelData)
-                                                    Notifs.notifications.removeListNotification(
-                                                        flickDelegate.modelData)
+                                                    return;
+                                                if (Math.abs(flickDelegate.x) > (flickDelegate.width * 0.45)) {
+                                                    Notifs.notifications.removePopupNotification(flickDelegate.modelData);
+                                                    Notifs.notifications.removeListNotification(flickDelegate.modelData);
                                                 } else
-                                                flickDelegate.x = 0
+                                                    flickDelegate.x = 0;
                                             }
                                         }
                                     }
@@ -269,8 +261,7 @@ Scope {
                                             Loader {
                                                 id: appIcon
 
-                                                active: flickDelegate.hasAppIcon
-                                                        || !flickDelegate.hasImage
+                                                active: flickDelegate.hasAppIcon || !flickDelegate.hasImage
                                                 asynchronous: true
 
                                                 anchors.centerIn: parent
@@ -293,8 +284,7 @@ Scope {
                                                         height: 65
                                                         sourceComponent: IconImage {
                                                             anchors.centerIn: parent
-                                                            source: Quickshell.iconPath(
-                                                                        flickDelegate.modelData?.appIcon)
+                                                            source: Quickshell.iconPath(flickDelegate.modelData?.appIcon)
                                                         }
                                                     }
 
@@ -345,8 +335,7 @@ Scope {
                                                         Image {
                                                             anchors.fill: parent
 
-                                                            source: Qt.resolvedUrl(
-                                                                        flickDelegate.modelData?.image)
+                                                            source: Qt.resolvedUrl(flickDelegate.modelData?.image)
                                                             fillMode: Image.PreserveAspectCrop
                                                             cache: false
                                                             asynchronous: true
@@ -405,8 +394,7 @@ Scope {
                                                             id: whenTime
 
                                                             property date currentTime: new Date()
-                                                            text: TimeAgo.timeAgoWithIfElse(
-                                                                      currentTime)
+                                                            text: TimeAgo.timeAgoWithIfElse(currentTime)
                                                             color: Themes.colors.on_surface_variant
 
                                                             Timer {
@@ -433,7 +421,7 @@ Scope {
 
                                                         anchors.centerIn: parent
                                                         icon: flickDelegate.isShowMoreBody ? "expand_less" : "expand_more"
-                                                        font.pixelSize: Appearance.fonts.large + 5
+                                                        font.pointSize: Appearance.fonts.large + 5
                                                         color: Themes.colors.on_surface_variant
 
                                                         Behavior on rotation {
@@ -452,8 +440,7 @@ Scope {
                                                         hoverEnabled: true
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: {
-                                                            flickDelegate.isShowMoreBody
-                                                            = !flickDelegate.isShowMoreBody
+                                                            flickDelegate.isShowMoreBody = !flickDelegate.isShowMoreBody;
                                                         }
                                                     }
                                                 }
@@ -476,8 +463,7 @@ Scope {
                                                 id: body
 
                                                 Layout.fillWidth: true
-                                                text: flickDelegate.modelData?.body
-                                                      || ""
+                                                text: flickDelegate.modelData?.body || ""
                                                 font.pixelSize: Appearance.fonts.small * 1.1
                                                 lineHeight: 1.4
                                                 color: Themes.colors.on_surface_variant
@@ -504,12 +490,10 @@ Scope {
                                                 Layout.fillWidth: true
                                                 Layout.topMargin: 8
                                                 spacing: 8
-                                                visible: flickDelegate.modelData?.actions
-                                                         && flickDelegate.modelData?.actions.length > 0
+                                                visible: flickDelegate.modelData?.actions && flickDelegate.modelData?.actions.length > 0
 
                                                 Repeater {
-                                                    model: flickDelegate.modelData?.actions
-                                                           ?? []
+                                                    model: flickDelegate.modelData?.actions ?? []
 
                                                     delegate: StyledRect {
                                                         id: actionButton
@@ -539,12 +523,10 @@ Scope {
                                                             cursorShape: Qt.PointingHandCursor
 
                                                             onClicked: {
-                                                                actionButton.modelData.invoke()
-                                                                Notifs.notifications.removePopupNotification(
-                                                                    flickDelegate.modelData)
-                                                                Notifs.notifications.removeListNotification(
-                                                                    flickDelegate.modelData)
-                                                                flickDelegate.modelData?.dismiss()
+                                                                actionButton.modelData.invoke();
+                                                                Notifs.notifications.removePopupNotification(flickDelegate.modelData);
+                                                                Notifs.notifications.removeListNotification(flickDelegate.modelData);
+                                                                flickDelegate.modelData?.dismiss();
                                                             }
 
                                                             StyledRect {
@@ -555,9 +537,7 @@ Scope {
                                                                 width: 0
                                                                 height: 0
                                                                 radius: width / 2
-                                                                color: Themes.withAlpha(
-                                                                           Themes.colors.primary,
-                                                                           0.3)
+                                                                color: Themes.withAlpha(Themes.colors.primary, 0.3)
                                                                 visible: false
 
                                                                 SequentialAnimation {
@@ -584,13 +564,13 @@ Scope {
                                                                         duration: 200
                                                                     }
                                                                     onStarted: {
-                                                                        ripple.visible = true
-                                                                        ripple.opacity = 1
+                                                                        ripple.visible = true;
+                                                                        ripple.opacity = 1;
                                                                     }
                                                                     onFinished: {
-                                                                        ripple.visible = false
-                                                                        ripple.width = 0
-                                                                        ripple.height = 0
+                                                                        ripple.visible = false;
+                                                                        ripple.width = 0;
+                                                                        ripple.height = 0;
                                                                     }
                                                                 }
                                                             }

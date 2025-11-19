@@ -28,7 +28,7 @@ StyledRect {
                 else
                     Themes.colors.on_surface;
             }
-            font.pixelSize: Appearance.fonts.large * 1.3
+            font.pointSize: Appearance.fonts.large
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             icon: {

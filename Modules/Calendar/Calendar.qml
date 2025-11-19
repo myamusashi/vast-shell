@@ -78,7 +78,7 @@ LazyLoader {
 
                             anchors.centerIn: parent
                             icon: "chevron_left"
-                            font.pixelSize: Appearance.fonts.large * 2
+                            font.pointSize: Appearance.fonts.large * 2
                             color: Themes.colors.on_primary_container
                         }
 
@@ -130,10 +130,11 @@ LazyLoader {
                         }
 
                         MatIcon {
-                            id: nextIcon
+							id: nextIcon
+
                             anchors.centerIn: parent
                             icon: "chevron_right"
-                            font.pixelSize: Appearance.fonts.large * 2
+                            font.pointSize: Appearance.fonts.large * 2
                             color: Themes.colors.primary
                         }
 

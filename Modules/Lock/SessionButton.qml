@@ -42,7 +42,7 @@ RowLayout {
                 MatIcon {
                     icon: "power_settings_circle"
                     color: Themes.colors.on_primary
-                    font.pixelSize: Appearance.fonts.extraLarge
+                    font.pointSize: Appearance.fonts.extraLarge
                 }
 
                 StyledText {
@@ -144,7 +144,7 @@ RowLayout {
                     MatIcon {
                         icon: buttonDelegate.modelData.icon
                         color: Themes.colors.on_primary
-                        font.pixelSize: Appearance.fonts.extraLarge
+                        font.pointSize: Appearance.fonts.extraLarge
                     }
 
                     StyledText {
@@ -193,7 +193,7 @@ RowLayout {
             anchors.centerIn: parent
             icon: root.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_up"
             color: Themes.colors.on_primary
-            font.pixelSize: Appearance.fonts.extraLarge
+            font.pointSize: Appearance.fonts.extraLarge
 
             RotationAnimator on rotation {
                 id: rotateArrowIcon

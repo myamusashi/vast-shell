@@ -26,7 +26,7 @@ ColumnLayout {
 
         MatIcon {
             Layout.alignment: Qt.AlignHCenter
-            font.pixelSize: Appearance.fonts.extraLarge * 4
+            font.pointSize: Appearance.fonts.extraLarge * 4
             color: Themes.colors.primary
             icon: Weather.weatherIconData
         }

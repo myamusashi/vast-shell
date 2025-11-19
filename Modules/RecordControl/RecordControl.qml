@@ -156,7 +156,7 @@ Scope {
 
                                 anchors.centerIn: parent
                                 icon: "close"
-                                font.pixelSize: Appearance.fonts.large
+                                font.pointSize: Appearance.fonts.large
                                 color: Themes.colors.on_surface_variant
                             }
 
@@ -188,7 +188,7 @@ Scope {
 
                                 MatIcon {
                                     icon: "schedule"
-                                    font.pixelSize: Appearance.fonts.large
+                                    font.pointSize: Appearance.fonts.large
                                     color: Themes.colors.primary
                                 }
 
@@ -241,7 +241,7 @@ Scope {
 
                                 MatIcon {
                                     icon: "stop"
-                                    font.pixelSize: Appearance.fonts.large
+                                    font.pointSize: Appearance.fonts.large
                                     color: Themes.colors.on_error
                                 }
 

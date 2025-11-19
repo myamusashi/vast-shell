@@ -71,7 +71,7 @@ StyledRect {
                         icon: settingButton.modelData.icon
                         color: root.state === settingButton.index ? Themes.colors.primary : Themes.colors.on_surface_variant
 
-                        font.pixelSize: Appearance.fonts.large * root.scaleFactor + 10
+                        font.pointSize: Appearance.fonts.large * root.scaleFactor
                     }
 
                     StyledText {

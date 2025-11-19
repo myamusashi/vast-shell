@@ -8,13 +8,20 @@ Text {
 
     required property string icon
 
-	font.family: Appearance.fonts.family_Material
-	font.weight: Font.Normal
-    font.pixelSize: Appearance.fonts.medium
-    font.hintingPreference: Font.PreferFullHinting
+	font {
+		family: Appearance.fonts.family_Material
+		pointSize: Appearance.fonts.medium
+		hintingPreference: Font.PreferNoHinting
+		variableAxes: {
+			"FILL": false,
+			"wght": fontInfo.weight,
+			"GRAD": -25,
+			"opsz": 48
+		}
+	}
+
 
     antialiasing: true
-    verticalAlignment: Text.AlignVCenter
     color: "transparent"
     renderType: Text.NativeRendering
     text: root.icon

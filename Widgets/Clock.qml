@@ -21,7 +21,7 @@ StyledRect {
 
             color: Themes.colors.on_background
             font.bold: true
-            font.pixelSize: Appearance.fonts.large * 1.2
+            font.pointSize: Appearance.fonts.large
             icon: "schedule"
         }
 

@@ -7,7 +7,8 @@ import qs.Data
 import qs.Helpers
 
 Switch {
-    id: root
+	id: root
+
     property bool isUseIcon: true
     property string onIcon: "check"
     property string offIcon: "close"
@@ -23,7 +24,8 @@ Switch {
         border.color: root.checked ? "transparent" : Themes.colors.outline
 
         StyledRect {
-            id: handle
+			id: handle
+
             readonly property int margin: 4
             readonly property bool isActive: root.down || root.checked
             readonly property int targetX: root.checked ? parent.width - targetWidth - margin : margin
@@ -63,7 +65,7 @@ Switch {
                 sourceComponent: MatIcon {
                     icon: root.checked ? root.onIcon : root.offIcon
                     color: root.checked ? Themes.colors.on_primary_container : Themes.colors.surface_container_highest
-                    font.pixelSize: Appearance.fonts.large
+                    font.pointSize: Appearance.fonts.medium
                 }
             }
         }

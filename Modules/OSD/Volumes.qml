@@ -50,7 +50,7 @@ Scope {
                         color: Themes.colors.on_background
                         icon: root.icon
                         Layout.alignment: Qt.AlignVCenter
-                        font.pixelSize: Appearance.fonts.extraLarge * 1.2
+                        font.pointSize: Appearance.fonts.extraLarge * 1.2
                     }
 
                     ColumnLayout {

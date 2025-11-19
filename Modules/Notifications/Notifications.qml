@@ -361,7 +361,7 @@ LazyLoader {
 
                                         anchors.centerIn: parent
                                         icon: delegateNotif.isShowMoreBody ? "expand_less" : "expand_more"
-                                        font.pixelSize: Appearance.fonts.large + 5
+                                        font.pointSize: Appearance.fonts.large + 5
                                         color: Themes.colors.on_surface_variant
 
                                         RotationAnimator on rotation {

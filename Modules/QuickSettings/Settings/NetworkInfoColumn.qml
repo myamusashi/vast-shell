@@ -33,18 +33,14 @@ ColumnLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.fillHeight: true
-                color: ethernetCard.isConnected ? Themes.colors.primary : Themes.withAlpha(
-                                                      Themes.colors.on_surface,
-                                                      0.1)
+                color: ethernetCard.isConnected ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
                 radius: Appearance.rounding.small
 
                 MatIcon {
                     anchors.centerIn: parent
                     icon: "settings_ethernet"
-                    color: ethernetCard.isConnected ? Themes.colors.on_primary : Themes.withAlpha(
-                                                          Themes.colors.on_surface,
-                                                          0.38)
-                    font.pixelSize: Appearance.fonts.extraLarge
+                    color: ethernetCard.isConnected ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
+                    font.pointSize: Appearance.fonts.extraLarge * 0.8
                 }
             }
 
@@ -71,8 +67,7 @@ ColumnLayout {
                 }
 
                 StyledText {
-                    text: SysUsage.statusWiredInterface
-                          === "connected" ? "Connected" : "Not Connected"
+                    text: SysUsage.statusWiredInterface === "connected" ? "Connected" : "Not Connected"
                     font.pixelSize: Appearance.fonts.normal
                     color: Themes.colors.on_surface_variant
                 }
@@ -90,34 +85,33 @@ ColumnLayout {
 
         readonly property var activeNetwork: {
             for (var i = 0; i < NetworkManager.networks.length; i++)
-            if (NetworkManager.networks[i].active)
-            return NetworkManager.networks[i]
+                if (NetworkManager.networks[i].active)
+                    return NetworkManager.networks[i];
 
-            return null
+            return null;
         }
 
         MArea {
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: settings
-                         && settings.wifiList.active ? Qt.ArrowCursor : Qt.PointingHandCursor
+            cursorShape: settings && settings.wifiList.active ? Qt.ArrowCursor : Qt.PointingHandCursor
             enabled: settings && !settings.wifiList.active
             onClicked: {
                 if (settings)
-                settings.wifiList.active = !settings.wifiList.active
+                    settings.wifiList.active = !settings.wifiList.active;
             }
         }
 
         function getWiFiIcon(strength) {
             if (strength >= 80)
-                return "network_wifi"
+                return "network_wifi";
             if (strength >= 50)
-                return "network_wifi_3_bar"
+                return "network_wifi_3_bar";
             if (strength >= 30)
-                return "network_wifi_2_bar"
+                return "network_wifi_2_bar";
             if (strength >= 15)
-                return "network_wifi_1_bar"
-            return "signal_wifi_0_bar"
+                return "network_wifi_1_bar";
+            return "signal_wifi_0_bar";
         }
 
         RowLayout {
@@ -128,19 +122,14 @@ ColumnLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
-                color: wifiCard.activeNetwork ? Themes.colors.primary : Themes.withAlpha(
-                                                    Themes.colors.on_surface,
-                                                    0.1)
+                color: wifiCard.activeNetwork ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
                 radius: Appearance.rounding.small
 
                 MatIcon {
                     anchors.centerIn: parent
-                    icon: wifiCard.activeNetwork ? wifiCard.getWiFiIcon(
-                                                       wifiCard.activeNetwork.strength) : "wifi_off"
-                    color: wifiCard.activeNetwork ? Themes.colors.on_primary : Themes.withAlpha(
-                                                        Themes.colors.on_surface,
-                                                        0.38)
-                    font.pixelSize: Appearance.fonts.extraLarge
+                    icon: wifiCard.activeNetwork ? wifiCard.getWiFiIcon(wifiCard.activeNetwork.strength) : "wifi_off"
+                    color: wifiCard.activeNetwork ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
+                    font.pointSize: Appearance.fonts.extraLarge * 0.8
                 }
             }
 

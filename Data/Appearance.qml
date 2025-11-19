@@ -12,12 +12,12 @@ Singleton {
         readonly property string family_Mono: "Hack"
         readonly property string family_Sans: "Google Sans Flex"
 
-        readonly property real small: 12
-        readonly property real medium: 13
-        readonly property real normal: 14
-        readonly property real large: 16
-        readonly property real larger: 18
-        readonly property real extraLarge: 30
+        readonly property int small: 12
+        readonly property int medium: 13
+        readonly property int normal: 14
+        readonly property int large: 16
+        readonly property int larger: 18
+        readonly property int extraLarge: 30
     }
 
     component AnimationCurvesComponent: QtObject {

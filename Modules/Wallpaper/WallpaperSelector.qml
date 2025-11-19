@@ -174,6 +174,12 @@ Scope {
                                     layer.smooth: true
                                 }
 
+                                StyledLabel {
+                                    anchors.centerIn: parent
+                                    visible: wallpaperGrid.currentIndex === delegateItem.index ? false : true
+                                    text: delegateItem.modelData.split('/').pop()
+                                }
+
                                 StyledRect {
                                     anchors.fill: parent
                                     color: wallpaperGrid.currentIndex === delegateItem.index ? "transparent" : Themes.withAlpha(Themes.colors.surface, 0.7)
