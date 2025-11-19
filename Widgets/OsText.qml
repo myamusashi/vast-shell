@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
@@ -18,7 +18,7 @@ StyledRect {
         MaterialIcon {
             Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
             color: Themes.colors.tertiary
-            font.family: Appearance.fonts.family_Mono
+            font.family: Appearance.fonts.familyMono
             font.pointSize: Appearance.fonts.extraLarge * 0.8
             icon: "󱄅"
         }

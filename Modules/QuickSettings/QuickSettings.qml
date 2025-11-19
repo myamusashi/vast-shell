@@ -8,7 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 import "Settings"
@@ -33,9 +33,7 @@ Scope {
 
         interval: 500
         repeat: false
-        onTriggered: {
-            gc();
-        }
+        onTriggered: gc()
     }
 
     LazyLoader {

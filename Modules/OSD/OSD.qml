@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.Pipewire
 
-import qs.Data
+import qs.Services
 
 Scope {
     id: root

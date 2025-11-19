@@ -2,14 +2,12 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
-import Quickshell.Widgets
 import Quickshell.Wayland
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 Scope {
@@ -50,7 +48,8 @@ Scope {
             surfaceFormat.opaque: false
             visible: root.isBarOpen
 
-            Cornery {
+			Cornery {
+				screen: bar.screen
                 visible: bar.visible
                 exclusiveZone: -1
                 barColor: Themes.colors.background

@@ -1,3 +1,4 @@
+
 pragma Singleton
 
 import Quickshell
@@ -79,7 +80,9 @@ Singleton {
     property var cc: null
     property var forecast: null
 
-    Component.onCompleted: reload()
+	Component.onCompleted: reload()
+
+	// TODO: implements JSON files to store weather
 
     function sendRequest(url, callback) {
         let request = new XMLHttpRequest();

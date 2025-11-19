@@ -4,7 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Helpers
 import qs.Components
 

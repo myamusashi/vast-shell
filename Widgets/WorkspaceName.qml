@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Wayland
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 StyledRect {

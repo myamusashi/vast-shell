@@ -4,7 +4,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Helpers
 import qs.Components
 
@@ -75,8 +76,8 @@ Loader {
                         StyledSwitch {
                             id: wifiToggle
 
-                            checked: NetworkManager.wifiEnabled
-                            onToggled: NetworkManager.toggleWifi()
+                            checked: Network.wifiEnabled
+                            onToggled: Network.toggleWifi()
                         }
                     }
 
@@ -91,7 +92,7 @@ Loader {
                             icon: "refresh"
                             color: mRefreshArea.containsPress ? Themes.withAlpha(Themes.colors.on_background, 0.1) : mRefreshArea.containsMouse ? Themes.withAlpha(Themes.colors.on_background, 0.08) : Themes.colors.on_background
                             font.pointSize: Appearance.fonts.extraLarge * 0.8
-                            opacity: NetworkManager.wifiEnabled ? 1.0 : 0.5
+                            opacity: Network.wifiEnabled ? 1.0 : 0.5
                             antialiasing: true
                             smooth: true
 
@@ -105,7 +106,7 @@ Loader {
                                 from: 0
                                 to: 360
                                 duration: 1000
-                                running: NetworkManager.scanning
+                                running: Network.scanning
                                 loops: Animation.Infinite
                             }
                         }
@@ -116,9 +117,9 @@ Loader {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            enabled: NetworkManager.wifiEnabled && !NetworkManager.scanning
+                            enabled: Network.wifiEnabled && !Network.scanning
                             onClicked: {
-                                NetworkManager.rescanWifi();
+                                Network.rescanWifi();
                             }
                         }
                     }
@@ -135,7 +136,7 @@ Loader {
                     implicitHeight: currentNetLayout.implicitHeight + 20
                     color: Themes.colors.surface_container_low
                     radius: Appearance.rounding.normal
-                    visible: NetworkManager.active !== null
+                    visible: Network.active !== null
 
                     RowLayout {
                         id: currentNetLayout
@@ -145,7 +146,7 @@ Loader {
                         spacing: Appearance.spacing.normal
 
                         MaterialIcon {
-                            icon: NetworkManager.active ? root.getWiFiIcon(NetworkManager.active.strength) : "wifi_off"
+                            icon: Network.active ? root.getWiFiIcon(Network.active.strength) : "wifi_off"
                             color: Themes.colors.primary
                             font.pointSize: Appearance.fonts.extraLarge
                         }
@@ -154,14 +155,14 @@ Loader {
                             spacing: Appearance.spacing.small
 
                             StyledLabel {
-                                text: NetworkManager.active ? NetworkManager.active.ssid : "Not connected"
+                                text: Network.active ? Network.active.ssid : "Not connected"
                                 color: Themes.colors.on_background
                                 font.pixelSize: Appearance.fonts.medium
                                 font.bold: true
                             }
 
                             StyledLabel {
-                                text: NetworkManager.active ? "Connected • " + NetworkManager.active.frequency + " MHz" : ""
+                                text: Network.active ? "Connected • " + Network.active.frequency + " MHz" : ""
                                 color: Themes.colors.on_surface_variant
                                 font.pixelSize: Appearance.fonts.small
                             }
@@ -187,7 +188,7 @@ Loader {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onClicked: NetworkManager.disconnectFromNetwork()
+                                onClicked: Network.disconnectFromNetwork()
                             }
                         }
                     }
@@ -198,17 +199,17 @@ Loader {
                     color: Themes.colors.on_surface_variant
                     font.pixelSize: Appearance.fonts.normal
                     font.bold: true
-                    visible: NetworkManager.wifiEnabled
+                    visible: Network.wifiEnabled
                 }
 
                 Progress {
-                    condition: NetworkManager.scanning
+                    condition: Network.scanning
                 }
 
                 Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: !NetworkManager.wifiEnabled
+                    visible: !Network.wifiEnabled
 
                     ColumnLayout {
                         anchors.centerIn: parent
@@ -241,12 +242,12 @@ Loader {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     clip: true
-                    visible: NetworkManager.wifiEnabled
+                    visible: Network.wifiEnabled
 
                     ListView {
                         id: networkListView
 
-                        model: NetworkManager.networks
+                        model: Network.networks
                         spacing: Appearance.spacing.small
 
                         delegate: StyledRect {
@@ -334,7 +335,7 @@ Loader {
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
                                     if (!delegateWifi.modelData.active)
-                                        NetworkManager.connectToNetwork(delegateWifi.modelData.ssid, "");
+                                        Network.connectToNetwork(delegateWifi.modelData.ssid, "");
                                 }
                             }
                         }
@@ -344,7 +345,7 @@ Loader {
                 Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: NetworkManager.wifiEnabled && NetworkManager.networks.length === 0 && !NetworkManager.scanning
+                    visible: Network.wifiEnabled && Network.networks.length === 0 && !Network.scanning
 
                     ColumnLayout {
                         anchors.centerIn: parent

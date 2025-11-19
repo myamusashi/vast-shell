@@ -6,13 +6,13 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Hyprland
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
 LazyLoader {
     property bool isCalendarShow: false
-	active: isCalendarShow
+    active: isCalendarShow
 
     component: PanelWindow {
         anchors {
@@ -130,7 +130,7 @@ LazyLoader {
                         }
 
                         MaterialIcon {
-							id: nextIcon
+                            id: nextIcon
 
                             anchors.centerIn: parent
                             icon: "chevron_right"

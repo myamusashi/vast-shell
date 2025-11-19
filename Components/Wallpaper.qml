@@ -1,7 +1,6 @@
 import QtQuick
-import QtQuick.Effects
 
-import qs.Data
+import qs.Helpers
 
 Image {
 	id: wallpaper

@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 PopupWindow {

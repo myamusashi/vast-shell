@@ -51,6 +51,7 @@ Singleton {
 
     Process {
         id: networkInfoProc
+
         command: ["sh", "-c", `
             nmcli -t -f DEVICE,TYPE,STATE device status | awk -F: '
             /ethernet/ && !eth_found {
@@ -291,6 +292,7 @@ Singleton {
 
     Timer {
         id: mainTimer
+
         running: true
         interval: 2000
         repeat: true

@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 
 Switch {

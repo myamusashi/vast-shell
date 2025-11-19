@@ -1,5 +1,5 @@
 import QtQuick
-import qs.Data
+import qs.Configs
 
 NumberAnimation {
     duration: Appearance.animations.durations.normal

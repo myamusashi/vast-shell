@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.UPower
 
-import qs.Data
+import qs.Configs
 import qs.Components
 
 RowLayout {
@@ -35,7 +35,6 @@ RowLayout {
             iconButton: modelData.icon
             buttonTitle: modelData.name
             buttonColor: modelData.profile === PowerProfiles.profile ? Themes.colors.primary : Themes.withAlpha(Themes.colors.on_surface, 0.1)
-
             buttonTextColor: modelData.profile === PowerProfiles.profile ? Themes.colors.on_primary : Themes.withAlpha(Themes.colors.on_surface, 0.38)
             onClicked: PowerProfiles.profile = modelData.profile
         }

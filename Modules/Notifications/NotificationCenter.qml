@@ -8,7 +8,8 @@ import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell.Services.Notifications
 
-import qs.Data
+import qs.Configs
+import qs.Services
 import qs.Helpers
 import qs.Components
 

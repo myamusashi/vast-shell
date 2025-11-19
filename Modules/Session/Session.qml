@@ -6,7 +6,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
@@ -137,7 +137,7 @@ Scope {
 
                                     anchors.centerIn: parent
                                     color: Themes.colors.primary
-                                    font.pointSize: Appearance.fonts.large * 4
+                                    font.pointSize: Appearance.fonts.large * 3
                                     icon: rectDelegate.modelData.icon
 
                                     focus: rectDelegate.index === session.currentIndex
@@ -170,7 +170,6 @@ Scope {
                                         id: mouseArea
 
                                         anchors.fill: parent
-
                                         cursorShape: Qt.PointingHandCursor
                                         hoverEnabled: true
 

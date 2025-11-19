@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-import qs.Data
+import qs.Configs
 import qs.Helpers
 
 Loader {

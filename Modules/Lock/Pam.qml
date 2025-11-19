@@ -19,10 +19,9 @@ Scope {
 
     function tryUnlock() {
         if (currentText === "")
-            return
-
-        unlockInProgress = true
-        pam.start()
+            return;
+        unlockInProgress = true;
+        pam.start();
     }
 
     PamContext {
@@ -32,20 +31,19 @@ Scope {
         configDirectory: "root:/Assets/pam.d"
 
         onPamMessage: {
-            if (this.responseRequired) {
-                this.respond(root.currentText)
-            }
+            if (this.responseRequired)
+                this.respond(root.currentText);
         }
 
         onCompleted: result => {
             if (result === PamResult.Success) {
-                root.lock.unlock()
+                root.lock.unlock();
             } else {
-                root.currentText = ""
-                root.showFailure = true
+                root.currentText = "";
+                root.showFailure = true;
             }
 
-            root.unlockInProgress = false
+            root.unlockInProgress = false;
         }
     }
 }
