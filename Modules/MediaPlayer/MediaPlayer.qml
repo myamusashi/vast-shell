@@ -10,7 +10,7 @@ import Quickshell.Hyprland
 import Quickshell.Services.Mpris
 
 import qs.Configs
-import qs.Services as Player
+import qs.Services
 import qs.Helpers
 import qs.Components
 
@@ -70,9 +70,7 @@ Scope {
             anchors {
                 top: true
             }
-            property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-            property real monitorWidth: monitor.width / monitor.scale
-            property real monitorHeight: monitor.height / monitor.scale
+            property real monitorWidth: Hypr.focusedMonitor.width
             implicitWidth: monitorWidth * 0.25
             implicitHeight: container.implicitHeight
             exclusiveZone: 0
@@ -113,9 +111,9 @@ Scope {
                                     id: coverArt
 
                                     anchors.fill: parent
-                                    source: Player.Mpris.active && Player.Mpris.active.trackArtUrl !== "" ? Player.Mpris.active.trackArtUrl : "root:/Assets/kuru.gif"
+                                    source: Mpris.active && Mpris.active.trackArtUrl !== "" ? Mpris.active.trackArtUrl : "root:/Assets/kuru.gif"
                                     fillMode: Image.PreserveAspectCrop
-                                    visible: Player.Mpris.active !== null
+                                    visible: Mpris.active !== null
                                     opacity: 0.5
                                     cache: false
                                     asynchronous: true
@@ -134,17 +132,17 @@ Scope {
                                     wrapMode: Text.Wrap
                                     elide: Text.ElideRight
                                     color: Themes.m3Colors.onSurface
-                                    visible: Player.Mpris.active && Player.Mpris.active.trackArtUrl === ""
+                                    visible: Mpris.active && Mpris.active.trackArtUrl === ""
                                 }
 
                                 AnimatedImage {
                                     id: coverNullArt
 
                                     anchors.fill: parent
-                                    visible: Player.Mpris.active === null
+                                    visible: Mpris.active === null
                                     asynchronous: true
                                     cache: false
-                                    source: Player.Mpris.active === null ? "root:/Assets/kuru.gif" : ""
+                                    source: Mpris.active === null ? "root:/Assets/kuru.gif" : ""
                                 }
 
                                 Item {
@@ -176,7 +174,7 @@ Scope {
 
                             StyledLabel {
                                 width: parent.width
-                                text: Player.Mpris.active ? Player.Mpris.active.trackTitle : ""
+                                text: Mpris.active ? Mpris.active.trackTitle : ""
                                 color: Themes.m3Colors.onBackground
                                 font.pixelSize: Appearance.fonts.large
                                 wrapMode: Text.NoWrap
@@ -188,27 +186,27 @@ Scope {
 
                                 StyledText {
                                     Layout.preferredWidth: width
-                                    text: Player.Mpris.active ? Player.Mpris.active.trackArtist : ""
-                                    color: Themes.m3Colors.onBackground
+                                    text: Mpris.active ? Mpris.active.trackArtist : ""
+                                    color: Themes.m3Colors.onSurface
                                     font.pixelSize: Appearance.fonts.small
                                     wrapMode: Text.NoWrap
                                     elide: Text.ElideRight
                                 }
 
                                 StyledText {
-                                    text: Player.Mpris.active ? "•" : ""
+                                    text: Mpris.active ? "•" : ""
                                     color: Themes.m3Colors.onBackground
                                     font.pixelSize: Appearance.fonts.extraLarge
                                 }
 
                                 StyledText {
-                                    text: Player.Mpris.active ? "Watched on " : ""
+                                    text: Mpris.active ? "Watched on " : ""
                                     color: Themes.m3Colors.onBackground
                                     font.pixelSize: Appearance.fonts.small
                                 }
 
                                 IconImage {
-                                    source: Quickshell.iconPath(Player.Mpris.active.desktopEntry)
+                                    source: Quickshell.iconPath(Mpris.active.desktopEntry)
                                     asynchronous: true
                                     implicitWidth: 20
                                     implicitHeight: 20
@@ -236,16 +234,16 @@ Scope {
                             StyledText {
                                 id: timeTrack
 
-                                text: Player.Mpris.active == null ? "00:00" : `${root.formatTime(Player.Mpris.active?.position)}
-                                ${root.formatTime(Player.Mpris.active?.length)}`
+                                text: Mpris.active == null ? "00:00" : `${root.formatTime(Mpris.active?.position)}
+                                ${root.formatTime(Mpris.active?.length)}`
                                 font.pixelSize: Appearance.fonts.large
                                 color: Themes.m3Colors.onBackground
 
                                 Timer {
-                                    running: Player.Mpris.active !== null && Player.Mpris.active.playbackState == MprisPlaybackState.Playing
+                                    running: Mpris.active !== null && Mpris.active.playbackState == MprisPlaybackState.Playing
                                     interval: 1000
                                     repeat: true
-                                    onTriggered: Player.Mpris.active.positionChanged()
+                                    onTriggered: Mpris.active.positionChanged()
                                 }
                             }
 
@@ -256,7 +254,7 @@ Scope {
                             MaterialIcon {
                                 id: pauseButton
 
-                                icon: Player.Mpris.active === null ? "pause_circle" : Player.Mpris.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
+                                icon: Mpris.active === null ? "pause_circle" : Mpris.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
                                 color: {
                                     if (pauseMArea.pressed)
                                         return Themes.withAlpha(Themes.m3Colors.primary, 0.08);
@@ -273,7 +271,7 @@ Scope {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
-                                    onClicked: Player.Mpris.active ? Player.Mpris.active.togglePlaying() : ""
+                                    onClicked: Mpris.active ? Mpris.active.togglePlaying() : ""
                                 }
                             }
                         }
@@ -286,13 +284,13 @@ Scope {
                             StyledButton {
                                 iconButton: "skip_previous"
                                 iconSize: 10
-                                onClicked: Player.Mpris.active ? Player.Mpris.active.previous() : {}
+                                onClicked: Mpris.active ? Mpris.active.previous() : {}
                             }
 
                             StyledSlide {
                                 id: barSlide
 
-                                value: Player.Mpris.active === null ? 0 : Player.Mpris.active.length > 0 ? Player.Mpris.active.position / Player.Mpris.active.length : 0
+                                value: Mpris.active === null ? 0 : Mpris.active.length > 0 ? Mpris.active.position / Mpris.active.length : 0
 
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 40
@@ -300,17 +298,17 @@ Scope {
                                 valueHeight: 0
 
                                 FrameAnimation {
-                                    running: Player.Mpris.active && Player.Mpris.active.playbackState == MprisPlaybackState.Playing
-                                    onTriggered: Player.Mpris.active.positionChanged()
+                                    running: Mpris.active && Mpris.active.playbackState == MprisPlaybackState.Playing
+                                    onTriggered: Mpris.active.positionChanged()
                                 }
 
-                                onMoved: Player.Mpris.active ? Player.Mpris.active.position = value * Player.Mpris.active.length : {}
+                                onMoved: Mpris.active ? Mpris.active.position = value * Mpris.active.length : {}
                             }
 
                             StyledButton {
                                 iconButton: "skip_next"
                                 iconSize: 10
-                                onClicked: Player.Mpris.active ? Player.Mpris.active.next() : {}
+                                onClicked: Mpris.active ? Mpris.active.next() : {}
                             }
                         }
                     }

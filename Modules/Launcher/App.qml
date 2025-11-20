@@ -95,7 +95,7 @@ Scope {
                     anchors.margins: Appearance.padding.normal
                     spacing: Appearance.spacing.normal
 
-                    TextField {
+                    StyledTextField {
                         id: search
 
                         Layout.fillWidth: true
