@@ -41,56 +41,56 @@ Singleton {
         return Qt.rgba(color.r, color.g, color.b, alpha);
     }
 
-    component ColorsComponent: QtObject {
+    component M3ColorsComponent: QtObject {
         readonly property color background: root.dark.background
         readonly property color error: root.dark.error
-        readonly property color error_container: root.dark.error_container
-        readonly property color inverse_on_surface: root.dark.inverse_on_surface
-        readonly property color inverse_primary: root.dark.inverse_primary
-        readonly property color inverse_surface: root.dark.inverse_surface
-        readonly property color on_background: root.dark.on_background
-        readonly property color on_error: root.dark.on_error
-        readonly property color on_error_container: root.dark.on_error_container
-        readonly property color on_primary: root.dark.on_primary
-        readonly property color on_primary_container: root.dark.on_primary_container
-        readonly property color on_primary_fixed: root.dark.on_primary_fixed
-        readonly property color on_primary_fixed_variant: root.dark.on_primary_fixed_variant
-        readonly property color on_secondary: root.dark.on_secondary
-        readonly property color on_secondary_container: root.dark.on_secondary_container
-        readonly property color on_secondary_fixed: root.dark.on_secondary_fixed
-        readonly property color on_secondary_fixed_variant: root.dark.on_secondary_fixed_variant
-        readonly property color on_surface: root.dark.on_surface
-        readonly property color on_surface_variant: root.dark.on_surface_variant
-        readonly property color on_tertiary: root.dark.on_tertiary
-        readonly property color on_tertiary_container: root.dark.on_tertiary_container
-        readonly property color on_tertiary_fixed: root.dark.on_tertiary_fixed
-        readonly property color on_tertiary_fixed_variant: root.dark.on_tertiary_fixed_variant
+        readonly property color errorContainer: root.dark.errorContainer
+        readonly property color inverseOnSurface: root.dark.inverseOnSurface
+        readonly property color inversePrimary: root.dark.inversePrimary
+        readonly property color inverseSurface: root.dark.inverseSurface
+        readonly property color onBackground: root.dark.onBackground
+        readonly property color onError: root.dark.onError
+        readonly property color onErrorContainer: root.dark.onErrorContainer
+        readonly property color onPrimary: root.dark.onPrimary
+        readonly property color onPrimaryContainer: root.dark.onPrimaryContainer
+        readonly property color onPrimaryFixed: root.dark.onPrimaryFixed
+        readonly property color onPrimaryFixedVariant: root.dark.onPrimaryFixedVariant
+        readonly property color onSecondary: root.dark.onSecondary
+        readonly property color onSecondaryContainer: root.dark.onSecondaryContainer
+        readonly property color onSecondaryFixed: root.dark.onSecondaryFixed
+        readonly property color onSecondaryFixedVariant: root.dark.onSecondaryFixedVariant
+        readonly property color onSurface: root.dark.onSurface
+        readonly property color onSurfaceVariant: root.dark.onSurfaceVariant
+        readonly property color onTertiary: root.dark.onTertiary
+        readonly property color onTertiaryContainer: root.dark.onTertiaryContainer
+        readonly property color onTertiaryFixed: root.dark.onTertiaryFixed
+        readonly property color onTertiaryFixedVariant: root.dark.onTertiaryFixedVariant
         readonly property color outline: root.dark.outline
-        readonly property color outline_variant: root.dark.outline_variant
+        readonly property color outlineVariant: root.dark.outlineVariant
         readonly property color primary: root.dark.primary
-        readonly property color primary_container: root.dark.primary_container
-        readonly property color primary_fixed: root.dark.primary_fixed
-        readonly property color primary_fixed_dim: root.dark.primary_fixed_dim
+        readonly property color primaryContainer: root.dark.primaryContainer
+        readonly property color primaryFixed: root.dark.primaryFixed
+        readonly property color primaryFixedDim: root.dark.primaryFixedDim
         readonly property color scrim: root.dark.scrim
         readonly property color secondary: root.dark.secondary
-        readonly property color secondary_container: root.dark.secondary_container
-        readonly property color secondary_fixed: root.dark.secondary_fixed
-        readonly property color secondary_fixed_dim: root.dark.secondary_fixed_dim
+        readonly property color secondaryContainer: root.dark.secondaryContainer
+        readonly property color secondaryFixed: root.dark.secondaryFixed
+        readonly property color secondaryFixedDim: root.dark.secondaryFixedDim
         readonly property color shadow: root.dark.shadow
         readonly property color surface: root.dark.surface
-        readonly property color surface_bright: root.dark.surface_bright
-        readonly property color surface_container: root.dark.surface_container
-        readonly property color surface_container_high: root.dark.surface_container_high
-        readonly property color surface_container_highest: root.dark.surface_container_highest
-        readonly property color surface_container_low: root.dark.surface_container_low
-        readonly property color surface_container_lowest: root.dark.surface_container_lowest
-        readonly property color surface_dim: root.dark.surface_dim
-        readonly property color surface_tint: root.dark.surface_tint
-        readonly property color surface_variant: root.dark.surface_variant
+        readonly property color surfaceBright: root.dark.surfaceBright
+        readonly property color surfaceContainer: root.dark.surfaceContainer
+        readonly property color surfaceContainerHigh: root.dark.surfaceContainerHigh
+        readonly property color surfaceContainerHighest: root.dark.surfaceContainerHighest
+        readonly property color surfaceContainerLow: root.dark.surfaceContainerLow
+        readonly property color surfaceContainerLowest: root.dark.surfaceContainerLowest
+        readonly property color surfaceDim: root.dark.surfaceDim
+        readonly property color surfaceTint: root.dark.surfaceTint
+        readonly property color surfaceVariant: root.dark.surfaceVariant
         readonly property color tertiary: root.dark.tertiary
-        readonly property color tertiary_container: root.dark.tertiary_container
-        readonly property color tertiary_fixed: root.dark.tertiary_fixed
-        readonly property color tertiary_fixed_dim: root.dark.tertiary_fixed_dim
+        readonly property color tertiaryContainer: root.dark.tertiaryContainer
+        readonly property color tertiaryFixed: root.dark.tertiaryFixed
+        readonly property color tertiaryFixedDim: root.dark.tertiaryFixedDim
 
         readonly property color red: root.dark.error
         readonly property color green: "#63A002"
@@ -98,5 +98,5 @@ Singleton {
         readonly property color yellow: "#FFDE3F"
     }
 
-    readonly property ColorsComponent colors: ColorsComponent {}
+    readonly property M3ColorsComponent m3Colors: M3ColorsComponent {}
 }
