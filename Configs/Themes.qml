@@ -10,7 +10,7 @@ import qs.Helpers
 Singleton {
     id: root
 
-    readonly property var dark: JSON.parse(colorsFile.text()).colors
+    readonly property var colorsTemplates: JSON.parse(colorsFile.text()).colors.dark
 
     FileView {
         id: colorsFile
@@ -19,7 +19,7 @@ Singleton {
         watchChanges: true
         blockLoading: true
         onFileChanged: reload()
-        onAdapterUpdated: writeAdapter()
+        onAdapterChanged: writeAdapter()
     }
 
     function parseRGBA(color) {
@@ -42,57 +42,57 @@ Singleton {
     }
 
     component M3ColorsComponent: QtObject {
-        readonly property color background: root.dark.background
-        readonly property color error: root.dark.error
-        readonly property color errorContainer: root.dark.errorContainer
-        readonly property color inverseOnSurface: root.dark.inverseOnSurface
-        readonly property color inversePrimary: root.dark.inversePrimary
-        readonly property color inverseSurface: root.dark.inverseSurface
-        readonly property color onBackground: root.dark.onBackground
-        readonly property color onError: root.dark.onError
-        readonly property color onErrorContainer: root.dark.onErrorContainer
-        readonly property color onPrimary: root.dark.onPrimary
-        readonly property color onPrimaryContainer: root.dark.onPrimaryContainer
-        readonly property color onPrimaryFixed: root.dark.onPrimaryFixed
-        readonly property color onPrimaryFixedVariant: root.dark.onPrimaryFixedVariant
-        readonly property color onSecondary: root.dark.onSecondary
-        readonly property color onSecondaryContainer: root.dark.onSecondaryContainer
-        readonly property color onSecondaryFixed: root.dark.onSecondaryFixed
-        readonly property color onSecondaryFixedVariant: root.dark.onSecondaryFixedVariant
-        readonly property color onSurface: root.dark.onSurface
-        readonly property color onSurfaceVariant: root.dark.onSurfaceVariant
-        readonly property color onTertiary: root.dark.onTertiary
-        readonly property color onTertiaryContainer: root.dark.onTertiaryContainer
-        readonly property color onTertiaryFixed: root.dark.onTertiaryFixed
-        readonly property color onTertiaryFixedVariant: root.dark.onTertiaryFixedVariant
-        readonly property color outline: root.dark.outline
-        readonly property color outlineVariant: root.dark.outlineVariant
-        readonly property color primary: root.dark.primary
-        readonly property color primaryContainer: root.dark.primaryContainer
-        readonly property color primaryFixed: root.dark.primaryFixed
-        readonly property color primaryFixedDim: root.dark.primaryFixedDim
-        readonly property color scrim: root.dark.scrim
-        readonly property color secondary: root.dark.secondary
-        readonly property color secondaryContainer: root.dark.secondaryContainer
-        readonly property color secondaryFixed: root.dark.secondaryFixed
-        readonly property color secondaryFixedDim: root.dark.secondaryFixedDim
-        readonly property color shadow: root.dark.shadow
-        readonly property color surface: root.dark.surface
-        readonly property color surfaceBright: root.dark.surfaceBright
-        readonly property color surfaceContainer: root.dark.surfaceContainer
-        readonly property color surfaceContainerHigh: root.dark.surfaceContainerHigh
-        readonly property color surfaceContainerHighest: root.dark.surfaceContainerHighest
-        readonly property color surfaceContainerLow: root.dark.surfaceContainerLow
-        readonly property color surfaceContainerLowest: root.dark.surfaceContainerLowest
-        readonly property color surfaceDim: root.dark.surfaceDim
-        readonly property color surfaceTint: root.dark.surfaceTint
-        readonly property color surfaceVariant: root.dark.surfaceVariant
-        readonly property color tertiary: root.dark.tertiary
-        readonly property color tertiaryContainer: root.dark.tertiaryContainer
-        readonly property color tertiaryFixed: root.dark.tertiaryFixed
-        readonly property color tertiaryFixedDim: root.dark.tertiaryFixedDim
+        readonly property color background: root.colorsTemplates.background
+        readonly property color error: root.colorsTemplates.error
+        readonly property color errorContainer: root.colorsTemplates.error_container
+        readonly property color inverseOnSurface: root.colorsTemplates.inverse_on_surface
+        readonly property color inversePrimary: root.colorsTemplates.inverse_primary
+        readonly property color inverseSurface: root.colorsTemplates.inverse_surface
+        readonly property color onBackground: root.colorsTemplates.on_background
+        readonly property color onError: root.colorsTemplates.on_error
+        readonly property color onErrorContainer: root.colorsTemplates.on_error_container
+        readonly property color onPrimary: root.colorsTemplates.on_primary
+        readonly property color onPrimaryContainer: root.colorsTemplates.on_primary_container
+        readonly property color onPrimaryFixed: root.colorsTemplates.on_primary_fixed
+        readonly property color onPrimaryFixedVariant: root.colorsTemplates.on_primary_fixed_variant
+        readonly property color onSecondary: root.colorsTemplates.on_secondary
+        readonly property color onSecondaryContainer: root.colorsTemplates.on_secondary_container
+        readonly property color onSecondaryFixed: root.colorsTemplates.on_secondary_fixed
+        readonly property color onSecondaryFixedVariant: root.colorsTemplates.on_secondary_fixed_variant
+        readonly property color onSurface: root.colorsTemplates.on_surface
+        readonly property color onSurfaceVariant: root.colorsTemplates.on_surface_variant
+        readonly property color onTertiary: root.colorsTemplates.on_tertiary
+        readonly property color onTertiaryContainer: root.colorsTemplates.on_tertiary_container
+        readonly property color onTertiaryFixed: root.colorsTemplates.on_tertiary_fixed
+        readonly property color onTertiaryFixedVariant: root.colorsTemplates.on_tertiary_fixed_variant
+        readonly property color outline: root.colorsTemplates.outline
+        readonly property color outlineVariant: root.colorsTemplates.outline_variant
+        readonly property color primary: root.colorsTemplates.primary
+        readonly property color primaryContainer: root.colorsTemplates.primary_container
+        readonly property color primaryFixed: root.colorsTemplates.primary_fixed
+        readonly property color primaryFixedDim: root.colorsTemplates.primary_fixed_dim
+        readonly property color scrim: root.colorsTemplates.scrim
+        readonly property color secondary: root.colorsTemplates.secondary
+        readonly property color secondaryContainer: root.colorsTemplates.secondary_container
+        readonly property color secondaryFixed: root.colorsTemplates.secondary_fixed
+        readonly property color secondaryFixedDim: root.colorsTemplates.secondary_fixed_dim
+        readonly property color shadow: root.colorsTemplates.shadow
+        readonly property color surface: root.colorsTemplates.surface
+        readonly property color surfaceBright: root.colorsTemplates.surface_bright
+        readonly property color surfaceContainer: root.colorsTemplates.surface_container
+        readonly property color surfaceContainerHigh: root.colorsTemplates.surface_container_high
+        readonly property color surfaceContainerHighest: root.colorsTemplates.surface_container_highest
+        readonly property color surfaceContainerLow: root.colorsTemplates.surface_container_low
+        readonly property color surfaceContainerLowest: root.colorsTemplates.surface_container_lowest
+        readonly property color surfaceDim: root.colorsTemplates.surface_dim
+        readonly property color surfaceTint: root.colorsTemplates.surface_tint
+        readonly property color surfaceVariant: root.colorsTemplates.surface_variant
+        readonly property color tertiary: root.colorsTemplates.tertiary
+        readonly property color tertiaryContainer: root.colorsTemplates.tertiary_container
+        readonly property color tertiaryFixed: root.colorsTemplates.tertiary_fixed
+        readonly property color tertiaryFixedDim: root.colorsTemplates.tertiary_fixed_dim
 
-        readonly property color red: root.dark.error
+        readonly property color red: error
         readonly property color green: "#63A002"
         readonly property color blue: "#769CDF"
         readonly property color yellow: "#FFDE3F"
