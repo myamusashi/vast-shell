@@ -98,16 +98,13 @@ Scope {
                     anchors.margins: Appearance.spacing.normal
                     spacing: Appearance.spacing.normal
 
-                    TextField {
+                    StyledTextField {
                         id: searchField
 
                         Layout.fillWidth: true
                         Layout.preferredHeight: 40
                         placeholderText: "Search wallpapers..."
-                        placeholderTextColor: Themes.m3Colors.m3SurfaceVariant
                         text: scope.searchQuery
-                        font.pixelSize: Appearance.fonts.medium
-                        color: Themes.m3Colors.m3OnSurface
                         focus: true
 
                         onTextChanged: {
@@ -116,13 +113,6 @@ Scope {
 
                             if (wallpaperGrid.count > 0)
                                 wallpaperGrid.currentIndex = 0;
-                        }
-
-                        background: StyledRect {
-                            color: Themes.withAlpha(Themes.m3Colors.m3SurfaceContainerHigh, 0.12)
-                            radius: Appearance.rounding.normal
-                            border.color: searchField.activeFocus ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OutlineVariant
-                            border.width: searchField.activeFocus ? 2 : 1
                         }
 
                         Keys.onDownPressed: wallpaperGrid.focus = true

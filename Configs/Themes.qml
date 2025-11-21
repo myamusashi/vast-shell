@@ -8,13 +8,15 @@ import qs.Helpers
 
 Singleton {
     id: root
-    readonly property M3TemplateComponent m3Colors: M3TemplateComponent {}
+
+	readonly property M3TemplateComponent m3Colors: M3TemplateComponent {}
 
     ColorQuantizer {
         id: colorQuantizer
+
         source: Qt.resolvedUrl(Paths.currentWallpaper)
         depth: 1
-        rescaleSize: 64
+		rescaleSize: 64
     }
 
     function getSourceColor() {

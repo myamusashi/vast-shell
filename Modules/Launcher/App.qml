@@ -107,13 +107,6 @@ Scope {
                         color: Themes.m3Colors.m3OnBackground
                         placeholderTextColor: Themes.m3Colors.m3OnSurfaceVariant
 
-                        background: StyledRect {
-                            radius: Appearance.rounding.small
-                            color: Themes.m3Colors.m3Surface
-                            // border.color: Themes.m3Colors.m3OnBackground
-                            // border.width: 2
-                        }
-
                         onTextChanged: {
                             root.currentIndex = 0;
                         }

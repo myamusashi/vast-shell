@@ -1,4 +1,6 @@
+Assets/keystate-bin
 result/
 result
 .qmlls.ini
 .direnv
+log

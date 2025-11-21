@@ -17,7 +17,7 @@ StyledRect {
 
         MaterialIcon {
             Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
-            color: Themes.m3Colors.m3Tertiary
+            color: Themes.m3Colors.m3Primary
             font.family: Appearance.fonts.familyMono
             font.pointSize: Appearance.fonts.extraLarge * 0.8
             icon: "󱄅"
