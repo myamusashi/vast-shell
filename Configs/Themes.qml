@@ -15,8 +15,8 @@ Singleton {
         id: colorQuantizer
 
         source: Qt.resolvedUrl(Paths.currentWallpaper)
-        depth: 1
-		rescaleSize: 64
+        depth: 2
+		rescaleSize: 32
     }
 
     function getSourceColor() {

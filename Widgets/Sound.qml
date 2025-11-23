@@ -39,9 +39,6 @@ StyledRect {
             icon: root.icon
             Layout.alignment: Qt.AlignVCenter
             font.pixelSize: Appearance.fonts.large * 1.2
-            font.variableAxes: {
-                "FILL": 10
-            }
         }
 
         StyledText {

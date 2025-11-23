@@ -18,7 +18,7 @@ Singleton {
 
     function dispatch(request: string): void {
         Hyprland.dispatch(request);
-	}
+    }
 
     function monitorFor(screen: ShellScreen): HyprlandMonitor {
         return Hyprland.monitorFor(screen);
@@ -40,13 +40,12 @@ Singleton {
             } else if (["openwindow", "closewindow", "movewindow"].includes(n)) {
                 Hyprland.refreshToplevels();
                 Hyprland.refreshWorkspaces();
-            } else if (n.includes("mon")) {
+            } else if (n.includes("mon"))
                 Hyprland.refreshMonitors();
-            } else if (n.includes("workspace")) {
+            else if (n.includes("workspace"))
                 Hyprland.refreshWorkspaces();
-            } else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n)) {
+            else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
                 Hyprland.refreshToplevels();
-            }
         }
     }
 }
