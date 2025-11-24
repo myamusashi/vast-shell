@@ -6,7 +6,6 @@
 stdenvNoCC.mkDerivation {
   pname = "material-symbols";
   version = "4.0.0-unstable-2025-04-11";
-
   src = fetchFromGitHub {
     owner = "google";
     repo = "material-design-icons";
@@ -14,14 +13,15 @@ stdenvNoCC.mkDerivation {
     hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
     sparseCheckout = ["variablefont"];
   };
-
   dontBuild = true;
-
   installPhase = ''
-    install -Dm644 variablefont/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf \
-      $out/share/fonts/truetype/MaterialSymbolsOutlined.ttf
-  '';
+    runHook preInstall
 
+    mkdir -p $out/share/fonts/truetype
+    cp variablefont/*.ttf $out/share/fonts/truetype/
+
+    runHook postInstall
+  '';
   meta = {
     description = "Material Symbols variable font";
     homepage = "https://github.com/google/material-design-icons";

@@ -46,7 +46,7 @@
           [
             packages.default
             quickshell.packages.${system}.default
-			pkgs.qt6.qtgraphs
+            pkgs.qt6.qtgraphs
             pkgs.go
             pkgs.roboto
             pkgs.roboto-flex
@@ -55,8 +55,8 @@
           ++ packages.runtimeDeps;
 
         shellHook = ''
-		  go build -o ./Assets/keystate-bin ./Assets/keystate.go
-          echo "Quickshell development environment"
+          go build -o ./Assets/keystate-bin ./Assets/keystate.go
+                echo "Quickshell development environment"
         '';
       };
     });
