@@ -8,8 +8,8 @@ import Quickshell.Services.Greetd
 
 import qs.Configs
 import qs.Helpers
-import qs.Components
 import qs.Greeter
+import qs.Components
 
 ShellRoot {
     id: root
@@ -270,15 +270,8 @@ ShellRoot {
                     text: "WRONG PASSWORD"
                     color: Themes.m3Colors.m3Error
                     font.pointSize: Appearance.fonts.large * 3
-                    opacity: sessionLock.showErrorMessage ? 1 : 0
-                    visible: opacity > 0
+                    visible: sessionLock.showErrorMessage
                     z: 10
-
-                    Behavior on opacity {
-                        NAnim {
-                            duration: Appearance.animations.durations.small
-                        }
-                    }
                 }
 
                 StyledLabel {
@@ -383,13 +376,17 @@ ShellRoot {
                 StyledButton {
                     iconButton: "skip_previous"
                     buttonTitle: "Previous User"
-                    onClicked: Users.previous()
+                    onClicked: {
+                        Users.previous();
+                        keyHandler.forceActiveFocus();
+                    }
                 }
 
                 Repeater {
                     model: Users.users_list.length
                     delegate: StyledRect {
                         id: delegateUser
+
                         required property int index
 
                         Layout.preferredWidth: 120
@@ -403,7 +400,7 @@ ShellRoot {
                             color: Users.current_user_index === delegateUser.index ? Themes.m3Colors.m3OnPrimary : Themes.m3Colors.m3OnSurfaceVariant
                         }
 
-                        MouseArea {
+                        MArea {
                             anchors.fill: parent
                             onClicked: Users.current_user_index = delegateUser.index
                         }
@@ -413,7 +410,10 @@ ShellRoot {
                 StyledButton {
                     iconButton: "skip_next"
                     buttonTitle: "Next User"
-                    onClicked: Users.next()
+                    onClicked: {
+                        Users.next();
+                        keyHandler.forceActiveFocus();
+                    }
                 }
             }
 
@@ -426,13 +426,17 @@ ShellRoot {
                 StyledButton {
                     iconButton: "skip_previous"
                     buttonTitle: "Previous Session"
-                    onClicked: Sessions.previous()
+                    onClicked: {
+                        Sessions.previous();
+                        keyHandler.forceActiveFocus();
+                    }
                 }
 
                 Repeater {
                     model: Sessions.session_names.length
                     delegate: StyledRect {
                         id: delegateSession
+
                         required property int index
 
                         Layout.preferredWidth: 150
@@ -446,7 +450,7 @@ ShellRoot {
                             color: Sessions.current_ses_index === delegateSession.index ? Themes.m3Colors.m3OnPrimary : Themes.m3Colors.m3OnSurfaceVariant
                         }
 
-                        MouseArea {
+                        MArea {
                             anchors.fill: parent
                             onClicked: Sessions.current_ses_index = delegateSession.index
                         }
@@ -456,7 +460,10 @@ ShellRoot {
                 StyledButton {
                     iconButton: "skip_next"
                     buttonTitle: "Next Session"
-                    onClicked: Sessions.next()
+                    onClicked: {
+                        Sessions.next();
+                        keyHandler.forceActiveFocus();
+                    }
                 }
             }
         }
