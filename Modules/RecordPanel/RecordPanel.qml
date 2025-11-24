@@ -15,22 +15,22 @@ import "Capture" as Cap
 Scope {
     id: scope
 
-	property bool open: false
+    property bool open: false
 
-	GlobalShortcut {
-		name: "recordPanel"
-		onPressed: scope.open = !scope.open
-	}
+    GlobalShortcut {
+        name: "recordPanel"
+        onPressed: scope.open = !scope.open
+    }
 
     Variants {
         model: Quickshell.screens
 
         delegate: PanelWindow {
-			id: root
+            id: root
 
             required property ShellScreen modelData
             property int monitorWidth: Hypr.focusedMonitor.width
-			property int monitorHeight: Hypr.focusedMonitor.height
+            property int monitorHeight: Hypr.focusedMonitor.height
 
             anchors {
                 right: true
@@ -39,7 +39,7 @@ Scope {
                 top: true
             }
             screen: modelData
-            color: Themes.withAlpha(Themes.m3Colors.m3Surface, 0.3)
+            color: "transparent"
 
             WlrLayershell.namespace: "shell:bar"
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
@@ -51,22 +51,32 @@ Scope {
 
             StyledRect {
                 anchors.fill: parent
-				anchors.margins: 15
-				color: Themes.withAlpha(Themes.m3Colors.m3Surface, 0.3)
-                width: childrenRect.width + 40
-                height: childrenRect.height + 40
-                radius: 0
+                color: Themes.withAlpha(Themes.m3Colors.m3Surface, 0.3)
 
-                Loader {
-                    anchors.top: parent.top
+                ColumnLayout {
                     anchors.left: parent.left
-                    active: scope.open
-                    asynchronous: true
-                    width: root.monitorHeight / 2.5
-                    sourceComponent: Cap.Capture {
-						id: capture
+					anchors.top: parent.top
+					anchors.leftMargin: 15
+                    spacing: Appearance.spacing.large
 
-                        condition: scope.open
+                    Loader {
+                        id: captureLoader
+                        active: scope.open
+                        asynchronous: true
+                        Layout.preferredWidth: item ? item.implicitWidth + 50 : 200
+                        Layout.preferredHeight: item ? item.implicitHeight : 0
+                        sourceComponent: Cap.Capture {
+                            condition: scope.open
+                        }
+                    }
+
+                    Loader {
+                        id: performanceLoader
+                        active: scope.open
+                        asynchronous: true
+                        Layout.preferredWidth: item ? item.implicitWidth : 200
+                        Layout.preferredHeight: item ? item.implicitHeight : 0
+                        sourceComponent: Performance {}
                     }
                 }
             }
