@@ -74,19 +74,9 @@ ClippingRectangle {
                     required property int index
                     buttonTitle: modelData.title
                     Layout.preferredWidth: implicitWidth
-                    buttonColor: "transparent"
-                    highlighted: root.state === index
-                    flat: root.state !== index
+					buttonColor: "transparent"
+					buttonTextColor: root.state === index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnBackground
                     onClicked: root.tabClicked(index)
-
-                    contentItem: StyledText {
-                        anchors.centerIn: parent
-                        text: audioTabButton.modelData.title
-                        color: root.state === audioTabButton.index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.large * 1.5
-                        font.weight: Font.Bold
-                        elide: Text.ElideRight
-                    }
                 }
             }
 
@@ -107,17 +97,15 @@ ClippingRectangle {
             id: indicator
 
             anchors.bottom: parent.bottom
-            width: tabRepeater.itemAt(root.state) ? tabRepeater.itemAt(root.state).width : 0
+            width: tabRepeater.itemAt(root.state).width
             height: 5
             color: Themes.m3Colors.m3Primary
             radius: Appearance.rounding.large
             x: {
                 var item = tabRepeater.itemAt(root.state);
-                if (item)
-                    return item.x + tabRowLayout.anchors.leftMargin;
-                return 0;
+                return item.x + tabRowLayout.anchors.leftMargin;
             }
-            visible: tabRepeater.itemAt(root.state) !== null
+			visible: tabRepeater.itemAt(root.state) !== null
 
             Behavior on x {
                 NAnim {
@@ -371,7 +359,6 @@ ClippingRectangle {
                                     height: 40
                                     radius: Appearance.rounding.large
                                     color: "transparent"
-                                    opacity: profilesComboBox.pressed ? 0.12 : profilesComboBox.hovered ? 0.08 : 0
 
                                     Behavior on opacity {
                                         NAnim {}

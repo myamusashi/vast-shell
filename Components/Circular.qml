@@ -46,7 +46,7 @@ StyledRect {
             // Background arc
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = Themes.m3Colors.m3SecondaryContainer;
+            ctx.strokeStyle = Themes.m3Colors.m3OutlineVariant;
             ctx.lineWidth = 8;
             ctx.stroke();
 

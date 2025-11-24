@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
+import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 
 import qs.Configs
@@ -26,7 +27,7 @@ ClippingRectangle {
         objects: [root.node]
     }
 
-    implicitWidth: 200
+    implicitWidth: 300
     implicitHeight: columnLayout.implicitHeight
     color: Themes.m3Colors.m3SurfaceContainer
     radius: Appearance.rounding.small
@@ -61,8 +62,7 @@ ClippingRectangle {
         StyledRect {
             Layout.fillWidth: true
             Layout.preferredHeight: 15
-			visible: root.isExpandSeeMyCaptureOpen
-			radius: 0
+            visible: root.isExpandSeeMyCaptureOpen
         }
 
         AudioCapture {
