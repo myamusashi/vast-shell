@@ -32,19 +32,29 @@ ClippingRectangle {
     color: Themes.m3Colors.m3SurfaceContainer
     radius: Appearance.rounding.small
 
-    FileView {
+    Process {
         id: pidStatusRecording
 
-        path: "/tmp/wl-screenrec.pid"
-        watchChanges: true
-        blockLoading: true
-        onFileChanged: {
-            reload();
-            if (text().trim() != "")
-                root.isRecording = true;
-            else
-                root.isRecording = false;
+        command: ["sh", "-c", "cat /tmp/wl-screenrec.pid"]
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const data = text.trim();
+                if (data !== "")
+                    root.isRecording = true;
+                else
+                    root.isRecording = false;
+            }
         }
+    }
+
+    Timer {
+        id: pidCheckTimer
+
+        interval: 2000
+        repeat: true
+        running: true
+        onTriggered: pidStatusRecording.running = true
     }
 
     ColumnLayout {
@@ -70,7 +80,7 @@ ClippingRectangle {
             state: root.state
 
             onTabClicked: index => root.state = index
-		}
+        }
     }
 
     component Header: Item {
@@ -122,7 +132,6 @@ ClippingRectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: rowLayout.implicitHeight + 30
 
-
         RowLayout {
             id: rowLayout
 
@@ -137,7 +146,7 @@ ClippingRectangle {
                         action: () => {
                             Quickshell.execDetached({
                                 command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-							});
+                            });
                             scope.open = false;
                         }
                     },
@@ -148,7 +157,7 @@ ClippingRectangle {
                             Quickshell.execDetached({
                                 command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
                             });
-                            scope.open = false;
+                            scope.open = root.isRecording ? false : true;
                         },
                         highlight: root.isRecording
                     },

@@ -16,22 +16,31 @@ Scope {
     property bool isRecordingControlOpen: false
     property int recordingSeconds: 0
 
-    FileView {
+    Process {
         id: pidStatusRecording
 
-        path: "/tmp/wl-screenrec.pid"
-        watchChanges: true
-        blockLoading: true
-        onFileChanged: {
-            reload();
-            if (text().trim() != "") {
-                scope.recordingSeconds = 0;
-                scope.isRecordingControlOpen = true;
-            } else {
-                scope.recordingSeconds = 0;
-                scope.isRecordingControlOpen = false;
+        command: ["sh", "-c", "cat /tmp/wl-screenrec.pid"]
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const data = text.trim();
+                if (data !== "") {
+                    scope.isRecordingControlOpen = true;
+                } else {
+                    scope.recordingSeconds = 0;
+                    scope.isRecordingControlOpen = false;
+                }
             }
         }
+    }
+
+    Timer {
+        id: pidCheckTimer
+
+        interval: 2000
+        repeat: true
+        running: true
+        onTriggered: pidStatusRecording.running = true
     }
 
     Timer {
@@ -64,7 +73,7 @@ Scope {
 
             title: "Recording Widgets"
 
-            visible: true
+            visible: scope.isRecordingControlOpen
             property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
             property real monitorWidth: monitor.width / monitor.scale
             property real monitorHeight: monitor.height / monitor.scale
@@ -111,7 +120,7 @@ Scope {
 
                             SequentialAnimation on opacity {
                                 loops: Animation.Infinite
-                                running: pidStatusRecording.text().trim() !== ""
+                                running: scope.isRecordingControlOpen
 
                                 NAnim {
                                     to: 0.3
@@ -242,12 +251,12 @@ Scope {
                                 MaterialIcon {
                                     icon: "stop"
                                     font.pointSize: Appearance.fonts.large
-                                    color: Themes.m3Colors.onError
+                                    color: Themes.m3Colors.m3OnError
                                 }
 
                                 StyledText {
                                     text: "Stop"
-                                    color: Themes.m3Colors.onError
+                                    color: Themes.m3Colors.m3OnError
                                     font.pixelSize: Appearance.fonts.normal
                                     font.bold: true
                                 }
@@ -260,12 +269,12 @@ Scope {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
-                                    scope.isRecordingControlOpen = false;
-                                    recordingTimer.stop();
-                                    scope.recordingSeconds = 0;
                                     Quickshell.execDetached({
                                         command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
                                     });
+
+                                    recordingTimer.stop();
+                                    scope.recordingSeconds = 0;
                                     scope.isRecordingControlOpen = false;
                                 }
                             }
