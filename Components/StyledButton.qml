@@ -10,9 +10,9 @@ Item {
 
     property string buttonTitle
     property string iconButton: ""
-	property int iconSize
+    property int iconSize
     property color buttonColor: Themes.m3Colors.m3Primary
-    property color buttonTextColor: Themes.m3Colors.m3OnPrimary
+    property color buttonTextColor: Themes.m3Colors.m3OnBackground
     property color buttonBorderColor: Themes.m3Colors.m3Outline
     property int buttonBorderWidth: 2
     property int buttonHeight: 40
@@ -21,13 +21,17 @@ Item {
     property bool isButtonUseBorder: false
     property real backgroundRounding: 0
 
+    property int baseWidth: implicitWidth
+    property alias mArea: mouseArea
+    property alias bg: background
+
     signal clicked
 
     implicitWidth: contentRow.implicitWidth + 32
     implicitHeight: buttonHeight
 
     StyledRect {
-		id: background
+        id: background
 
         anchors.fill: parent
         border.color: root.isButtonUseBorder ? root.buttonBorderColor : "transparent"
@@ -38,7 +42,7 @@ Item {
     }
 
     Row {
-		id: contentRow
+        id: contentRow
 
         spacing: root.iconTextSpacing
         anchors.centerIn: parent
@@ -68,7 +72,7 @@ Item {
     }
 
     MArea {
-		id: mouseArea
+        id: mouseArea
 
         anchors.fill: parent
         hoverEnabled: true
