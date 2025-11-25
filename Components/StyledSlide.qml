@@ -12,6 +12,8 @@ Slider {
 
     hoverEnabled: true
     Layout.alignment: Qt.AlignHCenter
+    implicitWidth: valueWidth || 200
+    implicitHeight: valueHeight || 40
 
     property bool dotEnd: true
     property real trackHeightDiff: 15
@@ -22,9 +24,6 @@ Slider {
     property int valueHeight
     property string icon
     property int iconSize
-
-    implicitWidth: valueWidth || 200
-    implicitHeight: valueHeight || 40
 
     readonly property real availableTrackWidth: availableWidth - handleGap * 2
     readonly property real trackHeight: height - trackHeightDiff
@@ -48,7 +47,7 @@ Slider {
         color: isActive ? Themes.m3Colors.m3OnPrimary : Themes.m3Colors.m3OnSecondaryContainer
     }
 
-    MArea {
+    MouseArea {
         anchors.fill: parent
         onPressed: mouse => mouse.accepted = false
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
@@ -122,7 +121,7 @@ Slider {
         color: Themes.m3Colors.m3Primary
 
         Behavior on width {
-            NumberAnimation {
+            NAnim {
                 duration: Appearance.animations.durations.small
                 easing.type: Easing.OutCubic
             }
