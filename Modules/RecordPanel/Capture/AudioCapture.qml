@@ -29,7 +29,7 @@ ClippingRectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-		spacing: 0
+        spacing: 0
 
         Header {
             id: tabLayout
@@ -74,8 +74,8 @@ ClippingRectangle {
                     required property int index
                     buttonTitle: modelData.title
                     Layout.preferredWidth: implicitWidth
-					buttonColor: "transparent"
-					buttonTextColor: root.state === index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnBackground
+                    buttonColor: "transparent"
+                    buttonTextColor: root.state === index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnBackground
                     onClicked: root.tabClicked(index)
                 }
             }
@@ -105,7 +105,7 @@ ClippingRectangle {
                 var item = tabRepeater.itemAt(root.state);
                 return item.x + tabRowLayout.anchors.leftMargin;
             }
-			visible: tabRepeater.itemAt(root.state) !== null
+            visible: tabRepeater.itemAt(root.state) !== null
 
             Behavior on x {
                 NAnim {
@@ -372,27 +372,47 @@ ClippingRectangle {
                                 implicitHeight: contentItem.implicitHeight
                                 height: Math.min(implicitHeight, 250)
                                 padding: Appearance.padding.normal
-
                                 background: StyledRect {
                                     color: Themes.m3Colors.m3SurfaceContainerLow
                                     radius: Appearance.rounding.small
                                 }
-
-                                contentItem: ListView {
+                                contentItem: ScrollView {
                                     clip: true
-                                    implicitHeight: contentHeight - 5
-                                    model: profilesComboBox.popup.visible ? profilesComboBox.delegateModel : null
-                                    currentIndex: profilesComboBox.highlightedIndex
+                                    implicitHeight: itemColumn.implicitHeight
 
-                                    ScrollIndicator.vertical: ScrollIndicator {
+                                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                                    ScrollBar.vertical: ScrollBar {
                                         contentItem: StyledRect {
                                             implicitWidth: 4
                                             radius: Appearance.rounding.small
                                             color: Themes.withAlpha(Themes.m3Colors.m3Primary, 0.1)
                                         }
                                     }
-                                }
 
+                                    Column {
+										id: itemColumn
+
+                                        width: parent.width
+                                        Repeater {
+                                            model: profilesComboBox.popup.visible ? profilesComboBox.delegateModel : null
+
+											delegate: ItemDelegate {
+												id: delegate
+
+												required property var modelData
+                                                required property int index
+                                                width: parent.width
+                                                highlighted: profilesComboBox.highlightedIndex === index
+
+                                                contentItem: Text {
+                                                    text: delegate.modelData || ""
+                                                    color: delegate.highlighted ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnSurface
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 enter: Transition {
                                     NAnim {
                                         property: "opacity"
@@ -405,7 +425,6 @@ ClippingRectangle {
                                         to: 1.0
                                     }
                                 }
-
                                 exit: Transition {
                                     NAnim {
                                         property: "scale"

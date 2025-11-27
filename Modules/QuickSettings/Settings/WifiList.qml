@@ -244,98 +244,100 @@ Loader {
                     clip: true
                     visible: Network.wifiEnabled
 
-                    ListView {
-                        id: networkListView
-
-                        model: Network.networks
+                    Column {
                         spacing: Appearance.spacing.small
+                        width: parent.width
 
-                        delegate: StyledRect {
-                            id: delegateWifi
+                        Repeater {
+                            model: Network.networks
 
-                            required property var modelData
-                            required property int index
+                            delegate: StyledRect {
+                                id: delegateWifi
 
-                            width: ListView.view.width
-                            implicitHeight: networkLayout.implicitHeight + 20
-                            color: Themes.m3Colors.m3SurfaceContainer
-                            radius: Appearance.rounding.normal
+                                required property var modelData
+                                required property int index
 
-                            RowLayout {
-                                id: networkLayout
+                                width: parent.width
+                                implicitHeight: networkLayout.implicitHeight + 20
+                                color: Themes.m3Colors.m3SurfaceContainer
+                                radius: Appearance.rounding.normal
 
-                                anchors.fill: parent
-                                anchors.margins: 10
-                                spacing: Appearance.spacing.normal
+                                RowLayout {
+                                    id: networkLayout
 
-                                MaterialIcon {
-                                    icon: root.getWiFiIcon(delegateWifi.modelData.strength)
-                                    color: delegateWifi.modelData.active ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnSurface
-                                    font.pointSize: Appearance.fonts.extraLarge
-                                }
+                                    anchors.fill: parent
+                                    anchors.margins: 10
+                                    spacing: Appearance.spacing.normal
 
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: Appearance.spacing.small
+                                    MaterialIcon {
+                                        icon: root.getWiFiIcon(delegateWifi.modelData.strength)
+                                        color: delegateWifi.modelData.active ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnSurface
+                                        font.pointSize: Appearance.fonts.extraLarge
+                                    }
 
-                                    RowLayout {
-                                        spacing: Appearance.spacing.smaller
+                                    ColumnLayout {
+                                        Layout.fillWidth: true
+                                        spacing: Appearance.spacing.small
 
-                                        StyledLabel {
-                                            text: delegateWifi.modelData.ssid || "(Hidden Network)"
-                                            color: Themes.m3Colors.m3OnBackground
-                                            font.pixelSize: Appearance.fonts.medium
-                                            font.bold: delegateWifi.modelData.active
+                                        RowLayout {
+                                            spacing: Appearance.spacing.smaller
+
+                                            StyledLabel {
+                                                text: delegateWifi.modelData.ssid || "(Hidden Network)"
+                                                color: Themes.m3Colors.m3OnBackground
+                                                font.pixelSize: Appearance.fonts.medium
+                                                font.bold: delegateWifi.modelData.active
+                                            }
+
+                                            MaterialIcon {
+                                                icon: "lock"
+                                                color: Themes.m3Colors.m3OnSurfaceVariant
+                                                font.pointSize: Appearance.fonts.small
+                                                visible: delegateWifi.modelData.isSecure
+                                            }
                                         }
 
-                                        MaterialIcon {
-                                            icon: "lock"
+                                        StyledLabel {
+                                            text: {
+                                                let details = [];
+                                                if (delegateWifi.modelData.active)
+                                                    details.push("Connected");
+
+                                                if (delegateWifi.modelData.security && delegateWifi.modelData.security !== "--")
+                                                    details.push(delegateWifi.modelData.security);
+
+                                                details.push(delegateWifi.modelData.frequency + " MHz");
+                                                return details.join(" • ");
+                                            }
                                             color: Themes.m3Colors.m3OnSurfaceVariant
-                                            font.pointSize: Appearance.fonts.small
-                                            visible: delegateWifi.modelData.isSecure
+                                            font.pixelSize: Appearance.fonts.small
                                         }
                                     }
 
                                     StyledLabel {
-                                        text: {
-                                            let details = [];
-                                            if (delegateWifi.modelData.active)
-                                                details.push("Connected");
-
-                                            if (delegateWifi.modelData.security && delegateWifi.modelData.security !== "--")
-                                                details.push(delegateWifi.modelData.security);
-
-                                            details.push(delegateWifi.modelData.frequency + " MHz");
-                                            return details.join(" • ");
-                                        }
+                                        text: delegateWifi.modelData.strength + "%"
                                         color: Themes.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.small
                                     }
+
+                                    MaterialIcon {
+                                        icon: "chevron_right"
+                                        color: Themes.m3Colors.m3OnSurfaceVariant
+                                        font.pointSize: Appearance.fonts.large
+                                        visible: !delegateWifi.modelData.active
+                                    }
                                 }
 
-                                StyledLabel {
-                                    text: delegateWifi.modelData.strength + "%"
-                                    color: Themes.m3Colors.m3OnSurfaceVariant
-                                    font.pixelSize: Appearance.fonts.small
-                                }
+                                MArea {
+                                    id: mouseArea
 
-                                MaterialIcon {
-                                    icon: "chevron_right"
-                                    color: Themes.m3Colors.m3OnSurfaceVariant
-                                    font.pointSize: Appearance.fonts.large
-                                    visible: !delegateWifi.modelData.active
-                                }
-                            }
-
-                            MArea {
-                                id: mouseArea
-
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    if (!delegateWifi.modelData.active)
-                                        Network.connectToNetwork(delegateWifi.modelData.ssid, "");
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        if (!delegateWifi.modelData.active)
+                                            Network.connectToNetwork(delegateWifi.modelData.ssid, "");
+                                    }
                                 }
                             }
                         }
