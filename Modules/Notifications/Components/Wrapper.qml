@@ -13,11 +13,11 @@ Item {
     property alias contentLayout: contentLayout
     property alias iconLayout: iconLayout
     required property Notification modelData
-	property bool isRemoving: false
-	property alias mArea: delegateMouseNotif
+    property bool isRemoving: false
+    property alias mArea: delegateMouseNotif
 
-	signal entered
-	signal exited
+    signal entered
+    signal exited
 
     width: parent.width
     height: isRemoving ? 0 : contentLayout.height * 1.3
@@ -31,7 +31,7 @@ Item {
     }
 
     NAnim {
-		id: scaleAnim
+        id: scaleAnim
 
         target: root
         property: "scale"
@@ -42,7 +42,7 @@ Item {
     }
 
     NAnim {
-		id: opacityAnim
+        id: opacityAnim
 
         target: root
         property: "opacity"
@@ -53,7 +53,7 @@ Item {
     }
 
     NAnim {
-		id: exitScaleAnim
+        id: exitScaleAnim
 
         target: root
         property: "scale"
@@ -63,7 +63,7 @@ Item {
     }
 
     NAnim {
-		id: exitOpacityAnim
+        id: exitOpacityAnim
 
         target: root
         property: "opacity"
@@ -102,7 +102,7 @@ Item {
         }
     }
     RetainableLock {
-		id: retainNotif
+        id: retainNotif
 
         object: root.modelData
         locked: true
@@ -129,10 +129,10 @@ Item {
             id: delegateMouseNotif
 
             anchors.fill: parent
-			hoverEnabled: true
+            hoverEnabled: true
 
-			onEntered: root.entered()
-			onExited: root.exited()
+            onEntered: root.entered()
+            onExited: root.exited()
 
             drag {
                 axis: Drag.XAxis
@@ -152,9 +152,8 @@ Item {
                         Qt.callLater(function () {
                             swipeRemoveTimer.start();
                         });
-                    } else {
+                    } else
                         root.x = 0;
-                    }
                 }
             }
 
