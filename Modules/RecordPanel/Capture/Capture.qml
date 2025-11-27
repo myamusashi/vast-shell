@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 
 import qs.Configs
@@ -78,7 +77,6 @@ ClippingRectangle {
         AudioCapture {
             visible: root.isExpandSeeMyCaptureOpen
             state: root.state
-
             onTabClicked: index => root.state = index
         }
     }

@@ -64,7 +64,8 @@ ColumnLayout {
             }
 
             MArea {
-                id: mArea
+				id: mArea
+
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: mevent => {
