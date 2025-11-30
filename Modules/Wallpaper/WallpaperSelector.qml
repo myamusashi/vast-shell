@@ -20,7 +20,10 @@ Scope {
     property string currentWallpaper: Paths.currentWallpaper
     property var wallpaperList: []
     property string searchQuery: ""
-    property string debouncedSearchQuery: ""
+	property string debouncedSearchQuery: ""
+    property bool triggerAnimation: false
+    property bool shouldDestroy: false
+
 
     Timer {
         id: searchDebounceTimer
@@ -55,151 +58,187 @@ Scope {
         }
     }
 
-    OuterShapeItem {
-        id: root
+    onIsWallpaperSwitcherOpenChanged: {
+        if (isWallpaperSwitcherOpen) {
+            shouldDestroy = false;
+            triggerAnimation = false;
+            animationTriggerTimer.restart();
+        } else {
+            triggerAnimation = false;
+            destroyTimer.restart();
+        }
+    }
 
-		content: container
-		needKeyboardFocus: scope.isWallpaperSwitcherOpen
+    Timer {
+        id: animationTriggerTimer
+        interval: 50
+        repeat: false
+        onTriggered: {
+            if (scope.isWallpaperSwitcherOpen)
+                scope.triggerAnimation = true;
+        }
+    }
 
-		StyledRect {
-			id: container
+    Timer {
+        id: destroyTimer
+        interval: Appearance.animations.durations.small + 50
+        repeat: false
+        onTriggered: scope.shouldDestroy = true
+    }
 
-			width: Hypr.focusedMonitor.width * 0.5
-			height: scope.isWallpaperSwitcherOpen ? Hypr.focusedMonitor.height * 0.5 : 0
-			color: Themes.m3Colors.m3Surface
-			radius: 0
-			topLeftRadius: Appearance.rounding.normal
-			topRightRadius: Appearance.rounding.normal
+    LazyLoader {
+        id: lazyLoader
 
-			anchors {
-				bottom: parent.bottom
-				horizontalCenter: parent.horizontalCenter
-			}
+        loading: scope.isWallpaperSwitcherOpen
+        activeAsync: scope.isWallpaperSwitcherOpen || !scope.shouldDestroy
 
-			Behavior on height {
-				NAnim {
-					duration: Appearance.animations.durations.small
-				}
-			}
+        component: OuterShapeItem {
+            id: root
 
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: Appearance.spacing.normal
-                spacing: Appearance.spacing.normal
+            content: container
+            needKeyboardFocus: scope.isWallpaperSwitcherOpen
 
-                StyledTextField {
-                    id: searchField
+            StyledRect {
+                id: container
 
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 40
-                    placeholderText: "Search wallpapers..."
-                    text: scope.searchQuery
-                    focus: true
+                implicitWidth: Hypr.focusedMonitor.width * 0.5
+                implicitHeight: scope.triggerAnimation ? Hypr.focusedMonitor.height * 0.5 : 0
+                color: Themes.m3Colors.m3Surface
+                radius: 0
+                topLeftRadius: Appearance.rounding.normal
+                topRightRadius: Appearance.rounding.normal
 
-                    onTextChanged: {
-                        scope.searchQuery = text;
-                        searchDebounceTimer.restart();
-
-                        if (wallpaperGrid.count > 0)
-                            wallpaperGrid.currentIndex = 0;
-                    }
-
-                    Keys.onDownPressed: wallpaperGrid.focus = true
-                    Keys.onEscapePressed: scope.isWallpaperSwitcherOpen = false
+                anchors {
+                    bottom: parent.bottom
+                    horizontalCenter: parent.horizontalCenter
                 }
 
-                GridView {
-                    id: wallpaperGrid
+                Behavior on implicitHeight {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
 
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: Appearance.spacing.normal
+                    spacing: Appearance.spacing.normal
 
-                    model: scope.filteredWallpaperList
+                    StyledTextField {
+                        id: searchField
 
-                    cellWidth: width / 3
-                    cellHeight: height / 3
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 40
+                        placeholderText: "Search wallpapers..."
+                        text: scope.searchQuery
+                        focus: true
 
-                    clip: true
-                    cacheBuffer: 0
+                        onTextChanged: {
+                            scope.searchQuery = text;
+                            searchDebounceTimer.restart();
 
-                    Component.onCompleted: {
-                        const idx = scope.wallpaperList.indexOf(Paths.currentWallpaper);
-                        currentIndex = idx !== -1 ? idx : 0;
+                            if (wallpaperGrid.count > 0)
+                                wallpaperGrid.currentIndex = 0;
+                        }
+
+                        Keys.onDownPressed: wallpaperGrid.focus = true
+                        Keys.onEscapePressed: scope.isWallpaperSwitcherOpen = false
                     }
 
-                    delegate: Item {
-                        id: delegateItem
+                    GridView {
+                        id: wallpaperGrid
 
-                        width: wallpaperGrid.cellWidth
-                        height: wallpaperGrid.cellHeight
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
 
-                        required property var modelData
-                        required property int index
+                        model: scope.filteredWallpaperList
 
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: 4
-                            color: "transparent"
+                        cellWidth: width / 3
+                        cellHeight: height / 3
 
-                            Image {
+                        clip: true
+                        cacheBuffer: 0
+
+                        Component.onCompleted: {
+                            const idx = scope.wallpaperList.indexOf(Paths.currentWallpaper);
+                            currentIndex = idx !== -1 ? idx : 0;
+                        }
+
+                        delegate: Item {
+                            id: delegateItem
+
+                            width: wallpaperGrid.cellWidth
+                            height: wallpaperGrid.cellHeight
+
+                            required property var modelData
+                            required property int index
+
+                            Rectangle {
                                 anchors.fill: parent
-                                source: "file://" + delegateItem.modelData
-                                fillMode: Image.PreserveAspectCrop
-                                asynchronous: true
-                                smooth: true
-                                cache: true
+                                anchors.margins: 4
+                                color: "transparent"
 
-                                layer.enabled: true
-                                layer.smooth: true
-                            }
+                                Image {
+                                    anchors.fill: parent
+                                    source: "file://" + delegateItem.modelData
+                                    fillMode: Image.PreserveAspectCrop
+                                    asynchronous: true
+                                    smooth: true
+                                    cache: true
 
-                            StyledLabel {
-                                anchors.centerIn: parent
-                                visible: wallpaperGrid.currentIndex === delegateItem.index ? false : true
-                                text: delegateItem.modelData.split('/').pop()
-                            }
+                                    layer.enabled: true
+                                    layer.smooth: true
+                                }
 
-                            StyledRect {
-                                anchors.fill: parent
-                                color: wallpaperGrid.currentIndex === delegateItem.index ? "transparent" : Themes.withAlpha(Themes.m3Colors.m3Surface, 0.7)
-                                radius: Appearance.rounding.small
-                                border.width: wallpaperGrid.currentIndex === delegateItem.index ? 3 : 1
-                                border.color: wallpaperGrid.currentIndex === delegateItem.index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OutlineVariant
-                            }
+                                StyledLabel {
+                                    anchors.centerIn: parent
+                                    visible: wallpaperGrid.currentIndex === delegateItem.index ? false : true
+                                    text: delegateItem.modelData.split('/').pop()
+                                }
 
-                            MArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
+                                StyledRect {
+                                    anchors.fill: parent
+                                    color: wallpaperGrid.currentIndex === delegateItem.index ? "transparent" : Themes.withAlpha(Themes.m3Colors.m3Surface, 0.7)
+                                    radius: Appearance.rounding.small
+                                    border.width: wallpaperGrid.currentIndex === delegateItem.index ? 3 : 1
+                                    border.color: wallpaperGrid.currentIndex === delegateItem.index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OutlineVariant
+                                }
 
-                                onClicked: {
-                                    wallpaperGrid.currentIndex = delegateItem.index;
-                                    Quickshell.execDetached({
-                                        command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                                    });
+                                MArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+
+                                    onClicked: {
+                                        wallpaperGrid.currentIndex = delegateItem.index;
+                                        Quickshell.execDetached({
+                                            command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                                        });
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    Keys.onPressed: event => {
-                        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                            Quickshell.execDetached({
-                                command: ["sh", "-c", `shell ipc call img set ${scope.filteredWallpaperList[currentIndex]}`]
-                            });
+                        Keys.onPressed: event => {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                Quickshell.execDetached({
+                                    command: ["sh", "-c", `shell ipc call img set ${scope.filteredWallpaperList[currentIndex]}`]
+                                });
+                            }
+                            if (event.key === Qt.Key_Escape)
+                                scope.isWallpaperSwitcherOpen = false;
+                            if (event.key === Qt.Key_Tab)
+                                searchField.focus = true;
                         }
-                        if (event.key === Qt.Key_Escape)
-                            scope.isWallpaperSwitcherOpen = false;
-                        if (event.key === Qt.Key_Tab)
-                            searchField.focus = true;
                     }
-                }
 
-                StyledLabel {
-                    Layout.alignment: Qt.AlignHCenter
-                    Layout.bottomMargin: Appearance.spacing.small
-                    text: wallpaperGrid.count > 0 ? (wallpaperGrid.currentIndex + 1) + " / " + wallpaperGrid.count : "0 / 0"
-                    color: Themes.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.small
+                    StyledLabel {
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.bottomMargin: Appearance.spacing.small
+                        text: wallpaperGrid.count > 0 ? (wallpaperGrid.currentIndex + 1) + " / " + wallpaperGrid.count : "0 / 0"
+                        color: Themes.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.small
+                    }
                 }
             }
         }
@@ -210,8 +249,6 @@ Scope {
 
         interval: 500
         repeat: false
-        onTriggered: {
-            gc();
-        }
+        onTriggered: gc()
     }
 }

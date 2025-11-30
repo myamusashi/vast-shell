@@ -18,6 +18,43 @@ Scope {
 
     property bool isMediaPlayerOpen: false
 
+    // Properties untuk orchestrate animasi
+    property bool triggerAnimation: false
+    property bool shouldDestroy: false
+
+    onIsMediaPlayerOpenChanged: {
+        if (isMediaPlayerOpen) {
+            // Buka: reset → tunggu load → trigger animasi
+            shouldDestroy = false
+            triggerAnimation = false
+            animationTriggerTimer.restart()
+        } else {
+            // Tutup: trigger animasi → tunggu selesai → destroy
+            triggerAnimation = false
+            destroyTimer.restart()
+        }
+    }
+
+    Timer {
+        id: animationTriggerTimer
+        interval: 50
+        repeat: false
+        onTriggered: {
+            if (root.isMediaPlayerOpen) {
+                root.triggerAnimation = true
+            }
+        }
+    }
+
+    Timer {
+        id: destroyTimer
+        interval: Appearance.animations.durations.small + 50
+        repeat: false
+        onTriggered: {
+            root.shouldDestroy = true
+        }
+    }
+
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -59,38 +96,44 @@ Scope {
         }
     }
 
-	OuterShapeItem {
-		content: container
+    LazyLoader {
+        loading: root.isMediaPlayerOpen
+        active: root.isMediaPlayerOpen || !root.shouldDestroy
+
+        component: OuterShapeItem {
+            content: container
 
             StyledRect {
                 id: container
 
                 implicitWidth: Hypr.focusedMonitor.width * 0.3
-                implicitHeight: root.isMediaPlayerOpen ? contentLayout.implicitHeight + 20 : 0
-				color: Themes.m3Colors.m3Surface
-				radius: 0
-				bottomLeftRadius: Appearance.rounding.normal
-				bottomRightRadius: bottomLeftRadius
+                // Gunakan triggerAnimation untuk kontrol animasi
+                implicitHeight: root.triggerAnimation ? contentLayout.implicitHeight + 20 : 0
+                color: Themes.m3Colors.m3Surface
+                radius: 0
+                bottomLeftRadius: Appearance.rounding.normal
+                bottomRightRadius: bottomLeftRadius
 
-				anchors {
-					top: parent.top
-					horizontalCenter: parent.horizontalCenter
-					topMargin: 0
-				}
+                anchors {
+                    top: parent.top
+                    horizontalCenter: parent.horizontalCenter
+                    topMargin: 0
+                }
 
-				Behavior on implicitHeight {
-					NAnim {
-						duration: Appearance.animations.durations.small
-					}
-				}
+                Behavior on implicitHeight {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
 
                 RowLayout {
                     id: contentLayout
 
                     anchors.fill: parent
                     anchors.margins: 10
-					spacing: Appearance.spacing.normal
-					visible: root.isMediaPlayerOpen && container.implicitHeight !== 0
+                    spacing: Appearance.spacing.normal
+                    visible: root.isMediaPlayerOpen && container.implicitHeight !== 0
 
                     Rectangle {
                         Layout.preferredWidth: 120
@@ -308,5 +351,6 @@ Scope {
                     }
                 }
             }
+        }
     }
 }

@@ -20,9 +20,42 @@ Scope {
 
     property bool isControlCenterOpen: false
     property int state: 0
+    property bool triggerAnimation: false
+    property bool shouldDestroy: false
 
     function toggleControlCenter(): void {
         isControlCenterOpen = !isControlCenterOpen;
+    }
+
+    onIsControlCenterOpenChanged: {
+        if (isControlCenterOpen) {
+            shouldDestroy = false;
+            triggerAnimation = false;
+            animationTriggerTimer.restart();
+        } else {
+            triggerAnimation = false;
+            destroyTimer.restart();
+        }
+    }
+
+    Timer {
+        id: animationTriggerTimer
+        interval: 50
+        repeat: false
+        onTriggered: {
+            if (scope.isControlCenterOpen) {
+                scope.triggerAnimation = true;
+            }
+        }
+    }
+
+    Timer {
+        id: destroyTimer
+        interval: Appearance.animations.durations.small + 50
+        repeat: false
+        onTriggered: {
+            scope.shouldDestroy = true;
+        }
     }
 
     GlobalShortcut {
@@ -38,200 +71,196 @@ Scope {
         onTriggered: gc()
     }
 
-    OuterShapeItem {
-        id: root
+    LazyLoader {
+        loading: scope.isControlCenterOpen
+        activeAsync: scope.isControlCenterOpen || !scope.shouldDestroy
 
-        content: container
+        component: OuterShapeItem {
+            id: root
 
-        ColumnLayout {
-            id: container
+            content: container
 
-            width: Hypr.focusedMonitor.width * 0.3
-            height: scope.isControlCenterOpen ? contentHeight : 0
-            spacing: 0
+            ColumnLayout {
+                id: container
 
-            // Calculate total content height
-            property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500
+                width: Hypr.focusedMonitor.width * 0.3
+                height: scope.triggerAnimation ? contentHeight : 0
+                spacing: 0
 
-            Behavior on height {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                    easing.type: Easing.OutCubic
-                }
-            }
+                property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500
 
-            anchors {
-                top: parent.top
-                right: parent.right
-                rightMargin: 60
-            }
-
-            clip: true // Important for smooth reveal
-
-            TabRows {
-                id: tabBar
-
-                state: scope.state
-                scaleFactor: Math.min(1.0, container.width / container.width)
-				visible: scope.isControlCenterOpen
-				topLeftRadius: 0
-				topRightRadius: 0
-
-                Layout.fillWidth: true
-
-                onTabClicked: index => {
-                    scope.state = index;
-                    controlCenterStackView.currentItem.viewIndex = index;
-                }
-            }
-
-            StyledRect {
-                id: divider
-
-                Layout.fillWidth: true
-                implicitHeight: scope.isControlCenterOpen ? 1 : 0
-                visible: scope.isControlCenterOpen
-                color: Themes.m3Colors.m3OutlineVariant
-
-                Behavior on implicitHeight {
+                Behavior on height {
                     NAnim {
                         duration: Appearance.animations.durations.small
+                        easing.type: Easing.OutCubic
                     }
                 }
-            }
 
-            StackView {
-                id: controlCenterStackView
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.preferredHeight: 500
-
-                property Component viewComponent: contentView
-
-                initialItem: viewComponent
-
-                onCurrentItemChanged: {
-                    if (currentItem)
-                        currentItem.viewIndex = scope.state;
+                anchors {
+                    top: parent.top
+                    right: parent.right
+                    rightMargin: 60
                 }
 
-                Component {
-                    id: contentView
+                clip: true
 
-                    Shape {
-                        id: shapeRect
-                        anchors.fill: parent
+                TabRows {
+                    id: tabBar
 
-                        ShapePath {
-                            strokeWidth: 0
-                            strokeColor: "transparent"
-                            fillColor: Themes.m3Colors.m3Surface
+                    state: scope.state
+                    scaleFactor: Math.min(1.0, container.width / container.width)
+                    visible: scope.isControlCenterOpen
+                    topLeftRadius: 0
+                    topRightRadius: 0
 
-                            startX: topLeftRadius
-                            startY: 0
+                    Layout.fillWidth: true
 
-                            // Top edge
-                            PathLine {
-                                x: shapeRect.width - topRightRadius
-                                y: 0
-                            }
+                    onTabClicked: index => {
+                        scope.state = index;
+                        controlCenterStackView.currentItem.viewIndex = index;
+                    }
+                }
 
-                            // Top-right corner
-                            PathArc {
-                                x: shapeRect.width
-                                y: topRightRadius
-                                radiusX: topRightRadius
-                                radiusY: topRightRadius
-                                direction: PathArc.Clockwise
-                            }
+                StyledRect {
+                    id: divider
 
-                            // Right edge
-                            PathLine {
-                                x: shapeRect.width
-                                y: shapeRect.height - bottomRightRadius
-                            }
+                    Layout.fillWidth: true
+                    implicitHeight: scope.isControlCenterOpen ? 1 : 0
+                    visible: scope.isControlCenterOpen
+                    color: Themes.m3Colors.m3OutlineVariant
 
-                            // Bottom-right corner
-                            PathArc {
-                                x: shapeRect.width - bottomRightRadius
-                                y: shapeRect.height
-                                radiusX: bottomRightRadius
-                                radiusY: bottomRightRadius
-                                direction: PathArc.Clockwise
-                            }
-
-                            // Bottom edge
-                            PathLine {
-                                x: bottomLeftRadius
-                                y: shapeRect.height
-                            }
-
-                            // Bottom-left corner
-                            PathArc {
-                                x: 0
-                                y: shapeRect.height - bottomLeftRadius
-                                radiusX: bottomLeftRadius
-                                radiusY: bottomLeftRadius
-                                direction: PathArc.Clockwise
-                            }
-
-                            // Left edge
-                            PathLine {
-                                x: 0
-                                y: topLeftRadius
-                            }
-
-                            // Top-left corner
-                            PathArc {
-                                x: topLeftRadius
-                                y: 0
-                                radiusX: topLeftRadius
-                                radiusY: topLeftRadius
-                                direction: PathArc.Clockwise
-                            }
+                    Behavior on implicitHeight {
+                        NAnim {
+                            duration: Appearance.animations.durations.small
                         }
+                    }
+                }
 
-                        property int viewIndex: 0
-                        property real topLeftRadius: 0
-                        property real topRightRadius: 0
-                        property real bottomLeftRadius: Appearance.rounding.normal
-                        property real bottomRightRadius: Appearance.rounding.normal
+                StackView {
+                    id: controlCenterStackView
 
-                        Loader {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.preferredHeight: 500
+
+                    property Component viewComponent: contentView
+
+                    initialItem: viewComponent
+
+                    onCurrentItemChanged: {
+                        if (currentItem)
+                            currentItem.viewIndex = scope.state;
+                    }
+
+                    Component {
+                        id: contentView
+
+                        Shape {
+                            id: shapeRect
                             anchors.fill: parent
-                            active: parent.viewIndex === 0
-                            asynchronous: true
-                            visible: active
 
-                            sourceComponent: Settings {}
-                        }
+                            ShapePath {
+                                strokeWidth: 0
+                                strokeColor: "transparent"
+                                fillColor: Themes.m3Colors.m3Surface
 
-                        Loader {
-                            anchors.fill: parent
-                            active: parent.viewIndex === 1
-                            asynchronous: true
-                            visible: active
+                                startX: topLeftRadius
+                                startY: 0
 
-                            sourceComponent: VolumeSettings {}
-                        }
+                                PathLine {
+                                    x: shapeRect.width - topRightRadius
+                                    y: 0
+                                }
 
-                        Loader {
-                            anchors.fill: parent
-                            active: parent.viewIndex === 2
-                            asynchronous: true
-                            visible: active
+                                PathArc {
+                                    x: shapeRect.width
+                                    y: topRightRadius
+                                    radiusX: topRightRadius
+                                    radiusY: topRightRadius
+                                    direction: PathArc.Clockwise
+                                }
 
-                            sourceComponent: Performances {}
-                        }
+                                PathLine {
+                                    x: shapeRect.width
+                                    y: shapeRect.height - bottomRightRadius
+                                }
 
-                        Loader {
-                            anchors.fill: parent
-                            active: parent.viewIndex === 3
-                            asynchronous: true
-                            visible: active
+                                PathArc {
+                                    x: shapeRect.width - bottomRightRadius
+                                    y: shapeRect.height
+                                    radiusX: bottomRightRadius
+                                    radiusY: bottomRightRadius
+                                    direction: PathArc.Clockwise
+                                }
 
-                            sourceComponent: Weathers {}
+                                PathLine {
+                                    x: bottomLeftRadius
+                                    y: shapeRect.height
+                                }
+
+                                PathArc {
+                                    x: 0
+                                    y: shapeRect.height - bottomLeftRadius
+                                    radiusX: bottomLeftRadius
+                                    radiusY: bottomLeftRadius
+                                    direction: PathArc.Clockwise
+                                }
+
+                                PathLine {
+                                    x: 0
+                                    y: topLeftRadius
+                                }
+
+                                PathArc {
+                                    x: topLeftRadius
+                                    y: 0
+                                    radiusX: topLeftRadius
+                                    radiusY: topLeftRadius
+                                    direction: PathArc.Clockwise
+                                }
+                            }
+
+                            property int viewIndex: 0
+                            property real topLeftRadius: 0
+                            property real topRightRadius: 0
+                            property real bottomLeftRadius: Appearance.rounding.normal
+                            property real bottomRightRadius: Appearance.rounding.normal
+
+                            Loader {
+                                anchors.fill: parent
+                                active: parent.viewIndex === 0
+                                asynchronous: true
+                                visible: active
+
+                                sourceComponent: Settings {}
+                            }
+
+                            Loader {
+                                anchors.fill: parent
+                                active: parent.viewIndex === 1
+                                asynchronous: true
+                                visible: active
+
+                                sourceComponent: VolumeSettings {}
+                            }
+
+                            Loader {
+                                anchors.fill: parent
+                                active: parent.viewIndex === 2
+                                asynchronous: true
+                                visible: active
+
+                                sourceComponent: Performances {}
+                            }
+
+                            Loader {
+                                anchors.fill: parent
+                                active: parent.viewIndex === 3
+                                asynchronous: true
+                                visible: active
+
+                                sourceComponent: Weathers {}
+                            }
                         }
                     }
                 }
