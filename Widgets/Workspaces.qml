@@ -96,7 +96,7 @@ StyledRect {
                         property bool isCaught: false
 
                         captureSource: waylandHandle
-                        live: true
+                        live: false
                         width: (toplevelData?.size[0] ?? sourceSize.width) * root.scaleFactor * 0.25
                         height: (toplevelData?.size[1] ?? sourceSize.height) * root.scaleFactor * 0.25
                         scale: (Drag.active && !toplevelData?.floating) ? 0.98 : 1
