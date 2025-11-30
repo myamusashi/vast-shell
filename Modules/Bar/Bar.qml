@@ -42,10 +42,10 @@ Scope {
 			WlrLayershell.namespace: "shell:bar"
 			WlrLayershell.layer: WlrLayer.Overlay
             screen: modelData
-            exclusionMode: ExclusionMode.Ignore
+			exclusionMode: ExclusionMode.Ignore
+			exclusiveZone: 0
             focusable: false
             implicitHeight: root.isBarOpen ? 40 : 0
-            exclusiveZone: 1
             surfaceFormat.opaque: false
 
 			OuterShape {

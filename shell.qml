@@ -16,8 +16,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 
+import qs.Components
+
 ShellRoot {
-    Bar {
+	Bar {
         id: bar
     }
     Lockscreen {}
@@ -50,12 +52,12 @@ ShellRoot {
         }
 
         target: Quickshell
-    }
+	}
 
-    GlobalShortcut {
-        name: "bar"
-        onPressed: bar.isBarOpen = !bar.isBarOpen
-    }
+    // GlobalShortcut {
+    //     name: "bar"
+    //     onPressed: bar.isBarOpen = !bar.isBarOpen
+    // }
 
     GlobalShortcut {
         name: "wallpaperSelector"
