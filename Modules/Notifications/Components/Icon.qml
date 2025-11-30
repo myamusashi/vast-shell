@@ -95,16 +95,6 @@ Item {
                     cache: false
                     asynchronous: true
                     sourceSize: Qt.size(16, 16)
-
-                    layer.enabled: true
-                    layer.effect: MultiEffect {
-                        maskEnabled: true
-                        maskSource: StyledRect {
-                            width: 16
-                            height: 16
-                            radius: 8
-                        }
-                    }
                 }
             }
         }

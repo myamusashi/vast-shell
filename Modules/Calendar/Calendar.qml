@@ -60,11 +60,12 @@ Scope {
             StyledRect {
                 id: container
 
+				color: Themes.m3Colors.m3Background
+				radius: 0
+				bottomLeftRadius: Appearance.rounding.normal
+
                 implicitWidth: calendarScope.triggerAnimation ? Hypr.focusedMonitor.width * 0.2 : 0
                 implicitHeight: calendarScope.triggerAnimation ? 350 : 0
-                color: Themes.m3Colors.m3Background
-                radius: 0
-                bottomLeftRadius: Appearance.rounding.normal
 
                 Behavior on implicitWidth {
                     NAnim {

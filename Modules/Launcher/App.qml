@@ -20,18 +20,15 @@ Scope {
     property int currentIndex: 0
     property bool isLauncherOpen: false
 
-    // Properties untuk orchestrate animasi
     property bool triggerAnimation: false
     property bool shouldDestroy: false
 
     onIsLauncherOpenChanged: {
         if (isLauncherOpen) {
-            // Buka: reset → tunggu load → trigger animasi
             shouldDestroy = false
             triggerAnimation = false
             animationTriggerTimer.restart()
         } else {
-            // Tutup: trigger animasi → tunggu selesai → destroy
             triggerAnimation = false
             destroyTimer.restart()
         }
@@ -76,9 +73,7 @@ Scope {
 
         interval: 500
         repeat: false
-        onTriggered: {
-            gc();
-        }
+        onTriggered: gc()
     }
 
     LazyLoader {
@@ -94,12 +89,13 @@ Scope {
             StyledRect {
                 id: rectLauncher
 
-                implicitWidth: Hypr.focusedMonitor.width * 0.3
-                implicitHeight: root.triggerAnimation ? Hypr.focusedMonitor.height * 0.5 : 0
                 radius: 0
                 topLeftRadius: Appearance.rounding.normal
                 topRightRadius: Appearance.rounding.normal
-                color: Themes.m3Colors.m3Surface
+				color: Themes.m3Colors.m3Surface
+
+				implicitWidth: Hypr.focusedMonitor.width * 0.3
+				implicitHeight: root.triggerAnimation ? Hypr.focusedMonitor.height * 0.5 : 0
 
                 Behavior on implicitHeight {
                     NAnim {

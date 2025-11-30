@@ -2,11 +2,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
-import Quickshell.Wayland
-import Quickshell.Hyprland
+import Quickshell.Widgets
 
 import qs.Configs
 import qs.Services
@@ -20,10 +18,9 @@ Scope {
     property string currentWallpaper: Paths.currentWallpaper
     property var wallpaperList: []
     property string searchQuery: ""
-	property string debouncedSearchQuery: ""
+    property string debouncedSearchQuery: ""
     property bool triggerAnimation: false
     property bool shouldDestroy: false
-
 
     Timer {
         id: searchDebounceTimer
@@ -101,8 +98,8 @@ Scope {
             StyledRect {
                 id: container
 
-                implicitWidth: Hypr.focusedMonitor.width * 0.5
-                implicitHeight: scope.triggerAnimation ? Hypr.focusedMonitor.height * 0.5 : 0
+                implicitWidth: Hypr.focusedMonitor.width * 0.6
+                implicitHeight: scope.triggerAnimation ? Hypr.focusedMonitor.height * 0.3 : 0
                 color: Themes.m3Colors.m3Surface
                 radius: 0
                 topLeftRadius: Appearance.rounding.normal
@@ -138,45 +135,77 @@ Scope {
                             scope.searchQuery = text;
                             searchDebounceTimer.restart();
 
-                            if (wallpaperGrid.count > 0)
-                                wallpaperGrid.currentIndex = 0;
+                            if (wallpaperPath.count > 0)
+                                wallpaperPath.currentIndex = 0;
                         }
 
-                        Keys.onDownPressed: wallpaperGrid.focus = true
+                        Keys.onDownPressed: wallpaperPath.focus = true
                         Keys.onEscapePressed: scope.isWallpaperSwitcherOpen = false
                     }
 
-                    GridView {
-                        id: wallpaperGrid
+                    PathView {
+                        id: wallpaperPath
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
                         model: scope.filteredWallpaperList
-
-                        cellWidth: width / 3
-                        cellHeight: height / 3
+                        pathItemCount: 5
+                        preferredHighlightBegin: 0.5
+                        preferredHighlightEnd: 0.5
 
                         clip: true
-                        cacheBuffer: 0
+                        cacheItemCount: 7
 
                         Component.onCompleted: {
                             const idx = scope.wallpaperList.indexOf(Paths.currentWallpaper);
                             currentIndex = idx !== -1 ? idx : 0;
                         }
 
+                        onModelChanged: {
+                            if (scope.debouncedSearchQuery === "" && currentIndex >= 0) {
+                                Qt.callLater(() => {
+                                    if (currentIndex < count)
+                                        currentIndex = currentIndex;
+                                });
+                            }
+                        }
+
+                        path: Path {
+                            startX: 0
+                            startY: wallpaperPath.height / 2
+
+                            PathLine {
+                                x: wallpaperPath.width
+                                y: wallpaperPath.height / 2
+                            }
+                        }
+
                         delegate: Item {
                             id: delegateItem
 
-                            width: wallpaperGrid.cellWidth
-                            height: wallpaperGrid.cellHeight
+                            width: wallpaperPath.width / 5 - 16
+                            height: wallpaperPath.height - 16
 
                             required property var modelData
                             required property int index
 
-                            Rectangle {
+                            scale: PathView.isCurrentItem ? 1.1 : 0.85
+                            z: PathView.isCurrentItem ? 100 : 1
+                            opacity: PathView.isCurrentItem ? 1.0 : 0.6
+
+                            Behavior on scale {
+                                NAnim {}
+                            }
+
+                            Behavior on opacity {
+                                NAnim {}
+                            }
+
+                            ClippingRectangle {
                                 anchors.fill: parent
-                                anchors.margins: 4
+								anchors.margins: 8
+								radius: Appearance.rounding.normal
                                 color: "transparent"
 
                                 Image {
@@ -185,24 +214,7 @@ Scope {
                                     fillMode: Image.PreserveAspectCrop
                                     asynchronous: true
                                     smooth: true
-                                    cache: true
-
-                                    layer.enabled: true
-                                    layer.smooth: true
-                                }
-
-                                StyledLabel {
-                                    anchors.centerIn: parent
-                                    visible: wallpaperGrid.currentIndex === delegateItem.index ? false : true
-                                    text: delegateItem.modelData.split('/').pop()
-                                }
-
-                                StyledRect {
-                                    anchors.fill: parent
-                                    color: wallpaperGrid.currentIndex === delegateItem.index ? "transparent" : Themes.withAlpha(Themes.m3Colors.m3Surface, 0.7)
-                                    radius: Appearance.rounding.small
-                                    border.width: wallpaperGrid.currentIndex === delegateItem.index ? 3 : 1
-                                    border.color: wallpaperGrid.currentIndex === delegateItem.index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OutlineVariant
+									cache: false
                                 }
 
                                 MArea {
@@ -210,7 +222,7 @@ Scope {
                                     cursorShape: Qt.PointingHandCursor
 
                                     onClicked: {
-                                        wallpaperGrid.currentIndex = delegateItem.index;
+                                        wallpaperPath.currentIndex = delegateItem.index;
                                         Quickshell.execDetached({
                                             command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
                                         });
@@ -229,13 +241,17 @@ Scope {
                                 scope.isWallpaperSwitcherOpen = false;
                             if (event.key === Qt.Key_Tab)
                                 searchField.focus = true;
+                            if (event.key === Qt.Key_Left)
+                                decrementCurrentIndex();
+                            if (event.key === Qt.Key_Right)
+                                incrementCurrentIndex();
                         }
                     }
 
                     StyledLabel {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.bottomMargin: Appearance.spacing.small
-                        text: wallpaperGrid.count > 0 ? (wallpaperGrid.currentIndex + 1) + " / " + wallpaperGrid.count : "0 / 0"
+                        text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
                         color: Themes.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.small
                     }

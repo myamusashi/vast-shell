@@ -69,7 +69,8 @@ Scope {
                 }
 
                 implicitWidth: Hypr.focusedMonitor.width * 0.2
-                implicitHeight: notificationScope.triggerAnimation ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
+				implicitHeight: notificationScope.triggerAnimation ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
+				color: Themes.m3Colors.m3Background
                 radius: 0
 				topLeftRadius: Appearance.rounding.normal
 				bottomLeftRadius: Appearance.rounding.normal

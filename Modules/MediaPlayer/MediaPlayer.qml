@@ -17,21 +17,18 @@ Scope {
     id: root
 
     property bool isMediaPlayerOpen: false
-
-    // Properties untuk orchestrate animasi
     property bool triggerAnimation: false
-    property bool shouldDestroy: false
+	property bool shouldDestroy: false
+	property string url: ""
 
     onIsMediaPlayerOpenChanged: {
         if (isMediaPlayerOpen) {
-            // Buka: reset → tunggu load → trigger animasi
-            shouldDestroy = false
-            triggerAnimation = false
-            animationTriggerTimer.restart()
+            shouldDestroy = false;
+            triggerAnimation = false;
+            animationTriggerTimer.restart();
         } else {
-            // Tutup: trigger animasi → tunggu selesai → destroy
-            triggerAnimation = false
-            destroyTimer.restart()
+            triggerAnimation = false;
+            destroyTimer.restart();
         }
     }
 
@@ -40,9 +37,8 @@ Scope {
         interval: 50
         repeat: false
         onTriggered: {
-            if (root.isMediaPlayerOpen) {
-                root.triggerAnimation = true
-            }
+            if (root.isMediaPlayerOpen)
+                root.triggerAnimation = true;
         }
     }
 
@@ -51,7 +47,7 @@ Scope {
         interval: Appearance.animations.durations.small + 50
         repeat: false
         onTriggered: {
-            root.shouldDestroy = true
+            root.shouldDestroy = true;
         }
     }
 
@@ -66,7 +62,6 @@ Scope {
         return `${minutes}:${secs.toString().padStart(2, '0')}`;
     }
 
-    property string url: ""
 
     function getTrackUrl(): void {
         trackUrl.running = true;
@@ -145,8 +140,11 @@ Scope {
                             width: 120
                             height: 120
 
-                            sourceComponent: Item {
-                                anchors.fill: parent
+                            sourceComponent: ClippingRectangle {
+								anchors.fill: parent
+								radius: Appearance.rounding.normal
+								color: "transparent"
+
                                 Image {
                                     id: coverArt
 
@@ -157,12 +155,6 @@ Scope {
                                     opacity: 0.5
                                     cache: false
                                     asynchronous: true
-
-                                    layer.enabled: true
-                                    layer.effect: MultiEffect {
-                                        maskEnabled: true
-                                        maskSource: mask
-                                    }
                                 }
 
                                 StyledText {
@@ -183,20 +175,6 @@ Scope {
                                     asynchronous: true
                                     cache: false
                                     source: Players.active === null ? "root:/Assets/kuru.gif" : ""
-                                }
-
-                                Item {
-                                    id: mask
-
-                                    anchors.fill: parent
-                                    layer.enabled: true
-                                    visible: false
-
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        color: "white"
-                                        radius: Appearance.rounding.small
-                                    }
                                 }
                             }
                         }

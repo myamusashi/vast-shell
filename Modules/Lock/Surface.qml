@@ -149,11 +149,10 @@ WlSessionLockSurface {
 
             onTriggered: {
                 // Randomly add or remove fake characters when idle
-                if (Math.random() > 0.5 && root.maskedBuffer.length < 50) {
+                if (Math.random() > 0.5 && root.maskedBuffer.length < 50)
                     root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
-                } else if (root.maskedBuffer.length > root.inputBuffer.length * 3) {
+                else if (root.maskedBuffer.length > root.inputBuffer.length * 3)
                     root.maskedBuffer = root.maskedBuffer.slice(0, -1);
-                }
                 interval = Math.random() * 3000 + 2000;
             }
         }
@@ -215,8 +214,8 @@ WlSessionLockSurface {
             anchors.centerIn: parent
             text: root.showErrorMessage ? "" : root.maskedBuffer
             color: root.maskedBuffer ? (root.pam.showFailure ? Themes.m3Colors.m3OnErrorContainer : Themes.m3Colors.m3OnSurface) : Themes.m3Colors.m3OnSurfaceVariant
-			font.pointSize: Appearance.fonts.extraLarge * 5
-			font.family: Appearance.fonts.familyMono
+            font.pointSize: Appearance.fonts.extraLarge * 5
+            font.family: Appearance.fonts.familyMono
             z: 0
 
             property real randomXOffset: 0
