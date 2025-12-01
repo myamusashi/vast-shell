@@ -131,7 +131,7 @@ Variants {
             Rectangle {
                 id: leftBar
 
-                implicitWidth: 5
+                implicitWidth: 10
                 implicitHeight: QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.left: parent.left
@@ -141,7 +141,7 @@ Variants {
                 id: topBar
 
                 implicitWidth: QsWindow.window?.width ?? 0
-                implicitHeight: 5
+                implicitHeight: 10
                 color: window.barColor
                 anchors.top: parent.top
             }
@@ -149,7 +149,7 @@ Variants {
             Rectangle {
                 id: rightBar
 
-                implicitWidth: 5
+                implicitWidth: 10
                 implicitHeight: QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.right: parent.right
@@ -159,7 +159,7 @@ Variants {
                 id: bottomBar
 
                 implicitWidth: QsWindow.window?.width ?? 0
-                implicitHeight: 5
+                implicitHeight: 10
                 color: window.barColor
                 anchors.bottom: parent.bottom
             }
@@ -208,6 +208,13 @@ Variants {
                         window.needFocusKeyboard = true;
                     else
                         window.needFocusKeyboard = false;
+                }
+
+                onShowConfirmDialogChanged: {
+                    if (session.showConfirmDialog)
+                        window.needFocusKeyboard = false;
+                    else
+                        window.needFocusKeyboard = true;
                 }
             }
 

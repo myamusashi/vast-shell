@@ -14,6 +14,7 @@ import qs.Components
 StyledRect {
     id: root
 
+    property alias dialog: boxConfirmation
     property int currentIndex: 0
     property bool isSessionOpen: GlobalStates.isSessionOpen
     property bool showConfirmDialog: false
