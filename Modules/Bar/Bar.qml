@@ -1,107 +1,48 @@
-// Thx Rexiel for your Bar PR on quickshell-mirror
-pragma ComponentBehavior: Bound
-
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
+import Quickshell.Hyprland
 
-import qs.Configs
+import qs.Helpers
 import qs.Components
 
-Scope {
-    id: root
+StyledRect {
+	visible: GlobalStates.isBarOpen
 
-    property bool isBarOpen: true
+	height: 40
+	width: parent.width
+	GlobalShortcut {
+		name: "layershell"
+		onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
+	}
+	anchors {
+		top: parent.top
+		left: parent.left
+		right: parent.right
+	}
 
-    Timer {
-        id: cleanup
+    RowLayout {
+        id: rowbar
 
-        interval: 500
-        repeat: false
-        onTriggered: {
-            gc();
+		anchors {
+			fill: parent
+            leftMargin: 5
+            rightMargin: 5
         }
-    }
 
-    Variants {
-        model: Quickshell.screens
-        delegate: PanelWindow {
-            id: bar
-
-            required property ShellScreen modelData
-            property real cornerRadius: 12
-
-            anchors {
-                left: true
-                right: true
-                top: true
-            }
-            color: "transparent"
-			WlrLayershell.namespace: "shell:bar"
-			WlrLayershell.layer: WlrLayer.Overlay
-            screen: modelData
-			exclusionMode: ExclusionMode.Ignore
-			exclusiveZone: 0
-            focusable: false
-            implicitHeight: root.isBarOpen ? 40 : 0
-            surfaceFormat.opaque: false
-
-            Item {
-				anchors.fill: parent
-
-                StyledRect {
-                    id: base
-
-                    color: "transparent"
-                    anchors.fill: parent
-                    radius: 0
-
-                    RowLayout {
-                        width: parent.width
-                        anchors {
-                            leftMargin: 5
-                            rightMargin: 5
-                        }
-                        anchors.fill: parent
-                        Left {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-
-                            onActiveChanged: {
-                                cleanup.start();
-                            }
-                        }
-                        Middle {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignCenter
-
-                            onActiveChanged: {
-                                cleanup.start();
-                            }
-                        }
-                        Right {
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: parent.width / 6
-                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-
-                            onActiveChanged: {
-                                cleanup.start();
-                            }
-                        }
-                    }
-                }
-            }
+        Left {
+            Layout.fillHeight: true
+            Layout.preferredWidth: parent.width / 6
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
         }
-    }
-
-    IpcHandler {
-        target: "layerShell"
-        function toggle(): void {
-            root.isBarOpen = !root.isBarOpen;
+        Middle {
+            Layout.fillHeight: true
+            Layout.preferredWidth: parent.width / 6
+            Layout.alignment: Qt.AlignCenter
+        }
+        Right {
+            Layout.fillHeight: true
+            Layout.preferredWidth: parent.width / 6
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
         }
     }
 }

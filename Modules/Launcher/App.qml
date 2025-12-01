@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Wayland
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
@@ -18,7 +17,7 @@ StyledRect {
     id: root
 
     property int currentIndex: 0
-    property bool isLauncherOpen: false
+    property bool isLauncherOpen: GlobalStates.isLauncherOpen
     property bool triggerAnimation: false
     property bool shouldDestroy: false
 
@@ -39,7 +38,8 @@ StyledRect {
     }
 
     Timer {
-        id: animationTriggerTimer
+		id: animationTriggerTimer
+		
         interval: 50
         repeat: false
         onTriggered: {
@@ -50,7 +50,8 @@ StyledRect {
     }
 
     Timer {
-        id: destroyTimer
+		id: destroyTimer
+
         interval: Appearance.animations.durations.small + 50
         repeat: false
         onTriggered: {
@@ -278,14 +279,6 @@ StyledRect {
                 color: Themes.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.large
             }
-        }
-    }
-
-    IpcHandler {
-        target: "launcher"
-
-        function toggle(): void {
-            root.isLauncherOpen = !root.isLauncherOpen;
         }
     }
 }

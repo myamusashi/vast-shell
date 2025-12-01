@@ -1,7 +1,13 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
+import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 
+import qs.Configs
+import qs.Helpers
 import qs.Components
 
 import "Calendar"
@@ -12,107 +18,270 @@ import "Notifications"
 import "Session"
 import "Wallpaper"
 import "OSD"
+import "Bar"
 
-PanelWindow {
-    id: root
+Variants {
+    model: Quickshell.screens
 
-    property alias rectScreen: rect
+    delegate: PanelWindow {
+		id: window
 
-    color: "transparent"
-    anchors {
-        top: true
-        right: true
-        left: true
-        bottom: true
-    }
+        property color barColor: Themes.m3Colors.m3Background
+        property alias top: topBar
+        property alias bottom: bottomBar
+        property alias left: leftBar
+        property alias right: rightBar
 
-    OuterShape {}
-
-    mask: Region {
-        x: 0
-        y: 0
-        width: root.width
-        height: root.height
-		intersection: Intersection.Xor
-
-        Region {
-            item: cal
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: app
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: mediaPlayer
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: quickSettings
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: session
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: wallpaperSelector
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: notif
-            intersection: Intersection.Xor
-        }
-        Region {
-            item: notifCenter
-            intersection: Intersection.Xor
-		}
-		Region {
-            item: osd
-            intersection: Intersection.Xor
-        }
-    }
-
-    Rectangle {
-        id: rect
-
-        anchors.fill: parent
         color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
 
-        Calendar {
-            id: cal
+        mask: Region {
+            item: cornersArea
+            intersection: Intersection.Subtract
+
+			Region {
+                item: bar
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: cal
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: app
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: mediaPlayer
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: quickSettings
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: session
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: wallpaperSelector
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: notif
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: notifCenter
+                intersection: Intersection.Xor
+            }
+            Region {
+                item: osd
+                intersection: Intersection.Xor
+            }
         }
 
-        App {
-            id: app
+        anchors {
+            left: true
+            top: true
+            right: true
+            bottom: true
         }
 
-        MediaPlayer {
-            id: mediaPlayer
+        Scope {
+            Exclusion {
+                name: "left"
+                exclusiveZone: leftBar.implicitWidth
+                anchors.left: true
+            }
+            Exclusion {
+                name: "top"
+                exclusiveZone: topBar.implicitHeight
+                anchors.top: true
+            }
+            Exclusion {
+                name: "right"
+                exclusiveZone: rightBar.implicitWidth
+                anchors.right: true
+            }
+            Exclusion {
+                name: "bottom"
+                exclusiveZone: bottomBar.implicitHeight
+                anchors.bottom: true
+            }
         }
 
-        QuickSettings {
-            id: quickSettings
+        Rectangle {
+            id: rect
+
+            anchors.fill: parent
+            color: "transparent"
+
+            Rectangle {
+                id: leftBar
+
+                implicitWidth: 5
+                implicitHeight: QsWindow.window?.height ?? 0
+                color: window.barColor
+                anchors.left: parent.left
+            }
+
+            Rectangle {
+                id: topBar
+
+                implicitWidth: QsWindow.window?.width ?? 0
+                implicitHeight: GlobalStates.isBarOpen ? 40 : 5
+                color: window.barColor
+				anchors.top: parent.top
+
+				Behavior on implicitHeight {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
+            }
+
+            Rectangle {
+                id: rightBar
+
+                implicitWidth: 5
+                implicitHeight: QsWindow.window?.height ?? 0
+                color: window.barColor
+                anchors.right: parent.right
+            }
+
+            Rectangle {
+                id: bottomBar
+
+                implicitWidth: QsWindow.window?.width ?? 0
+                implicitHeight: 5
+                color: window.barColor
+                anchors.bottom: parent.bottom
+            }
+
+			App {
+				id: app
+			}
+
+			Bar {
+				id: bar
+			}
+
+            Calendar {
+                id: cal
+            }
+
+
+            MediaPlayer {
+                id: mediaPlayer
+            }
+
+            QuickSettings {
+                id: quickSettings
+            }
+
+            Session {
+                id: session
+            }
+
+            WallpaperSelector {
+                id: wallpaperSelector
+            }
+
+            Notifications {
+                id: notif
+            }
+
+            NotificationCenter {
+                id: notifCenter
+            }
+
+            OSD {
+                id: osd
+            }
         }
 
-        Session {
-            id: session
+        Rectangle {
+            id: cornersArea
+
+            implicitWidth: QsWindow.window?.width - (leftBar.implicitWidth + rightBar.implicitWidth)
+            implicitHeight: QsWindow.window?.height - (topBar.implicitHeight + bottomBar.implicitHeight)
+            color: "transparent"
+            x: leftBar.implicitWidth
+            y: topBar.implicitHeight
+
+            Repeater {
+                model: [0, 1, 2, 3]
+                Corner {
+                    required property int modelData
+                    corner: modelData
+                    color: window.barColor
+                }
+            }
+        }
+    }
+
+    component Corner: WrapperItem {
+        id: root
+
+        property int corner
+        property real radius: 20
+        property color color
+
+        Component.onCompleted: {
+            switch (corner) {
+            case 0:
+                anchors.left = parent.left;
+                anchors.top = parent.top;
+                break;
+            case 1:
+                anchors.top = parent.top;
+                anchors.right = parent.right;
+                rotation = 90;
+                break;
+            case 2:
+                anchors.right = parent.right;
+                anchors.bottom = parent.bottom;
+                rotation = 180;
+                break;
+            case 3:
+                anchors.left = parent.left;
+                anchors.bottom = parent.bottom;
+                rotation = -90;
+                break;
+            }
         }
 
-        WallpaperSelector {
-            id: wallpaperSelector
+        Shape {
+            preferredRendererType: Shape.CurveRenderer
+            ShapePath {
+                strokeWidth: 0
+                fillColor: root.color
+                startX: root.radius
+                PathArc {
+                    relativeX: -root.radius
+                    relativeY: root.radius
+                    radiusX: root.radius
+                    radiusY: radiusX
+                    direction: PathArc.Counterclockwise
+                }
+                PathLine {
+                    relativeX: 0
+                    relativeY: -root.radius
+                }
+                PathLine {
+                    relativeX: root.radius
+                    relativeY: 0
+                }
+            }
         }
+    }
 
-        Notifications {
-            id: notif
-        }
-
-        NotificationCenter {
-            id: notifCenter
-		}
-
-		OSD {
-			id: osd
-		}
+    component Exclusion: PanelWindow {
+        property string name
+        implicitWidth: 0
+        implicitHeight: 0
+        WlrLayershell.namespace: `quickshell:${name}ExclusionZone`
     }
 }
