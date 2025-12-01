@@ -26,22 +26,11 @@ ShellRoot {
     Lockscreen {}
 	Wall {}
 	RecordPanel {}
-    // WallpaperSelector {
-    //     id: ws
-    // }
-    // Session {
-    //     id: session
-    // }
     Polkit {}
-    // App {
-    //     id: appLauncher
-    // }
     Screencapture {
         id: screencapture
 	}
 	Wrapper {}
-	// Notifications {}
-    OSD {}
     Overview {}
 
     Connections {
@@ -55,26 +44,6 @@ ShellRoot {
 
         target: Quickshell
 	}
-
-    // GlobalShortcut {
-    //     name: "bar"
-    //     onPressed: bar.isBarOpen = !bar.isBarOpen
-    // }
-
-    // GlobalShortcut {
-    //     name: "wallpaperSelector"
-    //     onPressed: ws.isWallpaperSwitcherOpen = !ws.isWallpaperSwitcherOpen
-    // }
-    //
-    // GlobalShortcut {
-    //     name: "session"
-    //     onPressed: session.isSessionOpen = !session.isSessionOpen
-    // }
-    //
-    // GlobalShortcut {
-    //     name: "appLauncher"
-    //     onPressed: app.isLauncherOpen = !app.isLauncherOpen
-    // }
 
     GlobalShortcut {
         name: "screencapture"
