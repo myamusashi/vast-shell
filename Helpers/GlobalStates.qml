@@ -9,14 +9,18 @@ import qs.Services
 Singleton {
     id: root
 
-    property bool isCalendarOpen: false
+	property bool isCalendarOpen: false
+	property bool isLauncherOpen: false
+	property bool isBarOpen: false
+	property bool isSessionOpen: false
     property bool isMediaPlayerOpen: false
     property bool isNotificationCenterOpen: false
     property bool isQuickSettingsOpen: false
     property bool isWallpaperSwitcherOpen: false
     property bool isVolumeOSDShow: false
     property bool isCapsLockOSDShow: false
-    property bool isNumLockOSDShow: false
+	property bool isNumLockOSDShow: false
+	property bool isOverviewOpen: false
 
     property var osdTimers: ({
             "capslock": null,

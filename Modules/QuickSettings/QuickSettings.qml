@@ -194,11 +194,4 @@ ColumnLayout {
             }
         }
     }
-
-    IpcHandler {
-        target: "controlCenter"
-        function toggle(): void {
-            root.toggleControlCenter();
-        }
-    }
 }

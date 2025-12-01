@@ -29,7 +29,7 @@ StyledRect {
         interval: 300
         repeat: false
         onTriggered: root.debouncedSearchQuery = root.searchQuery
-    }
+	}
 
     property var filteredWallpaperList: {
         if (debouncedSearchQuery === "")

@@ -4,7 +4,6 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import QtQuick
-import QtQuick.Shapes
 import QtQuick.Layouts
 
 import qs.Configs
@@ -16,7 +15,7 @@ StyledRect {
     id: root
 
     property int currentIndex: 0
-    property bool isSessionOpen: false
+    property bool isSessionOpen: GlobalStates.isSessionOpen
     property bool showConfirmDialog: false
     property var pendingAction: null
     property string pendingActionName: ""
@@ -259,14 +258,6 @@ StyledRect {
                     }
                 }
             }
-        }
-    }
-
-    IpcHandler {
-        target: "root"
-
-        function toggle(): void {
-            root.isSessionOpen = !root.isSessionOpen;
         }
     }
 
