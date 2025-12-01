@@ -7,7 +7,6 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 
 import qs.Configs
-import qs.Helpers
 import qs.Components
 
 import "Calendar"
@@ -24,7 +23,11 @@ Variants {
     model: Quickshell.screens
 
     delegate: PanelWindow {
-		id: window
+        id: window
+
+        property bool needFocusKeyboard: false
+
+        WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         property color barColor: Themes.m3Colors.m3Background
         property alias top: topBar
@@ -32,16 +35,24 @@ Variants {
         property alias left: leftBar
         property alias right: rightBar
 
-        color: "transparent"
+        color: session.isSessionOpen ? Themes.withAlpha(Themes.m3Colors.m3Background, 0.7) : "transparent"
         exclusionMode: ExclusionMode.Ignore
+
+        Behavior on color {
+            CAnim {}
+        }
 
         mask: Region {
             item: cornersArea
             intersection: Intersection.Subtract
 
-			Region {
+            Region {
                 item: bar
                 intersection: Intersection.Xor
+                Region {
+                    item: topBar
+                    intersection: Intersection.Xor
+                }
             }
             Region {
                 item: cal
@@ -130,16 +141,9 @@ Variants {
                 id: topBar
 
                 implicitWidth: QsWindow.window?.width ?? 0
-                implicitHeight: GlobalStates.isBarOpen ? 40 : 5
+                implicitHeight: 5
                 color: window.barColor
-				anchors.top: parent.top
-
-				Behavior on implicitHeight {
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                    }
-                }
+                anchors.top: parent.top
             }
 
             Rectangle {
@@ -160,18 +164,33 @@ Variants {
                 anchors.bottom: parent.bottom
             }
 
-			App {
-				id: app
-			}
+            App {
+                id: app
 
-			Bar {
-				id: bar
-			}
+                onIsLauncherOpenChanged: {
+                    if (app.isLauncherOpen)
+                        window.needFocusKeyboard = true;
+                    else
+                        window.needFocusKeyboard = false;
+                }
+            }
+
+            Bar {
+                id: bar
+
+                onHeightChanged: {
+                    topBar.implicitHeight = bar.height;
+                    cal.anchors.topMargin = bar.height;
+                    mediaPlayer.anchors.topMargin = bar.height;
+                    quickSettings.anchors.topMargin = bar.height;
+                    notif.anchors.topMargin = bar.height;
+                    notifCenter.anchors.topMargin = bar.height;
+                }
+            }
 
             Calendar {
                 id: cal
             }
-
 
             MediaPlayer {
                 id: mediaPlayer
@@ -183,10 +202,24 @@ Variants {
 
             Session {
                 id: session
+
+                onIsSessionOpenChanged: {
+                    if (session.isSessionOpen)
+                        window.needFocusKeyboard = true;
+                    else
+                        window.needFocusKeyboard = false;
+                }
             }
 
             WallpaperSelector {
                 id: wallpaperSelector
+
+                onIsWallpaperSwitcherOpenChanged: {
+                    if (wallpaperSelector.isWallpaperSwitcherOpen)
+                        window.needFocusKeyboard = true;
+                    else
+                        window.needFocusKeyboard = false;
+                }
             }
 
             Notifications {

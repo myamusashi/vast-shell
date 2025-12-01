@@ -139,7 +139,7 @@ Column {
             delegate: StyledRect {
                 id: actionButton
 
-                width: (parent.width - (parent.spacing * (parent.children.length - 1))) / parent.children.length
+                width: (parent.width - (parent.spacing * (parent.children.length - 1))) / parent.children.length + 10
                 height: 40
                 required property NotificationAction modelData
                 color: actionMouse.pressed ? Themes.m3Colors.m3SecondaryContainer : actionMouse.containsMouse ? Themes.m3Colors.m3SecondaryContainer : Themes.m3Colors.m3SurfaceContainerHigh
@@ -164,7 +164,7 @@ Column {
                 StyledText {
                     anchors.centerIn: parent
                     text: actionButton.modelData.text
-                    font.pixelSize: Appearance.fonts.small
+                    font.pixelSize: Appearance.fonts.medium
                     font.weight: Font.Medium
                     color: Themes.m3Colors.m3OnSecondaryContainer
                     elide: Text.ElideRight

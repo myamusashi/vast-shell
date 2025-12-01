@@ -38,8 +38,8 @@ StyledRect {
     }
 
     Timer {
-		id: animationTriggerTimer
-		
+        id: animationTriggerTimer
+
         interval: 50
         repeat: false
         onTriggered: {
@@ -50,7 +50,7 @@ StyledRect {
     }
 
     Timer {
-		id: destroyTimer
+        id: destroyTimer
 
         interval: Appearance.animations.durations.small + 50
         repeat: false
@@ -71,6 +71,12 @@ StyledRect {
                 command: ["app2unit", "--", ...entry.command],
                 workingDirectory: entry.workingDirectory
             });
+    }
+
+    focus: root.isLauncherOpen
+    onFocusChanged: {
+        if (focus && root.isLauncherOpen)
+            search.forceActiveFocus();
     }
 
     Timer {

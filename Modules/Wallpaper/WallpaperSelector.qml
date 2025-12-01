@@ -29,7 +29,13 @@ StyledRect {
         interval: 300
         repeat: false
         onTriggered: root.debouncedSearchQuery = root.searchQuery
-	}
+    }
+
+    focus: isWallpaperSwitcherOpen
+    onFocusChanged: {
+        if (isWallpaperSwitcherOpen)
+            searchField.forceActiveFocus();
+    }
 
     property var filteredWallpaperList: {
         if (debouncedSearchQuery === "")

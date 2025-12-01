@@ -32,7 +32,8 @@ StyledRect {
     }
 
     Timer {
-        id: animationTriggerTimer
+		id: animationTriggerTimer
+
         interval: 50
         repeat: false
         onTriggered: {
@@ -43,7 +44,8 @@ StyledRect {
     }
 
     Timer {
-        id: destroyTimer
+		id: destroyTimer
+
         interval: Appearance.animations.durations.small + 50
         repeat: false
         onTriggered: {
@@ -56,10 +58,11 @@ StyledRect {
         top: parent.top
     }
 
-    width: 350
+    width: 450
     height: root.triggerAnimation ? Hypr.focusedMonitor.height * 0.7 : 0
     clip: true
-    radius: 0
+	radius: 0
+	anchors.leftMargin: 15
     bottomLeftRadius: Appearance.rounding.normal
     visible: height > 0
     color: Themes.m3Colors.m3Background

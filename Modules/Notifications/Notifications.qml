@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import Quickshell
+import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
 import qs.Configs
@@ -16,7 +16,9 @@ StyledRect {
 
     anchors {
         right: parent.right
-        top: parent.top
+		top: parent.top
+		rightMargin: 5
+		topMargin: 5
     }
 
     property bool hasNotifications: Notifs.notifications.popupNotifications.length > 0
@@ -51,10 +53,11 @@ StyledRect {
         onTriggered: container.shouldDestroy = true
     }
 
-    width: 350
+    width: 400
     height: container.triggerAnimation ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
     color: Themes.m3Colors.m3Background
-    radius: 0
+	radius: 0
+	clip: true
     bottomLeftRadius: Appearance.rounding.normal
 
     Behavior on width {

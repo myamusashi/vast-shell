@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
 import qs.Configs
@@ -22,7 +23,7 @@ Item {
     width: parent.width
     height: isRemoving ? 0 : contentLayout.height * 1.3
     clip: true
-    x: parent.width
+	x: parent.width
 
     Component.onCompleted: {
         slideInAnim.start();
@@ -87,11 +88,9 @@ Item {
     StyledRect {
         anchors.fill: parent
         color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3ErrorContainer : Themes.m3Colors.m3SurfaceContainer
-        topLeftRadius: Appearance.rounding.large
-        bottomLeftRadius: Appearance.rounding.large
-        radius: 0
-        topRightRadius: 0
-        bottomRightRadius: 0
+		radius: Appearance.rounding.normal
+		anchors.leftMargin: 10
+		clip: true
         border.color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3Error : "transparent"
         border.width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
 
@@ -152,10 +151,10 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.topMargin: 15
-            anchors.leftMargin: 15
-            anchors.rightMargin: 15
-            spacing: Appearance.spacing.normal
+            anchors.topMargin: 10
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+			spacing: Appearance.spacing.normal
 
             Icon {
                 id: iconLayout

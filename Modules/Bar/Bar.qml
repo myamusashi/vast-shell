@@ -2,29 +2,39 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Hyprland
 
+import qs.Configs
 import qs.Helpers
 import qs.Components
 
 StyledRect {
-	visible: GlobalStates.isBarOpen
+	color: Themes.m3Colors.m3Background
+	height: GlobalStates.isBarOpen ? 40 : 0
+    width: parent.width
 
-	height: 40
-	width: parent.width
-	GlobalShortcut {
-		name: "layershell"
-		onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
-	}
-	anchors {
-		top: parent.top
-		left: parent.left
-		right: parent.right
-	}
+    GlobalShortcut {
+        name: "layershell"
+        onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
+    }
+
+    anchors {
+        top: parent.top
+        left: parent.left
+        right: parent.right
+    }
+
+    Behavior on height {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
 
     RowLayout {
         id: rowbar
 
-		anchors {
-			fill: parent
+		visible: GlobalStates.isBarOpen
+        anchors {
+            fill: parent
             leftMargin: 5
             rightMargin: 5
         }
