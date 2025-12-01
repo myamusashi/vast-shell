@@ -49,10 +49,6 @@ Item {
 		layerColor: "transparent"
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: notificationCenter.isNotificationCenterOpen = !notificationCenter.isNotificationCenterOpen
+        onClicked: GlobalStates.isNotificationCenterOpen = !GlobalStates.isNotificationCenterOpen
     }
-
-    NotificationCenter {
-		id: notificationCenter
-	}
 }

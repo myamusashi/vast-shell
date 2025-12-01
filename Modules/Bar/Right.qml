@@ -7,7 +7,6 @@ import qs.Configs
 import qs.Widgets
 import qs.Helpers
 import qs.Components
-import qs.Modules.QuickSettings
 
 Loader {
     active: true
@@ -61,12 +60,8 @@ Loader {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: quickSettings.isControlCenterOpen = !quickSettings.isControlCenterOpen
+                onClicked: GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen
             }
         }
-    }
-
-    QuickSettings {
-        id: quickSettings
     }
 }

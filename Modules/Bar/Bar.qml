@@ -48,10 +48,6 @@ Scope {
             implicitHeight: root.isBarOpen ? 40 : 0
             surfaceFormat.opaque: false
 
-			OuterShape {
-				id: outer
-			}
-
             Item {
 				anchors.fill: parent
 

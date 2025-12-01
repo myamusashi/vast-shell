@@ -40,10 +40,6 @@ StyledRect {
         anchors.fill: timeContainer
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: cal.isCalendarShow = !cal.isCalendarShow
-    }
-
-    Calendar {
-        id: cal
+        onClicked: GlobalStates.isCalendarOpen = !GlobalStates.isCalendarOpen
     }
 }

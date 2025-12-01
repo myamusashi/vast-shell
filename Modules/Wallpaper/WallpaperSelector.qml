@@ -5,16 +5,17 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
+import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Services
 import qs.Helpers
 import qs.Components
 
-Scope {
-    id: scope
+StyledRect {
+    id: root
 
-    property bool isWallpaperSwitcherOpen: false
+    property bool isWallpaperSwitcherOpen: GlobalStates.isWallpaperSwitcherOpen
     property string currentWallpaper: Paths.currentWallpaper
     property var wallpaperList: []
     property string searchQuery: ""
@@ -27,7 +28,7 @@ Scope {
 
         interval: 300
         repeat: false
-        onTriggered: scope.debouncedSearchQuery = scope.searchQuery
+        onTriggered: root.debouncedSearchQuery = root.searchQuery
     }
 
     property var filteredWallpaperList: {
@@ -50,9 +51,14 @@ Scope {
         stdout: StdioCollector {
             onStreamFinished: {
                 const wallList = text.trim().split('\n').filter(path => path.length > 0);
-                scope.wallpaperList = wallList;
+                root.wallpaperList = wallList;
             }
         }
+    }
+
+    GlobalShortcut {
+        name: "wallpaperSwitcher"
+        onPressed: GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen
     }
 
     onIsWallpaperSwitcherOpenChanged: {
@@ -71,8 +77,8 @@ Scope {
         interval: 50
         repeat: false
         onTriggered: {
-            if (scope.isWallpaperSwitcherOpen)
-                scope.triggerAnimation = true;
+            if (root.isWallpaperSwitcherOpen)
+                root.triggerAnimation = true;
         }
     }
 
@@ -80,183 +86,165 @@ Scope {
         id: destroyTimer
         interval: Appearance.animations.durations.small + 50
         repeat: false
-        onTriggered: scope.shouldDestroy = true
+        onTriggered: root.shouldDestroy = true
     }
 
-    LazyLoader {
-        id: lazyLoader
+    implicitWidth: Hypr.focusedMonitor.width * 0.6
+    implicitHeight: root.triggerAnimation ? Hypr.focusedMonitor.height * 0.3 : 0
+    color: Themes.m3Colors.m3Surface
+    radius: 0
+    topLeftRadius: Appearance.rounding.normal
+    topRightRadius: Appearance.rounding.normal
 
-        loading: scope.isWallpaperSwitcherOpen
-        activeAsync: scope.isWallpaperSwitcherOpen || !scope.shouldDestroy
+    anchors {
+        bottom: parent.bottom
+        horizontalCenter: parent.horizontalCenter
+    }
 
-        component: OuterShapeItem {
-            id: root
+    Behavior on implicitHeight {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
 
-            content: container
-            needKeyboardFocus: scope.isWallpaperSwitcherOpen
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: Appearance.spacing.normal
+        spacing: Appearance.spacing.normal
 
-            StyledRect {
-                id: container
+        StyledTextField {
+            id: searchField
 
-                implicitWidth: Hypr.focusedMonitor.width * 0.6
-                implicitHeight: scope.triggerAnimation ? Hypr.focusedMonitor.height * 0.3 : 0
-                color: Themes.m3Colors.m3Surface
-                radius: 0
-                topLeftRadius: Appearance.rounding.normal
-                topRightRadius: Appearance.rounding.normal
+            Layout.fillWidth: true
+            Layout.preferredHeight: 40
+            placeholderText: "Search wallpapers..."
+            text: root.searchQuery
+            focus: true
 
-                anchors {
-                    bottom: parent.bottom
-                    horizontalCenter: parent.horizontalCenter
+            onTextChanged: {
+                root.searchQuery = text;
+                searchDebounceTimer.restart();
+
+                if (wallpaperPath.count > 0)
+                    wallpaperPath.currentIndex = 0;
+            }
+
+            Keys.onDownPressed: wallpaperPath.focus = true
+            Keys.onEscapePressed: root.isWallpaperSwitcherOpen = false
+        }
+
+        PathView {
+            id: wallpaperPath
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            model: root.filteredWallpaperList
+            pathItemCount: 5
+            preferredHighlightBegin: 0.5
+            preferredHighlightEnd: 0.5
+
+            clip: true
+            cacheItemCount: 7
+
+            Component.onCompleted: {
+                const idx = root.wallpaperList.indexOf(Paths.currentWallpaper);
+                currentIndex = idx !== -1 ? idx : 0;
+            }
+
+            onModelChanged: {
+                if (root.debouncedSearchQuery === "" && currentIndex >= 0) {
+                    Qt.callLater(() => {
+                        if (currentIndex < count)
+                            currentIndex = currentIndex;
+                    });
+                }
+            }
+
+            path: Path {
+                startX: 0
+                startY: wallpaperPath.height / 2
+
+                PathLine {
+                    x: wallpaperPath.width
+                    y: wallpaperPath.height / 2
+                }
+            }
+
+            delegate: Item {
+                id: delegateItem
+
+                width: wallpaperPath.width / 5 - 16
+                height: wallpaperPath.height - 16
+
+                required property var modelData
+                required property int index
+
+                scale: PathView.isCurrentItem ? 1.1 : 0.85
+                z: PathView.isCurrentItem ? 100 : 1
+                opacity: PathView.isCurrentItem ? 1.0 : 0.6
+
+                Behavior on scale {
+                    NAnim {}
                 }
 
-                Behavior on implicitHeight {
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                    }
+                Behavior on opacity {
+                    NAnim {}
                 }
 
-                ColumnLayout {
+                ClippingRectangle {
                     anchors.fill: parent
-                    anchors.margins: Appearance.spacing.normal
-                    spacing: Appearance.spacing.normal
+                    anchors.margins: 8
+                    radius: Appearance.rounding.normal
+                    color: "transparent"
 
-                    StyledTextField {
-                        id: searchField
-
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 40
-                        placeholderText: "Search wallpapers..."
-                        text: scope.searchQuery
-                        focus: true
-
-                        onTextChanged: {
-                            scope.searchQuery = text;
-                            searchDebounceTimer.restart();
-
-                            if (wallpaperPath.count > 0)
-                                wallpaperPath.currentIndex = 0;
-                        }
-
-                        Keys.onDownPressed: wallpaperPath.focus = true
-                        Keys.onEscapePressed: scope.isWallpaperSwitcherOpen = false
+                    Image {
+                        anchors.fill: parent
+                        source: "file://" + delegateItem.modelData
+                        fillMode: Image.PreserveAspectCrop
+                        asynchronous: true
+                        smooth: true
+                        cache: false
                     }
 
-                    PathView {
-                        id: wallpaperPath
+                    MArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
 
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        model: scope.filteredWallpaperList
-                        pathItemCount: 5
-                        preferredHighlightBegin: 0.5
-                        preferredHighlightEnd: 0.5
-
-                        clip: true
-                        cacheItemCount: 7
-
-                        Component.onCompleted: {
-                            const idx = scope.wallpaperList.indexOf(Paths.currentWallpaper);
-                            currentIndex = idx !== -1 ? idx : 0;
+                        onClicked: {
+                            wallpaperPath.currentIndex = delegateItem.index;
+                            Quickshell.execDetached({
+                                command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                            });
                         }
-
-                        onModelChanged: {
-                            if (scope.debouncedSearchQuery === "" && currentIndex >= 0) {
-                                Qt.callLater(() => {
-                                    if (currentIndex < count)
-                                        currentIndex = currentIndex;
-                                });
-                            }
-                        }
-
-                        path: Path {
-                            startX: 0
-                            startY: wallpaperPath.height / 2
-
-                            PathLine {
-                                x: wallpaperPath.width
-                                y: wallpaperPath.height / 2
-                            }
-                        }
-
-                        delegate: Item {
-                            id: delegateItem
-
-                            width: wallpaperPath.width / 5 - 16
-                            height: wallpaperPath.height - 16
-
-                            required property var modelData
-                            required property int index
-
-                            scale: PathView.isCurrentItem ? 1.1 : 0.85
-                            z: PathView.isCurrentItem ? 100 : 1
-                            opacity: PathView.isCurrentItem ? 1.0 : 0.6
-
-                            Behavior on scale {
-                                NAnim {}
-                            }
-
-                            Behavior on opacity {
-                                NAnim {}
-                            }
-
-                            ClippingRectangle {
-                                anchors.fill: parent
-								anchors.margins: 8
-								radius: Appearance.rounding.normal
-                                color: "transparent"
-
-                                Image {
-                                    anchors.fill: parent
-                                    source: "file://" + delegateItem.modelData
-                                    fillMode: Image.PreserveAspectCrop
-                                    asynchronous: true
-                                    smooth: true
-									cache: false
-                                }
-
-                                MArea {
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-
-                                    onClicked: {
-                                        wallpaperPath.currentIndex = delegateItem.index;
-                                        Quickshell.execDetached({
-                                            command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                                        });
-                                    }
-                                }
-                            }
-                        }
-
-                        Keys.onPressed: event => {
-                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                                Quickshell.execDetached({
-                                    command: ["sh", "-c", `shell ipc call img set ${scope.filteredWallpaperList[currentIndex]}`]
-                                });
-                            }
-                            if (event.key === Qt.Key_Escape)
-                                scope.isWallpaperSwitcherOpen = false;
-                            if (event.key === Qt.Key_Tab)
-                                searchField.focus = true;
-                            if (event.key === Qt.Key_Left)
-                                decrementCurrentIndex();
-                            if (event.key === Qt.Key_Right)
-                                incrementCurrentIndex();
-                        }
-                    }
-
-                    StyledLabel {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.bottomMargin: Appearance.spacing.small
-                        text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
-                        color: Themes.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.small
                     }
                 }
             }
+
+            Keys.onPressed: event => {
+                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    Quickshell.execDetached({
+                        command: ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
+                    });
+                }
+                if (event.key === Qt.Key_Escape)
+                    root.isWallpaperSwitcherOpen = false;
+                if (event.key === Qt.Key_Tab)
+                    searchField.focus = true;
+                if (event.key === Qt.Key_Left)
+                    decrementCurrentIndex();
+                if (event.key === Qt.Key_Right)
+                    incrementCurrentIndex();
+            }
+        }
+
+        StyledLabel {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.bottomMargin: Appearance.spacing.small
+            text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
+            color: Themes.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.small
         }
     }
 
