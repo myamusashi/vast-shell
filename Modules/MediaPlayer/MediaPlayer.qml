@@ -287,15 +287,13 @@ StyledRect {
                     onClicked: Players.active ? Players.active.previous() : {}
                 }
 
-                StyledSlide {
+                Wavy {
                     id: barSlide
 
                     value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
-                    valueWidth: 0
-                    valueHeight: 0
 
                     FrameAnimation {
                         running: Players.active && Players.active.playbackState == MprisPlaybackState.Playing
