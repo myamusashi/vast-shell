@@ -17,7 +17,6 @@ StyledRect {
     color: "transparent"
 
     readonly property int index: 0
-    property bool playerControlShow: false
 
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
@@ -52,10 +51,6 @@ StyledRect {
         anchors.fill: mediaInfo
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-        onClicked: root.playerControlShow = !root.playerControlShow
-    }
-
-    MediaPlayer {
-        isMediaPlayerOpen: root.playerControlShow
+        onClicked: GlobalStates.isMediaPlayerOpen = !GlobalStates.isMediaPlayerOpen
     }
 }

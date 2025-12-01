@@ -11,8 +11,13 @@ import qs.Components
 
 import "Components" as Com
 
-Scope {
-    id: notificationScope
+StyledRect {
+    id: container
+
+    anchors {
+        right: parent.right
+        top: parent.top
+    }
 
     property bool hasNotifications: Notifs.notifications.popupNotifications.length > 0
     property bool triggerAnimation: false
@@ -34,9 +39,8 @@ Scope {
         interval: 50
         repeat: false
         onTriggered: {
-            if (notificationScope.hasNotifications) {
-                notificationScope.triggerAnimation = true;
-            }
+            if (container.hasNotifications)
+                container.triggerAnimation = true;
         }
     }
 
@@ -44,89 +48,68 @@ Scope {
         id: destroyTimer
         interval: Appearance.animations.durations.small + 50
         repeat: false
-        onTriggered: {
-            notificationScope.shouldDestroy = true;
+        onTriggered: container.shouldDestroy = true
+    }
+
+    width: 350
+    height: container.triggerAnimation ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
+    color: Themes.m3Colors.m3Background
+    radius: 0
+    bottomLeftRadius: Appearance.rounding.normal
+
+    Behavior on width {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 
-    LazyLoader {
-        loading: notificationScope.hasNotifications
-        activeAsync: notificationScope.hasNotifications || !notificationScope.shouldDestroy
+    Behavior on height {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
 
-        component: OuterShapeItem {
-            content: item
+    Flickable {
+        id: notifFlickable
 
-            StyledRect {
-                id: item
+        anchors.fill: container
+        contentHeight: notifColumn.height
+        clip: true
+        boundsBehavior: Flickable.StopAtBounds
 
-                anchors {
-                    right: parent.right
-                    top: parent.top
+        Column {
+            id: notifColumn
+
+            width: parent.width
+            spacing: Appearance.spacing.normal
+
+            Repeater {
+                id: notifRepeater
+
+                model: ScriptModel {
+                    values: [...Notifs.notifications.popupNotifications.map(a => a)].reverse()
                 }
 
-				width: Hypr.focusedMonitor.width * 0.2
-				height: notificationScope.triggerAnimation ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
-				color: Themes.m3Colors.m3Background
-                radius: 0
-				bottomLeftRadius: Appearance.rounding.normal
+                delegate: Com.Wrapper {
+                    id: wrapper
 
-				Behavior on width {
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    onEntered: closePopups.stop()
+                    onExited: closePopups.start()
+
+                    Timer {
+                        id: closePopups
+
+                        interval: wrapper.modelData.urgency === NotificationUrgency.Critical ? 10000 : 5000
+                        running: true
+                        onTriggered: wrapper.removeNotificationWithAnimation()
                     }
-                }
 
-                Behavior on height {
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                    }
-                }
-
-
-                Flickable {
-					id: notifFlickable
-
-                    anchors.fill: parent
-                    contentHeight: notifColumn.height
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-
-                    Column {
-						id: notifColumn
-
-                        width: parent.width
-                        spacing: Appearance.spacing.normal
-
-                        Repeater {
-                            id: notifRepeater
-
-                            model: ScriptModel {
-                                values: [...Notifs.notifications.popupNotifications.map(a => a)].reverse()
-                            }
-
-                            delegate: Com.Wrapper {
-                                id: wrapper
-
-                                onEntered: closePopups.stop()
-                                onExited: closePopups.start()
-
-                                Timer {
-									id: closePopups
-
-                                    interval: wrapper.modelData.urgency === NotificationUrgency.Critical ? 10000 : 5000
-                                    running: true
-                                    onTriggered: wrapper.removeNotificationWithAnimation()
-                                }
-
-                                Timer {
-                                    id: removeTimer
-                                    interval: Appearance.animations.durations.emphasizedAccel + 50
-                                    onTriggered: Notifs.notifications.removePopupNotification(wrapper.modelData)
-                                }
-                            }
-                        }
+                    Timer {
+                        id: removeTimer
+                        interval: Appearance.animations.durations.emphasizedAccel + 50
+                        onTriggered: Notifs.notifications.removePopupNotification(wrapper.modelData)
                     }
                 }
             }

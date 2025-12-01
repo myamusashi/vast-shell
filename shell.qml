@@ -11,6 +11,7 @@ import qs.Modules.RecordPanel
 import qs.Modules.OSD
 import qs.Modules.Overview
 import qs.Modules.Polkit
+import qs.Modules
 
 import QtQuick
 import Quickshell
@@ -20,25 +21,26 @@ import qs.Components
 
 ShellRoot {
 	Bar {
-        id: bar
-    }
+	       id: bar
+	   }
     Lockscreen {}
 	Wall {}
 	RecordPanel {}
-    WallpaperSelector {
-        id: ws
-    }
-    Session {
-        id: session
-    }
+    // WallpaperSelector {
+    //     id: ws
+    // }
+    // Session {
+    //     id: session
+    // }
     Polkit {}
-    App {
-        id: appLauncher
-    }
+    // App {
+    //     id: appLauncher
+    // }
     Screencapture {
         id: screencapture
-    }
-    Notifications {}
+	}
+	Wrapper {}
+	// Notifications {}
     OSD {}
     Overview {}
 
@@ -59,20 +61,20 @@ ShellRoot {
     //     onPressed: bar.isBarOpen = !bar.isBarOpen
     // }
 
-    GlobalShortcut {
-        name: "wallpaperSelector"
-        onPressed: ws.isWallpaperSwitcherOpen = !ws.isWallpaperSwitcherOpen
-    }
-
-    GlobalShortcut {
-        name: "session"
-        onPressed: session.isSessionOpen = !session.isSessionOpen
-    }
-
-    GlobalShortcut {
-        name: "appLauncher"
-        onPressed: appLauncher.isLauncherOpen = !appLauncher.isLauncherOpen
-    }
+    // GlobalShortcut {
+    //     name: "wallpaperSelector"
+    //     onPressed: ws.isWallpaperSwitcherOpen = !ws.isWallpaperSwitcherOpen
+    // }
+    //
+    // GlobalShortcut {
+    //     name: "session"
+    //     onPressed: session.isSessionOpen = !session.isSessionOpen
+    // }
+    //
+    // GlobalShortcut {
+    //     name: "appLauncher"
+    //     onPressed: app.isLauncherOpen = !app.isLauncherOpen
+    // }
 
     GlobalShortcut {
         name: "screencapture"

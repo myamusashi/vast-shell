@@ -48,7 +48,7 @@ Scope {
             property real workspaceHeight: (Hypr.focusedMonitor.height - (root.reserved[1] + root.reserved[3])) * scope.scaleFactor / Hypr.focusedMonitor.scale
             property real containerWidth: workspaceWidth + scope.borderWidth
             property real containerHeight: workspaceHeight + scope.borderWidth
-            property list<int> reserved: Hypr.focusedMonitor.lastIpcObject?.reserved
+            property list<int> reserved: Hypr.focusedMonitor.lastIpcObject.reserved
 
             implicitWidth: contentGrid.implicitWidth * 2.5
             implicitHeight: contentGrid.implicitHeight * 2.5
@@ -93,7 +93,6 @@ Scope {
                         required property int index
                         property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
                         property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
-
                         property bool hasMaximized: !!(workspace?.toplevels?.values.some(t => t.wayland?.maximized))
 
                         implicitWidth: root.containerWidth + 25
@@ -111,7 +110,6 @@ Scope {
 
                             path: Qt.resolvedUrl(Paths.currentWallpaperFile)
                             watchChanges: true
-                            blockLoading: true
                             onFileChanged: reload()
                         }
 
@@ -252,6 +250,7 @@ Scope {
 
                                     onClicked: mouse => {
                                         if (!dragged) {
+                                            if (mouse.button === Qt.LeftButton)
                                             if (mouse.button === Qt.LeftButton)
                                                 toplevel.waylandHandle.activate();
                                             else if (mouse.button === Qt.RightButton)

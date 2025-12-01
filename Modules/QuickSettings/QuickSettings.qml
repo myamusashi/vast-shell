@@ -10,15 +10,16 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 import qs.Components
 
 import "Settings"
 
-Scope {
-    id: scope
+ColumnLayout {
+    id: root
 
-    property bool isControlCenterOpen: false
+    property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
     property int state: 0
     property bool triggerAnimation: false
     property bool shouldDestroy: false
@@ -28,7 +29,7 @@ Scope {
     }
 
     onIsControlCenterOpenChanged: {
-        if (isControlCenterOpen) {
+        if (root.isControlCenterOpen) {
             shouldDestroy = false;
             triggerAnimation = false;
             animationTriggerTimer.restart();
@@ -43,8 +44,8 @@ Scope {
         interval: 50
         repeat: false
         onTriggered: {
-            if (scope.isControlCenterOpen) {
-                scope.triggerAnimation = true;
+            if (root.isControlCenterOpen) {
+                root.triggerAnimation = true;
             }
         }
     }
@@ -54,13 +55,13 @@ Scope {
         interval: Appearance.animations.durations.small + 50
         repeat: false
         onTriggered: {
-            scope.shouldDestroy = true;
+            root.shouldDestroy = true;
         }
     }
 
     GlobalShortcut {
         name: "ControlCenter"
-        onPressed: scope.toggleControlCenter()
+        onPressed: root.toggleControlCenter()
     }
 
     Timer {
@@ -71,139 +72,124 @@ Scope {
         onTriggered: gc()
     }
 
-    LazyLoader {
-        loading: scope.isControlCenterOpen
-        activeAsync: scope.isControlCenterOpen || !scope.shouldDestroy
+    width: Hypr.focusedMonitor.width * 0.3
+    height: root.triggerAnimation ? contentHeight : 0
+    spacing: 0
 
-        component: OuterShapeItem {
-            id: root
+    property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500
 
-            content: container
+    Behavior on height {
+        NAnim {
+            duration: Appearance.animations.durations.small
+            easing.type: Easing.OutCubic
+        }
+    }
 
-            ColumnLayout {
-                id: container
+    anchors {
+        top: parent.top
+        right: parent.right
+        rightMargin: 60
+    }
 
-                width: Hypr.focusedMonitor.width * 0.3
-                height: scope.triggerAnimation ? contentHeight : 0
-                spacing: 0
+    clip: true
 
-                property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500
+    TabRows {
+        id: tabBar
 
-                Behavior on height {
-                    NAnim {
-                        duration: Appearance.animations.durations.small
-                        easing.type: Easing.OutCubic
-                    }
+        state: root.state
+        scaleFactor: Math.min(1.0, root.width / root.width)
+        visible: root.isControlCenterOpen
+        topLeftRadius: 0
+        topRightRadius: 0
+
+        Layout.fillWidth: true
+
+        onTabClicked: index => {
+            root.state = index;
+            controlCenterStackView.currentItem.viewIndex = index;
+        }
+    }
+
+    StyledRect {
+        id: divider
+
+        Layout.fillWidth: true
+        implicitHeight: root.isControlCenterOpen ? 1 : 0
+        visible: root.isControlCenterOpen
+        color: Themes.m3Colors.m3OutlineVariant
+
+        Behavior on implicitHeight {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+    }
+
+    StackView {
+        id: controlCenterStackView
+
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        Layout.preferredHeight: 500
+
+        property Component viewComponent: contentView
+
+        initialItem: viewComponent
+
+        onCurrentItemChanged: {
+            if (currentItem)
+                currentItem.viewIndex = root.state;
+        }
+
+        Component {
+            id: contentView
+
+            StyledRect {
+                id: shapeRect
+
+                anchors.fill: parent
+
+                radius: 0
+                bottomLeftRadius: Appearance.rounding.normal
+                bottomRightRadius: Appearance.rounding.normal
+                color: Themes.m3Colors.m3Background
+
+                property int viewIndex: 0
+
+                Loader {
+                    anchors.fill: parent
+                    active: parent.viewIndex === 0
+                    asynchronous: true
+                    visible: active
+
+                    sourceComponent: Settings {}
                 }
 
-                anchors {
-                    top: parent.top
-                    right: parent.right
-                    rightMargin: 60
+                Loader {
+                    anchors.fill: parent
+                    active: parent.viewIndex === 1
+                    asynchronous: true
+                    visible: active
+
+                    sourceComponent: VolumeSettings {}
                 }
 
-                clip: true
+                Loader {
+                    anchors.fill: parent
+                    active: parent.viewIndex === 2
+                    asynchronous: true
+                    visible: active
 
-                TabRows {
-                    id: tabBar
-
-                    state: scope.state
-                    scaleFactor: Math.min(1.0, container.width / container.width)
-                    visible: scope.isControlCenterOpen
-                    topLeftRadius: 0
-                    topRightRadius: 0
-
-                    Layout.fillWidth: true
-
-                    onTabClicked: index => {
-                        scope.state = index;
-                        controlCenterStackView.currentItem.viewIndex = index;
-                    }
+                    sourceComponent: Performances {}
                 }
 
-                StyledRect {
-                    id: divider
+                Loader {
+                    anchors.fill: parent
+                    active: parent.viewIndex === 3
+                    asynchronous: true
+                    visible: active
 
-                    Layout.fillWidth: true
-                    implicitHeight: scope.isControlCenterOpen ? 1 : 0
-                    visible: scope.isControlCenterOpen
-                    color: Themes.m3Colors.m3OutlineVariant
-
-                    Behavior on implicitHeight {
-                        NAnim {
-                            duration: Appearance.animations.durations.small
-                        }
-                    }
-                }
-
-                StackView {
-                    id: controlCenterStackView
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 500
-
-                    property Component viewComponent: contentView
-
-                    initialItem: viewComponent
-
-                    onCurrentItemChanged: {
-                        if (currentItem)
-                            currentItem.viewIndex = scope.state;
-                    }
-
-                    Component {
-                        id: contentView
-
-                        StyledRect {
-							id: shapeRect
-
-                            anchors.fill: parent
-
-							radius: 0
-							bottomLeftRadius: Appearance.rounding.normal
-                            bottomRightRadius: Appearance.rounding.normal
-							color: Themes.m3Colors.m3Background
-
-							property int viewIndex: 0
-
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 0
-                                asynchronous: true
-                                visible: active
-
-                                sourceComponent: Settings {}
-                            }
-
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 1
-                                asynchronous: true
-                                visible: active
-
-                                sourceComponent: VolumeSettings {}
-                            }
-
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 2
-                                asynchronous: true
-                                visible: active
-
-                                sourceComponent: Performances {}
-                            }
-
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 3
-                                asynchronous: true
-                                visible: active
-
-                                sourceComponent: Weathers {}
-                            }
-                        }
-                    }
+                    sourceComponent: Weathers {}
                 }
             }
         }
@@ -212,7 +198,7 @@ Scope {
     IpcHandler {
         target: "controlCenter"
         function toggle(): void {
-            scope.toggleControlCenter();
+            root.toggleControlCenter();
         }
     }
 }
