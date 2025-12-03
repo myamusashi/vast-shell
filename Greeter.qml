@@ -20,51 +20,51 @@ ShellRoot {
         target: Greetd
 
         function onAuthMessage(message, error, responseRequired, echoResponse) {
-            console.log("[MSG] " + message);
-            console.log("[ERR] " + error);
-            console.log("[RESREQ] " + responseRequired);
-            console.log("[ECHO] " + echoResponse);
+            console.log("[MSG] " + message)
+            console.log("[ERR] " + error)
+            console.log("[RESREQ] " + responseRequired)
+            console.log("[ECHO] " + echoResponse)
 
             if (responseRequired) {
-                Greetd.respond(sessionLock.inputBuffer);
-                sessionLock.inputBuffer = "";
-                sessionLock.maskedBuffer = "";
+                Greetd.respond(sessionLock.inputBuffer)
+                sessionLock.inputBuffer = ""
+                sessionLock.maskedBuffer = ""
             }
 
             if (error) {
-                console.log("[AUTH ERROR] " + error);
-                sessionLock.showErrorMessage = true;
-                sessionLock.inputBuffer = "";
-                sessionLock.maskedBuffer = "";
+                console.log("[AUTH ERROR] " + error)
+                sessionLock.showErrorMessage = true
+                sessionLock.inputBuffer = ""
+                sessionLock.maskedBuffer = ""
             }
         }
 
         function onReadyToLaunch() {
-            console.log("[READY TO LAUNCH]");
-            console.log("[SESSION] " + Sessions.current_session);
-            sessionLock.locked = false;
+            console.log("[READY TO LAUNCH]")
+            console.log("[SESSION] " + Sessions.current_session)
+            sessionLock.locked = false
 
-            const sessionCmd = Sessions.current_session.split(" ");
-            console.log("[LAUNCHING] " + JSON.stringify(sessionCmd));
-            Greetd.launch(sessionCmd);
+            const sessionCmd = Sessions.current_session.split(" ")
+            console.log("[LAUNCHING] " + JSON.stringify(sessionCmd))
+            Greetd.launch(sessionCmd)
         }
     }
 
     function authenticate() {
-        console.log("[AUTH START] User: " + Users.current_user);
-        console.log("[AUTH START] Session: " + Sessions.current_session);
+        console.log("[AUTH START] User: " + Users.current_user)
+        console.log("[AUTH START] Session: " + Sessions.current_session)
 
         if (!Users.current_user) {
-            console.log("[ERROR] No user selected!");
-            return;
+            console.log("[ERROR] No user selected!")
+            return
         }
 
-        Greetd.createSession(Users.current_user);
+        Greetd.createSession(Users.current_user)
     }
 
     Component.onCompleted: {
-        console.log("[INIT] Current session: " + Sessions.current_session);
-        console.log("[INIT] Current user: " + Users.current_user);
+        console.log("[INIT] Current session: " + Sessions.current_session)
+        console.log("[INIT] Current user: " + Users.current_user)
     }
 
     WlSessionLock {
@@ -93,23 +93,23 @@ ShellRoot {
                 source: ""
 
                 Component.onCompleted: {
-                    source = sessionLock.wallpaperPath;
+                    source = sessionLock.wallpaperPath
 
                     Paths.currentWallpaperChanged.connect(() => {
-                        if (walAnimation.running)
-                            walAnimation.complete();
-                        animatingWal.source = sessionLock.wallpaperPath;
-                    });
+                                                              if (walAnimation.running)
+                                                              walAnimation.complete()
+                                                              animatingWal.source = sessionLock.wallpaperPath
+                                                          })
                     animatingWal.statusChanged.connect(() => {
-                        if (animatingWal.status == Image.Ready)
-                            walAnimation.start();
-                    });
+                                                           if (animatingWal.status == Image.Ready)
+                                                           walAnimation.start()
+                                                       })
 
                     walAnimation.finished.connect(() => {
-                        img.source = animatingWal.source;
-                        animatingWal.source = "";
-                        animatinRect.width = 0;
-                    });
+                                                      img.source = animatingWal.source
+                                                      animatingWal.source = ""
+                                                      animatinRect.width = 0
+                                                  })
                 }
             }
 
@@ -153,83 +153,83 @@ ShellRoot {
                     focus: true
                     Keys.onPressed: kevent => {
                         if (sessionLock.showErrorMessage && kevent.text)
-                            sessionLock.showErrorMessage = false;
+                        sessionLock.showErrorMessage = false
 
                         if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                             if (sessionLock.inputBuffer.length > 0) {
-                                console.log("[ENTER] Authenticating...");
-                                root.authenticate();
+                                console.log("[ENTER] Authenticating...")
+                                root.authenticate()
                             }
-                            return;
+                            return
                         }
 
                         if (Greetd.state === GreetdState.Authenticating) {
-                            console.log("[BLOCKED] Input blocked during authentication");
-                            return;
+                            console.log("[BLOCKED] Input blocked during authentication")
+                            return
                         }
 
                         if (kevent.key === Qt.Key_A && (kevent.modifiers & Qt.ControlModifier)) {
-                            passwordBuffer.color = Themes.m3Colors.m3Blue;
-                            sessionLock.isAllSelected = true;
-                            kevent.accepted = true;
-                            return;
+                            passwordBuffer.color = Themes.m3Colors.m3Blue
+                            sessionLock.isAllSelected = true
+                            kevent.accepted = true
+                            return
                         }
 
                         if (kevent.key === Qt.Key_Backspace) {
                             if (kevent.modifiers & Qt.ControlModifier) {
-                                passwordBuffer.color = Themes.m3Colors.m3OnBackground;
-                                sessionLock.inputBuffer = "";
-                                sessionLock.maskedBuffer = "";
-                                sessionLock.isAllSelected = false;
-                                return;
+                                passwordBuffer.color = Themes.m3Colors.m3OnBackground
+                                sessionLock.inputBuffer = ""
+                                sessionLock.maskedBuffer = ""
+                                sessionLock.isAllSelected = false
+                                return
                             }
 
                             if (sessionLock.isAllSelected) {
-                                sessionLock.inputBuffer = "";
-                                sessionLock.maskedBuffer = "";
-                                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
-                                sessionLock.isAllSelected = false;
-                                return;
+                                sessionLock.inputBuffer = ""
+                                sessionLock.maskedBuffer = ""
+                                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant
+                                sessionLock.isAllSelected = false
+                                return
                             }
 
-                            sessionLock.inputBuffer = sessionLock.inputBuffer.slice(0, -1);
+                            sessionLock.inputBuffer = sessionLock.inputBuffer.slice(0, -1)
 
-                            const randomRemove = Math.min(Math.floor(Math.random() * 3) + 1, sessionLock.maskedBuffer.length);
-                            sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -randomRemove);
+                            const randomRemove = Math.min(Math.floor(Math.random() * 3) + 1, sessionLock.maskedBuffer.length)
+                            sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -randomRemove)
 
                             if (sessionLock.maskedBuffer === "")
-                                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
+                            passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant
 
-                            return;
+                            return
                         }
 
                         if (kevent.text) {
                             if (sessionLock.isAllSelected) {
-                                sessionLock.inputBuffer = "";
-                                sessionLock.maskedBuffer = "";
-                                sessionLock.isAllSelected = false;
+                                sessionLock.inputBuffer = ""
+                                sessionLock.maskedBuffer = ""
+                                sessionLock.isAllSelected = false
                             }
 
                             if (passwordBuffer.color === Themes.m3Colors.m3Blue || passwordBuffer.color === Themes.m3Colors.m3OnBackground)
-                                passwordBuffer.color = sessionLock.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant;
+                            passwordBuffer.color = sessionLock.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant
 
-                            sessionLock.inputBuffer += kevent.text;
+                            sessionLock.inputBuffer += kevent.text
 
-                            const randomLength = Math.floor(Math.random() * 3) + 1;
-                            for (let i = 0; i < randomLength; i++)
-                                sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
+                            const randomLength = Math.floor(Math.random() * 3) + 1
+                            for (var i = 0; i < randomLength; i++)
+                            sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)]
 
-                            const currentTime = Date.now();
+                            const currentTime = Date.now()
                             if (sessionLock.lastKeystrokeTime > 0) {
-                                const timeDelta = currentTime - sessionLock.lastKeystrokeTime;
+                                const timeDelta = currentTime - sessionLock.lastKeystrokeTime
                                 if (timeDelta < 50) {
-                                    fakeDelayTimer.interval = Math.random() * 30 + 10;
-                                    fakeDelayTimer.restart();
+                                    fakeDelayTimer.interval = Math.random() * 30 + 10
+                                    fakeDelayTimer.restart()
                                 }
                             }
-                            sessionLock.lastKeystrokeTime = currentTime;
+                            sessionLock.lastKeystrokeTime = currentTime
 
-                            typingAnimation.restart();
+                            typingAnimation.restart()
                         }
                     }
                 }
@@ -240,8 +240,8 @@ ShellRoot {
                     interval: 20
                     repeat: false
                     onTriggered: {
-                        passwordBuffer.opacity = 0.99;
-                        passwordBuffer.opacity = 1.0;
+                        passwordBuffer.opacity = 0.99
+                        passwordBuffer.opacity = 1.0
                     }
                 }
 
@@ -254,11 +254,11 @@ ShellRoot {
 
                     onTriggered: {
                         if (Math.random() > 0.5 && sessionLock.maskedBuffer.length < 50)
-                            sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
+                        sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)]
                         else if (sessionLock.maskedBuffer.length > sessionLock.inputBuffer.length * 3)
-                            sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -1);
+                        sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -1)
 
-                        interval = Math.random() * 3000 + 2000;
+                        interval = Math.random() * 3000 + 2000
                     }
                 }
 
@@ -297,8 +297,8 @@ ShellRoot {
                         repeat: true
                         running: sessionLock.locked && sessionLock.maskedBuffer.length > 0
                         onTriggered: {
-                            passwordBuffer.randomXOffset = (Math.random() - 0.5) * 4;
-                            passwordBuffer.randomYOffset = (Math.random() - 0.5) * 4;
+                            passwordBuffer.randomXOffset = (Math.random() - 0.5) * 4
+                            passwordBuffer.randomYOffset = (Math.random() - 0.5) * 4
                         }
                     }
 
@@ -319,8 +319,8 @@ ShellRoot {
                         repeat: true
                         running: sessionLock.locked && sessionLock.maskedBuffer.length > 0
                         onTriggered: {
-                            const baseFontSize = Appearance.fonts.extraLarge * 5;
-                            passwordBuffer.font.pointSize = baseFontSize * (0.95 + Math.random() * 0.1);
+                            const baseFontSize = Appearance.fonts.extraLarge * 5
+                            passwordBuffer.font.pointSize = baseFontSize * (0.95 + Math.random() * 0.1)
                         }
                     }
 
@@ -377,8 +377,8 @@ ShellRoot {
                     iconButton: "skip_previous"
                     buttonTitle: "Previous User"
                     onClicked: {
-                        Users.previous();
-                        keyHandler.forceActiveFocus();
+                        Users.previous()
+                        keyHandler.forceActiveFocus()
                     }
                 }
 
@@ -411,8 +411,8 @@ ShellRoot {
                     iconButton: "skip_next"
                     buttonTitle: "Next User"
                     onClicked: {
-                        Users.next();
-                        keyHandler.forceActiveFocus();
+                        Users.next()
+                        keyHandler.forceActiveFocus()
                     }
                 }
             }
@@ -427,8 +427,8 @@ ShellRoot {
                     iconButton: "skip_previous"
                     buttonTitle: "Previous Session"
                     onClicked: {
-                        Sessions.previous();
-                        keyHandler.forceActiveFocus();
+                        Sessions.previous()
+                        keyHandler.forceActiveFocus()
                     }
                 }
 
@@ -461,8 +461,8 @@ ShellRoot {
                     iconButton: "skip_next"
                     buttonTitle: "Next Session"
                     onClicked: {
-                        Sessions.next();
-                        keyHandler.forceActiveFocus();
+                        Sessions.next()
+                        keyHandler.forceActiveFocus()
                     }
                 }
             }

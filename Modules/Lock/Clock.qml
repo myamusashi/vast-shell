@@ -78,10 +78,8 @@ ColumnLayout {
                 color: Themes.m3Colors.m3OnSurface
                 renderType: Text.NativeRendering
                 text: {
-                    const hours = root.currentDate.getHours().toString(
-                                    ).padStart(2, '0')
-                    const minutes = root.currentDate.getMinutes().toString(
-                                      ).padStart(2, '0')
+                    const hours = root.currentDate.getHours().toString().padStart(2, '0')
+                    const minutes = root.currentDate.getMinutes().toString().padStart(2, '0')
                     return `${hours}:${minutes}`
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -121,8 +119,7 @@ ColumnLayout {
                     font.weight: Font.Medium
                     color: Themes.m3Colors.m3OnSurface
                     renderType: Text.NativeRendering
-                    text: root.currentDate.getSeconds().toString().padStart(2,
-                                                                            '0')
+                    text: root.currentDate.getSeconds().toString().padStart(2, '0')
                 }
             }
         }
@@ -197,8 +194,7 @@ ColumnLayout {
                 font.weight: Font.Normal
                 color: Themes.m3Colors.m3OnSurface
                 renderType: Text.NativeRendering
-                text: `${root.currentDate.getDate()} ${root.getMonthName(
-                          root.currentDate.getMonth())}`
+                text: `${root.currentDate.getDate()} ${root.getMonthName(root.currentDate.getMonth())}`
             }
         }
     }

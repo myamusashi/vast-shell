@@ -12,7 +12,7 @@ import qs.Helpers
 import qs.Components
 
 Item {
-	id: root
+    id: root
 
     required property Notification modelData
     property bool hasImage: modelData.image.length > 0
@@ -21,7 +21,7 @@ Item {
     height: 40
 
     Loader {
-		id: appIcon
+        id: appIcon
 
         active: root.hasAppIcon || !root.hasImage
         anchors.centerIn: parent
@@ -34,7 +34,7 @@ Item {
             color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3Error : root.modelData.urgency === NotificationUrgency.Low ? Themes.m3Colors.m3SecondaryContainer : Themes.m3Colors.m3PrimaryContainer
 
             Loader {
-				id: icon
+                id: icon
 
                 active: root.hasAppIcon
                 anchors.centerIn: parent
@@ -64,7 +64,7 @@ Item {
     }
 
     Loader {
-		id: image
+        id: image
 
         active: root.hasImage
         anchors.right: parent.right

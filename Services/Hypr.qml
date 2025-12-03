@@ -17,11 +17,11 @@ Singleton {
     readonly property int activeWsId: focusedWorkspace?.id ?? 1
 
     function dispatch(request: string): void {
-        Hyprland.dispatch(request);
+        Hyprland.dispatch(request)
     }
 
     function monitorFor(screen: ShellScreen): HyprlandMonitor {
-        return Hyprland.monitorFor(screen);
+        return Hyprland.monitorFor(screen)
     }
 
     signal configReloaded
@@ -30,22 +30,22 @@ Singleton {
         target: Hyprland
 
         function onRawEvent(event: HyprlandEvent): void {
-            const n = event.name;
+            const n = event.name
             if (n.endsWith("v2"))
-                return;
+                return
 
             if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
-                Hyprland.refreshWorkspaces();
-                Hyprland.refreshMonitors();
+                Hyprland.refreshWorkspaces()
+                Hyprland.refreshMonitors()
             } else if (["openwindow", "closewindow", "movewindow"].includes(n)) {
-                Hyprland.refreshToplevels();
-                Hyprland.refreshWorkspaces();
+                Hyprland.refreshToplevels()
+                Hyprland.refreshWorkspaces()
             } else if (n.includes("mon"))
-                Hyprland.refreshMonitors();
+                Hyprland.refreshMonitors()
             else if (n.includes("workspace"))
-                Hyprland.refreshWorkspaces();
+                Hyprland.refreshWorkspaces()
             else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
-                Hyprland.refreshToplevels();
+                Hyprland.refreshToplevels()
         }
     }
 }

@@ -55,7 +55,7 @@ StyledRect {
 
         onClicked: mevent => {
             if (mevent.button === Qt.MiddleButton)
-                Audio.toggleMute(root.node);
+            Audio.toggleMute(root.node)
         }
 
         onWheel: mevent => Audio.wheelAction(mevent, root.node)

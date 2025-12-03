@@ -15,11 +15,11 @@ Column {
     property bool isShowMoreBody: false
 
     width: parent.width
-	spacing: Appearance.spacing.small
+    spacing: Appearance.spacing.small
 
-	Component.onCompleted: {
-		Notifs.appName = notif.appName
-	}
+    Component.onCompleted: {
+        Notifs.appName = notif.appName
+    }
 
     Row {
         width: parent.width
@@ -30,9 +30,9 @@ Column {
             height: appNameRow.height
 
             Row {
-				id: appNameRow
+                id: appNameRow
 
-				spacing: Appearance.spacing.normal
+                spacing: Appearance.spacing.normal
 
                 StyledText {
                     id: appName
@@ -56,8 +56,8 @@ Column {
                     id: whenTime
 
                     text: {
-                        const now = new Date();
-                        return TimeAgo.timeAgoWithIfElse(now);
+                        const now = new Date()
+                        return TimeAgo.timeAgoWithIfElse(now)
                     }
                     color: Themes.m3Colors.m3OnSurfaceVariant
                 }
@@ -96,8 +96,8 @@ Column {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    root.isShowMoreBody = !root.isShowMoreBody;
-                    rotateArrowIcon.running = !rotateArrowIcon.running;
+                    root.isShowMoreBody = !root.isShowMoreBody
+                    rotateArrowIcon.running = !rotateArrowIcon.running
                 }
             }
         }
@@ -125,7 +125,7 @@ Column {
         color: Themes.m3Colors.m3OnSurface
         textFormat: Text.StyledText
         maximumLineCount: root.isShowMoreBody ? 0 : 1
-		wrapMode: Text.Wrap
+        wrapMode: Text.Wrap
     }
 
     Row {
@@ -156,9 +156,9 @@ Column {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        actionButton.modelData.invoke();
-                        Notifs.notifications.removePopupNotification(root.notif);
-                        Notifs.notifications.removeListNotification(root.notif);
+                        actionButton.modelData.invoke()
+                        Notifs.notifications.removePopupNotification(root.notif)
+                        Notifs.notifications.removeListNotification(root.notif)
                     }
                 }
                 StyledText {

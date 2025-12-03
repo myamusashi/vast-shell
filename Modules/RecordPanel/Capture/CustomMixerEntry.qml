@@ -35,9 +35,9 @@ ColumnLayout {
 
         StyledLabel {
             text: {
-                const app = root.node.properties["application.name"] ?? (root.node.description != "" ? root.node.description : root.node.name);
-                const media = root.node.properties["media.name"];
-                return media != undefined ? `${app} - ${media}` : app;
+                const app = root.node.properties["application.name"] ?? (root.node.description != "" ? root.node.description : root.node.name)
+                const media = root.node.properties["media.name"]
+                return media != undefined ? `${app} - ${media}` : app
             }
             elide: Text.ElideRight
             wrapMode: Text.Wrap
@@ -64,13 +64,13 @@ ColumnLayout {
             }
 
             MArea {
-				id: mArea
+                id: mArea
 
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: mevent => {
                     if (mevent.button === Qt.LeftButton)
-                        Audio.toggleMute(root.node);
+                    Audio.toggleMute(root.node)
                 }
                 onWheel: mevent => Audio.wheelAction(mevent, root.node)
             }

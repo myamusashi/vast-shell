@@ -3,7 +3,7 @@ import QtQuick
 import qs.Helpers
 
 Image {
-	id: wallpaper
+    id: wallpaper
 
     anchors.fill: parent
     source: Paths.currentWallpaper
@@ -14,8 +14,8 @@ Image {
     smooth: true
     onStatusChanged: {
         if (this.status == Image.Error) {
-            console.log("[ERROR] Wallpaper source invalid");
-            console.log("[INFO] Please disable set wallpaper if not required");
+            console.log("[ERROR] Wallpaper source invalid")
+            console.log("[INFO] Please disable set wallpaper if not required")
         }
     }
 }

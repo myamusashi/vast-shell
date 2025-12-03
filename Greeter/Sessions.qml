@@ -17,12 +17,12 @@ Singleton {
 
     function next() {
         if (session_execs.length > 0)
-            current_ses_index = (current_ses_index + 1) % session_execs.length;
+            current_ses_index = (current_ses_index + 1) % session_execs.length
     }
 
     function previous() {
         if (session_execs.length > 0)
-            current_ses_index = (current_ses_index - 1 + session_execs.length) % session_execs.length;
+            current_ses_index = (current_ses_index - 1 + session_execs.length) % session_execs.length
     }
 
     Process {
@@ -37,27 +37,27 @@ Singleton {
 
         stdout: SplitParser {
             onRead: data => {
-                const parsedData = data.split(",");
+                const parsedData = data.split(",")
                 if (parsedData.length >= 3) {
-                    console.log("[SESSIONS] ID: " + parsedData[0] + ", Name: " + parsedData[1] + ", Exec: " + parsedData[2]);
+                    console.log("[SESSIONS] ID: " + parsedData[0] + ", Name: " + parsedData[1] + ", Exec: " + parsedData[2])
 
                     if (parsedData[0] == root.preferred_session) {
-                        console.log("[INFO] Found preferred session " + root.preferred_session);
-                        root.current_ses_index = root.session_names.length;
+                        console.log("[INFO] Found preferred session " + root.preferred_session)
+                        root.current_ses_index = root.session_names.length
                     }
 
-                    root.session_names.push(parsedData[1]);
-                    root.session_execs.push(parsedData[2]);
+                    root.session_names.push(parsedData[1])
+                    root.session_execs.push(parsedData[2])
                 }
             }
         }
 
         onExited: {
-            console.log("[SESSIONS] Loaded " + root.session_execs.length + " sessions");
+            console.log("[SESSIONS] Loaded " + root.session_execs.length + " sessions")
             if (root.session_execs.length === 0) {
-                console.log("[WARN] No sessions found, adding fallback");
-                root.session_names.push("Hyprland");
-                root.session_execs.push("Hyprland");
+                console.log("[WARN] No sessions found, adding fallback")
+                root.session_names.push("Hyprland")
+                root.session_execs.push("Hyprland")
             }
         }
     }

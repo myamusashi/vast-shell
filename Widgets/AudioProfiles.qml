@@ -45,10 +45,10 @@ ComboBox {
         rightPadding: profilesComboBox.indicator.width + profilesComboBox.spacing
         text: {
             for (var i = 0; i < Audio.models.length; i++)
-                if (Audio.models[i].index == Audio.activeProfileIndex)
-                    return Audio.models[i].readable;
+            if (Audio.models[i].index == Audio.activeProfileIndex)
+            return Audio.models[i].readable
 
-            return Audio.models[-1].readable;
+            return Audio.models[-1].readable
         }
         font.weight: Font.DemiBold
         font.pixelSize: Appearance.fonts.large
@@ -96,20 +96,20 @@ ComboBox {
             Connections {
                 target: profilesComboBox
                 function onPressedChanged() {
-                    canvas.requestPaint();
+                    canvas.requestPaint()
                 }
             }
 
             Component.onCompleted: requestPaint()
 
             onPaint: {
-                context.reset();
-                context.moveTo(0, 0);
-                context.lineTo(width, 0);
-                context.lineTo(width / 2, height);
-                context.closePath();
-                context.fillStyle = Themes.m3Colors.m3OnBackground;
-                context.fill();
+                context.reset()
+                context.moveTo(0, 0)
+                context.lineTo(width, 0)
+                context.lineTo(width / 2, height)
+                context.closePath()
+                context.fillStyle = Themes.m3Colors.m3OnBackground
+                context.fill()
             }
         }
 
@@ -209,12 +209,12 @@ ComboBox {
     }
 
     onActivated: index => {
-        const profile = Audio.models[index];
+        const profile = Audio.models[index]
         if (profile && profile.available === "yes") {
             Quickshell.execDetached({
-                command: ["sh", "-c", `pw-cli set-param ${Audio.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
-            });
-            Audio.activeProfileIndex = profile.index;
+                                        "command": ["sh", "-c", `pw-cli set-param ${Audio.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
+                                    })
+            Audio.activeProfileIndex = profile.index
         }
     }
 }

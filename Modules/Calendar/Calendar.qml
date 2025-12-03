@@ -41,7 +41,7 @@ StyledRect {
     }
 
     Loader {
-		anchors.fill: parent
+        anchors.fill: parent
         active: container.isCalendarShow
         asynchronous: true
         sourceComponent: ColumnLayout {
@@ -86,10 +86,10 @@ StyledRect {
                         hoverEnabled: true
 
                         onClicked: {
-                            root.currentMonth = root.currentMonth - 1;
+                            root.currentMonth = root.currentMonth - 1
                             if (root.currentMonth < 0) {
-                                root.currentMonth = 11;
-                                root.currentYear = root.currentYear - 1;
+                                root.currentMonth = 11
+                                root.currentYear = root.currentYear - 1
                             }
                         }
                     }
@@ -99,9 +99,9 @@ StyledRect {
                     Layout.fillWidth: true
                     text: {
                         const monthNames = Array.from({
-                            "length": 12
-                        }, (_, i) => Qt.locale().monthName(i, Qt.locale().LongFormat));
-                        return monthNames[root.currentMonth] + " " + root.currentYear;
+                                                          "length": 12
+                                                      }, (_, i) => Qt.locale().monthName(i, Qt.locale().LongFormat))
+                        return monthNames[root.currentMonth] + " " + root.currentYear
                     }
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -135,10 +135,10 @@ StyledRect {
                         hoverEnabled: true
 
                         onClicked: {
-                            root.currentMonth = root.currentMonth + 1;
+                            root.currentMonth = root.currentMonth + 1
                             if (root.currentMonth > 11) {
-                                root.currentMonth = 0;
-                                root.currentYear = root.currentYear + 1;
+                                root.currentMonth = 0
+                                root.currentYear = root.currentYear + 1
                             }
                         }
                     }
@@ -166,9 +166,9 @@ StyledRect {
                         text: daysOfWeekDelegate.model.shortName
                         color: {
                             if (daysOfWeekDelegate.model.shortName === "Sun" || daysOfWeekDelegate.model.shortName === "Sat")
-                                return Themes.m3Colors.m3Error;
+                            return Themes.m3Colors.m3Error
                             else
-                                return Themes.m3Colors.m3OnSurface;
+                            return Themes.m3Colors.m3OnSurface
                         }
                         font.pixelSize: Appearance.fonts.small * 1.2
                         font.weight: 600
@@ -201,11 +201,11 @@ StyledRect {
 
                     color: {
                         if (dayItem.model.today)
-                            return Themes.m3Colors.m3Primary;
+                        return Themes.m3Colors.m3Primary
                         else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
-                            return Themes.m3Colors.m3SurfaceVariant;
+                        return Themes.m3Colors.m3SurfaceVariant
 
-                        return "transparent";
+                        return "transparent"
                     }
 
                     radius: Appearance.rounding.small
@@ -220,7 +220,9 @@ StyledRect {
                         hoverEnabled: true
                         visible: dayItem.model.month === root.currentMonth
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: {}
+                        onClicked: {
+
+                        }
                     }
 
                     StyledText {
@@ -228,26 +230,26 @@ StyledRect {
                         text: Qt.formatDate(dayItem.model.date, "d")
                         color: {
                             if (dayItem.model.today)
-                                return Themes.m3Colors.m3OnPrimary;
+                            return Themes.m3Colors.m3OnPrimary
                             else if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-                                return Themes.m3Colors.m3Error;
+                            return Themes.m3Colors.m3Error
                             else if (dayItem.model.month === root.currentMonth)
-                                return Themes.m3Colors.m3OnSurface;
+                            return Themes.m3Colors.m3OnSurface
                             else {
                                 if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-                                    return Themes.withAlpha(Themes.m3Colors.m3Error, 0.2);
+                                return Themes.withAlpha(Themes.m3Colors.m3Error, 0.2)
                                 else
-                                    return Themes.withAlpha(Themes.m3Colors.m3OnSurface, 0.2);
+                                return Themes.withAlpha(Themes.m3Colors.m3OnSurface, 0.2)
                             }
                         }
                         font.pixelSize: Appearance.fonts.small * 1.3
                         font.weight: {
                             if (dayItem.model.today)
-                                return 1000;
+                            return 1000
                             else if (dayItem.model.month === root.currentMonth)
-                                return 600;
+                            return 600
                             else
-                                return 100;
+                            return 100
                         }
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter

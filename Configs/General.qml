@@ -5,7 +5,7 @@ import qs.Helpers
 
 JsonObject {
     property int fontScaling: 1
-	property int iconScaling: 1
+    property int iconScaling: 1
     property string fontFamilyMono: Appearance.fonts.family_Mono
     property string fontFamilySans: Appearance.fonts.family_Sans
     property string theme: "dark"

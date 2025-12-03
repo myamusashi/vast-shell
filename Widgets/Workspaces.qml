@@ -20,8 +20,8 @@ StyledRect {
     property real containerWidth: workspaceWidth + borderWidth
     property real containerHeight: workspaceHeight + borderWidth
     property list<int> reserved: Hypr.focusedMonitor.lastIpcObject.reserved
-	property real scaleFactor: 0.1
-	property real borderWidth: 2
+    property real scaleFactor: 0.1
+    property real borderWidth: 2
 
     implicitWidth: workspaceRow.width + 20
     implicitHeight: 40
@@ -34,8 +34,8 @@ StyledRect {
         cursorShape: Qt.PointingHandCursor
         onClicked: () => {
             Quickshell.execDetached({
-                command: ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
-            });
+                                        "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
+                                    })
         }
     }
 
@@ -54,8 +54,8 @@ StyledRect {
                 width: 50
                 height: 30
                 color: workspace?.focused ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnPrimary
-				radius: 0
-				clip: true
+                radius: 0
+                clip: true
                 required property int index
                 property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
                 property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
@@ -68,12 +68,12 @@ StyledRect {
                     onExited: drag.source.isCaught = false
 
                     onDropped: drag => {
-                        const toplevel = drag.source;
+                        const toplevel = drag.source
 
                         if (toplevel.modelData.workspace !== workspaceContainer.workspace) {
-                            const address = toplevel.modelData.address;
-                            Hypr.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`);
-                            Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`);
+                            const address = toplevel.modelData.address
+                            Hypr.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`)
+                            Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`)
                         }
                     }
                 }
@@ -82,7 +82,7 @@ StyledRect {
                     anchors.fill: parent
                     onClicked: {
                         if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                            Hypr.dispatch("workspace " + (parent.index + 1));
+                        Hypr.dispatch("workspace " + (parent.index + 1))
                     }
                 }
 
@@ -122,25 +122,25 @@ StyledRect {
                         Drag.hotSpot.y: height / 2
                         Drag.onActiveChanged: {
                             if (Drag.active) {
-                                parent = visualParent;
+                                parent = visualParent
                             } else {
-                                var mapped = mapToItem(originalParent, 0, 0);
-                                parent = originalParent;
+                                var mapped = mapToItem(originalParent, 0, 0)
+                                parent = originalParent
 
                                 if (toplevelData?.floating) {
-                                    x = mapped.x;
-                                    y = mapped.y;
+                                    x = mapped.x
+                                    y = mapped.y
                                 } else if (!isCaught) {
-                                    x = mapped.x;
-                                    y = mapped.y;
+                                    x = mapped.x
+                                    y = mapped.y
                                 } else {
                                     // Fixed repositioning logic
-                                    const baseX = toplevelData?.at[0] ?? 0;
-                                    const baseY = toplevelData?.at[1] ?? 0;
-                                    const offsetX = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[0];
-                                    const offsetY = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[1];
-                                    x = (baseX - offsetX) * root.scaleFactor + 5;
-                                    y = (baseY - offsetY) * root.scaleFactor + 5;
+                                    const baseX = toplevelData?.at[0] ?? 0
+                                    const baseY = toplevelData?.at[1] ?? 0
+                                    const offsetX = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[0]
+                                    const offsetY = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[1]
+                                    x = (baseX - offsetX) * root.scaleFactor + 5
+                                    y = (baseY - offsetY) * root.scaleFactor + 5
                                 }
                             }
                         }
@@ -160,26 +160,26 @@ StyledRect {
 
                             onPositionChanged: {
                                 if (drag.active)
-                                    dragged = true;
+                                dragged = true
                             }
 
                             onClicked: mouse => {
                                 if (!dragged) {
                                     if (mouse.button === Qt.LeftButton)
-                                        toplevel.waylandHandle.activate();
+                                    toplevel.waylandHandle.activate()
                                     else if (mouse.button === Qt.RightButton)
-                                        toplevel.waylandHandle.close();
+                                    toplevel.waylandHandle.close()
                                 }
                             }
 
                             onReleased: {
                                 if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
-                                    const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
-                                    const x = Math.round((mapped.x - 5) / root.scaleFactor + root.reserved[0]);
-                                    const y = Math.round((mapped.y - 5) / root.scaleFactor + root.reserved[1]);
+                                    const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0)
+                                    const x = Math.round((mapped.x - 5) / root.scaleFactor + root.reserved[0])
+                                    const y = Math.round((mapped.y - 5) / root.scaleFactor + root.reserved[1])
 
-                                    Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
-                                    toplevel.Drag.drop();
+                                    Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`)
+                                    toplevel.Drag.drop()
                                 }
                             }
                         }

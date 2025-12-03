@@ -14,7 +14,7 @@ import "Components" as Com
 StyledRect {
     id: root
 
-	property bool isNotificationCenterOpen: GlobalStates.isNotificationCenterOpen
+    property bool isNotificationCenterOpen: GlobalStates.isNotificationCenterOpen
 
     anchors {
         right: parent.right
@@ -81,20 +81,17 @@ StyledRect {
                     }
 
                     Repeater {
-                        model: [
-                            {
+                        model: [{
                                 "icon": "clear_all",
                                 "action": () => {
-                                    Notifs.notifications.dismissAll();
+                                    Notifs.notifications.dismissAll()
                                 }
-                            },
-                            {
+                            }, {
                                 "icon": Notifs.disabledDnD ? "notifications_off" : "notifications_active",
                                 "action": () => {
-                                    Notifs.disabledDnD = !Notifs.disabledDnD;
+                                    Notifs.disabledDnD = !Notifs.disabledDnD
                                 }
-                            }
-                        ]
+                            }]
 
                         delegate: StyledRect {
                             id: notifHeaderDelegate

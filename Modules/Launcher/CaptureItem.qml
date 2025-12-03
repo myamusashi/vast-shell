@@ -22,23 +22,23 @@ StyledRect {
         switch (event.key) {
         case Qt.Key_Return:
         case Qt.Key_Enter:
-            root.executeAction();
-            event.accepted = true;
-            break;
+            root.executeAction()
+            event.accepted = true
+            break
         case Qt.Key_Escape:
-            root.closed();
-            event.accepted = true;
-            break;
+            root.closed()
+            event.accepted = true
+            break
         case Qt.Key_Up:
             if (root.optionIndex > 0)
-                root.indexModel(root.optionIndex - 1);
-            event.accepted = true;
-            break;
+                root.indexModel(root.optionIndex - 1)
+            event.accepted = true
+            break
         case Qt.Key_Down:
             if (root.optionIndex < root.maxIndex)
-                root.indexModel(root.optionIndex + 1);
-            event.accepted = true;
-            break;
+                root.indexModel(root.optionIndex + 1)
+            event.accepted = true
+            break
         }
     }
 
@@ -97,8 +97,8 @@ StyledRect {
     }
 
     function executeAction() {
-        root.forceActiveFocus();
-        root.optionData.action();
-        root.executed();
+        root.forceActiveFocus()
+        root.optionData.action()
+        root.executed()
     }
 }

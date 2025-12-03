@@ -33,8 +33,7 @@ Singleton {
             console.log("Failed to read config files")
         }
 
-        onSaveFailed: err => console.log("Failed to save config",
-                                         FileViewError.toString(err))
+        onSaveFailed: err => console.log("Failed to save config", FileViewError.toString(err))
 
         JsonAdapter {
             id: adapter

@@ -13,23 +13,23 @@ Slider {
     hoverEnabled: true
     Layout.alignment: Qt.AlignHCenter
     implicitWidth: valueWidth || 200
-	implicitHeight: valueHeight
+    implicitHeight: valueHeight
 
-	enum ContainerSize {
-		XS = 16,
-		S = 24,
-		M = 40,
-		L = 56,
-		XL = 96
-	}
+    enum ContainerSize {
+        XS = 16,
+        S = 24,
+        M = 40,
+        L = 56,
+        XL = 96
+    }
 
-	enum HandleSize {
-		XS = 44,
-		S = 44,
-		M = 44,
-		L = 68,
-		XL = 108
-	}
+    enum HandleSize {
+        XS = 44,
+        S = 44,
+        M = 44,
+        L = 68,
+        XL = 108
+    }
 
     property bool dotEnd: true
     property real trackHeightDiff: 15

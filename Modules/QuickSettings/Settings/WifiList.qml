@@ -119,7 +119,7 @@ Loader {
                             cursorShape: Qt.PointingHandCursor
                             enabled: Network.wifiEnabled && !Network.scanning
                             onClicked: {
-                                Network.rescanWifi();
+                                Network.rescanWifi()
                             }
                         }
                     }
@@ -299,15 +299,15 @@ Loader {
 
                                         StyledLabel {
                                             text: {
-                                                let details = [];
+                                                let details = []
                                                 if (delegateWifi.modelData.active)
-                                                    details.push("Connected");
+                                                details.push("Connected")
 
                                                 if (delegateWifi.modelData.security && delegateWifi.modelData.security !== "--")
-                                                    details.push(delegateWifi.modelData.security);
+                                                details.push(delegateWifi.modelData.security)
 
-                                                details.push(delegateWifi.modelData.frequency + " MHz");
-                                                return details.join(" • ");
+                                                details.push(delegateWifi.modelData.frequency + " MHz")
+                                                return details.join(" • ")
                                             }
                                             color: Themes.m3Colors.m3OnSurfaceVariant
                                             font.pixelSize: Appearance.fonts.small
@@ -336,7 +336,7 @@ Loader {
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
                                         if (!delegateWifi.modelData.active)
-                                            Network.connectToNetwork(delegateWifi.modelData.ssid, "");
+                                        Network.connectToNetwork(delegateWifi.modelData.ssid, "")
                                     }
                                 }
                             }
@@ -380,14 +380,14 @@ Loader {
 
         function getWiFiIcon(strength) {
             if (strength >= 80)
-                return "network_wifi";
+                return "network_wifi"
             if (strength >= 50)
-                return "network_wifi_3_bar";
+                return "network_wifi_3_bar"
             if (strength >= 30)
-                return "network_wifi_2_bar";
+                return "network_wifi_2_bar"
             if (strength >= 15)
-                return "network_wifi_1_bar";
-            return "signal_wifi_0_bar";
+                return "network_wifi_1_bar"
+            return "signal_wifi_0_bar"
         }
     }
 }

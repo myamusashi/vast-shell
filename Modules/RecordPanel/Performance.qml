@@ -83,28 +83,28 @@ ClippingRectangle {
         property real ramValue: 0
 
         function pushValues() {
-            counter += 1;
+            counter += 1
 
-            cpuValue = SystemUsage.cpuPerc;
-            gpuValue = SystemUsage.gpuUsage;
-            vramValue = SystemUsage.vramUsed / 100;
-            ramValue = SystemUsage.memPercent;
+            cpuValue = SystemUsage.cpuPerc
+            gpuValue = SystemUsage.gpuUsage
+            vramValue = SystemUsage.vramUsed / 100
+            ramValue = SystemUsage.memPercent
 
-            cpuPoints.append(counter, cpuValue);
-            gpuPoints.append(counter, gpuValue);
-            vramPoints.append(counter, vramValue);
-            ramPoints.append(counter, ramValue);
+            cpuPoints.append(counter, cpuValue)
+            gpuPoints.append(counter, gpuValue)
+            vramPoints.append(counter, vramValue)
+            ramPoints.append(counter, ramValue)
 
             // Remove old points
             if (cpuPoints.count > maxPoints + 1) {
-                cpuPoints.removeMultiple(0, cpuPoints.count - maxPoints - 1);
-                gpuPoints.removeMultiple(0, gpuPoints.count - maxPoints - 1);
-                vramPoints.removeMultiple(0, vramPoints.count - maxPoints - 1);
-                ramPoints.removeMultiple(0, ramPoints.count - maxPoints - 1);
+                cpuPoints.removeMultiple(0, cpuPoints.count - maxPoints - 1)
+                gpuPoints.removeMultiple(0, gpuPoints.count - maxPoints - 1)
+                vramPoints.removeMultiple(0, vramPoints.count - maxPoints - 1)
+                ramPoints.removeMultiple(0, ramPoints.count - maxPoints - 1)
             }
 
-            axisX.min = Math.max(0, counter - maxPoints);
-            axisX.max = counter;
+            axisX.min = Math.max(0, counter - maxPoints)
+            axisX.max = counter
         }
 
         Component.onCompleted: pushValues()
@@ -112,7 +112,7 @@ ClippingRectangle {
         Connections {
             target: SystemUsage
             function onCpuPercChanged() {
-                graph.pushValues();
+                graph.pushValues()
             }
         }
 

@@ -70,24 +70,19 @@ GridLayout {
         spacing: Appearance.spacing.small
 
         Repeater {
-            model: [
-                {
+            model: [{
                     "label": "Wired Download",
                     "value": SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed)
-                },
-                {
+                }, {
                     "label": "Wired Upload",
                     "value": SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed)
-                },
-                {
+                }, {
                     "label": "Wireless Download",
                     "value": SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)
-                },
-                {
+                }, {
                     "label": "Wireless Upload",
                     "value": SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed)
-                }
-            ]
+                }]
 
             StyledText {
                 required property var modelData
@@ -106,24 +101,19 @@ GridLayout {
         spacing: Appearance.spacing.small
 
         Repeater {
-            model: [
-                {
+            model: [{
                     "label": "Wired download usage",
                     "value": SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
-                },
-                {
+                }, {
                     "label": "Wired upload usage",
                     "value": SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
-                },
-                {
+                }, {
                     "label": "Wireless download usage",
                     "value": SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
-                },
-                {
+                }, {
                     "label": "Wireless upload usage",
                     "value": SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
-                }
-            ]
+                }]
 
             StyledText {
                 required property var modelData
@@ -142,16 +132,13 @@ GridLayout {
         spacing: Appearance.spacing.small
 
         Repeater {
-            model: [
-                {
+            model: [{
                     "label": "Wired interface",
                     "value": SystemUsage.wiredInterface
-                },
-                {
+                }, {
                     "label": "Wireless interface",
                     "value": SystemUsage.wirelessInterface
-                }
-            ]
+                }]
 
             StyledText {
                 required property var modelData

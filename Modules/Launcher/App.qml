@@ -27,12 +27,12 @@ StyledRect {
     // Thx caelestia
     function launch(entry: DesktopEntry): void {
         entry.runInTerminal ? Quickshell.execDetached({
-            command: ["app2unit", "--", "foot", `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
-            workingDirectory: entry.workingDirectory
-        }) : Quickshell.execDetached({
-            command: ["app2unit", "--", ...entry.command],
-            workingDirectory: entry.workingDirectory
-        });
+                                                          "command": ["app2unit", "--", "foot", `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
+                                                          "workingDirectory": entry.workingDirectory
+                                                      }) : Quickshell.execDetached({
+                                                                                       "command": ["app2unit", "--", ...entry.command],
+                                                                                       "workingDirectory": entry.workingDirectory
+                                                                                   })
     }
 
     radius: 0
@@ -67,7 +67,7 @@ StyledRect {
             focus: root.isLauncherOpen
             onFocusChanged: {
                 if (focus && root.isLauncherOpen)
-                    search.forceActiveFocus();
+                search.forceActiveFocus()
             }
 
             StyledTextField {
@@ -83,8 +83,8 @@ StyledRect {
                 placeholderTextColor: Themes.m3Colors.m3OnSurfaceVariant
 
                 onTextChanged: {
-                    root.currentIndex = 0;
-                    listView.positionViewAtBeginning();
+                    root.currentIndex = 0
+                    listView.positionViewAtBeginning()
                 }
 
                 Keys.onPressed: function (event) {
@@ -93,20 +93,20 @@ StyledRect {
                     case Qt.Key_Tab:
                     case Qt.Key_Enter:
                         if (listView.count > 0) {
-                            listView.focus = true;
-                            event.accepted = true;
+                            listView.focus = true
+                            event.accepted = true
                         }
-                        break;
+                        break
                     case Qt.Key_Escape:
-                        root.isLauncherOpen = false;
-                        event.accepted = true;
-                        break;
+                        root.isLauncherOpen = false
+                        event.accepted = true
+                        break
                     case Qt.Key_Down:
                         if (listView.count > 0) {
-                            listView.focus = true;
-                            event.accepted = true;
+                            listView.focus = true
+                            event.accepted = true
                         }
-                        break;
+                        break
                     }
                 }
             }
@@ -209,8 +209,8 @@ StyledRect {
                         hoverEnabled: true
 
                         onClicked: {
-                            root.launch(delegateItem.modelData);
-                            root.isLauncherOpen = false;
+                            root.launch(delegateItem.modelData)
+                            root.isLauncherOpen = false
                         }
 
                         onEntered: listView.currentIndex = delegateItem.index
@@ -219,19 +219,19 @@ StyledRect {
                     Keys.onPressed: function (event) {
                         switch (event.key) {
                         case Qt.Key_Tab:
-                            search.focus = true;
-                            event.accepted = true;
-                            break;
+                            search.focus = true
+                            event.accepted = true
+                            break
                         case Qt.Key_Return:
                         case Qt.Key_Enter:
-                            root.launch(delegateItem.modelData);
-                            root.isLauncherOpen = false;
-                            event.accepted = true;
-                            break;
+                            root.launch(delegateItem.modelData)
+                            root.isLauncherOpen = false
+                            event.accepted = true
+                            break
                         case Qt.Key_Escape:
-                            root.isLauncherOpen = false;
-                            event.accepted = true;
-                            break;
+                            root.isLauncherOpen = false
+                            event.accepted = true
+                            break
                         }
                     }
                 }

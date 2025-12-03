@@ -6,11 +6,11 @@ import qs.Configs
 import qs.Components
 
 Item {
-	id: root
+    id: root
 
-	required property string icon
-	required property string text
-	required property bool condition
+    required property string icon
+    required property string text
+    required property bool condition
 
     Layout.fillWidth: true
     Layout.preferredHeight: 50

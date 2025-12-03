@@ -97,14 +97,12 @@ Scope {
 
                         //                  Loader {
                         // id: controlBarLoader
-                        //
                         //                      active: scope.open
                         //                      asynchronous: true
                         //                      Layout.fillWidth: true
                         //                      Layout.preferredHeight: 80
                         //                      sourceComponent: ControlBar {}
                         //                  }
-
                         Item {
                             Layout.fillHeight: true
                         }

@@ -11,7 +11,7 @@ import qs.Components
 Item {
     id: volumeOSD
 
-	required property bool isVolumeOSDShow
+    required property bool isVolumeOSDShow
 
     width: parent.width
     height: isVolumeOSDShow ? 80 : 0

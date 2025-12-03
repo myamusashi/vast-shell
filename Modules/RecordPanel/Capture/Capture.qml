@@ -38,11 +38,11 @@ ClippingRectangle {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = text.trim();
+                const data = text.trim()
                 if (data !== "")
-                    root.isRecording = true;
+                root.isRecording = true
                 else
-                    root.isRecording = false;
+                root.isRecording = false
             }
         }
     }
@@ -137,34 +137,30 @@ ClippingRectangle {
             spacing: width * 0.2
 
             Repeater {
-                model: [
-                    {
-                        icon: "photo_camera",
-                        label: "Screenshot",
-                        action: () => {
+                model: [{
+                        "icon": "photo_camera",
+                        "label": "Screenshot",
+                        "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-                            });
-                            scope.open = false;
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
+                                                    })
+                            scope.open = false
                         }
-                    },
-                    {
-                        icon: "fiber_manual_record",
-                        label: "Start",
-                        action: () => {
+                    }, {
+                        "icon": "fiber_manual_record",
+                        "label": "Start",
+                        "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
-                            });
-                            scope.open = root.isRecording ? false : true;
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+                                                    })
+                            scope.open = root.isRecording ? false : true
                         },
-                        highlight: root.isRecording
-                    },
-                    {
-                        icon: root.icon,
-                        label: "Microphone",
-                        action: () => Audio.toggleMute(root.node)
-                    }
-                ]
+                        "highlight": root.isRecording
+                    }, {
+                        "icon": root.icon,
+                        "label": "Microphone",
+                        "action": () => Audio.toggleMute(root.node)
+                    }]
 
                 delegate: Item {
                     id: controlDelegate

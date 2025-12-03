@@ -23,13 +23,13 @@ StyledRect {
 
     property var filteredWallpaperList: {
         if (debouncedSearchQuery === "")
-            return wallpaperList;
+        return wallpaperList
 
-        const query = debouncedSearchQuery.toLowerCase();
+        const query = debouncedSearchQuery.toLowerCase()
         return wallpaperList.filter(path => {
-            const fileName = path.split('/').pop().toLowerCase();
-            return fileName.includes(query);
-        });
+                                        const fileName = path.split('/').pop().toLowerCase()
+                                        return fileName.includes(query)
+                                    })
     }
 
     Process {
@@ -40,8 +40,8 @@ StyledRect {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const wallList = text.trim().split('\n').filter(path => path.length > 0);
-                root.wallpaperList = wallList;
+                const wallList = text.trim().split('\n').filter(path => path.length > 0)
+                root.wallpaperList = wallList
             }
         }
     }
@@ -78,7 +78,7 @@ StyledRect {
         focus: root.isWallpaperSwitcherOpen
         onFocusChanged: {
             if (root.isWallpaperSwitcherOpen)
-                searchField.forceActiveFocus();
+            searchField.forceActiveFocus()
         }
 
         StyledTextField {
@@ -91,11 +91,11 @@ StyledRect {
             focus: true
 
             onTextChanged: {
-                root.searchQuery = text;
-                searchDebounceTimer.restart();
+                root.searchQuery = text
+                searchDebounceTimer.restart()
 
                 if (wallpaperPath.count > 0)
-                    wallpaperPath.currentIndex = 0;
+                wallpaperPath.currentIndex = 0
             }
 
             Keys.onDownPressed: wallpaperPath.focus = true
@@ -117,16 +117,16 @@ StyledRect {
             cacheItemCount: 7
 
             Component.onCompleted: {
-                const idx = root.wallpaperList.indexOf(Paths.currentWallpaper);
-                currentIndex = idx !== -1 ? idx : 0;
+                const idx = root.wallpaperList.indexOf(Paths.currentWallpaper)
+                currentIndex = idx !== -1 ? idx : 0
             }
 
             onModelChanged: {
                 if (root.debouncedSearchQuery === "" && currentIndex >= 0) {
                     Qt.callLater(() => {
-                        if (currentIndex < count)
-                            currentIndex = currentIndex;
-                    });
+                                     if (currentIndex < count)
+                                     currentIndex = currentIndex
+                                 })
                 }
             }
 
@@ -181,10 +181,10 @@ StyledRect {
                         cursorShape: Qt.PointingHandCursor
 
                         onClicked: {
-                            wallpaperPath.currentIndex = delegateItem.index;
+                            wallpaperPath.currentIndex = delegateItem.index
                             Quickshell.execDetached({
-                                command: ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                            });
+                                                        "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                                                    })
                         }
                     }
                 }
@@ -193,17 +193,17 @@ StyledRect {
             Keys.onPressed: event => {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     Quickshell.execDetached({
-                        command: ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
-                    });
+                                                "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
+                                            })
                 }
                 if (event.key === Qt.Key_Escape)
-                    root.isWallpaperSwitcherOpen = false;
+                root.isWallpaperSwitcherOpen = false
                 if (event.key === Qt.Key_Tab)
-                    searchField.focus = true;
+                searchField.focus = true
                 if (event.key === Qt.Key_Left)
-                    decrementCurrentIndex();
+                decrementCurrentIndex()
                 if (event.key === Qt.Key_Right)
-                    incrementCurrentIndex();
+                incrementCurrentIndex()
             }
         }
 

@@ -1,4 +1,5 @@
 pragma ComponentBehavior: Bound
+
 pragma Singleton
 
 import QtQuick
@@ -47,7 +48,7 @@ Singleton {
     readonly property string gpuPowerText: gpuPower + " W"
     readonly property string gpuFreqText: gpuFreqActual + " MHz"
     readonly property string gpuRc6Text: gpuRc6 + "%"
-	readonly property string gpuBandwidthText: `R: ${gpuMemBandwidthRead} MiB/s W: ${gpuMemBandwidthWrite} MiB/s`
+    readonly property string gpuBandwidthText: `R: ${gpuMemBandwidthRead} MiB/s W: ${gpuMemBandwidthWrite} MiB/s`
 
     property var previousData: null
     property double lastUpdateTime: 0
@@ -68,32 +69,32 @@ Singleton {
         command: ["sh", "-c", `
             nmcli -t -f DEVICE,TYPE,STATE device status | awk -F: '
             /ethernet/ && !eth_found {
-                print "WIRED_DEV:" $1;
-                print "WIRED_STATE:" $3;
-                eth_found=1
+            print "WIRED_DEV:" $1;
+            print "WIRED_STATE:" $3;
+            eth_found=1
             }
             /wifi/ && !wifi_found {
-                print "WIFI_DEV:" $1;
-                wifi_found=1
+            print "WIFI_DEV:" $1;
+            wifi_found=1
             }
             /^(wg0|CloudflareWARP):/ {
-                print "VPN_DEV:" $1
+            print "VPN_DEV:" $1
             }
             '
             `]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const lines = text.trim().split('\n');
+                const lines = text.trim().split('\n')
                 for (const line of lines) {
                     if (line.startsWith("WIRED_DEV:"))
-                        root.wiredInterface = line.substring(10).trim();
+                    root.wiredInterface = line.substring(10).trim()
                     else if (line.startsWith("WIRED_STATE:"))
-                        root.statusWiredInterface = line.substring(12).replace(" (externally)", "").trim();
+                    root.statusWiredInterface = line.substring(12).replace(" (externally)", "").trim()
                     else if (line.startsWith("WIFI_DEV:"))
-                        root.wirelessInterface = line.substring(9).trim();
+                    root.wirelessInterface = line.substring(9).trim()
                     else if (line.startsWith("VPN_DEV:"))
-                        root.statusVPNInterface = line.substring(8).trim();
+                    root.statusVPNInterface = line.substring(8).trim()
                 }
             }
         }
@@ -107,58 +108,58 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
-                    const jsonText = text.trim();
-                    const cleanedJson = jsonText.endsWith(',') ? jsonText.slice(0, -1) + ']' : jsonText + ']';
-                    const dataArray = JSON.parse(cleanedJson);
+                    const jsonText = text.trim()
+                    const cleanedJson = jsonText.endsWith(',') ? jsonText.slice(0, -1) + ']' : jsonText + ']'
+                    const dataArray = JSON.parse(cleanedJson)
 
                     // Get the last sample (most recent data)
                     if (dataArray.length === 0)
-                        return;
-                    const data = dataArray[dataArray.length - 1];
+                    return
+                    const data = dataArray[dataArray.length - 1]
 
                     // Get GPU usage from render/3d engine
                     if (data.engines && data.engines["Render/3D"])
-                        root.gpuUsage = Math.round(data.engines["Render/3D"].busy || 0);
+                    root.gpuUsage = Math.round(data.engines["Render/3D"].busy || 0)
 
                     // Get power consumption
                     if (data.power && data.power.GPU)
-                        root.gpuPower = data.power.GPU.toFixed(2);
+                    root.gpuPower = data.power.GPU.toFixed(2)
 
-                    let totalVramUsed = 0;
+                    let totalVramUsed = 0
                     if (data.clients)
-                        for (const clientId in data.clients) {
-                            const client = data.clients[clientId];
-                            if (client.memory && client.memory.system)
-                                totalVramUsed += parseInt(client.memory.system.resident) || 0;
-                        }
+                    for (const clientId in data.clients) {
+                        const client = data.clients[clientId]
+                        if (client.memory && client.memory.system)
+                        totalVramUsed += parseInt(client.memory.system.resident) || 0
+                    }
 
                     // Convert bytes to MB
-                    root.vramUsed = Math.round(totalVramUsed / 1048576);
+                    root.vramUsed = Math.round(totalVramUsed / 1048576)
 
                     // Get frequency info
                     if (data.frequency) {
-                        root.gpuFreqActual = Math.round(data.frequency.actual || 0);
-                        root.gpuFreqRequested = Math.round(data.frequency.requested || 0);
+                        root.gpuFreqActual = Math.round(data.frequency.actual || 0)
+                        root.gpuFreqRequested = Math.round(data.frequency.requested || 0)
                     }
 
                     // RC6 (power saving state)
                     if (data.rc6)
-                        root.gpuRc6 = data.rc6.value.toFixed(1);
+                    root.gpuRc6 = data.rc6.value.toFixed(1)
 
                     // Get memory bandwidth
                     if (data["imc-bandwidth"]) {
-                        root.gpuMemBandwidthRead = Math.round(data["imc-bandwidth"].reads || 0);
-                        root.gpuMemBandwidthWrite = Math.round(data["imc-bandwidth"].writes || 0);
+                        root.gpuMemBandwidthRead = Math.round(data["imc-bandwidth"].reads || 0)
+                        root.gpuMemBandwidthWrite = Math.round(data["imc-bandwidth"].writes || 0)
                     }
                 } catch (e) {
-                    console.log("Failed to parse intel_gpu_top output:", e);
+                    console.log("Failed to parse intel_gpu_top output:", e)
                 }
             }
         }
         stderr: StdioCollector {
             onStreamFinished: {
                 if (text.trim().length > 0) {
-                    console.log("intel_gpu_top error:", text.trim());
+                    console.log("intel_gpu_top error:", text.trim())
                 }
             }
         }
@@ -173,120 +174,116 @@ Singleton {
             cat /sys/class/drm/card0/gt_max_freq_mhz 2>/dev/null || echo "1"
 
             cat /sys/kernel/debug/dri/0/i915_gem_objects 2>/dev/null | awk '/bytes total/ {print $1}'
-        `]
+            `]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const lines = text.trim().split('\n');
+                const lines = text.trim().split('\n')
                 if (lines.length >= 3) {
-                    const curFreq = parseInt(lines[0]) || 0;
-                    const maxFreq = parseInt(lines[1]) || 1;
-                    const vramBytes = parseInt(lines[2]) || 0;
+                    const curFreq = parseInt(lines[0]) || 0
+                    const maxFreq = parseInt(lines[1]) || 1
+                    const vramBytes = parseInt(lines[2]) || 0
 
                     // Estimate usage from frequency
-                    root.gpuUsage = Math.round((curFreq / maxFreq) * 100);
+                    root.gpuUsage = Math.round((curFreq / maxFreq) * 100)
 
                     if (vramBytes > 0)
-                        root.vramUsed = Math.round(vramBytes / 1048576);
+                    root.vramUsed = Math.round(vramBytes / 1048576)
                 }
             }
         }
     }
 
     function parseNetworkData(data) {
-        const lines = data.split('\n');
-        const interfaces = {};
+        const lines = data.split('\n')
+        const interfaces = {}
 
         for (var i = 2; i < lines.length; i++) {
-            const line = lines[i].trim();
+            const line = lines[i].trim()
             if (!line)
-                continue;
-            const parts = line.split(/\s+/);
+                continue
+            const parts = line.split(/\s+/)
             if (parts.length < 17)
-                continue;
-            const ifaceName = parts[0].replace(':', '');
+                continue
+            const ifaceName = parts[0].replace(':', '')
 
             if (ifaceName !== root.wirelessInterface && ifaceName !== root.wiredInterface)
-                continue;
+                continue
 
             interfaces[ifaceName] = {
                 "rxBytes": parseInt(parts[1]) || 0,
                 "txBytes": parseInt(parts[9]) || 0
-            };
+            }
         }
 
-        return interfaces;
+        return interfaces
     }
 
     function calculateNetworkStats(data) {
-        const currentTime = Date.now();
-        const currentData = parseNetworkData(data);
+        const currentTime = Date.now()
+        const currentData = parseNetworkData(data)
 
-        const wirelessData = currentData[wirelessInterface];
-        const wiredData = currentData[wiredInterface];
+        const wirelessData = currentData[wirelessInterface]
+        const wiredData = currentData[wiredInterface]
 
         if (wirelessData) {
-            totalWirelessDownloadUsage = wirelessData.rxBytes / 1048576;
-            totalWirelessUploadUsage = wirelessData.txBytes / 1048576;
+            totalWirelessDownloadUsage = wirelessData.rxBytes / 1048576
+            totalWirelessUploadUsage = wirelessData.txBytes / 1048576
         }
 
         if (wiredData) {
-            totalWiredDownloadUsage = wiredData.rxBytes / 1048576;
-            totalWiredUploadUsage = wiredData.txBytes / 1048576;
+            totalWiredDownloadUsage = wiredData.rxBytes / 1048576
+            totalWiredUploadUsage = wiredData.txBytes / 1048576
         }
 
         if (previousData && lastUpdateTime > 0) {
-            const timeDiffSec = (currentTime - lastUpdateTime) / 1000;
+            const timeDiffSec = (currentTime - lastUpdateTime) / 1000
 
             if (timeDiffSec > 0.1) {
-                const prevWireless = previousData[wirelessInterface];
-                const prevWired = previousData[wiredInterface];
+                const prevWireless = previousData[wirelessInterface]
+                const prevWired = previousData[wiredInterface]
 
                 if (wirelessData && prevWireless) {
-                    const rxDiff = wirelessData.rxBytes - prevWireless.rxBytes;
-                    const txDiff = wirelessData.txBytes - prevWireless.txBytes;
+                    const rxDiff = wirelessData.rxBytes - prevWireless.rxBytes
+                    const txDiff = wirelessData.txBytes - prevWireless.txBytes
 
-                    wirelessDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec);
-                    wirelessUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec);
+                    wirelessDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec)
+                    wirelessUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec)
                 }
 
                 if (wiredData && prevWired) {
-                    const rxDiff = wiredData.rxBytes - prevWired.rxBytes;
-                    const txDiff = wiredData.txBytes - prevWired.txBytes;
+                    const rxDiff = wiredData.rxBytes - prevWired.rxBytes
+                    const txDiff = wiredData.txBytes - prevWired.txBytes
 
-                    wiredDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec);
-                    wiredUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec);
+                    wiredDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec)
+                    wiredUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec)
                 }
             }
         }
 
-        previousData = currentData;
-        lastUpdateTime = currentTime;
+        previousData = currentData
+        lastUpdateTime = currentTime
     }
 
-    readonly property var speedThresholds: [
-        {
+    readonly property var speedThresholds: [{
             "limit": 0.01,
             "format": () => "0.00 MB/s"
-        },
-        {
+        }, {
             "limit": 1,
             "format": s => (s * 1024).toFixed(2) + " KB/s"
-        },
-        {
+        }, {
             "limit": Infinity,
             "format": s => s.toFixed(2) + " MB/s"
-        }
-    ]
+        }]
 
     function formatSpeed(speedMBps) {
         for (const threshold of speedThresholds)
             if (speedMBps < threshold.limit)
-                return threshold.format(speedMBps);
+                return threshold.format(speedMBps)
     }
 
     function formatUsage(usageMB) {
-        return usageMB < 1024 ? usageMB.toFixed(2) + " MB" : (usageMB / 1024).toFixed(2) + " GB";
+        return usageMB < 1024 ? usageMB.toFixed(2) + " MB" : (usageMB / 1024).toFixed(2) + " GB"
     }
 
     FileView {
@@ -294,11 +291,11 @@ Singleton {
 
         path: "/proc/meminfo"
         onLoaded: {
-            const data = text();
-            const memMatch = data.match(/MemTotal:\s+(\d+)[\s\S]*?MemAvailable:\s+(\d+)/);
+            const data = text()
+            const memMatch = data.match(/MemTotal:\s+(\d+)[\s\S]*?MemAvailable:\s+(\d+)/)
             if (memMatch) {
-                root.memTotal = parseInt(memMatch[1], 10);
-                root.memUsed = root.memTotal - parseInt(memMatch[2], 10);
+                root.memTotal = parseInt(memMatch[1], 10)
+                root.memUsed = root.memTotal - parseInt(memMatch[2], 10)
             }
         }
     }
@@ -309,36 +306,36 @@ Singleton {
         command: ["sh", "-c", "df | grep '^/dev/' | awk '{print $1, $3, $4}'"]
         stdout: StdioCollector {
             onStreamFinished: {
-                const deviceMap = new Map();
+                const deviceMap = new Map()
 
                 for (const line of text.trim().split("\n")) {
                     if (line.trim() === "")
-                        continue;
-                    const parts = line.trim().split(/\s+/);
+                    continue
+                    const parts = line.trim().split(/\s+/)
                     if (parts.length >= 3) {
-                        const device = parts[0];
-                        const used = parseInt(parts[1], 10) || 0;
-                        const avail = parseInt(parts[2], 10) || 0;
+                        const device = parts[0]
+                        const used = parseInt(parts[1], 10) || 0
+                        const avail = parseInt(parts[2], 10) || 0
 
                         if (!deviceMap.has(device) || (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
                             deviceMap.set(device, {
-                                "used": used,
-                                "avail": avail
-                            });
+                                              "used": used,
+                                              "avail": avail
+                                          })
                         }
                     }
                 }
 
-                let totalUsed = 0;
-                let totalAvail = 0;
+                let totalUsed = 0
+                let totalAvail = 0
 
                 for (const stats of deviceMap.values()) {
-                    totalUsed += stats.used;
-                    totalAvail += stats.avail;
+                    totalUsed += stats.used
+                    totalAvail += stats.avail
                 }
 
-                root.diskUsed = totalUsed;
-                root.diskTotal = totalUsed + totalAvail;
+                root.diskUsed = totalUsed
+                root.diskTotal = totalUsed + totalAvail
             }
         }
     }
@@ -348,38 +345,38 @@ Singleton {
 
         path: "/proc/stat"
         onLoaded: {
-            const data = text();
-            const match = data.match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m);
+            const data = text()
+            const match = data.match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m)
 
             if (!match)
-                return;
+            return
 
-            const user = parseInt(match[1], 10);
-            const nice = parseInt(match[2], 10);
-            const system = parseInt(match[3], 10);
-            const idle = parseInt(match[4], 10);
-            const iowait = parseInt(match[5], 10) || 0;
+            const user = parseInt(match[1], 10)
+            const nice = parseInt(match[2], 10)
+            const system = parseInt(match[3], 10)
+            const idle = parseInt(match[4], 10)
+            const iowait = parseInt(match[5], 10) || 0
 
-            const total = user + nice + system + idle + iowait;
-            const idleTotal = idle + iowait;
+            const total = user + nice + system + idle + iowait
+            const idleTotal = idle + iowait
 
             if (!root.initialized) {
-                root.lastCpuTotal = total;
-                root.lastCpuIdle = idleTotal;
-                root.initialized = true;
-                return;
+                root.lastCpuTotal = total
+                root.lastCpuIdle = idleTotal
+                root.initialized = true
+                return
             }
 
-            const totalDiff = total - root.lastCpuTotal;
-            const idleDiff = idleTotal - root.lastCpuIdle;
+            const totalDiff = total - root.lastCpuTotal
+            const idleDiff = idleTotal - root.lastCpuIdle
 
             if (totalDiff > 0) {
-                const usage = (totalDiff - idleDiff) / totalDiff;
-                root.cpuPerc = Math.round(Math.max(0, Math.min(1, usage)) * 100);
+                const usage = (totalDiff - idleDiff) / totalDiff
+                root.cpuPerc = Math.round(Math.max(0, Math.min(1, usage)) * 100)
             }
 
-            root.lastCpuTotal = total;
-            root.lastCpuIdle = idleTotal;
+            root.lastCpuTotal = total
+            root.lastCpuIdle = idleTotal
         }
     }
 
@@ -394,30 +391,30 @@ Singleton {
         property int updateCycle: 0
 
         onTriggered: {
-            cpuStatFileView.reload();
-            meminfoFileView.reload();
-            netDevFileView.reload();
+            cpuStatFileView.reload()
+            meminfoFileView.reload()
+            netDevFileView.reload()
 
-            updateCycle = (updateCycle + 1) % 4;
+            updateCycle = (updateCycle + 1) % 4
 
             switch (updateCycle) {
-            case 0:
-                networkInfoProc.running = true;
-                break;
-            case 1:
-                diskDfProc.running = true;
-                break;
-            case 2:
-                intelGpuProc.running = true;
-                break;
-            case 3:
-                intelGpuSysfsProc.running = true;
-                break;
+                case 0:
+                networkInfoProc.running = true
+                break
+                case 1:
+                diskDfProc.running = true
+                break
+                case 2:
+                intelGpuProc.running = true
+                break
+                case 3:
+                intelGpuSysfsProc.running = true
+                break
             }
         }
     }
 
     Component.onDestruction: {
-        previousData = null;
+        previousData = null
     }
 }

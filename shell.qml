@@ -15,13 +15,13 @@ import Quickshell.Hyprland
 
 ShellRoot {
     Lockscreen {}
-	Wall {}
-	RecordPanel {}
+    Wall {}
+    RecordPanel {}
     Polkit {}
     Screencapture {
         id: screencapture
-	}
-	Wrapper {}
+    }
+    Wrapper {}
     Overview {}
 
     Connections {
@@ -34,7 +34,7 @@ ShellRoot {
         }
 
         target: Quickshell
-	}
+    }
 
     GlobalShortcut {
         name: "screencapture"

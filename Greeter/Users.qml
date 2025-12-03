@@ -13,11 +13,11 @@ Singleton {
     property list<string> users_list: []
 
     function next() {
-        current_user_index = (current_user_index + 1) % users_list.length;
+        current_user_index = (current_user_index + 1) % users_list.length
     }
 
     function previous() {
-        current_user_index = (current_user_index - 1 + users_list.length) % users_list.length;
+        current_user_index = (current_user_index - 1 + users_list.length) % users_list.length
     }
 
     Process {
@@ -31,12 +31,12 @@ Singleton {
         }
         stdout: SplitParser {
             onRead: data => {
-                console.log("[USERS] " + data);
+                console.log("[USERS] " + data)
                 if (data == root.preferred_user) {
-                    console.log("[INFO] Found preferred user " + root.preferred_user);
-                    root.current_user_index = root.users_list.length;
+                    console.log("[INFO] Found preferred user " + root.preferred_user)
+                    root.current_user_index = root.users_list.length
                 }
-                root.users_list.push(data);
+                root.users_list.push(data)
             }
         }
     }

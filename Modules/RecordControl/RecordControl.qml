@@ -23,12 +23,12 @@ Scope {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = text.trim();
+                const data = text.trim()
                 if (data !== "") {
-                    scope.isRecordingControlOpen = true;
+                    scope.isRecordingControlOpen = true
                 } else {
-                    scope.recordingSeconds = 0;
-                    scope.isRecordingControlOpen = false;
+                    scope.recordingSeconds = 0
+                    scope.isRecordingControlOpen = false
                 }
             }
         }
@@ -58,14 +58,14 @@ Scope {
         interval: 500
         repeat: false
         onTriggered: {
-            gc();
+            gc()
         }
     }
 
     LazyLoader {
         active: scope.isRecordingControlOpen
         onActiveChanged: {
-            cleanup.start();
+            cleanup.start()
         }
 
         component: FloatingWindow {
@@ -84,14 +84,14 @@ Scope {
             color: "transparent"
 
             function formatTime(seconds) {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                const secs = seconds % 60;
+                const hours = Math.floor(seconds / 3600)
+                const minutes = Math.floor((seconds % 3600) / 60)
+                const secs = seconds % 60
 
                 if (hours > 0)
-                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
 
-                return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
             }
 
             StyledRect {
@@ -270,12 +270,12 @@ Scope {
                                 cursorShape: Qt.PointingHandCursor
                                 onClicked: {
                                     Quickshell.execDetached({
-                                        command: ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
-                                    });
+                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
+                                                            })
 
-                                    recordingTimer.stop();
-                                    scope.recordingSeconds = 0;
-                                    scope.isRecordingControlOpen = false;
+                                    recordingTimer.stop()
+                                    scope.recordingSeconds = 0
+                                    scope.isRecordingControlOpen = false
                                 }
                             }
                         }

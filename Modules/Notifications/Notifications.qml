@@ -15,9 +15,9 @@ StyledRect {
 
     anchors {
         right: parent.right
-		top: parent.top
-		rightMargin: 5
-		topMargin: 5
+        top: parent.top
+        rightMargin: 5
+        topMargin: 5
     }
 
     property bool hasNotifications: Notifs.notifications.popupNotifications.length > 0
@@ -25,8 +25,8 @@ StyledRect {
     width: 400
     height: hasNotifications ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
     color: Themes.m3Colors.m3Background
-	radius: 0
-	clip: true
+    radius: 0
+    clip: true
     bottomLeftRadius: Appearance.rounding.normal
 
     Behavior on width {

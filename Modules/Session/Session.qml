@@ -56,53 +56,47 @@ StyledRect {
             Repeater {
                 id: repeater
 
-                model: [
-                    {
+                model: [{
                         "icon": "power_settings_circle",
                         "name": "Shutdown",
                         "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", "systemctl poweroff"]
-                            });
+                                                        "command": ["sh", "-c", "systemctl poweroff"]
+                                                    })
                         }
-                    },
-                    {
+                    }, {
                         "icon": "restart_alt",
                         "name": "Reboot",
                         "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", "systemctl reboot"]
-                            });
+                                                        "command": ["sh", "-c", "systemctl reboot"]
+                                                    })
                         }
-                    },
-                    {
+                    }, {
                         "icon": "sleep",
                         "name": "Sleep",
                         "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", "systemctl suspend"]
-                            });
+                                                        "command": ["sh", "-c", "systemctl suspend"]
+                                                    })
                         }
-                    },
-                    {
+                    }, {
                         "icon": "door_open",
                         "name": "Logout",
                         "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", "hyprctl dispatch exit"]
-                            });
+                                                        "command": ["sh", "-c", "hyprctl dispatch exit"]
+                                                    })
                         }
-                    },
-                    {
+                    }, {
                         "icon": "lock",
                         "name": "Lockscreen",
                         "action": () => {
                             Quickshell.execDetached({
-                                command: ["sh", "-c", "shell ipc call lock lock"]
-                            });
+                                                        "command": ["sh", "-c", "shell ipc call lock lock"]
+                                                    })
                         }
-                    }
-                ]
+                    }]
 
                 delegate: StyledRect {
                     id: rectDelegate
@@ -120,17 +114,17 @@ StyledRect {
                     color: isHighlighted ? Themes.withAlpha(Themes.m3Colors.m3Secondary, 0.2) : "transparent"
 
                     Component.onCompleted: {
-                        rectDelegate.animProgress = 0;
+                        rectDelegate.animProgress = 0
                     }
 
                     focus: root.isSessionOpen
                     onFocusChanged: {
                         if (focus && root.isSessionOpen)
-                            Qt.callLater(() => {
-                                let firstIcon = repeater.itemAt(root.currentIndex);
-                                if (firstIcon)
-                                    firstIcon.children[0].forceActiveFocus();
-                            });
+                        Qt.callLater(() => {
+                                         let firstIcon = repeater.itemAt(root.currentIndex)
+                                         if (firstIcon)
+                                         firstIcon.children[0].forceActiveFocus()
+                                     })
                     }
 
                     Timer {
@@ -145,9 +139,9 @@ StyledRect {
                         target: root
                         function onIsSessionOpenChanged() {
                             if (root.isSessionOpen)
-                                rectDelegate.animProgress = 0;
+                                rectDelegate.animProgress = 0
 
-                            animTimer.restart();
+                            animTimer.restart()
                         }
                     }
 
@@ -173,7 +167,7 @@ StyledRect {
                             target: root
                             function onCurrentIndexChanged() {
                                 if (root.currentIndex === rectDelegate.index)
-                                    iconDelegate.forceActiveFocus();
+                                    iconDelegate.forceActiveFocus()
                             }
                         }
 
@@ -181,11 +175,11 @@ StyledRect {
                         Keys.onReturnPressed: handleAction()
                         Keys.onUpPressed: {
                             if (root.currentIndex > 0)
-                                root.currentIndex--;
+                            root.currentIndex--
                         }
                         Keys.onDownPressed: {
                             if (root.currentIndex < 4)
-                                root.currentIndex++;
+                            root.currentIndex++
                         }
                         Keys.onEscapePressed: root.isSessionOpen = false
 
@@ -196,9 +190,9 @@ StyledRect {
                         }
 
                         function handleAction() {
-                            root.pendingAction = rectDelegate.modelData.action;
-                            root.pendingActionName = rectDelegate.modelData.name + "?";
-                            root.showConfirmDialog = true;
+                            root.pendingAction = rectDelegate.modelData.action
+                            root.pendingActionName = rectDelegate.modelData.name + "?"
+                            root.showConfirmDialog = true
                         }
 
                         MArea {
@@ -210,14 +204,14 @@ StyledRect {
                             hoverEnabled: true
 
                             onClicked: {
-                                parent.focus = true;
-                                root.currentIndex = rectDelegate.index;
-                                parent.handleAction();
+                                parent.focus = true
+                                root.currentIndex = rectDelegate.index
+                                parent.handleAction()
                             }
 
                             onEntered: {
-                                parent.focus = true;
-                                root.currentIndex = rectDelegate.index;
+                                parent.focus = true
+                                root.currentIndex = rectDelegate.index
                             }
                         }
                     }
@@ -237,18 +231,18 @@ StyledRect {
 
         onAccepted: {
             if (root.pendingAction)
-                root.pendingAction();
+            root.pendingAction()
 
-            root.showConfirmDialog = false;
-            root.isSessionOpen = false;
-            root.pendingAction = null;
-            root.pendingActionName = "";
+            root.showConfirmDialog = false
+            root.isSessionOpen = false
+            root.pendingAction = null
+            root.pendingActionName = ""
         }
 
         onRejected: {
-            root.showConfirmDialog = false;
-            root.pendingAction = null;
-            root.pendingActionName = "";
+            root.showConfirmDialog = false
+            root.pendingAction = null
+            root.pendingActionName = ""
         }
     }
 }

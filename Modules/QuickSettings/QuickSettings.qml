@@ -19,7 +19,7 @@ ColumnLayout {
     property int state: 0
 
     function toggleControlCenter(): void {
-        isControlCenterOpen = !isControlCenterOpen;
+        isControlCenterOpen = !isControlCenterOpen
     }
 
     GlobalShortcut {
@@ -60,8 +60,8 @@ ColumnLayout {
         Layout.fillWidth: true
 
         onTabClicked: index => {
-            root.state = index;
-            controlCenterStackView.currentItem.viewIndex = index;
+            root.state = index
+            controlCenterStackView.currentItem.viewIndex = index
         }
     }
 
@@ -93,7 +93,7 @@ ColumnLayout {
 
         onCurrentItemChanged: {
             if (currentItem)
-                currentItem.viewIndex = root.state;
+            currentItem.viewIndex = root.state
         }
 
         Component {

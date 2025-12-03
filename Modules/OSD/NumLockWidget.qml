@@ -12,7 +12,7 @@ import qs.Components
 Item {
     id: numLockOSD
 
-	required property bool isNumLockOSDShow
+    required property bool isNumLockOSDShow
 
     width: parent.width
     height: isNumLockOSDShow ? 50 : 0

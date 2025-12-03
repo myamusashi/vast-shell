@@ -118,9 +118,9 @@ LazyLoader {
                     enabled: passwordInput.text.length > 0 || !!Pol.PolAgent.agent?.flow?.isResponseRequired
 
                     onClicked: {
-                        Pol.PolAgent.agent?.flow?.submit(passwordInput.text);
-                        passwordInput.text = "";
-                        passwordInput.forceActiveFocus();
+                        Pol.PolAgent.agent?.flow?.submit(passwordInput.text)
+                        passwordInput.text = ""
+                        passwordInput.forceActiveFocus()
                     }
                 }
 
@@ -132,8 +132,8 @@ LazyLoader {
                     visible: Pol.PolAgent.agent?.isActive
 
                     onClicked: {
-                        Pol.PolAgent.agent?.flow?.cancelAuthenticationRequest();
-                        passwordInput.text = "";
+                        Pol.PolAgent.agent?.flow?.cancelAuthenticationRequest()
+                        passwordInput.text = ""
                     }
                 }
             }
@@ -142,9 +142,9 @@ LazyLoader {
         Connections {
             target: Pol.PolAgent.agent?.flow
             function onIsResponseRequiredChanged() {
-                passwordInput.text = "";
+                passwordInput.text = ""
                 if (Pol.PolAgent.agent?.flow.isResponseRequired)
-                    passwordInput.forceActiveFocus();
+                    passwordInput.forceActiveFocus()
             }
         }
     }

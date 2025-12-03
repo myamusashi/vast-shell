@@ -8,23 +8,19 @@ import qs.Components
 RowLayout {
     spacing: Appearance.spacing.small
 
-    readonly property var profiles: [
-        {
+    readonly property var profiles: [{
             "icon": "energy_savings_leaf",
             "name": "Power save",
             "profile": PowerProfile.PowerSaver
-        },
-        {
+        }, {
             "icon": "balance",
             "name": "Balanced",
             "profile": PowerProfile.Balanced
-        },
-        {
+        }, {
             "icon": "rocket_launch",
             "name": "Performance",
             "profile": PowerProfile.Performance
-        }
-    ]
+        }]
 
     Repeater {
         model: parent.profiles

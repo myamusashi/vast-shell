@@ -10,7 +10,7 @@ import qs.Components
 Item {
     id: capsLockOSD
 
-	required property bool isCapsLockOSDShow
+    required property bool isCapsLockOSDShow
 
     width: parent.width
     height: isCapsLockOSDShow ? 50 : 0

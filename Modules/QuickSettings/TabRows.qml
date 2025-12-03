@@ -22,7 +22,7 @@ StyledRect {
     color: Themes.m3Colors.m3Surface
 
     RowLayout {
-		id: tabLayout
+        id: tabLayout
 
         anchors.centerIn: parent
         spacing: 15
@@ -31,28 +31,23 @@ StyledRect {
         Repeater {
             id: tabRepeater
 
-            model: [
-                {
+            model: [{
                     "title": "Settings",
                     "icon": "settings",
                     "index": 0
-                },
-                {
+                }, {
                     "title": "Volumes",
                     "icon": "speaker",
                     "index": 1
-                },
-                {
+                }, {
                     "title": "Performance",
                     "icon": "speed",
                     "index": 2
-                },
-                {
+                }, {
                     "title": "Weather",
                     "icon": "cloud",
                     "index": 3
-                }
-            ]
+                }]
 
             StyledButton {
                 id: settingButton
@@ -60,11 +55,11 @@ StyledRect {
                 required property var modelData
                 required property int index
 
-				buttonTitle: modelData.title
-				iconButton: modelData.icon
-				iconSize: Appearance.fonts.large * root.scaleFactor
-				Layout.fillWidth: true
-				buttonTextColor: root.state === modelData.index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnBackground
+                buttonTitle: modelData.title
+                iconButton: modelData.icon
+                iconSize: Appearance.fonts.large * root.scaleFactor
+                Layout.fillWidth: true
+                buttonTextColor: root.state === modelData.index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnBackground
                 buttonColor: "transparent"
                 onClicked: root.tabClicked(settingButton.index)
             }
@@ -82,9 +77,9 @@ StyledRect {
 
         x: {
             if (tabRepeater.itemAt(root.state))
-                return tabRepeater.itemAt(root.state).x + tabLayout.x;
+            return tabRepeater.itemAt(root.state).x + tabLayout.x
 
-            return 0;
+            return 0
         }
 
         Behavior on x {

@@ -7,8 +7,8 @@ import qs.Helpers
 import qs.Components
 
 StyledRect {
-	color: Themes.m3Colors.m3Background
-	height: GlobalStates.isBarOpen ? 40 : 5
+    color: Themes.m3Colors.m3Background
+    height: GlobalStates.isBarOpen ? 40 : 5
     width: parent.width
 
     GlobalShortcut {
@@ -32,7 +32,7 @@ StyledRect {
     RowLayout {
         id: rowbar
 
-		visible: GlobalStates.isBarOpen
+        visible: GlobalStates.isBarOpen
         anchors {
             fill: parent
             leftMargin: 5

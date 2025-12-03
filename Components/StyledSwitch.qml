@@ -7,7 +7,7 @@ import qs.Configs
 import qs.Helpers
 
 Switch {
-	id: root
+    id: root
 
     property bool isUseIcon: true
     property string onIcon: "check"
@@ -24,7 +24,7 @@ Switch {
         border.color: root.checked ? "transparent" : Themes.m3Colors.m3Outline
 
         StyledRect {
-			id: handle
+            id: handle
 
             readonly property int margin: 4
             readonly property bool isActive: root.down || root.checked

@@ -41,41 +41,37 @@ RowLayout {
 
             onClicked: {
                 Quickshell.execDetached({
-                    command: ["sh", "-c", "systemctl poweroff"]
-                });
+                                            "command": ["sh", "-c", "systemctl poweroff"]
+                                        })
             }
         }
 
         Repeater {
-            model: [
-                {
+            model: [{
                     "icon": "restart_alt",
                     "name": "Reboot",
                     "action": () => {
                         Quickshell.execDetached({
-                            command: ["sh", "-c", "systemctl reboot"]
-                        });
+                                                    "command": ["sh", "-c", "systemctl reboot"]
+                                                })
                     }
-                },
-                {
+                }, {
                     "icon": "sleep",
                     "name": "Sleep",
                     "action": () => {
                         Quickshell.execDetached({
-                            command: ["sh", "-c", "systemctl suspend"]
-                        });
+                                                    "command": ["sh", "-c", "systemctl suspend"]
+                                                })
                     }
-                },
-                {
+                }, {
                     "icon": "door_open",
                     "name": "Logout",
                     "action": () => {
                         Quickshell.execDetached({
-                            command: ["sh", "-c", "hyprctl dispatch exit"]
-                        });
+                                                    "command": ["sh", "-c", "hyprctl dispatch exit"]
+                                                })
                     }
-                }
-            ]
+                }]
 
             delegate: StyledButton {
                 id: buttonDelegate
@@ -148,8 +144,8 @@ RowLayout {
         isButtonFullRound: true
         baseWidth: 56
 
-		scale: mArea.containsMouse ? 1.1 : 1.0
-		backgroundRounding: Appearance.rounding.full
+        scale: mArea.containsMouse ? 1.1 : 1.0
+        backgroundRounding: Appearance.rounding.full
 
         Behavior on scale {
             NAnim {
@@ -171,7 +167,7 @@ RowLayout {
         }
 
         onClicked: {
-            root.isOpen = !root.isOpen;
+            root.isOpen = !root.isOpen
         }
     }
 }

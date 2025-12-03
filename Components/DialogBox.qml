@@ -48,8 +48,8 @@ Loader {
             Column {
                 id: column
 
-				anchors.centerIn: parent
-				width: 360
+                anchors.centerIn: parent
+                width: 360
                 anchors.margins: 20
                 spacing: Appearance.spacing.large
 

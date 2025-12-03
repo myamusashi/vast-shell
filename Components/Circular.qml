@@ -36,31 +36,31 @@ StyledRect {
         property real value: root.value
 
         onPaint: {
-            var ctx = getContext("2d");
-            var centerX = width / 2;
-            var centerY = height / 2;
-            var radius = Math.min(width, height) / 2 - 10;
+            var ctx = getContext("2d")
+            var centerX = width / 2
+            var centerY = height / 2
+            var radius = Math.min(width, height) / 2 - 10
 
-            ctx.clearRect(0, 0, width, height);
+            ctx.clearRect(0, 0, width, height)
 
             // Background arc
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = Themes.m3Colors.m3OutlineVariant;
-            ctx.lineWidth = 8;
-            ctx.stroke();
+            ctx.beginPath()
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
+            ctx.strokeStyle = Themes.m3Colors.m3OutlineVariant
+            ctx.lineWidth = 8
+            ctx.stroke()
 
             // Progress arc
-            ctx.beginPath();
-            var startAngle = -Math.PI / 2;
-            var endAngle = startAngle + (value / 100) * 2 * Math.PI;
-            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.beginPath()
+            var startAngle = -Math.PI / 2
+            var endAngle = startAngle + (value / 100) * 2 * Math.PI
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle)
 
             // Color based on value
-            ctx.strokeStyle = value > 80 ? Themes.m3Colors.m3Error : value > 60 ? Themes.m3Colors.m3Tertiary : Themes.m3Colors.m3Primary;
-            ctx.lineWidth = 8;
-            ctx.lineCap = "round";
-            ctx.stroke();
+            ctx.strokeStyle = value > 80 ? Themes.m3Colors.m3Error : value > 60 ? Themes.m3Colors.m3Tertiary : Themes.m3Colors.m3Primary
+            ctx.lineWidth = 8
+            ctx.lineCap = "round"
+            ctx.stroke()
         }
     }
 

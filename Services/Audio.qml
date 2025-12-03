@@ -9,32 +9,32 @@ Singleton {
     id: root
 
     function getIcon(node: PwNode): string {
-        return (node.isSink) ? getSinkIcon(node) : getSourceIcon(node);
+        return (node.isSink) ? getSinkIcon(node) : getSourceIcon(node)
     }
 
     function getSinkIcon(node: PwNode): string {
-        return (node.audio.muted) ? "volume_off" : (node.audio.volume > 0.5) ? "volume_up" : (node.audio.volume > 0.01) ? "volume_down" : "volume_mute";
+        return (node.audio.muted) ? "volume_off" : (node.audio.volume > 0.5) ? "volume_up" : (node.audio.volume > 0.01) ? "volume_down" : "volume_mute"
     }
 
     function getSourceIcon(node: PwNode): string {
-        return (node.audio.muted) ? "mic_off" : "mic";
+        return (node.audio.muted) ? "mic_off" : "mic"
     }
 
     function toggleMute(node: PwNode) {
-        node.audio.muted = !node.audio.muted;
+        node.audio.muted = !node.audio.muted
     }
 
     function wheelAction(event: WheelEvent, node: PwNode) {
         if (event.angleDelta.y < 0)
-            node.audio.volume -= 0.01;
+            node.audio.volume -= 0.01
         else
-            node.audio.volume += 0.01;
+            node.audio.volume += 0.01
 
         if (node.audio.volume > 1.3)
-            node.audio.volume = 1.3;
+            node.audio.volume = 1.3
 
         if (node.audio.volume < 0)
-            node.audio.volume = 0.0;
+            node.audio.volume = 0.0
     }
 
     property var models: []
@@ -49,16 +49,16 @@ Singleton {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = JSON.parse(text.trim());
+                const data = JSON.parse(text.trim())
                 root.models = data.map(profile => {
-                    return {
-                        "index": profile.index,
-                        "name": profile.name,
-                        "description": profile.description,
-                        "available": profile.available,
-                        "readable": formatProfileName(profile.name)
-                    };
-                });
+                                           return {
+                                               "index": profile.index,
+                                               "name": profile.name,
+                                               "description": profile.description,
+                                               "available": profile.available,
+                                               "readable": formatProfileName(profile.name)
+                                           }
+                                       })
             }
         }
     }
@@ -70,8 +70,8 @@ Singleton {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = text.trim();
-                root.idPipewire = data;
+                const data = text.trim()
+                root.idPipewire = data
             }
         }
     }
@@ -83,45 +83,45 @@ Singleton {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = JSON.parse(text.trim());
+                const data = JSON.parse(text.trim())
                 root.activeProfiles = data.map(active => {
-                    return {
-                        "index": active.index,
-                        "name": active.name,
-                        "description": active.description,
-                        "available": active.available,
-                        "save": active.save
-                    };
-                });
-                root.activeProfileIndex = data.length > 0 ? data[0].index : -1;
+                                                   return {
+                                                       "index": active.index,
+                                                       "name": active.name,
+                                                       "description": active.description,
+                                                       "available": active.available,
+                                                       "save": active.save
+                                                   }
+                                               })
+                root.activeProfileIndex = data.length > 0 ? data[0].index : -1
             }
         }
     }
 
     function formatProfileName(name) {
         if (name === "off")
-            return "Off";
+            return "Off"
         if (name === "pro-audio")
-            return "Pro Audio";
+            return "Pro Audio"
 
         // separate output and input
-        const parts = name.split("+");
-        const formatted = [];
+        const parts = name.split("+")
+        const formatted = []
 
         for (let part of parts) {
-            part = part.trim();
+            part = part.trim()
 
             // Remove prefixes
-            part = part.replace(/^output:/, "").replace(/^input:/, "");
+            part = part.replace(/^output:/, "").replace(/^input:/, "")
 
             // Replace hyphens with spaces and capitalize
             part = part.split("-").map(word => {
-                return word.charAt(0).toUpperCase() + word.slice(1);
-            }).join(" ");
+                                           return word.charAt(0).toUpperCase() + word.slice(1)
+                                       }).join(" ")
 
-            formatted.push(part);
+            formatted.push(part)
         }
 
-        return formatted.join(" + ");
+        return formatted.join(" + ")
     }
 }

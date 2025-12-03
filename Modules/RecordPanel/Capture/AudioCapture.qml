@@ -56,16 +56,13 @@ ClippingRectangle {
             Repeater {
                 id: tabRepeater
 
-                model: [
-                    {
+                model: [{
                         "title": "Mix",
                         "index": 0
-                    },
-                    {
+                    }, {
                         "title": "Voice",
                         "index": 1
-                    }
-                ]
+                    }]
 
                 StyledButton {
                     id: audioTabButton
@@ -102,8 +99,8 @@ ClippingRectangle {
             color: Themes.m3Colors.m3Primary
             radius: Appearance.rounding.large
             x: {
-                var item = tabRepeater.itemAt(root.state);
-                return item.x + tabRowLayout.anchors.leftMargin;
+                var item = tabRepeater.itemAt(root.state)
+                return item.x + tabRowLayout.anchors.leftMargin
             }
             visible: tabRepeater.itemAt(root.state) !== null
 
@@ -130,7 +127,7 @@ ClippingRectangle {
         initialItem: viewComponent
         onCurrentItemChanged: {
             if (currentItem)
-                currentItem.viewIndex = root.state;
+            currentItem.viewIndex = root.state
         }
 
         Component {

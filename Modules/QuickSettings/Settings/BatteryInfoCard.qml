@@ -39,25 +39,22 @@ StyledRect {
     component BatteryDetailsList: ColumnLayout {
         spacing: Appearance.spacing.small
 
-        readonly property var details: [
-            {
+        readonly property var details: [{
                 "label": "Current capacity:",
                 "value": UPower.displayDevice.energy.toFixed(2) + " Wh",
                 "color": Themes.m3Colors.m3OnBackground
-            },
-            {
+            }, {
                 "label": "Full capacity:",
                 "value": UPower.displayDevice.energyCapacity.toFixed(2) + " Wh",
                 "color": Themes.m3Colors.m3OnBackground
-            },
-        ]
+            }]
 
         function getHealthColor(health) {
             if (health > 80)
-                return Themes.m3Colors.m3Primary;
+                return Themes.m3Colors.m3Primary
             if (health > 50)
-                return Themes.m3Colors.m3Secondary;
-            return Themes.m3Colors.m3Error;
+                return Themes.m3Colors.m3Secondary
+            return Themes.m3Colors.m3Error
         }
 
         Repeater {

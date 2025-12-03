@@ -66,10 +66,10 @@ Rectangle {
 
                 onClicked: {
                     if (entry.modelData.hasChildren) {
-                        root.trayMenu = entry.child;
-                        view.positionViewAtBeginning();
+                        root.trayMenu = entry.child
+                        view.positionViewAtBeginning()
                     } else {
-                        entry.modelData.triggered();
+                        entry.modelData.triggered()
                     }
                 }
             }
@@ -85,7 +85,7 @@ Rectangle {
                     visible: entry.modelData?.buttonType == QsMenuButtonType.CheckBox
 
                     MaterialIcon {
-						icon: (entry.modelData?.checkState != Qt.Checked) ? "check_box_outline_blank" : "check_box"
+                        icon: (entry.modelData?.checkState != Qt.Checked) ? "check_box_outline_blank" : "check_box"
                         anchors.centerIn: parent
                         color: Themes.m3Colors.m3OnPrimary
                         font.pixelSize: parent.width * 0.8
@@ -100,7 +100,7 @@ Rectangle {
                     visible: entry.modelData?.buttonType == QsMenuButtonType.RadioButton
 
                     MaterialIcon {
-						icon: (entry.modelData?.checkState != Qt.Checked) ? "radio_button_unchecked" : "radio_button_checked"
+                        icon: (entry.modelData?.checkState != Qt.Checked) ? "radio_button_unchecked" : "radio_button_checked"
                         anchors.centerIn: parent
                         color: Dat.Colors.current.primary
                         font.pixelSize: parent.width * 0.8

@@ -48,9 +48,9 @@ Variants {
         }
 
         mask: Region {
-			regions: regions.instances
-			item: cornersArea
-			intersection: Intersection.Subtract
+            regions: regions.instances
+            item: cornersArea
+            intersection: Intersection.Subtract
         }
 
         Variants {
@@ -59,8 +59,8 @@ Variants {
             model: window.contentItem.children
             delegate: Region {
                 required property Item modelData
-				item: modelData
-				intersection: Intersection.Xor
+                item: modelData
+                intersection: Intersection.Xor
             }
         }
 
@@ -140,12 +140,12 @@ Variants {
             id: bar
 
             onHeightChanged: {
-                topBar.implicitHeight = bar.height;
-                cal.anchors.topMargin = bar.height;
-                mediaPlayer.anchors.topMargin = bar.height;
-                quickSettings.anchors.topMargin = bar.height;
-                notif.anchors.topMargin = bar.height;
-                notifCenter.anchors.topMargin = bar.height;
+                topBar.implicitHeight = bar.height
+                cal.anchors.topMargin = bar.height
+                mediaPlayer.anchors.topMargin = bar.height
+                quickSettings.anchors.topMargin = bar.height
+                notif.anchors.topMargin = bar.height
+                notifCenter.anchors.topMargin = bar.height
             }
         }
 
@@ -215,25 +215,25 @@ Variants {
 
         Component.onCompleted: {
             switch (corner) {
-            case 0:
-                anchors.left = parent.left;
-                anchors.top = parent.top;
-                break;
-            case 1:
-                anchors.top = parent.top;
-                anchors.right = parent.right;
-                rotation = 90;
-                break;
-            case 2:
-                anchors.right = parent.right;
-                anchors.bottom = parent.bottom;
-                rotation = 180;
-                break;
-            case 3:
-                anchors.left = parent.left;
-                anchors.bottom = parent.bottom;
-                rotation = -90;
-                break;
+                case 0:
+                anchors.left = parent.left
+                anchors.top = parent.top
+                break
+                case 1:
+                anchors.top = parent.top
+                anchors.right = parent.right
+                rotation = 90
+                break
+                case 2:
+                anchors.right = parent.right
+                anchors.bottom = parent.bottom
+                rotation = 180
+                break
+                case 3:
+                anchors.left = parent.left
+                anchors.bottom = parent.bottom
+                rotation = -90
+                break
             }
         }
 

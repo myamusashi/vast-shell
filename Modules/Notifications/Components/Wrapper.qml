@@ -23,16 +23,16 @@ Item {
     width: parent.width
     height: isRemoving ? 0 : contentLayout.height * 1.3
     clip: true
-	x: parent.width
+    x: parent.width
 
     Component.onCompleted: {
-        slideInAnim.start();
+        slideInAnim.start()
     }
 
     signal animationCompleted
 
     NAnim {
-		id: slideInAnim
+        id: slideInAnim
 
         target: root
         property: "x"
@@ -77,20 +77,20 @@ Item {
     }
 
     function removeNotificationWithAnimation() {
-        isRemoving = true;
-        slideOutAnim.start();
+        isRemoving = true
+        slideOutAnim.start()
 
         Qt.callLater(function () {
-            removeTimer.start();
-        });
+            removeTimer.start()
+        })
     }
 
     StyledRect {
         anchors.fill: parent
         color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3ErrorContainer : Themes.m3Colors.m3SurfaceContainer
-		radius: Appearance.rounding.normal
-		anchors.leftMargin: 10
-		clip: true
+        radius: Appearance.rounding.normal
+        anchors.leftMargin: 10
+        clip: true
         border.color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3Error : "transparent"
         border.width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
 
@@ -111,18 +111,18 @@ Item {
 
                 onActiveChanged: {
                     if (delegateMouseNotif.drag.active)
-                        return;
+                        return
 
                     if (Math.abs(root.x) > (root.width * 0.45)) {
-                        var targetX = root.x > 0 ? root.width : -root.width;
-                        swipeOutAnim.to = targetX;
-                        swipeOutAnim.start();
+                        var targetX = root.x > 0 ? root.width : -root.width
+                        swipeOutAnim.to = targetX
+                        swipeOutAnim.start()
 
                         Qt.callLater(function () {
-                            swipeRemoveTimer.start();
-                        });
+                            swipeRemoveTimer.start()
+                        })
                     } else
-                        root.x = 0;
+                        root.x = 0
                 }
             }
 
@@ -140,8 +140,8 @@ Item {
 
                 interval: Appearance.animations.durations.normal
                 onTriggered: {
-                    Notifs.notifications.removePopupNotification(root.modelData);
-                    Notifs.notifications.removeListNotification(root.modelData);
+                    Notifs.notifications.removePopupNotification(root.modelData)
+                    Notifs.notifications.removeListNotification(root.modelData)
                 }
             }
         }
@@ -154,7 +154,7 @@ Item {
             anchors.topMargin: 10
             anchors.leftMargin: 10
             anchors.rightMargin: 10
-			spacing: Appearance.spacing.normal
+            spacing: Appearance.spacing.normal
 
             Icon {
                 id: iconLayout

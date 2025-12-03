@@ -25,8 +25,8 @@ RowLayout {
             id: debounceTimer
 
             interval: 150
-			repeat: true
-			running: true
+            repeat: true
+            running: true
             onTriggered: Brightness.setBrightness(brightnessSlider.value)
         }
     }

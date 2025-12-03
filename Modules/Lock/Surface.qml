@@ -26,7 +26,7 @@ WlSessionLockSurface {
         target: root.lock
 
         function onUnlock(): void {
-            unlockSequence.start();
+            unlockSequence.start()
         }
     }
 
@@ -36,8 +36,8 @@ WlSessionLockSurface {
 
         function onShowFailureChanged() {
             if (root.pam.showFailure) {
-                root.showErrorMessage = true;
-                errorShakeAnimation.start();
+                root.showErrorMessage = true
+                errorShakeAnimation.start()
             }
         }
     }
@@ -52,80 +52,80 @@ WlSessionLockSurface {
 
         Keys.onPressed: kevent => {
             if (root.showErrorMessage && kevent.text)
-                root.showErrorMessage = false;
+            root.showErrorMessage = false
 
             if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
-                root.pam.currentText = root.inputBuffer;
-                root.pam.tryUnlock();
-                root.inputBuffer = "";
-                root.maskedBuffer = "";
-                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
-                root.lastKeystrokeTime = 0;
-                return;
+                root.pam.currentText = root.inputBuffer
+                root.pam.tryUnlock()
+                root.inputBuffer = ""
+                root.maskedBuffer = ""
+                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant
+                root.lastKeystrokeTime = 0
+                return
             }
 
             if (kevent.key === Qt.Key_A && (kevent.modifiers & Qt.ControlModifier)) {
-                passwordBuffer.color = Themes.m3Colors.m3Blue;
-                root.isAllSelected = true;
-                kevent.accepted = true;
-                return;
+                passwordBuffer.color = Themes.m3Colors.m3Blue
+                root.isAllSelected = true
+                kevent.accepted = true
+                return
             }
 
             if (kevent.key === Qt.Key_Backspace) {
                 if (kevent.modifiers & Qt.ControlModifier) {
-                    passwordBuffer.color = Themes.m3Colors.m3OnBackground;
-                    root.inputBuffer = "";
-                    root.maskedBuffer = "";
-                    root.isAllSelected = false;
-                    return;
+                    passwordBuffer.color = Themes.m3Colors.m3OnBackground
+                    root.inputBuffer = ""
+                    root.maskedBuffer = ""
+                    root.isAllSelected = false
+                    return
                 }
 
                 if (root.isAllSelected) {
-                    root.inputBuffer = "";
-                    root.maskedBuffer = "";
-                    passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
-                    root.isAllSelected = false;
-                    return;
+                    root.inputBuffer = ""
+                    root.maskedBuffer = ""
+                    passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant
+                    root.isAllSelected = false
+                    return
                 }
 
-                root.inputBuffer = root.inputBuffer.slice(0, -1);
+                root.inputBuffer = root.inputBuffer.slice(0, -1)
 
-                const randomRemove = Math.min(Math.floor(Math.random() * 3) + 1, root.maskedBuffer.length);
-                root.maskedBuffer = root.maskedBuffer.slice(0, -randomRemove);
+                const randomRemove = Math.min(Math.floor(Math.random() * 3) + 1, root.maskedBuffer.length)
+                root.maskedBuffer = root.maskedBuffer.slice(0, -randomRemove)
 
                 if (root.maskedBuffer === "")
-                    passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
+                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant
 
-                return;
+                return
             }
 
             if (kevent.text) {
                 if (root.isAllSelected) {
-                    root.inputBuffer = "";
-                    root.maskedBuffer = "";
-                    root.isAllSelected = false;
+                    root.inputBuffer = ""
+                    root.maskedBuffer = ""
+                    root.isAllSelected = false
                 }
 
                 if (passwordBuffer.color === Themes.m3Colors.m3Blue || passwordBuffer.color === Themes.m3Colors.m3OnBackground)
-                    passwordBuffer.color = root.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant;
+                passwordBuffer.color = root.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant
 
-                root.inputBuffer += kevent.text;
+                root.inputBuffer += kevent.text
 
-                const randomLength = Math.floor(Math.random() * 3) + 1;
-                for (let i = 0; i < randomLength; i++)
-                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                const randomLength = Math.floor(Math.random() * 3) + 1
+                for (var i = 0; i < randomLength; i++)
+                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)]
 
-                const currentTime = Date.now();
+                const currentTime = Date.now()
                 if (root.lastKeystrokeTime > 0) {
-                    const timeDelta = currentTime - root.lastKeystrokeTime;
+                    const timeDelta = currentTime - root.lastKeystrokeTime
                     if (timeDelta < 50) {
-                        fakeDelayTimer.interval = Math.random() * 30 + 10;
-                        fakeDelayTimer.restart();
+                        fakeDelayTimer.interval = Math.random() * 30 + 10
+                        fakeDelayTimer.restart()
                     }
                 }
-                root.lastKeystrokeTime = currentTime;
+                root.lastKeystrokeTime = currentTime
 
-                typingAnimation.restart();
+                typingAnimation.restart()
             }
         }
 
@@ -135,8 +135,8 @@ WlSessionLockSurface {
             interval: 20
             repeat: false
             onTriggered: {
-                passwordBuffer.opacity = 0.99;
-                passwordBuffer.opacity = 1.0;
+                passwordBuffer.opacity = 0.99
+                passwordBuffer.opacity = 1.0
             }
         }
 
@@ -150,10 +150,10 @@ WlSessionLockSurface {
             onTriggered: {
                 // Randomly add or remove fake characters when idle
                 if (Math.random() > 0.5 && root.maskedBuffer.length < 50)
-                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)]
                 else if (root.maskedBuffer.length > root.inputBuffer.length * 3)
-                    root.maskedBuffer = root.maskedBuffer.slice(0, -1);
-                interval = Math.random() * 3000 + 2000;
+                root.maskedBuffer = root.maskedBuffer.slice(0, -1)
+                interval = Math.random() * 3000 + 2000
             }
         }
 
@@ -231,8 +231,8 @@ WlSessionLockSurface {
                 repeat: true
                 running: root.lock.locked && root.maskedBuffer.length > 0
                 onTriggered: {
-                    passwordBuffer.randomXOffset = (Math.random() - 0.5) * 4;
-                    passwordBuffer.randomYOffset = (Math.random() - 0.5) * 4;
+                    passwordBuffer.randomXOffset = (Math.random() - 0.5) * 4
+                    passwordBuffer.randomYOffset = (Math.random() - 0.5) * 4
                 }
             }
 
@@ -253,8 +253,8 @@ WlSessionLockSurface {
                 repeat: true
                 running: root.lock.locked && root.maskedBuffer.length > 0
                 onTriggered: {
-                    const baseFontSize = Appearance.fonts.extraLarge * 5;
-                    passwordBuffer.font.pointSize = baseFontSize * (0.95 + Math.random() * 0.1);
+                    const baseFontSize = Appearance.fonts.extraLarge * 5
+                    passwordBuffer.font.pointSize = baseFontSize * (0.95 + Math.random() * 0.1)
                 }
             }
         }

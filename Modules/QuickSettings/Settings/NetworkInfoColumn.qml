@@ -86,10 +86,10 @@ ColumnLayout {
 
         readonly property var activeNetwork: {
             for (var i = 0; i < Network.networks.length; i++)
-                if (Network.networks[i].active)
-                    return Network.networks[i];
+            if (Network.networks[i].active)
+            return Network.networks[i]
 
-            return null;
+            return null
         }
 
         MArea {
@@ -99,20 +99,20 @@ ColumnLayout {
             enabled: settings && !settings.wifiList.active
             onClicked: {
                 if (settings)
-                    settings.wifiList.active = !settings.wifiList.active;
+                settings.wifiList.active = !settings.wifiList.active
             }
         }
 
         function getWiFiIcon(strength) {
             if (strength >= 80)
-                return "network_wifi";
+                return "network_wifi"
             if (strength >= 50)
-                return "network_wifi_3_bar";
+                return "network_wifi_3_bar"
             if (strength >= 30)
-                return "network_wifi_2_bar";
+                return "network_wifi_2_bar"
             if (strength >= 15)
-                return "network_wifi_1_bar";
-            return "signal_wifi_0_bar";
+                return "network_wifi_1_bar"
+            return "signal_wifi_0_bar"
         }
 
         RowLayout {
