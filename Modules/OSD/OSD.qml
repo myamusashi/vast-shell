@@ -1,4 +1,4 @@
-pragma ComponentBehavior: Bound
+pragma ComponentBehavior
 
 import QtQuick
 
@@ -36,54 +36,57 @@ StyledRect {
     }
 
     function calculateHeight() {
-        var totalHeight = 0;
-        var spacing = 10;
-        var padding = 10;
+        var totalHeight = 0
+        var spacing = 10
+        var padding = 10
 
         if (GlobalStates.isCapsLockOSDShow)
-            totalHeight += 50;
+            totalHeight += 50
         if (GlobalStates.isNumLockOSDShow)
-            totalHeight += 50;
+            totalHeight += 50
         if (GlobalStates.isVolumeOSDShow)
-            totalHeight += 80;
+            totalHeight += 80
 
-        var activeCount = 0;
+        var activeCount = 0
         if (GlobalStates.isCapsLockOSDShow)
-            activeCount++;
+            activeCount++
         if (GlobalStates.isNumLockOSDShow)
-            activeCount++;
+            activeCount++
         if (GlobalStates.isVolumeOSDShow)
-            activeCount++;
+            activeCount++
 
         if (activeCount > 1)
-            totalHeight += (activeCount - 1) * spacing;
+            totalHeight += (activeCount - 1) * spacing
 
-        return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
+        return totalHeight > 0 ? totalHeight + (padding * 2) : 0
     }
 
-    Column {
-        id: osdColumn
+    Loader {
+        anchors.fill: parent
+        active: GlobalStates.isVolumeOSDShow || GlobalStates.isNumLockOSDShow || GlobalStates.isCapsLockOSDShow
+        asynchronous: true
+        sourceComponent: Column {
+            anchors {
+                fill: parent
+                margins: 15
+            }
+            spacing: Appearance.spacing.normal
 
-        anchors {
-            fill: parent
-            margins: 15
-        }
-        spacing: Appearance.spacing.normal
+            CapsLockWidget {
+                id: capsLockOSD
+                isCapsLockOSDShow: GlobalStates.isCapsLockOSDShow
+            }
 
-        CapsLockWidget {
-            id: capsLockOSD
-            isCapsLockOSDShow: GlobalStates.isCapsLockOSDShow
-        }
+            NumLockWidget {
+                id: numLockOSD
+                isNumLockOSDShow: GlobalStates.isNumLockOSDShow
+            }
 
-        NumLockWidget {
-            id: numLockOSD
-            isNumLockOSDShow: GlobalStates.isNumLockOSDShow
-        }
+            Volumes {
+                id: volumeOSD
 
-        Volumes {
-            id: volumeOSD
-
-            isVolumeOSDShow: GlobalStates.isVolumeOSDShow
+                isVolumeOSDShow: GlobalStates.isVolumeOSDShow
+            }
         }
     }
 }

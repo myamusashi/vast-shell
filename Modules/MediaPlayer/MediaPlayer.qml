@@ -16,39 +16,7 @@ StyledRect {
     id: root
 
     property bool isMediaPlayerOpen: GlobalStates.isMediaPlayerOpen
-    property bool triggerAnimation: false
-    property bool shouldDestroy: false
     property string url: ""
-
-    onIsMediaPlayerOpenChanged: {
-        if (isMediaPlayerOpen) {
-            shouldDestroy = false;
-            triggerAnimation = false;
-            animationTriggerTimer.restart();
-        } else {
-            triggerAnimation = false;
-            destroyTimer.restart();
-        }
-    }
-
-    Timer {
-        id: animationTriggerTimer
-        interval: 50
-        repeat: false
-        onTriggered: {
-            if (root.isMediaPlayerOpen)
-                root.triggerAnimation = true;
-        }
-    }
-
-    Timer {
-        id: destroyTimer
-        interval: Appearance.animations.durations.small + 50
-        repeat: false
-        onTriggered: {
-            root.shouldDestroy = true;
-        }
-    }
 
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
@@ -76,21 +44,10 @@ StyledRect {
                 root.url = res;
             }
         }
-    }
-
-    Timer {
-        id: cleanup
-
-        interval: 500
-        repeat: root.isMediaPlayerOpen ? false : true
-        onTriggered: {
-            root.url = "";
-            gc();
-        }
-    }
+	}
 
     implicitWidth: Hypr.focusedMonitor.width * 0.3
-    implicitHeight: root.triggerAnimation ? contentLayout.implicitHeight + 20 : 0
+    implicitHeight: root.triggerAnimation ? contentLoader.implicitHeight + 20 : 0
     color: Themes.m3Colors.m3Surface
     radius: 0
     bottomLeftRadius: Appearance.rounding.normal
@@ -109,206 +66,213 @@ StyledRect {
         }
     }
 
-    RowLayout {
-        id: contentLayout
+	Loader {
+		id: contentLoader
 
         anchors.fill: parent
-        anchors.margins: 10
-        spacing: Appearance.spacing.normal
-        visible: root.isMediaPlayerOpen && root.implicitHeight !== 0
+        active: root.isMediaPlayerOpen
+        asynchronous: true
+        sourceComponent: RowLayout {
+            id: contentLayout
 
-        Rectangle {
-            Layout.preferredWidth: 120
-            Layout.preferredHeight: 120
-            color: "transparent"
+            anchors.fill: parent
+            anchors.margins: 10
+            spacing: Appearance.spacing.normal
+            visible: root.isMediaPlayerOpen && root.implicitHeight !== 0
 
-            Loader {
-                active: root.isMediaPlayerOpen
-                anchors.centerIn: parent
-                width: 120
-                height: 120
+            Rectangle {
+                Layout.preferredWidth: 120
+                Layout.preferredHeight: 120
+                color: "transparent"
 
-                sourceComponent: ClippingRectangle {
-                    anchors.fill: parent
-                    radius: Appearance.rounding.normal
-                    color: "transparent"
+                Loader {
+                    active: root.isMediaPlayerOpen
+                    anchors.centerIn: parent
+                    width: 120
+                    height: 120
 
-                    Image {
-                        id: coverArt
-
+                    sourceComponent: ClippingRectangle {
                         anchors.fill: parent
-                        source: Players.active && Players.active.trackArtUrl !== "" ? Players.active.trackArtUrl : "root:/Assets/kuru.gif"
-                        fillMode: Image.PreserveAspectCrop
-                        visible: Players.active !== null
-                        opacity: 0.5
-                        cache: false
-                        asynchronous: true
-                    }
+                        radius: Appearance.rounding.normal
+                        color: "transparent"
 
-                    StyledText {
-                        anchors.centerIn: parent
-                        width: 120
-                        text: "Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG."
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
-                        color: Themes.m3Colors.m3OnSurface
-                        visible: Players.active && Players.active.trackArtUrl === ""
-                    }
+                        Image {
+                            id: coverArt
 
-                    AnimatedImage {
-                        id: coverNullArt
-
-                        anchors.fill: parent
-                        visible: Players.active === null
-                        asynchronous: true
-                        cache: false
-                        source: Players.active === null ? "root:/Assets/kuru.gif" : ""
-                    }
-                }
-            }
-        }
-
-        ColumnLayout {
-            id: controlLayout
-
-            Layout.fillWidth: true
-
-            Column {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignLeft
-                spacing: 2
-
-                StyledLabel {
-                    width: parent.width
-                    text: Players.active ? Players.active.trackTitle : ""
-                    color: Themes.m3Colors.m3OnBackground
-                    font.pixelSize: Appearance.fonts.large
-                    wrapMode: Text.NoWrap
-                    elide: Text.ElideRight
-                }
-
-                RowLayout {
-                    Layout.preferredWidth: 50
-
-                    StyledText {
-                        Layout.preferredWidth: width
-                        text: Players.active ? Players.active.trackArtist : ""
-                        color: Themes.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.small
-                        wrapMode: Text.NoWrap
-                        elide: Text.ElideRight
-                    }
-
-                    StyledText {
-                        text: Players.active ? "•" : ""
-                        color: Themes.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.extraLarge
-                    }
-
-                    StyledText {
-                        text: Players.active ? "Watched on " : ""
-                        color: Themes.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.small
-                    }
-
-                    IconImage {
-                        source: Quickshell.iconPath(Players.active.desktopEntry)
-                        asynchronous: true
-                        implicitWidth: 20
-                        implicitHeight: 20
-
-                        MArea {
                             anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: Qt.openUrlExternally(root.url)
+                            source: Players.active && Players.active.trackArtUrl !== "" ? Players.active.trackArtUrl : "root:/Assets/kuru.gif"
+                            fillMode: Image.PreserveAspectCrop
+                            visible: Players.active !== null
+                            opacity: 0.5
+                            cache: false
+                            asynchronous: true
+                        }
+
+                        StyledText {
+                            anchors.centerIn: parent
+                            width: 120
+                            text: "Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG."
+                            wrapMode: Text.Wrap
+                            elide: Text.ElideRight
+                            color: Themes.m3Colors.m3OnSurface
+                            visible: Players.active && Players.active.trackArtUrl === ""
+                        }
+
+                        AnimatedImage {
+                            id: coverNullArt
+
+                            anchors.fill: parent
+                            visible: Players.active === null
+                            asynchronous: true
+                            cache: false
+                            source: Players.active === null ? "root:/Assets/kuru.gif" : ""
                         }
                     }
                 }
             }
 
-            Item {
-                Layout.fillHeight: true
-                Layout.minimumHeight: 5
-            }
+            ColumnLayout {
+                id: controlLayout
 
-            RowLayout {
                 Layout.fillWidth: true
-                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                spacing: 10
 
-                StyledText {
-                    id: timeTrack
+                Column {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignLeft
+                    spacing: 2
 
-                    text: Players.active == null ? "00:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}`
-                    font.pixelSize: Appearance.fonts.large
-                    color: Themes.m3Colors.m3OnBackground
+                    StyledLabel {
+                        width: parent.width
+                        text: Players.active ? Players.active.trackTitle : ""
+                        color: Themes.m3Colors.m3OnBackground
+                        font.pixelSize: Appearance.fonts.large
+                        wrapMode: Text.NoWrap
+                        elide: Text.ElideRight
+                    }
 
-                    Timer {
-                        running: Players.active !== null && Players.active.playbackState == MprisPlaybackState.Playing
-                        interval: 1000
-                        repeat: true
-                        onTriggered: Players.active.positionChanged()
+                    RowLayout {
+                        Layout.preferredWidth: 50
+
+                        StyledText {
+                            Layout.preferredWidth: width
+                            text: Players.active ? Players.active.trackArtist : ""
+                            color: Themes.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.small
+                            wrapMode: Text.NoWrap
+                            elide: Text.ElideRight
+                        }
+
+                        StyledText {
+                            text: Players.active ? "•" : ""
+                            color: Themes.m3Colors.m3OnBackground
+                            font.pixelSize: Appearance.fonts.extraLarge
+                        }
+
+                        StyledText {
+                            text: Players.active ? "Watched on " : ""
+                            color: Themes.m3Colors.m3OnBackground
+                            font.pixelSize: Appearance.fonts.small
+                        }
+
+                        IconImage {
+                            source: Quickshell.iconPath(Players.active.desktopEntry)
+                            asynchronous: true
+                            implicitWidth: 20
+                            implicitHeight: 20
+
+                            MArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: Qt.openUrlExternally(root.url)
+                            }
+                        }
                     }
                 }
 
                 Item {
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: 5
+                }
+
+                RowLayout {
                     Layout.fillWidth: true
-                }
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    spacing: 10
 
-                MaterialIcon {
-                    id: pauseButton
+                    StyledText {
+                        id: timeTrack
 
-                    icon: Players.active === null ? "pause_circle" : Players.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
-                    color: Themes.m3Colors.m3Primary
-                    font.pointSize: Appearance.fonts.extraLarge * 1.5
+                        text: Players.active == null ? "00:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}`
+                        font.pixelSize: Appearance.fonts.large
+                        color: Themes.m3Colors.m3OnBackground
 
-                    MArea {
-                        id: pauseMArea
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Players.active ? Players.active.togglePlaying() : ""
-                    }
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-                spacing: Appearance.spacing.normal
-
-                StyledButton {
-                    iconButton: "skip_previous"
-                    iconSize: Appearance.fonts.large * 1.2
-                    buttonTextColor: Themes.m3Colors.m3OnPrimary
-                    mArea.layerColor: "transparent"
-                    onClicked: Players.active ? Players.active.previous() : {}
-                }
-
-                Wavy {
-                    id: barSlide
-
-                    value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
-
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 40
-
-                    FrameAnimation {
-                        running: Players.active && Players.active.playbackState == MprisPlaybackState.Playing
-                        onTriggered: Players.active.positionChanged()
+                        Timer {
+                            running: Players.active !== null && Players.active.playbackState == MprisPlaybackState.Playing
+                            interval: 1000
+                            repeat: true
+                            onTriggered: Players.active.positionChanged()
+                        }
                     }
 
-                    onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    MaterialIcon {
+                        id: pauseButton
+
+                        icon: Players.active === null ? "pause_circle" : Players.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
+                        color: Themes.m3Colors.m3Primary
+                        font.pointSize: Appearance.fonts.extraLarge * 1.5
+
+                        MArea {
+                            id: pauseMArea
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: Players.active ? Players.active.togglePlaying() : ""
+                        }
+                    }
                 }
 
-                StyledButton {
-                    iconButton: "skip_next"
-                    iconSize: Appearance.fonts.large * 1.2
-                    buttonTextColor: Themes.m3Colors.m3OnPrimary
-                    mArea.layerColor: "transparent"
-                    onClicked: Players.active ? Players.active.next() : {}
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    spacing: Appearance.spacing.normal
+
+                    StyledButton {
+                        iconButton: "skip_previous"
+                        iconSize: Appearance.fonts.large * 1.2
+                        buttonTextColor: Themes.m3Colors.m3OnPrimary
+                        mArea.layerColor: "transparent"
+                        onClicked: Players.active ? Players.active.previous() : {}
+                    }
+
+                    Wavy {
+                        id: barSlide
+
+                        value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
+
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 40
+
+                        FrameAnimation {
+                            running: Players.active && Players.active.playbackState == MprisPlaybackState.Playing
+                            onTriggered: Players.active.positionChanged()
+                        }
+
+                        onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
+                    }
+
+                    StyledButton {
+                        iconButton: "skip_next"
+                        iconSize: Appearance.fonts.large * 1.2
+                        buttonTextColor: Themes.m3Colors.m3OnPrimary
+                        mArea.layerColor: "transparent"
+                        onClicked: Players.active ? Players.active.next() : {}
+                    }
                 }
             }
         }

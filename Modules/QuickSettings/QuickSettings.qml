@@ -1,13 +1,9 @@
 pragma ComponentBehavior: Bound
 
-import Quickshell
-import Quickshell.Io
-import Quickshell.Hyprland
-
 import QtQuick
-import QtQuick.Shapes
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -21,42 +17,9 @@ ColumnLayout {
 
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
     property int state: 0
-    property bool triggerAnimation: false
-    property bool shouldDestroy: false
 
     function toggleControlCenter(): void {
         isControlCenterOpen = !isControlCenterOpen;
-    }
-
-    onIsControlCenterOpenChanged: {
-        if (root.isControlCenterOpen) {
-            shouldDestroy = false;
-            triggerAnimation = false;
-            animationTriggerTimer.restart();
-        } else {
-            triggerAnimation = false;
-            destroyTimer.restart();
-        }
-    }
-
-    Timer {
-        id: animationTriggerTimer
-        interval: 50
-        repeat: false
-        onTriggered: {
-            if (root.isControlCenterOpen) {
-                root.triggerAnimation = true;
-            }
-        }
-    }
-
-    Timer {
-        id: destroyTimer
-        interval: Appearance.animations.durations.small + 50
-        repeat: false
-        onTriggered: {
-            root.shouldDestroy = true;
-        }
     }
 
     GlobalShortcut {
@@ -64,16 +27,8 @@ ColumnLayout {
         onPressed: root.toggleControlCenter()
     }
 
-    Timer {
-        id: cleanup
-
-        interval: 500
-        repeat: false
-        onTriggered: gc()
-    }
-
     width: Hypr.focusedMonitor.width * 0.3
-    height: root.triggerAnimation ? contentHeight : 0
+    height: isControlCenterOpen ? contentHeight : 0
     spacing: 0
 
     property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500

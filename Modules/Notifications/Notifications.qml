@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
 import qs.Configs
@@ -22,39 +21,9 @@ StyledRect {
     }
 
     property bool hasNotifications: Notifs.notifications.popupNotifications.length > 0
-    property bool triggerAnimation: false
-    property bool shouldDestroy: false
-
-    onHasNotificationsChanged: {
-        if (hasNotifications) {
-            shouldDestroy = false;
-            triggerAnimation = false;
-            animationTriggerTimer.restart();
-        } else {
-            triggerAnimation = false;
-            destroyTimer.restart();
-        }
-    }
-
-    Timer {
-        id: animationTriggerTimer
-        interval: 50
-        repeat: false
-        onTriggered: {
-            if (container.hasNotifications)
-                container.triggerAnimation = true;
-        }
-    }
-
-    Timer {
-        id: destroyTimer
-        interval: Appearance.animations.durations.small + 50
-        repeat: false
-        onTriggered: container.shouldDestroy = true
-    }
 
     width: 400
-    height: container.triggerAnimation ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
+    height: hasNotifications ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
     color: Themes.m3Colors.m3Background
 	radius: 0
 	clip: true

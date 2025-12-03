@@ -1,10 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Wayland
 
 import qs.Configs
 import qs.Services
@@ -16,42 +14,7 @@ import "Components" as Com
 StyledRect {
     id: root
 
-    property bool isNotificationCenterOpen: GlobalStates.isNotificationCenterOpen
-    property bool triggerAnimation: false
-    property bool shouldDestroy: false
-
-    onIsNotificationCenterOpenChanged: {
-        if (isNotificationCenterOpen) {
-            shouldDestroy = false;
-            triggerAnimation = false;
-            animationTriggerTimer.restart();
-        } else {
-            triggerAnimation = false;
-            destroyTimer.restart();
-        }
-    }
-
-    Timer {
-		id: animationTriggerTimer
-
-        interval: 50
-        repeat: false
-        onTriggered: {
-            if (root.isNotificationCenterOpen) {
-                root.triggerAnimation = true;
-            }
-        }
-    }
-
-    Timer {
-		id: destroyTimer
-
-        interval: Appearance.animations.durations.small + 50
-        repeat: false
-        onTriggered: {
-            root.shouldDestroy = true;
-        }
-    }
+	property bool isNotificationCenterOpen: GlobalStates.isNotificationCenterOpen
 
     anchors {
         right: parent.right
@@ -59,10 +22,10 @@ StyledRect {
     }
 
     width: 450
-    height: root.triggerAnimation ? Hypr.focusedMonitor.height * 0.7 : 0
+    height: isNotificationCenterOpen ? Hypr.focusedMonitor.height * 0.7 : 0
     clip: true
-	radius: 0
-	anchors.leftMargin: 15
+    radius: 0
+    anchors.leftMargin: 15
     bottomLeftRadius: Appearance.rounding.normal
     visible: height > 0
     color: Themes.m3Colors.m3Background
@@ -81,125 +44,130 @@ StyledRect {
         }
     }
 
-    ColumnLayout {
+    Loader {
         anchors.fill: parent
-        spacing: Appearance.spacing.normal
-        opacity: root.height > 50 ? 1 : 0
+        active: root.isNotificationCenterOpen
+        asynchronous: true
+        sourceComponent: ColumnLayout {
+            anchors.fill: parent
+            spacing: Appearance.spacing.normal
+            opacity: root.height > 50 ? 1 : 0
 
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
-
-        StyledRect {
-            Layout.fillWidth: true
-            implicitHeight: header.height + 30
-            Layout.margins: 5
-            Layout.alignment: Qt.AlignTop
-            color: "transparent"
-
-            RowLayout {
-                id: header
-
-                anchors.fill: parent
-                anchors.margins: 10
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: "Notifications"
-                    color: Themes.m3Colors.m3OnBackground
-                    font.pixelSize: Appearance.fonts.large * 1.2
-                    font.weight: Font.Medium
+            Behavior on opacity {
+                NAnim {
+                    duration: Appearance.animations.durations.small
                 }
+            }
 
-                Repeater {
-                    model: [
-                        {
-                            "icon": "clear_all",
-                            "action": () => {
-                                Notifs.notifications.dismissAll();
+            StyledRect {
+                Layout.fillWidth: true
+                implicitHeight: header.height + 30
+                Layout.margins: 5
+                Layout.alignment: Qt.AlignTop
+                color: "transparent"
+
+                RowLayout {
+                    id: header
+
+                    anchors.fill: parent
+                    anchors.margins: 10
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: "Notifications"
+                        color: Themes.m3Colors.m3OnBackground
+                        font.pixelSize: Appearance.fonts.large * 1.2
+                        font.weight: Font.Medium
+                    }
+
+                    Repeater {
+                        model: [
+                            {
+                                "icon": "clear_all",
+                                "action": () => {
+                                    Notifs.notifications.dismissAll();
+                                }
+                            },
+                            {
+                                "icon": Notifs.disabledDnD ? "notifications_off" : "notifications_active",
+                                "action": () => {
+                                    Notifs.disabledDnD = !Notifs.disabledDnD;
+                                }
                             }
-                        },
-                        {
-                            "icon": Notifs.disabledDnD ? "notifications_off" : "notifications_active",
-                            "action": () => {
-                                Notifs.disabledDnD = !Notifs.disabledDnD;
+                        ]
+
+                        delegate: StyledRect {
+                            id: notifHeaderDelegate
+
+                            Layout.preferredWidth: 32
+                            Layout.preferredHeight: 32
+                            color: iconMouse.containsMouse ? Themes.m3Colors.m3SurfaceContainerHigh : "transparent"
+
+                            required property var modelData
+
+                            MaterialIcon {
+                                anchors.centerIn: parent
+                                icon: notifHeaderDelegate.modelData.icon
+                                font.pointSize: Appearance.fonts.extraLarge * 0.6
+                                color: Themes.m3Colors.m3OnSurface
                             }
-                        }
-                    ]
 
-                    delegate: StyledRect {
-                        id: notifHeaderDelegate
+                            MArea {
+                                id: iconMouse
 
-                        Layout.preferredWidth: 32
-                        Layout.preferredHeight: 32
-                        color: iconMouse.containsMouse ? Themes.m3Colors.m3SurfaceContainerHigh : "transparent"
-
-                        required property var modelData
-
-                        MaterialIcon {
-                            anchors.centerIn: parent
-                            icon: notifHeaderDelegate.modelData.icon
-                            font.pointSize: Appearance.fonts.extraLarge * 0.6
-                            color: Themes.m3Colors.m3OnSurface
-                        }
-
-                        MArea {
-                            id: iconMouse
-
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            hoverEnabled: true
-                            onClicked: notifHeaderDelegate.modelData.action()
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                hoverEnabled: true
+                                onClicked: notifHeaderDelegate.modelData.action()
+                            }
                         }
                     }
                 }
             }
-        }
 
-        StyledRect {
-            color: Themes.m3Colors.m3OutlineVariant
-            Layout.fillWidth: true
-            implicitHeight: 1
-        }
+            StyledRect {
+                color: Themes.m3Colors.m3OutlineVariant
+                Layout.fillWidth: true
+                implicitHeight: 1
+            }
 
-        StyledRect {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            color: "transparent"
+            StyledRect {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                color: "transparent"
 
-            Flickable {
-                id: notifFlickable
+                Flickable {
+                    id: notifFlickable
 
-                anchors {
-                    right: parent.right
-                    top: parent.top
-                    bottom: parent.bottom
-                    left: parent.left
-                    leftMargin: 15
-                    rightMargin: 15
-                }
-
-                width: parent.width
-                contentHeight: notifColumn.height + 5
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
-
-                Column {
-                    id: notifColumn
+                    anchors {
+                        right: parent.right
+                        top: parent.top
+                        bottom: parent.bottom
+                        left: parent.left
+                        leftMargin: 15
+                        rightMargin: 15
+                    }
 
                     width: parent.width
-                    spacing: Appearance.spacing.normal
+                    contentHeight: notifColumn.height + 5
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
 
-                    Repeater {
-                        id: notifRepeater
+                    Column {
+                        id: notifColumn
 
-                        model: ScriptModel {
-                            values: [...Notifs.notifications.listNotifications.map(a => a)].reverse()
+                        width: parent.width
+                        spacing: Appearance.spacing.normal
+
+                        Repeater {
+                            id: notifRepeater
+
+                            model: ScriptModel {
+                                values: [...Notifs.notifications.listNotifications.map(a => a)].reverse()
+                            }
+
+                            delegate: Com.Wrapper {}
                         }
-
-                        delegate: Com.Wrapper {}
                     }
                 }
             }

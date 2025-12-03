@@ -20,22 +20,6 @@ StyledRect {
     property var wallpaperList: []
     property string searchQuery: ""
     property string debouncedSearchQuery: ""
-    property bool triggerAnimation: false
-    property bool shouldDestroy: false
-
-    Timer {
-        id: searchDebounceTimer
-
-        interval: 300
-        repeat: false
-        onTriggered: root.debouncedSearchQuery = root.searchQuery
-    }
-
-    focus: isWallpaperSwitcherOpen
-    onFocusChanged: {
-        if (isWallpaperSwitcherOpen)
-            searchField.forceActiveFocus();
-    }
 
     property var filteredWallpaperList: {
         if (debouncedSearchQuery === "")
@@ -67,36 +51,8 @@ StyledRect {
         onPressed: GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen
     }
 
-    onIsWallpaperSwitcherOpenChanged: {
-        if (isWallpaperSwitcherOpen) {
-            shouldDestroy = false;
-            triggerAnimation = false;
-            animationTriggerTimer.restart();
-        } else {
-            triggerAnimation = false;
-            destroyTimer.restart();
-        }
-    }
-
-    Timer {
-        id: animationTriggerTimer
-        interval: 50
-        repeat: false
-        onTriggered: {
-            if (root.isWallpaperSwitcherOpen)
-                root.triggerAnimation = true;
-        }
-    }
-
-    Timer {
-        id: destroyTimer
-        interval: Appearance.animations.durations.small + 50
-        repeat: false
-        onTriggered: root.shouldDestroy = true
-    }
-
     implicitWidth: Hypr.focusedMonitor.width * 0.6
-    implicitHeight: root.triggerAnimation ? Hypr.focusedMonitor.height * 0.3 : 0
+    implicitHeight: isWallpaperSwitcherOpen ? Hypr.focusedMonitor.height * 0.3 : 0
     color: Themes.m3Colors.m3Surface
     radius: 0
     topLeftRadius: Appearance.rounding.normal
@@ -118,6 +74,12 @@ StyledRect {
         anchors.fill: parent
         anchors.margins: Appearance.spacing.normal
         spacing: Appearance.spacing.normal
+
+        focus: root.isWallpaperSwitcherOpen
+        onFocusChanged: {
+            if (root.isWallpaperSwitcherOpen)
+                searchField.forceActiveFocus();
+        }
 
         StyledTextField {
             id: searchField

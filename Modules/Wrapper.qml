@@ -26,9 +26,6 @@ Variants {
         id: window
 
         property bool needFocusKeyboard: false
-
-        WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-
         property color barColor: Themes.m3Colors.m3Background
         property alias top: topBar
         property alias bottom: bottomBar
@@ -37,66 +34,34 @@ Variants {
 
         color: session.isSessionOpen ? Themes.withAlpha(Themes.m3Colors.m3Background, 0.7) : "transparent"
         exclusionMode: ExclusionMode.Ignore
-
-        Behavior on color {
-            CAnim {}
-        }
-
-        mask: Region {
-            item: cornersArea
-            intersection: Intersection.Subtract
-
-            Region {
-                item: bar
-                intersection: Intersection.Xor
-                Region {
-                    item: topBar
-                    intersection: Intersection.Xor
-                }
-            }
-            Region {
-                item: cal
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: app
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: mediaPlayer
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: quickSettings
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: session
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: wallpaperSelector
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: notif
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: notifCenter
-                intersection: Intersection.Xor
-            }
-            Region {
-                item: osd
-                intersection: Intersection.Xor
-            }
-        }
+        WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         anchors {
             left: true
             top: true
             right: true
             bottom: true
+        }
+
+        Behavior on color {
+            CAnim {}
+        }
+
+        mask: Region {
+			regions: regions.instances
+			item: cornersArea
+			intersection: Intersection.Subtract
+        }
+
+        Variants {
+            id: regions
+
+            model: window.contentItem.children
+            delegate: Region {
+                required property Item modelData
+				item: modelData
+				intersection: Intersection.Xor
+            }
         }
 
         Scope {
@@ -163,83 +128,62 @@ Variants {
                 color: window.barColor
                 anchors.bottom: parent.bottom
             }
+        }
 
-            App {
-                id: app
+        App {
+            id: app
 
-                onIsLauncherOpenChanged: {
-                    if (app.isLauncherOpen)
-                        window.needFocusKeyboard = true;
-                    else
-                        window.needFocusKeyboard = false;
-                }
+            onIsLauncherOpenChanged: app.isLauncherOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
+        }
+
+        Bar {
+            id: bar
+
+            onHeightChanged: {
+                topBar.implicitHeight = bar.height;
+                cal.anchors.topMargin = bar.height;
+                mediaPlayer.anchors.topMargin = bar.height;
+                quickSettings.anchors.topMargin = bar.height;
+                notif.anchors.topMargin = bar.height;
+                notifCenter.anchors.topMargin = bar.height;
             }
+        }
 
-            Bar {
-                id: bar
+        Calendar {
+            id: cal
+        }
 
-                onHeightChanged: {
-                    topBar.implicitHeight = bar.height;
-                    cal.anchors.topMargin = bar.height;
-                    mediaPlayer.anchors.topMargin = bar.height;
-                    quickSettings.anchors.topMargin = bar.height;
-                    notif.anchors.topMargin = bar.height;
-                    notifCenter.anchors.topMargin = bar.height;
-                }
-            }
+        MediaPlayer {
+            id: mediaPlayer
+        }
 
-            Calendar {
-                id: cal
-            }
+        QuickSettings {
+            id: quickSettings
+        }
 
-            MediaPlayer {
-                id: mediaPlayer
-            }
+        Session {
+            id: session
 
-            QuickSettings {
-                id: quickSettings
-            }
+            onIsSessionOpenChanged: session.isSessionOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
+            onShowConfirmDialogChanged: session.showConfirmDialog ? window.needFocusKeyboard = false : window.needFocusKeyboard = true
+        }
 
-            Session {
-                id: session
+        WallpaperSelector {
+            id: wallpaperSelector
 
-                onIsSessionOpenChanged: {
-                    if (session.isSessionOpen)
-                        window.needFocusKeyboard = true;
-                    else
-                        window.needFocusKeyboard = false;
-                }
+            onIsWallpaperSwitcherOpenChanged: wallpaperSelector.isWallpaperSwitcherOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
+        }
 
-                onShowConfirmDialogChanged: {
-                    if (session.showConfirmDialog)
-                        window.needFocusKeyboard = false;
-                    else
-                        window.needFocusKeyboard = true;
-                }
-            }
+        Notifications {
+            id: notif
+        }
 
-            WallpaperSelector {
-                id: wallpaperSelector
+        NotificationCenter {
+            id: notifCenter
+        }
 
-                onIsWallpaperSwitcherOpenChanged: {
-                    if (wallpaperSelector.isWallpaperSwitcherOpen)
-                        window.needFocusKeyboard = true;
-                    else
-                        window.needFocusKeyboard = false;
-                }
-            }
-
-            Notifications {
-                id: notif
-            }
-
-            NotificationCenter {
-                id: notifCenter
-            }
-
-            OSD {
-                id: osd
-            }
+        OSD {
+            id: osd
         }
 
         Rectangle {
