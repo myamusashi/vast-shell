@@ -40,23 +40,23 @@ Variants {
             source: ""
 
             Component.onCompleted: {
-                source = Paths.currentWallpaper
+                source = Paths.currentWallpaper;
 
                 Paths.currentWallpaperChanged.connect(() => {
                                                           if (walAnimation.running)
-                                                          walAnimation.complete()
-                                                          animatingWal.source = Paths.currentWallpaper
-                                                      })
+                                                          walAnimation.complete();
+                                                          animatingWal.source = Paths.currentWallpaper;
+                                                      });
                 animatingWal.statusChanged.connect(() => {
                                                        if (animatingWal.status == Image.Ready)
-                                                       walAnimation.start()
-                                                   })
+                                                       walAnimation.start();
+                                                   });
 
                 walAnimation.finished.connect(() => {
-                                                  img.source = animatingWal.source
-                                                  animatingWal.source = ""
-                                                  animatinRect.width = 0
-                                              })
+                                                  img.source = animatingWal.source;
+                                                  animatingWal.source = "";
+                                                  animatinRect.width = 0;
+                                              });
             }
         }
 
@@ -94,10 +94,10 @@ Variants {
             function set(path: string): void {
                 Quickshell.execDetached({
                                             "command": ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaperFile + " && " + `matugen image ${path}`]
-                                        })
+                                        });
             }
             function get(): string {
-                return Paths.currentWallpaper
+                return Paths.currentWallpaper;
             }
         }
     }

@@ -22,14 +22,14 @@ LazyLoader {
         color: "transparent"
 
         function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600)
-            const minutes = Math.floor((seconds % 3600) / 60)
-            const secs = seconds % 60
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
 
             if (hours > 0)
-                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-            return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+            return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
         }
 
         StyledRect {
@@ -209,11 +209,11 @@ LazyLoader {
                             onClicked: {
                                 Quickshell.execDetached({
                                                             "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
-                                                        })
+                                                        });
 
-                                Record.recordingTimer.stop()
-                                Record.recordingSeconds = 0
-                                Record.isRecordingControlOpen = false
+                                Record.recordingTimer.stop();
+                                Record.recordingSeconds = 0;
+                                Record.isRecordingControlOpen = false;
                             }
                         }
                     }

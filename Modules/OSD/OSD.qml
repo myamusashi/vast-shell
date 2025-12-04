@@ -36,29 +36,29 @@ StyledRect {
     }
 
     function calculateHeight() {
-        var totalHeight = 0
-        var spacing = 10
-        var padding = 10
+        var totalHeight = 0;
+        var spacing = 10;
+        var padding = 10;
 
         if (GlobalStates.isCapsLockOSDShow)
-            totalHeight += 50
+            totalHeight += 50;
         if (GlobalStates.isNumLockOSDShow)
-            totalHeight += 50
+            totalHeight += 50;
         if (GlobalStates.isVolumeOSDShow)
-            totalHeight += 80
+            totalHeight += 80;
 
-        var activeCount = 0
+        var activeCount = 0;
         if (GlobalStates.isCapsLockOSDShow)
-            activeCount++
+            activeCount++;
         if (GlobalStates.isNumLockOSDShow)
-            activeCount++
+            activeCount++;
         if (GlobalStates.isVolumeOSDShow)
-            activeCount++
+            activeCount++;
 
         if (activeCount > 1)
-            totalHeight += (activeCount - 1) * spacing
+            totalHeight += (activeCount - 1) * spacing;
 
-        return totalHeight > 0 ? totalHeight + (padding * 2) : 0
+        return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
     }
 
     Loader {

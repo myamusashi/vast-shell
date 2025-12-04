@@ -11,13 +11,13 @@ ColumnLayout {
     property var currentDate: new Date()
 
     function getDayName(index) {
-        const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
-        return days[index]
+        const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        return days[index];
     }
 
     function getMonthName(index) {
-        const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"]
-        return months[index]
+        const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"];
+        return months[index];
     }
 
     Timer {
@@ -78,9 +78,9 @@ ColumnLayout {
                 color: Themes.m3Colors.m3OnSurface
                 renderType: Text.NativeRendering
                 text: {
-                    const hours = root.currentDate.getHours().toString().padStart(2, '0')
-                    const minutes = root.currentDate.getMinutes().toString().padStart(2, '0')
-                    return `${hours}:${minutes}`
+                    const hours = root.currentDate.getHours().toString().padStart(2, '0');
+                    const minutes = root.currentDate.getMinutes().toString().padStart(2, '0');
+                    return `${hours}:${minutes}`;
                 }
                 Layout.alignment: Qt.AlignHCenter
 

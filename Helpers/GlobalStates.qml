@@ -29,37 +29,37 @@ Singleton {
                              })
 
     function startOSDTimer(osdName) {
-        var timer = Qt.createQmlObject('import QtQuick 2.15; Timer { interval: 2000; repeat: false; }', root, "dynamicTimer")
+        var timer = Qt.createQmlObject('import QtQuick 2.15; Timer { interval: 2000; repeat: false; }', root, "dynamicTimer");
 
         timer.triggered.connect(function () {
-            closeOSD(osdName)
-            timer.destroy()
-            osdTimers[osdName] = null
+            closeOSD(osdName);
+            timer.destroy();
+            osdTimers[osdName] = null;
 
-            checkAndClosePanelWindow()
-        })
+            checkAndClosePanelWindow();
+        });
 
         if (osdTimers[osdName]) {
-            osdTimers[osdName].stop()
-            osdTimers[osdName].destroy()
+            osdTimers[osdName].stop();
+            osdTimers[osdName].destroy();
         }
 
-        osdTimers[osdName] = timer
-        timer.start()
+        osdTimers[osdName] = timer;
+        timer.start();
     }
 
     function closeOSD(osdName) {
         if (osdName === "capslock")
-            isCapsLockOSDShow = false
+            isCapsLockOSDShow = false;
         else if (osdName === "numlock")
-            isNumLockOSDShow = false
+            isNumLockOSDShow = false;
         else if (osdName === "volume")
-            isVolumeOSDShow = false
+            isVolumeOSDShow = false;
     }
 
     function checkAndClosePanelWindow() {
         if (!isVolumeOSDShow && !isCapsLockOSDShow && !isNumLockOSDShow)
-            cleanup.start()
+            cleanup.start();
     }
 
     Timer {
@@ -74,12 +74,12 @@ Singleton {
         target: KeyLockState.state
 
         function onCapsLockChanged() {
-            root.isCapsLockOSDShow = true
-            root.startOSDTimer("capslock")
+            root.isCapsLockOSDShow = true;
+            root.startOSDTimer("capslock");
         }
         function onNumLockChanged() {
-            root.isNumLockOSDShow = true
-            root.startOSDTimer("numlock")
+            root.isNumLockOSDShow = true;
+            root.startOSDTimer("numlock");
         }
     }
 
@@ -87,8 +87,8 @@ Singleton {
         target: Pipewire.defaultAudioSink.audio
 
         function onVolumeChanged() {
-            root.isVolumeOSDShow = true
-            root.startOSDTimer("volume")
+            root.isVolumeOSDShow = true;
+            root.startOSDTimer("volume");
         }
     }
 

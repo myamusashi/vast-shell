@@ -1,37 +1,25 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S bash
+set -euo pipefail
 
-backup_commas() {
-	local file="$1"
-	sed -i.bak-comma \
-		-e 's/,\([[:space:]]*\)$/___COMMA___\1/g' \
-		"$file"
+format_file() {
+	qmlformat -w 4 -W 360 -i "$1" || {
+		echo "Failed: $1" >&2
+		return 1
+	}
 }
 
-restore_commas() {
-	local file="$1"
-	sed -i 's/___COMMA___/,/g' "$file"
-	rm -f "${file}.bak-comma"
+export -f format_file
+
+mapfile -t all_files < <(find "${1:-.}" -name "*.qml" -type f)
+[ ${#all_files[@]} -eq 0 ] && {
+	echo "No QML files found"
+	exit 0
 }
 
-find . -name "*.qml" -type f | while read -r file; do
-	echo "Formatting: $file"
-	qmlfmt -t 4 -i 4 -w -b 250 "$file"
-	awk '
-    /^[[:space:]]*if \(.*\)$/ {
-        print
-        getline
-        if ($0 ~ /^    / || $0 ~ /^\t/) {
-            print
-        } else if ($0 ~ /^[[:space:]]*$/) {
-            print
-        } else {
-            print "    " $0
-        }
-        next
-    }
-    { print }
-    ' "$file" >"$file.tmp"
-
-	mv "$file.tmp" "$file"
-	sed -i "s/pragma ComponentBehavior$/pragma ComponentBehavior: Bound/g" "$file"
-done
+echo "Formatting ${#all_files[@]} files..."
+printf '%s\0' "${all_files[@]}" |
+	xargs -0 -P "${QMLFMT_JOBS:-$(nproc)}" -I {} bash -c 'format_file "$@"' _ {} &&
+	echo "Done" || {
+	echo "Errors occurred" >&2
+	exit 1
+}

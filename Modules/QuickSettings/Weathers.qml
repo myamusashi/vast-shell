@@ -64,16 +64,20 @@ ColumnLayout {
             spacing: Appearance.spacing.large * 5
 
             Repeater {
-                model: [{
+                model: [
+                    {
                         "value": Weather.tempMinData + "° / " + Weather.tempMaxData + "°",
                         "label": "Min / Max"
-                    }, {
+                    },
+                    {
                         "value": Weather.humidityData + "%",
                         "label": "Kelembapan"
-                    }, {
+                    },
+                    {
                         "value": Weather.windSpeedData + " m/s",
                         "label": "Angin"
-                    }]
+                    }
+                ]
 
                 ColumnLayout {
                     id: weatherPage

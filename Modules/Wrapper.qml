@@ -140,12 +140,12 @@ Variants {
             id: bar
 
             onHeightChanged: {
-                topBar.implicitHeight = bar.height
-                cal.anchors.topMargin = bar.height
-                mediaPlayer.anchors.topMargin = bar.height
-                quickSettings.anchors.topMargin = bar.height
-                notif.anchors.topMargin = bar.height
-                notifCenter.anchors.topMargin = bar.height
+                topBar.implicitHeight = bar.height;
+                cal.anchors.topMargin = bar.height;
+                mediaPlayer.anchors.topMargin = bar.height;
+                quickSettings.anchors.topMargin = bar.height;
+                notif.anchors.topMargin = bar.height;
+                notifCenter.anchors.topMargin = bar.height;
             }
         }
 
@@ -216,24 +216,24 @@ Variants {
         Component.onCompleted: {
             switch (corner) {
                 case 0:
-                anchors.left = parent.left
-                anchors.top = parent.top
-                break
+                anchors.left = parent.left;
+                anchors.top = parent.top;
+                break;
                 case 1:
-                anchors.top = parent.top
-                anchors.right = parent.right
-                rotation = 90
-                break
+                anchors.top = parent.top;
+                anchors.right = parent.right;
+                rotation = 90;
+                break;
                 case 2:
-                anchors.right = parent.right
-                anchors.bottom = parent.bottom
-                rotation = 180
-                break
+                anchors.right = parent.right;
+                anchors.bottom = parent.bottom;
+                rotation = 180;
+                break;
                 case 3:
-                anchors.left = parent.left
-                anchors.bottom = parent.bottom
-                rotation = -90
-                break
+                anchors.left = parent.left;
+                anchors.bottom = parent.bottom;
+                rotation = -90;
+                break;
             }
         }
 

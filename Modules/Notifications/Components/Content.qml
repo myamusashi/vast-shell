@@ -18,7 +18,7 @@ Column {
     spacing: Appearance.spacing.small
 
     Component.onCompleted: {
-        Notifs.appName = notif.appName
+        Notifs.appName = notif.appName;
     }
 
     Row {
@@ -56,8 +56,8 @@ Column {
                     id: whenTime
 
                     text: {
-                        const now = new Date()
-                        return TimeAgo.timeAgoWithIfElse(now)
+                        const now = new Date();
+                        return TimeAgo.timeAgoWithIfElse(now);
                     }
                     color: Themes.m3Colors.m3OnSurfaceVariant
                 }
@@ -96,8 +96,8 @@ Column {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
-                    root.isShowMoreBody = !root.isShowMoreBody
-                    rotateArrowIcon.running = !rotateArrowIcon.running
+                    root.isShowMoreBody = !root.isShowMoreBody;
+                    rotateArrowIcon.running = !rotateArrowIcon.running;
                 }
             }
         }
@@ -156,9 +156,9 @@ Column {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        actionButton.modelData.invoke()
-                        Notifs.notifications.removePopupNotification(root.notif)
-                        Notifs.notifications.removeListNotification(root.notif)
+                        actionButton.modelData.invoke();
+                        Notifs.notifications.removePopupNotification(root.notif);
+                        Notifs.notifications.removeListNotification(root.notif);
                     }
                 }
                 StyledText {

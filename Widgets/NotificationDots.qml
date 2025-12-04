@@ -25,20 +25,20 @@ Item {
         MaterialIcon {
             color: {
                 if (root.notificationCount > 0 && root.notificationCount !== null && root.isDndEnable !== true)
-                    Themes.m3Colors.m3Primary
+                    Themes.m3Colors.m3Primary;
                 else if (root.isDndEnable)
-                    Themes.m3Colors.m3OnSurface
+                    Themes.m3Colors.m3OnSurface;
                 else
-                    Themes.m3Colors.m3OnSurface
+                    Themes.m3Colors.m3OnSurface;
             }
             font.pointSize: Appearance.fonts.large
             icon: {
                 if (root.notificationCount > 0 && root.notificationCount !== null && root.isDndEnable !== true)
-                    "notifications_unread"
+                    "notifications_unread";
                 else if (root.isDndEnable)
-                    "notifications_off"
+                    "notifications_off";
                 else
-                    "notifications"
+                    "notifications";
             }
         }
     }
