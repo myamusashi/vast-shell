@@ -6,7 +6,7 @@ import qs.Services
 import qs.Components
 
 ColumnLayout {
-	property alias passwordInput: passwordInput
+    property alias passwordInput: passwordInput
 
     implicitWidth: parent.width
     StyledLabel {

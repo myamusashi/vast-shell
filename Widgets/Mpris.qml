@@ -31,7 +31,7 @@ StyledRect {
     RowLayout {
         id: mediaInfo
 
-    anchors.centerIn: parent
+        anchors.centerIn: parent
         spacing: Appearance.spacing.small
 
         MaterialIcon {

@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Services.SystemTray
 import Quickshell.Widgets
+import Quickshell.Services.SystemTray
 
 import qs.Configs
 import qs.Helpers

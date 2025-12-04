@@ -17,7 +17,7 @@ Item {
         id: root
 
         property int notificationCount: Notifs.notifications.listNotifications.length || 0
-        property bool isDndEnable: Notifs.disabledDnD
+        property bool isDndEnable: Notifs.notifications.disabledDnD
 
         implicitWidth: 10
         implicitHeight: parent.height

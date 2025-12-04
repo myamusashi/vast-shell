@@ -43,40 +43,40 @@ Slider {
             anchors.fill: parent
             antialiasing: true
             onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                var trackStartX = bg.trackStartX;
-                var trackWidth = bg.trackWidth;
-                var normalizedValue = bg.normalizedValue;
-                var activeWidth = trackWidth * normalizedValue;
-                var gapOffset = slider.separatorWidth / 2;
-                activeWidth = Math.max(0, activeWidth - gapOffset);
+                var ctx = getContext("2d")
+                ctx.clearRect(0, 0, width, height)
+                var trackStartX = bg.trackStartX
+                var trackWidth = bg.trackWidth
+                var normalizedValue = bg.normalizedValue
+                var activeWidth = trackWidth * normalizedValue
+                var gapOffset = slider.separatorWidth / 2
+                activeWidth = Math.max(0, activeWidth - gapOffset)
                 if (activeWidth <= 0)
-                    return;
-                ctx.strokeStyle = slider.activeColor;
-                ctx.lineWidth = 4;
-                ctx.lineCap = "round";
-                ctx.lineJoin = "round";
-                ctx.beginPath();
-                ctx.moveTo(trackStartX, height / 2);
-                var steps = Math.max(Math.floor(activeWidth / 3), 30);
+                    return
+                ctx.strokeStyle = slider.activeColor
+                ctx.lineWidth = 4
+                ctx.lineCap = "round"
+                ctx.lineJoin = "round"
+                ctx.beginPath()
+                ctx.moveTo(trackStartX, height / 2)
+                var steps = Math.max(Math.floor(activeWidth / 3), 30)
                 for (var i = 1; i <= steps; i++) {
-                    var progress = i / steps;
-                    var currentProgress = (progress * activeWidth) / trackWidth;
-                    var x = trackStartX + trackWidth * currentProgress;
-                    var waveOffset = Math.sin(currentProgress * Math.PI * 2 * slider.waveFrequency + slider.waveAnimationPhase) * slider.waveAmplitude;
-                    var y = height / 2 + waveOffset;
-                    ctx.lineTo(x, y);
+                    var progress = i / steps
+                    var currentProgress = (progress * activeWidth) / trackWidth
+                    var x = trackStartX + trackWidth * currentProgress
+                    var waveOffset = Math.sin(currentProgress * Math.PI * 2 * slider.waveFrequency + slider.waveAnimationPhase) * slider.waveAmplitude
+                    var y = height / 2 + waveOffset
+                    ctx.lineTo(x, y)
                 }
-                ctx.stroke();
+                ctx.stroke()
             }
             Connections {
                 target: slider
                 function onVisualPositionChanged() {
-                    wavyCanvas.requestPaint();
+                    wavyCanvas.requestPaint()
                 }
                 function onWaveAnimationPhaseChanged() {
-                    wavyCanvas.requestPaint();
+                    wavyCanvas.requestPaint()
                 }
             }
         }
@@ -86,33 +86,33 @@ Slider {
             anchors.fill: parent
             antialiasing: true
             onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                var trackStartX = bg.trackStartX;
-                var trackWidth = bg.trackWidth;
-                var normalizedValue = bg.normalizedValue;
-                var gapOffset = slider.separatorWidth / 2;
-                var inactiveStartPos = normalizedValue + (gapOffset / trackWidth);
-                var inactiveWidth = trackWidth * (1 - inactiveStartPos);
+                var ctx = getContext("2d")
+                ctx.clearRect(0, 0, width, height)
+                var trackStartX = bg.trackStartX
+                var trackWidth = bg.trackWidth
+                var normalizedValue = bg.normalizedValue
+                var gapOffset = slider.separatorWidth / 2
+                var inactiveStartPos = normalizedValue + (gapOffset / trackWidth)
+                var inactiveWidth = trackWidth * (1 - inactiveStartPos)
                 if (inactiveWidth <= 0 || inactiveStartPos >= 1)
-                    return;
-                ctx.strokeStyle = slider.inactiveColor;
-                ctx.lineWidth = 4;
-                ctx.lineCap = "round";
-                ctx.lineJoin = "round";
+                    return
+                ctx.strokeStyle = slider.inactiveColor
+                ctx.lineWidth = 4
+                ctx.lineCap = "round"
+                ctx.lineJoin = "round"
 
-                var startX = trackStartX + trackWidth * inactiveStartPos;
-                var startY = height / 2;
+                var startX = trackStartX + trackWidth * inactiveStartPos
+                var startY = height / 2
 
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(trackStartX + trackWidth, height / 2);
-                ctx.stroke();
+                ctx.beginPath()
+                ctx.moveTo(startX, startY)
+                ctx.lineTo(trackStartX + trackWidth, height / 2)
+                ctx.stroke()
             }
             Connections {
                 target: slider
                 function onVisualPositionChanged() {
-                    inactiveCanvas.requestPaint();
+                    inactiveCanvas.requestPaint()
                 }
             }
         }

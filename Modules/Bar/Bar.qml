@@ -8,7 +8,7 @@ import qs.Components
 
 StyledRect {
     color: Themes.m3Colors.m3Background
-    height: GlobalStates.isBarOpen ? 40 : 5
+    height: GlobalStates.isBarOpen ? 40 : 10
     width: parent.width
 
     GlobalShortcut {

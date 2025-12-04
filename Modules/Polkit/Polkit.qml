@@ -9,19 +9,19 @@ DialogBox {
     id: root
 
     needKeyboardFocus: true
-	activeAsync: PolAgent.agent.isActive
+    activeAsync: PolAgent.agent.isActive
     header: Header {}
     body: Body {
         id: bodyPolkit
 
         Connections {
-			target: root
+            target: root
 
-			function onActiveChanged() {
-				bodyPolkit.passwordInput.focus = true;
-				bodyPolkit.passwordInput.forceActiveFocus();
-			}
-		}
+            function onActiveChanged() {
+                bodyPolkit.passwordInput.focus = true
+                bodyPolkit.passwordInput.forceActiveFocus()
+            }
+        }
     }
 
     onAccepted: PolAgent.agent?.flow?.submit(bodyPolkit.passwordInput.text)
