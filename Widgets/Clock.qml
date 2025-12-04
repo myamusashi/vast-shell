@@ -4,12 +4,10 @@ import QtQuick.Layouts
 import qs.Configs
 import qs.Helpers
 import qs.Components
-import qs.Modules.Calendar
 
 StyledRect {
     Layout.fillHeight: true
     color: "transparent"
-    // color: Themes.colors.withAlpha(Themes.m3Colors.m3Background, 0.79)
     implicitWidth: timeContainer.width + 15
     radius: Appearance.rounding.small
 
