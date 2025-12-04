@@ -8,7 +8,6 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 import qs.Components
-import qs.Modules.MediaPlayer
 
 StyledRect {
     id: root
@@ -32,7 +31,7 @@ StyledRect {
     RowLayout {
         id: mediaInfo
 
-        anchors.centerIn: parent
+    anchors.centerIn: parent
         spacing: Appearance.spacing.small
 
         MaterialIcon {

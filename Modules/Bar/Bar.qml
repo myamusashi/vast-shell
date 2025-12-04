@@ -29,30 +29,33 @@ StyledRect {
         }
     }
 
-    RowLayout {
-        id: rowbar
+    Loader {
+        anchors.fill: parent
+        active: GlobalStates.isBarOpen
+        asynchronous: true
+        sourceComponent: RowLayout {
+            id: rowbar
 
-        visible: GlobalStates.isBarOpen
-        anchors {
-            fill: parent
-            leftMargin: 5
-            rightMargin: 5
-        }
+            anchors {
+                fill: parent
+                leftMargin: 5
+                rightMargin: 5
+            }
 
-        Left {
-            Layout.fillHeight: true
-            Layout.preferredWidth: parent.width / 6
-            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-        }
-        Middle {
-            Layout.fillHeight: true
-            Layout.preferredWidth: parent.width / 6
-            Layout.alignment: Qt.AlignCenter
-        }
-        Right {
-            Layout.fillHeight: true
-            Layout.preferredWidth: parent.width / 6
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            Left {
+                Layout.fillHeight: true
+                Layout.preferredWidth: parent.width / 6
+                Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+            }
+            Middle {
+                Layout.fillHeight: true
+                Layout.preferredWidth: parent.width / 6
+            }
+            Right {
+                Layout.fillHeight: true
+                Layout.preferredWidth: parent.width / 6
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            }
         }
     }
 }
