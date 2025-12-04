@@ -47,7 +47,7 @@ StyledRect {
     }
 
     implicitWidth: Hypr.focusedMonitor.width * 0.3
-    implicitHeight: root.triggerAnimation ? contentLoader.implicitHeight + 20 : 0
+    implicitHeight: isMediaPlayerOpen ? contentLoader.implicitHeight + 20 : 0
     color: Themes.m3Colors.m3Surface
     radius: 0
     bottomLeftRadius: Appearance.rounding.normal
