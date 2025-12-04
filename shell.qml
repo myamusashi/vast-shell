@@ -26,11 +26,11 @@ ShellRoot {
 
     Connections {
         function onReloadCompleted() {
-            Quickshell.inhibitReloadPopup()
+            Quickshell.inhibitReloadPopup();
         }
 
         function onReloadFailed() {
-            Quickshell.inhibitReloadPopup()
+            Quickshell.inhibitReloadPopup();
         }
 
         target: Quickshell

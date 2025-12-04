@@ -26,7 +26,7 @@ Item {
     x: parent.width
 
     Component.onCompleted: {
-        slideInAnim.start()
+        slideInAnim.start();
     }
 
     signal animationCompleted
@@ -77,12 +77,12 @@ Item {
     }
 
     function removeNotificationWithAnimation() {
-        isRemoving = true
-        slideOutAnim.start()
+        isRemoving = true;
+        slideOutAnim.start();
 
         Qt.callLater(function () {
-            removeTimer.start()
-        })
+            removeTimer.start();
+        });
     }
 
     StyledRect {
@@ -111,18 +111,17 @@ Item {
 
                 onActiveChanged: {
                     if (delegateMouseNotif.drag.active)
-                        return
-
+                        return;
                     if (Math.abs(root.x) > (root.width * 0.45)) {
-                        var targetX = root.x > 0 ? root.width : -root.width
-                        swipeOutAnim.to = targetX
-                        swipeOutAnim.start()
+                        var targetX = root.x > 0 ? root.width : -root.width;
+                        swipeOutAnim.to = targetX;
+                        swipeOutAnim.start();
 
                         Qt.callLater(function () {
-                            swipeRemoveTimer.start()
-                        })
+                            swipeRemoveTimer.start();
+                        });
                     } else
-                        root.x = 0
+                        root.x = 0;
                 }
             }
 
@@ -140,8 +139,8 @@ Item {
 
                 interval: Appearance.animations.durations.normal
                 onTriggered: {
-                    Notifs.notifications.removePopupNotification(root.modelData)
-                    Notifs.notifications.removeListNotification(root.modelData)
+                    Notifs.notifications.removePopupNotification(root.modelData);
+                    Notifs.notifications.removeListNotification(root.modelData);
                 }
             }
         }

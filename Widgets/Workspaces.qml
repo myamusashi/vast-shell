@@ -33,7 +33,7 @@ StyledRect {
         onClicked: () => {
             Quickshell.execDetached({
                                         "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
-                                    })
+                                    });
         }
     }
 
@@ -66,12 +66,12 @@ StyledRect {
                     onExited: drag.source.isCaught = false
 
                     onDropped: drag => {
-                        const toplevel = drag.source
+                        const toplevel = drag.source;
 
                         if (toplevel.modelData.workspace !== workspaceContainer.workspace) {
-                            const address = toplevel.modelData.address
-                            Hypr.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`)
-                            Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`)
+                            const address = toplevel.modelData.address;
+                            Hypr.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`);
+                            Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`);
                         }
                     }
                 }
@@ -80,7 +80,7 @@ StyledRect {
                     anchors.fill: parent
                     onClicked: {
                         if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                        Hypr.dispatch("workspace " + (parent.index + 1))
+                        Hypr.dispatch("workspace " + (parent.index + 1));
                     }
                 }
 
@@ -120,25 +120,25 @@ StyledRect {
                         Drag.hotSpot.y: height / 2
                         Drag.onActiveChanged: {
                             if (Drag.active) {
-                                parent = visualParent
+                                parent = visualParent;
                             } else {
-                                var mapped = mapToItem(originalParent, 0, 0)
-                                parent = originalParent
+                                var mapped = mapToItem(originalParent, 0, 0);
+                                parent = originalParent;
 
                                 if (toplevelData?.floating) {
-                                    x = mapped.x
-                                    y = mapped.y
+                                    x = mapped.x;
+                                    y = mapped.y;
                                 } else if (!isCaught) {
-                                    x = mapped.x
-                                    y = mapped.y
+                                    x = mapped.x;
+                                    y = mapped.y;
                                 } else {
                                     // Fixed repositioning logic
-                                    const baseX = toplevelData?.at[0] ?? 0
-                                    const baseY = toplevelData?.at[1] ?? 0
-                                    const offsetX = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[0]
-                                    const offsetY = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[1]
-                                    x = (baseX - offsetX) * root.scaleFactor + 5
-                                    y = (baseY - offsetY) * root.scaleFactor + 5
+                                    const baseX = toplevelData?.at[0] ?? 0;
+                                    const baseY = toplevelData?.at[1] ?? 0;
+                                    const offsetX = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[0];
+                                    const offsetY = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[1];
+                                    x = (baseX - offsetX) * root.scaleFactor + 5;
+                                    y = (baseY - offsetY) * root.scaleFactor + 5;
                                 }
                             }
                         }
@@ -158,26 +158,26 @@ StyledRect {
 
                             onPositionChanged: {
                                 if (drag.active)
-                                dragged = true
+                                dragged = true;
                             }
 
                             onClicked: mouse => {
                                 if (!dragged) {
                                     if (mouse.button === Qt.LeftButton)
-                                    toplevel.waylandHandle.activate()
+                                    toplevel.waylandHandle.activate();
                                     else if (mouse.button === Qt.RightButton)
-                                    toplevel.waylandHandle.close()
+                                    toplevel.waylandHandle.close();
                                 }
                             }
 
                             onReleased: {
                                 if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
-                                    const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0)
-                                    const x = Math.round((mapped.x - 5) / root.scaleFactor + root.reserved[0])
-                                    const y = Math.round((mapped.y - 5) / root.scaleFactor + root.reserved[1])
+                                    const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
+                                    const x = Math.round((mapped.x - 5) / root.scaleFactor + root.reserved[0]);
+                                    const y = Math.round((mapped.y - 5) / root.scaleFactor + root.reserved[1]);
 
-                                    Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`)
-                                    toplevel.Drag.drop()
+                                    Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
+                                    toplevel.Drag.drop();
                                 }
                             }
                         }

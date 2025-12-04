@@ -22,12 +22,12 @@ Singleton {
     }
 
     function up(): void {
-        root.isNightModeOn = true
-        hyprsunset.running = true
+        root.isNightModeOn = true;
+        hyprsunset.running = true;
     }
 
     function down(): void {
-        root.isNightModeOn = false
-        killHyprsunset.running = true
+        root.isNightModeOn = false;
+        killHyprsunset.running = true;
     }
 }

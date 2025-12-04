@@ -18,8 +18,8 @@ DialogBox {
             target: root
 
             function onActiveChanged() {
-                bodyPolkit.passwordInput.focus = true
-                bodyPolkit.passwordInput.forceActiveFocus()
+                bodyPolkit.passwordInput.focus = true;
+                bodyPolkit.passwordInput.forceActiveFocus();
             }
         }
     }

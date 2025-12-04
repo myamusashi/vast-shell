@@ -19,18 +19,18 @@ StyledRect {
     property string url: ""
 
     function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600)
-        const minutes = Math.floor((seconds % 3600) / 60)
-        const secs = Math.floor(seconds % 60)
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
 
         if (hours > 0)
-            return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+            return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-        return `${minutes}:${secs.toString().padStart(2, '0')}`
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
     }
 
     function getTrackUrl(): void {
-        trackUrl.running = true
+        trackUrl.running = true;
     }
 
     Process {
@@ -40,8 +40,8 @@ StyledRect {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const res = text.trim()
-                root.url = res
+                const res = text.trim();
+                root.url = res;
             }
         }
     }

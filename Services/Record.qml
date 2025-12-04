@@ -18,12 +18,12 @@ Singleton {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = text.trim()
+                const data = text.trim();
                 if (data !== "") {
-                    root.isRecordingControlOpen = true
+                    root.isRecordingControlOpen = true;
                 } else {
-                    root.recordingSeconds = 0
-                    root.isRecordingControlOpen = false
+                    root.recordingSeconds = 0;
+                    root.isRecordingControlOpen = false;
                 }
             }
         }

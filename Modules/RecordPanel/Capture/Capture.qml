@@ -27,14 +27,14 @@ ClippingRectangle {
     }
 
     function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600)
-        const minutes = Math.floor((seconds % 3600) / 60)
-        const secs = seconds % 60
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
 
         if (hours > 0)
-            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
     implicitWidth: 350
@@ -49,11 +49,11 @@ ClippingRectangle {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = text.trim()
+                const data = text.trim();
                 if (data !== "")
-                root.isRecording = true
+                root.isRecording = true;
                 else
-                root.isRecording = false
+                root.isRecording = false;
             }
         }
     }
@@ -148,31 +148,35 @@ ClippingRectangle {
             spacing: width * 0.2
 
             Repeater {
-                model: [{
+                model: [
+                    {
                         "icon": "photo_camera",
                         "label": "Screenshot",
                         "action": () => {
                             Quickshell.execDetached({
                                                         "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-                                                    })
-                            scope.open = false
+                                                    });
+                            scope.open = false;
                         }
-                    }, {
+                    },
+                    {
                         "icon": "fiber_manual_record",
                         "label": "Start",
                         "action": () => {
                             Quickshell.execDetached({
                                                         "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
-                                                    })
-                            scope.open = root.isRecording ? false : true
+                                                    });
+                            scope.open = root.isRecording ? false : true;
                         },
                         "highlight": root.isRecording,
                         "showRecordTime": Record.recordingSeconds
-                    }, {
+                    },
+                    {
                         "icon": root.icon,
                         "label": "Microphone",
                         "action": () => Audio.toggleMute(root.node)
-                    }]
+                    }
+                ]
 
                 delegate: Item {
                     id: controlDelegate

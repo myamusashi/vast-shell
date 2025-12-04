@@ -81,17 +81,20 @@ StyledRect {
                     }
 
                     Repeater {
-                        model: [{
+                        model: [
+                            {
                                 "icon": "clear_all",
                                 "action": () => {
-                                    Notifs.notifications.dismissAll()
+                                    Notifs.notifications.dismissAll();
                                 }
-                            }, {
+                            },
+                            {
                                 "icon": Notifs.disabledDnD ? "notifications_off" : "notifications_active",
                                 "action": () => {
-                                    Notifs.disabledDnD = !Notifs.disabledDnD
+                                    Notifs.disabledDnD = !Notifs.disabledDnD;
                                 }
-                            }]
+                            }
+                        ]
 
                         delegate: StyledRect {
                             id: notifHeaderDelegate

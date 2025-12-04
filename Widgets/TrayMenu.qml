@@ -65,10 +65,10 @@ Rectangle {
 
                 onClicked: {
                     if (entry.modelData.hasChildren) {
-                        root.trayMenu = entry.child
-                        view.positionViewAtBeginning()
+                        root.trayMenu = entry.child;
+                        view.positionViewAtBeginning();
                     } else {
-                        entry.modelData.triggered()
+                        entry.modelData.triggered();
                     }
                 }
             }
