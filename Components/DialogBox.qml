@@ -1,25 +1,27 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
+import Quickshell.Wayland
 
 import qs.Configs
 import qs.Helpers
 
-Loader {
+LazyLoader {
     id: root
 
-    required property string header
-    required property string body
+    property bool needKeyboardFocus: false
+    required property Component header
+    required property Component body
 
     signal accepted
     signal rejected
 
-    active: false
-    asynchronous: true
+    activeAsync: false
 
-    sourceComponent: PanelWindow {
+    component: PanelWindow {
+        id: window
+
         anchors {
             left: true
             right: true
@@ -28,6 +30,7 @@ Loader {
         }
 
         color: Themes.withAlpha(Themes.m3Colors.m3Background, 0.3)
+        WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         MArea {
             anchors.fill: parent
@@ -37,8 +40,8 @@ Loader {
 
         StyledRect {
             anchors.centerIn: parent
-            implicitWidth: column.implicitWidth + 40
-            implicitHeight: column.implicitHeight + 40
+            implicitWidth: column.width + 60
+            implicitHeight: column.height + 40
 
             radius: Appearance.rounding.large
             color: Themes.m3Colors.m3Surface
@@ -49,16 +52,17 @@ Loader {
                 id: column
 
                 anchors.centerIn: parent
-                width: 360
+                width: Math.max(300, loaderHeader.item ? loaderHeader.implicitWidth : 0, loaderBody.item ? loaderBody.implicitWidth : 0, rowButtons.implicitWidth)
                 anchors.margins: 20
                 spacing: Appearance.spacing.large
 
-                StyledText {
-                    text: root.header
-                    color: Themes.m3Colors.m3OnSurface
-                    elide: Text.ElideMiddle
-                    font.pixelSize: Appearance.fonts.extraLarge
-                    font.bold: true
+                Loader {
+                    id: loaderHeader
+
+                    width: parent.width
+                    active: true
+                    asynchronous: true
+                    sourceComponent: root.header
                 }
 
                 StyledRect {
@@ -67,12 +71,13 @@ Loader {
                     color: Themes.m3Colors.m3OutlineVariant
                 }
 
-                StyledText {
+                Loader {
+                    id: loaderBody
+
                     width: parent.width
-                    text: root.body
-                    color: Themes.m3Colors.m3OnBackground
-                    font.pixelSize: Appearance.fonts.large
-                    wrapMode: Text.Wrap
+                    active: true
+                    asynchronous: true
+                    sourceComponent: root.body
                 }
 
                 StyledRect {
@@ -82,6 +87,8 @@ Loader {
                 }
 
                 Row {
+                    id: rowButtons
+
                     anchors.right: parent.right
                     spacing: Appearance.spacing.normal
 
