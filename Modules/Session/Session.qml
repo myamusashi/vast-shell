@@ -51,7 +51,7 @@ StyledRect {
         sourceComponent: ColumnLayout {
             anchors.fill: parent
             anchors.margins: 10
-            spacing: 5
+            spacing: Appearance.spacing.normal
 
             Repeater {
                 id: repeater
@@ -223,10 +223,20 @@ StyledRect {
     DialogBox {
         id: boxConfirmation
 
-        anchors.centerIn: parent
-
-        header: "root"
-        body: "Do you want to " + root.pendingActionName.toLowerCase()
+        header: StyledText {
+            text: "Session"
+            color: Themes.m3Colors.m3OnSurface
+            elide: Text.ElideMiddle
+            font.pixelSize: Appearance.fonts.extraLarge
+            font.bold: true
+        }
+        body: StyledText {
+            text: "Do you want to " + root.pendingActionName.toLowerCase() + "?"
+            font.pixelSize: Appearance.fonts.large
+            color: Themes.m3Colors.m3OnSurface
+            wrapMode: Text.Wrap
+            width: parent.width
+        }
         active: root.showConfirmDialog
 
         onAccepted: {
