@@ -26,7 +26,18 @@ ClippingRectangle {
         objects: [root.node]
     }
 
-    implicitWidth: 300
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600)
+        const minutes = Math.floor((seconds % 3600) / 60)
+        const secs = seconds % 60
+
+        if (hours > 0)
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+
+        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+    }
+
+    implicitWidth: 350
     implicitHeight: columnLayout.implicitHeight
     color: Themes.m3Colors.m3SurfaceContainer
     radius: Appearance.rounding.small
@@ -128,7 +139,7 @@ ClippingRectangle {
         color: Themes.m3Colors.m3SurfaceContainerHigh
         radius: 0
         Layout.fillWidth: true
-        Layout.preferredHeight: rowLayout.implicitHeight + 30
+        Layout.preferredHeight: rowLayout.implicitHeight + 70
 
         RowLayout {
             id: rowLayout
@@ -155,7 +166,8 @@ ClippingRectangle {
                                                     })
                             scope.open = root.isRecording ? false : true
                         },
-                        "highlight": root.isRecording
+                        "highlight": root.isRecording,
+                        "showRecordTime": Record.recordingSeconds
                     }, {
                         "icon": root.icon,
                         "label": "Microphone",
@@ -172,13 +184,17 @@ ClippingRectangle {
                     Layout.preferredHeight: 70
 
                     StyledRect {
+                        id: iconRect
+
                         anchors.centerIn: parent
-                        width: 60
-                        height: 60
+                        implicitWidth: 60
+                        implicitHeight: 60
                         color: controlDelegate.modelData.highlight ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3SurfaceContainerHighest
                         radius: Appearance.rounding.full
 
                         MaterialIcon {
+                            id: iconItem
+
                             anchors.centerIn: parent
                             icon: controlDelegate.modelData.icon
                             color: controlDelegate.modelData.highlight ? Themes.m3Colors.m3OnPrimary : Themes.m3Colors.m3OnSurface
@@ -191,6 +207,20 @@ ClippingRectangle {
                             hoverEnabled: true
                             onClicked: controlDelegate.modelData.action()
                         }
+                    }
+
+                    StyledText {
+                        visible: controlDelegate.modelData.showRecordTime !== undefined && root.isRecording
+                        anchors {
+                            top: iconRect.bottom
+                            topMargin: 2
+                            horizontalCenter: iconRect.horizontalCenter
+                        }
+                        text: root.formatTime(Record.recordingSeconds)
+                        color: Themes.m3Colors.m3OnBackground
+                        font.pixelSize: Appearance.fonts.large
+                        font.bold: true
+                        font.family: Appearance.fonts.familyMono
                     }
                 }
             }
