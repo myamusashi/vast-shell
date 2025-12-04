@@ -9,7 +9,6 @@ import Quickshell.Services.Pipewire
 
 import qs.Configs
 import qs.Services
-import qs.Helpers
 import qs.Widgets
 import qs.Components
 
