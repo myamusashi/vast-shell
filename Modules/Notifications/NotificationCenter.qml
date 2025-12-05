@@ -9,7 +9,7 @@ import qs.Services
 import qs.Helpers
 import qs.Components
 
-import "Components" as Com
+import "Components"
 
 StyledRect {
     id: root
@@ -21,7 +21,7 @@ StyledRect {
         top: parent.top
     }
 
-    width: 450
+    width: Hypr.focusedMonitor.width * 0.25
     height: isNotificationCenterOpen ? Hypr.focusedMonitor.height * 0.7 : 0
     clip: true
     radius: 0
@@ -84,14 +84,12 @@ StyledRect {
                         model: [
                             {
                                 "icon": "clear_all",
-                                "action": () => {
-                                    Notifs.notifications.dismissAll();
-                                }
+                                "action": () => Notifs.clearAll()
                             },
                             {
-                                "icon": Notifs.disabledDnD ? "notifications_off" : "notifications_active",
+                                "icon": Notifs.dnd ? "notifications_off" : "notifications_active",
                                 "action": () => {
-                                    Notifs.disabledDnD = !Notifs.disabledDnD;
+                                    Notifs.dnd = !Notifs.dnd;
                                 }
                             }
                         ]
@@ -160,15 +158,25 @@ StyledRect {
                         spacing: Appearance.spacing.normal
 
                         Repeater {
-                            id: notifRepeater
-
                             model: ScriptModel {
-                                values: [...Notifs.notifications.listNotifications.map(a => a)].reverse()
+                                values: [...Notifs.notClosed].reverse()
                             }
 
-                            delegate: Com.Wrapper {}
+                            delegate: Wrapper {
+                                required property var modelData
+                                notif: modelData
+                            }
                         }
                     }
+                }
+
+                StyledText {
+                    anchors.centerIn: parent
+                    text: "No notifications"
+                    color: Themes.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.medium
+                    visible: Notifs.notClosed.length === 0
+                    opacity: 0.6
                 }
             }
         }

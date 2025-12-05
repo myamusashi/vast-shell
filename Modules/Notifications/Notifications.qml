@@ -8,7 +8,7 @@ import qs.Configs
 import qs.Services
 import qs.Components
 
-import "Components" as Com
+import "Components"
 
 StyledRect {
     id: container
@@ -20,9 +20,9 @@ StyledRect {
         topMargin: 5
     }
 
-    property bool hasNotifications: Notifs.notifications.popupNotifications.length > 0
+    property bool hasNotifications: Notifs.popups.length > 0
 
-    width: 400
+    width: Hypr.focusedMonitor.width * 0.2
     height: hasNotifications ? Math.min(notifColumn.height + 30, parent.height * 0.4) : 0
     color: Themes.m3Colors.m3Background
     radius: 0
@@ -58,30 +58,20 @@ StyledRect {
             spacing: Appearance.spacing.normal
 
             Repeater {
-                id: notifRepeater
-
                 model: ScriptModel {
-                    values: [...Notifs.notifications.popupNotifications.map(a => a)].reverse()
+                    values: [...Notifs.popups].reverse()
                 }
 
-                delegate: Com.Wrapper {
-                    id: wrapper
+                delegate: Wrapper {
+                    required property var modelData
+                    notif: modelData
+                    width: notifColumn.width
 
-                    onEntered: closePopups.stop()
-                    onExited: closePopups.start()
-
-                    Timer {
-                        id: closePopups
-
-                        interval: wrapper.modelData.urgency === NotificationUrgency.Critical ? 10000 : 5000
-                        running: true
-                        onTriggered: wrapper.removeNotificationWithAnimation()
+                    onEntered: {
+                        modelData.timer.stop();
                     }
-
-                    Timer {
-                        id: removeTimer
-                        interval: Appearance.animations.durations.emphasizedAccel + 50
-                        onTriggered: Notifs.notifications.removePopupNotification(wrapper.modelData)
+                    onExited: {
+                        modelData.timer.restart();
                     }
                 }
             }

@@ -1,11 +1,8 @@
 import QtQuick
-import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
 import qs.Configs
 import qs.Helpers
-import qs.Services
 import qs.Components
 
 Item {
@@ -13,12 +10,13 @@ Item {
 
     property alias contentLayout: contentLayout
     property alias iconLayout: iconLayout
-    required property Notification modelData
+    required property var notif
     property bool isRemoving: false
     property alias mArea: delegateMouseNotif
 
     signal entered
     signal exited
+    signal animationCompleted
 
     width: parent.width
     height: isRemoving ? 0 : contentLayout.height * 1.3
@@ -28,8 +26,6 @@ Item {
     Component.onCompleted: {
         slideInAnim.start();
     }
-
-    signal animationCompleted
 
     NAnim {
         id: slideInAnim
@@ -69,30 +65,23 @@ Item {
         }
     }
 
-    RetainableLock {
-        id: retainNotif
-
-        object: root.modelData
-        locked: true
-    }
-
     function removeNotificationWithAnimation() {
         isRemoving = true;
         slideOutAnim.start();
 
         Qt.callLater(function () {
-            removeTimer.start();
+            swipeRemoveTimer.start();
         });
     }
 
     StyledRect {
         anchors.fill: parent
-        color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3ErrorContainer : Themes.m3Colors.m3SurfaceContainer
+        color: root.notif.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3ErrorContainer : Themes.m3Colors.m3SurfaceContainer
         radius: Appearance.rounding.normal
         anchors.leftMargin: 10
         clip: true
-        border.color: root.modelData.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3Error : "transparent"
-        border.width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
+        border.color: root.notif.urgency === NotificationUrgency.Critical ? Themes.m3Colors.m3Error : "transparent"
+        border.width: root.notif.urgency === NotificationUrgency.Critical ? 1 : 0
 
         MArea {
             id: delegateMouseNotif
@@ -139,8 +128,8 @@ Item {
 
                 interval: Appearance.animations.durations.normal
                 onTriggered: {
-                    Notifs.notifications.removePopupNotification(root.modelData);
-                    Notifs.notifications.removeListNotification(root.modelData);
+                    if (root.notif)
+                        root.notif.close();
                 }
             }
         }
@@ -156,15 +145,14 @@ Item {
             spacing: Appearance.spacing.normal
 
             Icon {
-                id: iconLayout
-
-                modelData: root.modelData
+				id: iconLayout
+				modelData: root.notif
             }
 
             Content {
                 id: contentLayout
 
-                notif: root.modelData
+				modelData: root.notif
                 width: parent.width - 40 - parent.spacing
             }
         }

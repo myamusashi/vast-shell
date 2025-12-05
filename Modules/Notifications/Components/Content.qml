@@ -5,21 +5,16 @@ import Quickshell.Services.Notifications
 
 import qs.Helpers
 import qs.Configs
-import qs.Services
 import qs.Components
 
 Column {
     id: root
 
-    required property Notification notif
+    required property var modelData
     property bool isShowMoreBody: false
 
     width: parent.width
     spacing: Appearance.spacing.small
-
-    Component.onCompleted: {
-        Notifs.appName = notif.appName;
-    }
 
     Row {
         width: parent.width
@@ -37,7 +32,7 @@ Column {
                 StyledText {
                     id: appName
 
-                    text: root.notif.appName
+                    text: root.modelData.appName
                     font.pixelSize: Appearance.fonts.large
                     font.weight: Font.Medium
                     color: Themes.m3Colors.m3OnSurfaceVariant
@@ -107,7 +102,7 @@ Column {
         id: summary
 
         width: parent.width
-        text: root.notif.summary
+        text: root.modelData.summary
         font.pixelSize: Appearance.fonts.medium
         font.weight: Font.DemiBold
         color: Themes.m3Colors.m3OnSurface
@@ -120,7 +115,7 @@ Column {
         id: body
 
         width: parent.width
-        text: root.notif.body || ""
+        text: root.modelData.body || ""
         font.pixelSize: Appearance.fonts.medium
         color: Themes.m3Colors.m3OnSurface
         textFormat: Text.StyledText
@@ -132,10 +127,10 @@ Column {
         width: parent.width
         topPadding: 8
         spacing: Appearance.spacing.normal
-        visible: root.notif?.actions && root.notif.actions.length > 0
+        visible: root.modelData?.actions && root.modelData.actions.length > 0
 
         Repeater {
-            model: root.notif?.actions
+            model: root.modelData?.actions
             delegate: StyledRect {
                 id: actionButton
 
@@ -155,11 +150,7 @@ Column {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        actionButton.modelData.invoke();
-                        Notifs.notifications.removePopupNotification(root.notif);
-                        Notifs.notifications.removeListNotification(root.notif);
-                    }
+                    onClicked: actionButton.modelData.invoke()
                 }
                 StyledText {
                     anchors.centerIn: parent

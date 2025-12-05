@@ -1,8 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Effects
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
@@ -14,7 +12,7 @@ import qs.Components
 Item {
     id: root
 
-    required property Notification modelData
+    required property var modelData
     property bool hasImage: modelData.image.length > 0
     property bool hasAppIcon: modelData.appIcon.length > 0
     width: 40
