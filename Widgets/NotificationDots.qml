@@ -1,11 +1,8 @@
 import QtQuick
-import QtQuick.Layouts
 
 import qs.Configs
 import qs.Helpers
-import qs.Components
 import qs.Services
-import qs.Modules.Notifications
 
 Item {
     id: dots
@@ -16,7 +13,7 @@ Item {
     Dots {
         id: root
 
-        property int notificationCount: Notifs.popups.length || 0
+        property int notificationCount: Notifs.notClosed.length
         property bool isDndEnable: Notifs.dnd
 
         implicitWidth: 10
