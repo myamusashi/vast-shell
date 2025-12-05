@@ -130,7 +130,7 @@ Column {
 
                 width: (parent.width - parent.children.length - 1) / parent.children.length + 10
                 height: 40
-                color: actionMouse.pressed ? Themes.m3Colors.m3SecondaryContainer : actionMouse.containsMouse ? Themes.m3Colors.m3SecondaryContainer : Themes.m3Colors.m3SurfaceContainerHigh
+                color: Themes.m3Colors.m3SurfaceContainerHigh
                 radius: Appearance.rounding.full
                 StyledRect {
                     anchors.fill: parent
@@ -138,8 +138,6 @@ Column {
                     color: "transparent"
                 }
                 MArea {
-                    id: actionMouse
-
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
@@ -150,7 +148,7 @@ Column {
                     text: actionButton.modelData.text
                     font.pixelSize: Appearance.fonts.medium
                     font.weight: Font.Medium
-                    color: Themes.m3Colors.m3OnSecondaryContainer
+                    color: Themes.m3Colors.m3OnBackground
                     elide: Text.ElideRight
                 }
             }

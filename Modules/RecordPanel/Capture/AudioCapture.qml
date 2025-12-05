@@ -194,10 +194,8 @@ ClippingRectangle {
                     }
 
                     CustomMixerEntry {
-                        useCustomProperties: true
+                        useCustomProperties: false
                         node: Pipewire.defaultAudioSink
-
-                        customProperty: AudioProfiles {}
                     }
 
                     Rectangle {

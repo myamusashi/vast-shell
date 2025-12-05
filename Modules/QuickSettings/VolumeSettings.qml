@@ -29,10 +29,8 @@ ScrollView {
             }
 
             MixerEntry {
-                useCustomProperties: true
+                useCustomProperties: false
                 node: Pipewire.defaultAudioSink
-
-                customProperty: AudioProfiles {}
             }
 
             Rectangle {
