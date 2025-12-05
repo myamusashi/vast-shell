@@ -12,9 +12,6 @@ import qs.Components
 ColumnLayout {
     id: root
 
-    anchors.centerIn: parent
-    spacing: Appearance.spacing.normal
-
     required property bool useCustomProperties
     property Component customProperty
     required property PwNode node
@@ -24,57 +21,59 @@ ColumnLayout {
         objects: [root.node]
     }
 
-    RowLayout {
+    Loader {
+        active: true
+
         Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
+        Layout.fillHeight: true
+        Layout.alignment: Qt.AlignLeft
+        sourceComponent: root.useCustomProperties ? root.customProperty : defaultNode
+    }
 
-        MaterialIcon {
-            Layout.alignment: Qt.AlignVCenter
-            visible: root.icon !== ""
-            icon: root.icon
-            color: Themes.m3Colors.m3OnSurface
-            font.pointSize: Appearance.fonts.extraLarge
-        }
+    Component {
+        id: defaultNode
 
-        Loader {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
-            active: true
-            sourceComponent: root.useCustomProperties ? root.customProperty : defaultNode
-        }
-
-        Component {
-            id: defaultNode
-
-            StyledLabel {
-                text: {
-                    const app = root.node.properties["application.name"] ?? (root.node.description != "" ? root.node.description : root.node.name);
-                    const media = root.node.properties["media.name"];
-                    return media != undefined ? `${app} - ${media}` : app;
-                }
-                elide: Text.ElideRight
-                wrapMode: Text.Wrap
+        StyledLabel {
+            text: {
+                const app = root.node.properties["application.name"] ?? (root.node.description != "" ? root.node.description : root.node.name);
+                const media = root.node.properties["media.name"];
+                return media != undefined ? `${app} - ${media}` : app;
             }
-        }
-
-        StyledButton {
-            Layout.alignment: Qt.AlignVCenter
-            buttonTitle: root.node.audio.muted ? "unmute" : "mute"
-            onClicked: root.node.audio.muted = !root.node.audio.muted
-            buttonTextColor: Themes.m3Colors.m3OnSurface
-            buttonColor: Themes.m3Colors.m3SurfaceContainer
-            isButtonFullRound: false
-            backgroundRounding: 15
+            elide: Text.ElideRight
+            wrapMode: Text.Wrap
+            Layout.fillWidth: true
         }
     }
 
     RowLayout {
         Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
+        Layout.alignment: Qt.AlignCenter
 
-        StyledLabel {
-            Layout.preferredWidth: 50
-            text: `${Math.floor(root.node.audio.volume * 100)}%`
+        StyledRect {
+            Layout.alignment: Qt.AlignCenter
+            implicitWidth: 30
+            implicitHeight: 30
+            radius: Appearance.rounding.full
+
+            MaterialIcon {
+                anchors.centerIn: parent
+                visible: icon !== ""
+                icon: root.icon
+                color: Themes.m3Colors.m3OnSurface
+                font.pointSize: Appearance.fonts.large * 1.5
+            }
+
+            MArea {
+                id: mArea
+
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: mevent => {
+                    if (mevent.button === Qt.LeftButton)
+                    Audio.toggleMute(root.node);
+                }
+                onWheel: mevent => Audio.wheelAction(mevent, root.node)
+            }
         }
 
         StyledSlide {
