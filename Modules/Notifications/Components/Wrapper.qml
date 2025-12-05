@@ -145,14 +145,14 @@ Item {
             spacing: Appearance.spacing.normal
 
             Icon {
-				id: iconLayout
-				modelData: root.notif
+                id: iconLayout
+                modelData: root.notif
             }
 
             Content {
                 id: contentLayout
 
-				modelData: root.notif
+                modelData: root.notif
                 width: parent.width - 40 - parent.spacing
             }
         }
