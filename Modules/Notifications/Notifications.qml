@@ -59,7 +59,7 @@ StyledRect {
 
             Repeater {
                 model: ScriptModel {
-                    values: [...Notifs.popups].reverse()
+                    values: [...Notifs.popups]
                 }
 
                 delegate: Wrapper {

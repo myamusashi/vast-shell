@@ -159,7 +159,7 @@ StyledRect {
 
                         Repeater {
                             model: ScriptModel {
-                                values: [...Notifs.notClosed].reverse()
+                                values: [...Notifs.notClosed]
                             }
 
                             delegate: Wrapper {

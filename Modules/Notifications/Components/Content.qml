@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Services.Notifications
 
 import qs.Helpers
 import qs.Configs
@@ -50,50 +49,42 @@ Column {
                 StyledText {
                     id: whenTime
 
-                    text: {
-                        const now = new Date();
-                        return TimeAgo.timeAgoWithIfElse(now);
-                    }
+                    property date notificationDate: root.modelData.time
+                    text: TimeAgo.timeAgoWithIfElse(notificationDate)
                     color: Themes.m3Colors.m3OnSurfaceVariant
+
+                    Timer {
+                        interval: 60000
+                        running: true
+                        repeat: true
+                        onTriggered: whenTime.text = TimeAgo.timeAgoWithIfElse(whenTime.notificationDate)
+                    }
                 }
             }
         }
 
         StyledRect {
             id: expandButton
-
             width: 32
             height: 32
             radius: Appearance.rounding.large
             color: "transparent"
+
             MaterialIcon {
                 id: expandIcon
 
                 anchors.centerIn: parent
                 icon: root.isShowMoreBody ? "expand_less" : "expand_more"
-                font.pointSize: Appearance.fonts.large
+                font.pixelSize: Appearance.fonts.extraLarge
                 color: Themes.m3Colors.m3OnSurfaceVariant
-                RotationAnimator on rotation {
-                    id: rotateArrowIcon
-
-                    from: 0
-                    to: 180
-                    duration: Appearance.animations.durations.normal
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.animations.curves.standard
-                    running: false
-                }
             }
+
             MArea {
                 id: expandButtonMouse
-
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: {
-                    root.isShowMoreBody = !root.isShowMoreBody;
-                    rotateArrowIcon.running = !rotateArrowIcon.running;
-                }
+                onClicked: root.isShowMoreBody = !root.isShowMoreBody
             }
         }
     }
@@ -131,12 +122,14 @@ Column {
 
         Repeater {
             model: root.modelData?.actions
+
             delegate: StyledRect {
                 id: actionButton
 
-                width: (parent.width - (parent.spacing * (parent.children.length - 1))) / parent.children.length + 10
+                required property var modelData
+
+                width: (parent.width - parent.children.length - 1) / parent.children.length + 10
                 height: 40
-                required property NotificationAction modelData
                 color: actionMouse.pressed ? Themes.m3Colors.m3SecondaryContainer : actionMouse.containsMouse ? Themes.m3Colors.m3SecondaryContainer : Themes.m3Colors.m3SurfaceContainerHigh
                 radius: Appearance.rounding.full
                 StyledRect {
