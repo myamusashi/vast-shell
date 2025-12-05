@@ -13,16 +13,16 @@ import qs.Components
 StyledRect {
     id: root
 
-    property real workspaceWidth: (Hypr.focusedMonitor.width - (root.reserved[0] + root.reserved[2])) * scaleFactor / Hypr.focusedMonitor.scale
-    property real workspaceHeight: (Hypr.focusedMonitor.height - (root.reserved[1] + root.reserved[3])) * scaleFactor / Hypr.focusedMonitor.scale
-    property real containerWidth: workspaceWidth + borderWidth
-    property real containerHeight: workspaceHeight + borderWidth
+    property real workspaceWidth: Hypr.focusedMonitor.width - (root.reserved[0] + root.reserved[2])
+    property real workspaceHeight: Hypr.focusedMonitor.height - (root.reserved[1] + root.reserved[3])
+    property real containerWidth: 60
+    property real containerHeight: 30
     property list<int> reserved: Hypr.focusedMonitor.lastIpcObject.reserved
-    property real scaleFactor: 0.1
+    property real scaleFactor: Math.min(containerWidth / workspaceWidth, containerHeight / workspaceHeight)
     property real borderWidth: 2
 
-    implicitWidth: workspaceRow.width + 20
-    implicitHeight: 40
+    implicitWidth: workspaceRow.width
+    implicitHeight: 30
 
     MArea {
         id: workspaceMBarArea
@@ -32,8 +32,8 @@ StyledRect {
         cursorShape: Qt.PointingHandCursor
         onClicked: () => {
             Quickshell.execDetached({
-                                        "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
-                                    });
+                "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
+            });
         }
     }
 
@@ -49,8 +49,8 @@ StyledRect {
             delegate: StyledRect {
                 id: workspaceContainer
 
-                width: 50
-                height: 30
+                width: root.containerWidth
+                height: root.containerHeight
                 color: workspace?.focused ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnPrimary
                 radius: 0
                 clip: true
@@ -80,7 +80,7 @@ StyledRect {
                     anchors.fill: parent
                     onClicked: {
                         if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                        Hypr.dispatch("workspace " + (parent.index + 1));
+                            Hypr.dispatch("workspace " + (parent.index + 1));
                     }
                 }
 
@@ -99,20 +99,23 @@ StyledRect {
                         property StyledRect visualParent: root
                         property bool isCaught: false
 
-                        captureSource: null
+                        captureSource: waylandHandle
                         live: false
 
-                        width: 30 + root.scaleFactor
-                        height: 25 + root.scaleFactor
+                        width: sourceSize.width * root.scaleFactor / Hypr.focusedMonitor.scale
+                        height: sourceSize.height * root.scaleFactor / Hypr.focusedMonitor.scale
                         scale: (Drag.active && !toplevelData?.floating) ? 0.98 : 1
 
                         Rectangle {
-                            anchors.fill: toplevel
-                            color: Themes.m3Colors.m3Outline
-                        }
+                            anchors.fill: parent
+                            color: Themes.m3Colors.m3SurfaceContainerHigh
+                            border.color: Themes.m3Colors.m3Outline
+							border.width: 1
+						}
+						anchors.margins: 2
 
-                        x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + 3
-                        y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + 3
+                        x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2
+                        y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2
                         z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
 
                         Drag.active: mouseArea.drag.active
@@ -132,13 +135,12 @@ StyledRect {
                                     x = mapped.x;
                                     y = mapped.y;
                                 } else {
-                                    // Fixed repositioning logic
                                     const baseX = toplevelData?.at[0] ?? 0;
                                     const baseY = toplevelData?.at[1] ?? 0;
                                     const offsetX = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[0];
                                     const offsetY = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[1];
-                                    x = (baseX - offsetX) * root.scaleFactor + 5;
-                                    y = (baseY - offsetY) * root.scaleFactor + 5;
+                                    x = (baseX - offsetX) * root.scaleFactor + (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2;
+                                    y = (baseY - offsetY) * root.scaleFactor + (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2;
                                 }
                             }
                         }
@@ -158,23 +160,25 @@ StyledRect {
 
                             onPositionChanged: {
                                 if (drag.active)
-                                dragged = true;
+                                    dragged = true;
                             }
 
                             onClicked: mouse => {
                                 if (!dragged) {
                                     if (mouse.button === Qt.LeftButton)
-                                    toplevel.waylandHandle.activate();
+                                        toplevel.waylandHandle.activate();
                                     else if (mouse.button === Qt.RightButton)
-                                    toplevel.waylandHandle.close();
+                                        toplevel.waylandHandle.close();
                                 }
                             }
 
                             onReleased: {
                                 if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
                                     const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
-                                    const x = Math.round((mapped.x - 5) / root.scaleFactor + root.reserved[0]);
-                                    const y = Math.round((mapped.y - 5) / root.scaleFactor + root.reserved[1]);
+                                    const centerOffsetX = (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2;
+                                    const centerOffsetY = (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2;
+                                    const x = Math.round((mapped.x - centerOffsetX) / root.scaleFactor + root.reserved[0]);
+                                    const y = Math.round((mapped.y - centerOffsetY) / root.scaleFactor + root.reserved[1]);
 
                                     Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
                                     toplevel.Drag.drop();
