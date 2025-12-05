@@ -56,7 +56,7 @@ Singleton {
                                                "name": profile.name,
                                                "description": profile.description,
                                                "available": profile.available,
-                                               "readable": formatProfileName(profile.name)
+                                               "readable": root.formatProfileName(profile.name)
                                            };
                                        });
             }
@@ -79,7 +79,7 @@ Singleton {
     Process {
         id: activeProfiles
 
-        command: ["sh", "-c", "pw-dump | jq '[.[] | select(.type == \"PipeWire:Interface:Device\") | {id: .id, name: .info.props[\"device.name\"], active_profile: .info.params.Profile}].[0].active_profile'"]
+        command: ["sh", "-c", "pw-dump | jq '[.[] | select(.type == \"PipeWire:Interface:Device\") | {id: .id, name: .info.props[\"device.name\"], active_profile: .info.params.Profile}].[].active_profile'"]
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
@@ -104,7 +104,6 @@ Singleton {
         if (name === "pro-audio")
             return "Pro Audio";
 
-        // separate output and input
         const parts = name.split("+");
         const formatted = [];
 

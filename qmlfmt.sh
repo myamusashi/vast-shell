@@ -1,4 +1,6 @@
 #!/usr/bin/env -S bash
+# https://github.com/noctalia-dev/noctalia-shell/blob/main/Bin/dev/qmlfmt.sh
+
 set -euo pipefail
 
 format_file() {

@@ -45,9 +45,9 @@ Singleton {
 
     function levenshteinDistance(a: string, b: string): int {
         if (a.length === 0)
-        return b.length;
+            return b.length;
         if (b.length === 0)
-        return a.length;
+            return a.length;
 
         const shorter = a.length <= b.length ? a : b;
         const longer = a.length <= b.length ? b : a;

@@ -20,7 +20,7 @@ Singleton {
 
     function findMaxId(): int {
         if (hyprland.workspaces.length === 0)
-        return 1;
+            return 1;
 
         let num = hyprland.workspaces.length;
         let maxId = hyprland.workspaces[num - 1]?.id || 1;

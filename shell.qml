@@ -25,6 +25,8 @@ ShellRoot {
     Overview {}
 
     Connections {
+        target: Quickshell
+
         function onReloadCompleted() {
             Quickshell.inhibitReloadPopup();
         }
@@ -32,8 +34,6 @@ ShellRoot {
         function onReloadFailed() {
             Quickshell.inhibitReloadPopup();
         }
-
-        target: Quickshell
     }
 
     GlobalShortcut {
