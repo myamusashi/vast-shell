@@ -141,6 +141,8 @@ ShellRoot {
                 }
             }
 
+            Keys.onTabPressed: keyHandler.forceActiveFocus()
+
             FocusScope {
                 id: inputFocus
 
@@ -299,18 +301,6 @@ ShellRoot {
                         onTriggered: {
                             passwordBuffer.randomXOffset = (Math.random() - 0.5) * 4;
                             passwordBuffer.randomYOffset = (Math.random() - 0.5) * 4;
-                        }
-                    }
-
-                    Behavior on color {
-                        CAnim {
-                            duration: Appearance.animations.durations.small
-                        }
-                    }
-
-                    Behavior on font.pointSize {
-                        NAnim {
-                            duration: 100
                         }
                     }
 
