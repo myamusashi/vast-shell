@@ -60,25 +60,23 @@ Singleton {
         x = x / 0.95047;
         z = z / 1.08883;
 
-        x = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
-        y = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
-        z = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
+        let fx = x > 0.008856 ? Math.pow(x, 1 / 3) : (7.787 * x) + (16 / 116);
+        let fy = y > 0.008856 ? Math.pow(y, 1 / 3) : (7.787 * y) + (16 / 116);
+        let fz = z > 0.008856 ? Math.pow(z, 1 / 3) : (7.787 * z) + (16 / 116);
 
-        let l = (116 * y) - 16;
-        let a = 500 * (x - y);
-        let bLab = 200 * (y - z);
+        let l = (116 * fy) - 16;
+        let a = 500 * (fx - fy);
+        let bLab = 200 * (fy - fz);
 
         let chroma = Math.sqrt(a * a + bLab * bLab);
         let hue = Math.atan2(bLab, a) * 180 / Math.PI;
         if (hue < 0)
             hue += 360;
 
-        let tone = l;
-
         return {
             "h": hue,
             "c": chroma,
-            "t": tone
+            "t": l
         };
     }
 
@@ -88,13 +86,13 @@ Singleton {
         let bLab = c * Math.sin(hueRad);
         let l = t;
 
-        let y = (l + 16) / 116;
-        let x = a / 500 + y;
-        let z = y - bLab / 200;
+        let fy = (l + 16) / 116;
+        let fx = a / 500 + fy;
+        let fz = fy - bLab / 200;
 
-        x = x > 0.206897 ? Math.pow(x, 3) : (x - 16 / 116) / 7.787;
-        y = y > 0.206897 ? Math.pow(y, 3) : (y - 16 / 116) / 7.787;
-        z = z > 0.206897 ? Math.pow(z, 3) : (z - 16 / 116) / 7.787;
+        let x = fx > 0.206897 ? Math.pow(fx, 3) : (fx - 16 / 116) / 7.787;
+        let y = fy > 0.206897 ? Math.pow(fy, 3) : (fy - 16 / 116) / 7.787;
+        let z = fz > 0.206897 ? Math.pow(fz, 3) : (fz - 16 / 116) / 7.787;
 
         x = x * 0.95047;
         z = z * 1.08883;
@@ -114,16 +112,48 @@ Singleton {
         return Qt.rgba(r, g, b, 1.0);
     }
 
+    function isInGamut(r, g, b) {
+        return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1;
+    }
+
+    function hctToRgbWithGamutMapping(h, c, t) {
+        let maxAttempts = 20;
+        let chromaStep = c / maxAttempts;
+        let currentChroma = c;
+
+        for (let i = 0; i < maxAttempts; i++) {
+            let color = hctToRgb(h, currentChroma, t);
+
+            if (color.r >= -0.001 && color.r <= 1.001 && color.g >= -0.001 && color.g <= 1.001 && color.b >= -0.001 && color.b <= 1.001)
+                return color;
+
+            currentChroma -= chromaStep;
+            if (currentChroma < 0) {
+                currentChroma = 0;
+                break;
+            }
+        }
+
+        return hctToRgb(h, currentChroma, t);
+    }
+
     function createTonalColor(baseColor, tone) {
         let hct = rgbToHct(baseColor);
 
         let adjustedChroma = hct.c;
-        if (tone < 20 || tone > 90)
-            adjustedChroma = hct.c * 0.5;
-        else if (tone >= 50 && tone <= 70)
-            adjustedChroma = Math.min(hct.c * 1.1, 120);
 
-        return hctToRgb(hct.h, adjustedChroma, tone);
+        if (tone < 10)
+            adjustedChroma = hct.c * 0.4;
+        else if (tone > 95)
+            adjustedChroma = hct.c * 0.3;
+        else if (tone < 20)
+            adjustedChroma = hct.c * 0.7;
+        else if (tone > 90)
+            adjustedChroma = hct.c * 0.8;
+
+        adjustedChroma = Math.min(adjustedChroma, 115);
+
+        return hctToRgbWithGamutMapping(hct.h, adjustedChroma, tone);
     }
 
     function createAnalogousColor(baseColor, hueShift) {
@@ -140,17 +170,15 @@ Singleton {
 
     component M3TemplateComponent: QtObject {
         readonly property color m3SourceColor: root.getSourceColor()
-        readonly property color m3SecondarySource: root.createAnalogousColor(m3SourceColor, 30)
-        readonly property color m3TertiarySource: root.createAnalogousColor(m3SourceColor, 60)
-
+        readonly property color m3SecondarySource: root.createAnalogousColor(m3SourceColor, 60)
+        readonly property color m3TertiarySource: root.createAnalogousColor(m3SourceColor, 120)
         readonly property color m3NeutralSource: {
             let hct = root.rgbToHct(m3SourceColor);
-            return root.hctToRgb(hct.h, Math.min(hct.c * 0.04, 6), hct.t);
+            return root.hctToRgb(hct.h, 4, hct.t);
         }
-
         readonly property color m3NeutralVariantSource: {
             let hct = root.rgbToHct(m3SourceColor);
-            return root.hctToRgb(hct.h, Math.min(hct.c * 0.08, 12), hct.t);
+            return root.hctToRgb(hct.h, 8, hct.t);
         }
 
         readonly property color m3Background: root.createTonalColor(m3NeutralSource, 6)
@@ -194,24 +222,27 @@ Singleton {
         readonly property color m3OnTertiaryFixed: root.createTonalColor(m3TertiarySource, 10)
         readonly property color m3OnTertiaryFixedVariant: root.createTonalColor(m3TertiarySource, 30)
 
-        readonly property color m3Error: "#F2B8B5"
-        readonly property color m3ErrorContainer: "#8C1D18"
-        readonly property color m3OnError: "#690005"
-        readonly property color m3OnErrorContainer: "#ffdad6"
+        readonly property color m3ErrorSource: root.hctToRgb(25, 84, 40)
+        readonly property color m3Error: root.createTonalColor(m3ErrorSource, 80)
+        readonly property color m3ErrorContainer: root.createTonalColor(m3ErrorSource, 30)
+        readonly property color m3OnError: root.createTonalColor(m3ErrorSource, 20)
+        readonly property color m3OnErrorContainer: root.createTonalColor(m3ErrorSource, 90)
 
         readonly property color m3InverseSurface: root.createTonalColor(m3NeutralSource, 90)
         readonly property color m3InverseOnSurface: root.createTonalColor(m3NeutralSource, 20)
         readonly property color m3InversePrimary: root.createTonalColor(m3SourceColor, 40)
+
         readonly property color m3Outline: root.createTonalColor(m3NeutralVariantSource, 60)
         readonly property color m3OutlineVariant: root.createTonalColor(m3NeutralVariantSource, 30)
+
         readonly property color m3Scrim: "#000000"
         readonly property color m3Shadow: "#000000"
         readonly property color m3SurfaceTint: m3Primary
         readonly property color m3SurfaceVariant: root.createTonalColor(m3NeutralVariantSource, 30)
 
         readonly property color m3Red: m3Error
-        readonly property color m3Green: "#4CAF50"
-        readonly property color m3Blue: "#2196F3"
-        readonly property color m3Yellow: "#FFC107"
+        readonly property color m3Green: root.hctToRgb(145, 50, 70)
+        readonly property color m3Blue: root.hctToRgb(220, 50, 70)
+        readonly property color m3Yellow: root.hctToRgb(90, 60, 70)
     }
 }
