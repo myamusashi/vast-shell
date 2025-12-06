@@ -90,7 +90,7 @@ StyledRect {
                     delegate: ScreencopyView {
                         id: toplevel
 
-                        required property HyprlandToplevel modelData
+						required property HyprlandToplevel modelData
                         property Toplevel waylandHandle: modelData?.wayland
                         property var toplevelData: modelData.lastIpcObject
                         property int initX: toplevelData.at[0] ?? 0
@@ -108,8 +108,8 @@ StyledRect {
 
                         Rectangle {
                             anchors.fill: parent
-                            color: Themes.m3Colors.m3SurfaceContainerHigh
-                            border.color: Themes.m3Colors.m3Outline
+                            color: toplevel.modelData.activated ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnPrimary
+                            border.color: toplevel.modelData.activated ? Themes.m3Colors.m3Outline : Themes.m3Colors.m3OutlineVariant
                             border.width: 1
 						}
 
