@@ -16,17 +16,20 @@ RowLayout {
         {
             "icon": "screenshot_frame",
             "title": "Screenshot",
-            "script": "--screenshot-selection"
+			"script": "--screenshot-selection",
+			"condition": true
         },
         {
             "icon": "screen_record",
             "title": "Screen record",
-            "script": "--screenrecord-selection"
+			"script": "--screenrecord-selection",
+			"condition": true
         },
         {
             "icon": "content_paste",
             "title": "Clipboard",
-            "command": ["kitty", "--class", "clipse", "-e", "clipse"]
+			"command": ["kitty", "--class", "clipse", "-e", "clipse"],
+			"condition": true
         }
     ]
 
@@ -51,28 +54,9 @@ RowLayout {
             iconButton: modelData.icon
             buttonTitle: modelData.title
             buttonTextColor: Themes.m3Colors.m3OnPrimary
-            onClicked: root.executeAction(modelData)
+			onClicked: root.executeAction(modelData)
+			enabled: modelData.condition
             mArea.layerColor: "transparent"
-
-            property real originalWidth: implicitWidth
-            width: originalWidth
-
-            states: State {
-                name: "pressed"
-                when: button.mArea.pressed
-                PropertyChanges {
-                    target: button
-                    width: originalWidth * 1.05
-                }
-            }
-
-            transitions: Transition {
-                NAnim {
-                    property: "width"
-                    duration: Appearance.animations.durations.small
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                }
-            }
         }
     }
 }

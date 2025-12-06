@@ -28,7 +28,6 @@ RowLayout {
             buttonColor: Themes.m3Colors.m3Primary
             buttonTextColor: Themes.m3Colors.m3OnPrimary
             buttonHeight: 56
-            isButtonFullRound: true
 
             scale: mArea.containsMouse ? 1.05 : 1.0
 
@@ -93,7 +92,6 @@ RowLayout {
                 buttonColor: Themes.m3Colors.m3Primary
                 buttonTextColor: Themes.m3Colors.m3OnPrimary
                 buttonHeight: 56
-                isButtonFullRound: true
 
                 visible: root.isOpen || Layout.preferredHeight > 0
                 opacity: root.isOpen ? 1.0 : 0.0
@@ -145,7 +143,6 @@ RowLayout {
         buttonColor: Themes.m3Colors.m3Primary
         buttonTextColor: Themes.m3Colors.m3OnPrimary
         buttonHeight: 56
-        isButtonFullRound: true
         baseWidth: 56
 
         scale: mArea.containsMouse ? 1.1 : 1.0

@@ -33,7 +33,8 @@ RowLayout {
             required property var modelData
 
             iconButton: modelData.icon
-            buttonTitle: modelData.name
+			buttonTitle: modelData.name
+			enabled: modelData.profile === PowerProfiles.profile
             buttonColor: modelData.profile === PowerProfiles.profile ? Themes.m3Colors.m3Primary : Themes.withAlpha(Themes.m3Colors.m3OnSurface, 0.1)
             buttonTextColor: modelData.profile === PowerProfiles.profile ? Themes.m3Colors.m3OnPrimary : Themes.withAlpha(Themes.m3Colors.m3OnSurface, 0.38)
             onClicked: PowerProfiles.profile = modelData.profile

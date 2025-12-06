@@ -361,11 +361,12 @@ ShellRoot {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.margins: 20
-                spacing: 10
+                spacing: Appearance.spacing.normal
 
                 StyledButton {
                     iconButton: "skip_previous"
-                    buttonTitle: "Previous User"
+					buttonTitle: ""
+					enabled: true
                     onClicked: {
                         Users.previous();
                         keyHandler.forceActiveFocus();
@@ -399,7 +400,8 @@ ShellRoot {
 
                 StyledButton {
                     iconButton: "skip_next"
-                    buttonTitle: "Next User"
+					buttonTitle: ""
+					enabled: true
                     onClicked: {
                         Users.next();
                         keyHandler.forceActiveFocus();
@@ -411,11 +413,12 @@ ShellRoot {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.margins: 20
-                spacing: 10
+                spacing: Appearance.spacing.normal
 
                 StyledButton {
                     iconButton: "skip_previous"
-                    buttonTitle: "Previous Session"
+					buttonTitle: ""
+					enabled: true
                     onClicked: {
                         Sessions.previous();
                         keyHandler.forceActiveFocus();
@@ -449,7 +452,8 @@ ShellRoot {
 
                 StyledButton {
                     iconButton: "skip_next"
-                    buttonTitle: "Next Session"
+					buttonTitle: ""
+					enabled: true
                     onClicked: {
                         Sessions.next();
                         keyHandler.forceActiveFocus();
