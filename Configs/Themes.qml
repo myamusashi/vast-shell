@@ -1,15 +1,41 @@
 pragma ComponentBehavior: Bound
 pragma Singleton
 
-import Quickshell
 import QtQuick
+import Quickshell
+import Quickshell.Io
 
 import qs.Helpers
 
 Singleton {
     id: root
 
-    readonly property M3TemplateComponent m3Colors: M3TemplateComponent {}
+    readonly property M3TemplateComponent m3GeneratedColors: M3TemplateComponent {}
+    readonly property MatugenTemplateComponent matugenColors: MatugenTemplateComponent {}
+    readonly property var matugenTemplateColors: isDarkMode ? JSON.parse(matugenDarkFile.text()).colors : JSON.parse(matugenLightFile.text()).colors
+
+    property bool isUseMatugen: true
+    property bool isDarkMode: true
+
+    readonly property var m3Colors: isUseMatugen ? matugenColors : m3GeneratedColors
+
+    FileView {
+        id: matugenDarkFile
+
+        path: Paths.shellDir + "/colors-dark.json"
+        watchChanges: true
+        blockLoading: true
+        onFileChanged: reload()
+    }
+
+    FileView {
+        id: matugenLightFile
+
+        path: Paths.shellDir + "/colors-light.json"
+        watchChanges: true
+        blockLoading: true
+        onFileChanged: reload()
+    }
 
     ColorQuantizer {
         id: colorQuantizer
@@ -166,6 +192,71 @@ Singleton {
 
     function withAlpha(color, alpha) {
         return Qt.rgba(color.r, color.g, color.b, alpha);
+    }
+
+    component MatugenTemplateComponent: QtObject {
+        readonly property color m3Background: root.matugenTemplateColors.background
+        readonly property color m3Surface: root.matugenTemplateColors.surface
+        readonly property color m3SurfaceDim: root.matugenTemplateColors.surfaceDim
+        readonly property color m3SurfaceBright: root.matugenTemplateColors.surfaceBright
+        readonly property color m3SurfaceContainerLowest: root.matugenTemplateColors.surfaceContainerLowest
+        readonly property color m3SurfaceContainerLow: root.matugenTemplateColors.surfaceContainerLow
+        readonly property color m3SurfaceContainer: root.matugenTemplateColors.surfaceContainer
+        readonly property color m3SurfaceContainerHigh: root.matugenTemplateColors.surfaceContainerHigh
+        readonly property color m3SurfaceContainerHighest: root.matugenTemplateColors.surfaceContainerHighest
+
+        readonly property color m3OnSurface: root.matugenTemplateColors.onSurface
+        readonly property color m3OnSurfaceVariant: root.matugenTemplateColors.onSurfaceVariant
+        readonly property color m3OnBackground: root.matugenTemplateColors.onBackground
+
+        readonly property color m3Primary: root.matugenTemplateColors.primary
+        readonly property color m3OnPrimary: root.matugenTemplateColors.onPrimary
+        readonly property color m3PrimaryContainer: root.matugenTemplateColors.primaryContainer
+        readonly property color m3OnPrimaryContainer: root.matugenTemplateColors.onPrimaryContainer
+        readonly property color m3PrimaryFixed: root.matugenTemplateColors.primaryFixed
+        readonly property color m3PrimaryFixedDim: root.matugenTemplateColors.primaryFixedDim
+        readonly property color m3OnPrimaryFixed: root.matugenTemplateColors.onPrimaryFixed
+        readonly property color m3OnPrimaryFixedVariant: root.matugenTemplateColors.onPrimaryFixedVariant
+
+        readonly property color m3Secondary: root.matugenTemplateColors.secondary
+        readonly property color m3OnSecondary: root.matugenTemplateColors.onSecondary
+        readonly property color m3SecondaryContainer: root.matugenTemplateColors.secondaryContainer
+        readonly property color m3OnSecondaryContainer: root.matugenTemplateColors.onSecondaryContainer
+        readonly property color m3SecondaryFixed: root.matugenTemplateColors.secondaryFixed
+        readonly property color m3SecondaryFixedDim: root.matugenTemplateColors.secondaryFixedDim
+        readonly property color m3OnSecondaryFixed: root.matugenTemplateColors.onSecondaryFixed
+        readonly property color m3OnSecondaryFixedVariant: root.matugenTemplateColors.onSecondaryFixedVariant
+
+        readonly property color m3Tertiary: root.matugenTemplateColors.tertiary
+        readonly property color m3OnTertiary: root.matugenTemplateColors.onTertiary
+        readonly property color m3TertiaryContainer: root.matugenTemplateColors.tertiaryContainer
+        readonly property color m3OnTertiaryContainer: root.matugenTemplateColors.onTertiaryContainer
+        readonly property color m3TertiaryFixed: root.matugenTemplateColors.tertiaryFixed
+        readonly property color m3TertiaryFixedDim: root.matugenTemplateColors.tertiaryFixedDim
+        readonly property color m3OnTertiaryFixed: root.matugenTemplateColors.onTertiaryFixed
+        readonly property color m3OnTertiaryFixedVariant: root.matugenTemplateColors.onTertiaryFixedVariant
+
+        readonly property color m3Error: root.matugenTemplateColors.error
+        readonly property color m3ErrorContainer: root.matugenTemplateColors.errorContainer
+        readonly property color m3OnError: root.matugenTemplateColors.onError
+        readonly property color m3OnErrorContainer: root.matugenTemplateColors.onErrorContainer
+
+        readonly property color m3InverseSurface: root.matugenTemplateColors.inverseSurface
+        readonly property color m3InverseOnSurface: root.matugenTemplateColors.inverseOnSurface
+        readonly property color m3InversePrimary: root.matugenTemplateColors.inversePrimary
+
+        readonly property color m3Outline: root.matugenTemplateColors.outline
+        readonly property color m3OutlineVariant: root.matugenTemplateColors.outlineVariant
+
+        readonly property color m3Scrim: root.matugenTemplateColors.scrim
+        readonly property color m3Shadow: root.matugenTemplateColors.shadow
+        readonly property color m3SurfaceTint: m3Primary
+        readonly property color m3SurfaceVariant: root.matugenTemplateColors.surfaceVariant
+
+        readonly property color m3Red: m3Error
+        readonly property color m3Green: root.hctToRgb(145, 50, 70)
+        readonly property color m3Blue: root.hctToRgb(220, 50, 70)
+        readonly property color m3Yellow: root.hctToRgb(90, 60, 70)
     }
 
     component M3TemplateComponent: QtObject {
