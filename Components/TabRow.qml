@@ -21,13 +21,14 @@ StyledRect {
     property color indicatorColor: Themes.m3Colors.m3Primary
     property int indicatorHeight: 2
     property int indicatorRadius: Appearance.rounding.large
-    property bool showIndicator: true
+	property bool showIndicator: true
+	radius: 0
 
     signal tabClicked(int index, var tabData)
 
 	implicitWidth: parent.width
 	implicitHeight: preferredHeight
-    color: backgroundColor
+	color: backgroundColor
 
     RowLayout {
 		id: tabLayout

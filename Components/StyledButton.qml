@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell.Widgets
 
 import qs.Configs
 import qs.Helpers
@@ -10,17 +11,16 @@ Item {
 
     property string buttonTitle
     property string iconButton: ""
-    property int iconSize
+    property int iconSize: Appearance.fonts.medium
     property color buttonColor: Themes.m3Colors.m3Primary
     property color buttonTextColor: Themes.m3Colors.m3OnBackground
     property color buttonBorderColor: Themes.m3Colors.m3Outline
     property int buttonBorderWidth: 2
     property int buttonHeight: 40
     property int iconTextSpacing: 8
-    property bool isButtonFullRound: true
+    property bool enabled: true
     property bool isButtonUseBorder: false
     property real backgroundRounding: 0
-
     property int baseWidth: implicitWidth
     property alias mArea: mouseArea
     property alias bg: background
@@ -30,15 +30,85 @@ Item {
     implicitWidth: contentRow.implicitWidth + 32
     implicitHeight: buttonHeight
 
-    StyledRect {
+    ClippingRectangle {
         id: background
 
         anchors.fill: parent
         border.color: root.isButtonUseBorder ? root.buttonBorderColor : "transparent"
         border.width: root.isButtonUseBorder ? root.buttonBorderWidth : 0
-        radius: root.isButtonFullRound ? Appearance.rounding.full : root.backgroundRounding
+        radius: Appearance.rounding.full
         color: root.buttonColor
-        opacity: mouseArea.pressed ? 0.8 : (mouseArea.containsMouse ? 0.9 : 1.0)
+        opacity: root.enabled ? (mouseArea.pressed ? 0.8 : (mouseArea.containsMouse ? 0.9 : 1.0)) : 0.5
+
+        states: [
+            State {
+                name: "enabled"
+                when: root.enabled === true && !mouseArea.pressed
+                PropertyChanges {
+                    target: background
+                    radius: Appearance.rounding.small
+                }
+            },
+            State {
+                name: "disabled"
+                when: root.enabled === false
+                PropertyChanges {
+                    target: background
+                    radius: Appearance.rounding.full
+                }
+            },
+            State {
+                name: "pressed"
+                when: mouseArea.pressed && root.enabled
+                PropertyChanges {
+                    target: background
+                    radius: Appearance.rounding.small
+                }
+                PropertyChanges {
+                    target: root
+                    width: root.implicitWidth * 1.05
+                }
+            }
+        ]
+
+        transitions: [
+            Transition {
+                from: "enabled"
+                to: "disabled"
+                NAnim {
+                    property: "radius"
+                    duration: Appearance.animations.durations.small
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
+                    easing.type: Easing.Linear
+                }
+            },
+            Transition {
+                from: "disabled"
+                to: "enabled"
+                NAnim {
+                    property: "radius"
+                    duration: Appearance.animations.durations.small
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
+                    easing.type: Easing.Linear
+                }
+            },
+            Transition {
+                to: "pressed"
+                NAnim {
+                    property: "width"
+                    duration: Appearance.animations.durations.expressiveFastSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                }
+            },
+            Transition {
+                from: "pressed"
+                NAnim {
+                    property: "width"
+                    duration: Appearance.animations.durations.expressiveFastSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                }
+            }
+        ]
     }
 
     Row {
@@ -46,7 +116,7 @@ Item {
 
         spacing: root.iconTextSpacing
         anchors.centerIn: parent
-
+        opacity: root.enabled ? 1.0 : 0.5
         Loader {
             active: root.iconButton !== ""
             anchors.verticalCenter: parent.verticalCenter
@@ -57,7 +127,6 @@ Item {
                 color: root.buttonTextColor
             }
         }
-
         Loader {
             active: root.buttonTitle !== ""
             anchors.verticalCenter: parent.verticalCenter
@@ -65,17 +134,15 @@ Item {
                 text: root.buttonTitle
                 font.pixelSize: Appearance.fonts.large
                 font.weight: Font.Medium
-                font.family: Appearance.fonts.familySans
                 color: root.buttonTextColor
             }
         }
     }
-
     MArea {
         id: mouseArea
 
-        anchors.fill: parent
-        hoverEnabled: true
+		anchors.fill: parent
+		layerColor: "transparent"
         cursorShape: Qt.PointingHandCursor
         onClicked: root.clicked()
     }
