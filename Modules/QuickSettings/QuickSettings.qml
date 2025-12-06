@@ -48,17 +48,35 @@ ColumnLayout {
 
     clip: true
 
-    TabRows {
+    TabRow {
         id: tabBar
 
         state: root.state
         scaleFactor: Math.min(1.0, root.width / root.width)
         visible: root.isControlCenterOpen
-        topLeftRadius: 0
-        topRightRadius: 0
-
         Layout.fillWidth: true
-
+        tabs: [
+            {
+                "title": "Settings",
+                "icon": "settings",
+                "index": 0
+            },
+            {
+                "title": "Volumes",
+                "icon": "speaker",
+                "index": 1
+            },
+            {
+                "title": "Performance",
+                "icon": "speed",
+                "index": 2
+            },
+            {
+                "title": "Weather",
+                "icon": "cloud",
+                "index": 3
+            }
+        ]
         onTabClicked: index => {
             root.state = index;
             controlCenterStackView.currentItem.viewIndex = index;
@@ -93,7 +111,7 @@ ColumnLayout {
 
         onCurrentItemChanged: {
             if (currentItem)
-            currentItem.viewIndex = root.state;
+                currentItem.viewIndex = root.state;
         }
 
         Component {
