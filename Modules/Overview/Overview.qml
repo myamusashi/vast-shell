@@ -77,7 +77,7 @@ Scope {
                 Repeater {
                     model: 8
 
-                    delegate: ClippingRectangle {
+                    delegate: StyledRect {
                         id: workspaceContainer
 
                         required property int index
@@ -87,13 +87,10 @@ Scope {
 
                         implicitWidth: root.containerWidth + 25
                         implicitHeight: root.containerHeight + 25
-
                         color: "transparent"
-                        border.width: 2
-
-                        border.color: hasMaximized ? "red" : workspace?.focused ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnPrimary
-
                         clip: true
+                        border.width: 2
+                        border.color: hasMaximized ? "red" : workspace?.focused ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnPrimary
 
                         FileView {
                             id: wallid
@@ -139,7 +136,7 @@ Scope {
                             anchors.fill: parent
                             onClicked: {
                                 if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                                Hypr.dispatch("workspace" + parent.index + 1);
+                                    Hypr.dispatch("workspace" + parent.index + 1);
                             }
                         }
 
@@ -196,7 +193,7 @@ Scope {
                                 Drag.hotSpot.y: height / 2
                                 Drag.onActiveChanged: {
                                     if (Drag.active)
-                                    parent = visualParent;
+                                        parent = visualParent;
                                     else {
                                         var mapped = mapToItem(originalParent, 0, 0);
                                         parent = originalParent;
@@ -234,16 +231,16 @@ Scope {
 
                                     onPositionChanged: {
                                         if (drag.active)
-                                        dragged = true;
+                                            dragged = true;
                                     }
 
                                     onClicked: mouse => {
                                         if (!dragged) {
                                             if (mouse.button === Qt.LeftButton)
-                                            if (mouse.button === Qt.LeftButton)
-                                            toplevel.waylandHandle.activate();
-                                            else if (mouse.button === Qt.RightButton)
-                                            toplevel.waylandHandle.close();
+                                                if (mouse.button === Qt.LeftButton)
+                                                    toplevel.waylandHandle.activate();
+                                                else if (mouse.button === Qt.RightButton)
+                                                    toplevel.waylandHandle.close();
                                         }
                                     }
 
