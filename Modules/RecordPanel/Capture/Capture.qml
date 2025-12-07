@@ -156,7 +156,7 @@ ClippingRectangle {
                             Quickshell.execDetached({
                                                         "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
                                                     });
-                            scope.open = false;
+                            root.open = false;
                         }
                     },
                     {
@@ -166,7 +166,7 @@ ClippingRectangle {
                             Quickshell.execDetached({
                                                         "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
                                                     });
-                            scope.open = root.isRecording ? false : true;
+                            root.open = root.isRecording ? false : true;
                         },
                         "highlight": root.isRecording,
                         "showRecordTime": Record.recordingSeconds
