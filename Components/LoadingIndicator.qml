@@ -5,23 +5,23 @@ import Quickshell
 import qs.Configs
 
 Item {
-	id: root
+    id: root
 
-	property bool status: false
-	property bool withBackground: false
+    property bool status: false
+    property bool withBackground: false
 
     anchors.centerIn: parent
     implicitWidth: 30
-	implicitHeight: 30
+    implicitHeight: 30
 
-	Rectangle {
-		anchors.fill: parent
-		visible: root.withBackground
-		color: Themes.withAlpha(Themes.m3Colors.m3Primary, 0.3)
-	}
+    Rectangle {
+        anchors.fill: parent
+        visible: root.withBackground
+        color: Themes.withAlpha(Themes.m3Colors.m3Primary, 0.3)
+    }
 
     Item {
-		id: loadingSpinner
+        id: loadingSpinner
 
         anchors.fill: parent
         visible: root.status
@@ -43,7 +43,7 @@ Item {
             Image {
                 anchors.fill: parent
                 source: loadingSpinner.morphShapes[(loadingSpinner.morphState + 1) % loadingSpinner.morphShapes.length]
-                sourceSize: Qt.size(parent.width, parent.height)
+                sourceSize: Qt.size(root.implicitWidth, root.implicitHeight)
                 smooth: true
             }
         }

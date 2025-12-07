@@ -123,13 +123,13 @@ Item {
             spacing: Appearance.spacing.normal
 
             Icon {
-				id: iconLayout
+                id: iconLayout
 
                 modelData: root.itemData
             }
 
             Content {
-				id: contentLayout
+                id: contentLayout
 
                 modelData: root.itemData
                 width: parent.width - iconLayout.width - parent.spacing

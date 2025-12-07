@@ -111,7 +111,7 @@ ColumnLayout {
 
         onCurrentItemChanged: {
             if (currentItem)
-                currentItem.viewIndex = root.state;
+				currentItem.viewIndex = root.state;
         }
 
         Component {

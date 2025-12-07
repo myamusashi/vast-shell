@@ -45,6 +45,6 @@ Singleton {
                 Hyprland.refreshWorkspaces();
             else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
                 Hyprland.refreshToplevels();
-			}
+        }
     }
 }

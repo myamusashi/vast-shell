@@ -10,6 +10,7 @@ import qs.Components
 
 Loader {
     id: root
+
     required property var modelData
     property string thumbnailPath: ""
 
@@ -43,9 +44,8 @@ Loader {
 
         Image {
             id: image
+
             anchors.centerIn: parent
-            width: 60
-            height: 60
             fillMode: Image.PreserveAspectCrop
             cache: true
             asynchronous: true
@@ -65,13 +65,13 @@ Loader {
                         const videoFormats = ["mkv", "mp4", "webm", "avi"];
                         return videoFormats.includes(ext) ? "📹" : "🖼️";
                     }
-                    font.pixelSize: 24
+                    font.pixelSize: Appearance.fonts.large
                 }
-			}
+            }
 
-			LoadingIndicator {
-				status: image.status === Image.Loading
-			}
+            LoadingIndicator {
+                status: image.status === Image.Loading
+            }
         }
     }
 

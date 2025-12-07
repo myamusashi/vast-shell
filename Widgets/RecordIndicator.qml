@@ -33,9 +33,9 @@ StyledRect {
         }
 
         StyledText {
-			text: root.formatTime(Record.recordingSeconds)
-			color: Themes.m3Colors.m3OnBackground
-			font.bold: true
+            text: root.formatTime(Record.recordingSeconds)
+            color: Themes.m3Colors.m3OnBackground
+            font.bold: true
         }
     }
 }

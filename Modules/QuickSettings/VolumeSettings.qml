@@ -8,8 +8,8 @@ import Quickshell.Widgets
 import Quickshell.Services.Pipewire
 
 import qs.Configs
-import qs.Services
 import qs.Widgets
+import qs.Services
 
 ScrollView {
     anchors.fill: parent

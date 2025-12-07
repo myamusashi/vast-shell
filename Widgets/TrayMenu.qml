@@ -91,8 +91,6 @@ Rectangle {
                     }
                 }
 
-                // untested cause nothing I use have radio buttons
-                // if you use this and find somethings wrong / "yes rexi everything is fine" lemme know by opening an issue
                 Item {
                     Layout.fillHeight: true
                     implicitWidth: this.height
@@ -101,7 +99,7 @@ Rectangle {
                     MaterialIcon {
                         icon: (entry.modelData?.checkState != Qt.Checked) ? "radio_button_unchecked" : "radio_button_checked"
                         anchors.centerIn: parent
-                        color: Dat.Colors.current.primary
+                        color: Themes.m3Colors.m3Primary
                         font.pixelSize: parent.width * 0.8
                     }
                 }
@@ -130,7 +128,7 @@ Rectangle {
                         anchors.fill: parent
                         anchors.margins: 3
                         fillMode: Image.PreserveAspectFit
-                        source: entry.modelData?.icon ?? ""
+                        source: Qt.resolvedUrl(entry.modelData?.icon) ?? ""
                     }
                 }
 

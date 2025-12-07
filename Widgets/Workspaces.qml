@@ -90,7 +90,7 @@ StyledRect {
                     delegate: ScreencopyView {
                         id: toplevel
 
-						required property HyprlandToplevel modelData
+                        required property HyprlandToplevel modelData
                         property Toplevel waylandHandle: modelData?.wayland
                         property var toplevelData: modelData.lastIpcObject
                         property int initX: toplevelData.at[0] ?? 0
@@ -111,7 +111,7 @@ StyledRect {
                             color: toplevel.modelData.activated ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnPrimary
                             border.color: toplevel.modelData.activated ? Themes.m3Colors.m3Outline : Themes.m3Colors.m3OutlineVariant
                             border.width: 1
-						}
+                        }
 
                         x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2
                         y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2
@@ -122,7 +122,7 @@ StyledRect {
                         Drag.hotSpot.y: height / 2
                         Drag.onActiveChanged: {
                             if (Drag.active)
-                                parent = visualParent;
+                            parent = visualParent;
                             else {
                                 var mapped = mapToItem(originalParent, 0, 0);
                                 parent = originalParent;

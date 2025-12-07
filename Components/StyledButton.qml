@@ -141,8 +141,8 @@ Item {
     MArea {
         id: mouseArea
 
-		anchors.fill: parent
-		layerColor: "transparent"
+        anchors.fill: parent
+        layerColor: "transparent"
         cursorShape: Qt.PointingHandCursor
         onClicked: root.clicked()
     }

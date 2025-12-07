@@ -55,13 +55,13 @@ Column {
                         const timestamp = root.modelData.created;
                         const date = new Date(timestamp * 1000);
                         return date.toLocaleString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit',
-                            hour12: true
-                        });
+                                                       month: 'short',
+                                                       day: 'numeric',
+                                                       year: 'numeric',
+                                                       hour: 'numeric',
+                                                       minute: '2-digit',
+                                                       hour12: true
+                                                   });
                     }
                     color: Themes.m3Colors.m3OnSurfaceVariant
                 }
@@ -107,21 +107,21 @@ Column {
             onClicked: {
                 const data = root.getFileExtension(root.modelData.path);
                 switch (data) {
-                case "mkv":
-                case "mp3":
-                case "mp4":
+                    case "mkv":
+                    case "mp3":
+                    case "mp4":
                     Quickshell.execDetached({
-                        command: ["mpv", root.modelData.path]
-                    });
+                                                command: ["mpv", root.modelData.path]
+                                            });
                     break;
-                case "png":
-                case "jpg":
-                case "jpeg":
-                case "gif":
-                case "ico":
+                    case "png":
+                    case "jpg":
+                    case "jpeg":
+                    case "gif":
+                    case "ico":
                     Quickshell.execDetached({
-                        command: ["lximage-qt", root.modelData.path]
-                    });
+                                                command: ["lximage-qt", root.modelData.path]
+                                            });
                     break;
                 }
             }

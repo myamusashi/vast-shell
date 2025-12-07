@@ -16,20 +16,20 @@ RowLayout {
         {
             "icon": "screenshot_frame",
             "title": "Screenshot",
-			"script": "--screenshot-selection",
-			"condition": true
+            "script": "--screenshot-selection",
+            "condition": true
         },
         {
             "icon": "screen_record",
             "title": "Screen record",
-			"script": "--screenrecord-selection",
-			"condition": true
+            "script": "--screenrecord-selection",
+            "condition": true
         },
         {
             "icon": "content_paste",
             "title": "Clipboard",
-			"command": ["kitty", "--class", "clipse", "-e", "clipse"],
-			"condition": true
+            "command": ["kitty", "--class", "clipse", "-e", "clipse"],
+            "condition": true
         }
     ]
 
@@ -54,8 +54,8 @@ RowLayout {
             iconButton: modelData.icon
             buttonTitle: modelData.title
             buttonTextColor: Themes.m3Colors.m3OnPrimary
-			onClicked: root.executeAction(modelData)
-			enabled: modelData.condition
+            onClicked: root.executeAction(modelData)
+            enabled: modelData.condition
             mArea.layerColor: "transparent"
         }
     }

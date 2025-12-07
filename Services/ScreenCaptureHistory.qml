@@ -23,12 +23,12 @@ Singleton {
             console.error("Failed to parse file metadata:", e);
             return [];
         }
-	}
+    }
 
-	function reloadFiles(): void {
-		getScreenshotFilesMetadata.started();
-		getScreenrecordFilesMetadata.started();
-	}
+    function reloadFiles(): void {
+        getScreenshotFilesMetadata.started();
+        getScreenrecordFilesMetadata.started();
+    }
 
     Process {
         id: getScreenshotFilesMetadata
@@ -39,12 +39,12 @@ Singleton {
             onStreamFinished: {
                 const data = text.trim();
                 if (data)
-                    root.screenshotFiles = root.parseFileList(data);
+                root.screenshotFiles = root.parseFileList(data);
             }
         }
     }
 
-	// TODO: created thumbnails
+    // TODO: created thumbnails
     Process {
         id: getScreenrecordFilesMetadata
 
@@ -54,7 +54,7 @@ Singleton {
             onStreamFinished: {
                 const data = text.trim();
                 if (data)
-                    root.screenrecordFiles = root.parseFileList(data);
+                root.screenrecordFiles = root.parseFileList(data);
             }
         }
     }
