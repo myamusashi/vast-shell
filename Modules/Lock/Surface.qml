@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import Quickshell.Wayland
 
 import qs.Configs
+import qs.Helpers
 import qs.Components
 
 WlSessionLockSurface {
@@ -52,7 +53,7 @@ WlSessionLockSurface {
 
         Keys.onPressed: kevent => {
             if (root.showErrorMessage && kevent.text)
-            root.showErrorMessage = false;
+                root.showErrorMessage = false;
 
             if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                 root.pam.currentText = root.inputBuffer;
@@ -94,7 +95,7 @@ WlSessionLockSurface {
                 root.maskedBuffer = root.maskedBuffer.slice(0, -randomRemove);
 
                 if (root.maskedBuffer === "")
-                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
+                    passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
 
                 return;
             }
@@ -107,13 +108,13 @@ WlSessionLockSurface {
                 }
 
                 if (passwordBuffer.color === Themes.m3Colors.m3Blue || passwordBuffer.color === Themes.m3Colors.m3OnBackground)
-                passwordBuffer.color = root.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant;
+                    passwordBuffer.color = root.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant;
 
                 root.inputBuffer += kevent.text;
 
                 const randomLength = Math.floor(Math.random() * 3) + 1;
                 for (var i = 0; i < randomLength; i++)
-                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
 
                 const currentTime = Date.now();
                 if (root.lastKeystrokeTime > 0) {
@@ -150,9 +151,9 @@ WlSessionLockSurface {
             onTriggered: {
                 // Randomly add or remove fake characters when idle
                 if (Math.random() > 0.5 && root.maskedBuffer.length < 50)
-                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
                 else if (root.maskedBuffer.length > root.inputBuffer.length * 3)
-                root.maskedBuffer = root.maskedBuffer.slice(0, -1);
+                    root.maskedBuffer = root.maskedBuffer.slice(0, -1);
                 interval = Math.random() * 3000 + 2000;
             }
         }
@@ -171,7 +172,16 @@ WlSessionLockSurface {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
                     easing.type: Easing.Linear
                     from: 0
-                    to: 0.69
+                    to: 1
+                }
+
+                NAnim {
+                    duration: Appearance.animations.durations.extraLarge
+                    target: wallBlur
+                    running: false
+                    property: "blur"
+                    from: 1
+                    to: 0
                 }
             }
         }
@@ -278,6 +288,12 @@ WlSessionLockSurface {
     SequentialAnimation {
         id: unlockSequence
 
+        PropertyAction {
+            targets: GlobalStates
+            properties: "hideOuterBorder"
+            value: false
+        }
+
         ParallelAnimation {
             PropertyAnimation {
                 target: clockContainer
@@ -313,11 +329,26 @@ WlSessionLockSurface {
             property: "locked"
             value: false
         }
+
+        PauseAnimation {
+            duration: Appearance.animations.durations.extraLarge
+        }
     }
 
     SequentialAnimation {
         id: entrySequence
+
         running: true
+
+        PropertyAction {
+            targets: GlobalStates
+            properties: "hideOuterBorder"
+            value: true
+        }
+
+        PauseAnimation {
+            duration: Appearance.animations.durations.extraLarge
+        }
 
         ParallelAnimation {
             PropertyAnimation {
