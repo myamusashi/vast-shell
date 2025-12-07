@@ -13,6 +13,7 @@ Loader {
 
     required property var modelData
     property string thumbnailPath: ""
+    property bool showLoading: true
 
     function getFileExtension(filepath) {
         const filename = filepath.split('/').pop();
@@ -70,7 +71,14 @@ Loader {
             }
 
             LoadingIndicator {
-                status: image.status === Image.Loading
+                implicitWidth: 30
+                implicitHeight: 30
+				status: {
+					if (root.getFileExtension(root.modelData.path) === "mkv" ||root.getFileExtension(root.modelData.path) === "mp4")
+						return root.showLoading || image.status == Image.Loading
+					else
+						return image.status == Image.Loading
+				}
             }
         }
     }
@@ -83,7 +91,8 @@ Loader {
         stdout: StdioCollector {
             onStreamFinished: {
                 const data = text.trim();
-                root.thumbnailPath = data;
+                delayTimer.thumbnailData = data;
+                delayTimer.start();
             }
         }
 
@@ -92,6 +101,19 @@ Loader {
                 if (text.trim())
                     console.error("Thumbnail generation error:", text);
             }
+        }
+    }
+
+    Timer {
+		id: delayTimer
+
+        interval: 500
+        repeat: false
+        property string thumbnailData: ""
+
+        onTriggered: {
+            root.thumbnailPath = thumbnailData;
+            root.showLoading = false;
         }
     }
 }
