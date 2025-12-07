@@ -7,6 +7,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 
 import qs.Configs
+import qs.Helpers
 import qs.Components
 
 import "Calendar"
@@ -96,37 +97,65 @@ Variants {
             Rectangle {
                 id: leftBar
 
-                implicitWidth: 10
+                implicitWidth: GlobalStates.hideOuterBorder ? 0 : 10
                 implicitHeight: QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.left: parent.left
+
+                Behavior on implicitWidth {
+                    NAnim {
+                        duration: Appearance.animations.durations.large
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
             }
 
             Rectangle {
                 id: topBar
 
                 implicitWidth: QsWindow.window?.width ?? 0
-                implicitHeight: 10
+                implicitHeight: GlobalStates.hideOuterBorder ? 0 : 10
                 color: window.barColor
                 anchors.top: parent.top
+
+                Behavior on implicitHeight {
+                    NAnim {
+                        duration: Appearance.animations.durations.large
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
             }
 
             Rectangle {
                 id: rightBar
 
-                implicitWidth: 10
+                implicitWidth: GlobalStates.hideOuterBorder ? 0 : 10
                 implicitHeight: QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.right: parent.right
+
+                Behavior on implicitWidth {
+                    NAnim {
+                        duration: Appearance.animations.durations.large
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
             }
 
             Rectangle {
                 id: bottomBar
 
                 implicitWidth: QsWindow.window?.width ?? 0
-                implicitHeight: 10
+                implicitHeight: GlobalStates.hideOuterBorder ? 0 : 10
                 color: window.barColor
                 anchors.bottom: parent.bottom
+
+                Behavior on implicitHeight {
+                    NAnim {
+                        duration: Appearance.animations.durations.large
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
             }
         }
 
@@ -215,21 +244,21 @@ Variants {
 
         Component.onCompleted: {
             switch (corner) {
-                case 0:
+            case 0:
                 anchors.left = parent.left;
                 anchors.top = parent.top;
                 break;
-                case 1:
+            case 1:
                 anchors.top = parent.top;
                 anchors.right = parent.right;
                 rotation = 90;
                 break;
-                case 2:
+            case 2:
                 anchors.right = parent.right;
                 anchors.bottom = parent.bottom;
                 rotation = 180;
                 break;
-                case 3:
+            case 3:
                 anchors.left = parent.left;
                 anchors.bottom = parent.bottom;
                 rotation = -90;
