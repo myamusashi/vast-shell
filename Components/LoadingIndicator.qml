@@ -42,17 +42,8 @@ Item {
 
             Image {
                 anchors.fill: parent
-                source: loadingSpinner.morphShapes[loadingSpinner.morphState]
-                sourceSize: Qt.size(parent.width, parent.height)
-                opacity: 1 - loadingSpinner.morphProgress
-                smooth: true
-            }
-
-            Image {
-                anchors.fill: parent
                 source: loadingSpinner.morphShapes[(loadingSpinner.morphState + 1) % loadingSpinner.morphShapes.length]
                 sourceSize: Qt.size(parent.width, parent.height)
-                opacity: loadingSpinner.morphProgress
                 smooth: true
             }
         }
