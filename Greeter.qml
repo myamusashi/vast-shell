@@ -48,6 +48,10 @@ ShellRoot {
             console.log("[LAUNCHING] " + JSON.stringify(sessionCmd));
             Greetd.launch(sessionCmd);
         }
+
+        function onAuthFailure(message) {
+            sessionLock.showErrorMessage = true;
+        }
     }
 
     function authenticate() {
@@ -78,7 +82,6 @@ ShellRoot {
         property int fakeTypingTimer: 0
         property var lastKeystrokeTime: 0
         readonly property string wallpaperPath: "root:/Assets/wallpaper.png"
-
         readonly property bool unlocking: Greetd.state == GreetdState.Authenticating
 
         locked: true
@@ -96,20 +99,20 @@ ShellRoot {
                     source = sessionLock.wallpaperPath;
 
                     Paths.currentWallpaperChanged.connect(() => {
-                                                              if (walAnimation.running)
-                                                              walAnimation.complete();
-                                                              animatingWal.source = sessionLock.wallpaperPath;
-                                                          });
+                        if (walAnimation.running)
+                            walAnimation.complete();
+                        animatingWal.source = sessionLock.wallpaperPath;
+                    });
                     animatingWal.statusChanged.connect(() => {
-                                                           if (animatingWal.status == Image.Ready)
-                                                           walAnimation.start();
-                                                       });
+                        if (animatingWal.status == Image.Ready)
+                            walAnimation.start();
+                    });
 
                     walAnimation.finished.connect(() => {
-                                                      img.source = animatingWal.source;
-                                                      animatingWal.source = "";
-                                                      animatinRect.width = 0;
-                                                  });
+                        img.source = animatingWal.source;
+                        animatingWal.source = "";
+                        animatinRect.width = 0;
+                    });
                 }
             }
 
@@ -155,7 +158,7 @@ ShellRoot {
                     focus: true
                     Keys.onPressed: kevent => {
                         if (sessionLock.showErrorMessage && kevent.text)
-                        sessionLock.showErrorMessage = false;
+                            sessionLock.showErrorMessage = false;
 
                         if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                             if (sessionLock.inputBuffer.length > 0) {
@@ -171,7 +174,7 @@ ShellRoot {
                         }
 
                         if (kevent.key === Qt.Key_A && (kevent.modifiers & Qt.ControlModifier)) {
-                            passwordBuffer.color = Themes.m3Colors.m3Blue;
+                            passwordBuffer.color = Themes.m3GeneratedColors.m3Blue;
                             sessionLock.isAllSelected = true;
                             kevent.accepted = true;
                             return;
@@ -179,7 +182,7 @@ ShellRoot {
 
                         if (kevent.key === Qt.Key_Backspace) {
                             if (kevent.modifiers & Qt.ControlModifier) {
-                                passwordBuffer.color = Themes.m3Colors.m3OnBackground;
+                                passwordBuffer.color = Themes.m3GeneratedColors.m3OnBackground;
                                 sessionLock.inputBuffer = "";
                                 sessionLock.maskedBuffer = "";
                                 sessionLock.isAllSelected = false;
@@ -189,7 +192,7 @@ ShellRoot {
                             if (sessionLock.isAllSelected) {
                                 sessionLock.inputBuffer = "";
                                 sessionLock.maskedBuffer = "";
-                                passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
+                                passwordBuffer.color = Themes.m3GeneratedColors.m3OnSurfaceVariant;
                                 sessionLock.isAllSelected = false;
                                 return;
                             }
@@ -200,7 +203,7 @@ ShellRoot {
                             sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -randomRemove);
 
                             if (sessionLock.maskedBuffer === "")
-                            passwordBuffer.color = Themes.m3Colors.m3OnSurfaceVariant;
+                                passwordBuffer.color = Themes.m3GeneratedColors.m3OnSurfaceVariant;
 
                             return;
                         }
@@ -212,14 +215,14 @@ ShellRoot {
                                 sessionLock.isAllSelected = false;
                             }
 
-                            if (passwordBuffer.color === Themes.m3Colors.m3Blue || passwordBuffer.color === Themes.m3Colors.m3OnBackground)
-                            passwordBuffer.color = sessionLock.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant;
+                            if (passwordBuffer.color === Themes.m3GeneratedColors.m3Blue || passwordBuffer.color === Themes.m3GeneratedColors.m3OnBackground)
+                                passwordBuffer.color = sessionLock.maskedBuffer ? Themes.m3GeneratedColors.m3OnSurface : Themes.m3GeneratedColors.m3OnSurfaceVariant;
 
                             sessionLock.inputBuffer += kevent.text;
 
                             const randomLength = Math.floor(Math.random() * 3) + 1;
                             for (var i = 0; i < randomLength; i++)
-                            sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
+                                sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
 
                             const currentTime = Date.now();
                             if (sessionLock.lastKeystrokeTime > 0) {
@@ -256,9 +259,9 @@ ShellRoot {
 
                     onTriggered: {
                         if (Math.random() > 0.5 && sessionLock.maskedBuffer.length < 50)
-                        sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
+                            sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
                         else if (sessionLock.maskedBuffer.length > sessionLock.inputBuffer.length * 3)
-                        sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -1);
+                            sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -1);
 
                         interval = Math.random() * 3000 + 2000;
                     }
@@ -270,7 +273,7 @@ ShellRoot {
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: -80
                     text: "WRONG PASSWORD"
-                    color: Themes.m3Colors.m3Error
+                    color: Themes.m3GeneratedColors.m3Error
                     font.pointSize: Appearance.fonts.large * 3
                     visible: sessionLock.showErrorMessage
                     z: 10
@@ -281,7 +284,7 @@ ShellRoot {
 
                     anchors.centerIn: parent
                     text: sessionLock.maskedBuffer
-                    color: sessionLock.maskedBuffer ? Themes.m3Colors.m3OnSurface : Themes.m3Colors.m3OnSurfaceVariant
+                    color: sessionLock.maskedBuffer ? Themes.m3GeneratedColors.m3OnSurface : Themes.m3GeneratedColors.m3OnSurfaceVariant
                     font.pointSize: Appearance.fonts.extraLarge * 5
                     font.family: Appearance.fonts.familyMono
                     z: 5
@@ -344,7 +347,7 @@ ShellRoot {
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: 60
                     text: "Type password and press Enter"
-                    color: Themes.m3Colors.m3OnSurfaceVariant
+                    color: Themes.m3GeneratedColors.m3OnSurfaceVariant
                     font.pointSize: Appearance.fonts.small
                     opacity: sessionLock.maskedBuffer.length === 0 ? 0.6 : 0
                     visible: opacity > 0
@@ -383,12 +386,12 @@ ShellRoot {
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 60
                         visible: Users.current_user_index === index
-                        color: Users.current_user_index === index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3SurfaceVariant
+                        color: Users.current_user_index === index ? Themes.m3GeneratedColors.m3Primary : Themes.m3GeneratedColors.m3SurfaceVariant
 
                         StyledLabel {
                             anchors.centerIn: parent
                             text: Users.users_list[delegateUser.index] || ""
-                            color: Users.current_user_index === delegateUser.index ? Themes.m3Colors.m3OnPrimary : Themes.m3Colors.m3OnSurfaceVariant
+                            color: Users.current_user_index === delegateUser.index ? Themes.m3GeneratedColors.m3OnPrimary : Themes.m3GeneratedColors.m3OnSurfaceVariant
                         }
 
                         MArea {
@@ -435,12 +438,12 @@ ShellRoot {
                         Layout.preferredWidth: 150
                         Layout.preferredHeight: 60
                         visible: Sessions.current_ses_index === index
-                        color: Sessions.current_ses_index === index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3SurfaceVariant
+                        color: Sessions.current_ses_index === index ? Themes.m3GeneratedColors.m3Primary : Themes.m3GeneratedColors.m3SurfaceVariant
 
                         StyledLabel {
                             anchors.centerIn: parent
                             text: Sessions.session_names[delegateSession.index] || ""
-                            color: Sessions.current_ses_index === delegateSession.index ? Themes.m3Colors.m3OnPrimary : Themes.m3Colors.m3OnSurfaceVariant
+                            color: Sessions.current_ses_index === delegateSession.index ? Themes.m3GeneratedColors.m3OnPrimary : Themes.m3GeneratedColors.m3OnSurfaceVariant
                         }
 
                         MArea {
