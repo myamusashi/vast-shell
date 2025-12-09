@@ -5,6 +5,8 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 
+import qs.Helpers
+
 Scope {
     property alias lock: lock
 
@@ -31,7 +33,8 @@ Scope {
         target: "lock"
 
         function lock(): void {
-            lock.locked = true;
+            GlobalStates.hideOuterBorder = true;
+            lockTimer.start();
         }
 
         function unlock(): void {
@@ -41,5 +44,13 @@ Scope {
         function isLocked(): bool {
             return lock.locked;
         }
+    }
+
+    Timer {
+        id: lockTimer
+
+        interval: 500
+        repeat: false
+        onTriggered: lock.locked = true
     }
 }

@@ -165,24 +165,21 @@ WlSessionLockSurface {
             layer.effect: MultiEffect {
                 id: wallBlur
 
-                autoPaddingEnabled: false
-                blurEnabled: true
+				autoPaddingEnabled: false
+				blurEnabled: true
 
-                NAnim on blur {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.type: Easing.Linear
-                    from: 0
-                    to: 1
-                }
+				Behavior on blur {
+					NAnim {
+						from: 0
+					to: 0.69
+					}
+				}
 
-                NAnim {
-                    duration: Appearance.animations.durations.extraLarge
-                    target: wallBlur
-                    running: false
-                    property: "blur"
-                    from: 1
-                    to: 0
-                }
+				NAnim {
+					running: !root.lock.locked
+					from: 0.69
+					to: 0
+				}
             }
         }
 
@@ -286,12 +283,16 @@ WlSessionLockSurface {
     }
 
     SequentialAnimation {
-        id: unlockSequence
+		id: unlockSequence
 
         PropertyAction {
             targets: GlobalStates
             properties: "hideOuterBorder"
             value: false
+		}
+
+        PauseAnimation {
+            duration: Appearance.animations.durations.extraLarge
         }
 
         ParallelAnimation {
@@ -339,12 +340,6 @@ WlSessionLockSurface {
         id: entrySequence
 
         running: true
-
-        PropertyAction {
-            targets: GlobalStates
-            properties: "hideOuterBorder"
-            value: true
-        }
 
         PauseAnimation {
             duration: Appearance.animations.durations.extraLarge
