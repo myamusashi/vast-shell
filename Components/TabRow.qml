@@ -48,12 +48,12 @@ StyledRect {
                 required property var modelData
                 required property int index
 
+				Layout.fillWidth: true
                 buttonTitle: modelData.title || ""
                 iconButton: modelData.icon || ""
                 iconSize: modelData.iconSize || (Appearance.fonts.large * root.scaleFactor)
-                Layout.fillWidth: true
                 buttonTextColor: root.currentIndex === index ? root.activeColor : root.inactiveColor
-                buttonColor: modelData.backgroundColor || "transparent"
+                buttonColor: modelData.backgroundColor
                 enabled: modelData.enabled !== undefined ? modelData.enabled : true
 
                 onClicked: {
@@ -67,10 +67,9 @@ StyledRect {
     StyledRect {
         id: indicator
 
-        visible: root.showIndicator
         anchors.bottom: tabLayout.bottom
-        width: tabRepeater.itemAt(root.currentIndex) ? tabRepeater.itemAt(root.currentIndex).width : 0
-        height: root.indicatorHeight
+        implicitWidth: tabRepeater.itemAt(root.currentIndex) ? tabRepeater.itemAt(root.currentIndex).width : 0
+        implicitHeight: root.indicatorHeight
         color: root.indicatorColor
         radius: root.indicatorRadius
 
