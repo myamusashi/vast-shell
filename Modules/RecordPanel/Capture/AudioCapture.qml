@@ -9,7 +9,6 @@ import Quickshell.Services.Pipewire
 
 import qs.Configs
 import qs.Services
-import qs.Widgets
 import qs.Components
 
 ClippingRectangle {
@@ -34,90 +33,32 @@ ClippingRectangle {
             id: tabLayout
         }
 
+		StyledRect {
+			Layout.fillWidth: true
+            implicitHeight: 1
+            color: Themes.m3Colors.m3OutlineVariant
+        }
+
         View {
             id: audioCaptureStackView
         }
     }
 
-    component Header: Item {
+    component Header: TabRow {
+        state: root.state
+        scaleFactor: Math.min(1.0, root.width / root.width)
+        visible: true
+        backgroundColor: "transparent"
         Layout.fillWidth: true
-        Layout.preferredHeight: 50
-
-        RowLayout {
-            id: tabRowLayout
-
-            anchors.fill: parent
-            anchors.margins: 5
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
-            spacing: Appearance.spacing.large
-
-            Repeater {
-                id: tabRepeater
-
-                model: [
-                    {
-                        "title": "Mix",
-                        "index": 0
-                    },
-                    {
-                        "title": "Voice",
-                        "index": 1
-                    }
-                ]
-
-                StyledButton {
-                    id: audioTabButton
-
-                    required property var modelData
-                    required property int index
-                    buttonTitle: modelData.title
-                    Layout.preferredWidth: implicitWidth
-                    buttonColor: "transparent"
-                    buttonTextColor: root.state === index ? Themes.m3Colors.m3Primary : Themes.m3Colors.m3OnBackground
-                    onClicked: root.tabClicked(index)
-                }
+        tabs: [
+            {
+                "title": "Mix",
+            },
+            {
+                "title": "Voice",
             }
-
-            Item {
-                Layout.fillWidth: true
-            }
-        }
-
-        StyledRect {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            height: 1
-            color: Themes.m3Colors.m3OutlineVariant
-        }
-
-        StyledRect {
-            id: indicator
-
-            anchors.bottom: parent.bottom
-            width: tabRepeater.itemAt(root.state).width
-            height: 5
-            color: Themes.m3Colors.m3Primary
-            radius: Appearance.rounding.large
-            x: {
-                var item = tabRepeater.itemAt(root.state);
-                return item.x + tabRowLayout.anchors.leftMargin;
-            }
-            visible: tabRepeater.itemAt(root.state) !== null
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-
-            Behavior on width {
-                NAnim {
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                }
-            }
-        }
+        ]
+        onTabClicked: root.tabClicked(root.state)
     }
 
     component View: StackView {
@@ -129,7 +70,7 @@ ClippingRectangle {
         initialItem: viewComponent
         onCurrentItemChanged: {
             if (currentItem)
-            currentItem.viewIndex = root.state;
+                currentItem.viewIndex = root.state;
         }
 
         Component {
