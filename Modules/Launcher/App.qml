@@ -14,8 +14,9 @@ import qs.Helpers
 import qs.Services
 
 import QtCore
+
 StyledRect {
-	id: root
+    id: root
 
     property int currentIndex: 1
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
@@ -28,11 +29,11 @@ StyledRect {
 
     Component.onCompleted: {
         loadLaunchHistory();
-	}
+    }
 
-	Settings {
-		id: settings
-	}
+    Settings {
+        id: settings
+    }
 
     function loadLaunchHistory(): void {
         const stored = settings.value("launchHistory", "[]");
@@ -143,7 +144,7 @@ StyledRect {
                     search.forceActiveFocus();
             }
             StyledTextField {
-				id: search
+                id: search
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 60
@@ -181,7 +182,7 @@ StyledRect {
                 }
             }
             ListView {
-				id: listView
+                id: listView
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -191,14 +192,72 @@ StyledRect {
                 clip: true
                 spacing: 8
                 cacheBuffer: 100
-                reuseItems: true
+                reuseItems: false
+                preferredHighlightBegin: 0
+                preferredHighlightEnd: height
+                highlightRangeMode: ListView.ApplyRange
                 highlightMoveDuration: 150
+                highlightFollowsCurrentItem: false
+                maximumFlickVelocity: 3000
                 highlightMoveVelocity: -1
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
                 }
+                rebound: Transition {
+                    NAnim {
+                        properties: "x,y"
+                    }
+                }
+
+                add: Transition {
+                    NAnim {
+                        properties: "opacity,scale"
+                        from: 0
+                        to: 1
+                    }
+                }
+
+                remove: Transition {
+                    NAnim {
+                        properties: "opacity,scale"
+                        from: 1
+                        to: 0
+                    }
+                }
+
+                move: Transition {
+                    NAnim {
+                        property: "y"
+                    }
+                    NAnim {
+                        properties: "opacity,scale"
+                        to: 1
+                    }
+                }
+
+                addDisplaced: Transition {
+                    NAnim {
+                        property: "y"
+                        duration: Appearance.animations.durations.small
+                    }
+                    NAnim {
+                        properties: "opacity,scale"
+                        to: 1
+                    }
+                }
+
+                displaced: Transition {
+                    NAnim {
+                        property: "y"
+                    }
+                    NAnim {
+                        properties: "opacity,scale"
+                        to: 1
+                    }
+                }
+
                 delegate: ItemDelegate {
-					id: delegateItem
+                    id: delegateItem
 
                     required property DesktopEntry modelData
                     required property int index
@@ -215,12 +274,12 @@ StyledRect {
                             border.width: listView.currentIndex === delegateItem.index ? 3 : 1
                             border.color: listView.currentIndex === delegateItem.index && !search.focus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OutlineVariant
                             Behavior on border.width {
-                                NumberAnimation {
+                                NAnim {
                                     duration: 100
                                 }
                             }
                             Behavior on border.color {
-                                ColorAnimation {
+                                CAnim {
                                     duration: 100
                                 }
                             }
@@ -254,6 +313,11 @@ StyledRect {
                                 opacity: 0.7
                             }
                         }
+                    }
+
+                    background: StyledRect {
+                        anchors.fill: parent
+                        color: listView.currentIndex === delegateItem.index ? Colours.m3Colors.m3SurfaceContainer : "transparent"
                     }
                     MArea {
                         anchors.fill: parent
