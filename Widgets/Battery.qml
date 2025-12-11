@@ -22,7 +22,7 @@ Item {
     onBatChargingChanged: {
         if (root.batCharging)
             root.chargeFillIndex = root.batPercentage * 100;
-    }
+	}
 
     ClippingRectangle {
         id: batteryBody

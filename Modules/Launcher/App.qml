@@ -105,7 +105,7 @@ StyledRect {
         updateLaunchHistory(entry);
 
         entry.runInTerminal ? Quickshell.execDetached({
-            "command": ["app2unit", "--", "foot", `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
+            "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
             "workingDirectory": entry.workingDirectory
         }) : Quickshell.execDetached({
             "command": ["app2unit", "--", ...entry.command],

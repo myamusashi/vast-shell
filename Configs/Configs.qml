@@ -10,12 +10,13 @@ Singleton {
     id: root
 
     property alias appearance: adapter.appearance
-    property alias colors: adapter.colors
+	property alias colors: adapter.colors
+	property alias generals: adapter.generals
     property alias wallpaper: adapter.wallpaper
     property alias weather: adapter.weather
 
     FileView {
-        path: Paths.home + "/.config/shell/configurations.json"
+        path: Paths.shellDir + "/configurations.json"
 		watchChanges: true
         onFileChanged: reload()
         onLoadFailed: err => {
@@ -29,7 +30,8 @@ Singleton {
             id: adapter
 
             property AppearanceConfig appearance: AppearanceConfig {}
-            property ColorSystemConfig colors: ColorSystemConfig {}
+			property ColorSystemConfig colors: ColorSystemConfig {}
+			property GeneralConfig generals: GeneralConfig {}
             property WallpaperConfig wallpaper: WallpaperConfig {}
             property WeatherConfig weather: WeatherConfig {}
         }

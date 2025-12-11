@@ -1,10 +1,10 @@
 pragma Singleton
 
 import QtQuick
-
 import Quickshell
 
-import QtQml
+import qs.Configs
+
 Singleton {
     id: root
 
@@ -76,7 +76,7 @@ Singleton {
     readonly property int humidityData: cc?.humidity ?? 0
     readonly property int windSpeedData: cc?.windspeedKmph ?? 0
 
-    property string city: "Tangerang"
+    property string city: Configs.weather.city
     property var cc: null
     property var forecast: null
 
@@ -120,7 +120,7 @@ Singleton {
     }
 
     Timer {
-        interval: 1800000
+        interval: Configs.weather.reloadTime
         running: true
         repeat: true
         onTriggered: root.reload()
