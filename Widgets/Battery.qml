@@ -1,5 +1,5 @@
 import QtQuick
-
+import Quickshell.Widgets
 import Quickshell.Services.UPower
 
 import qs.Components
@@ -11,35 +11,47 @@ Item {
 
     readonly property bool batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
     readonly property real batPercentage: UPower.displayDevice.percentage
-    readonly property real batFill: (batteryBody.width - 4) * (batPercentage / 100.0)
-    property real chargeFillIndex: 0 // Ubah ke real untuk animasi smooth
+    readonly property real batFill: batteryBody.width * (batPercentage / 100.0)
+    property real chargeFillIndex: 0
     property int widthBattery: 26
     property int heightBattery: 12
 
-    width: widthBattery + 4
-    height: heightBattery
+    implicitWidth: widthBattery + 4
+    implicitHeight: heightBattery
 
-    StyledRect {
+    onBatChargingChanged: {
+        if (root.batCharging)
+            root.chargeFillIndex = root.batPercentage * 100;
+    }
+
+    ClippingRectangle {
         id: batteryBody
 
-        width: root.widthBattery
-        height: root.heightBattery
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
+        implicitWidth: root.widthBattery
+        implicitHeight: root.heightBattery
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+        }
         border {
             width: 2
             color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Colours.withAlpha(Colours.m3Colors.m3Outline, 0.5)
         }
         color: "transparent"
-        radius: 6
+        radius: Appearance.rounding.small * 0.5
 
         StyledRect {
             id: batteryFill
 
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            width: root.batCharging ? (parent.width - 4) * (root.chargeFillIndex / 100.0) : (parent.width - 4) * root.batPercentage
+            anchors {
+                left: parent.left
+                leftMargin: 2
+                top: parent.top
+                topMargin: 2
+                bottom: parent.bottom
+                bottomMargin: 2
+            }
+            implicitWidth: root.batCharging ? (parent.width - 4) * (root.chargeFillIndex / 100.0) : (parent.width - 4) * root.batPercentage
             color: {
                 if (root.batCharging)
                     return Colours.m3Colors.m3Green;
@@ -49,7 +61,7 @@ Item {
                     return Colours.m3Colors.m3Yellow;
                 return Colours.m3Colors.m3OnSurface;
             }
-            radius: parent.radius
+            radius: parent.radius - 2
 
             Behavior on width {
                 enabled: !root.batCharging
@@ -60,8 +72,10 @@ Item {
         StyledText {
             anchors.centerIn: parent
             text: Math.round(root.batPercentage * 100)
-            font.pixelSize: batteryBody.height * 0.65
-            font.weight: Font.Bold
+            font {
+                pixelSize: batteryBody.height * 0.65
+                weight: Font.Bold
+            }
             color: root.batPercentage <= 0.5 ? Colours.m3Colors.m3OnBackground : Colours.m3Colors.m3Surface
         }
     }
@@ -69,11 +83,13 @@ Item {
     StyledRect {
         id: batteryTip
 
-        width: 2
-        height: 5
-        anchors.left: batteryBody.right
-        anchors.leftMargin: 0.5
-        anchors.verticalCenter: parent.verticalCenter
+        implicitWidth: 2
+        implicitHeight: 5
+        anchors {
+            left: batteryBody.right
+            leftMargin: 0.5
+            verticalCenter: parent.verticalCenter
+        }
         color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Colours.withAlpha(Colours.m3Colors.m3Outline, 0.5)
         topRightRadius: 1
         bottomRightRadius: 1
@@ -90,41 +106,36 @@ Item {
         NAnim {
             target: root
             property: "chargeFillIndex"
-            from: 0
-            to: 20
-            duration: Appearance.animations.durations.normal
+            from: root.batPercentage * 100
+            to: Math.min(root.batPercentage * 100 + 20, 100)
             easing.type: Easing.Linear
         }
         NAnim {
             target: root
             property: "chargeFillIndex"
-            from: 20
-            to: 40
-            duration: Appearance.animations.durations.normal
+            from: Math.min(root.batPercentage * 100 + 20, 100)
+            to: Math.min(root.batPercentage * 100 + 40, 100)
             easing.type: Easing.Linear
         }
         NAnim {
             target: root
             property: "chargeFillIndex"
-            from: 40
-            to: 60
-            duration: Appearance.animations.durations.normal
+            from: Math.min(root.batPercentage * 100 + 40, 100)
+            to: Math.min(root.batPercentage * 100 + 60, 100)
             easing.type: Easing.Linear
         }
         NAnim {
             target: root
             property: "chargeFillIndex"
-            from: 60
-            to: 80
-            duration: Appearance.animations.durations.normal
+            from: Math.min(root.batPercentage * 100 + 60, 100)
+            to: Math.min(root.batPercentage * 100 + 80, 100)
             easing.type: Easing.Linear
         }
         NAnim {
             target: root
             property: "chargeFillIndex"
-            from: 80
+            from: Math.min(root.batPercentage * 100 + 80, 100)
             to: 100
-            duration: Appearance.animations.durations.normal
             easing.type: Easing.Linear
         }
 
@@ -136,13 +147,13 @@ Item {
             target: root
             property: "chargeFillIndex"
             from: 100
-            to: 0
+            to: root.batPercentage * 100
             duration: Appearance.animations.durations.large
             easing.type: Easing.Linear
         }
 
         onStopped: {
-            root.chargeFillIndex = 0;
+            root.chargeFillIndex = root.batPercentage * 100;
         }
     }
 }
