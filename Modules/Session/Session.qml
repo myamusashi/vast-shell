@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import Quickshell
+import Quickshell.Io
 import Quickshell.Hyprland
 
 import qs.Components
@@ -20,6 +21,20 @@ StyledRect {
     property bool showConfirmDialog: false
     property var pendingAction: null
     property string pendingActionName: ""
+
+	IpcHandler {
+		target: "Session"
+
+		function open(): void {
+			GlobalStates.isSessionOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isSessionOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen;
+		}
+	}
 
     GlobalShortcut {
         name: "session"

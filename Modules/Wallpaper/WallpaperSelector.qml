@@ -45,7 +45,21 @@ StyledRect {
                 root.wallpaperList = wallList;
             }
         }
-    }
+	}
+
+	IpcHandler {
+		target: "wallpaperSwitcher"
+
+		function open(): void {
+			GlobalStates.isWallpaperSwitcherOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isWallpaperSwitcherOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen;
+		}
+	}
 
     GlobalShortcut {
         name: "wallpaperSwitcher"

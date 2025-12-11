@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-
 import Quickshell
+import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Hyprland
 
@@ -25,7 +25,21 @@ StyledRect {
     GlobalShortcut {
         name: "appLauncher"
         onPressed: root.isLauncherOpen = !root.isLauncherOpen
-    }
+	}
+
+	IpcHandler {
+		target: "appLauncher"
+
+		function open(): void {
+			GlobalStates.isLauncherOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isLauncherOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen;
+		}
+	}
 
     Component.onCompleted: {
         loadLaunchHistory();
@@ -118,8 +132,8 @@ StyledRect {
     topLeftRadius: Appearance.rounding.normal
     topRightRadius: Appearance.rounding.normal
     color: Colours.m3Colors.m3Surface
-    implicitWidth: Hypr.focusedMonitor.width * 0.3
-    implicitHeight: isLauncherOpen ? Hypr.focusedMonitor.height * 0.5 : 0
+    implicitWidth: parent.width * 0.3
+    implicitHeight: isLauncherOpen ? parent.height * 0.5 : 0
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial

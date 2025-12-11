@@ -3,8 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-
+import Quickshell.Io
 import Quickshell.Hyprland
+
 
 import qs.Components
 import qs.Configs
@@ -25,7 +26,21 @@ ColumnLayout {
     GlobalShortcut {
         name: "ControlCenter"
         onPressed: root.toggleControlCenter()
-    }
+	}
+
+	IpcHandler {
+		target: "QuickSettings"
+
+		function open(): void {
+			GlobalStates.isQuickSettingsOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isQuickSettingsOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
+		}
+	}
 
     width: parent.width * 0.3
     height: isControlCenterOpen ? contentHeight : 0

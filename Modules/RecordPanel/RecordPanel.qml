@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
@@ -20,7 +20,21 @@ Scope {
     GlobalShortcut {
         name: "recordPanel"
         onPressed: GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen
-    }
+	}
+
+	IpcHandler {
+		target: "recordPanel"
+
+		function open(): void {
+			GlobalStates.isRecordPanelOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isRecordPanelOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen;
+		}
+	}
 
     Variants {
         model: Quickshell.screens

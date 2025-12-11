@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-
+import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Hyprland
 
@@ -13,6 +13,20 @@ ClippingRectangle {
     color: Colours.m3Colors.m3Background
     height: GlobalStates.isBarOpen ? 40 : 10
     width: parent.width
+
+	IpcHandler {
+		target: "layershell"
+
+		function open(): void {
+			GlobalStates.isBarOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isBarOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isBarOpen = !GlobalStates.isBarOpen;
+		}
+	}
 
     GlobalShortcut {
         name: "layershell"

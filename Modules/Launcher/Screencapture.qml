@@ -17,12 +17,18 @@ Scope {
     id: root
 
     IpcHandler {
-        target: "screencapture"
+		target: "screenCaptureLauncher"
 
-        function toggle(): void {
-            GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen;
-        }
-    }
+		function open(): void {
+			GlobalStates.isScreenCapturePanelOpen = true;
+		}
+		function close(): void {
+			GlobalStates.isScreenCapturePanelOpen = false;
+		}
+		function toggle(): void {
+			GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen;
+		}
+	}
 
     GlobalShortcut {
         name: "screencaptureLauncher"
