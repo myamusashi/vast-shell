@@ -1,9 +1,6 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls.Material
 import QtQuick.Controls
-
-import Quickshell
 
 import qs.Configs
 import qs.Helpers
@@ -27,7 +24,7 @@ TextField {
     clip: true
 
     font {
-        family: Appearance.fonts.family.sans
+        family: Appearance.fonts.family.mono
         pixelSize: Appearance.fonts.size.small ?? 15
         hintingPreference: Font.PreferFullHinting
         variableAxes: {
