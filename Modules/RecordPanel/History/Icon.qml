@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Io
 
@@ -51,8 +50,10 @@ Loader {
             anchors.centerIn: parent
             fillMode: Image.PreserveAspectCrop
             cache: true
-            asynchronous: true
-            sourceSize: Qt.size(60, 60)
+			asynchronous: true
+			width: 40
+			height: 40
+            sourceSize: Qt.size(40, 40)
             source: root.thumbnailPath
 
             Rectangle {
