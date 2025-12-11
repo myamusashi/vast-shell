@@ -160,27 +160,6 @@ WlSessionLockSurface {
 
         Wallpaper {
             id: wallpaper
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                id: wallBlur
-
-				autoPaddingEnabled: false
-				blurEnabled: true
-
-				Behavior on blur {
-					NAnim {
-						from: 0
-					to: 0.69
-					}
-				}
-
-				NAnim {
-					running: !root.lock.locked
-					from: 0.69
-					to: 0
-				}
-            }
         }
 
         ColumnLayout {

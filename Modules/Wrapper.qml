@@ -98,7 +98,7 @@ Variants {
                 id: leftBar
 
                 implicitWidth: GlobalStates.hideOuterBorder ? 0 : 10
-                implicitHeight: QsWindow.window?.height ?? 0
+                implicitHeight: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.left: parent.left
 
@@ -113,7 +113,7 @@ Variants {
             Rectangle {
                 id: topBar
 
-                implicitWidth: QsWindow.window?.width ?? 0
+                implicitWidth: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.width ?? 0
                 implicitHeight: GlobalStates.hideOuterBorder ? 0 : 10
                 color: window.barColor
                 anchors.top: parent.top
@@ -130,7 +130,7 @@ Variants {
                 id: rightBar
 
                 implicitWidth: GlobalStates.hideOuterBorder ? 0 : 10
-                implicitHeight: QsWindow.window?.height ?? 0
+                implicitHeight: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.right: parent.right
 
@@ -145,7 +145,7 @@ Variants {
             Rectangle {
                 id: bottomBar
 
-                implicitWidth: QsWindow.window?.width ?? 0
+                implicitWidth: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.width ?? 0
                 implicitHeight: GlobalStates.hideOuterBorder ? 0 : 10
                 color: window.barColor
                 anchors.bottom: parent.bottom
@@ -218,8 +218,8 @@ Variants {
         Rectangle {
             id: cornersArea
 
-            implicitWidth: QsWindow.window?.width - (leftBar.implicitWidth + rightBar.implicitWidth)
-            implicitHeight: QsWindow.window?.height - (topBar.implicitHeight + bottomBar.implicitHeight)
+            implicitWidth: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.width - (leftBar.implicitWidth + rightBar.implicitWidth)
+            implicitHeight: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.height - (topBar.implicitHeight + bottomBar.implicitHeight)
             color: "transparent"
             x: leftBar.implicitWidth
             y: topBar.implicitHeight

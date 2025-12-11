@@ -10,11 +10,16 @@ import qs.Modules.Polkit
 import qs.Modules
 import qs.Helpers
 
+import qs.Components
+
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 
 ShellRoot {
+	id: root
+
+	property alias wrapper: wrapper
     Lockscreen {}
     Wall {}
     RecordPanel {}
@@ -22,7 +27,9 @@ ShellRoot {
     Screencapture {
         id: screencapture
     }
-    Wrapper {}
+	Wrapper {
+		id: wrapper
+	}
     Overview {}
 
     Connections {
@@ -40,5 +47,5 @@ ShellRoot {
     GlobalShortcut {
         name: "screencapture"
         onPressed: GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen
-    }
+	}
 }
