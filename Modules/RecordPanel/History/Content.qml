@@ -113,7 +113,7 @@ Column {
                     case "mp3":
                     case "mp4":
                     Quickshell.execDetached({
-                                                command: ["mpv", root.modelData.path]
+                                                command: [Configs.generals.apps.videoViewer, root.modelData.path]
                                             });
                     break;
                     case "png":
@@ -122,7 +122,7 @@ Column {
                     case "gif":
                     case "ico":
                     Quickshell.execDetached({
-                                                command: ["lximage-qt", root.modelData.path]
+                                                command: [Configs.generals.apps.imageViewer, root.modelData.path]
                                             });
                     break;
                 }
