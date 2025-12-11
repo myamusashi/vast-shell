@@ -2,13 +2,13 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Components
-import qs.Configs
 import qs.Helpers
 import qs.Services
 
 StyledRect {
     id: root
 
+	Layout.alignment: Qt.AlignCenter
     visible: Record.isRecordingControlOpen
     color: "transparent"
 
