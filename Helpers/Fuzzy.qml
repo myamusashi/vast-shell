@@ -1,5 +1,6 @@
 pragma Singleton
 
+import QtCore
 import QtQuick
 import Quickshell
 
@@ -7,10 +8,79 @@ Singleton {
     readonly property real prefixWeight: 0.3
     readonly property real distanceWeight: 0.3
     readonly property real consecutiveWeight: 0.25
-    readonly property real wordBoundaryWeight: 0.15
-    readonly property real recencyWeight: 0.4  // Weight for recency boost
+	readonly property real wordBoundaryWeight: 0.15
+	readonly property real recencyWeight: 0.4  // Weight for recency boost
+	property var launchHistory: []
+	
+    Settings {
+        id: settings
+    }
 
-    // Character similarity map for look-alike matching
+    function loadLaunchHistory(): void {
+        const stored = settings.value("launchHistory", "[]");
+        try {
+            launchHistory = JSON.parse(stored);
+        } catch (e) {
+            launchHistory = [];
+        }
+    }
+
+    function saveLaunchHistory(): void {
+        settings.setValue("launchHistory", JSON.stringify(launchHistory));
+    }
+
+    function updateLaunchHistory(entry: DesktopEntry): void {
+        const appId = entry.id || entry.name;
+        const now = Date.now();
+
+        let found = false;
+        for (let i = 0; i < launchHistory.length; i++) {
+            if (launchHistory[i].id === appId) {
+                launchHistory[i].timestamp = now;
+                launchHistory[i].count = (launchHistory[i].count || 0) + 1;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            launchHistory.push({
+                id: appId,
+                timestamp: now,
+                count: 1
+            });
+        }
+
+        if (launchHistory.length > 50) {
+            launchHistory.sort((a, b) => b.timestamp - a.timestamp);
+            launchHistory = launchHistory.slice(0, 50);
+        }
+
+        saveLaunchHistory();
+    }
+
+    function getRecencyScore(entry: DesktopEntry): real {
+        const appId = entry.id || entry.name;
+        const now = Date.now();
+
+        for (let i = 0; i < launchHistory.length; i++) {
+            if (launchHistory[i].id === appId) {
+                const age = now - launchHistory[i].timestamp;
+                const dayInMs = 86400000;
+
+                // Exponential decay: high score for recent launches, decays over 7 days
+                const recencyScore = Math.exp(-age / (dayInMs * 7));
+
+                // Frequency bonus (normalized)
+                const frequencyScore = Math.min(launchHistory[i].count / 10, 1);
+
+                // Combined score: 70% recency, 30% frequency
+                return recencyScore * 0.7 + frequencyScore * 0.3;
+            }
+        }
+
+        return 0;
+    }
     readonly property var charMap: ({
             "a": 'aàáâãäåāăą4@',
             "e": 'eèéêëēėę3',

@@ -13,14 +13,11 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 
-import QtCore
-
 StyledRect {
     id: root
 
     property int currentIndex: 1
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
-    property var launchHistory: []
 
     GlobalShortcut {
         name: "appLauncher"
@@ -42,82 +39,14 @@ StyledRect {
 	}
 
     Component.onCompleted: {
-        loadLaunchHistory();
-    }
+		Fuzzy.loadLaunchHistory();
+	}
 
-    Settings {
-        id: settings
-    }
-
-    function loadLaunchHistory(): void {
-        const stored = settings.value("launchHistory", "[]");
-        try {
-            launchHistory = JSON.parse(stored);
-        } catch (e) {
-            launchHistory = [];
-        }
-    }
-
-    function saveLaunchHistory(): void {
-        settings.setValue("launchHistory", JSON.stringify(launchHistory));
-    }
-
-    function updateLaunchHistory(entry: DesktopEntry): void {
-        const appId = entry.id || entry.name;
-        const now = Date.now();
-
-        let found = false;
-        for (let i = 0; i < launchHistory.length; i++) {
-            if (launchHistory[i].id === appId) {
-                launchHistory[i].timestamp = now;
-                launchHistory[i].count = (launchHistory[i].count || 0) + 1;
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            launchHistory.push({
-                id: appId,
-                timestamp: now,
-                count: 1
-            });
-        }
-
-        if (launchHistory.length > 50) {
-            launchHistory.sort((a, b) => b.timestamp - a.timestamp);
-            launchHistory = launchHistory.slice(0, 50);
-        }
-
-        saveLaunchHistory();
-    }
-
-    function getRecencyScore(entry: DesktopEntry): real {
-        const appId = entry.id || entry.name;
-        const now = Date.now();
-
-        for (let i = 0; i < launchHistory.length; i++) {
-            if (launchHistory[i].id === appId) {
-                const age = now - launchHistory[i].timestamp;
-                const dayInMs = 86400000;
-
-                // Exponential decay: high score for recent launches, decays over 7 days
-                const recencyScore = Math.exp(-age / (dayInMs * 7));
-
-                // Frequency bonus (normalized)
-                const frequencyScore = Math.min(launchHistory[i].count / 10, 1);
-
-                // Combined score: 70% recency, 30% frequency
-                return recencyScore * 0.7 + frequencyScore * 0.3;
-            }
-        }
-
-        return 0;
-    }
+	visible: window.modelData.name === Hypr.focusedMonitor.name
 
     // Thx caelestia
     function launch(entry: DesktopEntry): void {
-        updateLaunchHistory(entry);
+        Fuzzy.updateLaunchHistory(entry);
 
         entry.runInTerminal ? Quickshell.execDetached({
             "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
@@ -146,7 +75,7 @@ StyledRect {
     }
     Loader {
         anchors.fill: parent
-        active: root.isLauncherOpen
+        active: window.modelData.name === Hypr.focusedMonitor.name
         asynchronous: true
         sourceComponent: ColumnLayout {
             anchors.fill: parent
@@ -201,7 +130,7 @@ StyledRect {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 model: ScriptModel {
-                    values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name", 0.55, root.getRecencyScore)
+                    values: Fuzzy.fuzzySearch(DesktopEntries.applications.values, search.text, "name", 0.55, Fuzzy.getRecencyScore)
                 }
                 clip: true
                 spacing: 8
@@ -211,7 +140,6 @@ StyledRect {
                 preferredHighlightEnd: height
                 highlightRangeMode: ListView.ApplyRange
                 highlightMoveDuration: 150
-                highlightFollowsCurrentItem: false
                 maximumFlickVelocity: 3000
                 highlightMoveVelocity: -1
                 ScrollBar.vertical: ScrollBar {

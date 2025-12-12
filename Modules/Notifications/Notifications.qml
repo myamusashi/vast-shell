@@ -25,7 +25,8 @@ StyledRect {
     height: hasNotifications ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
     color: Colours.m3Colors.m3Background
     radius: 0
-    bottomLeftRadius: Appearance.rounding.normal
+	bottomLeftRadius: Appearance.rounding.normal
+	visible: window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on height {
         NAnim {
@@ -47,7 +48,6 @@ StyledRect {
         }
 
         cacheBuffer: 200
-        reuseItems: true
 
         delegate: Wrapper {
             required property var modelData

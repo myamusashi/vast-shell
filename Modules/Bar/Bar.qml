@@ -11,8 +11,8 @@ import qs.Services
 
 ClippingRectangle {
     color: Colours.m3Colors.m3Background
-    height: GlobalStates.isBarOpen ? 40 : 10
-    width: parent.width
+	implicitWidth: parent.width
+    implicitHeight: window.modelData.name === Hypr.focusedMonitor.name ? GlobalStates.isBarOpen ? 40 : 10 : 10
 
 	IpcHandler {
 		target: "layershell"
@@ -48,7 +48,7 @@ ClippingRectangle {
 
     Loader {
         anchors.fill: parent
-        active: GlobalStates.isBarOpen
+        active: window.modelData.name === Hypr.focusedMonitor.name ? GlobalStates.isBarOpen : GlobalStates.isBarOpen = false
         asynchronous: true
         sourceComponent: RowLayout {
             id: rowbar

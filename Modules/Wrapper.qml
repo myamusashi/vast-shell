@@ -21,12 +21,14 @@ import "Session"
 import "Wallpaper"
 import "OSD"
 import "Bar"
+
 Variants {
     model: Quickshell.screens
 
     delegate: PanelWindow {
         id: window
 
+		required property ShellScreen modelData
         property bool needFocusKeyboard: false
         property color barColor: Colours.m3Colors.m3Background
         property alias top: topBar
@@ -34,6 +36,7 @@ Variants {
         property alias left: leftBar
         property alias right: rightBar
 
+		screen: modelData
         color: session.isSessionOpen ? Colours.withAlpha(Colours.m3Colors.m3Background, 0.7) : "transparent"
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
@@ -68,21 +71,25 @@ Variants {
 
         Scope {
             Exclusion {
+                screen: window.modelData
                 name: "left"
                 exclusiveZone: leftBar.implicitWidth
                 anchors.left: true
             }
             Exclusion {
+                screen: window.modelData
                 name: "top"
                 exclusiveZone: topBar.implicitHeight
                 anchors.top: true
             }
             Exclusion {
+                screen: window.modelData
                 name: "right"
                 exclusiveZone: rightBar.implicitWidth
                 anchors.right: true
             }
             Exclusion {
+                screen: window.modelData
                 name: "bottom"
                 exclusiveZone: bottomBar.implicitHeight
                 anchors.bottom: true

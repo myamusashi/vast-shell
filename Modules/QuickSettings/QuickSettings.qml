@@ -44,7 +44,8 @@ ColumnLayout {
 
     width: parent.width * 0.3
     height: isControlCenterOpen ? contentHeight : 0
-    spacing: 0
+	spacing: 0
+	visible: window.modelData.name === Hypr.focusedMonitor.name
 
     property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500
 

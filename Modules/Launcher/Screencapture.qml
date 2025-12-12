@@ -17,18 +17,18 @@ Scope {
     id: root
 
     IpcHandler {
-		target: "screenCaptureLauncher"
+        target: "screenCaptureLauncher"
 
-		function open(): void {
-			GlobalStates.isScreenCapturePanelOpen = true;
-		}
-		function close(): void {
-			GlobalStates.isScreenCapturePanelOpen = false;
-		}
-		function toggle(): void {
-			GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen;
-		}
-	}
+        function open(): void {
+            GlobalStates.isScreenCapturePanelOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isScreenCapturePanelOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen;
+        }
+    }
 
     GlobalShortcut {
         name: "screencaptureLauncher"
@@ -41,9 +41,6 @@ Scope {
         component: PanelWindow {
             id: window
 
-            property HyprlandMonitor monitor: Hyprland.monitorFor(screen)
-            property real monitorWidth: monitor.width / monitor.scale
-            property real monitorHeight: monitor.height / monitor.scale
             property int selectedIndex: 0
             property int selectedTab: 0
 
@@ -55,10 +52,10 @@ Scope {
                 left: true
             }
 
-            implicitWidth: monitorWidth * 0.18
-            implicitHeight: monitorHeight * 0.35
-            margins.right: monitorWidth * 0.41
-            margins.left: monitorWidth * 0.41
+            implicitWidth: 100
+            implicitHeight: 300
+            margins.right: implicitWidth * 8
+            margins.left: implicitWidth * 8
 
             color: "transparent"
 
@@ -152,11 +149,11 @@ Scope {
                                         focus: GlobalStates.isScreenCapturePanelOpen
                                         onFocusChanged: {
                                             if (focus && GlobalStates.isScreenCapturePanelOpen)
-                                            Qt.callLater(() => {
-                                                             let firstIcon = tabRepeater.itemAt(window.selectedTab);
-                                                             if (firstIcon)
-                                                             firstIcon.children[0].forceActiveFocus();
-                                                         });
+                                                Qt.callLater(() => {
+                                                    let firstIcon = tabRepeater.itemAt(window.selectedTab);
+                                                    if (firstIcon)
+                                                        firstIcon.children[0].forceActiveFocus();
+                                                });
                                         }
 
                                         radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
@@ -197,8 +194,8 @@ Scope {
                                                 "icon": "select_window_2",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
+                                                    });
                                                 }
                                             },
                                             {
@@ -206,8 +203,8 @@ Scope {
                                                 "icon": "select",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
+                                                    });
                                                 }
                                             },
                                             {
@@ -215,8 +212,8 @@ Scope {
                                                 "icon": "monitor",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-eDP-1"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-eDP-1"]
+                                                    });
                                                 }
                                             },
                                             {
@@ -224,8 +221,8 @@ Scope {
                                                 "icon": "monitor",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-HDMI-A-2"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-HDMI-A-2"]
+                                                    });
                                                 }
                                             },
                                             {
@@ -233,8 +230,8 @@ Scope {
                                                 "icon": "dual_screen",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-both-screens"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-both-screens"]
+                                                    });
                                                 }
                                             }
                                         ]
@@ -271,8 +268,8 @@ Scope {
                                                 "icon": "select",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+                                                    });
                                                 }
                                             },
                                             {
@@ -280,8 +277,8 @@ Scope {
                                                 "icon": "monitor",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-eDP-1"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-eDP-1"]
+                                                    });
                                                 }
                                             },
                                             {
@@ -289,8 +286,8 @@ Scope {
                                                 "icon": "monitor",
                                                 "action": () => {
                                                     Quickshell.execDetached({
-                                                                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-HDMI-A-2"]
-                                                                            });
+                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-HDMI-A-2"]
+                                                    });
                                                 }
                                             }
                                         ]

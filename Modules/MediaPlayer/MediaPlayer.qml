@@ -35,6 +35,7 @@ ClippingRectangle {
     radius: 0
     bottomLeftRadius: Appearance.rounding.normal
     bottomRightRadius: bottomLeftRadius
+	visible: window.modelData.name === Hypr.focusedMonitor.name
 
     anchors {
         top: parent.top
@@ -53,7 +54,7 @@ ClippingRectangle {
         id: contentLoader
 
         anchors.fill: parent
-        active: root.isMediaPlayerOpen
+        active: window.modelData.name === Hypr.focusedMonitor.name
         asynchronous: true
         sourceComponent: RowLayout {
             id: contentLayout

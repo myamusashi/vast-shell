@@ -28,7 +28,7 @@ StyledRect {
     radius: 0
     anchors.leftMargin: 15
     bottomLeftRadius: Appearance.rounding.normal
-    visible: height > 0
+    visible: window.modelData.name === Hypr.focusedMonitor.name && height > 0
     color: Colours.m3Colors.m3Background
 
     Behavior on width {
@@ -47,7 +47,7 @@ StyledRect {
 
     Loader {
         anchors.fill: parent
-        active: root.isNotificationCenterOpen
+        active: window.modelData.name === Hypr.focusedMonitor.name
         asynchronous: true
         sourceComponent: ColumnLayout {
             anchors.fill: parent
@@ -150,9 +150,7 @@ StyledRect {
                     spacing: Appearance.spacing.normal
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
-
                     cacheBuffer: 300
-                    reuseItems: true
 
                     delegate: Wrapper {
                         required property var modelData
