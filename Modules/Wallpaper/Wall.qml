@@ -9,7 +9,6 @@ import Quickshell.Wayland
 import qs.Components
 import qs.Configs
 import qs.Helpers
-import qs.Services
 
 Variants {
     model: Quickshell.screens
@@ -38,7 +37,8 @@ Variants {
         Wallpaper {
             id: img
 
-            anchors.fill: parent
+			anchors.fill: parent
+			sourceSize: Qt.size(root.modelData.width, root.modelData.height)
             source: ""
 
             Component.onCompleted: {
