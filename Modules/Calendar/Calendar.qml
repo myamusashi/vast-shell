@@ -49,7 +49,7 @@ StyledRect {
 
     Loader {
         anchors.fill: parent
-        active: window.modelData.name === Hypr.focusedMonitor.name
+        active: window.modelData.name === Hypr.focusedMonitor.name && container.isCalendarShow
         asynchronous: true
         sourceComponent: ColumnLayout {
             id: root

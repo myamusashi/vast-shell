@@ -48,7 +48,7 @@ ClippingRectangle {
 
     Loader {
         anchors.fill: parent
-        active: window.modelData.name === Hypr.focusedMonitor.name ? GlobalStates.isBarOpen : GlobalStates.isBarOpen = false
+        active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isBarOpen
         asynchronous: true
         sourceComponent: RowLayout {
             id: rowbar

@@ -47,7 +47,7 @@ StyledRect {
 
     Loader {
         anchors.fill: parent
-        active: window.modelData.name === Hypr.focusedMonitor.name
+        active: window.modelData.name === Hypr.focusedMonitor.name && root.isNotificationCenterOpen
         asynchronous: true
         sourceComponent: ColumnLayout {
             anchors.fill: parent

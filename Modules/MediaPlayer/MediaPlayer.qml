@@ -54,7 +54,7 @@ ClippingRectangle {
         id: contentLoader
 
         anchors.fill: parent
-        active: window.modelData.name === Hypr.focusedMonitor.name
+        active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isMediaPlayerOpen
         asynchronous: true
         sourceComponent: RowLayout {
             id: contentLayout

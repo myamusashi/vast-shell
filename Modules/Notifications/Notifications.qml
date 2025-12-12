@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-
 import Quickshell
 
 import qs.Components
@@ -9,6 +8,7 @@ import qs.Configs
 import qs.Services
 
 import "Components"
+
 StyledRect {
     id: container
 
@@ -56,12 +56,8 @@ StyledRect {
             notif: modelData
             width: notifListView.width
 
-            onEntered: {
-                modelData.timer.stop();
-            }
-            onExited: {
-                modelData.timer.restart();
-            }
+            onEntered: modelData.timer.stop()
+            onExited: modelData.timer.restart()
         }
     }
 }
