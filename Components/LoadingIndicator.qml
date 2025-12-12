@@ -4,17 +4,18 @@ import qs.Helpers
 import qs.Services
 
 import "../Submodules/rounded-polygon-qmljs/material-shapes.js" as MaterialShapes
+
 Item {
     id: root
 
-	property bool status: false
+    property bool status: false
     property double radius: 50
     property double padding: 50
     property double shapePadding: 12
     anchors.centerIn: parent
     implicitWidth: 30
-	implicitHeight: 30
-	visible: status
+    implicitHeight: 30
+    visible: status
 
     property var shapeGetters: [MaterialShapes.getOval, MaterialShapes.getSoftBurst, MaterialShapes.getPentagon, MaterialShapes.getPill, MaterialShapes.getSunny, MaterialShapes.getCookie4Sided]
     property int shapeIndex: 0
@@ -22,7 +23,7 @@ Item {
 
     // Automatic morphing
     Timer {
-		id: morphTimer
+        id: morphTimer
 
         interval: 1500
         running: root.status
@@ -36,7 +37,7 @@ Item {
     }
 
     Timer {
-		id: morphDelay
+        id: morphDelay
 
         interval: 100
         onTriggered: {
@@ -48,7 +49,7 @@ Item {
     }
 
     ShapeCanvas {
-		id: shapeCanvas
+        id: shapeCanvas
 
         anchors.centerIn: parent
         implicitWidth: parent.width
@@ -63,8 +64,8 @@ Item {
             loops: Animation.Infinite
             from: shapeCanvas.rotation
             to: shapeCanvas.rotation + 360
-			duration: root.rotationSpeed
-			easing.type: Easing.OutQuart
+            duration: root.rotationSpeed
+            easing.type: Easing.OutQuart
             running: true
         }
     }

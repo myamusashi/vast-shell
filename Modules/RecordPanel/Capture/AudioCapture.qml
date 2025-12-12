@@ -34,8 +34,8 @@ ClippingRectangle {
             id: tabLayout
         }
 
-		StyledRect {
-			Layout.fillWidth: true
+        StyledRect {
+            Layout.fillWidth: true
             implicitHeight: 1
             color: Colours.m3Colors.m3OutlineVariant
         }
@@ -53,10 +53,10 @@ ClippingRectangle {
         Layout.fillWidth: true
         tabs: [
             {
-                "title": "Mix",
+                "title": "Mix"
             },
             {
-                "title": "Voice",
+                "title": "Voice"
             }
         ]
         onTabClicked: root.tabClicked(root.state)
@@ -71,7 +71,7 @@ ClippingRectangle {
         initialItem: viewComponent
         onCurrentItemChanged: {
             if (currentItem)
-                currentItem.viewIndex = root.state;
+            currentItem.viewIndex = root.state;
         }
 
         Component {

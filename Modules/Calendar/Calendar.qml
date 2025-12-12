@@ -15,9 +15,9 @@ StyledRect {
     property bool isCalendarShow: GlobalStates.isCalendarOpen
     color: Colours.m3Colors.m3Background
     radius: 0
-	bottomLeftRadius: Appearance.rounding.normal
+    bottomLeftRadius: Appearance.rounding.normal
 
-	visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: window.modelData.name === Hypr.focusedMonitor.name
 
     implicitWidth: isCalendarShow ? Hypr.focusedMonitor.width * 0.2 : 0
     implicitHeight: isCalendarShow ? 350 : 0

@@ -28,7 +28,7 @@ Variants {
     delegate: PanelWindow {
         id: window
 
-		required property ShellScreen modelData
+        required property ShellScreen modelData
         property bool needFocusKeyboard: false
         property color barColor: Colours.m3Colors.m3Background
         property alias top: topBar
@@ -36,7 +36,7 @@ Variants {
         property alias left: leftBar
         property alias right: rightBar
 
-		screen: modelData
+        screen: modelData
         color: session.isSessionOpen ? Colours.withAlpha(Colours.m3Colors.m3Background, 0.7) : "transparent"
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
@@ -252,21 +252,21 @@ Variants {
 
         Component.onCompleted: {
             switch (corner) {
-            case 0:
+                case 0:
                 anchors.left = parent.left;
                 anchors.top = parent.top;
                 break;
-            case 1:
+                case 1:
                 anchors.top = parent.top;
                 anchors.right = parent.right;
                 rotation = 90;
                 break;
-            case 2:
+                case 2:
                 anchors.right = parent.right;
                 anchors.bottom = parent.bottom;
                 rotation = 180;
                 break;
-            case 3:
+                case 3:
                 anchors.left = parent.left;
                 anchors.bottom = parent.bottom;
                 rotation = -90;

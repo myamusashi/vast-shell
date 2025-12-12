@@ -24,12 +24,12 @@ JsonObject {
         property int large: 16 * scale
         property int larger: 18 * scale
         property int extraLarge: 30 * scale
-	}
+    }
 
-	component FontsComponent: JsonObject {
-		property FontFamily family: FontFamily {}
-		property FontSize size: FontSize {}
-	}
+    component FontsComponent: JsonObject {
+        property FontFamily family: FontFamily {}
+        property FontSize size: FontSize {}
+    }
 
     component AnimationCurvesComponent: JsonObject {
         property list<real> emphasized: [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1]

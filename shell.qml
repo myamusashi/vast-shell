@@ -16,9 +16,9 @@ import qs.Modules.RecordPanel
 import qs.Modules.Wallpaper
 
 ShellRoot {
-	id: root
+    id: root
 
-	property alias wrapper: wrapper
+    property alias wrapper: wrapper
     Lockscreen {}
     Wall {}
     RecordPanel {}
@@ -26,9 +26,9 @@ ShellRoot {
     Screencapture {
         id: screencapture
     }
-	Wrapper {
-		id: wrapper
-	}
+    Wrapper {
+        id: wrapper
+    }
     Overview {}
 
     Connections {
@@ -46,5 +46,5 @@ ShellRoot {
     GlobalShortcut {
         name: "screencapture"
         onPressed: GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen
-	}
+    }
 }

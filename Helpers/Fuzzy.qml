@@ -8,10 +8,10 @@ Singleton {
     readonly property real prefixWeight: 0.3
     readonly property real distanceWeight: 0.3
     readonly property real consecutiveWeight: 0.25
-	readonly property real wordBoundaryWeight: 0.15
-	readonly property real recencyWeight: 0.4  // Weight for recency boost
-	property var launchHistory: []
-	
+    readonly property real wordBoundaryWeight: 0.15
+    readonly property real recencyWeight: 0.4  // Weight for recency boost
+    property var launchHistory: []
+
     Settings {
         id: settings
     }
@@ -45,10 +45,10 @@ Singleton {
 
         if (!found) {
             launchHistory.push({
-                id: appId,
-                timestamp: now,
-                count: 1
-            });
+                                   id: appId,
+                                   timestamp: now,
+                                   count: 1
+                               });
         }
 
         if (launchHistory.length > 50) {
@@ -82,19 +82,19 @@ Singleton {
         return 0;
     }
     readonly property var charMap: ({
-            "a": 'aàáâãäåāăą4@',
-            "e": 'eèéêëēėę3',
-            "i": 'iìíîïīįı1!|l',
-            "o": 'oòóôõöøōő0',
-            "u": 'uùúûüūůű',
-            "c": 'cçćč',
-            "n": 'nñńň',
-            "s": 'sśšş5$',
-            "z": 'zźżž2',
-            "l": 'l1!|i',
-            "g": 'g9',
-            "t": 't7+'
-        })
+                                        "a": 'aàáâãäåāăą4@',
+                                        "e": 'eèéêëēėę3',
+                                        "i": 'iìíîïīįı1!|l',
+                                        "o": 'oòóôõöøōő0',
+                                        "u": 'uùúûüūůű',
+                                        "c": 'cçćč',
+                                        "n": 'nñńň',
+                                        "s": 'sśšş5$',
+                                        "z": 'zźżž2',
+                                        "l": 'l1!|i',
+                                        "g": 'g9',
+                                        "t": 't7+'
+                                    })
     function normalizeChar(chars: string): string {
         const lower = chars.toLowerCase();
         for (const key in charMap) {
@@ -208,9 +208,9 @@ Singleton {
                     const item = items[i];
                     const recency = recencyScoreFn(item);
                     results.push({
-                        "item": item,
-                        "score": recency
-                    });
+                                     "item": item,
+                                     "score": recency
+                                 });
                 }
                 results.sort((a, b) => b.score - a.score);
                 return results.map(r => r.item);
@@ -252,21 +252,21 @@ Singleton {
                 }
 
                 results.push({
-                    "item": item,
-                    "score": finalScore
-                });
+                                 "item": item,
+                                 "score": finalScore
+                             });
             }
         }
 
         results.sort((a, b) => {
-            const scoreDiff = b.score - a.score;
-            if (Math.abs(scoreDiff) < 0.001) {
-                const aText = key ? a.item[key] : a.item;
-                const bText = key ? b.item[key] : b.item;
-                return aText.length - bText.length;
-            }
-            return scoreDiff;
-        });
+                         const scoreDiff = b.score - a.score;
+                         if (Math.abs(scoreDiff) < 0.001) {
+                             const aText = key ? a.item[key] : a.item;
+                             const bText = key ? b.item[key] : b.item;
+                             return aText.length - bText.length;
+                         }
+                         return scoreDiff;
+                     });
 
         return results.map(r => r.item);
     }

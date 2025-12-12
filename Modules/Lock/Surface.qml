@@ -54,7 +54,7 @@ WlSessionLockSurface {
 
         Keys.onPressed: kevent => {
             if (root.showErrorMessage && kevent.text)
-                root.showErrorMessage = false;
+            root.showErrorMessage = false;
 
             if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                 root.pam.currentText = root.inputBuffer;
@@ -96,7 +96,7 @@ WlSessionLockSurface {
                 root.maskedBuffer = root.maskedBuffer.slice(0, -randomRemove);
 
                 if (root.maskedBuffer === "")
-                    passwordBuffer.color = Colours.m3Colors.m3OnSurfaceVariant;
+                passwordBuffer.color = Colours.m3Colors.m3OnSurfaceVariant;
 
                 return;
             }
@@ -109,13 +109,13 @@ WlSessionLockSurface {
                 }
 
                 if (passwordBuffer.color === Colours.m3Colors.m3Blue || passwordBuffer.color === Colours.m3Colors.m3OnBackground)
-                    passwordBuffer.color = root.maskedBuffer ? Colours.m3Colors.m3OnSurface : Colours.m3Colors.m3OnSurfaceVariant;
+                passwordBuffer.color = root.maskedBuffer ? Colours.m3Colors.m3OnSurface : Colours.m3Colors.m3OnSurfaceVariant;
 
                 root.inputBuffer += kevent.text;
 
                 const randomLength = Math.floor(Math.random() * 3) + 1;
                 for (var i = 0; i < randomLength; i++)
-                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
 
                 const currentTime = Date.now();
                 if (root.lastKeystrokeTime > 0) {
@@ -152,9 +152,9 @@ WlSessionLockSurface {
             onTriggered: {
                 // Randomly add or remove fake characters when idle
                 if (Math.random() > 0.5 && root.maskedBuffer.length < 50)
-                    root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+                root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
                 else if (root.maskedBuffer.length > root.inputBuffer.length * 3)
-                    root.maskedBuffer = root.maskedBuffer.slice(0, -1);
+                root.maskedBuffer = root.maskedBuffer.slice(0, -1);
                 interval = Math.random() * 3000 + 2000;
             }
         }
@@ -263,13 +263,13 @@ WlSessionLockSurface {
     }
 
     SequentialAnimation {
-		id: unlockSequence
+        id: unlockSequence
 
         PropertyAction {
             targets: GlobalStates
             properties: "hideOuterBorder"
             value: false
-		}
+        }
 
         PauseAnimation {
             duration: Appearance.animations.durations.extraLarge

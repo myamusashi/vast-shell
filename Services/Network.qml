@@ -18,7 +18,6 @@ import Quickshell.Io
 // You should have received a copy of the GNU General Public License
 // along with shell. If not, see https://www.gnu.org/licenses/.
 
-
 Singleton {
     id: root
 

@@ -131,8 +131,8 @@ StyledRect {
 
             StyledRect {
                 Layout.fillWidth: true
-				Layout.fillHeight: true
-				clip: true
+                Layout.fillHeight: true
+                clip: true
                 color: "transparent"
 
                 ListView {

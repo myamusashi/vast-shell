@@ -8,7 +8,7 @@ import qs.Services
 StyledRect {
     id: root
 
-	Layout.alignment: Qt.AlignCenter
+    Layout.alignment: Qt.AlignCenter
     visible: Record.isRecordingControlOpen
     color: "transparent"
 

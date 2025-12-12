@@ -49,7 +49,7 @@ StyledRect {
                 required property var modelData
                 required property int index
 
-				Layout.fillWidth: true
+                Layout.fillWidth: true
                 buttonTitle: modelData.title || ""
                 iconButton: modelData.icon || ""
                 iconSize: modelData.iconSize || (Appearance.fonts.size.large * root.scaleFactor)

@@ -6,13 +6,13 @@ import QtQuick.Controls
 import Quickshell.Io
 import Quickshell.Hyprland
 
-
 import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
 
 import "Settings"
+
 ColumnLayout {
     id: root
 
@@ -26,26 +26,26 @@ ColumnLayout {
     GlobalShortcut {
         name: "ControlCenter"
         onPressed: root.toggleControlCenter()
-	}
+    }
 
-	IpcHandler {
-		target: "QuickSettings"
+    IpcHandler {
+        target: "QuickSettings"
 
-		function open(): void {
-			GlobalStates.isQuickSettingsOpen = true;
-		}
-		function close(): void {
-			GlobalStates.isQuickSettingsOpen = false;
-		}
-		function toggle(): void {
-			GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
-		}
-	}
+        function open(): void {
+            GlobalStates.isQuickSettingsOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isQuickSettingsOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
+        }
+    }
 
     width: parent.width * 0.3
     height: isControlCenterOpen ? contentHeight : 0
-	spacing: 0
-	visible: window.modelData.name === Hypr.focusedMonitor.name
+    spacing: 0
+    visible: window.modelData.name === Hypr.focusedMonitor.name
 
     property real contentHeight: tabBar.implicitHeight + divider.implicitHeight + 500
 
@@ -127,7 +127,7 @@ ColumnLayout {
 
         onCurrentItemChanged: {
             if (currentItem)
-				currentItem.viewIndex = root.state;
+            currentItem.viewIndex = root.state;
         }
 
         Component {

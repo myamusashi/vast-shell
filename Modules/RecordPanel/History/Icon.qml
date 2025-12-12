@@ -33,9 +33,9 @@ Loader {
         const videoFormats = ["mkv", "mp4", "webm", "avi"];
 
         if (videoFormats.includes(ext))
-            createThumbnails.running = true;
+        createThumbnails.running = true;
         else
-            thumbnailPath = "file://" + root.modelData.path;
+        thumbnailPath = "file://" + root.modelData.path;
     }
 
     sourceComponent: StyledRect {
@@ -50,9 +50,9 @@ Loader {
             anchors.centerIn: parent
             fillMode: Image.PreserveAspectCrop
             cache: true
-			asynchronous: true
-			width: 40
-			height: 40
+            asynchronous: true
+            width: 40
+            height: 40
             sourceSize: Qt.size(40, 40)
             source: root.thumbnailPath
 
@@ -76,12 +76,12 @@ Loader {
             LoadingIndicator {
                 implicitWidth: 30
                 implicitHeight: 30
-				status: {
-					if (root.getFileExtension(root.modelData.path) === "mkv" ||root.getFileExtension(root.modelData.path) === "mp4")
-						return root.showLoading || image.status == Image.Loading
-					else
-						return image.status == Image.Loading
-				}
+                status: {
+                    if (root.getFileExtension(root.modelData.path) === "mkv" || root.getFileExtension(root.modelData.path) === "mp4")
+                    return root.showLoading || image.status == Image.Loading;
+                    else
+                    return image.status == Image.Loading;
+                }
             }
         }
     }
@@ -102,13 +102,13 @@ Loader {
         stderr: StdioCollector {
             onStreamFinished: {
                 if (text.trim())
-                    console.error("Thumbnail generation error:", text);
+                console.error("Thumbnail generation error:", text);
             }
         }
     }
 
     Timer {
-		id: delayTimer
+        id: delayTimer
 
         interval: 500
         repeat: false

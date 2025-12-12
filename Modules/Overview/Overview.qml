@@ -16,8 +16,6 @@ import qs.Services
 
 // Thx M7moud El-zayat for your Overview code
 
-
-
 Scope {
     id: scope
 
@@ -140,7 +138,7 @@ Scope {
                             anchors.fill: parent
                             onClicked: {
                                 if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                                    Hypr.dispatch("workspace" + parent.index + 1);
+                                Hypr.dispatch("workspace" + parent.index + 1);
                             }
                         }
 
@@ -197,7 +195,7 @@ Scope {
                                 Drag.hotSpot.y: height / 2
                                 Drag.onActiveChanged: {
                                     if (Drag.active)
-                                        parent = visualParent;
+                                    parent = visualParent;
                                     else {
                                         var mapped = mapToItem(originalParent, 0, 0);
                                         parent = originalParent;
@@ -235,16 +233,16 @@ Scope {
 
                                     onPositionChanged: {
                                         if (drag.active)
-                                            dragged = true;
+                                        dragged = true;
                                     }
 
                                     onClicked: mouse => {
                                         if (!dragged) {
                                             if (mouse.button === Qt.LeftButton)
-                                                if (mouse.button === Qt.LeftButton)
-                                                    toplevel.waylandHandle.activate();
-                                                else if (mouse.button === Qt.RightButton)
-                                                    toplevel.waylandHandle.close();
+                                            if (mouse.button === Qt.LeftButton)
+                                            toplevel.waylandHandle.activate();
+                                            else if (mouse.button === Qt.RightButton)
+                                            toplevel.waylandHandle.close();
                                         }
                                     }
 

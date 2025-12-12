@@ -37,8 +37,8 @@ Variants {
         Wallpaper {
             id: img
 
-			anchors.fill: parent
-			sourceSize: Qt.size(root.modelData.width, root.modelData.height)
+            anchors.fill: parent
+            sourceSize: Qt.size(root.modelData.width, root.modelData.height)
             source: ""
 
             Component.onCompleted: {

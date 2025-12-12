@@ -3,8 +3,8 @@ import QtQuick
 import Quickshell.Io
 
 JsonObject {
-	property Apps apps: Apps {}
-	property Battery battery: Battery {}
+    property Apps apps: Apps {}
+    property Battery battery: Battery {}
 
     component Battery: JsonObject {
         property list<var> warnLevels: [

@@ -5,6 +5,7 @@ import qs.Configs
 import qs.Services
 
 import "../Submodules/rounded-polygon-qmljs/shapes/morph.js" as Morph
+
 Canvas {
     id: root
     property color color: "#685496"

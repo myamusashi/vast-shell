@@ -11,6 +11,7 @@ import qs.Helpers
 import qs.Services
 
 import QtGraphs
+
 ClippingRectangle {
     id: root
 

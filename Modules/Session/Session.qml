@@ -22,19 +22,19 @@ StyledRect {
     property var pendingAction: null
     property string pendingActionName: ""
 
-	IpcHandler {
-		target: "Session"
+    IpcHandler {
+        target: "Session"
 
-		function open(): void {
-			GlobalStates.isSessionOpen = true;
-		}
-		function close(): void {
-			GlobalStates.isSessionOpen = false;
-		}
-		function toggle(): void {
-			GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen;
-		}
-	}
+        function open(): void {
+            GlobalStates.isSessionOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isSessionOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen;
+        }
+    }
 
     GlobalShortcut {
         name: "session"

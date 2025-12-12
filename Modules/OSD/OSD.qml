@@ -19,8 +19,8 @@ StyledRect {
     implicitHeight: GlobalStates.isVolumeOSDShow || GlobalStates.isNumLockOSDShow || GlobalStates.isCapsLockOSDShow ? calculateHeight() : 0
     radius: 0
     topLeftRadius: Appearance.rounding.normal
-	color: Colours.m3Colors.m3Background
-	visible: window.modelData.name === Hypr.focusedMonitor.name
+    color: Colours.m3Colors.m3Background
+    visible: window.modelData.name === Hypr.focusedMonitor.name
     clip: true
 
     Behavior on implicitWidth {

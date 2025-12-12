@@ -22,39 +22,39 @@ StyledRect {
     GlobalShortcut {
         name: "appLauncher"
         onPressed: root.isLauncherOpen = !root.isLauncherOpen
-	}
+    }
 
-	IpcHandler {
-		target: "appLauncher"
+    IpcHandler {
+        target: "appLauncher"
 
-		function open(): void {
-			GlobalStates.isLauncherOpen = true;
-		}
-		function close(): void {
-			GlobalStates.isLauncherOpen = false;
-		}
-		function toggle(): void {
-			GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen;
-		}
-	}
+        function open(): void {
+            GlobalStates.isLauncherOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isLauncherOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen;
+        }
+    }
 
     Component.onCompleted: {
-		Fuzzy.loadLaunchHistory();
-	}
+        Fuzzy.loadLaunchHistory();
+    }
 
-	visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: window.modelData.name === Hypr.focusedMonitor.name
 
     // Thx caelestia
     function launch(entry: DesktopEntry): void {
         Fuzzy.updateLaunchHistory(entry);
 
         entry.runInTerminal ? Quickshell.execDetached({
-            "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
-            "workingDirectory": entry.workingDirectory
-        }) : Quickshell.execDetached({
-            "command": ["app2unit", "--", ...entry.command],
-            "workingDirectory": entry.workingDirectory
-        });
+                                                          "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
+                                                          "workingDirectory": entry.workingDirectory
+                                                      }) : Quickshell.execDetached({
+                                                                                       "command": ["app2unit", "--", ...entry.command],
+                                                                                       "workingDirectory": entry.workingDirectory
+                                                                                   });
     }
 
     radius: 0
@@ -84,7 +84,7 @@ StyledRect {
             focus: root.isLauncherOpen
             onFocusChanged: {
                 if (focus && root.isLauncherOpen)
-                    search.forceActiveFocus();
+                search.forceActiveFocus();
             }
             StyledTextField {
                 id: search

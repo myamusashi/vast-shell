@@ -9,6 +9,7 @@ import qs.Services
 
 Column {
     id: root
+
     required property var modelData
     property bool isShowMoreBody: false
 
@@ -40,6 +41,7 @@ Column {
 
             StyledText {
                 id: timeText
+
                 text: TimeAgo.timeAgoWithIfElse(root.modelData.time)
                 color: Colours.m3Colors.m3OnSurfaceVariant
 
@@ -54,6 +56,7 @@ Column {
 
         StyledRect {
             id: expandButton
+
             width: 32
             height: 32
             radius: Appearance.rounding.large
@@ -107,6 +110,7 @@ Column {
 
             delegate: StyledRect {
                 id: actionButton
+
                 required property var modelData
                 required property int index
 

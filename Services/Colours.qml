@@ -13,10 +13,10 @@ Singleton {
 
     property alias colorQuantizer: colorQuantizer
     readonly property M3TemplateComponent m3GeneratedColors: M3TemplateComponent {}
-	readonly property MatugenTemplateComponent matugenColors: MatugenTemplateComponent {}
-	readonly property StaticColorTemplateComponent staticColors: StaticColorTemplateComponent {}
-	readonly property var matugenTemplateColors: Configs.colors.isDarkMode ? JSON.parse(matugenDarkFile.text()).colors : JSON.parse(matugenLightFile.text()).colors
-	readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
+    readonly property MatugenTemplateComponent matugenColors: MatugenTemplateComponent {}
+    readonly property StaticColorTemplateComponent staticColors: StaticColorTemplateComponent {}
+    readonly property var matugenTemplateColors: Configs.colors.isDarkMode ? JSON.parse(matugenDarkFile.text()).colors : JSON.parse(matugenLightFile.text()).colors
+    readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
     readonly property var m3Colors: Configs.colors.useMatugenColor ? matugenColors : Configs.colors.useStaticColors ? staticColors : m3GeneratedColors
 
     FileView {

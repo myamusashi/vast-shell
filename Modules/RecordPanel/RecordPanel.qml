@@ -14,27 +14,28 @@ import qs.Services
 
 import "Capture" as Cap
 import "History"
+
 Scope {
     id: scope
 
     GlobalShortcut {
         name: "recordPanel"
         onPressed: GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen
-	}
+    }
 
-	IpcHandler {
-		target: "recordPanel"
+    IpcHandler {
+        target: "recordPanel"
 
-		function open(): void {
-			GlobalStates.isRecordPanelOpen = true;
-		}
-		function close(): void {
-			GlobalStates.isRecordPanelOpen = false;
-		}
-		function toggle(): void {
-			GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen;
-		}
-	}
+        function open(): void {
+            GlobalStates.isRecordPanelOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isRecordPanelOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen;
+        }
+    }
 
     Variants {
         model: Quickshell.screens

@@ -35,7 +35,7 @@ ClippingRectangle {
     radius: 0
     bottomLeftRadius: Appearance.rounding.normal
     bottomRightRadius: bottomLeftRadius
-	visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: window.modelData.name === Hypr.focusedMonitor.name
 
     anchors {
         top: parent.top
