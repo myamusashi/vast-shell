@@ -9,7 +9,6 @@ import qs.Services
 
 Column {
     id: root
-
     required property var modelData
     property bool isShowMoreBody: false
 
@@ -20,46 +19,35 @@ Column {
         width: parent.width
         spacing: Appearance.spacing.small
 
-        Item {
+        Row {
+            id: appInfoRow
             width: parent.width - expandButton.width - parent.spacing
-            height: appNameRow.height
+            spacing: Appearance.spacing.normal
 
-            Row {
-                id: appNameRow
+            StyledText {
+                text: root.modelData.appName
+                font.pixelSize: Appearance.fonts.size.large
+                font.weight: Font.Medium
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                elide: Text.ElideRight
+            }
 
-                spacing: Appearance.spacing.normal
+            StyledText {
+                text: "•"
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.large
+            }
 
-                StyledText {
-                    id: appName
+            StyledText {
+                id: timeText
+                text: TimeAgo.timeAgoWithIfElse(root.modelData.time)
+                color: Colours.m3Colors.m3OnSurfaceVariant
 
-                    text: root.modelData.appName
-                    font.pixelSize: Appearance.fonts.size.large
-                    font.weight: Font.Medium
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    elide: Text.ElideRight
-                }
-
-                StyledText {
-                    id: dots
-
-                    text: "•"
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.large
-                }
-
-                StyledText {
-                    id: whenTime
-
-                    property date notificationDate: root.modelData.time
-                    text: TimeAgo.timeAgoWithIfElse(notificationDate)
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-
-                    Timer {
-                        interval: 60000
-                        running: true
-                        repeat: true
-                        onTriggered: whenTime.text = TimeAgo.timeAgoWithIfElse(whenTime.notificationDate)
-                    }
+                Timer {
+                    interval: 60000
+                    running: true
+                    repeat: true
+                    onTriggered: timeText.text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
                 }
             }
         }
@@ -72,8 +60,6 @@ Column {
             color: "transparent"
 
             MaterialIcon {
-                id: expandIcon
-
                 anchors.centerIn: parent
                 icon: root.isShowMoreBody ? "expand_less" : "expand_more"
                 font.pixelSize: Appearance.fonts.size.extraLarge
@@ -81,7 +67,6 @@ Column {
             }
 
             MArea {
-                id: expandButtonMouse
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
@@ -91,28 +76,24 @@ Column {
     }
 
     StyledText {
-        id: summary
-
         width: parent.width
         text: root.modelData.summary
         font.pixelSize: Appearance.fonts.size.medium
         font.weight: Font.DemiBold
         color: Colours.m3Colors.m3OnSurface
-        elide: Text.ElideRight
         wrapMode: Text.Wrap
         maximumLineCount: 2
+        elide: Text.ElideRight
     }
 
     StyledText {
-        id: body
-
         width: parent.width
         text: root.modelData.body || ""
         font.pixelSize: Appearance.fonts.size.medium
         color: Colours.m3Colors.m3OnSurface
         textFormat: Text.StyledText
-        maximumLineCount: root.isShowMoreBody ? 0 : 1
         wrapMode: Text.Wrap
+        maximumLineCount: root.isShowMoreBody ? 0 : 1
     }
 
     Row {
@@ -126,24 +107,25 @@ Column {
 
             delegate: StyledRect {
                 id: actionButton
-
                 required property var modelData
+                required property int index
 
-                width: (parent.width - parent.children.length - 1) / parent.children.length + 10
-                height: 40
-                color: Colours.m3Colors.m3SurfaceContainerHigh
-                radius: Appearance.rounding.full
-                StyledRect {
-                    anchors.fill: parent
-                    radius: parent.radius
-                    color: "transparent"
+                width: {
+                    const count = root.modelData.actions.length;
+                    const totalSpacing = (count - 1) * Appearance.spacing.normal;
+                    return (parent.width - totalSpacing) / count;
                 }
+                height: 40
+                radius: Appearance.rounding.full
+                color: Colours.m3Colors.m3SurfaceContainerHigh
+
                 MArea {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: actionButton.modelData.invoke()
                 }
+
                 StyledText {
                     anchors.centerIn: parent
                     text: actionButton.modelData.text

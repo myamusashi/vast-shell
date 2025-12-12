@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
 
 import qs.Components
@@ -132,7 +131,8 @@ StyledRect {
 
             StyledRect {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+				Layout.fillHeight: true
+				clip: true
                 color: "transparent"
 
                 ListView {
@@ -150,14 +150,13 @@ StyledRect {
                     spacing: Appearance.spacing.normal
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
-                    cacheBuffer: 300
+                    cacheBuffer: 200
 
                     delegate: Wrapper {
                         required property var modelData
                         required property int index
 
                         notif: modelData
-                        width: notifListView.width
                     }
                 }
 
