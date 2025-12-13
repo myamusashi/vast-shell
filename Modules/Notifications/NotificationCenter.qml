@@ -21,8 +21,8 @@ StyledRect {
         top: parent.top
     }
 
-    width: Hypr.focusedMonitor.width * 0.25
-    height: isNotificationCenterOpen ? Hypr.focusedMonitor.height * 0.7 : 0
+    implicitWidth: parent.width * 0.25
+    implicitHeight: isNotificationCenterOpen ? parent.height * 0.7 : 0
     clip: true
     radius: 0
     anchors.leftMargin: 15
@@ -30,14 +30,14 @@ StyledRect {
     visible: window.modelData.name === Hypr.focusedMonitor.name && height > 0
     color: Colours.m3Colors.m3Background
 
-    Behavior on width {
+    Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 
-    Behavior on height {
+    Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial

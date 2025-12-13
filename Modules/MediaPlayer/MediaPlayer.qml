@@ -240,8 +240,8 @@ ClippingRectangle {
                         value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
 
                         Layout.fillWidth: true
-						Layout.preferredHeight: 40
-						enableWave: Players.active.playbackState === MprisPlaybackState.Playing
+                        Layout.preferredHeight: 40
+                        enableWave: Players.active.playbackState === MprisPlaybackState.Playing
 
                         FrameAnimation {
                             running: root.isMediaPlayerOpen && Players.active && Players.active.playbackState == MprisPlaybackState.Playing

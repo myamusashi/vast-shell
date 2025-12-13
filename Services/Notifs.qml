@@ -2,13 +2,11 @@ pragma Singleton
 pragma ComponentBehavior: Bound
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
 
 import qs.Helpers
-import qs.Services
 
 // Thanks to Caelestia once again for your amazing code: https://github.com/caelestia-dots/shell/blob/main/modules/notifications/Notification.qml
 
@@ -274,6 +272,7 @@ Singleton {
 
     Component {
         id: notifComponent
+
         Notif {}
     }
 }

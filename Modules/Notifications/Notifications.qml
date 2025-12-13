@@ -21,14 +21,14 @@ StyledRect {
 
     property bool hasNotifications: Notifs.popups.length > 0
 
-    width: Hypr.focusedMonitor.width * 0.2
-    height: hasNotifications ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
+    implicitWidth: parent.width * 0.2
+    implicitHeight: hasNotifications ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
     color: Colours.m3Colors.m3Background
     radius: 0
     bottomLeftRadius: Appearance.rounding.normal
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
-    Behavior on height {
+    Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -54,8 +54,6 @@ StyledRect {
             required property int index
 
             notif: modelData
-            width: notifListView.width
-
             onEntered: modelData.timer.stop()
             onExited: modelData.timer.restart()
         }

@@ -6,7 +6,7 @@ import qs.Configs
 import qs.Services
 
 Slider {
-	id: slider
+    id: slider
 
     property color activeColor: Colours.m3Colors.m3Primary
     property color inactiveColor: Colours.m3Colors.m3SecondaryContainer
@@ -22,8 +22,8 @@ Slider {
 
     Behavior on waveTransition {
         NAnim {
-			duration: Appearance.animations.durations.expressiveDefaultSpatial
-			easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 
@@ -40,7 +40,7 @@ Slider {
     }
 
     background: Item {
-		id: bg
+        id: bg
 
         x: slider.leftPadding
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
@@ -52,7 +52,7 @@ Slider {
         readonly property real normalizedValue: slider.visualPosition
 
         Canvas {
-			id: wavyCanvas
+            id: wavyCanvas
 
             anchors.fill: parent
             antialiasing: true
@@ -100,7 +100,7 @@ Slider {
             }
         }
         Canvas {
-			id: inactiveCanvas
+            id: inactiveCanvas
 
             anchors.fill: parent
             antialiasing: true
@@ -127,7 +127,7 @@ Slider {
                 ctx.stroke();
             }
             Connections {
-				target: slider
+                target: slider
 
                 function onVisualPositionChanged() {
                     inactiveCanvas.requestPaint();
@@ -136,7 +136,7 @@ Slider {
         }
     }
     handle: Rectangle {
-		id: handleRect
+        id: handleRect
 
         x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
         y: slider.topPadding + slider.availableHeight / 2 - height / 2

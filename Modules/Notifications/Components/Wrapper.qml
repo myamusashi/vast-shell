@@ -9,36 +9,32 @@ import qs.Services
 Item {
     id: root
 
-    property alias contentLayout: contentLayout
-    property alias iconLayout: iconLayout
     required property var notif
     property bool isRemoving: false
+    property alias contentLayout: contentLayout
+    property alias iconLayout: iconLayout
     property alias mArea: delegateMouseNotif
 
     signal entered
     signal exited
     signal animationCompleted
 
-    width: parent.width
-    height: isRemoving ? 0 : contentLayout.height * 1.3
+    implicitWidth: isRemoving ? 0 : parent.width
+    implicitHeight: isRemoving ? 0 : contentLayout.height * 1.3
     clip: true
     x: parent.width
 
-    Component.onCompleted: {
-        slideInAnim.start();
-    }
+    Component.onCompleted: slideInAnim.start()
 
     Component.onDestruction: {
         slideInAnim.stop();
         slideOutAnim.stop();
         swipeOutAnim.stop();
-        swipeRemoveTimer.stop();
     }
 
     ListView.onPooled: {
         slideInAnim.stop();
         slideOutAnim.stop();
-        swipeRemoveTimer.stop();
     }
 
     ListView.onReused: {
@@ -56,7 +52,6 @@ Item {
         to: 0
         duration: Appearance.animations.durations.emphasized
         easing.bezierCurve: Appearance.animations.curves.emphasized
-
         onFinished: root.animationCompleted()
     }
 
@@ -65,9 +60,24 @@ Item {
 
         target: root
         property: "x"
-        to: root.width
+        to: root.parent.width
         duration: Appearance.animations.durations.emphasizedAccel
         easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+        onFinished: root.isRemoving = true
+    }
+
+    NAnim {
+        id: swipeOutAnim
+
+        target: root
+        property: "x"
+        duration: Appearance.animations.durations.small
+        easing.bezierCurve: Appearance.animations.curves.standardAccel
+        onFinished: {
+            root.notif.popup = false;
+            if (root.notif)
+                root.notif.close();
+        }
     }
 
     Behavior on x {
@@ -78,7 +88,14 @@ Item {
         }
     }
 
-    Behavior on height {
+    Behavior on implicitWidth {
+        NAnim {
+            duration: Appearance.animations.durations.emphasized
+            easing.bezierCurve: Appearance.animations.curves.emphasized
+        }
+    }
+
+    Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.emphasized
             easing.bezierCurve: Appearance.animations.curves.emphasized
@@ -86,22 +103,23 @@ Item {
     }
 
     function removeNotificationWithAnimation() {
-        isRemoving = true;
         slideOutAnim.start();
-
-        Qt.callLater(function () {
-            swipeRemoveTimer.start();
-        });
     }
 
     StyledRect {
-        anchors.fill: parent
-        color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
+        anchors {
+            fill: parent
+            leftMargin: 10
+        }
         radius: Appearance.rounding.normal
-        anchors.leftMargin: 10
         clip: true
-        border.color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : "transparent"
-        border.width: root.notif.urgency === NotificationUrgency.Critical ? 1 : 0
+
+        color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
+
+        border {
+            color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : "transparent"
+            width: root.notif.urgency === NotificationUrgency.Critical ? 1 : 0
+        }
 
         MArea {
             id: delegateMouseNotif
@@ -119,50 +137,25 @@ Item {
                 maximumX: root.width
 
                 onActiveChanged: {
-                    if (delegateMouseNotif.drag.active)
+                    if (drag.active)
                         return;
-                    if (Math.abs(root.x) > (root.width * 0.45)) {
-                        var targetX = root.x > 0 ? root.width : -root.width;
-                        swipeOutAnim.to = targetX;
+                    if (Math.abs(root.x) > root.width * 0.45) {
+                        swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
                         swipeOutAnim.start();
-
-                        Qt.callLater(function () {
-                            swipeRemoveTimer.start();
-                        });
-                    } else
+                    } else {
                         root.x = 0;
-                }
-            }
-
-            NAnim {
-                id: swipeOutAnim
-
-                target: root
-                property: "x"
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.standardAccel
-            }
-
-            Timer {
-                id: swipeRemoveTimer
-
-                interval: Appearance.animations.durations.normal
-                onTriggered: {
-                    root.removeNotificationWithAnimation();
-                    if (root.notif)
-                        root.notif.close();
+                    }
                 }
             }
         }
 
         Row {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.topMargin: 10
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
+            anchors {
+                fill: parent
+                topMargin: 10
+                leftMargin: 10
+                rightMargin: 10
+            }
             spacing: Appearance.spacing.normal
 
             Icon {
@@ -175,7 +168,6 @@ Item {
                 id: contentLayout
 
                 modelData: root.notif
-                width: parent.width - 40 - parent.spacing
             }
         }
     }
