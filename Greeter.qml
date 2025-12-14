@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Greetd
@@ -369,49 +369,38 @@ ShellRoot {
                 anchors.margins: 20
                 spacing: Appearance.spacing.normal
 
-                StyledButton {
-                    iconButton: "skip_previous"
-                    buttonTitle: ""
-                    enabled: true
-                    onClicked: {
-                        Users.previous();
-                        keyHandler.forceActiveFocus();
-                    }
+                StyledLabel {
+                    text: "User:"
+                    color: Colours.m3GeneratedColors.m3OnSurface
                 }
 
-                Repeater {
-                    model: Users.users_list.length
-                    delegate: StyledRect {
-                        id: delegateUser
-
-                        required property int index
-
-                        Layout.preferredWidth: 120
-                        Layout.preferredHeight: 60
-                        visible: Users.current_user_index === index
-                        color: Users.current_user_index === index ? Colours.m3GeneratedColors.m3Primary : Colours.m3GeneratedColors.m3SurfaceVariant
-
-                        StyledLabel {
-                            anchors.centerIn: parent
-                            text: Users.users_list[delegateUser.index] || ""
-                            color: Users.current_user_index === delegateUser.index ? Colours.m3GeneratedColors.m3OnPrimary : Colours.m3GeneratedColors.m3OnSurfaceVariant
-                        }
-
-                        MArea {
-                            anchors.fill: parent
-                            onClicked: Users.current_user_index = delegateUser.index
+                ComboBox {
+                    Layout.preferredWidth: 200
+                    model: Users.users_list
+                    currentIndex: Users.current_user_index
+                    onCurrentIndexChanged: {
+                        if (currentIndex !== Users.current_user_index) {
+                            Users.current_user_index = currentIndex;
+                            keyHandler.forceActiveFocus();
                         }
                     }
                 }
+            }
 
-                StyledButton {
-                    iconButton: "skip_next"
-                    buttonTitle: ""
-                    enabled: true
-                    onClicked: {
-                        Users.next();
-                        keyHandler.forceActiveFocus();
-                    }
+            StyledButton {
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.margins: 20
+                iconButton: "keyboard"
+                buttonTitle: "Get yo ass back"
+                visible: !keyHandler.activeFocus
+                onClicked: {
+                    keyHandler.forceActiveFocus();
+                }
+
+                opacity: keyHandler.activeFocus ? 0 : 1
+                Behavior on opacity {
+                    NAnim {}
                 }
             }
 
@@ -421,48 +410,20 @@ ShellRoot {
                 anchors.margins: 20
                 spacing: Appearance.spacing.normal
 
-                StyledButton {
-                    iconButton: "skip_previous"
-                    buttonTitle: ""
-                    enabled: true
-                    onClicked: {
-                        Sessions.previous();
-                        keyHandler.forceActiveFocus();
-                    }
+                StyledLabel {
+                    text: "Session:"
+                    color: Colours.m3GeneratedColors.m3OnSurface
                 }
 
-                Repeater {
-                    model: Sessions.session_names.length
-                    delegate: StyledRect {
-                        id: delegateSession
-
-                        required property int index
-
-                        Layout.preferredWidth: 150
-                        Layout.preferredHeight: 60
-                        visible: Sessions.current_ses_index === index
-                        color: Sessions.current_ses_index === index ? Colours.m3GeneratedColors.m3Primary : Colours.m3GeneratedColors.m3SurfaceVariant
-
-                        StyledLabel {
-                            anchors.centerIn: parent
-                            text: Sessions.session_names[delegateSession.index] || ""
-                            color: Sessions.current_ses_index === delegateSession.index ? Colours.m3GeneratedColors.m3OnPrimary : Colours.m3GeneratedColors.m3OnSurfaceVariant
+                ComboBox {
+                    Layout.preferredWidth: 250
+                    model: Sessions.session_names
+                    currentIndex: Sessions.current_ses_index
+                    onCurrentIndexChanged: {
+                        if (currentIndex !== Sessions.current_ses_index) {
+                            Sessions.current_ses_index = currentIndex;
+                            keyHandler.forceActiveFocus();
                         }
-
-                        MArea {
-                            anchors.fill: parent
-                            onClicked: Sessions.current_ses_index = delegateSession.index
-                        }
-                    }
-                }
-
-                StyledButton {
-                    iconButton: "skip_next"
-                    buttonTitle: ""
-                    enabled: true
-                    onClicked: {
-                        Sessions.next();
-                        keyHandler.forceActiveFocus();
                     }
                 }
             }
