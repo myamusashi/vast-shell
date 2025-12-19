@@ -4,10 +4,17 @@ import QtQuick.Layouts
 import qs.Configs
 import qs.Widgets
 
-RowLayout {
-    Layout.alignment: Qt.AlignCenter
+Loader {
+    active: true
+    asynchronous: true
 
-    Mpris {}
+    sourceComponent: RowLayout {
+        anchors.centerIn: parent
+        anchors.leftMargin: Appearance.margin.small
+        spacing: Appearance.spacing.normal
 
-    RecordIndicator {}
+        Mpris {}
+
+        RecordIndicator {}
+    }
 }
