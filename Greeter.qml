@@ -376,7 +376,9 @@ ShellRoot {
 
                 ComboBox {
                     Layout.preferredWidth: 200
-                    model: Users.users_list
+                    model: ScriptModel {
+                        values: [...Users.users_list]
+                    }
                     currentIndex: Users.current_user_index
                     onCurrentIndexChanged: {
                         if (currentIndex !== Users.current_user_index) {
@@ -417,7 +419,9 @@ ShellRoot {
 
                 ComboBox {
                     Layout.preferredWidth: 250
-                    model: Sessions.session_names
+                    model: ScriptModel {
+                        values: [...Sessions.session_names]
+                    }
                     currentIndex: Sessions.current_ses_index
                     onCurrentIndexChanged: {
                         if (currentIndex !== Sessions.current_ses_index) {
