@@ -146,8 +146,8 @@ ClippingRectangle {
                         implicitHeight: 1
                     }
 
-                    RowLayout {
-                        Layout.fillWidth: true
+                    ColumnLayout {
+                        Layout.fillHeight: true
                         Layout.topMargin: 20
                         Repeater {
                             model: linkTracker.linkGroups
