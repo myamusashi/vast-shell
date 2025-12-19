@@ -8,19 +8,9 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property int value: parseInt(brValue.text.trim())
+    property int value: 0
     property int maxValue: 100
     property bool available: false
-
-    Process {
-        id: getBrightnessValue
-
-        command: ["brightnessctl", "g"]
-        running: true
-        stdout: StdioCollector {
-            id: brValue
-        }
-    }
 
     Process {
         id: getBrightness
@@ -34,12 +24,13 @@ Singleton {
                 for (let line of lines) {
                     if (line.includes("Current brightness:")) {
                         const match = line.match(/Current brightness:\s*(\d+)\s*\((\d+)%\)/);
-                        if (match)
-                        root.value = parseInt(match[1]);
+                        if (match) {
+                            root.value = parseInt(match[1]); // Hanya satu assignment
+                        }
                     } else if (line.includes("Max brightness:")) {
                         const match = line.match(/Max brightness:\s*(\d+)/);
                         if (match)
-                        root.maxValue = parseInt(match[1]);
+                            root.maxValue = parseInt(match[1]);
                     }
                 }
                 root.available = true;
@@ -97,7 +88,7 @@ Singleton {
         stderr: StdioCollector {
             onStreamFinished: {
                 if (this.text.trim() !== "")
-                console.warn("Failed to set brightness:", this.text.trim());
+                    console.warn("Failed to set brightness:", this.text.trim());
             }
         }
     }
