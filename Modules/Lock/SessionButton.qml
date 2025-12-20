@@ -2,175 +2,95 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
 
 import qs.Components
-import qs.Configs
+import qs.Helpers
 import qs.Services
 
-RowLayout {
-    id: root
+ColumnLayout {
+    Layout.alignment: Qt.AlignBottom
+    spacing: 0.0
 
-    property bool isOpen
-
-    ColumnLayout {
-        Layout.alignment: Qt.AlignCenter
-        spacing: 0
-
-        StyledButton {
-            id: mainButton
-
-            Layout.preferredWidth: implicitWidth
-            Layout.preferredHeight: 56
-
-            buttonTitle: "Shutdown"
-            iconButton: "power_settings_circle"
-            iconSize: Appearance.fonts.size.extraLarge
-            buttonColor: Colours.m3Colors.m3Primary
-            buttonTextColor: Colours.m3Colors.m3OnPrimary
-            buttonHeight: 56
-
-            scale: mArea.containsMouse ? 1.05 : 1.0
-
-            Behavior on scale {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                    easing.bezierCurve: Appearance.animations.curves.standard
+    Repeater {
+        model: [
+            {
+                "icon": "power_settings_circle",
+                "action": () => {
+                    Quickshell.execDetached({
+                        "command": ["sh", "-c", "systemctl poweroff"]
+                    });
+                }
+            },
+            {
+                "icon": "restart_alt",
+                "action": () => {
+                    Quickshell.execDetached({
+                        "command": ["sh", "-c", "systemctl reboot"]
+                    });
+                }
+            },
+            {
+                "icon": "sleep",
+                "action": () => {
+                    Quickshell.execDetached({
+                        "command": ["sh", "-c", "systemctl suspend"]
+                    });
+                }
+            },
+            {
+                "icon": "door_open",
+                "action": () => {
+                    Quickshell.execDetached({
+                        "command": ["sh", "-c", "hyprctl dispatch exit"]
+                    });
                 }
             }
+        ]
 
-            onClicked: {
-                Quickshell.execDetached({
-                                            "command": ["sh", "-c", "systemctl poweroff"]
-                                        });
-            }
-        }
+		delegate: StyledRect {
+			id: rectDelegate
 
-        Repeater {
-            model: [
-                {
-                    "icon": "restart_alt",
-                    "name": "Reboot",
-                    "action": () => {
-                        Quickshell.execDetached({
-                                                    "command": ["sh", "-c", "systemctl reboot"]
-                                                });
-                    }
-                },
-                {
-                    "icon": "sleep",
-                    "name": "Sleep",
-                    "action": () => {
-                        Quickshell.execDetached({
-                                                    "command": ["sh", "-c", "systemctl suspend"]
-                                                });
-                    }
-                },
-                {
-                    "icon": "door_open",
-                    "name": "Logout",
-                    "action": () => {
-                        Quickshell.execDetached({
-                                                    "command": ["sh", "-c", "hyprctl dispatch exit"]
-                                                });
-                    }
-                }
-            ]
+			required property var modelData
 
-            delegate: StyledButton {
-                id: buttonDelegate
+			anchors.centerIn: parent
+			color: Colours.m3Colors.m3Primary
+			implicitWidth: 60
+			implicitHeight: 60
 
-                required property var modelData
-                required property int index
+			MaterialIcon {
+				anchors.centerIn: parent
+				icon: rectDelegate.modelData.icon
+				color: Colours.m3Colors.m3OnPrimary
+				width: 40
+				height: 40
+			}
 
-                Layout.preferredWidth: mainButton.width
-                Layout.preferredHeight: root.isOpen ? 56 : 0
-                Layout.topMargin: root.isOpen ? Appearance.spacing.normal : 0
+			MArea {
+				id: mArea
 
-                buttonTitle: modelData.name
-                iconButton: modelData.icon
-                iconSize: Appearance.fonts.size.extraLarge
-                buttonColor: Colours.m3Colors.m3Primary
-                buttonTextColor: Colours.m3Colors.m3OnPrimary
-                buttonHeight: 56
-
-                visible: root.isOpen || Layout.preferredHeight > 0
-                opacity: root.isOpen ? 1.0 : 0.0
-                scale: root.isOpen ? (mArea.containsMouse ? 1.05 : 1.0) : 0.8
-                transformOrigin: Item.Center
-
-                Behavior on Layout.preferredHeight {
-                    NAnim {
-                        duration: Appearance.animations.durations.normal
-                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                    }
-                }
-
-                Behavior on opacity {
-                    NAnim {
-                        duration: Appearance.animations.durations.normal
-                        easing.bezierCurve: Appearance.animations.curves.standard
-                    }
-                }
-
-                Behavior on scale {
-                    NAnim {
-                        duration: Appearance.animations.durations.normal
-                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                    }
-                }
-
-                Behavior on Layout.topMargin {
-                    NAnim {
-                        duration: Appearance.animations.durations.normal
-                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-                    }
-                }
-
-                onClicked: modelData.action()
-            }
-        }
-    }
-
-    StyledButton {
-        id: toggleButton
-
-        Layout.alignment: Qt.AlignBottom
-        Layout.preferredWidth: 56
-        Layout.preferredHeight: 56
-
-        iconButton: root.isOpen ? "keyboard_arrow_down" : "keyboard_arrow_up"
-        iconSize: Appearance.fonts.size.extraLarge
-        buttonColor: Colours.m3Colors.m3Primary
-        buttonTextColor: Colours.m3Colors.m3OnPrimary
-        buttonHeight: 56
-        baseWidth: 56
-
-        scale: mArea.containsMouse ? 1.1 : 1.0
-        backgroundRounding: Appearance.rounding.full
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.standard
-            }
-        }
-
-        Item {
-            anchors.fill: parent
-            rotation: root.isOpen ? 180 : 0
-
-            Behavior on rotation {
-                NAnim {
-                    duration: Appearance.animations.durations.normal
-                    easing.bezierCurve: Appearance.animations.curves.standard
-                }
-            }
-        }
-
-        onClicked: {
-            root.isOpen = !root.isOpen;
-        }
+				anchors.fill: parent
+				hoverEnabled: true
+				onClicked: rectDelegate.modelData.action()
+			}
+		}
+			//      delegate: StyledButton {
+			//          id: buttonDelegate
+			//
+			//          required property var modelData
+			//
+			//          y: parent.height + 56
+			//          anchors.horizontalCenter: parent.horizontalCenter
+			// width: parent.width
+			// showIconBackground: true
+			//          height: 56
+			//          buttonTitle: ""
+			//          iconButton: modelData.icon
+			//          iconSize: Appearance.fonts.size.extraLarge
+			//          buttonColor: Colours.m3Colors.m3Primary
+			//          buttonTextColor: Colours.m3Colors.m3OnPrimary
+			//          buttonHeight: 56
+			//          onClicked: modelData.action()
+			//      }
     }
 }
