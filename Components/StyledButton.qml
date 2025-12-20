@@ -1,47 +1,75 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-
+import QtQuick.Layouts
 import Quickshell.Widgets
 
 import qs.Configs
 import qs.Helpers
 import qs.Services
 
-Item {
-    id: root
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
 
-    property string buttonTitle
-    property string iconButton: ""
-    property int iconSize: Appearance.fonts.size.medium
+Item {
+	id: root
+
+    property alias mArea: mouseArea
+    property alias bg: background
+    property bool enabled: true
+    property bool useLayoutWidth: true
+    property bool isButtonUseBorder: false
+    property bool showIconBackground: false
+    property bool elideText: false
+    property color iconColor: Colours.m3Colors.m3OnPrimary
     property color buttonColor: Colours.m3Colors.m3Primary
     property color buttonTextColor: Colours.m3Colors.m3OnBackground
     property color buttonBorderColor: Colours.m3Colors.m3Outline
-    property int buttonBorderWidth: 2
+	property color iconBackgroundColor: Colours.m3Colors.m3Primary
+	property int textSize: Appearance.fonts.size.large
+    property int iconSize: Appearance.fonts.size.medium
+    property int buttonWidth: 150
     property int buttonHeight: 40
     property int iconTextSpacing: 8
-    property bool enabled: true
-    property bool isButtonUseBorder: false
+    property int buttonBorderWidth: 2
+    property int iconBackgroundSize: 50
     property real backgroundRounding: 0
-    property int baseWidth: implicitWidth
-    property alias mArea: mouseArea
-    property alias bg: background
-    readonly property real normalWidth: contentRow.implicitWidth + 32
+    property real iconBackgroundRadius: Appearance.rounding.small
+    property string iconButton: ""
+    property string fontFamily: Appearance.fonts.family.material
+    property string buttonTitle: ""
+    readonly property real normalWidth: buttonWidth
+    readonly property real expandedWidth: normalWidth * 1.1
 
     signal clicked
 
-    implicitWidth: normalWidth
+    implicitWidth: useLayoutWidth ? undefined : normalWidth
     implicitHeight: buttonHeight
 
+    Layout.preferredWidth: useLayoutWidth ? (mouseArea.pressed ? expandedWidth : normalWidth) : undefined
+    Layout.preferredHeight: buttonHeight
+    Layout.fillWidth: false
+    Layout.alignment: Qt.AlignVCenter
+
+    Behavior on Layout.preferredWidth {
+        enabled: root.useLayoutWidth
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+
     ClippingRectangle {
-        id: background
+		id: background
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        implicitWidth: root.normalWidth * (mouseArea.pressed && root.enabled ? 1.1 : 1.0)
+        implicitWidth: root.useLayoutWidth ? parent.width : (root.normalWidth * (mouseArea.pressed && root.enabled ? 1.1 : 1.0))
         implicitHeight: parent.height
 
         Behavior on implicitWidth {
+			enabled: !root.useLayoutWidth
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -50,8 +78,8 @@ Item {
 
         border.color: root.isButtonUseBorder ? root.buttonBorderColor : "transparent"
         border.width: root.isButtonUseBorder ? root.buttonBorderWidth : 0
-		color: root.buttonColor
-		radius: root.enabled ? Appearance.rounding.small : Appearance.rounding.full
+        color: root.buttonColor
+        radius: root.enabled ? Appearance.rounding.small : Appearance.rounding.full
         opacity: root.enabled ? (mouseArea.pressed ? 0.8 : (mouseArea.containsMouse ? 0.9 : 1.0)) : 0.5
 
         states: [
@@ -95,37 +123,73 @@ Item {
         ]
     }
 
-    Row {
-        id: contentRow
+    RowLayout {
+		id: contentRow
 
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.leftMargin: 12
+        anchors.rightMargin: 12
         spacing: root.iconTextSpacing
-        anchors.centerIn: parent
         opacity: root.enabled ? 1.0 : 0.5
 
         Loader {
             active: root.iconButton !== ""
-            anchors.verticalCenter: parent.verticalCenter
-            sourceComponent: MaterialIcon {
-                icon: root.iconButton
-                font.pointSize: root.iconSize > 0 ? root.iconSize : Appearance.fonts.size.large
-                font.bold: true
-                color: root.buttonTextColor
+            Layout.alignment: Qt.AlignVCenter
+
+            sourceComponent: Item {
+                implicitWidth: root.showIconBackground ? root.iconBackgroundSize : iconOnly.implicitWidth
+                implicitHeight: root.showIconBackground ? root.iconBackgroundSize : iconOnly.implicitHeight
+
+                Rectangle {
+                    visible: root.showIconBackground
+                    anchors.fill: parent
+                    color: root.iconBackgroundColor
+                    radius: root.iconBackgroundRadius
+
+                    MaterialIcon {
+                        anchors.centerIn: parent
+                        icon: root.iconButton
+                        font.family: root.fontFamily
+                        font.pointSize: root.iconSize > 0 ? root.iconSize : Appearance.fonts.size.large
+                        font.bold: true
+                        color: root.iconColor
+                    }
+                }
+
+                MaterialIcon {
+					id: iconOnly
+
+                    visible: !root.showIconBackground
+                    anchors.centerIn: parent
+                    icon: root.iconButton
+                    font.family: root.fontFamily
+                    font.pointSize: root.iconSize > 0 ? root.iconSize : Appearance.fonts.size.large
+                    font.bold: true
+                    color: root.iconColor
+                }
             }
         }
+
         Loader {
             active: root.buttonTitle !== ""
-            anchors.verticalCenter: parent.verticalCenter
+            Layout.alignment: Qt.AlignVCenter
+            Layout.fillWidth: true
+
             sourceComponent: StyledText {
                 text: root.buttonTitle
-                font.pixelSize: Appearance.fonts.size.large
+                font.pixelSize: root.textSize
                 font.weight: Font.Medium
                 color: root.buttonTextColor
+                elide: Text.ElideRight
+                width: Math.min(implicitWidth, contentRow.width - (root.iconButton !== "" ? (root.showIconBackground ? root.iconBackgroundSize : 24) + root.iconTextSpacing : 0))
             }
         }
     }
 
     MArea {
-        id: mouseArea
+		id: mouseArea
 
         anchors.fill: parent
         layerColor: "transparent"
