@@ -226,10 +226,12 @@ ClippingRectangle {
                     Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                     spacing: Appearance.spacing.normal
 
-                    StyledButton {
-                        iconButton: "skip_previous"
+					StyledButton {
+						iconButton: "skip_previous"
+						iconBackgroundColor: "transparent"
+						showIconBackground: true
 						iconSize: Appearance.fonts.size.large * 1.2
-						buttonWidth: 60
+						buttonWidth: 50
                         buttonTextColor: Colours.m3Colors.m3OnPrimary
                         mArea.layerColor: "transparent"
                         onClicked: Players.active ? Players.active.previous() : {}
@@ -255,7 +257,9 @@ ClippingRectangle {
                     StyledButton {
                         iconButton: "skip_next"
 						iconSize: Appearance.fonts.size.large * 1.2
-						buttonWidth: 60
+						iconBackgroundColor: "transparent"
+						showIconBackground: true
+						buttonWidth: 50
                         buttonTextColor: Colours.m3Colors.m3OnPrimary
                         mArea.layerColor: "transparent"
                         onClicked: Players.active ? Players.active.next() : {}
