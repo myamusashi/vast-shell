@@ -106,11 +106,11 @@ start_recording() {
 	fi
 	VID="$VIDEO_DIR/$(date +%Y-%m-%d_%H-%M-%S).mp4"
 	if [ -n "$geometry" ]; then
-		wl-screenrec --codec hevc --audio --audio-device default -b "3 MB" --low-power on --max-fps 50 -g "$geometry" -f "$VID" &
+		wl-screenrec --codec hevc --max-fps 50 -g "$geometry" -f "$VID" &
 	elif [ -n "$output" ]; then
-		wl-screenrec --codec hevc --audio --audio-device default -b "3 MB" --low-power on --max-fps 50 -o "$output" -f "$VID" &
+		wl-screenrec --codec hevc --max-fps 50 -o "$output" -f "$VID" &
 	else
-		wl-screenrec --codec hevc --audio --audio-device default -b "3 MB" --low-power on --max-fps 50 -f "$VID" &
+		wl-screenrec --codec hevc --max-fps 50 -f "$VID" &
 	fi
 	echo $! >"$RECORD_PID_FILE"
 	echo "$VID" >"$RECORD_VIDEO_FILE"
