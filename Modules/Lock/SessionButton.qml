@@ -4,9 +4,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-import qs.Components
+import qs.Configs
 import qs.Helpers
 import qs.Services
+import qs.Components
 
 ColumnLayout {
     Layout.alignment: Qt.AlignBottom
@@ -48,49 +49,20 @@ ColumnLayout {
             }
         ]
 
-		delegate: StyledRect {
-			id: rectDelegate
+        delegate: StyledButton {
+            id: buttonDelegate
 
 			required property var modelData
 
-			anchors.centerIn: parent
-			color: Colours.m3Colors.m3Primary
-			implicitWidth: 60
-			implicitHeight: 60
+            implicitWidth: 50
+			implicitHeight: 50
 
-			MaterialIcon {
-				anchors.centerIn: parent
-				icon: rectDelegate.modelData.icon
-				color: Colours.m3Colors.m3OnPrimary
-				width: 40
-				height: 40
-			}
-
-			MArea {
-				id: mArea
-
-				anchors.fill: parent
-				hoverEnabled: true
-				onClicked: rectDelegate.modelData.action()
-			}
-		}
-			//      delegate: StyledButton {
-			//          id: buttonDelegate
-			//
-			//          required property var modelData
-			//
-			//          y: parent.height + 56
-			//          anchors.horizontalCenter: parent.horizontalCenter
-			// width: parent.width
-			// showIconBackground: true
-			//          height: 56
-			//          buttonTitle: ""
-			//          iconButton: modelData.icon
-			//          iconSize: Appearance.fonts.size.extraLarge
-			//          buttonColor: Colours.m3Colors.m3Primary
-			//          buttonTextColor: Colours.m3Colors.m3OnPrimary
-			//          buttonHeight: 56
-			//          onClicked: modelData.action()
-			//      }
+			iconBackgroundColor: "transparent"
+			showIconBackground: true
+			iconSize: Appearance.fonts.size.large
+			iconButton: modelData.icon
+			buttonTitle: ""
+			onClicked: modelData.action()
+        }
     }
 }
