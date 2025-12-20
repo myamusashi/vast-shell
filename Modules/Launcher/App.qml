@@ -49,12 +49,12 @@ StyledRect {
         Fuzzy.updateLaunchHistory(entry);
 
         entry.runInTerminal ? Quickshell.execDetached({
-                                                          "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
-                                                          "workingDirectory": entry.workingDirectory
-                                                      }) : Quickshell.execDetached({
-                                                                                       "command": ["app2unit", "--", ...entry.command],
-                                                                                       "workingDirectory": entry.workingDirectory
-                                                                                   });
+            "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Quickshell.shellDir}/Assets/wrap_term_launch.sh`, ...entry.command],
+            "workingDirectory": entry.workingDirectory
+        }) : Quickshell.execDetached({
+            "command": ["app2unit", "--", ...entry.command],
+            "workingDirectory": entry.workingDirectory
+        });
     }
 
     radius: 0
@@ -84,7 +84,7 @@ StyledRect {
             focus: root.isLauncherOpen
             onFocusChanged: {
                 if (focus && root.isLauncherOpen)
-                search.forceActiveFocus();
+                    search.forceActiveFocus();
             }
             StyledTextField {
                 id: search
@@ -290,7 +290,7 @@ StyledRect {
                         }
                     }
                 }
-                Label {
+                StyledLabel {
                     anchors.centerIn: parent
                     visible: listView.count === 0 && search.text !== ""
                     text: "No applications found"
