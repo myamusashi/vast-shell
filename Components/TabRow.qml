@@ -22,7 +22,7 @@ StyledRect {
     property color indicatorColor: Colours.m3Colors.m3Primary
     property int indicatorHeight: 2
     property int indicatorRadius: Appearance.rounding.large
-	property bool showIndicator: true
+    property bool showIndicator: true
     radius: 0
 
     signal tabClicked(int index, var tabData)
@@ -49,12 +49,12 @@ StyledRect {
                 required property var modelData
                 required property int index
 
-				Layout.fillWidth: true
-				buttonWidth: 0
+                Layout.fillWidth: true
+                buttonWidth: 0
                 buttonTitle: modelData.title || ""
-				iconButton: modelData.icon || ""
-				iconSize: modelData.iconSize || (Appearance.fonts.size.large * root.scaleFactor)
-				iconColor: Colours.m3Colors.m3OnSurface
+                iconButton: modelData.icon || ""
+                iconSize: modelData.iconSize || (Appearance.fonts.size.large * root.scaleFactor)
+                iconColor: Colours.m3Colors.m3OnSurface
                 buttonTextColor: root.currentIndex === index ? root.activeColor : root.inactiveColor
                 buttonColor: root.backgroundColor
                 enabled: modelData.enabled !== undefined ? modelData.enabled : true
@@ -78,7 +78,7 @@ StyledRect {
 
         x: {
             if (tabRepeater.itemAt(root.currentIndex))
-            return tabRepeater.itemAt(root.currentIndex).x + tabLayout.x;
+                return tabRepeater.itemAt(root.currentIndex).x + tabLayout.x;
             return 0;
         }
 

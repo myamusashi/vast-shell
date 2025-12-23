@@ -48,7 +48,7 @@ StyledRect {
                         if (icon.includes("?path=")) {
                             const split = icon.split("?path=");
                             if (split.length !== 2)
-                            return icon;
+                                return icon;
                             const name = split[0];
                             const path = split[1];
                             const fileName = name.substring(name.lastIndexOf("/") + 1);
@@ -95,7 +95,7 @@ StyledRect {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: mouse => {
                         if (!delegateTray.modelData)
-                        return;
+                            return;
                         if (mouse.button === Qt.LeftButton && !delegateTray.modelData.onlyMenu) {
                             delegateTray.modelData.activate();
                             return;

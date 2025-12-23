@@ -39,25 +39,25 @@ Singleton {
 
     // Constants
     readonly property var mmsgCommands: ({
-                                             "query": {
-                                                 "workspaces": ["mmsg", "-g", "-t"],
-                                                 "windows": ["mmsg", "-g", "-c"],
-                                                 "layout": ["mmsg", "-g", "-l"],
-                                                 "outputs": ["mmsg", "-g", "-A"],
-                                                 "monitors": ["mmsg", "-g", "-o"],
-                                                 "outputEnum": ["mmsg", "-g", "-O"],
-                                                 "eventStream": ["mmsg", "-w"]
-                                             },
-                                             "action": {
-                                                 "view": ["mmsg", "-s", "-d", "view"],
-                                                 "tag": ["mmsg", "-s", "-t"],
-                                                 "focusMaster": ["mmsg", "-s", "-d", "focusmaster"],
-                                                 "killClient": ["mmsg", "-s", "-d", "killclient"],
-                                                 "toggleOverview": ["mmsg", "-s", "-d", "toggleoverview"],
-                                                 "setLayout": ["mmsg", "-s", "-d", "setlayout"],
-                                                 "quit": ["mmsg", "-s", "-q"]
-                                             }
-                                         })
+            "query": {
+                "workspaces": ["mmsg", "-g", "-t"],
+                "windows": ["mmsg", "-g", "-c"],
+                "layout": ["mmsg", "-g", "-l"],
+                "outputs": ["mmsg", "-g", "-A"],
+                "monitors": ["mmsg", "-g", "-o"],
+                "outputEnum": ["mmsg", "-g", "-O"],
+                "eventStream": ["mmsg", "-w"]
+            },
+            "action": {
+                "view": ["mmsg", "-s", "-d", "view"],
+                "tag": ["mmsg", "-s", "-t"],
+                "focusMaster": ["mmsg", "-s", "-d", "focusmaster"],
+                "killClient": ["mmsg", "-s", "-d", "killclient"],
+                "toggleOverview": ["mmsg", "-s", "-d", "toggleoverview"],
+                "setLayout": ["mmsg", "-s", "-d", "setlayout"],
+                "quit": ["mmsg", "-s", "-q"]
+            }
+        })
 
     readonly property string overviewLayoutSymbol: "󰃇"
     readonly property int defaultWorkspaceId: 1
@@ -141,7 +141,7 @@ Singleton {
 
         onRunningChanged: {
             if (running)
-            windowsProcess.currentWindow = {};
+                windowsProcess.currentWindow = {};
         }
 
         stdout: SplitParser {
@@ -338,21 +338,21 @@ Singleton {
             const args = parts.slice(1);
 
             switch (cmd) {
-                case "workspace":
+            case "workspace":
                 switchToWorkspace({
-                                      "idx": parseInt(args[0])
-                                  });
+                    "idx": parseInt(args[0])
+                });
                 break;
-                case "killactive":
+            case "killactive":
                 closeWindow(null);
                 break;
-                case "toggleoverview":
+            case "toggleoverview":
                 toggleOverview();
                 break;
-                case "exit":
+            case "exit":
                 logout();
                 break;
-                default:
+            default:
                 console.warn("MangoService", "Unknown dispatch command:", cmd);
             }
         } catch (e) {
@@ -390,12 +390,12 @@ Singleton {
                 Quickshell.execDetached(command);
 
                 Qt.callLater(() => {
-                                 let focusCommand = mmsgCommands.action.focusMaster.slice();
-                                 if (isMultiMonitor)
-                                 focusCommand.push("-o", window.output);
+                    let focusCommand = mmsgCommands.action.focusMaster.slice();
+                    if (isMultiMonitor)
+                        focusCommand.push("-o", window.output);
 
-                                 Quickshell.execDetached(focusCommand);
-                             });
+                    Quickshell.execDetached(focusCommand);
+                });
             }
         } catch (e) {
             console.error("MangoService", "Failed to focus window:", e);
@@ -562,10 +562,10 @@ Singleton {
             _workspaceCache = newWorkspaceCache;
 
             workspacesList.sort((a, b) => {
-                                    if (a.id !== b.id)
-                                    return a.id - b.id;
-                                    return a.output.localeCompare(b.output);
-                                });
+                if (a.id !== b.id)
+                    return a.id - b.id;
+                return a.output.localeCompare(b.output);
+            });
 
             workspacesModel.clear();
             for (var i = 0; i < workspacesList.length; i++)

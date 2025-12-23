@@ -33,8 +33,8 @@ StyledRect {
         cursorShape: Qt.PointingHandCursor
         onClicked: () => {
             Quickshell.execDetached({
-                                        "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
-                                    });
+                "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
+            });
         }
     }
 
@@ -81,7 +81,7 @@ StyledRect {
                     anchors.fill: parent
                     onClicked: {
                         if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                        Hypr.dispatch("workspace " + (parent.index + 1));
+                            Hypr.dispatch("workspace " + (parent.index + 1));
                     }
                 }
 
@@ -123,7 +123,7 @@ StyledRect {
                         Drag.hotSpot.y: height / 2
                         Drag.onActiveChanged: {
                             if (Drag.active)
-                            parent = visualParent;
+                                parent = visualParent;
                             else {
                                 var mapped = mapToItem(originalParent, 0, 0);
                                 parent = originalParent;
@@ -160,15 +160,15 @@ StyledRect {
 
                             onPositionChanged: {
                                 if (drag.active)
-                                dragged = true;
+                                    dragged = true;
                             }
 
                             onClicked: mouse => {
                                 if (!dragged) {
                                     if (mouse.button === Qt.LeftButton)
-                                    toplevel.waylandHandle.activate();
+                                        toplevel.waylandHandle.activate();
                                     else if (mouse.button === Qt.RightButton)
-                                    toplevel.waylandHandle.close();
+                                        toplevel.waylandHandle.close();
                                 }
                             }
 

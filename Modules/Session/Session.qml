@@ -78,8 +78,8 @@ StyledRect {
                         "name": "Shutdown",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", "systemctl poweroff"]
-                                                    });
+                                "command": ["sh", "-c", "systemctl poweroff"]
+                            });
                         }
                     },
                     {
@@ -87,8 +87,8 @@ StyledRect {
                         "name": "Reboot",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", "systemctl reboot"]
-                                                    });
+                                "command": ["sh", "-c", "systemctl reboot"]
+                            });
                         }
                     },
                     {
@@ -96,8 +96,8 @@ StyledRect {
                         "name": "Sleep",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", "systemctl suspend"]
-                                                    });
+                                "command": ["sh", "-c", "systemctl suspend"]
+                            });
                         }
                     },
                     {
@@ -105,8 +105,8 @@ StyledRect {
                         "name": "Logout",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", "hyprctl dispatch exit"]
-                                                    });
+                                "command": ["sh", "-c", "hyprctl dispatch exit"]
+                            });
                         }
                     },
                     {
@@ -114,8 +114,8 @@ StyledRect {
                         "name": "Lockscreen",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", "shell ipc call lock lock"]
-                                                    });
+                                "command": ["sh", "-c", "shell ipc call lock lock"]
+                            });
                         }
                     }
                 ]
@@ -142,11 +142,11 @@ StyledRect {
                     focus: root.isSessionOpen
                     onFocusChanged: {
                         if (focus && root.isSessionOpen)
-                        Qt.callLater(() => {
-                                         let firstIcon = repeater.itemAt(root.currentIndex);
-                                         if (firstIcon)
-                                         firstIcon.children[0].forceActiveFocus();
-                                     });
+                            Qt.callLater(() => {
+                                let firstIcon = repeater.itemAt(root.currentIndex);
+                                if (firstIcon)
+                                    firstIcon.children[0].forceActiveFocus();
+                            });
                     }
 
                     Timer {
@@ -197,11 +197,11 @@ StyledRect {
                         Keys.onReturnPressed: handleAction()
                         Keys.onUpPressed: {
                             if (root.currentIndex > 0)
-                            root.currentIndex--;
+                                root.currentIndex--;
                         }
                         Keys.onDownPressed: {
                             if (root.currentIndex < 4)
-                            root.currentIndex++;
+                                root.currentIndex++;
                         }
                         Keys.onEscapePressed: root.isSessionOpen = false
 
@@ -263,7 +263,7 @@ StyledRect {
 
         onAccepted: {
             if (root.pendingAction)
-            root.pendingAction();
+                root.pendingAction();
 
             root.showConfirmDialog = false;
             root.isSessionOpen = false;

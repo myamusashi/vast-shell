@@ -216,13 +216,13 @@ ClippingRectangle {
                     height: 12
                     color: {
                         switch (graph.metricType) {
-                            case 0:
+                        case 0:
                             return Colours.m3Colors.m3Blue;
-                            case 1:
+                        case 1:
                             return Colours.m3Colors.m3Green;
-                            case 2:
+                        case 2:
                             return Colours.m3Colors.m3Red;
-                            case 3:
+                        case 3:
                             return Colours.m3Colors.m3Yellow;
                         }
                     }
@@ -233,25 +233,25 @@ ClippingRectangle {
                 Text {
                     text: {
                         switch (graph.metricType) {
-                            case 0:
+                        case 0:
                             return "CPU";
-                            case 1:
+                        case 1:
                             return "GPU";
-                            case 2:
+                        case 2:
                             return "VRAM";
-                            case 3:
+                        case 3:
                             return "RAM";
                         }
                     }
                     color: {
                         switch (graph.metricType) {
-                            case 0:
+                        case 0:
                             return Colours.m3Colors.m3Blue;
-                            case 1:
+                        case 1:
                             return Colours.m3Colors.m3Green;
-                            case 2:
+                        case 2:
                             return Colours.m3Colors.m3Red;
-                            case 3:
+                        case 3:
                             return Colours.m3Colors.m3Yellow;
                         }
                     }
@@ -299,13 +299,13 @@ ClippingRectangle {
 
                     color: {
                         switch (graph.metricType) {
-                            case 0:
+                        case 0:
                             return Colours.m3Colors.m3Blue;
-                            case 1:
+                        case 1:
                             return Colours.m3Colors.m3Green;
-                            case 2:
+                        case 2:
                             return Colours.m3Colors.m3Red;
-                            case 3:
+                        case 3:
                             return Colours.m3Colors.m3Yellow;
                         }
                     }

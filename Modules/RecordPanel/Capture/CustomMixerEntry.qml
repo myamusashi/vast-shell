@@ -71,7 +71,7 @@ ColumnLayout {
                 cursorShape: Qt.PointingHandCursor
                 onClicked: mevent => {
                     if (mevent.button === Qt.LeftButton)
-                    Audio.toggleMute(root.node);
+                        Audio.toggleMute(root.node);
                 }
                 onWheel: mevent => Audio.wheelAction(mevent, root.node)
             }

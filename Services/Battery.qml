@@ -1,4 +1,3 @@
-pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -41,9 +40,9 @@ Singleton {
 
                 for (var i = 0; i < values.length; i++) {
                     if (i % 2 === 0)
-                    designCapacities.push(values[i]);
+                        designCapacities.push(values[i]);
                     else
-                    currentCapacities.push(values[i]);
+                        currentCapacities.push(values[i]);
                 }
 
                 const totalDesign = designCapacities.reduce((sum, val) => sum + val, 0);

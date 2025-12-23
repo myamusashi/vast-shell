@@ -52,14 +52,14 @@ Singleton {
             onStreamFinished: {
                 const data = JSON.parse(text.trim());
                 root.models = data.map(profile => {
-                                           return {
-                                               "index": profile.index,
-                                               "name": profile.name,
-                                               "description": profile.description,
-                                               "available": profile.available,
-                                               "readable": root.formatProfileName(profile.name)
-                                           };
-                                       });
+                    return {
+                        "index": profile.index,
+                        "name": profile.name,
+                        "description": profile.description,
+                        "available": profile.available,
+                        "readable": root.formatProfileName(profile.name)
+                    };
+                });
             }
         }
     }
@@ -86,14 +86,14 @@ Singleton {
             onStreamFinished: {
                 const data = JSON.parse(text.trim());
                 root.activeProfiles = data.map(active => {
-                                                   return {
-                                                       "index": active.index,
-                                                       "name": active.name,
-                                                       "description": active.description,
-                                                       "available": active.available,
-                                                       "save": active.save
-                                                   };
-                                               });
+                    return {
+                        "index": active.index,
+                        "name": active.name,
+                        "description": active.description,
+                        "available": active.available,
+                        "save": active.save
+                    };
+                });
                 root.activeProfileIndex = data.length > 0 ? data[0].index : -1;
             }
         }
@@ -116,8 +116,8 @@ Singleton {
 
             // Replace hyphens with spaces and capitalize
             part = part.split("-").map(word => {
-                                           return word.charAt(0).toUpperCase() + word.slice(1);
-                                       }).join(" ");
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join(" ");
 
             formatted.push(part);
         }

@@ -24,13 +24,13 @@ StyledRect {
 
     property var filteredWallpaperList: {
         if (debouncedSearchQuery === "")
-        return wallpaperList;
+            return wallpaperList;
 
         const query = debouncedSearchQuery.toLowerCase();
         return wallpaperList.filter(path => {
-                                        const fileName = path.split('/').pop().toLowerCase();
-                                        return fileName.includes(query);
-                                    });
+            const fileName = path.split('/').pop().toLowerCase();
+            return fileName.includes(query);
+        });
     }
 
     Process {
@@ -93,7 +93,7 @@ StyledRect {
         focus: root.isWallpaperSwitcherOpen
         onFocusChanged: {
             if (root.isWallpaperSwitcherOpen)
-            searchField.forceActiveFocus();
+                searchField.forceActiveFocus();
         }
 
         StyledTextField {
@@ -110,7 +110,7 @@ StyledRect {
                 searchDebounceTimer.restart();
 
                 if (wallpaperPath.count > 0)
-                wallpaperPath.currentIndex = 0;
+                    wallpaperPath.currentIndex = 0;
             }
 
             Keys.onDownPressed: wallpaperPath.focus = true
@@ -147,9 +147,9 @@ StyledRect {
             onModelChanged: {
                 if (root.debouncedSearchQuery === "" && currentIndex >= 0) {
                     Qt.callLater(() => {
-                                     if (currentIndex < count)
-                                     currentIndex = currentIndex;
-                                 });
+                        if (currentIndex < count)
+                            currentIndex = currentIndex;
+                    });
                 }
             }
 
@@ -208,8 +208,8 @@ StyledRect {
                         onClicked: {
                             wallpaperPath.currentIndex = delegateItem.index;
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                                                    });
+                                "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                            });
                         }
                     }
                 }
@@ -218,17 +218,17 @@ StyledRect {
             Keys.onPressed: event => {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     Quickshell.execDetached({
-                                                "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
-                                            });
+                        "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
+                    });
                 }
                 if (event.key === Qt.Key_Escape)
-                root.isWallpaperSwitcherOpen = false;
+                    root.isWallpaperSwitcherOpen = false;
                 if (event.key === Qt.Key_Tab)
-                searchField.focus = true;
+                    searchField.focus = true;
                 if (event.key === Qt.Key_Left)
-                decrementCurrentIndex();
+                    decrementCurrentIndex();
                 if (event.key === Qt.Key_Right)
-                incrementCurrentIndex();
+                    incrementCurrentIndex();
             }
         }
 

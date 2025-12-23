@@ -52,17 +52,17 @@ ColumnLayout {
         delegate: StyledButton {
             id: buttonDelegate
 
-			required property var modelData
+            required property var modelData
 
             implicitWidth: 50
-			implicitHeight: 50
+            implicitHeight: 50
 
-			iconBackgroundColor: "transparent"
-			showIconBackground: true
-			iconSize: Appearance.fonts.size.large
-			iconButton: modelData.icon
-			buttonTitle: ""
-			onClicked: modelData.action()
+            iconBackgroundColor: "transparent"
+            showIconBackground: true
+            iconSize: Appearance.fonts.size.large
+            iconButton: modelData.icon
+            buttonTitle: ""
+            onClicked: modelData.action()
         }
     }
 }

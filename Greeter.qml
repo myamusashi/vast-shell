@@ -102,20 +102,20 @@ ShellRoot {
                     source = sessionLock.wallpaperPath;
 
                     Paths.currentWallpaperChanged.connect(() => {
-                                                              if (walAnimation.running)
-                                                              walAnimation.complete();
-                                                              animatingWal.source = sessionLock.wallpaperPath;
-                                                          });
+                        if (walAnimation.running)
+                            walAnimation.complete();
+                        animatingWal.source = sessionLock.wallpaperPath;
+                    });
                     animatingWal.statusChanged.connect(() => {
-                                                           if (animatingWal.status == Image.Ready)
-                                                           walAnimation.start();
-                                                       });
+                        if (animatingWal.status == Image.Ready)
+                            walAnimation.start();
+                    });
 
                     walAnimation.finished.connect(() => {
-                                                      img.source = animatingWal.source;
-                                                      animatingWal.source = "";
-                                                      animatinRect.width = 0;
-                                                  });
+                        img.source = animatingWal.source;
+                        animatingWal.source = "";
+                        animatinRect.width = 0;
+                    });
                 }
             }
 
@@ -161,7 +161,7 @@ ShellRoot {
                     focus: true
                     Keys.onPressed: kevent => {
                         if (sessionLock.showErrorMessage && kevent.text)
-                        sessionLock.showErrorMessage = false;
+                            sessionLock.showErrorMessage = false;
 
                         if (kevent.key === Qt.Key_Enter || kevent.key === Qt.Key_Return) {
                             if (sessionLock.inputBuffer.length > 0) {
@@ -206,7 +206,7 @@ ShellRoot {
                             sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -randomRemove);
 
                             if (sessionLock.maskedBuffer === "")
-                            passwordBuffer.color = Colours.m3GeneratedColors.m3OnSurfaceVariant;
+                                passwordBuffer.color = Colours.m3GeneratedColors.m3OnSurfaceVariant;
 
                             return;
                         }
@@ -219,13 +219,13 @@ ShellRoot {
                             }
 
                             if (passwordBuffer.color === Colours.m3GeneratedColors.m3Blue || passwordBuffer.color === Colours.m3GeneratedColors.m3OnBackground)
-                            passwordBuffer.color = sessionLock.maskedBuffer ? Colours.m3GeneratedColors.m3OnSurface : Colours.m3GeneratedColors.m3OnSurfaceVariant;
+                                passwordBuffer.color = sessionLock.maskedBuffer ? Colours.m3GeneratedColors.m3OnSurface : Colours.m3GeneratedColors.m3OnSurfaceVariant;
 
                             sessionLock.inputBuffer += kevent.text;
 
                             const randomLength = Math.floor(Math.random() * 3) + 1;
                             for (var i = 0; i < randomLength; i++)
-                            sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
+                                sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
 
                             const currentTime = Date.now();
                             if (sessionLock.lastKeystrokeTime > 0) {
@@ -262,9 +262,9 @@ ShellRoot {
 
                     onTriggered: {
                         if (Math.random() > 0.5 && sessionLock.maskedBuffer.length < 50)
-                        sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
+                            sessionLock.maskedBuffer += sessionLock.maskChars[Math.floor(Math.random() * sessionLock.maskChars.length)];
                         else if (sessionLock.maskedBuffer.length > sessionLock.inputBuffer.length * 3)
-                        sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -1);
+                            sessionLock.maskedBuffer = sessionLock.maskedBuffer.slice(0, -1);
 
                         interval = Math.random() * 3000 + 2000;
                     }

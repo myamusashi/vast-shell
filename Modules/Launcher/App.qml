@@ -88,9 +88,9 @@ StyledRect {
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 60
-				placeholderText: "  Search"
-				focus: root.isPrototypeOf
-				onFocusChanged: forceActiveFocus()
+                placeholderText: "  Search"
+                focus: root.isPrototypeOf
+                onFocusChanged: forceActiveFocus()
                 font.family: Appearance.fonts.family.sans
                 font.pixelSize: Appearance.fonts.size.large * 1.2
                 color: Colours.m3Colors.m3OnBackground
@@ -239,9 +239,9 @@ StyledRect {
                                 searchText: search.text
                                 fullText: delegateItem.modelData.name || ""
                                 font.pixelSize: Appearance.fonts.size.normal
-								elide: Text.ElideRight
-								font.weight: Font.DemiBold
-								color: Colours.m3Colors.m3OnSurface
+                                elide: Text.ElideRight
+                                font.weight: Font.DemiBold
+                                color: Colours.m3Colors.m3OnSurface
                                 normalColor: Colours.m3Colors.m3OnSurface
                                 highlightColor: Colours.m3Colors.m3Primary
                             }

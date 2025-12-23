@@ -33,9 +33,9 @@ Loader {
         const videoFormats = ["mkv", "mp4", "webm", "avi"];
 
         if (videoFormats.includes(ext))
-        createThumbnails.running = true;
+            createThumbnails.running = true;
         else
-        thumbnailPath = "file://" + root.modelData.path;
+            thumbnailPath = "file://" + root.modelData.path;
     }
 
     sourceComponent: StyledRect {
@@ -78,9 +78,9 @@ Loader {
                 implicitHeight: 30
                 status: {
                     if (root.getFileExtension(root.modelData.path) === "mkv" || root.getFileExtension(root.modelData.path) === "mp4")
-                    return root.showLoading || image.status == Image.Loading;
+                        return root.showLoading || image.status == Image.Loading;
                     else
-                    return image.status == Image.Loading;
+                        return image.status == Image.Loading;
                 }
             }
         }
@@ -102,7 +102,7 @@ Loader {
         stderr: StdioCollector {
             onStreamFinished: {
                 if (text.trim())
-                console.error("Thumbnail generation error:", text);
+                    console.error("Thumbnail generation error:", text);
             }
         }
     }

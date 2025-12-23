@@ -57,7 +57,7 @@ Item {
     }
 
     ClippingRectangle {
-		id: background
+        id: background
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
@@ -120,7 +120,7 @@ Item {
     }
 
     RowLayout {
-		id: contentRow
+        id: contentRow
 
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: root.buttonTitle === "" ? undefined : parent.left
@@ -155,7 +155,7 @@ Item {
                 }
 
                 MaterialIcon {
-					id: iconOnly
+                    id: iconOnly
 
                     visible: !root.showIconBackground
                     anchors.centerIn: parent
@@ -184,7 +184,7 @@ Item {
     }
 
     MArea {
-		id: mouseArea
+        id: mouseArea
 
         anchors.fill: parent
         layerColor: "transparent"

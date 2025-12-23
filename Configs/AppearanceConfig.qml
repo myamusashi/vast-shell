@@ -3,10 +3,10 @@ import Quickshell.Io
 JsonObject {
     id: root
 
-	property AnimationsComponent animations: AnimationsComponent {}
+    property AnimationsComponent animations: AnimationsComponent {}
     property FontsComponent fonts: FontsComponent {}
-	property MarginComponent margin: MarginComponent {}
-	property PaddingComponent padding: PaddingComponent {}
+    property MarginComponent margin: MarginComponent {}
+    property PaddingComponent padding: PaddingComponent {}
     property RoundingComponent rounding: RoundingComponent {}
     property SpacingComponent spacing: SpacingComponent {}
 

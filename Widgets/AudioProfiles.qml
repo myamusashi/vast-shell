@@ -46,8 +46,8 @@ ComboBox {
         rightPadding: profilesComboBox.indicator.width + profilesComboBox.spacing
         text: {
             for (var i = 0; i < Audio.models.length; i++)
-            if (Audio.models[i].index == Audio.activeProfileIndex)
-            return Audio.models[i].readable;
+                if (Audio.models[i].index == Audio.activeProfileIndex)
+                    return Audio.models[i].readable;
 
             return Audio.models[-1].readable;
         }
@@ -213,8 +213,8 @@ ComboBox {
         const profile = Audio.models[index];
         if (profile && profile.available === "yes") {
             Quickshell.execDetached({
-                                        "command": ["sh", "-c", `pw-cli set-param ${Audio.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
-                                    });
+                "command": ["sh", "-c", `pw-cli set-param ${Audio.idPipewire} Profile '{ \"index\": ${profile.index}}'`]
+            });
             Audio.activeProfileIndex = profile.index;
         }
     }

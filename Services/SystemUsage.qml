@@ -88,13 +88,13 @@ Singleton {
                 const lines = text.trim().split('\n');
                 for (const line of lines) {
                     if (line.startsWith("WIRED_DEV:"))
-                    root.wiredInterface = line.substring(10).trim();
+                        root.wiredInterface = line.substring(10).trim();
                     else if (line.startsWith("WIRED_STATE:"))
-                    root.statusWiredInterface = line.substring(12).replace(" (externally)", "").trim();
+                        root.statusWiredInterface = line.substring(12).replace(" (externally)", "").trim();
                     else if (line.startsWith("WIFI_DEV:"))
-                    root.wirelessInterface = line.substring(9).trim();
+                        root.wirelessInterface = line.substring(9).trim();
                     else if (line.startsWith("VPN_DEV:"))
-                    root.statusVPNInterface = line.substring(8).trim();
+                        root.statusVPNInterface = line.substring(8).trim();
                 }
             }
         }
@@ -114,24 +114,24 @@ Singleton {
 
                     // Get the last sample (most recent data)
                     if (dataArray.length === 0)
-                    return;
+                        return;
                     const data = dataArray[dataArray.length - 1];
 
                     // Get GPU usage from render/3d engine
                     if (data.engines && data.engines["Render/3D"])
-                    root.gpuUsage = Math.round(data.engines["Render/3D"].busy || 0);
+                        root.gpuUsage = Math.round(data.engines["Render/3D"].busy || 0);
 
                     // Get power consumption
                     if (data.power && data.power.GPU)
-                    root.gpuPower = data.power.GPU.toFixed(2);
+                        root.gpuPower = data.power.GPU.toFixed(2);
 
                     let totalVramUsed = 0;
                     if (data.clients)
-                    for (const clientId in data.clients) {
-                        const client = data.clients[clientId];
-                        if (client.memory && client.memory.system)
-                        totalVramUsed += parseInt(client.memory.system.resident) || 0;
-                    }
+                        for (const clientId in data.clients) {
+                            const client = data.clients[clientId];
+                            if (client.memory && client.memory.system)
+                                totalVramUsed += parseInt(client.memory.system.resident) || 0;
+                        }
 
                     // Convert bytes to MB
                     root.vramUsed = Math.round(totalVramUsed / 1048576);
@@ -144,7 +144,7 @@ Singleton {
 
                     // RC6 (power saving state)
                     if (data.rc6)
-                    root.gpuRc6 = data.rc6.value.toFixed(1);
+                        root.gpuRc6 = data.rc6.value.toFixed(1);
 
                     // Get memory bandwidth
                     if (data["imc-bandwidth"]) {
@@ -188,7 +188,7 @@ Singleton {
                     root.gpuUsage = Math.round((curFreq / maxFreq) * 100);
 
                     if (vramBytes > 0)
-                    root.vramUsed = Math.round(vramBytes / 1048576);
+                        root.vramUsed = Math.round(vramBytes / 1048576);
                 }
             }
         }
@@ -313,7 +313,7 @@ Singleton {
 
                 for (const line of text.trim().split("\n")) {
                     if (line.trim() === "")
-                    continue;
+                        continue;
                     const parts = line.trim().split(/\s+/);
                     if (parts.length >= 3) {
                         const device = parts[0];
@@ -322,9 +322,9 @@ Singleton {
 
                         if (!deviceMap.has(device) || (used + avail) > (deviceMap.get(device).used + deviceMap.get(device).avail)) {
                             deviceMap.set(device, {
-                                              "used": used,
-                                              "avail": avail
-                                          });
+                                "used": used,
+                                "avail": avail
+                            });
                         }
                     }
                 }
@@ -352,7 +352,7 @@ Singleton {
             const match = data.match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m);
 
             if (!match)
-            return;
+                return;
             const user = parseInt(match[1], 10);
             const nice = parseInt(match[2], 10);
             const system = parseInt(match[3], 10);
@@ -400,16 +400,16 @@ Singleton {
             updateCycle = (updateCycle + 1) % 4;
 
             switch (updateCycle) {
-                case 0:
+            case 0:
                 networkInfoProc.running = true;
                 break;
-                case 1:
+            case 1:
                 diskDfProc.running = true;
                 break;
-                case 2:
+            case 2:
                 intelGpuProc.running = true;
                 break;
-                case 3:
+            case 3:
                 intelGpuSysfsProc.running = true;
                 break;
             }

@@ -21,7 +21,7 @@ Singleton {
 
     onListChanged: {
         if (loaded)
-        saveTimer.restart();
+            saveTimer.restart();
     }
 
     Timer {
@@ -30,19 +30,19 @@ Singleton {
         interval: 50
         onTriggered: {
             storage.setText(JSON.stringify(root.notClosed.map(n => ({
-                                                                        time: n.time.getTime(),
-                                                                        id: n.id,
-                                                                        summary: n.summary,
-                                                                        body: n.body,
-                                                                        appIcon: n.appIcon,
-                                                                        appName: n.appName,
-                                                                        image: n.image,
-                                                                        expireTimeout: n.expireTimeout,
-                                                                        urgency: n.urgency,
-                                                                        resident: n.resident,
-                                                                        hasActionIcons: n.hasActionIcons,
-                                                                        actions: n.actions
-                                                                    })), null, 2));
+                        time: n.time.getTime(),
+                        id: n.id,
+                        summary: n.summary,
+                        body: n.body,
+                        appIcon: n.appIcon,
+                        appName: n.appName,
+                        image: n.image,
+                        expireTimeout: n.expireTimeout,
+                        urgency: n.urgency,
+                        resident: n.resident,
+                        hasActionIcons: n.hasActionIcons,
+                        actions: n.actions
+                    })), null, 2));
         }
     }
 
@@ -70,9 +70,9 @@ Singleton {
             notif.tracked = true;
 
             const comp = notifComponent.createObject(root, {
-                                                         popup: !persistentProps.dnd,
-                                                         notification: notif
-                                                     });
+                popup: !persistentProps.dnd,
+                notification: notif
+            });
 
             if (comp) {
                 root.list = [comp, ...root.list];
@@ -103,19 +103,19 @@ Singleton {
 
                 for (const notifData of data) {
                     const notif = notifComponent.createObject(root, {
-                                                                  time: new Date(notifData.time),
-                                                                  id: notifData.id,
-                                                                  summary: notifData.summary,
-                                                                  body: notifData.body,
-                                                                  appIcon: notifData.appIcon,
-                                                                  appName: notifData.appName,
-                                                                  image: notifData.image,
-                                                                  expireTimeout: notifData.expireTimeout,
-                                                                  urgency: notifData.urgency,
-                                                                  resident: notifData.resident,
-                                                                  hasActionIcons: notifData.hasActionIcons,
-                                                                  actions: notifData.actions
-                                                              });
+                        time: new Date(notifData.time),
+                        id: notifData.id,
+                        summary: notifData.summary,
+                        body: notifData.body,
+                        appIcon: notifData.appIcon,
+                        appName: notifData.appName,
+                        image: notifData.image,
+                        expireTimeout: notifData.expireTimeout,
+                        urgency: notifData.urgency,
+                        resident: notifData.resident,
+                        hasActionIcons: notifData.hasActionIcons,
+                        actions: notifData.actions
+                    });
 
                     if (notif) {
                         root.list.push(notif);
@@ -155,15 +155,15 @@ Singleton {
             const m = Math.floor(diff / 60000);
 
             if (m < 1)
-            return qsTr("now");
+                return qsTr("now");
 
             const h = Math.floor(m / 60);
             const d = Math.floor(h / 24);
 
             if (d > 0)
-            return `${d}d`;
+                return `${d}d`;
             if (h > 0)
-            return `${h}h`;
+                return `${h}h`;
             return `${m}m`;
         }
 
@@ -231,10 +231,10 @@ Singleton {
 
             function onActionsChanged() {
                 notif.actions = notif.notification.actions.map(a => ({
-                                                                         identifier: a.identifier,
-                                                                         text: a.text,
-                                                                         invoke: () => a.invoke()
-                                                                     }));
+                            identifier: a.identifier,
+                            text: a.text,
+                            invoke: () => a.invoke()
+                        }));
             }
         }
 
@@ -250,7 +250,7 @@ Singleton {
 
         Component.onCompleted: {
             if (!notification)
-            return;
+                return;
 
             id = notification.id;
             summary = notification.summary;
@@ -263,10 +263,10 @@ Singleton {
             resident = notification.resident;
             hasActionIcons = notification.hasActionIcons;
             actions = notification.actions.map(a => ({
-                                                         identifier: a.identifier,
-                                                         text: a.text,
-                                                         invoke: () => a.invoke()
-                                                     }));
+                        identifier: a.identifier,
+                        text: a.text,
+                        invoke: () => a.invoke()
+                    }));
         }
     }
 

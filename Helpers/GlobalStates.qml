@@ -36,7 +36,7 @@ Singleton {
     property string scriptPath: `${Quickshell.shellDir}/Assets/screen-capture.sh`
 
     property var _activeOSDs: ({})
-	property var _osdTimers: ({})
+    property var _osdTimers: ({})
 
     function showOSD(osdName) {
         if (!osdName)

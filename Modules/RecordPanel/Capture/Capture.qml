@@ -52,9 +52,9 @@ ClippingRectangle {
             onStreamFinished: {
                 const data = text.trim();
                 if (data !== "")
-                root.isRecording = true;
+                    root.isRecording = true;
                 else
-                root.isRecording = false;
+                    root.isRecording = false;
             }
         }
     }
@@ -155,8 +155,8 @@ ClippingRectangle {
                         "label": "Screenshot",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-                                                    });
+                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
+                            });
                             root.open = false;
                         }
                     },
@@ -165,8 +165,8 @@ ClippingRectangle {
                         "label": "Start",
                         "action": () => {
                             Quickshell.execDetached({
-                                                        "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
-                                                    });
+                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+                            });
                             root.open = root.isRecording ? false : true;
                         },
                         "highlight": root.isRecording,

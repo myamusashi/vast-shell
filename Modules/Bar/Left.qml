@@ -8,12 +8,12 @@ Loader {
     active: true
     asynchronous: true
 
-	sourceComponent: RowLayout {
-		anchors.fill: parent
-		anchors.leftMargin: Appearance.margin.small
+    sourceComponent: RowLayout {
+        anchors.fill: parent
+        anchors.leftMargin: Appearance.margin.small
         spacing: Appearance.spacing.normal
 
-		OsText {
+        OsText {
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
         }
 

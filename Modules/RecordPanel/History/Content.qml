@@ -57,13 +57,13 @@ Column {
                         const timestamp = root.modelData.created;
                         const date = new Date(timestamp * 1000);
                         return date.toLocaleString('en-US', {
-                                                       month: 'short',
-                                                       day: 'numeric',
-                                                       year: 'numeric',
-                                                       hour: 'numeric',
-                                                       minute: '2-digit',
-                                                       hour12: true
-                                                   });
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        });
                     }
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
@@ -109,21 +109,21 @@ Column {
             onClicked: {
                 const data = root.getFileExtension(root.modelData.path);
                 switch (data) {
-                    case "mkv":
-                    case "mp3":
-                    case "mp4":
+                case "mkv":
+                case "mp3":
+                case "mp4":
                     Quickshell.execDetached({
-                                                command: [Configs.generals.apps.videoViewer, root.modelData.path]
-                                            });
+                        command: [Configs.generals.apps.videoViewer, root.modelData.path]
+                    });
                     break;
-                    case "png":
-                    case "jpg":
-                    case "jpeg":
-                    case "gif":
-                    case "ico":
+                case "png":
+                case "jpg":
+                case "jpeg":
+                case "gif":
+                case "ico":
                     Quickshell.execDetached({
-                                                command: [Configs.generals.apps.imageViewer, root.modelData.path]
-                                            });
+                        command: [Configs.generals.apps.imageViewer, root.modelData.path]
+                    });
                     break;
                 }
             }

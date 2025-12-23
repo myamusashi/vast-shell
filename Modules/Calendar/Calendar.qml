@@ -62,8 +62,8 @@ StyledRect {
             readonly property var monthNames: {
                 const locale = Qt.locale();
                 return Array.from({
-                                      length: 12
-                                  }, (_, i) => locale.monthName(i));
+                    length: 12
+                }, (_, i) => locale.monthName(i));
             }
             property date currentDate: new Date()
             property int currentYear: currentDate.getFullYear()
@@ -174,9 +174,9 @@ StyledRect {
                         text: daysOfWeekDelegate.model.shortName
                         color: {
                             if (daysOfWeekDelegate.model.shortName === "Sun" || daysOfWeekDelegate.model.shortName === "Sat")
-                            return Colours.m3Colors.m3Error;
+                                return Colours.m3Colors.m3Error;
                             else
-                            return Colours.m3Colors.m3OnSurface;
+                                return Colours.m3Colors.m3OnSurface;
                         }
                         font.pixelSize: Appearance.fonts.size.small * 1.2
                         font.weight: 600
@@ -209,9 +209,9 @@ StyledRect {
 
                     color: {
                         if (dayItem.model.today)
-                        return Colours.m3Colors.m3Primary;
+                            return Colours.m3Colors.m3Primary;
                         else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
-                        return Colours.m3Colors.m3SurfaceVariant;
+                            return Colours.m3Colors.m3SurfaceVariant;
 
                         return "transparent";
                     }
@@ -236,26 +236,26 @@ StyledRect {
                         text: Qt.formatDate(dayItem.model.date, "d")
                         color: {
                             if (dayItem.model.today)
-                            return Colours.m3Colors.m3OnPrimary;
+                                return Colours.m3Colors.m3OnPrimary;
                             else if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-                            return Colours.m3Colors.m3Error;
+                                return Colours.m3Colors.m3Error;
                             else if (dayItem.model.month === root.currentMonth)
-                            return Colours.m3Colors.m3OnSurface;
+                                return Colours.m3Colors.m3OnSurface;
                             else {
                                 if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-                                return Colours.withAlpha(Colours.m3Colors.m3Error, 0.2);
+                                    return Colours.withAlpha(Colours.m3Colors.m3Error, 0.2);
                                 else
-                                return Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.2);
+                                    return Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.2);
                             }
                         }
                         font.pixelSize: Appearance.fonts.size.small * 1.3
                         font.weight: {
                             if (dayItem.model.today)
-                            return 1000;
+                                return 1000;
                             else if (dayItem.model.month === root.currentMonth)
-                            return 600;
+                                return 600;
                             else
-                            return 100;
+                                return 100;
                         }
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter

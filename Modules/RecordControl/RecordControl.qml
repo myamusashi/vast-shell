@@ -209,8 +209,8 @@ LazyLoader {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 Quickshell.execDetached({
-                                                            "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
-                                                        });
+                                    "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
+                                });
 
                                 Record.recordingTimer.stop();
                                 Record.recordingSeconds = 0;

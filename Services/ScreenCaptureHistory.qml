@@ -41,7 +41,7 @@ Singleton {
             onStreamFinished: {
                 const data = text.trim();
                 if (data)
-                root.screenshotFiles = root.parseFileList(data);
+                    root.screenshotFiles = root.parseFileList(data);
             }
         }
     }
@@ -56,7 +56,7 @@ Singleton {
             onStreamFinished: {
                 const data = text.trim();
                 if (data)
-                root.screenrecordFiles = root.parseFileList(data);
+                    root.screenrecordFiles = root.parseFileList(data);
             }
         }
     }

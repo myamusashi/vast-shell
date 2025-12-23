@@ -33,7 +33,7 @@ Scope {
 
         onPamMessage: {
             if (this.responseRequired)
-            this.respond(root.currentText);
+                this.respond(root.currentText);
         }
 
         onCompleted: result => {

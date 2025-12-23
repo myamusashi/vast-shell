@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell.Services.UPower
 
 import qs.Components
@@ -9,6 +8,7 @@ import qs.Services
 import qs.Widgets
 
 StyledRect {
+    Layout.fillWidth: true
     Layout.preferredHeight: 140
     color: Colours.m3Colors.m3SurfaceContainerLow
     radius: Appearance.rounding.normal

@@ -9,9 +9,9 @@ Text {
     property string searchText: ""
     property string fullText: ""
     property color highlightColor: Colours.m3Colors.m3Primary
-	property color normalColor: Colours.m3Colors.m3OnSurface
+    property color normalColor: Colours.m3Colors.m3OnSurface
 
-	font.family: Appearance.fonts.family.sans
+    font.family: Appearance.fonts.family.sans
     textFormat: Text.RichText
 
     function normalizeChar(character) {

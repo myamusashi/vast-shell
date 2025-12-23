@@ -31,7 +31,7 @@ Slider {
 
     NumberAnimation on waveAnimationPhase {
         from: 0
-        to: Math.PI * 2 
+        to: Math.PI * 2
         duration: 2000
         loops: Animation.Infinite
         running: slider.enableWave

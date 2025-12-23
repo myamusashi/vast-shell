@@ -136,11 +136,11 @@ StyledRect {
                         focus: GlobalStates.isScreenCapturePanelOpen
                         onFocusChanged: {
                             if (focus && GlobalStates.isScreenCapturePanelOpen)
-                            Qt.callLater(() => {
-                                             let firstIcon = tabRepeater.itemAt(root.selectedTab);
-                                             if (firstIcon)
-                                             firstIcon.children[0].forceActiveFocus();
-                                         });
+                                Qt.callLater(() => {
+                                    let firstIcon = tabRepeater.itemAt(root.selectedTab);
+                                    if (firstIcon)
+                                        firstIcon.children[0].forceActiveFocus();
+                                });
                         }
 
                         radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
@@ -182,8 +182,8 @@ StyledRect {
                                     "icon": "select_window_2",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                                                    "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
-                                                                });
+                                            "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-window"]
+                                        });
                                     }
                                 },
                                 {
@@ -191,32 +191,32 @@ StyledRect {
                                     "icon": "select",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                                                    "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
-                                                                });
+                                            "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
+                                        });
                                     }
                                 }
                             ];
 
                             Quickshell.screens.forEach(screen => {
-                                                           options.push({
-                                                                            "name": screen.name,
-                                                                            "icon": "monitor",
-                                                                            "action": () => {
-                                                                                Quickshell.execDetached({
-                                                                                                            "command": ["sh", "-c", Quickshell.shellDir + `/Assets/screen-capture.sh --screenshot-output ${screen.name}`]
-                                                                                                        });
-                                                                            }
-                                                                        });
-                                                           options.push({
-                                                                            "name": "Merge screens",
-                                                                            "icon": "cell_merge",
-                                                                            "action": () => {
-                                                                                Quickshell.execDetached({
-                                                                                                            "command": ["sh", "-c", Quickshell.shellDir + `/Assets/screen-capture.sh --screenshot-outputs ${screen.name}`]
-                                                                                                        });
-                                                                            }
-                                                                        });
-                                                       });
+                                options.push({
+                                    "name": screen.name,
+                                    "icon": "monitor",
+                                    "action": () => {
+                                        Quickshell.execDetached({
+                                            "command": ["sh", "-c", Quickshell.shellDir + `/Assets/screen-capture.sh --screenshot-output ${screen.name}`]
+                                        });
+                                    }
+                                });
+                                options.push({
+                                    "name": "Merge screens",
+                                    "icon": "cell_merge",
+                                    "action": () => {
+                                        Quickshell.execDetached({
+                                            "command": ["sh", "-c", Quickshell.shellDir + `/Assets/screen-capture.sh --screenshot-outputs ${screen.name}`]
+                                        });
+                                    }
+                                });
+                            });
 
                             return options;
                         }
@@ -260,23 +260,23 @@ StyledRect {
                                     "icon": "select",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                                                    "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
-                                                                });
+                                            "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+                                        });
                                     }
                                 }
                             ];
 
                             Quickshell.screens.forEach(screen => {
-                                                           options.push({
-                                                                            "name": screen.name,
-                                                                            "icon": "monitor",
-                                                                            "action": () => {
-                                                                                Quickshell.execDetached({
-                                                                                                            "command": ["sh", "-c", Quickshell.shellDir + `/Assets/screen-capture.sh --screenrecord-${screen.name}`]
-                                                                                                        });
-                                                                            }
-                                                                        });
-                                                       });
+                                options.push({
+                                    "name": screen.name,
+                                    "icon": "monitor",
+                                    "action": () => {
+                                        Quickshell.execDetached({
+                                            "command": ["sh", "-c", Quickshell.shellDir + `/Assets/screen-capture.sh --screenrecord-${screen.name}`]
+                                        });
+                                    }
+                                });
+                            });
 
                             return options;
                         }

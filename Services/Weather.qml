@@ -8,7 +8,7 @@ import qs.Configs
 import qs.Helpers
 
 Singleton {
-	id: root
+    id: root
 
     // Thx caelestia
     readonly property var weatherIcons: ({
@@ -69,7 +69,7 @@ Singleton {
     }
 
     FileView {
-		id: weatherFile
+        id: weatherFile
 
         path: Paths.cacheDir + "/weather_shell/weather.json"
         watchChanges: true
@@ -80,10 +80,10 @@ Singleton {
                 console.log("Failed to read config files");
         }
         onSaveFailed: err => console.log("Failed to save config", FileViewError.toString(err))
-		onAdapterUpdated: writeAdapter()
+        onAdapterUpdated: writeAdapter()
 
         JsonAdapter {
-			id: adapter
+            id: adapter
 
             property JsonObject weather: JsonObject {
                 property string weatherConditionData: ""
