@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
+import Qt.labs.folderlistmodel
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
@@ -33,17 +33,21 @@ StyledRect {
         });
     }
 
-    Process {
-        id: listWallpaper
+    FolderListModel {
+        id: wallpaperFolder
 
-        workingDirectory: Paths.wallpaperDir
-        command: ["sh", "-c", `find -L ${Paths.wallpaperDir} -type d -path */.* -prune -o -not -name .* -type f -print`]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const wallList = text.trim().split('\n').filter(path => path.length > 0);
-                root.wallpaperList = wallList;
+        folder: Qt.resolvedUrl(Paths.wallpaperDir)
+        nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.bmp", "*.gif"]
+        showDirs: false
+        showDotAndDotDot: false
+        showHidden: false
+
+        onCountChanged: {
+            let list = [];
+            for (let i = 0; i < count; i++) {
+                list.push(get(i, "filePath"));
             }
+            root.wallpaperList = list;
         }
     }
 

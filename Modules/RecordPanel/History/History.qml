@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-
 import Quickshell
 
 import qs.Components
