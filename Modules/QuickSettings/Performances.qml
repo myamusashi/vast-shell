@@ -8,13 +8,16 @@ import qs.Services
 GridLayout {
     anchors.centerIn: parent
     columns: 3
-    rowSpacing: Appearance.spacing.large * 2
+    rows: 2
+    rowSpacing: Appearance.spacing.large
+    columnSpacing: Appearance.spacing.large
 
     ColumnLayout {
         Layout.alignment: Qt.AlignCenter
         spacing: Appearance.spacing.normal
 
         Circular {
+            Layout.alignment: Qt.AlignHCenter
             value: Math.round(SystemUsage.memUsed / SystemUsage.memTotal * 100)
             size: 0
             text: value + "%"
@@ -22,14 +25,14 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "RAM usage\n" + SystemUsage.memProp.toFixed(0) + " GB"
+            text: "CPU Usage"
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }
     }
 
     ColumnLayout {
-        Layout.alignment: Qt.AlignVCenter
+        Layout.alignment: Qt.AlignCenter
         spacing: Appearance.spacing.normal
 
         Circular {
@@ -41,8 +44,9 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "CPU usage"
+            text: "RAM Usage\n" + SystemUsage.memProp.toFixed(0) + " GB"
             color: Colours.m3Colors.m3OnSurface
+            horizontalAlignment: Text.AlignHCenter
         }
     }
 
@@ -51,6 +55,7 @@ GridLayout {
         spacing: Appearance.spacing.normal
 
         Circular {
+            Layout.alignment: Qt.AlignHCenter
             value: SystemUsage.diskPercent.toFixed(0)
             text: value + "%"
             size: 0
@@ -58,108 +63,181 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "Disk usage\n" + SystemUsage.diskProp.toFixed(0) + " GB"
+            text: "Disk Usage\n" + SystemUsage.diskProp.toFixed(0) + " GB"
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }
     }
 
     ColumnLayout {
-        Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-        Layout.preferredWidth: 160
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: 180
         spacing: Appearance.spacing.small
+
+        StyledText {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
+            text: "Network Speed"
+            color: Colours.m3Colors.m3Primary
+            font.pixelSize: Appearance.fonts.size.medium
+            font.weight: Font.Medium
+            horizontalAlignment: Text.AlignHCenter
+        }
 
         Repeater {
             model: [
                 {
-                    "label": "Wired Download",
-                    "value": SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed)
+                    label: "Wired ↓",
+                    value: SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed)
                 },
                 {
-                    "label": "Wired Upload",
-                    "value": SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed)
+                    label: "Wired ↑",
+                    value: SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed)
                 },
                 {
-                    "label": "Wireless Download",
-                    "value": SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)
+                    label: "Wireless ↓",
+                    value: SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)
                 },
                 {
-                    "label": "Wireless Upload",
-                    "value": SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed)
+                    label: "Wireless ↑",
+                    value: SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed)
                 }
             ]
 
-            StyledText {
+            RowLayout {
+                id: speedDelegate
                 required property var modelData
-                Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: modelData.label + ":\n" + modelData.value
-                color: Colours.m3Colors.m3OnSurface
+                spacing: Appearance.spacing.small
+
+                StyledText {
+                    Layout.preferredWidth: 80
+                    text: speedDelegate.modelData.label
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: speedDelegate.modelData.value
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.small
+                    horizontalAlignment: Text.AlignRight
+                }
             }
         }
     }
 
     ColumnLayout {
-        Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-        Layout.preferredWidth: 160
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: 180
         spacing: Appearance.spacing.small
+
+        StyledText {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
+            text: "Data Usage"
+            color: Colours.m3Colors.m3Primary
+            font.pixelSize: Appearance.fonts.size.medium
+            font.weight: Font.Medium
+            horizontalAlignment: Text.AlignHCenter
+        }
 
         Repeater {
             model: [
                 {
-                    "label": "Wired download usage",
-                    "value": SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
+                    label: "Wired ↓",
+                    value: SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
                 },
                 {
-                    "label": "Wired upload usage",
-                    "value": SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
+                    label: "Wired ↑",
+                    value: SystemUsage.formatUsage(SystemUsage.totalWiredUploadUsage)
                 },
                 {
-                    "label": "Wireless download usage",
-                    "value": SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
+                    label: "Wireless ↓",
+                    value: SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
                 },
                 {
-                    "label": "Wireless upload usage",
-                    "value": SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
+                    label: "Wireless ↑",
+                    value: SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
                 }
             ]
 
-            StyledText {
+            RowLayout {
+                id: totalDelegate
+
                 required property var modelData
-                Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: modelData.label + ":\n" + modelData.value
-                color: Colours.m3Colors.m3OnSurface
+                spacing: Appearance.spacing.small
+
+                StyledText {
+                    Layout.preferredWidth: 80
+                    text: totalDelegate.modelData.label
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: totalDelegate.modelData.value
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.small
+                    horizontalAlignment: Text.AlignRight
+                }
             }
         }
     }
 
     ColumnLayout {
-        Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-        Layout.preferredWidth: 160
+        Layout.alignment: Qt.AlignCenter
+        Layout.preferredWidth: 180
         spacing: Appearance.spacing.small
+
+        StyledText {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.fillWidth: true
+            text: "Network Interfaces"
+            color: Colours.m3Colors.m3Primary
+            font.pixelSize: Appearance.fonts.size.medium
+            font.weight: Font.Medium
+            horizontalAlignment: Text.AlignHCenter
+        }
 
         Repeater {
             model: [
                 {
-                    "label": "Wired interface",
-                    "value": SystemUsage.wiredInterface
+                    label: "Wired",
+                    value: SystemUsage.wiredInterface
                 },
                 {
-                    "label": "Wireless interface",
-                    "value": SystemUsage.wirelessInterface
+                    label: "Wireless",
+                    value: SystemUsage.wirelessInterface
                 }
             ]
 
-            StyledText {
+            ColumnLayout {
+                id: interfaceDelegate
+
                 required property var modelData
-                Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: modelData.label + ":\n" + modelData.value
-                color: Colours.m3Colors.m3OnSurface
+                spacing: 2
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: interfaceDelegate.modelData.label
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: interfaceDelegate.modelData.value
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.small
+                    font.family: Appearance.fonts.family.mono
+                    horizontalAlignment: Text.AlignHCenter
+                }
             }
         }
     }
