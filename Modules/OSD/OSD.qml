@@ -15,8 +15,8 @@ StyledRect {
         bottom: parent.bottom
     }
 
-    implicitWidth: GlobalStates.isVolumeOSDShow || GlobalStates.isNumLockOSDShow || GlobalStates.isCapsLockOSDShow ? 250 : 0
-    implicitHeight: GlobalStates.isVolumeOSDShow || GlobalStates.isNumLockOSDShow || GlobalStates.isCapsLockOSDShow ? calculateHeight() : 0
+    implicitWidth: GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock") || GlobalStates.isOSDVisible("volume") ? 250 : 0
+    implicitHeight: calculateHeight()
     radius: 0
     topLeftRadius: Appearance.rounding.normal
     color: Colours.m3Colors.m3Background
@@ -42,19 +42,19 @@ StyledRect {
         var spacing = 10;
         var padding = 10;
 
-        if (GlobalStates.isCapsLockOSDShow)
+        if (GlobalStates.isOSDVisible("capslock"))
             totalHeight += 50;
-        if (GlobalStates.isNumLockOSDShow)
+        if (GlobalStates.isOSDVisible("numlock"))
             totalHeight += 50;
-        if (GlobalStates.isVolumeOSDShow)
+        if (GlobalStates.isOSDVisible("volume"))
             totalHeight += 80;
 
         var activeCount = 0;
-        if (GlobalStates.isCapsLockOSDShow)
+        if (GlobalStates.isOSDVisible("volume"))
             activeCount++;
-        if (GlobalStates.isNumLockOSDShow)
+        if (GlobalStates.isOSDVisible("capslock"))
             activeCount++;
-        if (GlobalStates.isVolumeOSDShow)
+        if (GlobalStates.isOSDVisible("numlock"))
             activeCount++;
 
         if (activeCount > 1)
@@ -65,7 +65,7 @@ StyledRect {
 
     Loader {
         anchors.fill: parent
-        active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isVolumeOSDShow || GlobalStates.isNumLockOSDShow || GlobalStates.isCapsLockOSDShow
+        active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")
         asynchronous: true
         sourceComponent: Column {
             anchors {
@@ -74,21 +74,11 @@ StyledRect {
             }
             spacing: Appearance.spacing.normal
 
-            CapsLockWidget {
-                id: capsLockOSD
-                isCapsLockOSDShow: GlobalStates.isCapsLockOSDShow
-            }
+            CapsLockWidget {}
 
-            NumLockWidget {
-                id: numLockOSD
-                isNumLockOSDShow: GlobalStates.isNumLockOSDShow
-            }
+            NumLockWidget {}
 
-            Volumes {
-                id: volumeOSD
-
-                isVolumeOSDShow: GlobalStates.isVolumeOSDShow
-            }
+            Volumes {}
         }
     }
 }

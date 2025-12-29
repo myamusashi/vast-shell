@@ -12,16 +12,15 @@ import qs.Services
 Item {
     id: volumeOSD
 
-    required property bool isVolumeOSDShow
-
     implicitWidth: parent.width
-    implicitHeight: isVolumeOSDShow ? 80 : 0
+    implicitHeight: GlobalStates.isOSDVisible("volume") ? 80 : 0
     visible: height > 0
     clip: true
 
-    Behavior on height {
+    Behavior on implicitHeight {
         NAnim {
-            duration: Appearance.animations.durations.small
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 

@@ -2,9 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 
-import Quickshell
-import Quickshell.Wayland
-
 import qs.Components
 import qs.Configs
 import qs.Helpers
@@ -13,16 +10,15 @@ import qs.Services
 Item {
     id: numLockOSD
 
-    required property bool isNumLockOSDShow
-
     width: parent.width
-    height: isNumLockOSDShow ? 50 : 0
+    height: GlobalStates.isOSDVisible("numlock") ? 50 : 0
     visible: height > 0
     clip: true
 
     Behavior on height {
         NAnim {
-            duration: Appearance.animations.durations.small
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 

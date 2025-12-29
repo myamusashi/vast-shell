@@ -8,16 +8,15 @@ import qs.Services
 Item {
     id: capsLockOSD
 
-    required property bool isCapsLockOSDShow
-
     width: parent.width
-    height: isCapsLockOSDShow ? 50 : 0
+    height: GlobalStates.isOSDVisible("capslock") ? 50 : 0
     visible: height > 0
     clip: true
 
     Behavior on height {
         NAnim {
-            duration: Appearance.animations.durations.small
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 
