@@ -49,16 +49,19 @@ ScrollView {
                     id: groups
 
                     required property PwLinkGroup modelData
+
                     Layout.fillWidth: true
                     Layout.alignment: Qt.AlignLeft
                     IconImage {
-                        source: Quickshell.iconPath(DesktopEntries.heuristicLookup(Players.active.desktopEntry)?.icon, "image-missing") || Players.active.trackArtUrl
+                        source: Quickshell.iconPath(groups.modelData.source.properties["application.icon-name"], "image-missing")
                         asynchronous: true
                         Layout.preferredWidth: 60
                         Layout.preferredHeight: 60
                         Layout.alignment: Qt.AlignVCenter
                     }
                     MixerEntry {
+                        id: mixerGroup
+
                         useCustomProperties: false
                         node: groups.modelData.source
                     }
