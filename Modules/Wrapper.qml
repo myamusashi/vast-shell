@@ -2,10 +2,10 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Shapes
-
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
+import Quickshell.Hyprland
 
 import qs.Components
 import qs.Configs
@@ -16,9 +16,11 @@ import "Calendar"
 import "Launcher"
 import "MediaPlayer"
 import "QuickSettings"
+import "Overview"
 import "Notifications"
 import "Session"
 import "Wallpaper"
+import "Weather"
 import "OSD"
 import "Bar"
 
@@ -29,7 +31,17 @@ Variants {
         id: window
 
         required property ShellScreen modelData
-        property bool needFocusKeyboard: false
+        readonly property bool needFocusKeyboard: {
+            if (app.isLauncherOpen)
+                return true;
+            if (session.isSessionOpen && !session.showConfirmDialog)
+                return true;
+            if (wallpaperSelector.isWallpaperSwitcherOpen)
+                return true;
+            if (screenCapture.isScreenCapturePanelOpen)
+                return true;
+            return false;
+        }
         property color barColor: Colours.m3Colors.m3Background
         property alias top: topBar
         property alias bottom: bottomBar
@@ -197,8 +209,6 @@ Variants {
 
         App {
             id: app
-
-            onIsLauncherOpenChanged: app.isLauncherOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
         }
 
         Bar {
@@ -210,7 +220,7 @@ Variants {
                 mediaPlayer.anchors.topMargin = bar.height;
                 quickSettings.anchors.topMargin = bar.height;
                 notif.anchors.topMargin = bar.height;
-                notifCenter.anchors.topMargin = bar.height;
+                // notifCenter.anchors.topMargin = bar.height;
             }
         }
 
@@ -228,30 +238,30 @@ Variants {
 
         Session {
             id: session
-
-            onIsSessionOpenChanged: session.isSessionOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
-            onShowConfirmDialogChanged: session.showConfirmDialog ? window.needFocusKeyboard = false : window.needFocusKeyboard = true
         }
 
         WallpaperSelector {
             id: wallpaperSelector
-
-            onIsWallpaperSwitcherOpenChanged: wallpaperSelector.isWallpaperSwitcherOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
         }
 
         Screencapture {
             id: screenCapture
+        }
 
-            onIsScreenCapturePanelOpenChanged: screenCapture.isScreenCapturePanelOpen ? window.needFocusKeyboard = true : window.needFocusKeyboard = false
+        OverviewV2 {
+            GlobalShortcut {
+                name: "overview"
+                onPressed: GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen
+            }
         }
 
         Notifications {
             id: notif
         }
 
-        NotificationCenter {
-            id: notifCenter
-        }
+		Weathers {
+			id: weathers
+		}
 
         OSD {
             id: osd
@@ -286,21 +296,21 @@ Variants {
 
         Component.onCompleted: {
             switch (corner) {
-                case 0:
+            case 0:
                 anchors.left = parent.left;
                 anchors.top = parent.top;
                 break;
-                case 1:
+            case 1:
                 anchors.top = parent.top;
                 anchors.right = parent.right;
                 rotation = 90;
                 break;
-                case 2:
+            case 2:
                 anchors.right = parent.right;
                 anchors.bottom = parent.bottom;
                 rotation = 180;
                 break;
-                case 3:
+            case 3:
                 anchors.left = parent.left;
                 anchors.bottom = parent.bottom;
                 rotation = -90;

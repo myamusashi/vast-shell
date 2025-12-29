@@ -22,7 +22,7 @@ ShellRoot {
     Wrapper {
         id: wrapper
     }
-    Overview {}
+    // Overview {}
 
     Connections {
         target: Quickshell
