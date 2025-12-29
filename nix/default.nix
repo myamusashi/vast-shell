@@ -7,6 +7,7 @@
   findutils,
   gnused,
   gawk,
+  weather-icons,
   libnotify,
   quickshell,
   util-linux,
@@ -21,7 +22,7 @@
   hyprland,
   qt6,
   callPackage,
-  fetchFromGitHub, # Add this
+  fetchFromGitHub,
 }: let
   app2unit = callPackage ./app2unit.nix {};
   keystate-bin = callPackage ./keystate.nix {};
@@ -45,6 +46,7 @@
     playerctl
     wl-clipboard
     libnotify
+    weather-icons
     wl-screenrec
     ffmpeg
     foot
@@ -62,7 +64,6 @@
     nativeBuildInputs = [makeWrapper];
 
     postPatch = ''
-      # Link the submodule into the correct location
       rm -rf Submodules/rounded-polygon-qmljs
       mkdir -p Submodules
       ln -s ${rounded-polygon-qmljs} Submodules/rounded-polygon-qmljs
@@ -75,16 +76,21 @@
 
     installPhase = ''
       runHook preInstall
+
       mkdir -p $out/share/quickshell
-      cp -r * \
-        $out/share/quickshell/
+      cp -r * $out/share/quickshell/
+
       install -Dm755 ${keystate-bin}/bin/keystate-bin \
         $out/share/quickshell/Assets/keystate-bin
       install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
       install -Dm755 ${keystate-bin}/bin/keystate-bin $out/bin/keystate-bin
+
       mkdir -p $out/share/fonts/truetype
-      cp -r ${material-symbols}/share/fonts/truetype/* $out/share/fonts/truetype/
-      makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell $out/bin/shell \
+      cp -r ${material-symbols}/share/fonts/truetype/* \
+        $out/share/fonts/truetype/
+
+      makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
+        $out/bin/shell \
         --add-flags "-p $out/share/quickshell" \
         --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
         --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
@@ -92,6 +98,7 @@
         --suffix PATH : /run/current-system/sw/bin \
         --suffix PATH : /etc/profiles/per-user/$USER/bin \
         --suffix PATH : $HOME/.nix-profile/bin
+
       runHook postInstall
     '';
 
