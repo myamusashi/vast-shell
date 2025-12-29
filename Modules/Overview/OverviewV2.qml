@@ -8,10 +8,9 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 import Quickshell.Hyprland
 
-import qs.Components
-import qs.Configs
 import qs.Helpers
 import qs.Services
+import qs.Components
 
 // Thx M7moud El-zayat for your Overview code
 
@@ -144,111 +143,119 @@ StyledRect {
                 }
 
                 // Toplevels
-                Repeater {
-                    model: parent.workspace?.toplevels
+                Loader {
+                    id: loader
 
-                    delegate: ScreencopyView {
-                        id: toplevel
+                    anchors.fill: parent
+                    active: root.isOverviewOpen
+                    asynchronous: true
 
-                        required property HyprlandToplevel modelData
-                        property Toplevel waylandHandle: modelData?.wayland
-                        property var toplevelData: modelData.lastIpcObject
-                        property int initX: toplevelData.at[0] ?? 0
-                        property int initY: toplevelData.at[1] ?? 0
-                        property StyledRect originalParent: workspaceContainer
-                        property StyledRect visualParent: overLayer
-                        property bool isCaught: false
+                    sourceComponent: Repeater {
+                        model: workspaceContainer.workspace?.toplevels
 
-                        captureSource: waylandHandle
-                        live: true
+                        delegate: ScreencopyView {
+                            id: toplevel
 
-                        width: sourceSize.width * root.scaleFactor / Hypr.focusedMonitor.scale
-                        height: sourceSize.height * root.scaleFactor / Hypr.focusedMonitor.scale
-                        scale: (Drag.active && !toplevelData?.floating) ? 0.75 : 1
+                            required property HyprlandToplevel modelData
+                            property Toplevel waylandHandle: modelData?.wayland
+                            property var toplevelData: modelData.lastIpcObject
+                            property int initX: toplevelData.at[0] ?? 0
+                            property int initY: toplevelData.at[1] ?? 0
+                            property StyledRect originalParent: workspaceContainer
+                            property StyledRect visualParent: overLayer
+                            property bool isCaught: false
 
-                        x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + root.borderWidth + 12
-                        y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + root.borderWidth + 12
-                        z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
+                            captureSource: waylandHandle
+                            live: true
 
-                        Behavior on x {
-                            NAnim {}
-                        }
+                            width: sourceSize.width * root.scaleFactor / Hypr.focusedMonitor.scale
+                            height: sourceSize.height * root.scaleFactor / Hypr.focusedMonitor.scale
+                            scale: (Drag.active && !toplevelData?.floating) ? 0.75 : 1
 
-                        Behavior on scale {
-                            NAnim {}
-                        }
+                            x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + root.borderWidth + 12
+                            y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + root.borderWidth + 12
+                            z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
 
-                        Behavior on y {
-                            NAnim {}
-                        }
+                            Behavior on x {
+                                NAnim {}
+                            }
 
-                        Drag.active: mouseArea.drag.active
-                        Drag.hotSpot.x: width / 2
-                        Drag.hotSpot.y: height / 2
-                        Drag.onActiveChanged: {
-                            if (Drag.active)
-                                parent = visualParent;
-                            else {
-                                var mapped = mapToItem(originalParent, 0, 0);
-                                parent = originalParent;
+                            Behavior on scale {
+                                NAnim {}
+                            }
 
-                                if (toplevelData?.floating) {
-                                    x = mapped.x;
-                                    y = mapped.y;
-                                } else if (!toplevelData?.floating) {
-                                    x = !isCaught ? mapped.x : (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + root.borderWidth + 12;
-                                    y = !isCaught ? mapped.y : (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + root.borderWidth + 12;
+                            Behavior on y {
+                                NAnim {}
+                            }
+
+                            Drag.active: mouseArea.drag.active
+                            Drag.hotSpot.x: width / 2
+                            Drag.hotSpot.y: height / 2
+                            Drag.onActiveChanged: {
+                                if (Drag.active)
+                                    parent = visualParent;
+                                else {
+                                    var mapped = mapToItem(originalParent, 0, 0);
+                                    parent = originalParent;
+
+                                    if (toplevelData?.floating) {
+                                        x = mapped.x;
+                                        y = mapped.y;
+                                    } else if (!toplevelData?.floating) {
+                                        x = !isCaught ? mapped.x : (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + root.borderWidth + 12;
+                                        y = !isCaught ? mapped.y : (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + root.borderWidth + 12;
+                                    }
                                 }
                             }
-                        }
 
-                        IconImage {
-                            id: icon
+                            IconImage {
+                                id: icon
 
-                            anchors.centerIn: parent
-                            source: Quickshell.iconPath(DesktopEntries.heuristicLookup(toplevel.waylandHandle?.appId)?.icon, "image-missing")
-                            asynchronous: true
-                            width: 44
-                            height: 44
-                            backer.cache: true
-                            backer.asynchronous: true
-                        }
-
-                        MArea {
-                            id: mouseArea
-
-                            property bool dragged: false
-
-                            drag.target: (toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized) ? undefined : toplevel
-                            cursorShape: dragged ? Qt.DragMoveCursor : Qt.ArrowCursor
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
-                            anchors.fill: parent
-
-                            onPressed: dragged = false
-
-                            onPositionChanged: {
-                                if (drag.active)
-                                    dragged = true;
+                                anchors.centerIn: parent
+                                source: Quickshell.iconPath(DesktopEntries.heuristicLookup(toplevel.waylandHandle?.appId)?.icon, "image-missing")
+                                asynchronous: true
+                                width: 44
+                                height: 44
+                                backer.cache: true
+                                backer.asynchronous: true
                             }
 
-                            onClicked: mouse => {
-                                if (!dragged) {
-                                    if (mouse.button === Qt.LeftButton)
+                            MArea {
+                                id: mouseArea
+
+                                property bool dragged: false
+
+                                drag.target: (toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized) ? undefined : toplevel
+                                cursorShape: dragged ? Qt.DragMoveCursor : Qt.ArrowCursor
+                                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                                anchors.fill: parent
+
+                                onPressed: dragged = false
+
+                                onPositionChanged: {
+                                    if (drag.active)
+                                        dragged = true;
+                                }
+
+                                onClicked: mouse => {
+                                    if (!dragged) {
                                         if (mouse.button === Qt.LeftButton)
-                                            toplevel.waylandHandle.activate();
-                                        else if (mouse.button === Qt.RightButton)
-                                            toplevel.waylandHandle.close();
+                                            if (mouse.button === Qt.LeftButton)
+                                                toplevel.waylandHandle.activate();
+                                            else if (mouse.button === Qt.RightButton)
+                                                toplevel.waylandHandle.close();
+                                    }
                                 }
-                            }
 
-                            onReleased: {
-                                if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
-                                    const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
-                                    const x = Math.round(mapped.x / root.scaleFactor + root.reserved[0]);
-                                    const y = Math.round(mapped.y / root.scaleFactor + root.reserved[1]);
+                                onReleased: {
+                                    if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
+                                        const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
+                                        const x = Math.round(mapped.x / root.scaleFactor + root.reserved[0]);
+                                        const y = Math.round(mapped.y / root.scaleFactor + root.reserved[1]);
 
-                                    Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
-                                    toplevel.Drag.drop();
+                                        Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
+                                        toplevel.Drag.drop();
+                                    }
                                 }
                             }
                         }
