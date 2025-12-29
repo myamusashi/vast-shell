@@ -8,9 +8,10 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 
-ColumnLayout {
-
+RowLayout {
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    Layout.fillWidth: true
+    Layout.fillHeight: true
     spacing: Appearance.spacing.normal
 
     EthernetCard {}
@@ -20,7 +21,7 @@ ColumnLayout {
         id: ethernetCard
 
         Layout.fillWidth: true
-        Layout.preferredHeight: 65
+        implicitHeight: 70
         color: Colours.m3Colors.m3SurfaceContainer
         radius: Appearance.rounding.normal
 
@@ -80,14 +81,14 @@ ColumnLayout {
         id: wifiCard
 
         Layout.fillWidth: true
-        Layout.preferredHeight: 65
+        implicitHeight: 70
         color: Colours.m3Colors.m3SurfaceContainer
         radius: Appearance.rounding.normal
 
         readonly property var activeNetwork: {
             for (var i = 0; i < Network.networks.length; i++)
-            if (Network.networks[i].active)
-            return Network.networks[i];
+                if (Network.networks[i].active)
+                    return Network.networks[i];
 
             return null;
         }
@@ -99,7 +100,7 @@ ColumnLayout {
             enabled: settings && !settings.wifiList.active
             onClicked: {
                 if (settings)
-                settings.wifiList.active = !settings.wifiList.active;
+                    settings.wifiList.active = !settings.wifiList.active;
             }
         }
 
