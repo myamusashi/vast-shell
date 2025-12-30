@@ -74,6 +74,7 @@ StyledRect {
                     }
                     delegate: StyledRect {
                         id: delegate
+
                         required property var modelData
                         Layout.preferredWidth: 65
                         Layout.preferredHeight: 110
@@ -96,13 +97,24 @@ StyledRect {
                                 Layout.preferredWidth: 40
                                 Layout.preferredHeight: 40
 
-                                ShapeCanvas {
+								ShapeCanvas {
                                     anchors.fill: parent
                                     anchors.rightMargin: 3
                                     color: Colours.m3Colors.m3Primary
                                     roundedPolygon: MaterialShapes.getCookie4Sided()
                                     visible: delegate.isCurrentHour
                                     onProgressChanged: requestPaint()
+
+                                    // force if shape failed to paint
+                                    Component.onCompleted: {
+                                        roundedPolygon = MaterialShapes.getCookie4Sided();
+                                        requestPaint();
+                                    }
+
+                                    onVisibleChanged: {
+                                        if (visible)
+                                            requestPaint();
+                                    }
                                 }
 
                                 StyledText {
