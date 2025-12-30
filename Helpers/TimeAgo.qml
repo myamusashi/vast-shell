@@ -46,9 +46,9 @@ Singleton {
         }
 
         return hours + ":" + minutes + " " + period;
-	}
+    }
 
-	function convertTo12HourCompact(time24) {
+    function convertTo12HourCompact(time24) {
         if (!time24)
             return "";
 

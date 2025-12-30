@@ -89,7 +89,7 @@ StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 60
                 placeholderText: "  Search"
-				focus: root.isLauncherOpen
+                focus: root.isLauncherOpen
                 font.family: Appearance.fonts.family.sans
                 font.pixelSize: Appearance.fonts.size.large * 1.2
                 color: Colours.m3Colors.m3OnBackground
@@ -120,9 +120,9 @@ StyledRect {
                         }
                         break;
                     }
-				}
+                }
 
-				Component.onCompleted: forceActiveFocus()
+                Component.onCompleted: forceActiveFocus()
             }
             ListView {
                 id: listView

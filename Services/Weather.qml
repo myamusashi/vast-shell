@@ -114,8 +114,8 @@ Singleton {
     property real visibility: 0.0
     property int cloudCover: 0
     property real precipitation: 0.0
-	property real precipitationDaily: 0.0
-	property string lastUpdateAstronomy: ""
+    property real precipitationDaily: 0.0
+    property string lastUpdateAstronomy: ""
     property string sunRise: ""
     property string sunSet: ""
     property string dayLength: ""
@@ -334,7 +334,7 @@ Singleton {
             const current = json.current || {};
             const hourly = json.hourly_forecast || [];
 
-            root.lastUpdateAQI = new Date().toISOString();;
+            root.lastUpdateAQI = new Date().toISOString();
 
             // Update location if not set by weather
             if (!root.latitude) {

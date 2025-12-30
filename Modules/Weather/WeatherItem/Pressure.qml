@@ -22,43 +22,43 @@ ShapeCanvas {
 
     Pressure {
         ColumnLayout {
-			anchors {
-				top: parent.top
-				horizontalCenter: parent.horizontalCenter
-				topMargin: 30
-			}
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+                topMargin: 30
+            }
 
             RowLayout {
                 MaterialIcon {
                     icon: "vertical_align_center"
-					font.pointSize: Appearance.fonts.size.normal
-					font.weight: Font.DemiBold
+                    font.pointSize: Appearance.fonts.size.normal
+                    font.weight: Font.DemiBold
                     color: Colours.m3Colors.m3OnSurface
                 }
 
                 StyledText {
-					text: "Pressure"
-					font.weight: Font.DemiBold
+                    text: "Pressure"
+                    font.weight: Font.DemiBold
                     color: Colours.m3Colors.m3OnSurface
                 }
-			}
+            }
 
-			StyledText {
-				Layout.alignment: Qt.AlignHCenter
+            StyledText {
+                Layout.alignment: Qt.AlignHCenter
 
-				text: Weather.pressure
-				font.pixelSize: Appearance.fonts.size.extraLarge
-				font.weight: Font.Bold
-				color: Colours.m3Colors.m3OnSurface
-			}
+                text: Weather.pressure
+                font.pixelSize: Appearance.fonts.size.extraLarge
+                font.weight: Font.Bold
+                color: Colours.m3Colors.m3OnSurface
+            }
 
-			StyledText {
-				Layout.alignment: Qt.AlignHCenter
+            StyledText {
+                Layout.alignment: Qt.AlignHCenter
 
-				text: "hPa"
-				font.pixelSize: Appearance.fonts.size.large
-				color: Colours.m3Colors.m3OnSurface
-			}
+                text: "hPa"
+                font.pixelSize: Appearance.fonts.size.large
+                color: Colours.m3Colors.m3OnSurface
+            }
         }
     }
 
@@ -106,7 +106,7 @@ ShapeCanvas {
         }
 
         Connections {
-			target: canvas
+            target: canvas
 
             function onProgressChanged() {
                 gaugeCanvas.requestPaint();

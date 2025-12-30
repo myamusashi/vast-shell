@@ -11,8 +11,8 @@ import qs.Components
 import "../../../Submodules/rounded-polygon-qmljs/material-shapes.js" as MaterialShapes
 
 ShapeCanvas {
-	color: Colours.m3Colors.m3SurfaceContainer
-	clip: true
+    color: Colours.m3Colors.m3SurfaceContainer
+    clip: true
     roundedPolygon: MaterialShapes.getSquare()
     onProgressChanged: requestPaint()
 

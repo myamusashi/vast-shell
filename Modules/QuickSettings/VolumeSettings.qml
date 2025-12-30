@@ -51,7 +51,7 @@ ScrollView {
                     required property PwLinkGroup modelData
 
                     Layout.fillWidth: true
-					Layout.alignment: Qt.AlignLeft
+                    Layout.alignment: Qt.AlignLeft
 
                     IconImage {
                         source: Quickshell.iconPath(DesktopEntries.heuristicLookup(groups.modelData.source.name)?.icon, "image-missing")
@@ -59,14 +59,14 @@ ScrollView {
                         Layout.preferredWidth: 60
                         Layout.preferredHeight: 60
                         Layout.alignment: Qt.AlignVCenter
-					}
+                    }
 
                     MixerEntry {
                         id: mixerGroup
 
                         useCustomProperties: false
                         node: groups.modelData.source
-					}
+                    }
                 }
             }
         }

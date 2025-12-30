@@ -50,22 +50,22 @@ ShapeCanvas {
         }
     }
 
-	StyledText {
-		anchors.centerIn: parent
+    StyledText {
+        anchors.centerIn: parent
         text: Weather.cloudCover
         font.pixelSize: Appearance.fonts.size.extraLarge
         color: Colours.m3Colors.m3OnSurface
-	}
+    }
 
-	StyledText {
-		anchors {
-			bottom: parent.bottom
-			horizontalCenter: parent.horizontalCenter
-			bottomMargin: 20
-		}
+    StyledText {
+        anchors {
+            bottom: parent.bottom
+            horizontalCenter: parent.horizontalCenter
+            bottomMargin: 20
+        }
 
         text: "%"
         font.pixelSize: Appearance.fonts.size.large
         color: Colours.m3Colors.m3OnSurface
-	}
+    }
 }

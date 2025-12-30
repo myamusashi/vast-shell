@@ -259,9 +259,9 @@ Variants {
             id: notif
         }
 
-		Weathers {
-			id: weathers
-		}
+        Weathers {
+            id: weathers
+        }
 
         OSD {
             id: osd

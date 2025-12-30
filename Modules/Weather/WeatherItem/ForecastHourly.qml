@@ -57,20 +57,20 @@ StyledRect {
             boundsBehavior: Flickable.StopAtBounds
 
             RowLayout {
-				id: hourlyRow
+                id: hourlyRow
 
                 spacing: 8
 
                 Repeater {
                     model: ScriptModel {
-                        values: (function() {
-                            const currentHour = new Date().getHours();
-                            return Weather.hourlyForecast.filter(function(forecast) {
-                                const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
-                                const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                                return forecastHour >= currentHour;
-                            });
-                        })()
+                        values: (function () {
+                                const currentHour = new Date().getHours();
+                                return Weather.hourlyForecast.filter(function (forecast) {
+                                    const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
+                                    const forecastHour = parseInt(timeStr.split(":")[0] || "0");
+                                    return forecastHour >= currentHour;
+                                });
+                            })()
                     }
                     delegate: StyledRect {
                         id: delegate
@@ -94,16 +94,16 @@ StyledRect {
                             Item {
                                 Layout.alignment: Qt.AlignHCenter
                                 Layout.preferredWidth: 40
-								Layout.preferredHeight: 40
+                                Layout.preferredHeight: 40
 
                                 ShapeCanvas {
-									anchors.fill: parent
-									anchors.rightMargin: 3
+                                    anchors.fill: parent
+                                    anchors.rightMargin: 3
                                     color: Colours.m3Colors.m3Primary
                                     roundedPolygon: MaterialShapes.getCookie4Sided()
                                     visible: delegate.isCurrentHour
                                     onProgressChanged: requestPaint()
-								}
+                                }
 
                                 StyledText {
                                     anchors.centerIn: parent
@@ -119,8 +119,8 @@ StyledRect {
                                 spacing: 2
                                 StyledText {
                                     text: (parseInt(delegate.modelData.humidity) || 0) + "%"
-									color: Colours.m3Colors.m3Primary
-									font.weight: Font.Bold
+                                    color: Colours.m3Colors.m3Primary
+                                    font.weight: Font.Bold
                                     font.pixelSize: Appearance.fonts.size.small
                                 }
                             }
@@ -136,8 +136,8 @@ StyledRect {
                                 Layout.alignment: Qt.AlignHCenter
                                 text: TimeAgo.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
                                 color: Colours.m3Colors.m3OnSurface
-								font.weight: Font.Bold
-								font.pixelSize: Appearance.fonts.size.small
+                                font.weight: Font.Bold
+                                font.pixelSize: Appearance.fonts.size.small
                             }
                         }
                     }

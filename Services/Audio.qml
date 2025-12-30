@@ -9,6 +9,11 @@ import Quickshell.Services.Pipewire
 Singleton {
     id: root
 
+    property var models: []
+    property var activeProfiles: []
+    property int idPipewire: 0
+    property int activeProfileIndex: activeProfiles.length > 0 ? activeProfiles[0].index : -1
+
     function getIcon(node: PwNode): string {
         return (node.isSink) ? getSinkIcon(node) : getSourceIcon(node);
     }
@@ -38,11 +43,6 @@ Singleton {
             node.audio.volume = 0.0;
     }
 
-    property var models: []
-    property var activeProfiles: []
-    property int idPipewire
-    property int activeProfileIndex: activeProfiles.length > 0 ? activeProfiles[0].index : -1
-
     Process {
         id: profiles
 
@@ -50,16 +50,29 @@ Singleton {
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
-                const data = JSON.parse(text.trim());
-                root.models = data.map(profile => {
-                    return {
-                        "index": profile.index,
-                        "name": profile.name,
-                        "description": profile.description,
-                        "available": profile.available,
-                        "readable": root.formatProfileName(profile.name)
-                    };
-                });
+                try {
+                    const trimmed = text.trim();
+                    if (!trimmed || trimmed === "null") {
+                        root.models = [];
+                        return;
+                    }
+
+                    const data = JSON.parse(trimmed);
+                    if (data && Array.isArray(data)) {
+                        root.models = data.map(profile => ({
+                                    "index": profile.index,
+                                    "name": profile.name,
+                                    "description": profile.description,
+                                    "available": profile.available,
+                                    "readable": root.formatProfileName(profile.name)
+                                }));
+                    } else {
+                        root.models = [];
+                    }
+                } catch (e) {
+                    console.error("Failed to parse profiles:", e);
+                    root.models = [];
+                }
             }
         }
     }

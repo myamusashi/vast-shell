@@ -43,7 +43,7 @@ ShapeCanvas {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
             topMargin: 20
-		}
+        }
 
         MaterialIcon {
             icon: "sunny"
@@ -54,7 +54,7 @@ ShapeCanvas {
                 "opsz": fontInfo.pixelSize,
                 "wght": fontInfo.weight
             }
-		}
+        }
 
         StyledText {
             text: "UV index"
@@ -65,7 +65,7 @@ ShapeCanvas {
 
     ColumnLayout {
         anchors.centerIn: parent
-		spacing: Appearance.spacing.normal
+        spacing: Appearance.spacing.normal
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
@@ -73,7 +73,7 @@ ShapeCanvas {
             font.pixelSize: Appearance.fonts.size.large * 1.5
             font.weight: Font.Bold
             color: Colours.m3Colors.m3OnSurface
-		}
+        }
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
@@ -84,13 +84,13 @@ ShapeCanvas {
     }
 
     Item {
-		anchors.fill: parent
+        anchors.fill: parent
 
         Repeater {
-			model: 5
+            model: 5
 
             StyledRect {
-				id: indicator
+                id: indicator
 
                 required property int index
                 property real angle: 150 - (index * 30)

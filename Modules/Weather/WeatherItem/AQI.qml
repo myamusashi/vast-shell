@@ -11,7 +11,7 @@ import qs.Components
 import "../../../Submodules/rounded-polygon-qmljs/material-shapes.js" as MaterialShapes
 
 ShapeCanvas {
-	id: canvas
+    id: canvas
 
     color: Colours.m3Colors.m3SurfaceContainer
     clip: true
@@ -68,7 +68,7 @@ ShapeCanvas {
             leftMargin: 20
             rightMargin: 20
             bottomMargin: 20
-		}
+        }
 
         spacing: Appearance.spacing.small
 
@@ -106,8 +106,8 @@ ShapeCanvas {
             Layout.bottomMargin: 8
 
             StyledRect {
-				implicitWidth: parent.width
-				implicitHeight: 5
+                implicitWidth: parent.width
+                implicitHeight: 5
                 radius: Appearance.rounding.small
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
@@ -150,8 +150,7 @@ ShapeCanvas {
                 y: parent.height / 2 - height / 2
 
                 Behavior on x {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
             }
         }
@@ -162,6 +161,6 @@ ShapeCanvas {
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.Medium
             color: Colours.m3Colors.m3OnSurface
-		}
+        }
     }
 }

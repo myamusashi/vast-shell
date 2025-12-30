@@ -23,8 +23,8 @@ Singleton {
     property bool isWallpaperSwitcherOpen: false
     property bool isOverviewOpen: false
     property bool isRecordPanelOpen: false
-	property bool isWeatherPanelOpen: false
-	property bool hideOuterBorder: false
+    property bool isWeatherPanelOpen: false
+    property bool hideOuterBorder: false
 
     readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
@@ -101,8 +101,8 @@ Singleton {
             break;
         case "overview":
             isOverviewOpen = !isOverviewOpen;
-			break;
-		case "weather":
+            break;
+        case "weather":
             isWeatherPanelOpen = !isWeatherPanelOpen;
             break;
         case "recordPanel":
@@ -142,8 +142,8 @@ Singleton {
             break;
         case "overview":
             isOverviewOpen = true;
-			break;
-		case "weather":
+            break;
+        case "weather":
             isWeatherPanelOpen = true;
             break;
         case "recordPanel":
@@ -183,8 +183,8 @@ Singleton {
             break;
         case "overview":
             isOverviewOpen = false;
-			break;
-		case "weather":
+            break;
+        case "weather":
             isWeatherPanelOpen = false;
             break;
         case "recordPanel":

@@ -7,7 +7,7 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property string sessions: Quickshell.env("KURU_DM_SESSIONS") || "/run/current-system/sw/share/wayland-sessions"
+    property string sessions: "/run/current-system/sw/share/wayland-sessions"
     property string preferred_session: "hyprland"
     property int current_ses_index: 0
     property string current_session: session_execs[current_ses_index] ?? "Hyprland"

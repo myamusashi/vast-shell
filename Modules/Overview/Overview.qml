@@ -14,7 +14,7 @@ import qs.Components
 
 // Thx M7moud El-zayat for your Overview code
 StyledRect {
-	id: root
+    id: root
 
     property bool isOverviewOpen: GlobalStates.isOverviewOpen
     property real scaleFactor: 0.2
@@ -74,7 +74,7 @@ StyledRect {
     }
 
     StyledRect {
-		id: overLayer
+        id: overLayer
 
         color: "transparent"
         z: 1
@@ -82,7 +82,7 @@ StyledRect {
     }
 
     GridLayout {
-		id: contentGrid
+        id: contentGrid
 
         rows: 2
         columns: 4
@@ -104,8 +104,7 @@ StyledRect {
         Repeater {
             model: 8
             delegate: StyledRect {
-				id: workspaceContainer
-
+                id: workspaceContainer
 
                 required property int index
                 property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
@@ -131,7 +130,7 @@ StyledRect {
                 }
 
                 FileView {
-					id: wallid
+                    id: wallid
 
                     path: Qt.resolvedUrl(Paths.currentWallpaperFile)
                     watchChanges: true
@@ -174,7 +173,7 @@ StyledRect {
                 }
 
                 Loader {
-					id: loader
+                    id: loader
 
                     anchors.fill: parent
                     active: root.isOverviewOpen
@@ -182,7 +181,7 @@ StyledRect {
                     sourceComponent: Repeater {
                         model: workspaceContainer.workspace?.toplevels
                         delegate: ScreencopyView {
-							id: toplevel
+                            id: toplevel
 
                             required property HyprlandToplevel modelData
                             property Toplevel waylandHandle: modelData?.wayland
@@ -231,7 +230,7 @@ StyledRect {
                             }
 
                             IconImage {
-								id: icon
+                                id: icon
 
                                 anchors.centerIn: parent
                                 source: Quickshell.iconPath(DesktopEntries.heuristicLookup(toplevel.waylandHandle?.appId)?.icon, "image-missing")
@@ -243,7 +242,7 @@ StyledRect {
                             }
 
                             MArea {
-								id: mouseArea
+                                id: mouseArea
 
                                 property bool dragged: false
                                 drag.target: (toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized) ? undefined : toplevel
