@@ -155,7 +155,7 @@ ClippingRectangle {
                         "label": "Screenshot",
                         "action": () => {
                             Quickshell.execDetached({
-                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenshot-selection"]
+                                "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenshot-selection"]
                             });
                             root.open = false;
                         }
@@ -165,7 +165,7 @@ ClippingRectangle {
                         "label": "Start",
                         "action": () => {
                             Quickshell.execDetached({
-                                "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+                                "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenrecord-selection"]
                             });
                             root.open = root.isRecording ? false : true;
                         },

@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Services.Pipewire
 
 import qs.Services
+import qs.Helpers
 
 Singleton {
     id: root
@@ -34,7 +35,7 @@ Singleton {
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
 
-    property string scriptPath: `${Quickshell.shellDir}/Assets/screen-capture.sh`
+    property string scriptPath: `${Paths.rootDir}/Assets/screen-capture.sh`
 
     property var _activeOSDs: ({})
     property var _osdTimers: ({})

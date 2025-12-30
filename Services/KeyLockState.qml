@@ -2,9 +2,10 @@ pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Io
+
+import qs.Helpers
 
 Singleton {
     id: root
@@ -15,7 +16,7 @@ Singleton {
         id: lockStateProcess
 
         running: true
-        command: [Quickshell.shellDir + "/Assets/keystate-bin"]
+        command: [Paths.rootDir + "/Assets/keystate-bin"]
     }
 
     FileView {
