@@ -10,8 +10,6 @@ import qs.Services
 import "Components"
 
 StyledRect {
-    id: container
-
     anchors {
         right: parent.right
         top: parent.top
@@ -38,7 +36,7 @@ StyledRect {
     ListView {
         id: notifListView
 
-        anchors.fill: container
+        anchors.fill: parent
         spacing: Appearance.spacing.normal
         boundsBehavior: Flickable.StopAtBounds
         clip: true

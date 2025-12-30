@@ -97,7 +97,7 @@ StyledRect {
                                 Layout.preferredWidth: 40
                                 Layout.preferredHeight: 40
 
-								ShapeCanvas {
+                                ShapeCanvas {
                                     anchors.fill: parent
                                     anchors.rightMargin: 3
                                     color: Colours.m3Colors.m3Primary
