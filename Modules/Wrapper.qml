@@ -219,8 +219,8 @@ Variants {
                 cal.anchors.topMargin = bar.height;
                 mediaPlayer.anchors.topMargin = bar.height;
                 quickSettings.anchors.topMargin = bar.height;
-				notif.anchors.topMargin = bar.height;
-				weathers.anchors.topMargin = bar.height;
+                notif.anchors.topMargin = bar.height;
+                weathers.anchors.topMargin = bar.height;
                 // notifCenter.anchors.topMargin = bar.height;
             }
         }
@@ -261,7 +261,7 @@ Variants {
         }
 
         Weathers {
-			id: weathers
+            id: weathers
         }
 
         OSD {
