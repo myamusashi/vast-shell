@@ -62,22 +62,21 @@ ShapeCanvas {
             Layout.bottomMargin: 30
             spacing: Appearance.spacing.small
 
-            Item {
-                implicitHeight: 30
-                implicitWidth: 30
+            implicitHeight: 30
+            implicitWidth: 30
 
-                ShapeCanvas {
-                    color: Colours.m3Colors.m3Primary
-                    anchors.fill: parent
-                    roundedPolygon: MaterialShapes.getCircle()
-                    onProgressChanged: requestPaint()
-                }
+            ShapeCanvas {
+                implicitWidth: 30
+                implicitHeight: 30
+                color: Colours.m3Colors.m3Primary
+                roundedPolygon: MaterialShapes.getCircle()
+                onProgressChanged: requestPaint()
 
                 StyledText {
                     anchors.centerIn: parent
                     text: Weather.dewPoint.toFixed(0) + "°"
                     font.pixelSize: Appearance.fonts.size.normal
-                    font.weight: Font.Bold
+                    font.weight: Font.DemiBold
                     color: Colours.m3Colors.m3Surface
                 }
             }
