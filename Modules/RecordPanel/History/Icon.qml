@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell
 import Quickshell.Io
 
 import qs.Components
@@ -90,7 +89,7 @@ Loader {
         id: createThumbnails
 
         running: false
-        command: ["sh", "-c", `${Quickshell.shellDir}/Assets/create-thumbnails.sh "${root.modelData.path}" "${Paths.cacheDir}/video-thumbnails"`]
+        command: ["sh", "-c", `${Paths.rootDir}/Assets/create-thumbnails.sh "${root.modelData.path}" "${Paths.cacheDir}/video-thumbnails"`]
         stdout: StdioCollector {
             onStreamFinished: {
                 const data = text.trim();
