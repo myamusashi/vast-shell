@@ -82,9 +82,11 @@ ShapeCanvas {
             right: parent.right
             bottom: parent.bottom
         }
-        height: childrenRect.height
+        implicitHeight: contentLayout.implicitHeight
 
         ColumnLayout {
+            id: contentLayout
+
             anchors {
                 left: parent.left
                 right: parent.right
@@ -109,22 +111,17 @@ ShapeCanvas {
                     anchors.margins: 0
                     spacing: 0
 
-                    Item {
+                    RowLayout {
                         Layout.alignment: Qt.AlignVCenter
-                        implicitWidth: childrenRect.width
-                        implicitHeight: childrenRect.height
+                        spacing: Appearance.spacing.small
 
                         MaterialIcon {
-                            id: moonriseIcon
-
                             icon: "vertical_align_top"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
                         }
+
                         StyledText {
-                            anchors.left: moonriseIcon.right
-                            anchors.leftMargin: 4
-                            anchors.verticalCenter: moonriseIcon.verticalCenter
                             text: TimeAgo.convertTo12Hour(Weather.moonRise)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
@@ -246,7 +243,7 @@ ShapeCanvas {
                 moonCanvas.requestPaint();
             }
 
-            function onmoonriseProgressChanged() {
+            function onMoonriseProgressChanged() {
                 moonCanvas.requestPaint();
             }
         }

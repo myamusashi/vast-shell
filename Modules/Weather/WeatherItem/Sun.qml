@@ -81,9 +81,11 @@ ShapeCanvas {
             right: parent.right
             bottom: parent.bottom
         }
-        height: childrenRect.height
+
+        implicitHeight: contentLayout.implicitHeight
 
         ColumnLayout {
+            id: contentLayout
             anchors {
                 left: parent.left
                 right: parent.right
@@ -108,44 +110,35 @@ ShapeCanvas {
                     anchors.margins: 0
                     spacing: 0
 
-                    Item {
-                        Layout.alignment: Qt.AlignVCenter
-                        implicitWidth: childrenRect.width
-                        implicitHeight: childrenRect.height
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter
+                        spacing: 4
 
                         MaterialIcon {
-                            id: sunriseIcon
-
                             icon: "vertical_align_top"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
                         }
+
                         StyledText {
-                            anchors.left: sunriseIcon.right
-                            anchors.leftMargin: 4
-                            anchors.verticalCenter: sunriseIcon.verticalCenter
                             text: TimeAgo.convertTo12Hour(Weather.sunRise)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
                         }
                     }
 
-                    Item {
-                        Layout.alignment: Qt.AlignVCenter
-                        implicitWidth: childrenRect.width
-                        implicitHeight: childrenRect.height
+                    RowLayout {
+                        Layout.alignment: Qt.AlignHCenter
+                        spacing: 4
 
                         MaterialIcon {
                             id: sunsetIcon
-
                             icon: "vertical_align_bottom"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
                         }
+
                         StyledText {
-                            anchors.left: sunsetIcon.right
-                            anchors.leftMargin: 4
-                            anchors.verticalCenter: sunsetIcon.verticalCenter
                             text: TimeAgo.convertTo12Hour(Weather.sunSet)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
@@ -163,6 +156,7 @@ ShapeCanvas {
         property color hillColor: Colours.m3Colors.m3Primary
         property color sunColor: Colours.m3Colors.m3Yellow
         property real sunSize: 20
+
         onPaint: {
             var ctx = getContext("2d");
             ctx.clearRect(0, 0, width, height);
@@ -244,12 +238,13 @@ ShapeCanvas {
 
             ctx.restore();
         }
+
         Connections {
             target: canvas
 
             function onProgressChanged() {
                 sunCanvas.requestPaint();
-			}
+            }
 
             function onSunriseProgressChanged() {
                 sunCanvas.requestPaint();
