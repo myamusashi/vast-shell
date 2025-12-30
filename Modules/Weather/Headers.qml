@@ -7,8 +7,30 @@ import qs.Services
 import qs.Components
 
 RowLayout {
+    id: root
+
     Layout.fillWidth: true
     spacing: Appearance.spacing.normal
+
+    property string lastUpdateText: TimeAgo.timeAgoWithIfElse(Weather.lastUpdateWeather)
+
+    Timer {
+        interval: 60000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: {
+            root.lastUpdateText = TimeAgo.timeAgoWithIfElse(Weather.lastUpdateWeather);
+        }
+    }
+
+    Connections {
+        target: Weather
+
+        function onLastUpdateWeatherChanged() {
+            root.lastUpdateText = TimeAgo.timeAgoWithIfElse(Weather.lastUpdateWeather);
+        }
+    }
 
     ColumnLayout {
         Layout.preferredWidth: 240
@@ -98,19 +120,11 @@ RowLayout {
                 font.pointSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurface
             }
-			StyledText {
-				id: time
 
-                text: TimeAgo.timeAgoWithIfElse(Weather.lastUpdateWeather)
+            StyledText {
+                text: root.lastUpdateText
                 font.pixelSize: Appearance.fonts.size.small
-				color: Colours.m3Colors.m3OnSurface
-
-				Timer {
-                    interval: 60000
-                    running: true
-                    repeat: true
-                    onTriggered: time.text = TimeAgo.timeAgoWithIfElse(Weather.lastUpdateWeather)
-                }
+                color: Colours.m3Colors.m3OnSurface
             }
         }
     }
