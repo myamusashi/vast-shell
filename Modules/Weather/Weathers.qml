@@ -13,23 +13,54 @@ import qs.Services
 
 import "WeatherItem" as WI
 
-StyledRect {
+Item {
     id: root
 
-    anchors {
-        right: parent.right
-        verticalCenter: parent.verticalCenter
-    }
     implicitHeight: parent.height
     width: GlobalStates.isWeatherPanelOpen ? parent.width * 0.25 : 0
     visible: width > 0
-    clip: true
-    color: Colours.m3Colors.m3Surface
 
     Behavior on width {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+
+    anchors {
+        right: parent.right
+        verticalCenter: parent.verticalCenter
+    }
+
+    OuterRoundedCorner {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.leftMargin: -radius
+        radius: GlobalStates.isWeatherPanelOpen ? 40 : 0
+        corner: 2
+        bgColor: Colours.m3Colors.m3Surface
+
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+    }
+
+    OuterRoundedCorner {
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: -radius
+        radius: GlobalStates.isWeatherPanelOpen ? 40 : 0
+        corner: 0
+        bgColor: Colours.m3Colors.m3Surface
+
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
         }
     }
 
@@ -51,161 +82,168 @@ StyledRect {
         onPressed: GlobalStates.togglePanel("weather")
     }
 
-    Loader {
-        id: mainLoader
-
+    StyledRect {
         anchors.fill: parent
-        active: root.visible && GlobalStates.isWeatherPanelOpen
-        asynchronous: true
+        clip: true
+        radius: 0
+        color: Colours.m3Colors.m3Surface
 
-        sourceComponent: Flickable {
-            id: flickable
+        Loader {
+            id: mainLoader
 
             anchors.fill: parent
-            contentWidth: width
-            contentHeight: contentColumn.implicitHeight + 40
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
+            active: root.visible && GlobalStates.isWeatherPanelOpen
+            asynchronous: true
 
-            ScrollBar.vertical: ScrollBar {
-                id: scrollBar
+            sourceComponent: Flickable {
+                id: flickable
 
-                policy: ScrollBar.AsNeeded
-                anchors {
-                    right: flickable.right
-                    top: flickable.top
-                    bottom: flickable.bottom
+                anchors.fill: parent
+                contentWidth: width
+                contentHeight: contentColumn.implicitHeight + 40
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
+
+                ScrollBar.vertical: ScrollBar {
+                    id: scrollBar
+
+                    policy: ScrollBar.AsNeeded
+                    anchors {
+                        right: flickable.right
+                        top: flickable.top
+                        bottom: flickable.bottom
+                    }
+                    width: 6
+
+                    contentItem: StyledRect {
+                        implicitWidth: 6
+                        radius: Appearance.rounding.small
+                        color: Colours.m3Colors.m3Primary
+                        opacity: scrollBar.pressed ? 0.8 : 0.5
+                    }
+
+                    background: StyledRect {
+                        implicitWidth: 6
+                        radius: Appearance.rounding.small
+                        color: Colours.m3Colors.m3OutlineVariant
+                        opacity: 0.3
+                    }
                 }
-                width: 6
 
-                contentItem: StyledRect {
-                    implicitWidth: 6
-                    radius: Appearance.rounding.small
-                    color: Colours.m3Colors.m3Primary
-                    opacity: scrollBar.pressed ? 0.8 : 0.5
-                }
+                ColumnLayout {
+                    id: contentColumn
 
-                background: StyledRect {
-                    implicitWidth: 6
-                    radius: Appearance.rounding.small
-                    color: Colours.m3Colors.m3OutlineVariant
-                    opacity: 0.3
-                }
-            }
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        top: parent.top
+                        margins: 20
+                    }
+                    spacing: Appearance.spacing.normal
 
-            ColumnLayout {
-                id: contentColumn
+                    Headers {}
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
-                    margins: 20
-                }
-                spacing: Appearance.spacing.normal
+                    Loader {
+                        id: summaryLoader
 
-                Headers {}
+                        Layout.fillWidth: true
+                        active: Weather.quickSummary !== ""
+                        visible: active
+                        asynchronous: true
 
-                Loader {
-                    id: summaryLoader
+                        sourceComponent: StyledRect {
+                            implicitHeight: summaryText.implicitHeight + 20
+                            color: Colours.m3Colors.m3SurfaceContainer
+                            radius: Appearance.rounding.normal
 
-                    Layout.fillWidth: true
-                    active: Weather.quickSummary !== ""
-                    visible: active
-                    asynchronous: true
+                            StyledText {
+                                id: summaryText
 
-                    sourceComponent: StyledRect {
-                        implicitHeight: summaryText.implicitHeight + 20
-                        color: Colours.m3Colors.m3SurfaceContainer
-                        radius: Appearance.rounding.normal
-
-                        StyledText {
-                            id: summaryText
-
-                            anchors.fill: parent
-                            anchors.margins: 10
-                            text: Weather.quickSummary
-                            color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.small
-                            wrapMode: Text.WordWrap
-                            horizontalAlignment: Text.AlignLeft
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                text: Weather.quickSummary
+                                color: Colours.m3Colors.m3OnSurface
+                                font.pixelSize: Appearance.fonts.size.small
+                                wrapMode: Text.WordWrap
+                                horizontalAlignment: Text.AlignLeft
+                            }
                         }
                     }
-                }
 
-                Loader {
-                    id: forecastLoader
+                    Loader {
+                        id: forecastLoader
 
-                    Layout.fillWidth: true
-                    active: (Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)
-                    visible: active
-                    asynchronous: true
+                        Layout.fillWidth: true
+                        active: (Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)
+                        visible: active
+                        asynchronous: true
 
-                    sourceComponent: ColumnLayout {
-                        spacing: Appearance.spacing.large
+                        sourceComponent: ColumnLayout {
+                            spacing: Appearance.spacing.large
 
-                        WI.ForecastHourly {
-                            Layout.fillWidth: true
+                            WI.ForecastHourly {
+                                Layout.fillWidth: true
+                            }
+
+                            WI.ForecastDaily {
+                                Layout.fillWidth: true
+                            }
                         }
+                    }
 
-                        WI.ForecastDaily {
-                            Layout.fillWidth: true
+                    GridLayout {
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignCenter
+                        columns: 2
+                        columnSpacing: Appearance.spacing.large
+                        rowSpacing: Appearance.spacing.large
+
+                        WI.Humidity {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Sun {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Pressure {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Visibility {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Wind {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.UVIndex {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.AQI {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Precipitation {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Moon {
+                            implicitWidth: 150
+                            implicitHeight: 150
+                        }
+                        WI.Cloudiness {
+                            implicitWidth: 150
+                            implicitHeight: 150
                         }
                     }
-                }
 
-                GridLayout {
-                    Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignCenter
-                    columns: 2
-                    columnSpacing: Appearance.spacing.large
-                    rowSpacing: Appearance.spacing.large
-
-                    WI.Humidity {
-                        implicitWidth: 150
-                        implicitHeight: 150
+                    Item {
+                        Layout.fillHeight: true
+                        Layout.preferredHeight: 20
                     }
-                    WI.Sun {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.Pressure {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.Visibility {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.Wind {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.UVIndex {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.AQI {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.Precipitation {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.Moon {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                    WI.Cloudiness {
-                        implicitWidth: 150
-                        implicitHeight: 150
-                    }
-                }
-
-                Item {
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 20
                 }
             }
         }

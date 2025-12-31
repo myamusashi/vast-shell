@@ -13,7 +13,7 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 
-StyledRect {
+Item {
     id: root
 
     property bool isWallpaperSwitcherOpen: GlobalStates.isWallpaperSwitcherOpen
@@ -22,32 +22,50 @@ StyledRect {
     property string searchQuery: ""
     property string debouncedSearchQuery: ""
 
-    property var filteredWallpaperList: {
-        if (debouncedSearchQuery === "")
-            return wallpaperList;
+    implicitWidth: parent.width * 0.6
+    implicitHeight: isWallpaperSwitcherOpen ? parent.height * 0.3 : 0
 
-        const query = debouncedSearchQuery.toLowerCase();
-        return wallpaperList.filter(path => {
-            const fileName = path.split('/').pop().toLowerCase();
-            return fileName.includes(query);
-        });
+    Behavior on implicitHeight {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
     }
 
-    FolderListModel {
-        id: wallpaperFolder
+    anchors {
+        bottom: parent.bottom
+        horizontalCenter: parent.horizontalCenter
+    }
 
-        folder: Qt.resolvedUrl(Paths.wallpaperDir)
-        nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.bmp", "*.gif"]
-        showDirs: false
-        showDotAndDotDot: false
-        showHidden: false
+    OuterRoundedCorner {
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.rightMargin: -radius
+        radius: GlobalStates.isWallpaperSwitcherOpen ? 40 : 0
+        corner: 1
+        bgColor: Colours.m3Colors.m3Surface
 
-        onCountChanged: {
-            let list = [];
-            for (let i = 0; i < count; i++) {
-                list.push(get(i, "filePath"));
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
-            root.wallpaperList = list;
+        }
+    }
+
+    OuterRoundedCorner {
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.leftMargin: -radius
+        radius: GlobalStates.isWallpaperSwitcherOpen ? 40 : 0
+        corner: 0
+        bgColor: Colours.m3Colors.m3Surface
+
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
         }
     }
 
@@ -70,178 +88,196 @@ StyledRect {
         onPressed: GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen
     }
 
-    implicitWidth: Hypr.focusedMonitor.width * 0.6
-    implicitHeight: isWallpaperSwitcherOpen ? Hypr.focusedMonitor.height * 0.3 : 0
-    color: Colours.m3Colors.m3Surface
-    radius: 0
-    topLeftRadius: Appearance.rounding.normal
-    topRightRadius: Appearance.rounding.normal
+    property var filteredWallpaperList: {
+        if (debouncedSearchQuery === "")
+            return wallpaperList;
 
-    anchors {
-        bottom: parent.bottom
-        horizontalCenter: parent.horizontalCenter
+        const query = debouncedSearchQuery.toLowerCase();
+        return wallpaperList.filter(path => {
+            const fileName = path.split('/').pop().toLowerCase();
+            return fileName.includes(query);
+        });
     }
 
-    Behavior on implicitHeight {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    ColumnLayout {
+    StyledRect {
         anchors.fill: parent
-        anchors.margins: Appearance.spacing.normal
-        spacing: Appearance.spacing.normal
+        color: Colours.m3Colors.m3Surface
+        radius: 0
+        topLeftRadius: Appearance.rounding.normal
+        topRightRadius: Appearance.rounding.normal
 
-        focus: root.isWallpaperSwitcherOpen
-        onFocusChanged: {
-            if (root.isWallpaperSwitcherOpen)
-                searchField.forceActiveFocus();
+        FolderListModel {
+            id: wallpaperFolder
+
+            folder: Qt.resolvedUrl(Paths.wallpaperDir)
+            nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.bmp", "*.gif"]
+            showDirs: false
+            showDotAndDotDot: false
+            showHidden: false
+
+            onCountChanged: {
+                let list = [];
+                for (let i = 0; i < count; i++) {
+                    list.push(get(i, "filePath"));
+                }
+                root.wallpaperList = list;
+            }
         }
 
-        StyledTextField {
-            id: searchField
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: Appearance.spacing.normal
+            spacing: Appearance.spacing.normal
 
-            Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            placeholderText: "Search wallpapers..."
-            text: root.searchQuery
-            focus: true
-
-            onTextChanged: {
-                root.searchQuery = text;
-                searchDebounceTimer.restart();
-
-                if (wallpaperPath.count > 0)
-                    wallpaperPath.currentIndex = 0;
+            focus: root.isWallpaperSwitcherOpen
+            onFocusChanged: {
+                if (root.isWallpaperSwitcherOpen)
+                    searchField.forceActiveFocus();
             }
 
-            Keys.onDownPressed: wallpaperPath.focus = true
-            Keys.onEscapePressed: root.isWallpaperSwitcherOpen = false
-        }
+            StyledTextField {
+                id: searchField
 
-        Timer {
-            id: searchDebounceTimer
+                Layout.fillWidth: true
+                Layout.preferredHeight: 40
+                placeholderText: "Search wallpapers..."
+                text: root.searchQuery
+                focus: true
 
-            interval: 300
-            repeat: false
-            onTriggered: root.debouncedSearchQuery = root.searchQuery
-        }
+                onTextChanged: {
+                    root.searchQuery = text;
+                    searchDebounceTimer.restart();
 
-        PathView {
-            id: wallpaperPath
+                    if (wallpaperPath.count > 0)
+                        wallpaperPath.currentIndex = 0;
+                }
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            model: root.filteredWallpaperList
-            pathItemCount: 5
-            preferredHighlightBegin: 0.5
-            preferredHighlightEnd: 0.5
-
-            clip: true
-            cacheItemCount: 7
-
-            Component.onCompleted: {
-                const idx = root.wallpaperList.indexOf(Paths.currentWallpaper);
-                currentIndex = idx !== -1 ? idx : 0;
+                Keys.onDownPressed: wallpaperPath.focus = true
+                Keys.onEscapePressed: root.isWallpaperSwitcherOpen = false
             }
 
-            onModelChanged: {
-                if (root.debouncedSearchQuery === "" && currentIndex >= 0) {
-                    Qt.callLater(() => {
-                        if (currentIndex < count)
-                            currentIndex = currentIndex;
-                    });
-                }
+            Timer {
+                id: searchDebounceTimer
+
+                interval: 300
+                repeat: false
+                onTriggered: root.debouncedSearchQuery = root.searchQuery
             }
 
-            path: Path {
-                startX: 0
-                startY: wallpaperPath.height / 2
+            PathView {
+                id: wallpaperPath
 
-                PathLine {
-                    x: wallpaperPath.width
-                    y: wallpaperPath.height / 2
-                }
-            }
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-            delegate: Item {
-                id: delegateItem
+                model: root.filteredWallpaperList
+                pathItemCount: 5
+                preferredHighlightBegin: 0.5
+                preferredHighlightEnd: 0.5
 
-                width: wallpaperPath.width / 5 - 16
-                height: wallpaperPath.height - 16
+                clip: true
+                cacheItemCount: 7
 
-                required property var modelData
-                required property int index
-
-                scale: PathView.isCurrentItem ? 1.1 : 0.85
-                z: PathView.isCurrentItem ? 100 : 1
-                opacity: PathView.isCurrentItem ? 1.0 : 0.6
-
-                Behavior on scale {
-                    NAnim {}
+                Component.onCompleted: {
+                    const idx = root.wallpaperList.indexOf(Paths.currentWallpaper);
+                    currentIndex = idx !== -1 ? idx : 0;
                 }
 
-                Behavior on opacity {
-                    NAnim {}
+                onModelChanged: {
+                    if (root.debouncedSearchQuery === "" && currentIndex >= 0) {
+                        Qt.callLater(() => {
+                            if (currentIndex < count)
+                                currentIndex = currentIndex;
+                        });
+                    }
                 }
 
-                ClippingRectangle {
-                    anchors.fill: parent
-                    anchors.margins: 8
-                    radius: Appearance.rounding.normal
-                    color: "transparent"
+                path: Path {
+                    startX: 0
+                    startY: wallpaperPath.height / 2
 
-                    Image {
-                        anchors.fill: parent
-                        source: "file://" + delegateItem.modelData
-                        sourceSize.width: 200
-                        sourceSize.height: 200
-                        fillMode: Image.PreserveAspectCrop
-                        asynchronous: true
-                        smooth: true
-                        cache: true
+                    PathLine {
+                        x: wallpaperPath.width
+                        y: wallpaperPath.height / 2
+                    }
+                }
+
+                delegate: Item {
+                    id: delegateItem
+
+                    width: wallpaperPath.width / 5 - 16
+                    height: wallpaperPath.height - 16
+
+                    required property var modelData
+                    required property int index
+
+                    scale: PathView.isCurrentItem ? 1.1 : 0.85
+                    z: PathView.isCurrentItem ? 100 : 1
+                    opacity: PathView.isCurrentItem ? 1.0 : 0.6
+
+                    Behavior on scale {
+                        NAnim {}
                     }
 
-                    MArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
+                    Behavior on opacity {
+                        NAnim {}
+                    }
 
-                        onClicked: {
-                            wallpaperPath.currentIndex = delegateItem.index;
-                            Quickshell.execDetached({
-                                "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                            });
+                    ClippingRectangle {
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        radius: Appearance.rounding.normal
+                        color: "transparent"
+
+                        Image {
+                            anchors.fill: parent
+                            source: "file://" + delegateItem.modelData
+                            sourceSize.width: 200
+                            sourceSize.height: 200
+                            fillMode: Image.PreserveAspectCrop
+                            asynchronous: true
+                            smooth: true
+                            cache: true
+                        }
+
+                        MArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+
+                            onClicked: {
+                                wallpaperPath.currentIndex = delegateItem.index;
+                                Quickshell.execDetached({
+                                    "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            Keys.onPressed: event => {
-                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    Quickshell.execDetached({
-                        "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
-                    });
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                        Quickshell.execDetached({
+                            "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
+                        });
+                    }
+                    if (event.key === Qt.Key_Escape)
+                        root.isWallpaperSwitcherOpen = false;
+                    if (event.key === Qt.Key_Tab)
+                        searchField.focus = true;
+                    if (event.key === Qt.Key_Left)
+                        decrementCurrentIndex();
+                    if (event.key === Qt.Key_Right)
+                        incrementCurrentIndex();
                 }
-                if (event.key === Qt.Key_Escape)
-                    root.isWallpaperSwitcherOpen = false;
-                if (event.key === Qt.Key_Tab)
-                    searchField.focus = true;
-                if (event.key === Qt.Key_Left)
-                    decrementCurrentIndex();
-                if (event.key === Qt.Key_Right)
-                    incrementCurrentIndex();
             }
-        }
 
-        StyledLabel {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.bottomMargin: Appearance.spacing.small
-            text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
-            color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.small
+            StyledLabel {
+                Layout.alignment: Qt.AlignHCenter
+                Layout.bottomMargin: Appearance.spacing.small
+                text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
+                color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.small
+            }
         }
     }
 }

@@ -9,21 +9,13 @@ import qs.Services
 
 import "Components"
 
-StyledRect {
-    anchors {
-        right: parent.right
-        top: parent.top
-        rightMargin: 5
-        topMargin: 5
-    }
+Item {
+    id: root
 
     property bool hasNotifications: Notifs.popups.length > 0
 
     implicitWidth: parent.width * 0.2
     implicitHeight: hasNotifications ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
-    color: Colours.m3Colors.m3Background
-    radius: 0
-    bottomLeftRadius: Appearance.rounding.normal
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitHeight {
@@ -33,27 +25,72 @@ StyledRect {
         }
     }
 
-    ListView {
-        id: notifListView
+    anchors {
+        right: parent.right
+        top: parent.top
+    }
 
-        anchors.fill: parent
-        spacing: Appearance.spacing.normal
-        boundsBehavior: Flickable.StopAtBounds
-        clip: true
+    OuterRoundedCorner {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.leftMargin: -radius
+        radius: root.hasNotifications ? 40 : 0
+        corner: 2
+        bgColor: Colours.m3Colors.m3Surface
 
-        model: ScriptModel {
-            values: [...Notifs.popups]
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
         }
+    }
 
-        cacheBuffer: 200
+    OuterRoundedCorner {
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.bottomMargin: -radius
+        radius: root.hasNotifications ? 40 : 0
+        corner: 2
+        bgColor: Colours.m3Colors.m3Surface
 
-        delegate: Wrapper {
-            required property var modelData
-            required property int index
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+    }
 
-            notif: modelData
-            onEntered: modelData.timer.stop()
-            onExited: modelData.timer.restart()
+    StyledRect {
+        anchors.fill: parent
+
+        color: Colours.m3Colors.m3Background
+        radius: 0
+        bottomLeftRadius: Appearance.rounding.normal
+
+        ListView {
+            id: notifListView
+
+            anchors.fill: parent
+            spacing: Appearance.spacing.normal
+            boundsBehavior: Flickable.StopAtBounds
+            clip: true
+
+            model: ScriptModel {
+                values: [...Notifs.popups]
+            }
+
+            cacheBuffer: 200
+
+            delegate: Wrapper {
+                required property var modelData
+                required property int index
+
+                notif: modelData
+                onEntered: modelData.timer.stop()
+                onExited: modelData.timer.restart()
+            }
         }
     }
 }

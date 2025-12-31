@@ -117,7 +117,7 @@ Variants {
             Rectangle {
                 id: leftBar
 
-                implicitWidth: GlobalStates.hideOuterBorder ? 0 : 5
+                implicitWidth: GlobalStates.hideOuterBorder ? 0 : 7
                 implicitHeight: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.left: parent.left
@@ -141,7 +141,7 @@ Variants {
                 id: topBar
 
                 implicitWidth: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.width ?? 0
-                implicitHeight: GlobalStates.hideOuterBorder ? 0 : 5
+                implicitHeight: GlobalStates.hideOuterBorder ? 0 : 7
                 color: window.barColor
                 anchors.top: parent.top
 
@@ -163,7 +163,7 @@ Variants {
             Rectangle {
                 id: rightBar
 
-                implicitWidth: GlobalStates.hideOuterBorder ? 0 : 5
+                implicitWidth: GlobalStates.hideOuterBorder ? 0 : 7
                 implicitHeight: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.height ?? 0
                 color: window.barColor
                 anchors.right: parent.right
@@ -187,7 +187,7 @@ Variants {
                 id: bottomBar
 
                 implicitWidth: GlobalStates.hideOuterBorder ? 0 : QsWindow.window?.width ?? 0
-                implicitHeight: GlobalStates.hideOuterBorder ? 0 : 5
+                implicitHeight: GlobalStates.hideOuterBorder ? 0 : 7
                 color: window.barColor
                 anchors.bottom: parent.bottom
 

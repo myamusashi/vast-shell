@@ -13,14 +13,62 @@ import qs.Components
 
 import "Settings"
 
-StyledRect {
+Item {
     id: root
 
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
     property int state: 0
 
+    implicitWidth: parent.width * 0.8
+    implicitHeight: isControlCenterOpen ? 400 : 0
+    visible: window.modelData.name === Hypr.focusedMonitor.name
+
+    Behavior on implicitHeight {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+
+    anchors {
+        top: parent.top
+        horizontalCenter: parent.horizontalCenter
+    }
+
     function toggleControlCenter(): void {
         GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
+    }
+
+    OuterRoundedCorner {
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.rightMargin: -radius
+        radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
+        corner: 3
+        bgColor: Colours.m3Colors.m3Surface
+
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+    }
+
+    OuterRoundedCorner {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.leftMargin: -radius
+        radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
+        corner: 2
+        bgColor: Colours.m3Colors.m3Surface
+
+        Behavior on radius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
     }
 
     GlobalShortcut {
@@ -42,125 +90,114 @@ StyledRect {
         }
     }
 
-    color: Colours.m3Colors.m3Surface
-    clip: true
-    radius: 0
-    bottomLeftRadius: Appearance.rounding.small
-    bottomRightRadius: Appearance.rounding.small
-    width: parent.width * 0.8
-    height: isControlCenterOpen ? 400 : 0
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    StyledRect {
+        id: rect
 
-    Behavior on height {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    anchors {
-        top: parent.top
-        horizontalCenter: parent.horizontalCenter
-        rightMargin: 60
-    }
-
-    Loader {
         anchors.fill: parent
-        active: GlobalStates.isQuickSettingsOpen
-        asynchronous: true
-        sourceComponent: RowLayout {
+        clip: true
+        color: Colours.m3Colors.m3Surface
+        radius: 0
+        bottomLeftRadius: Appearance.rounding.large
+        bottomRightRadius: Appearance.rounding.large
+
+        Loader {
             anchors.fill: parent
+            active: GlobalStates.isQuickSettingsOpen
+            asynchronous: true
+            sourceComponent: RowLayout {
+                anchors.fill: parent
 
-            TabColumn {
-                id: tabBar
+                TabColumn {
+                    id: tabBar
 
-                state: root.state
-                color: root.color
-                scaleFactor: Math.min(1.0, root.width / root.width)
-                visible: root.isControlCenterOpen
-                Layout.fillWidth: true
-                tabs: [
-                    {
-                        "icon": "settings",
-                        "index": 0
-                    },
-                    {
-                        "icon": "speaker",
-                        "index": 1
-                    },
-                    {
-                        "icon": "speed",
-                        "index": 2
-                    }
-                ]
-                onTabClicked: index => {
-                    root.state = index;
-                    controlCenterStackView.currentItem.viewIndex = index;
-                }
-            }
-
-            ColumnLayout {
-                Layout.preferredWidth: parent.width * 0.5
-                Layout.fillHeight: true
-                spacing: 0
-
-                StackView {
-                    id: controlCenterStackView
-
+                    state: root.state
+                    color: rect.color
+                    scaleFactor: Math.min(1.0, root.width / root.width)
+                    visible: root.isControlCenterOpen
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 500
-
-                    property Component viewComponent: contentView
-
-                    initialItem: viewComponent
-
-                    onCurrentItemChanged: {
-                        if (currentItem)
-                            currentItem.viewIndex = root.state;
+                    tabs: [
+                        {
+                            "icon": "settings",
+                            "index": 0
+                        },
+                        {
+                            "icon": "speaker",
+                            "index": 1
+                        },
+                        {
+                            "icon": "speed",
+                            "index": 2
+                        }
+                    ]
+                    onTabClicked: index => {
+                        root.state = index;
+                        controlCenterStackView.currentItem.viewIndex = index;
                     }
+                }
 
-                    Component {
-                        id: contentView
+                ColumnLayout {
+                    Layout.preferredWidth: parent.width * 0.5
+                    Layout.fillHeight: true
+                    spacing: 0
 
-                        StyledRect {
-                            id: shapeRect
+                    StackView {
+                        id: controlCenterStackView
 
-                            anchors.fill: parent
-                            anchors.topMargin: 10
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredHeight: 500
 
-                            radius: 0
-                            bottomLeftRadius: Appearance.rounding.normal
-                            bottomRightRadius: Appearance.rounding.normal
-                            color: Colours.m3Colors.m3Background
+                        property Component viewComponent: contentView
 
-                            property int viewIndex: 0
+                        initialItem: viewComponent
 
-                            Loader {
+                        onCurrentItemChanged: {
+                            if (currentItem)
+                                currentItem.viewIndex = root.state;
+                        }
+
+                        Component {
+                            id: contentView
+
+                            StyledRect {
+                                id: shapeRect
+
                                 anchors.fill: parent
-                                active: parent.viewIndex === 0
-                                asynchronous: true
-                                visible: active
+                                anchors.topMargin: 10
 
-                                sourceComponent: Settings {}
-                            }
+                                radius: 0
+                                bottomLeftRadius: Appearance.rounding.normal
+                                bottomRightRadius: Appearance.rounding.normal
+                                color: Colours.m3Colors.m3Background
 
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 1
-                                asynchronous: true
-                                visible: active
+                                property int viewIndex: 0
 
-                                sourceComponent: VolumeSettings {}
-                            }
+                                Loader {
+                                    anchors.fill: parent
+                                    active: parent.viewIndex === 0
+                                    asynchronous: true
+                                    visible: active
 
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 2
-                                asynchronous: true
-                                visible: active
+                                    sourceComponent: Settings {}
+                                }
 
-                                sourceComponent: Performances {}
+                                Loader {
+                                    anchors.fill: parent
+                                    active: parent.viewIndex === 1
+                                    asynchronous: true
+                                    visible: active
+
+                                    sourceComponent: VolumeSettings {}
+                                }
+
+                                Loader {
+                                    anchors.fill: parent
+                                    active: parent.viewIndex === 2
+                                    asynchronous: true
+                                    visible: active
+
+                                    sourceComponent: Performances {}
+                                }
                             }
                         }
                     }
