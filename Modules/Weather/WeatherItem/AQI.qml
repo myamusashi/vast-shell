@@ -18,7 +18,7 @@ ShapeCanvas {
     roundedPolygon: MaterialShapes.getSquare()
     onProgressChanged: requestPaint()
 
-    property int aqi: 90
+    property int aqi: Weather.usAQI
     property var aqiCategories: [
         {
             max: 50,
