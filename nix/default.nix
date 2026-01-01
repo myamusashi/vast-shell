@@ -7,6 +7,7 @@
   findutils,
   gnused,
   gawk,
+  lucide,
   weather-icons,
   libnotify,
   quickshell,
@@ -54,6 +55,12 @@
     hyprland
     qt6.qtgraphs
     material-symbols
+    (lucide.overrideAttrs rec {
+      version = "0.544.0";
+
+      url = "https://unpkg.com/lucide-static@${version}/font/Lucide.ttf";
+      hash = "sha256-Cf4vv+f3ZUtXPED+PCHxvZZDMF5nWYa4iGFSDQtkquQ=";
+    })
   ];
 
   shell = stdenvNoCC.mkDerivation {
