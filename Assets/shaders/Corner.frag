@@ -15,25 +15,18 @@ void main() {
     vec2 pos = qt_TexCoord0 * radius;
     vec2 cornerPos;
 
-    if (corner == 0) {
-        // Top-left inner
-        cornerPos = vec2(0.0, 0.0);
-    } else if (corner == 1) {
-        // Top-right inner
-        cornerPos = vec2(radius, 0.0);
-    } else if (corner == 2) {
-        // Bottom-left inner
-        cornerPos = vec2(0.0, radius);
-    } else if (corner == 3) {
-        // Bottom-right inner
-        cornerPos = vec2(radius, radius);
-    }
+    if (corner == 0) cornerPos = vec2(0.0, 0.0);
+    else if (corner == 1) cornerPos = vec2(radius, 0.0);
+    else if (corner == 2) cornerPos = vec2(0.0, radius);
+    else if (corner == 3) cornerPos = vec2(radius, radius);
 
     float dist = distance(pos, cornerPos);
 
-    // Anti-aliasing
-    float edgeWidth = 1.0;
-    float alpha = smoothstep(radius - edgeWidth, radius + edgeWidth, dist);
+    // Adaptive edge width based on screen-space derivatives
+    float edgeWidth = length(vec2(dFdx(dist), dFdy(dist))) * 1.5;
+
+    float t = clamp((dist - radius + edgeWidth) / (2.0 * edgeWidth), 0.0, 1.0);
+    float alpha = t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 
     fragColor = bgColor * qt_Opacity * alpha;
 }
