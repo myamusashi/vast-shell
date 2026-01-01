@@ -32,7 +32,7 @@ StyledRect {
             return 0;
         var reserved1 = reserved[1] || 0;
         var reserved3 = reserved[3] || 0;
-        return (Hypr.focusedMonitor.height - (reserved1 + reserved3)) * scaleFactor / Hypr.focusedMonitor.scale;
+        return (parent.height - (reserved1 + reserved3)) * scaleFactor / Hypr.focusedMonitor.scale;
     }
     property real containerWidth: workspaceWidth + borderWidth
     property real containerHeight: workspaceHeight + borderWidth

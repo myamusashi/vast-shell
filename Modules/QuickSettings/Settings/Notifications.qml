@@ -55,7 +55,8 @@ StyledRect {
                     width: parent.width * 0.1
                     color: Colours.m3Colors.m3SurfaceContainer
 
-                    MaterialIcon {
+                    Icon {
+                        type: Icon.Material
                         anchors.centerIn: parent
                         icon: Notifs.dnd ? "notifications_off" : "notifications_active"
                         color: Colours.m3Colors.m3OnSurface

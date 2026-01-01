@@ -86,7 +86,7 @@ Slider {
                 leftMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            sourceComponent: MaterialIcon {
+            sourceComponent: Icon {
                 icon: root.icon
                 color: Colours.m3Colors.m3OnPrimary
                 font.pointSize: root.iconSize || Appearance.fonts.size.medium

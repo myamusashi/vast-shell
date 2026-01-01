@@ -57,16 +57,11 @@ ShapeCanvas {
             topMargin: 5
         }
 
-        MaterialIcon {
-            icon: "nightlight"
+        Icon {
+            type: Icon.Lucide
+            icon: Lucide.icon_moon
             font.pointSize: Appearance.fonts.size.large * 1.2
             color: Colours.m3Colors.m3OnSurface
-
-            font.variableAxes: {
-                "FILL": 10,
-                "opsz": fontInfo.pixelSize,
-                "wght": fontInfo.weight
-            }
         }
 
         StyledText {
@@ -115,7 +110,8 @@ ShapeCanvas {
                         Layout.alignment: Qt.AlignVCenter
                         spacing: Appearance.spacing.small
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             icon: "vertical_align_top"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
@@ -133,17 +129,20 @@ ShapeCanvas {
                         implicitWidth: childrenRect.width
                         implicitHeight: childrenRect.height
 
-                        MaterialIcon {
+                        Icon {
                             id: moonsetIcon
 
+                            type: Icon.Material
                             icon: "vertical_align_bottom"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
                         }
                         StyledText {
-                            anchors.left: moonsetIcon.right
-                            anchors.leftMargin: 4
-                            anchors.verticalCenter: moonsetIcon.verticalCenter
+                            anchors {
+                                left: moonsetIcon.right
+                                leftMargin: 4
+                                verticalCenter: moonsetIcon.verticalCenter
+                            }
                             text: TimeAgo.convertTo12Hour(Weather.moonSet)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface

@@ -16,7 +16,7 @@ Item {
     id: root
 
     property alias dialog: boxConfirmation
-	property int currentIndex: 0
+    property int currentIndex: 0
     property bool isSessionOpen: GlobalStates.isSessionOpen
     property bool showConfirmDialog: false
     property var pendingAction: null
@@ -35,7 +35,7 @@ Item {
     anchors {
         right: parent.right
         verticalCenter: parent.verticalCenter
-	}
+    }
 
     IpcHandler {
         target: "Session"
@@ -54,9 +54,9 @@ Item {
     GlobalShortcut {
         name: "session"
         onPressed: GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen
-	}
+    }
 
-	OuterRoundedCorner {
+    Corner {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.topMargin: -radius
@@ -72,7 +72,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.bottomMargin: -radius
@@ -88,8 +88,8 @@ Item {
         }
     }
 
-	StyledRect {
-		anchors.fill: parent
+    StyledRect {
+        anchors.fill: parent
         radius: 0
         topLeftRadius: Appearance.rounding.normal
         bottomLeftRadius: Appearance.rounding.normal
@@ -212,7 +212,7 @@ Item {
                             }
                         }
 
-                        MaterialIcon {
+                        Icon {
                             id: iconDelegate
 
                             anchors.centerIn: parent

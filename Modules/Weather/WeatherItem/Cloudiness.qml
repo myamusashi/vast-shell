@@ -31,8 +31,9 @@ ShapeCanvas {
             topMargin: 20
         }
 
-        MaterialIcon {
-            icon: "cloud"
+        Icon {
+            type: Icon.Lucide
+            icon: Lucide.icon_cloud
             font.pointSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurface
 

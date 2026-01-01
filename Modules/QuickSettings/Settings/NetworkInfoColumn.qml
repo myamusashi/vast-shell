@@ -38,7 +38,8 @@ RowLayout {
                 color: ethernetCard.isConnected ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
-                MaterialIcon {
+                Icon {
+                    type: Icon.Material
                     anchors.centerIn: parent
                     icon: "settings_ethernet"
                     color: ethernetCard.isConnected ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
@@ -127,7 +128,8 @@ RowLayout {
                 color: wifiCard.activeNetwork ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
-                MaterialIcon {
+                Icon {
+                    type: Icon.Material
                     anchors.centerIn: parent
                     icon: wifiCard.activeNetwork ? wifiCard.getWiFiIcon(wifiCard.activeNetwork.strength) : "wifi_off"
                     color: wifiCard.activeNetwork ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)

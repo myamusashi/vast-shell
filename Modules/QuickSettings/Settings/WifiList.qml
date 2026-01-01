@@ -62,7 +62,8 @@ Item {
                         color: "transparent"
                         radius: Appearance.rounding.full
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             anchors.centerIn: parent
                             icon: "arrow_back"
                             color: Colours.m3Colors.m3OnBackground
@@ -99,7 +100,8 @@ Item {
                         color: "transparent"
                         radius: Appearance.rounding.full
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             anchors.centerIn: parent
                             icon: "refresh"
                             color: Colours.m3Colors.m3OnBackground
@@ -143,7 +145,8 @@ Item {
                         anchors.margins: 16
                         spacing: Appearance.spacing.normal
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             Layout.alignment: Qt.AlignVCenter
                             icon: Network.active ? root.getWiFiIcon(Network.active.strength) : "wifi_off"
                             color: Colours.m3Colors.m3Primary
@@ -176,7 +179,8 @@ Item {
                             color: disconnectArea.containsPress ? Colours.withAlpha(Colours.m3Colors.m3Error, 0.2) : disconnectArea.containsMouse ? Colours.withAlpha(Colours.m3Colors.m3Error, 0.1) : "transparent"
                             radius: Appearance.rounding.full
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Material
                                 anchors.centerIn: parent
                                 icon: "close"
                                 color: Colours.m3Colors.m3Error
@@ -218,7 +222,8 @@ Item {
                         anchors.centerIn: parent
                         spacing: Appearance.spacing.large
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             Layout.alignment: Qt.AlignHCenter
                             icon: "wifi_off"
                             color: Colours.m3Colors.m3OnSurfaceVariant
@@ -279,7 +284,8 @@ Item {
                             anchors.margins: 16
                             spacing: Appearance.spacing.normal
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Material
                                 Layout.alignment: Qt.AlignVCenter
                                 icon: root.getWiFiIcon(networkDelegate.modelData.strength)
                                 color: networkDelegate.modelData.active ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
@@ -301,7 +307,8 @@ Item {
                                         font.bold: networkDelegate.modelData.active
                                     }
 
-                                    MaterialIcon {
+                                    Icon {
+                                        type: Icon.Material
                                         icon: "lock"
                                         color: Colours.m3Colors.m3OnSurfaceVariant
                                         font.pointSize: Appearance.fonts.size.small
@@ -332,7 +339,8 @@ Item {
                                 font.bold: true
                             }
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Material
                                 Layout.alignment: Qt.AlignVCenter
                                 icon: "chevron_right"
                                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -366,7 +374,8 @@ Item {
                         anchors.centerIn: parent
                         spacing: Appearance.spacing.large
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             Layout.alignment: Qt.AlignHCenter
                             icon: "wifi_find"
                             color: Colours.m3Colors.m3OnSurfaceVariant

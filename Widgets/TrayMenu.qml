@@ -85,7 +85,8 @@ Rectangle {
                     implicitWidth: this.height
                     visible: entry.modelData?.buttonType == QsMenuButtonType.CheckBox
 
-                    MaterialIcon {
+                    Icon {
+                        type: Icon.Material
                         icon: (entry.modelData?.checkState != Qt.Checked) ? "check_box_outline_blank" : "check_box"
                         anchors.centerIn: parent
                         color: Colours.m3Colors.m3OnPrimary
@@ -98,7 +99,8 @@ Rectangle {
                     implicitWidth: this.height
                     visible: entry.modelData?.buttonType == QsMenuButtonType.RadioButton
 
-                    MaterialIcon {
+                    Icon {
+                        type: Icon.Material
                         icon: (entry.modelData?.checkState != Qt.Checked) ? "radio_button_unchecked" : "radio_button_checked"
                         anchors.centerIn: parent
                         color: Colours.m3Colors.m3Primary

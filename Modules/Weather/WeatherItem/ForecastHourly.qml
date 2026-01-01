@@ -28,7 +28,8 @@ StyledRect {
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             Layout.leftMargin: 15
             Layout.topMargin: 20
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 icon: "schedule"
                 color: Colours.m3Colors.m3Primary
                 font.pointSize: Appearance.fonts.size.large
@@ -137,7 +138,8 @@ StyledRect {
                                 }
                             }
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Weather
                                 Layout.alignment: Qt.AlignHCenter
                                 font.pointSize: Appearance.fonts.size.large * 1.3
                                 color: Colours.m3Colors.m3Primary

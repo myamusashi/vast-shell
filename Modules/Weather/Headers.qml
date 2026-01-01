@@ -46,7 +46,8 @@ RowLayout {
                 color: Colours.m3Colors.m3Primary
                 font.pixelSize: Appearance.fonts.size.extraLarge * 1.5
             }
-            MaterialIcon {
+            Icon {
+                type: Icon.Weather
                 icon: Weather.weatherIcon
                 font.pixelSize: Appearance.fonts.size.extraLarge * 1.5
                 color: Colours.m3Colors.m3Primary
@@ -59,8 +60,9 @@ RowLayout {
 
             RowLayout {
                 spacing: Appearance.spacing.small
-                MaterialIcon {
-                    icon: "arrow_upward"
+                Icon {
+                    type: Icon.Lucide
+                    icon: Lucide.icon_arrow_up
                     color: Colours.m3Colors.m3OnSurface
                     font.pointSize: Appearance.fonts.size.small
                 }
@@ -73,8 +75,9 @@ RowLayout {
 
             RowLayout {
                 spacing: Appearance.spacing.small
-                MaterialIcon {
-                    icon: "arrow_downward"
+                Icon {
+                    type: Icon.Lucide
+                    icon: Lucide.icon_arrow_down
                     color: Colours.m3Colors.m3OnSurface
                     font.pointSize: Appearance.fonts.size.small
                 }
@@ -115,7 +118,8 @@ RowLayout {
             Layout.alignment: Qt.AlignBottom | Qt.AlignRight
             spacing: Appearance.spacing.small
 
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 icon: "update"
                 font.pointSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurface

@@ -3,7 +3,7 @@ import Quickshell.Services.Notifications
 
 import qs.Components
 import qs.Configs
-import qs.Helpers
+import qs.Helpers as H
 import qs.Services
 
 Item {
@@ -121,7 +121,7 @@ Item {
             width: root.notif.urgency === NotificationUrgency.Critical ? 1 : 0
         }
 
-        MArea {
+        H.MArea {
             id: delegateMouseNotif
 
             anchors.fill: parent

@@ -15,8 +15,9 @@ StyledRect {
     Dots {
         id: timeContainer
 
-        MaterialIcon {
+        Icon {
             id: icon
+            type: Icon.Material
 
             color: Colours.m3Colors.m3OnBackground
             font.bold: true

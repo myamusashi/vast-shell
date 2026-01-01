@@ -63,7 +63,7 @@ Column {
             radius: Appearance.rounding.large
             color: "transparent"
 
-            MaterialIcon {
+            Icon {
                 anchors.centerIn: parent
                 icon: root.isShowMoreBody ? "expand_less" : "expand_more"
                 font.pixelSize: Appearance.fonts.size.extraLarge

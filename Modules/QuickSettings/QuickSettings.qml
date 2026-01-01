@@ -39,7 +39,7 @@ Item {
         GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.rightMargin: -radius
@@ -55,7 +55,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.leftMargin: -radius

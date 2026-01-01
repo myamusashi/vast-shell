@@ -2,8 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick.Layouts
 import QtQuick
-
-import Quickshell.Hyprland
 import Quickshell
 
 import qs.Components
@@ -17,8 +15,6 @@ LazyLoader {
         id: root
 
         title: "Recording Widgets"
-        implicitWidth: Hypr.focusedMonitor.width * 0.15
-        implicitHeight: Hypr.focusedMonitor.width * 0.12
 
         color: "transparent"
 
@@ -49,12 +45,9 @@ LazyLoader {
                     Layout.fillWidth: true
                     spacing: Appearance.spacing.normal
 
-                    Rectangle {
-                        id: recordingDot
-
+                    StyledRect {
                         Layout.preferredWidth: 12
                         Layout.preferredHeight: 12
-                        radius: 6
                         color: Colours.m3Colors.m3Error
 
                         SequentialAnimation on opacity {
@@ -73,8 +66,6 @@ LazyLoader {
                     }
 
                     StyledText {
-                        id: header
-
                         text: "Screen Recording"
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
@@ -86,22 +77,13 @@ LazyLoader {
                     }
 
                     StyledRect {
-                        id: closeButton
-
                         Layout.preferredWidth: 28
                         Layout.preferredHeight: 28
                         radius: Appearance.rounding.large
                         color: "transparent"
 
-                        Behavior on color {
-                            CAnim {
-                                duration: Appearance.animations.durations.small * 0.8
-                            }
-                        }
-
-                        MaterialIcon {
-                            id: closeIcon
-
+                        Icon {
+                            type: Icon.Material
                             anchors.centerIn: parent
                             icon: "close"
                             font.pointSize: Appearance.fonts.size.large
@@ -109,8 +91,6 @@ LazyLoader {
                         }
 
                         MArea {
-                            id: closeButtonMouse
-
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
@@ -134,7 +114,8 @@ LazyLoader {
                             anchors.centerIn: parent
                             spacing: Appearance.spacing.small
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Material
                                 icon: "schedule"
                                 font.pointSize: Appearance.fonts.size.large
                                 color: Colours.m3Colors.m3Primary
@@ -187,7 +168,8 @@ LazyLoader {
                             anchors.centerIn: parent
                             spacing: Appearance.spacing.small
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Material
                                 icon: "stop"
                                 font.pointSize: Appearance.fonts.size.large
                                 color: Colours.m3Colors.m3OnError
@@ -209,7 +191,7 @@ LazyLoader {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 Quickshell.execDetached({
-                                    "command": ["sh", "-c", Quickshell.shellDir + "/Assets/screen-capture.sh --stop-recording"]
+                                    "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --stop-recording"]
                                 });
 
                                 Record.recordingTimer.stop();

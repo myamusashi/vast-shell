@@ -27,7 +27,8 @@ ShapeCanvas {
             RowLayout {
                 Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
-                MaterialIcon {
+                Icon {
+                    type: Icon.Material
                     icon: "visibility"
                     font.pointSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurface

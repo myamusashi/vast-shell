@@ -8,5 +8,5 @@ ShaderEffect {
     width: radius
     height: radius
 
-    fragmentShader: "root:/Assets/shaders/OuterRoundedCorner.frag.qsb"
+    fragmentShader: "root:/Assets/shaders/Corner.frag.qsb"
 }

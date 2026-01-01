@@ -104,7 +104,8 @@ ClippingRectangle {
             anchors.rightMargin: 10
             spacing: 10
 
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 icon: "screen_record"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
@@ -121,7 +122,8 @@ ClippingRectangle {
                 Layout.fillWidth: true
             }
 
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 icon: "close"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
@@ -197,7 +199,7 @@ ClippingRectangle {
                         color: controlDelegate.modelData.highlight ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainerHighest
                         radius: Appearance.rounding.full
 
-                        MaterialIcon {
+                        Icon {
                             id: iconItem
 
                             anchors.centerIn: parent
@@ -246,7 +248,8 @@ ClippingRectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 10
 
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 icon: "capture"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large

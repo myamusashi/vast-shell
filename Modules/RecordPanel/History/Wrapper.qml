@@ -2,7 +2,7 @@ import QtQuick
 
 import qs.Components
 import qs.Configs
-import qs.Helpers
+import qs.Helpers as H
 import qs.Services
 
 Item {
@@ -91,7 +91,7 @@ Item {
         anchors.leftMargin: 10
         clip: true
 
-        MArea {
+        H.MArea {
             id: delegateMouseNotif
 
             anchors.fill: parent

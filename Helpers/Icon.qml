@@ -1,15 +1,34 @@
 import QtQuick
-
 import qs.Components
 import qs.Configs
 
 Text {
     id: root
 
+    enum IconType {
+        Lucide,
+        Material,
+        Weather
+    }
+
     required property string icon
+    property int type: Icon.Material
+
+    readonly property string fontFamily: {
+        switch (root.type) {
+        case Icon.Material:
+            return Appearance.fonts.family.material;
+        case Icon.Weather:
+            return "Weather Icons";
+        case Icon.Lucide:
+            return "lucide";
+        default:
+            return Appearance.fonts.family.material;
+        }
+    }
 
     font {
-        family: Appearance.fonts.family.material
+        family: root.fontFamily
         pointSize: Appearance.fonts.size.medium
         hintingPreference: Font.PreferNoHinting
         variableAxes: {
@@ -27,9 +46,5 @@ Text {
 
     Behavior on color {
         CAnim {}
-    }
-
-    Behavior on opacity {
-        NAnim {}
     }
 }

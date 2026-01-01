@@ -30,7 +30,7 @@ Item {
         top: parent.top
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: -radius
@@ -46,7 +46,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.bottomMargin: -radius

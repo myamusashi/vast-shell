@@ -27,8 +27,9 @@ StyledRect {
             Layout.topMargin: 20
             spacing: Appearance.rounding.small
 
-            MaterialIcon {
-                icon: "calendar_month"
+            Icon {
+                type: Icon.Lucide
+                icon: Lucide.icon_calendar_days
                 font.pointSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3Primary
             }
@@ -95,7 +96,8 @@ StyledRect {
                                 }
                             }
 
-                            MaterialIcon {
+                            Icon {
+                                type: Icon.Weather
                                 Layout.alignment: Qt.AlignHCenter
                                 font.pointSize: Appearance.fonts.size.extraLarge
                                 color: Colours.m3Colors.m3Primary

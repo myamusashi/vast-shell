@@ -26,7 +26,8 @@ StyledRect {
     RowLayout {
         anchors.centerIn: parent
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: "screen_record"
             font.pixelSize: 24
             color: Colours.m3Colors.m3OnPrimary

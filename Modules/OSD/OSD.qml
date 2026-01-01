@@ -50,7 +50,7 @@ Item {
         return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.topMargin: -radius
@@ -66,7 +66,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.leftMargin: -radius

@@ -71,7 +71,7 @@ Item {
         });
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.leftMargin: -radius
@@ -88,7 +88,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.rightMargin: -radius

@@ -45,7 +45,8 @@ ShapeCanvas {
             topMargin: 20
         }
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: "sunny"
             font.pointSize: Appearance.fonts.size.large * 1.2
             color: Colours.m3Colors.m3OnSurface

@@ -47,7 +47,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: -radius
@@ -64,7 +64,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.rightMargin: -radius
@@ -92,12 +92,14 @@ Item {
 
         Loader {
             id: contentLoader
+
             anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isMediaPlayerOpen
             asynchronous: true
 
             sourceComponent: RowLayout {
                 id: contentLayout
+
                 anchors.fill: parent
                 anchors.margins: 10
                 spacing: Appearance.spacing.normal
@@ -120,6 +122,7 @@ Item {
 
                             Image {
                                 id: coverArt
+
                                 anchors.fill: parent
                                 source: Players.active && Players.active.trackArtUrl !== "" ? Players.active.trackArtUrl : "root:/Assets/kuru.gif"
                                 sourceSize: Qt.size(120, 120)
@@ -142,6 +145,7 @@ Item {
 
                             AnimatedImage {
                                 id: coverNullArt
+
                                 anchors.fill: parent
                                 visible: Players.active === null
                                 asynchronous: true
@@ -154,6 +158,7 @@ Item {
 
                 ColumnLayout {
                     id: controlLayout
+
                     Layout.fillWidth: true
 
                     Column {
@@ -222,6 +227,7 @@ Item {
 
                         StyledText {
                             id: timeTrack
+
                             text: Players.active == null ? "00:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}`
                             font.pixelSize: Appearance.fonts.size.large
                             color: Colours.m3Colors.m3OnBackground
@@ -238,14 +244,16 @@ Item {
                             Layout.fillWidth: true
                         }
 
-                        MaterialIcon {
+                        Icon {
                             id: pauseButton
+
                             icon: Players.active === null ? "pause_circle" : Players.active.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
                             color: Colours.m3Colors.m3Primary
                             font.pointSize: Appearance.fonts.size.extraLarge * 1.5
 
                             MArea {
                                 id: pauseMArea
+
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
@@ -272,6 +280,7 @@ Item {
 
                         Wavy {
                             id: barSlide
+
                             value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
