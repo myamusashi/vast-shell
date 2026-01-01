@@ -29,7 +29,8 @@ ShapeCanvas {
             }
 
             RowLayout {
-                MaterialIcon {
+                Icon {
+                    type: Icon.Material
                     icon: "vertical_align_center"
                     font.pointSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold

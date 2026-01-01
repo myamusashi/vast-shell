@@ -25,8 +25,9 @@ ShapeCanvas {
         RowLayout {
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
-            MaterialIcon {
-                icon: "rainy_heavy"
+            Icon {
+                type: Icon.Lucide
+                icon: Lucide.icon_cloud_rain
                 font.pointSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3OnSurface
             }
@@ -74,8 +75,9 @@ ShapeCanvas {
                 maximumLineCount: 2
             }
 
-            MaterialIcon {
-                icon: "rainy"
+            Icon {
+                type: Icon.Lucide
+                icon: Lucide.icon_cloud_rain_wind
                 font.pointSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
             }

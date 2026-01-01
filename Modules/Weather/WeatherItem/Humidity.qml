@@ -34,8 +34,9 @@ ShapeCanvas {
             Layout.topMargin: 5
             spacing: 0
 
-            MaterialIcon {
-                icon: "humidity_high"
+            Icon {
+                type: Icon.Lucide
+                icon: Lucide.icon_droplet
                 color: Colours.m3Colors.m3OnSurface
                 font.pointSize: Appearance.fonts.size.large * 1.2
             }

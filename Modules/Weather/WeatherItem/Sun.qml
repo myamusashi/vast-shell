@@ -56,7 +56,8 @@ ShapeCanvas {
             topMargin: 5
         }
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: "wb_twilight"
             font.pointSize: Appearance.fonts.size.large * 1.2
             color: Colours.m3Colors.m3OnSurface
@@ -86,6 +87,7 @@ ShapeCanvas {
 
         ColumnLayout {
             id: contentLayout
+
             anchors {
                 left: parent.left
                 right: parent.right
@@ -112,9 +114,10 @@ ShapeCanvas {
 
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
-                        spacing: 4
+                        spacing: Appearance.spacing.small
 
-                        MaterialIcon {
+                        Icon {
+                            type: Icon.Material
                             icon: "vertical_align_top"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
@@ -129,10 +132,10 @@ ShapeCanvas {
 
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
-                        spacing: 4
+                        spacing: Appearance.spacing.small
 
-                        MaterialIcon {
-                            id: sunsetIcon
+                        Icon {
+                            type: Icon.Material
                             icon: "vertical_align_bottom"
                             font.pointSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface

@@ -144,7 +144,8 @@ Item {
                     color: root.iconBackgroundColor
                     radius: root.iconBackgroundRadius
 
-                    MaterialIcon {
+                    Icon {
+                        type: Icon.Material
                         anchors.centerIn: parent
                         icon: root.iconButton
                         font.family: root.fontFamily
@@ -154,8 +155,9 @@ Item {
                     }
                 }
 
-                MaterialIcon {
+                Icon {
                     id: iconOnly
+                    type: Icon.Material
 
                     visible: !root.showIconBackground
                     anchors.centerIn: parent

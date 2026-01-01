@@ -35,7 +35,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: -radius
@@ -51,7 +51,7 @@ Item {
         }
     }
 
-    OuterRoundedCorner {
+    Corner {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.bottomMargin: -radius
@@ -107,7 +107,7 @@ Item {
                         radius: Appearance.rounding.full
                         color: "transparent"
 
-                        MaterialIcon {
+                        Icon {
                             id: prevIcon
 
                             anchors.centerIn: parent
@@ -151,7 +151,7 @@ Item {
                         radius: Appearance.rounding.full
                         color: "transparent"
 
-                        MaterialIcon {
+                        Icon {
                             id: nextIcon
 
                             anchors.centerIn: parent

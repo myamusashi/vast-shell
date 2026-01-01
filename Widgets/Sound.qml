@@ -35,7 +35,8 @@ StyledRect {
 
         spacing: 5
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             color: Colours.m3Colors.m3OnBackground
             icon: root.icon
             Layout.alignment: Qt.AlignVCenter

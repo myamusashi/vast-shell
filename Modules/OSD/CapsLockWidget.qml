@@ -37,7 +37,8 @@ Item {
                 font.pixelSize: Appearance.fonts.size.large * 1.5
             }
 
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 icon: KeyLockState.state.capsLock ? "lock" : "lock_open_right"
                 color: KeyLockState.state.capsLock ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
                 font.pointSize: Appearance.fonts.size.large * 1.5

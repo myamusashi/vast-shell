@@ -23,7 +23,8 @@ Item {
         anchors.rightMargin: 10
         spacing: 10
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: root.icon
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.extraLarge
@@ -40,7 +41,8 @@ Item {
             Layout.fillWidth: true
         }
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: "close"
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.extraLarge

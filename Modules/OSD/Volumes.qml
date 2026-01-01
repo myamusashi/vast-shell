@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-
 import Quickshell.Services.Pipewire
 
 import qs.Components
@@ -49,7 +48,7 @@ Item {
                 }
             }
 
-            MaterialIcon {
+            Icon {
                 id: volumeIcon
 
                 anchors {

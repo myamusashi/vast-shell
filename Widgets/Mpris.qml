@@ -35,7 +35,8 @@ StyledRect {
         anchors.centerIn: parent
         spacing: Appearance.spacing.small
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
             font.pointSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnBackground

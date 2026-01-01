@@ -63,7 +63,7 @@ Switch {
                 active: root.isUseIcon
                 anchors.centerIn: parent
                 asynchronous: true
-                sourceComponent: MaterialIcon {
+                sourceComponent: Icon {
                     icon: root.checked ? root.onIcon : root.offIcon
                     color: root.checked ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3SurfaceContainerHighest
                     font.pointSize: Appearance.fonts.size.medium

@@ -55,7 +55,8 @@ ColumnLayout {
             implicitHeight: 30
             radius: Appearance.rounding.full
 
-            MaterialIcon {
+            Icon {
+                type: Icon.Material
                 anchors.centerIn: parent
                 visible: icon !== ""
                 icon: root.icon

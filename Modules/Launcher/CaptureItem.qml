@@ -70,7 +70,8 @@ StyledRect {
             }
         }
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             icon: root.optionData.icon
             color: root.isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Outline
             font.pixelSize: Appearance.fonts.size.large

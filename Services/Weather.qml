@@ -11,82 +11,84 @@ Singleton {
     id: root
 
     readonly property var weatherIcons: ({
-            "0": "clear_day"           // Clear sky
-            ,
-            "1": "partly_cloudy_day"   // Mainly clear
-            ,
-            "2": "partly_cloudy_day"   // Partly cloudy
-            ,
-            "3": "cloud"               // Overcast
+            // Clear sky
+            "0": WeatherIcon.day_sunny,
 
-            ,
+            // Mainly clear
+            "1": WeatherIcon.day_cloudy,
+
+            // Partly cloudy
+            "2": WeatherIcon.day_cloudy,
+
+            // Overcast
+            "3": WeatherIcon.cloud,
 
             // Fog (45-48)
-            "45": "foggy"              // Fog
+            "45": WeatherIcon.fog              // Fog
             ,
-            "48": "foggy"              // Depositing rime fog
+            "48": WeatherIcon.fog              // Depositing rime fog
 
             ,
 
             // Drizzle (51-57)
-            "51": "rainy"              // Light drizzle
+            "51": WeatherIcon.rain             // Light drizzle
             ,
-            "53": "rainy"              // Moderate drizzle
+            "53": WeatherIcon.rain             // Moderate drizzle
             ,
-            "55": "rainy"              // Dense drizzle
+            "55": WeatherIcon.rain             // Dense drizzle
             ,
-            "56": "weather_hail"       // Light freezing drizzle
+            "56": WeatherIcon.sleet            // Light freezing drizzle
             ,
-            "57": "weather_hail"       // Dense freezing drizzle
+            "57": WeatherIcon.sleet            // Dense freezing drizzle
 
             ,
 
             // Rain (61-67)
-            "61": "rainy"              // Slight rain
+            "61": WeatherIcon.rain             // Slight rain
             ,
-            "63": "rainy"              // Moderate rain
+            "63": WeatherIcon.rain             // Moderate rain
             ,
-            "65": "rainy"              // Heavy rain
+            "65": WeatherIcon.rain             // Heavy rain
             ,
-            "66": "weather_hail"       // Light freezing rain
+            "66": WeatherIcon.rain_mix         // Light freezing rain
             ,
-            "67": "weather_hail"       // Heavy freezing rain
+            "67": WeatherIcon.rain_mix         // Heavy freezing rain
 
             ,
 
             // Snow (71-77)
-            "71": "cloudy_snowing"     // Slight snow
+            "71": WeatherIcon.snow             // Slight snow
             ,
-            "73": "cloudy_snowing"     // Moderate snow
+            "73": WeatherIcon.snow             // Moderate snow
             ,
-            "75": "snowing_heavy"      // Heavy snow
+            "75": WeatherIcon.snow             // Heavy snow
             ,
-            "77": "snowing"            // Snow grains
+            "77": WeatherIcon.snow             // Snow grains
 
             ,
 
             // Showers (80-82)
-            "80": "rainy"              // Slight rain showers
+            "80": WeatherIcon.showers          // Slight rain showers
             ,
-            "81": "rainy"              // Moderate rain showers
+            "81": WeatherIcon.showers          // Moderate rain showers
             ,
-            "82": "rainy"              // Violent rain showers
+            "82": WeatherIcon.storm_showers    // Violent rain showers
 
             ,
 
             // Snow showers (85-86)
-            "85": "cloudy_snowing"     // Slight snow showers
+            "85": WeatherIcon.snow             // Slight snow showers
             ,
-            "86": "snowing_heavy"      // Heavy snow showers
+            "86": WeatherIcon.snow             // Heavy snow showers
 
             ,
 
             // Thunderstorm (95-99)
-            "95": "thunderstorm"       // Thunderstorm
+            "95": WeatherIcon.thunderstorm     // Thunderstorm
             ,
-            "96": "thunderstorm"       // Thunderstorm with slight hail
+            "96": WeatherIcon.thunderstorm     // Thunderstorm with slight hail
             ,
-            "99": "thunderstorm"        // Thunderstorm with heavy hail
+            "99": WeatherIcon.thunderstorm      // Thunderstorm with heavy hail
         })
 
     // Weather properties

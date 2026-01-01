@@ -19,7 +19,8 @@ Item {
         implicitWidth: 10
         implicitHeight: parent.height
 
-        MaterialIcon {
+        Icon {
+            type: Icon.Material
             color: {
                 if (root.notificationCount > 0 && root.notificationCount !== null && root.isDndEnable !== true)
                     Colours.m3Colors.m3Primary;
