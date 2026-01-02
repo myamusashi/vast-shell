@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -38,7 +39,7 @@ Singleton {
     property string scriptPath: `${Paths.rootDir}/Assets/screen-capture.sh`
 
     property var _activeOSDs: ({})
-    property var _osdTimers: ({})
+    property var _osdTimerRefs: ({})
 
     function showOSD(osdName) {
         if (!osdName)
@@ -197,26 +198,36 @@ Singleton {
     function _startOSDTimer(osdName) {
         _stopOSDTimer(osdName);
 
-        var timer = Qt.createQmlObject('import QtQuick; Timer {}', root, "osdTimer_" + osdName);
+        try {
+            var timer = timerComponent.createObject(root, {
+                "osdName": osdName,
+                "interval": osdDisplayDuration
+            });
 
-        timer.interval = osdDisplayDuration;
-        timer.repeat = false;
-
-        timer.triggered.connect(function () {
-            hideOSD(osdName);
-            timer.destroy();
-            _osdTimers[osdName] = null;
-        });
-
-        _osdTimers[osdName] = timer;
-        timer.start();
+			// qmllint disable
+            if (timer) {
+                _osdTimerRefs[osdName] = timer;
+				timer.start();
+			// qmllint enable
+            } else {
+                console.error("Failed to create OSD timer for:", osdName);
+            }
+        } catch (e) {
+            console.error("Error creating OSD timer:", e);
+        }
     }
 
     function _stopOSDTimer(osdName) {
-        if (_osdTimers[osdName]) {
-            _osdTimers[osdName].stop();
-            _osdTimers[osdName].destroy();
-            _osdTimers[osdName] = null;
+        if (_osdTimerRefs[osdName]) {
+            try {
+                _osdTimerRefs[osdName].stop();
+                _osdTimerRefs[osdName].destroy();
+            } catch (e) {
+                console.error("Error stopping OSD timer:", e);
+            } finally {
+                _osdTimerRefs[osdName] = null;
+                delete _osdTimerRefs[osdName];
+            }
         }
     }
 
@@ -227,6 +238,29 @@ Singleton {
 
         if (!anyVisible) {
             cleanupTimer.start();
+        }
+    }
+
+    Component {
+        id: timerComponent
+
+        Timer {
+            property string osdName: ""
+
+            interval: root.osdDisplayDuration
+            repeat: false
+            running: false
+
+            onTriggered: {
+                root.hideOSD(osdName);
+            }
+
+            Component.onDestruction: {
+                // Ensure cleanup
+                if (running) {
+                    stop();
+                }
+            }
         }
     }
 
@@ -260,5 +294,13 @@ Singleton {
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
+    }
+
+    Component.onDestruction: {
+        for (var key in _osdTimerRefs) {
+            if (_osdTimerRefs.hasOwnProperty(key)) {
+                _stopOSDTimer(key);
+            }
+        }
     }
 }
