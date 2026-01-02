@@ -86,6 +86,7 @@ Item {
                 required property var modelData
                 required property int index
 
+                isPopup: true
                 notif: modelData
                 onEntered: modelData.timer?.stop()
                 onExited: modelData.timer?.restart()

@@ -231,6 +231,10 @@ Singleton {
             }
         }
 
+        function dismissPopup() {
+            popup = false;
+        }
+
         function close() {
             closed = true;
             if (root.list.includes(this)) {

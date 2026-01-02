@@ -10,13 +10,13 @@ Item {
     id: root
 
     required property var notif
+    property bool isPopup: false
     property alias contentLayout: contentLayout
     property alias iconLayout: iconLayout
     property alias mArea: delegateMouseNotif
 
     signal entered
     signal exited
-    signal animationCompleted
 
     implicitWidth: parent.width
     implicitHeight: contentLayout.height * 1.3
@@ -24,11 +24,14 @@ Item {
     x: parent.width
 
     Timer {
-		id: timer
+        id: timer
 
         interval: root.notif.expireTimeout > 0 ? root.notif.expireTimeout : 5000
         running: !delegateMouseNotif.containsMouse
-        onTriggered: root.removeNotificationWithAnimation()
+        onTriggered: {
+            timer.stop();
+            slideOutAnim.start();
+        }
     }
 
     Component.onCompleted: {
@@ -56,7 +59,7 @@ Item {
     }
 
     NAnim {
-		id: slideInAnim
+        id: slideInAnim
 
         target: root
         property: "x"
@@ -64,11 +67,10 @@ Item {
         to: 0
         duration: Appearance.animations.durations.emphasized
         easing.bezierCurve: Appearance.animations.curves.emphasized
-        onFinished: root.animationCompleted()
     }
 
     NAnim {
-		id: slideOutAnim
+        id: slideOutAnim
 
         target: root
         property: "x"
@@ -76,21 +78,21 @@ Item {
         duration: Appearance.animations.durations.emphasizedAccel
         easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
         onFinished: {
-            root.notif.popup = false;
-            root.notif.close();
+            if (root.isPopup)
+                root.notif.popup = false;
         }
     }
 
     NAnim {
-		id: swipeOutAnim
+        id: swipeOutAnim
 
         target: root
         property: "x"
         duration: Appearance.animations.durations.small
         easing.bezierCurve: Appearance.animations.curves.standardAccel
         onFinished: {
-            root.notif.popup = false;
-            root.notif.close();
+            if (root.isPopup)
+                root.notif.popup = false;
         }
     }
 
@@ -106,11 +108,6 @@ Item {
             duration: Appearance.animations.durations.emphasized
             easing.bezierCurve: Appearance.animations.curves.emphasized
         }
-    }
-
-    function removeNotificationWithAnimation() {
-        timer.stop();
-        slideOutAnim.start();
     }
 
     StyledRect {
@@ -158,6 +155,7 @@ Item {
                     if (Math.abs(root.x) > root.width * 0.45) {
                         swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
                         swipeOutAnim.start();
+                        root.notif.close();
                     } else {
                         root.x = 0;
                         timer.restart();
