@@ -24,71 +24,42 @@ Singleton {
             "3": WeatherIcon.cloud,
 
             // Fog (45-48)
-            "45": WeatherIcon.fog              // Fog
-            ,
-            "48": WeatherIcon.fog              // Depositing rime fog
-
-            ,
+            "45": WeatherIcon.fog,
+            "48": WeatherIcon.fog,
 
             // Drizzle (51-57)
-            "51": WeatherIcon.rain             // Light drizzle
-            ,
-            "53": WeatherIcon.rain             // Moderate drizzle
-            ,
-            "55": WeatherIcon.rain             // Dense drizzle
-            ,
-            "56": WeatherIcon.sleet            // Light freezing drizzle
-            ,
-            "57": WeatherIcon.sleet            // Dense freezing drizzle
-
-            ,
+            "51": WeatherIcon.rain,
+            "53": WeatherIcon.rain,
+            "55": WeatherIcon.rain,
+            "56": WeatherIcon.sleet,
+            "57": WeatherIcon.sleet,
 
             // Rain (61-67)
-            "61": WeatherIcon.rain             // Slight rain
-            ,
-            "63": WeatherIcon.rain             // Moderate rain
-            ,
-            "65": WeatherIcon.rain             // Heavy rain
-            ,
-            "66": WeatherIcon.rain_mix         // Light freezing rain
-            ,
-            "67": WeatherIcon.rain_mix         // Heavy freezing rain
-
-            ,
+            "61": WeatherIcon.rain,
+            "63": WeatherIcon.rain,
+            "65": WeatherIcon.rain,
+            "66": WeatherIcon.rain_mix,
+            "67": WeatherIcon.rain_mix,
 
             // Snow (71-77)
-            "71": WeatherIcon.snow             // Slight snow
-            ,
-            "73": WeatherIcon.snow             // Moderate snow
-            ,
-            "75": WeatherIcon.snow             // Heavy snow
-            ,
-            "77": WeatherIcon.snow             // Snow grains
-
-            ,
+            "71": WeatherIcon.snow,
+            "73": WeatherIcon.snow,
+            "75": WeatherIcon.snow,
+            "77": WeatherIcon.snow,
 
             // Showers (80-82)
-            "80": WeatherIcon.showers          // Slight rain showers
-            ,
-            "81": WeatherIcon.showers          // Moderate rain showers
-            ,
-            "82": WeatherIcon.storm_showers    // Violent rain showers
-
-            ,
+            "80": WeatherIcon.showers,
+            "81": WeatherIcon.showers,
+            "82": WeatherIcon.storm_showers,
 
             // Snow showers (85-86)
-            "85": WeatherIcon.snow             // Slight snow showers
-            ,
-            "86": WeatherIcon.snow             // Heavy snow showers
-
-            ,
+            "85": WeatherIcon.snow,
+            "86": WeatherIcon.snow,
 
             // Thunderstorm (95-99)
-            "95": WeatherIcon.thunderstorm     // Thunderstorm
-            ,
-            "96": WeatherIcon.thunderstorm     // Thunderstorm with slight hail
-            ,
-            "99": WeatherIcon.thunderstorm      // Thunderstorm with heavy hail
+            "95": WeatherIcon.thunderstorm,
+            "96": WeatherIcon.thunderstorm,
+            "99": WeatherIcon.thunderstorm
         })
 
     // Weather properties
@@ -453,6 +424,7 @@ Singleton {
             try {
                 _activeWeatherRequest.abort();
             } catch (e) {}
+            _cleanupRequest(_activeWeatherRequest);
             _activeWeatherRequest = null;
         }
 
@@ -480,23 +452,29 @@ Singleton {
                     console.error("Weather request failed with status:", request.status);
                     weatherLoading = false;
                 }
+                // Clean up handlers
+                _cleanupRequest(request);
             }
         };
 
         request.onerror = function () {
-            console.error("Weather network error");
+            console.error("Weather network error - keeping cached data");
             if (request === _activeWeatherRequest) {
                 _activeWeatherRequest = null;
             }
             weatherLoading = false;
+            // Clean up handlers
+            _cleanupRequest(request);
         };
 
         request.ontimeout = function () {
-            console.error("Weather request timeout");
+            console.error("Weather request timeout - keeping cached data");
             if (request === _activeWeatherRequest) {
                 _activeWeatherRequest = null;
             }
             weatherLoading = false;
+            // Clean up handlers
+            _cleanupRequest(request);
         };
 
         request.open("GET", url);
@@ -521,6 +499,7 @@ Singleton {
             try {
                 _activeAQIRequest.abort();
             } catch (e) {}
+            _cleanupRequest(_activeAQIRequest);
             _activeAQIRequest = null;
         }
 
@@ -548,23 +527,29 @@ Singleton {
                     console.error("AQI request failed with status:", request.status);
                     aqiLoading = false;
                 }
+                // Clean up handlers
+                _cleanupRequest(request);
             }
         };
 
         request.onerror = function () {
-            console.error("AQI network error");
+            console.error("AQI network error - keeping cached data");
             if (request === _activeAQIRequest) {
                 _activeAQIRequest = null;
             }
             aqiLoading = false;
+            // Clean up handlers
+            _cleanupRequest(request);
         };
 
         request.ontimeout = function () {
-            console.error("AQI request timeout");
+            console.error("AQI request timeout - keeping cached data");
             if (request === _activeAQIRequest) {
                 _activeAQIRequest = null;
             }
             aqiLoading = false;
+            // Clean up handlers
+            _cleanupRequest(request);
         };
 
         request.open("GET", url);
@@ -589,6 +574,7 @@ Singleton {
             try {
                 _activeAstronomyRequest.abort();
             } catch (e) {}
+            _cleanupRequest(_activeAstronomyRequest);
             _activeAstronomyRequest = null;
         }
 
@@ -616,23 +602,29 @@ Singleton {
                     console.error("Astronomy request failed with status:", request.status);
                     astronomyLoading = false;
                 }
+                // Clean up handlers
+                _cleanupRequest(request);
             }
         };
 
         request.onerror = function () {
-            console.error("Astronomy network error");
+            console.error("Astronomy network error - keeping cached data");
             if (request === _activeAstronomyRequest) {
                 _activeAstronomyRequest = null;
             }
             astronomyLoading = false;
+            // Clean up handlers
+            _cleanupRequest(request);
         };
 
         request.ontimeout = function () {
-            console.error("Astronomy request timeout");
+            console.error("Astronomy request timeout - keeping cached data");
             if (request === _activeAstronomyRequest) {
                 _activeAstronomyRequest = null;
             }
             astronomyLoading = false;
+            // Clean up handlers
+            _cleanupRequest(request);
         };
 
         request.open("GET", url);
@@ -750,20 +742,15 @@ Singleton {
             try {
                 const content = text();
                 if (!content || content.trim() === "") {
-                    console.log("No cached weather data found");
+                    console.log("No cached weather data found, fetching fresh data");
                     root.reload();
                     return;
                 }
 
                 const data = JSON.parse(content);
-                const cacheAge = Date.now() - (data.timestamp || 0);
-                const maxCacheAge = 3600000; // 1 hour
 
-                if (cacheAge > maxCacheAge) {
-                    console.log("Weather cache is stale, reloading");
-                    root.reload();
-                    return;
-                }
+                // Always load from cache first
+                console.log("Loading weather data from cache...");
 
                 // Restore from cache
                 root.latitude = data.latitude || 0.0;
@@ -833,8 +820,14 @@ Singleton {
                 root.weatherLoaded = true;
                 root.aqiLoaded = true;
                 root.astronomyLoaded = true;
-                console.log("Loaded weather, AQI, and astronomy data from cache");
+
+                const cacheAge = Date.now() - (data.timestamp || 0);
+                const cacheAgeMinutes = Math.floor(cacheAge / 60000);
+                console.log(`Loaded weather data from cache (${cacheAgeMinutes} minutes old)`);
+
+                console.log("Fetching fresh weather data in background...");
                 reloadTimer.start();
+                root.reload();
             } catch (error) {
                 console.error("Failed to load weather cache:", error);
                 root.reload();
@@ -842,9 +835,22 @@ Singleton {
         }
 
         onLoadFailed: function (error) {
-            console.log("Weather cache doesn't exist, creating it");
+            console.log("Weather cache doesn't exist, creating it and fetching data");
             setText("{}");
             root.reload();
+        }
+    }
+
+    // clean up XMLHttpRequest handlers
+    function _cleanupRequest(request) {
+        if (request) {
+            try {
+                request.onreadystatechange = null;
+                request.onerror = null;
+                request.ontimeout = null;
+            } catch (e) {
+                console.error("Error cleaning up request handlers:", e);
+            }
         }
     }
 
@@ -853,18 +859,21 @@ Singleton {
             try {
                 _activeWeatherRequest.abort();
             } catch (e) {}
+            _cleanupRequest(_activeWeatherRequest);
             _activeWeatherRequest = null;
         }
         if (_activeAQIRequest) {
             try {
                 _activeAQIRequest.abort();
             } catch (e) {}
+            _cleanupRequest(_activeAQIRequest);
             _activeAQIRequest = null;
         }
         if (_activeAstronomyRequest) {
             try {
                 _activeAstronomyRequest.abort();
             } catch (e) {}
+            _cleanupRequest(_activeAstronomyRequest);
             _activeAstronomyRequest = null;
         }
     }
