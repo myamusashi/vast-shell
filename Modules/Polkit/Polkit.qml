@@ -20,15 +20,15 @@ DialogBox {
             function onActiveChanged() {
                 bodyPolkit.passwordInput.focus = true;
                 bodyPolkit.passwordInput.forceActiveFocus();
-			}
+            }
 
-			function onAccepted() {
-				PolAgent.agent?.flow?.submit(bodyPolkit.passwordInput.text);
-			}
+            function onAccepted() {
+                PolAgent.agent?.flow?.submit(bodyPolkit.passwordInput.text);
+            }
 
-			function onRejected() {
-				PolAgent.agent?.flow?.cancelAuthenticationRequest()
-			}
+            function onRejected() {
+                PolAgent.agent?.flow?.cancelAuthenticationRequest();
+            }
         }
     }
 }

@@ -108,8 +108,8 @@ RowLayout {
             StyledText {
                 text: TimeAgo.formatTimestampRelative(parseInt(Weather.lastUpdateWeather))
                 font.pixelSize: Appearance.fonts.size.small
-				color: Colours.m3Colors.m3OnSurface
-				Component.onCompleted: console.log(Weather.lastUpdateWeather)
+                color: Colours.m3Colors.m3OnSurface
+                Component.onCompleted: console.log(Weather.lastUpdateWeather)
             }
         }
     }
