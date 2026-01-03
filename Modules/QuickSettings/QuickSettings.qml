@@ -40,35 +40,17 @@ Item {
     }
 
     Corner {
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.rightMargin: -radius
+		location: Qt.TopLeftCorner
+        extensionSide: Qt.Horizontal
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
-        corner: 3
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     Corner {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.leftMargin: -radius
+		location: Qt.TopRightCorner
+        extensionSide: Qt.Horizontal
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     GlobalShortcut {
@@ -94,7 +76,6 @@ Item {
         id: rect
 
 		anchors.fill: parent
-		implicitWidth: mainLoader.item.activeContentWidth
         clip: true
         color: Colours.m3Colors.m3Surface
         radius: 0

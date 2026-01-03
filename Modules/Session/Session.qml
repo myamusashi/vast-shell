@@ -57,35 +57,17 @@ Item {
     }
 
     Corner {
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: -radius
+		location: Qt.TopRightCorner
+        extensionSide: Qt.Vertical
         radius: root.isSessionOpen ? 40 : 0
-        corner: 0
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     Corner {
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.bottomMargin: -radius
+		location: Qt.BottomRightCorner
+        extensionSide: Qt.Vertical
         radius: root.isSessionOpen ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     StyledRect {
