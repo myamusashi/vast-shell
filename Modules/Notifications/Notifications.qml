@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Widgets
 
 import qs.Components
 import qs.Configs
@@ -30,40 +31,23 @@ Item {
         top: parent.top
     }
 
-    Corner {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.leftMargin: -radius
+	Corner {
+		location: Qt.TopLeftCorner
+        extensionSide: Qt.Horizontal
         radius: root.hasNotifications ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
-    Corner {
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.bottomMargin: -radius
+	Corner {
+		location: Qt.BottomRightCorner
+        extensionSide: Qt.Vertical
         radius: root.hasNotifications ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
-    StyledRect {
-        anchors.fill: parent
+    WrapperRectangle {
+		anchors.fill: parent
+		margin: Appearance.margin.normal
         color: Colours.m3Colors.m3Background
         radius: 0
         bottomLeftRadius: Appearance.rounding.normal
@@ -71,7 +55,6 @@ Item {
         ListView {
             id: notifListView
 
-            anchors.fill: parent
             spacing: Appearance.spacing.normal
             boundsBehavior: Flickable.StopAtBounds
             clip: true

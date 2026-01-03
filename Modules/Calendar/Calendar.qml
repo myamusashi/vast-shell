@@ -35,36 +35,18 @@ Item {
         }
     }
 
-    Corner {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.leftMargin: -radius
+	Corner {
+		location: Qt.TopLeftCorner
+		extensionSide: Qt.Horizontal
         radius: GlobalStates.isCalendarOpen ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
-    Corner {
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.bottomMargin: -radius
+	Corner {
+		location: Qt.BottomRightCorner
+		extensionSide: Qt.Vertical
         radius: GlobalStates.isCalendarOpen ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     StyledRect {

@@ -33,35 +33,17 @@ Item {
     }
 
     Corner {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.leftMargin: -radius
+		location: Qt.TopLeftCorner
+        extensionSide: Qt.Horizontal
         radius: GlobalStates.isWeatherPanelOpen ? 40 : 0
-        corner: 2
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     Corner {
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: -radius
+		location: Qt.BottomLeftCorner
+        extensionSide: Qt.Horizontal
         radius: GlobalStates.isWeatherPanelOpen ? 40 : 0
-        corner: 0
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     IpcHandler {

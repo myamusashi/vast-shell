@@ -38,35 +38,17 @@ Item {
     }
 
     Corner {
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.rightMargin: -radius
+		location: Qt.BottomRightCorner
+        extensionSide: Qt.Horizontal
         radius: GlobalStates.isWallpaperSwitcherOpen ? 40 : 0
-        corner: 1
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     Corner {
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.leftMargin: -radius
+		location: Qt.BottomLeftCorner
+        extensionSide: Qt.Horizontal
         radius: GlobalStates.isWallpaperSwitcherOpen ? 40 : 0
-        corner: 0
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        color: Colours.m3Colors.m3Surface
     }
 
     IpcHandler {

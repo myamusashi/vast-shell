@@ -51,36 +51,17 @@ Item {
     }
 
     Corner {
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: -radius
-        radius: GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock") ? 40 : 0
-        corner: 0
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        location: Qt.TopRightCorner
+        extensionSide: Qt.Vertical
+        radius: (GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        color: Colours.m3Colors.m3Surface
     }
 
     Corner {
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.leftMargin: -radius
-
-        radius: GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock") ? 40 : 0
-        corner: 0
-        bgColor: Colours.m3Colors.m3Surface
-
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+        location: Qt.BottomLeftCorner
+        extensionSide: Qt.Horizontal
+        radius: (GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        color: Colours.m3Colors.m3Surface
     }
 
     StyledRect {
