@@ -20,7 +20,7 @@ Item {
     property int state: 0
 
     implicitWidth: parent.width * 0.8
-    implicitHeight: isControlCenterOpen ? 400 : 0
+    implicitHeight: isControlCenterOpen ? 450 : 0
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitHeight {
@@ -93,7 +93,8 @@ Item {
     StyledRect {
         id: rect
 
-        anchors.fill: parent
+		anchors.fill: parent
+		implicitWidth: mainLoader.item.activeContentWidth
         clip: true
         color: Colours.m3Colors.m3Surface
         radius: 0
@@ -101,44 +102,137 @@ Item {
         bottomRightRadius: Appearance.rounding.large
 
         Loader {
+            id: mainLoader
+
             anchors.fill: parent
             active: GlobalStates.isQuickSettingsOpen
             asynchronous: true
             sourceComponent: RowLayout {
                 anchors.fill: parent
 
-                TabColumn {
-                    id: tabBar
-
-                    state: root.state
-                    color: rect.color
-                    scaleFactor: Math.min(1.0, root.width / root.width)
-                    visible: root.isControlCenterOpen
-                    Layout.fillWidth: true
-                    tabs: [
-                        {
-                            "icon": "settings",
-                            "index": 0
-                        },
-                        {
-                            "icon": "speaker",
-                            "index": 1
-                        },
-                        {
-                            "icon": "speed",
-                            "index": 2
-                        }
-                    ]
-                    onTabClicked: index => {
-                        root.state = index;
-                        controlCenterStackView.currentItem.viewIndex = index;
-                    }
-                }
-
                 ColumnLayout {
                     Layout.preferredWidth: parent.width * 0.5
                     Layout.fillHeight: true
                     spacing: 0
+
+                    StyledRect {
+                        id: tabBar
+
+                        Layout.fillWidth: true
+                        implicitHeight: 60
+                        color: rect.color
+                        radius: 0
+                        visible: root.isControlCenterOpen
+
+                        property int currentIndex: root.state
+                        property var tabs: [
+                            {
+                                "icon": "settings",
+                                "name": "Settings",
+                                "index": 0
+                            },
+                            {
+                                "icon": "speaker",
+                                "name": "Volume",
+                                "index": 1
+                            },
+                            {
+                                "icon": "speed",
+                                "name": "Performance",
+                                "index": 2
+                            }
+                        ]
+
+                        RowLayout {
+                            id: tabLayout
+
+                            anchors.centerIn: parent
+                            spacing: 15
+                            width: parent.width * 0.95
+
+                            Repeater {
+                                id: tabRepeater
+
+                                model: tabBar.tabs
+
+                                Item {
+                                    id: tabItem
+
+                                    required property var modelData
+                                    required property int index
+
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: tabBar.height
+
+                                    ColumnLayout {
+                                        anchors.centerIn: parent
+                                        spacing: 4
+
+                                        Icon {
+                                            id: tabIcon
+
+                                            Layout.alignment: Qt.AlignHCenter
+                                            icon: tabItem.modelData.icon
+                                            type: Icon.Material
+                                            font.pointSize: Appearance.fonts.size.large
+                                            color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
+                                        }
+
+                                        StyledText {
+                                            id: tabText
+
+                                            Layout.alignment: Qt.AlignHCenter
+                                            text: tabItem.modelData.name
+                                            font.pixelSize: Appearance.fonts.size.small
+                                            color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
+                                        }
+                                    }
+
+                                    MArea {
+                                        id: tabMArea
+
+                                        anchors.fill: parent
+                                        layerColor: Colours.m3Colors.m3Primary
+                                        layerRadius: Appearance.rounding.small
+
+                                        onClicked: {
+                                            root.state = tabItem.index;
+                                            tabBar.currentIndex = tabItem.index;
+                                            controlCenterStackView.currentItem.viewIndex = tabItem.index;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        StyledRect {
+                            id: indicator
+
+                            anchors.bottom: tabLayout.bottom
+                            implicitWidth: tabRepeater.itemAt(tabBar.currentIndex) ? tabRepeater.itemAt(tabBar.currentIndex).width : 0
+                            implicitHeight: 2
+                            color: Colours.m3Colors.m3Primary
+                            radius: Appearance.rounding.large
+
+                            x: {
+                                if (tabRepeater.itemAt(tabBar.currentIndex))
+                                    return tabRepeater.itemAt(tabBar.currentIndex).x + tabLayout.x;
+                                return 0;
+                            }
+
+                            Behavior on x {
+                                NAnim {
+                                    duration: Appearance.animations.durations.small
+                                }
+                            }
+
+                            Behavior on width {
+                                NAnim {
+                                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                                }
+                            }
+                        }
+                    }
 
                     StackView {
                         id: controlCenterStackView
@@ -163,7 +257,9 @@ Item {
                                 id: shapeRect
 
                                 anchors.fill: parent
-                                anchors.topMargin: 10
+                                anchors.leftMargin: 15
+                                anchors.rightMargin: 15
+                                anchors.topMargin: 15
 
                                 radius: 0
                                 bottomLeftRadius: Appearance.rounding.normal
@@ -187,7 +283,9 @@ Item {
                                     asynchronous: true
                                     visible: active
 
-                                    sourceComponent: VolumeSettings {}
+									sourceComponent: VolumeSettings {
+										implicitWidth: 500
+									}
                                 }
 
                                 Loader {

@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Services.Notifications
 
 import qs.Configs
 import qs.Helpers
@@ -94,10 +95,162 @@ StyledRect {
                     boundsBehavior: Flickable.StopAtBounds
                     cacheBuffer: 200
 
-                    delegate: N.Wrapper {
+                    delegate: Item {
+                        id: root
+
                         required property var modelData
-                        required property int index
-                        notif: modelData
+                        property bool isPopup: false
+                        property alias contentLayout: contentLayout
+                        property alias iconLayout: iconLayout
+                        property alias mArea: delegateMouseNotif
+
+                        signal entered
+                        signal exited
+
+                        implicitWidth: parent.width
+                        implicitHeight: contentLayout.height * 1.3
+                        clip: true
+                        x: parent.width
+
+                        Component.onCompleted: {
+                            slideInAnim.start();
+                        }
+
+                        Component.onDestruction: {
+                            slideInAnim.stop();
+                            slideOutAnim.start();
+                            swipeOutAnim.start();
+                        }
+
+                        ListView.onReused: {
+                            x = parent.width;
+                            slideInAnim.start();
+                        }
+
+                        NAnim {
+                            id: slideInAnim
+
+                            target: root
+                            property: "x"
+                            from: root.parent.width
+                            to: 0
+                            duration: Appearance.animations.durations.emphasized
+                            easing.bezierCurve: Appearance.animations.curves.emphasized
+                        }
+
+                        NAnim {
+                            id: slideOutAnim
+
+                            target: root
+                            property: "x"
+                            to: root.parent.width
+                            duration: Appearance.animations.durations.emphasizedAccel
+                            easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
+                            onFinished: {
+                                if (root.isPopup)
+                                    root.modelData.popup = false;
+                            }
+                        }
+
+                        NAnim {
+                            id: swipeOutAnim
+
+                            target: root
+                            property: "x"
+                            duration: Appearance.animations.durations.small
+                            easing.bezierCurve: Appearance.animations.curves.standardAccel
+                            onFinished: {
+                                if (root.isPopup)
+                                    root.modelData.popup = false;
+                            }
+                        }
+
+                        Behavior on implicitWidth {
+                            NAnim {
+                                duration: Appearance.animations.durations.emphasized
+                                easing.bezierCurve: Appearance.animations.curves.emphasized
+                            }
+                        }
+
+                        Behavior on implicitHeight {
+                            NAnim {
+                                duration: Appearance.animations.durations.emphasized
+                                easing.bezierCurve: Appearance.animations.curves.emphasized
+                            }
+                        }
+
+                        StyledRect {
+                            anchors {
+                                fill: parent
+                                leftMargin: 10
+                            }
+                            radius: Appearance.rounding.normal
+                            clip: true
+
+                            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
+
+                            border {
+                                color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : "transparent"
+                                width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
+                            }
+
+                            MArea {
+                                id: delegateMouseNotif
+
+                                anchors.fill: parent
+                                hoverEnabled: true
+
+                                onEntered: {
+                                    root.entered();
+                                }
+
+                                onExited: {
+                                    root.exited();
+                                }
+
+                                drag {
+                                    axis: Drag.XAxis
+                                    target: root
+                                    minimumX: -root.width
+                                    maximumX: root.width
+
+                                    onActiveChanged: {
+                                        if (drag.active)
+                                            return;
+
+                                        if (Math.abs(root.x) > root.width * 0.45) {
+                                            swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
+                                            swipeOutAnim.start();
+                                            root.modelData.close();
+                                        } else {
+                                            root.x = 0;
+                                        }
+									}
+                                }
+                            }
+
+                            Row {
+                                anchors {
+                                    fill: parent
+                                    topMargin: 10
+                                    leftMargin: 10
+                                    rightMargin: 10
+                                }
+                                spacing: Appearance.spacing.normal
+
+                                N.Icon {
+                                    id: iconLayout
+
+                                    modelData: root.modelData
+                                }
+
+                                N.Content {
+                                    id: contentLayout
+
+                                    modelData: root.modelData
+                                }
+                            }
+                        }
                     }
                 }
 
