@@ -9,6 +9,7 @@ Singleton {
     id: root
 
     property alias appearance: adapter.appearance
+    property alias bar: adapter.bar
     property alias colors: adapter.colors
     property alias generals: adapter.generals
     property alias wallpaper: adapter.wallpaper
@@ -33,6 +34,7 @@ Singleton {
             property GeneralConfig generals: GeneralConfig {}
             property WallpaperConfig wallpaper: WallpaperConfig {}
             property WeatherConfig weather: WeatherConfig {}
+            property BarConfig bar: BarConfig {}
             property var widgets: [
                 {
                     "icon": "screenshot_frame",
