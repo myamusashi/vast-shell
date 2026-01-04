@@ -6,6 +6,13 @@ JsonObject {
     property Apps apps: Apps {}
     property Battery battery: Battery {}
 
+    property bool transparent: false
+    property real alpha: 0.8
+    property bool blur: false
+    property bool liveBlur: true
+    property real blurIntensity: 1.0
+    property int blurPasses: 3
+
     component Battery: JsonObject {
         property list<var> warnLevels: [
             {
@@ -35,8 +42,8 @@ JsonObject {
         property string terminal: "foot"
         property string imageViewer: "lximage-qt"
         property string videoViewer: "mpv"
-        property list<string> audio: ["pavucontrol-qt"]
-        property list<string> playback: ["mpv"]
-        property list<string> fileExplorer: ["pcmanfm-qt"]
+        property string audio: "pavucontrol-qt"
+        property string playback: "mpv"
+        property string fileExplorer: "pcmanfm-qt"
     }
 }
