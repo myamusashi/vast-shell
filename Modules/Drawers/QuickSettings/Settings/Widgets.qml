@@ -18,7 +18,7 @@ Item {
     property int maxRows: 3
     property int itemSpacing: Appearance.spacing.normal
     property int pageSpacing: 20
-    property var widgetsList: Configs.widgets.lists
+    property var widgetsList: Configs.widgets
     readonly property int itemsPerPage: maxColumns * maxRows
     readonly property int totalPages: Math.ceil(widgetsList.length / itemsPerPage)
     readonly property int currentPageIndex: Math.floor(swipeView.contentX / swipeView.width)
