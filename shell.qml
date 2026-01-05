@@ -1,4 +1,5 @@
 //@ pragma UseQApplication
+//@ pragma NativeTextRendering
 //@ pragma IconTheme WhiteSur-dark
 //@ pragma Env QS_NO_RELOAD_POPUP=1
 
@@ -19,16 +20,4 @@ ShellRoot {
     RecordPanel {}
     Polkit {}
     Drawers {}
-
-    Connections {
-        target: Quickshell
-
-        function onReloadCompleted() {
-            Quickshell.inhibitReloadPopup();
-        }
-
-        function onReloadFailed() {
-            Quickshell.inhibitReloadPopup();
-        }
-    }
 }
