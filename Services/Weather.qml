@@ -149,26 +149,26 @@ Singleton {
 
     function getWeatherIconFromCode(code, isDayTime) {
         if (code === null || code === undefined)
-            return "air";
+            return WeatherIcon.windy;
 
         const codeStr = code.toString();
-        const iconName = weatherIcons[codeStr] || "air";
+        const iconName = weatherIcons[codeStr] || WeatherIcon.windy;
 
         if (code === 0 || code === 1 || code === 2) {
             if (isDayTime) {
                 if (code === 0)
-                    return "clear_day";
+                    return WeatherIcon.day_sunny;
                 if (code === 1)
-                    return "partly_cloudy_day";
+                    return WeatherIcon.day_cloudy;
                 if (code === 2)
-                    return "partly_cloudy_day";
+                    return WeatherIcon.day_cloudy;
             } else {
                 if (code === 0)
-                    return "clear_night";
+                    return WeatherIcon.night_clear;
                 if (code === 1)
-                    return "partly_cloudy_night";
+                    return WeatherIcon.night_cloudy;
                 if (code === 2)
-                    return "partly_cloudy_night";
+                    return WeatherIcon.night_cloudy;
             }
         }
 

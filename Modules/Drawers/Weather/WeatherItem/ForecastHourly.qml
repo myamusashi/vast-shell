@@ -49,7 +49,7 @@ StyledRect {
 
         Flickable {
             Layout.fillWidth: true
-            Layout.preferredHeight: 120
+            Layout.preferredHeight: 150
             contentWidth: hourlyRow.width
             clip: true
 
@@ -77,8 +77,9 @@ StyledRect {
                         id: delegate
 
                         required property var modelData
-                        Layout.preferredWidth: 65
-                        Layout.preferredHeight: 110
+
+                        implicitWidth: 65
+                        implicitHeight: 130
                         radius: Appearance.rounding.normal
 
                         readonly property bool isCurrentHour: {
@@ -91,7 +92,7 @@ StyledRect {
                         ColumnLayout {
                             anchors.fill: parent
                             anchors.margins: 0
-                            spacing: 0
+                            spacing: Appearance.spacing.small
 
                             Item {
                                 Layout.alignment: Qt.AlignHCenter
@@ -110,11 +111,6 @@ StyledRect {
                                     Component.onCompleted: {
                                         roundedPolygon = MaterialShapes.getCookie4Sided();
                                         requestPaint();
-                                    }
-
-                                    onVisibleChanged: {
-                                        if (visible)
-                                            requestPaint();
                                     }
                                 }
 
