@@ -1,28 +1,21 @@
 import QtQuick
 import QtQuick.Shapes
+import Quickshell.Widgets
 
-import qs.Configs
-
-Shape {
+WrapperItem {
     id: root
 
+    property color color: "white"
     property int location: Qt.TopRightCorner
     property int extensionSide: Qt.Vertical
-
     property real radius: 30
-    property color color: "white"
 
-    width: radius
-    height: radius
+    implicitWidth: radius
+    implicitHeight: radius
 
     Behavior on radius {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
+        NAnim {}
     }
-
-    preferredRendererType: Shape.CurveRenderer
 
     rotation: {
         if (location === Qt.TopRightCorner)
@@ -111,30 +104,35 @@ Shape {
         }
     ]
 
-    ShapePath {
-        strokeWidth: 0
-        strokeColor: "transparent"
-        fillColor: root.color
+    Shape {
+        preferredRendererType: Shape.CurveRenderer
 
-        startX: root.width
-        startY: 0
+        ShapePath {
+            strokeWidth: 0
+            strokeColor: "transparent"
+            fillColor: root.color
+            pathHints: ShapePath.PathSolid & ShapePath.PathNonIntersecting
 
-        PathLine {
-            x: root.width
-            y: root.height
-        }
-        PathLine {
-            x: 0
-            y: root.height
-        }
+            startX: root.width
+            startY: 0
 
-        PathArc {
-            x: root.width
-            y: 0
-            radiusX: root.radius
-            radiusY: root.radius
-            useLargeArc: false
-            direction: PathArc.Counterclockwise
+            PathLine {
+                x: root.width
+                y: root.height
+            }
+            PathLine {
+                x: 0
+                y: root.height
+            }
+
+            PathArc {
+                x: root.width
+                y: 0
+                radiusX: root.radius
+                radiusY: root.radius
+                useLargeArc: false
+                direction: PathArc.Counterclockwise
+            }
         }
     }
 }

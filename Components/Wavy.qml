@@ -18,8 +18,6 @@ Slider {
     property bool enableWave: true
     property real waveTransition: 1.0
 
-    snapMode: Slider.NoSnap
-
     Behavior on waveTransition {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -27,27 +25,29 @@ Slider {
         }
     }
 
+    snapMode: Slider.NoSnap
     onEnableWaveChanged: waveTransition = enableWave ? 1.0 : 0.0
 
     NumberAnimation on waveAnimationPhase {
+        running: slider.enableWave
         from: 0
         to: Math.PI * 2
         duration: 2000
         loops: Animation.Infinite
-        running: slider.enableWave
     }
 
     background: Item {
         id: bg
 
-        x: slider.leftPadding
-        y: slider.topPadding + slider.availableHeight / 2 - height / 2
-        width: slider.availableWidth
-        height: slider.height || 10
         readonly property real trackStartX: 0
         readonly property real trackEndX: width
         readonly property real trackWidth: trackEndX - trackStartX
         readonly property real normalizedValue: slider.visualPosition
+
+        x: slider.leftPadding
+        y: slider.topPadding + slider.availableHeight / 2 - height / 2
+        width: slider.availableWidth
+        height: slider.height || 10
 
         Canvas {
             id: wavyCanvas
@@ -86,12 +86,15 @@ Slider {
             }
             Connections {
                 target: slider
+
                 function onVisualPositionChanged() {
                     wavyCanvas.requestPaint();
                 }
+
                 function onWaveAnimationPhaseChanged() {
                     wavyCanvas.requestPaint();
                 }
+
                 function onWaveTransitionChanged() {
                     wavyCanvas.requestPaint();
                 }
@@ -133,6 +136,7 @@ Slider {
             }
         }
     }
+
     handle: Rectangle {
         id: handleRect
 
@@ -144,6 +148,7 @@ Slider {
         color: slider.activeColor
         opacity: slider.hovered ? 1 : 0
         scale: slider.pressed ? 1.3 : 1
+
         Behavior on scale {
             NAnim {
                 duration: Appearance.animations.durations.small

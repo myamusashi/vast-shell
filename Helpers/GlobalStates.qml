@@ -256,10 +256,8 @@ Singleton {
             }
 
             Component.onDestruction: {
-                // Ensure cleanup
-                if (running) {
+                if (running)
                     stop();
-                }
             }
         }
     }
@@ -270,6 +268,10 @@ Singleton {
         interval: root.cleanupDelay
         repeat: false
         onTriggered: gc()
+    }
+
+    PwObjectTracker {
+        objects: [Pipewire.defaultAudioSink]
     }
 
     Connections {
@@ -290,10 +292,6 @@ Singleton {
         function onVolumeChanged() {
             root.showOSD("volume");
         }
-    }
-
-    PwObjectTracker {
-        objects: [Pipewire.defaultAudioSink]
     }
 
     Component.onDestruction: {
