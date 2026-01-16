@@ -97,7 +97,6 @@ Item {
         Loader {
             anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && root.isLauncherOpen
-            asynchronous: true
 
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
@@ -161,11 +160,7 @@ Item {
                     clip: true
                     spacing: 8
                     cacheBuffer: 100
-                    reuseItems: false
-                    preferredHighlightBegin: 0
-                    preferredHighlightEnd: height
-                    highlightRangeMode: ListView.ApplyRange
-                    highlightMoveDuration: 150
+                    highlightMoveDuration: 200
                     maximumFlickVelocity: 3000
                     highlightMoveVelocity: -1
                     ScrollBar.vertical: ScrollBar {
