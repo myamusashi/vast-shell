@@ -64,7 +64,6 @@ StyledRect {
     Loader {
         anchors.fill: parent
         active: GlobalStates.isScreenCapturePanelOpen
-        asynchronous: true
         sourceComponent: ColumnLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal

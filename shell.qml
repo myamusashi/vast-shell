@@ -1,4 +1,3 @@
-//@ pragma UseQApplication
 //@ pragma NativeTextRendering
 //@ pragma IconTheme WhiteSur-dark
 //@ pragma Env QS_NO_RELOAD_POPUP=1
