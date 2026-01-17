@@ -42,16 +42,6 @@ WrapperRectangle {
         }
     }
 
-    Component {
-        id: loadingIndicator
-
-        LoadingIndicator {
-            implicitWidth: 120
-            implicitHeight: 120
-            status: !Loader.Ready
-        }
-    }
-
     FileView {
         id: fileMD
 
