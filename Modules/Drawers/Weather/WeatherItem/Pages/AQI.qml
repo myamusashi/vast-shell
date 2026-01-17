@@ -39,32 +39,15 @@ WrapperRectangle {
         }
     }
 
-    Component {
-        id: loadingIndicator
-
-        LoadingIndicator {
-            implicitWidth: 120
-            implicitHeight: 120
-            status: !Loader.Ready
-        }
-    }
-
-    FileView {
-        id: aqiUSAFileDescription
-
-        path: Qt.resolvedUrl("./Markdown/USAQI.md")
-        watchChanges: true
-    }
-
-    FileView {
-        id: aqiEuroFileDescription
-
-        path: Qt.resolvedUrl("./Markdown/EuroAQI.md")
-        watchChanges: true
+    LoadingIndicator {
+        implicitWidth: 120
+        implicitHeight: 120
+        status: !Loader.Ready
     }
 
     Loader {
         active: root.isOpen
+        asynchronous: true
 
         sourceComponent: Column {
             id: column
@@ -72,6 +55,22 @@ WrapperRectangle {
             property string description: tabGroup.currentIndex === 0 ? aqiUSAFileDescription.text() : aqiEuroFileDescription.text()
 
             spacing: Appearance.spacing.normal
+
+            FileView {
+                id: aqiUSAFileDescription
+
+                path: Qt.resolvedUrl("./Markdown/USAQI.md")
+                watchChanges: true
+                onFileChanged: reload()
+            }
+
+            FileView {
+                id: aqiEuroFileDescription
+
+                path: Qt.resolvedUrl("./Markdown/EuroAQI.md")
+                watchChanges: true
+                onFileChanged: reload()
+            }
 
             Header {
                 icon: Lucide.icon_waves

@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Io
+import Quickshell.Widgets
 import Quickshell.Hyprland
 
 import qs.Configs
@@ -67,55 +68,53 @@ Item {
         onPressed: GlobalStates.togglePanel("weather")
     }
 
-    StyledRect {
+    ClippingRectangle {
         anchors.fill: parent
-
-        clip: true
         radius: 0
         color: GlobalStates.drawerColors
 
-        Loader {
-            id: mainLoader
+        Flickable {
+            id: flickable
 
             anchors.fill: parent
-            active: GlobalStates.isWeatherPanelOpen
-            asynchronous: true
+            contentWidth: width
+			contentHeight: mainLoader.item.implicitHeight + 40
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
 
-            sourceComponent: Flickable {
-                id: flickable
+            ScrollBar.vertical: ScrollBar {
+                id: scrollBar
 
-                anchors.fill: parent
-                contentWidth: width
-                contentHeight: contentColumn.implicitHeight + 40
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
-
-                ScrollBar.vertical: ScrollBar {
-                    id: scrollBar
-
-                    anchors {
-                        right: flickable.right
-                        top: flickable.top
-                        bottom: flickable.bottom
-                    }
-
-                    policy: ScrollBar.AsNeeded
-                    width: 6
-                    contentItem: StyledRect {
-                        implicitWidth: 6
-                        radius: Appearance.rounding.small
-                        color: Colours.m3Colors.m3Primary
-                        opacity: scrollBar.pressed ? 0.8 : 0.5
-                    }
-                    background: StyledRect {
-                        implicitWidth: 6
-                        radius: Appearance.rounding.small
-                        color: Colours.m3Colors.m3OutlineVariant
-                        opacity: 0.3
-                    }
+                anchors {
+                    right: flickable.right
+                    top: flickable.top
+                    bottom: flickable.bottom
                 }
 
-                ColumnLayout {
+                policy: ScrollBar.AsNeeded
+                width: 6
+                contentItem: StyledRect {
+                    implicitWidth: 6
+                    radius: Appearance.rounding.small
+                    color: Colours.m3Colors.m3Primary
+                    opacity: scrollBar.pressed ? 0.8 : 0.5
+                }
+                background: StyledRect {
+                    implicitWidth: 6
+                    radius: Appearance.rounding.small
+                    color: Colours.m3Colors.m3OutlineVariant
+                    opacity: 0.3
+                }
+            }
+
+            Loader {
+                id: mainLoader
+
+                anchors.fill: parent
+                active: true
+                asynchronous: true
+
+                sourceComponent: ColumnLayout {
                     id: contentColumn
 
                     anchors {
@@ -344,6 +343,7 @@ Item {
                                     moonPages.zoomOriginY = moonCard.mapToItem(root, 0, 0).y + moonCard.height / 2;
                                     moonPages.isOpen = true;
                                 }
+                                z: 999
                             }
                         }
 
@@ -362,7 +362,7 @@ Item {
         }
     }
 
-    // Mouse blocker overlay
+    // Mouse blocker
     MouseArea {
         anchors.fill: parent
         visible: root.anyPageOpen

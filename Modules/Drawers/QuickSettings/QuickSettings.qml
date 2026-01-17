@@ -82,201 +82,194 @@ Item {
         bottomLeftRadius: Appearance.rounding.large
         bottomRightRadius: Appearance.rounding.large
 
-        Loader {
-            id: mainLoader
-
+        RowLayout {
             anchors.fill: parent
-            active: GlobalStates.isQuickSettingsOpen
-            asynchronous: true
-            sourceComponent: RowLayout {
-                anchors.fill: parent
 
-                ColumnLayout {
-                    Layout.preferredWidth: parent.width * 0.5
-                    Layout.fillHeight: true
-                    spacing: 0
+            ColumnLayout {
+                Layout.preferredWidth: parent.width * 0.5
+                Layout.fillHeight: true
+                spacing: 0
 
-                    StyledRect {
-                        id: tabBar
+                StyledRect {
+                    id: tabBar
 
-                        Layout.fillWidth: true
-                        implicitHeight: 60
-                        color: rect.color
-                        radius: 0
-                        visible: root.isControlCenterOpen
+                    Layout.fillWidth: true
+                    implicitHeight: 60
+                    color: rect.color
+                    radius: 0
+                    visible: root.isControlCenterOpen
 
-                        property int currentIndex: root.state
-                        property var tabs: [
-                            {
-                                "icon": "settings",
-                                "name": "Settings",
-                                "index": 0
-                            },
-                            {
-                                "icon": "speaker",
-                                "name": "Volume",
-                                "index": 1
-                            },
-                            {
-                                "icon": "speed",
-                                "name": "Performance",
-                                "index": 2
-                            }
-                        ]
-
-                        RowLayout {
-                            id: tabLayout
-
-                            anchors.centerIn: parent
-                            spacing: 15
-                            width: parent.width * 0.95
-
-                            Repeater {
-                                id: tabRepeater
-
-                                model: tabBar.tabs
-
-                                Item {
-                                    id: tabItem
-
-                                    required property var modelData
-                                    required property int index
-
-                                    Layout.fillWidth: true
-                                    Layout.preferredHeight: tabBar.height
-
-                                    ColumnLayout {
-                                        anchors.centerIn: parent
-                                        spacing: 4
-
-                                        Icon {
-                                            id: tabIcon
-
-                                            Layout.alignment: Qt.AlignHCenter
-                                            icon: tabItem.modelData.icon
-                                            type: Icon.Material
-                                            font.pixelSize: Appearance.fonts.size.large
-                                            color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
-                                        }
-
-                                        StyledText {
-                                            id: tabText
-
-                                            Layout.alignment: Qt.AlignHCenter
-                                            text: tabItem.modelData.name
-                                            font.pixelSize: Appearance.fonts.size.small
-                                            color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
-                                        }
-                                    }
-
-                                    MArea {
-                                        id: tabMArea
-
-                                        anchors.fill: parent
-                                        layerColor: Colours.m3Colors.m3Primary
-                                        layerRadius: Appearance.rounding.small
-
-                                        onClicked: {
-                                            root.state = tabItem.index;
-                                            tabBar.currentIndex = tabItem.index;
-                                            controlCenterStackView.currentItem.viewIndex = tabItem.index;
-                                        }
-                                    }
-                                }
-                            }
+                    property int currentIndex: root.state
+                    property var tabs: [
+                        {
+                            "icon": "settings",
+                            "name": "Settings",
+                            "index": 0
+                        },
+                        {
+                            "icon": "speaker",
+                            "name": "Volume",
+                            "index": 1
+                        },
+                        {
+                            "icon": "speed",
+                            "name": "Performance",
+                            "index": 2
                         }
+                    ]
 
-                        StyledRect {
-                            id: indicator
+                    RowLayout {
+                        id: tabLayout
 
-                            anchors.bottom: tabLayout.bottom
-                            implicitWidth: tabRepeater.itemAt(tabBar.currentIndex) ? tabRepeater.itemAt(tabBar.currentIndex).width : 0
-                            implicitHeight: 2
-                            color: Colours.m3Colors.m3Primary
-                            radius: Appearance.rounding.large
+                        anchors.centerIn: parent
+                        spacing: 15
+                        width: parent.width * 0.95
 
-                            x: {
-                                if (tabRepeater.itemAt(tabBar.currentIndex))
-                                    return tabRepeater.itemAt(tabBar.currentIndex).x + tabLayout.x;
-                                return 0;
-                            }
+                        Repeater {
+                            id: tabRepeater
 
-                            Behavior on x {
-                                NAnim {
-                                    duration: Appearance.animations.durations.small
+                            model: tabBar.tabs
+
+                            Item {
+                                id: tabItem
+
+                                required property var modelData
+                                required property int index
+
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: tabBar.height
+
+                                ColumnLayout {
+                                    anchors.centerIn: parent
+                                    spacing: 4
+
+                                    Icon {
+                                        id: tabIcon
+
+                                        Layout.alignment: Qt.AlignHCenter
+                                        icon: tabItem.modelData.icon
+                                        type: Icon.Material
+                                        font.pixelSize: Appearance.fonts.size.large
+                                        color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
+                                    }
+
+                                    StyledText {
+                                        id: tabText
+
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: tabItem.modelData.name
+                                        font.pixelSize: Appearance.fonts.size.small
+                                        color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
+                                    }
                                 }
-                            }
 
-                            Behavior on width {
-                                NAnim {
-                                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                                MArea {
+                                    id: tabMArea
+
+                                    anchors.fill: parent
+                                    layerColor: Colours.m3Colors.m3Primary
+                                    layerRadius: Appearance.rounding.small
+
+                                    onClicked: {
+                                        root.state = tabItem.index;
+                                        tabBar.currentIndex = tabItem.index;
+                                        controlCenterStackView.currentItem.viewIndex = tabItem.index;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    StackView {
-                        id: controlCenterStackView
+                    StyledRect {
+                        id: indicator
 
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 500
+                        anchors.bottom: tabLayout.bottom
+                        implicitWidth: tabRepeater.itemAt(tabBar.currentIndex) ? tabRepeater.itemAt(tabBar.currentIndex).width : 0
+                        implicitHeight: 2
+                        color: Colours.m3Colors.m3Primary
+                        radius: Appearance.rounding.large
 
-                        property Component viewComponent: contentView
-
-                        initialItem: viewComponent
-
-                        onCurrentItemChanged: {
-                            if (currentItem)
-                                currentItem.viewIndex = root.state;
+                        x: {
+                            if (tabRepeater.itemAt(tabBar.currentIndex))
+                                return tabRepeater.itemAt(tabBar.currentIndex).x + tabLayout.x;
+                            return 0;
                         }
 
-                        Component {
-                            id: contentView
+                        Behavior on x {
+                            NAnim {
+                                duration: Appearance.animations.durations.small
+                            }
+                        }
 
-                            StyledRect {
-                                id: shapeRect
+                        Behavior on width {
+                            NAnim {
+                                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                            }
+                        }
+                    }
+                }
 
+                StackView {
+                    id: controlCenterStackView
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.preferredHeight: 500
+
+                    property Component viewComponent: contentView
+
+                    initialItem: viewComponent
+
+                    onCurrentItemChanged: {
+                        if (currentItem)
+                            currentItem.viewIndex = root.state;
+                    }
+
+                    Component {
+                        id: contentView
+
+                        StyledRect {
+                            id: shapeRect
+
+                            anchors.fill: parent
+                            anchors.leftMargin: 15
+                            anchors.rightMargin: 15
+                            anchors.topMargin: 15
+
+                            radius: 0
+                            bottomLeftRadius: Appearance.rounding.normal
+                            bottomRightRadius: Appearance.rounding.normal
+                            color: Colours.m3Colors.m3Background
+
+                            property int viewIndex: 0
+
+                            Loader {
                                 anchors.fill: parent
-                                anchors.leftMargin: 15
-                                anchors.rightMargin: 15
-                                anchors.topMargin: 15
+                                active: parent.viewIndex === 0
+                                asynchronous: true
+                                visible: active
 
-                                radius: 0
-                                bottomLeftRadius: Appearance.rounding.normal
-                                bottomRightRadius: Appearance.rounding.normal
-                                color: Colours.m3Colors.m3Background
+                                sourceComponent: Settings {}
+                            }
 
-                                property int viewIndex: 0
+                            Loader {
+                                anchors.fill: parent
+                                active: parent.viewIndex === 1
+                                asynchronous: true
+                                visible: active
 
-                                Loader {
-                                    anchors.fill: parent
-                                    active: parent.viewIndex === 0
-                                    asynchronous: true
-                                    visible: active
-
-                                    sourceComponent: Settings {}
+                                sourceComponent: VolumeSettings {
+                                    implicitWidth: 500
                                 }
+                            }
 
-                                Loader {
-                                    anchors.fill: parent
-                                    active: parent.viewIndex === 1
-                                    asynchronous: true
-                                    visible: active
+                            Loader {
+                                anchors.fill: parent
+                                active: parent.viewIndex === 2
+                                asynchronous: true
+                                visible: active
 
-                                    sourceComponent: VolumeSettings {
-                                        implicitWidth: 500
-                                    }
-                                }
-
-                                Loader {
-                                    anchors.fill: parent
-                                    active: parent.viewIndex === 2
-                                    asynchronous: true
-                                    visible: active
-
-                                    sourceComponent: Performances {}
-                                }
+                                sourceComponent: Performances {}
                             }
                         }
                     }
