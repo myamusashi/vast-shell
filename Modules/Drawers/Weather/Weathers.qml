@@ -78,7 +78,7 @@ Item {
 
             anchors.fill: parent
             contentWidth: width
-			contentHeight: mainLoader.item.implicitHeight + 40
+            contentHeight: mainLoader.item.implicitHeight + 40
             clip: true
             boundsBehavior: Flickable.StopAtBounds
 

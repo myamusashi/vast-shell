@@ -21,7 +21,6 @@ WrapperRectangle {
     property bool isOpen: false
 
     margin: Appearance.margin.normal
-    visible: opacity > 0
     color: Colours.m3Colors.m3Surface
     scale: isOpen ? 1.0 : 0.5
     opacity: isOpen ? 1.0 : 0.0
@@ -38,16 +37,6 @@ WrapperRectangle {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    Component {
-        id: loadingIndicator
-
-        LoadingIndicator {
-            implicitWidth: 120
-            implicitHeight: 120
-            status: !Loader.Ready
         }
     }
 
