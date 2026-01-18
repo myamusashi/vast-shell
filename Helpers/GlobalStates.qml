@@ -36,7 +36,7 @@ Singleton {
     property bool isOverviewOpen: false
     property bool isRecordPanelOpen: false
     property bool isWeatherPanelOpen: false
-    property bool hideOuterBorder: false
+    property bool isLockscreenOpen: false
     property string scriptPath: `${Paths.rootDir}/Assets/screen-capture.sh`
     property var _activeOSDs: ({})
     property var _osdTimerRefs: ({})

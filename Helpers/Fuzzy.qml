@@ -60,7 +60,6 @@ Singleton {
         if (!found)
             launchHistory.push({
                 id: appId,
-
                 timestamp: now,
                 count: 1
             });
