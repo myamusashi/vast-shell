@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Wayland
 
@@ -33,6 +32,7 @@ LazyLoader {
         }
 
         color: Colours.withAlpha(Colours.m3Colors.m3Background, 0.3)
+        WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
         MArea {
