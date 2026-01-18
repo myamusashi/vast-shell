@@ -22,6 +22,7 @@ WlSessionLockSurface {
 
     property bool isClosing: false
     property bool showErrorMessage: false
+    color: "transparent"
 
     Connections {
         target: root.lock
@@ -44,35 +45,29 @@ WlSessionLockSurface {
         }
     }
 
+    ScreencopyView {
+        id: wallpaper
+
+        anchors.fill: parent
+
+        property int blurSize: 0
+
+        captureSource: root.screen
+        live: false
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            blurEnabled: true
+            blurMax: wallpaper.blurSize
+            blur: 1.0
+        }
+    }
+
     StyledRect {
         id: rectSurface
 
         anchors.fill: parent
         radius: 0
-        color: Colours.m3Colors.m3SurfaceContainerLowest
-
-        Wallpaper {
-            id: wallpaper
-
-            property int blurSize: 0
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                blurEnabled: true
-                blurMax: wallpaper.blurSize
-                blur: 1.0
-            }
-
-            Rectangle {
-                id: shadowRect
-
-                anchors.fill: parent
-
-                property real alpha: 0
-
-                color: Colours.withAlpha(GlobalStates.drawerColors, alpha)
-            }
-        }
+        color: "transparent"
 
         Component.onCompleted: {
             lockSequence.start();
@@ -143,7 +138,7 @@ WlSessionLockSurface {
                 horizontalCenter: parent.horizontalCenter
             }
 
-            implicitWidth: GlobalStates.isLockscreenOpen ? topWrapperRect.implicitWidth : 40
+            implicitWidth: GlobalStates.isLockscreenOpen ? topWrapperRect.implicitWidth : 80
             implicitHeight: 0
 
             Behavior on implicitWidth {
@@ -223,7 +218,7 @@ WlSessionLockSurface {
                 bottom: parent.bottom
                 horizontalCenter: parent.horizontalCenter
             }
-            implicitWidth: GlobalStates.isLockscreenOpen ? bottomWrapperRect.implicitWidth : 40
+            implicitWidth: GlobalStates.isLockscreenOpen ? bottomWrapperRect.implicitWidth : 80
             implicitHeight: 0
 
             Behavior on implicitWidth {
@@ -578,13 +573,7 @@ WlSessionLockSurface {
             NAnim {
                 target: wallpaper
                 property: "blurSize"
-                to: 64
-            }
-
-            NAnim {
-                target: shadowRect
-                property: "alpha"
-                to: 0.5
+                to: 40
             }
 
             NAnim {
@@ -624,7 +613,7 @@ WlSessionLockSurface {
             NAnim {
                 target: topItem
                 property: "implicitWidth"
-                to: topWrapperRect.implicitWidth
+                to: topWrapperRect.implicitWidth + 40
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -632,7 +621,7 @@ WlSessionLockSurface {
             NAnim {
                 target: bottomItem
                 property: "implicitWidth"
-                to: bottomWrapperRect.implicitWidth
+                to: bottomWrapperRect.implicitWidth + 40
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -652,7 +641,7 @@ WlSessionLockSurface {
             NAnim {
                 target: topItem
                 property: "implicitWidth"
-                to: 40
+                to: 80
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -660,7 +649,7 @@ WlSessionLockSurface {
             NAnim {
                 target: bottomItem
                 property: "implicitWidth"
-                to: 40
+                to: 80
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -690,12 +679,6 @@ WlSessionLockSurface {
             }
 
             NAnim {
-                target: shadowRect
-                property: "alpha"
-                to: 0
-            }
-
-            NAnim {
                 target: bottomLeftCorner
                 property: "radius"
                 to: 0
@@ -729,9 +712,7 @@ WlSessionLockSurface {
         }
 
         ScriptAction {
-            script: {
-                GlobalStates.isLockscreenOpen = false;
-            }
+            script: GlobalStates.isLockscreenOpen = false
         }
 
         PauseAnimation {
@@ -739,9 +720,7 @@ WlSessionLockSurface {
         }
 
         ScriptAction {
-            script: {
-                root.lock.locked = false;
-            }
+            script: root.lock.locked = false
         }
     }
 }
