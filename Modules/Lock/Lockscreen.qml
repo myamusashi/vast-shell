@@ -33,8 +33,8 @@ Scope {
         target: "lock"
 
         function lock(): void {
-            GlobalStates.hideOuterBorder = true;
-            lockTimer.start();
+            lock.locked = true;
+            GlobalStates.isLockscreenOpen = true;
         }
 
         function unlock(): void {
@@ -44,13 +44,5 @@ Scope {
         function isLocked(): bool {
             return lock.locked;
         }
-    }
-
-    Timer {
-        id: lockTimer
-
-        interval: 500
-        repeat: false
-        onTriggered: lock.locked = true
     }
 }
