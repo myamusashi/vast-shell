@@ -138,7 +138,7 @@ WlSessionLockSurface {
                 horizontalCenter: parent.horizontalCenter
             }
 
-            implicitWidth: GlobalStates.isLockscreenOpen ? topWrapperRect.implicitWidth : 80
+            implicitWidth: GlobalStates.isLockscreenOpen ? topWrapperRect.implicitWidth : lockIcon.contentWidth
             implicitHeight: 0
 
             Behavior on implicitWidth {
@@ -175,7 +175,7 @@ WlSessionLockSurface {
                 bottomRightRadius: bottomLeftRadius
 
                 RowLayout {
-                    spacing: 0
+					spacing: 0
 
                     Icon {
                         id: lockIcon
@@ -218,7 +218,7 @@ WlSessionLockSurface {
                 bottom: parent.bottom
                 horizontalCenter: parent.horizontalCenter
             }
-            implicitWidth: GlobalStates.isLockscreenOpen ? bottomWrapperRect.implicitWidth : 80
+            implicitWidth: GlobalStates.isLockscreenOpen ? bottomWrapperRect.implicitWidth : icon.implicitWidth
             implicitHeight: 0
 
             Behavior on implicitWidth {
@@ -262,7 +262,9 @@ WlSessionLockSurface {
                         color: "transparent"
                         z: -1
 
-                        IconImage {
+						IconImage {
+							id: icon
+
                             anchors.fill: parent
                             source: Qt.resolvedUrl(`${Paths.home}/.face`)
                             z: 1
@@ -613,7 +615,7 @@ WlSessionLockSurface {
             NAnim {
                 target: topItem
                 property: "implicitWidth"
-                to: topWrapperRect.implicitWidth + 40
+                to: topWrapperRect.implicitWidth
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -621,7 +623,7 @@ WlSessionLockSurface {
             NAnim {
                 target: bottomItem
                 property: "implicitWidth"
-                to: bottomWrapperRect.implicitWidth + 40
+                to: bottomWrapperRect.implicitWidth
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -641,7 +643,7 @@ WlSessionLockSurface {
             NAnim {
                 target: topItem
                 property: "implicitWidth"
-                to: 80
+                to: lockIcon.contentWidth + 10
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -649,7 +651,7 @@ WlSessionLockSurface {
             NAnim {
                 target: bottomItem
                 property: "implicitWidth"
-                to: 80
+                to: icon.width + 10
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
