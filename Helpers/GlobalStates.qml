@@ -14,12 +14,10 @@ Singleton {
 
     readonly property int osdDisplayDuration: 2000
     readonly property int cleanupDelay: 500
-
     readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
     readonly property bool isNumLockOSDVisible: _activeOSDs["numlock"] || false
     readonly property color drawerColors: Configs.generals.transparent ? Colours.withAlpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
-
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
@@ -40,6 +38,7 @@ Singleton {
     property string scriptPath: `${Paths.rootDir}/Assets/screen-capture.sh`
     property var _activeOSDs: ({})
     property var _osdTimerRefs: ({})
+    property var _pausedOSDs: ({})
 
     function showOSD(osdName) {
         if (!osdName)
@@ -47,7 +46,9 @@ Singleton {
 
         _activeOSDs[osdName] = true;
         _activeOSDsChanged();
-        _startOSDTimer(osdName);
+
+        if (!_pausedOSDs[osdName])
+            _startOSDTimer(osdName);
     }
 
     function hideOSD(osdName) {
@@ -55,21 +56,37 @@ Singleton {
             return;
 
         _activeOSDs[osdName] = false;
+        _pausedOSDs[osdName] = false;
         _activeOSDsChanged();
         _stopOSDTimer(osdName);
         _checkAndClosePanelWindow();
     }
 
     function toggleOSD(osdName) {
-        if (_activeOSDs[osdName]) {
+        if (_activeOSDs[osdName])
             hideOSD(osdName);
-        } else {
+        else
             showOSD(osdName);
-        }
     }
 
     function isOSDVisible(osdName) {
         return _activeOSDs[osdName] || false;
+    }
+
+    function pauseOSD(osdName) {
+        if (!osdName || !_activeOSDs[osdName])
+            return;
+
+        _pausedOSDs[osdName] = true;
+        _stopOSDTimer(osdName);
+    }
+
+    function resumeOSD(osdName) {
+        if (!osdName || !_activeOSDs[osdName])
+            return;
+
+        _pausedOSDs[osdName] = false;
+        _startOSDTimer(osdName);
     }
 
     function togglePanel(panelName) {
@@ -236,9 +253,8 @@ Singleton {
             return _activeOSDs[key] === true;
         });
 
-        if (!anyVisible) {
+        if (!anyVisible)
             cleanupTimer.start();
-        }
     }
 
     Component {
@@ -251,9 +267,7 @@ Singleton {
             repeat: false
             running: false
 
-            onTriggered: {
-                root.hideOSD(osdName);
-            }
+            onTriggered: root.hideOSD(osdName)
 
             Component.onDestruction: {
                 if (running)
@@ -296,9 +310,8 @@ Singleton {
 
     Component.onDestruction: {
         for (var key in _osdTimerRefs) {
-            if (_osdTimerRefs.hasOwnProperty(key)) {
+            if (_osdTimerRefs.hasOwnProperty(key))
                 _stopOSDTimer(key);
-            }
         }
     }
 }
