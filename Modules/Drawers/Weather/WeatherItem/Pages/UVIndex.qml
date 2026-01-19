@@ -42,7 +42,13 @@ WrapperRectangle {
 
     Loader {
         active: root.isOpen
+        asynchronous: true
         sourceComponent: Column {
+            anchors {
+                fill: parent
+                topMargin: 20
+            }
+            clip: true
             spacing: Appearance.spacing.normal
 
             Header {
@@ -208,24 +214,29 @@ WrapperRectangle {
                 implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small
                 radius: slider.trackWidth / 2
                 color: slider.trackColor
+
+                MaterialShape {
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                        topMargin: Appearance.margin.small
+                    }
+                    implicitWidth: 35
+                    implicitHeight: 35
+                    color: slider.handleColor
+                    shape: MaterialShape.Cookie9Sided
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: Math.round(slider.value)
+                        color: slider.handleTextColor
+                        font.pixelSize: Appearance.fonts.size.medium
+                        font.bold: true
+                    }
+                }
             }
         }
 
-        handle: MaterialShape {
-            x: slider.leftPadding + (slider.availableWidth - width) / 2
-            y: slider.topPadding + slider.visualPosition * (slider.availableHeight - height) + Appearance.spacing.normal
-            implicitWidth: 30
-            implicitHeight: 30
-            color: slider.handleColor
-            shape: MaterialShape.Cookie9Sided
-
-            StyledText {
-                anchors.centerIn: parent
-                text: Math.round(slider.value)
-                color: slider.handleTextColor
-                font.pixelSize: Appearance.fonts.size.medium
-                font.bold: true
-            }
-        }
+        handle: Item {}
     }
 }

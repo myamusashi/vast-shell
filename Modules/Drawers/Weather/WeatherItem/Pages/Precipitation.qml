@@ -19,6 +19,7 @@ WrapperRectangle {
     anchors.fill: parent
 
     property bool isOpen: false
+    property string descriptions: ""
 
     margin: Appearance.margin.normal
     visible: opacity > 0
@@ -41,10 +42,22 @@ WrapperRectangle {
         }
     }
 
+    FileView {
+        path: Qt.resolvedUrl("./Markdown/Precipitation.md")
+        watchChanges: true
+        onFileChanged: reload()
+        onLoaded: root.descriptions = text()
+    }
+
     Loader {
         active: root.isOpen
-
+        asynchronous: true
         sourceComponent: Column {
+            anchors {
+                fill: parent
+                topMargin: 20
+            }
+            clip: true
             spacing: Appearance.spacing.normal
 
             Header {
@@ -139,6 +152,34 @@ WrapperRectangle {
                         }
                     }
                 }
+            }
+
+            StyledRect {
+                implicitWidth: parent.width
+                implicitHeight: precipitationDescription.contentHeight + 20
+                color: Colours.m3Colors.m3Surface
+                border {
+                    color: Colours.m3Colors.m3OutlineVariant
+                    width: 1
+                }
+
+                StyledText {
+                    id: precipitationDescription
+
+                    anchors {
+                        fill: parent
+                        margins: 10
+                    }
+                    text: root.descriptions
+                    color: Colours.m3Colors.m3OnSurface
+                    textFormat: Text.MarkdownText
+                    wrapMode: Text.Wrap
+                    font.pixelSize: Appearance.fonts.size.normal
+                }
+            }
+
+            Item {
+                Layout.fillHeight: true
             }
         }
     }
