@@ -12,6 +12,8 @@ import qs.Services
 ColumnLayout {
     id: root
 
+    property alias slider: volumeSlider
+
     required property bool useCustomProperties
     required property PwNode node
 
@@ -79,6 +81,8 @@ ColumnLayout {
         }
 
         StyledSlide {
+            id: volumeSlider
+
             Layout.fillWidth: true
             Layout.preferredHeight: 44
             value: root.node.audio.volume
