@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell.Io
 import Quickshell.Widgets
 
@@ -77,8 +76,14 @@ WrapperRectangle {
 
     Loader {
         active: root.isOpen
+        asynchronous: true
         sourceComponent: Column {
-            anchors.centerIn: parent
+            anchors {
+                fill: parent
+                topMargin: 20
+            }
+            clip: true
+            spacing: Appearance.spacing.normal
 
             Header {
                 icon: Lucide.icon_sun

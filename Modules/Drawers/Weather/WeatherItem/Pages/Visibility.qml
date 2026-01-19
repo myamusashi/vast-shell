@@ -49,8 +49,13 @@ WrapperRectangle {
 
     Loader {
         active: root.isOpen
-
+        asynchronous: true
         sourceComponent: Column {
+            anchors {
+                fill: parent
+                topMargin: 20
+            }
+            clip: true
             spacing: Appearance.spacing.normal
 
             Header {

@@ -43,13 +43,18 @@ WrapperRectangle {
         id: loader
 
         active: root.isOpen
-
+        asynchronous: true
         sourceComponent: Column {
             id: column
 
-            property string description: tabGroup.currentIndex === 0 ? aqiUSAFileDescription.text() : aqiEuroFileDescription.text()
-
+            anchors {
+                fill: parent
+                topMargin: 20
+            }
+            clip: true
             spacing: Appearance.spacing.normal
+
+            property string description: tabGroup.currentIndex === 0 ? aqiUSAFileDescription.text() : aqiEuroFileDescription.text()
 
             FileView {
                 id: aqiUSAFileDescription

@@ -109,7 +109,6 @@ Variants {
                 mediaPlayer.anchors.topMargin = bar.height;
                 quickSettings.anchors.topMargin = bar.height;
                 notif.anchors.topMargin = bar.height;
-                weathers.anchors.topMargin = bar.height;
             }
         }
 

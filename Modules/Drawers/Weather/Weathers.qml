@@ -362,7 +362,6 @@ Item {
         }
     }
 
-    // Mouse blocker
     MouseArea {
         anchors.fill: parent
         visible: root.anyPageOpen

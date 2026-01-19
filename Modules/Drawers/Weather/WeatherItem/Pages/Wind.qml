@@ -52,8 +52,13 @@ WrapperRectangle {
 
     Loader {
         active: root.isOpen
-
+        asynchronous: true
         sourceComponent: Column {
+            anchors {
+                fill: parent
+                topMargin: 20
+            }
+            clip: true
             spacing: Appearance.spacing.normal
 
             Header {
@@ -228,21 +233,25 @@ WrapperRectangle {
                 implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small
                 radius: slider.trackWidth / 2
                 color: slider.trackColor
+                WrapperItem {
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                        topMargin: Appearance.margin.small
+                    }
+                    implicitWidth: 35
+                    implicitHeight: 35
+
+                    MaterialShape {
+                        id: shape
+
+                        color: Colours.m3Colors.m3OnPrimary
+                        shape: MaterialShape.Triangle
+                    }
+                }
             }
         }
 
-        handle: WrapperItem {
-            x: slider.leftPadding + (slider.availableWidth - width) / 2
-            y: slider.topPadding + slider.visualPosition * (slider.availableHeight - height) + 15
-            implicitWidth: 30
-            implicitHeight: 30
-
-            MaterialShape {
-                id: shape
-
-                color: Colours.m3Colors.m3OnPrimary
-                shape: MaterialShape.Triangle
-            }
-        }
+        handle: Item {}
     }
 }
