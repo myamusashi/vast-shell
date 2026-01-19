@@ -17,6 +17,7 @@ import "WallpaperSelector"
 import "Weather"
 import "OSD"
 import "Bar"
+import "Volume"
 
 Variants {
     model: Quickshell.screens
@@ -126,6 +127,10 @@ Variants {
 
         Session {
             id: session
+
+            onWidthChanged: {
+                volume.anchors.rightMargin = session.width;
+            }
         }
 
         WallpaperSelector {
@@ -150,6 +155,10 @@ Variants {
 
         OSD {
             id: osd
+        }
+
+        Volume {
+            id: volume
         }
     }
 

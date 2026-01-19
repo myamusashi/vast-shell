@@ -35,12 +35,8 @@ Item {
             totalHeight += 50;
         if (GlobalStates.isOSDVisible("numlock"))
             totalHeight += 50;
-        if (GlobalStates.isOSDVisible("volume"))
-            totalHeight += 80;
 
         var activeCount = 0;
-        if (GlobalStates.isOSDVisible("volume"))
-            activeCount++;
         if (GlobalStates.isOSDVisible("capslock"))
             activeCount++;
         if (GlobalStates.isOSDVisible("numlock"))
@@ -55,14 +51,14 @@ Item {
     Corner {
         location: Qt.BottomRightCorner
         extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
     Corner {
         location: Qt.BottomLeftCorner
         extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
@@ -76,7 +72,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: window.modelData.name === Hypr.focusedMonitor.name && (GlobalStates.isOSDVisible("volume") || GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock"))
+            active: window.modelData.name === Hypr.focusedMonitor.name && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock"))
             asynchronous: true
 
             sourceComponent: Column {
@@ -88,7 +84,6 @@ Item {
 
                 CapsLockWidget {}
                 NumLockWidget {}
-                Volumes {}
             }
         }
     }
