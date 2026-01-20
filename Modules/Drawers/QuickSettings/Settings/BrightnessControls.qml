@@ -25,18 +25,22 @@ RowLayout {
             id: debounceTimer
 
             interval: 150
-            repeat: true
-            running: true
+            repeat: false
+            running: false
             onTriggered: Brightness.setBrightness(brightnessSlider.value)
         }
     }
 
     StyledButton {
+        readonly property color inactiveTextColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+        readonly property color inactiveButtonColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+
         iconButton: "bedtime"
         buttonTitle: "Night mode"
-        buttonTextColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
-        buttonColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
-        onClicked: Hyprsunset.isNightModeOn ? Hyprsunset.down() : Hyprsunset.up()
+        buttonTextColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor
+        buttonColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : inactiveButtonColor
         enabled: Hyprsunset.isNightModeOn
+
+        onClicked: Hyprsunset.isNightModeOn ? Hyprsunset.down() : Hyprsunset.up()
     }
 }
