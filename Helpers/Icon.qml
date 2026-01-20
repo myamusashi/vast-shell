@@ -1,5 +1,5 @@
 import QtQuick
-import qs.Components
+
 import qs.Configs
 
 Text {
@@ -12,20 +12,7 @@ Text {
     }
 
     required property string icon
-
-    readonly property string fontFamily: {
-        switch (root.type) {
-        case Icon.Material:
-            return Appearance.fonts.family.material;
-        case Icon.Weather:
-            return "Weather Icons";
-        case Icon.Lucide:
-            return "lucide";
-        default:
-            return Appearance.fonts.family.material;
-        }
-    }
-
+    readonly property var fontFamilies: [Appearance.fonts.family.material, "lucide", "Weather Icons"]
     property int type: Icon.Material
 
     antialiasing: true
@@ -33,19 +20,9 @@ Text {
     renderType: Text.NativeRendering
     text: root.icon
 
-    Behavior on color {
-        CAnim {}
-    }
-
     font {
-        family: root.fontFamily
+        family: root.type === Icon.Lucide ? "lucide" : root.type === Icon.Weather ? "Weather Icons" : Appearance.fonts.family.material
         pixelSize: Appearance.fonts.size.medium
         hintingPreference: Font.PreferNoHinting
-        variableAxes: {
-            "FILL": false,
-            "wght": fontInfo.weight,
-            "GRAD": 0,
-            "opsz": 48
-        }
     }
 }
