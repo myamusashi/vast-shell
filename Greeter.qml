@@ -97,24 +97,42 @@ ShellRoot {
                 anchors.fill: parent
                 source: ""
 
+                property var _wallpaperHandler: null
+                property var _statusHandler: null
+                property var _finishedHandler: null
+
                 Component.onCompleted: {
                     source = sessionLock.wallpaperPath;
 
-                    Paths.currentWallpaperChanged.connect(() => {
+                    _wallpaperHandler = function () {
                         if (walAnimation.running)
                             walAnimation.complete();
                         animatingWal.source = sessionLock.wallpaperPath;
-                    });
-                    animatingWal.statusChanged.connect(() => {
+                    };
+
+                    _statusHandler = function () {
                         if (animatingWal.status == Image.Ready)
                             walAnimation.start();
-                    });
+                    };
 
-                    walAnimation.finished.connect(() => {
+                    _finishedHandler = function () {
                         img.source = animatingWal.source;
                         animatingWal.source = "";
                         animatinRect.width = 0;
-                    });
+                    };
+
+                    Paths.currentWallpaperChanged.connect(_wallpaperHandler);
+                    animatingWal.statusChanged.connect(_statusHandler);
+                    walAnimation.finished.connect(_finishedHandler);
+                }
+
+                Component.onDestruction: {
+                    if (_wallpaperHandler)
+                        Paths.currentWallpaperChanged.disconnect(_wallpaperHandler);
+                    if (_statusHandler)
+                        animatingWal.statusChanged.disconnect(_statusHandler);
+                    if (_finishedHandler)
+                        walAnimation.finished.disconnect(_finishedHandler);
                 }
             }
 
