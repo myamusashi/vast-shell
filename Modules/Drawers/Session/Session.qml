@@ -59,14 +59,14 @@ Item {
     Corner {
         location: Qt.TopRightCorner
         extensionSide: Qt.Vertical
-        radius: root.isSessionOpen ? 40 : 0
+        radius: GlobalStates.isSessionOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
     Corner {
         location: Qt.BottomRightCorner
         extensionSide: Qt.Vertical
-        radius: root.isSessionOpen ? 40 : 0
+        radius: GlobalStates.isSessionOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
@@ -79,8 +79,9 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: root.isSessionOpen
+            active: GlobalStates.isSessionOpen
             asynchronous: true
+
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 10
@@ -142,7 +143,7 @@ Item {
 
                         required property var modelData
                         required property int index
-                        property int animationDelay: root.isSessionOpen ? (4 - rectDelegate.index) * 50 : rectDelegate.index * 50
+                        property int animationDelay: GlobalStates.isSessionOpen ? (4 - rectDelegate.index) * 50 : rectDelegate.index * 50
                         property real animProgress: 0
                         property bool isHighlighted: mouseArea.containsMouse || (iconDelegate.focus && rectDelegate.index === root.currentIndex)
 
@@ -156,9 +157,9 @@ Item {
                             rectDelegate.animProgress = 0;
                         }
 
-                        focus: root.isSessionOpen
+                        focus: GlobalStates.isSessionOpen
                         onFocusChanged: {
-                            if (focus && root.isSessionOpen)
+                            if (focus && GlobalStates.isSessionOpen)
                                 Qt.callLater(() => {
                                     let firstIcon = repeater.itemAt(root.currentIndex);
                                     if (firstIcon)
@@ -171,13 +172,13 @@ Item {
 
                             interval: rectDelegate.animationDelay
                             running: true
-                            onTriggered: rectDelegate.animProgress = root.isSessionOpen ? 1 : 0
+                            onTriggered: rectDelegate.animProgress = GlobalStates.isSessionOpen ? 1 : 0
                         }
 
                         Connections {
                             target: root
                             function onIsSessionOpenChanged() {
-                                if (root.isSessionOpen)
+                                if (GlobalStates.isSessionOpen)
                                     rectDelegate.animProgress = 0;
 
                                 animTimer.restart();
@@ -226,7 +227,7 @@ Item {
                                 if (root.currentIndex < 4)
                                     root.currentIndex++;
                             }
-                            Keys.onEscapePressed: root.isSessionOpen = false
+                            Keys.onEscapePressed: GlobalStates.isSessionOpen = false
 
                             scale: mouseArea.pressed ? 0.95 : 1.0
 
@@ -283,7 +284,7 @@ Item {
                     root.pendingAction();
 
                 root.showConfirmDialog = false;
-                root.isSessionOpen = false;
+                GlobalStates.isSessionOpen = false;
                 root.pendingAction = null;
                 root.pendingActionName = "";
             }
