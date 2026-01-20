@@ -16,32 +16,32 @@ MaterialShape {
     property var aqiCategories: [
         {
             max: 50,
-            label: "Good",
+            label: qsTr("Good"),
             color: "#4CAF50"
         },
         {
             max: 100,
-            label: "Fair",
+            label: qsTr("Fair"),
             color: "#FFEB3B"
         },
         {
             max: 150,
-            label: "Moderate",
+            label: qsTr("Moderate"),
             color: "#FF9800"
         },
         {
             max: 200,
-            label: "Poor",
+            label: qsTr("Poor"),
             color: "#F44336"
         },
         {
             max: 300,
-            label: "Very Poor",
+            label: qsTr("Very Poor"),
             color: "#9C27B0"
         },
         {
             max: 500,
-            label: "Hazardous",
+            label: qsTr("Hazardous"),
             color: "#8B0000"
         }
     ]
@@ -80,7 +80,7 @@ MaterialShape {
             }
 
             StyledText {
-                text: "AQI"
+                text: qsTr("AQI")
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
                 color: Colours.m3Colors.m3OnSurface

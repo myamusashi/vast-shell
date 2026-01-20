@@ -148,7 +148,7 @@ ColumnLayout {
 
             StyledText {
                 Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                text: "Feels like " + Weather.feelsLike + "°"
+                text: qsTr("Feels like %1°").arg(Weather.feelsLike)
                 font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurface
             }

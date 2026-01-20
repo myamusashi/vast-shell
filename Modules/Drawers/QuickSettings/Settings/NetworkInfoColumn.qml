@@ -55,7 +55,7 @@ RowLayout {
                     spacing: Appearance.spacing.small
 
                     StyledText {
-                        text: "Ethernet"
+                        text: qsTr("Ethernet")
                         font.pixelSize: Appearance.fonts.size.large
                         font.weight: Font.Medium
                         color: Colours.m3Colors.m3OnSurface
@@ -70,7 +70,7 @@ RowLayout {
                 }
 
                 StyledText {
-                    text: SystemUsage.statusWiredInterface === "connected" ? "Connected" : "Not Connected"
+                    text: SystemUsage.statusWiredInterface === "connected" ? qsTr("Connected") : qsTr("Not Connected")
                     font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
@@ -142,13 +142,13 @@ RowLayout {
                 spacing: 2
 
                 StyledText {
-                    text: "Internet"
+                    text: qsTr("Internet")
                     font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
 
                 StyledText {
-                    text: wifiCard.activeNetwork ? wifiCard.activeNetwork.ssid : "WiFi Disconnected"
+                    text: wifiCard.activeNetwork ? wifiCard.activeNetwork.ssid : qsTr("WiFi Disconnected")
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.Medium
                     width: parent.width

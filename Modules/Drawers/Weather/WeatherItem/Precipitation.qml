@@ -30,7 +30,7 @@ MaterialShape {
             }
 
             StyledText {
-                text: "Precipitation"
+                text: qsTr("Precipitation")
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
                 color: Colours.m3Colors.m3OnSurface
@@ -64,7 +64,7 @@ MaterialShape {
 
             StyledText {
                 Layout.maximumWidth: 70
-                text: "Total rain for the day"
+                text: qsTr("Total rain for the day")
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
                 color: Colours.m3Colors.m3OnSurface

@@ -292,7 +292,7 @@ ShellRoot {
 
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: -80
-                    text: "WRONG PASSWORD"
+                    text: qsTr("WRONG PASSWORD")
                     color: Colours.m3GeneratedColors.m3Error
                     font.pixelSize: Appearance.fonts.size.large * 3
                     visible: sessionLock.showErrorMessage
@@ -366,7 +366,7 @@ ShellRoot {
                 StyledLabel {
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: 60
-                    text: "Type password and press Enter"
+                    text: qsTr("Type password and press Enter")
                     color: Colours.m3GeneratedColors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.large
                     opacity: sessionLock.maskedBuffer.length === 0 ? 0.6 : 0
@@ -387,7 +387,7 @@ ShellRoot {
                 spacing: Appearance.spacing.normal
 
                 StyledLabel {
-                    text: "User:"
+                    text: qsTr("User:")
                     color: Colours.m3GeneratedColors.m3OnSurface
                 }
 
@@ -411,7 +411,7 @@ ShellRoot {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.margins: 20
                 iconButton: "keyboard"
-                buttonTitle: "Get yo ass back"
+                buttonTitle: qsTr("Get yo ass back")
                 visible: !keyHandler.activeFocus
                 onClicked: {
                     keyHandler.forceActiveFocus();
@@ -430,7 +430,7 @@ ShellRoot {
                 spacing: Appearance.spacing.normal
 
                 StyledLabel {
-                    text: "Session:"
+                    text: qsTr("Session:")
                     color: Colours.m3GeneratedColors.m3OnSurface
                 }
 

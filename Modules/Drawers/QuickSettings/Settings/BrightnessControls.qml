@@ -36,7 +36,7 @@ RowLayout {
         readonly property color inactiveButtonColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
 
         iconButton: "bedtime"
-        buttonTitle: "Night mode"
+        buttonTitle: qsTr("Night mode")
         buttonTextColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor
         buttonColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : inactiveButtonColor
         enabled: Hyprsunset.isNightModeOn

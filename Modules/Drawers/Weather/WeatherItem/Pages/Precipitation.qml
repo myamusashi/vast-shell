@@ -62,7 +62,7 @@ WrapperRectangle {
 
             Header {
                 icon: Lucide.icon_cloud_rain
-                title: "Precipitation"
+                title: qsTr("Precipitation")
                 mouseArea.onClicked: root.isOpen = false
             }
 
@@ -81,7 +81,7 @@ WrapperRectangle {
                     spacing: Appearance.spacing.normal
 
                     StyledText {
-                        text: "Today's amount"
+                        text: qsTr("Today's amount")
                         color: Colours.m3Colors.m3OnBackground
                         font.pixelSize: Appearance.fonts.size.large * 1.5
                     }

@@ -121,7 +121,7 @@ StyledRect {
                 Repeater {
                     id: tabRepeater
 
-                    model: ["Screenshot", "Screen record"]
+                    model: [qsTr("Screenshot"), qsTr("Screen record")]
                     delegate: StyledRect {
                         id: tabItem
 
@@ -178,7 +178,7 @@ StyledRect {
                         values: {
                             let options = [
                                 {
-                                    "name": "Window",
+                                    "name": qsTr("Window"),
                                     "icon": "select_window_2",
                                     "action": () => {
                                         Quickshell.execDetached({
@@ -187,7 +187,7 @@ StyledRect {
                                     }
                                 },
                                 {
-                                    "name": "Selection",
+                                    "name": qsTr("Selection"),
                                     "icon": "select",
                                     "action": () => {
                                         Quickshell.execDetached({
@@ -208,7 +208,7 @@ StyledRect {
                                     }
                                 });
                                 options.push({
-                                    "name": "Merge screens",
+                                    "name": qsTr("Merge screens"),
                                     "icon": "cell_merge",
                                     "action": () => {
                                         Quickshell.execDetached({
@@ -256,7 +256,7 @@ StyledRect {
                         values: {
                             let options = [
                                 {
-                                    "name": "Selection",
+                                    "name": qsTr("Selection"),
                                     "icon": "select",
                                     "action": () => {
                                         Quickshell.execDetached({

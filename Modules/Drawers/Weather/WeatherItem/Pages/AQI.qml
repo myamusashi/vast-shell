@@ -74,7 +74,7 @@ WrapperRectangle {
 
             Header {
                 icon: Lucide.icon_waves
-                title: "Air quality"
+                title: qsTr("Air quality")
                 mouseArea.onClicked: root.isOpen = false
             }
 
@@ -93,7 +93,7 @@ WrapperRectangle {
                     spacing: Appearance.spacing.normal
 
                     StyledText {
-                        text: "Current conditions"
+                        text: qsTr("Current conditions")
                         color: Colours.m3Colors.m3OnBackground
                         font.pixelSize: Appearance.fonts.size.large * 1.5
                     }
@@ -191,11 +191,11 @@ WrapperRectangle {
                     Repeater {
                         model: [
                             {
-                                text: "United States AQI:",
+                                text: qsTr("United States AQI:"),
                                 value: Weather.usAQI
                             },
                             {
-                                text: "European AQi:",
+                                text: qsTr("European AQi:"),
                                 value: Weather.europeanAQI
                             }
                         ]

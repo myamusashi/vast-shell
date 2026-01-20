@@ -40,7 +40,7 @@ StyledRect {
                 }
             }
             StyledText {
-                text: "Hourly forecast"
+                text: qsTr("Hourly forecast")
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.Bold

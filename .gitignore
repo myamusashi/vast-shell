@@ -5,3 +5,4 @@ result
 .qmlls.ini
 .direnv
 log
+plugins/*/build

@@ -100,7 +100,7 @@ LazyLoader {
                         implicitHeight: 40
                         elideText: false
                         iconButton: "cancel"
-                        buttonTitle: "No"
+                        buttonTitle: qsTr("No")
                         buttonColor: "transparent"
                         onClicked: root.rejected()
                     }
@@ -109,7 +109,7 @@ LazyLoader {
                         implicitWidth: 80
                         implicitHeight: 40
                         iconButton: "check"
-                        buttonTitle: "Yes"
+                        buttonTitle: qsTr("Yes")
                         buttonTextColor: Colours.m3Colors.m3OnPrimary
                         onClicked: root.accepted()
                     }

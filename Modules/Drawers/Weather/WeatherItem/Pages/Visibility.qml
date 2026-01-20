@@ -60,7 +60,7 @@ WrapperRectangle {
 
             Header {
                 icon: Lucide.icon_eye
-                title: "Visibility"
+                title: qsTr("Visibility")
                 mouseArea.onClicked: root.isOpen = false
             }
 
@@ -118,7 +118,7 @@ WrapperRectangle {
 
                     StyledText {
                         Layout.alignment: Qt.AlignCenter | Qt.AlignLeft
-                        text: "Current conditions"
+                        text: qsTr("Current conditions")
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
                         font.weight: Font.Bold

@@ -93,7 +93,7 @@ WrapperRectangle {
 
                 Header {
                     icon: Lucide.icon_moon
-                    title: "Moon"
+                    title: qsTr("Moon")
                     mouseArea.onClicked: root.isOpen = false
                 }
 
@@ -128,7 +128,7 @@ WrapperRectangle {
                                         verticalCenter: parent.verticalCenter
                                         leftMargin: Appearance.margin.normal
                                     }
-                                    text: `Illumination: ${Weather.moonIllumination}%`
+                                    text: qsTr("Illumination: %1%").arg(Weather.moonIllumination)
                                     color: Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.large
                                 }
@@ -147,7 +147,7 @@ WrapperRectangle {
                                         verticalCenter: parent.verticalCenter
                                         leftMargin: Appearance.margin.normal
                                     }
-                                    text: `Moonrise: ${Weather.moonRise}`
+                                    text: qsTr("Moonrise: %1").arg(Weather.moonRise)
                                     color: Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.large
                                 }
@@ -166,7 +166,7 @@ WrapperRectangle {
                                         verticalCenter: parent.verticalCenter
                                         leftMargin: Appearance.margin.normal
                                     }
-                                    text: `Moonset: ${Weather.moonSet}`
+                                    text: qsTr("Moonset: %1").arg(Weather.moonSet)
                                     color: Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.large
                                 }

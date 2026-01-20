@@ -43,7 +43,7 @@ MaterialShape {
         }
 
         StyledText {
-            text: "Cloudiness"
+            text: qsTr("Cloudiness")
             font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurface
         }

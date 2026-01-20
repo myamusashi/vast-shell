@@ -70,7 +70,7 @@ MaterialShape {
             }
 
             StyledText {
-                text: "Wind"
+                text: qsTr("Wind")
                 font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
             }

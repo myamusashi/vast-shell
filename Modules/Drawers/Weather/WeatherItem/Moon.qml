@@ -70,7 +70,7 @@ MaterialShape {
         }
 
         StyledText {
-            text: "Moon"
+            text: qsTr("Moon")
             font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurface
         }

@@ -42,7 +42,7 @@ StyledRect {
                         anchors.centerIn: parent
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
-                        text: "Clear all"
+                        text: qsTr("Clear all")
                     }
 
                     MArea {
@@ -258,7 +258,7 @@ StyledRect {
 
                 StyledText {
                     anchors.centerIn: parent
-                    text: "No notifications"
+                    text: qsTr("No notifications")
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.medium
                     visible: Notifs.notClosed.length === 0

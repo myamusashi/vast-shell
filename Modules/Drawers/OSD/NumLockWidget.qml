@@ -33,7 +33,7 @@ Item {
             opacity: numLockOSD.height / 50
 
             StyledText {
-                text: "Num Lock"
+                text: qsTr("Num Lock")
                 font.weight: Font.Medium
                 color: Colours.m3Colors.m3OnBackground
                 font.pixelSize: Appearance.fonts.size.large * 1.5

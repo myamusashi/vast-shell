@@ -12,7 +12,7 @@ ColumnLayout {
     StyledLabel {
         Layout.fillWidth: true
         Layout.topMargin: 8
-        text: PolAgent.agent?.flow?.inputPrompt || "<no input prompt>"
+        text: PolAgent.agent?.flow?.inputPrompt || qsTr("<no input prompt>")
         wrapMode: Text.Wrap
         font.pixelSize: Appearance.fonts.size.medium
         font.weight: Font.Medium
@@ -25,7 +25,7 @@ ColumnLayout {
 
     StyledLabel {
         Layout.fillWidth: true
-        text: "Authentication failed. Please try again."
+        text: qsTr("Authentication failed. Please try again.")
         color: Colours.m3Colors.m3Error
         visible: PolAgent.agent?.flow?.failed || 0
         font.pixelSize: 12

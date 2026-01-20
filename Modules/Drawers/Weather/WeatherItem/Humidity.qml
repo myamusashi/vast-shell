@@ -46,7 +46,7 @@ MaterialShape {
             }
 
             StyledText {
-                text: "Humidity"
+                text: qsTr("Humidity")
                 color: Colours.m3Colors.m3OnSurface
                 font.weight: Font.Bold
                 font.pixelSize: Appearance.fonts.size.normal
@@ -87,7 +87,7 @@ MaterialShape {
             }
 
             StyledText {
-                text: "Dew point"
+                text: qsTr("Dew point")
                 font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
             }
