@@ -38,7 +38,7 @@ Item {
     }
 
     implicitWidth: parent.width * 0.6
-    implicitHeight: isWallpaperSwitcherOpen ? parent.height * 0.3 : 0
+    implicitHeight: GlobalStates.isWallpaperSwitcherOpen ? parent.height * 0.3 : 0
 
     Behavior on implicitHeight {
         NAnim {
@@ -110,9 +110,9 @@ Item {
             anchors.margins: Appearance.spacing.normal
             spacing: Appearance.spacing.normal
 
-            focus: root.isWallpaperSwitcherOpen
+            focus: GlobalStates.isWallpaperSwitcherOpen
             onFocusChanged: {
-                if (root.isWallpaperSwitcherOpen)
+                if (GlobalStates.isWallpaperSwitcherOpen)
                     searchField.forceActiveFocus();
             }
 
@@ -134,7 +134,7 @@ Item {
                 }
 
                 Keys.onDownPressed: wallpaperPath.focus = true
-                Keys.onEscapePressed: root.isWallpaperSwitcherOpen = false
+                Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
             }
 
             Timer {
@@ -242,7 +242,7 @@ Item {
                         });
                     }
                     if (event.key === Qt.Key_Escape)
-                        root.isWallpaperSwitcherOpen = false;
+                        GlobalStates.isWallpaperSwitcherOpen = false;
                     if (event.key === Qt.Key_Tab)
                         searchField.focus = true;
                     if (event.key === Qt.Key_Left)

@@ -97,8 +97,9 @@ Item {
         Loader {
             anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && root.isLauncherOpen
+            asynchronous: true
 
-            sourceComponent: ColumnLayout {
+            sourceComponent: Column {
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.normal
                 spacing: Appearance.spacing.normal
