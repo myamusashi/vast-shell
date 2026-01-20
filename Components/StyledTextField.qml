@@ -15,7 +15,7 @@ TextField {
     Material.background: "transparent"
     Material.foreground: Colours.m3Colors.m3OnSurface
     Material.containerStyle: Material.Outlined
-    renderType: Text.NativeRendering
+    renderType: Text.QtRendering
 
     selectedTextColor: Colours.m3Colors.m3OnSecondaryContainer
     selectionColor: Colours.m3Colors.m3SecondaryContainer

@@ -11,8 +11,4 @@ Text {
     color: "transparent"
     verticalAlignment: Text.AlignVCenter
     elide: Text.ElideRight
-
-    Behavior on color {
-        CAnim {}
-    }
 }
