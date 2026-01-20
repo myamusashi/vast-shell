@@ -175,7 +175,7 @@ WlSessionLockSurface {
                 bottomRightRadius: bottomLeftRadius
 
                 RowLayout {
-					spacing: 0
+                    spacing: 0
 
                     Icon {
                         id: lockIcon
@@ -262,8 +262,8 @@ WlSessionLockSurface {
                         color: "transparent"
                         z: -1
 
-						IconImage {
-							id: icon
+                        IconImage {
+                            id: icon
 
                             anchors.fill: parent
                             source: Qt.resolvedUrl(`${Paths.home}/.face`)
