@@ -180,7 +180,7 @@ WrapperRectangle {
                         Image {
                             Layout.preferredWidth: 120
                             Layout.preferredHeight: 120
-                            source: `root:/Assets/weather_icon/${Weather.moonPhase.trim().replace(/ /g, '')}.svg`
+                            source: `root:/Assets/weather_icon/${Weather.moonPhase.trim().replace(/ /g, '')}Moon.svg`
                             sourceSize: Qt.size(120, 120)
                             fillMode: Image.PreserveAspectFit
                             cache: true
