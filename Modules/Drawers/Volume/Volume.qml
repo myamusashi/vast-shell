@@ -166,8 +166,12 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             width: 30
             height: 30
-            source: Quickshell.iconPath(DesktopEntries.heuristicLookup(parent.node.name)?.icon, "image-missing")
-            asynchronous: true
+            source: {
+                const name = parent.node.name;
+                const appName = name.split(".").pop();
+                // What the fuck is this
+                Quickshell.iconPath(DesktopEntries.heuristicLookup(appName === "zen" ? "zen-twilight" : appName)?.icon, "image-missing");
+            }
         }
 
         StyledSlide {
