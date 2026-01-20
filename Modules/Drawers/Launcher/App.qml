@@ -228,6 +228,7 @@ Item {
                         height: 50
                         contentItem: RowLayout {
                             spacing: Appearance.spacing.normal
+
                             StyledRect {
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.preferredWidth: 40
