@@ -67,8 +67,8 @@
       makeWrapper
       patchelf
       cmake
-      qt6.qttools # untuk lrelease
-      qt6.wrapQtAppsHook # untuk Qt dependencies
+      qt6.qttools
+      qt6.wrapQtAppsHook
     ];
 
     buildInputs = [
@@ -89,7 +89,6 @@
       runHook preBuild
 
       echo "Building Translations..."
-      # Pastikan folder translations ada
       if [ -d "translations" ]; then
         ${qt6.qttools}/bin/lrelease translations/*.ts
       fi
@@ -115,12 +114,10 @@
     installPhase = ''
       runHook preInstall
 
-      # Install quickshell files (exclude build folder!)
       mkdir -p $out/share/quickshell
       shopt -s extglob
       cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
 
-      # Copy specific files to avoid build artifacts
       for dir in Assets Components Widgets; do
         if [ -d "$dir" ]; then
           mkdir -p "$out/share/quickshell/$dir"
@@ -128,41 +125,26 @@
         fi
       done
 
-      # Copy QML and config files
       for file in *.qml *.js; do
         [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
       done
 
-      # Copy translations
       if [ -d "translations" ]; then
         mkdir -p "$out/share/quickshell/translations"
         cp -r translations/*.qm "$out/share/quickshell/translations/" 2>/dev/null || true
       fi
 
-      # Install binaries
       install -Dm755 ${keystate-bin}/bin/keystate-bin \
         $out/share/quickshell/Assets/keystate-bin
       install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
       install -Dm755 ${keystate-bin}/bin/keystate-bin $out/bin/keystate-bin
 
-      # Install fonts
       mkdir -p $out/share/fonts/truetype
       cp -r ${material-symbols}/share/fonts/truetype/* \
         $out/share/fonts/truetype/
 
-      # Install TranslationManager plugin
       mkdir -p $out/lib/qt-6/qml/TranslationManager
 
-      # Debug: cek file yang ada di build
-      echo "=== Checking build directory ==="
-      ls -la build/
-      echo "=== Looking for .so files ==="
-      find build/ -name "*.so" -type f
-      echo "=== Looking for qmldir ==="
-      find build/ -name "qmldir" -type f
-      echo "================================"
-
-      # Copy plugin library - coba berbagai kemungkinan nama
       PLUGIN_COPIED=false
       for so_file in build/*.so build/**/*.so; do
         if [ -f "$so_file" ]; then
@@ -177,7 +159,6 @@
         exit 1
       fi
 
-      # Copy qmldir (CMake auto-generated)
       if [ -f build/qmldir ]; then
         echo "Using CMake-generated qmldir"
         cp build/qmldir $out/lib/qt-6/qml/TranslationManager/
@@ -189,14 +170,12 @@
         exit 1
       fi
 
-      # Copy additional QML files if exist
       for qml_file in build/*.qml; do
         if [ -f "$qml_file" ]; then
           cp "$qml_file" $out/lib/qt-6/qml/TranslationManager/
         fi
       done
 
-      # Create wrapper
       makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
         $out/bin/shell \
         --add-flags "-p $out/share/quickshell" \
@@ -211,34 +190,14 @@
     '';
 
     postInstall = ''
-      # Patch RPATH untuk semua .so files di plugin directory
-      echo "=== Patching RPATH for plugin libraries ==="
-
-      # Set RPATH untuk plugin agar bisa menemukan backing library
       for so_file in $out/lib/qt-6/qml/TranslationManager/*.so; do
         if [ -f "$so_file" ]; then
-          echo "Patching RPATH for: $so_file"
-
-          # Set RPATH to include:
-          # 1. $ORIGIN (current directory - untuk libTranslationManager.so)
-          # 2. Qt libraries
           patchelf \
             --set-rpath "\$ORIGIN:${lib.makeLibraryPath [qt6.qtbase qt6.qtdeclarative]}" \
             "$so_file"
-
-          # Verify
-          echo "RPATH for $so_file:"
-          patchelf --print-rpath "$so_file"
         fi
       done
-
-      echo "=== RPATH patching complete ==="
     '';
-
-    meta = {
-      description = "Custom Quickshell configuration";
-      mainProgram = "shell";
-    };
   };
 in {
   inherit
