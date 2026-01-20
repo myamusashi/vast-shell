@@ -22,7 +22,7 @@ Item {
     }
 
     property int currentIndex: 0
-    property bool isLauncherOpen: GlobalStates.isLauncherOpen
+	property bool isLauncherOpen: GlobalStates.isLauncherOpen
 
     implicitWidth: parent.width * 0.3
     implicitHeight: isLauncherOpen ? parent.height * 0.5 : 0
@@ -50,7 +50,7 @@ Item {
 
     GlobalShortcut {
         name: "appLauncher"
-        onPressed: root.isLauncherOpen = !root.isLauncherOpen
+        onPressed: GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen
     }
 
     IpcHandler {
@@ -74,14 +74,14 @@ Item {
     Corner {
         location: Qt.BottomLeftCorner
         extensionSide: Qt.Horizontal
-        radius: root.isLauncherOpen ? 40 : 0
+        radius: GlobalStates.isLauncherOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
     Corner {
         location: Qt.BottomRightCorner
         extensionSide: Qt.Horizontal
-        radius: root.isLauncherOpen ? 40 : 0
+        radius: GlobalStates.isLauncherOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
@@ -96,10 +96,10 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: window.modelData.name === Hypr.focusedMonitor.name && root.isLauncherOpen
+            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isLauncherOpen
             asynchronous: true
 
-            sourceComponent: Column {
+            sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.normal
                 spacing: Appearance.spacing.normal
@@ -110,7 +110,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 60
                     placeholderText: "  Search"
-                    focus: root.isLauncherOpen
+                    focus: GlobalStates.isLauncherOpen
                     font.family: Appearance.fonts.family.sans
                     font.pixelSize: Appearance.fonts.size.large * 1.2
                     color: Colours.m3Colors.m3OnBackground
@@ -131,7 +131,7 @@ Item {
                             }
                             break;
                         case Qt.Key_Escape:
-                            root.isLauncherOpen = false;
+                            GlobalStates.isLauncherOpen = false;
                             event.accepted = true;
                             break;
                         case Qt.Key_Down:
@@ -286,7 +286,7 @@ Item {
                             hoverEnabled: true
                             onClicked: {
                                 root.launch(delegateItem.modelData);
-                                root.isLauncherOpen = false;
+                                GlobalStates.isLauncherOpen = false;
                             }
                             onEntered: listView.currentIndex = delegateItem.index
                         }
@@ -299,11 +299,11 @@ Item {
                             case Qt.Key_Return:
                             case Qt.Key_Enter:
                                 root.launch(delegateItem.modelData);
-                                root.isLauncherOpen = false;
+                                GlobalStates.isLauncherOpen = false;
                                 event.accepted = true;
                                 break;
                             case Qt.Key_Escape:
-                                root.isLauncherOpen = false;
+                                GlobalStates.isLauncherOpen = false;
                                 event.accepted = true;
                                 break;
                             }
