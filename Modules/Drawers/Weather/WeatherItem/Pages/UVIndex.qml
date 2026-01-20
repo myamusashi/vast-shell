@@ -53,7 +53,7 @@ WrapperRectangle {
 
             Header {
                 icon: Lucide.icon_sun
-                title: "UV Index"
+                title: qsTr("UV Index")
                 mouseArea.onClicked: root.isOpen = false
             }
 
@@ -72,7 +72,7 @@ WrapperRectangle {
                     spacing: Appearance.spacing.normal
 
                     StyledText {
-                        text: "Today's average"
+                        text: qsTr("Today's average")
                         color: Colours.m3Colors.m3OnBackground
                         font.pixelSize: Appearance.fonts.size.large * 1.5
                     }
@@ -89,7 +89,7 @@ WrapperRectangle {
                         }
 
                         StyledText {
-                            text: "Moderate"
+                            text: qsTr("Moderate")
                             color: Colours.m3Colors.m3Primary
                             font.pixelSize: Appearance.fonts.size.normal
                         }

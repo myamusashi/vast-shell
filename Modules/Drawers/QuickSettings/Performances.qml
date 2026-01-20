@@ -24,7 +24,7 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "CPU Usage"
+            text: qsTr("CPU Usage")
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -43,7 +43,7 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "RAM Usage\n" + SystemUsage.memProp.toFixed(0) + " GB"
+            text: qsTr("RAM Usage") + "\n" + SystemUsage.memProp.toFixed(0) + " GB"
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -62,7 +62,7 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: "Disk Usage\n" + SystemUsage.diskProp.toFixed(0) + " GB"
+            text: qsTr("Disk Usage") + "\n" + SystemUsage.diskProp.toFixed(0) + " GB"
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -76,7 +76,7 @@ GridLayout {
         StyledText {
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true
-            text: "Network Speed"
+            text: qsTr("Network Speed")
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.medium
             font.weight: Font.Medium
@@ -86,19 +86,19 @@ GridLayout {
         Repeater {
             model: [
                 {
-                    label: "Wired ↓",
+                    label: qsTr("Wired ↓"),
                     value: SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed)
                 },
                 {
-                    label: "Wired ↑",
+                    label: qsTr("Wired ↑"),
                     value: SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed)
                 },
                 {
-                    label: "Wireless ↓",
+                    label: qsTr("Wireless ↓"),
                     value: SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)
                 },
                 {
-                    label: "Wireless ↑",
+                    label: qsTr("Wireless ↑"),
                     value: SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed)
                 }
             ]
@@ -136,7 +136,7 @@ GridLayout {
         StyledText {
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true
-            text: "Data Usage"
+            text: qsTr("Data Usage")
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.medium
             font.weight: Font.Medium
@@ -146,19 +146,19 @@ GridLayout {
         Repeater {
             model: [
                 {
-                    label: "Wired ↓",
+                    label: qsTr("Wired ↓"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
                 },
                 {
-                    label: "Wired ↑",
+                    label: qsTr("Wired ↑"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWiredUploadUsage)
                 },
                 {
-                    label: "Wireless ↓",
+                    label: qsTr("Wireless ↓"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
                 },
                 {
-                    label: "Wireless ↑",
+                    label: qsTr("Wireless ↑"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
                 }
             ]
@@ -196,7 +196,7 @@ GridLayout {
         StyledText {
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true
-            text: "Network Interfaces"
+            text: qsTr("Network Interfaces")
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.medium
             font.weight: Font.Medium
@@ -206,11 +206,11 @@ GridLayout {
         Repeater {
             model: [
                 {
-                    label: "Wired",
+                    label: qsTr("Wired"),
                     value: SystemUsage.wiredInterface
                 },
                 {
-                    label: "Wireless",
+                    label: qsTr("Wireless"),
                     value: SystemUsage.wirelessInterface
                 }
             ]

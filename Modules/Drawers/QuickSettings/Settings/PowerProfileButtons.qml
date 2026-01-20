@@ -13,17 +13,17 @@ RowLayout {
     readonly property var profiles: [
         {
             "icon": "energy_savings_leaf",
-            "name": "Power save",
+            "name": qsTr("Power save"),
             "profile": PowerProfile.PowerSaver
         },
         {
             "icon": "balance",
-            "name": "Balanced",
+            "name": qsTr("Balanced"),
             "profile": PowerProfile.Balanced
         },
         {
             "icon": "rocket_launch",
-            "name": "Performance",
+            "name": qsTr("Performance"),
             "profile": PowerProfile.Performance
         }
     ]

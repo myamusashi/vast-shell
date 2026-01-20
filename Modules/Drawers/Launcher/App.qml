@@ -22,7 +22,7 @@ Item {
     }
 
     property int currentIndex: 0
-	property bool isLauncherOpen: GlobalStates.isLauncherOpen
+    property bool isLauncherOpen: GlobalStates.isLauncherOpen
 
     implicitWidth: parent.width * 0.3
     implicitHeight: isLauncherOpen ? parent.height * 0.5 : 0
@@ -109,7 +109,7 @@ Item {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 60
-                    placeholderText: "  Search"
+                    placeholderText: qsTr("  Search")
                     focus: GlobalStates.isLauncherOpen
                     font.family: Appearance.fonts.family.sans
                     font.pixelSize: Appearance.fonts.size.large * 1.2
@@ -312,7 +312,7 @@ Item {
                     StyledLabel {
                         anchors.centerIn: parent
                         visible: listView.count === 0 && search.text !== ""
-                        text: "No applications found"
+                        text: qsTr("No applications found")
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.large
                     }

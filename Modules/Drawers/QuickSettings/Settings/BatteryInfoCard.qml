@@ -43,12 +43,12 @@ StyledRect {
 
         readonly property var details: [
             {
-                "label": "Current capacity:",
+                "label": qsTr("Current capacity:"),
                 "value": UPower.displayDevice.energy.toFixed(2) + " Wh",
                 "color": Colours.m3Colors.m3OnBackground
             },
             {
-                "label": "Full capacity:",
+                "label": qsTr("Full capacity:"),
                 "value": UPower.displayDevice.energyCapacity.toFixed(2) + " Wh",
                 "color": Colours.m3Colors.m3OnBackground
             }

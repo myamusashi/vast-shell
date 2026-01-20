@@ -114,7 +114,7 @@ Item {
                             StyledText {
                                 anchors.centerIn: parent
                                 width: contentWidth + 20
-                                text: "Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG."
+                                text: qsTr("Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG.")
                                 wrapMode: Text.Wrap
                                 elide: Text.ElideRight
                                 color: Colours.m3Colors.m3OnSurface
@@ -172,7 +172,7 @@ Item {
                             }
 
                             StyledText {
-                                text: Players.active ? "Watched on " : ""
+                                text: Players.active ? qsTr("Watched on") + " " : ""
                                 color: Colours.m3Colors.m3OnBackground
                                 font.pixelSize: Appearance.fonts.size.small
                             }

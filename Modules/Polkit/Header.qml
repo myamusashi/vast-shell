@@ -36,7 +36,7 @@ RowLayout {
         StyledLabel {
             Layout.fillWidth: true
             Layout.topMargin: 8
-            text: "Authentication Is Required"
+            text: qsTr("Authentication Is Required")
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Appearance.fonts.size.extraLarge
             font.weight: Font.Bold
@@ -46,7 +46,7 @@ RowLayout {
         StyledLabel {
             Layout.fillWidth: true
             Layout.topMargin: 8
-            text: PolAgent.agent?.flow?.message || "<no message>"
+            text: PolAgent.agent?.flow?.message || qsTr("<no message>")
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: Appearance.fonts.size.large

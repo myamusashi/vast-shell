@@ -53,10 +53,10 @@ ClippingRectangle {
         Layout.fillWidth: true
         tabs: [
             {
-                "title": "Mix"
+                "title": qsTr("Mix")
             },
             {
-                "title": "Voice"
+                "title": qsTr("Voice")
             }
         ]
         onTabClicked: root.tabClicked(root.state)
@@ -107,7 +107,7 @@ ClippingRectangle {
         anchors.leftMargin: 10
         spacing: Appearance.spacing.normal
         StyledLabel {
-            text: "LINUX DEFAULT OUTPUT"
+            text: qsTr("LINUX DEFAULT OUTPUT")
             font.pixelSize: Appearance.fonts.size.large
         }
 

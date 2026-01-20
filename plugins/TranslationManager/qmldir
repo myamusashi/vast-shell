@@ -1,0 +1,2 @@
+module TranslationPlugin
+singleton TranslationManager 1.0 TranslationManager.qml

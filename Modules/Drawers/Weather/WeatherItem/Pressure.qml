@@ -38,7 +38,7 @@ MaterialShape {
                 }
 
                 StyledText {
-                    text: "Pressure"
+                    text: qsTr("Pressure")
                     font.weight: Font.DemiBold
                     color: Colours.m3Colors.m3OnSurface
                 }

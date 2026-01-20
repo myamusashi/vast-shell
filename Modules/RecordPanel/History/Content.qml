@@ -38,7 +38,7 @@ Column {
                 spacing: Appearance.spacing.normal
 
                 StyledText {
-                    text: "Screen capture"
+                    text: qsTr("Screen capture")
                     font.pixelSize: Appearance.fonts.size.large
                     font.weight: Font.Medium
                     color: Colours.m3Colors.m3OnSurfaceVariant
@@ -130,7 +130,7 @@ Column {
 
         StyledText {
             anchors.centerIn: parent
-            text: "Open files"
+            text: qsTr("Open files")
             font.pixelSize: Appearance.fonts.size.medium
             font.weight: Font.Medium
             color: Colours.m3Colors.m3OnBackground

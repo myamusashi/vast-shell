@@ -87,7 +87,7 @@ WrapperRectangle {
 
             Header {
                 icon: Lucide.icon_sun
-                title: "Sun"
+                title: qsTr("Sun")
                 mouseArea.onClicked: root.isOpen = false
             }
 
@@ -137,7 +137,7 @@ WrapperRectangle {
                         StyledText {
                             width: parent.width
                             horizontalAlignment: Text.AlignHCenter
-                            text: "Sunrise"
+                            text: qsTr("Sunrise")
                             color: Colours.m3Colors.m3Primary
                             font.pixelSize: Appearance.fonts.size.large
                         }
@@ -157,7 +157,7 @@ WrapperRectangle {
                         StyledText {
                             width: parent.width
                             horizontalAlignment: Text.AlignHCenter
-                            text: "Sunset"
+                            text: qsTr("Sunset")
                             color: Colours.m3Colors.m3Primary
                             font.pixelSize: Appearance.fonts.size.large
                         }

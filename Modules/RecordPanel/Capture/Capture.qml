@@ -112,7 +112,7 @@ ClippingRectangle {
             }
 
             StyledText {
-                text: "Capture"
+                text: qsTr("Capture")
                 color: Colours.m3Colors.m3OnSurface
                 font.weight: Font.DemiBold
                 font.pixelSize: Appearance.fonts.size.large * 1.5
@@ -154,7 +154,7 @@ ClippingRectangle {
                 model: [
                     {
                         "icon": "photo_camera",
-                        "label": "Screenshot",
+                        "label": qsTr("Screenshot"),
                         "action": () => {
                             Quickshell.execDetached({
                                 "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenshot-selection"]
@@ -164,7 +164,7 @@ ClippingRectangle {
                     },
                     {
                         "icon": "fiber_manual_record",
-                        "label": "Start",
+                        "label": qsTr("Start"),
                         "action": () => {
                             Quickshell.execDetached({
                                 "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenrecord-selection"]
@@ -176,7 +176,7 @@ ClippingRectangle {
                     },
                     {
                         "icon": root.icon,
-                        "label": "Microphone",
+                        "label": qsTr("Microphone"),
                         "action": () => Audio.toggleMute(root.node)
                     }
                 ]
@@ -256,7 +256,7 @@ ClippingRectangle {
             }
 
             StyledText {
-                text: "See my captures"
+                text: qsTr("See my captures")
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large * 1.2
             }

@@ -19,5 +19,5 @@ StyledTextField {
     leftPadding: 16
     rightPadding: 16
 
-    placeholderText: "Enter password"
+    placeholderText: qsTr("Enter password")
 }

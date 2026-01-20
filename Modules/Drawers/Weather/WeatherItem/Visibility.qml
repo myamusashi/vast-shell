@@ -33,7 +33,7 @@ MaterialShape {
                 }
 
                 StyledText {
-                    text: "Visibility"
+                    text: qsTr("Visibility")
                     font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurface
                 }

@@ -82,12 +82,12 @@ WlSessionLockSurface {
             property var currentDate: new Date()
 
             function getDayName(index) {
-                const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                const days = [qsTr("Sunday"), qsTr("Monday"), qsTr("Tuesday"), qsTr("Wednesday"), qsTr("Thuesday"), qsTr("Friday"), qsTr("Saturday")];
                 return days[index];
             }
 
             function getMonthName(index) {
-                const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"];
+                const months = [qsTr("Jan"), qsTr("Feb"), qsTr("Mar"), qsTr("Apr"), qsTr("Mei"), qsTr("Jun"), qsTr("Jul"), qsTr("Aug"), qsTr("Sep"), qsTr("Okt"), qsTr("Nov"), qsTr("Des")];
                 return months[index];
             }
 
@@ -205,7 +205,7 @@ WlSessionLockSurface {
                     StyledText {
                         id: failText
 
-                        text: "Password Invalid"
+                        text: qsTr("Password Invalid")
                         color: Colours.m3Colors.m3Error
                         font.pixelSize: Appearance.fonts.size.large * 1.5
                         transformOrigin: Item.Left
@@ -288,7 +288,7 @@ WlSessionLockSurface {
                     renderType: Text.NativeRendering
                     wrapMode: TextEdit.NoWrap
                     inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
-                    placeholderText: root.pam.showFailure ? "Password invalid" : "Enter password"
+                    placeholderText: root.pam.showFailure ? qsTr("Password invalid") : qsTr("Enter password")
                     placeholderTextColor: root.pam.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
                     onAccepted: {
                         if (root.pam && text.length > 0)
@@ -394,7 +394,7 @@ WlSessionLockSurface {
                             model: [
                                 {
                                     "icon": "power_settings_circle",
-                                    "name": "Shutdown",
+                                    "name": qsTr("Shutdown"),
                                     "action": () => {
                                         Quickshell.execDetached({
                                             "command": ["sh", "-c", "systemctl poweroff"]
@@ -403,7 +403,7 @@ WlSessionLockSurface {
                                 },
                                 {
                                     "icon": "restart_alt",
-                                    "name": "Reboot",
+                                    "name": qsTr("Reboot"),
                                     "action": () => {
                                         Quickshell.execDetached({
                                             "command": ["sh", "-c", "systemctl reboot"]
@@ -412,7 +412,7 @@ WlSessionLockSurface {
                                 },
                                 {
                                     "icon": "sleep",
-                                    "name": "Sleep",
+                                    "name": qsTr("Sleep"),
                                     "action": () => {
                                         Quickshell.execDetached({
                                             "command": ["sh", "-c", "systemctl suspend"]
@@ -421,13 +421,13 @@ WlSessionLockSurface {
                                 },
                                 {
                                     "icon": "door_open",
-                                    "name": "Logout",
+                                    "name": qsTr("Logout"),
                                     "action": () => {
                                         Quickshell.execDetached({
                                             "command": ["sh", "-c", "hyprctl dispatch exit"]
                                         });
                                     }
-                                }
+                                },
                             ]
 
                             delegate: Icon {
@@ -487,7 +487,7 @@ WlSessionLockSurface {
             StyledText {
                 id: header
 
-                text: "Session"
+                text: qsTr("Session")
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideMiddle
                 font.pixelSize: Appearance.fonts.size.extraLarge
@@ -503,7 +503,7 @@ WlSessionLockSurface {
             StyledText {
                 id: body
 
-                text: "Do you want to " + sessionWrapperRect.pendingActionName.toLowerCase() + "?"
+                text: qsTr("Do you want to %1?").arg(sessionWrapperRect.pendingActionName.toLowerCase())
                 font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3OnSurface
                 wrapMode: Text.Wrap
@@ -527,7 +527,7 @@ WlSessionLockSurface {
                     implicitHeight: 40
                     elideText: false
                     iconButton: "cancel"
-                    buttonTitle: "No"
+                    buttonTitle: qsTr("No")
                     buttonColor: "transparent"
                     onClicked: {
                         sessionWrapperRect.showConfirmDialog = false;
@@ -540,7 +540,7 @@ WlSessionLockSurface {
                     implicitWidth: 80
                     implicitHeight: 40
                     iconButton: "check"
-                    buttonTitle: "Yes"
+                    buttonTitle: qsTr("Yes")
                     buttonTextColor: Colours.m3Colors.m3OnPrimary
                     onClicked: {
                         if (sessionWrapperRect.pendingAction)

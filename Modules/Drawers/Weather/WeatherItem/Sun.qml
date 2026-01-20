@@ -77,7 +77,7 @@ MaterialShape {
         }
 
         StyledText {
-            text: "Sun"
+            text: qsTr("Sun")
             font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurface
         }

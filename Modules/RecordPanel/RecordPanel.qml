@@ -144,7 +144,7 @@ Scope {
                             border.width: 1
                             Text {
                                 anchors.centerIn: parent
-                                text: "WIP"
+                                text: qsTr("WIP")
                                 color: Colours.m3Colors.m3OnSurface
                             }
                         }

@@ -47,7 +47,16 @@
         packages = [
           pkgs.go
           pkgs.python3
-		  pkgs.kdePackages.qtdeclarative
+          (with pkgs.kdePackages; [
+            qtdeclarative
+            qttools
+            qtbase
+            qttranslations
+          ])
+          pkgs.llvm
+          pkgs.gcc
+          pkgs.cmake
+          pkgs.clang-tools
         ];
 
         shellHook = ''

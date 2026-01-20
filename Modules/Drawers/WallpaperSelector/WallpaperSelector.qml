@@ -121,7 +121,7 @@ Item {
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 40
-                placeholderText: "Search wallpapers..."
+                placeholderText: qsTr("Search wallpapers...")
                 text: root.searchQuery
                 focus: true
 

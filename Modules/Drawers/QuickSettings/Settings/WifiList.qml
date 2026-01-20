@@ -80,7 +80,7 @@ Item {
 
                     StyledLabel {
                         Layout.fillWidth: true
-                        text: "Wi-Fi"
+                        text: qsTr("Wi-Fi")
                         color: Colours.m3Colors.m3OnBackground
                         font.pixelSize: Appearance.fonts.size.extraLarge
                         font.bold: true
@@ -159,14 +159,14 @@ Item {
                             spacing: 4
 
                             StyledLabel {
-                                text: Network.active ? Network.active.ssid : "Not connected"
+                                text: Network.active ? Network.active.ssid : qsTr("Not connected")
                                 color: Colours.m3Colors.m3OnBackground
                                 font.pixelSize: Appearance.fonts.size.medium
                                 font.bold: true
                             }
 
                             StyledLabel {
-                                text: Network.active ? "Connected • " + Network.active.frequency + " MHz" : ""
+                                text: Network.active ? qsTr("Connected") + " • " + Network.active.frequency + " MHz" : ""
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.small
                             }
@@ -201,7 +201,7 @@ Item {
 
                 StyledLabel {
                     Layout.topMargin: 8
-                    text: "Available Networks"
+                    text: qsTr("Available Networks")
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
                     font.bold: true
@@ -237,7 +237,7 @@ Item {
 
                             StyledLabel {
                                 Layout.alignment: Qt.AlignHCenter
-                                text: "Wi-Fi is turned off"
+                                text: qsTr("Wi-Fi is turned off")
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.large
                                 font.bold: true
@@ -245,7 +245,7 @@ Item {
 
                             StyledLabel {
                                 Layout.alignment: Qt.AlignHCenter
-                                text: "Turn on Wi-Fi to see available networks"
+                                text: qsTr("Turn on Wi-Fi to see available networks")
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.normal
                                 opacity: 0.7
@@ -301,7 +301,7 @@ Item {
                                     spacing: Appearance.spacing.smaller
 
                                     StyledLabel {
-                                        text: networkDelegate.modelData.ssid || "(Hidden Network)"
+                                        text: networkDelegate.modelData.ssid || qsTr("(Hidden Network)")
                                         color: Colours.m3Colors.m3OnBackground
                                         font.pixelSize: Appearance.fonts.size.medium
                                         font.bold: networkDelegate.modelData.active
@@ -320,7 +320,7 @@ Item {
                                     text: {
                                         let details = [];
                                         if (networkDelegate.modelData.active)
-                                            details.push("Connected");
+                                            details.push(qsTr("Connected"));
                                         if (networkDelegate.modelData.security && networkDelegate.modelData.security !== "--")
                                             details.push(networkDelegate.modelData.security);
                                         details.push(networkDelegate.modelData.frequency + " MHz");
@@ -389,7 +389,7 @@ Item {
 
                             StyledLabel {
                                 Layout.alignment: Qt.AlignHCenter
-                                text: "No networks found"
+                                text: qsTr("No networks found")
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.large
                                 font.bold: true
@@ -397,7 +397,7 @@ Item {
 
                             StyledLabel {
                                 Layout.alignment: Qt.AlignHCenter
-                                text: "Try refreshing the list"
+                                text: qsTr("Try refreshing the list")
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.normal
                                 opacity: 0.7

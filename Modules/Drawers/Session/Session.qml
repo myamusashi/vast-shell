@@ -93,7 +93,7 @@ Item {
                     model: [
                         {
                             "icon": "power_settings_circle",
-                            "name": "Shutdown",
+                            "name": qsTr("Shutdown"),
                             "action": () => {
                                 Quickshell.execDetached({
                                     "command": ["sh", "-c", "systemctl poweroff"]
@@ -102,7 +102,7 @@ Item {
                         },
                         {
                             "icon": "restart_alt",
-                            "name": "Reboot",
+                            "name": qsTr("Reboot"),
                             "action": () => {
                                 Quickshell.execDetached({
                                     "command": ["sh", "-c", "systemctl reboot"]
@@ -111,7 +111,7 @@ Item {
                         },
                         {
                             "icon": "sleep",
-                            "name": "Sleep",
+                            "name": qsTr("Sleep"),
                             "action": () => {
                                 Quickshell.execDetached({
                                     "command": ["sh", "-c", "systemctl suspend"]
@@ -120,7 +120,7 @@ Item {
                         },
                         {
                             "icon": "door_open",
-                            "name": "Logout",
+                            "name": qsTr("Logout"),
                             "action": () => {
                                 Quickshell.execDetached({
                                     "command": ["sh", "-c", "hyprctl dispatch exit"]
@@ -129,7 +129,7 @@ Item {
                         },
                         {
                             "icon": "lock",
-                            "name": "Lockscreen",
+                            "name": qsTr("Lockscreen"),
                             "action": () => {
                                 Quickshell.execDetached({
                                     "command": ["sh", "-c", "shell ipc call lock lock"]
@@ -264,14 +264,14 @@ Item {
             id: boxConfirmation
 
             header: StyledText {
-                text: "Session"
+                text: qsTr("Session")
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideMiddle
                 font.pixelSize: Appearance.fonts.size.extraLarge
                 font.bold: true
             }
             body: StyledText {
-                text: "Do you want to " + root.pendingActionName.toLowerCase() + "?"
+                text: qsTr("Do you want to %1?").arg(root.pendingActionName.toLowerCase())
                 font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3OnSurface
                 wrapMode: Text.Wrap

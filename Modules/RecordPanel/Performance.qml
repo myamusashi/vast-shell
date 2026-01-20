@@ -34,7 +34,7 @@ ClippingRectangle {
         Header {
             Layout.fillWidth: true
             icon: "browse_activity"
-            text: "Performance"
+            text: qsTr("Performance")
             condition: root.visible
         }
 

@@ -19,7 +19,7 @@ MaterialShape {
         , "#F44336"  // Very High (8-10) - Red
         , "#9C27B0"   // Extreme (11+) - Purple
     ]
-    property var uvLabels: ["Low", "Moderate", "High", "Very High", "Extreme"]
+    property var uvLabels: [qsTr("Low"), qsTr("Moderate"), qsTr("High"), qsTr("Very High"), qsTr("Extreme")]
 
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Cookie12Sided
@@ -56,7 +56,7 @@ MaterialShape {
         }
 
         StyledText {
-            text: "UV index"
+            text: qsTr("UV index")
             font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurface
         }
