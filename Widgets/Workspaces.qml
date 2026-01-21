@@ -66,11 +66,11 @@ StyledRect {
                 verticalCenter: parent.verticalCenter
             }
 
-            property int focusedWorkspace: Hypr.activeWsId
             readonly property var occupied: Hypr.workspaces.values.reduce((acc, curr) => { // Caelestia credit
                 acc[curr.id] = curr.lastIpcObject.windows > 0;
                 return acc;
             }, {})
+            property int focusedWorkspace: Hypr.activeWsId
 
             clip: true
             spacing: 0
