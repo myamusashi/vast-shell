@@ -114,9 +114,9 @@ StyledRect {
                             if (delegateRoot.isActive)
                                 return Colours.m3Colors.m3Primary;
                             else if (delegateRoot.isOccupied)
-                                return Colours.m3Colors.m3OutlineVariant;
-                            else
                                 return Colours.m3Colors.m3OnPrimary;
+                            else
+                                return Colours.m3Colors.m3OutlineVariant;
                         }
                         opacity: delegateRoot.isActive ? 1.0 : 0.5
 
