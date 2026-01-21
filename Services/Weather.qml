@@ -659,8 +659,8 @@ Singleton {
         id: reloadTimer
 
         interval: root.reloadInterval
-        running: true
-        repeat: true
+        running: GlobalStates.isWeatherPanelOpen
+        repeat: GlobalStates.isWeatherPanelOpen
         triggeredOnStart: false
         onTriggered: root.reload()
     }
