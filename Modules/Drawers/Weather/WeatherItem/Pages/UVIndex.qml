@@ -57,18 +57,18 @@ WrapperRectangle {
                 mouseArea.onClicked: root.isOpen = false
             }
 
-            ClippingRectangle {
+            WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
+                margin: 10
                 implicitWidth: parent.width
                 implicitHeight: parent.height * 0.3
                 radius: Appearance.rounding.normal
+                clip: true
                 color: Colours.m3Colors.m3SurfaceContainer
 
                 ColumnLayout {
                     id: content
 
-                    anchors.fill: parent
-                    anchors.margins: 10
                     spacing: Appearance.spacing.normal
 
                     StyledText {

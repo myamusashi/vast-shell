@@ -2,12 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
 
 import qs.Configs
 import qs.Helpers
-import qs.Services
 import qs.Widgets as Wid
+import qs.Services
+import qs.Components
 
 RowLayout {
     anchors.margins: 5
@@ -17,11 +17,12 @@ RowLayout {
     clip: true
     Wid.Clock {}
     Wid.Tray {}
-    ClippingRectangle {
+    StyledRect {
+        color: Colours.m3Colors.m3SurfaceContainer
+        clip: true
+        radius: Appearance.rounding.normal
         implicitWidth: quickSettingsLayout.childrenRect.width
         implicitHeight: parent.height * 0.7
-        color: Colours.m3Colors.m3SurfaceContainer
-        radius: Appearance.rounding.normal
 
         Row {
             id: quickSettingsLayout

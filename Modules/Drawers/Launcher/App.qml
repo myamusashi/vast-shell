@@ -25,7 +25,7 @@ Item {
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
 
     implicitWidth: parent.width * 0.3
-    implicitHeight: isLauncherOpen ? parent.height * 0.5 : 0
+    implicitHeight: GlobalStates.isLauncherOpen ? parent.height * 0.5 : 0
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
     // Thx caelestia
@@ -85,20 +85,16 @@ Item {
         color: GlobalStates.drawerColors
     }
 
-    StyledRect {
+    WrapperRectangle {
         anchors.fill: parent
         radius: 0
-        z: 2
         topLeftRadius: Appearance.rounding.large
         topRightRadius: Appearance.rounding.large
         color: GlobalStates.drawerColors
-        clip: true
 
         Loader {
-            anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isLauncherOpen
             asynchronous: true
-
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.normal
@@ -236,12 +232,14 @@ Item {
                                 Layout.preferredHeight: 40
                                 Layout.leftMargin: Appearance.padding.normal
                                 clip: true
+
                                 Behavior on border.width {
                                     NAnim {}
                                 }
                                 Behavior on border.color {
                                     CAnim {}
                                 }
+
                                 IconImage {
                                     anchors.centerIn: parent
                                     implicitSize: parent.height
@@ -254,6 +252,7 @@ Item {
                                 Layout.fillHeight: true
                                 Layout.rightMargin: Appearance.padding.normal
                                 spacing: 2
+
                                 HighlightText {
                                     Layout.fillWidth: true
                                     searchText: search.text
@@ -265,6 +264,7 @@ Item {
                                     normalColor: Colours.m3Colors.m3OnSurface
                                     highlightColor: Colours.m3Colors.m3Primary
                                 }
+
                                 StyledLabel {
                                     Layout.fillWidth: true
                                     text: delegateItem.modelData.comment

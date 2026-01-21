@@ -40,19 +40,13 @@ StyledRect {
     }
     property list<int> reserved: Hypr.focusedMonitor.lastIpcObject.reserved
 
-    x: isOverviewOpen ? (parent.width - width) / 2 : -width
+    x: GlobalStates.isOverviewOpen ? (parent.width - width) / 2 : -width
     implicitWidth: contentGrid.implicitWidth * 2.5
     implicitHeight: contentGrid.implicitHeight * 2.5
     color: "transparent"
-
-    opacity: isOverviewOpen ? 1 : 0
-    visible: opacity > 0
+    visible: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isOverviewOpen
 
     Behavior on x {
-        NAnim {}
-    }
-
-    Behavior on opacity {
         NAnim {}
     }
 
@@ -61,9 +55,8 @@ StyledRect {
         anchors.margins: -12
         color: GlobalStates.drawerColors
         border.color: Colours.m3Colors.m3Outline
-
-        opacity: root.isOverviewOpen ? 1 : 0
-        scale: root.isOverviewOpen ? 1 : 0.95
+        opacity: GlobalStates.isOverviewOpen ? 1 : 0
+        scale: GlobalStates.isOverviewOpen ? 1 : 0.95
 
         Behavior on opacity {
             NAnim {}
@@ -77,6 +70,20 @@ StyledRect {
     GlobalShortcut {
         name: "overview"
         onPressed: GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen
+    }
+
+    IpcHandler {
+        target: "overview"
+
+        function open(): void {
+            GlobalStates.isOverviewOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isOverviewOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen;
+        }
     }
 
     StyledRect {
@@ -96,8 +103,8 @@ StyledRect {
         rowSpacing: 12
         columnSpacing: 12
 
-        opacity: root.isOverviewOpen ? 1 : 0
-        scale: root.isOverviewOpen ? 1 : 0.9
+        opacity: GlobalStates.isOverviewOpen ? 1 : 0
+        scale: GlobalStates.isOverviewOpen ? 1 : 0.9
 
         Behavior on opacity {
             NAnim {}
@@ -124,8 +131,8 @@ StyledRect {
                 clip: true
                 border.width: 2
                 border.color: hasMaximized ? "red" : workspace?.focused ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnPrimary
-                opacity: root.isOverviewOpen ? 1 : 0
-                scale: root.isOverviewOpen ? 1 : 0.85
+                opacity: GlobalStates.isOverviewOpen ? 1 : 0
+                scale: GlobalStates.isOverviewOpen ? 1 : 0.85
 
                 Behavior on opacity {
                     NAnim {}
@@ -182,7 +189,7 @@ StyledRect {
                     id: loader
 
                     anchors.fill: parent
-                    active: root.isOverviewOpen
+                    active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isOverviewOpen
                     asynchronous: true
                     sourceComponent: Repeater {
                         model: workspaceContainer.workspace?.toplevels
@@ -207,7 +214,7 @@ StyledRect {
                             x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + root.borderWidth + 12
                             y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + root.borderWidth + 12
                             z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
-                            opacity: root.isOverviewOpen ? 1 : 0
+                            opacity: GlobalStates.isOverviewOpen ? 1 : 0
 
                             Behavior on scale {
                                 NAnim {}

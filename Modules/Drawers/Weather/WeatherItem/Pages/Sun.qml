@@ -91,14 +91,13 @@ WrapperRectangle {
                 mouseArea.onClicked: root.isOpen = false
             }
 
-            ClippingRectangle {
+            WrapperRectangle {
                 color: Colours.m3Colors.m3SurfaceContainer
                 radius: Appearance.rounding.normal
                 implicitWidth: parent.width
                 implicitHeight: parent.height * 0.3
 
                 SunCanvas {
-                    anchors.fill: parent
                     sunSize: 40
 
                     StyledRect {

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Widgets
 
 import qs.Components
 import qs.Configs
@@ -49,14 +50,13 @@ Item {
         color: GlobalStates.drawerColors
     }
 
-    StyledRect {
+    WrapperRectangle {
         anchors.fill: parent
         color: GlobalStates.drawerColors
         radius: 0
         bottomLeftRadius: Appearance.rounding.large
 
         Loader {
-            anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && container.isCalendarShow
             asynchronous: true
             sourceComponent: ColumnLayout {

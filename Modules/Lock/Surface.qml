@@ -167,11 +167,12 @@ WlSessionLockSurface {
             color: GlobalStates.drawerColors
         }
 
-        ClippingWrapperRectangle {
+        WrapperRectangle {
             id: topWrapperRect
 
             anchors.fill: parent
             color: GlobalStates.drawerColors
+            clip: true
             radius: 0
             leftMargin: Appearance.margin.normal
             rightMargin: Appearance.margin.normal
@@ -247,11 +248,12 @@ WlSessionLockSurface {
             color: GlobalStates.drawerColors
         }
 
-        ClippingWrapperRectangle {
+        WrapperRectangle {
             id: bottomWrapperRect
 
             anchors.fill: parent
             color: GlobalStates.drawerColors
+            clip: true
             radius: 0
             leftMargin: Appearance.margin.large
             rightMargin: Appearance.margin.large
@@ -457,8 +459,9 @@ WlSessionLockSurface {
         }
     }
 
-    ClippingWrapperRectangle {
+    WrapperRectangle {
         anchors.centerIn: parent
+        clip: true
         radius: Appearance.rounding.large
         margin: Appearance.margin.normal
         implicitWidth: sessionWrapperRect.showConfirmDialog ? column.implicitWidth + 20 : 0

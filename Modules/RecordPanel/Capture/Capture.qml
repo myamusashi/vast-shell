@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
@@ -13,7 +12,7 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 
-ClippingRectangle {
+WrapperRectangle {
     id: root
 
     property bool condition: false
@@ -71,9 +70,6 @@ ClippingRectangle {
     ColumnLayout {
         id: columnLayout
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
         spacing: 0
 
         Header {}
