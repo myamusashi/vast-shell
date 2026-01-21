@@ -115,24 +115,29 @@ StyledRect {
 
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: parent.width
+
                                 text: {
                                     const date = delegate.modelData.date || "";
                                     if (!date)
                                         return "";
-
                                     const today = new Date().toDateString();
                                     const forecastDate = new Date(date);
-
                                     if (forecastDate.toDateString() === today) {
                                         return qsTr("Today");
                                     }
-
                                     const days = [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr("Fri"), qsTr("Sat")];
                                     return days[forecastDate.getDay()];
                                 }
+
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.medium
                                 font.weight: Font.Bold
+                                wrapMode: Text.WordWrap
+                                horizontalAlignment: Text.AlignHCenter
+                                maximumLineCount: 2
+                                elide: Text.ElideRight
                             }
 
                             StyledText {
