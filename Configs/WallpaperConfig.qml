@@ -1,3 +1,4 @@
+import QtQuick
 import Quickshell.Io
 
 JsonObject {
