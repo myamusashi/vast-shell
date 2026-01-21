@@ -2,9 +2,10 @@ pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Io
+
+import qs.Helpers
 
 Singleton {
     id: root
@@ -382,9 +383,9 @@ Singleton {
 
         property int updateCycle: 0
 
-        running: true
+        running: GlobalStates.isQuickSettingsOpen
         interval: 2000
-        repeat: true
+        repeat: GlobalStates.isQuickSettingsOpen
         triggeredOnStart: true
 
         onTriggered: {
