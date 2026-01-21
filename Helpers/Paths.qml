@@ -25,6 +25,8 @@ Singleton {
 
     readonly property string recordDir: `${videos}/Shell`
 
+    readonly property string translateFilePath: `${rootDir}/translations`
+
     function pathToBreadcrumb(path) {
         if (!path || typeof path !== 'string')
             return '';
