@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 
-import Quickshell.Widgets
-
 import qs.Components
 import qs.Configs
 import qs.Helpers
@@ -12,12 +10,13 @@ import qs.Services
 
 import QtGraphs
 
-ClippingRectangle {
+StyledRect {
     id: root
 
     implicitWidth: columnLayout.width
     implicitHeight: columnLayout.implicitHeight
     color: Colours.m3Colors.m3SurfaceContainer
+    clip: true
     radius: Appearance.rounding.small
 
     property alias content: columnLayout

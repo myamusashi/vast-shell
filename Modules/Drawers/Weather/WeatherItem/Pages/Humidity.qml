@@ -58,8 +58,9 @@ WrapperRectangle {
                 mouseArea.onClicked: root.isOpen = false
             }
 
-            ClippingRectangle {
+            WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
+                clip: true
                 implicitWidth: parent.width
                 implicitHeight: parent.height * 0.3
                 radius: Appearance.rounding.normal

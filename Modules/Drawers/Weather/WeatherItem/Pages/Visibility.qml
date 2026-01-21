@@ -64,18 +64,14 @@ WrapperRectangle {
                 mouseArea.onClicked: root.isOpen = false
             }
 
-            ClippingRectangle {
+            WrapperRectangle {
                 radius: Appearance.rounding.normal
+                clip: true
                 color: Colours.m3Colors.m3SurfaceContainer
                 implicitWidth: parent.width
                 implicitHeight: parent.height * 0.1
 
                 Item {
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
                     implicitWidth: parent.width
 
                     MaterialShape {

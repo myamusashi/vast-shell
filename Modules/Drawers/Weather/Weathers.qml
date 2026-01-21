@@ -25,6 +25,7 @@ Item {
 
     implicitHeight: parent.height
     implicitWidth: GlobalStates.isWeatherPanelOpen ? parent.width * 0.25 : 0
+    visible: window.modelData.name === Hypr.focusedMonitor.name
 
     readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
 
@@ -68,15 +69,15 @@ Item {
         onPressed: GlobalStates.togglePanel("weather")
     }
 
-    ClippingRectangle {
+    WrapperRectangle {
         anchors.fill: parent
         radius: 0
+        clip: true
         color: GlobalStates.drawerColors
 
         Flickable {
             id: flickable
 
-            anchors.fill: parent
             contentWidth: width
             contentHeight: mainLoader.item.implicitHeight + 40
             clip: true
@@ -111,7 +112,7 @@ Item {
                 id: mainLoader
 
                 anchors.fill: parent
-                active: true
+                active: window.modelData.name === Hypr.focusedMonitor.name
                 asynchronous: true
 
                 sourceComponent: ColumnLayout {
@@ -133,7 +134,6 @@ Item {
 
                         Layout.fillWidth: true
                         active: Weather.quickSummary !== ""
-                        visible: active
                         asynchronous: true
 
                         sourceComponent: StyledRect {

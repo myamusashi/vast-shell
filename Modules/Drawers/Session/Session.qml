@@ -27,8 +27,9 @@ Item {
     property var pendingAction: null
     property string pendingActionName: ""
 
-    implicitWidth: isSessionOpen ? 80 : 0
+    implicitWidth: GlobalStates.isSessionOpen ? 80 : 0
     implicitHeight: parent.height * 0.5
+    visible: window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitWidth {
         NAnim {
@@ -79,7 +80,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: GlobalStates.isSessionOpen
+            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isSessionOpen
             asynchronous: true
 
             sourceComponent: ColumnLayout {

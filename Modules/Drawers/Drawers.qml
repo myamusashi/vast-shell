@@ -52,10 +52,6 @@ Variants {
             bottom: true
         }
 
-        Behavior on color {
-            CAnim {}
-        }
-
         mask: Region {
             regions: childRegions.instances
         }
@@ -81,7 +77,7 @@ Variants {
             Exclusion {
                 screen: window.modelData
                 name: "top"
-                exclusiveZone: GlobalStates.isBarOpen ? 40 : 0
+                exclusiveZone: GlobalStates.isBarOpen ? window.modelData.name === Hypr.focusedMonitor.name ? 40 : 0 : 0
                 anchors.top: true
             }
             Exclusion {
@@ -100,6 +96,10 @@ Variants {
 
         App {
             id: app
+
+            onHeightChanged: {
+                window.modelData.name === Hypr.focusedMonitor.name ? osd.anchors.bottomMargin = app.height : 0;
+            }
         }
 
         Bar {
@@ -129,7 +129,7 @@ Variants {
             id: session
 
             onWidthChanged: {
-                volume.anchors.rightMargin = session.width;
+                window.modelData.name === Hypr.focusedMonitor.name ? volume.anchors.rightMargin = session.width : 0;
             }
         }
 
@@ -141,17 +141,13 @@ Variants {
             id: screenCapture
         }
 
-        Overview {
-            id: overview
-        }
+        Overview {}
 
         Notifications {
             id: notif
         }
 
-        Weathers {
-            id: weathers
-        }
+        Weathers {}
 
         OSD {
             id: osd

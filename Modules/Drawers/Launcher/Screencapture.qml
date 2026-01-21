@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import Quickshell.Widgets
 import Quickshell.Hyprland
 
 import qs.Configs
@@ -11,7 +12,7 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
-StyledRect {
+WrapperRectangle {
     id: root
 
     anchors.centerIn: parent
@@ -20,7 +21,7 @@ StyledRect {
     property int selectedIndex: 0
     property int selectedTab: 0
 
-    visible: true
+    visible: window.modelData.name === Hypr.focusedMonitor.name
     implicitWidth: GlobalStates.isScreenCapturePanelOpen ? 300 : 0
     implicitHeight: GlobalStates.isScreenCapturePanelOpen ? 400 : 0
     radius: Appearance.rounding.large
@@ -62,8 +63,8 @@ StyledRect {
     }
 
     Loader {
-        anchors.fill: parent
-        active: GlobalStates.isScreenCapturePanelOpen
+        active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isScreenCapturePanelOpen
+        asynchronous: true
         sourceComponent: ColumnLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
