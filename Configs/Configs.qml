@@ -2,7 +2,9 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Io
+import TranslationManager
 
+import qs.Configs
 import qs.Helpers
 
 Singleton {
@@ -15,6 +17,11 @@ Singleton {
     property alias wallpaper: adapter.wallpaper
     property alias weather: adapter.weather
     property alias widgets: adapter.widgets
+    property alias language: adapter.language
+
+    onLanguageChanged: {
+        TranslationManager.loadTranslation(root.language, Paths.translateFilePath);
+    }
 
     FileView {
         path: Paths.shellDir + "/configurations.json"
@@ -24,6 +31,7 @@ Singleton {
             if (err !== FileViewError.FileNotFound)
                 console.log("Failed to read config files");
         }
+        onLoaded: TranslationManager.loadTranslation(root.language, Paths.translateFilePath)
         onSaveFailed: err => console.log("Failed to save config", FileViewError.toString(err))
 
         JsonAdapter {
@@ -35,6 +43,7 @@ Singleton {
             property WallpaperConfig wallpaper: WallpaperConfig {}
             property WeatherConfig weather: WeatherConfig {}
             property BarConfig bar: BarConfig {}
+            property string language: ""
             property var widgets: [
                 {
                     "icon": "screenshot_frame",
