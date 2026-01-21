@@ -12,8 +12,8 @@ Singleton {
     id: root
 
     // TODO: Yeah not now, add this values when i want to create Settings windows
-    property string videosPath
-    property string screenshotPath
+    property string videosPath: ""
+    property string screenshotPath: ""
     property list<var> screenshotFiles
     property list<var> screenrecordFiles
 
@@ -46,7 +46,6 @@ Singleton {
         }
     }
 
-    // TODO: created thumbnails
     Process {
         id: getScreenrecordFilesMetadata
 
