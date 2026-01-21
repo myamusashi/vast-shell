@@ -29,6 +29,7 @@ Singleton {
 
     Connections {
         target: Hyprland
+
         function onRawEvent(event) {
             let eventName = event.name;
 
