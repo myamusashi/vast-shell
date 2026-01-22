@@ -32,76 +32,26 @@ Variants {
         WlrLayershell.namespace: "shell:wallpaper"
 
         Wallpaper {
-            id: img
+            id: wallpaper
 
-            anchors.fill: parent
-            source: ""
-            sourceSize: Qt.size(root.modelData.width, root.modelData.height)
+            Behavior on source {
+                SequentialAnimation {
+                    NAnim {
+                        target: wallpaper
+                        property: "opacity"
+                        to: 0
+                        duration: Appearance.animations.durations.extraLarge
+                    }
 
-            property var _wallpaperHandler: null
-            property var _statusHandler: null
-            property var _finishedHandler: null
+                    PropertyAction {}
 
-            Component.onCompleted: {
-                source = Paths.currentWallpaper;
-
-                _wallpaperHandler = function () {
-                    if (walAnimation.running)
-                        walAnimation.complete();
-                    animatingWal.source = Paths.currentWallpaper;
-                };
-
-                _statusHandler = function () {
-                    if (animatingWal.status == Image.Ready)
-                        walAnimation.start();
-                };
-
-                _finishedHandler = function () {
-                    img.source = animatingWal.source;
-                    animatingWal.source = "";
-                    animatinRect.opacity = 0;
-                };
-
-                Paths.currentWallpaperChanged.connect(_wallpaperHandler);
-                animatingWal.statusChanged.connect(_statusHandler);
-                walAnimation.finished.connect(_finishedHandler);
-            }
-
-            Component.onDestruction: {
-                if (_wallpaperHandler)
-                    Paths.currentWallpaperChanged.disconnect(_wallpaperHandler);
-                if (_statusHandler)
-                    animatingWal.statusChanged.disconnect(_statusHandler);
-                if (_finishedHandler)
-                    walAnimation.finished.disconnect(_finishedHandler);
-            }
-        }
-
-        Rectangle {
-            id: animatinRect
-
-            anchors.fill: parent
-            color: "transparent"
-            opacity: 0
-            visible: opacity > 0
-
-            NAnim {
-                id: walAnimation
-
-                duration: Appearance.animations.durations.expressiveDefaultSpatial * 2
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                from: 0
-                property: "opacity"
-                target: animatinRect
-                to: 1
-            }
-
-            Wallpaper {
-                id: animatingWal
-
-                anchors.fill: parent
-                source: ""
-                sourceSize: Qt.size(root.modelData.width, root.modelData.height)
+                    NAnim {
+                        target: wallpaper
+                        property: "opacity"
+                        to: 1
+                        duration: Appearance.animations.durations.extraLarge
+                    }
+                }
             }
         }
 
