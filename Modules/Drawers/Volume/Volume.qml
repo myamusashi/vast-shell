@@ -1,8 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import Quickshell
 import Quickshell.Widgets
+import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 
 import qs.Configs
@@ -122,43 +124,54 @@ Item {
             Icon {
                 id: volumeIcon
 
-                anchors.horizontalCenter: parent.horizontalCenter
                 type: Icon.Lucide
                 icon: Lucide.icon_volume_2
                 color: Colours.m3Colors.m3Primary
                 font.pixelSize: Appearance.fonts.size.extraLarge
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
             }
 
             StyledSlide {
-                anchors.horizontalCenter: parent.horizontalCenter
                 width: 40
-                height: parent.height - volumeIcon.height - tuneIcon.height - 2 * parent.spacing
+                height: 250 - volumeIcon.height - 40 - 2 * Appearance.spacing.normal
                 orientation: Qt.Vertical
                 value: Pipewire.defaultAudioSink.audio.volume
-                onMoved: Pipewire.defaultAudioSink.audio.volume = value
+				onMoved: Pipewire.defaultAudioSink.audio.volume = value
+				onHoveredChanged: hovered ? GlobalStates.pauseOSD("volume") : GlobalStates.resumeOSD("volume")
             }
 
-            Icon {
-                id: tuneIcon
+            Item {
+                implicitWidth: 40
+                implicitHeight: 40
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                icon: "tune"
-                color: Colours.m3Colors.m3Primary
-                font.pixelSize: Appearance.fonts.size.larger
+                Pulse {
+					anchors.centerIn: parent
+					isActive: Players.active.playbackState === MprisPlaybackState.Playing
+                }
 
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-
+                    onEntered: GlobalStates.pauseOSD("volume")
+                    onExited: GlobalStates.resumeOSD("volume")
                     onClicked: root.openPerappVolume = !root.openPerappVolume
+                    onPressed: mouse => mouse.accepted = false
+                    onReleased: mouse => mouse.accepted = false
                 }
             }
         }
     }
 
     component Mixer: Column {
+        id: mixer
+
         required property PwNode node
+
+        PwObjectTracker {
+            objects: [mixer.node]
+        }
 
         spacing: Appearance.spacing.normal
 
@@ -181,6 +194,184 @@ Item {
             orientation: Qt.Vertical
             value: parent.node.audio.volume || 100
             onMoved: parent.node.audio.volume = value
+        }
+    }
+
+    component Pulse: Shape {
+        id: visualizerShape
+
+        implicitWidth: 40
+        implicitHeight: 40
+
+        property bool isActive: false
+        property real baseHeight: 2
+        property real maxHeight: 15
+
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3Primary
+            strokeWidth: 2
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
+
+            startX: 20
+            startY: visualizerShape.isActive ? 20 - bar1.currentHeight : 20 - visualizerShape.baseHeight
+
+            PathLine {
+                x: 20
+                y: visualizerShape.isActive ? 20 + bar1.currentHeight : 20 + visualizerShape.baseHeight
+            }
+        }
+
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3Primary
+            strokeWidth: 2
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
+
+            startX: 13
+            startY: visualizerShape.isActive ? 20 - bar2.currentHeight : 20 - visualizerShape.baseHeight
+
+            PathLine {
+                x: 13
+                y: visualizerShape.isActive ? 20 + bar2.currentHeight : 20 + visualizerShape.baseHeight
+            }
+        }
+
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3Primary
+            strokeWidth: 2
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
+
+            startX: 27
+            startY: visualizerShape.isActive ? 20 - bar3.currentHeight : 20 - visualizerShape.baseHeight
+
+            PathLine {
+                x: 27
+                y: visualizerShape.isActive ? 20 + bar3.currentHeight : 20 + visualizerShape.baseHeight
+            }
+        }
+
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3Primary
+            strokeWidth: 2
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
+
+            startX: 6
+            startY: visualizerShape.isActive ? 20 - bar4.currentHeight : 20 - visualizerShape.baseHeight
+
+            PathLine {
+                x: 6
+                y: visualizerShape.isActive ? 20 + bar4.currentHeight : 20 + visualizerShape.baseHeight
+            }
+        }
+
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3Primary
+            strokeWidth: 2
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
+
+            startX: 34
+            startY: visualizerShape.isActive ? 20 - bar5.currentHeight : 20 - visualizerShape.baseHeight
+
+            PathLine {
+                x: 34
+                y: visualizerShape.isActive ? 20 + bar5.currentHeight : 20 + visualizerShape.baseHeight
+            }
+        }
+
+        QtObject {
+            id: bar1
+            property real currentHeight: visualizerShape.baseHeight
+            property real targetHeight: visualizerShape.baseHeight
+
+            Behavior on currentHeight {
+                NAnim {
+                    duration: 100
+                    easing.type: Easing.OutQuad
+                }
+            }
+        }
+
+        QtObject {
+            id: bar2
+            property real currentHeight: visualizerShape.baseHeight
+            property real targetHeight: visualizerShape.baseHeight
+
+            Behavior on currentHeight {
+                NAnim {
+                    duration: 100
+                    easing.type: Easing.OutQuad
+                }
+            }
+        }
+
+        QtObject {
+            id: bar3
+            property real currentHeight: visualizerShape.baseHeight
+            property real targetHeight: visualizerShape.baseHeight
+
+            Behavior on currentHeight {
+                NAnim {
+                    duration: 100
+                    easing.type: Easing.OutQuad
+                }
+            }
+        }
+
+        QtObject {
+            id: bar4
+            property real currentHeight: visualizerShape.baseHeight
+            property real targetHeight: visualizerShape.baseHeight
+
+            Behavior on currentHeight {
+                NAnim {
+                    duration: 100
+                    easing.type: Easing.OutQuad
+                }
+            }
+        }
+
+        QtObject {
+            id: bar5
+            property real currentHeight: visualizerShape.baseHeight
+            property real targetHeight: visualizerShape.baseHeight
+
+            Behavior on currentHeight {
+                NAnim {
+                    duration: 100
+                    easing.type: Easing.OutQuad
+                }
+            }
+        }
+
+        Timer {
+            id: animationTimer
+            interval: 150
+            repeat: true
+            running: visualizerShape.isActive
+            onTriggered: {
+                bar1.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
+                bar2.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
+                bar3.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
+                bar4.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
+                bar5.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
+            }
+        }
+
+        Timer {
+            id: stopTimer
+            interval: 50
+            repeat: false
+            onTriggered: {
+                bar1.currentHeight = visualizerShape.baseHeight;
+                bar2.currentHeight = visualizerShape.baseHeight;
+                bar3.currentHeight = visualizerShape.baseHeight;
+                bar4.currentHeight = visualizerShape.baseHeight;
+                bar5.currentHeight = visualizerShape.baseHeight;
+            }
         }
     }
 }
