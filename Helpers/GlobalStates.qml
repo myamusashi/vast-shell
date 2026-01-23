@@ -16,7 +16,7 @@ Singleton {
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
-    readonly property int osdDisplayDuration: 2000
+    readonly property int osdDisplayDuration: 5000
     readonly property int cleanupDelay: 500
     readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
