@@ -135,7 +135,7 @@ Item {
 
                 Pulse {
 					anchors.centerIn: parent
-					isActive: Players.active.playbackState === MprisPlaybackState.Playing
+					isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
                 }
 
                 MouseArea {
