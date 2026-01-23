@@ -32,17 +32,6 @@ Item {
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        propagateComposedEvents: true
-        onEntered: GlobalStates.pauseOSD("volume")
-        onExited: GlobalStates.resumeOSD("volume")
-        onPressed: mouse => mouse.accepted = false
-        onReleased: mouse => mouse.accepted = false
-        onClicked: mouse => mouse.accepted = false
-    }
-
     Corner {
         location: Qt.TopRightCorner
         extensionSide: Qt.Vertical
@@ -138,7 +127,6 @@ Item {
                 orientation: Qt.Vertical
                 value: Pipewire.defaultAudioSink.audio.volume
 				onMoved: Pipewire.defaultAudioSink.audio.volume = value
-				onHoveredChanged: hovered ? GlobalStates.pauseOSD("volume") : GlobalStates.resumeOSD("volume")
             }
 
             Item {
@@ -152,13 +140,10 @@ Item {
 
                 MouseArea {
                     anchors.fill: parent
-                    hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onEntered: GlobalStates.pauseOSD("volume")
                     onExited: GlobalStates.resumeOSD("volume")
                     onClicked: root.openPerappVolume = !root.openPerappVolume
-                    onPressed: mouse => mouse.accepted = false
-                    onReleased: mouse => mouse.accepted = false
                 }
             }
         }
