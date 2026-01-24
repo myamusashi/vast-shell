@@ -122,11 +122,11 @@ Item {
             }
 
             StyledSlide {
-                width: 40
-                height: 250 - volumeIcon.height - 40 - 2 * Appearance.spacing.normal
+                implicitWidth: 40
+                implicitHeight: 250 - volumeIcon.height - 40 - 2 * Appearance.spacing.normal
                 orientation: Qt.Vertical
                 value: Pipewire.defaultAudioSink.audio.volume
-				onMoved: Pipewire.defaultAudioSink.audio.volume = value
+                onMoved: Pipewire.defaultAudioSink.audio.volume = value
             }
 
             Item {
@@ -134,8 +134,8 @@ Item {
                 implicitHeight: 40
 
                 Pulse {
-					anchors.centerIn: parent
-					isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
+                    anchors.centerIn: parent
+                    isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
                 }
 
                 MouseArea {
@@ -162,8 +162,8 @@ Item {
 
         IconImage {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 30
-            height: 30
+            implicitWidth: 30
+            implicitHeight: 30
             source: {
                 const name = parent.node.name;
                 const appName = name.split(".").pop();
@@ -174,8 +174,8 @@ Item {
 
         StyledSlide {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 40
-            height: parent.height - 30 - parent.spacing
+            implicitWidth: 40
+            implicitHeight: parent.height - 30 - parent.spacing
             orientation: Qt.Vertical
             value: parent.node.audio.volume || 100
             onMoved: parent.node.audio.volume = value
