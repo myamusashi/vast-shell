@@ -64,7 +64,7 @@ WrapperRectangle {
                 mouseArea.onClicked: root.isOpen = false
             }
 
-            WrapperRectangle {
+            StyledRect {
                 radius: Appearance.rounding.normal
                 clip: true
                 color: Colours.m3Colors.m3SurfaceContainer
