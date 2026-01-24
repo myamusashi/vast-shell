@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import M3Shapes
 
@@ -13,13 +12,14 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
+import "Markdown"
+
 WrapperRectangle {
     id: root
 
     anchors.fill: parent
 
     property bool isOpen: false
-    property string description: fileMD.text()
 
     margin: Appearance.margin.normal
     visible: opacity > 0
@@ -42,14 +42,6 @@ WrapperRectangle {
         }
     }
 
-    FileView {
-        id: fileMD
-
-        path: Qt.resolvedUrl("./Markdown/Wind.md")
-        watchChanges: true
-        onFileChanged: reload()
-    }
-
     Loader {
         active: root.isOpen
         asynchronous: true
@@ -70,8 +62,9 @@ WrapperRectangle {
             WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
                 margin: 10
-                implicitWidth: parent.width
-                implicitHeight: parent.height * 0.35
+				clip: true
+				implicitWidth: parent.width
+                implicitHeight: content.implicitHeight + 20
                 radius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer
 
@@ -106,7 +99,7 @@ WrapperRectangle {
 
                     Flickable {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        Layout.preferredHeight: 220
                         Layout.topMargin: Appearance.margin.large * 2
                         contentWidth: sliderRow.width
                         contentHeight: sliderRow.height
@@ -185,7 +178,7 @@ WrapperRectangle {
                 StyledText {
                     id: description
 
-                    text: root.description
+                    text: DetailText.wind
                     color: Colours.m3Colors.m3OnSurface
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap

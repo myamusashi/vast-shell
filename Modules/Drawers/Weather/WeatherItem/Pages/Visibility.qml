@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Io
 import Quickshell.Widgets
 import M3Shapes
 
@@ -11,13 +10,14 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
+import "Markdown"
+
 WrapperRectangle {
     id: root
 
     anchors.fill: parent
 
     property bool isOpen: false
-    property string descriptions: ""
 
     margin: Appearance.margin.normal
     visible: opacity > 0
@@ -40,13 +40,6 @@ WrapperRectangle {
         }
     }
 
-    FileView {
-        path: Qt.resolvedUrl("./Markdown/Visibility.md")
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.descriptions = text()
-    }
-
     Loader {
         active: root.isOpen
         asynchronous: true
@@ -64,15 +57,15 @@ WrapperRectangle {
                 mouseArea.onClicked: root.isOpen = false
             }
 
-            StyledRect {
+            ClippingRectangle {
                 radius: Appearance.rounding.normal
-                clip: true
                 color: Colours.m3Colors.m3SurfaceContainer
                 implicitWidth: parent.width
                 implicitHeight: parent.height * 0.1
 
                 Item {
-                    implicitWidth: parent.width
+					implicitWidth: parent.width
+					implicitHeight: parent.height
 
                     MaterialShape {
                         anchors.left: parent.left
@@ -160,7 +153,7 @@ WrapperRectangle {
                 StyledText {
                     id: description
 
-                    text: root.descriptions
+                    text: DetailText.visibility
                     color: Colours.m3Colors.m3OnSurface
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap

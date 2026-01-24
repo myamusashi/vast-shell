@@ -50,6 +50,29 @@ WrapperRectangle {
         }
     }
 
+    function getMoonPhaseText(phase) {
+        switch (phase) {
+        case "New Moon":
+            return qsTr("New Moon");
+        case "Waxing Crescent":
+            return qsTr("Waxing Crescent");
+        case "First Quarter":
+            return qsTr("First Quarter");
+        case "Waxing Gibbous":
+            return qsTr("Waxing Gibbous");
+        case "Full Moon":
+            return qsTr("Full Moon");
+        case "Waning Gibbous":
+            return qsTr("Waning Gibbous");
+        case "Last Quarter":
+            return qsTr("Last Quarter");
+        case "Waning Crescent":
+            return qsTr("Waning Crescent");
+        default:
+            return phase || qsTr("Unknown");
+        }
+    }
+
     Behavior on scale {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -80,6 +103,7 @@ WrapperRectangle {
 
     Loader {
         active: root.isOpen
+        asynchronous: true
         sourceComponent: ScrollView {
             anchors.fill: parent
             anchors.topMargin: 20
@@ -110,7 +134,7 @@ WrapperRectangle {
                             Layout.alignment: Qt.AlignLeft
 
                             StyledText {
-                                text: Weather.moonPhase
+                                text: root.getMoonPhaseText(Weather.moonPhase)
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.extraLarge
                             }

@@ -3,13 +3,14 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import Quickshell.Io
 import Quickshell.Widgets
 
 import qs.Configs
 import qs.Helpers
 import qs.Services
 import qs.Components
+
+import "Markdown"
 
 WrapperRectangle {
     id: root
@@ -54,23 +55,7 @@ WrapperRectangle {
             clip: true
             spacing: Appearance.spacing.normal
 
-            property string description: tabGroup.currentIndex === 0 ? aqiUSAFileDescription.text() : aqiEuroFileDescription.text()
-
-            FileView {
-                id: aqiUSAFileDescription
-
-                path: Qt.resolvedUrl("./Markdown/USAQI.md")
-                watchChanges: true
-                onFileChanged: reload()
-            }
-
-            FileView {
-                id: aqiEuroFileDescription
-
-                path: Qt.resolvedUrl("./Markdown/EuroAQI.md")
-                watchChanges: true
-                onFileChanged: reload()
-            }
+            property string description: tabGroup.currentIndex === 0 ? DetailText.usAQI : DetailText.euroAQI
 
             Header {
                 icon: Lucide.icon_waves

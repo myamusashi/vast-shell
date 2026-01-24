@@ -1,13 +1,14 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Io
 import Quickshell.Widgets
 
 import qs.Configs
 import qs.Helpers
 import qs.Services
 import qs.Components
+
+import "Markdown"
 
 WrapperRectangle {
     id: root
@@ -16,7 +17,6 @@ WrapperRectangle {
 
     property bool isOpen: false
     property real sunriseProgress: calculateSunProgress()
-    property string descriptions: ""
 
     margin: Appearance.margin.normal
     visible: opacity > 0
@@ -65,13 +65,6 @@ WrapperRectangle {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
-    }
-
-    FileView {
-        path: Qt.resolvedUrl("./Markdown/Sun.md")
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.descriptions = text()
     }
 
     Loader {
@@ -184,7 +177,7 @@ WrapperRectangle {
                     StyledText {
                         id: description
 
-                        text: root.descriptions
+                        text: DetailText.sun
                         color: Colours.m3Colors.m3OnSurface
                         textFormat: Text.MarkdownText
                         wrapMode: Text.Wrap

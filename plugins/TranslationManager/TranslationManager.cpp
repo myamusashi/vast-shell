@@ -4,8 +4,8 @@
 
 TranslationManager::TranslationManager(QObject *parent)
     : QObject(parent), m_translator(new QTranslator(this)),
-      m_currentLanguage("en") {
-  m_availableLanguages << "en" << "id";
+      m_currentLanguage("en_US") {
+  m_availableLanguages << "en_US" << "id_ID";
 }
 
 TranslationManager::~TranslationManager() {
@@ -32,7 +32,7 @@ bool TranslationManager::loadTranslation(const QString &language,
     m_translator = new QTranslator(this);
   }
 
-  QString fileName = QString("app_%1.qm").arg(language);
+  QString fileName = QString("%1.qm").arg(language);
   QString fullPath = translationPath + "/" + fileName;
 
   qDebug() << "Loading translation:" << fullPath;

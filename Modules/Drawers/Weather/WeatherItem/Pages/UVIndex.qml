@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import M3Shapes
 
@@ -12,6 +11,8 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 import qs.Components
+
+import "Markdown"
 
 WrapperRectangle {
     id: root
@@ -61,7 +62,7 @@ WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
                 margin: 10
                 implicitWidth: parent.width
-                implicitHeight: parent.height * 0.3
+                implicitHeight: content.width * 0.75
                 radius: Appearance.rounding.normal
                 clip: true
                 color: Colours.m3Colors.m3SurfaceContainer
@@ -139,7 +140,11 @@ WrapperRectangle {
                                 }
                             }
                         }
-                    }
+					}
+
+					Item {
+						Layout.fillHeight: true
+					}
                 }
             }
 
@@ -152,19 +157,12 @@ WrapperRectangle {
                     width: 1
                 }
 
-                FileView {
-                    id: uvIndexFileDescription
-
-                    path: Qt.resolvedUrl("./Markdown/UVIndex.md")
-                    watchChanges: true
-                }
-
                 StyledText {
                     id: uvIndexDescription
 
                     anchors.fill: parent
                     anchors.margins: 10
-                    text: uvIndexFileDescription.text()
+                    text: DetailText.uvIndex
                     color: Colours.m3Colors.m3OnSurface
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap

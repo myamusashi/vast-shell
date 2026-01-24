@@ -7,6 +7,8 @@ import qs.Services
 import qs.Components
 
 ColumnLayout {
+    id: root
+
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: Appearance.spacing.normal
@@ -16,6 +18,72 @@ ColumnLayout {
         Layout.fillWidth: true
         condition: Weather.isInitialLoading || Weather.isRefreshing
     }
+
+    function getWeatherCondition(condition) {
+        if (!condition)
+            return "";
+
+        switch (condition) {
+        case "Clear sky":
+            return qsTr("Clear sky");
+        case "Mainly clear":
+            return qsTr("Mainly clear");
+        case "Partly cloudy":
+            return qsTr("Partly cloudy");
+        case "Overcast":
+            return qsTr("Overcast");
+        case "Fog":
+            return qsTr("Fog");
+        case "Depositing rime fog":
+            return qsTr("Depositing rime fog");
+        case "Light drizzle":
+            return qsTr("Light drizzle");
+        case "Moderate drizzle":
+            return qsTr("Moderate drizzle");
+        case "Dense drizzle":
+            return qsTr("Dense drizzle");
+        case "Light freezing drizzle":
+            return qsTr("Light freezing drizzle");
+        case "Dense freezing drizzle":
+            return qsTr("Dense freezing drizzle");
+        case "Slight rain":
+            return qsTr("Slight rain");
+        case "Moderate rain":
+            return qsTr("Moderate rain");
+        case "Heavy rain":
+            return qsTr("Heavy rain");
+        case "Light freezing rain":
+            return qsTr("Light freezing rain");
+        case "Heavy freezing rain":
+            return qsTr("Heavy freezing rain");
+        case "Slight snow fall":
+            return qsTr("Slight snow fall");
+        case "Moderate snow fall":
+            return qsTr("Moderate snow fall");
+        case "Heavy snow fall":
+            return qsTr("Heavy snow fall");
+        case "Snow grains":
+            return qsTr("Snow grains");
+        case "Slight rain showers":
+            return qsTr("Slight rain showers");
+        case "Moderate rain showers":
+            return qsTr("Moderate rain showers");
+        case "Violent rain showers":
+            return qsTr("Violent rain showers");
+        case "Slight snow showers":
+            return qsTr("Slight snow showers");
+        case "Heavy snow showers":
+            return qsTr("Heavy snow showers");
+        case "Thunderstorm":
+            return qsTr("Thunderstorm");
+        case "Thunderstorm with slight hail":
+            return qsTr("Thunderstorm with slight hail");
+        case "Thunderstorm with heavy hail":
+            return qsTr("Thunderstorm with heavy hail");
+        default:
+            return condition;
+        }
+	}
 
     StyledRect {
         Layout.fillWidth: true
@@ -140,7 +208,7 @@ ColumnLayout {
 
             StyledText {
                 Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                text: Weather.weatherCondition
+                text: root.getWeatherCondition(Weather.weatherCondition)
                 font.weight: Font.DemiBold
                 font.pixelSize: Appearance.fonts.size.medium
                 color: Colours.m3Colors.m3OnSurface

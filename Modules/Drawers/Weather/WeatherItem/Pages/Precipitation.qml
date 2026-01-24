@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import M3Shapes
 
@@ -13,13 +12,14 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
+import "Markdown"
+
 WrapperRectangle {
     id: root
 
     anchors.fill: parent
 
     property bool isOpen: false
-    property string descriptions: ""
 
     margin: Appearance.margin.normal
     visible: opacity > 0
@@ -40,13 +40,6 @@ WrapperRectangle {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
-    }
-
-    FileView {
-        path: Qt.resolvedUrl("./Markdown/Precipitation.md")
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.descriptions = text()
     }
 
     Loader {
@@ -72,7 +65,7 @@ WrapperRectangle {
                 color: Colours.m3Colors.m3SurfaceContainer
                 clip: true
                 implicitWidth: parent.width
-                implicitHeight: parent.height * 0.3
+                implicitHeight: content.implicitHeight + 20
                 radius: Appearance.rounding.normal
 
                 ColumnLayout {
@@ -106,7 +99,7 @@ WrapperRectangle {
 
                     Flickable {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        Layout.preferredHeight: 180
                         Layout.topMargin: Appearance.margin.large * 2
                         contentWidth: sliderRow.width
                         contentHeight: sliderRow.height
@@ -170,7 +163,7 @@ WrapperRectangle {
                         fill: parent
                         margins: 10
                     }
-                    text: root.descriptions
+                    text: DetailText.precipitation
                     color: Colours.m3Colors.m3OnSurface
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap

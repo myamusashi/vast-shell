@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import M3Shapes
 
@@ -12,6 +11,8 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 import qs.Components
+
+import "Markdown"
 
 WrapperRectangle {
     id: root
@@ -43,7 +44,7 @@ WrapperRectangle {
 
     Loader {
         active: root.isOpen
-
+        asynchronous: true
         sourceComponent: Column {
             anchors {
                 fill: parent
@@ -60,17 +61,16 @@ WrapperRectangle {
 
             WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
+                margin: 10
                 clip: true
                 implicitWidth: parent.width
-                implicitHeight: parent.height * 0.3
+                implicitHeight: content.implicitHeight + 20
                 radius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer
 
                 ColumnLayout {
                     id: content
 
-                    anchors.fill: parent
-                    anchors.margins: 10
                     spacing: Appearance.spacing.normal
 
                     StyledText {
@@ -87,7 +87,7 @@ WrapperRectangle {
 
                     Flickable {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        Layout.preferredHeight: 180
                         Layout.topMargin: Appearance.margin.large * 2
                         contentWidth: sliderRow.width
                         contentHeight: sliderRow.height
@@ -142,13 +142,6 @@ WrapperRectangle {
                     width: 1
                 }
 
-                FileView {
-                    id: humidityFileDescription
-
-                    path: Qt.resolvedUrl("./Markdown/Humidity.md")
-                    watchChanges: true
-                }
-
                 StyledText {
                     id: humidityDescription
 
@@ -156,7 +149,7 @@ WrapperRectangle {
                         fill: parent
                         margins: 10
                     }
-                    text: humidityFileDescription.text()
+                    text: DetailText.humidity
                     color: Colours.m3Colors.m3OnSurface
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap
