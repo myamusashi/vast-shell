@@ -133,7 +133,7 @@ Item {
                         id: summaryLoader
 
                         Layout.fillWidth: true
-                        active: Weather.quickSummary !== ""
+                        active: Configs.weather.enableQuickSummary
                         asynchronous: true
 
                         sourceComponent: StyledRect {
@@ -146,7 +146,7 @@ Item {
 
                                 anchors.fill: parent
                                 anchors.margins: 10
-                                text: Weather.quickSummary
+                                text: Weather.getQuickSummary()
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.small
                                 wrapMode: Text.WordWrap

@@ -83,7 +83,7 @@ ColumnLayout {
         default:
             return condition;
         }
-	}
+    }
 
     StyledRect {
         Layout.fillWidth: true
@@ -193,7 +193,7 @@ ColumnLayout {
                         StyledText {
                             text: parent.modelData.text
                             color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.normal
+                            font.pixelSize: Appearance.fonts.size.large
                             font.weight: Font.DemiBold
                         }
                     }
