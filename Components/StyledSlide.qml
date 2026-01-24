@@ -27,7 +27,6 @@ Slider {
         XL = 108
     }
 
-    // Public API - preserved from original
     property bool dotEnd: true
     property bool useAnim: true
     property string icon: ""
@@ -35,11 +34,8 @@ Slider {
     property int valueWidth: orientation === Qt.Horizontal ? 200 : StyledSlide.ContainerSize.M
     property int valueHeight: orientation === Qt.Horizontal ? StyledSlide.ContainerSize.M : 200
 
-    signal moved
-
-    // Internal properties
-    hoverEnabled: true
     Layout.alignment: orientation === Qt.Horizontal ? Qt.AlignHCenter : Qt.AlignVCenter
+    hoverEnabled: true
     implicitWidth: valueWidth
     implicitHeight: valueHeight
 
@@ -59,7 +55,6 @@ Slider {
 
         onPressed: function (mouse) {
             if (root.orientation === Qt.Vertical) {
-                // Calculate relative position from bottom
                 var pos = 1 - (mouse.y / height);
                 pos = Math.max(0, Math.min(1, pos));
                 var newValue = root.from + (pos * (root.to - root.from));
@@ -69,7 +64,6 @@ Slider {
 
                 root.value = newValue;
             }
-            // Keep send event to slider when drag
             mouse.accepted = false;
         }
     }
@@ -103,10 +97,8 @@ Slider {
         // Filled portion (before handle)
         StyledRect {
             anchors {
-                // Horizontal
                 verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
                 left: root.orientation === Qt.Horizontal ? parent.left : undefined
-                // Vertical
                 horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
                 bottom: root.orientation === Qt.Vertical ? parent.bottom : undefined
             }
@@ -123,10 +115,8 @@ Slider {
         // Empty portion (after handle)
         StyledRect {
             anchors {
-                // Horizontal
                 verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
                 right: root.orientation === Qt.Horizontal ? parent.right : undefined
-                // Vertical
                 horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
                 top: root.orientation === Qt.Vertical ? parent.top : undefined
             }
