@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
 import M3Shapes
 
@@ -13,13 +12,14 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
+import "Markdown"
+
 WrapperRectangle {
     id: root
 
     anchors.fill: parent
 
     property bool isOpen: false
-    property string descriptions: ""
 
     margin: Appearance.margin.normal
     visible: opacity > 0
@@ -42,13 +42,6 @@ WrapperRectangle {
         }
     }
 
-    FileView {
-        path: Qt.resolvedUrl("./Markdown/Pressure.md")
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.descriptions = text()
-    }
-
     Loader {
         active: root.isOpen
         asynchronous: true
@@ -69,8 +62,9 @@ WrapperRectangle {
             WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
                 margin: 10
-                implicitWidth: parent.width
-                implicitHeight: content.implicitHeight + content.anchors.margins * 2
+				clip: true
+				implicitWidth: parent.width
+				implicitHeight: content.implicitHeight + 20
                 radius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer
 
@@ -185,7 +179,7 @@ WrapperRectangle {
                         fill: parent
                         margins: 10
                     }
-                    text: root.descriptions
+                    text: DetailText.pressure
                     color: Colours.m3Colors.m3OnSurface
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap
