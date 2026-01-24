@@ -62,8 +62,8 @@ WrapperRectangle {
             WrapperRectangle {
                 anchors.margins: Appearance.margin.normal
                 margin: 10
-				clip: true
-				implicitWidth: parent.width
+                clip: true
+                implicitWidth: parent.width
                 implicitHeight: content.implicitHeight + 20
                 radius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer

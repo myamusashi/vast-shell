@@ -64,8 +64,8 @@ WrapperRectangle {
                 implicitHeight: parent.height * 0.1
 
                 Item {
-					implicitWidth: parent.width
-					implicitHeight: parent.height
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
 
                     MaterialShape {
                         anchors.left: parent.left

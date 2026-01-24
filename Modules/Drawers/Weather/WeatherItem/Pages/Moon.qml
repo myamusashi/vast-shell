@@ -11,6 +11,8 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
+import "Markdown"
+
 WrapperRectangle {
     id: root
 
@@ -92,13 +94,6 @@ WrapperRectangle {
         running: true
         repeat: true
         onTriggered: root.moonriseProgress = root.calculateMoonProgress()
-    }
-
-    FileView {
-        path: Qt.resolvedUrl("./Markdown/Moon.md")
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: root.description = text()
     }
 
     Loader {
@@ -228,7 +223,7 @@ WrapperRectangle {
                     StyledText {
                         id: pressureDescription
 
-                        text: root.description
+                        text: DetailText.moon
                         color: Colours.m3Colors.m3OnSurface
                         textFormat: Text.MarkdownText
                         wrapMode: Text.Wrap

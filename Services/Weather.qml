@@ -99,7 +99,6 @@ Singleton {
     property bool isMoonUp: false
     property bool isSunUp: false
 
-    property string quickSummary: ""
     property var hourlyForecast: []
     property var dailyForecast: []
 
@@ -226,6 +225,155 @@ Singleton {
         }
     }
 
+    function calculateDayLength() {
+        if (!sunRise || !sunSet)
+            return {
+                hours: 0,
+                minutes: 0
+            };
+
+        try {
+            const [riseHours, riseMinutes] = sunRise.split(':').map(Number);
+            const [setHours, setMinutes] = sunSet.split(':').map(Number);
+
+            let totalMinutes = (setHours * 60 + setMinutes) - (riseHours * 60 + riseMinutes);
+            if (totalMinutes < 0)
+                totalMinutes += 24 * 60;
+
+            return {
+                hours: Math.floor(totalMinutes / 60),
+                minutes: totalMinutes % 60
+            };
+        } catch (e) {
+            return {
+                hours: 0,
+                minutes: 0
+            };
+        }
+    }
+
+    function getQuickSummary() {
+        if (!weatherLoaded)
+            return "";
+
+        const parts = [];
+
+        if (humidity > 80 && temp > 25)
+            parts.push(qsTr("A muggy and warm day — take care in the sun."));
+        else if (humidity > 80 && temp <= 25)
+            parts.push(qsTr("A humid day with sticky conditions."));
+        else if (temp > 30)
+            parts.push(qsTr("A hot day ahead — stay hydrated and seek shade."));
+        else if (temp < 10)
+            parts.push(qsTr("A cold day — dress warmly before heading out."));
+        else if (temp >= 20 && temp <= 28 && humidity < 60)
+            parts.push(qsTr("A pleasant day with comfortable conditions."));
+        else
+            parts.push(qsTr("Today's weather looks moderate."));
+
+        const priorityItems = [];
+
+        if (europeanAQI > 80 || usAQI > 150) {
+            priorityItems.push({
+                priority: 10,
+                text: qsTr("Air quality is poor right now — consider limiting time outside.")
+            });
+        } else if (europeanAQI > 60 || usAQI > 100) {
+            priorityItems.push({
+                priority: 7,
+                text: qsTr("Air quality is moderate — sensitive groups should take precautions.")
+            });
+        }
+
+        if (uvIndex >= 8) {
+            priorityItems.push({
+                priority: 9,
+                text: qsTr("UV index is very high (%1) — avoid direct sun exposure.").arg(uvIndex)
+            });
+        } else if (uvIndex >= 6) {
+            priorityItems.push({
+                priority: 6,
+                text: qsTr("Strong UV levels at %1 — use sun protection.").arg(uvIndex)
+            });
+        }
+
+        if (precipitation > 5) {
+            priorityItems.push({
+                priority: 8,
+                text: qsTr("Heavy rain expected — bring an umbrella.")
+            });
+        } else if (precipitation > 0.5) {
+            priorityItems.push({
+                priority: 5,
+                text: qsTr("Light rain possible — keep an umbrella handy.")
+            });
+        }
+
+        if (windSpeed > 50) {
+            priorityItems.push({
+                priority: 8,
+                text: qsTr("Very windy conditions at %1 km/h — be cautious outdoors.").arg(windSpeed)
+            });
+        } else if (windSpeed > 30) {
+            priorityItems.push({
+                priority: 4,
+                text: qsTr("Breezy day with winds around %1 km/h.").arg(windSpeed)
+            });
+        }
+
+        if (tempMax > 0 && tempMin !== tempMax && Math.abs(tempMax - tempMin) > 8) {
+            priorityItems.push({
+                priority: 5,
+                text: qsTr("Large temperature swing today: %1° to %2° — dress in layers.").arg(tempMin).arg(tempMax)
+            });
+        } else if (tempMax > 0 && tempMin !== tempMax) {
+            priorityItems.push({
+                priority: 3,
+                text: qsTr("Temperature ranging from %1° to %2° today.").arg(tempMin).arg(tempMax)
+            });
+        }
+
+        if (humidity > 85) {
+            priorityItems.push({
+                priority: 6,
+                text: qsTr("Very sticky conditions with %1% humidity.").arg(humidity)
+            });
+        }
+
+        if (visibility < 1) {
+            priorityItems.push({
+                priority: 7,
+                text: qsTr("Poor visibility at %1 km — drive carefully.").arg(visibility.toFixed(1))
+            });
+        }
+
+        if (temp >= 18 && temp <= 26 && humidity < 65 && uvIndex < 5 && precipitation === 0) {
+            priorityItems.push({
+                priority: 4,
+                text: qsTr("Perfect weather for outdoor activities.")
+            });
+        }
+
+        // Sort by priority (highest first) and take top 3
+        priorityItems.sort((a, b) => b.priority - a.priority);
+        const selectedItems = priorityItems.slice(0, 3);
+
+        // Add to parts
+        selectedItems.forEach(item => parts.push(item.text));
+
+        // Ensure we have at least 2 bullets total, add current temperature as fallback
+        if (parts.length < 2)
+            parts.push(qsTr("Current temperature is %1° with feels like %2°.").arg(temp).arg(feelsLike));
+
+        // Limit to 4 bullets maximum
+        const finalParts = parts.slice(0, 4);
+
+        if (finalParts.length === 0)
+            return "";
+
+        return finalParts[0] + "\n\n• " + finalParts.slice(1).join("\n\n• ");
+    }
+
     // clean up XMLHttpRequest handlers
     function _cleanupRequest(request) {
         if (request) {
@@ -282,7 +430,7 @@ Singleton {
             root.precipitation = details.precipitation_current_mm || 0.0;
             root.precipitationDaily = details.precipitation_daily_mm || 0.0;
 
-            root.quickSummary = json.quick_summary || "";
+            // Removed: root.quickSummary = json.quick_summary || "";
 
             root.hourlyForecast = hourly.map(function (hour) {
                 return {
@@ -696,7 +844,7 @@ Singleton {
                 cloudCover: root.cloudCover,
                 precipitation: root.precipitation,
                 precipitationDaily: root.precipitationDaily,
-                quickSummary: root.quickSummary,
+                // Removed: quickSummary: root.quickSummary,
                 hourlyForecast: root.hourlyForecast,
                 dailyForecast: root.dailyForecast,
 
@@ -784,7 +932,7 @@ Singleton {
                 root.cloudCover = data.cloudCover || 0;
                 root.precipitation = data.precipitation || 0.0;
                 root.precipitationDaily = data.precipitationDaily || 0.0;
-                root.quickSummary = data.quickSummary || "";
+                // Removed: root.quickSummary = data.quickSummary || "";
                 root.hourlyForecast = data.hourlyForecast || [];
                 root.dailyForecast = data.dailyForecast || [];
 
