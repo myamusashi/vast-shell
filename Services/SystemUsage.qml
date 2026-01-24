@@ -383,9 +383,9 @@ Singleton {
 
         property int updateCycle: 0
 
-        running: GlobalStates.isQuickSettingsOpen
+        running: GlobalStates.isRecordPanelOpen || GlobalStates.isQuickSettingsOpen
         interval: 2000
-        repeat: GlobalStates.isQuickSettingsOpen
+        repeat: GlobalStates.isRecordPanelOpen || GlobalStates.isQuickSettingsOpen
         triggeredOnStart: true
 
         onTriggered: {
