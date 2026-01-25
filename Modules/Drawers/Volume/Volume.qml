@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
+import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
@@ -97,7 +97,7 @@ Item {
             }
         }
 
-        Column {
+        ColumnLayout {
             id: mainVolumeColumn
 
             anchors {
@@ -106,19 +106,18 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
 
-            width: 40
-            height: 250
+            implicitWidth: 50
+            implicitHeight: 250
             spacing: Appearance.spacing.normal
 
             Icon {
                 id: volumeIcon
 
+                Layout.alignment: Qt.AlignCenter
                 type: Icon.Lucide
                 icon: Lucide.icon_volume_2
                 color: Colours.m3Colors.m3Primary
                 font.pixelSize: Appearance.fonts.size.extraLarge
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
             }
 
             StyledSlide {
@@ -130,8 +129,9 @@ Item {
             }
 
             Item {
-                implicitWidth: 40
-                implicitHeight: 40
+                Layout.alignment: Qt.AlignCenter
+                implicitWidth: 15
+                implicitHeight: 15
 
                 Pulse {
                     anchors.centerIn: parent
@@ -182,180 +182,100 @@ Item {
         }
     }
 
-    component Pulse: Shape {
+    component Pulse: Item {
         id: visualizerShape
+        property bool isActive: true
+        property real baseHeight: 1.5
+        property real progress: 0.0
+        implicitWidth: 20
+        implicitHeight: 20
 
-        implicitWidth: 40
-        implicitHeight: 40
-
-        property bool isActive: false
-        property real baseHeight: 2
-        property real maxHeight: 15
-
-        ShapePath {
-            strokeColor: Colours.m3Colors.m3Primary
-            strokeWidth: 2
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
-
-            startX: 20
-            startY: visualizerShape.isActive ? 20 - bar1.currentHeight : 20 - visualizerShape.baseHeight
-
-            PathLine {
-                x: 20
-                y: visualizerShape.isActive ? 20 + bar1.currentHeight : 20 + visualizerShape.baseHeight
-            }
+        function getBarHeight(barIndex: int): real {
+            if (!isActive)
+                return baseHeight;
+            const barConfigs = [
+                {
+                    minHeight: 2,
+                    maxHeight: 4,
+                    phaseOffset: 0.7
+                },
+                {
+                    minHeight: 3,
+                    maxHeight: 6,
+                    phaseOffset: 0.45
+                },
+                {
+                    minHeight: 5,
+                    maxHeight: 8,
+                    phaseOffset: 0.2
+                },
+                {
+                    minHeight: 8,
+                    maxHeight: 11,
+                    phaseOffset: 0.15
+                },
+                {
+                    minHeight: 7,
+                    maxHeight: 6,
+                    phaseOffset: 0.0
+                }
+            ];
+            const config = barConfigs[barIndex];
+            const phase = (progress + config.phaseOffset) % 1.0;
+            const sinValue = Math.max(0, Math.sin(phase * Math.PI * 2));
+            return config.minHeight + (config.maxHeight - config.minHeight) * sinValue;
         }
 
-        ShapePath {
-            strokeColor: Colours.m3Colors.m3Primary
-            strokeWidth: 2
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
+        Repeater {
+            model: [
+                {
+                    x: 2,
+                    index: 0
+                },
+                {
+                    x: 6,
+                    index: 1
+                },
+                {
+                    x: 10,
+                    index: 2
+                },
+                {
+                    x: 14,
+                    index: 3
+                },
+                {
+                    x: 18,
+                    index: 4
+                }
+            ]
+            delegate: Rectangle {
+                required property var modelData
+                property real barHeight: visualizerShape.getBarHeight(modelData.index)
+                x: modelData.x - width / 2.1
+                y: 10 - barHeight
+                width: 3
+                height: barHeight * 2
+                color: Colours.m3Colors.m3Primary
+                radius: 3
 
-            startX: 13
-            startY: visualizerShape.isActive ? 20 - bar2.currentHeight : 20 - visualizerShape.baseHeight
-
-            PathLine {
-                x: 13
-                y: visualizerShape.isActive ? 20 + bar2.currentHeight : 20 + visualizerShape.baseHeight
-            }
-        }
-
-        ShapePath {
-            strokeColor: Colours.m3Colors.m3Primary
-            strokeWidth: 2
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
-
-            startX: 27
-            startY: visualizerShape.isActive ? 20 - bar3.currentHeight : 20 - visualizerShape.baseHeight
-
-            PathLine {
-                x: 27
-                y: visualizerShape.isActive ? 20 + bar3.currentHeight : 20 + visualizerShape.baseHeight
-            }
-        }
-
-        ShapePath {
-            strokeColor: Colours.m3Colors.m3Primary
-            strokeWidth: 2
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
-
-            startX: 6
-            startY: visualizerShape.isActive ? 20 - bar4.currentHeight : 20 - visualizerShape.baseHeight
-
-            PathLine {
-                x: 6
-                y: visualizerShape.isActive ? 20 + bar4.currentHeight : 20 + visualizerShape.baseHeight
-            }
-        }
-
-        ShapePath {
-            strokeColor: Colours.m3Colors.m3Primary
-            strokeWidth: 2
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
-
-            startX: 34
-            startY: visualizerShape.isActive ? 20 - bar5.currentHeight : 20 - visualizerShape.baseHeight
-
-            PathLine {
-                x: 34
-                y: visualizerShape.isActive ? 20 + bar5.currentHeight : 20 + visualizerShape.baseHeight
-            }
-        }
-
-        QtObject {
-            id: bar1
-            property real currentHeight: visualizerShape.baseHeight
-            property real targetHeight: visualizerShape.baseHeight
-
-            Behavior on currentHeight {
-                NAnim {
-                    duration: 100
-                    easing.type: Easing.OutQuad
+                Behavior on barHeight {
+                    enabled: !visualizerShape.isActive
+                    NumberAnimation {
+                        duration: 900
+                        easing.type: Easing.OutCubic
+                    }
                 }
             }
         }
 
-        QtObject {
-            id: bar2
-            property real currentHeight: visualizerShape.baseHeight
-            property real targetHeight: visualizerShape.baseHeight
-
-            Behavior on currentHeight {
-                NAnim {
-                    duration: 100
-                    easing.type: Easing.OutQuad
-                }
-            }
-        }
-
-        QtObject {
-            id: bar3
-            property real currentHeight: visualizerShape.baseHeight
-            property real targetHeight: visualizerShape.baseHeight
-
-            Behavior on currentHeight {
-                NAnim {
-                    duration: 100
-                    easing.type: Easing.OutQuad
-                }
-            }
-        }
-
-        QtObject {
-            id: bar4
-            property real currentHeight: visualizerShape.baseHeight
-            property real targetHeight: visualizerShape.baseHeight
-
-            Behavior on currentHeight {
-                NAnim {
-                    duration: 100
-                    easing.type: Easing.OutQuad
-                }
-            }
-        }
-
-        QtObject {
-            id: bar5
-            property real currentHeight: visualizerShape.baseHeight
-            property real targetHeight: visualizerShape.baseHeight
-
-            Behavior on currentHeight {
-                NAnim {
-                    duration: 100
-                    easing.type: Easing.OutQuad
-                }
-            }
-        }
-
-        Timer {
-            id: animationTimer
-            interval: 150
-            repeat: true
+        SequentialAnimation on progress {
             running: visualizerShape.isActive
-            onTriggered: {
-                bar1.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
-                bar2.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
-                bar3.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
-                bar4.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
-                bar5.currentHeight = Math.random() * (visualizerShape.maxHeight - 3) + 3;
-            }
-        }
-
-        Timer {
-            id: stopTimer
-            interval: 50
-            repeat: false
-            onTriggered: {
-                bar1.currentHeight = visualizerShape.baseHeight;
-                bar2.currentHeight = visualizerShape.baseHeight;
-                bar3.currentHeight = visualizerShape.baseHeight;
-                bar4.currentHeight = visualizerShape.baseHeight;
-                bar5.currentHeight = visualizerShape.baseHeight;
+            loops: Animation.Infinite
+            NumberAnimation {
+                from: 0.0
+                to: 1.0
+                duration: 1000
             }
         }
     }
