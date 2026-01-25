@@ -14,176 +14,148 @@ import qs.Components
 
 import "Markdown"
 
-WrapperRectangle {
+Pages {
     id: root
 
-    anchors.fill: parent
-
-    property bool isOpen: false
-
-    margin: Appearance.margin.normal
-    visible: opacity > 0
-    color: Colours.m3Colors.m3Surface
-    scale: isOpen ? 1.0 : 0.5
-    opacity: isOpen ? 1.0 : 0.0
-    transformOrigin: Item.Center
-
-    Behavior on scale {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    content: Wind {}
+    component Wind: Column {
+        anchors {
+            fill: parent
+            topMargin: 20
         }
-    }
+        clip: true
+        spacing: Appearance.spacing.normal
 
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        Header {
+            icon: Lucide.icon_wind
+            title: qsTr("Wind")
+            mouseArea.onClicked: root.isOpen = false
         }
-    }
 
-    Loader {
-        active: root.isOpen
-        asynchronous: true
-        sourceComponent: Column {
-            anchors {
-                fill: parent
-                topMargin: 20
-            }
+        WrapperRectangle {
+            anchors.margins: Appearance.margin.normal
+            margin: 10
             clip: true
-            spacing: Appearance.spacing.normal
+            implicitWidth: parent.width
+            implicitHeight: content.implicitHeight + 20
+            radius: Appearance.rounding.normal
+            color: Colours.m3Colors.m3SurfaceContainer
 
-            Header {
-                icon: Lucide.icon_wind
-                title: qsTr("Wind")
-                mouseArea.onClicked: root.isOpen = false
-            }
+            ColumnLayout {
+                id: content
 
-            WrapperRectangle {
-                anchors.margins: Appearance.margin.normal
-                margin: 10
-                clip: true
-                implicitWidth: parent.width
-                implicitHeight: content.implicitHeight + 20
-                radius: Appearance.rounding.normal
-                color: Colours.m3Colors.m3SurfaceContainer
+                spacing: Appearance.spacing.normal
 
-                ColumnLayout {
-                    id: content
+                StyledText {
+                    text: qsTr("Today's average")
+                    color: Colours.m3Colors.m3OnBackground
+                    font.pixelSize: Appearance.fonts.size.large * 1.5
+                }
 
-                    spacing: Appearance.spacing.normal
+                RowLayout {
+                    spacing: Appearance.spacing.small
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignLeft
 
                     StyledText {
-                        text: qsTr("Today's average")
-                        color: Colours.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                        text: Weather.windSpeed
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
                     }
 
-                    RowLayout {
-                        spacing: Appearance.spacing.small
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignLeft
-
-                        StyledText {
-                            text: Weather.windSpeed
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.extraLarge
-                        }
-
-                        StyledText {
-                            text: "Km/h"
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.normal
-                        }
+                    StyledText {
+                        text: "Km/h"
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.normal
                     }
+                }
 
-                    Flickable {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 220
-                        Layout.topMargin: Appearance.margin.large * 2
-                        contentWidth: sliderRow.width
-                        contentHeight: sliderRow.height
-                        flickableDirection: Flickable.HorizontalFlick
-                        boundsBehavior: Flickable.StopAtBounds
+                Flickable {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 220
+                    Layout.topMargin: Appearance.margin.large * 2
+                    contentWidth: sliderRow.width
+                    contentHeight: sliderRow.height
+                    flickableDirection: Flickable.HorizontalFlick
+                    boundsBehavior: Flickable.StopAtBounds
 
-                        Row {
-                            id: sliderRow
+                    Row {
+                        id: sliderRow
 
-                            anchors.centerIn: parent
-                            spacing: Appearance.spacing.large
+                        anchors.centerIn: parent
+                        spacing: Appearance.spacing.large
 
-                            Repeater {
-                                model: ScriptModel {
-                                    values: (function () {
-                                            const currentHour = new Date().getHours();
-                                            return Weather.hourlyForecast.filter(function (forecast) {
-                                                const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
-                                                const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                                                return forecastHour >= currentHour;
-                                            });
-                                        })()
+                        Repeater {
+                            model: ScriptModel {
+                                values: (function () {
+                                        const currentHour = new Date().getHours();
+                                        return Weather.hourlyForecast.filter(function (forecast) {
+                                            const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
+                                            const forecastHour = parseInt(timeStr.split(":")[0] || "0");
+                                            return forecastHour >= currentHour;
+                                        });
+                                    })()
+                            }
+
+                            delegate: ColumnLayout {
+                                required property var modelData
+
+                                spacing: Appearance.spacing.small
+
+                                HumiditySlider {
+                                    implicitWidth: 30
+                                    implicitHeight: 150
+                                    value: parent.modelData.windSpeed
+                                    windShapeRotation: parent.modelData.windDirectionDegrees
                                 }
 
-                                delegate: ColumnLayout {
-                                    required property var modelData
+                                StyledText {
+                                    Layout.alignment: Qt.AlignCenter
+                                    text: parent.modelData.windSpeed
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
+                                }
 
-                                    spacing: Appearance.spacing.small
+                                StyledText {
+                                    Layout.alignment: Qt.AlignCenter
 
-                                    HumiditySlider {
-                                        implicitWidth: 30
-                                        implicitHeight: 150
-                                        value: parent.modelData.windSpeed
-                                        windShapeRotation: parent.modelData.windDirectionDegrees
-                                    }
+                                    text: parent.modelData.windDirectionText
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
+                                }
 
-                                    StyledText {
-                                        Layout.alignment: Qt.AlignCenter
-                                        text: parent.modelData.windSpeed
-                                        color: Colours.m3Colors.m3OnBackground
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                    }
+                                StyledText {
+                                    Layout.alignment: Qt.AlignCenter
 
-                                    StyledText {
-                                        Layout.alignment: Qt.AlignCenter
-
-                                        text: parent.modelData.windDirectionText
-                                        color: Colours.m3Colors.m3OnBackground
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                    }
-
-                                    StyledText {
-                                        Layout.alignment: Qt.AlignCenter
-
-                                        text: TimeAgo.convertTo12HourCompact(parent.modelData.time)
-                                        color: Colours.m3Colors.m3OnBackground
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                    }
+                                    text: TimeAgo.convertTo12HourCompact(parent.modelData.time)
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
                                 }
                             }
                         }
                     }
                 }
             }
-            WrapperRectangle {
-                border {
-                    color: Colours.m3Colors.m3Outline
-                    width: 1
-                }
-                color: Colours.m3Colors.m3Surface
-                radius: Appearance.rounding.normal
-                implicitWidth: parent.width
-                implicitHeight: description.contentHeight + 10
-                margin: 20
+        }
+        WrapperRectangle {
+            border {
+                color: Colours.m3Colors.m3Outline
+                width: 1
+            }
+            color: Colours.m3Colors.m3Surface
+            radius: Appearance.rounding.normal
+            implicitWidth: parent.width
+            implicitHeight: description.contentHeight + 10
+            margin: 20
 
-                StyledText {
-                    id: description
+            StyledText {
+                id: description
 
-                    text: DetailText.wind
-                    color: Colours.m3Colors.m3OnSurface
-                    textFormat: Text.MarkdownText
-                    wrapMode: Text.Wrap
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
+                text: DetailText.wind
+                color: Colours.m3Colors.m3OnSurface
+                textFormat: Text.MarkdownText
+                wrapMode: Text.Wrap
+                font.pixelSize: Appearance.fonts.size.normal
             }
         }
     }

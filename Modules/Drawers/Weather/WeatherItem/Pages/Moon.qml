@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import Quickshell.Io
 import Quickshell.Widgets
 
 import qs.Configs
@@ -13,23 +12,10 @@ import qs.Components
 
 import "Markdown"
 
-WrapperRectangle {
+Pages {
     id: root
 
-    anchors.fill: parent
-
-    property bool isOpen: false
-    property string description: ""
-    property real moonriseProgress: calculateMoonProgress()
-
-    margin: Appearance.margin.normal
-    visible: opacity > 0
-    color: Colours.m3Colors.m3Surface
-    scale: isOpen ? 1.0 : 0.5
-    opacity: isOpen ? 1.0 : 0.0
-    transformOrigin: Item.Center
-
-    Component.onCompleted: console.log("Moon names: " + Weather.moonPhase)
+    content: Moon {}
 
     function calculateMoonProgress() {
         var now = new Date();
@@ -75,20 +61,6 @@ WrapperRectangle {
         }
     }
 
-    Behavior on scale {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
     Timer {
         interval: 60000
         running: true
@@ -96,144 +68,140 @@ WrapperRectangle {
         onTriggered: root.moonriseProgress = root.calculateMoonProgress()
     }
 
-    Loader {
-        active: root.isOpen
-        asynchronous: true
-        sourceComponent: ScrollView {
+    component Moon: ScrollView {
+        anchors.fill: parent
+        anchors.topMargin: 20
+
+        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+        Column {
             anchors.fill: parent
-            anchors.topMargin: 20
+            spacing: Appearance.spacing.normal
 
-            ScrollBar.vertical.policy: ScrollBar.AsNeeded
-            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+            Header {
+                icon: Lucide.icon_moon
+                title: qsTr("Moon")
+                mouseArea.onClicked: root.isOpen = false
+            }
 
-            Column {
-                anchors.fill: parent
-                spacing: Appearance.spacing.normal
+            WrapperRectangle {
+                color: Colours.m3Colors.m3SurfaceContainer
+                radius: Appearance.rounding.normal
+                implicitWidth: parent.width
+                implicitHeight: parent.height * 0.3
+                margin: Appearance.margin.normal
 
-                Header {
-                    icon: Lucide.icon_moon
-                    title: qsTr("Moon")
-                    mouseArea.onClicked: root.isOpen = false
-                }
+                RowLayout {
+                    ColumnLayout {
+                        Layout.fillHeight: true
+                        Layout.alignment: Qt.AlignLeft
 
-                WrapperRectangle {
-                    color: Colours.m3Colors.m3SurfaceContainer
-                    radius: Appearance.rounding.normal
-                    implicitWidth: parent.width
-                    implicitHeight: parent.height * 0.3
-                    margin: Appearance.margin.normal
+                        StyledText {
+                            text: root.getMoonPhaseText(Weather.moonPhase)
+                            color: Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.extraLarge
+                        }
 
-                    RowLayout {
-                        ColumnLayout {
-                            Layout.fillHeight: true
-                            Layout.alignment: Qt.AlignLeft
+                        StyledRect {
+                            color: Colours.m3Colors.m3SurfaceContainerHigh
+                            implicitWidth: illumination.contentWidth + 20
+                            implicitHeight: illumination.contentHeight + 15
 
                             StyledText {
-                                text: root.getMoonPhaseText(Weather.moonPhase)
+                                id: illumination
+
+                                anchors {
+                                    left: parent.left
+                                    verticalCenter: parent.verticalCenter
+                                    leftMargin: Appearance.margin.normal
+                                }
+                                text: qsTr("Illumination: %1%").arg(Weather.moonIllumination)
                                 color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.extraLarge
-                            }
-
-                            StyledRect {
-                                color: Colours.m3Colors.m3SurfaceContainerHigh
-                                implicitWidth: illumination.contentWidth + 20
-                                implicitHeight: illumination.contentHeight + 15
-
-                                StyledText {
-                                    id: illumination
-
-                                    anchors {
-                                        left: parent.left
-                                        verticalCenter: parent.verticalCenter
-                                        leftMargin: Appearance.margin.normal
-                                    }
-                                    text: qsTr("Illumination: %1%").arg(Weather.moonIllumination)
-                                    color: Colours.m3Colors.m3OnSurface
-                                    font.pixelSize: Appearance.fonts.size.large
-                                }
-                            }
-
-                            StyledRect {
-                                color: Colours.m3Colors.m3SurfaceContainerHigh
-                                implicitWidth: moonRise.contentWidth + 20
-                                implicitHeight: moonRise.contentHeight + 15
-
-                                StyledText {
-                                    id: moonRise
-
-                                    anchors {
-                                        left: parent.left
-                                        verticalCenter: parent.verticalCenter
-                                        leftMargin: Appearance.margin.normal
-                                    }
-                                    text: qsTr("Moonrise: %1").arg(Weather.moonRise)
-                                    color: Colours.m3Colors.m3OnSurface
-                                    font.pixelSize: Appearance.fonts.size.large
-                                }
-                            }
-
-                            StyledRect {
-                                color: Colours.m3Colors.m3SurfaceContainerHigh
-                                implicitWidth: moonSet.contentWidth + 20
-                                implicitHeight: moonSet.contentHeight + 15
-
-                                StyledText {
-                                    id: moonSet
-
-                                    anchors {
-                                        left: parent.left
-                                        verticalCenter: parent.verticalCenter
-                                        leftMargin: Appearance.margin.normal
-                                    }
-                                    text: qsTr("Moonset: %1").arg(Weather.moonSet)
-                                    color: Colours.m3Colors.m3OnSurface
-                                    font.pixelSize: Appearance.fonts.size.large
-                                }
+                                font.pixelSize: Appearance.fonts.size.large
                             }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
+                        StyledRect {
+                            color: Colours.m3Colors.m3SurfaceContainerHigh
+                            implicitWidth: moonRise.contentWidth + 20
+                            implicitHeight: moonRise.contentHeight + 15
+
+                            StyledText {
+                                id: moonRise
+
+                                anchors {
+                                    left: parent.left
+                                    verticalCenter: parent.verticalCenter
+                                    leftMargin: Appearance.margin.normal
+                                }
+                                text: qsTr("Moonrise: %1").arg(Weather.moonRise)
+                                color: Colours.m3Colors.m3OnSurface
+                                font.pixelSize: Appearance.fonts.size.large
+                            }
                         }
 
-                        Image {
-                            Layout.preferredWidth: 120
-                            Layout.preferredHeight: 120
-                            source: `root:/Assets/weather_icon/${Weather.moonPhase.trim().replace(/ /g, '')}Moon.svg`
-                            sourceSize: Qt.size(120, 120)
-                            fillMode: Image.PreserveAspectFit
-                            cache: true
-                            asynchronous: true
-                            smooth: true
+                        StyledRect {
+                            color: Colours.m3Colors.m3SurfaceContainerHigh
+                            implicitWidth: moonSet.contentWidth + 20
+                            implicitHeight: moonSet.contentHeight + 15
+
+                            StyledText {
+                                id: moonSet
+
+                                anchors {
+                                    left: parent.left
+                                    verticalCenter: parent.verticalCenter
+                                    leftMargin: Appearance.margin.normal
+                                }
+                                text: qsTr("Moonset: %1").arg(Weather.moonSet)
+                                color: Colours.m3Colors.m3OnSurface
+                                font.pixelSize: Appearance.fonts.size.large
+                            }
                         }
                     }
-                }
 
-                WrapperRectangle {
-                    border {
-                        color: Colours.m3Colors.m3OutlineVariant
-                        width: 1
+                    Item {
+                        Layout.fillWidth: true
                     }
-                    color: Colours.m3Colors.m3Surface
-                    radius: Appearance.rounding.normal
-                    implicitWidth: parent.width
-                    implicitHeight: pressureDescription.contentHeight + 20
-                    margin: 20
 
-                    StyledText {
-                        id: pressureDescription
-
-                        text: DetailText.moon
-                        color: Colours.m3Colors.m3OnSurface
-                        textFormat: Text.MarkdownText
-                        wrapMode: Text.Wrap
-                        font.pixelSize: Appearance.fonts.size.normal
+                    Image {
+                        Layout.preferredWidth: 120
+                        Layout.preferredHeight: 120
+                        source: `root:/Assets/weather_icon/${Weather.moonPhase.trim().replace(/ /g, '')}Moon.svg`
+                        sourceSize: Qt.size(120, 120)
+                        fillMode: Image.PreserveAspectFit
+                        cache: true
+                        asynchronous: true
+                        smooth: true
                     }
                 }
+            }
 
-                Item {
-                    Layout.fillHeight: true
+            WrapperRectangle {
+                border {
+                    color: Colours.m3Colors.m3OutlineVariant
+                    width: 1
                 }
+                color: Colours.m3Colors.m3Surface
+                radius: Appearance.rounding.normal
+                implicitWidth: parent.width
+                implicitHeight: pressureDescription.contentHeight + 20
+                margin: 20
+
+                StyledText {
+                    id: pressureDescription
+
+                    text: DetailText.moon
+                    color: Colours.m3Colors.m3OnSurface
+                    textFormat: Text.MarkdownText
+                    wrapMode: Text.Wrap
+                    font.pixelSize: Appearance.fonts.size.normal
+                }
+            }
+
+            Item {
+                Layout.fillHeight: true
             }
         }
     }

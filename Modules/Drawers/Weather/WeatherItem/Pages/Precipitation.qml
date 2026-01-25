@@ -14,166 +14,139 @@ import qs.Components
 
 import "Markdown"
 
-WrapperRectangle {
+Pages {
     id: root
 
-    anchors.fill: parent
+    content: Precipitation {}
 
-    property bool isOpen: false
-
-    margin: Appearance.margin.normal
-    visible: opacity > 0
-    color: Colours.m3Colors.m3Surface
-    scale: isOpen ? 1.0 : 0.5
-    opacity: isOpen ? 1.0 : 0.0
-    transformOrigin: Item.Center
-
-    Behavior on scale {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    component Precipitation: Column {
+        anchors {
+            fill: parent
+            topMargin: 20
         }
-    }
+        clip: true
+        spacing: Appearance.spacing.normal
 
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        Header {
+            icon: Lucide.icon_cloud_rain
+            title: qsTr("Precipitation")
+            mouseArea.onClicked: root.isOpen = false
         }
-    }
 
-    Loader {
-        active: root.isOpen
-        asynchronous: true
-        sourceComponent: Column {
-            anchors {
-                fill: parent
-                topMargin: 20
-            }
+        WrapperRectangle {
+            anchors.margins: Appearance.margin.normal
+            margin: 10
+            color: Colours.m3Colors.m3SurfaceContainer
             clip: true
-            spacing: Appearance.spacing.normal
+            implicitWidth: parent.width
+            implicitHeight: content.implicitHeight + 20
+            radius: Appearance.rounding.normal
 
-            Header {
-                icon: Lucide.icon_cloud_rain
-                title: qsTr("Precipitation")
-                mouseArea.onClicked: root.isOpen = false
-            }
+            ColumnLayout {
+                id: content
 
-            WrapperRectangle {
-                anchors.margins: Appearance.margin.normal
-                margin: 10
-                color: Colours.m3Colors.m3SurfaceContainer
-                clip: true
-                implicitWidth: parent.width
-                implicitHeight: content.implicitHeight + 20
-                radius: Appearance.rounding.normal
+                spacing: Appearance.spacing.normal
 
-                ColumnLayout {
-                    id: content
+                StyledText {
+                    text: qsTr("Today's amount")
+                    color: Colours.m3Colors.m3OnBackground
+                    font.pixelSize: Appearance.fonts.size.large * 1.5
+                }
 
-                    spacing: Appearance.spacing.normal
+                RowLayout {
+                    spacing: Appearance.spacing.small
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignLeft
 
                     StyledText {
-                        text: qsTr("Today's amount")
-                        color: Colours.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                        text: Weather.precipitation
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
                     }
 
-                    RowLayout {
-                        spacing: Appearance.spacing.small
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignLeft
-
-                        StyledText {
-                            text: Weather.precipitation
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.extraLarge
-                        }
-
-                        StyledText {
-                            text: "mm"
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.normal
-                        }
+                    StyledText {
+                        text: "mm"
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.normal
                     }
+                }
 
-                    Flickable {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 180
-                        Layout.topMargin: Appearance.margin.large * 2
-                        contentWidth: sliderRow.width
-                        contentHeight: sliderRow.height
-                        flickableDirection: Flickable.HorizontalFlick
-                        boundsBehavior: Flickable.StopAtBounds
+                Flickable {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 180
+                    Layout.topMargin: Appearance.margin.large * 2
+                    contentWidth: sliderRow.width
+                    contentHeight: sliderRow.height
+                    flickableDirection: Flickable.HorizontalFlick
+                    boundsBehavior: Flickable.StopAtBounds
 
-                        Row {
-                            id: sliderRow
+                    Row {
+                        id: sliderRow
 
-                            spacing: Appearance.spacing.large
+                        spacing: Appearance.spacing.large
 
-                            Repeater {
-                                model: ScriptModel {
-                                    values: (function () {
-                                            const currentHour = new Date().getHours();
-                                            return Weather.hourlyForecast.filter(function (forecast) {
-                                                const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
-                                                const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                                                return forecastHour >= currentHour;
-                                            });
-                                        })()
+                        Repeater {
+                            model: ScriptModel {
+                                values: (function () {
+                                        const currentHour = new Date().getHours();
+                                        return Weather.hourlyForecast.filter(function (forecast) {
+                                            const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
+                                            const forecastHour = parseInt(timeStr.split(":")[0] || "0");
+                                            return forecastHour >= currentHour;
+                                        });
+                                    })()
+                            }
+
+                            delegate: ColumnLayout {
+                                id: precipitationDelegate
+
+                                spacing: Appearance.spacing.normal
+                                required property var modelData
+
+                                HumiditySlider {
+                                    implicitWidth: 30
+                                    implicitHeight: 150
+                                    value: precipitationDelegate.modelData.probability
                                 }
 
-                                delegate: ColumnLayout {
-                                    id: precipitationDelegate
-
-                                    spacing: Appearance.spacing.normal
-                                    required property var modelData
-
-                                    HumiditySlider {
-                                        implicitWidth: 30
-                                        implicitHeight: 150
-                                        value: precipitationDelegate.modelData.probability
-                                    }
-
-                                    StyledText {
-                                        text: TimeAgo.convertTo12HourCompact(precipitationDelegate.modelData.time)
-                                        color: Colours.m3Colors.m3OnBackground
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                    }
+                                StyledText {
+                                    text: TimeAgo.convertTo12HourCompact(precipitationDelegate.modelData.time)
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
-            StyledRect {
-                implicitWidth: parent.width
-                implicitHeight: precipitationDescription.contentHeight + 20
-                color: Colours.m3Colors.m3Surface
-                border {
-                    color: Colours.m3Colors.m3OutlineVariant
-                    width: 1
-                }
-
-                StyledText {
-                    id: precipitationDescription
-
-                    anchors {
-                        fill: parent
-                        margins: 10
-                    }
-                    text: DetailText.precipitation
-                    color: Colours.m3Colors.m3OnSurface
-                    textFormat: Text.MarkdownText
-                    wrapMode: Text.Wrap
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
+        StyledRect {
+            implicitWidth: parent.width
+            implicitHeight: precipitationDescription.contentHeight + 20
+            color: Colours.m3Colors.m3Surface
+            border {
+                color: Colours.m3Colors.m3OutlineVariant
+                width: 1
             }
 
-            Item {
-                Layout.fillHeight: true
+            StyledText {
+                id: precipitationDescription
+
+                anchors {
+                    fill: parent
+                    margins: 10
+                }
+                text: DetailText.precipitation
+                color: Colours.m3Colors.m3OnSurface
+                textFormat: Text.MarkdownText
+                wrapMode: Text.Wrap
+                font.pixelSize: Appearance.fonts.size.normal
             }
+        }
+
+        Item {
+            Layout.fillHeight: true
         }
     }
 
