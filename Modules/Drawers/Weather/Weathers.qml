@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Io
-import Quickshell.Widgets
 import Quickshell.Hyprland
 
 import qs.Configs
@@ -12,7 +11,7 @@ import qs.Helpers
 import qs.Services
 import qs.Components
 
-import "WeatherItem/Pages" as WeatherPages
+import "WeatherItem/Pages" as WP
 import "WeatherItem" as WI
 
 Item {
@@ -69,7 +68,9 @@ Item {
         onPressed: GlobalStates.togglePanel("weather")
     }
 
-    WrapperRectangle {
+    StyledRect {
+        id: rect
+
         anchors.fill: parent
         radius: 0
         clip: true
@@ -78,8 +79,9 @@ Item {
         Flickable {
             id: flickable
 
+            anchors.fill: parent
             contentWidth: width
-            contentHeight: mainLoader.item.implicitHeight + 40
+            contentHeight: mainLoader.item ? mainLoader.item.implicitHeight + 40 : 0
             clip: true
             boundsBehavior: Flickable.StopAtBounds
 
@@ -133,8 +135,7 @@ Item {
                         id: summaryLoader
 
                         Layout.fillWidth: true
-                        active: Configs.weather.enableQuickSummary
-                        asynchronous: true
+                        active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
 
                         sourceComponent: StyledRect {
                             implicitHeight: summaryText.implicitHeight + 20
@@ -159,8 +160,7 @@ Item {
                         id: forecastLoader
 
                         Layout.fillWidth: true
-                        active: (Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)
-                        visible: active
+                        active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
                         asynchronous: true
 
                         sourceComponent: ColumnLayout {
@@ -183,176 +183,245 @@ Item {
                         columnSpacing: Appearance.spacing.large
                         rowSpacing: Appearance.spacing.large
 
-                        WI.Humidity {
-                            id: humidityCard
+                        GridLayout {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignCenter
+                            columns: 2
+                            columnSpacing: Appearance.spacing.large
+                            rowSpacing: Appearance.spacing.large
 
-                            implicitWidth: 150
-                            implicitHeight: 150
+                            Loader {
+                                id: humidityCard
 
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    humidityPages.zoomOriginX = humidityCard.mapToItem(root, 0, 0).x + humidityCard.width / 2;
-                                    humidityPages.zoomOriginY = humidityCard.mapToItem(root, 0, 0).y + humidityCard.height / 2;
-                                    humidityPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Humidity {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                humidityPages.zoomOriginX = humidityCard.mapToItem(root, 0, 0).x + humidityCard.width / 2;
+                                                humidityPages.zoomOriginY = humidityCard.mapToItem(root, 0, 0).y + humidityCard.height / 2;
+                                                humidityPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.Sun {
-                            id: sunCard
+                            Loader {
+                                id: sunCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    sunPages.zoomOriginX = sunCard.mapToItem(root, 0, 0).x + sunCard.width / 2;
-                                    sunPages.zoomOriginY = sunCard.mapToItem(root, 0, 0).y + sunCard.height / 2;
-                                    sunPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Sun {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                sunPages.zoomOriginX = sunCard.mapToItem(root, 0, 0).x + sunCard.width / 2;
+                                                sunPages.zoomOriginY = sunCard.mapToItem(root, 0, 0).y + sunCard.height / 2;
+                                                sunPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.Pressure {
-                            id: pressureCard
+                            Loader {
+                                id: pressureCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    pressurePages.zoomOriginX = pressureCard.mapToItem(root, 0, 0).x + pressureCard.width / 2;
-                                    pressurePages.zoomOriginY = pressureCard.mapToItem(root, 0, 0).y + pressureCard.height / 2;
-                                    pressurePages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Pressure {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                pressurePages.zoomOriginX = pressureCard.mapToItem(root, 0, 0).x + pressureCard.width / 2;
+                                                pressurePages.zoomOriginY = pressureCard.mapToItem(root, 0, 0).y + pressureCard.height / 2;
+                                                pressurePages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.Visibility {
-                            id: visibilityCard
+                            Loader {
+                                id: visibilityCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    visibilityPages.zoomOriginX = visibilityCard.mapToItem(root, 0, 0).x + visibilityCard.width / 2;
-                                    visibilityPages.zoomOriginY = visibilityCard.mapToItem(root, 0, 0).y + visibilityCard.height / 2;
-                                    visibilityPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Visibility {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                visibilityPages.zoomOriginX = visibilityCard.mapToItem(root, 0, 0).x + visibilityCard.width / 2;
+                                                visibilityPages.zoomOriginY = visibilityCard.mapToItem(root, 0, 0).y + visibilityCard.height / 2;
+                                                visibilityPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.Wind {
-                            id: windCard
+                            Loader {
+                                id: windCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    windPages.zoomOriginX = windCard.mapToItem(root, 0, 0).x + windCard.width / 2;
-                                    windPages.zoomOriginY = windCard.mapToItem(root, 0, 0).y + windCard.height / 2;
-                                    windPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Wind {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                windPages.zoomOriginX = windCard.mapToItem(root, 0, 0).x + windCard.width / 2;
+                                                windPages.zoomOriginY = windCard.mapToItem(root, 0, 0).y + windCard.height / 2;
+                                                windPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.UVIndex {
-                            id: uvIndexCard
+                            Loader {
+                                id: uvIndexCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    uvIndexPages.zoomOriginX = uvIndexCard.mapToItem(root, 0, 0).x + uvIndexCard.width / 2;
-                                    uvIndexPages.zoomOriginY = uvIndexCard.mapToItem(root, 0, 0).y + uvIndexCard.height / 2;
-                                    uvIndexPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                asynchronous: true
+                                sourceComponent: Component {
+                                    WI.UVIndex {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                uvIndexPages.zoomOriginX = uvIndexCard.mapToItem(root, 0, 0).x + uvIndexCard.width / 2;
+                                                uvIndexPages.zoomOriginY = uvIndexCard.mapToItem(root, 0, 0).y + uvIndexCard.height / 2;
+                                                uvIndexPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.AQI {
-                            id: aqiCard
+                            Loader {
+                                id: aqiCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    aqiPages.zoomOriginX = aqiCard.mapToItem(root, 0, 0).x + aqiCard.width / 2;
-                                    aqiPages.zoomOriginY = aqiCard.mapToItem(root, 0, 0).y + aqiCard.height / 2;
-                                    aqiPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.AQI {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                aqiPages.zoomOriginX = aqiCard.mapToItem(root, 0, 0).x + aqiCard.width / 2;
+                                                aqiPages.zoomOriginY = aqiCard.mapToItem(root, 0, 0).y + aqiCard.height / 2;
+                                                aqiPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.Precipitation {
-                            id: precipitationCard
+                            Loader {
+                                id: precipitationCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    precipitationPages.zoomOriginX = precipitationCard.mapToItem(root, 0, 0).x + precipitationCard.width / 2;
-                                    precipitationPages.zoomOriginY = precipitationCard.mapToItem(root, 0, 0).y + precipitationCard.height / 2;
-                                    precipitationPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Precipitation {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            onClicked: {
+                                                precipitationPages.zoomOriginX = precipitationCard.mapToItem(root, 0, 0).x + precipitationCard.width / 2;
+                                                precipitationPages.zoomOriginY = precipitationCard.mapToItem(root, 0, 0).y + precipitationCard.height / 2;
+                                                precipitationPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        WI.Moon {
-                            id: moonCard
+                            Loader {
+                                id: moonCard
 
-                            implicitWidth: 150
-                            implicitHeight: 150
-                            MArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                enabled: !root.anyPageOpen
-                                onClicked: {
-                                    moonPages.zoomOriginX = moonCard.mapToItem(root, 0, 0).x + moonCard.width / 2;
-                                    moonPages.zoomOriginY = moonCard.mapToItem(root, 0, 0).y + moonCard.height / 2;
-                                    moonPages.isOpen = true;
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Moon {
+                                        anchors.fill: parent
+                                        MArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            cursorShape: Qt.PointingHandCursor
+                                            enabled: !root.anyPageOpen
+                                            z: 999
+                                            onClicked: {
+                                                moonPages.zoomOriginX = moonCard.mapToItem(root, 0, 0).x + moonCard.width / 2;
+                                                moonPages.zoomOriginY = moonCard.mapToItem(root, 0, 0).y + moonCard.height / 2;
+                                                moonPages.isOpen = true;
+                                            }
+                                        }
+                                    }
                                 }
-                                z: 999
                             }
-                        }
 
-                        WI.Cloudiness {
-                            implicitWidth: 150
-                            implicitHeight: 150
+                            Loader {
+                                id: cloudinessCard
+
+                                Layout.preferredWidth: 150
+                                Layout.preferredHeight: 150
+                                active: GlobalStates.isWeatherPanelOpen
+                                sourceComponent: Component {
+                                    WI.Cloudiness {
+                                        anchors.fill: parent
+                                    }
+                                }
+                            }
                         }
                     }
-
                     Item {
                         Layout.fillHeight: true
                         Layout.preferredHeight: 20
@@ -373,399 +442,39 @@ Item {
         onReleased: {}
     }
 
-    WeatherPages.Humidity {
+    WP.Humidity {
         id: humidityPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: humidityPages.isOpen ? 0 : humidityPages.zoomOriginX - humidityPages.width / 2
-            y: humidityPages.isOpen ? 0 : humidityPages.zoomOriginY - humidityPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.Sun {
+    WP.Sun {
         id: sunPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: sunPages.isOpen ? 0 : sunPages.zoomOriginX - sunPages.width / 2
-            y: sunPages.isOpen ? 0 : sunPages.zoomOriginY - sunPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.Pressure {
+    WP.Pressure {
         id: pressurePages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: pressurePages.isOpen ? 0 : pressurePages.zoomOriginX - pressurePages.width / 2
-            y: pressurePages.isOpen ? 0 : pressurePages.zoomOriginY - pressurePages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.Visibility {
+    WP.Visibility {
         id: visibilityPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: visibilityPages.isOpen ? 0 : visibilityPages.zoomOriginX - visibilityPages.width / 2
-            y: visibilityPages.isOpen ? 0 : visibilityPages.zoomOriginY - visibilityPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.Wind {
+    WP.Wind {
         id: windPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: windPages.isOpen ? 0 : windPages.zoomOriginX - windPages.width / 2
-            y: windPages.isOpen ? 0 : windPages.zoomOriginY - windPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.UVIndex {
-        id: uvIndexPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: uvIndexPages.isOpen ? 0 : uvIndexPages.zoomOriginX - uvIndexPages.width / 2
-            y: uvIndexPages.isOpen ? 0 : uvIndexPages.zoomOriginY - uvIndexPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-    }
-
-    WeatherPages.AQI {
+    WP.AQI {
         id: aqiPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: aqiPages.isOpen ? 0 : aqiPages.zoomOriginX - aqiPages.width / 2
-            y: aqiPages.isOpen ? 0 : aqiPages.zoomOriginY - aqiPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.Precipitation {
+    WP.Precipitation {
         id: precipitationPages
-
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: precipitationPages.isOpen ? 0 : precipitationPages.zoomOriginX - precipitationPages.width / 2
-            y: precipitationPages.isOpen ? 0 : precipitationPages.zoomOriginY - precipitationPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
 
-    WeatherPages.Moon {
+    WP.Moon {
         id: moonPages
+    }
 
-        property real zoomOriginX: parent.width / 2
-        property real zoomOriginY: parent.height / 2
-
-        anchors.fill: parent
-        scale: isOpen ? 1.0 : 0.5
-        opacity: isOpen ? 1.0 : 0.0
-        transformOrigin: Item.Center
-
-        transform: Translate {
-            x: moonPages.isOpen ? 0 : moonPages.zoomOriginX - moonPages.width / 2
-            y: moonPages.isOpen ? 0 : moonPages.zoomOriginY - moonPages.height / 2
-
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-            Behavior on y {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
+    WP.UVIndex {
+        id: uvIndexPages
     }
 }

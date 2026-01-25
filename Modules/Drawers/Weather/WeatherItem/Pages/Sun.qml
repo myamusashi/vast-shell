@@ -10,20 +10,11 @@ import qs.Components
 
 import "Markdown"
 
-WrapperRectangle {
+Pages {
     id: root
 
-    anchors.fill: parent
-
-    property bool isOpen: false
     property real sunriseProgress: calculateSunProgress()
-
-    margin: Appearance.margin.normal
-    visible: opacity > 0
-    color: Colours.m3Colors.m3Surface
-    scale: isOpen ? 1.0 : 0.5
-    opacity: isOpen ? 1.0 : 0.0
-    transformOrigin: Item.Center
+    content: Sun {}
 
     function calculateSunProgress() {
         var now = new Date();
@@ -53,136 +44,118 @@ WrapperRectangle {
         onTriggered: root.sunriseProgress = root.calculateSunProgress()
     }
 
-    Behavior on scale {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    component Sun: Column {
+        anchors {
+            fill: parent
+            topMargin: 20
         }
-    }
+        clip: true
+        spacing: Appearance.spacing.normal
 
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        Header {
+            icon: Lucide.icon_sun
+            title: qsTr("Sun")
+            mouseArea.onClicked: root.isOpen = false
         }
-    }
 
-    Loader {
-        active: root.isOpen
-        asynchronous: true
-        sourceComponent: Column {
-            anchors {
-                fill: parent
-                topMargin: 20
+        WrapperRectangle {
+            color: Colours.m3Colors.m3SurfaceContainer
+            radius: Appearance.rounding.normal
+            implicitWidth: parent.width
+            implicitHeight: parent.height * 0.3
+
+            SunCanvas {
+                sunSize: 40
+
+                StyledRect {
+                    anchors.bottom: parent.bottom
+                    clip: true
+                    color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.4)
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height * 0.4
+                    radius: 0
+
+                    StyledRect {
+                        anchors.top: parent.top
+                        radius: 0
+                        bottomLeftRadius: Appearance.rounding.normal
+                        bottomRightRadius: bottomLeftRadius
+
+                        implicitWidth: parent.width
+                        implicitHeight: 1
+                        color: Colours.m3Colors.m3OutlineVariant
+                    }
+                }
             }
-            clip: true
-            spacing: Appearance.spacing.normal
+        }
 
-            Header {
-                icon: Lucide.icon_sun
-                title: qsTr("Sun")
-                mouseArea.onClicked: root.isOpen = false
+        Column {
+            width: parent.width
+            height: parent.height * 0.7
+            spacing: Appearance.spacing.large * 1.5
+            Row {
+                width: parent.width
+                height: 40
+
+                Column {
+                    width: parent.width / 2
+                    spacing: 0
+                    StyledText {
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: qsTr("Sunrise")
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.large
+                    }
+                    StyledText {
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: Weather.sunRise
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
+                    }
+                }
+
+                Column {
+                    width: parent.width / 2
+                    spacing: 0
+
+                    StyledText {
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: qsTr("Sunset")
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.large
+                    }
+                    StyledText {
+                        width: parent.width
+                        horizontalAlignment: Text.AlignHCenter
+                        text: Weather.sunSet
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
+                    }
+                }
             }
 
             WrapperRectangle {
-                color: Colours.m3Colors.m3SurfaceContainer
+                border {
+                    width: 1
+                    color: Colours.m3Colors.m3Outline
+                }
+                margin: 20
                 radius: Appearance.rounding.normal
+                color: Colours.m3Colors.m3Surface
                 implicitWidth: parent.width
-                implicitHeight: parent.height * 0.3
+                implicitHeight: description.contentHeight + 20
 
-                SunCanvas {
-                    sunSize: 40
+                StyledText {
+                    id: description
 
-                    StyledRect {
-                        anchors.bottom: parent.bottom
-                        clip: true
-                        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.4)
-                        implicitWidth: parent.width
-                        implicitHeight: parent.height * 0.4
-                        radius: 0
-
-                        StyledRect {
-                            anchors.top: parent.top
-                            radius: 0
-                            bottomLeftRadius: Appearance.rounding.normal
-                            bottomRightRadius: bottomLeftRadius
-
-                            implicitWidth: parent.width
-                            implicitHeight: 1
-                            color: Colours.m3Colors.m3OutlineVariant
-                        }
-                    }
-                }
-            }
-
-            Column {
-                width: parent.width
-                height: parent.height * 0.7
-                spacing: Appearance.spacing.large * 1.5
-                Row {
-                    width: parent.width
-                    height: 40
-
-                    Column {
-                        width: parent.width / 2
-                        spacing: 0
-                        StyledText {
-                            width: parent.width
-                            horizontalAlignment: Text.AlignHCenter
-                            text: qsTr("Sunrise")
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.large
-                        }
-                        StyledText {
-                            width: parent.width
-                            horizontalAlignment: Text.AlignHCenter
-                            text: Weather.sunRise
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.extraLarge
-                        }
-                    }
-
-                    Column {
-                        width: parent.width / 2
-                        spacing: 0
-
-                        StyledText {
-                            width: parent.width
-                            horizontalAlignment: Text.AlignHCenter
-                            text: qsTr("Sunset")
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.large
-                        }
-                        StyledText {
-                            width: parent.width
-                            horizontalAlignment: Text.AlignHCenter
-                            text: Weather.sunSet
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.extraLarge
-                        }
-                    }
-                }
-
-                WrapperRectangle {
-                    border {
-                        width: 1
-                        color: Colours.m3Colors.m3Outline
-                    }
-                    margin: 20
-                    radius: Appearance.rounding.normal
-                    color: Colours.m3Colors.m3Surface
-                    implicitWidth: parent.width
-                    implicitHeight: description.contentHeight + 20
-
-                    StyledText {
-                        id: description
-
-                        text: DetailText.sun
-                        color: Colours.m3Colors.m3OnSurface
-                        textFormat: Text.MarkdownText
-                        wrapMode: Text.Wrap
-                        font.pixelSize: Appearance.fonts.size.normal
-                    }
+                    text: DetailText.sun
+                    color: Colours.m3Colors.m3OnSurface
+                    textFormat: Text.MarkdownText
+                    wrapMode: Text.Wrap
+                    font.pixelSize: Appearance.fonts.size.normal
                 }
             }
         }

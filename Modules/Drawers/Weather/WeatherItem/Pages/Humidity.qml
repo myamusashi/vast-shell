@@ -14,152 +14,124 @@ import qs.Components
 
 import "Markdown"
 
-WrapperRectangle {
+Pages {
     id: root
 
-    anchors.fill: parent
-
-    property bool isOpen: false
-
-    margin: Appearance.margin.normal
-    visible: opacity > 0
-    color: Colours.m3Colors.m3Surface
-    scale: isOpen ? 1.0 : 0.5
-    opacity: isOpen ? 1.0 : 0.0
-    transformOrigin: Item.Center
-
-    Behavior on scale {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    content: Humidity {}
+    component Humidity: Column {
+        anchors {
+            fill: parent
+            topMargin: 20
         }
-    }
+        clip: true
+        spacing: Appearance.spacing.normal
 
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        Header {
+            icon: Lucide.icon_droplet
+            title: qsTr("Humidity")
+            mouseArea.onClicked: root.isOpen = false
         }
-    }
 
-    Loader {
-        active: root.isOpen
-        asynchronous: true
-        sourceComponent: Column {
-            anchors {
-                fill: parent
-                topMargin: 20
-            }
+        WrapperRectangle {
+            anchors.margins: Appearance.margin.normal
+            margin: 10
             clip: true
-            spacing: Appearance.spacing.normal
+            implicitWidth: parent.width
+            implicitHeight: content.implicitHeight + 20
+            radius: Appearance.rounding.normal
+            color: Colours.m3Colors.m3SurfaceContainer
 
-            Header {
-                icon: Lucide.icon_droplet
-                title: qsTr("Humidity")
-                mouseArea.onClicked: root.isOpen = false
-            }
+            ColumnLayout {
+                id: content
 
-            WrapperRectangle {
-                anchors.margins: Appearance.margin.normal
-                margin: 10
-                clip: true
-                implicitWidth: parent.width
-                implicitHeight: content.implicitHeight + 20
-                radius: Appearance.rounding.normal
-                color: Colours.m3Colors.m3SurfaceContainer
+                spacing: Appearance.spacing.normal
 
-                ColumnLayout {
-                    id: content
+                StyledText {
+                    text: qsTr("Today's average")
+                    color: Colours.m3Colors.m3OnBackground
+                    font.pixelSize: Appearance.fonts.size.large * 1.5
+                }
 
-                    spacing: Appearance.spacing.normal
+                StyledText {
+                    text: Weather.humidity + "%"
+                    color: Colours.m3Colors.m3Primary
+                    font.pixelSize: Appearance.fonts.size.extraLarge
+                }
 
-                    StyledText {
-                        text: qsTr("Today's average")
-                        color: Colours.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.size.large * 1.5
-                    }
+                Flickable {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 180
+                    Layout.topMargin: Appearance.margin.large * 2
+                    contentWidth: sliderRow.width
+                    contentHeight: sliderRow.height
+                    flickableDirection: Flickable.HorizontalFlick
+                    boundsBehavior: Flickable.StopAtBounds
 
-                    StyledText {
-                        text: Weather.humidity + "%"
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.extraLarge
-                    }
+                    Row {
+                        id: sliderRow
 
-                    Flickable {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 180
-                        Layout.topMargin: Appearance.margin.large * 2
-                        contentWidth: sliderRow.width
-                        contentHeight: sliderRow.height
-                        flickableDirection: Flickable.HorizontalFlick
-                        boundsBehavior: Flickable.StopAtBounds
+                        spacing: Appearance.spacing.large
 
-                        Row {
-                            id: sliderRow
+                        Repeater {
+                            model: ScriptModel {
+                                values: (function () {
+                                        const currentHour = new Date().getHours();
+                                        return Weather.hourlyForecast.filter(function (forecast) {
+                                            const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
+                                            const forecastHour = parseInt(timeStr.split(":")[0] || "0");
+                                            return forecastHour >= currentHour;
+                                        });
+                                    })()
+                            }
 
-                            spacing: Appearance.spacing.large
+                            delegate: ColumnLayout {
+                                spacing: Appearance.spacing.normal
+                                required property var modelData
 
-                            Repeater {
-                                model: ScriptModel {
-                                    values: (function () {
-                                            const currentHour = new Date().getHours();
-                                            return Weather.hourlyForecast.filter(function (forecast) {
-                                                const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
-                                                const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                                                return forecastHour >= currentHour;
-                                            });
-                                        })()
+                                HumiditySlider {
+                                    implicitWidth: 30
+                                    implicitHeight: 150
+                                    value: parent.modelData.humidity
                                 }
 
-                                delegate: ColumnLayout {
-                                    spacing: Appearance.spacing.normal
-                                    required property var modelData
-
-                                    HumiditySlider {
-                                        implicitWidth: 30
-                                        implicitHeight: 150
-                                        value: parent.modelData.humidity
-                                    }
-
-                                    StyledText {
-                                        text: TimeAgo.convertTo12HourCompact(parent.modelData.time)
-                                        color: Colours.m3Colors.m3OnBackground
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                    }
+                                StyledText {
+                                    text: TimeAgo.convertTo12HourCompact(parent.modelData.time)
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
-            StyledRect {
-                implicitWidth: parent.width
-                implicitHeight: humidityDescription.contentHeight + 20
-                color: Colours.m3Colors.m3Surface
-                border {
-                    color: Colours.m3Colors.m3OutlineVariant
-                    width: 1
-                }
-
-                StyledText {
-                    id: humidityDescription
-
-                    anchors {
-                        fill: parent
-                        margins: 10
-                    }
-                    text: DetailText.humidity
-                    color: Colours.m3Colors.m3OnSurface
-                    textFormat: Text.MarkdownText
-                    wrapMode: Text.Wrap
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
+        StyledRect {
+            implicitWidth: parent.width
+            implicitHeight: humidityDescription.contentHeight + 20
+            color: Colours.m3Colors.m3Surface
+            border {
+                color: Colours.m3Colors.m3OutlineVariant
+                width: 1
             }
 
-            Item {
-                Layout.fillHeight: true
+            StyledText {
+                id: humidityDescription
+
+                anchors {
+                    fill: parent
+                    margins: 10
+                }
+                text: DetailText.humidity
+                color: Colours.m3Colors.m3OnSurface
+                textFormat: Text.MarkdownText
+                wrapMode: Text.Wrap
+                font.pixelSize: Appearance.fonts.size.normal
             }
+        }
+
+        Item {
+            Layout.fillHeight: true
         }
     }
 
