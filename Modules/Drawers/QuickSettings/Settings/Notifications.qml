@@ -1,7 +1,9 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
 import qs.Configs
@@ -10,73 +12,92 @@ import qs.Services
 import qs.Components
 import qs.Modules.Drawers.Notifications.Components as N
 
-StyledRect {
-    color: Colours.withAlpha(Colours.m3Colors.m3SurfaceContainer, 0.4)
-    implicitWidth: parent.width * 0.5
-    implicitHeight: parent.height
+ColumnLayout {
+    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    Layout.fillWidth: true
+    Layout.fillHeight: true
 
-    Loader {
-        anchors.fill: parent
-        active: GlobalStates.isQuickSettingsOpen
-        asynchronous: true
+    StyledRect {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        radius: Appearance.rounding.normal
+        color: Colours.withAlpha(Colours.m3Colors.m3SurfaceContainer, 0.4)
 
-        sourceComponent: Column {
-            anchors.fill: parent
+        RowLayout {
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+                topMargin: 10
+            }
+            implicitWidth: parent.width
+            implicitHeight: 50
             spacing: Appearance.spacing.small
 
-            Row {
-                width: parent.width
-                height: 50
-                visible: Notifs.notClosed.length > 0
-                leftPadding: 10
-                rightPadding: 10
-                topPadding: 10
-                spacing: parent.width * 0.01
+            Item {
+                Layout.fillWidth: true
+            }
 
-                StyledRect {
-                    height: 30
-                    width: parent.width * 0.6 - parent.spacing
-                    color: Colours.m3Colors.m3SurfaceContainer
+            StyledRect {
+                implicitWidth: textClear.contentWidth + 100
+                implicitHeight: 30
+                color: Colours.m3Colors.m3SurfaceContainer
 
-                    StyledText {
-                        anchors.centerIn: parent
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.large
-                        text: qsTr("Clear all")
-                    }
+                StyledText {
+                    id: textClear
 
-                    MArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Notifs.clearAll()
-                    }
+                    anchors.centerIn: parent
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.large
+                    text: qsTr("Clear all")
                 }
 
-                StyledRect {
-                    height: 30
-                    width: parent.width * 0.1
-                    color: Colours.m3Colors.m3SurfaceContainer
-
-                    Icon {
-                        type: Icon.Material
-                        anchors.centerIn: parent
-                        icon: Notifs.dnd ? "notifications_off" : "notifications_active"
-                        color: Colours.m3Colors.m3OnSurface
-                    }
-
-                    MArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Notifs.dnd = !Notifs.dnd
-                    }
+                MArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Notifs.clearAll()
                 }
             }
 
             StyledRect {
-                implicitWidth: parent.width
-                implicitHeight: parent.height - (Notifs.notClosed.length > 0 ? 60 : 10)
+                implicitWidth: 30
+                implicitHeight: 30
+                color: Colours.m3Colors.m3SurfaceContainer
+
+                Icon {
+                    id: iconDnD
+
+                    type: Icon.Material
+                    anchors.centerIn: parent
+                    icon: Notifs.dnd ? "notifications_off" : "notifications_active"
+                    font.pixelSize: Appearance.fonts.size.large
+                    color: Colours.m3Colors.m3OnSurface
+                }
+
+                MArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: Notifs.dnd = !Notifs.dnd
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+        }
+
+        Loader {
+            anchors {
+                fill: parent
+                topMargin: 50
+                bottomMargin: 10
+            }
+            active: GlobalStates.isQuickSettingsOpen
+            asynchronous: true
+
+            sourceComponent: StyledRect {
+                anchors.fill: parent
                 clip: true
                 color: "transparent"
 
@@ -93,66 +114,17 @@ StyledRect {
                     }
 
                     spacing: Appearance.spacing.normal
-                    clip: true
                     boundsBehavior: Flickable.StopAtBounds
-                    cacheBuffer: 200
 
-                    delegate: Item {
+                    delegate: WrapperItem {
                         id: root
 
                         required property var modelData
-                        property bool isPopup: false
-                        property alias contentLayout: contentLayout
-                        property alias iconLayout: iconLayout
-                        property alias mArea: delegateMouseNotif
-
-                        signal entered
-                        signal exited
 
                         implicitWidth: notifListView.width
                         implicitHeight: contentLayout.height * 1.3
+                        leftMargin: 10
                         clip: true
-                        x: width
-
-                        Component.onCompleted: {
-                            slideInAnim.start();
-                        }
-
-                        Component.onDestruction: {
-                            slideInAnim.stop();
-                            slideOutAnim.start();
-                            swipeOutAnim.start();
-                        }
-
-                        ListView.onReused: {
-                            x = parent.width;
-                            slideInAnim.start();
-                        }
-
-                        NAnim {
-                            id: slideInAnim
-
-                            target: root
-                            property: "x"
-                            from: root.width
-                            to: 0
-                            duration: Appearance.animations.durations.emphasized
-                            easing.bezierCurve: Appearance.animations.curves.emphasized
-                        }
-
-                        NAnim {
-                            id: slideOutAnim
-
-                            target: root
-                            property: "x"
-                            to: root.width
-                            duration: Appearance.animations.durations.emphasizedAccel
-                            easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-                            onFinished: {
-                                if (root.isPopup)
-                                    root.modelData.popup = false;
-                            }
-                        }
 
                         NAnim {
                             id: swipeOutAnim
@@ -160,32 +132,39 @@ StyledRect {
                             target: root
                             property: "x"
                             duration: Appearance.animations.durations.small
-                            easing.bezierCurve: Appearance.animations.curves.standardAccel
+
                             onFinished: {
-                                if (root.isPopup)
-                                    root.modelData.popup = false;
+                                fadeOutAnim.start();
                             }
                         }
 
-                        Behavior on implicitWidth {
-                            NAnim {
-                                duration: Appearance.animations.durations.emphasized
-                                easing.bezierCurve: Appearance.animations.curves.emphasized
-                            }
+                        NAnim {
+                            id: fadeOutAnim
+
+                            target: root
+                            property: "opacity"
+                            from: 1.0
+                            to: 0.0
+                            duration: Appearance.animations.durations.small
                         }
 
-                        Behavior on implicitHeight {
-                            NAnim {
-                                duration: Appearance.animations.durations.emphasized
-                                easing.bezierCurve: Appearance.animations.curves.emphasized
-                            }
+                        NAnim {
+                            id: springBackAnim
+
+                            target: root
+                            property: "x"
+                            to: 0
+                            duration: Appearance.animations.durations.small
+                        }
+
+                        Timer {
+                            id: closeTimer
+
+                            interval: swipeOutAnim.duration + fadeOutAnim.duration
+                            onTriggered: root.modelData.close()
                         }
 
                         StyledRect {
-                            anchors {
-                                fill: parent
-                                leftMargin: 10
-                            }
                             radius: Appearance.rounding.normal
                             clip: true
 
@@ -202,14 +181,6 @@ StyledRect {
                                 anchors.fill: parent
                                 hoverEnabled: true
 
-                                onEntered: {
-                                    root.entered();
-                                }
-
-                                onExited: {
-                                    root.exited();
-                                }
-
                                 drag {
                                     axis: Drag.XAxis
                                     target: root
@@ -219,13 +190,14 @@ StyledRect {
                                     onActiveChanged: {
                                         if (drag.active)
                                             return;
+                                        const swipeThreshold = root.width * 0.35;
 
-                                        if (Math.abs(root.x) > root.width * 0.45) {
-                                            swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
+                                        if (Math.abs(root.x) > swipeThreshold) {
+                                            swipeOutAnim.to = root.x > 0 ? root.width * 1.2 : -root.width * 1.2;
                                             swipeOutAnim.start();
-                                            root.modelData.close();
+                                            closeTimer.start();
                                         } else {
-                                            root.x = 0;
+                                            springBackAnim.start();
                                         }
                                     }
                                 }
