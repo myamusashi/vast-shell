@@ -10,45 +10,39 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 
-Item {
+WrapperItem {
+    id: root
+
+    anchors.fill: parent
+
     property alias active: loader.active
-    width: parent.width
-    height: parent.height
+
+    function getWiFiIcon(strength) {
+        if (strength >= 80)
+            return "network_wifi";
+        if (strength >= 50)
+            return "network_wifi_3_bar";
+        if (strength >= 30)
+            return "network_wifi_2_bar";
+        if (strength >= 15)
+            return "network_wifi_1_bar";
+        return "signal_wifi_0_bar";
+    }
 
     Loader {
         id: loader
 
-        anchors.fill: parent
         active: false
         asynchronous: true
-        sourceComponent: WiFi {}
-    }
-
-    component WiFi: WrapperItem {
-        id: root
-
-        function getWiFiIcon(strength) {
-            if (strength >= 80)
-                return "network_wifi";
-            if (strength >= 50)
-                return "network_wifi_3_bar";
-            if (strength >= 30)
-                return "network_wifi_2_bar";
-            if (strength >= 15)
-                return "network_wifi_1_bar";
-            return "signal_wifi_0_bar";
-        }
-
-        StyledRect {
+        sourceComponent: WrapperRectangle {
             anchors.fill: parent
+            margin: 20
+            topMargin: 15
+            bottomMargin: 15
             radius: 0
             color: Colours.m3Colors.m3Surface
 
             ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 20
-                anchors.topMargin: 15
-                anchors.bottomMargin: 15
                 spacing: Appearance.spacing.normal
 
                 RowLayout {

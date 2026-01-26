@@ -184,6 +184,7 @@ Item {
 
     component Pulse: Item {
         id: visualizerShape
+
         property bool isActive: true
         property real baseHeight: 1.5
         property real progress: 0.0

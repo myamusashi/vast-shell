@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Io
+import Quickshell.Widgets
 import Quickshell.Hyprland
 
 import qs.Configs
@@ -17,22 +18,21 @@ Item {
     id: root
 
     anchors {
-        top: parent.top
-        horizontalCenter: parent.horizontalCenter
+        left: parent.left
+        verticalCenter: parent.verticalCenter
     }
 
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
-    property int state: 0
 
-    implicitWidth: parent.width * 0.8
-    implicitHeight: isControlCenterOpen ? 450 : 0
+    implicitWidth: isControlCenterOpen ? parent.width * 0.3 : 0
+    implicitHeight: parent.height
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
     function toggleControlCenter(): void {
         GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
     }
 
-    Behavior on implicitHeight {
+    Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -40,15 +40,15 @@ Item {
     }
 
     Corner {
-        location: Qt.TopLeftCorner
-        extensionSide: Qt.Horizontal
+        location: Qt.TopRightCorner
+        extensionSide: Qt.Vertical
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
     Corner {
-        location: Qt.TopRightCorner
-        extensionSide: Qt.Horizontal
+        location: Qt.BottomRightCorner
+        extensionSide: Qt.Vertical
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
@@ -72,204 +72,155 @@ Item {
         }
     }
 
-    StyledRect {
+    WrapperRectangle {
         id: rect
 
         anchors.fill: parent
+        margin: Appearance.margin.large
+        topMargin: 40
         clip: true
         color: GlobalStates.drawerColors
         radius: 0
-        bottomLeftRadius: Appearance.rounding.large
-        bottomRightRadius: Appearance.rounding.large
 
-        RowLayout {
-            anchors.fill: parent
+        ColumnLayout {
+            WrapperRectangle {
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                implicitWidth: Math.min(parent.width, tabGroup.implicitWidth + 32)
+                implicitHeight: 50
+                color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.9)
+                margin: Appearance.margin.normal
+                radius: Appearance.rounding.full
 
-            ColumnLayout {
-                Layout.preferredWidth: parent.width * 0.5
-                Layout.fillHeight: true
-                spacing: 0
+                TabBar {
+                    id: tabGroup
 
-                StyledRect {
-                    id: tabBar
-
-                    Layout.fillWidth: true
-                    implicitHeight: 60
-                    color: rect.color
-                    radius: 0
-                    visible: root.isControlCenterOpen
-
-                    property int currentIndex: root.state
-                    property var tabs: [
-                        {
-                            "icon": "settings",
-                            "name": "Settings",
-                            "index": 0
-                        },
-                        {
-                            "icon": "speaker",
-                            "name": "Volume",
-                            "index": 1
-                        },
-                        {
-                            "icon": "speed",
-                            "name": "Performance",
-                            "index": 2
-                        }
-                    ]
-
-                    RowLayout {
-                        id: tabLayout
-
-                        anchors.centerIn: parent
-                        spacing: 15
-                        width: parent.width * 0.95
-
-                        Repeater {
-                            id: tabRepeater
-
-                            model: tabBar.tabs
-
-                            Item {
-                                id: tabItem
-
-                                required property var modelData
-                                required property int index
-
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: tabBar.height
-
-                                ColumnLayout {
-                                    anchors.centerIn: parent
-                                    spacing: 4
-
-                                    Icon {
-                                        id: tabIcon
-
-                                        Layout.alignment: Qt.AlignHCenter
-                                        icon: tabItem.modelData.icon
-                                        type: Icon.Material
-                                        font.pixelSize: Appearance.fonts.size.large
-                                        color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
-                                    }
-
-                                    StyledText {
-                                        id: tabText
-
-                                        Layout.alignment: Qt.AlignHCenter
-                                        text: tabItem.modelData.name
-                                        font.pixelSize: Appearance.fonts.size.small
-                                        color: tabBar.currentIndex === tabItem.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnBackground
-                                    }
-                                }
-
-                                MArea {
-                                    id: tabMArea
-
-                                    anchors.fill: parent
-                                    layerColor: Colours.m3Colors.m3Primary
-                                    layerRadius: Appearance.rounding.small
-
-                                    onClicked: {
-                                        root.state = tabItem.index;
-                                        tabBar.currentIndex = tabItem.index;
-                                        controlCenterStackView.currentItem.viewIndex = tabItem.index;
-                                    }
-                                }
+                    Repeater {
+                        model: [
+                            {
+                                "icon": "settings",
+                                "name": "Settings",
+                                "index": 0
+                            },
+                            {
+                                "icon": "speaker",
+                                "name": "Volume",
+                                "index": 1
+                            },
+                            {
+                                "icon": "speed",
+                                "name": "Performance",
+                                "index": 2
                             }
-                        }
-                    }
+                        ]
 
-                    StyledRect {
-                        id: indicator
+                        delegate: TabButton {
+                            id: buttonDelegate
 
-                        anchors.bottom: tabLayout.bottom
-                        implicitWidth: tabRepeater.itemAt(tabBar.currentIndex) ? tabRepeater.itemAt(tabBar.currentIndex).width : 0
-                        implicitHeight: 2
-                        color: Colours.m3Colors.m3Primary
-                        radius: Appearance.rounding.large
+                            required property var modelData
+                            required property int index
 
-                        x: {
-                            if (tabRepeater.itemAt(tabBar.currentIndex))
-                                return tabRepeater.itemAt(tabBar.currentIndex).x + tabLayout.x;
-                            return 0;
-                        }
+                            implicitWidth: contentItem.implicitWidth + 32
+                            implicitHeight: parent.height
+                            text: modelData.name
 
-                        Behavior on x {
-                            NAnim {
-                                duration: Appearance.animations.durations.small
+                            contentItem: StyledText {
+                                id: textModel
+
+                                text: buttonDelegate.modelData.name
+                                font.pixelSize: Appearance.fonts.size.large
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                wrapMode: Text.NoWrap
+                                elide: Text.ElideNone
+                                color: Colours.m3Colors.m3OnSurface
                             }
-                        }
 
-                        Behavior on width {
-                            NAnim {
-                                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                            background: StyledRect {
+                                radius: Appearance.rounding.full
+                                color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3PrimaryContainer : "transparent"
                             }
                         }
                     }
                 }
+            }
 
-                StackView {
-                    id: controlCenterStackView
+            SwipeView {
+                id: controlCenterSwipeView
 
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 500
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                    property Component viewComponent: contentView
+                currentIndex: tabGroup.currentIndex
 
-                    initialItem: viewComponent
+                onCurrentIndexChanged: {
+                    tabGroup.currentIndex = currentIndex;
+                }
 
-                    onCurrentItemChanged: {
-                        if (currentItem)
-                            currentItem.viewIndex = root.state;
-                    }
+                Repeater {
+                    model: [
+                        {
+                            component: "Settings",
+                            props: {}
+                        },
+                        {
+                            component: "VolumeSettings",
+                            props: {
+                                implicitWidth: 500
+                            }
+                        },
+                        {
+                            component: "Performances",
+                            props: {}
+                        }
+                    ]
 
-                    Component {
-                        id: contentView
+                    delegate: StyledRect {
+                        required property var modelData
 
-                        StyledRect {
-                            id: shapeRect
+                        radius: 0
+                        bottomLeftRadius: Appearance.rounding.normal
+                        bottomRightRadius: Appearance.rounding.normal
+                        color: Colours.m3Colors.m3Background
 
-                            anchors.fill: parent
-                            anchors.leftMargin: 15
-                            anchors.rightMargin: 15
-                            anchors.topMargin: 15
+                        Loader {
+                            anchors {
+                                fill: parent
+                                leftMargin: 5
+                                rightMargin: 5
+                                topMargin: 5
+                            }
+                            active: window.modelData.name === Hypr.focusedMonitor.name
+                            asynchronous: true
 
-                            radius: 0
-                            bottomLeftRadius: Appearance.rounding.normal
-                            bottomRightRadius: Appearance.rounding.normal
-                            color: Colours.m3Colors.m3Background
-
-                            property int viewIndex: 0
-
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 0
-                                asynchronous: true
-                                visible: active
-
-                                sourceComponent: Settings {}
+                            sourceComponent: {
+                                switch (parent.modelData.component) {
+                                case "Settings":
+                                    return settingsComponent;
+                                case "VolumeSettings":
+                                    return volumeComponent;
+                                case "Performances":
+                                    return performanceComponent;
+                                }
                             }
 
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 1
-                                asynchronous: true
-                                visible: active
+                            Component {
+                                id: settingsComponent
 
-                                sourceComponent: VolumeSettings {
+                                Settings {}
+                            }
+
+                            Component {
+                                id: volumeComponent
+
+                                VolumeSettings {
                                     implicitWidth: 500
                                 }
                             }
 
-                            Loader {
-                                anchors.fill: parent
-                                active: parent.viewIndex === 2
-                                asynchronous: true
-                                visible: active
+                            Component {
+                                id: performanceComponent
 
-                                sourceComponent: Performances {}
+                                Performances {}
                             }
                         }
                     }
