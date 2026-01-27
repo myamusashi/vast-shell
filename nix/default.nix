@@ -27,37 +27,57 @@
   callPackage,
   cmake,
 }: let
+  # Custom package dependencies
   app2unit = callPackage ./app2unit.nix {};
   keystate-bin = callPackage ./keystate.nix {};
   material-symbols = callPackage ./material-symbols.nix {};
+  qml-material = callPackage ./qmlMaterial.nix {};
+
+  # Lucide font, we use specific version for consistency
+  lucide-font = lucide.overrideAttrs rec {
+    version = "0.544.0";
+    url = "https://unpkg.com/lucide-static@${version}/font/Lucide.ttf";
+    hash = "sha256-Cf4vv+f3ZUtXPED+PCHxvZZDMF5nWYa4iGFSDQtkquQ=";
+  };
+
+  # Runtime dependencies for the shell
   runtimeDeps = [
+    # Core utils
     findutils
     gnugrep
     gawk
     gnused
     util-linux
+
+    # System tools, even though the quickshell already have the networkmanager services, i guess i'll leave here
     networkmanager
+    libnotify
+    polkit
+
+    # Media and theming
     matugen
     playerctl
     wl-clipboard
-    libnotify
-    weather-icons
     wl-screenrec
     ffmpeg
+    weather-icons
+    lucide-font # I'm still thinking if we should use 2 fonts or only use the material symbols
+
+    # Applications
     foot
-    polkit
-    m3Shapes
     hyprland
+
+    # Custom packages
+    m3Shapes
+    qml-material
+    material-symbols
+
+    # Qt libraries
     kdePackages.qtmultimedia
     qt6.qtbase
     qt6.qtgraphs
-    material-symbols
-    (lucide.overrideAttrs rec {
-      version = "0.544.0";
-      url = "https://unpkg.com/lucide-static@${version}/font/Lucide.ttf";
-      hash = "sha256-Cf4vv+f3ZUtXPED+PCHxvZZDMF5nWYa4iGFSDQtkquQ=";
-    })
   ];
+
   shell = stdenv.mkDerivation {
     pname = "shell";
     version = "0.1.0";
@@ -84,15 +104,18 @@
     '';
 
     dontUseCmakeConfigure = true;
+    dontWrapQtApps = true;
 
     buildPhase = ''
       runHook preBuild
 
+      # Build translations if they exist
       echo "Building Translations..."
       if [ -d "translations" ]; then
         ${qt6.qttools}/bin/lrelease translations/*.ts
       fi
 
+      # Build TranslationManager plugin
       echo "Building TranslationManager Plugin..."
       mkdir -p build
       cd build
@@ -109,15 +132,15 @@
       runHook postBuild
     '';
 
-    dontWrapQtApps = true;
-
     installPhase = ''
       runHook preInstall
 
+      # Copy shell files
       mkdir -p $out/share/quickshell
       shopt -s extglob
       cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
 
+      # Copy specific directories
       for dir in Assets Components Widgets; do
         if [ -d "$dir" ]; then
           mkdir -p "$out/share/quickshell/$dir"
@@ -125,26 +148,34 @@
         fi
       done
 
+      # Copy QML and JS files
       for file in *.qml *.js; do
         [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
       done
 
+      # Copy translations
       if [ -d "translations" ]; then
         mkdir -p "$out/share/quickshell/translations"
         cp -r translations/*.qm "$out/share/quickshell/translations/" 2>/dev/null || true
       fi
 
+      # Install binaries
       install -Dm755 ${keystate-bin}/bin/keystate-bin \
         $out/share/quickshell/Assets/keystate-bin
-      install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
-      install -Dm755 ${keystate-bin}/bin/keystate-bin $out/bin/keystate-bin
+      install -Dm755 ${app2unit}/bin/app2unit \
+        $out/bin/app2unit
+      install -Dm755 ${keystate-bin}/bin/keystate-bin \
+        $out/bin/keystate-bin
 
+      # Install fonts
       mkdir -p $out/share/fonts/truetype
       cp -r ${material-symbols}/share/fonts/truetype/* \
         $out/share/fonts/truetype/
 
+      # Install TranslationManager plugin
       mkdir -p $out/lib/qt-6/qml/TranslationManager
 
+      # Copy plugin library
       PLUGIN_COPIED=false
       for so_file in build/*.so build/**/*.so; do
         if [ -f "$so_file" ]; then
@@ -159,6 +190,7 @@
         exit 1
       fi
 
+      # Copy qmldir
       if [ -f build/qmldir ]; then
         echo "Using CMake-generated qmldir"
         cp build/qmldir $out/lib/qt-6/qml/TranslationManager/
@@ -170,6 +202,7 @@
         exit 1
       fi
 
+      # Copy additional QML files, do we really need this one?
       for qml_file in build/*.qml; do
         if [ -f "$qml_file" ]; then
           cp "$qml_file" $out/lib/qt-6/qml/TranslationManager/
@@ -190,6 +223,7 @@
     '';
 
     postInstall = ''
+      # Patch plugin libraries with correct rpath
       for so_file in $out/lib/qt-6/qml/TranslationManager/*.so; do
         if [ -f "$so_file" ]; then
           patchelf \
