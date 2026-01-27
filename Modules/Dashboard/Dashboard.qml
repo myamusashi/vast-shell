@@ -19,12 +19,12 @@ Scope {
     id: scope
 
     GlobalShortcut {
-        name: "recordPanel"
+        name: "dashboard"
         onPressed: GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen
     }
 
     IpcHandler {
-        target: "recordPanel"
+        target: "dashboard"
 
         function open(): void {
             GlobalStates.isRecordPanelOpen = true;
@@ -55,7 +55,7 @@ Scope {
             screen: modelData
             color: "transparent"
 
-            WlrLayershell.namespace: "shell:bar"
+            WlrLayershell.namespace: "shell:dashboard"
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             exclusionMode: ExclusionMode.Normal
             focusable: true
