@@ -27,6 +27,12 @@ Slider {
         XL = 108
     }
 
+    readonly property real availableTrackSize: orientation === Qt.Horizontal ? availableWidth - handleGap * 2 : availableHeight - handleGap * 2
+    readonly property real trackSize: orientation === Qt.Horizontal ? height - trackSizeDiff : width - trackSizeDiff
+    readonly property real handleSize: pressed ? 2 : 4
+    readonly property real invertedVisualPosition: 1 - visualPosition
+    readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
+
     property bool dotEnd: true
     property bool useAnim: true
     property string icon: ""
@@ -34,20 +40,14 @@ Slider {
     property int valueWidth: orientation === Qt.Horizontal ? 200 : StyledSlide.ContainerSize.M
     property int valueHeight: orientation === Qt.Horizontal ? StyledSlide.ContainerSize.M : 200
 
+    property real trackSizeDiff: 15
+    property real handleGap: 6
+    property real trackDotSize: 4
+
     Layout.alignment: orientation === Qt.Horizontal ? Qt.AlignHCenter : Qt.AlignVCenter
     hoverEnabled: true
     implicitWidth: valueWidth
     implicitHeight: valueHeight
-
-    readonly property real availableTrackSize: orientation === Qt.Horizontal ? availableWidth - handleGap * 2 : availableHeight - handleGap * 2
-    readonly property real trackSize: orientation === Qt.Horizontal ? height - trackSizeDiff : width - trackSizeDiff
-    readonly property real handleSize: pressed ? 2 : 4
-    readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
-    readonly property real invertedVisualPosition: 1 - visualPosition
-
-    property real trackSizeDiff: 15
-    property real handleGap: 6
-    property real trackDotSize: 4
 
     MouseArea {
         anchors.fill: parent
