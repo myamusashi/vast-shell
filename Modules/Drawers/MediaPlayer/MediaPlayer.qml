@@ -113,7 +113,6 @@ Item {
 
                             StyledText {
                                 anchors.centerIn: parent
-                                width: contentWidth + 20
                                 text: qsTr("Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG.")
                                 wrapMode: Text.Wrap
                                 elide: Text.ElideRight

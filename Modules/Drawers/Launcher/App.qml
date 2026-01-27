@@ -74,18 +74,18 @@ Item {
     Corner {
         location: Qt.BottomLeftCorner
         extensionSide: Qt.Horizontal
-        radius: GlobalStates.isLauncherOpen ? 40 : 0
+        radius: GlobalStates.isLauncherOpen ? 40 + (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) : 0
         color: GlobalStates.drawerColors
     }
 
     Corner {
         location: Qt.BottomRightCorner
         extensionSide: Qt.Horizontal
-        radius: GlobalStates.isLauncherOpen ? 40 : 0
+        radius: GlobalStates.isLauncherOpen ? 40 + (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) : 0
         color: GlobalStates.drawerColors
     }
 
-    WrapperRectangle {
+    StyledRect {
         anchors.fill: parent
         radius: 0
         topLeftRadius: Appearance.rounding.large
@@ -93,22 +93,24 @@ Item {
         color: GlobalStates.drawerColors
 
         Loader {
-            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isLauncherOpen
+            anchors.fill: parent
+
+            active: window.modelData.name === Hypr.focusedMonitor.name
             asynchronous: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.normal
+                anchors.margins: Appearance.padding.large
                 spacing: Appearance.spacing.normal
 
                 StyledTextField {
                     id: search
 
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 60
-                    placeholderText: qsTr("  Search")
+                    implicitWidth: parent.width
+                    implicitHeight: 60
+                    placeholderText: qsTr("Search")
                     focus: GlobalStates.isLauncherOpen
                     font.family: Appearance.fonts.family.sans
-                    font.pixelSize: Appearance.fonts.size.large * 1.2
+                    font.pixelSize: Appearance.fonts.size.small
                     color: Colours.m3Colors.m3OnBackground
                     placeholderTextColor: Colours.m3Colors.m3OnSurfaceVariant
                     onTextChanged: {
@@ -141,6 +143,7 @@ Item {
 
                     Component.onCompleted: forceActiveFocus()
                 }
+
                 ListView {
                     id: listView
 
@@ -160,9 +163,6 @@ Item {
                     highlightMoveDuration: 200
                     maximumFlickVelocity: 3000
                     highlightMoveVelocity: -1
-                    ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                    }
                     rebound: Transition {
                         NAnim {
                             properties: "x,y"
@@ -221,16 +221,16 @@ Item {
 
                         required property DesktopEntry modelData
                         required property int index
-                        width: listView.width
-                        height: 50
+                        implicitWidth: listView.width
+                        implicitHeight: 50
                         contentItem: RowLayout {
                             spacing: Appearance.spacing.normal
 
                             StyledRect {
                                 Layout.alignment: Qt.AlignVCenter
-                                Layout.preferredWidth: 40
-                                Layout.preferredHeight: 40
                                 Layout.leftMargin: Appearance.padding.normal
+                                implicitWidth: 40
+                                implicitHeight: 40
                                 clip: true
 
                                 Behavior on border.width {

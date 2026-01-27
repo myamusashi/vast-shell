@@ -2,15 +2,14 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 
-import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
+import qs.Components
 
 Item {
     id: root
@@ -27,7 +26,7 @@ Item {
     property var pendingAction: null
     property string pendingActionName: ""
 
-    implicitWidth: GlobalStates.isSessionOpen ? 80 : 0
+    implicitWidth: GlobalStates.isSessionOpen ? 80 + (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) : 0
     implicitHeight: parent.height * 0.5
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
