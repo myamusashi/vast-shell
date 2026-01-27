@@ -47,6 +47,7 @@
         packages = [
           pkgs.go
           pkgs.python3
+          pkgs.black
           (with pkgs.kdePackages; [
             qtdeclarative
             qttools
