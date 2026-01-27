@@ -13,7 +13,7 @@ Column {
     required property var modelData
     property bool isShowMoreBody: false
 
-    width: parent.width - iconLayout.width - parent.spacing
+    width: parent.width - iconLayout.width
     spacing: Appearance.spacing.small
 
     Row {

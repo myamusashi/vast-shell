@@ -5,13 +5,10 @@ import Quickshell.Io
 JsonObject {
     property Apps apps: Apps {}
     property Battery battery: Battery {}
-
     property bool transparent: false
     property real alpha: 0.8
-    property bool blur: false
-    property bool liveBlur: true
-    property real blurIntensity: 1.0
-    property int blurPasses: 3
+    property bool enableOuterBorder: false
+    property int outerBorderSize: 10
 
     component Battery: JsonObject {
         property list<var> warnLevels: [

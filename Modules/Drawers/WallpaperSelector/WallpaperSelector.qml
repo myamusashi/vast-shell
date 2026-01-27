@@ -76,6 +76,24 @@ Item {
         }
     }
 
+    FolderListModel {
+        id: wallpaperFolder
+
+        folder: Qt.resolvedUrl(Paths.wallpaperDir)
+        nameFilters: ["*.jpg", "*.jpeg", "*.png"]
+        showDirs: false
+        showDotAndDotDot: false
+        showHidden: false
+
+        onCountChanged: {
+            let list = [];
+            for (let i = 0; i < count; i++) {
+                list.push(get(i, "filePath"));
+            }
+            root.wallpaperList = list;
+        }
+    }
+
     GlobalShortcut {
         name: "wallpaperSwitcher"
         onPressed: GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen
@@ -87,24 +105,6 @@ Item {
         radius: 0
         topLeftRadius: Appearance.rounding.normal
         topRightRadius: Appearance.rounding.normal
-
-        FolderListModel {
-            id: wallpaperFolder
-
-            folder: Qt.resolvedUrl(Paths.wallpaperDir)
-            nameFilters: ["*.jpg", "*.jpeg", "*.png", "*.webp", "*.bmp", "*.gif"]
-            showDirs: false
-            showDotAndDotDot: false
-            showHidden: false
-
-            onCountChanged: {
-                let list = [];
-                for (let i = 0; i < count; i++) {
-                    list.push(get(i, "filePath"));
-                }
-                root.wallpaperList = list;
-            }
-        }
 
         Loader {
             active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isWallpaperSwitcherOpen
@@ -125,7 +125,7 @@ Item {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
-                    placeholderText: qsTr("Search wallpapers...")
+                    placeholderText: qsTr("Search wallpapers")
                     text: root.searchQuery
                     focus: true
 
@@ -139,6 +139,7 @@ Item {
 
                     Keys.onDownPressed: wallpaperPath.focus = true
                     Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
+                    Keys.onTabPressed: wallpaperPath.forceActiveFocus()
                 }
 
                 Timer {
@@ -244,21 +245,29 @@ Item {
                             Quickshell.execDetached({
                                 "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
                             });
+                            event.accepted = true;
                         }
-                        if (event.key === Qt.Key_Escape)
+                        if (event.key === Qt.Key_Escape) {
                             GlobalStates.isWallpaperSwitcherOpen = false;
-                        if (event.key === Qt.Key_Tab)
-                            searchField.focus = true;
-                        if (event.key === Qt.Key_Left)
+                            event.accepted = true;
+                        }
+                        if (event.key === Qt.Key_Tab) {
+                            searchField.forceActiveFocus();
+                            event.accepted = true;
+                        }
+                        if (event.key === Qt.Key_Left) {
                             decrementCurrentIndex();
-                        if (event.key === Qt.Key_Right)
+                            event.accepted = true;
+                        }
+                        if (event.key === Qt.Key_Right) {
                             incrementCurrentIndex();
+                            event.accepted = true;
+                        }
                     }
                 }
 
-                StyledLabel {
+                StyledText {
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.bottomMargin: Appearance.spacing.small
                     text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.small

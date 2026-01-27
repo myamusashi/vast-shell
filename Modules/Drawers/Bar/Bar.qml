@@ -42,27 +42,13 @@ Item {
         onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
     }
 
-    Corner {
-        location: Qt.TopLeftCorner
-        extensionSide: Qt.Horizontal
-        radius: Configs.bar.compact ? GlobalStates.isBarOpen ? 20 : 0 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.TopRightCorner
-        extensionSide: Qt.Horizontal
-        radius: Configs.bar.compact ? GlobalStates.isBarOpen ? 20 : 0 : 0
-        color: GlobalStates.drawerColors
-    }
-
     StyledRect {
         anchors.fill: parent
-        color: GlobalStates.drawerColors
         radius: 0
         bottomLeftRadius: Configs.bar.compact ? Appearance.rounding.large : 0
         bottomRightRadius: Configs.bar.compact ? bottomLeftRadius : 0
         clip: true
+
         Loader {
             anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isBarOpen
