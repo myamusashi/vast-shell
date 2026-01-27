@@ -13,12 +13,6 @@ ColumnLayout {
     Layout.fillHeight: true
     spacing: Appearance.spacing.normal
 
-    Progress {
-        Layout.alignment: Qt.AlignTop
-        Layout.fillWidth: true
-        condition: Weather.isInitialLoading || Weather.isRefreshing
-    }
-
     function getWeatherCondition(condition) {
         if (!condition)
             return "";
@@ -83,6 +77,12 @@ ColumnLayout {
         default:
             return condition;
         }
+    }
+
+    Progress {
+        Layout.alignment: Qt.AlignTop
+        Layout.fillWidth: true
+        condition: Weather.isInitialLoading || Weather.isRefreshing
     }
 
     StyledRect {
