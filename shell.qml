@@ -9,7 +9,7 @@ import Quickshell
 import qs.Modules.Drawers
 import qs.Modules.Lock
 import qs.Modules.Polkit
-import qs.Modules.RecordPanel
+import qs.Modules.Dashboard
 import qs.Modules.Wallpaper
 
 ShellRoot {
@@ -17,7 +17,7 @@ ShellRoot {
 
     Lockscreen {}
     Wall {}
-    RecordPanel {}
+    Dashboard {}
     Polkit {}
     Drawers {}
 }
