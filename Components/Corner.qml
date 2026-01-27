@@ -105,6 +105,8 @@ WrapperItem {
     ]
 
     Shape {
+        antialiasing: true
+        smooth: true
         preferredRendererType: Shape.CurveRenderer
 
         ShapePath {
@@ -112,10 +114,8 @@ WrapperItem {
             strokeColor: "transparent"
             fillColor: root.color
             pathHints: ShapePath.PathSolid & ShapePath.PathNonIntersecting
-
             startX: root.width
             startY: 0
-
             PathLine {
                 x: root.width
                 y: root.height
@@ -124,7 +124,6 @@ WrapperItem {
                 x: 0
                 y: root.height
             }
-
             PathArc {
                 x: root.width
                 y: 0
