@@ -39,22 +39,22 @@
         <translation>AQI</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="62"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="33"/>
         <source>Air quality</source>
         <translation>Kualitas udara</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="80"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="51"/>
         <source>Current conditions</source>
         <translation>Cuaca sekarang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="178"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="149"/>
         <source>United States AQI:</source>
         <translation>United States AQI:</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="182"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="153"/>
         <source>European AQi:</source>
         <translation>Eropa AQI:</translation>
     </message>
@@ -62,9 +62,9 @@
 <context>
     <name>App</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="108"/>
-        <source>  Search</source>
-        <translation>  Cari</translation>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="110"/>
+        <source>Search</source>
+        <translation>Cari</translation>
     </message>
     <message>
         <location filename="../Modules/Drawers/Launcher/App.qml" line="315"/>
@@ -572,142 +572,142 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Headers</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="28"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="22"/>
         <source>Clear sky</source>
         <translation>Langit cerah</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="30"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="24"/>
         <source>Mainly clear</source>
         <translation>Sebagian besar cerah</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="32"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="26"/>
         <source>Partly cloudy</source>
         <translation>Berawan sebagian</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="34"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="28"/>
         <source>Overcast</source>
         <translation>Mendung</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="36"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="30"/>
         <source>Fog</source>
         <translation>Berkabut</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="38"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="32"/>
         <source>Depositing rime fog</source>
         <translation>Kabut es</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="40"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="34"/>
         <source>Light drizzle</source>
         <translation>Gerimis ringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="42"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="36"/>
         <source>Moderate drizzle</source>
         <translation>Gerimis sedang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="44"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="38"/>
         <source>Dense drizzle</source>
         <translation>Gerimis lebat</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="46"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="40"/>
         <source>Light freezing drizzle</source>
         <translation>Gerimis beku ringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="48"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="42"/>
         <source>Dense freezing drizzle</source>
         <translation>Gerimis beku lebat</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="50"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="44"/>
         <source>Slight rain</source>
         <translation>Hujan ringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="52"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="46"/>
         <source>Moderate rain</source>
         <translation>Hujan sedang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="54"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="48"/>
         <source>Heavy rain</source>
         <translation>Hujan lebat</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="56"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="50"/>
         <source>Light freezing rain</source>
         <translation>Hujan beku ringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="52"/>
         <source>Heavy freezing rain</source>
         <translation>Hujan beku lebat</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="60"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="54"/>
         <source>Slight snow fall</source>
         <translation>Salju ringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="62"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="56"/>
         <source>Moderate snow fall</source>
         <translation>Salju sedang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="64"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="58"/>
         <source>Heavy snow fall</source>
         <translation>Salju lebat</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="66"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="60"/>
         <source>Snow grains</source>
         <translation>Butiran salju</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="68"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="62"/>
         <source>Slight rain showers</source>
         <translation>Hujan rintik-rintik</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="70"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="64"/>
         <source>Moderate rain showers</source>
         <translation>Hujan deras sesaat</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="72"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="66"/>
         <source>Violent rain showers</source>
         <translation>Hujan sangat deras</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="74"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="68"/>
         <source>Slight snow showers</source>
         <translation>Salju rintik-rintik</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="76"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="70"/>
         <source>Heavy snow showers</source>
         <translation>Salju deras</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="78"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="72"/>
         <source>Thunderstorm</source>
         <translation>Badai petir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="80"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="74"/>
         <source>Thunderstorm with slight hail</source>
         <translation>Badai petir dengan hujan es ringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/Headers.qml" line="82"/>
+        <location filename="../Modules/Drawers/Weather/Headers.qml" line="76"/>
         <source>Thunderstorm with heavy hail</source>
         <translation>Badai petir dengan hujan es lebat</translation>
     </message>
@@ -734,7 +734,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>Humidity</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="49"/>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="31"/>
         <source>Humidity</source>
         <translation>Kelembapan</translation>
     </message>
@@ -744,7 +744,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Titik embun</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="77"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="50"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
     </message>
@@ -774,67 +774,67 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>Moon</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Moon.qml" line="73"/>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="115"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="84"/>
         <source>Moon</source>
         <translation>Bulan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="44"/>
         <source>New Moon</source>
         <translation>Bulan Baru</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="60"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="46"/>
         <source>Waxing Crescent</source>
         <translation>Bulan Sabit Awal</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="62"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="48"/>
         <source>First Quarter</source>
         <translation>Bulan Separuh Awal</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="64"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="50"/>
         <source>Waxing Gibbous</source>
         <translation>Bulan Cembung Awal</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="66"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="52"/>
         <source>Full Moon</source>
         <translation>Bulan Penuh</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="68"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="54"/>
         <source>Waning Gibbous</source>
         <translation>Bulan Sabit Akhir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="70"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="56"/>
         <source>Last Quarter</source>
         <translation>Bulan Separuh Akhir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="72"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="58"/>
         <source>Waning Crescent</source>
         <translation>Bulan Sabit Akhir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="74"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="60"/>
         <source>Unknown</source>
         <translation>ndak tau</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="150"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="119"/>
         <source>Illumination: %1%</source>
         <translation>Iluminasi:%1%</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="169"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="138"/>
         <source>Moonrise: %1</source>
         <translation>Bulan naik: %1</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="188"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="157"/>
         <source>Moonset: %1</source>
         <translation>Bulan turun: %1</translation>
     </message>
@@ -870,12 +870,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifications</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="45"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="51"/>
         <source>Clear all</source>
         <translation>Bersihkan semuanya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="261"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="233"/>
         <source>No notifications</source>
         <translation>Tidak ada notifikasi</translation>
     </message>
@@ -992,13 +992,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Precipitation</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="32"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="33"/>
         <source>Precipitation</source>
         <translation>Curah hujan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="77"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="51"/>
         <source>Today&apos;s amount</source>
         <translation>Jumlah hari ini</translation>
     </message>
@@ -1011,13 +1011,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Pressure</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="31"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="41"/>
         <source>Pressure</source>
         <translation>Tekanan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="77"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="50"/>
         <source>Current conditions</source>
         <translation>Kondisi sekarang</translation>
     </message>
@@ -1062,37 +1062,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Session</name>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="97"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="96"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="106"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="105"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="115"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="114"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="124"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="123"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="133"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="132"/>
         <source>Lockscreen</source>
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="268"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="267"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="275"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="274"/>
         <source>Do you want to %1?</source>
         <translation>Kamu mau melakukan %1?</translation>
     </message>
@@ -1100,18 +1100,18 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Sun</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="83"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="57"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Sun.qml" line="80"/>
         <source>Sun</source>
         <translation>Matahari</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="132"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="106"/>
         <source>Sunrise</source>
         <translation>Matahari terbit</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="152"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="126"/>
         <source>Sunset</source>
         <translation>Matahari terbenam</translation>
     </message>
@@ -1389,17 +1389,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>UVIndex</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="57"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="31"/>
         <source>UV Index</source>
         <translation>UV Index</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="76"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="50"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="93"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="67"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="22"/>
         <source>Moderate</source>
         <translation>Sedang</translation>
@@ -1433,13 +1433,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Visibility</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="56"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="29"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Visibility.qml" line="36"/>
         <source>Visibility</source>
         <translation>Visibilitas</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="110"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="83"/>
         <source>Current conditions</source>
         <translation>Kondisi sekarang</translation>
     </message>
@@ -1448,8 +1448,8 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>WallpaperSelector</name>
     <message>
         <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="128"/>
-        <source>Search wallpapers...</source>
-        <translation>Cari wallpapers...</translation>
+        <source>Search wallpapers</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1553,7 +1553,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Services/Weather.qml" line="366"/>
         <source>Current temperature is %1° with feels like %2°.</source>
         <translation>Suhu saat ini %1° dengan terasa seperti %2°.</translation>
-	</message>
+    </message>
 </context>
 <context>
     <name>WifiList</name>
@@ -1607,13 +1607,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Wind</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="31"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Wind.qml" line="73"/>
         <source>Wind</source>
         <translation>Angin</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="77"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="50"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
     </message>
