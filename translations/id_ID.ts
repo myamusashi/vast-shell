@@ -184,7 +184,7 @@
 <context>
     <name>Dashboard</name>
     <message>
-        <location filename="../Modules/Dashboard/Dashboard.qml" line="147"/>
+        <location filename="../Modules/Dashboard/Dashboard.qml" line="145"/>
         <source>WIP</source>
         <translation type="unfinished">WIP</translation>
     </message>
@@ -782,67 +782,67 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>Moon</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Moon.qml" line="73"/>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="84"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="86"/>
         <source>Moon</source>
         <translation>Bulan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="44"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="46"/>
         <source>New Moon</source>
         <translation>Bulan Baru</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="46"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="48"/>
         <source>Waxing Crescent</source>
         <translation>Bulan Sabit Awal</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="48"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="50"/>
         <source>First Quarter</source>
         <translation>Bulan Separuh Awal</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="50"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="52"/>
         <source>Waxing Gibbous</source>
         <translation>Bulan Cembung Awal</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="52"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="54"/>
         <source>Full Moon</source>
         <translation>Bulan Penuh</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="54"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="56"/>
         <source>Waning Gibbous</source>
         <translation>Bulan Sabit Akhir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="56"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="58"/>
         <source>Last Quarter</source>
         <translation>Bulan Separuh Akhir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="58"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="60"/>
         <source>Waning Crescent</source>
         <translation>Bulan Sabit Akhir</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="60"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="62"/>
         <source>Unknown</source>
         <translation>ndak tau</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="119"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="121"/>
         <source>Illumination: %1%</source>
         <translation>Iluminasi:%1%</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="138"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="140"/>
         <source>Moonrise: %1</source>
         <translation>Bulan naik: %1</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="157"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="159"/>
         <source>Moonset: %1</source>
         <translation>Bulan turun: %1</translation>
     </message>
@@ -907,7 +907,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performance</name>
     <message>
-        <location filename="../Modules/Dashboard/Performance.qml" line="36"/>
+        <location filename="../Modules/Dashboard/Performance.qml" line="35"/>
         <source>Performance</source>
         <translation>Performa</translation>
     </message>
