@@ -1,12 +1,9 @@
 pragma ComponentBehavior: Bound
 
-import Qt.labs.folderlistmodel
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Hyprland
 
 import qs.Components
 import qs.Configs
@@ -22,20 +19,6 @@ Item {
     }
 
     property bool isWallpaperSwitcherOpen: GlobalStates.isWallpaperSwitcherOpen
-    property string currentWallpaper: Paths.currentWallpaper
-    property string searchQuery: ""
-    property string debouncedSearchQuery: ""
-    property var wallpaperList: []
-    property var filteredWallpaperList: {
-        if (debouncedSearchQuery === "")
-            return wallpaperList;
-
-        const query = debouncedSearchQuery.toLowerCase();
-        return wallpaperList.filter(path => {
-            const fileName = path.split('/').pop().toLowerCase();
-            return fileName.includes(query);
-        });
-    }
 
     implicitWidth: parent.width * 0.6
     implicitHeight: GlobalStates.isWallpaperSwitcherOpen ? parent.height * 0.3 : 0
@@ -62,43 +45,6 @@ Item {
         color: GlobalStates.drawerColors
     }
 
-    IpcHandler {
-        target: "wallpaperSwitcher"
-
-        function open(): void {
-            GlobalStates.isWallpaperSwitcherOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isWallpaperSwitcherOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen;
-        }
-    }
-
-    FolderListModel {
-        id: wallpaperFolder
-
-        folder: Qt.resolvedUrl(Paths.wallpaperDir)
-        nameFilters: ["*.jpg", "*.jpeg", "*.png"]
-        showDirs: false
-        showDotAndDotDot: false
-        showHidden: false
-
-        onCountChanged: {
-            let list = [];
-            for (let i = 0; i < count; i++) {
-                list.push(get(i, "filePath"));
-            }
-            root.wallpaperList = list;
-        }
-    }
-
-    GlobalShortcut {
-        name: "wallpaperSwitcher"
-        onPressed: GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen
-    }
-
     WrapperRectangle {
         anchors.fill: parent
         color: GlobalStates.drawerColors
@@ -107,7 +53,15 @@ Item {
         topRightRadius: Appearance.rounding.normal
 
         Loader {
-            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isWallpaperSwitcherOpen
+            active: {
+                if (GlobalStates.isWallpaperSwitcherOpen) {
+                    if (window.modelData.name === Hypr.focusedMonitor.name)
+                        return true;
+                } else if (!GlobalStates.isWallpaperSwitcherOpen && root.implicitHeight === 0)
+                    return false;
+                else
+                    return false;
+            }
             asynchronous: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
@@ -126,7 +80,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
                     placeholderText: qsTr("Search wallpapers")
-                    text: root.searchQuery
+                    text: WallpaperFileModels.searchQuery
                     focus: true
 
                     onTextChanged: {
@@ -147,7 +101,7 @@ Item {
 
                     interval: 300
                     repeat: false
-                    onTriggered: root.debouncedSearchQuery = root.searchQuery
+                    onTriggered: WallpaperFileModels.debouncedSearchQuery = WallpaperFileModels.searchQuery
                 }
 
                 PathView {
@@ -156,7 +110,9 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
-                    model: root.filteredWallpaperList
+                    model: ScriptModel {
+                        values: [...WallpaperFileModels.filteredWallpaperList]
+                    }
                     pathItemCount: 5
                     preferredHighlightBegin: 0.5
                     preferredHighlightEnd: 0.5
@@ -165,12 +121,12 @@ Item {
                     cacheItemCount: 7
 
                     Component.onCompleted: {
-                        const idx = root.wallpaperList.indexOf(Paths.currentWallpaper);
+                        const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
                         currentIndex = idx !== -1 ? idx : 0;
                     }
 
                     onModelChanged: {
-                        if (root.debouncedSearchQuery === "" && currentIndex >= 0) {
+                        if (WallpaperFileModels.debouncedSearchQuery === "" && currentIndex >= 0) {
                             Qt.callLater(() => {
                                 if (currentIndex < count)
                                     currentIndex = currentIndex;
@@ -191,12 +147,11 @@ Item {
                     delegate: Item {
                         id: delegateItem
 
-                        width: wallpaperPath.width / 5 - 16
-                        height: wallpaperPath.height - 16
-
                         required property var modelData
                         required property int index
 
+                        implicitWidth: wallpaperPath.width / 5 - 16
+                        implicitHeight: wallpaperPath.height - 16
                         scale: PathView.isCurrentItem ? 1.1 : 0.85
                         z: PathView.isCurrentItem ? 100 : 1
                         opacity: PathView.isCurrentItem ? 1.0 : 0.6
@@ -218,11 +173,9 @@ Item {
                             Image {
                                 anchors.fill: parent
                                 source: "file://" + delegateItem.modelData
-                                sourceSize.width: 200
-                                sourceSize.height: 200
+                                sourceSize: Qt.size(200, 200)
                                 fillMode: Image.PreserveAspectCrop
                                 asynchronous: true
-                                smooth: true
                                 cache: true
                             }
 
@@ -243,7 +196,7 @@ Item {
                     Keys.onPressed: event => {
                         if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                             Quickshell.execDetached({
-                                "command": ["sh", "-c", `shell ipc call img set ${root.filteredWallpaperList[currentIndex]}`]
+                                "command": ["sh", "-c", `shell ipc call img set ${WallpaperFileModels.filteredWallpaperList[currentIndex]}`]
                             });
                             event.accepted = true;
                         }

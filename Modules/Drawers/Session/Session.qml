@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
-import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -17,6 +15,7 @@ Item {
     anchors {
         right: parent.right
         verticalCenter: parent.verticalCenter
+        rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
     }
 
     property alias dialog: boxConfirmation
@@ -26,7 +25,7 @@ Item {
     property var pendingAction: null
     property string pendingActionName: ""
 
-    implicitWidth: GlobalStates.isSessionOpen ? 80 + (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) : 0
+    implicitWidth: GlobalStates.isSessionOpen ? 80 : 0
     implicitHeight: parent.height * 0.5
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
@@ -35,25 +34,6 @@ Item {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
-    }
-
-    IpcHandler {
-        target: "Session"
-
-        function open(): void {
-            GlobalStates.isSessionOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isSessionOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen;
-        }
-    }
-
-    GlobalShortcut {
-        name: "session"
-        onPressed: GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen
     }
 
     Corner {

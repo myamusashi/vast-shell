@@ -1,6 +1,5 @@
 import QtQuick
-import Quickshell.Io
-import Quickshell.Hyprland
+import Quickshell.Widgets
 
 import qs.Components
 import qs.Configs
@@ -23,34 +22,14 @@ Item {
         }
     }
 
-    IpcHandler {
-        target: "layershell"
-
-        function open(): void {
-            GlobalStates.isBarOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isBarOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isBarOpen = !GlobalStates.isBarOpen;
-        }
-    }
-
-    GlobalShortcut {
-        name: "layershell"
-        onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
-    }
-
-    StyledRect {
+    WrapperRectangle {
         anchors.fill: parent
         radius: 0
         bottomLeftRadius: Configs.bar.compact ? Appearance.rounding.large : 0
         bottomRightRadius: Configs.bar.compact ? bottomLeftRadius : 0
-        clip: true
+        color: "transparent"
 
         Loader {
-            anchors.fill: parent
             active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isBarOpen
             asynchronous: true
             sourceComponent: Item {

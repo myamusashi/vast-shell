@@ -29,6 +29,13 @@ Variants {
     delegate: PanelWindow {
         id: window
 
+        anchors {
+            left: true
+            top: true
+            right: true
+            bottom: true
+        }
+
         required property ShellScreen modelData
         readonly property bool needFocusKeyboard: {
             if (GlobalStates.isLauncherOpen)
@@ -47,13 +54,7 @@ Variants {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.namespace: "shell:drawers"
         WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-
-        anchors {
-            left: true
-            top: true
-            right: true
-            bottom: true
-        }
+        HyprlandWindow.visibleMask: window.contentItem.visibleChildren
 
         mask: Region {
             regions: childRegions.instances
@@ -213,7 +214,7 @@ Variants {
         Session {
             id: session
 
-            onWidthChanged: window.modelData.name === Hypr.focusedMonitor.name ? volume.anchors.rightMargin = session.width : 0
+            onWidthChanged: window.modelData.name === Hypr.focusedMonitor.name ? volume.anchors.rightMargin = session.width + Configs.generals.outerBorderSize : 0
         }
 
         WallpaperSelector {
@@ -224,6 +225,10 @@ Variants {
             id: screenCapture
         }
 
+        OSD {
+            id: osd
+        }
+
         Overview {}
 
         Notifications {
@@ -231,10 +236,6 @@ Variants {
         }
 
         Weathers {}
-
-        OSD {
-            id: osd
-        }
 
         Volume {
             id: volume

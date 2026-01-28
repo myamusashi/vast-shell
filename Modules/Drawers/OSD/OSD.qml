@@ -10,6 +10,12 @@ import qs.Services
 Item {
     id: root
 
+    anchors {
+        bottom: parent.bottom
+        horizontalCenter: parent.horizontalCenter
+        bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
+    }
+
     implicitWidth: parent.width * 0.15
     implicitHeight: calculateHeight()
     visible: window.modelData.name === Hypr.focusedMonitor.name
@@ -21,9 +27,18 @@ Item {
         }
     }
 
-    anchors {
-        bottom: parent.bottom
-        horizontalCenter: parent.horizontalCenter
+    Corner {
+        location: Qt.BottomRightCorner
+        extensionSide: Qt.Horizontal
+        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        color: GlobalStates.drawerColors
+    }
+
+    Corner {
+        location: Qt.BottomLeftCorner
+        extensionSide: Qt.Horizontal
+        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        color: GlobalStates.drawerColors
     }
 
     function calculateHeight() {
@@ -46,20 +61,6 @@ Item {
             totalHeight += (activeCount - 1) * spacing;
 
         return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
-    }
-
-    Corner {
-        location: Qt.BottomRightCorner
-        extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomLeftCorner
-        extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
-        color: GlobalStates.drawerColors
     }
 
     StyledRect {

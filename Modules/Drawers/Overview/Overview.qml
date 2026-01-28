@@ -67,25 +67,6 @@ StyledRect {
         }
     }
 
-    GlobalShortcut {
-        name: "overview"
-        onPressed: GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen
-    }
-
-    IpcHandler {
-        target: "overview"
-
-        function open(): void {
-            GlobalStates.isOverviewOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isOverviewOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen;
-        }
-    }
-
     StyledRect {
         id: overLayer
 

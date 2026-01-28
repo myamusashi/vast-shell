@@ -4,9 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -19,6 +17,7 @@ Item {
     anchors {
         bottom: parent.bottom
         horizontalCenter: parent.horizontalCenter
+        bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
     }
 
     property int currentIndex: 0
@@ -45,25 +44,6 @@ Item {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    GlobalShortcut {
-        name: "appLauncher"
-        onPressed: GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen
-    }
-
-    IpcHandler {
-        target: "appLauncher"
-
-        function open(): void {
-            GlobalStates.isLauncherOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isLauncherOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen;
         }
     }
 
@@ -97,10 +77,12 @@ Item {
 
             active: window.modelData.name === Hypr.focusedMonitor.name
             asynchronous: true
+            clip: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.large
                 spacing: Appearance.spacing.normal
+                visible: GlobalStates.isLauncherOpen
 
                 StyledTextField {
                     id: search

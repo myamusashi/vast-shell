@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell.Io
-import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -45,27 +43,6 @@ Item {
             radius: GlobalStates.isWeatherPanelOpen ? 40 : 0
             color: GlobalStates.drawerColors
         }
-    }
-
-    IpcHandler {
-        target: "weather"
-
-        function open() {
-            GlobalStates.openPanel("weather");
-        }
-
-        function close() {
-            GlobalStates.closePanel("weather");
-        }
-
-        function toggle() {
-            GlobalStates.togglePanel("weather");
-        }
-    }
-
-    GlobalShortcut {
-        name: "weather"
-        onPressed: GlobalStates.togglePanel("weather")
     }
 
     StyledRect {

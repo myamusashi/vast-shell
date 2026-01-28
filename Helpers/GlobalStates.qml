@@ -3,6 +3,8 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
+import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 import TranslationManager
 
@@ -257,6 +259,160 @@ Singleton {
 
         if (!anyVisible)
             cleanupTimer.start();
+    }
+
+    IpcHandler {
+        target: "wallpaperSwitcher"
+
+        function open(): void {
+            GlobalStates.isWallpaperSwitcherOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isWallpaperSwitcherOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "wallpaperSwitcher"
+        onPressed: GlobalStates.isWallpaperSwitcherOpen = !GlobalStates.isWallpaperSwitcherOpen
+    }
+
+    IpcHandler {
+        target: "layershell"
+
+        function open(): void {
+            GlobalStates.isBarOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isBarOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isBarOpen = !GlobalStates.isBarOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "layershell"
+        onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
+    }
+
+    GlobalShortcut {
+        name: "appLauncher"
+        onPressed: GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen
+    }
+
+    IpcHandler {
+        target: "appLauncher"
+
+        function open(): void {
+            GlobalStates.isLauncherOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isLauncherOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen;
+        }
+    }
+
+    IpcHandler {
+        target: "screenCaptureLauncher"
+
+        function open(): void {
+            GlobalStates.isScreenCapturePanelOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isScreenCapturePanelOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "screencaptureLauncher"
+        onPressed: GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen
+    }
+
+    IpcHandler {
+        target: "overview"
+
+        function open(): void {
+            GlobalStates.isOverviewOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isOverviewOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "overview"
+        onPressed: GlobalStates.isOverviewOpen = !GlobalStates.isOverviewOpen
+    }
+
+    IpcHandler {
+        target: "QuickSettings"
+
+        function open(): void {
+            GlobalStates.isQuickSettingsOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isQuickSettingsOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "QuickSettings"
+        onPressed: GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen
+    }
+
+    IpcHandler {
+        target: "Session"
+
+        function open(): void {
+            GlobalStates.isSessionOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isSessionOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "session"
+        onPressed: GlobalStates.isSessionOpen = !GlobalStates.isSessionOpen
+    }
+
+    IpcHandler {
+        target: "weather"
+
+        function open() {
+            GlobalStates.openPanel("weather");
+        }
+
+        function close() {
+            GlobalStates.closePanel("weather");
+        }
+
+        function toggle() {
+            GlobalStates.togglePanel("weather");
+        }
+    }
+
+    GlobalShortcut {
+        name: "weather"
+        onPressed: GlobalStates.togglePanel("weather")
     }
 
     Component {

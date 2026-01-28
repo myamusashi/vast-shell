@@ -17,7 +17,6 @@ Item {
     anchors {
         top: parent.top
         horizontalCenter: parent.horizontalCenter
-        topMargin: 0
     }
 
     property string url: ""

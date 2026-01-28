@@ -43,25 +43,6 @@ WrapperRectangle {
         }
     }
 
-    IpcHandler {
-        target: "screenCaptureLauncher"
-
-        function open(): void {
-            GlobalStates.isScreenCapturePanelOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isScreenCapturePanelOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen;
-        }
-    }
-
-    GlobalShortcut {
-        name: "screencaptureLauncher"
-        onPressed: GlobalStates.isScreenCapturePanelOpen = !GlobalStates.isScreenCapturePanelOpen
-    }
-
     Loader {
         active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isScreenCapturePanelOpen
         asynchronous: true
