@@ -22,6 +22,7 @@ WlSessionLockSurface {
 
     property bool isClosing: false
     property bool showErrorMessage: false
+
     color: "transparent"
 
     Connections {
@@ -589,7 +590,7 @@ WlSessionLockSurface {
             NAnim {
                 target: wallpaper
                 property: "blurSize"
-                to: 40
+                to: 64
             }
 
             NAnim {

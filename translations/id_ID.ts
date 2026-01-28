@@ -62,12 +62,12 @@
 <context>
     <name>App</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="110"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="92"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="315"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="297"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
@@ -75,17 +75,17 @@
 <context>
     <name>AudioCapture</name>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/AudioCapture.qml" line="56"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="56"/>
         <source>Mix</source>
         <translation>Mix</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/AudioCapture.qml" line="59"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="59"/>
         <source>Voice</source>
         <translation>Suara</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/AudioCapture.qml" line="110"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="110"/>
         <source>LINUX DEFAULT OUTPUT</source>
         <translation>LINUX DEFAULT OUTPUT</translation>
     </message>
@@ -135,27 +135,27 @@
 <context>
     <name>Capture</name>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/Capture.qml" line="111"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="111"/>
         <source>Capture</source>
         <translation>Tangkapan</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/Capture.qml" line="153"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="153"/>
         <source>Screenshot</source>
         <translation>Tangkapan Layar</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/Capture.qml" line="163"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="163"/>
         <source>Start</source>
         <translation>Mulai</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/Capture.qml" line="175"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="175"/>
         <source>Microphone</source>
         <translation>Mikrofon</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/Capture/Capture.qml" line="255"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="255"/>
         <source>See my captures</source>
         <translation>Lihat tangkapan layar</translation>
     </message>
@@ -171,14 +171,22 @@
 <context>
     <name>Content</name>
     <message>
-        <location filename="../Modules/RecordPanel/History/Content.qml" line="41"/>
+        <location filename="../Modules/Dashboard/History/Content.qml" line="41"/>
         <source>Screen capture</source>
         <translation>Tangkapan Layar</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/History/Content.qml" line="133"/>
+        <location filename="../Modules/Dashboard/History/Content.qml" line="133"/>
         <source>Open files</source>
         <translation>Membuka berkas</translation>
+    </message>
+</context>
+<context>
+    <name>Dashboard</name>
+    <message>
+        <location filename="../Modules/Dashboard/Dashboard.qml" line="147"/>
+        <source>WIP</source>
+        <translation type="unfinished">WIP</translation>
     </message>
 </context>
 <context>
@@ -720,12 +728,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>History</name>
     <message>
-        <location filename="../Modules/RecordPanel/History/History.qml" line="23"/>
+        <location filename="../Modules/Dashboard/History/History.qml" line="23"/>
         <source>Recent screenshot</source>
         <translation>Tangkapan layar terbaru</translation>
     </message>
     <message>
-        <location filename="../Modules/RecordPanel/History/History.qml" line="56"/>
+        <location filename="../Modules/Dashboard/History/History.qml" line="56"/>
         <source>Recent screen record</source>
         <translation>Rekaman layar terbaru</translation>
     </message>
@@ -760,12 +768,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>MediaPlayer</name>
     <message>
-        <location filename="../Modules/Drawers/MediaPlayer/MediaPlayer.qml" line="116"/>
+        <location filename="../Modules/Drawers/MediaPlayer/MediaPlayer.qml" line="115"/>
         <source>Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG.</source>
         <translation>Pencapaian Terbuka: 🏆 Static Image Starer - Kamu mengharapkan kuru spin, tapi trackArtUrl memutuskan untuk memutuskan koneksi. GG.</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/MediaPlayer/MediaPlayer.qml" line="174"/>
+        <location filename="../Modules/Drawers/MediaPlayer/MediaPlayer.qml" line="173"/>
         <source>Watched on</source>
         <translation>Ditonton di</translation>
     </message>
@@ -899,7 +907,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performance</name>
     <message>
-        <location filename="../Modules/RecordPanel/Performance.qml" line="36"/>
+        <location filename="../Modules/Dashboard/Performance.qml" line="36"/>
         <source>Performance</source>
         <translation>Performa</translation>
     </message>
@@ -1025,36 +1033,35 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>RecordPanel</name>
     <message>
-        <location filename="../Modules/RecordPanel/RecordPanel.qml" line="147"/>
         <source>WIP</source>
-        <translation>WIP</translation>
+        <translation type="vanished">WIP</translation>
     </message>
 </context>
 <context>
     <name>Screencapture</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="125"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="106"/>
         <source>Screenshot</source>
         <translation>Tangkapan layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="125"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="106"/>
         <source>Screen record</source>
         <translation>Rekam layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="182"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="163"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="191"/>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="260"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="172"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="241"/>
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="212"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="193"/>
         <source>Merge screens</source>
         <translation>Gabungkan layar</translation>
     </message>
@@ -1062,37 +1069,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Session</name>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="96"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="76"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="105"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="85"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="114"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="94"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="123"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="103"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="132"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="112"/>
         <source>Lockscreen</source>
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="267"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="247"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="274"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="254"/>
         <source>Do you want to %1?</source>
         <translation>Kamu mau melakukan %1?</translation>
     </message>
@@ -1119,152 +1126,152 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Surface</name>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Sunday</source>
         <translation>Minggu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Monday</source>
         <translation>Senin</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Tuesday</source>
         <translation>Selasa</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Wednesday</source>
         <translation>Rabu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Thuesday</source>
         <translation>Kamis</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Friday</source>
         <translation>Jumat</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
+        <location filename="../Modules/Lock/Surface.qml" line="86"/>
         <source>Saturday</source>
         <translation>Sabtu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Jan</source>
         <translation>Jan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Feb</source>
         <translation>Feb</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Mar</source>
         <translation>Mar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Apr</source>
         <translation>Apr</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Mei</source>
         <translation>Mei</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Jun</source>
         <translation>Jun</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Jul</source>
         <translation>Jul</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Aug</source>
         <translation>Agu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Sep</source>
         <translation>Sep</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Okt</source>
         <translation>Okt</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Nov</source>
         <translation>Nov</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
+        <location filename="../Modules/Lock/Surface.qml" line="91"/>
         <source>Des</source>
         <translation>Des</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="209"/>
+        <location filename="../Modules/Lock/Surface.qml" line="210"/>
         <source>Password Invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="293"/>
+        <location filename="../Modules/Lock/Surface.qml" line="294"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="293"/>
+        <location filename="../Modules/Lock/Surface.qml" line="294"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="399"/>
+        <location filename="../Modules/Lock/Surface.qml" line="400"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="408"/>
+        <location filename="../Modules/Lock/Surface.qml" line="409"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="417"/>
+        <location filename="../Modules/Lock/Surface.qml" line="418"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="426"/>
+        <location filename="../Modules/Lock/Surface.qml" line="427"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="493"/>
+        <location filename="../Modules/Lock/Surface.qml" line="494"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="509"/>
+        <location filename="../Modules/Lock/Surface.qml" line="510"/>
         <source>Do you want to %1?</source>
         <translation>Apakah kamu mau %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="533"/>
+        <location filename="../Modules/Lock/Surface.qml" line="534"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="546"/>
+        <location filename="../Modules/Lock/Surface.qml" line="547"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1447,7 +1454,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WallpaperSelector</name>
     <message>
-        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="128"/>
+        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="82"/>
         <source>Search wallpapers</source>
         <translation type="unfinished"></translation>
     </message>

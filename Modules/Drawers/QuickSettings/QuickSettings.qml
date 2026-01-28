@@ -3,9 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
-import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -28,10 +26,6 @@ Item {
     implicitHeight: parent.height
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
-    function toggleControlCenter(): void {
-        GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
-    }
-
     Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -51,25 +45,6 @@ Item {
         extensionSide: Qt.Vertical
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
         color: GlobalStates.drawerColors
-    }
-
-    GlobalShortcut {
-        name: "QuickSettings"
-        onPressed: root.toggleControlCenter()
-    }
-
-    IpcHandler {
-        target: "QuickSettings"
-
-        function open(): void {
-            GlobalStates.isQuickSettingsOpen = true;
-        }
-        function close(): void {
-            GlobalStates.isQuickSettingsOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isQuickSettingsOpen = !GlobalStates.isQuickSettingsOpen;
-        }
     }
 
     WrapperRectangle {
