@@ -162,7 +162,7 @@ StyledRect {
                     anchors.fill: parent
                     onClicked: {
                         if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                            Hypr.dispatch("workspace" + parent.index + 1);
+                            Hypr.dispatch("workspace " + (parent.index + 1));
                     }
                 }
 
