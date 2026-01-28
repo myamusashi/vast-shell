@@ -2,13 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtGraphs
 
 import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
-
-import QtGraphs
 
 StyledRect {
     id: root
@@ -16,8 +15,8 @@ StyledRect {
     implicitWidth: columnLayout.width
     implicitHeight: columnLayout.implicitHeight
     color: Colours.m3Colors.m3SurfaceContainer
-    clip: true
     radius: Appearance.rounding.small
+    clip: true
 
     property alias content: columnLayout
     property int currentTab: 0
@@ -34,7 +33,7 @@ StyledRect {
             Layout.fillWidth: true
             icon: "browse_activity"
             text: qsTr("Performance")
-            condition: root.visible
+            condition: true
         }
 
         RowLayout {
@@ -127,19 +126,17 @@ StyledRect {
                 Layout.margins: 12
                 spacing: Appearance.spacing.large
 
-                Loader {
+                Graphic {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    active: root.visible
-                    sourceComponent: Graph {
-                        metricType: root.currentTab
-                    }
+                    visible: root.visible
+                    metricType: root.currentTab
                 }
             }
         }
     }
 
-    component Graph: Item {
+    component Graphic: Item {
         id: graph
 
         required property int metricType
@@ -149,6 +146,9 @@ StyledRect {
         property real currentValue: 0
 
         function pushValue() {
+            if (!graphView || graphView.width === 0 || graphView.height === 0)
+                return;
+
             counter += 1;
 
             switch (metricType) {
@@ -175,7 +175,7 @@ StyledRect {
             axisX.max = counter;
         }
 
-        Component.onCompleted: pushValue()
+        Component.onCompleted: Qt.callLater(pushValue)
 
         Connections {
             target: SystemUsage

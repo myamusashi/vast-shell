@@ -16,6 +16,7 @@ Item {
     anchors {
         top: parent.top
         right: parent.right
+        rightMargin: Configs.generals.outerBorderSize
     }
 
     property bool isCalendarShow: GlobalStates.isCalendarOpen

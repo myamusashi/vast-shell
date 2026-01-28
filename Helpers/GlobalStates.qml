@@ -29,14 +29,14 @@ Singleton {
     property bool isCalendarOpen: false
     property bool isScreenCapturePanelOpen: false
     property bool isLauncherOpen: false
-    property bool isBarOpen: false
+    property bool isBarOpen: Configs.bar.alwaysOpenBar
     property bool isSessionOpen: false
     property bool isMediaPlayerOpen: false
     property bool isNotificationCenterOpen: false
     property bool isQuickSettingsOpen: false
     property bool isWallpaperSwitcherOpen: false
     property bool isOverviewOpen: false
-    property bool isRecordPanelOpen: false
+    property bool isDashboardOpen: false
     property bool isWeatherPanelOpen: false
     property bool isLockscreenOpen: false
     property string scriptPath: `${Paths.rootDir}/Assets/screen-capture.sh`
@@ -128,8 +128,8 @@ Singleton {
         case "weather":
             isWeatherPanelOpen = !isWeatherPanelOpen;
             break;
-        case "recordPanel":
-            isRecordPanelOpen = !isRecordPanelOpen;
+        case "dashboard":
+            isDashboardOpen = !isDashboardOpen;
             break;
         }
     }
@@ -169,8 +169,8 @@ Singleton {
         case "weather":
             isWeatherPanelOpen = true;
             break;
-        case "recordPanel":
-            isRecordPanelOpen = true;
+        case "dashboard":
+            isDashboardOpen = true;
             break;
         }
     }
@@ -210,8 +210,8 @@ Singleton {
         case "weather":
             isWeatherPanelOpen = false;
             break;
-        case "recordPanel":
-            isRecordPanelOpen = false;
+        case "dashboard":
+            isDashboardOpen = false;
             break;
         }
     }

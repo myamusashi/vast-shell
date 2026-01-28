@@ -15,142 +15,139 @@ import qs.Services
 import "Capture" as Cap
 import "History"
 
-Scope {
-    id: scope
+Variants {
+    model: Quickshell.screens
 
-    GlobalShortcut {
-        name: "dashboard"
-        onPressed: GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen
-    }
+    delegate: PanelWindow {
+        id: root
 
-    IpcHandler {
-        target: "dashboard"
+        required property ShellScreen modelData
 
-        function open(): void {
-            GlobalStates.isRecordPanelOpen = true;
+        anchors {
+            right: true
+            left: true
+            bottom: true
+            top: true
         }
-        function close(): void {
-            GlobalStates.isRecordPanelOpen = false;
-        }
-        function toggle(): void {
-            GlobalStates.isRecordPanelOpen = !GlobalStates.isRecordPanelOpen;
-        }
-    }
 
-    Variants {
-        model: Quickshell.screens
+        screen: modelData
+        color: "transparent"
 
-        delegate: PanelWindow {
-            id: root
+        WlrLayershell.namespace: "shell:dashboard"
+        WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+        exclusionMode: ExclusionMode.Normal
+        focusable: true
+        exclusiveZone: 0
+        surfaceFormat.opaque: false
+        visible: GlobalStates.isDashboardOpen
 
-            required property ShellScreen modelData
+        IpcHandler {
+            target: "dashboard"
 
-            anchors {
-                right: true
-                left: true
-                bottom: true
-                top: true
+            function open(): void {
+                GlobalStates.isDashboardOpen = true;
             }
+            function close(): void {
+                GlobalStates.isDashboardOpen = false;
+            }
+            function toggle(): void {
+                GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen;
+            }
+        }
 
-            screen: modelData
-            color: "transparent"
-
-            WlrLayershell.namespace: "shell:dashboard"
-            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
-            exclusionMode: ExclusionMode.Normal
-            focusable: true
-            exclusiveZone: 0
-            surfaceFormat.opaque: false
-            visible: GlobalStates.isRecordPanelOpen
-
-            StyledRect {
+        GlobalShortcut {
+            name: "dashboard"
+            onPressed: GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen
+        }
+        StyledRect {
+            anchors.fill: parent
+            color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)
+            RowLayout {
                 anchors.fill: parent
-                color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 15
-                    ColumnLayout {
-                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                        Layout.fillWidth: true
-                        Layout.preferredWidth: parent.width / 3
-                        Layout.topMargin: 15
-                        Layout.leftMargin: 15
-                        spacing: Appearance.spacing.large
-                        Loader {
-                            id: captureLoader
+                anchors.margins: 15
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width / 3
+                    Layout.topMargin: 15
+                    Layout.leftMargin: 15
+                    spacing: Appearance.spacing.large
+                    Loader {
+                        id: captureLoader
 
-                            active: GlobalStates.isRecordPanelOpen
-                            asynchronous: true
-                            Layout.preferredWidth: item ? item.implicitWidth + 50 : 200
-                            Layout.preferredHeight: item ? item.implicitHeight : 0
-                            sourceComponent: Cap.Capture {
-                                condition: GlobalStates.isRecordPanelOpen
-                            }
-                        }
-                        Loader {
-                            id: performanceLoader
-
-                            active: GlobalStates.isRecordPanelOpen
-                            asynchronous: true
-                            Layout.preferredWidth: item ? item.implicitWidth : 200
-                            Layout.preferredHeight: item ? item.implicitHeight : 0
-                            sourceComponent: Performance {}
-                        }
-                        Item {
-                            Layout.fillHeight: true
+                        active: GlobalStates.isDashboardOpen
+                        asynchronous: true
+                        Layout.preferredWidth: item ? item.implicitWidth + 50 : 200
+                        Layout.preferredHeight: item ? item.implicitHeight : 0
+                        sourceComponent: Cap.Capture {
+                            condition: GlobalStates.isDashboardOpen
                         }
                     }
-                    ColumnLayout {
-                        Layout.alignment: Qt.AlignCenter | Qt.AlignTop
-                        Layout.fillWidth: true
-                        Layout.preferredWidth: parent.width / 3
-                        spacing: Appearance.spacing.large
-                        // Loader {
-                        //     id: controlBarLoader
-                        //
-                        //     active: GlobalStates.isRecordPanelOpen
-                        //     asynchronous: true
-                        //     Layout.alignment: Qt.AlignHCenter
-                        //     Layout.preferredHeight: 80
-                        //     Layout.preferredWidth: parent.width
-                        //     sourceComponent: ControlBar {}
-                        // }
-                        Loader {
-                            id: historyLoader
 
-                            active: GlobalStates.isRecordPanelOpen
-                            asynchronous: true
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.preferredHeight: 80
-                            Layout.preferredWidth: parent.width
-                            sourceComponent: History {}
-                        }
-                        Item {
-                            Layout.fillHeight: true
+                    Loader {
+                        id: performanceLoader
+
+                        active: GlobalStates.isDashboardOpen
+                        asynchronous: true
+                        Layout.preferredWidth: item ? item.implicitWidth : 200
+                        Layout.preferredHeight: item ? item.implicitHeight : 0
+                        sourceComponent: Performance {}
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignCenter | Qt.AlignTop
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width / 3
+                    spacing: Appearance.spacing.large
+                    // Loader {
+                    //     id: controlBarLoader
+                    //
+                    //     active: GlobalStates.isDashboardOpen
+                    //     asynchronous: true
+                    //     Layout.alignment: Qt.AlignHCenter
+                    //     Layout.preferredHeight: 80
+                    //     Layout.preferredWidth: parent.width
+                    //     sourceComponent: ControlBar {}
+                    // }
+                    Loader {
+                        id: historyLoader
+
+                        active: GlobalStates.isDashboardOpen
+                        asynchronous: true
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredHeight: 80
+                        Layout.preferredWidth: parent.width
+                        sourceComponent: History {}
+                    }
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+                ColumnLayout {
+                    Layout.alignment: Qt.AlignCenter | Qt.AlignTop
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: parent.width / 3
+                    Layout.rightMargin: 15
+                    spacing: Appearance.spacing.large
+                    Rectangle {
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredWidth: 200
+                        Layout.preferredHeight: 100
+                        color: "transparent"
+                        border.color: Colours.m3Colors.m3Primary
+                        border.width: 1
+                        Text {
+                            anchors.centerIn: parent
+                            text: qsTr("WIP")
+                            color: Colours.m3Colors.m3OnSurface
                         }
                     }
-                    ColumnLayout {
-                        Layout.alignment: Qt.AlignCenter | Qt.AlignTop
-                        Layout.fillWidth: true
-                        Layout.preferredWidth: parent.width / 3
-                        Layout.rightMargin: 15
-                        spacing: Appearance.spacing.large
-                        Rectangle {
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.preferredWidth: 200
-                            Layout.preferredHeight: 100
-                            color: "transparent"
-                            border.color: Colours.m3Colors.m3Primary
-                            border.width: 1
-                            Text {
-                                anchors.centerIn: parent
-                                text: qsTr("WIP")
-                                color: Colours.m3Colors.m3OnSurface
-                            }
-                        }
-                        Item {
-                            Layout.fillHeight: true
-                        }
+                    Item {
+                        Layout.fillHeight: true
                     }
                 }
             }

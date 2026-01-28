@@ -49,7 +49,7 @@ MaterialShape {
     ClippingWrapperRectangle {
         anchors.fill: parent
         color: "transparent"
-        bottomLeftRadius: Appearance.rounding.large * 1.87
+        bottomLeftRadius: Appearance.rounding.large * 1.23
         bottomRightRadius: bottomLeftRadius
         Moon {}
     }
