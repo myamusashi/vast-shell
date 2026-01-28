@@ -84,7 +84,7 @@ Item {
                     focus: true
 
                     onTextChanged: {
-                        root.searchQuery = text;
+                        WallpaperFileModels.searchQuery = text;
                         searchDebounceTimer.restart();
 
                         if (wallpaperPath.count > 0)
