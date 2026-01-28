@@ -17,6 +17,8 @@ Pages {
 
     content: Moon {}
 
+    property real moonRiseProgress: calculateMoonProgress()
+
     function calculateMoonProgress() {
         var now = new Date();
         var currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -65,7 +67,7 @@ Pages {
         interval: 60000
         running: true
         repeat: true
-        onTriggered: root.moonriseProgress = root.calculateMoonProgress()
+        onTriggered: root.moonRiseProgress = root.calculateMoonProgress()
     }
 
     component Moon: ScrollView {
