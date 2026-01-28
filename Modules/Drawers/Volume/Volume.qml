@@ -18,6 +18,7 @@ Item {
     anchors {
         right: parent.right
         verticalCenter: parent.verticalCenter
+        rightMargin: anchors.rightMargin === 0 ? Configs.generals.outerBorderSize : 0
     }
 
     property bool openPerappVolume: false

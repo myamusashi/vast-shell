@@ -23,7 +23,7 @@ Loader {
         return filename.substring(lastDot + 1).toLowerCase();
     }
 
-    active: GlobalStates.isRecordPanelOpen
+    active: GlobalStates.isDashboardOpen
     width: 70
     height: 70
 

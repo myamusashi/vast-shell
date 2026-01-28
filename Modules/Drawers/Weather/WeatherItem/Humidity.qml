@@ -20,7 +20,7 @@ MaterialShape {
     ClippingWrapperRectangle {
         anchors.fill: shape
         color: "transparent"
-        radius: Appearance.rounding.large * 1.87
+        radius: Appearance.rounding.large * 1.8
 
         Wave {
             fillPercentage: Weather.humidity

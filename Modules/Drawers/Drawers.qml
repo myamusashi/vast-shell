@@ -185,7 +185,7 @@ Variants {
         App {
             id: app
 
-            onHeightChanged: window.modelData.name === Hypr.focusedMonitor.name ? osd.anchors.bottomMargin = app.height : 0
+            onHeightChanged: window.modelData.name === Hypr.focusedMonitor.name ? osd.anchors.bottomMargin = app.height + Configs.generals.outerBorderSize : 0
         }
 
         Bar {
