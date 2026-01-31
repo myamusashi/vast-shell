@@ -24,7 +24,7 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: qsTr("CPU Usage")
+            text: qsTr("RAM Usage") + "\n" + SystemUsage.memProp.toFixed(0) + " GB"
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }
@@ -43,7 +43,7 @@ GridLayout {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: qsTr("RAM Usage") + "\n" + SystemUsage.memProp.toFixed(0) + " GB"
+            text: qsTr("CPU Usage")
             color: Colours.m3Colors.m3OnSurface
             horizontalAlignment: Text.AlignHCenter
         }

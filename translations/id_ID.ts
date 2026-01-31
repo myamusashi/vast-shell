@@ -915,12 +915,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performances</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="27"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="46"/>
         <source>CPU Usage</source>
         <translation>Penggunaan CPU</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="46"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="27"/>
         <source>RAM Usage</source>
         <translation>Penggunaan RAM</translation>
     </message>
