@@ -3,10 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    m3Shapes = {
-      url = "github:myamusashi/m3shapes";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,7 +12,6 @@
   outputs = {
     self,
     nixpkgs,
-    m3Shapes,
     quickshell,
   }: let
     systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
@@ -33,7 +28,7 @@
       pkgs = pkgsFor system;
     in
       pkgs.callPackage ./nix/default.nix {
-        inherit quickshell m3Shapes;
+        inherit quickshell;
       });
 
     homeManagerModules.default = import ./nix/hm-modules.nix {

@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wshadow -Wconversion
@@ -28,6 +31,7 @@ qt_add_qml_module(TranslationManager
         TranslationManager.h
         TranslationManager.cpp
     NO_PLUGIN_OPTIONAL
+    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/TranslationManager
 )
 
 target_link_libraries(TranslationManager PRIVATE
@@ -37,6 +41,30 @@ target_link_libraries(TranslationManager PRIVATE
     Qt6::Quick
 )
 
-install(TARGETS TranslationManager TranslationManagerplugin
-    LIBRARY DESTINATION lib/qt-6/qml/TranslationManager
+if(NOT DEFINED QML_INSTALL_DIR)
+    set(QML_INSTALL_DIR "lib/qt-6/qml")
+endif()
+
+set_target_properties(TranslationManager PROPERTIES
+    INSTALL_RPATH "\$ORIGIN:${CMAKE_INSTALL_PREFIX}/${QML_INSTALL_DIR}/TranslationManager"
 )
+
+set_target_properties(TranslationManagerplugin PROPERTIES
+    INSTALL_RPATH "\$ORIGIN:${CMAKE_INSTALL_PREFIX}/${QML_INSTALL_DIR}/TranslationManager"
+)
+
+install(TARGETS TranslationManager TranslationManagerplugin
+    LIBRARY DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+)
+
+install(FILES 
+    ${CMAKE_BINARY_DIR}/TranslationManager/qmldir
+    DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+)
+
+if(EXISTS ${CMAKE_BINARY_DIR}/TranslationManager/TranslationManager.qmltypes)
+    install(FILES 
+        ${CMAKE_BINARY_DIR}/TranslationManager/TranslationManager.qmltypes
+        DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+    )
+endif()

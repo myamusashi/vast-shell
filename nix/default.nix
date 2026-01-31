@@ -12,7 +12,6 @@
   quickshell,
   util-linux,
   networkmanager,
-  m3Shapes,
   matugen,
   playerctl,
   wl-clipboard,
@@ -27,11 +26,12 @@
   callPackage,
   cmake,
 }: let
-  # Custom package dependencies
   app2unit = callPackage ./app2unit.nix {};
   keystate-bin = callPackage ./keystate.nix {};
   material-symbols = callPackage ./material-symbols.nix {};
   qml-material = callPackage ./qmlMaterial.nix {};
+  m3shapes = callPackage ./m3Shapes.nix {};
+  translationManager = callPackage ./translationManager.nix {};
 
   # Lucide font, we use specific version for consistency
   lucide-font = lucide.overrideAttrs rec {
@@ -40,21 +40,17 @@
     hash = "sha256-Cf4vv+f3ZUtXPED+PCHxvZZDMF5nWYa4iGFSDQtkquQ=";
   };
 
-  # Runtime dependencies for the shell
   runtimeDeps = [
-    # Core utils
     findutils
     gnugrep
     gawk
     gnused
     util-linux
 
-    # System tools, even though the quickshell already have the networkmanager services, i guess i'll leave here
     networkmanager
     libnotify
     polkit
 
-    # Media and theming
     matugen
     playerctl
     wl-clipboard
@@ -63,16 +59,14 @@
     weather-icons
     lucide-font # I'm still thinking if we should use 2 fonts or only use the material symbols
 
-    # Applications
     foot
     hyprland
 
-    # Custom packages
-    m3Shapes
     qml-material
+    m3shapes
+    translationManager
     material-symbols
 
-    # Qt libraries
     kdePackages.qtmultimedia
     qt6.qtbase
     qt6.qtgraphs
@@ -109,128 +103,78 @@
     buildPhase = ''
       runHook preBuild
 
-      # Build translations if they exist
       echo "Building Translations..."
       if [ -d "translations" ]; then
         ${qt6.qttools}/bin/lrelease translations/*.ts
       fi
 
-      # Build TranslationManager plugin
-      echo "Building TranslationManager Plugin..."
-      mkdir -p build
-      cd build
-
-      cmake ../plugins/TranslationManager \
-        -DCMAKE_INSTALL_PREFIX=$out \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DQT_QMAKE_EXECUTABLE=${qt6.qtbase}/bin/qmake \
-        -DCMAKE_PREFIX_PATH=${qt6.qtbase}
-
-      cmake --build .
-      cd ..
-
       runHook postBuild
     '';
 
     installPhase = ''
-      runHook preInstall
+         runHook preInstall
 
-      # Copy shell files
-      mkdir -p $out/share/quickshell
-      shopt -s extglob
-      cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
+         mkdir -p $out/share/quickshell
+         shopt -s extglob
+         cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
 
-      # Copy specific directories
-      for dir in Assets Components Widgets; do
-        if [ -d "$dir" ]; then
-          mkdir -p "$out/share/quickshell/$dir"
-          cp -r "$dir"/* "$out/share/quickshell/$dir/" 2>/dev/null || true
-        fi
-      done
+         for dir in Assets Components Widgets; do
+           if [ -d "$dir" ]; then
+             mkdir -p "$out/share/quickshell/$dir"
+             cp -r "$dir"/* "$out/share/quickshell/$dir/" 2>/dev/null || true
+           fi
+         done
 
-      # Copy QML and JS files
-      for file in *.qml *.js; do
-        [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
-      done
+         for file in *.qml; do
+           [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
+         done
 
-      # Copy translations
-      if [ -d "translations" ]; then
-        mkdir -p "$out/share/quickshell/translations"
-        cp -r translations/*.qm "$out/share/quickshell/translations/" 2>/dev/null || true
-      fi
+         install -Dm755 ${keystate-bin}/bin/keystate-bin \
+           $out/share/quickshell/Assets/keystate-bin
+         install -Dm755 ${app2unit}/bin/app2unit \
+           $out/bin/app2unit
+         install -Dm755 ${keystate-bin}/bin/keystate-bin \
+           $out/bin/keystate-bin
 
-      # Install binaries
-      install -Dm755 ${keystate-bin}/bin/keystate-bin \
-        $out/share/quickshell/Assets/keystate-bin
-      install -Dm755 ${app2unit}/bin/app2unit \
-        $out/bin/app2unit
-      install -Dm755 ${keystate-bin}/bin/keystate-bin \
-        $out/bin/keystate-bin
+         mkdir -p $out/share/fonts/truetype
+         cp -r ${material-symbols}/share/fonts/truetype/* \
+           $out/share/fonts/truetype/
 
-      # Install fonts
-      mkdir -p $out/share/fonts/truetype
-      cp -r ${material-symbols}/share/fonts/truetype/* \
-        $out/share/fonts/truetype/
+      echo "${translationManager}"
+         # Copy QML plugins to lib directory
+         mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
 
-      # Install TranslationManager plugin
-      mkdir -p $out/lib/qt-6/qml/TranslationManager
+         # Copy m3shapes
+         if [ -d "${m3shapes}/${qt6.qtbase.qtQmlPrefix}" ]; then
+           cp -r ${m3shapes}/${qt6.qtbase.qtQmlPrefix}/* \
+             $out/${qt6.qtbase.qtQmlPrefix}
+         fi
 
-      # Copy plugin library
-      PLUGIN_COPIED=false
-      for so_file in build/*.so build/**/*.so; do
-        if [ -f "$so_file" ]; then
-          echo "Found library: $so_file"
-          cp "$so_file" $out/lib/qt-6/qml/TranslationManager/
-          PLUGIN_COPIED=true
-        fi
-      done
+         # Copy qml-material
+         if [ -d "${qml-material}/${qt6.qtbase.qtQmlPrefix}" ]; then
+           cp -r ${qml-material}/${qt6.qtbase.qtQmlPrefix}/* \
+             $out/${qt6.qtbase.qtQmlPrefix}
+         fi
 
-      if [ "$PLUGIN_COPIED" = false ]; then
-        echo "ERROR: No .so file found in build directory!"
-        exit 1
-      fi
+         # Copy translationManager
+         if [ -d "${translationManager}/${qt6.qtbase.qtQmlPrefix}" ]; then
+           cp -r ${translationManager}/${qt6.qtbase.qtQmlPrefix}/* \
+             $out/${qt6.qtbase.qtQmlPrefix}
+         fi
 
-      # Copy qmldir
-      if [ -f build/qmldir ]; then
-        echo "Using CMake-generated qmldir"
-        cp build/qmldir $out/lib/qt-6/qml/TranslationManager/
-      elif [ -f plugins/TranslationManager/qmldir ]; then
-        echo "Using manual qmldir"
-        cp plugins/TranslationManager/qmldir $out/lib/qt-6/qml/TranslationManager/
-      else
-        echo "ERROR: qmldir not found!"
-        exit 1
-      fi
+         makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
+           $out/bin/shell \
+           --add-flags "-p $out/share/quickshell" \
+           --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
+           --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
+           --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
+           --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
+           --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
+           --suffix PATH : /run/current-system/sw/bin \
+           --suffix PATH : /etc/profiles/per-user/$USER/bin \
+           --suffix PATH : $HOME/.nix-profile/bin
 
-      # Copy additional QML files, do we really need this one?
-      for qml_file in build/*.qml; do
-        if [ -f "$qml_file" ]; then
-          cp "$qml_file" $out/lib/qt-6/qml/TranslationManager/
-        fi
-      done
-
-      makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
-        $out/bin/shell \
-        --add-flags "-p $out/share/quickshell" \
-        --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
-        --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
-        --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
-        --suffix PATH : /run/current-system/sw/bin \
-        --suffix PATH : /etc/profiles/per-user/$USER/bin \
-        --suffix PATH : $HOME/.nix-profile/bin
-
-      runHook postInstall
-    '';
-
-    postInstall = ''
-      # Patch plugin libraries with correct rpath
-      for so_file in $out/lib/qt-6/qml/TranslationManager/*.so; do
-        if [ -f "$so_file" ]; then
-          patchelf \
-            --set-rpath "\$ORIGIN:${lib.makeLibraryPath [qt6.qtbase qt6.qtdeclarative]}" \
-            "$so_file"
-        fi
-      done
+         runHook postInstall
     '';
   };
 in {

@@ -1,25 +1,5 @@
 {
   "nodes": {
-    "m3Shapes": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1768374620,
-        "narHash": "sha256-aLMj10UaFEBGHDw75+3QFvvk2wjokkXRQyRjs1guVGI=",
-        "owner": "myamusashi",
-        "repo": "m3shapes",
-        "rev": "1c8e6751febf230d7f94bf8015eaeb643bb4521e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "myamusashi",
-        "repo": "m3shapes",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1764667669,
@@ -58,7 +38,6 @@
     },
     "root": {
       "inputs": {
-        "m3Shapes": "m3Shapes",
         "nixpkgs": "nixpkgs",
         "quickshell": "quickshell"
       }
