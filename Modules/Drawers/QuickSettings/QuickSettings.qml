@@ -23,7 +23,7 @@ Item {
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
 
     implicitWidth: isControlCenterOpen ? parent.width * 0.3 : 0
-    implicitHeight: parent.height
+    implicitHeight: parent.height * 0.8
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitWidth {
@@ -34,14 +34,14 @@ Item {
     }
 
     Corner {
-        location: Qt.TopRightCorner
+        location: Qt.TopLeftCorner
         extensionSide: Qt.Vertical
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
         color: GlobalStates.drawerColors
     }
 
     Corner {
-        location: Qt.BottomRightCorner
+        location: Qt.BottomLeftCorner
         extensionSide: Qt.Vertical
         radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
         color: GlobalStates.drawerColors
@@ -55,7 +55,9 @@ Item {
         topMargin: 40
         clip: true
         color: GlobalStates.drawerColors
-        radius: 0
+		radius: 0
+		topRightRadius: Appearance.rounding.normal
+		bottomRightRadius: Appearance.rounding.normal
 
         ColumnLayout {
             WrapperRectangle {
@@ -113,7 +115,7 @@ Item {
                             background: StyledRect {
                                 radius: Appearance.rounding.full
                                 color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3PrimaryContainer : "transparent"
-                            }
+							}
                         }
                     }
                 }
@@ -124,12 +126,8 @@ Item {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-
                 currentIndex: tabGroup.currentIndex
-
-                onCurrentIndexChanged: {
-                    tabGroup.currentIndex = currentIndex;
-                }
+                onCurrentIndexChanged: tabGroup.currentIndex = currentIndex
 
                 Repeater {
                     model: [
@@ -155,18 +153,16 @@ Item {
                         radius: 0
                         bottomLeftRadius: Appearance.rounding.normal
                         bottomRightRadius: Appearance.rounding.normal
-                        color: Colours.m3Colors.m3Background
 
                         Loader {
                             anchors {
                                 fill: parent
-                                leftMargin: 5
-                                rightMargin: 5
+                                leftMargin: 20
+                                rightMargin: 20
                                 topMargin: 5
                             }
-                            active: window.modelData.name === Hypr.focusedMonitor.name
+                            active: true
                             asynchronous: true
-
                             sourceComponent: {
                                 switch (parent.modelData.component) {
                                 case "Settings":
