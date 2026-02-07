@@ -77,7 +77,6 @@ Item {
 
             active: window.modelData.name === Hypr.focusedMonitor.name
             asynchronous: true
-            clip: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.padding.large
@@ -91,8 +90,11 @@ Item {
                     implicitHeight: 60
                     placeholderText: qsTr("Search")
                     focus: GlobalStates.isLauncherOpen
+                    onFocusChanged: {
+                        if (focus)
+                            forceActiveFocus();
+                    }
                     font.family: Appearance.fonts.family.sans
-                    font.pixelSize: Appearance.fonts.size.small
                     color: Colours.m3Colors.m3OnBackground
                     placeholderTextColor: Colours.m3Colors.m3OnSurfaceVariant
                     onTextChanged: {
@@ -122,8 +124,6 @@ Item {
                             break;
                         }
                     }
-
-                    Component.onCompleted: forceActiveFocus()
                 }
 
                 ListView {
