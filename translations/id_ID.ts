@@ -62,7 +62,7 @@
 <context>
     <name>App</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="92"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="91"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>
@@ -75,17 +75,15 @@
 <context>
     <name>AudioCapture</name>
     <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="56"/>
         <source>Mix</source>
-        <translation>Mix</translation>
+        <translation type="vanished">Mix</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="59"/>
         <source>Voice</source>
-        <translation>Suara</translation>
+        <translation type="vanished">Suara</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="110"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="125"/>
         <source>LINUX DEFAULT OUTPUT</source>
         <translation>LINUX DEFAULT OUTPUT</translation>
     </message>
@@ -186,7 +184,7 @@
     <message>
         <location filename="../Modules/Dashboard/Dashboard.qml" line="145"/>
         <source>WIP</source>
-        <translation type="unfinished">WIP</translation>
+        <translation>WIP</translation>
     </message>
 </context>
 <context>
@@ -437,12 +435,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DialogBox</name>
     <message>
-        <location filename="../Components/DialogBox.qml" line="103"/>
+        <location filename="../Components/DialogBox.qml" line="102"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Components/DialogBox.qml" line="112"/>
+        <location filename="../Components/DialogBox.qml" line="111"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1266,12 +1264,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Apakah kamu mau %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="534"/>
+        <location filename="../Modules/Lock/Surface.qml" line="532"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="547"/>
+        <location filename="../Modules/Lock/Surface.qml" line="546"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1456,7 +1454,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="82"/>
         <source>Search wallpapers</source>
-        <translation type="unfinished"></translation>
+        <translation>Cari wallpapers</translation>
     </message>
 </context>
 <context>
