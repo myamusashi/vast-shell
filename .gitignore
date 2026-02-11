@@ -6,3 +6,4 @@ result
 .direnv
 log
 plugins/*/build
+*.tmp
