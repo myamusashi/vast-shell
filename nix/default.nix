@@ -68,6 +68,7 @@
     material-symbols
 
     kdePackages.qtmultimedia
+    qt6.qt5compat
     qt6.qtbase
     qt6.qtgraphs
   ];
