@@ -1,13 +1,13 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import Quickshell.Services.Mpris
+import Qt5Compat.GraphicalEffects
 
 import qs.Configs
 import qs.Helpers
@@ -56,10 +56,9 @@ WlSessionLockSurface {
         captureSource: root.screen
         live: false
         layer.enabled: true
-        layer.effect: MultiEffect {
-            blurEnabled: true
-            blurMax: wallpaper.blurSize
-            blur: 1.0
+		layer.effect: FastBlur {
+			source: wallpaper
+			radius: wallpaper.blurSize
         }
     }
 
@@ -529,10 +528,9 @@ WlSessionLockSurface {
                 StyledButton {
                     implicitWidth: 80
                     implicitHeight: 40
-                    elideText: false
-                    iconButton: "cancel"
-                    buttonTitle: qsTr("No")
-                    buttonColor: "transparent"
+                    text: qsTr("No")
+                    icon.name: "cancel"
+                    mdState.backgroundColor: "transparent"
                     onClicked: {
                         sessionWrapperRect.showConfirmDialog = false;
                         sessionWrapperRect.pendingAction = null;
@@ -543,9 +541,9 @@ WlSessionLockSurface {
                 StyledButton {
                     implicitWidth: 80
                     implicitHeight: 40
-                    iconButton: "check"
-                    buttonTitle: qsTr("Yes")
-                    buttonTextColor: Colours.m3Colors.m3OnPrimary
+                    icon.name: "check"
+                    text: qsTr("Yes")
+                    mdState.backgroundColor: Colours.m3Colors.m3OnPrimary
                     onClicked: {
                         if (sessionWrapperRect.pendingAction)
                             sessionWrapperRect.pendingAction();
@@ -626,24 +624,6 @@ WlSessionLockSurface {
             }
         }
 
-        ParallelAnimation {
-            NAnim {
-                target: topItem
-                property: "implicitWidth"
-                to: topWrapperRect.implicitWidth
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: bottomItem
-                property: "implicitWidth"
-                to: bottomWrapperRect.implicitWidth
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
         ScriptAction {
             script: {
                 GlobalStates.isLockscreenOpen = true;
@@ -653,24 +633,6 @@ WlSessionLockSurface {
 
     SequentialAnimation {
         id: unlockSequence
-
-        ParallelAnimation {
-            NAnim {
-                target: topItem
-                property: "implicitWidth"
-                to: lockIcon.contentWidth + 10
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: bottomItem
-                property: "implicitWidth"
-                to: icon.width + 10
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
 
         ParallelAnimation {
             NAnim {
