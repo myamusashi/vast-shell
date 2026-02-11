@@ -244,13 +244,12 @@ Item {
                         spacing: Appearance.spacing.normal
 
                         StyledButton {
-                            iconButton: "skip_previous"
-                            iconBackgroundColor: "transparent"
-                            showIconBackground: true
-                            iconSize: Appearance.fonts.size.large * 1.5
-                            buttonWidth: 30
-                            buttonTextColor: Colours.m3Colors.m3OnPrimary
-                            mArea.layerColor: "transparent"
+                            implicitWidth: 40
+							implicitHeight: 40
+							bgRadius: Appearance.rounding.normal
+							icon.name: "skip_previous"
+                            icon.color: Colours.m3Colors.m3OnPrimary
+                            color: Colours.m3Colors.m3Primary
                             onClicked: Players.active ? Players.active.previous() : {}
                         }
 
@@ -271,13 +270,12 @@ Item {
                         }
 
                         StyledButton {
-                            iconButton: "skip_next"
-                            iconSize: Appearance.fonts.size.large * 1.5
-                            iconBackgroundColor: "transparent"
-                            showIconBackground: true
-                            buttonWidth: 30
-                            buttonTextColor: Colours.m3Colors.m3OnPrimary
-                            mArea.layerColor: "transparent"
+                            implicitWidth: 40
+                            implicitHeight: 40
+							icon.name: "skip_next"
+							bgRadius: Appearance.rounding.normal
+                            icon.color: Colours.m3Colors.m3OnPrimary
+                            color: Colours.m3Colors.m3Primary
                             onClicked: Players.active ? Players.active.next() : {}
                         }
                     }

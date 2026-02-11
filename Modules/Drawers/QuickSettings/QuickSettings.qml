@@ -55,9 +55,9 @@ Item {
         topMargin: 40
         clip: true
         color: GlobalStates.drawerColors
-		radius: 0
-		topRightRadius: Appearance.rounding.normal
-		bottomRightRadius: Appearance.rounding.normal
+        radius: 0
+        topRightRadius: Appearance.rounding.normal
+        bottomRightRadius: Appearance.rounding.normal
 
         ColumnLayout {
             WrapperRectangle {
@@ -115,7 +115,7 @@ Item {
                             background: StyledRect {
                                 radius: Appearance.rounding.full
                                 color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3PrimaryContainer : "transparent"
-							}
+                            }
                         }
                     }
                 }

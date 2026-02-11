@@ -50,47 +50,14 @@ StyledRect {
                 required property int index
 
                 Layout.fillWidth: true
-                buttonWidth: 0
-                buttonTitle: modelData.title || ""
-                iconButton: modelData.icon || ""
-                iconSize: modelData.iconSize || (Appearance.fonts.size.large * root.scaleFactor)
-                iconColor: Colours.m3Colors.m3OnSurface
-                buttonTextColor: root.currentIndex === index ? root.activeColor : root.inactiveColor
-                buttonColor: root.backgroundColor
+                text: modelData.title || ""
+                icon.name: modelData.icon || ""
                 enabled: modelData.enabled !== undefined ? modelData.enabled : true
 
                 onClicked: {
                     root.currentIndex = index;
                     root.tabClicked(index, modelData);
                 }
-            }
-        }
-    }
-
-    StyledRect {
-        id: indicator
-
-        anchors.bottom: tabLayout.bottom
-        implicitWidth: tabRepeater.itemAt(root.currentIndex) ? tabRepeater.itemAt(root.currentIndex).width : 0
-        implicitHeight: root.indicatorHeight
-        color: root.indicatorColor
-        radius: root.indicatorRadius
-
-        x: {
-            if (tabRepeater.itemAt(root.currentIndex))
-                return tabRepeater.itemAt(root.currentIndex).x + tabLayout.x;
-            return 0;
-        }
-
-        Behavior on x {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
-
-        Behavior on width {
-            NAnim {
-                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             }
         }
     }
