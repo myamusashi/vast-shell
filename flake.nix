@@ -51,6 +51,7 @@
           ])
           pkgs.llvm
           pkgs.gcc
+          pkgs.gdb
           pkgs.cmake
           pkgs.clang-tools
         ];
