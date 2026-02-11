@@ -6,6 +6,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
+import Qcm.Material as MD
 
 import qs.Components
 import qs.Configs
@@ -45,22 +46,36 @@ StyledRect {
         }
     }
 
-    component Header: TabRow {
-        state: root.state
-        scaleFactor: Math.min(1.0, root.width / root.width)
-        visible: true
-        backgroundColor: "transparent"
-        Layout.fillWidth: true
-        tabs: [
-            {
-                "title": qsTr("Mix")
-            },
-            {
-                "title": qsTr("Voice")
+    component Header: Row {
+        anchors.horizontalCenter: parent.horizontalCenter
+        Repeater {
+            model: ["Mix", "Voice"]
+
+            delegate: MD.TabButton {
+                type: MD.Enum.PrimaryTab
+                required property var modelData
+                mdState.textColor: Colours.m3Colors.m3Primary
+
+                text: modelData
             }
-        ]
-        onTabClicked: root.tabClicked(root.state)
+        }
     }
+    // component Header: TabRow {
+    //     state: root.state
+    //     scaleFactor: Math.min(1.0, root.width / root.width)
+    //     visible: true
+    //     backgroundColor: "transparent"
+    //     Layout.fillWidth: true
+    //     tabs: [
+    //         {
+    //             "title": qsTr("Mix")
+    //         },
+    //         {
+    //             "title": qsTr("Voice")
+    //         }
+    //     ]
+    //     onTabClicked: root.tabClicked(root.state)
+    // }
 
     component View: StackView {
         property Component viewComponent: contentView

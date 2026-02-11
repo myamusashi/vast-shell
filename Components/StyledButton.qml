@@ -1,200 +1,55 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
-import Quickshell.Widgets
+import Qcm.Material as MD
 
 import qs.Configs
-import qs.Helpers
-import qs.Services
 
-Item {
+MD.Button {
     id: root
 
-    property alias mArea: mouseArea
-    property alias bg: background
+	property color color
+	property color textColor
+	property real bgRadius: Appearance.rounding.normal
 
-    readonly property real normalWidth: buttonTitle === "" ? iconOnlyWidth : buttonWidth
-    readonly property real expandedWidth: normalWidth * 1.1
+	mdState.textColor: textColor
 
-    property bool enabled: true
-    property bool useLayoutWidth: true
-    property bool isButtonUseBorder: false
-    property bool showIconBackground: false
-    property bool elideText: false
-    property color iconColor: Colours.m3Colors.m3OnPrimary
-    property color buttonColor: Colours.m3Colors.m3Primary
-    property color buttonTextColor: Colours.m3Colors.m3OnBackground
-    property color buttonBorderColor: Colours.m3Colors.m3Outline
-    property color iconBackgroundColor: Colours.m3Colors.m3Primary
-    property int textSize: Appearance.fonts.size.large
-    property int iconSize: Appearance.fonts.size.medium
-    property int buttonWidth: 150
-    property int iconOnlyWidth: 60
-    property int buttonHeight: 40
-    property int iconTextSpacing: 8
-    property int buttonBorderWidth: 2
-    property int iconBackgroundSize: 50
-    property real backgroundRounding: 0
-    property real iconBackgroundRadius: Appearance.rounding.small
-    property string iconButton: ""
-    property string fontFamily: Appearance.fonts.family.material
-    property string buttonTitle: ""
+    contentItem: MD.IconLabel {
+        anchors.centerIn: parent
+        text: root.text
+        color: root.mdState.textColor
+        style: root.iconStyle
+        icon.name: root.icon.name
+        icon.size: root.icon.width
+        icon.color: root.icon.color
+        opacity: root.mdState.contentOpacity
+        label.lineHeight: root.typescale.line_height
+    }
 
-    signal clicked
+    background: MD.ElevationRectangle {
+        implicitWidth: 64
+        implicitHeight: 40
 
-    implicitWidth: useLayoutWidth ? 0 : normalWidth
-    implicitHeight: buttonHeight
+        radius: root.bgRadius
+        color: root.mdState.backgroundColor
+        opacity: root.mdState.backgroundOpacity
 
-    Layout.preferredWidth: useLayoutWidth ? (mouseArea.pressed ? expandedWidth : normalWidth) : undefined
-    Layout.preferredHeight: buttonHeight
-    Layout.fillWidth: false
-    Layout.alignment: Qt.AlignVCenter
+        border.width: root.type == MD.Enum.BtOutlined ? 1 : 0
+        border.color: root.mdState.ctx.color.outline
+        elevation: root.mdState.elevation
+        elevationVisible: !MD.Util.epsilonEqual(elevation, MD.Token.elevation.level0) && !root.flat && color.a > 0
 
-    Behavior on Layout.preferredWidth {
-        enabled: root.useLayoutWidth
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        MD.Ripple2 {
+            anchors.fill: parent
+            radius: parent.radius
+            pressX: root.pressX
+            pressY: root.pressY
+            pressed: root.pressed
+            stateOpacity: root.mdState.stateLayerOpacity
+            color: root.mdState.stateLayerColor
         }
     }
 
-    ClippingRectangle {
-        id: background
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        implicitWidth: root.useLayoutWidth ? parent.width : (root.normalWidth * (mouseArea.pressed && root.enabled ? 1.1 : 1.0))
-        implicitHeight: parent.height
-
-        Behavior on implicitWidth {
-            enabled: !root.useLayoutWidth
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        border.color: root.isButtonUseBorder ? root.buttonBorderColor : "transparent"
-        border.width: root.isButtonUseBorder ? root.buttonBorderWidth : 0
-        color: root.buttonColor
-        radius: root.enabled ? Appearance.rounding.small : Appearance.rounding.full
-        opacity: root.enabled ? (mouseArea.pressed ? 0.8 : (mouseArea.containsMouse ? 0.9 : 1.0)) : 0.5
-
-        states: [
-            State {
-                name: "enabled"
-                when: root.enabled === true && !mouseArea.pressed
-                PropertyChanges {
-                    target: background
-                    radius: Appearance.rounding.small
-                }
-            },
-            State {
-                name: "disabled"
-                when: root.enabled === false
-                PropertyChanges {
-                    target: background
-                    radius: Appearance.rounding.full
-                }
-            }
-        ]
-
-        transitions: [
-            Transition {
-                from: "enabled"
-                to: "disabled"
-                NAnim {
-                    property: "radius"
-                    duration: Appearance.animations.durations.emphasized
-                    easing.bezierCurve: Appearance.animations.curves.emphasized
-                }
-            },
-            Transition {
-                from: "disabled"
-                to: "enabled"
-                NAnim {
-                    property: "radius"
-                    duration: Appearance.animations.durations.emphasized
-                    easing.bezierCurve: Appearance.animations.curves.emphasized
-                }
-            }
-        ]
-    }
-
-    RowLayout {
-        id: contentRow
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: root.buttonTitle === "" ? undefined : parent.left
-        anchors.right: root.buttonTitle === "" ? undefined : parent.right
-        anchors.leftMargin: root.buttonTitle === "" ? 0 : 12
-        anchors.rightMargin: root.buttonTitle === "" ? 0 : 12
-
-        spacing: root.iconTextSpacing
-        opacity: root.enabled ? 1.0 : 0.5
-
-        Loader {
-            active: root.iconButton !== ""
-            Layout.alignment: Qt.AlignVCenter
-            sourceComponent: Item {
-                implicitWidth: root.showIconBackground ? root.iconBackgroundSize : iconOnly.implicitWidth
-                implicitHeight: root.showIconBackground ? root.iconBackgroundSize : iconOnly.implicitHeight
-
-                StyledRect {
-                    visible: root.showIconBackground
-                    anchors.fill: parent
-                    color: root.iconBackgroundColor
-                    radius: root.iconBackgroundRadius
-
-                    Icon {
-                        anchors.centerIn: parent
-                        type: Icon.Material
-                        icon: root.iconButton
-                        font.family: root.fontFamily
-                        font.pixelSize: root.iconSize > 0 ? root.iconSize : Appearance.fonts.size.large
-                        font.bold: true
-                        color: root.iconColor
-                    }
-                }
-
-                Icon {
-                    id: iconOnly
-
-                    type: Icon.Material
-
-                    visible: !root.showIconBackground
-                    anchors.centerIn: parent
-                    icon: root.iconButton
-                    font.family: root.fontFamily
-                    font.pixelSize: root.iconSize > 0 ? root.iconSize : Appearance.fonts.size.large
-                    font.bold: true
-                    color: root.iconColor
-                }
-            }
-        }
-
-        Loader {
-            active: root.buttonTitle !== ""
-            Layout.alignment: Qt.AlignVCenter
-            Layout.fillWidth: true
-            sourceComponent: StyledText {
-                text: root.buttonTitle
-                font.pixelSize: root.textSize
-                font.weight: Font.Medium
-                color: root.buttonTextColor
-                elide: Text.ElideRight
-                width: Math.min(implicitWidth, contentRow.width - (root.iconButton !== "" ? (root.showIconBackground ? root.iconBackgroundSize : 24) + root.iconTextSpacing : 0))
-            }
-        }
-    }
-
-    MArea {
-        id: mouseArea
-
-        anchors.fill: parent
-        layerColor: "transparent"
-        cursorShape: Qt.PointingHandCursor
-        onClicked: root.clicked()
-    }
+    iconStyle: MD.Enum.IconAndText
+    mdState.backgroundColor: color
 }

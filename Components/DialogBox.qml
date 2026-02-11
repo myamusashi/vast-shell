@@ -98,19 +98,18 @@ LazyLoader {
                     StyledButton {
                         implicitWidth: 80
                         implicitHeight: 40
-                        elideText: false
-                        iconButton: "cancel"
-                        buttonTitle: qsTr("No")
-                        buttonColor: "transparent"
+                        icon.name: "cancel"
+                        text: qsTr("No")
+                        mdState.backgroundColor: "transparent"
                         onClicked: root.rejected()
                     }
 
                     StyledButton {
                         implicitWidth: 80
                         implicitHeight: 40
-                        iconButton: "check"
-                        buttonTitle: qsTr("Yes")
-                        buttonTextColor: Colours.m3Colors.m3OnPrimary
+                        icon.name: "check"
+                        text: qsTr("Yes")
+                        mdState.backgroundColor: Colours.m3Colors.m3OnPrimary
                         onClicked: root.accepted()
                     }
                 }
