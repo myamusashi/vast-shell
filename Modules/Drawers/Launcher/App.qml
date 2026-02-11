@@ -94,9 +94,6 @@ Item {
                         if (focus)
                             forceActiveFocus();
                     }
-                    font.family: Appearance.fonts.family.sans
-                    color: Colours.m3Colors.m3OnBackground
-                    placeholderTextColor: Colours.m3Colors.m3OnSurfaceVariant
                     onTextChanged: {
                         root.currentIndex = 0;
                         listView.positionViewAtBeginning();

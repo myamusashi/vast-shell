@@ -1,27 +1,19 @@
 import QtQuick
-import Qcm.Material as MD
+import QtQuick.Controls
 
 import qs.Configs
 import qs.Helpers
 import qs.Services
 
-MD.TextField {
-    type: MD.Enum.TextFieldOutlined
-    renderType: Text.QtRendering
+TextField {
     selectedTextColor: Colours.m3Colors.m3OnSecondaryContainer
     selectionColor: Colours.m3Colors.m3SecondaryContainer
     placeholderTextColor: Colours.m3Colors.m3Outline
     wrapMode: TextEdit.Wrap
-    clip: false
-
+    renderType: Text.QtRendering
     font {
         family: Appearance.fonts.family.sans
-        pixelSize: Appearance.fonts.size.small ?? 15
-        hintingPreference: Font.PreferFullHinting
-        variableAxes: {
-            "wght": 450,
-            "wdth": 100
-        }
+        pixelSize: Appearance.fonts.size.normal * 1.1
     }
 
     MArea {
@@ -30,5 +22,18 @@ MD.TextField {
         acceptedButtons: Qt.NoButton
         hoverEnabled: true
         cursorShape: Qt.IBeamCursor
+    }
+
+    background: StyledRect {
+        color: Colours.m3Colors.m3Background
+        radius: Appearance.rounding.small
+        border {
+            color: parent.focus ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.2)
+            width: 2
+        }
+
+        Behavior on border.color {
+            CAnim {}
+        }
     }
 }
