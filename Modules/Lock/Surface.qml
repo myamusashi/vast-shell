@@ -56,9 +56,9 @@ WlSessionLockSurface {
         captureSource: root.screen
         live: false
         layer.enabled: true
-		layer.effect: FastBlur {
-			source: wallpaper
-			radius: wallpaper.blurSize
+        layer.effect: FastBlur {
+            source: wallpaper
+            radius: wallpaper.blurSize
         }
     }
 

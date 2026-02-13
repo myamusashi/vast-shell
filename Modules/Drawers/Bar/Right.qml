@@ -27,8 +27,10 @@ RowLayout {
         Row {
             id: quickSettingsLayout
 
-            anchors.fill: parent
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors {
+                fill: parent
+                horizontalCenter: parent.horizontalCenter
+            }
             spacing: Appearance.spacing.normal
 
             Wid.Sound {

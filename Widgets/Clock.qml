@@ -1,11 +1,13 @@
 import QtQuick
-import QtQuick.Layouts
+
 import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
 
 StyledRect {
+    id: clock
+
     implicitWidth: timeContainer.width + 15
     implicitHeight: parent.height
     color: "transparent"
@@ -34,10 +36,11 @@ StyledRect {
             text: Qt.formatDateTime(Time?.date, "h:mm AP")
         }
     }
+
     MArea {
         id: mArea
 
-        anchors.fill: timeContainer
+        anchors.fill: clock
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         onClicked: GlobalStates.isCalendarOpen = !GlobalStates.isCalendarOpen
