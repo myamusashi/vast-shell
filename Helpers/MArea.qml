@@ -1,4 +1,5 @@
 import QtQuick
+import Qcm.Material as MD
 
 import qs.Components
 import qs.Configs
@@ -31,6 +32,16 @@ MouseArea {
 
         Behavior on opacity {
             animation: area.layerOpacityAnimation
+        }
+
+        MD.Ripple2 {
+            anchors.fill: parent
+            radius: area.layerRadius
+            pressX: area.mouseX
+            pressY: area.mouseY
+            pressed: area.pressed
+            stateOpacity: area.layerRadius
+            color: area.layerColor
         }
     }
 }
