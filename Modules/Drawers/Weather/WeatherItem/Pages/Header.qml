@@ -18,7 +18,7 @@ Row {
     Icon {
         id: iconItem
 
-        type: Icon.Lucide
+        type: Icon.Material
         icon: root.icon
         font.pixelSize: Appearance.fonts.size.extraLarge
         color: Colours.m3Colors.m3OnSurface

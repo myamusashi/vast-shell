@@ -72,8 +72,8 @@ MaterialShape {
             Layout.alignment: Qt.AlignLeft
 
             Icon {
-                type: Icon.Lucide
-                icon: Lucide.icon_waves
+                type: Icon.Material
+                icon: "waves"
                 font.pixelSize: Appearance.fonts.size.large * 1.5
                 font.weight: Font.DemiBold
                 color: Colours.m3Colors.m3OnSurface

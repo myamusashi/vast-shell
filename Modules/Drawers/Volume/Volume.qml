@@ -115,8 +115,8 @@ Item {
                 id: volumeIcon
 
                 Layout.alignment: Qt.AlignCenter
-                type: Icon.Lucide
-                icon: Lucide.icon_volume_2
+                type: Icon.Material
+                icon: "volume_up"
                 color: Colours.m3Colors.m3Primary
                 font.pixelSize: Appearance.fonts.size.extraLarge
             }

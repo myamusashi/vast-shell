@@ -23,8 +23,8 @@ MaterialShape {
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
             Icon {
-                type: Icon.Lucide
-                icon: Lucide.icon_cloud_rain
+                type: Icon.Material
+                icon: "rainy"
                 font.pixelSize: Appearance.fonts.size.large * 1.5
                 color: Colours.m3Colors.m3OnSurface
             }
@@ -73,8 +73,8 @@ MaterialShape {
             }
 
             Icon {
-                type: Icon.Lucide
-                icon: Lucide.icon_cloud_rain_wind
+                type: Icon.Material
+                icon: "rainy"
                 font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
             }

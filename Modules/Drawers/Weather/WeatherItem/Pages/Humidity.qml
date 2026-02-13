@@ -27,7 +27,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_droplet
+            icon: "water_drop"
             title: qsTr("Humidity")
             mouseArea.onClicked: root.isOpen = false
         }

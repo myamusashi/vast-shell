@@ -63,8 +63,8 @@ MaterialShape {
         }
 
         Icon {
-            type: Icon.Lucide
-            icon: Lucide.icon_moon
+            type: Icon.Material
+            icon: "bedtime"
             font.pixelSize: Appearance.fonts.size.large * 1.5
             color: Colours.m3Colors.m3OnSurface
         }

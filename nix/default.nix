@@ -6,9 +6,10 @@
   findutils,
   gnused,
   gawk,
-  lucide,
+
   weather-icons,
   libnotify,
+  iw,
   quickshell,
   util-linux,
   networkmanager,
@@ -33,12 +34,7 @@
   m3shapes = callPackage ./m3Shapes.nix {};
   translationManager = callPackage ./translationManager.nix {};
 
-  # Lucide font, we use specific version for consistency
-  lucide-font = lucide.overrideAttrs rec {
-    version = "0.544.0";
-    url = "https://unpkg.com/lucide-static@${version}/font/Lucide.ttf";
-    hash = "sha256-Cf4vv+f3ZUtXPED+PCHxvZZDMF5nWYa4iGFSDQtkquQ=";
-  };
+
 
   runtimeDeps = [
     findutils
@@ -47,6 +43,7 @@
     gnused
     util-linux
 
+    iw
     networkmanager
     libnotify
     polkit
@@ -57,7 +54,7 @@
     wl-screenrec
     ffmpeg
     weather-icons
-    lucide-font # I'm still thinking if we should use 2 fonts or only use the material symbols
+    weather-icons
 
     foot
     hyprland

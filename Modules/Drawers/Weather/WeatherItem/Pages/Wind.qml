@@ -27,7 +27,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_wind
+            icon: "air"
             title: qsTr("Wind")
             mouseArea.onClicked: root.isOpen = false
         }

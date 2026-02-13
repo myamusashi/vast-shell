@@ -98,8 +98,8 @@ ColumnLayout {
             spacing: Appearance.spacing.small
 
             Icon {
-                type: Icon.Lucide
-                icon: Lucide.icon_map_pin
+                type: Icon.Material
+                icon: "location_on"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large
             }
@@ -170,11 +170,11 @@ ColumnLayout {
                     model: [
                         {
                             text: Weather.tempMax + "°",
-                            icon: Lucide.icon_arrow_up
+                            icon: "arrow_upward"
                         },
                         {
                             text: Weather.tempMin + "°",
-                            icon: Lucide.icon_arrow_down
+                            icon: "arrow_downward"
                         }
                     ]
 
@@ -184,7 +184,7 @@ ColumnLayout {
                         spacing: Appearance.spacing.small
 
                         Icon {
-                            type: Icon.Lucide
+                            type: Icon.Material
                             icon: parent.modelData.icon
                             color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.normal

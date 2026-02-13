@@ -29,7 +29,7 @@ Pages {
         property string description: tabGroup.currentIndex === 0 ? DetailText.usAQI : DetailText.euroAQI
 
         Header {
-            icon: Lucide.icon_waves
+            icon: "waves"
             title: qsTr("Air quality")
             mouseArea.onClicked: root.isOpen = false
         }
