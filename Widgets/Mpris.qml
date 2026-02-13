@@ -49,6 +49,8 @@ StyledRect {
     }
 
     MArea {
+        id: mArea
+
         anchors.fill: mediaInfo
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
