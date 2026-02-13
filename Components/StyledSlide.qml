@@ -106,10 +106,6 @@ Slider {
             height: root.orientation === Qt.Horizontal ? root.trackSize : root.handleGap + (root.invertedVisualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
             color: Colours.m3Colors.m3Primary
             radius: Appearance.rounding.small * 0.5
-
-            topLeftRadius: Appearance.rounding.small * 0.5
-            bottomLeftRadius: Appearance.rounding.small * 0.5
-            bottomRightRadius: root.orientation === Qt.Vertical ? Appearance.rounding.small * 0.5 : 0
         }
 
         // Empty portion (after handle)
@@ -124,10 +120,6 @@ Slider {
             height: root.orientation === Qt.Horizontal ? root.trackSize : root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
             color: Colours.m3Colors.m3SurfaceContainerHighest
             radius: Appearance.rounding.small * 0.5
-
-            topRightRadius: Appearance.rounding.small * 0.5
-            bottomRightRadius: Appearance.rounding.small * 0.5
-            topLeftRadius: root.orientation === Qt.Vertical ? Appearance.rounding.small * 0.5 : 0
         }
     }
 
