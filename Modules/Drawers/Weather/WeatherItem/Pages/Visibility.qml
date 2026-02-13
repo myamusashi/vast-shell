@@ -25,7 +25,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_eye
+            icon: "visibility"
             title: qsTr("Visibility")
             mouseArea.onClicked: root.isOpen = false
         }

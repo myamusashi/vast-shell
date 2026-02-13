@@ -39,8 +39,8 @@ MaterialShape {
             spacing: 0
 
             Icon {
-                type: Icon.Lucide
-                icon: Lucide.icon_droplet
+                type: Icon.Material
+                icon: "water_drop"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large * 1.5
             }

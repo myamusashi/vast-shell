@@ -27,7 +27,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_sun
+            icon: "wb_sunny"
             title: qsTr("UV Index")
             mouseArea.onClicked: root.isOpen = false
         }

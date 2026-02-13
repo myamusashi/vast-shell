@@ -27,7 +27,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_fold_vertical
+            icon: "compress"
             title: qsTr("Pressure")
             mouseArea.onClicked: root.isOpen = false
         }

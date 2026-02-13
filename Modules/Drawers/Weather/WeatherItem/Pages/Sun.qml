@@ -53,7 +53,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_sun
+            icon: "wb_sunny"
             title: qsTr("Sun")
             mouseArea.onClicked: root.isOpen = false
         }

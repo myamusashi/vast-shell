@@ -6,13 +6,12 @@ Text {
     id: root
 
     enum IconType {
-        Lucide,
         Material,
         Weather
     }
 
     required property string icon
-    readonly property var fontFamilies: [Appearance.fonts.family.material, "lucide", "Weather Icons"]
+    readonly property var fontFamilies: [Appearance.fonts.family.material, "Weather Icons"]
     property int type: Icon.Material
 
     antialiasing: true
@@ -21,7 +20,7 @@ Text {
     text: root.icon
 
     font {
-        family: root.type === Icon.Lucide ? "lucide" : root.type === Icon.Weather ? "Weather Icons" : Appearance.fonts.family.material
+        family: root.type === Icon.Weather ? "Weather Icons" : Appearance.fonts.family.material
         pixelSize: Appearance.fonts.size.medium
         hintingPreference: Font.PreferNoHinting
     }

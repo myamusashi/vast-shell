@@ -82,7 +82,7 @@ Pages {
             spacing: Appearance.spacing.normal
 
             Header {
-                icon: Lucide.icon_moon
+                icon: "bedtime"
                 title: qsTr("Moon")
                 mouseArea.onClicked: root.isOpen = false
             }

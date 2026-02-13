@@ -30,8 +30,8 @@ MaterialShape {
         }
 
         Icon {
-            type: Icon.Lucide
-            icon: Lucide.icon_cloud
+            type: Icon.Material
+            icon: "cloud"
             font.pixelSize: Appearance.fonts.size.large * 1.5
             color: Colours.m3Colors.m3OnSurface
 

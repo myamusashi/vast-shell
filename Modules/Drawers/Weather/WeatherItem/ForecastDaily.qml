@@ -29,8 +29,8 @@ StyledRect {
             spacing: Appearance.rounding.small
 
             Icon {
-                type: Icon.Lucide
-                icon: Lucide.icon_calendar_days
+                type: Icon.Material
+                icon: "calendar_month"
                 font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3Primary
             }

@@ -28,7 +28,7 @@ Pages {
         spacing: Appearance.spacing.normal
 
         Header {
-            icon: Lucide.icon_cloud_rain
+            icon: "rainy"
             title: qsTr("Precipitation")
             mouseArea.onClicked: root.isOpen = false
         }
