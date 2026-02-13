@@ -35,10 +35,10 @@ RowLayout {
         readonly property color inactiveTextColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
         readonly property color inactiveButtonColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
 
-		icon.name: "bedtime"
-		icon.color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor
-		textColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor
-		color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : inactiveButtonColor
+        icon.name: "bedtime"
+        icon.color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor
+        textColor: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor
+        color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : inactiveButtonColor
         text: qsTr("Night mode")
 
         onClicked: Hyprsunset.isNightModeOn ? Hyprsunset.down() : Hyprsunset.up()

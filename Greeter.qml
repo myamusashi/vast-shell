@@ -16,7 +16,7 @@ import qs.Services
 ShellRoot {
     id: root
 
-    property var sessions: Sessions.sessions
+    readonly property var sessions: Sessions.sessions
 
     function authenticate() {
         console.log("[AUTH START] User: " + Users.current_user);

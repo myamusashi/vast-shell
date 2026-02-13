@@ -8,11 +8,11 @@ import qs.Configs
 MD.Button {
     id: root
 
-	property color color
-	property color textColor
-	property real bgRadius: Appearance.rounding.normal
+    property color color
+    property color textColor
+    property real bgRadius: Appearance.rounding.normal
 
-	mdState.textColor: textColor
+    mdState.textColor: textColor
 
     contentItem: MD.IconLabel {
         anchors.centerIn: parent

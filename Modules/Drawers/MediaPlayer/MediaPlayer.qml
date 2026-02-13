@@ -245,9 +245,9 @@ Item {
 
                         StyledButton {
                             implicitWidth: 40
-							implicitHeight: 40
-							bgRadius: Appearance.rounding.normal
-							icon.name: "skip_previous"
+                            implicitHeight: 40
+                            bgRadius: Appearance.rounding.normal
+                            icon.name: "skip_previous"
                             icon.color: Colours.m3Colors.m3OnPrimary
                             color: Colours.m3Colors.m3Primary
                             onClicked: Players.active ? Players.active.previous() : {}
@@ -272,8 +272,8 @@ Item {
                         StyledButton {
                             implicitWidth: 40
                             implicitHeight: 40
-							icon.name: "skip_next"
-							bgRadius: Appearance.rounding.normal
+                            icon.name: "skip_next"
+                            bgRadius: Appearance.rounding.normal
                             icon.color: Colours.m3Colors.m3OnPrimary
                             color: Colours.m3Colors.m3Primary
                             onClicked: Players.active ? Players.active.next() : {}

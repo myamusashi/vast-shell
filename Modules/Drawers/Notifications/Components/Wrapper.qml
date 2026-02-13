@@ -118,7 +118,6 @@ Item {
             leftMargin: 10
         }
         radius: Appearance.rounding.normal
-        clip: true
 
         color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
 
