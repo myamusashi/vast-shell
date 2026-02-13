@@ -8,21 +8,20 @@ StyledRect {
 
     required property real value
 
-    readonly property real calculatedWidth: Math.max(minSize, Math.max(textMetrics.width, textMetrics.height) + textPadding * 4)
-
+    property color circleColor: canvas.value > 80 ? Colours.m3Colors.m3Error : canvas.value > 60 ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary
     property string text
-    property real size
+    property real fixedSize: 100
+    property int textSize: 12
     property real textPadding: 20
-    property real minSize: 120 + size
 
-    width: calculatedWidth
-    height: width
+    implicitWidth: fixedSize
+    implicitHeight: fixedSize
 
     TextMetrics {
         id: textMetrics
 
         text: root.text
-        font.pixelSize: 16
+        font.pixelSize: root.textSize
         font.bold: true
     }
 
@@ -60,7 +59,7 @@ StyledRect {
             ctx.arc(centerX, centerY, radius, startAngle, endAngle);
 
             // Color based on value
-            ctx.strokeStyle = value > 80 ? Colours.m3Colors.m3Error : value > 60 ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary;
+            ctx.strokeStyle = root.circleColor;
             ctx.lineWidth = 8;
             ctx.lineCap = "round";
             ctx.stroke();
@@ -70,7 +69,7 @@ StyledRect {
     StyledText {
         anchors.centerIn: parent
         text: root.text
-        font.pixelSize: Math.max(12, Math.min(24, root.width / 6))
+        font.pixelSize: root.textSize
         font.bold: true
         color: Colours.m3Colors.m3OnSurface
         horizontalAlignment: Text.AlignHCenter
