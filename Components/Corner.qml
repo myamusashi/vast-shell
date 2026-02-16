@@ -5,6 +5,8 @@ import Quickshell.Widgets
 WrapperItem {
     id: root
 
+    anchors.margins: -1
+
     property color color: "white"
     property int location: Qt.TopRightCorner
     property int extensionSide: Qt.Vertical
