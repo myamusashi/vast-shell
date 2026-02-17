@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Widgets
+import Qcm.Material as MD
 
 import qs.Configs
 import qs.Helpers
@@ -63,13 +64,16 @@ Item {
             WrapperRectangle {
                 Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
                 implicitWidth: Math.min(parent.width, tabGroup.implicitWidth + 32)
-                implicitHeight: 50
-                color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.9)
+                implicitHeight: 56
+                color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.5)
                 margin: Appearance.margin.normal
                 radius: Appearance.rounding.full
 
                 TabBar {
                     id: tabGroup
+
+                    spacing: 2
+                    background: Item {}
 
                     Repeater {
                         model: [
@@ -89,7 +93,6 @@ Item {
                                 "index": 2
                             }
                         ]
-
                         delegate: TabButton {
                             id: buttonDelegate
 
@@ -100,21 +103,51 @@ Item {
                             implicitHeight: parent.height
                             text: modelData.name
 
-                            contentItem: StyledText {
-                                id: textModel
+                            contentItem: Item {
+                                implicitWidth: rowLayout.implicitWidth
+                                implicitHeight: rowLayout.implicitHeight
 
-                                text: buttonDelegate.modelData.name
-                                font.pixelSize: Appearance.fonts.size.large
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                wrapMode: Text.NoWrap
-                                elide: Text.ElideNone
-                                color: Colours.m3Colors.m3OnSurface
+                                Row {
+									id: rowLayout
+
+                                    spacing: Appearance.spacing.small
+                                    anchors.centerIn: parent
+
+                                    Icon {
+										anchors.verticalCenter: parent.verticalCenter
+                                        icon: buttonDelegate.modelData.icon
+                                        color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
+                                        font.pixelSize: Appearance.fonts.size.large
+                                    }
+
+                                    StyledText {
+										anchors.verticalCenter: parent.verticalCenter
+										text: buttonDelegate.modelData.name
+										color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
+                                        font.pixelSize: Appearance.fonts.size.large
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        wrapMode: Text.NoWrap
+                                        elide: Text.ElideNone
+                                    }
+                                }
                             }
 
                             background: StyledRect {
-                                radius: Appearance.rounding.full
-                                color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+                                radius: {
+                                    if (buttonDelegate.modelData.index === 0)
+                                        return Appearance.rounding.full;
+                                    else if (buttonDelegate.modelData.index === 2)
+                                        return Appearance.rounding.full;
+                                    else
+                                        return 0;
+                                }
+
+								color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainer
+                                topLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
+                                bottomLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
+                                topRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
+                                bottomRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
                             }
                         }
                     }
