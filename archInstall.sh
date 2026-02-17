@@ -93,9 +93,8 @@ echo_info "Installing AUR packages..."
 yay -S --needed --noconfirm \
 	quickshell-git \
 	matugen-bin \
-	playerctl \
 	wl-screenrec \
-	weather-icons
+	ttf-weather-icons
 
 # ─── keystate-bin (from Assets/keystate.go) ───────────────────────────────────
 echo_info "Building keystate-bin..."

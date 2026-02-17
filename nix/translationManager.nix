@@ -43,13 +43,11 @@ stdenv.mkDerivation {
 
     PLUGIN_DIR="$out/${qt6.qtbase.qtQmlPrefix}/TranslationManager"
 
-    # Set RPATH untuk libTranslationManagerplugin.so
     if [ -f "$PLUGIN_DIR/libTranslationManagerplugin.so" ]; then
       patchelf --set-rpath "$PLUGIN_DIR:${lib.makeLibraryPath [qt6.qtbase qt6.qtdeclarative]}" \
         "$PLUGIN_DIR/libTranslationManagerplugin.so"
     fi
 
-    # Set RPATH untuk libTranslationManager.so jika ada
     if [ -f "$PLUGIN_DIR/libTranslationManager.so" ]; then
       patchelf --set-rpath "${lib.makeLibraryPath [qt6.qtbase qt6.qtdeclarative]}" \
         "$PLUGIN_DIR/libTranslationManager.so"
