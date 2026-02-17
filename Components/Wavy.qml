@@ -26,6 +26,7 @@ Slider {
     }
 
     snapMode: Slider.NoSnap
+    hoverEnabled: true
     onEnableWaveChanged: waveTransition = enableWave ? 1.0 : 0.0
 
     NumberAnimation on waveAnimationPhase {
@@ -137,14 +138,13 @@ Slider {
         }
     }
 
-    handle: Rectangle {
+    handle: StyledRect {
         id: handleRect
 
         x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
-        width: 20
-        height: 20
-        radius: Appearance.rounding.full
+        implicitWidth: 6
+        implicitHeight: 20
         color: slider.activeColor
         opacity: slider.hovered ? 1 : 0
         scale: slider.pressed ? 1.3 : 1
