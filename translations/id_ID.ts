@@ -631,32 +631,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GeneralConfig</name>
     <message>
-        <location filename="../Configs/GeneralConfig.qml" line="17"/>
+        <location filename="../Configs/GeneralConfig.qml" line="18"/>
         <source>Low battery</source>
         <translation>Baterai lemah</translation>
     </message>
     <message>
-        <location filename="../Configs/GeneralConfig.qml" line="18"/>
+        <location filename="../Configs/GeneralConfig.qml" line="19"/>
         <source>You might want to plug in a charger</source>
         <translation>Kamu mungkin mau colok chargernya</translation>
     </message>
     <message>
-        <location filename="../Configs/GeneralConfig.qml" line="23"/>
+        <location filename="../Configs/GeneralConfig.qml" line="24"/>
         <source>Did you see the previous message?</source>
         <translation>Kamu bisa lihat pesan sebelumnya kan?</translation>
     </message>
     <message>
-        <location filename="../Configs/GeneralConfig.qml" line="24"/>
+        <location filename="../Configs/GeneralConfig.qml" line="25"/>
         <source>You should probably plug in a charger &lt;b&gt;now&lt;/b&gt;</source>
         <translation>Kamu mungkin ingin colok charger kamu &lt;b&gt;sekarang&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../Configs/GeneralConfig.qml" line="29"/>
+        <location filename="../Configs/GeneralConfig.qml" line="30"/>
         <source>Critical battery level</source>
         <translation>Level baterai kritis</translation>
     </message>
     <message>
-        <location filename="../Configs/GeneralConfig.qml" line="30"/>
+        <location filename="../Configs/GeneralConfig.qml" line="31"/>
         <source>PLUG THE CHARGER RIGHT NOW!!</source>
         <translation>MASUKAN CHARGER NYA SEKARANG!!</translation>
     </message>

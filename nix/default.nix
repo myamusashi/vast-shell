@@ -6,7 +6,6 @@
   findutils,
   gnused,
   gawk,
-
   weather-icons,
   libnotify,
   iw,
@@ -14,7 +13,6 @@
   util-linux,
   networkmanager,
   matugen,
-  playerctl,
   wl-clipboard,
   wl-screenrec,
   ffmpeg,
@@ -34,8 +32,6 @@
   m3shapes = callPackage ./m3Shapes.nix {};
   translationManager = callPackage ./translationManager.nix {};
 
-
-
   runtimeDeps = [
     findutils
     gnugrep
@@ -49,11 +45,9 @@
     polkit
 
     matugen
-    playerctl
     wl-clipboard
     wl-screenrec
     ffmpeg
-    weather-icons
     weather-icons
 
     foot

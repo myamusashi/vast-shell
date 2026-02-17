@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Widgets
-import Qcm.Material as MD
 
 import qs.Configs
 import qs.Helpers
@@ -108,22 +107,22 @@ Item {
                                 implicitHeight: rowLayout.implicitHeight
 
                                 Row {
-									id: rowLayout
+                                    id: rowLayout
 
                                     spacing: Appearance.spacing.small
                                     anchors.centerIn: parent
 
                                     Icon {
-										anchors.verticalCenter: parent.verticalCenter
+                                        anchors.verticalCenter: parent.verticalCenter
                                         icon: buttonDelegate.modelData.icon
                                         color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.large
                                     }
 
                                     StyledText {
-										anchors.verticalCenter: parent.verticalCenter
-										text: buttonDelegate.modelData.name
-										color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: buttonDelegate.modelData.name
+                                        color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.large
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
@@ -143,7 +142,7 @@ Item {
                                         return 0;
                                 }
 
-								color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainer
+                                color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainer
                                 topLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
                                 bottomLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
                                 topRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
