@@ -67,21 +67,26 @@
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="297"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="294"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
 </context>
 <context>
+    <name>AppsInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="29"/>
+        <source>Graphic User Interfaces</source>
+        <translation>Antarmuka Pengguna Grafis</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="33"/>
+        <source>Terminal User Interfaces</source>
+        <translation>Antarmuka Pengguna Terminal</translation>
+    </message>
+</context>
+<context>
     <name>AudioCapture</name>
-    <message>
-        <source>Mix</source>
-        <translation type="vanished">Mix</translation>
-    </message>
-    <message>
-        <source>Voice</source>
-        <translation type="vanished">Suara</translation>
-    </message>
     <message>
         <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="125"/>
         <source>LINUX DEFAULT OUTPUT</source>
@@ -117,7 +122,7 @@
 <context>
     <name>BrightnessControls</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="39"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="42"/>
         <source>Night mode</source>
         <translation>Mode Malam</translation>
     </message>
@@ -446,6 +451,128 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>DiskInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="14"/>
+        <source> GB used</source>
+        <translation> Penggunaan GB</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="21"/>
+        <source> GB total</source>
+        <translation> Total GB</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="40"/>
+        <source>Root</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="45"/>
+        <source>Boot</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="50"/>
+        <source>Free</source>
+        <translation>Kosong</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="82"/>
+        <source>Internal storage</source>
+        <translation>Penyimpanan internal</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="14"/>
+        <source>Display</source>
+        <translation>Tampilan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="21"/>
+        <source>Monitor</source>
+        <translation>Monitor</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="22"/>
+        <source>Description</source>
+        <translation>Deskripsi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="27"/>
+        <source>Resolution</source>
+        <translation>Resolusi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="32"/>
+        <source>Scale</source>
+        <translation>Skala</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="37"/>
+        <source>Refresh Rate</source>
+        <translation>Refresh Rate</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="42"/>
+        <source>Color Management</source>
+        <translation>Manajemen Warna</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="55"/>
+        <source>System Information</source>
+        <translation>Informasi Sistem</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="61"/>
+        <source>Vulkan</source>
+        <translation>Vulkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="62"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="67"/>
+        <source>Not available</source>
+        <translation>Tidak tersedia</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="66"/>
+        <source>OpenGL</source>
+        <translation>OpenGL</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="71"/>
+        <source>Vulkan Driver</source>
+        <translation>Driver Vulkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="76"/>
+        <source>vaAPI Driver</source>
+        <translation>Driver vaAPI</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="81"/>
+        <source>VDPAU Driver</source>
+        <translation>Driver VDPAU</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="86"/>
+        <source>OpenGL Renderer</source>
+        <translation>Renderer OpenGL</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="91"/>
+        <source>OpenGL Vendor</source>
+        <translation>Vendor OpenGL</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="128"/>
+        <source>N/A</source>
+        <translation>T/A</translation>
+    </message>
+</context>
+<context>
     <name>ForecastDaily</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="39"/>
@@ -758,7 +885,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>InputField</name>
     <message>
-        <location filename="../Modules/Polkit/InputField.qml" line="22"/>
+        <location filename="../Modules/Polkit/InputField.qml" line="17"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
@@ -903,6 +1030,34 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>OSInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="10"/>
+        <source>Operating system</source>
+        <translation>Sistem operasi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="15"/>
+        <source>Distro version</source>
+        <translation>Versi distro</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="19"/>
+        <source>kernel name</source>
+        <translation>Nama kernel</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="23"/>
+        <source>architecture design</source>
+        <translation>Desain arsitektur</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="27"/>
+        <source>CPU flags</source>
+        <translation>Flag CPU</translation>
+    </message>
+</context>
+<context>
     <name>Performance</name>
     <message>
         <location filename="../Modules/Dashboard/Performance.qml" line="35"/>
@@ -913,68 +1068,107 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performances</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="46"/>
-        <source>CPU Usage</source>
-        <translation>Penggunaan CPU</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="44"/>
+        <source>N/A</source>
+        <translation>T/A</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="27"/>
-        <source>RAM Usage</source>
-        <translation>Penggunaan RAM</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="51"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
+        <source> min</source>
+        <translation> menit</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="65"/>
-        <source>Disk Usage</source>
-        <translation>Penggunaan penyimpanan</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
+        <source> h </source>
+        <translation> j </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="79"/>
-        <source>Network Speed</source>
-        <translation>Kecepatan Jaringan</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
+        <source> h</source>
+        <translation> j</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="89"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="149"/>
-        <source>Wired ↓</source>
-        <translation>Kabel ↓</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="71"/>
+        <source>CPU status</source>
+        <translation>Status CPU</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="93"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="153"/>
-        <source>Wired ↑</source>
-        <translation>Kabel ↑</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="136"/>
+        <source>Battery</source>
+        <translation>Baterai</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="97"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="157"/>
-        <source>Wireless ↓</source>
-        <translation>nirkabel ↓</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="170"/>
+        <source>Charging</source>
+        <translation>Mengisi daya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="101"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="161"/>
-        <source>Wireless ↑</source>
-        <translation>nirkabel ↑</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="170"/>
+        <source>Discharging</source>
+        <translation>Menggunakan daya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="139"/>
-        <source>Data Usage</source>
-        <translation>Penggunaan Data</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="177"/>
+        <source>Rem. </source>
+        <translation>Sisa. </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="199"/>
-        <source>Network Interfaces</source>
-        <translation>Jaringan Antarmuka</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="189"/>
+        <source>Network</source>
+        <translation>Jaringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="209"/>
-        <source>Wired</source>
-        <translation>Kabel</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="220"/>
+        <source>Download ↓</source>
+        <translation>Unduh ↓</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="213"/>
-        <source>Wireless</source>
-        <translation>Nirkabel</translation>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="224"/>
+        <source>Upload ↑</source>
+        <translation>Unggah ↑</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="252"/>
+        <source>Link speed: </source>
+        <translation>Kecepatan link: </translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="263"/>
+        <source>Apps</source>
+        <translation>Aplikasi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="280"/>
+        <source>Total</source>
+        <translation>Total</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="290"/>
+        <source> GUI</source>
+        <translation> GUI</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="296"/>
+        <source> CLI</source>
+        <translation> CLI</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="306"/>
+        <source>Display</source>
+        <translation>Tampilan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="361"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="397"/>
+        <source> GB used</source>
+        <translation> GB terpakai</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="368"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="404"/>
+        <source> GB total</source>
+        <translation> GB total</translation>
     </message>
 </context>
 <context>
@@ -1029,10 +1223,21 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>RecordPanel</name>
+    <name>RamInfo</name>
     <message>
-        <source>WIP</source>
-        <translation type="vanished">WIP</translation>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="19"/>
+        <source>RAM Size</source>
+        <translation>Ukuran RAM</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="40"/>
+        <source>Used</source>
+        <translation>Terpakai</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="44"/>
+        <source>Free</source>
+        <translation>Kosong</translation>
     </message>
 </context>
 <context>
@@ -1124,152 +1329,152 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Surface</name>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Sunday</source>
         <translation>Minggu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Monday</source>
         <translation>Senin</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Tuesday</source>
         <translation>Selasa</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Wednesday</source>
         <translation>Rabu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Thuesday</source>
         <translation>Kamis</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Friday</source>
         <translation>Jumat</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="86"/>
+        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Saturday</source>
         <translation>Sabtu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Jan</source>
         <translation>Jan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Feb</source>
         <translation>Feb</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Mar</source>
         <translation>Mar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Apr</source>
         <translation>Apr</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Mei</source>
         <translation>Mei</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Jun</source>
         <translation>Jun</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Jul</source>
         <translation>Jul</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Aug</source>
         <translation>Agu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Sep</source>
         <translation>Sep</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Okt</source>
         <translation>Okt</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Nov</source>
         <translation>Nov</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="91"/>
+        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Des</source>
         <translation>Des</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="210"/>
+        <location filename="../Modules/Lock/Surface.qml" line="209"/>
         <source>Password Invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="294"/>
+        <location filename="../Modules/Lock/Surface.qml" line="293"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="294"/>
+        <location filename="../Modules/Lock/Surface.qml" line="293"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="400"/>
+        <location filename="../Modules/Lock/Surface.qml" line="399"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="409"/>
+        <location filename="../Modules/Lock/Surface.qml" line="408"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="418"/>
+        <location filename="../Modules/Lock/Surface.qml" line="417"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="427"/>
+        <location filename="../Modules/Lock/Surface.qml" line="426"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="494"/>
+        <location filename="../Modules/Lock/Surface.qml" line="493"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="510"/>
+        <location filename="../Modules/Lock/Surface.qml" line="509"/>
         <source>Do you want to %1?</source>
         <translation>Apakah kamu mau %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="532"/>
+        <location filename="../Modules/Lock/Surface.qml" line="531"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="546"/>
+        <location filename="../Modules/Lock/Surface.qml" line="545"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>

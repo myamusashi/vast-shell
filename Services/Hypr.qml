@@ -1,7 +1,7 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Hyprland
 
@@ -16,6 +16,8 @@ Singleton {
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
     readonly property int activeWsId: focusedWorkspace?.id ?? 1
+
+    property var monitorData: ({})
 
     function dispatch(request: string): void {
         Hyprland.dispatch(request);
@@ -46,6 +48,27 @@ Singleton {
                 Hyprland.refreshWorkspaces();
             else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
                 Hyprland.refreshToplevels();
+        }
+    }
+
+    Instantiator {
+        model: root.monitors
+        delegate: QtObject {
+            required property HyprlandMonitor modelData
+
+            Component.onCompleted: {
+                let data = Object.assign({}, root.monitorData);
+
+                data[modelData.name] = {
+                    availableModes: modelData.lastIpcObject.availableModes,
+                    description: modelData.description,
+                    refreshRate: modelData.lastIpcObject.refreshRate,
+                    resolution: modelData.width + "x" + modelData.height + "@" + modelData.lastIpcObject.refreshRate,
+                    scale: modelData.scale,
+                    colorManagementPreset: modelData.lastIpcObject.colorManagementPreset
+                };
+                root.monitorData = data;
+            }
         }
     }
 }
