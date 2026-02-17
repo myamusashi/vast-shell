@@ -12,6 +12,28 @@ die() {
 	exit 1
 }
 
+INSTALL_DIR=""
+BIN_DIR=""
+FONT_DIR=""
+QML_DIR=""
+BUILD_DIR=""
+PROJECT_ROOT=""
+M3SHAPES_REV=""
+QMLMATERIAL_REV=""
+
+init_globals() {
+	INSTALL_DIR="/usr/local/share/quickshell"
+	BIN_DIR="/usr/local/bin"
+	FONT_DIR="/usr/local/share/fonts"
+	QML_DIR="/usr/lib/qt6/qml"
+	BUILD_DIR="/tmp/quickshell-build"
+	PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)" || die "Failed to determine project root"
+	M3SHAPES_REV="1c8e6751febf230d7f94bf8015eaeb643bb4521e"
+	QMLMATERIAL_REV="21efe0c0d9fde4a9a041ab52e9ed3cc055c35796"
+
+	readonly INSTALL_DIR BIN_DIR FONT_DIR QML_DIR BUILD_DIR PROJECT_ROOT M3SHAPES_REV QMLMATERIAL_REV
+}
+
 check_root() {
 	[[ $EUID -eq 0 ]] || die "System-wide installation requires root. Run with sudo."
 }
@@ -24,7 +46,7 @@ install_system_packages() {
 	local -a missing=()
 	local -r pkg_list=(
 		base-devel git go cmake ninja extra-cmake-modules patchelf
-		qt6-{base,declarative,svg,graphs,multimedia,5compat,shadertools,tools}
+		qt6-base qt6-declarative qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
 		findutils grep sed gawk util-linux networkmanager libnotify
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 	)
@@ -51,12 +73,14 @@ setup_aur_helper() {
 	git clone https://aur.archlinux.org/yay.git "$BUILD_DIR/yay"
 	chown -R "$aur_user:$aur_user" "$BUILD_DIR/yay"
 
+	pushd "$BUILD_DIR/yay" >/dev/null
 	if [[ -n ${SUDO_USER:-} ]]; then
-		sudo -u "$SUDO_USER" makepkg -si --noconfirm -C "$BUILD_DIR/yay"
+		sudo -u "$SUDO_USER" makepkg -si --noconfirm
 	else
 		warn "SUDO_USER not set. Attempting to build as nobody..."
-		sudo -u nobody makepkg -si --noconfirm -C "$BUILD_DIR/yay" || die "Failed to build yay"
+		sudo -u nobody makepkg -si --noconfirm || die "Failed to build yay"
 	fi
+	popd >/dev/null
 }
 
 install_aur_packages() {
@@ -247,9 +271,8 @@ install_quickshell_config() {
 	rm -rf "$INSTALL_DIR"
 	mkdir -p "$INSTALL_DIR"
 
-	shopt -s extglob
-	cp -r "$PROJECT_ROOT"/!(build) "$INSTALL_DIR/" 2>/dev/null || true
-	shopt -u extglob
+	# Copy all except build/
+	find "$PROJECT_ROOT" -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} "$INSTALL_DIR/" \; 2>/dev/null || true
 
 	for dir in Assets Components Widgets; do
 		[[ -d $PROJECT_ROOT/$dir ]] && cp -r "$PROJECT_ROOT/$dir" "$INSTALL_DIR/"
@@ -264,7 +287,6 @@ install_quickshell_config() {
 
 	[[ -f $BIN_DIR/keystate-bin ]] && install -Dm755 "$BIN_DIR/keystate-bin" "$INSTALL_DIR/Assets/keystate-bin"
 }
-
 create_wrapper() {
 	log "Creating wrapper script..."
 	cat >"$BIN_DIR/shell" <<'EOF'
@@ -281,18 +303,8 @@ EOF
 	chmod +x "$BIN_DIR/shell"
 }
 
-PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
-
-readonly INSTALL_DIR="/usr/local/share/quickshell"
-readonly BIN_DIR="/usr/local/bin"
-readonly FONT_DIR="/usr/local/share/fonts"
-readonly QML_DIR="/usr/lib/qt6/qml"
-readonly BUILD_DIR="/tmp/quickshell-build"
-readonly PROJECT_ROOT
-readonly M3SHAPES_REV="1c8e6751febf230d7f94bf8015eaeb643bb4521e"
-readonly QMLMATERIAL_REV="21efe0c0d9fde4a9a041ab52e9ed3cc055c35796"
-
 main() {
+	init_globals
 	check_root
 	check_distro
 
@@ -313,6 +325,7 @@ main() {
 	rm -rf "$BUILD_DIR"
 
 	log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	log "System-wide installation complete!"
 	log "Run 'shell' to start quickshell."
 	log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }
