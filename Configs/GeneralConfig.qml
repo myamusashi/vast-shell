@@ -5,6 +5,7 @@ import Quickshell.Io
 JsonObject {
     property Apps apps: Apps {}
     property Battery battery: Battery {}
+    property bool followFocusMonitor: true
     property bool transparent: false
     property real alpha: 0.8
     property bool enableOuterBorder: false
