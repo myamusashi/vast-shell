@@ -27,7 +27,7 @@ Item {
 
     implicitWidth: GlobalStates.isSessionOpen ? 80 : 0
     implicitHeight: parent.height * 0.5
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitWidth {
         NAnim {
@@ -59,7 +59,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isSessionOpen
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isSessionOpen
             asynchronous: true
 
             sourceComponent: ColumnLayout {
@@ -187,6 +187,7 @@ Item {
                                 root.pendingAction = rectDelegate.modelData.action;
                                 root.pendingActionName = rectDelegate.modelData.name + "?";
                                 root.showConfirmDialog = true;
+                                GlobalStates.isSessionOpen = false;
                             }
 
                             Connections {

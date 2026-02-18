@@ -21,7 +21,7 @@ WrapperRectangle {
     property int selectedIndex: 0
     property int selectedTab: 0
 
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
     implicitWidth: GlobalStates.isScreenCapturePanelOpen ? 300 : 0
     implicitHeight: GlobalStates.isScreenCapturePanelOpen ? 400 : 0
     radius: Appearance.rounding.large
@@ -44,7 +44,7 @@ WrapperRectangle {
     }
 
     Loader {
-        active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isScreenCapturePanelOpen
+        active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isScreenCapturePanelOpen
         asynchronous: true
         sourceComponent: ColumnLayout {
             anchors.fill: parent

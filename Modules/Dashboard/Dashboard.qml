@@ -25,7 +25,6 @@ PanelWindow {
 
     color: "transparent"
 
-    screen: Configs.generals.followFocusMonitor ? GlobalStates.getFocusedMonitor : screen
     WlrLayershell.namespace: "shell:dashboard"
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
     exclusionMode: ExclusionMode.Normal

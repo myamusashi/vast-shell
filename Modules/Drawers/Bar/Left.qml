@@ -1,11 +1,17 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 
 import qs.Configs
 import qs.Widgets
 
 RowLayout {
+    id: root
+
     anchors.fill: parent
+
+    required property ShellScreen monitor
+
     anchors.leftMargin: Appearance.margin.small
     spacing: Appearance.spacing.normal
 
@@ -14,6 +20,7 @@ RowLayout {
     }
 
     Workspaces {
+        monitor: root.monitor
         Layout.alignment: Qt.AlignCenter
     }
 

@@ -24,7 +24,7 @@ Item {
 
     implicitWidth: isControlCenterOpen ? parent.width * 0.3 : 0
     implicitHeight: parent.height * 0.8
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitWidth {
         NAnim {

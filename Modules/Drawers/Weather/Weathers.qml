@@ -22,7 +22,7 @@ Item {
 
     implicitHeight: parent.height
     implicitWidth: GlobalStates.isWeatherPanelOpen ? parent.width * 0.25 : 0
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
 
@@ -91,7 +91,7 @@ Item {
                 id: mainLoader
 
                 anchors.fill: parent
-                active: window.modelData.name === Hypr.focusedMonitor.name
+                visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
                 asynchronous: true
 
                 sourceComponent: ColumnLayout {

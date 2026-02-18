@@ -24,7 +24,7 @@ Item {
 
     implicitWidth: parent.width * 0.2
     implicitHeight: isCalendarShow ? 350 : 0
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on cellWidth {
         enabled: false
@@ -58,7 +58,7 @@ Item {
         bottomLeftRadius: Appearance.rounding.large
 
         Loader {
-            active: window.modelData.name === Hypr.focusedMonitor.name && container.isCalendarShow
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && container.isCalendarShow
             asynchronous: true
             sourceComponent: ColumnLayout {
                 id: root
