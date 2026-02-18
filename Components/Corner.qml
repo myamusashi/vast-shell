@@ -12,6 +12,7 @@ WrapperItem {
     property int extensionSide: Qt.Vertical
     property real radius: 30
 
+    margin: -1
     implicitWidth: radius
     implicitHeight: radius
 

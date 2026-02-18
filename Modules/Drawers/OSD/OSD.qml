@@ -20,27 +20,6 @@ Item {
     implicitHeight: calculateHeight()
     visible: window.modelData.name === Hypr.focusedMonitor.name
 
-    Behavior on implicitHeight {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    Corner {
-        location: Qt.BottomRightCorner
-        extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomLeftCorner
-        extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
     function calculateHeight() {
         var totalHeight = 0;
         var spacing = 10;
@@ -61,6 +40,27 @@ Item {
             totalHeight += (activeCount - 1) * spacing;
 
         return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
+    }
+
+    Behavior on implicitHeight {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+
+    Corner {
+        location: Qt.BottomRightCorner
+        extensionSide: Qt.Horizontal
+        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        color: GlobalStates.drawerColors
+    }
+
+    Corner {
+        location: Qt.BottomLeftCorner
+        extensionSide: Qt.Horizontal
+        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
+        color: GlobalStates.drawerColors
     }
 
     StyledRect {
