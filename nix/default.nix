@@ -136,19 +136,16 @@
          # Copy QML plugins to lib directory
          mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
 
-         # Copy m3shapes
          if [ -d "${m3shapes}/${qt6.qtbase.qtQmlPrefix}" ]; then
            cp -r ${m3shapes}/${qt6.qtbase.qtQmlPrefix}/* \
              $out/${qt6.qtbase.qtQmlPrefix}
          fi
 
-         # Copy qml-material
          if [ -d "${qml-material}/${qt6.qtbase.qtQmlPrefix}" ]; then
            cp -r ${qml-material}/${qt6.qtbase.qtQmlPrefix}/* \
              $out/${qt6.qtbase.qtQmlPrefix}
          fi
 
-         # Copy translationManager
          if [ -d "${translationManager}/${qt6.qtbase.qtQmlPrefix}" ]; then
            cp -r ${translationManager}/${qt6.qtbase.qtQmlPrefix}/* \
              $out/${qt6.qtbase.qtQmlPrefix}

@@ -3,134 +3,127 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 
-import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
+import qs.Components
 
 import "Capture" as Cap
 import "History"
 
-Variants {
-    model: Quickshell.screens
+PanelWindow {
+    id: root
 
-    delegate: PanelWindow {
-        id: root
+    anchors {
+        right: true
+        left: true
+        bottom: true
+        top: true
+    }
 
-        required property ShellScreen modelData
+    color: "transparent"
 
-        anchors {
-            right: true
-            left: true
-            bottom: true
-            top: true
-        }
+    screen: Configs.generals.followFocusMonitor ? GlobalStates.getFocusedMonitor : screen
+    WlrLayershell.namespace: "shell:dashboard"
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
+    exclusionMode: ExclusionMode.Normal
+    focusable: true
+    exclusiveZone: 0
+    surfaceFormat.opaque: false
+    visible: GlobalStates.isDashboardOpen
 
-        screen: modelData
-        color: "transparent"
+    StyledRect {
+        anchors.fill: parent
+        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)
 
-        WlrLayershell.namespace: "shell:dashboard"
-        WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
-        exclusionMode: ExclusionMode.Normal
-        focusable: true
-        exclusiveZone: 0
-        surfaceFormat.opaque: false
-        visible: GlobalStates.isDashboardOpen
-
-        StyledRect {
+        RowLayout {
             anchors.fill: parent
-            color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 15
-                ColumnLayout {
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: parent.width / 3
-                    Layout.topMargin: 15
-                    Layout.leftMargin: 15
-                    spacing: Appearance.spacing.large
-                    Loader {
-                        id: captureLoader
+            anchors.margins: 15
+            ColumnLayout {
+                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width / 3
+                Layout.topMargin: 15
+                Layout.leftMargin: 15
+                spacing: Appearance.spacing.large
+                Loader {
+                    id: captureLoader
 
-                        active: GlobalStates.isDashboardOpen
-                        asynchronous: true
-                        Layout.preferredWidth: item ? item.implicitWidth + 50 : 200
-                        Layout.preferredHeight: item ? item.implicitHeight : 0
-                        sourceComponent: Cap.Capture {
-                            condition: GlobalStates.isDashboardOpen
-                        }
-                    }
-
-                    Loader {
-                        id: performanceLoader
-
-                        active: GlobalStates.isDashboardOpen
-                        asynchronous: true
-                        Layout.preferredWidth: item ? item.implicitWidth : 200
-                        Layout.preferredHeight: item ? item.implicitHeight : 0
-                        sourceComponent: Performance {}
-                    }
-
-                    Item {
-                        Layout.fillHeight: true
+                    active: GlobalStates.isDashboardOpen
+                    asynchronous: true
+                    Layout.preferredWidth: item ? item.implicitWidth + 50 : 200
+                    Layout.preferredHeight: item ? item.implicitHeight : 0
+                    sourceComponent: Cap.Capture {
+                        condition: GlobalStates.isDashboardOpen
                     }
                 }
-                ColumnLayout {
-                    Layout.alignment: Qt.AlignCenter | Qt.AlignTop
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: parent.width / 3
-                    spacing: Appearance.spacing.large
-                    // Loader {
-                    //     id: controlBarLoader
-                    //
-                    //     active: GlobalStates.isDashboardOpen
-                    //     asynchronous: true
-                    //     Layout.alignment: Qt.AlignHCenter
-                    //     Layout.preferredHeight: 80
-                    //     Layout.preferredWidth: parent.width
-                    //     sourceComponent: ControlBar {}
-                    // }
-                    Loader {
-                        id: historyLoader
 
-                        active: GlobalStates.isDashboardOpen
-                        asynchronous: true
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredHeight: 80
-                        Layout.preferredWidth: parent.width
-                        sourceComponent: History {}
-                    }
-                    Item {
-                        Layout.fillHeight: true
+                Loader {
+                    id: performanceLoader
+
+                    active: GlobalStates.isDashboardOpen
+                    asynchronous: true
+                    Layout.preferredWidth: item ? item.implicitWidth : 200
+                    Layout.preferredHeight: item ? item.implicitHeight : 0
+                    sourceComponent: Performance {}
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                }
+            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignCenter | Qt.AlignTop
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width / 3
+                spacing: Appearance.spacing.large
+                // Loader {
+                //     id: controlBarLoader
+                //
+                //     active: GlobalStates.isDashboardOpen
+                //     asynchronous: true
+                //     Layout.alignment: Qt.AlignHCenter
+                //     Layout.preferredHeight: 80
+                //     Layout.preferredWidth: parent.width
+                //     sourceComponent: ControlBar {}
+                // }
+                Loader {
+                    id: historyLoader
+
+                    active: GlobalStates.isDashboardOpen
+                    asynchronous: true
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.preferredHeight: 80
+                    Layout.preferredWidth: parent.width
+                    sourceComponent: History {}
+                }
+                Item {
+                    Layout.fillHeight: true
+                }
+            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignCenter | Qt.AlignTop
+                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width / 3
+                Layout.rightMargin: 15
+                spacing: Appearance.spacing.large
+                Rectangle {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.preferredWidth: 200
+                    Layout.preferredHeight: 100
+                    color: "transparent"
+                    border.color: Colours.m3Colors.m3Primary
+                    border.width: 1
+                    Text {
+                        anchors.centerIn: parent
+                        text: qsTr("WIP")
+                        color: Colours.m3Colors.m3OnSurface
                     }
                 }
-                ColumnLayout {
-                    Layout.alignment: Qt.AlignCenter | Qt.AlignTop
-                    Layout.fillWidth: true
-                    Layout.preferredWidth: parent.width / 3
-                    Layout.rightMargin: 15
-                    spacing: Appearance.spacing.large
-                    Rectangle {
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredWidth: 200
-                        Layout.preferredHeight: 100
-                        color: "transparent"
-                        border.color: Colours.m3Colors.m3Primary
-                        border.width: 1
-                        Text {
-                            anchors.centerIn: parent
-                            text: qsTr("WIP")
-                            color: Colours.m3Colors.m3OnSurface
-                        }
-                    }
-                    Item {
-                        Layout.fillHeight: true
-                    }
+                Item {
+                    Layout.fillHeight: true
                 }
             }
         }

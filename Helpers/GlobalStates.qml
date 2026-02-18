@@ -18,13 +18,12 @@ Singleton {
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
-    readonly property int osdDisplayDuration: 5000
-    readonly property int cleanupDelay: 500
     readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
     readonly property bool isNumLockOSDVisible: _activeOSDs["numlock"] || false
     readonly property color drawerColors: Configs.generals.transparent ? Colours.withAlpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
-    readonly property ShellScreen focusedMonitor: Quickshell.screens.find(s => s.name === Hypr.focusedMonitor?.name)
+    readonly property int osdDisplayDuration: 5000
+    readonly property int cleanupDelay: 500
     readonly property string currentLanguage: TranslationManager.currentLanguage
 
     property bool isCalendarOpen: false

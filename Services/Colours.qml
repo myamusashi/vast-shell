@@ -34,8 +34,7 @@ Singleton {
         let g = (targetColor.g - baseColor.g * invA) / overlayOpacity;
         let b = (targetColor.b - baseColor.b * invA) / overlayOpacity;
 
-        return Qt.rgba(clamp01(r), clamp01(g), clamp01(b), 1.0        // opacity handled separately
-        );
+        return Qt.rgba(clamp01(r), clamp01(g), clamp01(b), 1.0);
     }
 
     function getSourceColor() {
