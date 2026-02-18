@@ -464,16 +464,9 @@ WlSessionLockSurface {
         clip: true
         radius: Appearance.rounding.large
         margin: Appearance.margin.normal
-        implicitWidth: sessionWrapperRect.showConfirmDialog ? column.implicitWidth + 20 : 0
+        implicitWidth: column.implicitWidth + 20
         implicitHeight: sessionWrapperRect.showConfirmDialog ? column.implicitHeight + 20 : 0
         color: GlobalStates.drawerColors
-
-        Behavior on implicitWidth {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
 
         Behavior on implicitHeight {
             NAnim {
@@ -530,6 +523,8 @@ WlSessionLockSurface {
                     implicitHeight: 40
                     text: qsTr("No")
                     icon.name: "cancel"
+                    icon.color: Colours.m3Colors.m3Primary
+                    textColor: Colours.m3Colors.m3Primary
                     mdState.backgroundColor: "transparent"
                     onClicked: {
                         sessionWrapperRect.showConfirmDialog = false;
@@ -542,8 +537,10 @@ WlSessionLockSurface {
                     implicitWidth: 80
                     implicitHeight: 40
                     icon.name: "check"
+                    icon.color: Colours.m3Colors.m3Primary
+                    textColor: Colours.m3Colors.m3Primary
                     text: qsTr("Yes")
-                    mdState.backgroundColor: Colours.m3Colors.m3OnPrimary
+                    mdState.backgroundColor: "transparent"
                     onClicked: {
                         if (sessionWrapperRect.pendingAction)
                             sessionWrapperRect.pendingAction();
