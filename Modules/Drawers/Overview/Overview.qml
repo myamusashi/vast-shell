@@ -2,11 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Io
-import Quickshell.Wayland
 import Quickshell.Widgets
-import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -14,8 +10,10 @@ import qs.Services
 import qs.Components
 
 // Thx Confusion_18 for your simple Overview code
-StyledRect {
+ClippingWrapperRectangle {
     id: root
+
+    anchors.centerIn: parent
 
     property bool isOverviewOpen: GlobalStates.isOverviewOpen
     property real spacing: Appearance.spacing.normal
@@ -27,46 +25,48 @@ StyledRect {
 
     color: GlobalStates.drawerColors
     implicitWidth: contentWidth
-    implicitHeight: tileHeight * rows + spacing * (rows + 1)
-    x: GlobalStates.isOverviewOpen ? (parent.width - width) / 2 : -width
-    y: GlobalStates.isOverviewOpen ? (parent.height - height) / 2 : -height
+    implicitHeight: GlobalStates.isOverviewOpen ? tileHeight * rows + spacing * (rows + 1) : 0
+    radius: Appearance.rounding.normal
 
-    Behavior on x {
-        NAnim {}
+    Behavior on implicitHeight {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            onFinished: {
+                if (GlobalStates.isOverviewOpen)
+                    GlobalStates.isOverviewOpen = false;
+                else
+                    GlobalStates.isOverviewOpen = true;
+            }
+        }
     }
 
-    GridLayout {
-        id: overviewLayout
+    Loader {
+        id: loader
 
-        anchors {
-            fill: parent
-            margins: root.spacing
-        }
-        columns: root.columns
-        rows: root.rows
-        rowSpacing: 8
-        columnSpacing: 8
+        active: GlobalStates.isOverviewOpen
+        asynchronous: true
+        sourceComponent: GridLayout {
+            id: overviewLayout
 
-        Repeater {
-            model: root.rows * root.columns
+            anchors {
+                fill: parent
+                margins: root.spacing
+            }
+            columns: root.columns
+            rows: root.rows
+            rowSpacing: 8
+            columnSpacing: 8
 
-            delegate: WorkspaceView {
-                id: delegate
+            Repeater {
+                model: root.rows * root.columns
 
-                parentWindow: root
-                implicitWidth: root.tileWidth
-                implicitHeight: root.tileHeight
+                delegate: WorkspaceView {
+                    id: delegate
 
-                DropArea {
-                    anchors.fill: parent
-                    onDropped: drag => {
-                        var address = drag.source.address;
-
-                        Hypr.dispatch("movetoworkspacesilent " + (delegate.index + 1) + ", address:" + address);
-                        Hyprland.refreshWorkspaces();
-                        Hyprland.refreshMonitors();
-                        Hyprland.refreshToplevels();
-                    }
+                    parentWindow: root
+                    implicitWidth: root.tileWidth
+                    implicitHeight: root.tileHeight
                 }
             }
         }
