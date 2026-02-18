@@ -187,7 +187,7 @@
 <context>
     <name>Dashboard</name>
     <message>
-        <location filename="../Modules/Dashboard/Dashboard.qml" line="145"/>
+        <location filename="../Modules/Dashboard/Dashboard.qml" line="120"/>
         <source>WIP</source>
         <translation>WIP</translation>
     </message>
@@ -440,12 +440,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DialogBox</name>
     <message>
-        <location filename="../Components/DialogBox.qml" line="102"/>
+        <location filename="../Components/DialogBox.qml" line="104"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Components/DialogBox.qml" line="111"/>
+        <location filename="../Components/DialogBox.qml" line="115"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1068,105 +1068,105 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performances</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="44"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="46"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="51"/>
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="55"/>
         <source> min</source>
         <translation> menit</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="55"/>
         <source> h </source>
         <translation> j </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="55"/>
         <source> h</source>
         <translation> j</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="71"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="73"/>
         <source>CPU status</source>
         <translation>Status CPU</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="136"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="138"/>
         <source>Battery</source>
         <translation>Baterai</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="170"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="173"/>
         <source>Charging</source>
         <translation>Mengisi daya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="170"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="173"/>
         <source>Discharging</source>
         <translation>Menggunakan daya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="177"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="180"/>
         <source>Rem. </source>
         <translation>Sisa. </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="189"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="192"/>
         <source>Network</source>
         <translation>Jaringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="220"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="223"/>
         <source>Download ↓</source>
         <translation>Unduh ↓</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="224"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="227"/>
         <source>Upload ↑</source>
         <translation>Unggah ↑</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="252"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="255"/>
         <source>Link speed: </source>
         <translation>Kecepatan link: </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="263"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="266"/>
         <source>Apps</source>
         <translation>Aplikasi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="280"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="283"/>
         <source>Total</source>
         <translation>Total</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="290"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="293"/>
         <source> GUI</source>
         <translation> GUI</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="296"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="299"/>
         <source> CLI</source>
         <translation> CLI</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="306"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="309"/>
         <source>Display</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="361"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="397"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="364"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="400"/>
         <source> GB used</source>
         <translation> GB terpakai</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="368"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="404"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="371"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="407"/>
         <source> GB total</source>
         <translation> GB total</translation>
     </message>
@@ -1297,12 +1297,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="247"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="248"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="254"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="255"/>
         <source>Do you want to %1?</source>
         <translation>Kamu mau melakukan %1?</translation>
     </message>
@@ -1459,22 +1459,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="493"/>
+        <location filename="../Modules/Lock/Surface.qml" line="486"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="509"/>
+        <location filename="../Modules/Lock/Surface.qml" line="502"/>
         <source>Do you want to %1?</source>
         <translation>Apakah kamu mau %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="531"/>
+        <location filename="../Modules/Lock/Surface.qml" line="524"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="545"/>
+        <location filename="../Modules/Lock/Surface.qml" line="542"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
