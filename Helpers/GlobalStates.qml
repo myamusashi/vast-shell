@@ -435,23 +435,6 @@ Singleton {
     }
 
     IpcHandler {
-        target: "lock"
-
-        function lock(): void {
-            lock.locked = true;
-            GlobalStates.isLockscreenOpen = true;
-        }
-
-        function unlock(): void {
-            lock.unlock();
-        }
-
-        function isLocked(): bool {
-            return lock.locked;
-        }
-    }
-
-    IpcHandler {
         target: "img"
 
         function set(path: string): void {
