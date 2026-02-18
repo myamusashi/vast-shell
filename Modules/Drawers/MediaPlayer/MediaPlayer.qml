@@ -66,13 +66,13 @@ Item {
         radius: 0
         bottomLeftRadius: Appearance.rounding.large
         bottomRightRadius: bottomLeftRadius
-        visible: window.modelData.name === Hypr.focusedMonitor.name
+        visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
         Loader {
             id: contentLoader
 
             anchors.fill: parent
-            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isMediaPlayerOpen
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isMediaPlayerOpen
 
             sourceComponent: RowLayout {
                 id: contentLayout

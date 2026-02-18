@@ -14,6 +14,7 @@ ClippingWrapperRectangle {
     id: root
 
     anchors.centerIn: parent
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     property bool isOverviewOpen: GlobalStates.isOverviewOpen
     property real spacing: Appearance.spacing.normal
@@ -44,7 +45,7 @@ ClippingWrapperRectangle {
     Loader {
         id: loader
 
-        active: GlobalStates.isOverviewOpen
+        active: GlobalStates.isOverviewOpen && (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name)
         asynchronous: true
         sourceComponent: GridLayout {
             id: overviewLayout

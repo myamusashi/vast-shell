@@ -19,9 +19,10 @@ import "PerformancePages/Popup" as POPUP
 Item {
     id: wrapper
 
+    anchors.fill: parent
+
     property bool anyPopupVisible: batteryInfoPopup.isVisible || networkInfoPopup.isVisible || displayInfoPopup.isVisible || appsInfoPopup.isVisible || ramInfoPopup.isVisible || diskInfoPopup.isVisible || osInfoPopup.isVisible
 
-    anchors.fill: parent
     objectName: "rootWrapper"
 
     ScrollView {
@@ -32,11 +33,12 @@ Item {
         ColumnLayout {
             id: root
 
+            anchors.fill: parent
+
             readonly property int totalApps: DesktopEntries.applications.values.filter(e => !e.runInTerminal).length
             readonly property int totalTerminalApps: DesktopEntries.applications.values.filter(e => e.runInTerminal).length
             readonly property string batteryRemaining: formatBatteryTime(UPower.displayDevice.timeToEmpty ?? 0)
 
-            anchors.fill: parent
             spacing: Appearance.spacing.small
 
             function formatBatteryTime(seconds) {
@@ -138,7 +140,8 @@ Item {
                     zoomId: batteryInfoPopup
 
                     RowLayout {
-                        anchors.fill: parent
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
                         spacing: Appearance.spacing.normal
 
                         WID.Battery {
@@ -419,7 +422,6 @@ Item {
                 color: Colours.m3Colors.m3SurfaceContainer
 
                 RowLayout {
-                    anchors.fill: parent
                     spacing: Appearance.spacing.normal
 
                     StyledText {

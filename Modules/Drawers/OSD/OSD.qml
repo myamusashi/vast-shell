@@ -18,7 +18,7 @@ Item {
 
     implicitWidth: parent.width * 0.15
     implicitHeight: calculateHeight()
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     function calculateHeight() {
         var totalHeight = 0;
@@ -73,7 +73,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: window.modelData.name === Hypr.focusedMonitor.name && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock"))
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock"))
             asynchronous: true
 
             sourceComponent: Column {

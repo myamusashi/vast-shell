@@ -8,7 +8,7 @@ import qs.Services
 
 Item {
     implicitWidth: Configs.bar.compact ? parent.width * 0.6 : parent.width
-    implicitHeight: window.modelData.name === Hypr.focusedMonitor.name ? GlobalStates.isBarOpen ? 40 : 0 : 0
+    implicitHeight: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isBarOpen ? 40 : 0
 
     anchors {
         top: parent.top
@@ -30,7 +30,7 @@ Item {
         color: "transparent"
 
         Loader {
-            active: window.modelData.name === Hypr.focusedMonitor.name && GlobalStates.isBarOpen
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isBarOpen
             asynchronous: true
             sourceComponent: Item {
                 anchors {
@@ -40,6 +40,7 @@ Item {
                 }
 
                 Left {
+                    monitor: window.modelData
                     implicitHeight: parent.height
                     implicitWidth: parent.width / 6
                     anchors {

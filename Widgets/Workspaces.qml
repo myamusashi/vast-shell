@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
@@ -14,14 +13,16 @@ import qs.Services
 StyledRect {
     id: root
 
+    required property ShellScreen monitor
+
     implicitWidth: loader.item.implicitWidth
     implicitHeight: 30
 
-    property real workspaceWidth: Hypr.focusedMonitor.width - (reserved[0] + reserved[2])
-    property real workspaceHeight: Hypr.focusedMonitor.height - (reserved[1] + reserved[3])
+    property real workspaceWidth: monitor.width - (reserved[0] + reserved[2])
+    property real workspaceHeight: monitor.height - (reserved[1] + reserved[3])
     property real containerWidth: 60
     property real containerHeight: 30
-    property list<int> reserved: Hypr.focusedMonitor.lastIpcObject.reserved
+    property list<int> reserved: monitor.lastIpcObject.reserved
     property real scaleFactor: Math.min(containerWidth / workspaceWidth, containerHeight / workspaceHeight)
     property real borderWidth: 2
 

@@ -54,7 +54,7 @@ Variants {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.namespace: "shell:drawers"
         WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        HyprlandWindow.visibleMask: window.contentItem.visibleChildren
+        HyprlandWindow.visibleMask: window.contentItem.children
 
         mask: Region {
             regions: childRegions.instances
@@ -96,13 +96,13 @@ Variants {
                 name: "top"
                 exclusiveZone: {
                     if (GlobalStates.isBarOpen) {
-                        if (window.modelData.name === Hypr.focusedMonitor.name)
+                        if (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name)
                             return Configs.generals.outerBorderSize + Configs.bar.barHeight;
                         else {
                             if (Configs.generals.enableOuterBorder)
-                                return Configs.generals.outerBorderSize + Configs.bar.barHeight;
+                                return Configs.generals.outerBorderSize;
                             else
-                                return Configs.bar.barHeight;
+                                return 0;
                         }
                     } else
                         return Configs.generals.outerBorderSize;
@@ -152,7 +152,7 @@ Variants {
 
                 anchors.top: parent.top
                 implicitWidth: QsWindow.window?.width ?? 0
-                implicitHeight: exclusiveTop.zone
+                implicitHeight: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? exclusiveTop.zone : 0
                 color: GlobalStates.drawerColors
 
                 Behavior on implicitHeight {
@@ -185,7 +185,7 @@ Variants {
         App {
             id: app
 
-            onHeightChanged: window.modelData.name === Hypr.focusedMonitor.name ? osd.anchors.bottomMargin = app.height + Configs.generals.outerBorderSize : 0
+            onHeightChanged: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? osd.anchors.bottomMargin = app.height + Configs.generals.outerBorderSize : 0
         }
 
         Bar {
@@ -214,7 +214,7 @@ Variants {
         Session {
             id: session
 
-            onWidthChanged: window.modelData.name === Hypr.focusedMonitor.name ? volume.anchors.rightMargin = session.width + Configs.generals.outerBorderSize : 0
+            onWidthChanged: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? volume.anchors.rightMargin = session.width + Configs.generals.outerBorderSize : 0
         }
 
         WallpaperSelector {

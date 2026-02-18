@@ -25,7 +25,7 @@ Item {
 
     implicitWidth: parent.width * 0.3
     implicitHeight: GlobalStates.isLauncherOpen ? parent.height * 0.5 : 0
-    visible: window.modelData.name === Hypr.focusedMonitor.name
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     // Thx caelestia
     function launch(entry: DesktopEntry): void {
@@ -75,7 +75,7 @@ Item {
         Loader {
             anchors.fill: parent
 
-            active: window.modelData.name === Hypr.focusedMonitor.name
+            active: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
             asynchronous: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
