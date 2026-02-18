@@ -58,7 +58,7 @@ StyledRect {
     Component {
         id: dotWorkspaceIndicator
 
-        RowLayout {
+        Row {
             id: container
 
             anchors {
@@ -66,7 +66,8 @@ StyledRect {
                 verticalCenter: parent.verticalCenter
             }
 
-            readonly property var occupied: Hypr.workspaces.values.reduce((acc, curr) => { // Caelestia credit
+            // Caelestia credit
+            readonly property var occupied: Hypr.workspaces.values.reduce((acc, curr) => {
                 acc[curr.id] = curr.lastIpcObject.windows > 0;
                 return acc;
             }, {})
@@ -158,10 +159,30 @@ StyledRect {
                     color: workspace?.focused ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnPrimary
                     radius: 0
                     clip: true
+
                     required property int index
-                    property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
+
                     property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
                     property bool hasMaximized: !!(workspace?.toplevels?.values.some(t => t.wayland?.maximized))
+
+                    property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
+
+                    // Use this workspace's own monitor, fall back to focusedMonitor
+                    property var wsMonitor: workspace?.monitor ?? Hypr.focusedMonitor
+                    property list<int> wsReserved: wsMonitor.lastIpcObject.reserved ?? [0, 0, 0, 0]
+
+                    // Monitor logical origin (physical px ÷ scale = logical px, matches Hyprland's at[] coords)
+                    property real monitorLogicalX: wsMonitor.x / wsMonitor.scale
+                    property real monitorLogicalY: wsMonitor.y / wsMonitor.scale
+                    property real monitorLogicalW: wsMonitor.width / wsMonitor.scale
+                    property real monitorLogicalH: wsMonitor.height / wsMonitor.scale
+
+                    // Usable area after reserved struts
+                    property real usableW: monitorLogicalW - (wsReserved[0] + wsReserved[2])
+                    property real usableH: monitorLogicalH - (wsReserved[1] + wsReserved[3])
+
+                    // Scale to fit the container box
+                    property real scaleFactor: Math.min(root.containerWidth / usableW, root.containerHeight / usableH)
 
                     DropArea {
                         anchors.fill: parent
@@ -203,12 +224,37 @@ StyledRect {
                             property StyledRect visualParent: root
                             property bool isCaught: false
 
+                            // Helpers that centralise the coordinate math
+                            // Window at[] coords are in logical global space,
+                            // subtract the monitor's logical origin + reserved to get
+                            // coords relative to the usable area of this workspace tile.
+                            property real localX: {
+                                const atX = toplevelData?.at[0] ?? 0;
+                                const originX = workspaceContainer.monitorLogicalX;
+                                const reserved = waylandHandle?.fullscreen ? 0 : workspaceContainer.wsReserved[0];
+                                return atX - originX - reserved;
+                            }
+                            property real localY: {
+                                const atY = toplevelData?.at[1] ?? 0;
+                                const originY = workspaceContainer.monitorLogicalY;
+                                const reserved = waylandHandle?.fullscreen ? 0 : workspaceContainer.wsReserved[1];
+                                return atY - originY - reserved;
+                            }
+
+                            // Centering offset so the usable area is centred in the container
+                            property real centerOffsetX: (root.containerWidth - workspaceContainer.usableW * workspaceContainer.scaleFactor) / 2
+                            property real centerOffsetY: (root.containerHeight - workspaceContainer.usableH * workspaceContainer.scaleFactor) / 2
+
                             captureSource: waylandHandle
                             live: false
 
-                            width: sourceSize.width * root.scaleFactor / Hypr.focusedMonitor.scale
-                            height: sourceSize.height * root.scaleFactor / Hypr.focusedMonitor.scale
+                            width: sourceSize.width * workspaceContainer.scaleFactor / workspaceContainer.wsMonitor.scale
+                            height: sourceSize.height * workspaceContainer.scaleFactor / workspaceContainer.wsMonitor.scale
                             scale: (Drag.active && !toplevelData?.floating) ? 0.98 : 1
+
+                            x: localX * workspaceContainer.scaleFactor + centerOffsetX
+                            y: localY * workspaceContainer.scaleFactor + centerOffsetY
+                            z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
 
                             Rectangle {
                                 anchors.fill: parent
@@ -217,33 +263,22 @@ StyledRect {
                                 border.width: 1
                             }
 
-                            x: (toplevelData?.at[0] - (waylandHandle?.fullscreen ? 0 : root.reserved[0])) * root.scaleFactor + (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2
-                            y: (toplevelData?.at[1] - (waylandHandle?.fullscreen ? 0 : root.reserved[1])) * root.scaleFactor + (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2
-                            z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
-
                             Drag.active: mouseArea.drag.active
                             Drag.hotSpot.x: width / 2
                             Drag.hotSpot.y: height / 2
                             Drag.onActiveChanged: {
-                                if (Drag.active)
+                                if (Drag.active) {
                                     parent = visualParent;
-                                else {
-                                    var mapped = mapToItem(originalParent, 0, 0);
+                                } else {
+                                    const mapped = mapToItem(originalParent, 0, 0);
                                     parent = originalParent;
 
-                                    if (toplevelData?.floating) {
-                                        x = mapped.x;
-                                        y = mapped.y;
-                                    } else if (!isCaught) {
+                                    if (toplevelData?.floating || !isCaught) {
                                         x = mapped.x;
                                         y = mapped.y;
                                     } else {
-                                        const baseX = toplevelData?.at[0] ?? 0;
-                                        const baseY = toplevelData?.at[1] ?? 0;
-                                        const offsetX = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[0];
-                                        const offsetY = (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 0 : root.reserved[1];
-                                        x = (baseX - offsetX) * root.scaleFactor + (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2;
-                                        y = (baseY - offsetY) * root.scaleFactor + (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2;
+                                        x = localX * workspaceContainer.scaleFactor + centerOffsetX;
+                                        y = localY * workspaceContainer.scaleFactor + centerOffsetY;
                                     }
                                 }
                             }
@@ -274,12 +309,9 @@ StyledRect {
                                 onReleased: {
                                     if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
                                         const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
-                                        const centerOffsetX = (root.containerWidth - root.workspaceWidth * root.scaleFactor) / 2;
-                                        const centerOffsetY = (root.containerHeight - root.workspaceHeight * root.scaleFactor) / 2;
-                                        const x = Math.round((mapped.x - centerOffsetX) / root.scaleFactor + root.reserved[0]);
-                                        const y = Math.round((mapped.y - centerOffsetY) / root.scaleFactor + root.reserved[1]);
-
-                                        Hypr.dispatch(`movewindowpixel exact ${x} ${y}, address:0x${toplevel.modelData.address}`);
+                                        const nx = Math.round((mapped.x - toplevel.centerOffsetX) / workspaceContainer.scaleFactor + workspaceContainer.wsReserved[0] + workspaceContainer.monitorLogicalX);
+                                        const ny = Math.round((mapped.y - toplevel.centerOffsetY) / workspaceContainer.scaleFactor + workspaceContainer.wsReserved[1] + workspaceContainer.monitorLogicalY);
+                                        Hypr.dispatch(`movewindowpixel exact ${nx} ${ny}, address:0x${toplevel.modelData.address}`);
                                         toplevel.Drag.drop();
                                     }
                                 }
