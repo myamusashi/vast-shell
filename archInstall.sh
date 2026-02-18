@@ -185,9 +185,9 @@ build_qmlmaterial() {
 	if [[ -f $src/qml/Token.qml ]]; then
 		log "Patching Token.qml font paths..."
 		sed -i \
-			-e 's|source: root\.iconFontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/TTF/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
-			-e 's|source: root\.iconFill0FontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/TTF/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
-			-e 's|source: root\.iconFill1FontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/TTF/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
+			-e 's|source: root\.iconFontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/ttf-material-symbols-variable/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
+			-e 's|source: root\.iconFill0FontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/ttf-material-symbols-variable/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
+			-e 's|source: root\.iconFill1FontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/ttf-material-symbols-variable/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
 			"$src/qml/Token.qml"
 
 		if grep -q 'Qt.resolvedUrl.*MaterialSymbolsOutlined' "$src/qml/Token.qml"; then
