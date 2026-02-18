@@ -41,24 +41,6 @@ Variants {
         surfaceFormat.opaque: false
         visible: GlobalStates.isDashboardOpen
 
-        IpcHandler {
-            target: "dashboard"
-
-            function open(): void {
-                GlobalStates.isDashboardOpen = true;
-            }
-            function close(): void {
-                GlobalStates.isDashboardOpen = false;
-            }
-            function toggle(): void {
-                GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen;
-            }
-        }
-
-        GlobalShortcut {
-            name: "dashboard"
-            onPressed: GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen
-        }
         StyledRect {
             anchors.fill: parent
             color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)

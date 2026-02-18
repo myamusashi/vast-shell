@@ -28,21 +28,4 @@ Scope {
 
         lock: lock
     }
-
-    IpcHandler {
-        target: "lock"
-
-        function lock(): void {
-            lock.locked = true;
-            GlobalStates.isLockscreenOpen = true;
-        }
-
-        function unlock(): void {
-            lock.unlock();
-        }
-
-        function isLocked(): bool {
-            return lock.locked;
-        }
-    }
 }

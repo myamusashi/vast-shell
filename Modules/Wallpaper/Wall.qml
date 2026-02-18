@@ -54,18 +54,5 @@ Variants {
                 }
             }
         }
-
-        IpcHandler {
-            target: "img"
-
-            function set(path: string): void {
-                Quickshell.execDetached({
-                    "command": ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaperFile + " && " + `matugen image ${path}`]
-                });
-            }
-            function get(): string {
-                return Paths.currentWallpaper;
-            }
-        }
     }
 }
