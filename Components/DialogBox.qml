@@ -47,7 +47,7 @@ LazyLoader {
             implicitHeight: column.height + 40
 
             radius: Appearance.rounding.large
-            color: Colours.m3Colors.m3Surface
+            color: Colours.overlayColor(Colours.m3Colors.m3SurfaceTint, Colours.m3Colors.m3SurfaceContainerHigh, Configs.generals.alpha)
             border.color: Colours.m3Colors.m3Outline
             border.width: 2
 
@@ -69,8 +69,8 @@ LazyLoader {
                 }
 
                 StyledRect {
-                    width: parent.width
-                    height: 2
+                    implicitWidth: parent.width
+                    implicitHeight: 2
                     color: Colours.m3Colors.m3OutlineVariant
                 }
 
@@ -84,8 +84,8 @@ LazyLoader {
                 }
 
                 StyledRect {
-                    width: parent.width
-                    height: 2
+                    implicitWidth: parent.width
+                    implicitHeight: 2
                     color: Colours.m3Colors.m3OutlineVariant
                 }
 
@@ -98,8 +98,11 @@ LazyLoader {
                     StyledButton {
                         implicitWidth: 80
                         implicitHeight: 40
+                        bgRadius: Appearance.rounding.normal
                         icon.name: "cancel"
+                        icon.color: Colours.m3Colors.m3Primary
                         text: qsTr("No")
+                        textColor: Colours.m3Colors.m3Primary
                         mdState.backgroundColor: "transparent"
                         onClicked: root.rejected()
                     }
@@ -108,8 +111,10 @@ LazyLoader {
                         implicitWidth: 80
                         implicitHeight: 40
                         icon.name: "check"
+                        icon.color: Colours.m3Colors.m3Primary
                         text: qsTr("Yes")
-                        mdState.backgroundColor: Colours.m3Colors.m3OnPrimary
+                        textColor: Colours.m3Colors.m3Primary
+                        mdState.backgroundColor: "transparent"
                         onClicked: root.accepted()
                     }
                 }
