@@ -120,7 +120,9 @@ build_keystate() {
 	local -r gopath="$BUILD_DIR/gopath"
 	mkdir -p "$gopath"
 
-	GOPATH="$gopath" go build -C "$BUILD_DIR" -o keystate-bin "$PROJECT_ROOT/Assets/keystate.go"
+	cp "$PROJECT_ROOT/Assets/keystate.go" "$BUILD_DIR/"
+	cd "$BUILD_DIR"
+	GOPATH="$gopath" go build -o keystate-bin keystate.go
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$BIN_DIR/keystate-bin"
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/keystate-bin"
 }
@@ -152,7 +154,11 @@ build_m3shapes() {
 	[[ -d $install_base/M3Shapes ]] && cp -r "$install_base/M3Shapes/"* "$QML_DIR/M3Shapes/"
 	[[ -d $install_base/lib/qt6/qml/M3Shapes ]] && cp -r "$install_base/lib/qt6/qml/M3Shapes/"* "$QML_DIR/M3Shapes/"
 
-	[[ -f $plugin ]] && patchelf --set-rpath "$QML_DIR/M3Shapes:$(pkg-config --variable=libdir Qt6Core)" "$plugin" 2>/dev/null || true
+	if [[ -f $plugin ]]; then
+		local qt_core_lib
+		qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
+		patchelf --set-rpath "$QML_DIR/M3Shapes:$qt_core_lib" "$plugin" 2>/dev/null || true
+	fi
 }
 
 build_qmlmaterial() {
@@ -212,10 +218,15 @@ build_qmlmaterial() {
 
 	chmod 755 "$QML_DIR/Qcm/Material"/*.so* 2>/dev/null || true
 
-	local qt_libs
-	qt_libs="$(pkg-config --variable=libdir Qt6Core):$(pkg-config --variable=libdir Qt6Qml):$(pkg-config --variable=libdir Qt6Quick)"
+	local qt_core_lib qt_qml_lib qt_quick_lib
+	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
+	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
+	qt_quick_lib=$(pkg-config --variable=libdir Qt6Quick)
+
 	for f in "$QML_DIR/Qcm/Material"/*.so*; do
-		[[ -f $f && ! -L $f ]] && patchelf --set-rpath "$QML_DIR/Qcm/Material:$qt_libs" "$f" 2>/dev/null || true
+		if [[ -f $f && ! -L $f ]]; then
+			patchelf --set-rpath "$QML_DIR/Qcm/Material:$qt_core_lib:$qt_qml_lib:$qt_quick_lib" "$f" 2>/dev/null || true
+		fi
 	done
 
 	[[ -f $plugin ]] || warn "QmlMaterial plugin not found after installation"
@@ -247,12 +258,14 @@ build_translation_manager() {
 	[[ -d $install_base/TranslationManager ]] && cp -r "$install_base/TranslationManager/"* "$QML_DIR/TranslationManager/"
 	[[ -d $install_base/lib/qt6/qml/TranslationManager ]] && cp -r "$install_base/lib/qt6/qml/TranslationManager/"* "$QML_DIR/TranslationManager/"
 
-	local qt_libs
-	qt_libs="$(pkg-config --variable=libdir Qt6Core):$(pkg-config --variable=libdir Qt6Qml)"
-	[[ -f $plugin ]] && patchelf --set-rpath "$QML_DIR/TranslationManager:$qt_libs" "$plugin" 2>/dev/null || true
+	local qt_core_lib qt_qml_lib
+	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
+	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
+
+	[[ -f $plugin ]] && patchelf --set-rpath "$QML_DIR/TranslationManager:$qt_core_lib:$qt_qml_lib" "$plugin" 2>/dev/null || true
 
 	local lib="$QML_DIR/TranslationManager/libTranslationManager.so"
-	[[ -f $lib ]] && patchelf --set-rpath "$qt_libs" "$lib" 2>/dev/null || true
+	[[ -f $lib ]] && patchelf --set-rpath "$qt_core_lib:$qt_qml_lib" "$lib" 2>/dev/null || true
 }
 
 compile_translations() {
@@ -287,6 +300,7 @@ install_quickshell_config() {
 
 	[[ -f $BIN_DIR/keystate-bin ]] && install -Dm755 "$BIN_DIR/keystate-bin" "$INSTALL_DIR/Assets/keystate-bin"
 }
+
 create_wrapper() {
 	log "Creating wrapper script..."
 	cat >"$BIN_DIR/shell" <<'EOF'
