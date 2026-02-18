@@ -1,2 +1,2 @@
 # > [!WARNING]
-> THIS IS STILL IN DEVELOPMENT, AND NOT SUPPORT MULTI MONITOR AT THE MOMENT
+> It's stable enough when you have one monitor, but it should be good with multi-monitor too (hopefully)
