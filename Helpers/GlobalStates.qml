@@ -24,6 +24,7 @@ Singleton {
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
     readonly property bool isNumLockOSDVisible: _activeOSDs["numlock"] || false
     readonly property color drawerColors: Configs.generals.transparent ? Colours.withAlpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
+    readonly property ShellScreen focusedMonitor: Quickshell.screens.find(s => s.name === Hypr.focusedMonitor?.name)
     readonly property string currentLanguage: TranslationManager.currentLanguage
 
     property bool isCalendarOpen: false
@@ -413,6 +414,55 @@ Singleton {
     GlobalShortcut {
         name: "weather"
         onPressed: GlobalStates.togglePanel("weather")
+    }
+
+    IpcHandler {
+        target: "dashboard"
+
+        function open(): void {
+            GlobalStates.isDashboardOpen = true;
+        }
+        function close(): void {
+            GlobalStates.isDashboardOpen = false;
+        }
+        function toggle(): void {
+            GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen;
+        }
+    }
+
+    GlobalShortcut {
+        name: "dashboard"
+        onPressed: GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen
+    }
+
+    IpcHandler {
+        target: "lock"
+
+        function lock(): void {
+            lock.locked = true;
+            GlobalStates.isLockscreenOpen = true;
+        }
+
+        function unlock(): void {
+            lock.unlock();
+        }
+
+        function isLocked(): bool {
+            return lock.locked;
+        }
+    }
+
+    IpcHandler {
+        target: "img"
+
+        function set(path: string): void {
+            Quickshell.execDetached({
+                "command": ["sh", "-c", "echo " + path + " >" + Paths.currentWallpaperFile + " && " + `matugen image ${path}`]
+            });
+        }
+        function get(): string {
+            return Paths.currentWallpaper;
+        }
     }
 
     Component {
