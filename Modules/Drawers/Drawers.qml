@@ -12,7 +12,6 @@ import qs.Components
 
 import "Calendar"
 import "Launcher"
-import "MediaPlayer"
 import "QuickSettings"
 import "Overview"
 import "Notifications"
@@ -193,7 +192,6 @@ Variants {
 
             onHeightChanged: {
                 cal.anchors.topMargin = exclusiveTop.zone;
-                mediaPlayer.anchors.topMargin = exclusiveTop.zone;
                 quickSettings.anchors.topMargin = exclusiveTop.zone;
                 notif.anchors.topMargin = exclusiveTop.zone;
             }
@@ -201,10 +199,6 @@ Variants {
 
         Calendar {
             id: cal
-        }
-
-        MediaPlayer {
-            id: mediaPlayer
         }
 
         QuickSettings {
