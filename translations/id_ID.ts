@@ -891,17 +891,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>MediaPlayer</name>
-    <message>
-        <source>Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG.</source>
-        <translation type="vanished">Pencapaian Terbuka: 🏆 Static Image Starer - Kamu mengharapkan kuru spin, tapi trackArtUrl memutuskan untuk memutuskan koneksi. GG.</translation>
-    </message>
-    <message>
-        <source>Watched on</source>
-        <translation type="vanished">Ditonton di</translation>
-    </message>
-</context>
-<context>
     <name>Moon</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Moon.qml" line="73"/>
