@@ -15,7 +15,7 @@ Item {
     property int widthBattery: 26
     property int heightBattery: 12
 
-    implicitWidth: widthBattery + 4
+    implicitWidth: widthBattery
     implicitHeight: heightBattery
 
     onBatChargingChanged: {

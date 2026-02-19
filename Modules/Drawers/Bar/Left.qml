@@ -8,11 +8,13 @@ import qs.Widgets
 RowLayout {
     id: root
 
-    anchors.fill: parent
+    anchors {
+        fill: parent
+        leftMargin: Appearance.margin.small
+    }
 
     required property ShellScreen monitor
 
-    anchors.leftMargin: Appearance.margin.small
     spacing: Appearance.spacing.normal
 
     OsText {
@@ -20,8 +22,8 @@ RowLayout {
     }
 
     Workspaces {
-        monitor: root.monitor
         Layout.alignment: Qt.AlignCenter
+        monitor: root.monitor
     }
 
     WorkspaceName {
