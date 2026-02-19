@@ -31,7 +31,7 @@ StyledRect {
     Dots {
         id: container
 
-        spacing: 5
+        spacing: Appearance.spacing.small
 
         Icon {
             type: Icon.Material
@@ -50,12 +50,14 @@ StyledRect {
     }
 
     MArea {
-        acceptedButtons: Qt.MiddleButton | Qt.LeftButton
         anchors.fill: parent
+        acceptedButtons: Qt.MiddleButton | Qt.LeftButton
 
         onClicked: mevent => {
             if (mevent.button === Qt.MiddleButton)
                 Audio.toggleMute(root.node);
+            else if (mevent.button === Qt.LeftButton)
+                GlobalStates.toggleOSD("volume");
         }
 
         onWheel: mevent => Audio.wheelAction(mevent, root.node)
