@@ -27,18 +27,18 @@ Item {
 
     ScrollView {
         anchors.fill: parent
+        contentWidth: availableWidth
         ScrollBar.vertical.policy: ScrollBar.AsNeeded
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
         ColumnLayout {
             id: root
 
-            anchors.fill: parent
-
             readonly property int totalApps: DesktopEntries.applications.values.filter(e => !e.runInTerminal).length
             readonly property int totalTerminalApps: DesktopEntries.applications.values.filter(e => e.runInTerminal).length
             readonly property string batteryRemaining: formatBatteryTime(UPower.displayDevice.timeToEmpty ?? 0)
 
+            width: parent.width
             spacing: Appearance.spacing.small
 
             function formatBatteryTime(seconds) {
@@ -56,7 +56,7 @@ Item {
             }
 
             Item {
-                implicitWidth: parent.width
+                Layout.fillWidth: true
                 implicitHeight: cpuLayout.implicitHeight + 50
 
                 WrapperRectangle {
@@ -103,7 +103,7 @@ Item {
             }
 
             WrapperRectangle {
-                implicitWidth: parent.width
+                Layout.fillWidth: true
                 margin: Appearance.margin.normal
                 radius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer
@@ -208,6 +208,7 @@ Item {
                         }
 
                         ColumnLayout {
+                            Layout.alignment: Qt.AlignLeft
                             spacing: Appearance.spacing.small * 0.4
 
                             StyledText {
@@ -242,21 +243,26 @@ Item {
                                     }
 
                                     StyledText {
+                                        Layout.fillWidth: true
                                         text: parent.modelData.value
                                         color: Colours.m3Colors.m3OnSurface
-                                        font.pixelSize: Appearance.fonts.size.normal
+                                        font.pixelSize: Appearance.fonts.size.small
                                         font.weight: Font.DemiBold
+                                        wrapMode: Text.WordWrap
+                                        maximumLineCount: 2
                                         horizontalAlignment: Text.AlignRight
                                     }
                                 }
                             }
 
                             StyledText {
+                                Layout.fillWidth: true
                                 text: network.isWired ? qsTr("Link speed: ") + SystemUsage.wiredLinkSpeed + " Mbps" : qsTr("Link speed: ") + SystemUsage.wirelessLinkSpeed + " Mbps"
                                 color: Colours.withAlpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
-                                horizontalAlignment: Text.AlignRight
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
                             }
                         }
                     }
@@ -440,22 +446,31 @@ Item {
 
                     ColumnLayout {
                         StyledText {
+                            Layout.fillWidth: true
                             text: SystemUsage.osPrettyName
                             color: Colours.m3Colors.m3Green
                             font.pixelSize: Appearance.fonts.size.large * 1.2
                             font.weight: Font.DemiBold
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
                         }
                         StyledText {
+                            Layout.fillWidth: true
                             text: SystemUsage.cpuName
                             color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Font.DemiBold
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
                         }
                         StyledText {
+                            Layout.fillWidth: true
                             text: SystemUsage.kernelName
                             color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Font.DemiBold
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 2
                         }
                         StyledText {
                             text: SystemUsage.uptimeFormatted
@@ -485,7 +500,7 @@ Item {
         }
     }
 
-    component StatusCard: WrapperRectangle {
+    component StatusCard: StyledRect {
         id: card
 
         default property alias content: contentLayout.data
@@ -497,10 +512,9 @@ Item {
         property var zoomId: null
 
         Layout.fillWidth: true
-        implicitWidth: width * 0.5
         Layout.preferredHeight: gridOverview.cellHeight
-        margin: Appearance.margin.normal
         radius: Appearance.rounding.small * 0.5
+        clip: true
 
         topLeftRadius: isTopLeft ? Appearance.rounding.normal : radius
         topRightRadius: isTopRight ? Appearance.rounding.normal : radius
@@ -509,37 +523,34 @@ Item {
 
         color: Colours.m3Colors.m3SurfaceContainer
 
-        Item {
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: card.margin
-                spacing: Appearance.spacing.small
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: Appearance.margin.normal
+            spacing: Appearance.spacing.small
 
-                StyledText {
-                    text: card.title
-                    color: Colours.m3Colors.m3Green
-                    font.pixelSize: Appearance.fonts.size.large
-                }
-
-                ColumnLayout {
-                    id: contentLayout
-
-                    spacing: Appearance.spacing.small
-                }
+            StyledText {
+                text: card.title
+                color: Colours.m3Colors.m3Green
+                font.pixelSize: Appearance.fonts.size.large
             }
 
-            MArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                layerRadius: (card.isTopLeft ? card.topLeftRadius : card.isTopRight ? card.topRightRadius : card.isBottomRight ? card.bottomRightRadius : card.isBottomLeft ? card.bottomLeftRadius : card.radius)
-                onClicked: {
-                    var cardCenter = card.mapToItem(wrapper, card.width / 2, card.height / 2);
+            ColumnLayout {
+                id: contentLayout
+                Layout.fillWidth: true
+                spacing: Appearance.spacing.small
+            }
+        }
 
-                    card.zoomId.zoomOriginX = cardCenter.x;
-                    card.zoomId.zoomOriginY = cardCenter.y;
-                    card.zoomId.isVisible = true;
-                }
+        MArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            layerRadius: card.isTopLeft ? card.topLeftRadius : card.isTopRight ? card.topRightRadius : card.isBottomRight ? card.bottomRightRadius : card.isBottomLeft ? card.bottomLeftRadius : card.radius
+            onClicked: {
+                var cardCenter = card.mapToItem(wrapper, card.width / 2, card.height / 2);
+                card.zoomId.zoomOriginX = cardCenter.x;
+                card.zoomId.zoomOriginY = cardCenter.y;
+                card.zoomId.isVisible = true;
             }
         }
     }
