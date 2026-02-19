@@ -3,9 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Hyprland
 
 import qs.Configs
 import qs.Helpers
@@ -21,13 +19,16 @@ WrapperRectangle {
     property int selectedIndex: 0
     property int selectedTab: 0
 
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
-    implicitWidth: GlobalStates.isScreenCapturePanelOpen ? 300 : 0
-    implicitHeight: GlobalStates.isScreenCapturePanelOpen ? 400 : 0
-    radius: Appearance.rounding.large
+    border {
+        color: GlobalStates.isScreenCapturePanelOpen ? Colours.m3Colors.m3Outline : "transparent"
+        width: 2
+    }
     color: GlobalStates.drawerColors
-    border.color: Colours.m3Colors.m3Outline
-    border.width: 2
+    clip: true
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
+    implicitWidth: 300
+    implicitHeight: GlobalStates.isScreenCapturePanelOpen ? loader.item.implicitHeight + 50 : 0
+    radius: Appearance.rounding.normal
 
     Behavior on implicitHeight {
         NAnim {
@@ -36,14 +37,9 @@ WrapperRectangle {
         }
     }
 
-    Behavior on implicitWidth {
-        NAnim {
-            duration: Appearance.animations.durations.large
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
     Loader {
+        id: loader
+
         active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isScreenCapturePanelOpen
         asynchronous: true
         sourceComponent: ColumnLayout {
