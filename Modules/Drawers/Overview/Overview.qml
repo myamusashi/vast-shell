@@ -25,7 +25,7 @@ ClippingWrapperRectangle {
 
     border {
         color: GlobalStates.isOverviewOpen ? Colours.m3Colors.m3Outline : "transparent"
-        width: 2
+        width: GlobalStates.isOverviewOpen ? 2 : 0
     }
     color: GlobalStates.drawerColors
     implicitWidth: contentWidth
@@ -37,12 +37,6 @@ ClippingWrapperRectangle {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            onFinished: {
-                if (GlobalStates.isOverviewOpen)
-                    GlobalStates.isOverviewOpen = false;
-                else
-                    GlobalStates.isOverviewOpen = true;
-            }
         }
     }
 
