@@ -34,7 +34,7 @@ ColumnLayout {
         }
     }
 
-    // QuickButton {}
+    MediaPlayer {}
 
     Notifications {}
 }

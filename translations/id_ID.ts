@@ -893,14 +893,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>MediaPlayer</name>
     <message>
-        <location filename="../Modules/Drawers/MediaPlayer/MediaPlayer.qml" line="115"/>
         <source>Achievement Unlocked: 🏆 Static Image Starer - You expected the kuru spin but trackArtUrl decided to disconnect. GG.</source>
-        <translation>Pencapaian Terbuka: 🏆 Static Image Starer - Kamu mengharapkan kuru spin, tapi trackArtUrl memutuskan untuk memutuskan koneksi. GG.</translation>
+        <translation type="vanished">Pencapaian Terbuka: 🏆 Static Image Starer - Kamu mengharapkan kuru spin, tapi trackArtUrl memutuskan untuk memutuskan koneksi. GG.</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/MediaPlayer/MediaPlayer.qml" line="173"/>
         <source>Watched on</source>
-        <translation>Ditonton di</translation>
+        <translation type="vanished">Ditonton di</translation>
     </message>
 </context>
 <context>
@@ -1008,7 +1006,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Bersihkan semuanya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="233"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="230"/>
         <source>No notifications</source>
         <translation>Tidak ada notifikasi</translation>
     </message>
@@ -1243,28 +1241,28 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Screencapture</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="106"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="102"/>
         <source>Screenshot</source>
         <translation>Tangkapan layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="106"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="102"/>
         <source>Screen record</source>
         <translation>Rekam layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="163"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="159"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="172"/>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="241"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="168"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="237"/>
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="193"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="189"/>
         <source>Merge screens</source>
         <translation>Gabungkan layar</translation>
     </message>

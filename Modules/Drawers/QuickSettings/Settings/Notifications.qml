@@ -108,14 +108,11 @@ ColumnLayout {
                         fill: parent
                         rightMargin: 10
                     }
-
                     model: ScriptModel {
                         values: [...Notifs.notClosed]
                     }
-
                     spacing: Appearance.spacing.normal
                     boundsBehavior: Flickable.StopAtBounds
-
                     delegate: WrapperItem {
                         id: root
 
