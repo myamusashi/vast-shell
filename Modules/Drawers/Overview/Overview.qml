@@ -14,7 +14,6 @@ ClippingWrapperRectangle {
     id: root
 
     anchors.centerIn: parent
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     property bool isOverviewOpen: GlobalStates.isOverviewOpen
     property real spacing: Appearance.spacing.normal
@@ -24,10 +23,15 @@ ClippingWrapperRectangle {
     property real tileWidth: (contentWidth - spacing * (columns + 1)) / columns
     property real tileHeight: tileWidth * 9 / 16
 
+    border {
+        color: GlobalStates.isOverviewOpen ? Colours.m3Colors.m3Outline : "transparent"
+        width: 2
+    }
     color: GlobalStates.drawerColors
     implicitWidth: contentWidth
     implicitHeight: GlobalStates.isOverviewOpen ? tileHeight * rows + spacing * (rows + 1) : 0
     radius: Appearance.rounding.normal
+    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitHeight {
         NAnim {

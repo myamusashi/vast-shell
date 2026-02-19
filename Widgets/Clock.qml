@@ -8,7 +8,7 @@ import qs.Services
 StyledRect {
     id: clock
 
-    implicitWidth: timeContainer.width + 15
+    implicitWidth: timeContainer.width
     implicitHeight: parent.height
     color: "transparent"
     radius: Appearance.rounding.small
@@ -17,10 +17,6 @@ StyledRect {
         id: timeContainer
 
         Icon {
-            id: icon
-
-            type: Icon.Material
-
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
             font.pixelSize: Appearance.fonts.size.large
@@ -28,8 +24,6 @@ StyledRect {
         }
 
         StyledText {
-            id: text
-
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
             font.pixelSize: Appearance.fonts.size.medium
@@ -38,8 +32,6 @@ StyledRect {
     }
 
     MArea {
-        id: mArea
-
         anchors.fill: clock
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor

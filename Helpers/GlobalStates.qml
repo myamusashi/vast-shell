@@ -299,11 +299,6 @@ Singleton {
         onPressed: GlobalStates.isBarOpen = !GlobalStates.isBarOpen
     }
 
-    GlobalShortcut {
-        name: "appLauncher"
-        onPressed: GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen
-    }
-
     IpcHandler {
         target: "appLauncher"
 
@@ -316,6 +311,11 @@ Singleton {
         function toggle(): void {
             GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen;
         }
+    }
+
+    GlobalShortcut {
+        name: "appLauncher"
+        onPressed: GlobalStates.isLauncherOpen = !GlobalStates.isLauncherOpen
     }
 
     IpcHandler {

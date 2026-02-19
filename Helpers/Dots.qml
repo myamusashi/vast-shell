@@ -12,6 +12,7 @@ RowLayout {
 
     property alias icon: icon
     property alias text: text
+
     height: parent.height ? parent.height : 1
 
     WrapperItem {

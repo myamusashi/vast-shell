@@ -9,6 +9,8 @@ StyledRect {
     id: root
 
     Layout.alignment: Qt.AlignCenter
+
+    implicitWidth: row.width
     visible: Record.isRecordingControlOpen
     color: "transparent"
 
@@ -24,6 +26,8 @@ StyledRect {
     }
 
     RowLayout {
+        id: row
+
         anchors.centerIn: parent
 
         Icon {

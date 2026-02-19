@@ -83,7 +83,7 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.preferredHeight: 30
             value: root.node.audio.volume
-            onValueChanged: root.node.audio.volume = value
+            onMoved: root.node.audio.volume = value
         }
     }
 }
