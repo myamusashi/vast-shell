@@ -52,16 +52,13 @@ Slider {
     MouseArea {
         anchors.fill: parent
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
-
-        onPressed: function (mouse) {
+        onPressed: mouse => {
             if (root.orientation === Qt.Vertical) {
-                var pos = 1 - (mouse.y / height);
+                var pos = 1 - ((mouse.y - root.topPadding) / root.availableHeight);
                 pos = Math.max(0, Math.min(1, pos));
                 var newValue = root.from + (pos * (root.to - root.from));
-
                 if (root.stepSize > 0)
                     newValue = Math.round(newValue / root.stepSize) * root.stepSize;
-
                 root.value = newValue;
             }
             mouse.accepted = false;
@@ -77,8 +74,6 @@ Slider {
         y: root.topPadding
 
         Loader {
-            active: root.icon !== ""
-            z: 10
             anchors {
                 left: root.orientation === Qt.Horizontal ? parent.left : undefined
                 leftMargin: root.orientation === Qt.Horizontal ? 10 : 0
@@ -87,6 +82,8 @@ Slider {
                 horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
                 verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
             }
+            active: root.icon !== ""
+            z: 10
             sourceComponent: Icon {
                 icon: root.icon
                 color: root.orientation === Qt.Horizontal ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Primary
