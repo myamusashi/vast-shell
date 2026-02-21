@@ -1,0 +1,11 @@
+[config.custom_colors]
+
+[templates.shell]
+input_path = "/home/myamusashi/shell/Data/matugen/colors-dark.json"
+mode = "Dark"
+output_path = "/home/myamusashi/.config/shell/dark-colors.json"
+
+[templates.shell_light]
+input_path = "/home/myamusashi/shell/Data/matugen/colors-light.json"
+mode = "Light"
+output_path = "/home/myamusashi/.config/shell/light-colors.json"
