@@ -329,7 +329,7 @@ RowLayout {
 
                         IconImage {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: itemDel.modelData ? Quickshell.iconPath(itemDel.modelData.desktopEntry) : ""
+                            source: Quickshell.iconPath(itemDel.modelData.desktopEntry, "image-missing")
                             asynchronous: true
                             implicitWidth: 20
                             implicitHeight: 20
@@ -339,7 +339,7 @@ RowLayout {
                             anchors.verticalCenter: parent.verticalCenter
                             width: parent.width - 16 - parent.spacing
                             text: itemDel.modelData?.trackTitle ?? ""
-                            color: playerComboBox.currentIndex === itemDel.index ? root.trackArtColors.primary : root.trackArtColors.onSurface
+                            color: root.trackArtColors.onSurface
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: playerComboBox.currentIndex === itemDel.index ? Font.Medium : Font.Normal
                             elide: Text.ElideRight
