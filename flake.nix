@@ -63,7 +63,7 @@
 
         shellHook = ''
           go build -o ./Assets/go/keystate-bin ./Assets/go/keystate.go
-		  go build -o ./Assets/go/audioProfiles ./Assets/go/audioProfiles.go
+          go build -o ./Assets/go/audioProfiles ./Assets/go/audioProfiles.go
           echo "mushell environment"
         '';
       };
