@@ -13,10 +13,8 @@ ColumnLayout {
     id: root
 
     property alias slider: volumeSlider
-
-    required property bool useCustomProperties
     required property PwNode node
-
+    property bool useCustomProperties: false
     property Component customProperty
     property string icon: Audio.getIcon(node)
 
