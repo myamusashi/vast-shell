@@ -110,7 +110,7 @@ Singleton {
     }
 
     Process {
-		id: processKiller
+        id: processKiller
 
         command: ["sh", "-c", "pkill -TERM -x audioProfiles; sleep 1; pkill -KILL -x audioProfiles; true"]
         running: false
@@ -129,7 +129,7 @@ Singleton {
     }
 
     Process {
-		id: audioProfiles
+        id: audioProfiles
 
         command: [Qt.resolvedUrl("../Assets/go/audioProfiles")]
         running: false
@@ -151,7 +151,7 @@ Singleton {
     }
 
     Timer {
-		id: watchdogTimer
+        id: watchdogTimer
 
         interval: 2000
         repeat: false

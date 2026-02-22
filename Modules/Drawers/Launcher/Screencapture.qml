@@ -130,7 +130,7 @@ WrapperRectangle {
                             text: tabItem.modelData
                             color: tabItem.isSelected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
                             font.pixelSize: Appearance.fonts.size.normal * 0.9
-                            font.bold: tabItem.isSelected
+                            font.weight: tabItem.isSelected ? Font.DemiBold : Font.Normal
                         }
 
                         MArea {
