@@ -115,7 +115,7 @@ PanelWindow {
                     color: "transparent"
                     border.color: Colours.m3Colors.m3Primary
                     border.width: 1
-                    Text {
+                    StyledText {
                         anchors.centerIn: parent
                         text: qsTr("WIP")
                         color: Colours.m3Colors.m3OnSurface

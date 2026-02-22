@@ -335,7 +335,7 @@ WlSessionLockSurface {
                                 id: coverArt
 
                                 anchors.fill: parent
-                                source: Players.active && Players.active.trackArtUrl !== "" ? Players.active.trackArtUrl : "root:/Assets/kuru.gif"
+                                source: Players.active && Players.active.trackArtUrl !== "" ? Players.active.trackArtUrl : "root:/Assets/images/kuru.gif"
                                 sourceSize: Qt.size(60, 60)
                                 fillMode: Image.PreserveAspectCrop
                                 visible: Players.active !== null

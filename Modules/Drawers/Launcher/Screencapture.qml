@@ -160,7 +160,7 @@ WrapperRectangle {
                                     "icon": "select_window_2",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenshot-window"]
+                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenshot-window"]
                                         });
                                     }
                                 },
@@ -169,7 +169,7 @@ WrapperRectangle {
                                     "icon": "select",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenshot-selection"]
+                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenshot-selection"]
                                         });
                                     }
                                 }
@@ -181,7 +181,7 @@ WrapperRectangle {
                                     "icon": "monitor",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/screen-capture.sh --screenshot-output ${screen.name}`]
+                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenshot-output ${screen.name}`]
                                         });
                                     }
                                 });
@@ -190,7 +190,7 @@ WrapperRectangle {
                                     "icon": "cell_merge",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/screen-capture.sh --screenshot-outputs ${screen.name}`]
+                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenshot-outputs ${screen.name}`]
                                         });
                                     }
                                 });
@@ -238,7 +238,7 @@ WrapperRectangle {
                                     "icon": "select",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/screen-capture.sh --screenrecord-selection"]
+                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenrecord-selection"]
                                         });
                                     }
                                 }
@@ -250,7 +250,7 @@ WrapperRectangle {
                                     "icon": "monitor",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/screen-capture.sh --screenrecord-${screen.name}`]
+                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenrecord-${screen.name}`]
                                         });
                                     }
                                 });

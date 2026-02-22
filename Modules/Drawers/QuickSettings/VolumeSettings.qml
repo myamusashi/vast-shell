@@ -33,7 +33,7 @@ ScrollView {
             MixerEntry {
                 useCustomProperties: true
                 node: Pipewire.defaultAudioSink
-				customProperty: AudioProfiles {}
+                customProperty: AudioProfiles {}
             }
 
             Rectangle {

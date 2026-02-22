@@ -163,8 +163,8 @@ ComboBox {
                         Layout.alignment: Qt.AlignRight
                         Layout.rightMargin: Appearance.margin.large
 
-						StyledRect {
-							anchors.centerIn: parent
+                        StyledRect {
+                            anchors.centerIn: parent
                             visible: menuDelegate.modelData.available !== "yes"
                             implicitWidth: unavailableLabel.implicitWidth
                             implicitHeight: 20
