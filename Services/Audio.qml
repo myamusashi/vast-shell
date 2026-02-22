@@ -14,15 +14,21 @@ Singleton {
     property int activeProfileIndex: activeProfiles.length > 0 ? activeProfiles[0].index : -1
 
     function getIcon(node: PwNode): string {
-        return (node.isSink) ? getSinkIcon(node) : getSourceIcon(node);
+        return node.isSink ? getSinkIcon(node) : getSourceIcon(node);
     }
 
     function getSinkIcon(node: PwNode): string {
-        return (node.audio.muted) ? "volume_off" : (node.audio.volume > 0.5) ? "volume_up" : (node.audio.volume > 0.01) ? "volume_down" : "volume_mute";
+        if (node.audio.muted)
+            return "volume_off";
+        if (node.audio.volume > 0.5)
+            return "volume_up";
+        if (node.audio.volume > 0.01)
+            return "volume_down";
+        return "volume_mute";
     }
 
     function getSourceIcon(node: PwNode): string {
-        return (node.audio.muted) ? "mic_off" : "mic";
+        return node.audio.muted ? "mic_off" : "mic";
     }
 
     function toggleMute(node: PwNode) {
@@ -30,16 +36,8 @@ Singleton {
     }
 
     function wheelAction(event: WheelEvent, node: PwNode) {
-        if (event.angleDelta.y < 0)
-            node.audio.volume -= 0.01;
-        else
-            node.audio.volume += 0.01;
-
-        if (node.audio.volume > 1.3)
-            node.audio.volume = 1.3;
-
-        if (node.audio.volume < 0)
-            node.audio.volume = 0.0;
+        const delta = event.angleDelta.y < 0 ? -0.01 : 0.01;
+        node.audio.volume = Math.max(0.0, Math.min(1.3, node.audio.volume + delta));
     }
 
     FileView {
@@ -86,11 +84,63 @@ Singleton {
         }
     }
 
+    property bool _needsKill: false
+
     Process {
-        id: audioProfiles
+        id: processChecker
+        command: ["pgrep", "-x", "audioProfiles"]
+        running: true
+
+        onExited: code => {
+            root._needsKill = (code === 0);
+            if (root._needsKill) {
+                console.info("pw-profiles: stale process found, killing…");
+                processKiller.running = true;
+            } else {
+                audioProfiles.running = true;
+            }
+        }
+
+        stderr: StdioCollector {
+            onTextChanged: {
+                if (text.trim())
+                    console.warn("pw-profiles [checker]:", text.trim());
+            }
+        }
+    }
+
+    Process {
+		id: processKiller
+
+        command: ["sh", "-c", "pkill -TERM -x audioProfiles; sleep 1; pkill -KILL -x audioProfiles; true"]
+        running: false
+
+        onExited: {
+            console.info("pw-profiles: old process cleared, starting fresh…");
+            audioProfiles.running = true;
+        }
+
+        stderr: StdioCollector {
+            onTextChanged: {
+                if (text.trim())
+                    console.warn("pw-profiles [killer]:", text.trim());
+            }
+        }
+    }
+
+    Process {
+		id: audioProfiles
 
         command: [Qt.resolvedUrl("../Assets/go/audioProfiles")]
         running: false
+        onExited: code => {
+            if (code !== 0) {
+                console.warn(`pw-profiles: exited with code ${code}, restarting via checker in 2 s…`);
+                watchdogTimer.restart();
+            } else {
+                console.info("pw-profiles: clean exit.");
+            }
+        }
 
         stderr: StdioCollector {
             onTextChanged: {
@@ -100,11 +150,11 @@ Singleton {
         }
     }
 
-    Process {
-        id: killer
+    Timer {
+		id: watchdogTimer
 
-        command: ["sh", "-c", "kill -9 $(pgrep audioProfiles)"]
-        running: true
-        onExited: audioProfiles.running = true
+        interval: 2000
+        repeat: false
+        onTriggered: processChecker.running = true
     }
 }
