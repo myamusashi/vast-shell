@@ -31,8 +31,9 @@ ScrollView {
             }
 
             MixerEntry {
-                useCustomProperties: false
+                useCustomProperties: true
                 node: Pipewire.defaultAudioSink
+				customProperty: AudioProfiles {}
             }
 
             Rectangle {
@@ -63,7 +64,6 @@ ScrollView {
                     MixerEntry {
                         id: mixerGroup
 
-                        useCustomProperties: false
                         node: groups.modelData.source
                     }
                 }
