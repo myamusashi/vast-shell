@@ -124,7 +124,7 @@ RowLayout {
 
                 Icon {
                     icon: Players.active?.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
-                    color: root.trackArtColors.primary
+                    color: root.trackArtColors.onSurface
                     font.pixelSize: Appearance.fonts.size.extraLarge * 1.2
                     MArea {
                         anchors.fill: parent
