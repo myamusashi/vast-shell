@@ -41,8 +41,10 @@
       default = pkgs.mkShell {
         packages = [
           pkgs.go
+          pkgs.nil
           pkgs.python3
           pkgs.black
+          pkgs.pkg-config
           (with pkgs.kdePackages; [
             qtdeclarative
             qttools
@@ -54,10 +56,14 @@
           pkgs.gdb
           pkgs.cmake
           pkgs.clang-tools
+          pkgs.gopls
         ];
 
+        PKG_CONFIG_PATH = "${pkgs.pipewire.dev}/lib/pkgconfig";
+
         shellHook = ''
-          go build -o ./Assets/keystate-bin ./Assets/keystate.go
+          go build -o ./Assets/go/keystate-bin ./Assets/go/keystate.go
+		  go build -o ./Assets/go/audioProfiles ./Assets/go/audioProfiles.go
           echo "mushell environment"
         '';
       };

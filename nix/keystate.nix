@@ -6,7 +6,7 @@ stdenvNoCC.mkDerivation {
   pname = "keystate-bin";
   version = "0.1.0";
 
-  src = ../Assets;
+  src = ../Assets/go;
 
   nativeBuildInputs = [go];
 
