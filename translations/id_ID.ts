@@ -88,9 +88,22 @@
 <context>
     <name>AudioCapture</name>
     <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="125"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="126"/>
         <source>LINUX DEFAULT OUTPUT</source>
         <translation>LINUX DEFAULT OUTPUT</translation>
+    </message>
+</context>
+<context>
+    <name>AudioProfiles</name>
+    <message>
+        <location filename="../Widgets/AudioProfiles.qml" line="40"/>
+        <source>No profile</source>
+        <translation>Tidak ada profil</translation>
+    </message>
+    <message>
+        <location filename="../Widgets/AudioProfiles.qml" line="177"/>
+        <source>N/A</source>
+        <translation>T/A</translation>
     </message>
 </context>
 <context>
