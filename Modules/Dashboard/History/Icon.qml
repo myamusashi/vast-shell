@@ -89,7 +89,7 @@ Loader {
         id: createThumbnails
 
         running: false
-        command: ["sh", "-c", `${Paths.rootDir}/Assets/create-thumbnails.sh "${root.modelData.path}" "${Paths.cacheDir}/video-thumbnails"`]
+        command: ["sh", "-c", `${Paths.rootDir}/Assets/shell/create-thumbnails.sh "${root.modelData.path}" "${Paths.cacheDir}/video-thumbnails"`]
         stdout: StdioCollector {
             onStreamFinished: {
                 const data = text.trim();

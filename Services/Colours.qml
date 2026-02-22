@@ -213,7 +213,7 @@ Singleton {
     ColorQuantizer {
         id: colorQuantizer
 
-        source: Qt.resolvedUrl(Paths.currentWallpaper) || "root:/Assets/wallpaper.png"
+        source: Qt.resolvedUrl(Paths.currentWallpaper) || "root:/Assets/images/wallpaper.png"
         depth: 2
         rescaleSize: 32
     }

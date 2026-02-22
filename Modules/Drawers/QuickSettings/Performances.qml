@@ -421,16 +421,16 @@ Item {
             }
 
             WrapperRectangle {
-				Layout.fillWidth: true
-				Layout.preferredHeight: osLayout.implicitHeight
+                Layout.fillWidth: true
+                Layout.preferredHeight: osLayout.implicitHeight
                 margin: Appearance.margin.normal
                 radius: Appearance.rounding.small * 0.5
                 bottomRightRadius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer
 
                 Item {
-					RowLayout {
-						id: osLayout
+                    RowLayout {
+                        id: osLayout
 
                         spacing: Appearance.spacing.normal
 
@@ -483,7 +483,7 @@ Item {
                                 font.weight: Font.DemiBold
                             }
                         }
-					}
+                    }
 
                     MArea {
                         anchors.fill: parent

@@ -229,7 +229,7 @@ StyledRect {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                Text {
+                StyledText {
                     text: {
                         switch (graph.metricType) {
                         case 0:

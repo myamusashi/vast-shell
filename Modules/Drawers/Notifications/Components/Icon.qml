@@ -65,7 +65,7 @@ Item {
         Image {
             width: 30
             height: 30
-            source: "root:/Assets/notif-icon-image-fallback.jpg"
+            source: "root:/Assets/images/notif-icon-image-fallback.jpg"
             fillMode: Image.PreserveAspectFit
             cache: true
             asynchronous: true

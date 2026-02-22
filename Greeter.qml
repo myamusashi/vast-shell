@@ -77,7 +77,7 @@ ShellRoot {
         id: sessionLock
 
         readonly property list<string> maskChars: ["m", "y", "a", "m", "u", "s", "a", "s", "h", "i"]
-        readonly property string wallpaperPath: "root:/Assets/wallpaper.png"
+        readonly property string wallpaperPath: "root:/Assets/images/wallpaper.png"
         readonly property bool unlocking: Greetd.state == GreetdState.Authenticating
         property string inputBuffer: ""
         property string maskedBuffer: ""

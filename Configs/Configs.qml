@@ -48,13 +48,13 @@ Singleton {
                 {
                     "icon": "screenshot_frame",
                     "title": "Screenshot",
-                    "action": `${Paths.rootDir}/Assets/screen-capture.sh --screenshot-selection`,
+                    "action": `${Paths.rootDir}/Assets/shell/screen-capture.sh --screenshot-selection`,
                     "condition": true
                 },
                 {
                     "icon": "screen_record",
                     "title": "Screen record",
-                    "action": `${Paths.rootDir}/Assets/screen-capture.sh --screenrecord-selection`,
+                    "action": `${Paths.rootDir}/Assets/shell/screen-capture.sh --screenrecord-selection`,
                     "condition": true
                 },
                 {
