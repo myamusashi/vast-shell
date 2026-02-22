@@ -53,11 +53,12 @@ StyledRect {
     RowLayout {
         id: content
 
-        anchors.fill: parent
-        anchors.leftMargin: Appearance.spacing.small
-        anchors.rightMargin: Appearance.spacing.small
+        anchors {
+            fill: parent
+            leftMargin: Appearance.spacing.small
+            rightMargin: Appearance.spacing.small
+        }
         spacing: Appearance.spacing.normal
-
         transform: Scale {
             origin.x: content.width / 2
             origin.y: content.height / 2
@@ -93,6 +94,7 @@ StyledRect {
         StyledText {
             color: root.isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Outline
             font.pixelSize: Appearance.fonts.size.normal
+            font.weight: Font.DemiBold
             text: root.optionData.name
             Layout.fillWidth: true
         }
