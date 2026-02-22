@@ -111,7 +111,7 @@ build_keystate() {
 		log "keystate-bin already installed"
 		return 0
 	}
-	[[ -f $PROJECT_ROOT/Assets/keystate.go ]] || {
+	[[ -f $PROJECT_ROOT/Assets/go/keystate.go ]] || {
 		warn "keystate.go not found, skipping"
 		return 0
 	}
@@ -120,11 +120,32 @@ build_keystate() {
 	local -r gopath="$BUILD_DIR/gopath"
 	mkdir -p "$gopath"
 
-	cp "$PROJECT_ROOT/Assets/keystate.go" "$BUILD_DIR/"
+	cp "$PROJECT_ROOT/Assets/go/keystate.go" "$BUILD_DIR/"
 	cd "$BUILD_DIR"
 	GOPATH="$gopath" go build -o keystate-bin keystate.go
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$BIN_DIR/keystate-bin"
-	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/keystate-bin"
+	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/go/keystate-bin"
+}
+
+build_audioProfiles() {
+	[[ -f $BIN_DIR/audioProfiles ]] && {
+		log "audioProfiles already installed"
+		return 0
+	}
+	[[ -f $PROJECT_ROOT/Assets/go/audioProfiles.go ]] || {
+		warn "audioProfiles.go not found, skipping"
+		return 0
+	}
+
+	log "Building audioProfiles..."
+	local -r gopath="$BUILD_DIR/gopath"
+	mkdir -p "$gopath"
+
+	cp "$PROJECT_ROOT/Assets/go/audioProfiles.go" "$BUILD_DIR/"
+	cd "$BUILD_DIR"
+	GOPATH="$gopath" go build -o audioProfiles audioProfiles.go
+	install -Dm755 "$BUILD_DIR/audioProfiles" "$BIN_DIR/audioProfiles"
+	install -Dm755 "$BUILD_DIR/audioProfiles" "$PROJECT_ROOT/Assets/go/audioProfiles"
 }
 
 build_m3shapes() {
@@ -298,7 +319,8 @@ install_quickshell_config() {
 		sed -i 's/ShellRoot {/ShellRoot { settings.watchFiles: false/' "$INSTALL_DIR/shell.qml"
 	fi
 
-	[[ -f $BIN_DIR/keystate-bin ]] && install -Dm755 "$BIN_DIR/keystate-bin" "$INSTALL_DIR/Assets/keystate-bin"
+	[[ -f $BIN_DIR/keystate-bin ]] && install -Dm755 "$BIN_DIR/keystate-bin" "$INSTALL_DIR/Assets/go/keystate-bin"
+	[[ -f $BIN_DIR/audioProfiles ]] && install -Dm755 "$BIN_DIR/audioProfiles" "$INSTALL_DIR/Assets/go/audioProfiles"
 }
 
 create_wrapper() {
@@ -329,6 +351,7 @@ main() {
 	setup_aur_helper
 	install_aur_packages
 	build_keystate
+	build_audioProfiles
 	build_m3shapes
 	build_qmlmaterial
 	build_translation_manager
