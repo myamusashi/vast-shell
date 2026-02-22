@@ -421,66 +421,72 @@ Item {
             }
 
             WrapperRectangle {
-                Layout.fillWidth: true
+				Layout.fillWidth: true
+				Layout.preferredHeight: osLayout.implicitHeight
                 margin: Appearance.margin.normal
                 radius: Appearance.rounding.small * 0.5
                 bottomRightRadius: Appearance.rounding.normal
                 color: Colours.m3Colors.m3SurfaceContainer
 
-                RowLayout {
-                    spacing: Appearance.spacing.normal
+                Item {
+					RowLayout {
+						id: osLayout
 
-                    StyledText {
-                        text: {
-                            const osName = SystemUsage.osName.toLowerCase();
-                            const match = DistroAscii.listDistro.find(distro => osName.includes(distro.toLowerCase()));
-                            return match ? DistroAscii[match] : "Unknown";
-                        }
-                        color: Colours.m3Colors.m3Green
-                        font.pixelSize: Appearance.fonts.size.small * 0.5
-                        font.family: SystemUsage.osName.toLowerCase() === "nixos" ? Appearance.fonts.family.mono : Appearance.fonts.family.sans
-                        textFormat: Text.PlainText
-                        lineHeight: 1.0
-                        wrapMode: Text.NoWrap
-                    }
+                        spacing: Appearance.spacing.normal
 
-                    ColumnLayout {
                         StyledText {
-                            Layout.fillWidth: true
-                            text: SystemUsage.osPrettyName
+                            text: {
+                                const osName = SystemUsage.osName.toLowerCase();
+                                const match = DistroAscii.listDistro.find(distro => osName.includes(distro.toLowerCase()));
+                                return match ? DistroAscii[match] : "Unknown";
+                            }
                             color: Colours.m3Colors.m3Green
-                            font.pixelSize: Appearance.fonts.size.large * 1.2
-                            font.weight: Font.DemiBold
-                            wrapMode: Text.WordWrap
-                            maximumLineCount: 2
+                            font.pixelSize: Appearance.fonts.size.small * 0.5
+                            font.family: SystemUsage.osName.toLowerCase() === "nixos" ? Appearance.fonts.family.mono : Appearance.fonts.family.sans
+                            textFormat: Text.PlainText
+                            lineHeight: 1.0
+                            wrapMode: Text.NoWrap
                         }
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: SystemUsage.cpuName
-                            color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                            wrapMode: Text.WordWrap
-                            maximumLineCount: 2
+
+                        ColumnLayout {
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: SystemUsage.osPrettyName
+                                color: Colours.m3Colors.m3Green
+                                font.pixelSize: Appearance.fonts.size.large * 1.2
+                                font.weight: Font.DemiBold
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
+                            }
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: SystemUsage.cpuName
+                                color: Colours.m3Colors.m3OnSurface
+                                font.pixelSize: Appearance.fonts.size.normal
+                                font.weight: Font.DemiBold
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
+                            }
+                            StyledText {
+                                Layout.fillWidth: true
+                                text: SystemUsage.kernelName
+                                color: Colours.m3Colors.m3OnSurface
+                                font.pixelSize: Appearance.fonts.size.normal
+                                font.weight: Font.DemiBold
+                                wrapMode: Text.WordWrap
+                                maximumLineCount: 2
+                            }
+                            StyledText {
+                                text: SystemUsage.uptimeFormatted
+                                color: Colours.withAlpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
+                                font.pixelSize: Appearance.fonts.size.normal
+                                font.weight: Font.DemiBold
+                            }
                         }
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: SystemUsage.kernelName
-                            color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                            wrapMode: Text.WordWrap
-                            maximumLineCount: 2
-                        }
-                        StyledText {
-                            text: SystemUsage.uptimeFormatted
-                            color: Colours.withAlpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                        }
-                    }
+					}
 
                     MArea {
+                        anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
