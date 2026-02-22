@@ -1,51 +1,51 @@
 {
-  lib,
-  stdenvNoCC,
-  fetchFromGitHub,
-  makeWrapper,
-  gnugrep,
-  findutils,
-  gnused,
-  gawk,
-  scdoc,
-  libnotify,
+    lib,
+    stdenvNoCC,
+    fetchFromGitHub,
+    makeWrapper,
+    gnugrep,
+    findutils,
+    gnused,
+    gawk,
+    scdoc,
+    libnotify,
 }:
 stdenvNoCC.mkDerivation rec {
-  pname = "app2unit";
-  version = "1.0.3";
+    pname = "app2unit";
+    version = "1.3.0";
 
-  src = fetchFromGitHub {
-    owner = "Vladimir-csp";
-    repo = "app2unit";
-    tag = "v${version}";
-    hash = "sha256-7eEVjgs+8k+/NLteSBKgn4gPaPLHC+3Uzlmz6XB0930=";
-  };
+    src = fetchFromGitHub {
+        owner = "Vladimir-csp";
+        repo = "app2unit";
+        tag = "v${version}";
+        hash = "sha256-HkwcYYGNReDtPxZumnz3ZDb1sr1JcngAOqs/inO/350=";
+    };
 
-  nativeBuildInputs = [makeWrapper];
+    nativeBuildInputs = [makeWrapper];
 
-  dontBuild = true;
+    dontBuild = true;
 
-  installPhase = ''
-    runHook preInstall
+    installPhase = ''
+        runHook preInstall
 
-    install -Dm755 app2unit $out/bin/app2unit
+        install -Dm755 app2unit $out/bin/app2unit
 
-    wrapProgram $out/bin/app2unit \
-      --prefix PATH : ${lib.makeBinPath [
-      findutils
-      gnugrep
-      gnused
-      gawk
-      scdoc
-      libnotify
-    ]}
+        wrapProgram $out/bin/app2unit \
+          --prefix PATH : ${lib.makeBinPath [
+            findutils
+            gnugrep
+            gnused
+            gawk
+            scdoc
+            libnotify
+        ]}
 
-    runHook postInstall
-  '';
+        runHook postInstall
+    '';
 
-  meta = {
-    description = "Systemd integration for applications";
-    homepage = "https://github.com/Vladimir-csp/app2unit";
-    license = lib.licenses.gpl3Plus;
-  };
+    meta = {
+        description = "Systemd integration for applications";
+        homepage = "https://github.com/Vladimir-csp/app2unit";
+        license = lib.licenses.gpl3Plus;
+    };
 }
