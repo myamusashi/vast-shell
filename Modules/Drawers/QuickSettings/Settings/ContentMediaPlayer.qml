@@ -50,7 +50,7 @@ RowLayout {
 
             StyledText {
                 text: Players.active?.trackArtist ?? ""
-                color: root.trackArtColors.secondary
+                color: root.trackArtColors.onSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small
                 font.weight: Font.DemiBold
                 elide: Text.ElideRight
@@ -62,7 +62,7 @@ RowLayout {
 
             StyledText {
                 text: Players.active == null ? "0:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}`
-                color: root.trackArtColors.muted
+                color: root.trackArtColors.onSurface
                 font.pixelSize: Appearance.fonts.size.small
                 font.weight: Font.DemiBold
 
@@ -103,8 +103,8 @@ RowLayout {
                     implicitWidth: 24
                     implicitHeight: 24
                     bgRadius: Appearance.rounding.normal
-                    icon.name: Players.active?.shuffle ? "shuffle_on" : "shuffle"
-                    icon.color: Players.active?.shuffle ? root.trackArtColors.primary : root.trackArtColors.muted
+                    icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
+                    icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? root.trackArtColors.primary : root.trackArtColors.outline
                     color: "transparent"
                     onClicked: {
                         if (Players.active)
@@ -149,7 +149,7 @@ RowLayout {
                     implicitHeight: 24
                     bgRadius: Appearance.rounding.normal
                     icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
-                    icon.color: (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.trackArtColors.primary : root.trackArtColors.muted
+                    icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.trackArtColors.primary : root.trackArtColors.outline
                     color: "transparent"
                     onClicked: {
                         if (!Players.active)
@@ -249,6 +249,7 @@ RowLayout {
                             anchors.fill: parent
                             z: -1
                             level: 2
+                            radius: parent.radius - 2
                         }
                     }
 
