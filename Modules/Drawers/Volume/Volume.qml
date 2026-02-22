@@ -18,7 +18,7 @@ Item {
     anchors {
         right: parent.right
         verticalCenter: parent.verticalCenter
-        rightMargin: anchors.rightMargin === 0 ? Configs.generals.outerBorderSize : 0
+        rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
     }
 
     property bool openPerappVolume: false
@@ -178,7 +178,7 @@ Item {
             implicitWidth: 40
             implicitHeight: parent.height - 30 - parent.spacing
             orientation: Qt.Vertical
-            value: parent.node.audio.volume || 100
+            value: parent.node.audio.volume
             onMoved: parent.node.audio.volume = value
         }
     }

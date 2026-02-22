@@ -13,7 +13,7 @@ Item {
     anchors {
         bottom: parent.bottom
         horizontalCenter: parent.horizontalCenter
-        bottomMargin: anchors.bottomMargin === 0 ? Configs.generals.outerBorderSize : 0
+        bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
     }
 
     implicitWidth: parent.width * 0.15
