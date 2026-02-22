@@ -1,26 +1,26 @@
 {
-  stdenvNoCC,
-  go,
+    stdenvNoCC,
+    go,
 }:
 stdenvNoCC.mkDerivation {
-  pname = "keystate-bin";
-  version = "0.1.0";
+    pname = "keystate-bin";
+    version = "0.1.0";
 
-  src = ../Assets/go;
+    src = ../Assets/go;
 
-  nativeBuildInputs = [go];
+    nativeBuildInputs = [go];
 
-  buildPhase = ''
-    export HOME=$TMPDIR
-    go build -o keystate-bin keystate.go
-  '';
+    buildPhase = ''
+        export HOME=$TMPDIR
+        go build -o keystate-bin keystate.go
+    '';
 
-  installPhase = ''
-    install -Dm755 keystate-bin $out/bin/keystate-bin
-  '';
+    installPhase = ''
+        install -Dm755 keystate-bin $out/bin/keystate-bin
+    '';
 
-  meta = {
-    description = "Keyboard state monitor";
-    mainProgram = "keystate-bin";
-  };
+    meta = {
+        description = "Keyboard state monitor";
+        mainProgram = "keystate-bin";
+    };
 }
