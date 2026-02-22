@@ -675,34 +675,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>Greeter</name>
-    <message>
-        <location filename="../Greeter.qml" line="295"/>
-        <source>WRONG PASSWORD</source>
-        <translation>SALAH PASSWORD</translation>
-    </message>
-    <message>
-        <location filename="../Greeter.qml" line="369"/>
-        <source>Type password and press Enter</source>
-        <translation>Tulis password dan tekan Enter</translation>
-    </message>
-    <message>
-        <location filename="../Greeter.qml" line="390"/>
-        <source>User:</source>
-        <translation>Pengguna:</translation>
-    </message>
-    <message>
-        <location filename="../Greeter.qml" line="414"/>
-        <source>Get yo ass back</source>
-        <translation>Modar sia</translation>
-    </message>
-    <message>
-        <location filename="../Greeter.qml" line="433"/>
-        <source>Session:</source>
-        <translation>Sesi:</translation>
-    </message>
-</context>
-<context>
     <name>Header</name>
     <message>
         <location filename="../Modules/Polkit/Header.qml" line="39"/>
