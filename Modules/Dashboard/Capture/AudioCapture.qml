@@ -8,9 +8,10 @@ import Quickshell.Widgets
 import Quickshell.Services.Pipewire
 import Qcm.Material as MD
 
-import qs.Components
 import qs.Configs
+import qs.Widgets
 import qs.Services
+import qs.Components
 
 StyledRect {
     id: root
@@ -150,8 +151,7 @@ StyledRect {
                         node: Pipewire.defaultAudioSink
                     }
 
-                    CustomMixerEntry {
-                        useCustomProperties: false
+                    MixerEntry {
                         node: Pipewire.defaultAudioSink
                     }
 
@@ -188,9 +188,8 @@ StyledRect {
                                         Layout.alignment: Qt.AlignVCenter
                                     }
 
-                                    CustomMixerEntry {
+                                    MixerEntry {
                                         Layout.fillWidth: true
-                                        useCustomProperties: false
                                         node: delegateTracker.modelData.source
                                     }
                                 }
