@@ -12,8 +12,7 @@ package main
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
-
-// ── forwards ─────────────────────────────────────────────────────────────────
+#include <errno.h>
 
 static void registry_event_global(void *data, uint32_t id,
     uint32_t permissions, const char *type, uint32_t version,
@@ -23,12 +22,18 @@ static void device_event_info(void *data, const struct pw_device_info *info);
 static void device_event_param(void *data, int seq, uint32_t id,
     uint32_t index, uint32_t next, const struct spa_pod *param);
 
-// ── constants ─────────────────────────────────────────────────────────────────
-
 #define MAX_PROFILES  64
 #define MAX_STR       256
 
-// ── structs ───────────────────────────────────────────────────────────────────
+// Worst-case JSON expansion of a single MAX_STR field:
+// Every byte becomes \uXXXX (6 chars), plus 2 quotes = MAX_STR*6 + 2.
+#define MAX_STR_JSON  (MAX_STR * 6 + 2)
+
+// Error codes returned via the err out-param of device_to_json.
+#define DJ_OK        0
+#define DJ_ENOMEM   -1   // malloc failed
+#define DJ_EOVERFLOW -2  // buffer arithmetic overflowed (shouldn't happen with
+                         // the new cap formula, but kept as a safety net)
 
 typedef struct {
     int32_t index;
@@ -38,7 +43,7 @@ typedef struct {
 } profile_entry_t;
 
 typedef struct device_node {
-    struct pw_proxy          *proxy;
+    struct pw_proxy           *proxy;
     struct spa_hook           device_listener;
     struct spa_hook           proxy_listener;
 
@@ -48,13 +53,17 @@ typedef struct device_node {
     profile_entry_t           profiles[MAX_PROFILES];
     int                       profile_count;
 
+    profile_entry_t           staging[MAX_PROFILES];
+    int                       staging_count;
+    int                       enum_seq;
+
     int32_t                   active_index;
     char                      active_name[MAX_STR];
     char                      active_description[MAX_STR];
     char                      active_available[32];
 
     int                       dirty;
-    struct device_node       *next;
+    struct device_node        *next;
 } device_node_t;
 
 typedef struct {
@@ -66,8 +75,7 @@ typedef struct {
     device_node_t            *devices;
 } app_t;
 
-// ── event tables ──────────────────────────────────────────────────────────────
-
+// tables
 static const struct pw_registry_events registry_events = {
     PW_VERSION_REGISTRY_EVENTS,
     .global        = registry_event_global,
@@ -80,15 +88,13 @@ static const struct pw_device_events device_events = {
     .param = device_event_param,
 };
 
-// ── helpers ───────────────────────────────────────────────────────────────────
-
+// helpers
 static const char *safe_lookup(const struct spa_dict *dict, const char *key) {
     if (!dict) return "";
     const char *v = spa_dict_lookup(dict, key);
     return v ? v : "";
 }
 
-// safe_copy: always NUL-terminates dst regardless of src length.
 static void safe_copy(char *dst, size_t dst_size, const char *src) {
     if (!src || dst_size == 0) {
         if (dst_size > 0) dst[0] = '\0';
@@ -100,74 +106,88 @@ static void safe_copy(char *dst, size_t dst_size, const char *src) {
     dst[i] = '\0';
 }
 
-// ── JSON helpers ──────────────────────────────────────────────────────────────
-
 // Write a JSON-escaped string into buf[pos..cap).
-// Returns new pos. On overflow, returns cap (caller checks).
+// Returns new pos. On overflow returns cap (caller checks).
 static size_t json_write_str(char *buf, size_t cap, size_t pos, const char *s) {
     if (pos >= cap) return cap;
     buf[pos++] = '"';
-    for (; *s && pos + 2 < cap; s++) {
+    for (; *s; s++) {
         unsigned char c = (unsigned char)*s;
         if (c == '"' || c == '\\') {
+            if (pos + 2 > cap) return cap;
             buf[pos++] = '\\';
             buf[pos++] = (char)c;
         } else if (c < 0x20) {
-            // Control characters: \uXXXX
-            if (pos + 7 >= cap) break;
-            pos += (size_t)snprintf(buf + pos, cap - pos, "\\u%04x", c);
+            // "pos + 7 >= cap" (over-guarded by 1 and didn't account for the snprintf result).
+			// Now we reserve 6 chars explicitly and validate the snprintf return.
+            if (pos + 6 > cap) return cap;
+            int written = snprintf(buf + pos, cap - pos, "\\u%04x", c);
+            if (written < 0 || (size_t)written > cap - pos) return cap;
+            pos += (size_t)written;
         } else {
+            if (pos + 1 > cap) return cap;
             buf[pos++] = (char)c;
         }
     }
-    if (pos < cap) buf[pos++] = '"';
+    // closing '"'
+    if (pos + 1 > cap) return cap;
+    buf[pos++] = '"';
     return pos;
 }
 
-// Append a literal string (not JSON-escaped, used for keys/structure).
 static size_t json_write_lit(char *buf, size_t cap, size_t pos, const char *lit) {
     for (; *lit && pos < cap; lit++)
         buf[pos++] = *lit;
     return pos;
 }
 
-// Append a signed integer.
 static size_t json_write_int(char *buf, size_t cap, size_t pos, int32_t v) {
     if (pos >= cap) return cap;
     int written = snprintf(buf + pos, cap - pos, "%d", v);
-    if (written < 0) return cap;
-    pos += (size_t)written;
-    return pos >= cap ? cap : pos;
+    if (written < 0 || (size_t)written >= cap - pos) return cap;
+    return pos + (size_t)written;
 }
 
-// Append an unsigned integer.
 static size_t json_write_uint(char *buf, size_t cap, size_t pos, uint32_t v) {
     if (pos >= cap) return cap;
     int written = snprintf(buf + pos, cap - pos, "%u", v);
-    if (written < 0) return cap;
-    pos += (size_t)written;
-    return pos >= cap ? cap : pos;
+    if (written < 0 || (size_t)written >= cap - pos) return cap;
+    return pos + (size_t)written;
 }
 
-// ── JSON builder ──────────────────────────────────────────────────────────────
-
 // Returns heap-allocated JSON string; caller must free().
-// Returns NULL on allocation failure or overflow.
-static char *device_to_json(device_node_t *d) {
-    // Conservative upper bound:
-    // Per-profile:  keys(~60) + name(MAX_STR*2) + desc(MAX_STR*2) + avail(14) + escaping margin = ~1200
-    // Header/footer: device name + active profile = ~1500
-    size_t cap = 1500 + (size_t)d->profile_count * 1200;
-    char  *buf = (char *)malloc(cap);
-    if (!buf) return NULL;
+// On failure returns NULL and sets *err to DJ_ENOMEM or DJ_EOVERFLOW.
+// On success *err is DJ_OK.
+static char *device_to_json(device_node_t *d, int *err) {
+    if (err) *err = DJ_OK;
+
+    // each MAX_STR field can expand to MAX_STR_JSON bytes in the worst case.
+	// Per profile there are 2 such fields (name + description);
+	// the device itself has 1 name + 3 active profile string fields.
+	// Add generous fixed overhead for keys/punctuation.
+    //
+    //   Per profile:  2 * MAX_STR_JSON + 64  (keys + index + available + braces)
+    //   Header/footer: 4 * MAX_STR_JSON + 256
+    //
+    size_t per_profile = 2 * MAX_STR_JSON + 64;
+    size_t header      = 4 * MAX_STR_JSON + 256;
+    size_t cap         = header + (size_t)d->profile_count * per_profile;
+
+    char *buf = (char *)malloc(cap);
+    if (!buf) {
+        if (err) *err = DJ_ENOMEM;
+        return NULL;
+    }
 
     size_t p = 0;
 
-#define W_LIT(s)       p = json_write_lit (buf, cap, p, (s))
-#define W_STR(s)       p = json_write_str (buf, cap, p, (s))
-#define W_INT(v)       p = json_write_int (buf, cap, p, (v))
-#define W_UINT(v)      p = json_write_uint(buf, cap, p, (v))
-#define OVERFLOW_CHECK do { if (p >= cap) { free(buf); return NULL; } } while(0)
+// Helper macros, OVERFLOW_CHECK sets DJ_EOVERFLOW
+#define W_LIT(s)  p = json_write_lit (buf, cap, p, (s))
+#define W_STR(s)  p = json_write_str (buf, cap, p, (s))
+#define W_INT(v)  p = json_write_int (buf, cap, p, (v))
+#define W_UINT(v) p = json_write_uint(buf, cap, p, (v))
+#define OVERFLOW_CHECK \
+    do { if (p >= cap) { free(buf); if (err) *err = DJ_EOVERFLOW; return NULL; } } while(0)
 
     W_LIT("{\"deviceId\":"); W_UINT(d->pw_id);
     W_LIT(",\"deviceName\":"); W_STR(d->name);
@@ -178,7 +198,6 @@ static char *device_to_json(device_node_t *d) {
         W_LIT(",\"description\":"); W_STR(d->active_description);
         W_LIT(",\"available\":"); W_STR(d->active_available);
     W_LIT("},\"profiles\":[");
-
     OVERFLOW_CHECK;
 
     for (int i = 0; i < d->profile_count; i++) {
@@ -206,8 +225,6 @@ static char *device_to_json(device_node_t *d) {
     return buf;
 }
 
-// ── availability helper ───────────────────────────────────────────────────────
-
 static const char *parse_availability(const struct spa_pod *val) {
     uint32_t av = 0;
     if (spa_pod_get_id(val, &av) != 0)
@@ -219,21 +236,23 @@ static const char *parse_availability(const struct spa_pod *val) {
     }
 }
 
-// ── device callbacks ──────────────────────────────────────────────────────────
-
+// device callbacks
 static void device_event_info(void *data, const struct pw_device_info *info) {
     device_node_t *d = (device_node_t *)data;
-
     if (info->props) {
         const char *n = safe_lookup(info->props, PW_KEY_DEVICE_NAME);
         if (*n) safe_copy(d->name, sizeof(d->name), n);
     }
-
     if (info->change_mask & PW_DEVICE_CHANGE_MASK_PARAMS) {
+        // pw_device_enum_params returns the seq number for this round.
+        // Store it so device_event_param can discard stale callbacks
+        // from previous rounds.
+        d->enum_seq      = pw_device_enum_params((struct pw_device *)d->proxy,
+                               0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, NULL);
+        d->staging_count = 0;   // reset staging for this fresh round
+
         pw_device_enum_params((struct pw_device *)d->proxy,
-            0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, NULL);
-        pw_device_enum_params((struct pw_device *)d->proxy,
-            0, SPA_PARAM_Profile,     0, UINT32_MAX, NULL);
+            0, SPA_PARAM_Profile, 0, UINT32_MAX, NULL);
     }
 }
 
@@ -242,12 +261,25 @@ static void device_event_param(void *data, int seq, uint32_t id,
 
     device_node_t *d = (device_node_t *)data;
 
-    // Safety: must be a POD object before we iterate its properties.
-    if (!param || !spa_pod_is_object(param)) return;
-
     if (id == SPA_PARAM_EnumProfile) {
-        if (index == 0) d->profile_count = 0;
-        if (d->profile_count >= MAX_PROFILES) return;
+        // Discard callbacks from stale rounds (old device_event_info calls)
+        if (seq != d->enum_seq) {
+			return;
+		};
+
+        // param == NULL or non-object signals end of this sequence —
+        // commit whatever we've accumulated in staging.
+        if (!param || !spa_pod_is_object(param)) {
+            if (d->staging_count > 0) {
+                memcpy(d->profiles, d->staging,
+                       sizeof(profile_entry_t) * (size_t)d->staging_count);
+                d->profile_count = d->staging_count;
+                d->dirty         = 1;
+            }
+            return;
+        }
+
+        if (d->staging_count >= MAX_PROFILES) return;
 
         int32_t     pidx  = -1;
         const char *name  = NULL, *desc = NULL;
@@ -257,59 +289,58 @@ static void device_event_param(void *data, int seq, uint32_t id,
         SPA_POD_OBJECT_FOREACH((const struct spa_pod_object *)param, prop) {
             switch (prop->key) {
             case SPA_PARAM_PROFILE_index:
-                spa_pod_get_int(&prop->value, &pidx);
-                break;
+                spa_pod_get_int(&prop->value, &pidx);    break;
             case SPA_PARAM_PROFILE_name:
-                spa_pod_get_string(&prop->value, &name);
-                break;
+                spa_pod_get_string(&prop->value, &name); break;
             case SPA_PARAM_PROFILE_description:
-                spa_pod_get_string(&prop->value, &desc);
-                break;
+                spa_pod_get_string(&prop->value, &desc); break;
             case SPA_PARAM_PROFILE_available:
-                avail = parse_availability(&prop->value);
-                break;
+                avail = parse_availability(&prop->value); break;
             }
         }
 
-        profile_entry_t *e = &d->profiles[d->profile_count++];
+        profile_entry_t *e = &d->staging[d->staging_count++];
         e->index = pidx;
         safe_copy(e->name,        sizeof(e->name),        name  ? name  : "");
         safe_copy(e->description, sizeof(e->description), desc  ? desc  : "");
         safe_copy(e->available,   sizeof(e->available),   avail);
-        d->dirty = 1;
-
     } else if (id == SPA_PARAM_Profile) {
-        int32_t     pidx  = -1;
-        const char *name  = NULL, *desc = NULL;
-        const char *avail = "unknown";
+    	if (!param || !spa_pod_is_object(param)) return;
 
-        struct spa_pod_prop *prop;
-        SPA_POD_OBJECT_FOREACH((const struct spa_pod_object *)param, prop) {
-            switch (prop->key) {
-            case SPA_PARAM_PROFILE_index:
-                spa_pod_get_int(&prop->value, &pidx);
-                break;
-            case SPA_PARAM_PROFILE_name:
-                spa_pod_get_string(&prop->value, &name);
-                break;
-            case SPA_PARAM_PROFILE_description:
-                spa_pod_get_string(&prop->value, &desc);
-                break;
-            case SPA_PARAM_PROFILE_available:
-                avail = parse_availability(&prop->value);
-                break;
-            }
-        }
+    	// SPA_PARAM_Profile selalu datang setelah EnumProfile sequence selesai.
+    	// Gunakan ini sebagai trigger commit staging -> profiles[].
+    	if (d->staging_count > 0) {
+        	memcpy(d->profiles, d->staging,
+               sizeof(profile_entry_t) * (size_t)d->staging_count);
+        	d->profile_count = d->staging_count;
+        	d->staging_count = 0;  // reset agar tidak double-commit
+    	}
 
-        d->active_index = pidx;
-        safe_copy(d->active_name,        sizeof(d->active_name),        name  ? name  : "");
-        safe_copy(d->active_description, sizeof(d->active_description), desc  ? desc  : "");
-        safe_copy(d->active_available,   sizeof(d->active_available),   avail);
-        d->dirty = 1;
-    }
+    	int32_t     pidx  = -1;
+    	const char *name  = NULL, *desc = NULL;
+    	const char *avail = "unknown";
+
+    	struct spa_pod_prop *prop;
+    	SPA_POD_OBJECT_FOREACH((const struct spa_pod_object *)param, prop) {
+        	switch (prop->key) {
+        	case SPA_PARAM_PROFILE_index:
+            	spa_pod_get_int(&prop->value, &pidx);    break;
+        	case SPA_PARAM_PROFILE_name:
+            	spa_pod_get_string(&prop->value, &name); break;
+        	case SPA_PARAM_PROFILE_description:
+            	spa_pod_get_string(&prop->value, &desc); break;
+        	case SPA_PARAM_PROFILE_available:
+            	avail = parse_availability(&prop->value); break;
+        	}
+    	}
+
+    	d->active_index = pidx;
+    	safe_copy(d->active_name,        sizeof(d->active_name),        name  ? name  : "");
+    	safe_copy(d->active_description, sizeof(d->active_description), desc  ? desc  : "");
+    	safe_copy(d->active_available,   sizeof(d->active_available),   avail);
+    	d->dirty = 1;
+	}
 }
-
-// ── proxy removed ─────────────────────────────────────────────────────────────
 
 static void on_proxy_destroy(void *data) {
     device_node_t *d = (device_node_t *)data;
@@ -321,8 +352,6 @@ static const struct pw_proxy_events proxy_events = {
     PW_VERSION_PROXY_EVENTS,
     .destroy = on_proxy_destroy,
 };
-
-// ── registry callbacks ────────────────────────────────────────────────────────
 
 static void registry_event_global(void *data, uint32_t id,
     uint32_t permissions, const char *type, uint32_t version,
@@ -371,8 +400,7 @@ static void registry_event_global_remove(void *data, uint32_t id) {
     }
 }
 
-// ── public C API (called from Go) ─────────────────────────────────────────────
-
+// public C API
 static app_t *app_create(void) {
     int    argc = 0;
     char **argv = NULL;
@@ -388,7 +416,9 @@ static app_t *app_create(void) {
     if (!app->context) goto err;
 
     app->core = pw_context_connect(app->context, NULL, 0);
-    if (!app->core) goto err;
+    if (!app->core) {
+        goto err;
+    }
 
     app->registry = pw_core_get_registry(app->core, PW_VERSION_REGISTRY, 0);
     pw_registry_add_listener(app->registry, &app->registry_listener,
@@ -397,6 +427,7 @@ static app_t *app_create(void) {
     return app;
 
 err:
+    if (app->core)    pw_core_disconnect(app->core);
     if (app->context) pw_context_destroy(app->context);
     if (app->loop)    pw_main_loop_destroy(app->loop);
     free(app);
@@ -418,19 +449,34 @@ static void app_destroy(app_t *app) {
     pw_deinit();
 }
 
-// Run one non-blocking iteration of the PipeWire event loop.
+// the old code ignored the return value
+// entirely.  pw_loop_iterate returns the number of dispatched events on
+// success, or a negative errno-style value on error.
+// We now:
+//   - Return 0 on success (any non-negative result).
+//   - Return the negative error code on failure so callers can act on it
+//     (e.g. reconnect, log, or exit).
+//
+// The timeout of 500 ms is intentional it makes the call non-blocking for
+// the common case while still allowing the kernel to batch short-lived events.
 static int app_iterate(app_t *app) {
     struct pw_loop *loop = pw_main_loop_get_loop(app->loop);
-    return pw_loop_iterate(loop, 500);
+    int ret = pw_loop_iterate(loop, 500);
+    if (ret < 0) {
+        return ret;   // negative errno-style code
+    }
+    return 0;
 }
 
-// Return heap JSON for the first dirty device, or NULL if none dirty.
-// Clears the dirty flag. Caller must free().
-static char *drain_dirty(app_t *app) {
+// *err is set to DJ_OK, DJ_ENOMEM, or DJ_EOVERFLOW
+// so the caller can distinguish "nothing dirty" (returns NULL, *err==DJ_OK)
+// from a serialisation failure.
+static char *drain_dirty(app_t *app, int *err) {
+    if (err) *err = DJ_OK;
     for (device_node_t *d = app->devices; d; d = d->next) {
         if (d->dirty && d->profile_count > 0) {
             d->dirty = 0;
-            return device_to_json(d);
+            return device_to_json(d, err);
         }
     }
     return NULL;
@@ -445,6 +491,7 @@ import "C"
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -455,8 +502,6 @@ import (
 	"unsafe"
 )
 
-// ── file paths ────────────────────────────────────────────────────────────────
-
 func stateDir() string {
 	if xdg := os.Getenv("XDG_RUNTIME_DIR"); xdg != "" {
 		return filepath.Join(xdg, "pw-profiles")
@@ -464,8 +509,7 @@ func stateDir() string {
 	return filepath.Join("/tmp", "pw-profiles")
 }
 
-// atomicWrite writes data to path via a temp file + rename so FileView
-// never reads a partial file mid-write.
+// atomicWrite writes data to path via a temp file + rename so FileView never reads a partial file mid-write
 func atomicWrite(path string, data []byte) error {
 	dir := filepath.Dir(path)
 	if err := os.MkdirAll(dir, 0o700); err != nil {
@@ -477,8 +521,6 @@ func atomicWrite(path string, data []byte) error {
 	}
 	return os.Rename(tmp, path)
 }
-
-// ── Go types ──────────────────────────────────────────────────────────────────
 
 type Profile struct {
 	Index       int    `json:"index"`
@@ -509,7 +551,6 @@ type ActiveFile struct {
 	ActiveProfile ActiveProfile `json:"activeProfile"`
 }
 
-// Raw shape from C JSON
 type rawDevice struct {
 	DeviceID      uint32 `json:"deviceId"`
 	DeviceName    string `json:"deviceName"`
@@ -527,8 +568,6 @@ type rawDevice struct {
 		Available   string `json:"available"`
 	} `json:"profiles"`
 }
-
-// ── formatProfileName ─────────────────────────────────────────────────────────
 
 func formatProfileName(name string) string {
 	switch name {
@@ -554,8 +593,7 @@ func formatProfileName(name string) string {
 	return strings.Join(out, " + ")
 }
 
-// ── write helpers ─────────────────────────────────────────────────────────────
-
+// helpers
 func writeProfiles(dir string, rd rawDevice) error {
 	profiles := make([]Profile, len(rd.Profiles))
 	for i, p := range rd.Profiles {
@@ -597,8 +635,6 @@ func writeActive(dir string, rd rawDevice) error {
 	return atomicWrite(filepath.Join(dir, "active.json"), data)
 }
 
-// ── main ──────────────────────────────────────────────────────────────────────
-
 func main() {
 	dir := stateDir()
 
@@ -624,10 +660,21 @@ func main() {
 		}
 
 		for {
-			cjson := C.drain_dirty(app)
+			var cerr C.int
+			cjson := C.drain_dirty(app, &cerr)
+
 			if cjson == nil {
+				if cerr == C.DJ_ENOMEM {
+					log.Printf("drain_dirty: out of memory")
+					break
+				}
+				if cerr == C.DJ_EOVERFLOW {
+					log.Printf("drain_dirty: json buffer overflow (bug)")
+					break
+				}
 				break
 			}
+
 			raw := C.GoString(cjson)
 			C.free(unsafe.Pointer(cjson))
 
@@ -643,6 +690,8 @@ func main() {
 			if err := writeActive(dir, rd); err != nil {
 				fmt.Fprintln(os.Stderr, "pw-profiles: write active.json:", err)
 			}
+
+			log.Printf("writeProfiles: deviceId=%d count=%d", rd.DeviceID, len(rd.Profiles))
 		}
 
 		time.Sleep(500 * time.Millisecond)
