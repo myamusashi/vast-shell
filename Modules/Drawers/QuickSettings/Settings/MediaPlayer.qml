@@ -3,15 +3,11 @@ pragma ComponentBehavior: Bound
 import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
-import Quickshell.Services.Mpris
-import Qcm.Material as MD
 
 import qs.Configs
-import qs.Helpers
 import qs.Services
 import qs.Components
 
