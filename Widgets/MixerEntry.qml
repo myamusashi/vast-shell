@@ -19,6 +19,8 @@ ColumnLayout {
     property string icon: Audio.getIcon(node)
 
     PwObjectTracker {
+        id: objectTracker
+
         objects: [root.node]
     }
 
