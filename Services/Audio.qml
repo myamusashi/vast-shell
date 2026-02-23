@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -8,11 +9,16 @@ import Quickshell.Services.Pipewire
 Singleton {
     id: root
 
-    property var models: []
-    property var activeProfiles: []
+    property bool needsKill: false
     property int idPipewire: 0
     property int activeProfileIndex: activeProfiles.length > 0 ? activeProfiles[0].index : -1
-    property bool needsKill: false
+    property var activeProfiles: []
+    property var models: []
+    property var listSink: Pipewire.nodes.values.filter(e => e.isSink && !e.isStream).map(e => ({
+                nodeId: e.id,
+                name: e.name,
+                description: e.description
+            }))
 
     function getIcon(node: PwNode): string {
         return node.isSink ? getSinkIcon(node) : getSourceIcon(node);
