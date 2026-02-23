@@ -65,7 +65,7 @@
         m3shapes
         translationManager
 
-		## Qt packages
+        ## Qt packages
         kdePackages.qtmultimedia
         qt6.qt5compat
         qt6.qtbase
