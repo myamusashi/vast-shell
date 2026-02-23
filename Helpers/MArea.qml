@@ -1,9 +1,9 @@
 import QtQuick
 import Qcm.Material as MD
 
-import qs.Components
 import qs.Configs
 import qs.Services
+import qs.Components
 
 MouseArea {
     id: area
@@ -41,7 +41,7 @@ MouseArea {
             pressY: area.mouseY
             pressed: area.pressed
             stateOpacity: area.layerRadius
-            color: area.layerColor
+            color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
 }

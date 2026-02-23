@@ -4,6 +4,7 @@ import QtQuick
 import Qcm.Material as MD
 
 import qs.Configs
+import qs.Services
 
 MD.Button {
     id: root
@@ -46,7 +47,7 @@ MD.Button {
             pressY: root.pressY
             pressed: root.pressed
             stateOpacity: root.mdState.stateLayerOpacity
-            color: root.mdState.stateLayerColor
+            color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
 
