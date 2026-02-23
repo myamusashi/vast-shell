@@ -11,11 +11,16 @@ import qs.Configs
 import qs.Helpers
 import qs.Widgets
 import qs.Services
+import qs.Components
 
 ScrollView {
+    id: root
+
     anchors.fill: parent
     contentWidth: availableWidth
     clip: true
+
+    property int currentSinkIndex: 0
 
     RowLayout {
         anchors.fill: parent
@@ -30,6 +35,52 @@ ScrollView {
                 id: linkTracker
 
                 node: Pipewire.defaultAudioSink
+            }
+
+            Repeater {
+                model: ScriptModel {
+                    values: [...Audio.listSink]
+                }
+
+                delegate: RowLayout {
+                    id: del
+
+                    required property var modelData
+                    required property int index
+
+                    spacing: Appearance.spacing.small
+
+                    StyledRect {
+                        implicitWidth: 15
+                        implicitHeight: 15
+                        radius: Appearance.rounding.full
+                        color: root.currentSinkIndex === del.index ? Colours.m3Colors.m3Primary : "transparent"
+                        border.width: 2
+                        border.color: Colours.m3Colors.m3Primary
+
+                        Behavior on color {
+                            CAnim {
+                                duration: Appearance.animations.durations.small
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: del.modelData.description ?? ""
+                        color: root.currentSinkIndex === del.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: root.currentSinkIndex === del.index ? Font.Medium : Font.Normal
+                    }
+
+                    TapHandler {
+                        onTapped: {
+                            root.currentSinkIndex = del.index;
+                            Quickshell.execDetached({
+                                command: ["wpctl", "set-default", del.modelData.nodeId]
+                            });
+                        }
+                    }
+                }
             }
 
             RowLayout {
