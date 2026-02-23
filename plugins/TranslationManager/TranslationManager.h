@@ -1,35 +1,38 @@
 #ifndef TRANSLATIONMANAGER_H
 #define TRANSLATIONMANAGER_H
 
-#include <QObject>
-#include <QTranslator>
 #include <QGuiApplication>
+#include <QObject>
 #include <QQmlEngine>
+#include <QTranslator>
 
-class TranslationManager : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QString currentLanguage READ currentLanguage WRITE setCurrentLanguage NOTIFY languageChanged);
-    QML_ELEMENT
-    QML_SINGLETON;
+class TranslationManager : public QObject {
+  Q_OBJECT
+  Q_PROPERTY(QString currentLanguage READ currentLanguage WRITE
+                 setCurrentLanguage NOTIFY languageChanged)
+  QML_ELEMENT
+  QML_SINGLETON
 
 public:
-    explicit TranslationManager(QObject *parent = nullptr);
-    ~TranslationManager();
+  static constexpr auto DefaultTranslationPath = ":/translations";
 
-    QString currentLanguage() const;
-    void setCurrentLanguage(const QString &language);
+  explicit TranslationManager(QObject *parent = nullptr);
 
-    Q_INVOKABLE bool loadTranslation(const QString &language, const QString &translationPath = ":/translations");
-    Q_INVOKABLE QStringList availableLanguages() const;
+  QString currentLanguage() const;
+  void setCurrentLanguage(const QString &language);
+
+  Q_INVOKABLE bool
+  loadTranslation(const QString &language,
+                  const QString &translationPath = DefaultTranslationPath);
+  Q_INVOKABLE QStringList availableLanguages() const;
 
 signals:
-    void languageChanged();
+  void languageChanged();
 
 private:
-    QTranslator *m_translator;
-    QString m_currentLanguage;
-    QStringList m_availableLanguages;
+  QTranslator m_translator;
+  QString m_currentLanguage;
+  const QStringList m_availableLanguages;
 };
 
 #endif // TRANSLATIONMANAGER_H
