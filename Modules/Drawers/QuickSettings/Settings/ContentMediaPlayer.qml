@@ -106,6 +106,7 @@ RowLayout {
                     icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
                     icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? root.trackArtColors.primary : root.trackArtColors.outline
                     color: "transparent"
+                    enabled: Players.active?.shuffleSupported
                     onClicked: {
                         if (Players.active)
                             Players.active.shuffle = !Players.active.shuffle;
@@ -151,6 +152,7 @@ RowLayout {
                     icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
                     icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.trackArtColors.primary : root.trackArtColors.outline
                     color: "transparent"
+                    enabled: Players.active?.loopSupported
                     onClicked: {
                         if (!Players.active)
                             return;
@@ -299,7 +301,7 @@ RowLayout {
                         }
                         radius: Appearance.rounding.normal
                         height: parent.height
-                        color: playerComboBox.currentIndex === itemDel.index ? Colours.withAlpha(root.trackArtColors.primary, 0.08) : "transparent"
+                        color: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Colours.withAlpha(root.trackArtColors.primary, 0.08) : "transparent"
 
                         Behavior on color {
                             CAnim {
@@ -339,7 +341,7 @@ RowLayout {
                         StyledText {
                             anchors.verticalCenter: parent.verticalCenter
                             width: parent.width - 16 - parent.spacing
-                            text: itemDel.modelData?.trackTitle ?? ""
+                            text: Players.active?.desktopEntry ?? ""
                             color: root.trackArtColors.onSurface
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: playerComboBox.currentIndex === itemDel.index ? Font.Medium : Font.Normal
