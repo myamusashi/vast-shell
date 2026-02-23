@@ -22,9 +22,11 @@ Item {
     }
 
     property bool openPerappVolume: false
+    property real perappWidth: repeater.count * 40 + Math.max(0, repeater.count - 1) * Appearance.spacing.large
+    property real sliderHeight: 250 - volumeIcon.height - 40 - 2 * Appearance.spacing.normal
 
     implicitWidth: GlobalStates.isOSDVisible("volume") ? wrapper.implicitWidth : 0
-    implicitHeight: 300
+    implicitHeight: mainVolumeColumn.height + 30
 
     Behavior on implicitWidth {
         NAnim {
@@ -57,7 +59,7 @@ Item {
         id: wrapper
 
         anchors.fill: parent
-        implicitWidth: mainVolumeColumn.width + 10 + (root.openPerappVolume ? perappContainer.childrenRect.width + Appearance.spacing.large : 0)
+        implicitWidth: mainVolumeColumn.width + 10 + (root.openPerappVolume ? root.perappWidth + Appearance.spacing.large : 0)
         color: GlobalStates.drawerColors
         clip: true
         radius: 0
@@ -73,7 +75,7 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
 
-            width: root.openPerappVolume ? childrenRect.width : 0
+            width: root.openPerappVolume ? root.perappWidth : 0
             height: mainVolumeColumn.height
             spacing: Appearance.spacing.large
             clip: true
@@ -123,7 +125,7 @@ Item {
 
             StyledSlide {
                 implicitWidth: 40
-                implicitHeight: 250 - volumeIcon.height - 40 - 2 * Appearance.spacing.normal
+                implicitHeight: root.sliderHeight
                 orientation: Qt.Vertical
                 value: Pipewire.defaultAudioSink.audio.volume
                 onMoved: Pipewire.defaultAudioSink.audio.volume = value
@@ -166,17 +168,25 @@ Item {
             implicitWidth: 30
             implicitHeight: 30
             source: {
-                const name = parent.node.name;
+                const name = mixer.node.name;
                 const appName = name.split(".").pop();
-                // What the fuck is this
-                Quickshell.iconPath(DesktopEntries.heuristicLookup(appName === "zen" ? "zen-twilight" : appName)?.icon, "image-missing");
+
+                // alright man
+                let isZen = appName === "zen" || appName === "zen-twilight" || appName === "Twilight" || appName === "twilight";
+
+                if (isZen) {
+                    const entry = DesktopEntries.heuristicLookup("zen-twilight") ?? DesktopEntries.heuristicLookup("zen");
+                    return Quickshell.iconPath(entry?.icon, "image-missing");
+                }
+
+                return Quickshell.iconPath(DesktopEntries.heuristicLookup(appName)?.icon, "image-missing");
             }
         }
 
         StyledSlide {
             anchors.horizontalCenter: parent.horizontalCenter
             implicitWidth: 40
-            implicitHeight: parent.height - 30 - parent.spacing
+            implicitHeight: root.sliderHeight
             orientation: Qt.Vertical
             value: parent.node.audio.volume
             onMoved: parent.node.audio.volume = value
