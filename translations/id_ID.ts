@@ -88,7 +88,7 @@
 <context>
     <name>AudioCapture</name>
     <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="126"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="160"/>
         <source>LINUX DEFAULT OUTPUT</source>
         <translation>LINUX DEFAULT OUTPUT</translation>
     </message>
@@ -133,6 +133,39 @@
     </message>
 </context>
 <context>
+    <name>BottomItem</name>
+    <message>
+        <location filename="../Modules/Lock/BottomItem.qml" line="111"/>
+        <source>Password invalid</source>
+        <translation type="unfinished">Password tidak valid</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/BottomItem.qml" line="111"/>
+        <source>Enter password</source>
+        <translation type="unfinished">Masukkan password</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/BottomItem.qml" line="309"/>
+        <source>Shutdown</source>
+        <translation type="unfinished">Matikan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/BottomItem.qml" line="316"/>
+        <source>Reboot</source>
+        <translation type="unfinished">Mulai ulang</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/BottomItem.qml" line="323"/>
+        <source>Sleep</source>
+        <translation type="unfinished">Tidur</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/BottomItem.qml" line="330"/>
+        <source>Logout</source>
+        <translation type="unfinished">Keluar</translation>
+    </message>
+</context>
+<context>
     <name>BrightnessControls</name>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="42"/>
@@ -174,6 +207,104 @@
         <location filename="../Modules/Dashboard/Capture/Capture.qml" line="255"/>
         <source>See my captures</source>
         <translation>Lihat tangkapan layar</translation>
+    </message>
+</context>
+<context>
+    <name>Clock</name>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Sunday</source>
+        <translation type="unfinished">Minggu</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Monday</source>
+        <translation type="unfinished">Senin</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Tuesday</source>
+        <translation type="unfinished">Selasa</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Wednesday</source>
+        <translation type="unfinished">Rabu</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Thuesday</source>
+        <translation type="unfinished">Kamis</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Friday</source>
+        <translation type="unfinished">Jumat</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="19"/>
+        <source>Saturday</source>
+        <translation type="unfinished">Sabtu</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Jan</source>
+        <translation type="unfinished">Jan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Feb</source>
+        <translation type="unfinished">Feb</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Mar</source>
+        <translation type="unfinished">Mar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Apr</source>
+        <translation type="unfinished">Apr</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Mei</source>
+        <translation type="unfinished">Mei</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Jun</source>
+        <translation type="unfinished">Jun</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Jul</source>
+        <translation type="unfinished">Jul</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Aug</source>
+        <translation type="unfinished">Agu</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Sep</source>
+        <translation type="unfinished">Sep</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Okt</source>
+        <translation type="unfinished">Okt</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Nov</source>
+        <translation type="unfinished">Nov</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="24"/>
+        <source>Des</source>
+        <translation type="unfinished">Des</translation>
     </message>
 </context>
 <context>
@@ -1301,152 +1432,126 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Surface</name>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Sunday</source>
-        <translation>Minggu</translation>
+        <translation type="vanished">Minggu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Monday</source>
-        <translation>Senin</translation>
+        <translation type="vanished">Senin</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Tuesday</source>
-        <translation>Selasa</translation>
+        <translation type="vanished">Selasa</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Wednesday</source>
-        <translation>Rabu</translation>
+        <translation type="vanished">Rabu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Thuesday</source>
-        <translation>Kamis</translation>
+        <translation type="vanished">Kamis</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Friday</source>
-        <translation>Jumat</translation>
+        <translation type="vanished">Jumat</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="85"/>
         <source>Saturday</source>
-        <translation>Sabtu</translation>
+        <translation type="vanished">Sabtu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Jan</source>
-        <translation>Jan</translation>
+        <translation type="vanished">Jan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Feb</source>
-        <translation>Feb</translation>
+        <translation type="vanished">Feb</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Mar</source>
-        <translation>Mar</translation>
+        <translation type="vanished">Mar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Apr</source>
-        <translation>Apr</translation>
+        <translation type="vanished">Apr</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Mei</source>
-        <translation>Mei</translation>
+        <translation type="vanished">Mei</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Jun</source>
-        <translation>Jun</translation>
+        <translation type="vanished">Jun</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Jul</source>
-        <translation>Jul</translation>
+        <translation type="vanished">Jul</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Aug</source>
-        <translation>Agu</translation>
+        <translation type="vanished">Agu</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Sep</source>
-        <translation>Sep</translation>
+        <translation type="vanished">Sep</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Okt</source>
-        <translation>Okt</translation>
+        <translation type="vanished">Okt</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Nov</source>
-        <translation>Nov</translation>
+        <translation type="vanished">Nov</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="90"/>
         <source>Des</source>
-        <translation>Des</translation>
+        <translation type="vanished">Des</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="209"/>
         <source>Password Invalid</source>
-        <translation>Password tidak valid</translation>
+        <translation type="vanished">Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="293"/>
         <source>Password invalid</source>
-        <translation>Password tidak valid</translation>
+        <translation type="vanished">Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="293"/>
         <source>Enter password</source>
-        <translation>Masukkan password</translation>
+        <translation type="vanished">Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="399"/>
         <source>Shutdown</source>
-        <translation>Matikan</translation>
+        <translation type="vanished">Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="408"/>
         <source>Reboot</source>
-        <translation>Mulai ulang</translation>
+        <translation type="vanished">Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="417"/>
         <source>Sleep</source>
-        <translation>Tidur</translation>
+        <translation type="vanished">Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="426"/>
         <source>Logout</source>
-        <translation>Keluar</translation>
+        <translation type="vanished">Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="486"/>
+        <location filename="../Modules/Lock/Surface.qml" line="121"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="502"/>
+        <location filename="../Modules/Lock/Surface.qml" line="137"/>
         <source>Do you want to %1?</source>
         <translation>Apakah kamu mau %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="524"/>
+        <location filename="../Modules/Lock/Surface.qml" line="159"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Surface.qml" line="542"/>
+        <location filename="../Modules/Lock/Surface.qml" line="177"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1566,6 +1671,14 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Helpers/TimeAgo.qml" line="98"/>
         <source>Dec</source>
         <translation>Des</translation>
+    </message>
+</context>
+<context>
+    <name>TopItem</name>
+    <message>
+        <location filename="../Modules/Lock/TopItem.qml" line="83"/>
+        <source>Password Invalid</source>
+        <translation type="unfinished">Password tidak valid</translation>
     </message>
 </context>
 <context>
