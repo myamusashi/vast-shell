@@ -12,6 +12,7 @@ Singleton {
     property var activeProfiles: []
     property int idPipewire: 0
     property int activeProfileIndex: activeProfiles.length > 0 ? activeProfiles[0].index : -1
+    property bool needsKill: false
 
     function getIcon(node: PwNode): string {
         return node.isSink ? getSinkIcon(node) : getSourceIcon(node);
@@ -38,6 +39,10 @@ Singleton {
     function wheelAction(event: WheelEvent, node: PwNode) {
         const delta = event.angleDelta.y < 0 ? -0.01 : 0.01;
         node.audio.volume = Math.max(0.0, Math.min(1.3, node.audio.volume + delta));
+    }
+
+    function restartAudioProfiles() {
+        watchdogTimer.restart();
     }
 
     FileView {
@@ -84,16 +89,15 @@ Singleton {
         }
     }
 
-    property bool _needsKill: false
-
     Process {
         id: processChecker
+
         command: ["pgrep", "-x", "audioProfiles"]
         running: true
 
         onExited: code => {
-            root._needsKill = (code === 0);
-            if (root._needsKill) {
+            root.needsKill = (code === 0);
+            if (root.needsKill) {
                 console.info("pw-profiles: stale process found, killing…");
                 processKiller.running = true;
             } else {
