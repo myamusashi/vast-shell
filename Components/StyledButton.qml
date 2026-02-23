@@ -46,7 +46,7 @@ MD.Button {
             pressX: root.pressX
             pressY: root.pressY
             pressed: root.pressed
-            stateOpacity: root.mdState.stateLayerOpacity
+            stateOpacity: 0.08
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
