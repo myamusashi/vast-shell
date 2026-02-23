@@ -24,6 +24,7 @@ Item {
     property bool openPerappVolume: false
     property real perappWidth: repeater.count * 40 + Math.max(0, repeater.count - 1) * Appearance.spacing.large
     property real sliderHeight: 250 - volumeIcon.height - 40 - 2 * Appearance.spacing.normal
+    property string icon: Audio.getIcon(Pipewire.defaultAudioSink)
 
     implicitWidth: GlobalStates.isOSDVisible("volume") ? wrapper.implicitWidth : 0
     implicitHeight: mainVolumeColumn.height + 30
@@ -109,18 +110,80 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
 
+            property bool showVolume: false
+
             implicitWidth: 50
             implicitHeight: 250
             spacing: Appearance.spacing.normal
 
-            Icon {
-                id: volumeIcon
+            Item {
+                implicitHeight: 30
+                implicitWidth: 30
+                Layout.alignment: Qt.AlignTop | Qt.AlignCenter
 
-                Layout.alignment: Qt.AlignCenter
-                type: Icon.Material
-                icon: "volume_up"
-                color: Colours.m3Colors.m3Primary
-                font.pixelSize: Appearance.fonts.size.extraLarge
+                Icon {
+                    id: volumeIcon
+
+                    anchors.centerIn: parent
+                    type: Icon.Material
+                    icon: root.icon
+                    color: Colours.m3Colors.m3Primary
+                    font.pixelSize: Appearance.fonts.size.extraLarge
+                    opacity: mainVolumeColumn.showVolume ? 0 : 1
+                    scale: mainVolumeColumn.showVolume ? 0.5 : 1
+
+                    Behavior on opacity {
+                        NAnim {
+                            duration: Appearance.animations.durations.expressiveDefaultSpatial
+                            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                        }
+                    }
+                    Behavior on scale {
+                        NAnim {
+                            duration: Appearance.animations.durations.expressiveDefaultSpatial
+                            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                        }
+                    }
+                }
+
+                StyledText {
+                    anchors.centerIn: volumeIcon
+                    text: (Pipewire.defaultAudioSink.audio.volume * 100).toFixed(0)
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.large
+                    font.weight: Font.DemiBold
+                    opacity: mainVolumeColumn.showVolume ? 1 : 0
+                    scale: mainVolumeColumn.showVolume ? 1 : 0.5
+
+                    Behavior on opacity {
+                        NAnim {
+                            duration: Appearance.animations.durations.small
+                        }
+                    }
+                    Behavior on scale {
+                        NAnim {
+                            duration: Appearance.animations.durations.small
+                        }
+                    }
+                }
+
+                MArea {
+                    id: mArea
+
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: mevent => {
+                        if (mevent.button === Qt.LeftButton)
+                            Audio.toggleMute(Pipewire.defaultAudioSink);
+                    }
+                }
+            }
+
+            Timer {
+                id: volumeHideTimer
+
+                interval: 500
+                onTriggered: mainVolumeColumn.showVolume = false
             }
 
             StyledSlide {
@@ -129,6 +192,16 @@ Item {
                 orientation: Qt.Vertical
                 value: Pipewire.defaultAudioSink.audio.volume
                 onMoved: Pipewire.defaultAudioSink.audio.volume = value
+                onValueChanged: {
+                    if (!pressed) {
+                        mainVolumeColumn.showVolume = true;
+                        volumeHideTimer.restart();
+                    }
+                }
+                onPressedChanged: {
+                    if (!pressed)
+                        mainVolumeColumn.showVolume = false;
+                }
             }
 
             Item {
