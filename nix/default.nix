@@ -16,6 +16,7 @@
     wl-clipboard,
     wl-screenrec,
     ffmpeg,
+    wireplumber,
     foot,
     kdePackages,
     polkit,
@@ -39,6 +40,9 @@
         gawk
         gnused
         util-linux
+
+        ## pipewire for changing sinks
+        wireplumber
 
         ## network, polkit, notify
         iw
