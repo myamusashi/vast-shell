@@ -301,7 +301,7 @@ RowLayout {
                         }
                         radius: Appearance.rounding.normal
                         height: parent.height
-                        color: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Colours.withAlpha(root.trackArtColors.primary, 0.08) : "transparent"
+                        color: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Qt.darker(root.trackArtColors.primary, 1.5) : "transparent"
 
                         Behavior on color {
                             CAnim {
@@ -315,7 +315,7 @@ RowLayout {
                             pressX: itemDel.pressX
                             pressY: itemDel.pressY
                             pressed: itemDel.pressed
-                            stateOpacity: itemDel.hovered || itemDel.highlighted ? 0.08 : 0
+                            stateOpacity: 0.08
                             color: root.trackArtColors.primary
                         }
                     }
@@ -341,7 +341,7 @@ RowLayout {
                         StyledText {
                             anchors.verticalCenter: parent.verticalCenter
                             width: parent.width - 16 - parent.spacing
-                            text: Players.active?.desktopEntry ?? ""
+                            text: itemDel.modelData.desktopEntry ?? ""
                             color: root.trackArtColors.onSurface
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: playerComboBox.currentIndex === itemDel.index ? Font.Medium : Font.Normal
