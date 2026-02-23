@@ -7,8 +7,10 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
 
-import qs.Services
+import qs.Configs
+import qs.Helpers
 import qs.Widgets
+import qs.Services
 
 ScrollView {
     anchors.fill: parent
@@ -30,10 +32,27 @@ ScrollView {
                 node: Pipewire.defaultAudioSink
             }
 
-            MixerEntry {
-                useCustomProperties: true
-                node: Pipewire.defaultAudioSink
-                customProperty: AudioProfiles {}
+            RowLayout {
+                MixerEntry {
+                    useCustomProperties: true
+                    node: Pipewire.defaultAudioSink
+                    customProperty: AudioProfiles {}
+                }
+
+                Icon {
+                    Layout.alignment: Qt.AlignTop
+                    Layout.topMargin: (42 - font.pixelSize) / 2
+                    icon: "refresh"
+                    color: Colours.m3Colors.m3Primary
+                    font.pixelSize: Appearance.fonts.size.large * 1.5
+
+                    MArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: Audio.restartAudioProfiles()
+                    }
+                }
             }
 
             Rectangle {
