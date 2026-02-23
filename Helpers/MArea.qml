@@ -40,7 +40,7 @@ MouseArea {
             pressX: area.mouseX
             pressY: area.mouseY
             pressed: area.pressed
-            stateOpacity: area.layerRadius
+            stateOpacity: 0.08
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
