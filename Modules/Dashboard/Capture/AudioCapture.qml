@@ -6,9 +6,9 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
-import Qcm.Material as MD
 
 import qs.Configs
+import qs.Helpers
 import qs.Widgets
 import qs.Services
 import qs.Components
@@ -22,15 +22,20 @@ StyledRect {
     Layout.fillWidth: true
     Layout.preferredHeight: columnContent.implicitHeight
     color: Colours.m3Colors.m3SurfaceContainerHigh
+    radius: 0
     clip: true
 
     ColumnLayout {
         id: columnContent
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        spacing: 0
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            topMargin: Appearance.margin.normal
+        }
+
+        spacing: Appearance.spacing.normal
 
         Header {
             id: tabLayout
@@ -47,36 +52,65 @@ StyledRect {
         }
     }
 
-    component Header: Row {
-        anchors.horizontalCenter: parent.horizontalCenter
+    component Header: RowLayout {
+        Layout.alignment: Qt.AlignHCenter
+        Layout.fillWidth: true
+        height: 40
+
         Repeater {
             model: ["Mix", "Voice"]
 
-            delegate: MD.TabButton {
-                type: MD.Enum.PrimaryTab
-                required property var modelData
-                mdState.textColor: Colours.m3Colors.m3Primary
+            delegate: Item {
+                id: delegate
 
-                text: modelData
+                required property var modelData
+                required property int index
+
+                Layout.fillWidth: true
+                implicitHeight: 40
+
+                StyledRect {
+                    anchors.fill: parent
+                    color: root.state === delegate.index ? Colours.m3Colors.m3Primary : "transparent"
+                    opacity: 0.1
+                    radius: 0
+                }
+
+                StyledLabel {
+                    id: tabLabel
+
+                    anchors.centerIn: parent
+                    text: delegate.modelData.toUpperCase()
+                    font.pixelSize: Appearance.fonts.size.small
+                    font.bold: root.state === delegate.index
+                    color: root.state === delegate.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                }
+
+                StyledRect {
+                    anchors {
+                        bottom: parent.bottom
+                        left: parent.left
+                        right: parent.right
+                    }
+                    implicitHeight: 2
+                    color: Colours.m3Colors.m3Primary
+                    visible: root.state === delegate.index
+                    opacity: visible ? 1 : 0
+                    radius: 0
+
+                    Behavior on opacity {
+                        NAnim {}
+                    }
+                }
+
+                MArea {
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.tabClicked(delegate.index)
+                    layerRadius: 0
+                }
             }
         }
     }
-    // component Header: TabRow {
-    //     state: root.state
-    //     scaleFactor: Math.min(1.0, root.width / root.width)
-    //     visible: true
-    //     backgroundColor: "transparent"
-    //     Layout.fillWidth: true
-    //     tabs: [
-    //         {
-    //             "title": qsTr("Mix")
-    //         },
-    //         {
-    //             "title": qsTr("Voice")
-    //         }
-    //     ]
-    //     onTabClicked: root.tabClicked(root.state)
-    // }
 
     component View: StackView {
         property Component viewComponent: contentView
@@ -153,6 +187,8 @@ StyledRect {
 
                     MixerEntry {
                         node: Pipewire.defaultAudioSink
+                        useCustomProperties: true
+                        customProperty: AudioProfiles {}
                     }
 
                     Rectangle {
@@ -165,7 +201,9 @@ StyledRect {
                         Layout.fillHeight: true
                         Layout.topMargin: 20
                         Repeater {
-                            model: linkTracker.linkGroups
+                            model: ScriptModel {
+                                values: [...linkTracker.linkGroups]
+                            }
 
                             delegate: Item {
                                 id: delegateTracker
@@ -181,7 +219,20 @@ StyledRect {
                                     spacing: 10
 
                                     IconImage {
-                                        source: Quickshell.iconPath(Players.active.desktopEntry)
+                                        source: {
+                                            const name = delegateTracker.modelData.source.name;
+                                            const appName = name.split(".").pop();
+
+                                            // alright man
+                                            let isZen = appName === "zen" || appName === "zen-twilight" || appName === "Twilight" || appName === "twilight";
+
+                                            if (isZen) {
+                                                const entry = DesktopEntries.heuristicLookup("zen-twilight") ?? DesktopEntries.heuristicLookup("zen");
+                                                return Quickshell.iconPath(entry?.icon, "image-missing");
+                                            }
+
+                                            return Quickshell.iconPath(DesktopEntries.heuristicLookup(appName)?.icon, "image-missing");
+                                        }
                                         asynchronous: true
                                         Layout.preferredWidth: 60
                                         Layout.preferredHeight: 60
