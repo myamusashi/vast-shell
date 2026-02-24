@@ -55,8 +55,8 @@ Slider {
         Shape {
             id: wavyShape
 
-			anchors.fill: parent
-			antialiasing: true
+            anchors.fill: parent
+            antialiasing: true
             preferredRendererType: Shape.CurveRenderer
 
             function buildWavePath() {

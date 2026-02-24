@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Networking
 
 import qs.Configs
 import qs.Services
@@ -10,7 +11,7 @@ import qs.Components
 PopupWidget {
     id: root
 
-    readonly property bool isWired: SystemUsage.statusWiredInterface === "connected" && (Network.networks.find(n => n.active) ?? null)
+    readonly property bool isWired: SystemUsage.statusWiredInterface === "connected" && (Networking.wifiEnabled ?? null)
 
     icon: isWired ? "lan" : "network_wifi"
     text: "Network"

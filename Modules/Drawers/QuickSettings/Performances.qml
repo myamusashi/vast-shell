@@ -6,6 +6,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
+import Quickshell.Networking
 import Quickshell.Services.UPower
 
 import qs.Configs
@@ -193,9 +194,7 @@ Item {
                     isTopRight: true
                     zoomId: networkInfoPopup
 
-                    readonly property var activeNetwork: {
-                        return Network.networks.find(n => n.active) ?? null;
-                    }
+                    readonly property bool activeNetwork: Networking.wifiEnabled
                     readonly property bool isWired: SystemUsage.statusWiredInterface === "connected" && activeNetwork
 
                     RowLayout {
