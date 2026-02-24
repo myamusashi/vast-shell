@@ -137,32 +137,32 @@
     <message>
         <location filename="../Modules/Lock/BottomItem.qml" line="111"/>
         <source>Password invalid</source>
-        <translation type="unfinished">Password tidak valid</translation>
+        <translation>Password tidak valid</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/BottomItem.qml" line="111"/>
         <source>Enter password</source>
-        <translation type="unfinished">Masukkan password</translation>
+        <translation>Masukkan password</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/BottomItem.qml" line="309"/>
         <source>Shutdown</source>
-        <translation type="unfinished">Matikan</translation>
+        <translation>Matikan</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/BottomItem.qml" line="316"/>
         <source>Reboot</source>
-        <translation type="unfinished">Mulai ulang</translation>
+        <translation>Mulai ulang</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/BottomItem.qml" line="323"/>
         <source>Sleep</source>
-        <translation type="unfinished">Tidur</translation>
+        <translation>Tidur</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/BottomItem.qml" line="330"/>
         <source>Logout</source>
-        <translation type="unfinished">Keluar</translation>
+        <translation>Keluar</translation>
     </message>
 </context>
 <context>
@@ -214,97 +214,97 @@
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Sunday</source>
-        <translation type="unfinished">Minggu</translation>
+        <translation>Minggu</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Monday</source>
-        <translation type="unfinished">Senin</translation>
+        <translation>Senin</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Tuesday</source>
-        <translation type="unfinished">Selasa</translation>
+        <translation>Selasa</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Wednesday</source>
-        <translation type="unfinished">Rabu</translation>
+        <translation>Rabu</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Thuesday</source>
-        <translation type="unfinished">Kamis</translation>
+        <translation>Kamis</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Friday</source>
-        <translation type="unfinished">Jumat</translation>
+        <translation>Jumat</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
         <source>Saturday</source>
-        <translation type="unfinished">Sabtu</translation>
+        <translation>Sabtu</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Jan</source>
-        <translation type="unfinished">Jan</translation>
+        <translation>Jan</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Feb</source>
-        <translation type="unfinished">Feb</translation>
+        <translation>Feb</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Mar</source>
-        <translation type="unfinished">Mar</translation>
+        <translation>Mar</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Apr</source>
-        <translation type="unfinished">Apr</translation>
+        <translation>Apr</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Mei</source>
-        <translation type="unfinished">Mei</translation>
+        <translation>Mei</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Jun</source>
-        <translation type="unfinished">Jun</translation>
+        <translation>Jun</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Jul</source>
-        <translation type="unfinished">Jul</translation>
+        <translation>Jul</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Aug</source>
-        <translation type="unfinished">Agu</translation>
+        <translation>Agu</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Sep</source>
-        <translation type="unfinished">Sep</translation>
+        <translation>Sep</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Okt</source>
-        <translation type="unfinished">Okt</translation>
+        <translation>Okt</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Nov</source>
-        <translation type="unfinished">Nov</translation>
+        <translation>Nov</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Des</source>
-        <translation type="unfinished">Des</translation>
+        <translation>Des</translation>
     </message>
 </context>
 <context>
@@ -982,13 +982,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Humidity</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="49"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="50"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="31"/>
         <source>Humidity</source>
         <translation>Kelembapan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="90"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="91"/>
         <source>Dew point</source>
         <translation>Titik embun</translation>
     </message>
@@ -1009,7 +1009,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Moon</name>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Moon.qml" line="73"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Moon.qml" line="74"/>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="86"/>
         <source>Moon</source>
         <translation>Bulan</translation>
@@ -1078,27 +1078,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>NetworkInfoColumn</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="58"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="59"/>
         <source>Ethernet</source>
         <translation>Ethernet</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="73"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="74"/>
         <source>Connected</source>
         <translation>Terhubung</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="73"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="74"/>
         <source>Not Connected</source>
         <translation>Tidak Terhubung</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="145"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="126"/>
         <source>Internet</source>
         <translation>Internet</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="151"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="136"/>
         <source>WiFi Disconnected</source>
         <translation>WiFi Terputus</translation>
     </message>
@@ -1171,105 +1171,105 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performances</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="46"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="47"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="53"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="55"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="54"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="56"/>
         <source> min</source>
         <translation> menit</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="55"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="56"/>
         <source> h </source>
         <translation> j </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="55"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="56"/>
         <source> h</source>
         <translation> j</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="73"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="74"/>
         <source>CPU status</source>
         <translation>Status CPU</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="138"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="139"/>
         <source>Battery</source>
         <translation>Baterai</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="173"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="174"/>
         <source>Charging</source>
         <translation>Mengisi daya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="173"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="174"/>
         <source>Discharging</source>
         <translation>Menggunakan daya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="180"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="181"/>
         <source>Rem. </source>
         <translation>Sisa. </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="192"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="193"/>
         <source>Network</source>
         <translation>Jaringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="224"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="223"/>
         <source>Download ↓</source>
         <translation>Unduh ↓</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="228"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="227"/>
         <source>Upload ↑</source>
         <translation>Unggah ↑</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="260"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="259"/>
         <source>Link speed: </source>
         <translation>Kecepatan link: </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="272"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="271"/>
         <source>Apps</source>
         <translation>Aplikasi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="289"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="288"/>
         <source>Total</source>
         <translation>Total</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="299"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="298"/>
         <source> GUI</source>
         <translation> GUI</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="305"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="304"/>
         <source> CLI</source>
         <translation> CLI</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="315"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="314"/>
         <source>Display</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="370"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="406"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="369"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="405"/>
         <source> GB used</source>
         <translation> GB terpakai</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="377"/>
-        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="413"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="376"/>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="412"/>
         <source> GB total</source>
         <translation> GB total</translation>
     </message>
@@ -1315,7 +1315,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>Pressure</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="31"/>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="41"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="42"/>
         <source>Pressure</source>
         <translation>Tekanan</translation>
     </message>
@@ -1414,7 +1414,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>Sun</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="57"/>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Sun.qml" line="80"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Sun.qml" line="81"/>
         <source>Sun</source>
         <translation>Matahari</translation>
     </message>
@@ -1431,110 +1431,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 </context>
 <context>
     <name>Surface</name>
-    <message>
-        <source>Sunday</source>
-        <translation type="vanished">Minggu</translation>
-    </message>
-    <message>
-        <source>Monday</source>
-        <translation type="vanished">Senin</translation>
-    </message>
-    <message>
-        <source>Tuesday</source>
-        <translation type="vanished">Selasa</translation>
-    </message>
-    <message>
-        <source>Wednesday</source>
-        <translation type="vanished">Rabu</translation>
-    </message>
-    <message>
-        <source>Thuesday</source>
-        <translation type="vanished">Kamis</translation>
-    </message>
-    <message>
-        <source>Friday</source>
-        <translation type="vanished">Jumat</translation>
-    </message>
-    <message>
-        <source>Saturday</source>
-        <translation type="vanished">Sabtu</translation>
-    </message>
-    <message>
-        <source>Jan</source>
-        <translation type="vanished">Jan</translation>
-    </message>
-    <message>
-        <source>Feb</source>
-        <translation type="vanished">Feb</translation>
-    </message>
-    <message>
-        <source>Mar</source>
-        <translation type="vanished">Mar</translation>
-    </message>
-    <message>
-        <source>Apr</source>
-        <translation type="vanished">Apr</translation>
-    </message>
-    <message>
-        <source>Mei</source>
-        <translation type="vanished">Mei</translation>
-    </message>
-    <message>
-        <source>Jun</source>
-        <translation type="vanished">Jun</translation>
-    </message>
-    <message>
-        <source>Jul</source>
-        <translation type="vanished">Jul</translation>
-    </message>
-    <message>
-        <source>Aug</source>
-        <translation type="vanished">Agu</translation>
-    </message>
-    <message>
-        <source>Sep</source>
-        <translation type="vanished">Sep</translation>
-    </message>
-    <message>
-        <source>Okt</source>
-        <translation type="vanished">Okt</translation>
-    </message>
-    <message>
-        <source>Nov</source>
-        <translation type="vanished">Nov</translation>
-    </message>
-    <message>
-        <source>Des</source>
-        <translation type="vanished">Des</translation>
-    </message>
-    <message>
-        <source>Password Invalid</source>
-        <translation type="vanished">Password tidak valid</translation>
-    </message>
-    <message>
-        <source>Password invalid</source>
-        <translation type="vanished">Password tidak valid</translation>
-    </message>
-    <message>
-        <source>Enter password</source>
-        <translation type="vanished">Masukkan password</translation>
-    </message>
-    <message>
-        <source>Shutdown</source>
-        <translation type="vanished">Matikan</translation>
-    </message>
-    <message>
-        <source>Reboot</source>
-        <translation type="vanished">Mulai ulang</translation>
-    </message>
-    <message>
-        <source>Sleep</source>
-        <translation type="vanished">Tidur</translation>
-    </message>
-    <message>
-        <source>Logout</source>
-        <translation type="vanished">Keluar</translation>
-    </message>
     <message>
         <location filename="../Modules/Lock/Surface.qml" line="121"/>
         <source>Session</source>
@@ -1678,7 +1574,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Modules/Lock/TopItem.qml" line="83"/>
         <source>Password Invalid</source>
-        <translation type="unfinished">Password tidak valid</translation>
+        <translation>Password tidak valid</translation>
     </message>
 </context>
 <context>
@@ -1853,50 +1749,60 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WifiList</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="77"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="79"/>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="87"/>
+        <source>Tap/click a network to connect</source>
+        <translation>Tap/klik menyambungkan untuk jaringan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="199"/>
+        <source>Disconnect</source>
+        <translation>Putuskan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="199"/>
+        <source>Connect</source>
+        <translation>Sambungkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="209"/>
+        <source>Forget Network</source>
+        <translation>Lupakan Jaringan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="257"/>
+        <source>Disconnected</source>
+        <translation>Terputus</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="258"/>
+        <source>Disconnecting</source>
+        <translation>Menghubungkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="259"/>
+        <source>Connecting</source>
+        <translation>Memutuskan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="260"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="261"/>
+        <source>Unknown</source>
+        <translation>ndak tau</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="117"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="156"/>
-        <source>Not connected</source>
-        <translation>Tidak terhubung</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="163"/>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="317"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="256"/>
         <source>Connected</source>
-        <translation>Terhubung</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="198"/>
-        <source>Available Networks</source>
-        <translation>Jaringan Tersedia</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="234"/>
-        <source>Wi-Fi is turned off</source>
-        <translation>Wi-Fi dimatikan</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="242"/>
-        <source>Turn on Wi-Fi to see available networks</source>
-        <translation>Nyalakan Wi-Fi untuk melihat jaringan yang tersedia</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="298"/>
-        <source>(Hidden Network)</source>
-        <translation>(Jaringan disembunyikan)</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="386"/>
-        <source>No networks found</source>
-        <translation>Tidak ada networks yang ditemukan</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="394"/>
-        <source>Try refreshing the list</source>
-        <translation>Coba perbarui list</translation>
+        <translation>Tersambung</translation>
     </message>
 </context>
 <context>
