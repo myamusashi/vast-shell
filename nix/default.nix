@@ -11,7 +11,6 @@
     iw,
     quickshell,
     util-linux,
-    networkmanager,
     matugen,
     wl-clipboard,
     wl-screenrec,
@@ -46,7 +45,6 @@
 
         ## network, polkit, notify
         iw
-        networkmanager
         libnotify
         polkit
 

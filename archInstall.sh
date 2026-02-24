@@ -47,7 +47,7 @@ install_system_packages() {
 	local -r pkg_list=(
 		base-devel git go cmake ninja extra-cmake-modules patchelf
 		qt6-base qt6-declarative qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		findutils grep sed gawk util-linux networkmanager libnotify wireplumber
+		findutils grep sed gawk util-linux libnotify wireplumber
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 	)
 
