@@ -4,402 +4,281 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Widgets
+import Quickshell.Networking
 
 import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
 
-WrapperItem {
+WrapperRectangle {
     id: root
 
-    anchors.fill: parent
+    readonly property bool scanner: Wifi.activeWifiDevice.scannerEnabled
 
-    property alias active: loader.active
+    property bool isVisible: false
+    property real zoomOriginX: parent.width / 2
+    property real zoomOriginY: parent.height / 2
 
-    function getWiFiIcon(strength) {
-        if (strength >= 80)
-            return "network_wifi";
-        if (strength >= 50)
-            return "network_wifi_3_bar";
-        if (strength >= 30)
-            return "network_wifi_2_bar";
-        if (strength >= 15)
-            return "network_wifi_1_bar";
-        return "signal_wifi_0_bar";
+    border {
+        width: 1
+        color: Colours.m3Colors.m3Outline
+    }
+    implicitWidth: parent.width * 0.8
+    implicitHeight: Math.min(loader.implicitHeight + 20 * 2, parent.height * 0.8)
+    margin: Appearance.margin.normal
+    radius: Appearance.rounding.small
+    color: Colours.m3Colors.m3SurfaceContainer
+    scale: isVisible ? 1.0 : 0.5
+    opacity: isVisible ? 1.0 : 0.0
+    transformOrigin: Item.Center
+
+    transform: Translate {
+        x: root.isVisible ? 0 : root.zoomOriginX - root.width / 2
+        y: root.isVisible ? 0 : root.zoomOriginY - root.height / 2
+
+        Behavior on x {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+        Behavior on y {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+    }
+
+    Behavior on scale {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+
+    Behavior on opacity {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
     }
 
     Loader {
         id: loader
 
-        active: false
+        active: true
         asynchronous: true
-        sourceComponent: WrapperRectangle {
-            anchors.fill: parent
-            margin: 20
-            topMargin: 15
-            bottomMargin: 15
-            radius: 0
-            color: Colours.m3Colors.m3Surface
+        sourceComponent: ColumnLayout {
+            width: loader.width
+            spacing: Appearance.spacing.small
 
-            ColumnLayout {
-                spacing: Appearance.spacing.normal
+            StyledText {
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("Internet")
+                color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large * 1.5
+                font.weight: Font.DemiBold
+            }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 40
-                    spacing: Appearance.spacing.normal
+            StyledText {
+                Layout.alignment: Qt.AlignCenter
+                text: qsTr("Tap/click a network to connect")
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.medium
+                font.weight: Font.DemiBold
+            }
 
-                    StyledRect {
-                        Layout.preferredWidth: 40
-                        Layout.preferredHeight: 40
-                        color: "transparent"
-                        radius: Appearance.rounding.full
-
-                        Icon {
-                            type: Icon.Material
-                            anchors.centerIn: parent
-                            icon: "arrow_back"
-                            color: Colours.m3Colors.m3OnBackground
-                            font.pixelSize: Appearance.fonts.size.large
-                        }
-
-                        MArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: loader.active = false
-                        }
-                    }
-
-                    StyledLabel {
-                        Layout.fillWidth: true
-                        text: qsTr("Wi-Fi")
-                        color: Colours.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.size.extraLarge
-                        font.bold: true
-                        verticalAlignment: Text.AlignVCenter
-                    }
-
-                    StyledSwitch {
-                        Layout.preferredWidth: 52
-                        Layout.preferredHeight: 32
-                        checked: Network.wifiEnabled
-                        onToggled: Network.toggleWifi()
-                    }
-
-                    StyledRect {
-                        Layout.preferredWidth: 40
-                        Layout.preferredHeight: 40
-                        color: "transparent"
-                        radius: Appearance.rounding.full
-
-                        Icon {
-                            type: Icon.Material
-                            anchors.centerIn: parent
-                            icon: "refresh"
-                            color: Colours.m3Colors.m3OnBackground
-                            font.pixelSize: Appearance.fonts.size.large
-                            opacity: Network.wifiEnabled ? 1.0 : 0.3
-
-                            RotationAnimation on rotation {
-                                from: 0
-                                to: 360
-                                duration: 1000
-                                running: Network.scanning
-                                loops: Animation.Infinite
-                            }
-                        }
-
-                        MArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            enabled: Network.wifiEnabled && !Network.scanning
-                            onClicked: Network.rescanWifi()
-                        }
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 1
-                    color: Colours.m3Colors.m3OutlineVariant
-                }
+            Item {
+                Layout.alignment: Qt.AlignCenter
+                Layout.fillWidth: true
+                Layout.preferredHeight: 5
 
                 StyledRect {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 80
-                    color: Colours.m3Colors.m3SurfaceContainerLow
-                    radius: Appearance.rounding.large
-                    visible: Network.active !== null
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: Appearance.spacing.normal
-
-                        Icon {
-                            type: Icon.Material
-                            Layout.alignment: Qt.AlignVCenter
-                            icon: Network.active ? root.getWiFiIcon(Network.active.strength) : "wifi_off"
-                            color: Colours.m3Colors.m3Primary
-                            font.pixelSize: Appearance.fonts.size.extraLarge * 1.2
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignVCenter
-                            spacing: 4
-
-                            StyledLabel {
-                                text: Network.active ? Network.active.ssid : qsTr("Not connected")
-                                color: Colours.m3Colors.m3OnBackground
-                                font.pixelSize: Appearance.fonts.size.medium
-                                font.bold: true
-                            }
-
-                            StyledLabel {
-                                text: Network.active ? qsTr("Connected") + " • " + Network.active.frequency + " MHz" : ""
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.small
-                            }
-                        }
-
-                        StyledRect {
-                            Layout.preferredWidth: 36
-                            Layout.preferredHeight: 36
-                            Layout.alignment: Qt.AlignVCenter
-                            color: disconnectArea.containsPress ? Colours.withAlpha(Colours.m3Colors.m3Error, 0.2) : disconnectArea.containsMouse ? Colours.withAlpha(Colours.m3Colors.m3Error, 0.1) : "transparent"
-                            radius: Appearance.rounding.full
-
-                            Icon {
-                                type: Icon.Material
-                                anchors.centerIn: parent
-                                icon: "close"
-                                color: Colours.m3Colors.m3Error
-                                font.pixelSize: Appearance.fonts.size.large
-                            }
-
-                            MArea {
-                                id: disconnectArea
-
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: Network.disconnectFromNetwork()
-                            }
-                        }
-                    }
-                }
-
-                StyledLabel {
-                    Layout.topMargin: 8
-                    text: qsTr("Available Networks")
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.normal
-                    font.bold: true
-                    visible: Network.wifiEnabled
+                    anchors.centerIn: parent
+                    implicitWidth: parent.width * 0.5
+                    implicitHeight: 4
+                    color: Colours.m3Colors.m3SurfaceContainerHighest
                 }
 
                 Progress {
-                    Layout.fillWidth: true
-                    condition: Network.scanning
+                    anchors.centerIn: parent
+                    implicitWidth: parent.width * 0.5
+                    implicitHeight: 4
+                    condition: Wifi.activeWifiDevice.scannerEnabled && Networking.wifiEnabled
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                StyledText {
+                    text: qsTr("Wi-Fi")
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
                 }
 
                 Item {
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    visible: !Network.wifiEnabled
-
-                    ColumnLayout {
-                        anchors.centerIn: parent
-                        spacing: Appearance.spacing.large
-
-                        Icon {
-                            type: Icon.Material
-                            Layout.alignment: Qt.AlignHCenter
-                            icon: "wifi_off"
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            font.pixelSize: Appearance.fonts.size.extraLarge * 2
-                            opacity: 0.6
-                        }
-
-                        ColumnLayout {
-                            Layout.alignment: Qt.AlignHCenter
-                            spacing: Appearance.spacing.small
-
-                            StyledLabel {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: qsTr("Wi-Fi is turned off")
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.large
-                                font.bold: true
-                            }
-
-                            StyledLabel {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: qsTr("Turn on Wi-Fi to see available networks")
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                opacity: 0.7
-                            }
-                        }
-                    }
                 }
 
-                ListView {
-                    id: networksList
+                StyledSwitch {
+                    Layout.preferredWidth: 52
+                    Layout.preferredHeight: 32
+                    checked: Networking.wifiEnabled
+                    onToggled: Networking.wifiEnabled = checked
+                }
+            }
 
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    visible: Network.wifiEnabled && Network.networks.length > 0
-                    clip: true
-                    spacing: Appearance.spacing.small
-                    model: Network.networks
+            ListView {
+                id: devicesListView
 
-                    ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                    }
+                Layout.fillWidth: true
+                implicitHeight: contentHeight
+                interactive: false
+                model: Networking.devices
+                spacing: Appearance.spacing.small
 
-                    delegate: StyledRect {
-                        id: networkDelegate
+                delegate: ColumnLayout {
+                    id: deviceDelegate
 
-                        required property var modelData
-                        required property int index
+                    required property WifiDevice modelData
 
-                        implicitWidth: networksList.width
-                        implicitHeight: 72
-                        color: Colours.m3Colors.m3SurfaceContainer
-                        radius: Appearance.rounding.large
+                    width: devicesListView.width
 
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.margins: 16
-                            spacing: Appearance.spacing.normal
+                    Repeater {
+                        model: {
+                            if (deviceDelegate.modelData.type !== DeviceType.Wifi)
+                                return [];
+                            return [...deviceDelegate.modelData.networks.values].sort((a, b) => {
+                                if (a.connected !== b.connected)
+                                    return b.connected - a.connected;
+                                return b.signalStrength - a.signalStrength;
+                            });
+                        }
 
-                            Icon {
-                                type: Icon.Material
-                                Layout.alignment: Qt.AlignVCenter
-                                icon: root.getWiFiIcon(networkDelegate.modelData.strength)
-                                color: networkDelegate.modelData.active ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.extraLarge
+                        delegate: WrapperRectangle {
+                            id: networkDelegate
+
+                            required property WifiNetwork modelData
+
+                            Layout.fillWidth: true
+                            color: networkDelegate.modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                            radius: Appearance.rounding.large
+                            margin: Appearance.margin.small
+
+                            Behavior on color {
+                                CAnim {
+                                    duration: Appearance.animations.durations.small
+                                }
                             }
 
-                            ColumnLayout {
-                                Layout.fillWidth: true
-                                Layout.alignment: Qt.AlignVCenter
-                                spacing: 4
+                            TapHandler {
+                                id: networkTap
 
-                                RowLayout {
-                                    spacing: Appearance.spacing.smaller
+                                onTapped: {
+                                    if (!networkDelegate.modelData.connected)
+                                        networkDelegate.modelData.connect();
+                                }
+                            }
 
-                                    StyledLabel {
-                                        text: networkDelegate.modelData.ssid || qsTr("(Hidden Network)")
-                                        color: Colours.m3Colors.m3OnBackground
-                                        font.pixelSize: Appearance.fonts.size.medium
-                                        font.bold: networkDelegate.modelData.active
+                            TapHandler {
+                                acceptedButtons: Qt.RightButton
+                                onTapped: contextMenu.popup()
+                            }
+
+                            Menu {
+                                id: contextMenu
+
+                                modal: true
+                                focus: true
+                                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+                                MenuItem {
+                                    text: networkDelegate.modelData.connected ? qsTr("Disconnect") : qsTr("Connect")
+                                    onTriggered: {
+                                        if (networkDelegate.modelData.connected)
+                                            networkDelegate.modelData.disconnect();
+                                        else
+                                            networkDelegate.modelData.connect();
+                                    }
+                                }
+
+                                MenuItem {
+                                    text: qsTr("Forget Network")
+                                    onTriggered: networkDelegate.modelData.forget()
+                                }
+                            }
+
+                            RowLayout {
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                    verticalCenter: parent.verticalCenter
+                                    margins: Appearance.margin.small
+                                }
+                                spacing: Appearance.spacing.small
+
+                                Item {
+                                    implicitWidth: 28
+                                    implicitHeight: 28
+
+                                    Icon {
+                                        anchors.fill: parent
+                                        icon: "signal_wifi_0_bar"
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        font.pixelSize: Appearance.fonts.size.large * 1.5
                                     }
 
                                     Icon {
-                                        type: Icon.Material
-                                        icon: "lock"
-                                        color: Colours.m3Colors.m3OnSurfaceVariant
+                                        anchors.fill: parent
+                                        icon: Wifi.getWiFiIcon(networkDelegate.modelData.signalStrength)
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                                    }
+                                }
+
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    spacing: Appearance.spacing.small * 0.5
+
+                                    StyledText {
+                                        Layout.fillWidth: true
+                                        text: networkDelegate.modelData.name
+                                        elide: Text.ElideRight
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        font.pixelSize: Appearance.fonts.size.normal
+                                    }
+
+                                    StyledText {
+                                        text: ({
+                                                [NetworkState.Connected]: qsTr("Connected"),
+                                                [NetworkState.Disconnected]: qsTr("Disconnected"),
+                                                [NetworkState.Disconnecting]: qsTr("Disconnecting"),
+                                                [NetworkState.Connecting]: qsTr("Connecting"),
+                                                [NetworkState.Unknown]: qsTr("Unknown")
+                                            })[networkDelegate.modelData.state] ?? qsTr("Unknown")
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.small
-                                        visible: networkDelegate.modelData.isSecure
                                     }
                                 }
 
-                                StyledLabel {
-                                    text: {
-                                        let details = [];
-                                        if (networkDelegate.modelData.active)
-                                            details.push(qsTr("Connected"));
-                                        if (networkDelegate.modelData.security && networkDelegate.modelData.security !== "--")
-                                            details.push(networkDelegate.modelData.security);
-                                        details.push(networkDelegate.modelData.frequency + " MHz");
-                                        return details.join(" • ");
-                                    }
-                                    color: Colours.m3Colors.m3OnSurfaceVariant
-                                    font.pixelSize: Appearance.fonts.size.small
+                                Icon {
+                                    visible: !networkDelegate.modelData.known
+                                    icon: "lock"
+                                    color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                    font.pixelSize: Appearance.fonts.size.normal
                                 }
-                            }
-
-                            StyledLabel {
-                                Layout.alignment: Qt.AlignVCenter
-                                text: networkDelegate.modelData.strength + "%"
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.small
-                                font.bold: true
-                            }
-
-                            Icon {
-                                type: Icon.Material
-                                Layout.alignment: Qt.AlignVCenter
-                                icon: "chevron_right"
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.large
-                                visible: !networkDelegate.modelData.active
-                                opacity: 0.5
-                            }
-                        }
-
-                        MArea {
-                            id: mouseArea
-
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            enabled: !networkDelegate.modelData.active
-                            onClicked: {
-                                if (!networkDelegate.modelData.active)
-                                    Network.connectToNetwork(networkDelegate.modelData.ssid, "");
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    visible: Network.wifiEnabled && Network.networks.length === 0 && !Network.scanning
-
-                    ColumnLayout {
-                        anchors.centerIn: parent
-                        spacing: Appearance.spacing.large
-
-                        Icon {
-                            type: Icon.Material
-                            Layout.alignment: Qt.AlignHCenter
-                            icon: "wifi_find"
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            font.pixelSize: Appearance.fonts.size.extraLarge * 2
-                            opacity: 0.6
-                        }
-
-                        ColumnLayout {
-                            Layout.alignment: Qt.AlignHCenter
-                            spacing: Appearance.spacing.small
-
-                            StyledLabel {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: qsTr("No networks found")
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.large
-                                font.bold: true
-                            }
-
-                            StyledLabel {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: qsTr("Try refreshing the list")
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                opacity: 0.7
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        Wifi.activeWifiDevice.scannerEnabled = true;
     }
 }
