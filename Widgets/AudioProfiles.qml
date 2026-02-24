@@ -13,9 +13,22 @@ import qs.Services
 ComboBox {
     id: profilesComboBox
 
-    model: ScriptModel {
-        values: [...Audio.models]
+    model: profileModel.values
+
+    ScriptModel {
+		id: profileModel
+
+        values: Audio.models
     }
+
+    Connections {
+		target: Audio
+
+        function onModelsChanged() {
+            profileModel.values = Audio.models;
+        }
+    }
+
     textRole: "readable"
     onActivated: index => {
         const profile = Audio.models[index];
