@@ -503,8 +503,8 @@ import (
 )
 
 func stateDir() string {
-	if xdg := os.Getenv("XDG_RUNTIME_DIR"); xdg != "" {
-		return filepath.Join(xdg, "pw-profiles")
+	if home := os.Getenv("HOME"); home != "" {
+		return filepath.Join(home, "/.local/state/pw-profiles")
 	}
 	return filepath.Join("/tmp", "pw-profiles")
 }
