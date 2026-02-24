@@ -96,12 +96,12 @@
 <context>
     <name>AudioProfiles</name>
     <message>
-        <location filename="../Widgets/AudioProfiles.qml" line="40"/>
+        <location filename="../Widgets/AudioProfiles.qml" line="53"/>
         <source>No profile</source>
         <translation>Tidak ada profil</translation>
     </message>
     <message>
-        <location filename="../Widgets/AudioProfiles.qml" line="177"/>
+        <location filename="../Widgets/AudioProfiles.qml" line="190"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
