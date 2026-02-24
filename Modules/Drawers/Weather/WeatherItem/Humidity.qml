@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
 import Quickshell.Widgets
 import M3Shapes
@@ -98,41 +99,52 @@ MaterialShape {
         }
     }
 
-    component Wave: Canvas {
-        id: waveCanvas
+    component Wave: Shape {
+        id: waveShape
 
-        property real fillPercentage: 0
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
+
+        property alias fillPercentage: waveGeo.fillPercentage
         property color waveColor: Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4)
 
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: waveShape.waveColor
 
-            var fillHeight = height * (fillPercentage / 100);
-            var waveY = height - fillHeight;
-
-            ctx.fillStyle = waveColor;
-            ctx.beginPath();
-
-            ctx.moveTo(0, height);
-            ctx.lineTo(0, waveY);
-
-            var amplitude = 3;
-            var wavelength = width / 5;
-            var points = 100;
-
-            for (var i = 0; i <= points; i++) {
-                var x = (i / points) * width;
-                var y = waveY + Math.sin((x / wavelength * Math.PI * 2)) * amplitude;
-                ctx.lineTo(x, y);
+            PathSvg {
+                path: waveGeo.buildPath()
             }
-
-            ctx.lineTo(width, height);
-            ctx.closePath();
-            ctx.fill();
         }
 
-        onFillPercentageChanged: requestPaint()
-        Component.onCompleted: requestPaint()
+        QtObject {
+            id: waveGeo
+
+            readonly property real w: waveShape.parent.width
+            readonly property real h: waveShape.parent.height
+
+            property real fillPercentage: 0
+            property real fillHeight: h * (fillPercentage / 100)
+            property real waveY: h - fillHeight
+            property real amplitude: 3
+            property real wavelength: w / 5
+
+            function buildPath() {
+                if (fillHeight <= 0)
+                    return "M 0 0";
+
+                var points = 100;
+                var d = "M 0 " + h + " L 0 " + waveY;
+
+                for (var i = 0; i <= points; i++) {
+                    var x = (i / points) * w;
+                    var y = waveY + Math.sin((x / wavelength) * Math.PI * 2) * amplitude;
+                    d += " L " + x + " " + y;
+                }
+
+                d += " L " + w + " " + h + " Z";
+                return d;
+            }
+        }
     }
 }

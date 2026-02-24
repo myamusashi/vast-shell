@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Controls
 
 import qs.Components
@@ -50,29 +51,27 @@ Slider {
         width: slider.availableWidth
         height: slider.height || 10
 
-        Canvas {
-            id: wavyCanvas
+        // Active track
+        Shape {
+            id: wavyShape
 
-            anchors.fill: parent
-            antialiasing: true
-            onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
+			anchors.fill: parent
+			antialiasing: true
+            preferredRendererType: Shape.CurveRenderer
+
+            function buildWavePath() {
                 var trackStartX = bg.trackStartX;
                 var trackWidth = bg.trackWidth;
                 var normalizedValue = bg.normalizedValue;
-                var activeWidth = trackWidth * normalizedValue;
                 var gapOffset = slider.separatorWidth / 2;
-                activeWidth = Math.max(0, activeWidth - gapOffset);
-                ctx.strokeStyle = slider.activeColor;
-                ctx.lineWidth = 4;
-                ctx.lineCap = "round";
-                ctx.lineJoin = "round";
-                ctx.beginPath();
-                ctx.moveTo(trackStartX, height / 2);
+                var activeWidth = Math.max(0, trackWidth * normalizedValue - gapOffset);
+
+                if (activeWidth <= 0)
+                    return "M 0 0";
 
                 var steps = Math.max(Math.floor(activeWidth / 3), 30);
                 var effectiveAmplitude = slider.waveAmplitude * slider.waveTransition;
+                var d = "M " + trackStartX + " " + (height / 2);
 
                 for (var i = 1; i <= steps; i++) {
                     var progress = i / steps;
@@ -80,59 +79,49 @@ Slider {
                     var x = trackStartX + trackWidth * currentProgress;
                     var waveOffset = Math.sin(currentProgress * Math.PI * 2 * slider.waveFrequency + slider.waveAnimationPhase) * effectiveAmplitude;
                     var y = height / 2 + waveOffset;
-                    ctx.lineTo(x, y);
+                    d += " L " + x + " " + y;
                 }
 
-                ctx.stroke();
+                return d;
             }
-            Connections {
-                target: slider
 
-                function onVisualPositionChanged() {
-                    wavyCanvas.requestPaint();
-                }
+            ShapePath {
+                strokeColor: slider.activeColor
+                strokeWidth: 4
+                fillColor: "transparent"
+                capStyle: ShapePath.RoundCap
+                joinStyle: ShapePath.RoundJoin
 
-                function onWaveAnimationPhaseChanged() {
-                    wavyCanvas.requestPaint();
-                }
-
-                function onWaveTransitionChanged() {
-                    wavyCanvas.requestPaint();
+                PathSvg {
+                    path: wavyShape.buildWavePath()
                 }
             }
         }
-        Canvas {
-            id: inactiveCanvas
+
+        // Inactive track
+        Shape {
+            id: inactiveShape
 
             anchors.fill: parent
-            antialiasing: true
-            onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                var trackStartX = bg.trackStartX;
-                var trackWidth = bg.trackWidth;
-                var normalizedValue = bg.normalizedValue;
-                var gapOffset = slider.separatorWidth / 2;
-                var inactiveStartPos = normalizedValue + (gapOffset / trackWidth);
-                var inactiveWidth = trackWidth * (1 - inactiveStartPos);
-                if (inactiveWidth <= 0 || inactiveStartPos >= 1)
-                    return;
-                ctx.strokeStyle = slider.inactiveColor;
-                ctx.lineWidth = 4;
-                ctx.lineCap = "round";
-                ctx.lineJoin = "round";
-                var startX = trackStartX + trackWidth * inactiveStartPos;
-                var startY = height / 2;
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(trackStartX + trackWidth, height / 2);
-                ctx.stroke();
-            }
-            Connections {
-                target: slider
+            preferredRendererType: Shape.CurveRenderer
 
-                function onVisualPositionChanged() {
-                    inactiveCanvas.requestPaint();
+            property real inactiveStartPos: bg.normalizedValue + ((slider.separatorWidth / 2) / bg.trackWidth)
+            property real inactiveWidth: bg.trackWidth * (1 - inactiveStartPos)
+
+            visible: inactiveWidth > 0 && inactiveStartPos < 1
+
+            ShapePath {
+                strokeColor: slider.inactiveColor
+                strokeWidth: 4
+                fillColor: "transparent"
+                capStyle: ShapePath.RoundCap
+
+                startX: bg.trackStartX + bg.trackWidth * inactiveShape.inactiveStartPos
+                startY: inactiveShape.height / 2
+
+                PathLine {
+                    x: bg.trackStartX + bg.trackWidth
+                    y: inactiveShape.height / 2
                 }
             }
         }

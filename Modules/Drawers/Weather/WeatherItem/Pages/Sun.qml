@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import Quickshell.Widgets
 
 import qs.Configs
-import qs.Helpers
 import qs.Services
 import qs.Components
 
@@ -64,7 +64,7 @@ Pages {
             implicitWidth: parent.width
             implicitHeight: parent.height * 0.3
 
-            SunCanvas {
+            SunShape {
                 sunSize: 40
 
                 StyledRect {
@@ -161,79 +161,77 @@ Pages {
         }
     }
 
-    component SunCanvas: Canvas {
-        id: sunCanvas
+    component SunShape: Shape {
+        id: sunShape
+
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
 
         property color hillColor: Colours.m3Colors.m3Primary
         property color sunColor: Colours.m3Colors.m3Yellow
         property real sunSize: 20
 
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
+        // Hill geometry
+        property real hillHeight: height * 0.6
+        property real hillBaseY: height - hillHeight
+        property real startX: 0
+        property real startY: hillBaseY + hillHeight * 0.3
+        property real cp1X: width * 0.3
+        property real cp1Y: hillBaseY - hillHeight * 0.1
+        property real cp2X: width * 0.7
+        property real cp2Y: hillBaseY - hillHeight * 0.1
+        property real endX: width
+        property real endY: hillBaseY + hillHeight * 0.3
 
-            var size = Math.min(width, height);
-            var offsetX = width / 2 - size / 2;
-            var offsetY = height / 2 - size / 2;
+        // Sun position — cubic bezier evaluated at t = root.sunriseProgress
+        property real t: root.sunriseProgress
+        property real oneMinusT: 1 - t
+        property real sunX: Math.pow(oneMinusT, 3) * startX + 3 * Math.pow(oneMinusT, 2) * t * cp1X + 3 * oneMinusT * Math.pow(t, 2) * cp2X + Math.pow(t, 3) * endX
+        property real sunY: Math.pow(oneMinusT, 3) * startY + 3 * Math.pow(oneMinusT, 2) * t * cp1Y + 3 * oneMinusT * Math.pow(t, 2) * cp2Y + Math.pow(t, 3) * endY
 
-            ctx.save();
+        // Hill
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: sunShape.hillColor
 
-            // Reset transform to draw in canvas coordinates
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            startX: 0
+            startY: sunShape.height
 
-            // Draw hill - simple smooth curve at bottom
-            var hillHeight = height * 0.6;
-            var hillBaseY = height - hillHeight;
-
-            // Define hill curve control points
-            var startX = 0;
-            var startY = hillBaseY + hillHeight * 0.3;
-            var cp1X = width * 0.3;
-            var cp1Y = hillBaseY - hillHeight * 0.1;
-            var cp2X = width * 0.7;
-            var cp2Y = hillBaseY - hillHeight * 0.1;
-            var endX = width;
-            var endY = hillBaseY + hillHeight * 0.3;
-
-            ctx.fillStyle = hillColor;
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.lineTo(startX, startY);
-
-            // Smooth bezier curve for hill
-            ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
-
-            ctx.lineTo(width, height);
-            ctx.closePath();
-            ctx.fill();
-
-            // Calculate sun position on the bezier curve
-            var t = root.sunriseProgress;
-
-            // Cubic bezier formula: B(t) = (1-t)³P0 + 3(1-t)²tP1 + 3(1-t)t²P2 + t³P3
-            var oneMinusT = 1 - t;
-            var sunX = Math.pow(oneMinusT, 3) * startX + 3 * Math.pow(oneMinusT, 2) * t * cp1X + 3 * oneMinusT * Math.pow(t, 2) * cp2X + Math.pow(t, 3) * endX;
-
-            var sunY = Math.pow(oneMinusT, 3) * startY + 3 * Math.pow(oneMinusT, 2) * t * cp1Y + 3 * oneMinusT * Math.pow(t, 2) * cp2Y + Math.pow(t, 3) * endY;
-
-            // Draw sun
-            ctx.fillStyle = sunColor;
-            ctx.strokeStyle = sunColor;
-            ctx.lineWidth = 2;
-
-            ctx.beginPath();
-            ctx.arc(sunX, sunY, sunSize / 2, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.restore();
+            PathLine {
+                x: sunShape.startX
+                y: sunShape.startY
+            }
+            PathCubic {
+                control1X: sunShape.cp1X
+                control1Y: sunShape.cp1Y
+                control2X: sunShape.cp2X
+                control2Y: sunShape.cp2Y
+                x: sunShape.endX
+                y: sunShape.endY
+            }
+            PathLine {
+                x: sunShape.width
+                y: sunShape.height
+            }
+            PathLine {
+                x: 0
+                y: sunShape.height
+            }
         }
 
-        Connections {
-            target: root
+        // Sun
+        ShapePath {
+            strokeColor: sunShape.sunColor
+            strokeWidth: 2
+            fillColor: sunShape.sunColor
 
-            function onSunriseProgressChanged() {
-                sunCanvas.requestPaint();
+            PathAngleArc {
+                centerX: sunShape.sunX
+                centerY: sunShape.sunY
+                radiusX: sunShape.sunSize / 2
+                radiusY: sunShape.sunSize / 2
+                startAngle: 0
+                sweepAngle: 360
             }
         }
     }

@@ -1,6 +1,7 @@
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
-import qs.Configs
+
 import qs.Services
 
 StyledRect {
@@ -25,90 +26,69 @@ StyledRect {
         radius: root.cornerRadius
     }
 
-    Canvas {
-        id: indicatorCanvas
+    Shape {
+        id: indicatorShape
 
         anchors.fill: parent
-        antialiasing: true
 
         property real barPosition: 0
         property real barWidth: parent.width * 0.35
 
-        function drawRoundedRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.arcTo(x + width, y, x + width, y + radius, radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-            ctx.lineTo(x + radius, y + height);
-            ctx.arcTo(x, y + height, x, y + height - radius, radius);
-            ctx.lineTo(x, y + radius);
-            ctx.arcTo(x, y, x + radius, y, radius);
-            ctx.closePath();
+        preferredRendererType: Shape.CurveRenderer
+
+        function clampedRect() {
+            var startX = Math.max(0, barPosition);
+            var endX = Math.min(width, barPosition + barWidth);
+            return {
+                startX: startX,
+                drawWidth: endX - startX
+            };
         }
 
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
+        function wavePath() {
+            var r = clampedRect();
+            if (r.drawWidth <= 0 || barPosition > width || (barPosition + barWidth) < 0)
+                return "M 0 0";
 
-            if (!root.visible)
-                return;
-            var startX = barPosition;
-            var endX = barPosition + barWidth;
+            var steps = Math.max(Math.floor(r.drawWidth / 2), 20);
+            var d = "";
 
-            if (startX > width)
-                return;
-            if (endX < 0)
-                return;
-            startX = Math.max(0, startX);
-            endX = Math.min(width, endX);
-
-            var drawWidth = endX - startX;
-            if (drawWidth <= 0)
-                return;
-            ctx.fillStyle = root.indicatorColor;
-
-            if (root.waveAmplitude > 0) {
-                var steps = Math.max(Math.floor(drawWidth / 2), 20);
-                ctx.beginPath();
-                ctx.moveTo(startX, height / 2);
-
-                for (var i = 0; i <= steps; i++) {
-                    var progress = i / steps;
-                    var x = startX + drawWidth * progress;
-                    var normalizedPos = x / width;
-                    var waveOffset = Math.sin(normalizedPos * Math.PI * 2 * root.waveFrequency + root.waveAnimationPhase) * root.waveAmplitude;
-                    var y = height / 2 + waveOffset;
-
-                    if (i === 0) {
-                        ctx.moveTo(x, y - height / 2);
-                    }
-                    ctx.lineTo(x, y + height / 2);
-                }
-
-                for (var j = steps; j >= 0; j--) {
-                    var progress2 = j / steps;
-                    var x2 = startX + drawWidth * progress2;
-                    var normalizedPos2 = x2 / width;
-                    var waveOffset2 = Math.sin(normalizedPos2 * Math.PI * 2 * root.waveFrequency + root.waveAnimationPhase) * root.waveAmplitude;
-                    var y2 = height / 2 + waveOffset2;
-                    ctx.lineTo(x2, y2 - height / 2);
-                }
-
-                ctx.closePath();
-                ctx.fill();
-            } else {
-                drawRoundedRect(ctx, startX, 0, drawWidth, height, root.cornerRadius);
-                ctx.fill();
+            // Forward pass — bottom edge of the wave band
+            for (var i = 0; i <= steps; i++) {
+                var x = r.startX + r.drawWidth * (i / steps);
+                var wo = Math.sin((x / width) * Math.PI * 2 * root.waveFrequency + root.waveAnimationPhase) * root.waveAmplitude;
+                var yTop = height / 2 + wo - height / 2;
+                var yBottom = height / 2 + wo + height / 2;
+                d += (i === 0 ? "M " + x + " " + yTop + " L " : " L ") + x + " " + yBottom;
             }
+
+            // Backward pass — top edge of the wave band
+            for (var j = steps; j >= 0; j--) {
+                var x2 = r.startX + r.drawWidth * (j / steps);
+                var wo2 = Math.sin((x2 / width) * Math.PI * 2 * root.waveFrequency + root.waveAnimationPhase) * root.waveAmplitude;
+                d += " L " + x2 + " " + (height / 2 + wo2 - height / 2);
+            }
+
+            return d + " Z";
         }
 
-        Connections {
-            target: root
+        function roundedRectPath() {
+            var r = clampedRect();
+            if (r.drawWidth <= 0 || barPosition > width || (barPosition + barWidth) < 0)
+                return "M 0 0";
 
-            function onWaveAnimationPhaseChanged() {
-                indicatorCanvas.requestPaint();
+            var x = r.startX, w = r.drawWidth, h = height, cr = root.cornerRadius;
+            return "M " + (x + cr) + " 0" + " L " + (x + w - cr) + " 0" + " A " + cr + " " + cr + " 0 0 1 " + (x + w) + " " + cr + " L " + (x + w) + " " + (h - cr) + " A " + cr + " " + cr + " 0 0 1 " + (x + w - cr) + " " + h + " L " + (x + cr) + " " + h + " A " + cr + " " + cr + " 0 0 1 " + x + " " + (h - cr) + " L " + x + " " + cr + " A " + cr + " " + cr + " 0 0 1 " + (x + cr) + " 0 Z";
+        }
+
+        ShapePath {
+            fillColor: root.indicatorColor
+            strokeColor: "transparent"
+
+            PathSvg {
+                // Reactive binding — recomputes automatically whenever any
+                // dependency (barPosition, barWidth, waveAnimationPhase, …) changes.
+                path: root.waveAmplitude > 0 ? indicatorShape.wavePath() : indicatorShape.roundedRectPath()
             }
         }
 
@@ -120,36 +100,32 @@ StyledRect {
 
             ParallelAnimation {
                 NAnim {
-                    target: indicatorCanvas
+                    target: indicatorShape
                     property: "barWidth"
                     from: root.width * 0.0
                     to: root.width * 0.75
                 }
                 NAnim {
-                    target: indicatorCanvas
+                    target: indicatorShape
                     property: "barPosition"
                     from: 0
                     to: root.width * 0.25
                 }
             }
-
             ParallelAnimation {
                 NAnim {
-                    target: indicatorCanvas
+                    target: indicatorShape
                     property: "barWidth"
                     from: root.width * 0.75
                     to: root.width * 0.0
                 }
                 NAnim {
-                    target: indicatorCanvas
+                    target: indicatorShape
                     property: "barPosition"
                     from: root.width * 0.25
                     to: root.width
                 }
             }
         }
-
-        onBarPositionChanged: requestPaint()
-        onBarWidthChanged: requestPaint()
     }
 }
