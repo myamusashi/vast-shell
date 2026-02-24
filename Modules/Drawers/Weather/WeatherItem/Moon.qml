@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
 import Quickshell.Widgets
 import M3Shapes
@@ -156,73 +157,83 @@ MaterialShape {
         }
     }
 
-    component Moon: Canvas {
-        id: moonCanvas
+    component Moon: Shape {
+        id: moonShape
+
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
 
         property color hillColor: Colours.m3Colors.m3Primary
         property color moonColor: Colours.m3Colors.m3OnSurfaceVariant
         property real moonSize: 20
 
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
+        // Hill
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: moonShape.hillColor
 
-            var size = Math.min(width, height);
-            var offsetX = width / 2 - size / 2;
-            var offsetY = height / 2 - size / 2;
+            startX: 0
+            startY: moonGeo.h
 
-            ctx.save();
-            ctx.translate(offsetX, offsetY);
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-            var hillHeight = height * 0.6;
-            var hillBaseY = height - hillHeight;
-
-            var startX = 0;
-            var startY = hillBaseY + hillHeight * 0.3;
-            var cp1X = width * 0.3;
-            var cp1Y = hillBaseY - hillHeight * 0.1;
-            var cp2X = width * 0.7;
-            var cp2Y = hillBaseY - hillHeight * 0.1;
-            var endX = width;
-            var endY = hillBaseY + hillHeight * 0.3;
-
-            ctx.fillStyle = hillColor;
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.lineTo(startX, startY);
-
-            ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
-
-            ctx.lineTo(width, height);
-            ctx.closePath();
-            ctx.fill();
-
-            var t = canvas.moonriseProgress;
-
-            // Cubic bezier formula: B(t) = (1-t)³P0 + 3(1-t)²tP1 + 3(1-t)t²P2 + t³P3
-            var oneMinusT = 1 - t;
-            var moonX = Math.pow(oneMinusT, 3) * startX + 3 * Math.pow(oneMinusT, 2) * t * cp1X + 3 * oneMinusT * Math.pow(t, 2) * cp2X + Math.pow(t, 3) * endX;
-            var moonY = Math.pow(oneMinusT, 3) * startY + 3 * Math.pow(oneMinusT, 2) * t * cp1Y + 3 * oneMinusT * Math.pow(t, 2) * cp2Y + Math.pow(t, 3) * endY;
-
-            // Draw moon
-            ctx.fillStyle = moonColor;
-            ctx.strokeStyle = moonColor;
-            ctx.lineWidth = 2;
-
-            ctx.beginPath();
-            ctx.arc(moonX, moonY, moonSize / 2, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.restore();
-        }
-        Connections {
-            target: canvas
-
-            function onMoonriseProgressChanged() {
-                moonCanvas.requestPaint();
+            PathLine {
+                x: moonGeo.hillStartX
+                y: moonGeo.hillStartY
             }
+            PathCubic {
+                control1X: moonGeo.hillCp1X
+                control1Y: moonGeo.hillCp1Y
+                control2X: moonGeo.hillCp2X
+                control2Y: moonGeo.hillCp2Y
+                x: moonGeo.hillEndX
+                y: moonGeo.hillEndY
+            }
+            PathLine {
+                x: moonGeo.w
+                y: moonGeo.h
+            }
+            PathLine {
+                x: 0
+                y: moonGeo.h
+            }
+        }
+
+        // Moon
+        ShapePath {
+            strokeColor: moonShape.moonColor
+            strokeWidth: 2
+            fillColor: moonShape.moonColor
+
+            PathAngleArc {
+                centerX: moonGeo.moonX
+                centerY: moonGeo.moonY
+                radiusX: moonShape.moonSize / 2
+                radiusY: moonShape.moonSize / 2
+                startAngle: 0
+                sweepAngle: 360
+            }
+        }
+
+        QtObject {
+            id: moonGeo
+
+            readonly property real w: moonShape.parent.width
+            readonly property real h: moonShape.parent.height
+
+            property real hillHeight: h * 0.6
+            property real hillBaseY: h - hillHeight
+            property real hillStartX: 0
+            property real hillStartY: hillBaseY + hillHeight * 0.3
+            property real hillCp1X: w * 0.3
+            property real hillCp1Y: hillBaseY - hillHeight * 0.1
+            property real hillCp2X: w * 0.7
+            property real hillCp2Y: hillBaseY - hillHeight * 0.1
+            property real hillEndX: w
+            property real hillEndY: hillBaseY + hillHeight * 0.3
+
+            property real t: canvas.moonriseProgress
+            property real oneMinusT: 1 - t
+            property real moonX: Math.pow(oneMinusT, 3) * hillStartX + 3 * Math.pow(oneMinusT, 2) * t * hillCp1X + 3 * oneMinusT * Math.pow(t, 2) * hillCp2X + Math.pow(t, 3) * hillEndX
+            property real moonY: Math.pow(oneMinusT, 3) * hillStartY + 3 * Math.pow(oneMinusT, 2) * t * hillCp1Y + 3 * oneMinusT * Math.pow(t, 2) * hillCp2Y + Math.pow(t, 3) * hillEndY
         }
     }
 }

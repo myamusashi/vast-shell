@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
 import Quickshell.Widgets
 import M3Shapes
@@ -161,80 +162,84 @@ MaterialShape {
         }
     }
 
-    component Sun: Canvas {
-        id: sunCanvas
+    component Sun: Shape {
+        id: sunShape
+
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
 
         property color hillColor: Colours.m3Colors.m3Primary
         property color sunColor: Colours.m3Colors.m3Yellow
         property real sunSize: 20
 
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
+        // Hill
+        ShapePath {
+            strokeColor: "transparent"
+            fillColor: sunShape.hillColor
 
-            var size = Math.min(width, height);
-            var offsetX = width / 2 - size / 2;
-            var offsetY = height / 2 - size / 2;
+            startX: 0
+            startY: sunShape.height
 
-            ctx.save();
-
-            // Reset transform to draw in canvas coordinates
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-            // Draw hill - simple smooth curve at bottom
-            var hillHeight = height * 0.6;
-            var hillBaseY = height - hillHeight;
-
-            // Define hill curve control points
-            var startX = 0;
-            var startY = hillBaseY + hillHeight * 0.3;
-            var cp1X = width * 0.3;
-            var cp1Y = hillBaseY - hillHeight * 0.1;
-            var cp2X = width * 0.7;
-            var cp2Y = hillBaseY - hillHeight * 0.1;
-            var endX = width;
-            var endY = hillBaseY + hillHeight * 0.3;
-
-            ctx.fillStyle = hillColor;
-            ctx.beginPath();
-            ctx.moveTo(0, height);
-            ctx.lineTo(startX, startY);
-
-            // Smooth bezier curve for hill
-            ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
-
-            ctx.lineTo(width, height);
-            ctx.closePath();
-            ctx.fill();
-
-            // Calculate sun position on the bezier curve
-            var t = canvas.sunriseProgress;
-
-            // Cubic bezier formula: B(t) = (1-t)³P0 + 3(1-t)²tP1 + 3(1-t)t²P2 + t³P3
-            var oneMinusT = 1 - t;
-            var sunX = Math.pow(oneMinusT, 3) * startX + 3 * Math.pow(oneMinusT, 2) * t * cp1X + 3 * oneMinusT * Math.pow(t, 2) * cp2X + Math.pow(t, 3) * endX;
-
-            var sunY = Math.pow(oneMinusT, 3) * startY + 3 * Math.pow(oneMinusT, 2) * t * cp1Y + 3 * oneMinusT * Math.pow(t, 2) * cp2Y + Math.pow(t, 3) * endY;
-
-            // Draw sun
-            ctx.fillStyle = sunColor;
-            ctx.strokeStyle = sunColor;
-            ctx.lineWidth = 2;
-
-            ctx.beginPath();
-            ctx.arc(sunX, sunY, sunSize / 2, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.restore();
+            PathLine {
+                x: geo.hillStartX
+                y: geo.hillStartY
+            }
+            PathCubic {
+                control1X: geo.hillCp1X
+                control1Y: geo.hillCp1Y
+                control2X: geo.hillCp2X
+                control2Y: geo.hillCp2Y
+                x: geo.hillEndX
+                y: geo.hillEndY
+            }
+            PathLine {
+                x: sunShape.width
+                y: sunShape.height
+            }
+            PathLine {
+                x: 0
+                y: sunShape.height
+            }
         }
 
-        Connections {
-            target: canvas
+        // Sun
+        ShapePath {
+            strokeColor: sunShape.sunColor
+            strokeWidth: 2
+            fillColor: sunShape.sunColor
 
-            function onSunriseProgressChanged() {
-                sunCanvas.requestPaint();
+            PathAngleArc {
+                centerX: geo.sunX
+                centerY: geo.sunY
+                radiusX: sunShape.sunSize / 2
+                radiusY: sunShape.sunSize / 2
+                startAngle: 0
+                sweepAngle: 360
             }
+        }
+
+        QtObject {
+            id: geo
+
+            // foking binding loop
+            readonly property real w: sunShape.parent.width
+            readonly property real h: sunShape.parent.height
+
+            property real hillHeight: h * 0.6
+            property real hillBaseY: h - hillHeight
+            property real hillStartX: 0
+            property real hillStartY: hillBaseY + hillHeight * 0.3
+            property real hillCp1X: w * 0.3
+            property real hillCp1Y: hillBaseY - hillHeight * 0.1
+            property real hillCp2X: w * 0.7
+            property real hillCp2Y: hillBaseY - hillHeight * 0.1
+            property real hillEndX: w
+            property real hillEndY: hillBaseY + hillHeight * 0.3
+
+            property real t: canvas.sunriseProgress
+            property real oneMinusT: 1 - t
+            property real sunX: Math.pow(oneMinusT, 3) * hillStartX + 3 * Math.pow(oneMinusT, 2) * t * hillCp1X + 3 * oneMinusT * Math.pow(t, 2) * hillCp2X + Math.pow(t, 3) * hillEndX
+            property real sunY: Math.pow(oneMinusT, 3) * hillStartY + 3 * Math.pow(oneMinusT, 2) * t * hillCp1Y + 3 * oneMinusT * Math.pow(t, 2) * hillCp2Y + Math.pow(t, 3) * hillEndY
         }
     }
 }

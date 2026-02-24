@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Shapes
 
 import qs.Components
 import qs.Services
@@ -8,7 +9,7 @@ StyledRect {
 
     required property real value
 
-    property color circleColor: canvas.value > 80 ? Colours.m3Colors.m3Error : canvas.value > 60 ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary
+    property color circleColor: value > 80 ? Colours.m3Colors.m3Error : value > 60 ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary
     property string text
     property real fixedSize: 100
     property int textSize: 12
@@ -25,44 +26,44 @@ StyledRect {
         font.bold: true
     }
 
-    Canvas {
-        id: canvas
+    Shape {
+        id: indicatorShape
 
         anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
 
-        onValueChanged: requestPaint()
+        // Background circle
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3OutlineVariant
+            strokeWidth: 8
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
 
-        renderStrategy: Canvas.Threaded
-        renderTarget: Canvas.FramebufferObject
+            PathAngleArc {
+                centerX: indicatorShape.width / 2
+                centerY: indicatorShape.height / 2
+                radiusX: Math.min(indicatorShape.width, indicatorShape.height) / 2 - 10
+                radiusY: radiusX
+                startAngle: 0
+                sweepAngle: 360
+            }
+        }
 
-        property real value: root.value
+        // Progress arc
+        ShapePath {
+            strokeColor: root.circleColor
+            strokeWidth: 8
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
 
-        onPaint: {
-            var ctx = getContext("2d");
-            var centerX = width / 2;
-            var centerY = height / 2;
-            var radius = Math.min(width, height) / 2 - 10;
-
-            ctx.clearRect(0, 0, width, height);
-
-            // Background arc
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-            ctx.strokeStyle = Colours.m3Colors.m3OutlineVariant;
-            ctx.lineWidth = 8;
-            ctx.stroke();
-
-            // Progress arc
-            ctx.beginPath();
-            var startAngle = -Math.PI / 2;
-            var endAngle = startAngle + (value / 100) * 2 * Math.PI;
-            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-
-            // Color based on value
-            ctx.strokeStyle = root.circleColor;
-            ctx.lineWidth = 8;
-            ctx.lineCap = "round";
-            ctx.stroke();
+            PathAngleArc {
+                centerX: indicatorShape.width / 2
+                centerY: indicatorShape.height / 2
+                radiusX: Math.min(indicatorShape.width, indicatorShape.height) / 2 - 10
+                radiusY: radiusX
+                startAngle: -90
+                sweepAngle: (root.value / 100) * 360
+            }
         }
     }
 

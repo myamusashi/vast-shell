@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
 import M3Shapes
 
@@ -63,47 +64,48 @@ MaterialShape {
         }
     }
 
-    component Pressure: Canvas {
-        id: gaugeCanvas
+    component Pressure: Shape {
+        id: gaugeShape
 
         anchors.fill: parent
         anchors.margins: 3
+        preferredRendererType: Shape.CurveRenderer
 
         property real normalizedValue: (canvas.pressure - canvas.minPressure) / (canvas.maxPressure - canvas.minPressure)
-        property color trackColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.2)
-        property color activeColor: Colours.m3Colors.m3Primary
+        property real radius: Math.min(width, height) / 2 - 10
 
-        onNormalizedValueChanged: requestPaint()
+        // Background track
+        ShapePath {
+            strokeColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.2)
+            strokeWidth: 9
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
 
-        onPaint: {
-            var ctx = getContext("2d");
-            ctx.clearRect(0, 0, width, height);
+            PathAngleArc {
+                centerX: gaugeShape.width / 2
+                centerY: gaugeShape.height / 2
+                radiusX: gaugeShape.radius
+                radiusY: gaugeShape.radius
+                startAngle: 135
+                sweepAngle: 270
+            }
+        }
 
-            var centerX = width / 2;
-            var centerY = height / 2;
-            var radius = Math.min(width, height) / 2 - 10;
-            var lineWidth = 9;
+        // Active progress
+        ShapePath {
+            strokeColor: Colours.m3Colors.m3Primary
+            strokeWidth: 9
+            fillColor: "transparent"
+            capStyle: ShapePath.RoundCap
 
-            // Arc spans from 135° to 45° (270° total, leaving bottom 90° open)
-            var startAngle = Math.PI * 0.75; // 135°
-            var endAngle = Math.PI * 2.25; // 405° = 45°
-            var totalAngle = endAngle - startAngle;
-
-            ctx.lineCap = "round";
-            ctx.lineWidth = lineWidth;
-
-            // background track
-            ctx.strokeStyle = trackColor;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, startAngle, endAngle, false);
-            ctx.stroke();
-
-            // active progress
-            var progressAngle = startAngle + (totalAngle * normalizedValue);
-            ctx.strokeStyle = activeColor;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, startAngle, progressAngle, false);
-            ctx.stroke();
+            PathAngleArc {
+                centerX: gaugeShape.width / 2
+                centerY: gaugeShape.height / 2
+                radiusX: gaugeShape.radius
+                radiusY: gaugeShape.radius
+                startAngle: 135
+                sweepAngle: 270 * gaugeShape.normalizedValue
+            }
         }
     }
 }
