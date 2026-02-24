@@ -2,11 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Networking
 
-import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
+import qs.Components
 
 RowLayout {
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
@@ -86,35 +87,15 @@ RowLayout {
         color: Colours.m3Colors.m3SurfaceContainer
         radius: Appearance.rounding.normal
 
-        readonly property var activeNetwork: {
-            for (var i = 0; i < Network.networks.length; i++)
-                if (Network.networks[i].active)
-                    return Network.networks[i];
-
-            return null;
-        }
-
         MArea {
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: settings && settings.wifiList.active ? Qt.ArrowCursor : Qt.PointingHandCursor
-            enabled: settings && !settings.wifiList.active
+            cursorShape: content && content.wifi.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor
+            enabled: content && !content.wifi.isVisible
             onClicked: {
-                if (settings)
-                    settings.wifiList.active = !settings.wifiList.active;
+                if (content)
+                    content.wifi.isVisible = !content.wifi.isVisible;
             }
-        }
-
-        function getWiFiIcon(strength) {
-            if (strength >= 80)
-                return "network_wifi";
-            if (strength >= 50)
-                return "network_wifi_3_bar";
-            if (strength >= 30)
-                return "network_wifi_2_bar";
-            if (strength >= 15)
-                return "network_wifi_1_bar";
-            return "signal_wifi_0_bar";
         }
 
         RowLayout {
@@ -125,15 +106,15 @@ RowLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
-                color: wifiCard.activeNetwork ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+                color: Networking.wifiEnabled && Wifi.activeWifiNetwork.connected ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
                     type: Icon.Material
                     anchors.centerIn: parent
-                    icon: wifiCard.activeNetwork ? wifiCard.getWiFiIcon(wifiCard.activeNetwork.strength) : "wifi_off"
-                    color: wifiCard.activeNetwork ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
-                    font.pixelSize: Appearance.fonts.size.extraLarge * 0.8
+                    icon: Networking.wifiEnabled && Wifi.activeWifiNetwork.connected ? Wifi.getWiFiIcon(Wifi.activeWifiNetwork.signalStrength) : "wifi_off"
+                    color: Networking.wifiEnabled && Wifi.activeWifiNetwork.connected ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    font.pixelSize: Appearance.fonts.size.extraLarge
                 }
             }
 
@@ -148,7 +129,12 @@ RowLayout {
                 }
 
                 StyledText {
-                    text: wifiCard.activeNetwork ? wifiCard.activeNetwork.ssid : qsTr("WiFi Disconnected")
+                    text: {
+                        if (Networking.wifiEnabled && Wifi.activeWifiNetwork.connected)
+                            return Wifi.activeWifiNetwork.name;
+                        else
+                            return qsTr("WiFi Disconnected");
+                    }
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.Medium
                     width: parent.width

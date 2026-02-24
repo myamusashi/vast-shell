@@ -1,40 +1,65 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Networking
 
 import qs.Configs
 import qs.Components
 import qs.Services
 
-ColumnLayout {
+Item {
     id: content
 
     anchors.fill: parent
-    spacing: Appearance.spacing.normal
 
+    property alias wifi: wifi
     readonly property bool isConnected: SystemUsage.statusWiredInterface === "connected"
 
-    BrightnessControls {}
-    NetworkInfoColumn {}
-
-    RowLayout {
-        Layout.fillHeight: true
-        Layout.alignment: Qt.AlignLeft
+    ColumnLayout {
+        anchors.fill: parent
         spacing: Appearance.spacing.normal
 
-        StyledText {
-            font.pixelSize: Appearance.fonts.size.small
-            text: content.isConnected ? `${SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
-            color: Colours.m3Colors.m3OnSurface
+        BrightnessControls {}
+        NetworkInfoColumn {}
+
+        RowLayout {
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignLeft
+            spacing: Appearance.spacing.normal
+
+            StyledText {
+                font.pixelSize: Appearance.fonts.size.small
+                text: content.isConnected ? `${SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
+                color: Colours.m3Colors.m3OnSurface
+            }
+
+            StyledText {
+                font.pixelSize: Appearance.fonts.size.small
+                text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${Wifi.activeWifiDevice.name})` : "Not connected"
+                color: Colours.m3Colors.m3OnSurface
+            }
         }
 
-        StyledText {
-            font.pixelSize: Appearance.fonts.size.small
-            text: Network.active ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${Network.active})` : "Not connected"
-            color: Colours.m3Colors.m3OnSurface
-        }
+        MediaPlayer {}
+        Notifications {}
     }
 
-    MediaPlayer {}
+    WifiList {
+        id: wifi
 
-    Notifications {}
+        anchors.centerIn: parent
+        z: 99
+    }
+
+    StyledRect {
+        anchors.fill: parent
+        visible: wifi.isVisible
+        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.7)
+        z: 98
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onClicked: wifi.isVisible = false
+        }
+    }
 }
