@@ -16,13 +16,13 @@ ComboBox {
     model: profileModel.values
 
     ScriptModel {
-		id: profileModel
+        id: profileModel
 
         values: Audio.models
     }
 
     Connections {
-		target: Audio
+        target: Audio
 
         function onModelsChanged() {
             profileModel.values = Audio.models;
