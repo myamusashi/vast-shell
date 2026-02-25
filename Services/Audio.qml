@@ -9,7 +9,7 @@ import Quickshell.Services.Pipewire
 Singleton {
     id: root
 
-    property bool needsKill: false
+    property bool restartPending: false
     property int idPipewire: 0
     property int activeProfileIndex: activeProfiles.length > 0 ? activeProfiles[0].index : -1
     property var activeProfiles: []
@@ -48,7 +48,14 @@ Singleton {
     }
 
     function restartAudioProfiles() {
-        watchdogTimer.restart();
+        if (audioProfiles.running) {
+            console.info("pw-profiles: restart requested, stopping running process…");
+            root.restartPending = true;
+            audioProfiles.running = false;
+        } else {
+            console.info("pw-profiles: restart requested, process not running — starting directly…");
+            audioProfiles.running = true;
+        }
     }
 
     FileView {
@@ -100,17 +107,14 @@ Singleton {
 
         command: ["pgrep", "-x", "audioProfiles"]
         running: true
-
         onExited: code => {
-            root.needsKill = (code === 0);
-            if (root.needsKill) {
-                console.info("pw-profiles: stale process found, killing…");
+            if (code === 0) {
+                console.info("pw-profiles: stale process found at startup, killing…");
                 processKiller.running = true;
             } else {
                 audioProfiles.running = true;
             }
         }
-
         stderr: StdioCollector {
             onTextChanged: {
                 if (text.trim())
@@ -124,12 +128,10 @@ Singleton {
 
         command: ["sh", "-c", "pkill -TERM -x audioProfiles; sleep 1; pkill -KILL -x audioProfiles; true"]
         running: false
-
         onExited: {
             console.info("pw-profiles: old process cleared, starting fresh…");
             audioProfiles.running = true;
         }
-
         stderr: StdioCollector {
             onTextChanged: {
                 if (text.trim())
@@ -144,14 +146,17 @@ Singleton {
         command: [Qt.resolvedUrl("../Assets/go/audioProfiles")]
         running: false
         onExited: code => {
-            if (code !== 0) {
-                console.warn(`pw-profiles: exited with code ${code}, restarting via checker in 2 s…`);
+            if (root.restartPending) {
+                console.info("pw-profiles: restarting after intentional stop…");
+                root.restartPending = false;
+                audioProfiles.running = true;
+            } else if (code !== 0) {
+                console.warn(`pw-profiles: exited with code ${code}, restarting via watchdog in 2 s…`);
                 watchdogTimer.restart();
             } else {
                 console.info("pw-profiles: clean exit.");
             }
         }
-
         stderr: StdioCollector {
             onTextChanged: {
                 if (text.trim())
@@ -165,6 +170,6 @@ Singleton {
 
         interval: 2000
         repeat: false
-        onTriggered: processChecker.running = true
+        onTriggered: audioProfiles.running = true
     }
 }
