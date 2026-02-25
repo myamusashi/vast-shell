@@ -91,7 +91,7 @@ Item {
                 id: mainLoader
 
                 anchors.fill: parent
-                visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
+                active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWeatherPanelOpen
                 asynchronous: true
 
                 sourceComponent: ColumnLayout {
