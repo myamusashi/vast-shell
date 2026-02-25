@@ -14,10 +14,10 @@ PopupWidget {
     readonly property bool isWired: SystemUsage.statusWiredInterface === "connected" && (Networking.wifiEnabled ?? null)
 
     icon: isWired ? "lan" : "network_wifi"
-    text: "Network"
+    text: qsTr("Network")
     content: ColumnLayout {
         StyledText {
-            text: root.isWired ? "Ethernet" : "Wi-Fi"
+            text: root.isWired ? qsTr("Ethernet") : qsTr("Wi-Fi")
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large
         }
@@ -25,31 +25,31 @@ PopupWidget {
         Repeater {
             model: [
                 {
-                    text: "Status",
-                    value: root.isWired ? "Connected" : "Disconnected"
+                    text: qsTr("Status"),
+                    value: root.isWired ? qsTr("Connected") : qsTr("Disconnected")
                 },
                 {
-                    text: "Link speed",
+                    text: qsTr("Link speed"),
                     value: root.isWired ? SystemUsage.wiredLinkSpeed + " Mbps" : SystemUsage.wirelessLinkSpeed + " Mbps"
                 },
                 {
-                    text: "Signal strength",
+                    text: qsTr("Signal strength"),
                     value: root.isWired ? "0 dBm" : "-70 dBm"
                 },
                 {
-                    text: "Total wireless upload",
+                    text: qsTr("Total wireless upload"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
                 },
                 {
-                    text: "Total wired upload",
+                    text: qsTr("Total wired upload"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWiredUploadUsage)
                 },
                 {
-                    text: "Total wireless download",
+                    text: qsTr("Total wireless download"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
                 },
                 {
-                    text: "Total wired download",
+                    text: qsTr("Total wired download"),
                     value: SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
                 }
             ]
