@@ -62,18 +62,23 @@
 <context>
     <name>App</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="91"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="89"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="294"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="292"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
 </context>
 <context>
     <name>AppsInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="12"/>
+        <source>Installed apps</source>
+        <translation>Aplikasi terinstall</translation>
+    </message>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="29"/>
         <source>Graphic User Interfaces</source>
@@ -104,6 +109,69 @@
         <location filename="../Widgets/AudioProfiles.qml" line="190"/>
         <source>N/A</source>
         <translation>T/A</translation>
+    </message>
+</context>
+<context>
+    <name>BatteryInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="11"/>
+        <source>Battery</source>
+        <translation>Baterai</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="16"/>
+        <source>Battery level</source>
+        <translation>Daya baterai</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="20"/>
+        <source>Temperature</source>
+        <translation>Temperatur</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="24"/>
+        <source>Status</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
+        <source>Charging</source>
+        <translation>Mengisi daya</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
+        <source>Discharging</source>
+        <translation>Menguras daya</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="28"/>
+        <source>Technology</source>
+        <translation>Teknologi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="32"/>
+        <source>Overall Health</source>
+        <translation>Kesehatan Keseluruhan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="36"/>
+        <source>Voltage</source>
+        <translation>Tegangan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="42"/>
+        <source>%1 - Design Capacity</source>
+        <translation>%1 - Kapasitas desain</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="46"/>
+        <source>%1 - Current Capacity</source>
+        <translation>%1 - kapsitas saat ini</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="50"/>
+        <source>%1 - Health</source>
+        <translation>%1 - Kesehatan</translation>
     </message>
 </context>
 <context>
@@ -305,6 +373,11 @@
         <location filename="../Modules/Lock/Clock.qml" line="24"/>
         <source>Des</source>
         <translation>Des</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Clock.qml" line="66"/>
+        <source>%1 %2</source>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -597,6 +670,11 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DiskInfo</name>
     <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="10"/>
+        <source>Storage</source>
+        <translation>Penyimpanan</translation>
+    </message>
+    <message>
         <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="14"/>
         <source> GB used</source>
         <translation> Penggunaan GB</translation>
@@ -665,53 +743,57 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Manajemen Warna</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="55"/>
         <source>System Information</source>
-        <translation>Informasi Sistem</translation>
+        <translation type="vanished">Informasi Sistem</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="61"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="55"/>
+        <source>GPU</source>
+        <translation>GPU</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="59"/>
         <source>Vulkan</source>
         <translation>Vulkan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="62"/>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="67"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="60"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="65"/>
         <source>Not available</source>
         <translation>Tidak tersedia</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="66"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="64"/>
         <source>OpenGL</source>
         <translation>OpenGL</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="71"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="69"/>
         <source>Vulkan Driver</source>
         <translation>Driver Vulkan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="76"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="74"/>
         <source>vaAPI Driver</source>
         <translation>Driver vaAPI</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="81"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="79"/>
         <source>VDPAU Driver</source>
         <translation>Driver VDPAU</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="86"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="84"/>
         <source>OpenGL Renderer</source>
         <translation>Renderer OpenGL</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="91"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="89"/>
         <source>OpenGL Vendor</source>
         <translation>Vendor OpenGL</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="128"/>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="126"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -1076,6 +1158,69 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>NetworkInfo</name>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="17"/>
+        <source>Network</source>
+        <translation>Jaringan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="20"/>
+        <source>Ethernet</source>
+        <translation>Ethernet</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="20"/>
+        <source>Wi-Fi</source>
+        <translation>Wi-Fi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="28"/>
+        <source>Status</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="29"/>
+        <source>Connected</source>
+        <translation>Tersambung</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="29"/>
+        <source>Disconnected</source>
+        <translation>Terputus</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="32"/>
+        <source>Link speed</source>
+        <translation>Kecepatan tautan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="36"/>
+        <source>Signal strength</source>
+        <translation>Kekuaatan sinyal</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="40"/>
+        <source>Total wireless upload</source>
+        <translation>Total unggah nirkabel</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="44"/>
+        <source>Total wired upload</source>
+        <translation>total unggah kabel</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="48"/>
+        <source>Total wireless download</source>
+        <translation>total unduh nirkabel</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="52"/>
+        <source>Total wired download</source>
+        <translation>Total unduh kabel</translation>
+    </message>
+</context>
+<context>
     <name>NetworkInfoColumn</name>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="59"/>
@@ -1197,6 +1342,16 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Status CPU</translation>
     </message>
     <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="114"/>
+        <source>CPU: %1°C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="120"/>
+        <source>GPU: %1°C</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="139"/>
         <source>Battery</source>
         <translation>Baterai</translation>
@@ -1220,6 +1375,16 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="193"/>
         <source>Network</source>
         <translation>Jaringan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="214"/>
+        <source>Ethernet</source>
+        <translation>Ethernet</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="214"/>
+        <source>Wi-Fi</source>
+        <translation>Wi-Fi</translation>
     </message>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="223"/>
@@ -1262,6 +1427,16 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Tampilan</translation>
     </message>
     <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="340"/>
+        <source>%1x%2 @ %3Hz</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="350"/>
+        <source>RAM</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="369"/>
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="405"/>
         <source> GB used</source>
@@ -1272,6 +1447,16 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="412"/>
         <source> GB total</source>
         <translation> GB total</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="386"/>
+        <source>Disk</source>
+        <translation>Penyimpanan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/QuickSettings/Performances.qml" line="440"/>
+        <source>Unknown</source>
+        <translation>ndak tau</translation>
     </message>
 </context>
 <context>
@@ -1328,6 +1513,11 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>RamInfo</name>
     <message>
+        <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="10"/>
+        <source>Memory</source>
+        <translation>Memori</translation>
+    </message>
+    <message>
         <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="19"/>
         <source>RAM Size</source>
         <translation>Ukuran RAM</translation>
@@ -1341,6 +1531,24 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="44"/>
         <source>Free</source>
         <translation>Kosong</translation>
+    </message>
+</context>
+<context>
+    <name>RecordControl</name>
+    <message>
+        <location filename="../Modules/Drawers/RecordControl/RecordControl.qml" line="17"/>
+        <source>Recording Widgets</source>
+        <translation>Widget perekaman</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/RecordControl/RecordControl.qml" line="69"/>
+        <source>Screen Recording</source>
+        <translation>Rekam Layar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/RecordControl/RecordControl.qml" line="179"/>
+        <source>Stop</source>
+        <translation></translation>
     </message>
 </context>
 <context>
