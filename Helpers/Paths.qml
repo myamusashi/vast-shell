@@ -16,6 +16,7 @@ Singleton {
     readonly property string rootDir: Quickshell.shellDir
     readonly property string configDir: Quickshell.env("XDG_CONFIG_DIR") || `${home}/.config`
     readonly property string shellDir: `${configDir}/shell`
+    readonly property string stateDir: `${home}/.local/state`
 
     readonly property string cacheDir: Quickshell.env("XDG_CACHE_DIR") || `${home}/.cache`
     readonly property string currentWallpaperFile: `${cacheDir}/wall/path.txt`
