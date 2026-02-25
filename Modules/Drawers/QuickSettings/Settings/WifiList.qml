@@ -106,7 +106,7 @@ WrapperRectangle {
                     anchors.centerIn: parent
                     implicitWidth: parent.width * 0.5
                     implicitHeight: 4
-                    condition: Wifi.activeWifiDevice.scannerEnabled && Networking.wifiEnabled
+                    condition: Wifi.activeWifiDevice.scannerEnabled && Networking.wifiEnabled && root.isVisible
                 }
             }
 
