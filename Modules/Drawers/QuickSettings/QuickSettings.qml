@@ -60,133 +60,139 @@ Item {
         topRightRadius: Appearance.rounding.normal
         bottomRightRadius: Appearance.rounding.normal
 
-        ColumnLayout {
-            WrapperRectangle {
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-                implicitWidth: Math.min(parent.width, tabGroup.implicitWidth + 32)
-                implicitHeight: 56
-                color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.5)
-                margin: Appearance.margin.normal
-                radius: Appearance.rounding.full
+        Loader {
+            anchors.fill: parent
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && root.isControlCenterOpen
+            asynchronous: true
 
-                TabBar {
-                    id: tabGroup
+            sourceComponent: ColumnLayout {
+                WrapperRectangle {
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                    implicitWidth: Math.min(parent.width, tabGroup.implicitWidth + 32)
+                    implicitHeight: 56
+                    color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.5)
+                    margin: Appearance.margin.normal
+                    radius: Appearance.rounding.full
 
-                    spacing: 2
-                    background: Item {}
-                    currentIndex: root.saveIndex
-                    onCurrentIndexChanged: root.saveIndex = currentIndex
+                    TabBar {
+                        id: tabGroup
 
-                    Repeater {
-                        model: [
-                            {
-                                "icon": "settings",
-                                "name": "Settings",
-                                "index": 0
-                            },
-                            {
-                                "icon": "speaker",
-                                "name": "Volume",
-                                "index": 1
-                            },
-                            {
-                                "icon": "speed",
-                                "name": "Performance",
-                                "index": 2
-                            }
-                        ]
-                        delegate: TabButton {
-                            id: buttonDelegate
+                        spacing: 2
+                        background: Item {}
+                        currentIndex: root.saveIndex
+                        onCurrentIndexChanged: root.saveIndex = currentIndex
 
-                            required property var modelData
-                            required property int index
+                        Repeater {
+                            model: [
+                                {
+                                    "icon": "settings",
+                                    "name": "Settings",
+                                    "index": 0
+                                },
+                                {
+                                    "icon": "speaker",
+                                    "name": "Volume",
+                                    "index": 1
+                                },
+                                {
+                                    "icon": "speed",
+                                    "name": "Performance",
+                                    "index": 2
+                                }
+                            ]
+                            delegate: TabButton {
+                                id: buttonDelegate
 
-                            implicitWidth: contentItem.implicitWidth + 32
-                            implicitHeight: parent.height
-                            text: modelData.name
+                                required property var modelData
+                                required property int index
 
-                            contentItem: Item {
-                                implicitWidth: rowLayout.implicitWidth
-                                implicitHeight: rowLayout.implicitHeight
+                                implicitWidth: contentItem.implicitWidth + 32
+                                implicitHeight: parent.height
+                                text: modelData.name
 
-                                Row {
-                                    id: rowLayout
+                                contentItem: Item {
+                                    implicitWidth: rowLayout.implicitWidth
+                                    implicitHeight: rowLayout.implicitHeight
 
-                                    spacing: Appearance.spacing.small
-                                    anchors.centerIn: parent
+                                    Row {
+                                        id: rowLayout
 
-                                    Icon {
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        icon: buttonDelegate.modelData.icon
-                                        color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
-                                        font.pixelSize: Appearance.fonts.size.large
-                                    }
+                                        spacing: Appearance.spacing.small
+                                        anchors.centerIn: parent
 
-                                    StyledText {
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        text: buttonDelegate.modelData.name
-                                        color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
-                                        font.pixelSize: Appearance.fonts.size.large
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                        wrapMode: Text.NoWrap
-                                        elide: Text.ElideNone
+                                        Icon {
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            icon: buttonDelegate.modelData.icon
+                                            color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
+                                            font.pixelSize: Appearance.fonts.size.large
+                                        }
+
+                                        StyledText {
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            text: buttonDelegate.modelData.name
+                                            color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3SurfaceVariant
+                                            font.pixelSize: Appearance.fonts.size.large
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                            wrapMode: Text.NoWrap
+                                            elide: Text.ElideNone
+                                        }
                                     }
                                 }
-                            }
 
-                            background: StyledRect {
-                                radius: {
-                                    if (buttonDelegate.modelData.index === 0)
-                                        return Appearance.rounding.full;
-                                    else if (buttonDelegate.modelData.index === 2)
-                                        return Appearance.rounding.full;
-                                    else
-                                        return 0;
+                                background: StyledRect {
+                                    radius: {
+                                        if (buttonDelegate.modelData.index === 0)
+                                            return Appearance.rounding.full;
+                                        else if (buttonDelegate.modelData.index === 2)
+                                            return Appearance.rounding.full;
+                                        else
+                                            return 0;
+                                    }
+
+                                    color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainer
+                                    topLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
+                                    bottomLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
+                                    topRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
+                                    bottomRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
                                 }
-
-                                color: tabGroup.currentIndex === buttonDelegate.modelData.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainer
-                                topLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
-                                bottomLeftRadius: buttonDelegate.modelData.index === 0 ? Appearance.rounding.full : Appearance.rounding.small
-                                topRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
-                                bottomRightRadius: buttonDelegate.modelData.index === 2 ? Appearance.rounding.full : Appearance.rounding.small
                             }
                         }
                     }
                 }
-            }
 
-            Item {
-                id: pageContainer
+                Item {
+                    id: pageContainer
 
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
-                property int previousIndex: 0
+                    property int previousIndex: 0
 
-                Page {
-                    pageIndex: 0
-                    currentIndex: root.saveIndex
-                    content: Component {
-                        Settings {}
-                    }
-                }
-
-                Page {
-                    pageIndex: 1
-                    currentIndex: root.saveIndex
-                    content: Component {
-                        VolumeSettings {
-                            implicitWidth: 500
+                    Page {
+                        pageIndex: 0
+                        currentIndex: root.saveIndex
+                        content: Component {
+                            Settings {}
                         }
                     }
-                }
 
-                Page {
-                    pageIndex: 2
-                    currentIndex: root.saveIndex
-                    content: Component {
-                        Performances {}
+                    Page {
+                        pageIndex: 1
+                        currentIndex: root.saveIndex
+                        content: Component {
+                            VolumeSettings {
+                                implicitWidth: 500
+                            }
+                        }
+                    }
+
+                    Page {
+                        pageIndex: 2
+                        currentIndex: root.saveIndex
+                        content: Component {
+                            Performances {}
+                        }
                     }
                 }
             }
@@ -202,8 +208,8 @@ Item {
 
         anchors.fill: parent
         opacity: currentIndex === pageIndex ? 1 : 0
-		x: currentIndex === pageIndex ? 0 : currentIndex > pageIndex ? -parent.width * 0.05 : parent.width * 0.05
-		enabled: currentIndex === pageIndex
+        x: currentIndex === pageIndex ? 0 : currentIndex > pageIndex ? -parent.width * 0.05 : parent.width * 0.05
+        enabled: currentIndex === pageIndex
 
         Behavior on opacity {
             NAnim {
