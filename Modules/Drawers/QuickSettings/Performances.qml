@@ -111,13 +111,13 @@ Item {
 
                 RowLayout {
                     StyledText {
-                        text: "CPU: " + SystemUsage.cpuTemp + "°C"
+                        text: qsTr("CPU: %1°C").arg(SystemUsage.cpuTemp)
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
                     }
 
                     StyledText {
-                        text: "GPU: " + SystemUsage.gpuTemp + "°C"
+                        text: qsTr("GPU: %1°C").arg(SystemUsage.gpuTemp)
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
                     }
@@ -211,7 +211,7 @@ Item {
                             spacing: Appearance.spacing.small * 0.4
 
                             StyledText {
-                                text: network.isWired ? "Ethernet" : "Wi-Fi"
+                                text: network.isWired ? qsTr("Ethernet") : qsTr("Wi-Fi")
                                 color: Colours.m3Colors.m3Green
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
@@ -337,7 +337,7 @@ Item {
                             }
 
                             StyledText {
-                                text: "%1x%2 @ %3Hz".arg(Hypr.focusedMonitor.width).arg(Hypr.focusedMonitor.height).arg(Hypr.focusedMonitor.lastIpcObject.refreshRate.toFixed(0))
+                                text: qsTr("%1x%2 @ %3Hz").arg(Hypr.focusedMonitor.width).arg(Hypr.focusedMonitor.height).arg(Hypr.focusedMonitor.lastIpcObject.refreshRate.toFixed(0))
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
@@ -347,7 +347,7 @@ Item {
                 }
 
                 StatusCard {
-                    title: "RAM"
+                    title: qsTr("RAM")
                     zoomId: ramInfoPopup
                     isBottomLeft: true
 
@@ -383,7 +383,7 @@ Item {
                 }
 
                 StatusCard {
-                    title: "Disk"
+                    title: qsTr("Disk")
                     zoomId: diskInfoPopup
                     isBottomRight: true
 
@@ -437,7 +437,7 @@ Item {
                             text: {
                                 const osName = SystemUsage.osName.toLowerCase();
                                 const match = DistroAscii.listDistro.find(distro => osName.includes(distro.toLowerCase()));
-                                return match ? DistroAscii[match] : "Unknown";
+                                return match ? DistroAscii[match] : qsTr("Unknown");
                             }
                             color: Colours.m3Colors.m3Green
                             font.pixelSize: Appearance.fonts.size.small * 0.5
