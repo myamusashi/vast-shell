@@ -63,7 +63,7 @@ WrapperRectangle {
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.Medium
             color: Colours.m3Colors.m3OnSurface
-            text: `${root.currentDate.getDate()} ${root.getMonthName(root.currentDate.getMonth())}`
+            text: qsTr("%1 %2").arg(root.currentDate.getDate()).arg(root.getMonthName(root.currentDate.getMonth()))
         }
     }
 }
