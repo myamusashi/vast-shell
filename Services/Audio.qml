@@ -59,7 +59,7 @@ Singleton {
     }
 
     FileView {
-        path: `${Quickshell.env("XDG_RUNTIME_DIR")}/pw-profiles/profiles.json`
+        path: `${Paths.stateDir}/pw-profiles/profiles.json`
         watchChanges: true
         onFileChanged: reload()
         onLoaded: {
@@ -81,7 +81,7 @@ Singleton {
     }
 
     FileView {
-        path: `${Quickshell.env("XDG_RUNTIME_DIR")}/pw-profiles/active.json`
+        path: `${Paths.stateDir}/pw-profiles/active.json`
         watchChanges: true
         onFileChanged: reload()
         onLoaded: {
