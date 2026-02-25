@@ -250,7 +250,7 @@ WrapperRectangle {
                                     "icon": "monitor",
                                     "action": () => {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenrecord-${screen.name}`]
+                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenrecord-output ${screen.name}`]
                                         });
                                     }
                                 });
