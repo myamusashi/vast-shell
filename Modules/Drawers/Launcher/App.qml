@@ -65,7 +65,7 @@ Item {
         color: GlobalStates.drawerColors
     }
 
-    StyledRect {
+    WrapperRectangle {
         anchors.fill: parent
         radius: 0
         topLeftRadius: Appearance.rounding.large
@@ -73,9 +73,7 @@ Item {
         color: GlobalStates.drawerColors
 
         Loader {
-            anchors.fill: parent
-
-            active: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isLauncherOpen
             asynchronous: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
