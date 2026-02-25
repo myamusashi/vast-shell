@@ -21,6 +21,7 @@ Item {
     }
 
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
+    property int saveIndex: 0
 
     implicitWidth: isControlCenterOpen ? parent.width * 0.3 : 0
     implicitHeight: parent.height * 0.8
@@ -73,6 +74,8 @@ Item {
 
                     spacing: 2
                     background: Item {}
+                    currentIndex: root.saveIndex
+                    onCurrentIndexChanged: root.saveIndex = currentIndex
 
                     Repeater {
                         model: [
@@ -153,82 +156,76 @@ Item {
                 }
             }
 
-            SwipeView {
-                id: controlCenterSwipeView
+            Item {
+                id: pageContainer
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                currentIndex: tabGroup.currentIndex
-                onCurrentIndexChanged: tabGroup.currentIndex = currentIndex
 
-                Repeater {
-                    model: [
-                        {
-                            component: "Settings",
-                            props: {}
-                        },
-                        {
-                            component: "VolumeSettings",
-                            props: {
-                                implicitWidth: 500
-                            }
-                        },
-                        {
-                            component: "Performances",
-                            props: {}
-                        }
-                    ]
+                property int previousIndex: 0
 
-                    delegate: StyledRect {
-                        required property var modelData
+                Page {
+                    pageIndex: 0
+                    currentIndex: root.saveIndex
+                    content: Component {
+                        Settings {}
+                    }
+                }
 
-                        radius: 0
-                        bottomLeftRadius: Appearance.rounding.normal
-                        bottomRightRadius: Appearance.rounding.normal
-
-                        Loader {
-                            anchors {
-                                fill: parent
-                                leftMargin: 20
-                                rightMargin: 20
-                                topMargin: 5
-                            }
-                            active: true
-                            asynchronous: true
-                            sourceComponent: {
-                                switch (parent.modelData.component) {
-                                case "Settings":
-                                    return settingsComponent;
-                                case "VolumeSettings":
-                                    return volumeComponent;
-                                case "Performances":
-                                    return performanceComponent;
-                                }
-                            }
-
-                            Component {
-                                id: settingsComponent
-
-                                Settings {}
-                            }
-
-                            Component {
-                                id: volumeComponent
-
-                                VolumeSettings {
-                                    implicitWidth: 500
-                                }
-                            }
-
-                            Component {
-                                id: performanceComponent
-
-                                Performances {}
-                            }
+                Page {
+                    pageIndex: 1
+                    currentIndex: root.saveIndex
+                    content: Component {
+                        VolumeSettings {
+                            implicitWidth: 500
                         }
                     }
                 }
+
+                Page {
+                    pageIndex: 2
+                    currentIndex: root.saveIndex
+                    content: Component {
+                        Performances {}
+                    }
+                }
             }
+        }
+    }
+
+    component Page: Item {
+        id: animRoot
+
+        required property int pageIndex
+        required property int currentIndex
+        required property Component content
+
+        anchors.fill: parent
+        opacity: currentIndex === pageIndex ? 1 : 0
+		x: currentIndex === pageIndex ? 0 : currentIndex > pageIndex ? -parent.width * 0.05 : parent.width * 0.05
+		enabled: currentIndex === pageIndex
+
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+
+        Behavior on x {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+
+        Loader {
+            anchors.fill: parent
+            asynchronous: true
+            sourceComponent: animRoot.content
+
+            property bool visited: false
+            active: animRoot.currentIndex === animRoot.pageIndex || visited
+            onActiveChanged: if (active)
+                visited = true
         }
     }
 }
