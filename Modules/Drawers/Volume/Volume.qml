@@ -60,166 +60,172 @@ Item {
         id: wrapper
 
         anchors.fill: parent
-        implicitWidth: mainVolumeColumn.width + 10 + (root.openPerappVolume ? root.perappWidth + Appearance.spacing.large : 0)
+        implicitWidth: 50 + 10 + (root.openPerappVolume ? root.perappWidth + Appearance.spacing.large : 0)
         color: GlobalStates.drawerColors
         clip: true
         radius: 0
         topLeftRadius: Appearance.rounding.normal
         bottomLeftRadius: topLeftRadius
 
-        Row {
-            id: perappContainer
+        Loader {
+            anchors.fill: parent
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isOSDVisible("volume")
+            asynchronous: true
 
-            anchors {
-                left: parent.left
-                leftMargin: 10
-                verticalCenter: parent.verticalCenter
-            }
+            sourceComponent: Row {
+                id: perappContainer
 
-            width: root.openPerappVolume ? root.perappWidth : 0
-            height: mainVolumeColumn.height
-            spacing: Appearance.spacing.large
-            clip: true
+                anchors {
+                    left: parent.left
+                    leftMargin: 10
+                    verticalCenter: parent.verticalCenter
+                }
 
-            Behavior on width {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                width: root.openPerappVolume ? root.perappWidth : 0
+                height: mainVolumeColumn.height
+                spacing: Appearance.spacing.large
+                clip: true
+
+                Behavior on width {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
+
+                Repeater {
+                    id: repeater
+
+                    model: linkTracker.linkGroups
+                    delegate: Mixer {
+                        required property PwLinkGroup modelData
+                        width: 40
+                        height: perappContainer.height
+                        node: modelData.source
+                    }
                 }
             }
 
-            Repeater {
-                id: repeater
+            ColumnLayout {
+                id: mainVolumeColumn
 
-                model: linkTracker.linkGroups
-                delegate: Mixer {
-                    required property PwLinkGroup modelData
-                    width: 40
-                    height: perappContainer.height
-                    node: modelData.source
+                anchors {
+                    right: parent.right
+                    rightMargin: 5
+                    verticalCenter: parent.verticalCenter
                 }
-            }
-        }
 
-        ColumnLayout {
-            id: mainVolumeColumn
+                property bool showVolume: false
 
-            anchors {
-                right: parent.right
-                rightMargin: 5
-                verticalCenter: parent.verticalCenter
-            }
+                implicitWidth: 50
+                implicitHeight: 250
+                spacing: Appearance.spacing.normal
 
-            property bool showVolume: false
+                Item {
+                    implicitHeight: 30
+                    implicitWidth: 30
+                    Layout.alignment: Qt.AlignTop | Qt.AlignCenter
 
-            implicitWidth: 50
-            implicitHeight: 250
-            spacing: Appearance.spacing.normal
+                    Icon {
+                        id: volumeIcon
 
-            Item {
-                implicitHeight: 30
-                implicitWidth: 30
-                Layout.alignment: Qt.AlignTop | Qt.AlignCenter
+                        anchors.centerIn: parent
+                        type: Icon.Material
+                        icon: root.icon
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
+                        opacity: mainVolumeColumn.showVolume ? 0 : 1
+                        scale: mainVolumeColumn.showVolume ? 0.5 : 1
 
-                Icon {
-                    id: volumeIcon
-
-                    anchors.centerIn: parent
-                    type: Icon.Material
-                    icon: root.icon
-                    color: Colours.m3Colors.m3Primary
-                    font.pixelSize: Appearance.fonts.size.extraLarge
-                    opacity: mainVolumeColumn.showVolume ? 0 : 1
-                    scale: mainVolumeColumn.showVolume ? 0.5 : 1
-
-                    Behavior on opacity {
-                        NAnim {
-                            duration: Appearance.animations.durations.expressiveDefaultSpatial
-                            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                        Behavior on opacity {
+                            NAnim {
+                                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                            }
+                        }
+                        Behavior on scale {
+                            NAnim {
+                                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                            }
                         }
                     }
-                    Behavior on scale {
-                        NAnim {
-                            duration: Appearance.animations.durations.expressiveDefaultSpatial
-                            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+
+                    StyledText {
+                        anchors.centerIn: volumeIcon
+                        text: (Pipewire.defaultAudioSink.audio.volume * 100).toFixed(0)
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.large
+                        font.weight: Font.DemiBold
+                        opacity: mainVolumeColumn.showVolume ? 1 : 0
+                        scale: mainVolumeColumn.showVolume ? 1 : 0.5
+
+                        Behavior on opacity {
+                            NAnim {
+                                duration: Appearance.animations.durations.small
+                            }
+                        }
+                        Behavior on scale {
+                            NAnim {
+                                duration: Appearance.animations.durations.small
+                            }
+                        }
+                    }
+
+                    MArea {
+                        id: mArea
+
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: mevent => {
+                            if (mevent.button === Qt.LeftButton)
+                                Audio.toggleMute(Pipewire.defaultAudioSink);
                         }
                     }
                 }
 
-                StyledText {
-                    anchors.centerIn: volumeIcon
-                    text: (Pipewire.defaultAudioSink.audio.volume * 100).toFixed(0)
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.large
-                    font.weight: Font.DemiBold
-                    opacity: mainVolumeColumn.showVolume ? 1 : 0
-                    scale: mainVolumeColumn.showVolume ? 1 : 0.5
+                Timer {
+                    id: volumeHideTimer
 
-                    Behavior on opacity {
-                        NAnim {
-                            duration: Appearance.animations.durations.small
+                    interval: 500
+                    onTriggered: mainVolumeColumn.showVolume = false
+                }
+
+                StyledSlide {
+                    implicitWidth: 40
+                    implicitHeight: root.sliderHeight
+                    orientation: Qt.Vertical
+                    value: Pipewire.defaultAudioSink.audio.volume
+                    onMoved: Pipewire.defaultAudioSink.audio.volume = value
+                    onValueChanged: {
+                        if (!pressed) {
+                            mainVolumeColumn.showVolume = true;
+                            volumeHideTimer.restart();
                         }
                     }
-                    Behavior on scale {
-                        NAnim {
-                            duration: Appearance.animations.durations.small
-                        }
+                    onPressedChanged: {
+                        if (!pressed)
+                            mainVolumeColumn.showVolume = false;
                     }
                 }
 
-                MArea {
-                    id: mArea
+                Item {
+                    Layout.alignment: Qt.AlignCenter
+                    implicitWidth: 15
+                    implicitHeight: 15
 
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: mevent => {
-                        if (mevent.button === Qt.LeftButton)
-                            Audio.toggleMute(Pipewire.defaultAudioSink);
+                    Pulse {
+                        anchors.centerIn: parent
+                        isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
                     }
-                }
-            }
 
-            Timer {
-                id: volumeHideTimer
-
-                interval: 500
-                onTriggered: mainVolumeColumn.showVolume = false
-            }
-
-            StyledSlide {
-                implicitWidth: 40
-                implicitHeight: root.sliderHeight
-                orientation: Qt.Vertical
-                value: Pipewire.defaultAudioSink.audio.volume
-                onMoved: Pipewire.defaultAudioSink.audio.volume = value
-                onValueChanged: {
-                    if (!pressed) {
-                        mainVolumeColumn.showVolume = true;
-                        volumeHideTimer.restart();
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onEntered: GlobalStates.pauseOSD("volume")
+                        onExited: GlobalStates.resumeOSD("volume")
+                        onClicked: root.openPerappVolume = !root.openPerappVolume
                     }
-                }
-                onPressedChanged: {
-                    if (!pressed)
-                        mainVolumeColumn.showVolume = false;
-                }
-            }
-
-            Item {
-                Layout.alignment: Qt.AlignCenter
-                implicitWidth: 15
-                implicitHeight: 15
-
-                Pulse {
-                    anchors.centerIn: parent
-                    isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onEntered: GlobalStates.pauseOSD("volume")
-                    onExited: GlobalStates.resumeOSD("volume")
-                    onClicked: root.openPerappVolume = !root.openPerappVolume
                 }
             }
         }
