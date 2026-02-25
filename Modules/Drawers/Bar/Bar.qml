@@ -40,9 +40,9 @@ Item {
                 }
 
                 Left {
-                    monitor: window.modelData
                     implicitHeight: parent.height
                     implicitWidth: parent.width / 6
+                    monitor: window.modelData
                     anchors {
                         left: parent.left
                         verticalCenter: parent.verticalCenter
