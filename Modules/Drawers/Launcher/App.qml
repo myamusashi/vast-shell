@@ -32,7 +32,7 @@ Item {
         Fuzzy.updateLaunchHistory(entry);
 
         entry.runInTerminal ? Quickshell.execDetached({
-            "command": ["app2unit", "--", Configs.generals.apps.terminal, `${Paths.rootDir}/Assets/shell/wrap_term_launch.sh`, ...entry.command],
+            "command": ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command],
             "workingDirectory": entry.workingDirectory
         }) : Quickshell.execDetached({
             "command": ["app2unit", "--", ...entry.command],
