@@ -14,7 +14,7 @@ LazyLoader {
     component: FloatingWindow {
         id: root
 
-        title: "Recording Widgets"
+        title: qsTr("Recording Widgets")
 
         color: "transparent"
 
@@ -66,7 +66,7 @@ LazyLoader {
                     }
 
                     StyledText {
-                        text: "Screen Recording"
+                        text: qsTr("Screen Recording")
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.bold: true
@@ -176,7 +176,7 @@ LazyLoader {
                             }
 
                             StyledText {
-                                text: "Stop"
+                                text: qsTr("Stop")
                                 color: Colours.m3Colors.m3OnError
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.bold: true
