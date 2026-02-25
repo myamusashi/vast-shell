@@ -45,24 +45,7 @@ Singleton {
             property BarConfig bar: BarConfig {}
             property string language: ""
             property var widgets: [
-                {
-                    "icon": "screenshot_frame",
-                    "title": "Screenshot",
-                    "action": `${Paths.rootDir}/Assets/shell/screen-capture.sh --screenshot-selection`,
-                    "condition": true
-                },
-                {
-                    "icon": "screen_record",
-                    "title": "Screen record",
-                    "action": `${Paths.rootDir}/Assets/shell/screen-capture.sh --screenrecord-selection`,
-                    "condition": true
-                },
-                {
-                    "icon": "content_paste",
-                    "title": "Clipboard",
-                    "action": "kitty --class clipse -e clipse",
-                    "condition": true
-                }
+                {}
             ]
         }
     }
