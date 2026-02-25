@@ -35,6 +35,10 @@ bool TranslationManager::loadTranslation(const QString &language,
   m_currentLanguage = language;
   emit languageChanged();
 
+  auto *engine = qmlEngine(this);
+  if (engine)
+      engine->retranslate();
+
   qDebug() << "Translation loaded successfully:" << language;
   return true;
 }
