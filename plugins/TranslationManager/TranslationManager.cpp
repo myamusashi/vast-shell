@@ -28,6 +28,7 @@ bool TranslationManager::loadTranslation(const QString &language,
 
   if (!m_translator.load(filePath)) {
     qWarning() << "Failed to load translation:" << filePath;
+    QGuiApplication::installTranslator(&m_translator);
     return false;
   }
 
