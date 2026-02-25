@@ -9,7 +9,7 @@ import qs.Components
 
 PopupWidget {
     icon: "apps"
-    text: "Installed apps"
+    text: qsTr("Installed apps")
 
     content: ColumnLayout {
         PieChart {

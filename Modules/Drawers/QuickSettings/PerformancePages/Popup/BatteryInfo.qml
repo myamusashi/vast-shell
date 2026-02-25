@@ -8,46 +8,46 @@ import qs.Components
 
 PopupWidget {
     icon: "battery_6_bar"
-    text: "Battery"
+    text: qsTr("Battery")
     content: ColumnLayout {
         Repeater {
             model: [
                 {
-                    text: "Battery level",
+                    text: qsTr("Battery level"),
                     value: (UPower.displayDevice.percentage * 100).toFixed(0) + "%"
                 },
                 {
-                    text: "Temperature",
+                    text: qsTr("Temperature"),
                     value: SystemUsage.batteryTemp + "°C"
                 },
                 {
-                    text: "Status",
-                    value: Battery.charging ? "Charging" : "Discharging"
+                    text: qsTr("Status"),
+                    value: Battery.charging ? qsTr("Charging") : qsTr("Discharging")
                 },
                 {
-                    text: "Technology",
+                    text: qsTr("Technology"),
                     value: SystemUsage.batteryTechnologies
                 },
                 {
-                    text: "Overall Health",
+                    text: qsTr("Overall Health"),
                     value: Battery.overallBatteryHealth + "%"
                 },
                 {
-                    text: "Voltage",
+                    text: qsTr("Voltage"),
                     value: UPower.displayDevice.energyCapacity + " V"
                 },
             ].concat(Battery.batteries.map(function (bat, index) {
                 return [
                     {
-                        text: bat.name + " - Design Capacity",
+                        text: qsTr("%1 - Design Capacity").arg(bat.name),
                         value: Battery.formatCapacity(bat.designCapacity)
                     },
                     {
-                        text: bat.name + " - Current Capacity",
+                        text: qsTr("%1 - Current Capacity").arg(bat.name),
                         value: Battery.formatCapacity(bat.currentCapacity)
                     },
                     {
-                        text: bat.name + " - Health",
+                        text: qsTr("%1 - Health").arg(bat.name),
                         value: bat.health + "%"
                     }
                 ];

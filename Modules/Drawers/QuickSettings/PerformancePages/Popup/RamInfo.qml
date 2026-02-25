@@ -7,7 +7,7 @@ import qs.Components
 
 PopupWidget {
     icon: "memory"
-    text: "Memory"
+    text: qsTr("Memory")
     content: ColumnLayout {
         spacing: Appearance.spacing.normal
 

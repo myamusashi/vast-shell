@@ -7,7 +7,7 @@ import qs.Components
 
 PopupWidget {
     icon: "storage"
-    text: "Storage"
+    text: qsTr("Storage")
     content: ColumnLayout {
         RowLayout {
             StyledText {

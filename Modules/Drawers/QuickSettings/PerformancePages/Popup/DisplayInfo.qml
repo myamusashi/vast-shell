@@ -52,9 +52,7 @@ PopupWidget {
         Repeater {
             model: root.monitorModel.concat([
                 {
-                    header: qsTr("System Information"),
-                    text: "GPU",
-                    value: SystemUsage.gpuName
+                    text: qsTr("GPU")
                 },
                 {
                     header: "",
