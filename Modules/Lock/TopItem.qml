@@ -26,7 +26,7 @@ Item {
 
     property string iconName: "lock"
 
-    implicitWidth: root.isLockscreenOpen ? topWrapperRect.implicitWidth : lockIcon.contentWidth
+    implicitWidth: isLockscreenOpen ? topWrapperRect.implicitWidth : lockIcon.contentWidth
     implicitHeight: 0
 
     Behavior on implicitWidth {
