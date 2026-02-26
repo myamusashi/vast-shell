@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
+import M3Shapes
 
 import qs.Configs
 import qs.Helpers
@@ -28,6 +29,8 @@ Item {
     required property bool isLockscreenOpen
     required property color drawerColors
     required property var pam
+
+    property bool isUnlock: false
 
     // Prefer explicit height so children aren't clipped unexpectedly
     implicitWidth: isLockscreenOpen ? bottomWrapperRect.implicitWidth : icon.implicitWidth
@@ -100,11 +103,14 @@ Item {
                     id: passwordField
 
                     implicitWidth: 200
-					implicitHeight: 40
-					clip: true
+                    implicitHeight: 40
+
+                    readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
+                    property var shape: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
 
                     TextInput {
                         id: passwordInput
+
                         width: 0
                         height: 0
                         visible: false
@@ -114,7 +120,7 @@ Item {
                         inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
                         enabled: !root.pam.unlockInProgress
 
-                        text: root.pam ? root.pam.currentText : ""
+                        text: root.pam || root.pam.isUnlock ? root.pam.currentText : ""
 
                         onTextChanged: {
                             if (root.pam)
@@ -139,7 +145,6 @@ Item {
                         }
                     }
 
-                    // ── Dot model ─────────────────────────────────────────────────────
                     ListModel {
                         id: dotsModel
                     }
@@ -152,87 +157,91 @@ Item {
                                 dotsModel.append({});
                             while (dotsModel.count > len)
                                 dotsModel.remove(dotsModel.count - 1);
+
+                            Qt.callLater(() => dotsView.positionViewAtEnd());
                         }
                     }
 
-                    // ── Placeholder text ──────────────────────────────────────────────
-                    Text {
+                    StyledText {
                         anchors.centerIn: parent
                         visible: passwordInput.text.length === 0
                         text: root.pam.showFailure ? qsTr("Password invalid") : qsTr("Enter password")
                         color: root.pam.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.large
-                        font.family: Appearance.fonts.family.sans
                     }
 
-                    // ── Dots ListView ─────────────────────────────────────────────────
                     ListView {
                         id: dotsView
+
                         anchors.centerIn: parent
                         orientation: ListView.Horizontal
                         spacing: 1
                         model: dotsModel
-                        clip: false
+                        clip: true
 
                         visible: passwordInput.text.length > 0
-                        width: contentWidth
-                        height: 12
+                        implicitWidth: Math.min(contentWidth, passwordField.implicitWidth)
+                        implicitHeight: 20
 
-                        Behavior on width {
-                            NumberAnimation {
-                                duration: 150
-                                easing.type: Easing.OutCubic
+                        Behavior on implicitWidth {
+                            NAnim {
+                                duration: Appearance.animations.durations.small
                             }
                         }
 
-                        delegate: Rectangle {
-                            width: 12
-                            height: 12
-                            radius: 6
-                            color: root.pam.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnSurface
+                        delegate: MaterialShape {
+                            id: passwordShape
+
+                            required property int index
+
+                            implicitWidth: 20
+                            implicitHeight: 20
+                            shape: passwordField.shape[index % passwordField.shape.length]
+                            color: root.pam.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.pam.isUnlock ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+
+                            Behavior on color {
+                                CAnim {}
+                            }
                         }
 
                         add: Transition {
                             ParallelAnimation {
-                                NumberAnimation {
+                                NAnim {
                                     property: "opacity"
                                     from: 0
                                     to: 1
-                                    duration: 150
+                                    duration: Appearance.animations.durations.small
                                 }
-                                NumberAnimation {
+                                NAnim {
                                     property: "scale"
                                     from: 0.5
                                     to: 1
-                                    duration: 150
-                                    easing.type: Easing.OutCubic
+                                    duration: Appearance.animations.durations.small
                                 }
                             }
                         }
 
                         remove: Transition {
                             ParallelAnimation {
-                                NumberAnimation {
+                                NAnim {
                                     property: "opacity"
                                     from: 1
                                     to: 0
-                                    duration: 150
+                                    duration: Appearance.animations.durations.small
                                 }
-                                NumberAnimation {
+                                NAnim {
                                     property: "scale"
                                     from: 1
                                     to: 0.5
-                                    duration: 150
-                                    easing.type: Easing.OutCubic
+                                    duration: Appearance.animations.durations.small
                                 }
                             }
                         }
 
                         displaced: Transition {
-                            NumberAnimation {
+                            NAnim {
                                 properties: "x"
-                                duration: 150
-                                easing.type: Easing.OutCubic
+                                duration: Appearance.animations.durations.small
                             }
                         }
                     }
@@ -247,12 +256,12 @@ Item {
                     id: submitBtn
 
                     readonly property bool loading: root.pam.unlockInProgress
-                    readonly property bool canSubmit: root.pam && passwordField.text.length > 0
+                    readonly property bool canSubmit: root.pam && passwordInput.text.length > 0
 
                     implicitWidth: 34
                     implicitHeight: 34
                     radius: Appearance.rounding.full
-                    color: canSubmit ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4)
+                    color: canSubmit ? root.pam.isUnlock ? Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4)
                     scale: pressHandler.pressed ? 0.88 : hoverHandler.hovered ? 1.08 : 1.0
 
                     Behavior on color {
@@ -322,7 +331,7 @@ Item {
                 implicitHeight: hasArtwork ? 60 : 0
                 clip: true
                 radius: 0
-                visible: hasArtwork
+                visible: Players.active
 
                 Behavior on implicitWidth {
                     NAnim {}
@@ -334,7 +343,7 @@ Item {
 
                 RowLayout {
                     anchors.fill: parent
-                    spacing: 0
+                    spacing: Appearance.spacing.small
 
                     ClippingRectangle {
                         implicitWidth: 60
@@ -361,7 +370,7 @@ Item {
                             Layout.fillWidth: true
                             text: Players.active ? Players.active.trackArtist : ""
                             color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.small
+                            font.pixelSize: Appearance.fonts.size.medium
                             wrapMode: Text.NoWrap
                             elide: Text.ElideRight
                         }
