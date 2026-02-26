@@ -7,13 +7,13 @@ import qs.Services
 import qs.Components
 
 WrapperRectangle {
-	id: root
+    id: root
 
-	anchors.centerIn: parent
+    anchors.centerIn: parent
 
-	required property bool showConfirmDialog
-	required property var pendingAction
-	required property string pendingActionName
+    required property bool showConfirmDialog
+    required property var pendingAction
+    required property string pendingActionName
 
     clip: true
     radius: Appearance.rounding.large
