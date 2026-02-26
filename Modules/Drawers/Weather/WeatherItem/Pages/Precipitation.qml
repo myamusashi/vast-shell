@@ -182,17 +182,18 @@ Pages {
             Rectangle {
                 anchors.bottom: parent.bottom
                 x: slider.leftPadding + (slider.availableWidth - width) / 2
-                implicitWidth: 35
-                implicitHeight: slider.value === 0 ? 35 / 2 + Appearance.spacing.small : slider.availableHeight * slider.position + 35 / 2 + Appearance.spacing.small
+                implicitWidth: 40
+                implicitHeight: slider.value <= 5 ? 40 : slider.availableHeight * slider.position + 40 + Appearance.spacing.small
                 radius: slider.trackWidth / 2
                 color: slider.trackColor
 
                 MaterialShape {
                     anchors {
-                        top: parent.top
                         horizontalCenter: parent.horizontalCenter
-                        topMargin: Appearance.margin.small
+                        verticalCenter: parent.verticalCenter
                     }
+                    x: (parent.width - width) / 2
+                    y: parent.height - height
                     implicitWidth: 35
                     implicitHeight: 35
                     color: slider.handleColor

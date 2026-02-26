@@ -18,6 +18,7 @@ WrapperRectangle {
     scale: isOpen ? 1.0 : 0.5
     opacity: isOpen ? 1.0 : 0.0
     transformOrigin: Item.Center
+    margin: Appearance.margin.normal
     color: Colours.m3Colors.m3Surface
 
     transform: Translate {
