@@ -13,8 +13,8 @@ Scope {
 
     property string currentText: ""
     property bool showFailure: false
+    property bool isUnlock: false
     property bool unlockInProgress: false
-    property bool unlocking: false
 
     onCurrentTextChanged: showFailure = false
 
@@ -38,6 +38,7 @@ Scope {
 
         onCompleted: result => {
             if (result === PamResult.Success) {
+                root.isUnlock = true;
                 root.lock.unlock();
             } else {
                 root.currentText = "";
