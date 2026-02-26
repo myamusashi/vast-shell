@@ -40,7 +40,11 @@ Item {
         }
 
         MediaPlayer {}
-        Notifications {}
+        Notifications {
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
     }
 
     WifiList {
