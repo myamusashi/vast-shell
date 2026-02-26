@@ -14,7 +14,7 @@ stdenv.mkDerivation {
         fetchFromGitHub {
             owner = "myamusashi";
             repo = "Another-Ripple";
-            rev = "0eb6610b1270383fab0a4a2af5ffc40dbcf4df54";
+            rev = "917a89a4dde3f40d08945ae0e86b9a5128b96130";
             hash = "sha256-4xZ0nh9lRCLrn0T6DeRIFv9eMRAk/1UDTrZz/b6HT40=";
         }
         + "/AnotherRipple";
