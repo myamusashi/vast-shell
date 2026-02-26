@@ -79,7 +79,7 @@ WrapperRectangle {
                 icon.name: "cancel"
                 icon.color: Colours.m3Colors.m3Primary
                 textColor: Colours.m3Colors.m3Primary
-                mdState.backgroundColor: "transparent"
+                color: "transparent"
                 onClicked: {
                     root.showConfirmDialog = false;
                     root.pendingAction = null;
@@ -94,7 +94,7 @@ WrapperRectangle {
                 icon.color: Colours.m3Colors.m3Primary
                 textColor: Colours.m3Colors.m3Primary
                 text: qsTr("Yes")
-                mdState.backgroundColor: "transparent"
+                color: "transparent"
                 onClicked: {
                     if (root.pendingAction)
                         root.pendingAction();

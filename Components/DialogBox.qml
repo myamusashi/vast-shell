@@ -103,7 +103,7 @@ LazyLoader {
                         icon.color: Colours.m3Colors.m3Primary
                         text: qsTr("No")
                         textColor: Colours.m3Colors.m3Primary
-                        mdState.backgroundColor: "transparent"
+                        color: "transparent"
                         onClicked: root.rejected()
                     }
 
@@ -114,7 +114,7 @@ LazyLoader {
                         icon.color: Colours.m3Colors.m3Primary
                         text: qsTr("Yes")
                         textColor: Colours.m3Colors.m3Primary
-                        mdState.backgroundColor: "transparent"
+                        color: "transparent"
                         onClicked: root.accepted()
                     }
                 }
