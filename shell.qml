@@ -2,7 +2,6 @@
 //@ pragma NativeTextRendering
 //@ pragma IconTheme WhiteSur-dark
 //@ pragma Env QS_NO_RELOAD_POPUP=1
-//@ pragma Env QSG_RHI_BACKEND=vulkan
 
 import QtQuick
 import Quickshell
