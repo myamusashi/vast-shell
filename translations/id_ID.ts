@@ -67,7 +67,7 @@
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="292"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="293"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
@@ -657,22 +657,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="40"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="41"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="56"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="57"/>
         <source>Do you want to %1?</source>
         <translation>Apakah kamu ingin %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="78"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="79"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="96"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="98"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1776,12 +1776,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>TopItem</name>
     <message>
-        <location filename="../Modules/Lock/TopItem.qml" line="178"/>
+        <location filename="../Modules/Lock/TopItem.qml" line="177"/>
         <source>Password</source>
         <translation>Kata sandi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/TopItem.qml" line="178"/>
+        <location filename="../Modules/Lock/TopItem.qml" line="177"/>
         <source>Invalid</source>
         <translation>Tidak Valid</translation>
     </message>
