@@ -20,8 +20,8 @@ Item {
         verticalCenter: parent.verticalCenter
     }
 
+    property alias saveIndex: tabGroup.currentIndex
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
-    property int saveIndex: 0
 
     implicitWidth: GlobalStates.isQuickSettingsOpen ? parent.width * 0.3 : 0
     implicitHeight: parent.height * 0.8
@@ -74,8 +74,6 @@ Item {
 
                     spacing: 2
                     background: Item {}
-                    Component.onCompleted: currentIndex = root.saveIndex
-                    onCurrentIndexChanged: root.saveIndex = currentIndex
 
                     Repeater {
                         model: [

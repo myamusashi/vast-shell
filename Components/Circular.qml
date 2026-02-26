@@ -7,12 +7,13 @@ import qs.Services
 StyledRect {
     id: root
 
+    property alias textSize: styledText.font.pixelSize
+    property alias text: styledText.text
+
     required property real value
 
     property color circleColor: value > 80 ? Colours.m3Colors.m3Error : value > 60 ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary
-    property string text
     property real fixedSize: 100
-    property int textSize: 12
     property real textPadding: 20
 
     implicitWidth: fixedSize
@@ -68,9 +69,10 @@ StyledRect {
     }
 
     StyledText {
+        id: styledText
         anchors.centerIn: parent
-        text: root.text
-        font.pixelSize: root.textSize
+        text: ""
+        font.pixelSize: 12
         font.bold: true
         color: Colours.m3Colors.m3OnSurface
         horizontalAlignment: Text.AlignHCenter

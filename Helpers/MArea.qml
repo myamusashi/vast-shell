@@ -11,12 +11,12 @@ MouseArea {
     anchors.fill: parent
 
     property alias layerRect: layer
+    property alias layerColor: layer.color
+    property alias layerRadius: layer.radius
 
     property real clickOpacity: 0.2
     property real hoverOpacity: 0.08
-    property color layerColor: Colours.m3Colors.m3Primary
     property NumberAnimation layerOpacityAnimation: NAnim {}
-    property int layerRadius: parent?.radius ?? Appearance.rounding.small
 
     hoverEnabled: true
     onContainsMouseChanged: layer.opacity = (area.containsMouse) ? area.hoverOpacity : 0
@@ -26,9 +26,9 @@ MouseArea {
         id: layer
 
         anchors.fill: parent
-        color: area.layerColor
+        color: Colours.m3Colors.m3Primary
         opacity: 0
-        radius: area.layerRadius
+        radius: parent?.radius ?? Appearance.rounding.small
         clip: true
 
         Behavior on opacity {
@@ -38,7 +38,7 @@ MouseArea {
         SimpleRipple {
             anchors.fill: parent
             acceptEvent: false
-            color: "white"
+            color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
 }

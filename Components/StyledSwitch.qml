@@ -10,7 +10,7 @@ import qs.Services
 Switch {
     id: root
 
-    property bool isUseIcon: true
+    property alias isUseIcon: iconLoader.active
     property string onIcon: "check"
     property string offIcon: "close"
 
@@ -60,7 +60,8 @@ Switch {
             }
 
             Loader {
-                active: root.isUseIcon
+                id: iconLoader
+                active: true
                 anchors.centerIn: parent
                 asynchronous: true
                 sourceComponent: Icon {

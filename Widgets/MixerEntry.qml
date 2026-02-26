@@ -16,7 +16,6 @@ ColumnLayout {
     required property PwNode node
     property bool useCustomProperties: false
     property Component customProperty
-    property string icon: Audio.getIcon(node)
 
     PwObjectTracker {
         id: objectTracker
@@ -59,10 +58,12 @@ ColumnLayout {
             radius: Appearance.rounding.full
 
             Icon {
+				id: iconItem
+
                 type: Icon.Material
                 anchors.centerIn: parent
                 visible: icon !== ""
-                icon: root.icon
+                icon: Audio.getIcon(root.node)
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large * 1.5
             }

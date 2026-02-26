@@ -7,16 +7,17 @@ WrapperItem {
 
     anchors.margins: -1
 
-    property color color: "white"
+    property alias color: shapePath.fillColor
+    property alias radius: root.implicitWidth
+
     property int location: Qt.TopRightCorner
     property int extensionSide: Qt.Vertical
-    property real radius: 30
 
     margin: -1
-    implicitWidth: radius
-    implicitHeight: radius
+    implicitWidth: 30
+    implicitHeight: implicitWidth
 
-    Behavior on radius {
+    Behavior on implicitWidth {
         NAnim {}
     }
 
@@ -113,9 +114,10 @@ WrapperItem {
         preferredRendererType: Shape.CurveRenderer
 
         ShapePath {
+            id: shapePath
             strokeWidth: 0
             strokeColor: "transparent"
-            fillColor: root.color
+            fillColor: "white"
             pathHints: ShapePath.PathSolid & ShapePath.PathNonIntersecting
             startX: root.width
             startY: 0
@@ -130,8 +132,8 @@ WrapperItem {
             PathArc {
                 x: root.width
                 y: 0
-                radiusX: root.radius
-                radiusY: root.radius
+                radiusX: root.implicitWidth
+                radiusY: root.implicitHeight
                 useLargeArc: false
                 direction: PathArc.Counterclockwise
             }

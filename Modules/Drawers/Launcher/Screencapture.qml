@@ -143,9 +143,10 @@ WrapperRectangle {
             }
 
             StackLayout {
+				id: stackLayout
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                currentIndex: root.selectedTab
 
                 ColumnLayout {
                     id: screenshotLayout

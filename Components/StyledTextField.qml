@@ -8,10 +8,10 @@ import qs.Services
 TextField {
     id: root
 
-    property color backgroundColor: Colours.m3Colors.m3Background
-    property real backgroundRadius: Appearance.rounding.small
-    property color borderColor: focus ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.2)
-    property real borderWidth: 0
+    property alias backgroundColor: background.color
+    property alias backgroundRadius: background.radius
+    property alias borderColor: background.border.color
+    property alias borderWidth: background.border.width
 
     selectedTextColor: Colours.m3Colors.m3OnSecondaryContainer
     selectionColor: Colours.m3Colors.m3SecondaryContainer
@@ -33,11 +33,12 @@ TextField {
     }
 
     background: StyledRect {
-        color: root.backgroundColor
-        radius: root.backgroundRadius
+        id: background
+        color: Colours.m3Colors.m3Background
+        radius: Appearance.rounding.small
         border {
-            color: root.borderColor
-            width: root.borderWidth
+            color: root.focus ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.2)
+            width: 0
         }
 
         Behavior on border.color {

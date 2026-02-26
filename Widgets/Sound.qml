@@ -17,7 +17,6 @@ StyledRect {
     color: "transparent"
     radius: Appearance.rounding.small
 
-    property string icon: Audio.getIcon(root.node)
     property PwNode node: Pipewire.defaultAudioSink
 
     Behavior on implicitWidth {
@@ -34,9 +33,10 @@ StyledRect {
         spacing: Appearance.spacing.small
 
         Icon {
+            id: iconItem
             type: Icon.Material
             color: Colours.m3Colors.m3OnBackground
-            icon: root.icon
+            icon: Audio.getIcon(root.node)
             Layout.alignment: Qt.AlignVCenter
             font.pixelSize: Appearance.fonts.size.large * 1.5
         }

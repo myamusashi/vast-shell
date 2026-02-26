@@ -20,8 +20,8 @@ Item {
         bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
     }
 
-    property int currentIndex: 0
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
+    property int currentIndex: 0
 
     implicitWidth: parent.width * 0.3
     implicitHeight: GlobalStates.isLauncherOpen ? parent.height * 0.5 : 0
@@ -198,6 +198,7 @@ Item {
 
                         required property DesktopEntry modelData
                         required property int index
+
                         implicitWidth: listView.width
                         implicitHeight: 50
                         contentItem: RowLayout {

@@ -7,13 +7,14 @@ import qs.Services
 StyledRect {
     id: root
 
+    property alias trackColor: background.color
+    property alias indicatorColor: indicatorPath.fillColor
+    property alias cornerRadius: background.radius
+
     property bool condition: false
     property real waveAmplitude: 0
     property real waveFrequency: 8
     property real waveAnimationPhase: 0
-    property color trackColor: Colours.m3Colors.m3SurfaceContainerHighest
-    property color indicatorColor: Colours.m3Colors.m3Primary
-    property real cornerRadius: 2
 
     Layout.fillWidth: true
     height: 4
@@ -21,9 +22,10 @@ StyledRect {
     color: "transparent"
 
     StyledRect {
+        id: background
         anchors.fill: parent
-        color: root.trackColor
-        radius: root.cornerRadius
+        color: Colours.m3Colors.m3SurfaceContainerHighest
+        radius: 2
     }
 
     Shape {
@@ -82,7 +84,8 @@ StyledRect {
         }
 
         ShapePath {
-            fillColor: root.indicatorColor
+            id: indicatorPath
+            fillColor: Colours.m3Colors.m3Primary
             strokeColor: "transparent"
 
             PathSvg {
