@@ -1,5 +1,5 @@
+import AnotherRipple
 import QtQuick
-import Qcm.Material as MD
 
 import qs.Configs
 import qs.Services
@@ -29,19 +29,16 @@ MouseArea {
         color: area.layerColor
         opacity: 0
         radius: area.layerRadius
+        clip: true
 
         Behavior on opacity {
             animation: area.layerOpacityAnimation
         }
 
-        MD.Ripple2 {
+        SimpleRipple {
             anchors.fill: parent
-            radius: area.layerRadius
-            pressX: area.mouseX
-            pressY: area.mouseY
-            pressed: area.pressed
-            stateOpacity: 0.08
-            color: Colours.m3Colors.m3OnSurfaceVariant
+            acceptEvent: false
+            color: "white"
         }
     }
 }

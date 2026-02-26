@@ -1,12 +1,12 @@
 pragma ComponentBehavior: Bound
 
+import AnotherRipple
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
-import Qcm.Material as MD
 
 import qs.Configs
 import qs.Helpers
@@ -309,13 +309,8 @@ RowLayout {
                             }
                         }
 
-                        MD.Ripple2 {
+                        SimpleRipple {
                             anchors.fill: parent
-                            radius: itemBg.radius
-                            pressX: itemDel.pressX
-                            pressY: itemDel.pressY
-                            pressed: itemDel.pressed
-                            stateOpacity: 0.08
                             color: root.trackArtColors.primary
                         }
                     }

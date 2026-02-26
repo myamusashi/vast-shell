@@ -1,56 +1,114 @@
 pragma ComponentBehavior: Bound
 
+import AnotherRipple
 import QtQuick
-import Qcm.Material as MD
+import QtQuick.Controls
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 
-MD.Button {
+Button {
     id: root
 
-    property color color
-    property color textColor
-    property real bgRadius: Appearance.rounding.normal
-
-    mdState.textColor: textColor
-
-    contentItem: MD.IconLabel {
-        anchors.centerIn: parent
-        text: root.text
-        color: root.mdState.textColor
-        style: root.iconStyle
-        icon.name: root.icon.name
-        icon.size: root.icon.width
-        icon.color: root.icon.color
-        opacity: root.mdState.contentOpacity
-        label.lineHeight: root.typescale.line_height
+    readonly property real _stateOpacity: {
+        if (!enabled)
+            return 0.38;
+        if (pressed)
+            return 0.88;
+        if (hovered)
+            return 0.92;
+        return 1.0;
     }
+    readonly property color _overlayColor: {
+        if (pressed)
+            return Qt.darker(root.color, 1.18);
+        if (hovered)
+            return Qt.darker(root.color, 1.08);
+        return root.color;
+    }
+    readonly property color _effectiveTextColor: !enabled ? Colours.withAlpha(textColor, 0.38) : textColor
 
-    background: MD.ElevationRectangle {
-        implicitWidth: 64
-        implicitHeight: 40
+    property bool outlined: false
+    property color color: "#6750A4"
+    property color textColor: "#FFFFFF"
+    property int textSize: 13
+    property int iconSize: 18
+    property real bgRadius: 8
+    property string iconName: ""
 
-        radius: root.bgRadius
-        color: root.mdState.backgroundColor
-        opacity: root.mdState.backgroundOpacity
+    leftPadding: iconName !== "" ? 16 : 24
+    rightPadding: 24
+    topPadding: 10
+    bottomPadding: 10
+    spacing: 8
 
-        border.width: root.type == MD.Enum.BtOutlined ? 1 : 0
-        border.color: root.mdState.ctx.color.outline
-        elevation: root.mdState.elevation
-        elevationVisible: !MD.Util.epsilonEqual(elevation, MD.Token.elevation.level0) && !root.flat && color.a > 0
+    contentItem: Row {
+        spacing: root.spacing
 
-        MD.Ripple2 {
-            anchors.fill: parent
-            radius: parent.radius
-            pressX: root.pressX
-            pressY: root.pressY
-            pressed: root.pressed
-            stateOpacity: 0.08
-            color: Colours.m3Colors.m3OnSurfaceVariant
+        Icon {
+            visible: root.iconName !== ""
+            icon: root.iconName
+            font.pixelSize: root.iconSize
+            color: root._effectiveTextColor
+            verticalAlignment: Text.AlignVCenter
+            anchors.verticalCenter: parent.verticalCenter
+
+            Behavior on color {
+                CAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+        }
+
+        StyledText {
+            visible: root.text !== ""
+            text: root.text
+            font.pixelSize: root.textSize
+            font.weight: Font.Medium
+            font.letterSpacing: 0.1
+            color: root._effectiveTextColor
+            verticalAlignment: Text.AlignVCenter
+            anchors.verticalCenter: parent.verticalCenter
+
+            Behavior on color {
+                CAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
         }
     }
 
-    iconStyle: MD.Enum.IconAndText
-    mdState.backgroundColor: color
+    background: StyledRect {
+        implicitWidth: 64
+        implicitHeight: 40
+        radius: root.bgRadius
+        color: root.outlined ? "transparent" : root._overlayColor
+        opacity: root._stateOpacity
+        border {
+            width: root.outlined ? 1 : 0
+            color: root.outlined ? Qt.alpha(root.color, root.enabled ? 1.0 : 0.38) : "transparent"
+        }
+
+        Behavior on color {
+            CAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.small * 1.2
+            }
+        }
+
+        SimpleRipple {
+            anchors.fill: parent
+            acceptEvent: false
+            color: Qt.alpha("white", 0.28)
+        }
+    }
+
+    HoverHandler {
+        cursorShape: Qt.PointingHandCursor
+    }
 }
