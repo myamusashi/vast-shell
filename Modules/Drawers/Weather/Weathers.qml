@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell.Widgets
 
 import qs.Configs
 import qs.Helpers
@@ -45,7 +46,7 @@ Item {
         }
     }
 
-    StyledRect {
+    WrapperRectangle {
         id: rect
 
         anchors.fill: parent
@@ -56,7 +57,6 @@ Item {
         Flickable {
             id: flickable
 
-            anchors.fill: parent
             contentWidth: width
             contentHeight: mainLoader.item ? mainLoader.item.implicitHeight + 40 : 0
             clip: true
@@ -114,16 +114,15 @@ Item {
                         Layout.fillWidth: true
                         active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
 
-                        sourceComponent: StyledRect {
+                        sourceComponent: WrapperRectangle {
                             implicitHeight: summaryText.implicitHeight + 20
                             color: Colours.m3Colors.m3SurfaceContainer
                             radius: Appearance.rounding.normal
+                            margin: Appearance.margin.normal
 
                             StyledText {
                                 id: summaryText
 
-                                anchors.fill: parent
-                                anchors.margins: 10
                                 text: Weather.getQuickSummary()
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.small
