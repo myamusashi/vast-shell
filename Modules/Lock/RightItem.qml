@@ -1,12 +1,7 @@
 import QtQuick
-import QtQuick.Layouts
-import Quickshell
-import Quickshell.Widgets
-import Quickshell.Services.Notifications
 
 import qs.Configs
 import qs.Helpers
-import qs.Services
 import qs.Components
 import qs.Modules.Drawers.QuickSettings.Settings
 
@@ -55,7 +50,6 @@ Item {
         topLeftRadius: Appearance.rounding.normal
         bottomLeftRadius: Appearance.rounding.normal
         color: GlobalStates.drawerColors
-
         loader.active: GlobalStates.isLockscreenOpen
     }
 }
