@@ -203,32 +203,32 @@
 <context>
     <name>BottomItem</name>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="111"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="168"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="111"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="168"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="309"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="429"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="316"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="436"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="323"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="443"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="330"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="450"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
@@ -655,6 +655,29 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>Dialog</name>
+    <message>
+        <location filename="../Modules/Lock/Dialog.qml" line="40"/>
+        <source>Session</source>
+        <translation>Sesi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Dialog.qml" line="56"/>
+        <source>Do you want to %1?</source>
+        <translation>Apakah kamu ingin %1?</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Dialog.qml" line="78"/>
+        <source>No</source>
+        <translation>Tidak</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Dialog.qml" line="96"/>
+        <source>Yes</source>
+        <translation>Ya</translation>
+    </message>
+</context>
+<context>
     <name>DialogBox</name>
     <message>
         <location filename="../Components/DialogBox.qml" line="104"/>
@@ -741,10 +764,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="42"/>
         <source>Color Management</source>
         <translation>Manajemen Warna</translation>
-    </message>
-    <message>
-        <source>System Information</source>
-        <translation type="vanished">Informasi Sistem</translation>
     </message>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="55"/>
@@ -1251,12 +1270,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifications</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="51"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="46"/>
         <source>Clear all</source>
         <translation>Bersihkan semuanya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="230"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="227"/>
         <source>No notifications</source>
         <translation>Tidak ada notifikasi</translation>
     </message>
@@ -1638,29 +1657,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>Surface</name>
-    <message>
-        <location filename="../Modules/Lock/Surface.qml" line="121"/>
-        <source>Session</source>
-        <translation>Sesi</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Lock/Surface.qml" line="137"/>
-        <source>Do you want to %1?</source>
-        <translation>Apakah kamu mau %1?</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Lock/Surface.qml" line="159"/>
-        <source>No</source>
-        <translation>Tidak</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Lock/Surface.qml" line="177"/>
-        <source>Yes</source>
-        <translation>Ya</translation>
-    </message>
-</context>
-<context>
     <name>TimeAgo</name>
     <message>
         <location filename="../Helpers/TimeAgo.qml" line="15"/>
@@ -1780,9 +1776,14 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>TopItem</name>
     <message>
-        <location filename="../Modules/Lock/TopItem.qml" line="83"/>
-        <source>Password Invalid</source>
-        <translation>Password tidak valid</translation>
+        <location filename="../Modules/Lock/TopItem.qml" line="178"/>
+        <source>Password</source>
+        <translation>Kata sandi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/TopItem.qml" line="178"/>
+        <source>Invalid</source>
+        <translation>Tidak Valid</translation>
     </message>
 </context>
 <context>
