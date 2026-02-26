@@ -4,76 +4,52 @@
     cmake,
     ninja,
     fetchFromGitHub,
-    qt5,
     qt6,
 }:
 stdenv.mkDerivation {
     pname = "AnotherRipple";
-    version = "unstable-2022-11-20";
+    version = "unstable-2026-02-26";
 
     src =
         fetchFromGitHub {
-            owner = "mmjvox";
+            owner = "myamusashi";
             repo = "Another-Ripple";
-            rev = "919d73f45240fd2aad6b871023664c31d6111e21";
-            hash = "sha256-NmmFhkQDEA5n5vm+TUq48ilsnfit5C/4cvrLv46bb6E=";
+            rev = "0eb6610b1270383fab0a4a2af5ffc40dbcf4df54";
+            hash = "sha256-4xZ0nh9lRCLrn0T6DeRIFv9eMRAk/1UDTrZz/b6HT40=";
         }
         + "/AnotherRipple";
 
     nativeBuildInputs = [
         cmake
         ninja
-        qt5.wrapQtAppsHook
+        qt6.wrapQtAppsHook
     ];
 
     buildInputs = [
-        qt5.qtbase
-        qt5.qtdeclarative
+        qt6.qtbase
+        qt6.qtdeclarative
     ];
 
     cmakeFlags = [
         "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+        "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
+        (lib.cmakeFeature "INSTALL_QMLDIR" "lib/qt-6/qml")
     ];
 
     dontWrapQtApps = true;
 
-    postPatch = ''
-        substituteInPlace CMakeLists.txt \
-            --replace-fail "add_library(AnotherRipple STATIC" "add_library(AnotherRipple SHARED"
-    '';
-
-    # CMakeLists.txt has no install() rules so we do everything manually
-    installPhase = ''
-        runHook preInstall
-
-        install -Dm644 $src/include/AnotherRipple.h \
-            $out/include/AnotherRipple.h
-        for header in $src/include/AnotherRipple/*.h; do
-            install -Dm644 "$header" \
-                "$out/include/AnotherRipple/$(basename $header)"
-        done
-
-        install -Dm755 libAnotherRipple.so \
-        $out/${qt6.qtbase.qtQmlPrefix}/AnotherRipple/libAnotherRipple.so
-
-        mkdir -p $out/${qt6.qtbase.qtQmlPrefix}/AnotherRipple
-        cat > $out/${qt6.qtbase.qtQmlPrefix}/AnotherRipple/qmldir <<EOF
-          module AnotherRipple
-          plugin AnotherRipple
-        EOF
-
-        runHook postInstall
-    '';
-
-    postFixup = ''
-        patchelf --set-rpath "${qt6.qtbase.outPath}/lib" \
-            $out/${qt6.qtbase.qtQmlPrefix}/AnotherRipple/libAnotherRipple.so
+    postInstall = ''
+        pluginPath="$out/lib/qt-6/qml/AnotherRipple/libAnotherRipple.so"
+        if [ -f "$pluginPath" ]; then
+            patchelf --set-rpath "$out/lib/qt-6/qml/AnotherRipple:${qt6.qtbase.outPath}/lib" "$pluginPath"
+        fi
     '';
 
     meta = with lib; {
-        description = " This is a Ripple effect in QML, that can be used everywhere. ";
+        description = "A Ripple effect in QML, that can be used everywhere.";
         homepage = "https://github.com/mmjvox/Another-Ripple";
         platforms = platforms.linux;
+        license = licenses.mit; # Adjust if license is different
     };
 }
