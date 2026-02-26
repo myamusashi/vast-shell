@@ -22,14 +22,12 @@
     patchelf,
     hyprland,
     qt6,
-    qt5,
     callPackage,
     cmake,
 }: let
     app2unit = callPackage ./app2unit.nix {};
     keystate-bin = callPackage ./keystate.nix {};
     material-symbols = callPackage ./material-symbols.nix {};
-    qml-material = callPackage ./qmlMaterial.nix {};
     m3shapes = callPackage ./m3Shapes.nix {};
     another-ripple = callPackage ./AnotherRipple.nix {};
     translationManager = callPackage ./translationManager.nix {};
@@ -63,11 +61,6 @@
         ## terminal for running apps with app2unit and a compositor
         foot
         hyprland
-
-        ## QML plugins
-        qml-material
-        m3shapes
-        translationManager
 
         ## Qt packages
         kdePackages.qtmultimedia
@@ -148,11 +141,6 @@
 
             if [ -d "${m3shapes}/${qt6.qtbase.qtQmlPrefix}" ]; then
               cp -r ${m3shapes}/${qt6.qtbase.qtQmlPrefix}/* \
-                $out/${qt6.qtbase.qtQmlPrefix}
-            fi
-
-            if [ -d "${qml-material}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${qml-material}/${qt6.qtbase.qtQmlPrefix}/* \
                 $out/${qt6.qtbase.qtQmlPrefix}
             fi
 
