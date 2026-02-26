@@ -40,10 +40,14 @@ stdenv.mkDerivation {
     dontWrapQtApps = true;
 
     postInstall = ''
-        pluginPath="$out/lib/qt-6/qml/AnotherRipple/libAnotherRipple.so"
-        if [ -f "$pluginPath" ]; then
-            patchelf --set-rpath "$out/lib/qt-6/qml/AnotherRipple:${qt6.qtbase.outPath}/lib" "$pluginPath"
-        fi
+        qmlDir="$out/lib/qt-6/qml/AnotherRipple"
+        qtLibDir="${qt6.qtbase.outPath}/lib"
+
+        for lib in "$qmlDir/libAnotherRipple.so" "$qmlDir/libAnotherRippleplugin.so"; do
+          if [ -f "$lib" ]; then
+            patchelf --set-rpath "$qmlDir:$qtLibDir" "$lib"
+          fi
+        done
     '';
 
     meta = with lib; {
