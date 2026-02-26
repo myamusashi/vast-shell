@@ -96,29 +96,37 @@ Item {
             }
 
             RowLayout {
-                StyledTextField {
+                Item {
                     id: passwordField
 
                     implicitWidth: 200
-                    implicitHeight: 40
-                    echoMode: TextInput.Password
-                    focus: true
-                    enabled: !root.pam.unlockInProgress
-                    color: root.pam.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.large
-                    wrapMode: TextEdit.NoWrap
-                    inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
-                    placeholderText: root.pam.showFailure ? qsTr("Password invalid") : qsTr("Enter password")
-                    placeholderTextColor: root.pam.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
+					implicitHeight: 40
+					clip: true
 
-                    onAccepted: {
-                        if (root.pam && text.length > 0)
-                            root.pam.tryUnlock();
-                    }
+                    TextInput {
+                        id: passwordInput
+                        width: 0
+                        height: 0
+                        visible: false
 
-                    onTextChanged: {
-                        if (root.pam)
-                            root.pam.currentText = text;
+                        echoMode: TextInput.Password
+                        passwordMaskDelay: 0
+                        inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
+                        enabled: !root.pam.unlockInProgress
+
+                        text: root.pam ? root.pam.currentText : ""
+
+                        onTextChanged: {
+                            if (root.pam)
+                                root.pam.currentText = text;
+                        }
+
+                        Keys.onReturnPressed: {
+                            if (root.pam && text.length > 0)
+                                root.pam.tryUnlock();
+                        }
+
+                        Component.onCompleted: forceActiveFocus()
                     }
 
                     Connections {
@@ -126,9 +134,112 @@ Item {
                         enabled: root.pam !== null
 
                         function onCurrentTextChanged() {
-                            if (passwordField.text !== root.pam.currentText)
-                                passwordField.text = root.pam.currentText;
+                            if (passwordInput.text !== root.pam.currentText)
+                                passwordInput.text = root.pam.currentText;
                         }
+                    }
+
+                    // ── Dot model ─────────────────────────────────────────────────────
+                    ListModel {
+                        id: dotsModel
+                    }
+
+                    Connections {
+                        target: passwordInput
+                        function onTextChanged() {
+                            const len = passwordInput.text.length;
+                            while (dotsModel.count < len)
+                                dotsModel.append({});
+                            while (dotsModel.count > len)
+                                dotsModel.remove(dotsModel.count - 1);
+                        }
+                    }
+
+                    // ── Placeholder text ──────────────────────────────────────────────
+                    Text {
+                        anchors.centerIn: parent
+                        visible: passwordInput.text.length === 0
+                        text: root.pam.showFailure ? qsTr("Password invalid") : qsTr("Enter password")
+                        color: root.pam.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.large
+                        font.family: Appearance.fonts.family.sans
+                    }
+
+                    // ── Dots ListView ─────────────────────────────────────────────────
+                    ListView {
+                        id: dotsView
+                        anchors.centerIn: parent
+                        orientation: ListView.Horizontal
+                        spacing: 1
+                        model: dotsModel
+                        clip: false
+
+                        visible: passwordInput.text.length > 0
+                        width: contentWidth
+                        height: 12
+
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: 150
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+
+                        delegate: Rectangle {
+                            width: 12
+                            height: 12
+                            radius: 6
+                            color: root.pam.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnSurface
+                        }
+
+                        add: Transition {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    property: "opacity"
+                                    from: 0
+                                    to: 1
+                                    duration: 150
+                                }
+                                NumberAnimation {
+                                    property: "scale"
+                                    from: 0.5
+                                    to: 1
+                                    duration: 150
+                                    easing.type: Easing.OutCubic
+                                }
+                            }
+                        }
+
+                        remove: Transition {
+                            ParallelAnimation {
+                                NumberAnimation {
+                                    property: "opacity"
+                                    from: 1
+                                    to: 0
+                                    duration: 150
+                                }
+                                NumberAnimation {
+                                    property: "scale"
+                                    from: 1
+                                    to: 0.5
+                                    duration: 150
+                                    easing.type: Easing.OutCubic
+                                }
+                            }
+                        }
+
+                        displaced: Transition {
+                            NumberAnimation {
+                                properties: "x"
+                                duration: 150
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: passwordInput.forceActiveFocus()
                     }
                 }
 
