@@ -9,8 +9,8 @@ import qs.Services
 Item {
     id: root
 
-    required property string icon
-    required property string text
+    property alias icon: iconItem.icon
+    property alias text: textItem.text
     required property bool condition
 
     Layout.fillWidth: true
@@ -24,14 +24,16 @@ Item {
         spacing: 10
 
         Icon {
+            id: iconItem
             type: Icon.Material
-            icon: root.icon
+            icon: ""
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.extraLarge
         }
 
         StyledText {
-            text: root.text
+            id: textItem
+            text: ""
             color: Colours.m3Colors.m3OnSurface
             font.weight: Font.DemiBold
             font.pixelSize: Appearance.fonts.size.large * 1.5

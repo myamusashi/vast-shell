@@ -18,13 +18,12 @@ Item {
     property alias lockIcon: lockIcon
     property alias leftCorner: topLeftCorner
     property alias rightCorner: topRightCorner
+    property alias iconName: lockIcon.icon
 
     required property bool isLockscreenOpen
     required property color drawerColors
     required property bool locked
     required property bool showErrorMessage
-
-    property string iconName: "lock"
 
     implicitWidth: isLockscreenOpen ? topWrapperRect.implicitWidth : lockIcon.contentWidth
     implicitHeight: 0
@@ -70,7 +69,7 @@ Item {
                 id: lockIcon
 
                 Layout.alignment: Qt.AlignCenter
-                icon: root.iconName
+                icon: "lock"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
                 transformOrigin: Item.Bottom

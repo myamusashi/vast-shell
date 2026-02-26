@@ -9,8 +9,8 @@ Row {
     id: root
 
     property alias mouseArea: mArea
-    property string icon
-    property string title
+    property alias icon: iconItem.icon
+    property alias title: titleItem.text
 
     width: parent.width
     spacing: Appearance.spacing.normal
@@ -19,21 +19,21 @@ Row {
         id: iconItem
 
         type: Icon.Material
-        icon: root.icon
+        icon: ""
         font.pixelSize: Appearance.fonts.size.extraLarge
         color: Colours.m3Colors.m3OnSurface
     }
 
     StyledText {
-        id: titleText
+        id: titleItem
 
-        text: root.title
+        text: ""
         font.pixelSize: Appearance.fonts.size.extraLarge
         color: Colours.m3Colors.m3OnSurface
     }
 
     Item {
-        width: parent.width - iconItem.width - titleText.width - closeIcon.width - root.spacing * 3
+        width: parent.width - iconItem.width - titleItem.width - closeIcon.width - root.spacing * 3
         height: 1
     }
 

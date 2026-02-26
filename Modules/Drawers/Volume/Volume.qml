@@ -24,7 +24,6 @@ Item {
     property bool openPerappVolume: false
     property real perappWidth: loader.item ? loader.item.repeater.count * 40 + Math.max(0, loader.item.repeater.count - 1) * Appearance.spacing.large : 0
     property real sliderHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
-    property string icon: Audio.getIcon(Pipewire.defaultAudioSink)
 
     implicitWidth: GlobalStates.isOSDVisible("volume") ? wrapper.implicitWidth : 0
     implicitHeight: 250 + 30
@@ -144,7 +143,7 @@ Item {
 
                             anchors.centerIn: parent
                             type: Icon.Material
-                            icon: root.icon
+                            icon: Audio.getIcon(Pipewire.defaultAudioSink)
                             color: Colours.m3Colors.m3Primary
                             font.pixelSize: Appearance.fonts.size.extraLarge
                             opacity: mainVolumeColumn.showVolume ? 0 : 1
@@ -205,8 +204,10 @@ Item {
                     }
 
                     StyledSlide {
-                        implicitWidth: 40
-                        implicitHeight: root.sliderHeight
+                        id: volumeSlider
+
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
                         orientation: Qt.Vertical
                         value: Pipewire.defaultAudioSink.audio.volume
                         onMoved: Pipewire.defaultAudioSink.audio.volume = value

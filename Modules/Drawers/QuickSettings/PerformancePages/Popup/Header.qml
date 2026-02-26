@@ -9,8 +9,8 @@ import qs.Components
 ColumnLayout {
     id: root
 
-    required property string icon
-    required property string text
+    property alias icon: iconItem.icon
+    property alias text: textItem.text
 
     Layout.fillWidth: true
     Layout.preferredHeight: row.height + 10
@@ -20,13 +20,15 @@ ColumnLayout {
         id: row
 
         Icon {
-            icon: root.icon
+            id: iconItem
+            icon: ""
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large * 1.5
         }
 
         StyledText {
-            text: root.text
+            id: textItem
+            text: ""
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large * 1.2
         }

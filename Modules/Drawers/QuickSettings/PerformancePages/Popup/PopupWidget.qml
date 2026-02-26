@@ -12,8 +12,8 @@ import qs.Components
 WrapperRectangle {
     id: root
 
-    required property string text
-    required property string icon
+    property alias text: header.text
+    property alias icon: header.icon
     required property Component content
     property bool isVisible: false
     property real zoomOriginX: parent.width / 2
@@ -78,9 +78,10 @@ WrapperRectangle {
             spacing: 0
 
             Header {
+                id: header
                 Layout.fillWidth: true
-                text: root.text
-                icon: root.icon
+                text: ""
+                icon: ""
             }
 
             Loader {

@@ -8,12 +8,14 @@ import qs.Services
 Item {
     id: root
 
+    property alias widthBattery: batteryBody.implicitWidth
+    property alias heightBattery: batteryBody.implicitHeight
+
     readonly property bool batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
     readonly property real batPercentage: UPower.displayDevice.percentage
     readonly property real batFill: batteryBody.width * (batPercentage / 100.0)
+
     property real chargeFillIndex: 0
-    property int widthBattery: 26
-    property int heightBattery: 12
 
     implicitWidth: widthBattery
     implicitHeight: heightBattery
@@ -26,8 +28,8 @@ Item {
     StyledRect {
         id: batteryBody
 
-        implicitWidth: root.widthBattery
-        implicitHeight: root.heightBattery
+        implicitWidth: 26
+        implicitHeight: 12
         clip: true
         color: "transparent"
         radius: Appearance.rounding.small * 0.5

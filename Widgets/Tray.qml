@@ -13,11 +13,11 @@ import qs.Services
 StyledRect {
     id: root
 
+    property alias widgetHeight: root.implicitHeight
     readonly property real horizontalPadding: Appearance.spacing.normal
-    property real widgetHeight: 35
 
     implicitWidth: visible ? systemTrayRow.width + horizontalPadding * 1.2 : 0
-    implicitHeight: widgetHeight
+    implicitHeight: 35
     radius: Appearance.rounding.small
     color: "transparent"
     visible: SystemTray.items.values.length > 0
