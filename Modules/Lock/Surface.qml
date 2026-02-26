@@ -84,11 +84,18 @@ WlSessionLockSurface {
         showErrorMessage: root.showErrorMessage
     }
 
+    RightItem {
+        id: rightItem
+
+        isLockscreenOpen: GlobalStates.isLockscreenOpen
+    }
+
     BottomItem {
         id: bottomItem
 
         isLockscreenOpen: GlobalStates.isLockscreenOpen
         drawerColors: GlobalStates.drawerColors
+        isUnlock: root.pam.isUnlock
         pam: root.pam
     }
 
@@ -114,6 +121,14 @@ WlSessionLockSurface {
                 target: bottomItem
                 property: "implicitHeight"
                 to: 80
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
+                target: rightItem
+                property: "implicitWidth"
+                to: Hypr.focusedMonitor.width * 0.2
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -158,6 +173,22 @@ WlSessionLockSurface {
 
             NAnim {
                 target: bottomItem.rightCorner
+                property: "radius"
+                to: 40
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
+                target: rightItem.leftCorner
+                property: "radius"
+                to: 40
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
+                target: rightItem.rightCorner
                 property: "radius"
                 to: 40
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -233,9 +264,7 @@ WlSessionLockSurface {
         }
 
         ScriptAction {
-            script: {
-                topItem.iconName = "lock_open_right";
-            }
+            script: topItem.iconName = "lock_open_right"
         }
 
         PauseAnimation {
@@ -254,6 +283,14 @@ WlSessionLockSurface {
             NAnim {
                 target: bottomItem
                 property: "implicitHeight"
+                to: 0
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
+                target: rightItem
+                property: "implicitWidth"
                 to: 0
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -304,14 +341,30 @@ WlSessionLockSurface {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
+
+            NAnim {
+                target: rightItem.leftCorner
+                property: "radius"
+                to: 0
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
+                target: rightItem.rightCorner
+                property: "radius"
+                to: 0
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
         }
 
         ScriptAction {
-            script: GlobalStates.isLockscreenOpen = false
-        }
-
-        ScriptAction {
-            script: root.lock.locked = false
+            script: {
+                root.lock.locked = false;
+                GlobalStates.isLockscreenOpen = false;
+                root.pam.currentText = "";
+            }
         }
     }
 }
