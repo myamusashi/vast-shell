@@ -62,7 +62,7 @@ Item {
                 else
                     return false;
             }
-            asynchronous: true
+            asynchronous: false
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.spacing.normal
@@ -124,8 +124,10 @@ Item {
                     cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
 
                     Component.onCompleted: {
-                        const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
-                        currentIndex = idx !== -1 ? idx : 0;
+                        Qt.callLater(() => {
+                            const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
+                            currentIndex = idx !== -1 ? idx : 0;
+                        });
                     }
 
                     onModelChanged: {
@@ -220,10 +222,7 @@ Item {
                                 Elevation {
                                     anchors.fill: parent
                                     z: -1
-                                    level: 12
-                                    blur: 40
-                                    spread: 20
-                                    radius: 4
+                                    level: 3
                                 }
                             }
 
