@@ -174,9 +174,7 @@ Item {
                     pageIndex: 1
                     currentIndex: root.saveIndex
                     content: Component {
-                        VolumeSettings {
-                            implicitWidth: 500
-                        }
+                        VolumeSettings {}
                     }
                 }
 
@@ -202,6 +200,7 @@ Item {
         opacity: currentIndex === pageIndex ? 1 : 0
         x: currentIndex === pageIndex ? 0 : currentIndex > pageIndex ? -parent.width * 0.05 : parent.width * 0.05
         enabled: currentIndex === pageIndex
+        z: currentIndex === pageIndex ? 1 : 0
 
         Behavior on opacity {
             NAnim {
