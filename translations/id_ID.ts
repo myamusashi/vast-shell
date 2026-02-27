@@ -101,12 +101,12 @@
 <context>
     <name>AudioProfiles</name>
     <message>
-        <location filename="../Widgets/AudioProfiles.qml" line="53"/>
+        <location filename="../Widgets/AudioProfiles.qml" line="52"/>
         <source>No profile</source>
         <translation>Tidak ada profil</translation>
     </message>
     <message>
-        <location filename="../Widgets/AudioProfiles.qml" line="190"/>
+        <location filename="../Widgets/AudioProfiles.qml" line="188"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -1571,32 +1571,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>Screencapture</name>
+    <name>ScreenCapture</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="102"/>
-        <source>Screenshot</source>
-        <translation>Tangkapan layar</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="102"/>
-        <source>Screen record</source>
-        <translation>Rekam layar</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="161"/>
+        <location filename="../Services/ScreenCapture.qml" line="16"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="170"/>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="239"/>
+        <location filename="../Services/ScreenCapture.qml" line="22"/>
+        <location filename="../Services/ScreenCapture.qml" line="52"/>
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="191"/>
+        <location filename="../Services/ScreenCapture.qml" line="37"/>
         <source>Merge screens</source>
         <translation>Gabungkan layar</translation>
+    </message>
+</context>
+<context>
+    <name>Screencapture</name>
+    <message>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="100"/>
+        <source>Screenshot</source>
+        <translation>Tangkapan layar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="100"/>
+        <source>Screen record</source>
+        <translation>Rekam layar</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation type="vanished">Jendela</translation>
+    </message>
+    <message>
+        <source>Selection</source>
+        <translation type="vanished">Seleksi</translation>
+    </message>
+    <message>
+        <source>Merge screens</source>
+        <translation type="vanished">Gabungkan layar</translation>
     </message>
 </context>
 <context>
