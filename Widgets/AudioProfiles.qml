@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import AudioProfiles
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -13,33 +14,33 @@ import qs.Services
 ComboBox {
     id: profilesComboBox
 
-    model: profileModel.values
-
-    ScriptModel {
-        id: profileModel
-
-        values: Audio.models
-    }
+    model: Audio.models
+    textRole: "readable"
 
     Connections {
-        target: Audio
+        target: AudioProfilesWatcher
 
-        function onModelsChanged() {
-            profileModel.values = Audio.models;
+        function onActiveProfileChanged() {
+            const count = Audio.models.count();
+            for (let i = 0; i < count; i++) {
+                if (Audio.models.get(i).index === Audio.activeProfileIndex) {
+                    profilesComboBox.currentIndex = i;
+                    break;
+                }
+            }
         }
     }
 
-    textRole: "readable"
-    onActivated: index => {
-        const profile = Audio.models[index];
+    onActivated: rowIndex => {
+        const profile = Audio.models.get(rowIndex);
         if (!profile || profile.available !== "yes")
             return;
 
         Quickshell.execDetached({
-            command: ["pw-cli", "set-param", Audio.idPipewire, "Profile", `{ "index": ${profile.index} }`]
+            command: ["pw-cli", "set-param", String(Audio.idPipewire), "Profile", `{ "index": ${profile.index} }`]
         });
 
-        Audio.activeProfileIndex = profile.index;
+        profilesComboBox.popup.close();
     }
 
     contentItem: Item {
@@ -48,10 +49,7 @@ ComboBox {
         StyledText {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width - x - profilesComboBox.indicator.width - 16
-            text: {
-                const active = Audio.models.find(m => m.index === Audio.activeProfileIndex);
-                return active ? active.readable : qsTr("No profile");
-            }
+            text: AudioProfilesWatcher.activeProfile.readable ?? qsTr("No profile")
             font.weight: Font.Medium
             font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSecondaryContainer
@@ -92,10 +90,10 @@ ComboBox {
         implicitWidth: profilesComboBox.width
         implicitHeight: Math.min(itemListView.contentHeight + 16, 280)
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
         background: StyledRect {
             color: Colours.m3Colors.m3SurfaceContainerLow
             radius: Appearance.rounding.large
-
             Elevation {
                 anchors.fill: parent
                 z: -1
@@ -103,6 +101,7 @@ ComboBox {
                 radius: parent.radius
             }
         }
+
         contentItem: ListView {
             id: itemListView
 
@@ -110,6 +109,7 @@ ComboBox {
             implicitHeight: contentHeight
             model: profilesComboBox.popup.visible ? profilesComboBox.delegateModel : null
             currentIndex: profilesComboBox.currentIndex
+
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
                 contentItem: StyledRect {
@@ -118,6 +118,7 @@ ComboBox {
                     color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
                 }
             }
+
             header: Item {
                 height: 8
             }
@@ -130,6 +131,7 @@ ComboBox {
 
                 required property var modelData
                 required property int index
+                readonly property bool isActive: modelData.index === Audio.activeProfileIndex
 
                 width: itemListView.width
                 height: 52
@@ -140,11 +142,8 @@ ComboBox {
                 highlighted: profilesComboBox.highlightedIndex === index
                 enabled: modelData.available === "yes"
                 background: StyledRect {
-                    id: itemBg
-
                     radius: Appearance.rounding.large
-                    height: parent.height
-                    color: Audio.activeProfileIndex === menuDelegate.index ? Colours.m3Colors.m3TertiaryContainer : "transparent"
+                    color: menuDelegate.isActive ? Colours.m3Colors.m3TertiaryContainer : "transparent"
 
                     Behavior on color {
                         CAnim {
@@ -152,6 +151,7 @@ ComboBox {
                         }
                     }
                 }
+
                 contentItem: RowLayout {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: Appearance.spacing.small
@@ -182,10 +182,8 @@ ComboBox {
                             implicitWidth: unavailableLabel.implicitWidth
                             implicitHeight: 20
                             radius: 10
-
                             StyledText {
                                 id: unavailableLabel
-
                                 anchors.centerIn: parent
                                 text: qsTr("N/A")
                                 font.pixelSize: Appearance.fonts.size.small
@@ -199,10 +197,7 @@ ComboBox {
                             icon: "check"
                             font.pixelSize: Appearance.fonts.size.large * 1.3
                             color: Colours.m3Colors.m3Primary
-                            visible: {
-                                const active = Audio.models.find(m => m.index === Audio.activeProfileIndex);
-                                return active && active.readable === menuDelegate.modelData.readable;
-                            }
+                            visible: menuDelegate.isActive
                             scale: visible ? 1.0 : 0.0
                             Behavior on scale {
                                 NAnim {
@@ -218,7 +213,6 @@ ComboBox {
                         return;
                     profilesComboBox.currentIndex = index;
                     profilesComboBox.activated(index);
-                    profilesComboBox.popup.close();
                 }
             }
         }
