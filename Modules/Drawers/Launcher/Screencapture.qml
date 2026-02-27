@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import Quickshell.Widgets
 
 import qs.Configs
@@ -54,7 +53,6 @@ WrapperRectangle {
                     event.accepted = true;
                     break;
                 case Qt.Key_Up:
-                    root.selectedTab === 0 ? 4 : 2;
                     root.selectedIndex = Math.max(0, root.selectedIndex - 1);
                     event.accepted = true;
                     break;
@@ -63,7 +61,7 @@ WrapperRectangle {
                     event.accepted = true;
                     break;
                 case Qt.Key_Down:
-                    const maxIndex = root.selectedTab === 0 ? 4 : 2;
+                    const maxIndex = root.selectedTab === 0 ? ScreenCapture.screenshotOptions.values.length - 1 : ScreenCapture.recordOptions.values.length - 1;
                     root.selectedIndex = Math.min(maxIndex, root.selectedIndex + 1);
                     event.accepted = true;
                     break;
@@ -154,59 +152,10 @@ WrapperRectangle {
 
                     spacing: Appearance.spacing.small
 
-                    property var screenshotModel: ScriptModel {
-                        values: {
-                            let options = [
-                                {
-                                    "name": qsTr("Window"),
-                                    "icon": "select_window_2",
-                                    "action": () => {
-                                        Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenshot-window"]
-                                        });
-                                    }
-                                },
-                                {
-                                    "name": qsTr("Selection"),
-                                    "icon": "select",
-                                    "action": () => {
-                                        Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenshot-selection"]
-                                        });
-                                    }
-                                }
-                            ];
-
-                            Quickshell.screens.forEach(screen => {
-                                options.push({
-                                    "name": screen.name,
-                                    "icon": "monitor",
-                                    "action": () => {
-                                        Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenshot-output ${screen.name}`]
-                                        });
-                                    }
-                                });
-                                options.push({
-                                    "name": qsTr("Merge screens"),
-                                    "icon": "cell_merge",
-                                    "action": () => {
-                                        Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenshot-outputs ${screen.name}`]
-                                        });
-                                    }
-                                });
-                            });
-
-                            return options;
-                        }
-                    }
-
                     Repeater {
                         id: screenshotRepeater
 
-                        model: screenshotLayout.screenshotModel
-
+                        model: ScreenCapture.screenshotOptions
                         delegate: CaptureItem {
                             required property var modelData
                             required property int index
@@ -216,7 +165,7 @@ WrapperRectangle {
                             optionData: modelData
                             optionIndex: index
                             isSelected: index === root.selectedIndex && root.selectedTab === 0
-                            maxIndex: screenshotLayout.screenshotModel.values.length - 1
+                            maxIndex: ScreenCapture.screenshotOptions.values.length - 1
 
                             onIndexModel: function (idx) {
                                 root.selectedIndex = idx;
@@ -228,45 +177,12 @@ WrapperRectangle {
                 }
 
                 ColumnLayout {
-                    id: recordLayout
-
                     spacing: Appearance.spacing.small
-
-                    property var recordModel: ScriptModel {
-                        values: {
-                            let options = [
-                                {
-                                    "name": qsTr("Selection"),
-                                    "icon": "select",
-                                    "action": () => {
-                                        Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenrecord-selection"]
-                                        });
-                                    }
-                                }
-                            ];
-
-                            Quickshell.screens.forEach(screen => {
-                                options.push({
-                                    "name": screen.name,
-                                    "icon": "monitor",
-                                    "action": () => {
-                                        Quickshell.execDetached({
-                                            "command": ["sh", "-c", Paths.rootDir + `/Assets/shell/screen-capture.sh --screenrecord-output ${screen.name}`]
-                                        });
-                                    }
-                                });
-                            });
-
-                            return options;
-                        }
-                    }
 
                     Repeater {
                         id: recordRepeater
 
-                        model: recordLayout.recordModel
-
+                        model: ScreenCapture.recordOptions
                         delegate: CaptureItem {
                             required property var modelData
                             required property int index
@@ -276,7 +192,7 @@ WrapperRectangle {
                             optionData: modelData
                             optionIndex: index
                             isSelected: index === root.selectedIndex && root.selectedTab === 1
-                            maxIndex: recordLayout.recordModel.values.length - 1
+                            maxIndex: ScreenCapture.recordOptions.values.length - 1
 
                             onIndexModel: function (idx) {
                                 root.selectedIndex = idx;
