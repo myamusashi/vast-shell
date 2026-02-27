@@ -61,8 +61,9 @@ WlSessionLockSurface {
         id: rectSurface
 
         anchors.fill: parent
+
         radius: 0
-        color: Colours.withAlpha(Colours.m3Colors.m3Background, 0.3)
+        color: Qt.alpha(Colours.m3Colors.m3Background, 0.3)
 
         Component.onCompleted: {
             lockSequence.start();
@@ -72,31 +73,32 @@ WlSessionLockSurface {
             id: centerClock
 
             anchors.centerIn: parent
+            z: 1
         }
-    }
 
-    TopItem {
-        id: topItem
+        TopItem {
+            id: topItem
 
-        isLockscreenOpen: GlobalStates.isLockscreenOpen
-        drawerColors: GlobalStates.drawerColors
-        locked: root.lock.locked
-        showErrorMessage: root.showErrorMessage
-    }
+            isLockscreenOpen: GlobalStates.isLockscreenOpen
+            drawerColors: GlobalStates.drawerColors
+            locked: root.lock.locked
+            showErrorMessage: root.showErrorMessage
+        }
 
-    RightItem {
-        id: rightItem
+        RightItem {
+            id: rightItem
 
-        isLockscreenOpen: GlobalStates.isLockscreenOpen
-    }
+            isLockscreenOpen: GlobalStates.isLockscreenOpen
+        }
 
-    BottomItem {
-        id: bottomItem
+        BottomItem {
+            id: bottomItem
 
-        isLockscreenOpen: GlobalStates.isLockscreenOpen
-        drawerColors: GlobalStates.drawerColors
-        isUnlock: root.pam.isUnlock
-        pam: root.pam
+            isLockscreenOpen: GlobalStates.isLockscreenOpen
+            drawerColors: GlobalStates.drawerColors
+            isUnlock: root.pam.isUnlock
+            pam: root.pam
+        }
     }
 
     Dialog {
