@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Wayland
 import Quickshell.Hyprland
+import Quickshell.Services.UPower
 
 import qs.Configs
 import qs.Helpers
@@ -144,6 +145,8 @@ Variants {
                 implicitWidth: exclusiveLeft.zone
                 implicitHeight: QsWindow.window?.height ?? 0
                 color: GlobalStates.drawerColors
+
+                ElevatedCharging {}
             }
 
             Rectangle {
@@ -160,6 +163,8 @@ Variants {
                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                     }
                 }
+
+                ElevatedCharging {}
             }
 
             Rectangle {
@@ -169,6 +174,8 @@ Variants {
                 implicitWidth: exclusiveRight.zone
                 implicitHeight: QsWindow.window?.height ?? 0
                 color: GlobalStates.drawerColors
+
+                ElevatedCharging {}
             }
 
             Rectangle {
@@ -178,6 +185,8 @@ Variants {
                 implicitWidth: QsWindow.window?.width ?? 0
                 implicitHeight: exclusiveBottom.zone
                 color: GlobalStates.drawerColors
+
+                ElevatedCharging {}
             }
         }
 
@@ -267,7 +276,7 @@ Variants {
 
         property int corner
         property real radius: 20
-        property color color
+        property alias color: shapePath.fillColor
 
         Component.onCompleted: {
             switch (corner) {
@@ -296,8 +305,9 @@ Variants {
         Shape {
             preferredRendererType: Shape.CurveRenderer
             ShapePath {
+                id: shapePath
                 strokeWidth: 0
-                fillColor: root.color
+                fillColor: "transparent"
                 startX: root.radius
                 PathArc {
                     relativeX: -root.radius
@@ -314,6 +324,73 @@ Variants {
                     relativeX: root.radius
                     relativeY: 0
                 }
+            }
+        }
+    }
+
+    component ElevatedCharging: Elevation {
+        id: elev
+
+        anchors.fill: parent
+        z: -1
+        level: 3
+
+        SequentialAnimation {
+            id: chargeFlash
+
+            ParallelAnimation {
+                CAnim {
+                    target: elev
+                    property: "color"
+                    to: Colours.m3Colors.m3Green
+                    duration: Appearance.animations.durations.large * 0.8
+                }
+                NAnim {
+                    target: elev
+                    property: "blur"
+                    to: 20
+                    duration: Appearance.animations.durations.large * 0.8
+                }
+                NAnim {
+                    target: elev
+                    property: "spread"
+                    to: 20
+                    duration: Appearance.animations.durations.large * 0.8
+                }
+            }
+
+            PauseAnimation {
+                duration: 800
+            }
+
+            ParallelAnimation {
+                CAnim {
+                    target: elev
+                    property: "color"
+                    to: Qt.alpha(Colours.m3Colors.m3Shadow, 0.7)
+                    duration: Appearance.animations.durations.large
+                }
+                NAnim {
+                    target: elev
+                    property: "blur"
+                    to: (elev.dp * 5) ** 0.7
+                    duration: Appearance.animations.durations.large
+                }
+                NAnim {
+                    target: elev
+                    property: "spread"
+                    to: -elev.dp * 0.3 + (elev.dp * 0.1) ** 2
+                    duration: Appearance.animations.durations.large
+                }
+            }
+        }
+
+        Connections {
+            target: UPower.displayDevice
+
+            function onStateChanged() {
+                if (UPower.displayDevice.state === UPowerDeviceState.Charging)
+                    chargeFlash.restart();
             }
         }
     }
