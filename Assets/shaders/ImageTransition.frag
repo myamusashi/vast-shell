@@ -1,12 +1,9 @@
 #version 440
 
-// Compile with:
-//   qsb --glsl "450" --hlsl 50 --msl 12 -o transition.frag.qsb transition.frag
-//
 // Transitions:
-//   0 – Fade              Classic alpha cross-dissolve
-//   1 – Wipe Down         Top-to-bottom wipe with soft feathered edge
-//   2 – Circle Expand     Circle grows from screen centre (soft edge)
+//   0 – Fade              Classic
+//   1 – Wipe Down         Top-to-bottom wipe
+//   2 – Circle Expand     Circle grows from screen centre
 //   3 – Dissolve          Random noise per-pixel dissolve
 //   4 – Split Horizontal  Two halves split open from centre row
 //   5 – Slide Up          Old image slides upward, new revealed below
@@ -18,30 +15,24 @@
 layout(location = 0) in  vec2 texCoord;
 layout(location = 0) out vec4 fragColor;
 
-// ── Uniform Buffer Object ────────────────────────────────────────────────────
-// qt_Matrix / qt_Opacity MUST be first two members – Qt 6 requirement.
-// All custom uniforms follow in the SAME std140 block.
 layout(std140, binding = 0) uniform FragBuf {
-    mat4  qt_Matrix;         // (filled by Qt, unused in fragment)
-    float qt_Opacity;        // global opacity from ShaderEffect
+    mat4  qt_Matrix;
+    float qt_Opacity;
 
     float progress;          // 0.0 → 1.0
     int   transitionType;    // 0 – 9
-    float smoothAmount;      // soft-edge width  (0.0 – 0.15)
+    float smoothAmount;      // 0.0 – 0.15
     float aspect;            // height / width
     vec2  resolution;        // viewport size in pixels
 } ubuf;
 
-// ── Texture Samplers ─────────────────────────────────────────────────────────
 // Binding indices start at 1 (binding 0 is taken by the UBO above).
 layout(binding = 1) uniform sampler2D source1;   // "from" wallpaper
 layout(binding = 2) uniform sampler2D source2;   // "to"   wallpaper
 
-// ── Constants ────────────────────────────────────────────────────────────────
 #define M_PI    3.141592654
 #define _TWOPI  6.283185307
 
-// ── Helper: line-segment ray intersection ────────────────────────────────────
 // Returns t ≥ 0 along direction d from origin o that hits segment p1→p2,
 // or −1000.0 if there is no valid intersection.
 float raySegment(vec2 o, vec2 d, vec2 p1, vec2 p2) {
@@ -56,9 +47,8 @@ float raySegment(vec2 o, vec2 d, vec2 p1, vec2 p2) {
     return -1000.0;
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
 void main() {
-    vec2  uv   = texCoord;                          // (0,0) TL → (1,1) BR
+    vec2  uv   = texCoord;
     vec2  uv2;
     float p    = clamp(ubuf.progress,     0.0, 1.0);
     float sa   = ubuf.smoothAmount;
@@ -69,14 +59,12 @@ void main() {
     vec3 col2 = texture(source2, uv).rgb;
     vec3 col;
 
-    // ── 0: Fade ───────────────────────────────────────────────────────────────
+    // 0. Fade transition
     if (ubuf.transitionType == 0) {
         col = mix(col1, col2, p);
     }
 
-    // ── 1: Wipe Down (soft feathered edge) ───────────────────────────────────
-    // A horizontal band advances downward. Above the band = old image,
-    // below = new image, inside = soft blend.
+    // 1. Wipe Down transition
     else if (ubuf.transitionType == 1) {
         float edge = 1.0 - p;
         if      (uv.y <= edge)      col = col1;
@@ -84,8 +72,7 @@ void main() {
         else                        col = mix(col1, col2, (uv.y - edge) / sa);
     }
 
-    // ── 2: Circle Expand (soft edge) ─────────────────────────────────────────
-    // A circle centred at (0.5, 0.5) expands from radius 0 to cover the frame.
+    // 2. Circle Expand transition
     else if (ubuf.transitionType == 2) {
         // max radius needed to cover all 4 corners
         float maxR = sqrt(0.25 / (asp * asp) + 0.25);
@@ -97,7 +84,7 @@ void main() {
         else                    col = col2;
     }
 
-    // ── 3: Dissolve ───────────────────────────────────────────────────────────
+    // 3. Dissolve transition
     // Each pixel gets a pseudo-random threshold; it switches to the new image
     // once progress exceeds its threshold — giving a random scatter dissolve.
     else if (ubuf.transitionType == 3) {
@@ -105,16 +92,16 @@ void main() {
         col = (p > noise) ? col2 : col1;
     }
 
-    // ── 4: Split Horizontal (open from centre) ────────────────────────────────
+    // 4. Split Horizontal transition
     // The frame splits along the horizontal centre line; the top half slides up
     // and the bottom half slides down, revealing the new image.
     else if (ubuf.transitionType == 4) {
         float halfOff = 0.5 * p;
         if (uv.y < 0.5 - halfOff || uv.y >= 0.5 + halfOff) col = col1;
-        else                                                  col = col2;
+        else                                               col = col2;
     }
 
-    // ── 5: Slide Up ───────────────────────────────────────────────────────────
+    // 5. Slide Up transition
     // The old image physically slides upward; the new image is revealed below.
     else if (ubuf.transitionType == 5) {
         if (uv.y >= 1.0 - p) {
@@ -125,7 +112,7 @@ void main() {
         }
     }
 
-    // ── 6: Pixelate ───────────────────────────────────────────────────────────
+    // 6. Pixelate transition
     // Block size ramps up to a peak at p=0.5, then back down. The blended
     // pixelated textures cross-fade simultaneously.
     else if (ubuf.transitionType == 6) {
@@ -133,28 +120,25 @@ void main() {
         float bsz  = max(1.0, ramp * 60.0);
         uv2.x = (floor(uv.x * res.x / bsz) * bsz + 0.5) / res.x;
         uv2.y = (floor(uv.y * res.y / bsz) * bsz + 0.5) / res.y;
-        col   = mix(texture(source1, uv2).rgb,
-                    texture(source2, uv2).rgb, p);
+        col   = mix(texture(source1, uv2).rgb, texture(source2, uv2).rgb, p);
     }
 
-    // ── 7: Diagonal Wipe (top-left → bottom-right) ───────────────────────────
-    // A diagonal band (45°) sweeps across the frame.
+    // 7. Diagonal Wipe  transition (direction: top-left → bottom-right)
     else if (ubuf.transitionType == 7) {
-        float diag = uv.x + uv.y;          // 0 (TL) → 2 (BR)
+        float diag = uv.x + uv.y;
         float edge = p * 2.0;
         if      (diag < edge - sa) col = col2;
         else if (diag < edge)      col = mix(col1, col2, (diag - (edge - sa)) / sa);
         else                       col = col1;
     }
 
-    // ── 8: Box Expand (soft edge) ─────────────────────────────────────────────
-    // A rectangle centred at (0.5, 0.5) grows outward to fill the frame.
+    // 8. Box Expand transition
     else if (ubuf.transitionType == 8) {
         vec2  d2       = abs(uv - 0.5);
         float halfSize  = 0.5 * p;
         float halfSizeS = halfSize + sa;
 
-        if      (d2.x <= halfSize  && d2.y <= halfSize) {
+        if (d2.x <= halfSize  && d2.y <= halfSize) {
             col = col2;
         } else if (d2.x <= halfSizeS && d2.y <= halfSizeS) {
             float blend = max(
@@ -167,7 +151,7 @@ void main() {
         }
     }
 
-    // ── 9: Roll (page-roll from right edge) ───────────────────────────────────
+    // 9. Roll transition (page-roll from right edge)
     // The old image appears to curl around a vertical cylinder that sweeps
     // left to right, peeling back to reveal the new image beneath.
     else if (ubuf.transitionType == 9) {
@@ -184,14 +168,14 @@ void main() {
         if (uv2.x >= 0.0 && uv2.x < res.x &&
             uv2.y >= 0.0 && uv2.y < res.y) {
             uv2 /= res;
-            uv2.x = 1.0 - uv2.x;          // mirror back to original orientation
+            uv2.x = 1.0 - uv2.x; // mirror back to original orientation
             col   = texture(source1, uv2).rgb;
         } else {
             col = col2;
         }
     }
 
-    // ── Fallback ──────────────────────────────────────────────────────────────
+    // fb
     else {
         col = mix(col1, col2, p);
     }

@@ -1,8 +1,5 @@
 #version 440
 
-// Compile with:
-//   qsb --glsl "450,330,300 es" --hlsl 50 --msl 12 -o ImageTransition.vert.qsb transition.vert
-
 layout(location = 0) in  vec4 qt_Vertex;
 layout(location = 1) in  vec2 qt_MultiTexCoord0;
 
