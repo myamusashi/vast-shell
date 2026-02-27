@@ -414,7 +414,7 @@ Item {
 
             delegate: Rectangle {
                 required property var modelData
-                readonly property real currentBarHeight: pulse.barHeight(modelData.index)
+                property real currentBarHeight: pulse.barHeight(modelData.index)
 
                 x: modelData.x - width / 2.1
                 y: 10 - currentBarHeight
