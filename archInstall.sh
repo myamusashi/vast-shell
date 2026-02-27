@@ -19,7 +19,6 @@ QML_DIR=""
 BUILD_DIR=""
 PROJECT_ROOT=""
 M3SHAPES_REV=""
-QMLMATERIAL_REV=""
 
 init_globals() {
 	INSTALL_DIR="/usr/local/share/quickshell"
@@ -29,9 +28,9 @@ init_globals() {
 	BUILD_DIR="/tmp/quickshell-build"
 	PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)" || die "Failed to determine project root"
 	M3SHAPES_REV="1c8e6751febf230d7f94bf8015eaeb643bb4521e"
-	QMLMATERIAL_REV="21efe0c0d9fde4a9a041ab52e9ed3cc055c35796"
+	ANOTHER_RIPPLE_REV="main"
 
-	readonly INSTALL_DIR BIN_DIR FONT_DIR QML_DIR BUILD_DIR PROJECT_ROOT M3SHAPES_REV QMLMATERIAL_REV
+	readonly INSTALL_DIR BIN_DIR FONT_DIR QML_DIR BUILD_DIR PROJECT_ROOT M3SHAPES_REV ANOTHER_RIPPLE_REV
 }
 
 check_root() {
@@ -182,76 +181,108 @@ build_m3shapes() {
 	fi
 }
 
-build_qmlmaterial() {
-	local -r plugin="$QML_DIR/Qcm/Material/libqml_materialplugin.so"
-	local -r lib="$QML_DIR/Qcm/Material/libqml_material.so"
+compile_wallpaper_shaders() {
+	local -r shader_dir="$PROJECT_ROOT/Assets/shaders"
+	local -r vert_src="$shader_dir/ImageTransition.vert"
+	local -r frag_src="$shader_dir/ImageTransition.frag"
+	local -r vert_out="$shader_dir/ImageTransition.vert.qsb"
+	local -r frag_out="$shader_dir/ImageTransition.frag.qsb"
 
-	if [[ -f $plugin && -f $lib && ${FORCE_REBUILD:-0} -ne 1 ]]; then
-		log "QmlMaterial already installed (set FORCE_REBUILD=1 to rebuild)"
+	# Locate qsb tool — packaged as qt6-shadertools on Arch
+	local qsb
+	qsb=$(command -v qsb 2>/dev/null || command -v qsb6 2>/dev/null || true)
+	[[ -n $qsb ]] || qsb=$(find /usr/lib/qt6 /usr/lib/qt /opt/qt6 -name "qsb" -type f 2>/dev/null | head -1 || true)
+	[[ -n $qsb ]] || {
+		warn "qsb not found — skipping shader compilation (qt6-shadertools required)"
 		return 0
-	fi
-
-	[[ ${FORCE_REBUILD:-0} -eq 1 ]] && log "Force rebuilding QmlMaterial..."
-	log "Building QmlMaterial..."
-
-	local -r src="$BUILD_DIR/QmlMaterial"
-	[[ -d $src ]] || git clone --recurse-submodules https://github.com/hypengw/QmlMaterial.git "$src"
-
-	git -C "$src" checkout "$QMLMATERIAL_REV" 2>/dev/null || {
-		git -C "$src" fetch
-		git -C "$src" checkout "$QMLMATERIAL_REV"
 	}
-	git -C "$src" submodule update --init --recursive
 
-	if [[ -f $src/qml/Token.qml ]]; then
-		log "Patching Token.qml font paths..."
-		sed -i \
-			-e 's|source: root\.iconFontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/ttf-material-symbols-variable/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
-			-e 's|source: root\.iconFill0FontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/ttf-material-symbols-variable/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
-			-e 's|source: root\.iconFill1FontUrl|source: Qt.resolvedUrl("file:///usr/share/fonts/ttf-material-symbols-variable/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf")|g' \
-			"$src/qml/Token.qml"
+	[[ -f $vert_src ]] || {
+		warn "Vertex shader not found: $vert_src"
+		return 0
+	}
+	[[ -f $frag_src ]] || {
+		warn "Fragment shader not found: $frag_src"
+		return 0
+	}
 
-		if grep -q 'Qt.resolvedUrl.*MaterialSymbolsOutlined' "$src/qml/Token.qml"; then
-			log "Font paths successfully patched"
-		else
-			warn "Font path patching may have failed, check $src/qml/Token.qml"
+	# Skip if already compiled and sources are older than outputs
+	if [[ -f $vert_out && -f $frag_out ]]; then
+		if [[ $vert_src -ot $vert_out && $frag_src -ot $frag_out ]]; then
+			log "Wallpaper shaders already compiled and up to date"
+			return 0
 		fi
-	else
-		warn "$src/qml/Token.qml not found, skipping font patch"
 	fi
 
-	cmake -S "$src" -B "$src/build" -G Ninja \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX="$BUILD_DIR/qmlmaterial-install" \
-		-DQM_BUILD_EXAMPLE=OFF
+	log "Compiling wallpaper transition shaders..."
+
+	"$qsb" \
+		--glsl "450,330,300 es" \
+		--hlsl 50 \
+		--msl 12 \
+		-o "$vert_out" \
+		"$vert_src" ||
+		die "Failed to compile vertex shader: $vert_src"
+
+	"$qsb" \
+		--glsl "450,330,300 es" \
+		--hlsl 50 \
+		--msl 12 \
+		-o "$frag_out" \
+		"$frag_src" ||
+		die "Failed to compile fragment shader: $frag_src"
+
+	log "Shaders compiled → $(basename "$vert_out"), $(basename "$frag_out")"
+}
+
+build_another_ripple() {
+	local -r plugin="$QML_DIR/AnotherRipple/libAnotherRippleplugin.so"
+	[[ -f $plugin ]] && {
+		log "AnotherRipple already installed"
+		return 0
+	}
+
+	log "Building AnotherRipple..."
+	local -r src="$BUILD_DIR/Another-Ripple"
+
+	[[ -d $src ]] || git clone https://github.com/myamusashi/Another-Ripple.git "$src"
+	git -C "$src" checkout "$ANOTHER_RIPPLE_REV" 2>/dev/null || {
+		git -C "$src" fetch
+		git -C "$src" checkout "$ANOTHER_RIPPLE_REV"
+	}
+
+	# The nix derivation appends /AnotherRipple to the source — CMakeLists.txt lives there
+	local -r cmake_src="$src/AnotherRipple"
+	[[ -d $cmake_src ]] || die "AnotherRipple subdirectory not found in repo: $cmake_src"
+
+	cmake -S "$cmake_src" -B "$src/build" -G Ninja \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+		-DCMAKE_INSTALL_PREFIX="$BUILD_DIR/anotherripple-install" \
+		-DINSTALL_QMLDIR="lib/qt6/qml"
 	ninja -C "$src/build"
 	ninja -C "$src/build" install
 
-	mkdir -p "$QML_DIR/Qcm/Material"
-	local install_base="$BUILD_DIR/qmlmaterial-install"
-
-	for dir in "$install_base/Qcm/Material" "$install_base/qml_modules/Qcm/Material" "$install_base/lib/qt6/qml/Qcm/Material"; do
-		[[ -d $dir ]] && cp -r "$dir/"* "$QML_DIR/Qcm/Material/"
+	mkdir -p "$QML_DIR/AnotherRipple"
+	local install_base="$BUILD_DIR/anotherripple-install"
+	for dir in \
+		"$install_base/AnotherRipple" \
+		"$install_base/lib/qt6/qml/AnotherRipple" \
+		"$install_base/lib/qt-6/qml/AnotherRipple"; do
+		[[ -d $dir ]] && cp -r "$dir/"* "$QML_DIR/AnotherRipple/"
 	done
 
-	find "$install_base/lib" "$src/build" -name "libqml_material*.so*" -o -name "libQcm*.so*" 2>/dev/null |
-		while read -r f; do [[ -f $f ]] && cp "$f" "$QML_DIR/Qcm/Material/"; done
-
-	chmod 755 "$QML_DIR/Qcm/Material"/*.so* 2>/dev/null || true
-
-	local qt_core_lib qt_qml_lib qt_quick_lib
+	local qt_core_lib qt_qml_lib
 	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
 	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
-	qt_quick_lib=$(pkg-config --variable=libdir Qt6Quick)
 
-	for f in "$QML_DIR/Qcm/Material"/*.so*; do
-		if [[ -f $f && ! -L $f ]]; then
-			patchelf --set-rpath "$QML_DIR/Qcm/Material:$qt_core_lib:$qt_qml_lib:$qt_quick_lib" "$f" 2>/dev/null || true
-		fi
+	for lib in \
+		"$QML_DIR/AnotherRipple/libAnotherRipple.so" \
+		"$QML_DIR/AnotherRipple/libAnotherRippleplugin.so"; do
+		[[ -f $lib ]] && patchelf --set-rpath "$QML_DIR/AnotherRipple:$qt_core_lib:$qt_qml_lib" "$lib" 2>/dev/null || true
 	done
 
-	[[ -f $plugin ]] || warn "QmlMaterial plugin not found after installation"
-	[[ -f $lib ]] || warn "libqml_material.so not found after installation"
+	[[ -f $plugin ]] || warn "AnotherRipple plugin not found after installation"
 }
 
 build_translation_manager() {
@@ -291,13 +322,21 @@ build_translation_manager() {
 
 compile_translations() {
 	[[ -d $PROJECT_ROOT/translations ]] || return 0
-	command -v lrelease &>/dev/null || {
-		warn "lrelease not found, skipping translations"
+
+	# On Arch, qt6-tools installs lrelease to /usr/lib/qt6/bin/ which is NOT in $PATH by default.
+	# Check that specific location first, then fall back to whatever is in $PATH.
+	local lrelease_bin
+	lrelease_bin=$(command -v /usr/lib/qt6/bin/lrelease 2>/dev/null ||
+		command -v lrelease 2>/dev/null ||
+		true)
+
+	[[ -n $lrelease_bin ]] || {
+		warn "lrelease not found — install qt6-tools: pacman -S qt6-tools"
 		return 0
 	}
 
-	log "Compiling translations..."
-	lrelease "$PROJECT_ROOT/translations/"*.ts 2>/dev/null || true
+	log "Compiling translations with $(basename "$lrelease_bin")..."
+	"$lrelease_bin" "$PROJECT_ROOT/translations/"*.ts 2>/dev/null || true
 }
 
 install_quickshell_config() {
@@ -353,7 +392,8 @@ main() {
 	build_keystate
 	build_audioProfiles
 	build_m3shapes
-	build_qmlmaterial
+	build_another_ripple
+	compile_wallpaper_shaders
 	build_translation_manager
 	compile_translations
 	install_quickshell_config
