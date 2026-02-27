@@ -2,11 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 
-import qs.Configs
-import qs.Helpers
 import qs.Components
 
 Variants {
@@ -32,27 +29,7 @@ Variants {
         WlrLayershell.namespace: "shell:wallpaper"
 
         Wallpaper {
-            id: wallpaper
-
-            Behavior on source {
-                SequentialAnimation {
-                    NAnim {
-                        target: wallpaper
-                        property: "opacity"
-                        to: 0
-                        duration: Appearance.animations.durations.extraLarge
-                    }
-
-                    PropertyAction {}
-
-                    NAnim {
-                        target: wallpaper
-                        property: "opacity"
-                        to: 1
-                        duration: Appearance.animations.durations.extraLarge
-                    }
-                }
-            }
+            anchors.fill: parent
         }
     }
 }
