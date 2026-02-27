@@ -110,15 +110,18 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
 
+                    // Center card gets 2 "units", each side card gets 1 "unit"
+                    // Total units = Configs.wallpaper.visibleWallpaper + 1 (center counts double)
+                    readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
+
                     model: ScriptModel {
                         values: [...WallpaperFileModels.filteredWallpaperList]
                     }
-                    pathItemCount: 5
+                    pathItemCount: Configs.wallpaper.visibleWallpaper
                     preferredHighlightBegin: 0.5
                     preferredHighlightEnd: 0.5
-
                     clip: true
-                    cacheItemCount: 7
+                    cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
 
                     Component.onCompleted: {
                         const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
@@ -150,25 +153,61 @@ Item {
                         required property var modelData
                         required property int index
 
-                        implicitWidth: wallpaperPath.width / 5 - 16
-                        implicitHeight: wallpaperPath.height - 16
-                        scale: PathView.isCurrentItem ? 1.1 : 0.85
-                        z: PathView.isCurrentItem ? 100 : 1
-                        opacity: PathView.isCurrentItem ? 1.0 : 0.6
+                        readonly property bool isCurrent: PathView.isCurrentItem
 
-                        Behavior on scale {
-                            NAnim {}
+                        // Center card = 2 units wide, side cards = 1 unit wide
+                        implicitWidth: isCurrent ? wallpaperPath.unitWidth * 2 : wallpaperPath.unitWidth
+                        implicitHeight: wallpaperPath.height
+
+                        z: isCurrent ? 100 : 1
+                        opacity: isCurrent ? 1.0 : 0.92
+
+                        Behavior on implicitWidth {
+                            NAnim {
+                                duration: Appearance.animations.durations.normal
+                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                            }
                         }
 
                         Behavior on opacity {
-                            NAnim {}
+                            NAnim {
+                                duration: Appearance.animations.durations.normal
+                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                            }
                         }
 
                         ClippingRectangle {
-                            anchors.fill: parent
-                            anchors.margins: 8
-                            radius: Appearance.rounding.normal
+                            id: cardRect
+
+                            anchors.centerIn: parent
+
+                            // Gap between cards scales with unit width so it looks proportional at any count
+                            implicitWidth: parent.width - (delegateItem.isCurrent ? Math.max(20, wallpaperPath.unitWidth * 0.3) : Math.max(12, wallpaperPath.unitWidth * 0.2))
+                            implicitHeight: parent.height
+
+                            // Center: soft rect | Side: pill — pill radius needs card height not parent
+                            radius: delegateItem.isCurrent ? Appearance.rounding.large ?? 24 : 20
+
                             color: "transparent"
+
+                            Behavior on implicitWidth {
+                                NAnim {
+                                    duration: Appearance.animations.durations.normal
+                                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                                }
+                            }
+                            Behavior on implicitHeight {
+                                NAnim {
+                                    duration: Appearance.animations.durations.normal
+                                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                                }
+                            }
+                            Behavior on radius {
+                                NAnim {
+                                    duration: Appearance.animations.durations.normal
+                                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                                }
+                            }
 
                             Image {
                                 anchors.fill: parent
@@ -177,6 +216,27 @@ Item {
                                 fillMode: Image.PreserveAspectCrop
                                 asynchronous: true
                                 cache: true
+
+                                Elevation {
+                                    anchors.fill: parent
+                                    z: -1
+                                    level: 12
+                                    blur: 40
+                                    spread: 20
+                                    radius: 4
+                                }
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                radius: cardRect.radius
+                                color: Qt.rgba(0, 0, 0, delegateItem.isCurrent ? 0.0 : 0.22)
+
+                                Behavior on color {
+                                    CAnim {
+                                        duration: Appearance.animations.durations.normal
+                                    }
+                                }
                             }
 
                             MArea {
@@ -184,10 +244,13 @@ Item {
                                 cursorShape: Qt.PointingHandCursor
 
                                 onClicked: {
-                                    wallpaperPath.currentIndex = delegateItem.index;
-                                    Quickshell.execDetached({
-                                        "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
-                                    });
+                                    if (!delegateItem.isCurrent) {
+                                        wallpaperPath.currentIndex = delegateItem.index;
+                                    } else {
+                                        Quickshell.execDetached({
+                                            "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                                        });
+                                    }
                                 }
                             }
                         }
