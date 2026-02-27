@@ -19,6 +19,7 @@ QML_DIR=""
 BUILD_DIR=""
 PROJECT_ROOT=""
 M3SHAPES_REV=""
+ANOTHER_RIPPLE_REV=""
 
 init_globals() {
 	INSTALL_DIR="/usr/local/share/quickshell"
@@ -43,9 +44,12 @@ check_distro() {
 
 install_system_packages() {
 	local -a missing=()
+	# go removed — audioProfiles is now a Qt plugin, not a Go binary
+	# pipewire and pkgconf added — required to build the AudioProfiles plugin
 	local -r pkg_list=(
-		base-devel git go cmake ninja extra-cmake-modules patchelf
+		base-devel git cmake ninja extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
+		pipewire
 		findutils grep sed gawk util-linux libnotify wireplumber
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 	)
@@ -126,25 +130,65 @@ build_keystate() {
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/go/keystate-bin"
 }
 
-build_audioProfiles() {
-	[[ -f $BIN_DIR/audioProfiles ]] && {
-		log "audioProfiles already installed"
-		return 0
-	}
-	[[ -f $PROJECT_ROOT/Assets/go/audioProfiles.go ]] || {
-		warn "audioProfiles.go not found, skipping"
+build_audio_profiles_plugin() {
+	local -r plugin_so="$QML_DIR/AudioProfiles/libAudioProfilesPlugin.so"
+	[[ -f $plugin_so ]] && {
+		log "AudioProfiles plugin already installed"
 		return 0
 	}
 
-	log "Building audioProfiles..."
-	local -r gopath="$BUILD_DIR/gopath"
-	mkdir -p "$gopath"
+	local -r src="$PROJECT_ROOT/plugins/AudioProfiles"
+	[[ -d $src ]] || {
+		warn "plugins/AudioProfiles not found, skipping"
+		return 0
+	}
 
-	cp "$PROJECT_ROOT/Assets/go/audioProfiles.go" "$BUILD_DIR/"
-	cd "$BUILD_DIR"
-	GOPATH="$gopath" go build -o audioProfiles audioProfiles.go
-	install -Dm755 "$BUILD_DIR/audioProfiles" "$BIN_DIR/audioProfiles"
-	install -Dm755 "$BUILD_DIR/audioProfiles" "$PROJECT_ROOT/Assets/go/audioProfiles"
+	log "Building AudioProfiles Qt plugin..."
+	local -r build="$BUILD_DIR/AudioProfiles-build"
+	local -r install_base="$BUILD_DIR/AudioProfiles-install"
+
+	cmake -S "$src" -B "$build" -G Ninja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX="$install_base"
+	ninja -C "$build"
+	ninja -C "$build" install
+
+	# CMakeLists.txt installs into $prefix/lib/qt-6/qml/AudioProfiles — try that
+	# path first, then fall back to variants used by different Qt/distro combos.
+	mkdir -p "$QML_DIR/AudioProfiles"
+	local found=0
+	for dir in \
+		"$install_base/lib/qt-6/qml/AudioProfiles" \
+		"$install_base/lib/qt6/qml/AudioProfiles" \
+		"$install_base/AudioProfiles"; do
+		if [[ -d $dir ]]; then
+			cp -r "$dir/"* "$QML_DIR/AudioProfiles/"
+			found=1
+			break
+		fi
+	done
+	((found)) || die "AudioProfiles install tree not found under $install_base"
+
+	local qt_core_lib qt_qml_lib pw_lib
+	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
+	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
+	pw_lib=$(pkg-config --variable=libdir libpipewire-0.3)
+
+	# Backing library — needs PipeWire + Qt
+	local backing="$QML_DIR/AudioProfiles/libAudioProfilesPlugin.so"
+	[[ -f $backing ]] &&
+		patchelf --set-rpath \
+			"$QML_DIR/AudioProfiles:$qt_core_lib:$qt_qml_lib:$pw_lib" \
+			"$backing" 2>/dev/null || true
+
+	# Thin QML stub — only needs Qt (loads backing lib from same dir)
+	local stub="$QML_DIR/AudioProfiles/libAudioProfilesQmlPlugin.so"
+	[[ -f $stub ]] &&
+		patchelf --set-rpath \
+			"$QML_DIR/AudioProfiles:$qt_core_lib:$qt_qml_lib" \
+			"$stub" 2>/dev/null || true
+
+	[[ -f $plugin_so ]] || warn "AudioProfiles plugin .so not found after install — check build output"
 }
 
 build_m3shapes() {
@@ -188,7 +232,6 @@ compile_wallpaper_shaders() {
 	local -r vert_out="$shader_dir/ImageTransition.vert.qsb"
 	local -r frag_out="$shader_dir/ImageTransition.frag.qsb"
 
-	# Locate qsb tool — packaged as qt6-shadertools on Arch
 	local qsb
 	qsb=$(command -v qsb 2>/dev/null || command -v qsb6 2>/dev/null || true)
 	[[ -n $qsb ]] || qsb=$(find /usr/lib/qt6 /usr/lib/qt /opt/qt6 -name "qsb" -type f 2>/dev/null | head -1 || true)
@@ -206,7 +249,6 @@ compile_wallpaper_shaders() {
 		return 0
 	}
 
-	# Skip if already compiled and sources are older than outputs
 	if [[ -f $vert_out && -f $frag_out ]]; then
 		if [[ $vert_src -ot $vert_out && $frag_src -ot $frag_out ]]; then
 			log "Wallpaper shaders already compiled and up to date"
@@ -216,20 +258,10 @@ compile_wallpaper_shaders() {
 
 	log "Compiling wallpaper transition shaders..."
 
-	"$qsb" \
-		--glsl "450,330,300 es" \
-		--hlsl 50 \
-		--msl 12 \
-		-o "$vert_out" \
-		"$vert_src" ||
+	"$qsb" --glsl "450,330,300 es" --hlsl 50 --msl 12 -o "$vert_out" "$vert_src" ||
 		die "Failed to compile vertex shader: $vert_src"
 
-	"$qsb" \
-		--glsl "450,330,300 es" \
-		--hlsl 50 \
-		--msl 12 \
-		-o "$frag_out" \
-		"$frag_src" ||
+	"$qsb" --glsl "450,330,300 es" --hlsl 50 --msl 12 -o "$frag_out" "$frag_src" ||
 		die "Failed to compile fragment shader: $frag_src"
 
 	log "Shaders compiled → $(basename "$vert_out"), $(basename "$frag_out")"
@@ -251,7 +283,6 @@ build_another_ripple() {
 		git -C "$src" checkout "$ANOTHER_RIPPLE_REV"
 	}
 
-	# The nix derivation appends /AnotherRipple to the source — CMakeLists.txt lives there
 	local -r cmake_src="$src/AnotherRipple"
 	[[ -d $cmake_src ]] || die "AnotherRipple subdirectory not found in repo: $cmake_src"
 
@@ -323,8 +354,6 @@ build_translation_manager() {
 compile_translations() {
 	[[ -d $PROJECT_ROOT/translations ]] || return 0
 
-	# On Arch, qt6-tools installs lrelease to /usr/lib/qt6/bin/ which is NOT in $PATH by default.
-	# Check that specific location first, then fall back to whatever is in $PATH.
 	local lrelease_bin
 	lrelease_bin=$(command -v /usr/lib/qt6/bin/lrelease 2>/dev/null ||
 		command -v lrelease 2>/dev/null ||
@@ -344,7 +373,6 @@ install_quickshell_config() {
 	rm -rf "$INSTALL_DIR"
 	mkdir -p "$INSTALL_DIR"
 
-	# Copy all except build/
 	find "$PROJECT_ROOT" -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} "$INSTALL_DIR/" \; 2>/dev/null || true
 
 	for dir in Assets Components Widgets; do
@@ -359,7 +387,6 @@ install_quickshell_config() {
 	fi
 
 	[[ -f $BIN_DIR/keystate-bin ]] && install -Dm755 "$BIN_DIR/keystate-bin" "$INSTALL_DIR/Assets/go/keystate-bin"
-	[[ -f $BIN_DIR/audioProfiles ]] && install -Dm755 "$BIN_DIR/audioProfiles" "$INSTALL_DIR/Assets/go/audioProfiles"
 }
 
 create_wrapper() {
@@ -390,7 +417,7 @@ main() {
 	setup_aur_helper
 	install_aur_packages
 	build_keystate
-	build_audioProfiles
+	build_audio_profiles_plugin # replaces build_audioProfiles
 	build_m3shapes
 	build_another_ripple
 	compile_wallpaper_shaders
