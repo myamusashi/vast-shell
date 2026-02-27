@@ -30,6 +30,7 @@
     material-symbols = callPackage ./material-symbols.nix {};
     m3shapes = callPackage ./m3Shapes.nix {};
     another-ripple = callPackage ./AnotherRipple.nix {};
+    audioProfiles = callPackage ./audioProfiles.nix {};
     translationManager = callPackage ./translationManager.nix {};
 
     runtimeDeps = [
@@ -160,6 +161,11 @@
                 $out/${qt6.qtbase.qtQmlPrefix}
             fi
 
+            if [ -d "${audioProfiles}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${audioProfiles}/${qt6.qtbase.qtQmlPrefix}/* \
+                $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+
             if [ -d "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" ]; then
               cp -r ${another-ripple}/${qt6.qtbase.qtQmlPrefix}/* \
                 $out/${qt6.qtbase.qtQmlPrefix}
@@ -172,7 +178,8 @@
                   --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
                   --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                   --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
-                  --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
+                  --prefix QML2_IMPORT_PATH : "${audioProfiles}/${qt6.qtbase.qtQmlPrefix}" \
+                  --prefix QML2_IMPORT_PATH : "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" \
                   --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
                   --suffix PATH : /run/current-system/sw/bin \
                   --suffix PATH : /etc/profiles/per-user/$USER/bin \
