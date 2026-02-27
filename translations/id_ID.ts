@@ -657,22 +657,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="41"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="40"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="57"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="56"/>
         <source>Do you want to %1?</source>
         <translation>Apakah kamu ingin %1?</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="79"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="78"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="98"/>
+        <location filename="../Modules/Lock/Dialog.qml" line="96"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1583,18 +1583,18 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Rekam layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="159"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="161"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="168"/>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="237"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="170"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="239"/>
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="189"/>
+        <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="191"/>
         <source>Merge screens</source>
         <translation>Gabungkan layar</translation>
     </message>
