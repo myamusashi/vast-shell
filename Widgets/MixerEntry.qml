@@ -58,7 +58,7 @@ ColumnLayout {
             radius: Appearance.rounding.full
 
             Icon {
-				id: iconItem
+                id: iconItem
 
                 type: Icon.Material
                 anchors.centerIn: parent
