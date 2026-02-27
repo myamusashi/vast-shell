@@ -12,172 +12,134 @@
 //   8 – Box Expand        Rectangle grows from screen centre (soft edge)
 //   9 – Roll              Page-roll cylinder sweeps from right edge
 
-layout(location = 0) in  vec2 texCoord;
+layout(location = 0) noperspective in vec2 texCoord;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform FragBuf {
     mat4  qt_Matrix;
     float qt_Opacity;
-
-    float progress;          // 0.0 → 1.0
-    int   transitionType;    // 0 – 9
-    float smoothAmount;      // 0.0 – 0.15
-    float aspect;            // height / width
-    vec2  resolution;        // viewport size in pixels
+    float progress;
+    int   transitionType;
+    float smoothAmount;
+    float aspect;
+    vec2  resolution;
 } ubuf;
 
-// Binding indices start at 1 (binding 0 is taken by the UBO above).
-layout(binding = 1) uniform sampler2D source1;   // "from" wallpaper
-layout(binding = 2) uniform sampler2D source2;   // "to"   wallpaper
+layout(binding = 1) uniform sampler2D source1;
+layout(binding = 2) uniform sampler2D source2;
 
-#define M_PI    3.141592654
-#define _TWOPI  6.283185307
+#define M_HALF_PI 1.5707963268
 
-// Returns t ≥ 0 along direction d from origin o that hits segment p1→p2,
-// or −1000.0 if there is no valid intersection.
-float raySegment(vec2 o, vec2 d, vec2 p1, vec2 p2) {
-    vec2  v1 = o  - p1;
-    vec2  v2 = p2 - p1;
-    vec2  v3 = vec2(-d.y, d.x);
-    float dt = dot(v2, v3);
-    if (abs(dt) < 1e-6) return -1000.0;
-    float t1 = (v2.x * v1.y - v2.y * v1.x) / dt;
-    float t2 = dot(v1, v3) / dt;
-    if (t1 >= 0.0 && t2 >= 0.0 && t2 <= 1.0) return t1;
-    return -1000.0;
+float hash21(vec2 p) {
+    p = fract(p * vec2(234.34, 435.345));
+    p += dot(p, p + 34.23);
+    return fract(p.x * p.y);
 }
 
 void main() {
-    vec2  uv   = texCoord;
-    vec2  uv2;
-    float p    = clamp(ubuf.progress,     0.0, 1.0);
-    float sa   = ubuf.smoothAmount;
-    float asp  = ubuf.aspect;
-    vec2  res  = max(ubuf.resolution, vec2(1.0));
+    vec2  uv = texCoord;
+    float p  = clamp(ubuf.progress, 0.0, 1.0);
+    float sa = ubuf.smoothAmount;
+    vec3  col;
 
-    vec3 col1 = texture(source1, uv).rgb;
-    vec3 col2 = texture(source2, uv).rgb;
-    vec3 col;
-
-    // 0. Fade transition
+    // 0. Fade
     if (ubuf.transitionType == 0) {
-        col = mix(col1, col2, p);
+        col = mix(texture(source1, uv).rgb,
+                  texture(source2, uv).rgb, p);
     }
 
-    // 1. Wipe Down transition
+    // 1. Wipe Down
     else if (ubuf.transitionType == 1) {
         float edge = 1.0 - p;
-        if      (uv.y <= edge)      col = col1;
-        else if (uv.y >= edge + sa) col = col2;
-        else                        col = mix(col1, col2, (uv.y - edge) / sa);
+        float t    = smoothstep(edge, edge + sa, uv.y);
+        col = mix(texture(source1, uv).rgb,
+                  texture(source2, uv).rgb, t);
     }
 
-    // 2. Circle Expand transition
+    // 2. Circle Expand
     else if (ubuf.transitionType == 2) {
-        // max radius needed to cover all 4 corners
+        float asp  = ubuf.aspect;
         float maxR = sqrt(0.25 / (asp * asp) + 0.25);
+        float r    = length(vec2((uv.x - 0.5) / asp, uv.y - 0.5));
         float rad  = maxR * p;
-        vec2  d    = vec2((uv.x - 0.5) / asp, uv.y - 0.5);
-        float r    = length(d);
-        if      (r >= rad + sa) col = col1;
-        else if (r >= rad)      col = mix(col2, col1, (r - rad) / sa);
-        else                    col = col2;
+        float t    = smoothstep(rad + sa, rad, r);
+        col = mix(texture(source1, uv).rgb,
+                  texture(source2, uv).rgb, t);
     }
 
-    // 3. Dissolve transition
-    // Each pixel gets a pseudo-random threshold; it switches to the new image
-    // once progress exceeds its threshold — giving a random scatter dissolve.
+    // 3. Dissolve
     else if (ubuf.transitionType == 3) {
-        float noise = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453);
-        col = (p > noise) ? col2 : col1;
+        float noise = hash21(uv);
+        col = (p > noise)
+            ? texture(source2, uv).rgb
+            : texture(source1, uv).rgb;
     }
 
-    // 4. Split Horizontal transition
-    // The frame splits along the horizontal centre line; the top half slides up
-    // and the bottom half slides down, revealing the new image.
+    // 4. Split Horizontal
     else if (ubuf.transitionType == 4) {
         float halfOff = 0.5 * p;
-        if (uv.y < 0.5 - halfOff || uv.y >= 0.5 + halfOff) col = col1;
-        else                                               col = col2;
+        col = (uv.y < 0.5 - halfOff || uv.y >= 0.5 + halfOff)
+            ? texture(source1, uv).rgb
+            : texture(source2, uv).rgb;
     }
 
-    // 5. Slide Up transition
-    // The old image physically slides upward; the new image is revealed below.
+    // 5. Slide Up
     else if (ubuf.transitionType == 5) {
-        if (uv.y >= 1.0 - p) {
-            col = col2;
-        } else {
-            uv2 = vec2(uv.x, uv.y + p);
-            col = texture(source1, uv2).rgb;
-        }
+        col = (uv.y >= 1.0 - p)
+            ? texture(source2, uv).rgb
+            : texture(source1, vec2(uv.x, uv.y + p)).rgb;
     }
 
-    // 6. Pixelate transition
-    // Block size ramps up to a peak at p=0.5, then back down. The blended
-    // pixelated textures cross-fade simultaneously.
+    // 6. Pixelate
     else if (ubuf.transitionType == 6) {
+        vec2  res  = max(ubuf.resolution, vec2(1.0));
+        vec2  iRes = 1.0 / res;
         float ramp = (p < 0.5) ? p * 2.0 : (1.0 - p) * 2.0;
-        float bsz  = max(1.0, ramp * 60.0);
-        uv2.x = (floor(uv.x * res.x / bsz) * bsz + 0.5) / res.x;
-        uv2.y = (floor(uv.y * res.y / bsz) * bsz + 0.5) / res.y;
-        col   = mix(texture(source1, uv2).rgb, texture(source2, uv2).rgb, p);
+        float bsz  = max(1.0, ramp * 48.0);
+        vec2  uv2  = (floor(uv * res / bsz) * bsz + 0.5) * iRes;
+        col = mix(texture(source1, uv2).rgb,
+                  texture(source2, uv2).rgb, p);
     }
 
-    // 7. Diagonal Wipe  transition (direction: top-left → bottom-right)
+    // 7. Diagonal Wipe
     else if (ubuf.transitionType == 7) {
         float diag = uv.x + uv.y;
         float edge = p * 2.0;
-        if      (diag < edge - sa) col = col2;
-        else if (diag < edge)      col = mix(col1, col2, (diag - (edge - sa)) / sa);
-        else                       col = col1;
+        float t    = smoothstep(edge - sa, edge, diag);
+        col = mix(texture(source1, uv).rgb,
+                  texture(source2, uv).rgb, t);
     }
 
-    // 8. Box Expand transition
+    // 8. Box Expand
     else if (ubuf.transitionType == 8) {
-        vec2  d2       = abs(uv - 0.5);
-        float halfSize  = 0.5 * p;
-        float halfSizeS = halfSize + sa;
-
-        if (d2.x <= halfSize  && d2.y <= halfSize) {
-            col = col2;
-        } else if (d2.x <= halfSizeS && d2.y <= halfSizeS) {
-            float blend = max(
-                (d2.x > halfSize ? d2.x - halfSize : 0.0),
-                (d2.y > halfSize ? d2.y - halfSize : 0.0)
-            ) / sa;
-            col = mix(col2, col1, clamp(blend, 0.0, 1.0));
-        } else {
-            col = col1;
-        }
+        float maxD = max(abs(uv.x - 0.5), abs(uv.y - 0.5));
+        float hs   = 0.5 * p;
+        float t    = smoothstep(hs + sa, hs, maxD);
+        col = mix(texture(source1, uv).rgb,
+                  texture(source2, uv).rgb, t);
     }
 
-    // 9. Roll transition (page-roll from right edge)
-    // The old image appears to curl around a vertical cylinder that sweeps
-    // left to right, peeling back to reveal the new image beneath.
+    // 9. Roll
     else if (ubuf.transitionType == 9) {
-        float theta = (M_PI / 2.0) * p;
+        vec2  res  = max(ubuf.resolution, vec2(1.0));
+        vec2  iRes = 1.0 / res;
+        float theta = M_HALF_PI * p;
         float c1    = cos(theta);
         float s1    = sin(theta);
-
-        // Rotate pixels around the right edge (1-uv.x is distance from right)
-        float rx = (1.0 - uv.x) * res.x;
-        float ry =        uv.y   * res.y;
-        uv2.x = rx * c1 - ry * s1;
-        uv2.y = rx * s1 + ry * c1;
-
-        if (uv2.x >= 0.0 && uv2.x < res.x &&
-            uv2.y >= 0.0 && uv2.y < res.y) {
-            uv2 /= res;
-            uv2.x = 1.0 - uv2.x; // mirror back to original orientation
-            col   = texture(source1, uv2).rgb;
-        } else {
-            col = col2;
-        }
+        float rx    = (1.0 - uv.x) * res.x;
+        float ry    =        uv.y   * res.y;
+        vec2  rot   = vec2(rx * c1 - ry * s1,
+                           rx * s1 + ry * c1);
+        col = (rot.x >= 0.0 && rot.x < res.x &&
+               rot.y >= 0.0 && rot.y < res.y)
+            ? texture(source1, vec2(1.0 - rot.x, rot.y) * iRes).rgb 
+            : texture(source2, uv).rgb;
     }
 
-    // fb
+    // fallback
     else {
-        col = mix(col1, col2, p);
+        col = mix(texture(source1, uv).rgb,
+                  texture(source2, uv).rgb, p);
     }
 
     fragColor = vec4(col * ubuf.qt_Opacity, ubuf.qt_Opacity);
