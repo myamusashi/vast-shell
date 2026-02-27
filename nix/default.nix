@@ -100,10 +100,21 @@
         buildPhase = ''
             runHook preBuild
 
-            echo "Building Translations..."
+            echo "Compile Translations..."
             if [ -d "translations" ]; then
-              ${qt6.qttools}/bin/lrelease translations/*.ts
+                ${qt6.qttools}/bin/lrelease translations/*.ts
             fi
+
+            echo "Compile shaders..."
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/ImageTransition.frag.qsb \
+                   Assets/shaders/ImageTransition.frag
+
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/ImageTransition.vert.qsb \
+                   Assets/shaders/ImageTransition.vert
 
             runHook postBuild
         '';
@@ -156,16 +167,16 @@
 
             makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
               $out/bin/shell \
-              --add-flags "-p $out/share/quickshell" \
-              --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
-              --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
-              --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
-              --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
-              --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
-              --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
-              --suffix PATH : /run/current-system/sw/bin \
-              --suffix PATH : /etc/profiles/per-user/$USER/bin \
-              --suffix PATH : $HOME/.nix-profile/bin
+                  --add-flags "-p $out/share/quickshell" \
+                  --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
+                  --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
+                  --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
+                  --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
+                  --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
+                  --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
+                  --suffix PATH : /run/current-system/sw/bin \
+                  --suffix PATH : /etc/profiles/per-user/$USER/bin \
+                  --suffix PATH : $HOME/.nix-profile/bin
 
             runHook postInstall
         '';

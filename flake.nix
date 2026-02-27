@@ -50,6 +50,7 @@
                         qttools
                         qtbase
                         qttranslations
+                        qtshadertools
                     ])
                     pkgs.llvm
                     pkgs.gcc
