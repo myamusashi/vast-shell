@@ -83,27 +83,10 @@ ScrollView {
                 }
             }
 
-            RowLayout {
-                MixerEntry {
-                    useCustomProperties: true
-                    node: Pipewire.defaultAudioSink
-                    customProperty: AudioProfiles {}
-                }
-
-                Icon {
-                    Layout.alignment: Qt.AlignTop
-                    Layout.topMargin: (42 - font.pixelSize) / 2
-                    icon: "refresh"
-                    color: Colours.m3Colors.m3Primary
-                    font.pixelSize: Appearance.fonts.size.large * 1.5
-
-                    MArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Audio.restartAudioProfiles()
-                    }
-                }
+            MixerEntry {
+                useCustomProperties: true
+                node: Pipewire.defaultAudioSink
+                customProperty: AudioProfiles {}
             }
 
             Rectangle {
