@@ -62,7 +62,7 @@ WlSessionLockSurface {
 
         anchors.fill: parent
         radius: 0
-        color: "transparent"
+        color: Colours.withAlpha(Colours.m3Colors.m3Background, 0.3)
 
         Component.onCompleted: {
             lockSequence.start();
