@@ -363,6 +363,7 @@ WlSessionLockSurface {
             script: {
                 root.lock.locked = false;
                 GlobalStates.isLockscreenOpen = false;
+                root.pam.isUnlock = false;
                 root.pam.currentText = "";
             }
         }
