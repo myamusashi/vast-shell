@@ -21,12 +21,18 @@ Item {
         rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
     }
 
+    readonly property real perappWidth: {
+        const count = loader.item?.repeater.count ?? 0;
+        return count * itemSize + Math.max(0, count - 1) * itemSpacing;
+    }
+    readonly property real sliderHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
+    readonly property int itemSize: 40
+    readonly property int itemSpacing: Appearance.spacing.large
+
     property bool openPerappVolume: false
-    property real perappWidth: loader.item ? loader.item.repeater.count * 40 + Math.max(0, loader.item.repeater.count - 1) * Appearance.spacing.large : 0
-    property real sliderHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
 
     implicitWidth: GlobalStates.isOSDVisible("volume") ? wrapper.implicitWidth : 0
-    implicitHeight: 250 + 30
+    implicitHeight: 280
 
     Behavior on implicitWidth {
         NAnim {
@@ -51,7 +57,6 @@ Item {
 
     PwNodeLinkTracker {
         id: linkTracker
-
         node: Pipewire.defaultAudioSink
     }
 
@@ -59,7 +64,7 @@ Item {
         id: wrapper
 
         anchors.fill: parent
-        implicitWidth: 50 + 10 + (root.openPerappVolume ? root.perappWidth + Appearance.spacing.large : 0)
+        implicitWidth: 60 + (root.openPerappVolume ? root.perappWidth + root.itemSpacing : 0)
         color: GlobalStates.drawerColors
         clip: true
         radius: 0
@@ -71,15 +76,12 @@ Item {
 
             active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isOSDVisible("volume")
             asynchronous: true
-
             onActiveChanged: {
                 if (!active)
                     root.openPerappVolume = false;
             }
 
             sourceComponent: Item {
-                id: loaderRoot
-
                 anchors.fill: parent
 
                 property alias repeater: repeater
@@ -95,7 +97,7 @@ Item {
 
                     width: root.openPerappVolume ? root.perappWidth : 0
                     height: mainVolumeColumn.height
-                    spacing: Appearance.spacing.large
+                    spacing: root.itemSpacing
                     clip: true
 
                     Behavior on width {
@@ -111,7 +113,8 @@ Item {
                         model: linkTracker.linkGroups
                         delegate: Mixer {
                             required property PwLinkGroup modelData
-                            width: 40
+
+                            width: root.itemSize
                             height: perappContainer.height
                             node: modelData.source
                         }
@@ -134,9 +137,9 @@ Item {
                     spacing: Appearance.spacing.normal
 
                     Item {
-                        implicitHeight: 30
+                        Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
                         implicitWidth: 30
-                        Layout.alignment: Qt.AlignTop | Qt.AlignCenter
+                        implicitHeight: 30
 
                         Icon {
                             id: volumeIcon
@@ -185,8 +188,6 @@ Item {
                         }
 
                         MArea {
-                            id: mArea
-
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: mevent => {
@@ -198,16 +199,13 @@ Item {
 
                     Timer {
                         id: volumeHideTimer
-
                         interval: 500
                         onTriggered: mainVolumeColumn.showVolume = false
                     }
 
                     StyledSlide {
-                        id: volumeSlider
-
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
+                        Layout.preferredHeight: root.sliderHeight
                         orientation: Qt.Vertical
                         value: Pipewire.defaultAudioSink.audio.volume
                         onMoved: Pipewire.defaultAudioSink.audio.volume = value
@@ -224,7 +222,7 @@ Item {
                     }
 
                     Item {
-                        Layout.alignment: Qt.AlignCenter
+                        Layout.alignment: Qt.AlignHCenter
                         implicitWidth: 15
                         implicitHeight: 15
 
@@ -250,86 +248,144 @@ Item {
         id: mixer
 
         required property PwNode node
+        property bool showVolume: false
+
+        spacing: Appearance.spacing.normal
 
         PwObjectTracker {
             objects: [mixer.node]
         }
 
-        spacing: Appearance.spacing.normal
-
-        IconImage {
-            anchors.horizontalCenter: parent.horizontalCenter
-            implicitWidth: 30
+        Item {
+            implicitWidth: root.itemSize
             implicitHeight: 30
-            source: {
-                const name = mixer.node.name;
-                const appName = name.split(".").pop();
 
-                // alright man
-                let isZen = appName === "zen" || appName === "zen-twilight" || appName === "Twilight" || appName === "twilight";
+            IconImage {
+                id: appIcon
 
-                if (isZen) {
-                    const entry = DesktopEntries.heuristicLookup("zen-twilight") ?? DesktopEntries.heuristicLookup("zen");
-                    return Quickshell.iconPath(entry?.icon, "image-missing");
+                anchors.centerIn: parent
+                implicitWidth: 30
+                implicitHeight: 30
+                opacity: mixer.showVolume ? 0 : 1
+                scale: mixer.showVolume ? 0.5 : 1
+                source: {
+                    const appName = mixer.node.name.split(".").pop();
+                    const isZen = ["zen", "zen-twilight", "Twilight", "twilight"].includes(appName);
+                    if (isZen) {
+                        const entry = DesktopEntries.heuristicLookup("zen-twilight") ?? DesktopEntries.heuristicLookup("zen");
+                        return Quickshell.iconPath(entry?.icon, "image-missing");
+                    }
+                    return Quickshell.iconPath(DesktopEntries.heuristicLookup(appName)?.icon, "image-missing");
                 }
 
-                return Quickshell.iconPath(DesktopEntries.heuristicLookup(appName)?.icon, "image-missing");
+                Behavior on opacity {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
+                Behavior on scale {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
+                }
+            }
+
+            StyledText {
+                anchors.centerIn: appIcon
+                text: (mixer.node.audio.volume * 100).toFixed(0)
+                color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large
+                font.weight: Font.DemiBold
+                opacity: mixer.showVolume ? 1 : 0
+                scale: mixer.showVolume ? 1 : 0.5
+
+                Behavior on opacity {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
+                Behavior on scale {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
+            }
+
+            Timer {
+                id: appVolumeHideTimer
+                interval: 500
+                onTriggered: mixer.showVolume = false
             }
         }
 
         StyledSlide {
             anchors.horizontalCenter: parent.horizontalCenter
-            implicitWidth: 40
+            implicitWidth: root.itemSize
             implicitHeight: root.sliderHeight
             orientation: Qt.Vertical
-            value: parent.node.audio.volume
-            onMoved: parent.node.audio.volume = value
+            value: mixer.node.audio.volume
+            onMoved: mixer.node.audio.volume = value
+            onValueChanged: {
+                mixer.showVolume = true;
+                if (!pressed)
+                    appVolumeHideTimer.restart();
+            }
+            onPressedChanged: {
+                if (pressed)
+                    appVolumeHideTimer.stop();
+                else
+                    appVolumeHideTimer.restart();
+            }
         }
     }
 
     component Pulse: Item {
-        id: visualizerShape
+        id: pulse
 
+        readonly property real baseBarHeight: 1.5
         property bool isActive: false
-        property real baseHeight: 1.5
         property real progress: 0.0
+
         implicitWidth: 20
         implicitHeight: 20
 
-        function getBarHeight(barIndex: int): real {
+        readonly property list<var> barConfigs: [
+            {
+                minHeight: 2,
+                maxHeight: 4,
+                phaseOffset: 0.70
+            },
+            {
+                minHeight: 3,
+                maxHeight: 6,
+                phaseOffset: 0.45
+            },
+            {
+                minHeight: 5,
+                maxHeight: 8,
+                phaseOffset: 0.20
+            },
+            {
+                minHeight: 8,
+                maxHeight: 11,
+                phaseOffset: 0.15
+            },
+            {
+                minHeight: 7,
+                maxHeight: 6,
+                phaseOffset: 0.00
+            }
+        ]
+
+        function barHeight(index: int): real {
             if (!isActive)
-                return baseHeight;
-            const barConfigs = [
-                {
-                    minHeight: 2,
-                    maxHeight: 4,
-                    phaseOffset: 0.7
-                },
-                {
-                    minHeight: 3,
-                    maxHeight: 6,
-                    phaseOffset: 0.45
-                },
-                {
-                    minHeight: 5,
-                    maxHeight: 8,
-                    phaseOffset: 0.2
-                },
-                {
-                    minHeight: 8,
-                    maxHeight: 11,
-                    phaseOffset: 0.15
-                },
-                {
-                    minHeight: 7,
-                    maxHeight: 6,
-                    phaseOffset: 0.0
-                }
-            ];
-            const config = barConfigs[barIndex];
-            const phase = (progress + config.phaseOffset) % 1.0;
+                return baseBarHeight;
+            const cfg = barConfigs[index];
+            const phase = (progress + cfg.phaseOffset) % 1.0;
             const sinValue = Math.max(0, Math.sin(phase * Math.PI * 2));
-            return config.minHeight + (config.maxHeight - config.minHeight) * sinValue;
+            return cfg.minHeight + (cfg.maxHeight - cfg.minHeight) * sinValue;
         }
 
         Repeater {
@@ -355,18 +411,21 @@ Item {
                     index: 4
                 }
             ]
+
             delegate: Rectangle {
                 required property var modelData
-                property real barHeight: visualizerShape.getBarHeight(modelData.index)
-                x: modelData.x - width / 2.1
-                y: 10 - barHeight
-                width: 3
-                height: barHeight * 2
-                color: Colours.m3Colors.m3Primary
-                radius: 3
+                readonly property real currentBarHeight: pulse.barHeight(modelData.index)
 
-                Behavior on barHeight {
-                    enabled: !visualizerShape.isActive
+                x: modelData.x - width / 2.1
+                y: 10 - currentBarHeight
+                width: 3
+                height: currentBarHeight * 2
+                radius: 3
+                color: Colours.m3Colors.m3Primary
+
+                Behavior on currentBarHeight {
+                    enabled: !pulse.isActive
+
                     NumberAnimation {
                         duration: 900
                         easing.type: Easing.OutCubic
@@ -376,8 +435,9 @@ Item {
         }
 
         SequentialAnimation on progress {
-            running: visualizerShape.isActive
+            running: pulse.isActive
             loops: Animation.Infinite
+
             NumberAnimation {
                 from: 0.0
                 to: 1.0
