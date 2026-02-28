@@ -18,6 +18,7 @@ Item {
     anchors {
         left: parent.left
         verticalCenter: parent.verticalCenter
+        leftMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
     }
 
     property alias saveIndex: tabGroup.currentIndex
