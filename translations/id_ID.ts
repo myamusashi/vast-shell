@@ -1862,7 +1862,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WallpaperSelector</name>
     <message>
-        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="82"/>
+        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="83"/>
         <source>Search wallpapers</source>
         <translation>Cari wallpapers</translation>
     </message>
