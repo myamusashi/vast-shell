@@ -14,7 +14,7 @@ import qs.Services
 WrapperRectangle {
     id: root
 
-    readonly property bool scanner: Wifi.activeWifiDevice.scannerEnabled
+    readonly property bool scanner: Wifi.activeWifiDevice?.scannerEnabled ?? false
 
     property bool isVisible: false
     property real zoomOriginX: parent.width / 2
@@ -106,7 +106,7 @@ WrapperRectangle {
                     anchors.centerIn: parent
                     implicitWidth: parent.width * 0.5
                     implicitHeight: 4
-                    condition: Wifi.activeWifiDevice.scannerEnabled && Networking.wifiEnabled && root.isVisible
+                    condition: Wifi.activeWifiDevice?.scannerEnabled && Networking.wifiEnabled && root.isVisible
                 }
             }
 
@@ -164,7 +164,7 @@ WrapperRectangle {
                             required property WifiNetwork modelData
 
                             Layout.fillWidth: true
-                            color: networkDelegate.modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                            color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
                             radius: Appearance.rounding.large
                             margin: Appearance.margin.small
 
@@ -178,7 +178,7 @@ WrapperRectangle {
                                 id: networkTap
 
                                 onTapped: {
-                                    if (!networkDelegate.modelData.connected)
+                                    if (networkDelegate.modelData && !networkDelegate.modelData.connected)
                                         networkDelegate.modelData.connect();
                                 }
                             }
@@ -198,16 +198,16 @@ WrapperRectangle {
                                 MenuItem {
                                     text: networkDelegate.modelData.connected ? qsTr("Disconnect") : qsTr("Connect")
                                     onTriggered: {
-                                        if (networkDelegate.modelData.connected)
+                                        if (networkDelegate.modelData?.connected)
                                             networkDelegate.modelData.disconnect();
                                         else
-                                            networkDelegate.modelData.connect();
+                                            networkDelegate.modelData?.connect();
                                     }
                                 }
 
                                 MenuItem {
                                     text: qsTr("Forget Network")
-                                    onTriggered: networkDelegate.modelData.forget()
+                                    onTriggered: networkDelegate.modelData?.forget()
                                 }
                             }
 
@@ -227,14 +227,14 @@ WrapperRectangle {
                                     Icon {
                                         anchors.fill: parent
                                         icon: "signal_wifi_0_bar"
-                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.large * 1.5
                                     }
 
                                     Icon {
                                         anchors.fill: parent
-                                        icon: Wifi.getWiFiIcon(networkDelegate.modelData.signalStrength)
-                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        icon: Wifi.getWiFiIcon(networkDelegate.modelData?.signalStrength ?? 0)
+                                        color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.large * 1.5
                                     }
                                 }
@@ -245,9 +245,9 @@ WrapperRectangle {
 
                                     StyledText {
                                         Layout.fillWidth: true
-                                        text: networkDelegate.modelData.name
+                                        text: networkDelegate.modelData?.name ?? ""
                                         elide: Text.ElideRight
-                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.normal
                                     }
 
@@ -258,16 +258,16 @@ WrapperRectangle {
                                                 [NetworkState.Disconnecting]: qsTr("Disconnecting"),
                                                 [NetworkState.Connecting]: qsTr("Connecting"),
                                                 [NetworkState.Unknown]: qsTr("Unknown")
-                                            })[networkDelegate.modelData.state] ?? qsTr("Unknown")
-                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                            })[networkDelegate.modelData?.state] ?? qsTr("Unknown")
+                                        color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.small
                                     }
                                 }
 
                                 Icon {
-                                    visible: !networkDelegate.modelData.known
+                                    visible: networkDelegate.modelData && !networkDelegate.modelData.known
                                     icon: "lock"
-                                    color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                    color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                     font.pixelSize: Appearance.fonts.size.normal
                                 }
                             }
@@ -279,6 +279,7 @@ WrapperRectangle {
     }
 
     Component.onCompleted: {
-        Wifi.activeWifiDevice.scannerEnabled = true;
+        if (Wifi.activeWifiDevice)
+            Wifi.activeWifiDevice.scannerEnabled = true;
     }
 }

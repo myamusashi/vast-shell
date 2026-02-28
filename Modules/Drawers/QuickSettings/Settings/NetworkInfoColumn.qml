@@ -106,14 +106,14 @@ RowLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
-                color: Networking.wifiEnabled && Wifi.activeWifiNetwork.connected ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+                color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
                     type: Icon.Material
                     anchors.centerIn: parent
-                    icon: Networking.wifiEnabled && Wifi.activeWifiNetwork.connected ? Wifi.getWiFiIcon(Wifi.activeWifiNetwork.signalStrength) : "wifi_off"
-                    color: Networking.wifiEnabled && Wifi.activeWifiNetwork.connected ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    icon: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Wifi.getWiFiIcon(Wifi.activeWifiNetwork?.signalStrength ?? 0) : "wifi_off"
+                    color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge
                 }
             }
@@ -130,8 +130,8 @@ RowLayout {
 
                 StyledText {
                     text: {
-                        if (Networking.wifiEnabled && Wifi.activeWifiNetwork.connected)
-                            return Wifi.activeWifiNetwork.name;
+                        if (Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected)
+                            return Wifi.activeWifiNetwork?.name ?? "";
                         else
                             return qsTr("WiFi Disconnected");
                     }
