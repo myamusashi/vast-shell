@@ -1,17 +1,15 @@
 pragma Singleton
 
 import QtQuick
-
 import Quickshell
 import Quickshell.Io
 
 import qs.Helpers
-import qs.Services
 
 Singleton {
     id: root
 
-    // TODO: Yeah not now, add this values when i want to create Settings windows
+    // TODO: this should be use FolderListModel, but i can't figure it out
     property string videosPath: ""
     property string screenshotPath: ""
     property list<var> screenshotFiles
