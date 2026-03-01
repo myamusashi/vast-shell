@@ -193,7 +193,7 @@ func copyToClipboard(img string) {
 
 // Recording
 func wlScreenrecCmd(vid, geometry, output string) []string {
-	base := []string{"wl-screenrec", "--codec", "hevc", "--max-fps", "50"}
+	base := []string{"wl-screenrec",  "--capture-backend", "ext-image-copy-capture", "--codec", "hevc", "--max-fps", "60"}
 	if audioDevice != "" {
 		base = append(base, "--audio", "--audio-device", audioDevice)
 	}
@@ -257,7 +257,6 @@ func stopRecording() {
 
 	// Send SIGINT and wait
 	proc.Signal(syscall.SIGINT)
-	// Wait with a goroutine + timeout
 	done := make(chan error, 1)
 	go func() {
 		_, err := syscall.Wait4(pid, nil, 0, nil)
@@ -397,7 +396,6 @@ func screenshotOutputs(out1, out2 string) {
 	gotoLink(base, base, true)
 }
 
-// Entry point
 const usage = `Usage: screen-capture {COMMAND} [ARGS]
 Monitor names are auto-detected via hyprctl monitors -j.
 Pass an explicit name to override the default.
@@ -413,13 +411,13 @@ Screenrecord Commands:
   --screenrecord-output [OUTPUT]         Record a monitor (default: first detected)
   --screenrecord-all                     Record all screens (toggle to stop)
   --stop-recording                       Stop active recording
+  --create-thumbnail [VIDEO] [OUTPUT]    Generate a thumbnail for a video
 
 Global Flags:
   --audio-device <device>                Audio device for screen recording
 `
 
 func main() {
-	// Ignore SIGPIPE
 	signal.Ignore(syscall.SIGPIPE)
 
 	args := os.Args[1:]
@@ -428,7 +426,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Strip --audio-device <device>
 	for i := 0; i < len(args); i++ {
 		if args[i] == "--audio-device" {
 			if i+1 >= len(args) {
@@ -514,6 +511,31 @@ func main() {
 
 	case "--stop-recording":
 		stopRecording()
+
+	case "--create-thumbnail":
+		video := arg(1)
+		output := arg(2)
+		if video == "" || output == "" {
+			fmt.Fprintln(os.Stderr, "Error: --create-thumbnail requires video path and output path")
+			os.Exit(1)
+		}
+		// If output is a directory, append the video filename with .png extension
+		if info, err := os.Stat(output); err == nil && info.IsDir() {
+			base := filepath.Base(video)
+			ext := filepath.Ext(base)
+			output = filepath.Join(output, strings.TrimSuffix(base, ext)+".png")
+		}
+		// Check if output already exists
+		if _, err := os.Stat(output); err == nil {
+			fmt.Println(output)
+			return
+		}
+
+		if createThumbnail(video, output) {
+			fmt.Println(output)
+		} else {
+			os.Exit(1)
+		}
 
 	default:
 		fmt.Fprint(os.Stderr, usage)
