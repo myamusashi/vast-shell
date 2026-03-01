@@ -9,7 +9,6 @@ Item {
     id: root
 
     required property var modelData
-    property var itemData: modelData
     property bool isRemoving: false
     signal entered
     signal exited
@@ -126,13 +125,13 @@ Item {
             Icon {
                 id: iconLayout
 
-                modelData: root.itemData
+                modelData: root.modelData
             }
 
             Content {
                 id: contentLayout
 
-                modelData: root.itemData
+                modelData: root.modelData
                 width: parent.width - iconLayout.width - parent.spacing
             }
         }
