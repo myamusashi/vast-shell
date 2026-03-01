@@ -243,7 +243,7 @@ Item {
                                     highlightColor: Colours.m3Colors.m3Primary
                                 }
 
-                                StyledLabel {
+                                StyledText {
                                     Layout.fillWidth: true
                                     text: delegateItem.modelData.comment
                                     font.pixelSize: Appearance.fonts.size.small
@@ -287,7 +287,7 @@ Item {
                             }
                         }
                     }
-                    StyledLabel {
+                    StyledText {
                         anchors.centerIn: parent
                         visible: listView.count === 0 && search.text !== ""
                         text: qsTr("No applications found")

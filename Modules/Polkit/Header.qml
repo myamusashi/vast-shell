@@ -33,7 +33,7 @@ RowLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        StyledLabel {
+        StyledText {
             Layout.fillWidth: true
             Layout.topMargin: 8
             text: qsTr("Authentication Is Required")
@@ -43,7 +43,7 @@ RowLayout {
             color: Colours.m3Colors.m3OnSurface
         }
 
-        StyledLabel {
+        StyledText {
             Layout.fillWidth: true
             Layout.topMargin: 8
             text: PolAgent.agent?.flow?.message || qsTr("<no message>")

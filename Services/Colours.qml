@@ -18,7 +18,6 @@ Singleton {
     readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
     readonly property M3TemplateColors m3Colors: Configs.colors.useMatugenColor ? matugenColors : Configs.colors.useStaticColors ? staticColors : m3GeneratedColors
 
-    // Thx end-4
     function clamp01(x) {
         return Math.min(1, Math.max(0, x));
     }
