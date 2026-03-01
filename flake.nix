@@ -42,8 +42,6 @@
                 packages = [
                     pkgs.go
                     pkgs.nil
-                    pkgs.python3
-                    pkgs.black
                     pkgs.pkg-config
                     (with pkgs.kdePackages; [
                         qtdeclarative
@@ -60,10 +58,10 @@
                     pkgs.gopls
                 ];
 
-                PKG_CONFIG_PATH = "${pkgs.pipewire.dev}/lib/pkgconfig";
-
                 shellHook = ''
-                    go build -o ./Assets/go/keystate-bin ./Assets/go/keystate.go
+                    go build -o ./Assets/go/keystate ./Assets/go/keystate.go
+                    go build -o ./Assets/go/screen-capture ./Assets/go/screen-capture.go
+                    go build -o ./Assets/go/formatting ./Assets/go/formatting.go
                     echo "mushell environment"
                 '';
             };
