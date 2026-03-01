@@ -152,9 +152,7 @@ WrapperRectangle {
                         "icon": "photo_camera",
                         "label": qsTr("Screenshot"),
                         "action": () => {
-                            Quickshell.execDetached({
-                                "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenshot-selection"]
-                            });
+                            ScreenCapture.exec("--screenshot-selection");
                             root.open = false;
                         }
                     },
@@ -162,9 +160,7 @@ WrapperRectangle {
                         "icon": "fiber_manual_record",
                         "label": qsTr("Start"),
                         "action": () => {
-                            Quickshell.execDetached({
-                                "command": ["sh", "-c", Paths.rootDir + "/Assets/shell/screen-capture.sh --screenrecord-selection"]
-                            });
+                            ScreenCapture.exec("--screenrecord-selection");
                             root.open = root.isRecording ? false : true;
                         },
                         "highlight": root.isRecording,

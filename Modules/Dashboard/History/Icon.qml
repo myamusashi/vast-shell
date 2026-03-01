@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Io
 
 import qs.Components
 import qs.Configs
@@ -15,14 +14,6 @@ Loader {
     property string thumbnailPath: ""
     property bool showLoading: true
 
-    function getFileExtension(filepath) {
-        const filename = filepath.split('/').pop();
-        const lastDot = filename.lastIndexOf('.');
-        if (lastDot === -1 || lastDot === 0)
-            return '';
-        return filename.substring(lastDot + 1).toLowerCase();
-    }
-
     active: GlobalStates.isDashboardOpen
     width: 70
     height: 70
@@ -31,15 +22,25 @@ Loader {
         const ext = getFileExtension(root.modelData.path);
         const videoFormats = ["mkv", "mp4", "webm", "avi"];
 
+        console.log(ext);
+
         if (videoFormats.includes(ext))
-            createThumbnails.running = true;
+            ScreenCapture.exec("--create-thumbnail " + root.modelData.path + " " + Paths.cacheDir + "/video-thumbnails");
         else
             thumbnailPath = "file://" + root.modelData.path;
     }
 
+    function getFileExtension(filepath) {
+        const filename = filepath.split('/').pop();
+        const lastDot = filename.lastIndexOf('.');
+        if (lastDot === -1 || lastDot === 0)
+            return '';
+        return filename.substring(lastDot + 1).toLowerCase();
+    }
+
     sourceComponent: StyledRect {
-        width: 70
-        height: 70
+        implicitWidth: 70
+        implicitHeight: 70
         radius: Appearance.rounding.full
         color: Colours.m3Colors.m3PrimaryContainer
 
@@ -53,7 +54,11 @@ Loader {
             width: 40
             height: 40
             sourceSize: Qt.size(40, 40)
-            source: root.thumbnailPath
+			source: root.thumbnailPath
+
+			Component.onCompleted: {
+				console.log("Thumbnail: " + root.thumbnailPath)
+			}
 
             Rectangle {
                 anchors.fill: parent
@@ -85,34 +90,13 @@ Loader {
         }
     }
 
-    Process {
-        id: createThumbnails
-
-        running: false
-        command: ["sh", "-c", `${Paths.rootDir}/Assets/shell/create-thumbnails.sh "${root.modelData.path}" "${Paths.cacheDir}/video-thumbnails"`]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const data = text.trim();
-                delayTimer.thumbnailData = data;
-                delayTimer.start();
-            }
-        }
-
-        stderr: StdioCollector {
-            onStreamFinished: {
-                if (text.trim())
-                    console.error("Thumbnail generation error:", text);
-            }
-        }
-    }
-
     Timer {
         id: delayTimer
 
-        interval: 500
-        repeat: false
         property string thumbnailData: ""
 
+        interval: 500
+        repeat: false
         onTriggered: {
             root.thumbnailPath = thumbnailData;
             root.showLoading = false;
