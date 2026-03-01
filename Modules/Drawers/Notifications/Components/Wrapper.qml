@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
 import qs.Components
@@ -112,11 +113,12 @@ Item {
         }
     }
 
-    StyledRect {
+    WrapperRectangle {
         anchors {
             fill: parent
             leftMargin: 10
-        }
+		}
+		margin: Appearance.margin.normal
         radius: Appearance.rounding.normal
 
         color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
@@ -126,64 +128,64 @@ Item {
             width: root.notif.urgency === NotificationUrgency.Critical ? 1 : 0
         }
 
-        H.MArea {
-            id: delegateMouseNotif
+        Item {
+            H.MArea {
+                id: delegateMouseNotif
 
-            anchors.fill: parent
-            hoverEnabled: true
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    root.entered();
+                    timer.stop();
+                }
+                onExited: {
+                    root.exited();
+                    timer.restart();
+                }
 
-            onEntered: {
-                root.entered();
-                timer.stop();
-            }
+                drag {
+                    axis: Drag.XAxis
+                    target: root
+                    minimumX: -root.width
+                    maximumX: root.width
 
-            onExited: {
-                root.exited();
-                timer.restart();
-            }
-
-            drag {
-                axis: Drag.XAxis
-                target: root
-                minimumX: -root.width
-                maximumX: root.width
-
-                onActiveChanged: {
-                    if (drag.active) {
-                        timer.stop();
-                        return;
-                    }
-                    if (Math.abs(root.x) > root.width * 0.45) {
-                        swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
-                        swipeOutAnim.start();
-                        root.notif.close();
-                    } else {
-                        root.x = 0;
-                        timer.restart();
+                    onActiveChanged: {
+                        if (drag.active) {
+                            timer.stop();
+                            return;
+                        }
+                        if (Math.abs(root.x) > root.width * 0.45) {
+                            swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
+                            swipeOutAnim.start();
+                            root.notif.close();
+                        } else {
+                            root.x = 0;
+                            timer.restart();
+                        }
                     }
                 }
             }
-        }
 
-        Row {
-            anchors {
-                fill: parent
-                topMargin: 10
-                leftMargin: 10
-                rightMargin: 10
-            }
-            spacing: Appearance.spacing.normal
+            Row {
+                anchors {
+                    fill: parent
+                    topMargin: 10
+                    leftMargin: 10
+                    rightMargin: 10
+                }
+                spacing: Appearance.spacing.normal
 
-            Icon {
-                id: iconLayout
+                Icon {
+                    id: iconLayout
 
-                modelData: root.notif
-            }
+                    modelData: root.notif
+                }
 
-            Content {
-                id: contentLayout
+                Content {
+                    id: contentLayout
 
-                modelData: root.notif
+                    modelData: root.notif
+                }
             }
         }
     }
