@@ -262,17 +262,17 @@
         <translation>Tangkapan Layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="163"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="161"/>
         <source>Start</source>
         <translation>Mulai</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="175"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="171"/>
         <source>Microphone</source>
         <translation>Mikrofon</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="255"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="251"/>
         <source>See my captures</source>
         <translation>Lihat tangkapan layar</translation>
     </message>
