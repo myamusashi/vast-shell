@@ -59,7 +59,7 @@
                 ];
 
                 shellHook = ''
-                    go build -o ./Assets/go/keystate ./Assets/go/keystate.go
+                    go build -o ./Assets/go/keystate-bin ./Assets/go/keystate.go
                     go build -o ./Assets/go/screen-capture ./Assets/go/screen-capture.go
                     go build -o ./Assets/go/formatting ./Assets/go/formatting.go
                     echo "mushell environment"

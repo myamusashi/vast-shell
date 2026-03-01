@@ -333,6 +333,9 @@ Variants {
         id: elev
 
         anchors.fill: parent
+        color: "transparent"
+        blur: 0
+        spread: 0
         z: -1
         level: 3
 
