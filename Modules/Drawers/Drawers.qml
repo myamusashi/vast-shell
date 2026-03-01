@@ -252,6 +252,7 @@ Variants {
             color: "transparent"
             x: leftBar.implicitWidth
             y: topBar.implicitHeight
+            z: -2
 
             Repeater {
                 model: [0, 1, 2, 3]
