@@ -1983,38 +1983,38 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Tap/klik menyambungkan untuk jaringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="199"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="195"/>
         <source>Disconnect</source>
         <translation>Putuskan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="199"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="195"/>
         <source>Connect</source>
         <translation>Sambungkan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="209"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="200"/>
         <source>Forget Network</source>
         <translation>Lupakan Jaringan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="257"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="248"/>
         <source>Disconnected</source>
         <translation>Terputus</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="258"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="249"/>
         <source>Disconnecting</source>
         <translation>Menghubungkan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="259"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="250"/>
         <source>Connecting</source>
         <translation>Memutuskan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="260"/>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="261"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="251"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="252"/>
         <source>Unknown</source>
         <translation>ndak tau</translation>
     </message>
@@ -2024,7 +2024,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="256"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="247"/>
         <source>Connected</source>
         <translation>Tersambung</translation>
     </message>
