@@ -158,64 +158,65 @@ StyledRect {
                         onTriggered: root.modelData.close()
                     }
 
-                    StyledRect {
-                        radius: Appearance.rounding.normal
-                        clip: true
-
+                    WrapperRectangle {
                         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
-
                         border {
                             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : "transparent"
                             width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
                         }
+                        margin: Appearance.margin.normal
+                        radius: Appearance.rounding.normal
+                        clip: true
 
-                        MArea {
-                            id: delegateMouseNotif
+                        Item {
+                            MArea {
+                                id: delegateMouseNotif
 
-                            anchors.fill: parent
-                            hoverEnabled: true
+                                anchors.fill: parent
+                                hoverEnabled: true
 
-                            drag {
-                                axis: Drag.XAxis
-                                target: root
-                                minimumX: -root.width
-                                maximumX: root.width
+                                drag {
+                                    axis: Drag.XAxis
+                                    target: root
+                                    minimumX: -root.width
+                                    maximumX: root.width
 
-                                onActiveChanged: {
-                                    if (drag.active)
-                                        return;
-                                    const swipeThreshold = root.width * 0.35;
+                                    onActiveChanged: {
+                                        if (drag.active)
+                                            return;
+                                        const swipeThreshold = root.width * 0.35;
 
-                                    if (Math.abs(root.x) > swipeThreshold) {
-                                        swipeOutAnim.to = root.x > 0 ? root.width * 1.2 : -root.width * 1.2;
-                                        swipeOutAnim.start();
-                                        closeTimer.start();
-                                    } else {
-                                        springBackAnim.start();
+                                        if (Math.abs(root.x) > swipeThreshold) {
+                                            swipeOutAnim.to = root.x > 0 ? root.width * 1.2 : -root.width * 1.2;
+                                            swipeOutAnim.start();
+                                            closeTimer.start();
+                                        } else {
+                                            springBackAnim.start();
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        Row {
-                            anchors {
-                                fill: parent
-                                topMargin: 10
-                                leftMargin: 10
-                                rightMargin: 10
-                            }
-                            spacing: Appearance.spacing.normal
+                            Row {
+                                anchors {
+                                    fill: parent
+                                    topMargin: 10
+                                    leftMargin: 10
+                                    rightMargin: 10
+                                }
+                                spacing: Appearance.spacing.normal
 
-                            N.Icon {
-                                id: iconLayout
+                                N.Icon {
+                                    id: iconLayout
 
-                                modelData: root.modelData
-                            }
+                                    modelData: root.modelData
+                                }
 
-                            N.Content {
-                                id: contentLayout
+                                N.Content {
+                                    id: contentLayout
 
-                                modelData: root.modelData
+                                    modelData: root.modelData
+                                }
                             }
                         }
                     }
