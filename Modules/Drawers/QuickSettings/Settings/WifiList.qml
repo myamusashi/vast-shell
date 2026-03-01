@@ -188,24 +188,15 @@ WrapperRectangle {
                                 onTapped: contextMenu.popup()
                             }
 
-                            Menu {
+                            StyledMenu {
                                 id: contextMenu
 
-                                modal: true
-                                focus: true
-                                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-                                MenuItem {
-                                    text: networkDelegate.modelData.connected ? qsTr("Disconnect") : qsTr("Connect")
-                                    onTriggered: {
-                                        if (networkDelegate.modelData?.connected)
-                                            networkDelegate.modelData.disconnect();
-                                        else
-                                            networkDelegate.modelData?.connect();
-                                    }
+                                StyledMenuItem {
+                                    text: networkDelegate.modelData?.connected ? qsTr("Disconnect") : qsTr("Connect")
+                                    onTriggered: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.modelData?.connect()
                                 }
 
-                                MenuItem {
+                                StyledMenuItem {
                                     text: qsTr("Forget Network")
                                     onTriggered: networkDelegate.modelData?.forget()
                                 }
