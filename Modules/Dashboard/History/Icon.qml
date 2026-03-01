@@ -54,11 +54,11 @@ Loader {
             width: 40
             height: 40
             sourceSize: Qt.size(40, 40)
-			source: root.thumbnailPath
+            source: root.thumbnailPath
 
-			Component.onCompleted: {
-				console.log("Thumbnail: " + root.thumbnailPath)
-			}
+            Component.onCompleted: {
+                console.log("Thumbnail: " + root.thumbnailPath);
+            }
 
             Rectangle {
                 anchors.fill: parent
