@@ -1275,7 +1275,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Bersihkan semuanya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="227"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="228"/>
         <source>No notifications</source>
         <translation>Tidak ada notifikasi</translation>
     </message>
