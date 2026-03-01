@@ -117,8 +117,8 @@ Item {
         anchors {
             fill: parent
             leftMargin: 10
-		}
-		margin: Appearance.margin.normal
+        }
+        margin: Appearance.margin.normal
         radius: Appearance.rounding.normal
 
         color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
