@@ -34,12 +34,13 @@ ColumnLayout {
     Component {
         id: defaultNode
 
-        StyledLabel {
+        StyledText {
             text: {
                 const app = root.node.properties["application.name"] ?? (root.node.description != "" ? root.node.description : root.node.name);
                 const media = root.node.properties["media.name"];
                 return media != undefined ? `${app} - ${media}` : app;
-            }
+			}
+			color: Colours.m3Colors.m3OnBackground
             elide: Text.ElideRight
             wrapMode: Text.Wrap
             Layout.fillWidth: true

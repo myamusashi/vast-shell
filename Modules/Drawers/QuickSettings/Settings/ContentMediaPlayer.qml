@@ -34,7 +34,7 @@ RowLayout {
             NAnim {}
         }
 
-        StyledLabel {
+        StyledText {
             Layout.fillWidth: true
             text: Players.active?.trackTitle ?? ""
             color: root.trackArtColors.onSurface

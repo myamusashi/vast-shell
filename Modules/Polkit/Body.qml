@@ -9,7 +9,7 @@ ColumnLayout {
     property alias passwordInput: passwordInput
 
     implicitWidth: parent.width
-    StyledLabel {
+    StyledText {
         Layout.fillWidth: true
         Layout.topMargin: 8
         text: PolAgent.agent?.flow?.inputPrompt || qsTr("<no input prompt>")
@@ -23,7 +23,7 @@ ColumnLayout {
         id: passwordInput
     }
 
-    StyledLabel {
+    StyledText {
         Layout.fillWidth: true
         text: qsTr("Authentication failed. Please try again.")
         color: Colours.m3Colors.m3Error
