@@ -1,9 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Components
-import qs.Configs
 import qs.Services
+import qs.Components
 
 StyledTextField {
     id: passwordInput

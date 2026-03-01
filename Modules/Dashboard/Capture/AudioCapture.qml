@@ -76,7 +76,7 @@ StyledRect {
                     radius: 0
                 }
 
-                StyledLabel {
+                StyledText {
                     id: tabLabel
 
                     anchors.centerIn: parent
@@ -156,9 +156,10 @@ StyledRect {
         anchors.rightMargin: 10
         anchors.leftMargin: 10
         spacing: Appearance.spacing.normal
-        StyledLabel {
+        StyledText {
             text: qsTr("LINUX DEFAULT OUTPUT")
-            font.pixelSize: Appearance.fonts.size.large
+			font.pixelSize: Appearance.fonts.size.large
+			color: Colours.m3Colors.m3OnBackground
         }
 
         ScrollView {
