@@ -158,8 +158,8 @@ StyledRect {
         spacing: Appearance.spacing.normal
         StyledText {
             text: qsTr("LINUX DEFAULT OUTPUT")
-			font.pixelSize: Appearance.fonts.size.large
-			color: Colours.m3Colors.m3OnBackground
+            font.pixelSize: Appearance.fonts.size.large
+            color: Colours.m3Colors.m3OnBackground
         }
 
         ScrollView {
