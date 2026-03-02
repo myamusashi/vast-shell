@@ -371,19 +371,69 @@ Variants {
                 CAnim {
                     target: elev
                     property: "color"
-                    to: Qt.alpha(Colours.m3Colors.m3Shadow, 0.7)
+                    to: "transparent"
                     duration: Appearance.animations.durations.large
                 }
                 NAnim {
                     target: elev
                     property: "blur"
-                    to: (elev.dp * 5) ** 0.7
+                    to: 0
                     duration: Appearance.animations.durations.large
                 }
                 NAnim {
                     target: elev
                     property: "spread"
-                    to: -elev.dp * 0.3 + (elev.dp * 0.1) ** 2
+                    to: 0
+                    duration: Appearance.animations.durations.large
+                }
+            }
+        }
+
+        SequentialAnimation {
+            id: lowFlash
+
+            ParallelAnimation {
+                CAnim {
+                    target: elev
+                    property: "color"
+                    to: Colours.m3Colors.m3Red
+                    duration: Appearance.animations.durations.large * 0.8
+                }
+                NAnim {
+                    target: elev
+                    property: "blur"
+                    to: 20
+                    duration: Appearance.animations.durations.large * 0.8
+                }
+                NAnim {
+                    target: elev
+                    property: "spread"
+                    to: 20
+                    duration: Appearance.animations.durations.large * 0.8
+                }
+            }
+
+            PauseAnimation {
+                duration: 800
+            }
+
+            ParallelAnimation {
+                CAnim {
+                    target: elev
+                    property: "color"
+                    to: "transparent"
+                    duration: Appearance.animations.durations.large
+                }
+                NAnim {
+                    target: elev
+                    property: "blur"
+                    to: 0
+                    duration: Appearance.animations.durations.large
+                }
+                NAnim {
+                    target: elev
+                    property: "spread"
+                    to: 0
                     duration: Appearance.animations.durations.large
                 }
             }
@@ -395,6 +445,18 @@ Variants {
             function onStateChanged() {
                 if (UPower.displayDevice.state === UPowerDeviceState.Charging)
                     chargeFlash.restart();
+            }
+            function onPercentageChanged() {
+                const percentage = Math.round(root.batPercentage * 100);
+                const levels = Configs.generals.battery.warnLevels;
+                const warn = levels.find(e => e.level === percentage);
+
+                if (warn) {
+                    lowFlash.restart();
+                    Quickshell.execDetached({
+                        command: ["notify-send", "-a", "vast-shell", "-i", warn.icon, warn.title, warn.message, "-u", warn.level === percentage ? warn.urgency : "normal"]
+                    });
+                }
             }
         }
     }
