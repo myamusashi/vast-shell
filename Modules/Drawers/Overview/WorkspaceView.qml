@@ -97,8 +97,7 @@ ClippingRectangle {
         id: repeater
 
         model: root.wsp ? root.wsp.toplevels : []
-
-        ScreencopyView {
+        delegate: ScreencopyView {
             id: toplevel
 
             required property HyprlandToplevel modelData
@@ -106,25 +105,25 @@ ClippingRectangle {
             property Toplevel waylandHandle: modelData?.wayland
             property var toplevelData: modelData.lastIpcObject
             property string address: toplevelData.address ?? null
-            property int initX: toplevelData.at[0] ?? 0
-            property int initY: toplevelData.at[1] ?? 0
+            property int initX: toplevelData?.at?.[0] || 0
+            property int initY: toplevelData?.at?.[1] || 0
             property bool isCaught: false
             property Item originalParent: root
             property Item visualParent: root.parentWindow
-
             // Logical position relative to this tile
-            property real baseX: (toplevelData?.at[0] ?? 0) - root.monitorLogicalX
-            property real baseY: (toplevelData?.at[1] ?? 0) - root.monitorLogicalY
+            property real baseX: initX - root.monitorLogicalX
+            property real baseY: initY - root.monitorLogicalY
 
             captureSource: waylandHandle
             live: true
-            width: (toplevelData?.size?.[0] ?? 0) / root.scaleFactor
-            height: (toplevelData?.size?.[1] ?? 0) / root.scaleFactor
+            width: (toplevelData?.size?.[0] || 0) / root.scaleFactor
+            height: (toplevelData?.size?.[1] || 0) / root.scaleFactor
             scale: (Drag.active && !toplevelData?.floating) ? 0.92 : 1
             opacity: GlobalStates.isOverviewOpen ? 1 : 0
             z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : (toplevelData?.floating) ? 1 : 0
             x: baseX / root.scaleFactor
             y: baseY / root.scaleFactor
+
             Component.onCompleted: Hyprland.refreshToplevels()
 
             Behavior on scale {
