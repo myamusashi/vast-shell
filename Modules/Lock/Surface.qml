@@ -1,6 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
+import Quickshell.Widgets
 import Quickshell.Wayland
 import Qt5Compat.GraphicalEffects
 
@@ -101,10 +103,100 @@ WlSessionLockSurface {
         }
     }
 
-    Dialog {
-        showConfirmDialog: bottomItem.showConfirmDialog
-        pendingAction: bottomItem.pendingAction
-        pendingActionName: bottomItem.pendingActionName
+    WrapperRectangle {
+        anchors.centerIn: parent
+
+        clip: true
+        radius: Appearance.rounding.large
+        margin: Appearance.margin.normal
+        implicitWidth: column.implicitWidth * 2
+        implicitHeight: bottomItem.showConfirmDialog ? column.implicitHeight + 20 : 0
+        color: GlobalStates.drawerColors
+
+        Behavior on implicitHeight {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+
+        ColumnLayout {
+            id: column
+
+            spacing: Appearance.spacing.large
+
+            StyledText {
+                id: header
+
+                text: qsTr("Session")
+                color: Colours.m3Colors.m3OnSurface
+                elide: Text.ElideMiddle
+                font.pixelSize: Appearance.fonts.size.extraLarge
+                font.bold: true
+            }
+
+            StyledRect {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2
+                color: Colours.m3Colors.m3OutlineVariant
+            }
+
+            StyledText {
+                id: body
+
+                text: qsTr("Do you want to %1?").arg(bottomItem.pendingActionName.toLowerCase())
+                font.pixelSize: Appearance.fonts.size.large
+                color: Colours.m3Colors.m3OnSurface
+                wrapMode: Text.Wrap
+                Layout.fillWidth: Math.max(300, implicitWidth)
+            }
+
+            StyledRect {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2
+                color: Colours.m3Colors.m3OutlineVariant
+            }
+
+            Row {
+                id: rowButtons
+
+                Layout.alignment: Qt.AlignRight
+                spacing: Appearance.spacing.normal
+
+                StyledButton {
+                    implicitWidth: 80
+                    implicitHeight: 40
+                    text: qsTr("No")
+                    icon.name: "cancel"
+                    icon.color: Colours.m3Colors.m3Primary
+                    textColor: Colours.m3Colors.m3Primary
+                    color: "transparent"
+                    onClicked: {
+                        bottomItem.showConfirmDialog = false;
+                        bottomItem.pendingAction = null;
+                        bottomItem.pendingActionName = "";
+                    }
+                }
+
+                StyledButton {
+                    implicitWidth: 80
+                    implicitHeight: 40
+                    icon.name: "check"
+                    icon.color: Colours.m3Colors.m3Primary
+                    rippleColor: Colours.withAlpha(Colours.m3Colors.m3SecondaryContainer, 0)
+                    textColor: Colours.m3Colors.m3Primary
+                    text: qsTr("Yes")
+                    color: "transparent"
+                    onClicked: {
+                        if (bottomItem.pendingAction)
+                            bottomItem.pendingAction();
+                        bottomItem.showConfirmDialog = false;
+                        bottomItem.pendingAction = null;
+                        bottomItem.pendingActionName = "";
+                    }
+                }
+            }
+        }
     }
 
     SequentialAnimation {
