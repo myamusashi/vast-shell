@@ -8,7 +8,7 @@
 		"fonts": {
 			"family": {
 				"material": "Material Symbols Rounded",
-				"mono": "Hack",
+				"mono": "Maple Mono NF",
 				"sans": "Google Sans Flex"
 			},
 			"size": {
@@ -18,26 +18,21 @@
 	},
 	"bar": {
 		"alwaysOpenBar": true,
+		"barHeight": 48,
 		"compact": false,
-		"workspacesIndicator": "dot",
-		"barHeight": 40,
-		"visibleWorkspace": 5
+		"visibleWorkspace": 5,
+		"workspacesIndicator": "dot"
 	},
-	"language": "",
 	"colors": {
 		"isDarkMode": true,
-		"matugenConfigPathForDarkColor": "/home/myamusashi/.config/shell/dark-colors.json",
-		"matugenConfigPathForLightColor": "/home/myamusashi/.config/shell/light-colors.json",
-		"staticColorsPath": "/home/myamusashi/.config/shell/colors.json",
+		"matugenConfigPathForDarkColor": "/home/<user>/.config/shell/dark-colors.json",
+		"matugenConfigPathForLightColor": "/home/<user>/.config/shell/light-colors.json",
+		"staticColorsPath": "/home/<user>/.config/shell/colors.json",
 		"useMatugenColor": true,
 		"useStaticColors": false
 	},
 	"generals": {
-		"transparent": false,
 		"alpha": 0.5,
-		"enableOuterBorder": true,
-		"outerBorderSize": 5,
-		"followFocusMonitor": true,
 		"apps": {
 			"audio": "pavucontrol-qt",
 			"fileExplorer": "pcmanfm-qt",
@@ -47,38 +42,48 @@
 			"videoViewer": "mpv"
 		},
 		"battery": {
-			"criticalLevel": 3,
 			"warnLevels": [
 				{
-					"icon": "battery_android_frame_2",
+					"icon": "battery-020",
 					"level": 20,
-					"message": "You might want to plug in a charger",
+					"urgency": "normal",
+					"message": "Dude, plug your charger",
 					"title": "Low battery"
 				},
 				{
-					"icon": "battery_android_frame_1",
+					"icon": "battery-010",
 					"level": 10,
-					"message": "You should probably plug in a charger <b>now</b>",
-					"title": "Did you see the previous message?"
+					"urgency": "low",
+					"message": "Dude, your battery dying",
+					"title": "Battery dying"
 				},
 				{
-					"critical": true,
-					"icon": "battery_android_alert",
+					"icon": "battery-000",
 					"level": 5,
-					"message": "PLUG THE CHARGER RIGHT NOW!!",
-					"title": "Critical battery level"
+					"urgency": "critical",
+					"message": "PUT IT IN NOW",
+					"title": "Critical level"
 				}
 			]
-		}
+		},
+		"enableOuterBorder": false,
+		"followFocusMonitor": true,
+		"outerBorderSize": 5,
+		"transparent": false
 	},
+	"language": "",
 	"wallpaper": {
 		"enabledWallpaper": true,
-		"wallpaperDir": "/home/myamusashi/Pictures/wallpapers"
+		"transition": "random",
+		"transitionDuration": 600,
+		"transitionLowPerfMode": false,
+		"visibleWallpaper": 3,
+		"wallpaperDir": "/home/<user>/Pictures/wallpapers"
 	},
 	"weather": {
+		"enableQuickSummary": true,
 		"latitude": "",
 		"longitude": "",
-		"reloadTime": 1800000,
-		"enableQuickSummary": true
+		"reloadTime": 1800000
 	}
 }
