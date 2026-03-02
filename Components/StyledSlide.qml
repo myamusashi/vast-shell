@@ -33,6 +33,12 @@ Slider {
     readonly property real invertedVisualPosition: 1 - visualPosition
     readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
 
+    property color filledRectColor: Colours.m3Colors.m3Primary
+    property color emptyRectColor: Colours.m3Colors.m3SurfaceContainerHighest
+    property color handleColor: Colours.m3Colors.m3Primary
+    property real filledRectOpacity: 1.0
+    property real emptyRectOpacity: 1.0
+    property real handleOpacity: 1.0
     property bool dotEnd: true
     property bool useAnim: true
     property string icon: ""
@@ -93,6 +99,8 @@ Slider {
 
         // Filled portion (before handle)
         StyledRect {
+            id: filledRect
+
             anchors {
                 verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
                 left: root.orientation === Qt.Horizontal ? parent.left : undefined
@@ -101,12 +109,15 @@ Slider {
             }
             width: root.orientation === Qt.Horizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap) : root.trackSize
             height: root.orientation === Qt.Horizontal ? root.trackSize : root.handleGap + (root.invertedVisualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
-            color: Colours.m3Colors.m3Primary
+            color: root.filledRectColor
             radius: Appearance.rounding.small * 0.5
+            opacity: root.filledRectOpacity
         }
 
         // Empty portion (after handle)
         StyledRect {
+            id: emptyRect
+
             anchors {
                 verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
                 right: root.orientation === Qt.Horizontal ? parent.right : undefined
@@ -115,19 +126,23 @@ Slider {
             }
             width: root.orientation === Qt.Horizontal ? root.handleGap + ((1 - root.visualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap) : root.trackSize
             height: root.orientation === Qt.Horizontal ? root.trackSize : root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
-            color: Colours.m3Colors.m3SurfaceContainerHighest
+            color: root.emptyRectColor
             radius: Appearance.rounding.small * 0.5
+            opacity: root.emptyRectOpacity
         }
     }
 
     handle: StyledRect {
+        id: handle
+
         width: root.orientation === Qt.Horizontal ? root.handleSize : root.width
         height: root.orientation === Qt.Horizontal ? root.height : root.handleSize
         x: root.orientation === Qt.Horizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - width / 2 : 0
         y: root.orientation === Qt.Vertical ? root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - height / 2 : 0
         anchors.verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
         anchors.horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
-        color: Colours.m3Colors.m3Primary
+        color: root.handleColor
+        opacity: root.handleOpacity
 
         Behavior on width {
             enabled: root.useAnim
