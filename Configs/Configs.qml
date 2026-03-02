@@ -32,6 +32,7 @@ Singleton {
                 console.log("Failed to read config files");
         }
         onLoaded: TranslationManager.loadTranslation(root.language, Paths.translateFilePath)
+        onAdapterUpdated: writeAdapter()
         onSaveFailed: err => console.log("Failed to save config", FileViewError.toString(err))
 
         JsonAdapter {

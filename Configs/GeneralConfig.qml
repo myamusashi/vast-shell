@@ -17,20 +17,19 @@ JsonObject {
                 level: 20,
                 title: qsTr("Low battery"),
                 message: qsTr("You might want to plug in a charger"),
-                icon: "battery_android_frame_2"
+                icon: "battery-020"
             },
             {
                 level: 10,
                 title: qsTr("Did you see the previous message?"),
                 message: qsTr("You should probably plug in a charger <b>now</b>"),
-                icon: "battery_android_frame_1"
+                icon: "battery-010"
             },
             {
                 level: 5,
                 title: qsTr("Critical battery level"),
                 message: qsTr("PLUG THE CHARGER RIGHT NOW!!"),
-                icon: "battery_android_alert",
-                critical: true
+                icon: "battery-000"
             },
         ]
         property int criticalLevel: 3
