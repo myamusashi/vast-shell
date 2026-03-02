@@ -12,6 +12,7 @@ import qs.Modules.Lock
 import qs.Modules.Polkit
 import qs.Modules.Dashboard
 import qs.Modules.Wallpaper
+import qs.Modules.Settings
 
 ShellRoot {
     id: root
@@ -21,4 +22,5 @@ ShellRoot {
     Dashboard {}
     Polkit {}
     Drawers {}
+    Settings {}
 }
