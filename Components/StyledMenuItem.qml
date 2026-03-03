@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 import qs.Configs
@@ -10,7 +11,6 @@ MenuItem {
     id: root
 
     property alias trailingIcon: trailingIconItem.icon
-    property alias showCheckbox: checkBox.visible
 
     implicitWidth: 200
     implicitHeight: 48
@@ -35,14 +35,7 @@ MenuItem {
             anchors.fill: parent
             radius: parent.radius
 
-            color: {
-                const c = Qt.color(Colours.m3Colors.m3OnSurface);
-                if (root.pressed)
-                    return Qt.rgba(c.r, c.g, c.b, 0.12);
-                if (root.hovered)
-                    return Qt.rgba(c.r, c.g, c.b, 0.08);
-                return "transparent";
-            }
+            color: trailingIconItem.icon === "" ? "transparent" : Colours.m3Colors.m3SurfaceContainerHighest
 
             Behavior on color {
                 CAnim {
@@ -52,45 +45,9 @@ MenuItem {
         }
     }
 
-    contentItem: Item {
+    contentItem: RowLayout {
         implicitWidth: root.implicitWidth
         implicitHeight: root.implicitHeight
-
-        Rectangle {
-            id: checkBox
-
-            visible: false
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                leftMargin: Appearance.margin.normal
-            }
-            width: 18
-            height: 18
-            radius: 3
-            color: root.checked ? Colours.m3Colors.m3Primary : "transparent"
-            border.color: root.checked ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-            border.width: 2
-
-            Behavior on color {
-                CAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on border.color {
-                CAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-
-            Icon {
-                anchors.centerIn: parent
-                icon: "check"
-                font.pixelSize: 12
-                color: Colours.m3Colors.m3OnPrimary
-                visible: root.checked
-            }
-        }
 
         StyledText {
             anchors {
