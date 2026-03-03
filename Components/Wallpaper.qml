@@ -20,6 +20,7 @@ import qs.Helpers
 Item {
     id: root
 
+    readonly property var _shaderNames: ["fade", "wipeDown", "circleExpand", "dissolve", "splitHorizontal", "slideUp", "pixelate", "diagonalWipe", "boxExpand", "roll"]
     readonly property var _typeMap: ({
             "fade": 0,
             "wipeDown": 1,
@@ -71,10 +72,7 @@ Item {
         _startTransition(url);
     }
 
-    // Private
     function _startTransition(url) {
-        // [2] Resolve type first so we can check for -1 (lowPerfMode) and
-        //     "none" in one place before touching the shader at all.
         _typeResolved = _resolveType();
 
         if (Configs.wallpaper.transition === "none" || _typeResolved === -1) {
@@ -84,7 +82,9 @@ Item {
             return;
         }
 
-        // Wire shader sources for this direction before loading starts
+        const name = _shaderNames[_typeResolved] ?? "fade";
+        fx.fragmentShader = `root:/Assets/shaders/transitions/${name}.frag.qsb`;
+
         if (_slot === 0) {
             fx.source1 = imgA;
             fx.source2 = imgB;
@@ -104,7 +104,6 @@ Item {
             _busy = false;
             _toImg = null;
         }
-    // Otherwise wait for _onImgStatus() via Connections below
     }
 
     function _onImgStatus(img) {
@@ -146,32 +145,41 @@ Item {
         }
     }
 
-    // Update resolution only when the shader is idle to avoid feeding a
-    // mid-transition resize to the running shader.
+    // Resolution helper (call whenever viewport resizes and shader is idle)
     function _updateResolution() {
-        if (!_busy)
-            fx.resolution = Qt.vector2d(root.width, root.height);
+        if (!_busy) {
+            const w = root.width;
+            const h = root.height;
+            fx.resolution = Qt.vector2d(w, h);
+            fx.invResolution = Qt.vector2d(1.0 / w, 1.0 / h);
+        }
     }
 
-    // Initialisation
     Component.onCompleted: {
-        // Set sourceSize once imperatively
         imgA.sourceSize = Qt.size(root.width, root.height);
         imgB.sourceSize = Qt.size(root.width, root.height);
 
-        // Seed the resolution uniform with the real viewport size.
-        fx.resolution = Qt.vector2d(root.width, root.height);
+        const w = root.width;
+        const h = root.height;
+        fx.resolution = Qt.vector2d(w, h);
+        fx.invResolution = Qt.vector2d(1.0 / w, 1.0 / h);
 
         imgA.source = Paths.currentWallpaper;
 
-        // make fx visible for exactly one frame at
-        // progress=0 (outputs 100% source1 = visually identical to imgA)
-        // so the GPU driver compiles SPIR-V → native ISA now, not on the
-        // first real transition where it would cause a mid-frame stutter.
-        fx.visible = true;
-        Qt.callLater(() => {
-            fx.visible = Qt.binding(() => root._busy);
-        });
+        let i = 0;
+        function warmNext() {
+            if (i >= root._shaderNames.length) {
+                fx.fragmentShader = `root:/Assets/shaders/transitions/fade.frag.qsb`;
+                fx.visible = false;
+                fx.visible = Qt.binding(() => root._busy);
+                return;
+            }
+            fx.fragmentShader = `root:/Assets/shaders/transitions/${root._shaderNames[i]}.frag.qsb`;
+            fx.visible = true;
+            i++;
+            Qt.callLater(warmNext);
+        }
+        warmNext();
     }
 
     Image {
@@ -205,19 +213,38 @@ Item {
 
         anchors.fill: parent
 
+        // Textures
         property var source1: imgA
         property var source2: imgB
+
         property real progress: 0.0
-        property int transitionType: root._typeResolved
         property real smoothAmount: 0.05
         property real aspect: root.height > 0.0 ? root.height / root.width : 1.0
-        property vector2d resolution: Qt.vector2d(1920, 1080)  // overwritten below
+        property vector2d resolution: Qt.vector2d(1920, 1080)
+        property vector2d invResolution: Qt.vector2d(1.0 / 1920.0, 1.0 / 1080.0)
+        property real rollCos: root._typeResolved === 9 ? Math.cos(Math.PI / 2.0 * fx.progress) : 1.0
+        property real rollSin: root._typeResolved === 9 ? Math.sin(Math.PI / 2.0 * fx.progress) : 0.0
 
-        visible: root._busy   // zero GPU cost when idle
-        blending: false        //skip alpha blend stage
-        layer.enabled: false
         vertexShader: "root:/Assets/shaders/ImageTransition.vert.qsb"
-        fragmentShader: "root:/Assets/shaders/ImageTransition.frag.qsb"
+        fragmentShader: {
+            const shaders = ["fade"            // 0
+                , "wipeDown"        // 1
+                , "circleExpand"    // 2
+                , "dissolve"        // 3
+                , "splitHorizontal" // 4
+                , "slideUp"         // 5
+                , "pixelate"        // 6
+                , "diagonalWipe"    // 7
+                , "boxExpand"       // 8
+                , "roll"             // 9
+            ];
+            const idx = root._typeResolved;
+            const name = (idx >= 0 && idx < shaders.length) ? shaders[idx] : "fade";
+            return `root:/Assets/shaders/transitions/${name}.frag.qsb`;
+        }
+        visible: root._busy
+        blending: false
+        layer.enabled: false
     }
 
     NAnim {
