@@ -57,11 +57,11 @@ Rectangle {
             }
 
             M3FilledTextField {
-				id: fileNameField
+                id: fileNameField
 
                 Layout.fillWidth: true
-				text: ""
-				enabled: false
+                text: ""
+                enabled: false
             }
         }
 

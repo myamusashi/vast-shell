@@ -25,14 +25,14 @@ Rectangle {
         CAnim {
             duration: Appearance.animations.durations.small
         }
-	}
+    }
 
-	Elevation {
-		anchors.fill: parent
-		z: -1
-		radius: parent.radius
-		level: ma.containsMouse ? 1 : 0
-	}
+    Elevation {
+        anchors.fill: parent
+        z: -1
+        radius: parent.radius
+        level: ma.containsMouse ? 1 : 0
+    }
 
     SimpleRipple {
         anchors.fill: parent
