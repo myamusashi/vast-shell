@@ -5,13 +5,14 @@ import QtQuick.Layouts
 import qs.Configs
 import qs.Services
 import qs.Components
+import qs.Helpers
 
 Rectangle {
-	id: root
+    id: root
 
     property string text: ""
 
-    radius: 8
+    radius: Appearance.rounding.small
     color: ma.containsMouse ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
     border.color: Colours.m3Colors.m3Outline
     border.width: 1
@@ -33,28 +34,29 @@ Rectangle {
     RowLayout {
         anchors {
             fill: parent
-            leftMargin: 12
-            rightMargin: 8
+            leftMargin: Appearance.margin.larger
+            rightMargin: Appearance.margin.smaller
         }
-        spacing: 4
+        spacing: Appearance.margin.small
 
         StyledText {
             Layout.fillWidth: true
             text: root.text
-            font.pixelSize: 12
+            font.pixelSize: Appearance.fonts.size.small
             color: Colours.m3Colors.m3OnSurface
             elide: Text.ElideRight
         }
 
-        StyledText {
-            text: "▾"
+        Icon {
+            id: dropDownIcon
+            icon: "arrow_drop_down"
+            font.pixelSize: Appearance.fonts.size.small
             color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: 11
         }
     }
 
     MouseArea {
-		id: ma
+        id: ma
 
         anchors.fill: parent
         hoverEnabled: true

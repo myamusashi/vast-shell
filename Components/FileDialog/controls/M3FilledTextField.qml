@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import qs.Configs
 import qs.Services
 import qs.Components
+import qs.Helpers
 
 Rectangle {
     id: root
@@ -13,13 +14,13 @@ Rectangle {
 
     signal accepted(string text)
 
-    height: 40
-    radius: 4
+    height: 48
+    radius: Appearance.rounding.small
     color: Colours.m3Colors.m3SurfaceContainerHighest
 
     // Active indicator line
     Rectangle {
-		id: indicator
+        id: indicator
 
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -47,14 +48,15 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 12
-        anchors.rightMargin: 8
-        spacing: 6
+        anchors.leftMargin: Appearance.margin.larger
+        anchors.rightMargin: Appearance.margin.smaller
+        spacing: Appearance.spacing.small
 
-        StyledText {
+        Icon {
+            id: prefixIconItem
             visible: root.prefixIcon !== ""
-            text: root.prefixIcon
-            font.pixelSize: 14
+            icon: root.prefixIcon
+            font.pixelSize: Appearance.fonts.size.medium
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
 
@@ -63,7 +65,7 @@ Rectangle {
             Layout.fillWidth: true
             verticalAlignment: TextInput.AlignVCenter
             color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: 13
+            font.pixelSize: Appearance.fonts.size.normal
             text: root.text
             onAccepted: root.accepted(text)
         }

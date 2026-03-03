@@ -30,7 +30,7 @@ ColumnLayout {
 
     Rectangle {
         Layout.fillWidth: true
-        implicitHeight: 32
+        implicitHeight: 40
         color: Colours.m3Colors.m3SurfaceContainer
 
         Rectangle {
@@ -44,22 +44,22 @@ ColumnLayout {
         RowLayout {
             anchors {
                 fill: parent
-                leftMargin: 38
-                rightMargin: 16
+                leftMargin: 48
+                rightMargin: Appearance.margin.normal
             }
             spacing: 0
 
             StyledText {
                 text: "Name"
-                font.pixelSize: 11
+                font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.fillWidth: true
-                leftPadding: 4
+                leftPadding: Appearance.padding.small
             }
             StyledText {
                 text: "Size"
-                font.pixelSize: 11
+                font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 76
@@ -67,19 +67,19 @@ ColumnLayout {
             }
             StyledText {
                 text: "Type"
-                font.pixelSize: 11
+                font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 90
-                leftPadding: 10
+                leftPadding: Appearance.padding.normal
             }
             StyledText {
                 text: "Modified"
-                font.pixelSize: 11
+                font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 110
-                leftPadding: 6
+                leftPadding: Appearance.padding.smaller
             }
         }
     }
@@ -100,7 +100,7 @@ ColumnLayout {
             contentItem: Rectangle {
                 implicitWidth: 6
                 implicitHeight: 48
-                radius: 3
+                radius: width / 2
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 opacity: vScroll.pressed ? 0.7 : vScroll.hovered ? 0.5 : 0.3
                 Behavior on opacity {
@@ -143,9 +143,9 @@ ColumnLayout {
             fileSize: model.fileSize
             fileModified: model.fileModified
             filePath: model.filePath
-            isFolder: isFolder = (root.currentIndex === index)
+            isFolder: model.fileIsDir
             isSelected: fileList.currentIndex === index
-            index: model.index
+            index: index
 
             onClicked: {
                 fileList.currentIndex = index;

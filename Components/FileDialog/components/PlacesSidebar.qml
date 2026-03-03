@@ -27,73 +27,73 @@ Rectangle {
     ColumnLayout {
         anchors {
             fill: parent
-            topMargin: 12
-            leftMargin: 8
-            rightMargin: 8
+            topMargin: Appearance.margin.normal
+            leftMargin: Appearance.margin.small
+            rightMargin: Appearance.margin.small
         }
-        spacing: 2
+        spacing: Appearance.spacing.small
 
         StyledText {
             text: "Places"
-            font.pixelSize: 11
+            font.pixelSize: Appearance.fonts.size.small
             font.letterSpacing: 0.8
             color: Colours.m3Colors.m3OnSurfaceVariant
-            leftPadding: 16
-            bottomPadding: 4
+            leftPadding: Appearance.margin.normal
+            bottomPadding: Appearance.spacing.small
             Layout.fillWidth: true
         }
 
         ListView {
-			id: placesList
+            id: placesList
 
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
-            spacing: 2
+            spacing: Appearance.spacing.small
             currentIndex: -1
             highlightFollowsCurrentItem: false
 
             model: ListModel {
-				id: placesModel
+                id: placesModel
 
                 ListElement {
                     label: "Home"
-                    icon: "🏠"
+                    icon: "home"
                     path: ""
                 }
                 ListElement {
                     label: "Desktop"
-                    icon: "🖥️"
+                    icon: "desktop_windows"
                     path: ""
                 }
                 ListElement {
                     label: "Documents"
-                    icon: "📄"
+                    icon: "description"
                     path: ""
                 }
                 ListElement {
                     label: "Downloads"
-                    icon: "📥"
+                    icon: "download"
                     path: ""
                 }
                 ListElement {
                     label: "Music"
-                    icon: "🎵"
+                    icon: "music_note"
                     path: ""
                 }
                 ListElement {
                     label: "Pictures"
-                    icon: "🖼️"
+                    icon: "image"
                     path: ""
                 }
                 ListElement {
                     label: "Videos"
-                    icon: "🎬"
+                    icon: "movie"
                     path: ""
                 }
                 ListElement {
                     label: "Computer"
-                    icon: "💻"
+                    icon: "computer"
                     path: "file:///"
                 }
             }

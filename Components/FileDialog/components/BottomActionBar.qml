@@ -16,7 +16,7 @@ Rectangle {
     signal cancelClicked
     signal openClicked
 
-    implicitHeight: bottomCol.implicitHeight + 20
+    implicitHeight: bottomCol.implicitHeight + (Appearance.margin.normal * 2)
     color: Colours.m3Colors.m3SurfaceContainer
 
     Elevation {
@@ -34,50 +34,48 @@ Rectangle {
     }
 
     ColumnLayout {
-		id: bottomCol
+        id: bottomCol
 
         anchors {
             left: parent.left
             right: parent.right
             top: parent.top
-            margins: 12
-            topMargin: 12
+            margins: Appearance.margin.normal
         }
-        spacing: 8
+        spacing: Appearance.spacing.normal
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: 12
+            spacing: Appearance.spacing.normal
 
             StyledText {
                 text: "File name"
-                font.pixelSize: 12
+                font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurfaceVariant
-                Layout.preferredWidth: 72
+                Layout.preferredWidth: 80
             }
 
             M3FilledTextField {
                 id: fileNameField
                 Layout.fillWidth: true
-                Layout.preferredHeight: 40
                 text: root.fileName
             }
         }
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: 12
+            spacing: Appearance.spacing.normal
 
             StyledText {
                 text: "Filter"
-                font.pixelSize: 12
+                font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurfaceVariant
-                Layout.preferredWidth: 72
+                Layout.preferredWidth: 80
             }
 
             M3OutlinedChip {
-                Layout.preferredWidth: 200
-                Layout.preferredHeight: 32
+                Layout.preferredWidth: 250
+                Layout.fillHeight: true
                 text: root.nameFilters.join(", ")
             }
 

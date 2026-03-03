@@ -3,6 +3,7 @@ import QtQuick.Layouts
 
 import qs.Services
 import qs.Components
+import qs.Helpers
 
 import "../controls"
 
@@ -22,7 +23,7 @@ Rectangle {
     signal pathEntered(string path)
     signal showHiddenToggled
 
-    height: 56
+    height: 64
     color: Colours.m3Colors.m3SurfaceContainer
 
     Elevation {
@@ -41,52 +42,51 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: 6
-        anchors.rightMargin: 8
-        spacing: 0
+        anchors.leftMargin: Appearance.margin.normal
+        anchors.rightMargin: Appearance.margin.normal
+        spacing: Appearance.spacing.small
 
         M3IconButton {
-            icon: "←"
+            icon: "arrow_back"
             enabled: root.canGoBack
             onClicked: root.backClicked()
         }
 
         M3IconButton {
-            icon: "→"
+            icon: "arrow_forward"
             enabled: root.canGoForward
             onClicked: root.forwardClicked()
         }
 
         M3IconButton {
-            icon: "↑"
+            icon: "arrow_upward"
             enabled: root.canGoUp
             onClicked: root.upClicked()
         }
 
         M3IconButton {
-            icon: "↻"
+            icon: "refresh"
             spinOnClick: true
             onClicked: root.refreshClicked()
         }
 
         Item {
-            implicitWidth: 6
+            implicitWidth: Appearance.spacing.small
         }
 
         M3FilledTextField {
             Layout.fillWidth: true
-            implicitHeight: 40
-            prefixIcon: "📂"
+            prefixIcon: "folder_open"
             text: root.currentPath
             onAccepted: txt => root.pathEntered(txt)
         }
 
         Item {
-            implicitWidth: 6
+            implicitWidth: Appearance.spacing.small
         }
 
         M3IconButton {
-            icon: "👁"
+            icon: "visibility"
             toggled: root.showHidden
             onClicked: root.showHiddenToggled()
         }

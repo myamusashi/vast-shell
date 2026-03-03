@@ -6,7 +6,7 @@ import qs.Services
 import qs.Components
 
 Rectangle {
-	id: root
+    id: root
 
     property string text: ""
     property bool enabled: true
@@ -14,8 +14,8 @@ Rectangle {
     signal clicked
 
     implicitWidth: 96
-    implicitHeight: 40
-    radius: 20
+    implicitHeight: 48
+    radius: height / 2
     clip: true
 
     color: !enabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.12) : ma.pressed ? Qt.darker(Colours.m3Colors.m3Primary, 1.15) : ma.containsMouse ? Qt.lighter(Colours.m3Colors.m3Primary, 1.08) : Colours.m3Colors.m3Primary
@@ -47,7 +47,7 @@ Rectangle {
     StyledText {
         anchors.centerIn: parent
         text: root.text
-        font.pixelSize: 14
+        font.pixelSize: Appearance.fonts.size.normal
         font.bold: true
         color: enabled ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
         Behavior on color {
@@ -58,7 +58,7 @@ Rectangle {
     }
 
     MouseArea {
-		id: ma
+        id: ma
 
         anchors.fill: parent
         hoverEnabled: true
