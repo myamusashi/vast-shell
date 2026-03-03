@@ -40,13 +40,6 @@ Rectangle {
         }
     }
 
-    Elevation {
-        anchors.fill: parent
-        z: -1
-        radius: root.radius
-        level: 1
-    }
-
     MArea {
         id: ma
 
