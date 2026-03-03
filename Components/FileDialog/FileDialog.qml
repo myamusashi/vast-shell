@@ -5,6 +5,7 @@ import Qt.labs.folderlistmodel
 
 import qs.Configs
 import qs.Services
+import qs.Components
 
 import "components"
 
@@ -136,6 +137,22 @@ Window {
                 onFolderDoubleClicked: path => root.navigateTo(path)
                 onFileDoubleClicked: path => root.fileSelected(path)
                 onSelectionChanged: fileName => bottomBar.setFileName(fileName)
+
+                StyledMenu {
+                    id: contextMenu
+
+                    StyledMenuItem {
+                        text: qsTr("Show hidden")
+                        trailingIcon: root.showHidden ? "check" : ""
+                        onTriggered: root.showHidden = !root.showHidden
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onClicked: mouse => contextMenu.popup(mouse.x, mouse.y)
+                }
             }
         }
 
