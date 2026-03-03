@@ -1,4 +1,3 @@
-import AnotherRipple
 import QtQuick
 import QtQuick.Layouts
 
@@ -24,13 +23,6 @@ Rectangle {
         }
     }
 
-    SimpleRipple {
-        anchors.fill: parent
-        clipRadius: 8
-        color: Colours.m3Colors.m3OnSurface
-        acceptEvent: false
-    }
-
     RowLayout {
         anchors {
             fill: parent
@@ -50,15 +42,12 @@ Rectangle {
         Icon {
             id: dropDownIcon
             icon: "arrow_drop_down"
-            font.pixelSize: Appearance.fonts.size.small
+            font.pixelSize: Appearance.fonts.size.large * 1.3
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
 
-    MouseArea {
+    MArea {
         id: ma
-
-        anchors.fill: parent
-        hoverEnabled: true
     }
 }

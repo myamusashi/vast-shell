@@ -1,9 +1,9 @@
 pragma ComponentBehavior: Bound
 
-import AnotherRipple
 import QtQuick
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 import qs.Components
 
@@ -34,13 +34,6 @@ Rectangle {
         level: ma.containsMouse ? 1 : 0
     }
 
-    SimpleRipple {
-        anchors.fill: parent
-        clipRadius: 20
-        color: Colours.m3Colors.m3OnPrimary
-        acceptEvent: false
-    }
-
     StyledText {
         anchors.centerIn: parent
         text: root.text
@@ -54,11 +47,9 @@ Rectangle {
         }
     }
 
-    MouseArea {
+    MArea {
         id: ma
 
-        anchors.fill: parent
-        hoverEnabled: true
         enabled: root.enabled
         onClicked: root.clicked()
     }
