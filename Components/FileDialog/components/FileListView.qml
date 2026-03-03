@@ -167,18 +167,4 @@ ColumnLayout {
         currentIndex = -1;
         fileList.currentIndex = -1;
     }
-
-    StyledMenu {
-        id: contextMenu
-
-        StyledMenuItem {
-            text: qsTr("Show hidden")
-            onTriggered: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.modelData?.connect()
-        }
-
-        StyledMenuItem {
-            text: qsTr("Forget Network")
-            onTriggered: networkDelegate.modelData?.forget()
-        }
-    }
 }
