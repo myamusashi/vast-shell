@@ -19,19 +19,12 @@ Rectangle {
     radius: height / 2
     clip: true
 
-    color: !enabled ? Colours.m3Colors.m3Primary : ma.pressed ? Colours.m3Colors.m3Primary : ma.containsMouse ? Qt.alpha(Colours.m3Colors.m3OnPrimary, 0.08) : Colours.m3Colors.m3Primary
+    color: !enabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.12) : ma.pressed ? Qt.tint(Colours.m3Colors.m3Primary, Qt.alpha(Colours.m3Colors.m3OnPrimary, 0.12)) : ma.containsMouse ? Qt.tint(Colours.m3Colors.m3Primary, Qt.alpha(Colours.m3Colors.m3OnPrimary, 0.08)) : Colours.m3Colors.m3Primary
 
     Behavior on color {
         CAnim {
             duration: Appearance.animations.durations.small
         }
-    }
-
-    Elevation {
-        anchors.fill: parent
-        z: -1
-        radius: parent.radius
-        level: ma.containsMouse ? 1 : 0
     }
 
     StyledText {
@@ -47,9 +40,17 @@ Rectangle {
         }
     }
 
+    Elevation {
+        anchors.fill: parent
+        z: -1
+        radius: root.radius
+        level: 1
+    }
+
     MArea {
         id: ma
 
+        layerRadius: root.radius
         enabled: root.enabled
         onClicked: root.clicked()
     }
