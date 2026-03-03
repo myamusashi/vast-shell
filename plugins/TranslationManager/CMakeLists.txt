@@ -10,6 +10,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wshadow -Wconversion
     -Wold-style-cast -Wnull-dereference -Wdouble-promotion
@@ -22,16 +24,16 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wunused-lambda-capture)
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+set(QML_OUTPUT_DIR "${CMAKE_BINARY_DIR}/TranslationManager")
 
 qt_add_qml_module(TranslationManager
     URI TranslationManager
     VERSION 1.0
+    PLUGIN_TARGET TranslationManagerQmlPlugin
+    OUTPUT_DIRECTORY ${QML_OUTPUT_DIR}
     SOURCES
         TranslationManager.h
         TranslationManager.cpp
-    NO_PLUGIN_OPTIONAL
-    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/TranslationManager
 )
 
 target_link_libraries(TranslationManager PRIVATE
@@ -45,26 +47,39 @@ if(NOT DEFINED QML_INSTALL_DIR)
     set(QML_INSTALL_DIR "lib/qt-6/qml")
 endif()
 
+set(PLUGIN_TARGET_NAME "TranslationManagerQmlPlugin")
+
 set_target_properties(TranslationManager PROPERTIES
-    INSTALL_RPATH "\$ORIGIN:${CMAKE_INSTALL_PREFIX}/${QML_INSTALL_DIR}/TranslationManager"
+    INSTALL_RPATH "\$ORIGIN"
 )
 
-set_target_properties(TranslationManagerplugin PROPERTIES
-    INSTALL_RPATH "\$ORIGIN:${CMAKE_INSTALL_PREFIX}/${QML_INSTALL_DIR}/TranslationManager"
+set_target_properties(${PLUGIN_TARGET_NAME} PROPERTIES
+    INSTALL_RPATH "\$ORIGIN"
 )
 
-install(TARGETS TranslationManager TranslationManagerplugin
+install(TARGETS TranslationManager
     LIBRARY DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+    RUNTIME DESTINATION ${QML_INSTALL_DIR}/TranslationManager
 )
 
-install(FILES 
-    ${CMAKE_BINARY_DIR}/TranslationManager/qmldir
+install(TARGETS ${PLUGIN_TARGET_NAME}
+    LIBRARY DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+    RUNTIME DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+)
+
+install(DIRECTORY "${QML_OUTPUT_DIR}/"
     DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+    FILES_MATCHING
+        PATTERN "qmldir"
+        PATTERN "*.qmltypes"
+        PATTERN "*.so" EXCLUDE
+        PATTERN "*.dll" EXCLUDE
 )
 
-if(EXISTS ${CMAKE_BINARY_DIR}/TranslationManager/TranslationManager.qmltypes)
+if(EXISTS ${QML_OUTPUT_DIR}/TranslationManager.qmltypes)
     install(FILES 
-        ${CMAKE_BINARY_DIR}/TranslationManager/TranslationManager.qmltypes
+        ${QML_OUTPUT_DIR}/TranslationManager.qmltypes
         DESTINATION ${QML_INSTALL_DIR}/TranslationManager
+        OPTIONAL
     )
 endif()
