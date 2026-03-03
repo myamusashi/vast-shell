@@ -11,35 +11,41 @@ Rectangle {
     default property alias content: contentLayout.data
 
     Layout.fillWidth: true
-    implicitHeight: layout.implicitHeight + (Appearance.padding.large * 2)
+    implicitHeight: layout.implicitHeight + (Appearance.margin.large * 2)
 
     color: Colours.m3Colors.m3SurfaceContainerLow
     radius: Appearance.rounding.large
 
     Elevation {
         anchors.fill: parent
+        z: -1
         level: 1
-        radius: parent.radius
+        radius: root.radius
     }
 
     ColumnLayout {
         id: layout
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: Appearance.padding.large
+
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            margins: Appearance.margin.large
+        }
         spacing: Appearance.spacing.larger
 
         StyledText {
             id: titleText
+
             font.pixelSize: Appearance.fonts.size.large
-            font.bold: true
+            font.weight: Font.DemiBold
             color: Colours.m3Colors.m3Primary
             visible: text !== ""
         }
 
         ColumnLayout {
             id: contentLayout
+
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
         }
