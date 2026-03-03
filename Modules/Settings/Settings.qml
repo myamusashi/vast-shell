@@ -20,7 +20,7 @@ FloatingWindow {
         id: surfaceContainer
         anchors.fill: parent
         color: Colours.m3Colors.m3Surface
-        radius: Configs.appearance.rounding.large
+        radius: Appearance.rounding.large
         clip: true
 
         Elevation {
@@ -31,8 +31,8 @@ FloatingWindow {
 
         RowLayout {
             anchors.fill: parent
-            anchors.margins: Configs.appearance.margin.large
-            spacing: Configs.appearance.spacing.large
+            anchors.margins: Appearance.margin.large
+            spacing: Appearance.spacing.large
 
             Rectangle {
                 Layout.preferredWidth: 220
@@ -41,15 +41,15 @@ FloatingWindow {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    spacing: Configs.appearance.spacing.small
+                    spacing: Appearance.spacing.small
 
                     StyledText {
                         text: qsTr("Settings")
                         Layout.fillWidth: true
-                        Layout.margins: Configs.appearance.margin.normal
-                        Layout.bottomMargin: Configs.appearance.margin.large
+                        Layout.margins: Appearance.margin.normal
+                        Layout.bottomMargin: Appearance.margin.large
                         font.bold: true
-                        font.pixelSize: Configs.appearance.fonts.size.extraLarge
+                        font.pixelSize: Appearance.fonts.size.extraLarge
                         color: Colours.m3Colors.m3OnSurface
                     }
 

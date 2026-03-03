@@ -13,15 +13,15 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: Configs.appearance.margin.large
-        spacing: Configs.appearance.spacing.large
+        anchors.margins: Appearance.margin.large
+        spacing: Appearance.spacing.large
 
         StyledText {
             text: qsTr("Top Bar Configuration")
-            font.pixelSize: Configs.appearance.fonts.size.extraLarge
+            font.pixelSize: Appearance.fonts.size.extraLarge
             font.bold: true
             color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Configs.appearance.margin.normal
+            Layout.bottomMargin: Appearance.margin.normal
         }
 
         SettingsCard {
@@ -32,7 +32,7 @@ Item {
                 StyledText {
                     text: qsTr("Always Open Bar:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSwitch {
@@ -46,7 +46,7 @@ Item {
                 StyledText {
                     text: qsTr("Compact Navigation Bar:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSwitch {
@@ -60,7 +60,7 @@ Item {
                 StyledText {
                     text: qsTr("Bar Height:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSlide {
@@ -82,7 +82,7 @@ Item {
                 StyledText {
                     text: qsTr("Workspace Indicator Style:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     ToolTip.text: "Available values: 'dot', 'interactive'"
                 }
@@ -98,7 +98,7 @@ Item {
                 StyledText {
                     text: qsTr("Number of Visible Workspaces:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSlide {
