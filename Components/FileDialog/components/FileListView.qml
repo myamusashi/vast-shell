@@ -14,14 +14,16 @@ ColumnLayout {
     id: root
 
     required property var model
-    property bool foldersOnly: false
 
+    property bool folderHidden: false
+    property bool foldersOnly: false
     property int currentIndex: -1
     property bool hasSelection: currentIndex >= 0
     property string selectedFileName: hasSelection ? model.get(currentIndex, "fileName") : ""
     property string currentFilePath: hasSelection ? model.get(currentIndex, "filePath") : ""
     property bool currentIsFolder: hasSelection ? model.isFolder(currentIndex) : false
 
+    signal showHiddenToggled
     signal folderDoubleClicked(string path)
     signal fileDoubleClicked(string path)
     signal selectionChanged(string fileName)
@@ -145,7 +147,7 @@ ColumnLayout {
             filePath: model.filePath
             isFolder: model.fileIsDir
             isSelected: fileList.currentIndex === index
-            index: index
+            itemIndex: index
 
             onClicked: {
                 fileList.currentIndex = index;
@@ -164,5 +166,19 @@ ColumnLayout {
     function clearSelection() {
         currentIndex = -1;
         fileList.currentIndex = -1;
+    }
+
+    StyledMenu {
+        id: contextMenu
+
+        StyledMenuItem {
+            text: qsTr("Show hidden")
+            onTriggered: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.modelData?.connect()
+        }
+
+        StyledMenuItem {
+            text: qsTr("Forget Network")
+            onTriggered: networkDelegate.modelData?.forget()
+        }
     }
 }
