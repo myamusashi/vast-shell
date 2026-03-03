@@ -23,16 +23,16 @@ Item {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: Configs.appearance.margin.large
+            margins: Appearance.margin.large
         }
-        spacing: Configs.appearance.spacing.large
+        spacing: Appearance.spacing.large
 
         StyledText {
             text: qsTr("General Settings")
-            font.pixelSize: Configs.appearance.fonts.size.extraLarge
+            font.pixelSize: Appearance.fonts.size.extraLarge
             font.bold: true
             color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Configs.appearance.margin.normal
+            Layout.bottomMargin: Appearance.margin.normal
         }
 
         SettingsCard {
@@ -44,7 +44,7 @@ Item {
                 StyledText {
                     text: qsTr("Follow Focus Monitor:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
 
@@ -60,7 +60,7 @@ Item {
                 StyledText {
                     text: qsTr("Enable Transparent Mode:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
 
@@ -76,7 +76,7 @@ Item {
                 StyledText {
                     text: qsTr("Transparency Alpha:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
 
@@ -132,7 +132,7 @@ Item {
                 StyledText {
                     text: qsTr("Enable Outer Border:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSwitch {
@@ -195,7 +195,7 @@ Item {
         StyledText {
             text: appSetting.label
             Layout.fillWidth: true
-            font.pixelSize: Configs.appearance.fonts.size.large
+            font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
 

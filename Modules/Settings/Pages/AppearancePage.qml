@@ -16,24 +16,24 @@ Item {
     Flickable {
         anchors.fill: parent
         contentWidth: parent.width
-        contentHeight: contentColumn.implicitHeight + (Configs.appearance.margin.large * 2)
+        contentHeight: contentColumn.implicitHeight + (Appearance.margin.large * 2)
         clip: true
         ScrollBar.vertical: ScrollBar {}
 
         ColumnLayout {
             id: contentColumn
-            width: parent.width - (Configs.appearance.margin.large * 2)
+            width: parent.width - (Appearance.margin.large * 2)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.topMargin: Configs.appearance.margin.large
-            spacing: Configs.appearance.spacing.large
+            anchors.topMargin: Appearance.margin.large
+            spacing: Appearance.spacing.large
 
             StyledText {
                 text: qsTr("Appearance & Theming")
-                font.pixelSize: Configs.appearance.fonts.size.extraLarge
+                font.pixelSize: Appearance.fonts.size.extraLarge
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurface
-                Layout.bottomMargin: Configs.appearance.margin.normal
+                Layout.bottomMargin: Appearance.margin.normal
             }
 
             SettingsCard {
@@ -44,7 +44,7 @@ Item {
                     StyledText {
                         text: qsTr("Dark Mode:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
 
@@ -59,7 +59,7 @@ Item {
                     StyledText {
                         text: qsTr("Use Static Colors:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSwitch {
@@ -73,7 +73,7 @@ Item {
                     StyledText {
                         text: qsTr("Static Colors Path:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledTextField {
@@ -106,7 +106,7 @@ Item {
                     StyledText {
                         text: qsTr("Use Matugen Colors:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSwitch {
@@ -120,7 +120,7 @@ Item {
                     StyledText {
                         text: qsTr("Matugen Path (Light):")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledTextField {
@@ -135,7 +135,7 @@ Item {
                     StyledText {
                         text: qsTr("Matugen Path (Dark):")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledTextField {
@@ -154,12 +154,12 @@ Item {
                     StyledText {
                         text: qsTr("Sans Serif Font:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledTextField {
-                        text: Configs.appearance.fonts.family.sans
-                        onTextChanged: Configs.appearance.fonts.family.sans = text
+                        text: Appearance.fonts.family.sans
+                        onTextChanged: Appearance.fonts.family.sans = text
                         Layout.preferredWidth: 250
                     }
                 }
@@ -169,12 +169,12 @@ Item {
                     StyledText {
                         text: qsTr("Monospace Font:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledTextField {
-                        text: Configs.appearance.fonts.family.mono
-                        onTextChanged: Configs.appearance.fonts.family.mono = text
+                        text: Appearance.fonts.family.mono
+                        onTextChanged: Appearance.fonts.family.mono = text
                         Layout.preferredWidth: 250
                     }
                 }
@@ -184,12 +184,12 @@ Item {
                     StyledText {
                         text: qsTr("Material Icon Font:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledTextField {
-                        text: Configs.appearance.fonts.family.material
-                        onTextChanged: Configs.appearance.fonts.family.material = text
+                        text: Appearance.fonts.family.material
+                        onTextChanged: Appearance.fonts.family.material = text
                         Layout.preferredWidth: 250
                     }
                 }
@@ -199,15 +199,15 @@ Item {
                     StyledText {
                         text: qsTr("Font Size Scale:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSlide {
                         from: 1
                         to: 5
                         stepSize: 1
-                        value: Configs.appearance.fonts.size.scale
-                        onValueChanged: Configs.appearance.fonts.size.scale = value
+                        value: Appearance.fonts.size.scale
+                        onValueChanged: Appearance.fonts.size.scale = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -221,15 +221,15 @@ Item {
                     StyledText {
                         text: qsTr("UI Corner Roundness (Normal):")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSlide {
                         from: 0
                         to: 50
                         stepSize: 1
-                        value: Configs.appearance.rounding.normal
-                        onValueChanged: Configs.appearance.rounding.normal = value
+                        value: Appearance.rounding.normal
+                        onValueChanged: Appearance.rounding.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -239,15 +239,15 @@ Item {
                     StyledText {
                         text: qsTr("Element Spacing (Normal):")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSlide {
                         from: 0
                         to: 50
                         stepSize: 1
-                        value: Configs.appearance.spacing.normal
-                        onValueChanged: Configs.appearance.spacing.normal = value
+                        value: Appearance.spacing.normal
+                        onValueChanged: Appearance.spacing.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -257,15 +257,15 @@ Item {
                     StyledText {
                         text: qsTr("Padding (Normal):")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSlide {
                         from: 0
                         to: 50
                         stepSize: 1
-                        value: Configs.appearance.padding.normal
-                        onValueChanged: Configs.appearance.padding.normal = value
+                        value: Appearance.padding.normal
+                        onValueChanged: Appearance.padding.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -275,15 +275,15 @@ Item {
                     StyledText {
                         text: qsTr("Margin (Normal):")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSlide {
                         from: 0
                         to: 50
                         stepSize: 1
-                        value: Configs.appearance.margin.normal
-                        onValueChanged: Configs.appearance.margin.normal = value
+                        value: Appearance.margin.normal
+                        onValueChanged: Appearance.margin.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -298,7 +298,7 @@ Item {
                     StyledText {
                         text: qsTr("Animation Durations Scale:")
                         Layout.fillWidth: true
-                        font.pixelSize: Configs.appearance.fonts.size.large
+                        font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
                     StyledSlide {
@@ -314,7 +314,7 @@ Item {
 
             Item {
                 Layout.fillHeight: true
-                implicitHeight: Configs.appearance.margin.large
+                implicitHeight: Appearance.margin.large
             }
         }
     }

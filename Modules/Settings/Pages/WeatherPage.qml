@@ -12,15 +12,15 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: Configs.appearance.margin.large
-        spacing: Configs.appearance.spacing.large
+        anchors.margins: Appearance.margin.large
+        spacing: Appearance.spacing.large
 
         StyledText {
             text: qsTr("Weather & Location")
-            font.pixelSize: Configs.appearance.fonts.size.extraLarge
+            font.pixelSize: Appearance.fonts.size.extraLarge
             font.bold: true
             color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Configs.appearance.margin.normal
+            Layout.bottomMargin: Appearance.margin.normal
         }
 
         SettingsCard {
@@ -31,7 +31,7 @@ Item {
                 StyledText {
                     text: qsTr("Latitude:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledTextField {
@@ -47,7 +47,7 @@ Item {
                 StyledText {
                     text: qsTr("Longitude:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledTextField {
@@ -67,7 +67,7 @@ Item {
                 StyledText {
                     text: qsTr("Enable Quick Summary Widget:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSwitch {
@@ -81,7 +81,7 @@ Item {
                 StyledText {
                     text: qsTr("Weather Reload Time (ms):")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledTextField {

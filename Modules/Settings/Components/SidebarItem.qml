@@ -26,14 +26,14 @@ Rectangle {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: Configs.appearance.margin.large
-        anchors.rightMargin: Configs.appearance.margin.large
-        spacing: Configs.appearance.spacing.normal
+        anchors.leftMargin: Appearance.margin.large
+        anchors.rightMargin: Appearance.margin.large
+        spacing: Appearance.spacing.normal
 
         Icon {
             id: iconItem
 
-            font.pixelSize: Configs.appearance.fonts.size.large
+            font.pixelSize: Appearance.fonts.size.extraLarge
             color: root.isActive ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
 
             Behavior on color {
@@ -43,8 +43,9 @@ Rectangle {
 
         StyledText {
             id: textItem
+
             Layout.fillWidth: true
-            font.pixelSize: Configs.appearance.fonts.size.normal
+            font.pixelSize: Appearance.fonts.size.normal
             font.bold: root.isActive
             color: root.isActive ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
 

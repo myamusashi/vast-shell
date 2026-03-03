@@ -14,18 +14,18 @@ Item {
     ColumnLayout {
         anchors {
             fill: parent
-            margins: Configs.appearance.margin.large
+            margins: Appearance.margin.large
         }
-        spacing: Configs.appearance.spacing.large
+        spacing: Appearance.spacing.large
 
         StyledText {
             text: qsTr("Wallpaper Engine")
             font {
-                pixelSize: Configs.appearance.fonts.size.extraLarge
+                pixelSize: Appearance.fonts.size.extraLarge
                 bold: true
             }
             color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Configs.appearance.margin.normal
+            Layout.bottomMargin: Appearance.margin.normal
         }
 
         SettingsCard {
@@ -36,7 +36,7 @@ Item {
                 StyledText {
                     text: qsTr("Enable Wallpaper:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSwitch {
@@ -50,7 +50,7 @@ Item {
                 StyledText {
                     text: qsTr("Wallpaper Directory Path:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledTextField {
@@ -65,7 +65,7 @@ Item {
                 StyledText {
                     text: qsTr("Loaded Wallpaper Count:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSlide {
@@ -87,7 +87,7 @@ Item {
                 StyledText {
                     text: qsTr("Transition Animation Mode:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledTextField {
@@ -102,7 +102,7 @@ Item {
                 StyledText {
                     text: qsTr("Transition Low Performance Priority:")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSwitch {
@@ -116,7 +116,7 @@ Item {
                 StyledText {
                     text: qsTr("Transition Duration (ms):")
                     Layout.fillWidth: true
-                    font.pixelSize: Configs.appearance.fonts.size.large
+                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
                 StyledSlide {
