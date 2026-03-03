@@ -1,3 +1,4 @@
+import AnotherRipple
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -50,13 +51,8 @@ MenuItem {
         implicitHeight: root.implicitHeight
 
         StyledText {
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left
-                leftMargin: Appearance.margin.normal
-                right: trailingIconItem.visible ? trailingIconItem.left : parent.right
-                rightMargin: Appearance.margin.normal
-            }
+            Layout.alignment: Qt.AlignLeft
+            Layout.leftMargin: Appearance.margin.normal
 
             text: root.text
             font.pixelSize: Appearance.fonts.size.normal
@@ -74,27 +70,52 @@ MenuItem {
             }
         }
 
-        Icon {
-            id: trailingIconItem
+        Item {
+            Layout.alignment: Qt.AlignCenter
+            implicitWidth: 30
+            implicitHeight: 30
 
-            anchors {
-                verticalCenter: parent.verticalCenter
-                right: parent.right
-                rightMargin: Appearance.margin.normal
+            Icon {
+                anchors.centerIn: parent
+                icon: "check_box_outline_blank"
+                font.pixelSize: Appearance.fonts.size.large
+                color: root.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+
+                Behavior on color {
+                    CAnim {
+                        duration: Appearance.animations.durations.small
+                        easing.bezierCurve: Appearance.animations.curves.standard
+                    }
+                }
             }
 
-            icon: ""
-            font.pixelSize: Appearance.fonts.size.large
-            visible: root.trailingIcon !== ""
+            Icon {
+                id: trailingIconItem
 
-            color: root.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+                anchors.centerIn: parent
+                icon: ""
+                font.pixelSize: Appearance.fonts.size.large
+                color: root.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+                visible: root.trailingIcon !== ""
 
-            Behavior on color {
-                CAnim {
-                    duration: Appearance.animations.durations.small
-                    easing.bezierCurve: Appearance.animations.curves.standard
+                Behavior on color {
+                    CAnim {
+                        duration: Appearance.animations.durations.small
+                        easing.bezierCurve: Appearance.animations.curves.standard
+                    }
                 }
             }
         }
+    }
+
+    SimpleRipple {
+        anchors {
+            fill: parent
+            leftMargin: Appearance.margin.small
+            rightMargin: Appearance.margin.small
+        }
+        color: Colours.m3Colors.m3OnSurface
+        xClipRadius: Appearance.rounding.normal
+        yClipRadius: Appearance.rounding.normal
     }
 }
