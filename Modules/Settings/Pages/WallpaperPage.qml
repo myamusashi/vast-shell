@@ -1,8 +1,12 @@
 import QtQuick
 import QtQuick.Layouts
+
 import qs.Configs
-import qs.Components
+import qs.Helpers
 import qs.Services
+import qs.Components
+import qs.Components.FileDialog
+
 import "../Components"
 
 Item {
@@ -53,10 +57,28 @@ Item {
                     font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
+
                 StyledTextField {
+                    id: wallpaperDirField
+
                     text: Configs.wallpaper.wallpaperDir
                     onTextChanged: Configs.wallpaper.wallpaperDir = text
                     Layout.preferredWidth: 350
+
+                    MArea {
+                        onClicked: {
+                            wallpaperDirField.forceActiveFocus();
+                            fileDialog.visible = true;
+                        }
+                    }
+                }
+
+                FileDialog {
+                    id: fileDialog
+
+                    nameFilters: ["*.jpg", "*.png", "*.jpeg", "*.JPG", "*.PNG"]
+                    showHidden: true
+                    onFileSelected: path => Configs.wallpaper.wallpaperDir = path
                 }
             }
 
@@ -72,6 +94,8 @@ Item {
                     from: 1
                     to: 10
                     stepSize: 1
+                    snapEnabled: true
+                    showValuePopup: true
                     value: Configs.wallpaper.visibleWallpaper
                     onValueChanged: Configs.wallpaper.visibleWallpaper = value
                     Layout.preferredWidth: 200
@@ -90,10 +114,50 @@ Item {
                     font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
-                StyledTextField {
-                    text: Configs.wallpaper.transition
-                    onTextChanged: Configs.wallpaper.transition = text
+                StyledComboBox {
+                    model: [
+                        {
+                            display: "none"
+                        },
+                        {
+                            display: "random"
+                        },
+                        {
+                            display: "fade"
+                        },
+                        {
+                            display: "wipedown"
+                        },
+                        {
+                            display: "circle"
+                        },
+                        {
+                            display: "dissolve"
+                        },
+                        {
+                            display: "splitH"
+                        },
+                        {
+                            display: "slideup"
+                        },
+                        {
+                            display: "pixelate"
+                        },
+                        {
+                            display: "diagonal"
+                        },
+                        {
+                            display: "box"
+                        },
+                        {
+                            display: "roll"
+                        }
+                    ]
                     Layout.preferredWidth: 200
+                    currentIndex: -1
+                    placeholderText: Configs.wallpaper.transition
+                    isItemActive: (md, _) => md.display === Configs.wallpaper.transition
+                    onActivated: index => Configs.wallpaper.transition = model[index].display
                 }
             }
 

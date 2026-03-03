@@ -189,8 +189,11 @@ Item {
         property var categories: []
         property string configValue
         signal configChanged(string value)
-
         Layout.fillWidth: true
+
+        property var appList: [...DesktopEntries.applications.values].filter(e => appSetting.categories.every(c => e.categories.includes(c))).map(e => ({
+                    "display": root.cleanExec(e.execString)
+                }))
 
         StyledText {
             text: appSetting.label
@@ -199,32 +202,20 @@ Item {
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
 
-        StyledMenu {
-            id: appMenu
+        StyledComboBox {
+            id: appCombo
 
-            Repeater {
-                model: ScriptModel {
-                    values: [...DesktopEntries.applications.values].filter(e => appSetting.categories.every(c => e.categories.includes(c)))
-                }
-                delegate: StyledMenuItem {
-                    required property DesktopEntry modelData
-                    text: root.cleanExec(modelData.execString)
-                    onTriggered: appSetting.configChanged(root.cleanExec(modelData.execString))
-                }
-            }
-        }
-
-        StyledTextField {
-            id: field
-
-            text: appSetting.configValue
             Layout.preferredWidth: 250
-            onTextChanged: appSetting.configChanged(text)
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    field.forceActiveFocus();
-                    appMenu.popup();
+            model: appSetting.appList
+            currentIndex: appSetting.appList.findIndex(item => item.display === appSetting.configValue)
+            placeholderText: appSetting.configValue
+            isItemActive: (md, _) => md.display === appSetting.configValue
+            onActivated: index => appSetting.configChanged(appSetting.appList[index].display)
+
+            Connections {
+                target: appSetting
+                function onConfigValueChanged() {
+                    appCombo.currentIndex = appSetting.appList.findIndex(item => item.display === appSetting.configValue);
                 }
             }
         }
