@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
 
+import qs.Configs
 import qs.Helpers
 
 // Thanks to Caelestia once again for your amazing code: https://github.com/caelestia-dots/shell/blob/main/modules/notifications/Notification.qml
@@ -14,23 +15,32 @@ Singleton {
 
     property alias dnd: persistentProps.dnd
 
-    readonly property list<Notif> notClosed: list.filter(n => !n.closed)
-    readonly property list<Notif> popups: list.filter(n => n.popup)
+    readonly property list<Notif> notClosed: list && Array.isArray(list) ? list.filter(n => n && !n.closed) : []
+    readonly property list<Notif> popups: list && Array.isArray(list) ? list.filter(n => n && n.popup) : []
 
     property list<Notif> list: []
     property bool loaded: false
-    // Memory management properties
-    property int maxNotifications: 100
-    property int maxNotificationAge: 604800000 // 7 days in milliseconds
+
+    property int maxNotifications: Configs.noti
+    property int maxNotificationAge: 604800000
 
     function clearAll() {
+        if (!root.list || !Array.isArray(root.list))
+            return;
+
         for (const notif of root.list.slice())
-            notif.close();
+            if (notif && typeof notif.close === 'function')
+                notif.close();
     }
 
     function cleanupOldNotifications() {
-        const now = Date.now();
+        if (!root.list || !Array.isArray(root.list))
+            return;
+
+        const now = Date.now ? Date.now() : new Date().getTime();
         const oldNotifications = root.list.filter(n => {
+            if (!n || !n.time || !(n.time instanceof Date))
+                return false;
             const age = now - n.time.getTime();
             return age > root.maxNotificationAge;
         });
@@ -38,29 +48,41 @@ Singleton {
         if (oldNotifications.length > 0) {
             console.log(`Cleaning up ${oldNotifications.length} old notification(s)`);
             for (const notif of oldNotifications)
-                notif.close();
+                if (notif && typeof notif.close === 'function')
+                    notif.close();
         }
     }
 
     function enforceNotificationLimit() {
         cleanupOldNotifications();
 
-        // check if we're at the limit
+        if (!root.notClosed || !Array.isArray(root.notClosed))
+            return;
+
         const currentCount = root.notClosed.length;
 
         if (currentCount >= root.maxNotifications) {
-            // Sort by time (oldest first) and remove excess
-            const sortedNotifs = root.notClosed.slice().sort((a, b) => a.time - b.time);
-            const toRemove = currentCount - root.maxNotifications + 1; // +1 to make room for new one
+            const sortedNotifs = root.notClosed.slice().sort((a, b) => {
+                if (!a || !a.time)
+                    return 1;
+                if (!b || !b.time)
+                    return -1;
+                return a.time - b.time;
+            });
+
+            const toRemove = currentCount - root.maxNotifications + 1;
 
             console.log(`Removing ${toRemove} oldest notification(s) to enforce limit`);
-            for (let i = 0; i < toRemove && i < sortedNotifs.length; i++)
-                sortedNotifs[i].close();
+            for (let i = 0; i < toRemove && i < sortedNotifs.length; i++) {
+                const notif = sortedNotifs[i];
+                if (notif && typeof notif.close === 'function')
+                    notif.close();
+            }
         }
     }
 
     onListChanged: {
-        if (loaded)
+        if (loaded && saveTimer && typeof saveTimer.restart === 'function')
             saveTimer.restart();
     }
 
@@ -69,31 +91,45 @@ Singleton {
 
         interval: 50
         onTriggered: {
-            storage.setText(JSON.stringify(root.notClosed.map(n => ({
-                        time: n.time.getTime(),
-                        id: n.id,
-                        summary: n.summary,
-                        body: n.body,
-                        appIcon: n.appIcon,
-                        appName: n.appName,
-                        image: n.image,
-                        expireTimeout: n.expireTimeout,
-                        urgency: n.urgency,
-                        resident: n.resident,
-                        hasActionIcons: n.hasActionIcons,
-                        actions: n.actions
-                    })), null, 2));
+            if (!root.notClosed || !Array.isArray(root.notClosed)) {
+                storage.setText("[]");
+                return;
+            }
+
+            try {
+                const dataToSave = root.notClosed.filter(n => n !== null && n !== undefined).map(n => ({
+                            time: n.time && n.time.getTime ? n.time.getTime() : Date.now(),
+                            id: n.id ?? "",
+                            summary: n.summary ?? "",
+                            body: n.body ?? "",
+                            appIcon: n.appIcon ?? "",
+                            appName: n.appName ?? "",
+                            image: n.image ?? "",
+                            expireTimeout: n.expireTimeout ?? 5000,
+                            urgency: n.urgency ?? 0,
+                            resident: n.resident ?? false,
+                            hasActionIcons: n.hasActionIcons ?? false,
+                            actions: Array.isArray(n.actions) ? n.actions : []
+                        }));
+
+                storage.setText(JSON.stringify(dataToSave, null, 2));
+            } catch (error) {
+                console.error("Failed to save notifications:", error);
+            }
         }
     }
 
     Timer {
         id: cleanupTimer
 
-        interval: 3600000 // Run cleanup every hour
+        interval: 3600000
         running: true
         repeat: true
         triggeredOnStart: false
-        onTriggered: root.cleanupOldNotifications()
+        onTriggered: {
+            if (root && typeof root.cleanupOldNotifications === 'function')
+                root.cleanupOldNotifications();
+        }
     }
 
     PersistentProperties {
@@ -117,78 +153,114 @@ Singleton {
         persistenceSupported: true
 
         onNotification: notif => {
-            notif.tracked = true;
-
-            // Check if we need to clean up before adding a new notification
-            root.enforceNotificationLimit();
-
-            const comp = notifComponent.createObject(root, {
-                popup: !persistentProps.dnd,
-                notification: notif
-            });
-
-            if (comp) {
-                root.list = [comp, ...root.list];
+            if (!notif) {
+                console.error("Received null notification");
+                return;
             }
+
+            if (typeof notif.tracked !== 'undefined')
+                notif.tracked = true;
+
+            if (root && typeof root.enforceNotificationLimit === 'function')
+                root.enforceNotificationLimit();
+
+            let comp = null;
+            try {
+                comp = notifComponent.createObject(root, {
+                    popup: persistentProps ? !persistentProps.dnd : true,
+                    notification: notif
+                });
+            } catch (error) {
+                console.error("Failed to create notification component:", error);
+                return;
+            }
+
+            if (comp && root && root.list && Array.isArray(root.list))
+                root.list = [comp, ...root.list];
         }
     }
 
     FileView {
         id: storage
 
-        path: Paths.cacheDir + "/mushell/notifications.json"
-
+        path: (Paths && Paths.cacheDir ? Paths.cacheDir : "/tmp") + "/mushell/notifications.json"
         onLoaded: {
             try {
-                const content = text();
-                if (!content || content.trim() === "") {
+                const content = text ? text() : "";
+                if (!content || typeof content !== 'string' || content.trim() === "") {
                     console.log("No cached notifications found");
                     root.loaded = true;
                     return;
                 }
 
-                const data = JSON.parse(content);
+                let data = null;
+                try {
+                    data = JSON.parse(content);
+                } catch (parseError) {
+                    console.error("Failed to parse notification cache:", parseError);
+                    root.loaded = true;
+                    return;
+                }
+
                 if (!Array.isArray(data)) {
                     console.error("Invalid notification cache format");
                     root.loaded = true;
                     return;
                 }
 
-                const now = Date.now();
+                const now = Date.now ? Date.now() : new Date().getTime();
                 let loadedCount = 0;
 
                 for (const notifData of data) {
-                    // Skip notifications that are too old
-                    const notifAge = now - notifData.time;
+                    if (!notifData || typeof notifData !== 'object')
+                        continue;
+
+                    const notifTime = notifData.time ?? 0;
+                    const notifAge = now - notifTime;
+
                     if (notifAge > root.maxNotificationAge)
                         continue;
 
-                    const notif = notifComponent.createObject(root, {
-                        time: new Date(notifData.time),
-                        id: notifData.id,
-                        summary: notifData.summary,
-                        body: notifData.body,
-                        appIcon: notifData.appIcon,
-                        appName: notifData.appName,
-                        image: notifData.image,
-                        expireTimeout: notifData.expireTimeout,
-                        urgency: notifData.urgency,
-                        resident: notifData.resident,
-                        hasActionIcons: notifData.hasActionIcons,
-                        actions: notifData.actions
-                    });
+                    let notif = null;
+                    try {
+                        notif = notifComponent.createObject(root, {
+                            time: new Date(notifTime),
+                            id: notifData.id ?? "",
+                            summary: notifData.summary ?? "",
+                            body: notifData.body ?? "",
+                            appIcon: notifData.appIcon ?? "",
+                            appName: notifData.appName ?? "",
+                            image: notifData.image ?? "",
+                            expireTimeout: notifData.expireTimeout ?? 5000,
+                            urgency: notifData.urgency ?? 0,
+                            resident: notifData.resident ?? false,
+                            hasActionIcons: notifData.hasActionIcons ?? false,
+                            actions: Array.isArray(notifData.actions) ? notifData.actions : []
+                        });
+                    } catch (createError) {
+                        console.error("Failed to create notification from cache:", createError);
+                        continue;
+                    }
 
-                    if (notif) {
+                    if (notif && root.list && Array.isArray(root.list)) {
                         root.list.push(notif);
                         loadedCount++;
                     }
 
-                    // Stop loading if we've reached the max limit
                     if (loadedCount >= root.maxNotifications)
                         break;
                 }
 
-                root.list.sort((a, b) => b.time - a.time);
+                if (root.list && Array.isArray(root.list)) {
+                    root.list.sort((a, b) => {
+                        if (!a || !a.time)
+                            return 1;
+                        if (!b || !b.time)
+                            return -1;
+                        return b.time - a.time;
+                    });
+                }
+
                 console.log(`Loaded ${loadedCount} notification(s) from cache`);
                 root.loaded = true;
             } catch (error) {
@@ -199,7 +271,9 @@ Singleton {
 
         onLoadFailed: error => {
             console.log("Notification cache doesn't exist, creating it");
-            setText("[]");
+            if (storage && typeof storage.setText === 'function')
+                storage.setText("[]");
+
             root.loaded = true;
         }
     }
@@ -212,7 +286,13 @@ Singleton {
 
         property date time: new Date()
         readonly property string timeStr: {
-            const diff = Time.date.getTime() - time.getTime();
+            if (!Time || !Time.date || !(Time.date instanceof Date) || !notif.time || !(notif.time instanceof Date))
+                return qsTr("now");
+
+            const diff = Time.date.getTime() - notif.time.getTime();
+            if (diff < 0)
+                return qsTr("now");
+
             const m = Math.floor(diff / 60000);
 
             if (m < 1)
@@ -228,7 +308,7 @@ Singleton {
             return `${m}m`;
         }
 
-        property Notification notification
+        property var notification: null
         property string id: ""
         property string summary: ""
         property string body: ""
@@ -236,60 +316,73 @@ Singleton {
         property string appName: ""
         property string image: ""
         property real expireTimeout: 5000
-        property int urgency: NotificationUrgency.Normal
+        property int urgency: NotificationUrgency ? NotificationUrgency.Normal : 0
         property bool resident: false
         property bool hasActionIcons: false
         property list<var> actions: []
 
         readonly property Connections conn: Connections {
-            target: notif.notification
+            target: notif.notification && notif.notification instanceof Notification ? notif.notification : null
 
             function onClosed() {
-                notif.close();
+                if (notif && typeof notif.close === 'function')
+                    notif.close();
             }
 
             function onSummaryChanged() {
-                notif.summary = notif.notification.summary;
+                if (notif && notif.notification)
+                    notif.summary = notif.notification.summary ?? "";
             }
 
             function onBodyChanged() {
-                notif.body = notif.notification.body;
+                if (notif && notif.notification)
+                    notif.body = notif.notification.body ?? "";
             }
 
             function onAppIconChanged() {
-                notif.appIcon = notif.notification.appIcon;
+                if (notif && notif.notification)
+                    notif.appIcon = notif.notification.appIcon ?? "";
             }
 
             function onAppNameChanged() {
-                notif.appName = notif.notification.appName;
+                if (notif && notif.notification)
+                    notif.appName = notif.notification.appName ?? "";
             }
 
             function onImageChanged() {
-                notif.image = notif.notification.image;
+                if (notif && notif.notification)
+                    notif.image = notif.notification.image ?? "";
             }
 
             function onExpireTimeoutChanged() {
-                notif.expireTimeout = notif.notification.expireTimeout;
+                if (notif && notif.notification)
+                    notif.expireTimeout = notif.notification.expireTimeout ?? 5000;
             }
 
             function onUrgencyChanged() {
-                notif.urgency = notif.notification.urgency;
+                if (notif && notif.notification)
+                    notif.urgency = notif.notification.urgency ?? 0;
             }
 
             function onResidentChanged() {
-                notif.resident = notif.notification.resident;
+                if (notif && notif.notification)
+                    notif.resident = notif.notification.resident ?? false;
             }
 
             function onHasActionIconsChanged() {
-                notif.hasActionIcons = notif.notification.hasActionIcons;
+                if (notif && notif.notification)
+                    notif.hasActionIcons = notif.notification.hasActionIcons ?? false;
             }
 
             function onActionsChanged() {
-                notif.actions = notif.notification.actions.map(a => ({
-                            identifier: a.identifier,
-                            text: a.text,
-                            invoke: () => a.invoke()
-                        }));
+                if (notif && notif.notification && Array.isArray(notif.notification.actions)) {
+                    notif.actions = notif.notification.actions.filter(a => a !== null && a !== undefined).map(a => ({
+                                identifier: a.identifier ?? "",
+                                text: a.text ?? "",
+                                invoke: typeof a.invoke === 'function' ? () => a.invoke() : () => {}
+                            }));
+                } else
+                    notif.actions = [];
             }
         }
 
@@ -298,43 +391,63 @@ Singleton {
         }
 
         function close() {
-            closed = true;
-            if (root.list.includes(this)) {
-                root.list = root.list.filter(n => n !== this);
-                if (notification)
-                    notification.dismiss();
+            if (!notif)
+                return;
 
-                // Clean up connections
-                conn.target = null;
+            notif.closed = true;
 
-                destroy();
+            if (root && root.list && Array.isArray(root.list) && root.list.includes(notif)) {
+                root.list = root.list.filter(n => n !== notif);
+
+                if (notif.notification && typeof notif.notification.dismiss === 'function') {
+                    try {
+                        notif.notification.dismiss();
+                    } catch (e) {
+                        console.error("Error dismissing notification:", e);
+                    }
+                }
+
+                if (conn)
+                    conn.target = null;
+
+                try {
+                    notif.destroy();
+                } catch (e) {
+                    console.error("Error destroying notification:", e);
+                }
             }
         }
 
         Component.onCompleted: {
-            if (!notification)
+            if (!notif.notification)
                 return;
 
-            id = notification.id;
-            summary = notification.summary;
-            body = notification.body;
-            appIcon = notification.appIcon;
-            appName = notification.appName;
-            image = notification.image;
-            expireTimeout = notification.expireTimeout;
-            urgency = notification.urgency;
-            resident = notification.resident;
-            hasActionIcons = notification.hasActionIcons;
-            actions = notification.actions.map(a => ({
-                        identifier: a.identifier,
-                        text: a.text,
-                        invoke: () => a.invoke()
-                    }));
+            try {
+                notif.id = notif.notification.id ?? "";
+                notif.summary = notif.notification.summary ?? "";
+                notif.body = notif.notification.body ?? "";
+                notif.appIcon = notif.notification.appIcon ?? "";
+                notif.appName = notif.notification.appName ?? "";
+                notif.image = notif.notification.image ?? "";
+                notif.expireTimeout = notif.notification.expireTimeout ?? 5000;
+                notif.urgency = notif.notification.urgency ?? (NotificationUrgency ? NotificationUrgency.Normal : 0);
+                notif.resident = notif.notification.resident ?? false;
+                notif.hasActionIcons = notif.notification.hasActionIcons ?? false;
+
+                if (Array.isArray(notif.notification.actions)) {
+                    notif.actions = notif.notification.actions.filter(a => a !== null && a !== undefined).map(a => ({
+                                identifier: a.identifier ?? "",
+                                text: a.text ?? "",
+                                invoke: typeof a.invoke === 'function' ? () => a.invoke() : () => {}
+                            }));
+                }
+            } catch (error) {
+                console.error("Error initializing notification:", error);
+            }
         }
 
         Component.onDestruction: {
-            // Ensure connections are cleaned up
-            if (conn.target)
+            if (conn)
                 conn.target = null;
         }
     }
@@ -346,10 +459,16 @@ Singleton {
     }
 
     Component.onDestruction: {
-        cleanupTimer.stop();
+        if (cleanupTimer && typeof cleanupTimer.stop === 'function')
+            cleanupTimer.stop();
+
+        if (!root.list || !Array.isArray(root.list))
+            return;
+
         for (const notif of root.list.slice()) {
             try {
-                notif.close();
+                if (notif && typeof notif.close === 'function')
+                    notif.close();
             } catch (e) {
                 console.error("Error cleaning up notification:", e);
             }
