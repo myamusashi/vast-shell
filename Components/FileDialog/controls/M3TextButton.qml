@@ -1,7 +1,7 @@
-import AnotherRipple
 import QtQuick
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 import qs.Components
 
@@ -26,13 +26,6 @@ Rectangle {
         }
     }
 
-    SimpleRipple {
-        anchors.fill: parent
-        clipRadius: 20
-        color: Colours.m3Colors.m3Primary
-        acceptEvent: false
-    }
-
     StyledText {
         anchors.centerIn: parent
         text: root.text
@@ -41,7 +34,7 @@ Rectangle {
         color: Colours.m3Colors.m3Primary
     }
 
-    MouseArea {
+    MArea {
         id: ma
 
         anchors.fill: parent
