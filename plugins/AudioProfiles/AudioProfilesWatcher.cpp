@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QQmlEngine>
 #include <QStringList>
+#include <cstdlib>
 
 extern "C" {
 #include <pipewire/pipewire.h>
@@ -204,6 +205,7 @@ static void ap_on_proxy_destroy(void* data) {
     ap_device_node_t* d = static_cast<ap_device_node_t*>(data);
     spa_hook_remove(&d->device_listener);
     spa_hook_remove(&d->proxy_listener);
+    free(d);
 }
 
 // Event tables (defined here so all callback symbols are already visible)
@@ -265,7 +267,6 @@ static void ap_registry_event_global_remove(void* data, uint32_t id) {
             else
                 app->devices = d->next;
             pw_proxy_destroy(d->proxy);
-            free(d);
             return;
         }
         prev = d;
@@ -308,12 +309,17 @@ static ap_app_t* ap_app_create() {
     return app;
 
 err:
+    if (app->registry) {
+        spa_hook_remove(&app->registry_listener);
+        pw_proxy_destroy(reinterpret_cast<struct pw_proxy*>(app->registry));
+    }
     if (app->core)
         pw_core_disconnect(app->core);
     if (app->context)
         pw_context_destroy(app->context);
     if (app->loop)
         pw_thread_loop_destroy(app->loop);
+
     free(app);
     return nullptr;
 }
@@ -321,16 +327,21 @@ err:
 static void ap_app_destroy(ap_app_t* app) {
     if (!app)
         return;
+
+    // 1. kill the thread
     pw_thread_loop_stop(app->loop);
+
     for (ap_device_node_t *d = app->devices, *n; d; d = n) {
         n = d->next;
-        pw_proxy_destroy(d->proxy);
-        free(d);
+        pw_proxy_destroy(d->proxy); // ap_on_proxy_destroy → free(d)
     }
+    app->devices = nullptr;
+
+    spa_hook_remove(&app->registry_listener);
     pw_proxy_destroy(reinterpret_cast<struct pw_proxy*>(app->registry));
     pw_core_disconnect(app->core);
     pw_context_destroy(app->context);
-    pw_thread_loop_destroy(app->loop);
+    pw_thread_loop_destroy(app->loop); // 2. destroy after stop
     free(app);
 }
 
@@ -396,7 +407,7 @@ AudioProfilesWatcher::AudioProfilesWatcher(QObject* parent) : QObject(parent), m
         emit connectedChanged();
     }
 
-    m_timer->setInterval(500);
+    m_timer->setInterval(100);
     connect(m_timer, &QTimer::timeout, this, &AudioProfilesWatcher::poll);
     m_timer->start();
 }
@@ -416,56 +427,65 @@ void AudioProfilesWatcher::poll() {
 
     ap_app_t* app = m_pw->app;
 
-    // Lock the PW thread loop so we can safely read device state
-    pw_thread_loop_lock(app->loop);
-    ap_device_node_t* d = ap_drain_dirty(app);
-    if (!d) {
-        pw_thread_loop_unlock(app->loop);
-        return;
-    }
-
-    // Copy all needed data while the lock is held
-    const quint32     newDeviceId   = d->pw_id;
-    const QString     newDeviceName = QString::fromUtf8(d->name);
-    const int         newActIdx     = d->active_index;
-
-    const QString     actName = QString::fromUtf8(d->active_name);
-    const QVariantMap newActProfile{
-        {QStringLiteral("index"), d->active_index},
-        {QStringLiteral("name"), actName},
-        {QStringLiteral("description"), QString::fromUtf8(d->active_description)},
-        {QStringLiteral("available"), QString::fromUtf8(d->active_available)},
-        {QStringLiteral("readable"), formatProfileName(actName)},
+    // collect all dirty snapshots inside the lock
+    struct DeviceSnapshot {
+        quint32             deviceId;
+        QString             deviceName;
+        int                 activeIdx;
+        QVariantMap         activeProfile;
+        QList<ProfileEntry> profiles;
     };
+    QList<DeviceSnapshot> snapshots;
 
-    QList<ProfileEntry> newProfiles;
-    newProfiles.reserve(d->profile_count);
-    for (int i = 0; i < d->profile_count; ++i) {
-        const ap_profile_entry_t& e  = d->profiles[i];
-        const QString             nm = QString::fromUtf8(e.name);
-        newProfiles.append(ProfileEntry{
-            e.index,
-            nm,
-            QString::fromUtf8(e.description),
-            QString::fromUtf8(e.available),
-            formatProfileName(nm),
-        });
+    pw_thread_loop_lock(app->loop);
+    while (ap_device_node_t* d = ap_drain_dirty(app)) {
+        DeviceSnapshot snap;
+        snap.deviceId   = d->pw_id;
+        snap.deviceName = QString::fromUtf8(d->name);
+        snap.activeIdx  = d->active_index;
+
+        const QString actName = QString::fromUtf8(d->active_name);
+        snap.activeProfile    = {
+            {QStringLiteral("index"), d->active_index},
+            {QStringLiteral("name"), actName},
+            {QStringLiteral("description"), QString::fromUtf8(d->active_description)},
+            {QStringLiteral("available"), QString::fromUtf8(d->active_available)},
+            {QStringLiteral("readable"), formatProfileName(actName)},
+        };
+
+        snap.profiles.reserve(d->profile_count);
+        for (int i = 0; i < d->profile_count; ++i) {
+            const ap_profile_entry_t& e  = d->profiles[i];
+            const QString             nm = QString::fromUtf8(e.name);
+            snap.profiles.append(ProfileEntry{
+                e.index,
+                nm,
+                QString::fromUtf8(e.description),
+                QString::fromUtf8(e.available),
+                formatProfileName(nm),
+            });
+        }
+        snapshots.append(std::move(snap));
     }
-
     pw_thread_loop_unlock(app->loop);
 
-    const bool deviceChanged  = (m_deviceId != newDeviceId || m_deviceName != newDeviceName);
-    const bool profileChanged = (m_activeIndex != newActIdx || m_activeProfile != newActProfile);
+    if (snapshots.isEmpty())
+        return;
 
-    m_deviceId      = newDeviceId;
-    m_deviceName    = newDeviceName;
-    m_activeIndex   = newActIdx;
-    m_activeProfile = newActProfile;
+    // process all snapshots, emit signals outside the lock
+    for (const DeviceSnapshot& snap : snapshots) {
+        const bool deviceChanged  = (m_deviceId != snap.deviceId || m_deviceName != snap.deviceName);
+        const bool profileChanged = (m_activeIndex != snap.activeIdx || m_activeProfile != snap.activeProfile);
 
-    m_model->setProfiles(newProfiles); // resets the list model
+        m_deviceId      = snap.deviceId;
+        m_deviceName    = snap.deviceName;
+        m_activeIndex   = snap.activeIdx;
+        m_activeProfile = snap.activeProfile;
+        m_model->setProfiles(snap.profiles);
 
-    if (deviceChanged)
-        emit deviceInfoChanged();
-    if (profileChanged)
-        emit activeProfileChanged();
+        if (deviceChanged)
+            emit deviceInfoChanged();
+        if (profileChanged)
+            emit activeProfileChanged();
+    }
 }
