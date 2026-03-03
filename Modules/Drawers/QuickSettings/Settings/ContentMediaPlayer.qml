@@ -311,6 +311,8 @@ RowLayout {
 
                         SimpleRipple {
                             anchors.fill: parent
+                            xClipRadius: itemBg.radius
+                            yClipRadius: itemBg.radius
                             color: root.trackArtColors.primary
                         }
                     }
