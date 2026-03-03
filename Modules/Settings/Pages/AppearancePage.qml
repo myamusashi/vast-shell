@@ -289,7 +289,6 @@ Item {
                 }
             }
 
-            // Motion & Animation
             SettingsCard {
                 title: qsTr("Motion & Animation")
 
@@ -301,12 +300,14 @@ Item {
                         font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
+
                     StyledSlide {
                         from: 1
                         to: 5
                         stepSize: 1
-                        value: Configs.appearance.animations.durations.scale
-                        onValueChanged: Configs.appearance.animations.durations.scale = value
+                        snapEnabled: true
+                        value: Appearance.animations.durations.scale
+                        onMoved: Appearance.animations.durations.scale = value
                         Layout.preferredWidth: 200
                     }
                 }
