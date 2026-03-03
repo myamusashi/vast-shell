@@ -86,10 +86,20 @@ Item {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     ToolTip.text: "Available values: 'dot', 'interactive'"
                 }
-                StyledTextField {
-                    text: Configs.bar.workspacesIndicator
-                    onTextChanged: Configs.bar.workspacesIndicator = text
+                StyledComboBox {
+                    model: [
+                        {
+                            display: "dot"
+                        },
+                        {
+                            display: "interactive"
+                        }
+                    ]
                     Layout.preferredWidth: 200
+                    currentIndex: -1
+                    placeholderText: Configs.bar.workspacesIndicator
+                    isItemActive: (md, _) => md.display === Configs.bar.workspacesIndicator
+                    onActivated: index => Configs.bar.workspacesIndicator = model[index].display
                 }
             }
 
@@ -105,6 +115,8 @@ Item {
                     from: 1
                     to: 15
                     stepSize: 1
+                    snapEnabled: true
+                    showValuePopup: true
                     value: Configs.bar.visibleWorkspace
                     onValueChanged: Configs.bar.visibleWorkspace = value
                     Layout.preferredWidth: 200
