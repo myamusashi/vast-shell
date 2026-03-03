@@ -1,5 +1,5 @@
 import Quickshell.Io
 
 JsonObject {
-    property string language: ""
+    property string language: "id_ID"
 }
