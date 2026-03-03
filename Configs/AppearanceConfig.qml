@@ -18,12 +18,12 @@ JsonObject {
 
     component FontSize: JsonObject {
         property int scale: 1
-        property int small: 12 * scale
-        property int medium: 13 * scale
-        property int normal: 14 * scale
-        property int large: 16 * scale
-        property int larger: 18 * scale
-        property int extraLarge: 30 * scale
+        readonly property int small: 12 * scale
+        readonly property int medium: 13 * scale
+        readonly property int normal: 14 * scale
+        readonly property int large: 16 * scale
+        readonly property int larger: 18 * scale
+        readonly property int extraLarge: 30 * scale
     }
 
     component FontsComponent: JsonObject {
@@ -45,16 +45,16 @@ JsonObject {
 
     component AnimationDurationsComponent: JsonObject {
         property int scale: 1
-        property int emphasized: 500 * scale
-        property int emphasizedAccel: 200 * scale
-        property int emphasizedDecel: 400 * scale
-        property int expressiveDefaultSpatial: 500 * scale
-        property int expressiveEffects: 200 * scale
-        property int expressiveFastSpatial: 350 * scale
-        property int extraLarge: 1000 * scale
-        property int large: 600 * scale
-        property int normal: 300 * scale
-        property int small: 200 * scale
+        readonly property int emphasized: 500 * scale
+        readonly property int emphasizedAccel: 200 * scale
+        readonly property int emphasizedDecel: 400 * scale
+        readonly property int expressiveDefaultSpatial: 500 * scale
+        readonly property int expressiveEffects: 200 * scale
+        readonly property int expressiveFastSpatial: 350 * scale
+        readonly property int extraLarge: 1000 * scale
+        readonly property int large: 600 * scale
+        readonly property int normal: 300 * scale
+        readonly property int small: 200 * scale
     }
 
     component AnimationsComponent: JsonObject {
