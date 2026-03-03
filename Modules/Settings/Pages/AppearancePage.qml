@@ -1,15 +1,20 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 import qs.Components
 import qs.Components.FileDialog
+
 import "../Components"
 
 Item {
     id: root
+
     Layout.fillWidth: true
     Layout.fillHeight: true
 
@@ -22,6 +27,7 @@ Item {
 
         ColumnLayout {
             id: contentColumn
+
             width: parent.width - (Appearance.margin.large * 2)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
@@ -71,39 +77,6 @@ Item {
                 RowLayout {
                     Layout.fillWidth: true
                     StyledText {
-                        text: qsTr("Static Colors Path:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
-                    StyledTextField {
-                        id: staticColorField
-
-                        text: Configs.colors.staticColorsPath
-                        onTextChanged: Configs.colors.staticColorsPath = text
-                        Layout.preferredWidth: 300
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                staticColorField.forceActiveFocus();
-                                fileDialog.visible = true;
-                            }
-                        }
-                    }
-
-                    FileDialog {
-                        id: fileDialog
-
-                        nameFilters: ["*.json"]
-                        showHidden: true
-                        onFileSelected: path => Configs.colors.staticColorsPath = path
-                    }
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
                         text: qsTr("Use Matugen Colors:")
                         Layout.fillWidth: true
                         font.pixelSize: Appearance.fonts.size.large
@@ -115,34 +88,22 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Matugen Path (Light):")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
-                    StyledTextField {
-                        text: Configs.colors.matugenConfigPathForLightColor
-                        onTextChanged: Configs.colors.matugenConfigPathForLightColor = text
-                        Layout.preferredWidth: 300
-                    }
+                FilePathRow {
+                    label: qsTr("Static Colors Path:")
+                    configValue: Configs.colors.staticColorsPath
+                    onConfigChanged: value => Configs.colors.staticColorsPath = value
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Matugen Path (Dark):")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
-                    StyledTextField {
-                        text: Configs.colors.matugenConfigPathForDarkColor
-                        onTextChanged: Configs.colors.matugenConfigPathForDarkColor = text
-                        Layout.preferredWidth: 300
-                    }
+                FilePathRow {
+                    label: qsTr("Matugen Path (Light):")
+                    configValue: Configs.colors.matugenConfigPathForLightColor
+                    onConfigChanged: value => Configs.colors.matugenConfigPathForLightColor = value
+                }
+
+                FilePathRow {
+                    label: qsTr("Matugen Path (Dark):")
+                    configValue: Configs.colors.matugenConfigPathForDarkColor
+                    onConfigChanged: value => Configs.colors.matugenConfigPathForDarkColor = value
                 }
             }
 
@@ -157,10 +118,11 @@ Item {
                         font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
-                    StyledTextField {
-                        text: Appearance.fonts.family.sans
-                        onTextChanged: Appearance.fonts.family.sans = text
+                    FontPicker {
                         Layout.preferredWidth: 250
+                        configValue: Appearance.fonts.family
+                        searchField: Appearance.fonts.family.sans
+                        onConfigChanged: value => Appearance.fonts.family.sans = value
                     }
                 }
 
@@ -172,10 +134,11 @@ Item {
                         font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
-                    StyledTextField {
-                        text: Appearance.fonts.family.mono
-                        onTextChanged: Appearance.fonts.family.mono = text
+                    FontPicker {
                         Layout.preferredWidth: 250
+                        configValue: Appearance.fonts.family
+                        searchField: Appearance.fonts.family.mono
+                        onConfigChanged: value => Appearance.fonts.family.mono = value
                     }
                 }
 
@@ -187,10 +150,11 @@ Item {
                         font.pixelSize: Appearance.fonts.size.large
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
-                    StyledTextField {
-                        text: Appearance.fonts.family.material
-                        onTextChanged: Appearance.fonts.family.material = text
+                    FontPicker {
                         Layout.preferredWidth: 250
+                        configValue: Appearance.fonts.family
+                        searchField: Appearance.fonts.family.material
+                        onConfigChanged: value => Appearance.fonts.family.material = value
                     }
                 }
 
@@ -206,6 +170,8 @@ Item {
                         from: 1
                         to: 5
                         stepSize: 1
+                        snapEnabled: true
+                        showValuePopup: true
                         value: Appearance.fonts.size.scale
                         onValueChanged: Appearance.fonts.size.scale = value
                         Layout.preferredWidth: 200
@@ -305,6 +271,7 @@ Item {
                         from: 1
                         to: 5
                         stepSize: 1
+                        showValuePopup: true
                         snapEnabled: true
                         value: Appearance.animations.durations.scale
                         onMoved: Appearance.animations.durations.scale = value
@@ -316,6 +283,170 @@ Item {
             Item {
                 Layout.fillHeight: true
                 implicitHeight: Appearance.margin.large
+            }
+        }
+    }
+
+    component FilePathRow: RowLayout {
+        id: filePathRow
+
+        property string label
+        property string configValue
+        property var nameFilters: ["*.json"]
+        signal configChanged(string value)
+        Layout.fillWidth: true
+
+        StyledText {
+            text: filePathRow.label
+            Layout.fillWidth: true
+            font.pixelSize: Appearance.fonts.size.large
+            color: Colours.m3Colors.m3OnSurfaceVariant
+        }
+
+        StyledTextField {
+            id: pathField
+
+            text: filePathRow.configValue
+            onTextChanged: filePathRow.configChanged(text)
+            Layout.preferredWidth: 300
+
+            MArea {
+                anchors.fill: parent
+                onClicked: {
+                    pathField.forceActiveFocus();
+                    fileDialog.visible = true;
+                }
+            }
+        }
+
+        FileDialog {
+            id: fileDialog
+
+            nameFilters: filePathRow.nameFilters
+            showHidden: true
+            onFileSelected: path => filePathRow.configChanged(path)
+        }
+    }
+
+    component FontPicker: Item {
+        id: fontPicker
+
+        property alias searchField: searchField.placeholderText
+        property string configValue
+        signal configChanged(string value)
+
+        implicitHeight: 48
+        implicitWidth: 250
+
+        property string searchText: ""
+        property var filteredModel: {
+            const query = searchText.toLowerCase();
+            const result = [];
+            for (let i = 0; i < Fontlist.fontListModel.count; i++) {
+                const item = Fontlist.fontListModel.get(i);
+                if (!query || item.name.toLowerCase().includes(query))
+                    result.push(item);
+            }
+            return result;
+        }
+
+        StyledTextField {
+            id: searchField
+
+            anchors.fill: parent
+            text: fontPicker.configValue
+            placeholderText: qsTr("Search font...")
+
+            onTextChanged: {
+                fontPicker.searchText = text;
+                if (!popup.visible)
+                    popup.open();
+            }
+
+            onActiveFocusChanged: {
+                if (activeFocus && !popup.visible)
+                    popup.open();
+            }
+        }
+
+        Popup {
+            id: popup
+
+            y: searchField.height + 4
+            width: searchField.width
+            implicitHeight: Math.min(listView.contentHeight + 16, 280)
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+            background: StyledRect {
+                color: Colours.m3Colors.m3SurfaceContainerLow
+                radius: Appearance.rounding.large
+                Elevation {
+                    anchors.fill: parent
+                    z: -1
+                    level: 2
+                    radius: parent.radius
+                }
+            }
+
+            contentItem: ListView {
+                id: listView
+
+                clip: true
+                implicitHeight: contentHeight
+                model: fontPicker.filteredModel
+
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                    contentItem: StyledRect {
+                        implicitWidth: 4
+                        radius: 2
+                        color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    }
+                }
+
+                header: Item {
+                    height: 8
+                }
+                footer: Item {
+                    height: 8
+                }
+
+                delegate: ItemDelegate {
+                    id: fontDelegate
+
+                    required property var modelData
+                    required property int index
+
+                    readonly property bool itemActive: modelData.name === fontPicker.configValue
+
+                    width: listView.width
+                    height: 52
+                    leftPadding: 16
+                    rightPadding: 16
+                    topPadding: 0
+                    bottomPadding: 0
+
+                    background: StyledRect {
+                        radius: Appearance.rounding.large
+                        color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
+                    }
+
+                    contentItem: StyledText {
+                        text: fontDelegate.modelData.name
+                        font.family: fontDelegate.modelData.name  // preview the font
+                        font.pixelSize: Appearance.fonts.size.normal
+                        color: Colours.m3Colors.m3OnSurface
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
+
+                    onClicked: {
+                        fontPicker.configChanged(modelData.name);
+                        searchField.text = modelData.name;
+                        fontPicker.searchText = "";
+                        popup.close();
+                    }
+                }
             }
         }
     }
