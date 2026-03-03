@@ -120,7 +120,6 @@ Item {
                     }
                     FontPicker {
                         Layout.preferredWidth: 250
-                        configValue: Appearance.fonts.family
                         searchField: Appearance.fonts.family.sans
                         onConfigChanged: value => Appearance.fonts.family.sans = value
                     }
@@ -136,7 +135,6 @@ Item {
                     }
                     FontPicker {
                         Layout.preferredWidth: 250
-                        configValue: Appearance.fonts.family
                         searchField: Appearance.fonts.family.mono
                         onConfigChanged: value => Appearance.fonts.family.mono = value
                     }
@@ -152,7 +150,6 @@ Item {
                     }
                     FontPicker {
                         Layout.preferredWidth: 250
-                        configValue: Appearance.fonts.family
                         searchField: Appearance.fonts.family.material
                         onConfigChanged: value => Appearance.fonts.family.material = value
                     }
