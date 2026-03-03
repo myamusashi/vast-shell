@@ -1,4 +1,3 @@
-import AnotherRipple
 import QtQuick
 import QtQuick.Layouts
 
@@ -40,12 +39,6 @@ Rectangle {
                 duration: Appearance.animations.durations.small
             }
         }
-    }
-
-    SimpleRipple {
-        anchors.fill: parent
-        color: root.isSelected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurface
-        acceptEvent: false
     }
 
     RowLayout {
@@ -133,8 +126,6 @@ Rectangle {
     }
 
     MArea {
-        anchors.fill: parent
-        hoverEnabled: true
         onClicked: root.clicked()
         onDoubleClicked: root.doubleClicked()
     }
