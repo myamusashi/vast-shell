@@ -15,7 +15,7 @@ stdenv.mkDerivation {
             owner = "myamusashi";
             repo = "Another-Ripple";
             rev = "main";
-            hash = "sha256-6sn5BNmKkdfuuxK+0Sietc/hyUS9cXSGVWLBkJM1Q1U=";
+            hash = "sha256-7a/mp9WASoID7EPo036WCdhysjMo9eIYS+s9lc/g6ag=";
         }
         + "/AnotherRipple";
 
