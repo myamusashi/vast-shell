@@ -23,7 +23,7 @@ Rectangle {
 
     implicitHeight: 48
     clip: true
-    color: isSelected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+    color: !root.isSelected && (root.index % 2 !== 0) ? Qt.alpha(Colours.m3Colors.m3PrimaryContainer, 0.3) : "transparent"
 
     Behavior on color {
         CAnim {
@@ -131,17 +131,9 @@ Rectangle {
         }
     }
 
-    MouseArea {
+    MArea {
         anchors.fill: parent
         hoverEnabled: true
-        onEntered: {
-            if (!root.isSelected)
-                root.color = Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08);
-        }
-        onExited: {
-            if (!root.isSelected)
-                root.color = "transparent";
-        }
         onClicked: root.clicked()
         onDoubleClicked: root.doubleClicked()
     }

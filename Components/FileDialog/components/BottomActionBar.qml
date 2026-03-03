@@ -10,7 +10,7 @@ import "../controls"
 Rectangle {
     id: root
 
-    property string fileName: ""
+    property alias fileName: fileNameField.text
     property var nameFilters: ["*"]
     property bool hasSelection: false
 
@@ -57,9 +57,11 @@ Rectangle {
             }
 
             M3FilledTextField {
-                id: fileNameField
+				id: fileNameField
+
                 Layout.fillWidth: true
-                text: root.fileName
+				text: ""
+				enabled: false
             }
         }
 
