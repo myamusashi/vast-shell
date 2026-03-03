@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
+import qs.Configs
 import qs.Services
 import qs.Components
 
@@ -49,7 +50,7 @@ Rectangle {
             spacing: Appearance.spacing.normal
 
             StyledText {
-                text: "File name"
+                text: qsTr("File name")
                 font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 80
@@ -67,7 +68,7 @@ Rectangle {
             spacing: Appearance.spacing.normal
 
             StyledText {
-                text: "Filter"
+                text: qsTr("Filter")
                 font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 80
@@ -84,12 +85,12 @@ Rectangle {
             }
 
             M3TextButton {
-                text: "Cancel"
+                text: qsTr("Cancel")
                 onClicked: root.cancelClicked()
             }
 
             M3FilledButton {
-                text: "Open"
+                text: qsTr("Open")
                 enabled: root.hasSelection
                 onClicked: root.openClicked()
             }

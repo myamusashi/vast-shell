@@ -16,7 +16,7 @@ Rectangle {
     signal clicked
 
     implicitHeight: 48
-    radius: Appearance.rounding.medium
+    radius: Appearance.rounding.small
     clip: true
     color: isSelected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
 

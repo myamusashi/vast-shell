@@ -1,6 +1,5 @@
 import AnotherRipple
 import QtQuick
-import QtQuick.Layouts
 
 import qs.Configs
 import qs.Services

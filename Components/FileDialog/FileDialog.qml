@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtCore
 import Qt.labs.folderlistmodel
 
+import qs.Configs
 import qs.Services
 
 import "components"
@@ -10,7 +11,7 @@ import "components"
 Window {
     id: root
 
-    title: "Open File"
+    title: qsTr("Open File")
     width: 800
     height: 560
     minimumWidth: 600
@@ -79,12 +80,12 @@ Window {
 
     function formatSize(bytes) {
         if (bytes < 1024)
-            return bytes + " B";
+            return bytes + " " + qsTr("B");
         if (bytes < 1048576)
-            return (bytes / 1024).toFixed(1) + " KiB";
+            return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
         if (bytes < 1073741824)
-            return (bytes / 1048576).toFixed(1) + " MiB";
-        return (bytes / 1073741824).toFixed(1) + " GiB";
+            return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
+        return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
     }
 
     Component.onCompleted: {

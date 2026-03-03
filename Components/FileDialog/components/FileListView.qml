@@ -50,7 +50,7 @@ ColumnLayout {
             spacing: 0
 
             StyledText {
-                text: "Name"
+                text: qsTr("Name")
                 font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -58,7 +58,7 @@ ColumnLayout {
                 leftPadding: Appearance.padding.small
             }
             StyledText {
-                text: "Size"
+                text: qsTr("Size")
                 font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -66,7 +66,7 @@ ColumnLayout {
                 horizontalAlignment: Text.AlignRight
             }
             StyledText {
-                text: "Type"
+                text: qsTr("Type")
                 font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -74,7 +74,7 @@ ColumnLayout {
                 leftPadding: Appearance.padding.normal
             }
             StyledText {
-                text: "Modified"
+                text: qsTr("Modified")
                 font.pixelSize: Appearance.fonts.size.small
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant

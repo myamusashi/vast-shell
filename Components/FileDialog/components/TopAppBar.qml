@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 
+import qs.Configs
 import qs.Services
 import qs.Components
-import qs.Helpers
 
 import "../controls"
 
