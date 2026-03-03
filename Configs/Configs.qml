@@ -4,7 +4,6 @@ import Quickshell
 import Quickshell.Io
 import TranslationManager
 
-import qs.Configs
 import qs.Helpers
 
 Singleton {
@@ -44,7 +43,8 @@ Singleton {
             property WallpaperConfig wallpaper: WallpaperConfig {}
             property WeatherConfig weather: WeatherConfig {}
             property BarConfig bar: BarConfig {}
-            property string language: ""
+            property NotificationConfig notification: NotificationConfig {}
+            property LocalizationConfig language: LocalizationConfig {}
             property var widgets: [
                 {}
             ]
