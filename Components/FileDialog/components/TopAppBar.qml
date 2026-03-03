@@ -14,7 +14,6 @@ Rectangle {
     property bool canGoForward: false
     property bool canGoUp: false
     property string currentPath: ""
-    property bool showHidden: false
 
     signal backClicked
     signal forwardClicked
@@ -85,10 +84,11 @@ Rectangle {
             implicitWidth: Appearance.spacing.small
         }
 
-        M3IconButton {
-            icon: "visibility"
-            toggled: root.showHidden
-            onClicked: root.showHiddenToggled()
-        }
+        // M3IconButton {
+        // 	id: visibility
+        //
+        //           icon: "visibility"
+        //           onClicked: root.showHiddenToggled()
+        //       }
     }
 }

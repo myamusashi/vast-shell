@@ -16,14 +16,14 @@ Rectangle {
     property string filePath: ""
     property bool isFolder: false
     property bool isSelected: false
-    property int index: 0
+    property int itemIndex: 0
 
     signal clicked
     signal doubleClicked
 
     implicitHeight: 48
     clip: true
-    color: !root.isSelected && (root.index % 2 !== 0) ? Qt.alpha(Colours.m3Colors.m3PrimaryContainer, 0.3) : "transparent"
+    color: root.isSelected ? Qt.alpha(Colours.m3Colors.m3Primary, 0.3) : "transparent"
 
     Behavior on color {
         CAnim {
@@ -34,7 +34,7 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         color: Colours.m3Colors.m3OnSurface
-        opacity: !root.isSelected && (root.index % 2 !== 0) ? 0.03 : 0
+        opacity: !root.isSelected && (root.itemIndex % 2 !== 0) ? 0.03 : 0
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
@@ -58,6 +58,7 @@ Rectangle {
 
         Icon {
             id: iconItem
+
             icon: root.isFolder ? "folder" : "description"
             font.pixelSize: Appearance.fonts.size.large
             Layout.preferredWidth: 32

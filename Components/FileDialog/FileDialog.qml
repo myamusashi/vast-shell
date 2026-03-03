@@ -38,8 +38,8 @@ Window {
         nameFilters: root.nameFilters
     }
 
-    function navigateTo(path) {
-        var url = path.startsWith("file://") ? path : "file://" + path;
+    function navigateTo(path: string): url {
+        const url = path.startsWith("file://") ? path : "file://" + path;
 
         // Truncate forward history
         if (historyIndex < history.length - 1)
@@ -104,14 +104,12 @@ Window {
             canGoForward: root.historyIndex < root.history.length - 1
             canGoUp: root.currentFolder !== "file:///"
             currentPath: root.currentFolder.toString().replace("file://", "")
-            showHidden: root.showHidden
 
             onBackClicked: root.goBack()
             onForwardClicked: root.goForward()
             onUpClicked: root.goUp()
             onRefreshClicked: root.refresh()
             onPathEntered: path => root.navigateTo(path)
-            onShowHiddenToggled: root.showHidden = !root.showHidden
         }
 
         RowLayout {
@@ -134,6 +132,7 @@ Window {
                 Layout.fillHeight: true
                 model: folderModel
                 foldersOnly: root.foldersOnly
+
                 onFolderDoubleClicked: path => root.navigateTo(path)
                 onFileDoubleClicked: path => root.fileSelected(path)
                 onSelectionChanged: fileName => bottomBar.setFileName(fileName)
