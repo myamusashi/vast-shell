@@ -4,6 +4,7 @@ import QtCore
 import QtQuick
 import QtQuick.Layouts
 
+import qs.Configs
 import qs.Services
 import qs.Components
 
@@ -34,7 +35,7 @@ Rectangle {
         spacing: Appearance.spacing.small
 
         StyledText {
-            text: "Places"
+            text: qsTr("Places")
             font.pixelSize: Appearance.fonts.size.small
             font.letterSpacing: 0.8
             color: Colours.m3Colors.m3OnSurfaceVariant
@@ -57,42 +58,42 @@ Rectangle {
                 id: placesModel
 
                 ListElement {
-                    label: "Home"
+                    label: qsTr("Home")
                     icon: "home"
                     path: ""
                 }
                 ListElement {
-                    label: "Desktop"
+                    label: qsTr("Desktop")
                     icon: "desktop_windows"
                     path: ""
                 }
                 ListElement {
-                    label: "Documents"
+                    label: qsTr("Documents")
                     icon: "description"
                     path: ""
                 }
                 ListElement {
-                    label: "Downloads"
+                    label: qsTr("Downloads")
                     icon: "download"
                     path: ""
                 }
                 ListElement {
-                    label: "Music"
+                    label: qsTr("Music")
                     icon: "music_note"
                     path: ""
                 }
                 ListElement {
-                    label: "Pictures"
+                    label: qsTr("Pictures")
                     icon: "image"
                     path: ""
                 }
                 ListElement {
-                    label: "Videos"
+                    label: qsTr("Videos")
                     icon: "movie"
                     path: ""
                 }
                 ListElement {
-                    label: "Computer"
+                    label: qsTr("Computer")
                     icon: "computer"
                     path: "file:///"
                 }

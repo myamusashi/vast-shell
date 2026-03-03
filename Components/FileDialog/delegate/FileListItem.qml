@@ -148,18 +148,18 @@ Rectangle {
 
     function getFileExtension(name, folder) {
         if (folder)
-            return "Folder";
+            return qsTr("Folder");
         var dot = name.lastIndexOf(".");
-        return dot >= 0 ? name.substring(dot + 1).toUpperCase() + " file" : "File";
+        return dot >= 0 ? name.substring(dot + 1).toUpperCase() + " " + qsTr("file") : qsTr("File");
     }
 
     function formatSize(bytes) {
         if (bytes < 1024)
-            return bytes + " B";
+            return bytes + " " + qsTr("B");
         if (bytes < 1048576)
-            return (bytes / 1024).toFixed(1) + " KiB";
+            return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
         if (bytes < 1073741824)
-            return (bytes / 1048576).toFixed(1) + " MiB";
-        return (bytes / 1073741824).toFixed(1) + " GiB";
+            return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
+        return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
     }
 }
