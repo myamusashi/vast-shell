@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Shapes
 import QtQuick.Layouts
 import QtQuick.Controls
 
@@ -56,6 +57,11 @@ Slider {
     property color snapDotFilledColor: Colours.m3Colors.m3OnPrimary
     property color snapDotEmptyColor: Colours.m3Colors.m3OnSurfaceVariant
 
+    property bool showValuePopup: false
+    property bool popupOnHoverToo: false
+    property var popupValueFormat: v => Math.round(v)
+    readonly property bool _popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
+
     snapMode: (snapEnabled && stepSize > 0) ? Slider.SnapAlways : Slider.NoSnap
     Layout.alignment: orientation === Qt.Horizontal ? Qt.AlignHCenter : Qt.AlignVCenter
     hoverEnabled: true
@@ -99,7 +105,6 @@ Slider {
             z: 10
 
             states: [
-                // Horizontal-left
                 State {
                     name: "hFilled"
                     when: root.orientation === Qt.Horizontal && !iconLoader.iconInEmpty
@@ -117,7 +122,6 @@ Slider {
                         anchors.leftMargin: 10
                     }
                 },
-                // Horizontal–right
                 State {
                     name: "hEmpty"
                     when: root.orientation === Qt.Horizontal && iconLoader.iconInEmpty
@@ -135,7 +139,6 @@ Slider {
                         anchors.rightMargin: 10
                     }
                 },
-                // Vertical-bottom
                 State {
                     name: "vFilled"
                     when: root.orientation === Qt.Vertical && !iconLoader.iconInEmpty
@@ -153,7 +156,6 @@ Slider {
                         anchors.bottomMargin: 10
                     }
                 },
-                // Vertical–up
                 State {
                     name: "vEmpty"
                     when: root.orientation === Qt.Vertical && iconLoader.iconInEmpty
@@ -188,7 +190,6 @@ Slider {
             }
         }
 
-        // Filled portion (before handle)
         StyledRect {
             id: filledRect
 
@@ -205,7 +206,6 @@ Slider {
             opacity: 1.0
         }
 
-        // Empty portion
         StyledRect {
             id: emptyRect
 
@@ -270,6 +270,100 @@ Slider {
         Behavior on height {
             enabled: root.useAnim
             NAnim {}
+        }
+
+        Item {
+            id: valuePopupRoot
+
+            x: root.orientation === Qt.Horizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
+            y: root.orientation === Qt.Horizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
+
+            width: valuePopupBubble.width + (root.orientation === Qt.Vertical ? caret.caretSize + 2 : 0)
+            height: valuePopupBubble.height + (root.orientation === Qt.Horizontal ? caret.caretSize + 2 : 0)
+            z: 20
+            visible: root._popupVisible
+            opacity: visible ? 1.0 : 0.0
+            scale: visible ? 1.0 : 0.82
+
+            transformOrigin: root.orientation === Qt.Horizontal ? Item.Bottom : Item.Right
+
+            Behavior on opacity {
+                enabled: root.useAnim
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+            Behavior on scale {
+                enabled: root.useAnim
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+
+            StyledRect {
+                id: valuePopupBubble
+
+                readonly property real hPad: 10
+                readonly property real vPad: 6
+
+                width: valueLabel.implicitWidth + hPad * 2
+                height: valueLabel.implicitHeight + vPad * 2
+                x: 0
+                y: 0
+
+                color: Colours.m3Colors.m3InverseSurface
+                radius: Appearance.rounding.small
+
+                StyledText {
+                    id: valueLabel
+                    anchors.centerIn: parent
+                    text: root.popupValueFormat(root.value)
+                    font.pixelSize: Appearance.fonts.size.small
+                    font.weight: Font.Medium
+                    color: Colours.m3Colors.m3InverseOnSurface
+                }
+            }
+
+            Shape {
+                id: caret
+
+                anchors {
+                    horizontalCenter: root.orientation === Qt.Horizontal ? valuePopupBubble.horizontalCenter : undefined
+                    top: root.orientation === Qt.Horizontal ? valuePopupBubble.bottom : undefined
+                    left: root.orientation === Qt.Vertical ? valuePopupBubble.right : undefined
+                    verticalCenter: root.orientation === Qt.Vertical ? valuePopupBubble.verticalCenter : undefined
+                }
+
+                readonly property int caretSize: 6
+
+                width: root.orientation === Qt.Horizontal ? caretSize * 2 : caretSize
+                height: root.orientation === Qt.Horizontal ? caretSize : caretSize * 2
+                preferredRendererType: Shape.CurveRenderer
+
+                ShapePath {
+                    fillColor: Colours.m3Colors.m3InverseSurface
+                    strokeColor: "transparent"
+                    strokeWidth: 0
+
+                    startX: 0
+                    startY: 0
+
+                    // Horizontal ▼: (0,0) → (12,0) → (6,6)
+                    // Vertical   ▶: (0,0) → (0,12) → (6,6)
+                    PathLine {
+                        x: root.orientation === Qt.Horizontal ? caret.caretSize * 2 : 0
+                        y: root.orientation === Qt.Horizontal ? 0 : caret.caretSize * 2
+                    }
+                    PathLine {
+                        x: caret.caretSize
+                        y: caret.caretSize
+                    }
+                    PathLine {
+                        x: 0
+                        y: 0
+                    }
+                }
+            }
         }
     }
 }
