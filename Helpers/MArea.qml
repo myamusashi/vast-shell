@@ -28,7 +28,6 @@ MouseArea {
         anchors.fill: parent
         color: Colours.m3Colors.m3Primary
         opacity: 0
-        radius: parent?.radius ?? Appearance.rounding.small
         clip: true
 
         Behavior on opacity {
@@ -38,7 +37,14 @@ MouseArea {
         SimpleRipple {
             anchors.fill: parent
             acceptEvent: false
-            color: Colours.m3Colors.m3OnSurfaceVariant
+            color: Colours.m3Colors.m3OnSurface
+            xClipRadius: layer.radius
+            yClipRadius: layer.radius
         }
+    }
+
+    Component.onCompleted: {
+        if (layer.radius === 0)
+            layer.radius = Appearance.rounding.small;
     }
 }
