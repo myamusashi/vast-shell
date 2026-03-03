@@ -144,10 +144,9 @@ Window {
             id: bottomBar
 
             Layout.fillWidth: true
-            fileName: fileListView.selectedFileName
+            fileName: fileListView.model.fileIsDir ? "" : ""
             nameFilters: root.nameFilters
             hasSelection: fileListView.hasSelection || fileName.length > 0
-
             onCancelClicked: root.close()
             onOpenClicked: {
                 if (fileListView.currentIsFolder)

@@ -13,7 +13,7 @@ import "../delegate"
 ColumnLayout {
     id: root
 
-    property var model
+    required property var model
     property bool foldersOnly: false
 
     property int currentIndex: -1

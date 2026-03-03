@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import AnotherRipple
 import QtQuick
 
@@ -9,7 +11,6 @@ Rectangle {
     id: root
 
     property string text: ""
-    property bool enabled: true
 
     signal clicked
 
@@ -18,24 +19,20 @@ Rectangle {
     radius: height / 2
     clip: true
 
-    color: !enabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.12) : ma.pressed ? Qt.darker(Colours.m3Colors.m3Primary, 1.15) : ma.containsMouse ? Qt.lighter(Colours.m3Colors.m3Primary, 1.08) : Colours.m3Colors.m3Primary
+    color: !enabled ? Colours.m3Colors.m3Primary : ma.pressed ? Colours.m3Colors.m3Primary : ma.containsMouse ? Qt.alpha(Colours.m3Colors.m3OnPrimary, 0.08) : Colours.m3Colors.m3Primary
 
     Behavior on color {
         CAnim {
             duration: Appearance.animations.durations.small
         }
-    }
+	}
 
-    Elevation {
-        anchors.fill: parent
-        z: -1
-        level: ma.containsMouse && enabled ? 3 : 1
-        Behavior on level {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
-    }
+	Elevation {
+		anchors.fill: parent
+		z: -1
+		radius: parent.radius
+		level: ma.containsMouse ? 1 : 0
+	}
 
     SimpleRipple {
         anchors.fill: parent
@@ -49,7 +46,7 @@ Rectangle {
         text: root.text
         font.pixelSize: Appearance.fonts.size.normal
         font.bold: true
-        color: enabled ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
+        color: Colours.m3Colors.m3OnPrimary
         Behavior on color {
             CAnim {
                 duration: Appearance.animations.durations.small
