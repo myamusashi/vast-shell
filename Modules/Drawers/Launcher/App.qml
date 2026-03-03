@@ -77,7 +77,7 @@ Item {
             asynchronous: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: Appearance.padding.large
+                anchors.margins: Appearance.margin.large
                 spacing: Appearance.spacing.normal
                 visible: GlobalStates.isLauncherOpen
 
@@ -206,7 +206,7 @@ Item {
 
                             StyledRect {
                                 Layout.alignment: Qt.AlignVCenter
-                                Layout.leftMargin: Appearance.padding.normal
+                                Layout.leftMargin: Appearance.margin.normal
                                 implicitWidth: 40
                                 implicitHeight: 40
                                 clip: true
@@ -228,7 +228,7 @@ Item {
                             ColumnLayout {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                Layout.rightMargin: Appearance.padding.normal
+                                Layout.rightMargin: Appearance.margin.normal
                                 spacing: 2
 
                                 HighlightText {
