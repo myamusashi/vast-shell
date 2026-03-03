@@ -152,7 +152,7 @@ ColumnLayout {
             onClicked: {
                 fileList.currentIndex = index;
                 root.currentIndex = index;
-                root.selectionChanged(fileName);
+                root.selectionChanged(isFolder ? "" : fileName);
             }
             onDoubleClicked: {
                 if (isFolder)
