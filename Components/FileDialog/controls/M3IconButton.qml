@@ -1,9 +1,11 @@
 import AnotherRipple
 import QtQuick
+import QtQuick.Layouts
 
 import qs.Configs
 import qs.Services
 import qs.Components
+import qs.Helpers
 
 Rectangle {
     id: root
@@ -18,7 +20,7 @@ Rectangle {
 
     implicitWidth: 40
     implicitHeight: 40
-    radius: 20
+    radius: height / 2
     clip: true
     color: toggled ? Colours.m3Colors.m3SecondaryContainer : "transparent"
     opacity: enabled ? 1.0 : 0.38
@@ -29,12 +31,19 @@ Rectangle {
         }
     }
 
-    StyledText {
+    Icon {
+        id: iconItem
         anchors.centerIn: parent
-        text: root.icon
-        font.pixelSize: 18
-        color: root.toggled ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
+        icon: root.icon
+        font.pixelSize: Appearance.fonts.size.large
         rotation: root.spinAngle
+        color: root.toggled ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
+
+        Behavior on color {
+            CAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
     }
 
     SimpleRipple {

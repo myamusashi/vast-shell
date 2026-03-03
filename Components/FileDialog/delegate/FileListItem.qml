@@ -3,13 +3,14 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 import qs.Components
 
 Rectangle {
     id: root
 
-    property string fileName: ""
+    property alias fileName: fileName.text
     property int fileSize: 0
     property var fileModified
     property string filePath: ""
@@ -20,7 +21,7 @@ Rectangle {
     signal clicked
     signal doubleClicked
 
-    implicitHeight: 40
+    implicitHeight: 48
     clip: true
     color: isSelected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
 
@@ -30,7 +31,6 @@ Rectangle {
         }
     }
 
-    // Alternating row background
     Rectangle {
         anchors.fill: parent
         color: Colours.m3Colors.m3OnSurface
@@ -51,25 +51,35 @@ Rectangle {
     RowLayout {
         anchors {
             fill: parent
-            leftMargin: 6
-            rightMargin: 16
+            leftMargin: Appearance.margin.small
+            rightMargin: Appearance.margin.normal
         }
-        spacing: 0
+        spacing: Appearance.spacing.small
 
-        StyledText {
-            text: root.isFolder ? "📁" : "📄"
-            font.pixelSize: 16
+        Icon {
+            id: iconItem
+            icon: root.isFolder ? "folder" : "description"
+            font.pixelSize: Appearance.fonts.size.large
             Layout.preferredWidth: 32
-            horizontalAlignment: Text.AlignHCenter
+            color: root.isSelected ? Colours.m3Colors.m3OnPrimaryContainer : (root.isFolder ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant)
+
+            Behavior on color {
+                CAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
         }
 
         StyledText {
+            id: fileName
+
             Layout.fillWidth: true
-            text: root.fileName
+            text: ""
             color: root.isSelected ? Colours.m3Colors.m3OnPrimaryContainer : root.fileName.startsWith(".") ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnSurface
-            font.pixelSize: 13
+            font.pixelSize: Appearance.fonts.size.normal
             elide: Text.ElideRight
             leftPadding: 2
+
             Behavior on color {
                 CAnim {
                     duration: Appearance.animations.durations.small
@@ -80,9 +90,10 @@ Rectangle {
         StyledText {
             text: root.isFolder ? "" : root.formatSize(root.fileSize)
             color: root.isSelected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: 11
+            font.pixelSize: Appearance.fonts.size.small
             Layout.preferredWidth: 76
             horizontalAlignment: Text.AlignRight
+
             Behavior on color {
                 CAnim {
                     duration: Appearance.animations.durations.small
@@ -93,10 +104,11 @@ Rectangle {
         StyledText {
             text: root.getFileExtension(root.fileName, root.isFolder)
             color: root.isSelected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: 11
+            font.pixelSize: Appearance.fonts.size.small
             Layout.preferredWidth: 90
             leftPadding: 10
             elide: Text.ElideRight
+
             Behavior on color {
                 CAnim {
                     duration: Appearance.animations.durations.small
@@ -107,9 +119,10 @@ Rectangle {
         StyledText {
             text: Qt.formatDateTime(root.fileModified, "yyyy-MM-dd hh:mm")
             color: root.isSelected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: 11
+            font.pixelSize: Appearance.fonts.size.small
             Layout.preferredWidth: 110
             leftPadding: 6
+
             Behavior on color {
                 CAnim {
                     duration: Appearance.animations.durations.small

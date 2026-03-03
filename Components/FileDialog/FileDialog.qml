@@ -95,7 +95,7 @@ Window {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: Appearance.spacing.small
 
         TopAppBar {
             Layout.fillWidth: true
@@ -121,7 +121,7 @@ Window {
             PlacesSidebar {
                 id: placesSidebar
 
-                Layout.preferredWidth: 180
+                Layout.preferredWidth: 200
                 Layout.fillHeight: true
                 onPlaceSelected: path => root.navigateTo(path)
             }
