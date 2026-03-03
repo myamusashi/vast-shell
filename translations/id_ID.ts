@@ -75,104 +75,109 @@
 <context>
     <name>AppearancePage</name>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="32"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="38"/>
         <source>Appearance &amp; Theming</source>
         <translation>Tampilan &amp; Tema</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="40"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="46"/>
         <source>Color System</source>
         <translation>Sistem Warna</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="45"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="51"/>
         <source>Dark Mode:</source>
         <translation>Mode Gelap:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="60"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="66"/>
         <source>Use Static Colors:</source>
         <translation>Gunakan Warna Statis:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="74"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="92"/>
         <source>Static Colors Path:</source>
         <translation>Jalur Warna Statis:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="107"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="80"/>
         <source>Use Matugen Colors:</source>
         <translation>Gunakan Warna Matugen:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="121"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="98"/>
         <source>Matugen Path (Light):</source>
         <translation>Jalur Matugen (Terang):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="136"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="104"/>
         <source>Matugen Path (Dark):</source>
         <translation>Jalur Matugen (Gelap):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="150"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="111"/>
         <source>Typography System</source>
         <translation>Sistem Tipografi</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="155"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="116"/>
         <source>Sans Serif Font:</source>
         <translation>Font Sans Serif:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="170"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="132"/>
         <source>Monospace Font:</source>
         <translation>Font Monospace:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="185"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="148"/>
         <source>Material Icon Font:</source>
         <translation>Font Ikon Material:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="200"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="164"/>
         <source>Font Size Scale:</source>
         <translation>Skala Ukuran Font:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="217"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="183"/>
         <source>Shapes &amp; Layout</source>
         <translation>Bentuk &amp; Tata Letak</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="222"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="188"/>
         <source>UI Corner Roundness (Normal):</source>
         <translation>Kelengkungan Sudut UI (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="240"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="206"/>
         <source>Element Spacing (Normal):</source>
         <translation>Jarak Elemen (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="258"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="224"/>
         <source>Padding (Normal):</source>
         <translation>Padding (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="276"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="242"/>
         <source>Margin (Normal):</source>
         <translation>Margin (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="293"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="259"/>
         <source>Motion &amp; Animation</source>
         <translation>Gerakan &amp; Animasi</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="298"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="264"/>
         <source>Animation Durations Scale:</source>
         <translation>Skala Durasi Animasi:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="358"/>
+        <source>Search font...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -203,10 +208,6 @@
 </context>
 <context>
     <name>AudioProfiles</name>
-    <message>
-        <source>No profile</source>
-        <translation type="vanished">Tidak ada profil</translation>
-    </message>
     <message>
         <location filename="../Widgets/AudioProfiles.qml" line="15"/>
         <source>N/A</source>
@@ -246,7 +247,7 @@
         <translation>Gaya Indikator Workspace:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/BarPage.qml" line="99"/>
+        <location filename="../Modules/Settings/Pages/BarPage.qml" line="109"/>
         <source>Number of Visible Workspaces:</source>
         <translation>Jumlah workspaces Terlihat:</translation>
     </message>
@@ -988,65 +989,70 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="14"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="15"/>
         <source>Open File</source>
         <translation>Buka Berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="83"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="84"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="85"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="86"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="87"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="88"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="88"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="89"/>
         <source>GiB</source>
         <translation>GiB</translation>
+    </message>
+    <message>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="145"/>
+        <source>Show hidden</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>FileListItem</name>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="144"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="135"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="146"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="137"/>
         <source>file</source>
         <translation>berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="146"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="137"/>
         <source>File</source>
         <translation>Berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="151"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="142"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="153"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="144"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="155"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="146"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="156"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="147"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1074,14 +1080,8 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Diubah</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="175"/>
-        <source>Show hidden</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="180"/>
         <source>Forget Network</source>
-        <translation type="unfinished">Lupakan Jaringan</translation>
+        <translation type="obsolete">Lupakan Jaringan</translation>
     </message>
 </context>
 <context>
@@ -2297,47 +2297,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WallpaperPage</name>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="22"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="26"/>
         <source>Wallpaper Engine</source>
         <translation>Mesin Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="32"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="36"/>
         <source>Image Sourcing</source>
         <translation>Sumber Gambar</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="37"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="41"/>
         <source>Enable Wallpaper:</source>
         <translation>Aktifkan Wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="51"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="55"/>
         <source>Wallpaper Directory Path:</source>
         <translation>Jalur Direktori Wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="66"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="88"/>
         <source>Loaded Wallpaper Count:</source>
         <translation>Jumlah Wallpaper Terdimuat:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="83"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="107"/>
         <source>Transitions &amp; Performance</source>
         <translation>Transisi &amp; Performa</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="88"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="112"/>
         <source>Transition Animation Mode:</source>
         <translation>Mode Animasi Transisi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="103"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="167"/>
         <source>Transition Low Performance Priority:</source>
         <translation>Prioritas Performa Rendah Transisi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="117"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="181"/>
         <source>Transition Duration (ms):</source>
         <translation>Durasi Transisi (md):</translation>
     </message>
