@@ -106,6 +106,11 @@ Scope {
                                 iconName: "language"
                                 pageIndex: 5
                             }
+                            SidebarItem {
+                                text: qsTr("Network & Internet")
+                                iconName: "wifi"
+                                pageIndex: 6
+                            }
 
                             Item {
                                 Layout.fillHeight: true
@@ -126,6 +131,7 @@ Scope {
 
                         StackLayout {
                             id: stackLayout
+
                             anchors.fill: parent
                             currentIndex: settingsWindow.currentPage
 
@@ -135,6 +141,7 @@ Scope {
                             WallpaperPage {}
                             WeatherPage {}
                             LanguagePage {}
+                            InternetPage {}
                         }
                     }
                 }
