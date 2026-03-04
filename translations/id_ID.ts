@@ -125,59 +125,59 @@
         <translation>Font Sans Serif:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="132"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="131"/>
         <source>Monospace Font:</source>
         <translation>Font Monospace:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="148"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="146"/>
         <source>Material Icon Font:</source>
         <translation>Font Ikon Material:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="164"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="161"/>
         <source>Font Size Scale:</source>
         <translation>Skala Ukuran Font:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="183"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="180"/>
         <source>Shapes &amp; Layout</source>
         <translation>Bentuk &amp; Tata Letak</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="188"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="185"/>
         <source>UI Corner Roundness (Normal):</source>
         <translation>Kelengkungan Sudut UI (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="206"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="203"/>
         <source>Element Spacing (Normal):</source>
         <translation>Jarak Elemen (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="224"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="221"/>
         <source>Padding (Normal):</source>
         <translation>Padding (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="242"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="239"/>
         <source>Margin (Normal):</source>
         <translation>Margin (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="259"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="256"/>
         <source>Motion &amp; Animation</source>
         <translation>Gerakan &amp; Animasi</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="264"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="261"/>
         <source>Animation Durations Scale:</source>
         <translation>Skala Durasi Animasi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="358"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="355"/>
         <source>Search font...</source>
-        <translation type="unfinished"></translation>
+        <translation>Cari font...</translation>
     </message>
 </context>
 <context>
@@ -989,70 +989,70 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="15"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="38"/>
         <source>Open File</source>
         <translation>Buka Berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="84"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="97"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="86"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="99"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="88"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="101"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="89"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="102"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="145"/>
+        <location filename="../Components/FileDialog/FileDialog.qml" line="159"/>
         <source>Show hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Tampilkan file tersembunyi</translation>
     </message>
 </context>
 <context>
     <name>FileListItem</name>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="135"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="137"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="137"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="139"/>
         <source>file</source>
         <translation>berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="137"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="139"/>
         <source>File</source>
         <translation>Berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="142"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="144"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="144"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="146"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="146"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="148"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="147"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="149"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1631,7 +1631,9 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifs</name>
     <message>
-        <location filename="../Services/Notifs.qml" line="219"/>
+        <location filename="../Services/Notifs.qml" line="290"/>
+        <location filename="../Services/Notifs.qml" line="294"/>
+        <location filename="../Services/Notifs.qml" line="299"/>
         <source>now</source>
         <translation>Sekarang</translation>
     </message>
@@ -2039,37 +2041,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="47"/>
+        <location filename="../Modules/Settings/Settings.qml" line="70"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="57"/>
+        <location filename="../Modules/Settings/Settings.qml" line="80"/>
         <source>General</source>
         <translation>Umum</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="62"/>
+        <location filename="../Modules/Settings/Settings.qml" line="85"/>
         <source>Appearance</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="67"/>
+        <location filename="../Modules/Settings/Settings.qml" line="90"/>
         <source>Top Bar</source>
         <translation>Bilah Atas</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="72"/>
+        <location filename="../Modules/Settings/Settings.qml" line="95"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="77"/>
+        <location filename="../Modules/Settings/Settings.qml" line="100"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="82"/>
+        <location filename="../Modules/Settings/Settings.qml" line="105"/>
         <source>Language</source>
         <translation>Bahasa</translation>
     </message>
@@ -2079,12 +2081,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Components/StyledComboBox.qml" line="15"/>
         <source>Select…</source>
-        <translation type="unfinished"></translation>
+        <translation>Pilih...</translation>
     </message>
     <message>
         <location filename="../Components/StyledComboBox.qml" line="18"/>
         <source>N/A</source>
-        <translation type="unfinished">T/A</translation>
+        <translation>T/A</translation>
     </message>
 </context>
 <context>
