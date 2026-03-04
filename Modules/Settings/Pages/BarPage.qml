@@ -1,13 +1,16 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+
 import qs.Configs
 import qs.Components
 import qs.Services
+
 import "../Components"
 
 Item {
     id: root
+
     Layout.fillWidth: true
     Layout.fillHeight: true
 
