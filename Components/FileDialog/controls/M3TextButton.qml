@@ -8,7 +8,7 @@ import qs.Components
 Rectangle {
     id: root
 
-    property string text: ""
+    property alias text: text.text
     property bool enabled: true
 
     signal clicked
@@ -27,8 +27,9 @@ Rectangle {
     }
 
     StyledText {
+        id: text
+
         anchors.centerIn: parent
-        text: root.text
         font.pixelSize: Appearance.fonts.size.normal
         font.bold: true
         color: Colours.m3Colors.m3Primary
@@ -37,8 +38,7 @@ Rectangle {
     MArea {
         id: ma
 
-        anchors.fill: parent
-        hoverEnabled: true
+        layerRadius: root.radius
         enabled: root.enabled
         onClicked: root.clicked()
     }
