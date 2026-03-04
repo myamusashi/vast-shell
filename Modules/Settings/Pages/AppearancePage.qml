@@ -311,7 +311,7 @@ Item {
                 anchors.fill: parent
                 onClicked: {
                     pathField.forceActiveFocus();
-                    fileDialog.visible = true;
+                    fileDialog.openFileDialog();
                 }
             }
         }
