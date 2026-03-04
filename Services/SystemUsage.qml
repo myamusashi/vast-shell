@@ -107,6 +107,10 @@ Singleton {
     property int diskUsed: 0
     property int diskTotal: 0
 
+    // ethernet and wifi devices
+    property var allEthernetDevices: []
+    property var allWifiDevices: []
+
     // network interfaces name and status
     property string wiredInterface: ""
     property string wirelessInterface: ""
@@ -282,6 +286,94 @@ Singleton {
                     else if (line.startsWith("VPN_DEV:"))
                         root.statusVPNInterface = line.substring(8).trim();
                 }
+            }
+        }
+    }
+
+    Process {
+        id: allNetworkDevicesProc
+
+        command: ["sh", "-c", `
+        echo "===ETHERNET==="
+        for dev in /sys/class/net/*; do
+            if [ -d "$dev" ] && [ "$(cat "$dev/type" 2>/dev/null)" = "1" ]; then
+                iface=$(basename "$dev")
+                # Skip loopback and virtual interfaces
+                if [ "$iface" = "lo" ] || echo "$iface" | grep -qE "^(docker|veth|br-|virbr|tun|wg)"; then
+                    continue
+                fi
+                # Check if it's ethernet and not wireless
+                if [ ! -d "$dev/wireless" ] && [ ! -d "$dev/phy80211" ]; then
+                    # Get device model from ethtool or udev
+                    model=$(ethtool -i "$iface" 2>/dev/null | grep "driver:" | cut -d: -f2 | xargs || echo "Unknown")
+                    if [ "$model" = "Unknown" ]; then
+                        model=$(udevadm info --query=all --name="$iface" 2>/dev/null | grep "ID_MODEL_FROM_DATABASE=" | cut -d= -f2 | xargs || echo "Unknown Ethernet")
+                    fi
+                    operstate=$(cat "$dev/operstate" 2>/dev/null || echo "unknown")
+                    echo "ETH:$iface:$model:$operstate"
+                fi
+            fi
+        done
+
+        echo "===WIFI==="
+        for dev in /sys/class/net/*; do
+            if [ -d "$dev/wireless" ] || [ -d "$dev/phy80211" ]; then
+                iface=$(basename "$dev")
+                # Get model from iw or udev
+                model=$(iw dev "$iface" info 2>/dev/null | grep "wdev" | head -1 | xargs || echo "Unknown")
+                if [ "$model" = "Unknown" ]; then
+                    model=$(udevadm info --query=all --name="$iface" 2>/dev/null | grep "ID_MODEL_FROM_DATABASE=" | cut -d= -f2 | xargs || echo "Unknown WiFi")
+                fi
+                operstate=$(cat "$dev/operstate" 2>/dev/null || echo "unknown")
+                echo "WIFI:$iface:$model:$operstate"
+            fi
+        done
+    `]
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const ethDevices = [];
+                const wifiDevices = [];
+                let currentSection = "";
+
+                for (const line of text.trim().split('\n')) {
+                    if (line === "===ETHERNET===") {
+                        currentSection = "eth";
+                        continue;
+                    } else if (line === "===WIFI===") {
+                        currentSection = "wifi";
+                        continue;
+                    }
+
+                    if (line.startsWith("ETH:")) {
+                        const parts = line.substring(4).split(':');
+                        const iface = parts[0];
+                        const model = parts[1] || "Unknown Ethernet";
+                        const state = parts[2] || "unknown";
+
+                        ethDevices.push({
+                            "interface": iface,
+                            "model": model,
+                            "state": state,
+                            "isActive": iface === root.wiredInterface
+                        });
+                    } else if (line.startsWith("WIFI:")) {
+                        const parts = line.substring(5).split(':');
+                        const iface = parts[0];
+                        const model = parts[1] || "Unknown WiFi";
+                        const state = parts[2] || "unknown";
+
+                        wifiDevices.push({
+                            "interface": iface,
+                            "model": model,
+                            "state": state,
+                            "isActive": iface === root.wirelessInterface
+                        });
+                    }
+                }
+
+                root.allEthernetDevices = ethDevices;
+                root.allWifiDevices = wifiDevices;
             }
         }
     }
@@ -1004,6 +1096,7 @@ Singleton {
             switch (updateCycle) {
             case 0:
                 networkInfoProc.running = true;
+                allNetworkDevicesProc.running = true;
                 break;
             case 1:
                 diskDfProc.running = true;
