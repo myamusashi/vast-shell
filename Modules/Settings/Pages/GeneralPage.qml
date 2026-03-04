@@ -5,8 +5,8 @@ import QtQuick.Layouts
 import Quickshell
 
 import qs.Configs
-import qs.Components
 import qs.Services
+import qs.Components
 
 import "../Components"
 
@@ -191,9 +191,9 @@ Item {
         signal configChanged(string value)
         Layout.fillWidth: true
 
-        property var appList: [...DesktopEntries.applications.values].filter(e => appSetting.categories.every(c => e.categories.includes(c))).map(e => ({
-                    "display": root.cleanExec(e.execString)
-                }))
+        property var appList: [...new Map([...DesktopEntries.applications.values].filter(e => appSetting.categories.every(c => e.categories.includes(c))).map(e => ({
+                        display: root.cleanExec(e.execString)
+                    })).map(e => [e.display, e])).values()]
 
         StyledText {
             text: appSetting.label
