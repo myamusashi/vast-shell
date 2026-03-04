@@ -32,7 +32,7 @@ Rectangle {
         text: root.text
         font.pixelSize: Appearance.fonts.size.normal
         font.bold: true
-        color: Colours.m3Colors.m3OnPrimary
+        color: !enabled ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnPrimary
         Behavior on color {
             CAnim {
                 duration: Appearance.animations.durations.small
