@@ -68,7 +68,7 @@ Item {
                     MArea {
                         onClicked: {
                             wallpaperDirField.forceActiveFocus();
-                            fileDialog.visible = true;
+                            fileDialog.openFileDialog();
                         }
                     }
                 }
