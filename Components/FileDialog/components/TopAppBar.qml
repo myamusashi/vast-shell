@@ -28,7 +28,7 @@ Rectangle {
     Elevation {
         anchors.fill: parent
         z: -1
-        level: 0
+        level: 3
     }
 
     Rectangle {
@@ -83,12 +83,5 @@ Rectangle {
         Item {
             implicitWidth: Appearance.spacing.small
         }
-
-        // M3IconButton {
-        // 	id: visibility
-        //
-        //           icon: "visibility"
-        //           onClicked: root.showHiddenToggled()
-        //       }
     }
 }
