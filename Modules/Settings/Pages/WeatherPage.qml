@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
+
 import qs.Configs
 import qs.Components
 import qs.Services
+
 import "../Components"
 
 Item {
