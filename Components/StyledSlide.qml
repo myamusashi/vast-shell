@@ -57,7 +57,7 @@ Slider {
     property color snapDotFilledColor: Colours.m3Colors.m3OnPrimary
     property color snapDotEmptyColor: Colours.m3Colors.m3OnSurfaceVariant
 
-    property bool showValuePopup: false
+    property bool showValuePopup: true
     property bool popupOnHoverToo: false
     property var popupValueFormat: v => Math.round(v)
     readonly property bool _popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
