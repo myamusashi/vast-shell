@@ -34,6 +34,7 @@ Rectangle {
         anchors.fill: parent
         color: Colours.m3Colors.m3OnSurface
         opacity: !root.isSelected && (root.itemIndex % 2 !== 0) ? 0.03 : 0
+
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
@@ -126,6 +127,7 @@ Rectangle {
     }
 
     MArea {
+        layerRadius: root.radius
         onClicked: root.clicked()
         onDoubleClicked: root.doubleClicked()
     }
