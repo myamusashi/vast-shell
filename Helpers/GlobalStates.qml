@@ -26,6 +26,7 @@ Singleton {
     readonly property int cleanupDelay: 500
     readonly property string currentLanguage: TranslationManager.currentLanguage
 
+    property bool isSettingsOpen: false
     property bool isCalendarOpen: false
     property bool isScreenCapturePanelOpen: false
     property bool isLauncherOpen: false
