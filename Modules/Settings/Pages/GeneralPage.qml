@@ -191,9 +191,21 @@ Item {
         signal configChanged(string value)
         Layout.fillWidth: true
 
-        property var appList: [...new Map([...DesktopEntries.applications.values].filter(e => appSetting.categories.every(c => e.categories.includes(c))).map(e => ({
-                        display: root.cleanExec(e.execString)
-                    })).map(e => [e.display, e])).values()]
+        property var appList: {
+            const apps = [...DesktopEntries.applications.values];
+            const filtered = apps.filter(e => appSetting.categories.every(c => e.categories.includes(c)));
+            const mapped = filtered.map(e => ({
+                        e,
+                        display: e.execString.replace(/%[uUfFdDnNickvm]/g, "")  // remove %placeholders
+                        .replace(/--\S+/g, "")                                  // remove --flags
+                        .replace(/--/g, "")                                     // remove --
+                        .trim()                                                 // remove whitespace
+                    }));
+
+            const deduplicated = [...new Map(mapped.map(e => [e.display, e])).values()];
+
+            return deduplicated;
+        }
 
         StyledText {
             text: appSetting.label
@@ -206,7 +218,9 @@ Item {
             id: appCombo
 
             Layout.preferredWidth: 250
-            model: appSetting.appList
+            model: ScriptModel {
+                values: [...appSetting.appList]
+            }
             currentIndex: appSetting.appList.findIndex(item => item.display === appSetting.configValue)
             placeholderText: appSetting.configValue
             isItemActive: (md, _) => md.display === appSetting.configValue
