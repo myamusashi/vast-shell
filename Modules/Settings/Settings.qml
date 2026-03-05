@@ -40,7 +40,6 @@ Scope {
             color: "transparent"
 
             Rectangle {
-                id: surfaceContainer
                 anchors.fill: parent
                 color: Colours.m3Colors.m3Surface
                 radius: Appearance.rounding.large
@@ -88,12 +87,12 @@ Scope {
                             }
                             SidebarItem {
                                 text: qsTr("Top Bar")
-                                iconName: "horizontal_split"
+                                iconName: "table_rows"
                                 pageIndex: 2
                             }
                             SidebarItem {
                                 text: qsTr("Wallpaper")
-                                iconName: "wallpaper"
+                                iconName: "wall_art"
                                 pageIndex: 3
                             }
                             SidebarItem {

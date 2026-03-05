@@ -49,7 +49,6 @@ Item {
         text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
 
         onTextChanged: {
-            root.textChanged(text);
             if (root.pam)
                 root.pam.currentText = text;
         }
@@ -323,6 +322,7 @@ Item {
 
         implicitWidth: 32
         implicitHeight: 32
+        z: 1
 
         Icon {
             icon: "visibility_off"

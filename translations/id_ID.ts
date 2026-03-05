@@ -1013,11 +1013,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
-    <message>
-        <location filename="../Components/FileDialog/FileDialog.qml" line="159"/>
-        <source>Show hidden</source>
-        <translation>Tampilkan file tersembunyi</translation>
-    </message>
 </context>
 <context>
     <name>FileListItem</name>
@@ -1060,22 +1055,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListView</name>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="55"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="43"/>
+        <source>Show hidden</source>
+        <translation>Tampilkan file tersembunyi</translation>
+    </message>
+    <message>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="66"/>
         <source>Name</source>
         <translation>Nama</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="63"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="74"/>
         <source>Size</source>
         <translation>Ukuran</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="71"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="82"/>
         <source>Type</source>
         <translation>Jenis</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="79"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="90"/>
         <source>Modified</source>
         <translation>Diubah</translation>
     </message>
@@ -1440,74 +1440,108 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>InternetPage</name>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="26"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="30"/>
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="33"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="51"/>
         <source>Hotspot</source>
         <translation>Hotspot</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="48"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="66"/>
         <source>Enable hotspot &amp; sharing internet:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyalakan hotspot &amp; berbagi internet:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="59"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="77"/>
         <source>User hotspot:</source>
-        <translation type="unfinished"></translation>
+        <translation>hotspot user:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="72"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="90"/>
         <source>Password hotspot:</source>
-        <translation type="unfinished"></translation>
+        <translation>hotspot password:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="86"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="104"/>
         <source>Hotspot interface:</source>
-        <translation type="unfinished"></translation>
+        <translation>interface hotspot:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="90"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="108"/>
         <source>Default: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Default: %1</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="90"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="108"/>
         <source>none detected</source>
-        <translation type="unfinished"></translation>
+        <translation>tidak terdeteksi</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="97"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="115"/>
         <source>Bandwidth:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bandwidth</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="116"/>
-        <source>Ethernet</source>
-        <translation type="unfinished">Ethernet</translation>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="142"/>
+        <source>Wi-Fi</source>
+        <translation>Wi-Fi</translation>
     </message>
     <message>
-        <source>Enable hotspot &amp; sharing internet</source>
-        <translation type="vanished">Aktifkan Kata Sandi</translation>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="149"/>
+        <source>Enable Wi-Fi:</source>
+        <translation>Wi-Fi nyala:</translation>
     </message>
     <message>
-        <source>User hotspot</source>
-        <translation type="vanished">Hotspot Pengguna</translation>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="242"/>
+        <source>Disconnect</source>
+        <translation>Putuskan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="63"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="242"/>
+        <source>Connect</source>
+        <translation>Sambungkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="247"/>
+        <source>Forget Network</source>
+        <translation>Lupakan Jaringan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="294"/>
+        <source>Connected</source>
+        <translation>Sambungkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="295"/>
+        <source>Disconnected</source>
+        <translation>Terputus</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="296"/>
+        <source>Disconnecting</source>
+        <translation>Menghubungkan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="297"/>
+        <source>Connecting</source>
+        <translation>Memutuskan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="298"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="299"/>
+        <source>Unknown</source>
+        <translation>ndak tau</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="81"/>
         <source>Default: MyHotspot</source>
         <translation>Default: MyHotspot</translation>
     </message>
     <message>
-        <source>Password hotspot</source>
-        <translation type="vanished">Hotspot kata sandi</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="77"/>
+        <location filename="../Modules/Settings/Pages/InternetPage.qml" line="94"/>
         <source>Default: password123</source>
         <translation>Default: password123</translation>
     </message>
@@ -1515,17 +1549,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>LanguagePage</name>
     <message>
-        <location filename="../Modules/Settings/Pages/LanguagePage.qml" line="19"/>
+        <location filename="../Modules/Settings/Pages/LanguagePage.qml" line="23"/>
         <source>System Language</source>
         <translation>Bahasa Sistem</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/LanguagePage.qml" line="27"/>
+        <location filename="../Modules/Settings/Pages/LanguagePage.qml" line="30"/>
         <source>Locale Preference</source>
         <translation>Preferensi Lokal</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/LanguagePage.qml" line="32"/>
+        <location filename="../Modules/Settings/Pages/LanguagePage.qml" line="36"/>
         <source>Current Language:</source>
         <translation>Bahasa Saat Ini:</translation>
     </message>
@@ -2116,42 +2150,42 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="70"/>
+        <location filename="../Modules/Settings/Settings.qml" line="69"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="80"/>
+        <location filename="../Modules/Settings/Settings.qml" line="79"/>
         <source>General</source>
         <translation>Umum</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="85"/>
+        <location filename="../Modules/Settings/Settings.qml" line="84"/>
         <source>Appearance</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="90"/>
+        <location filename="../Modules/Settings/Settings.qml" line="89"/>
         <source>Top Bar</source>
         <translation>Bilah Atas</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="95"/>
+        <location filename="../Modules/Settings/Settings.qml" line="94"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="100"/>
+        <location filename="../Modules/Settings/Settings.qml" line="99"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="105"/>
+        <location filename="../Modules/Settings/Settings.qml" line="104"/>
         <source>Language</source>
         <translation>Bahasa</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="110"/>
+        <location filename="../Modules/Settings/Settings.qml" line="109"/>
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
@@ -2172,12 +2206,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Components/StyledTextInput.qml" line="131"/>
+        <location filename="../Components/StyledTextInput.qml" line="130"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Components/StyledTextInput.qml" line="131"/>
+        <location filename="../Components/StyledTextInput.qml" line="130"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
