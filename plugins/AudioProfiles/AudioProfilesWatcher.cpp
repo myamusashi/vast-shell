@@ -341,7 +341,7 @@ static void ap_app_destroy(ap_app_t* app) {
     pw_proxy_destroy(reinterpret_cast<struct pw_proxy*>(app->registry));
     pw_core_disconnect(app->core);
     pw_context_destroy(app->context);
-    pw_thread_loop_destroy(app->loop); // 2. destroy after stop
+    pw_thread_loop_destroy(app->loop);
     free(app);
 }
 

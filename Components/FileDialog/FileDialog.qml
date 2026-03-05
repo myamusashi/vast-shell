@@ -45,7 +45,7 @@ Scope {
                 id: folderModel
 
                 folder: root.currentFolder
-                showHidden: root.showHidden
+                showHidden: fileListView.folderHidden
                 showDirsFirst: true
                 showDotAndDotDot: false
                 showFiles: !root.foldersOnly
@@ -146,27 +146,11 @@ Scope {
                         Layout.fillHeight: true
 
                         model: folderModel
-                        foldersOnly: root.foldersOnly
+                        folderHidden: root.showHidden
 
                         onFolderDoubleClicked: path => window.navigateTo(path)
                         onFileDoubleClicked: path => root.fileSelected(path)
                         onSelectionChanged: fileName => bottomBar.setFileName(fileName)
-
-                        StyledMenu {
-                            id: contextMenu
-
-                            StyledMenuItem {
-                                text: qsTr("Show hidden")
-                                trailingIcon: root.showHidden ? "check" : ""
-                                onTriggered: root.showHidden = !root.showHidden
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                acceptedButtons: Qt.RightButton
-                                onClicked: mouse => contextMenu.popup(mouse.x, mouse.y)
-                            }
-                        }
                     }
                 }
 
