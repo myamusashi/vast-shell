@@ -824,29 +824,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>Dialog</name>
-    <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="40"/>
-        <source>Session</source>
-        <translation>Sesi</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="56"/>
-        <source>Do you want to %1?</source>
-        <translation>Apakah kamu ingin %1?</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="78"/>
-        <source>No</source>
-        <translation>Tidak</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Lock/Dialog.qml" line="96"/>
-        <source>Yes</source>
-        <translation>Ya</translation>
-    </message>
-</context>
-<context>
     <name>DialogBox</name>
     <message>
         <location filename="../Components/DialogBox.qml" line="104"/>
@@ -2233,6 +2210,29 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="126"/>
         <source>Sunset</source>
         <translation>Matahari terbenam</translation>
+    </message>
+</context>
+<context>
+    <name>Surface</name>
+    <message>
+        <location filename="../Modules/Lock/Surface.qml" line="131"/>
+        <source>Session</source>
+        <translation>Sesi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Surface.qml" line="147"/>
+        <source>Do you want to %1?</source>
+        <translation>Apakah kamu mau %1</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Surface.qml" line="169"/>
+        <source>No</source>
+        <translation>Tidak</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Lock/Surface.qml" line="188"/>
+        <source>Yes</source>
+        <translation>Ya</translation>
     </message>
 </context>
 <context>
