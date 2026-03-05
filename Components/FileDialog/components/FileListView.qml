@@ -23,22 +23,33 @@ ColumnLayout {
     property string currentFilePath: hasSelection ? model.get(currentIndex, "filePath") : ""
     property bool currentIsFolder: hasSelection ? model.isFolder(currentIndex) : false
 
-    signal showHiddenToggled
+    signal showHiddenToggled(bool hidden)
     signal folderDoubleClicked(string path)
     signal fileDoubleClicked(string path)
     signal selectionChanged(string fileName)
 
     spacing: 0
+    onFolderHiddenChanged: root.showHiddenToggled(folderHidden)
 
     Rectangle {
         Layout.fillWidth: true
         implicitHeight: 40
         color: Colours.m3Colors.m3SurfaceContainer
 
+        StyledMenu {
+            id: contextMenu
+
+            StyledMenuItem {
+                text: qsTr("Show hidden")
+                trailingIcon: root.folderHidden ? "check" : ""
+                onTriggered: root.folderHidden = !root.folderHidden
+            }
+        }
+
         Rectangle {
             anchors.bottom: parent.bottom
-            Layout.preferredWidth: parent.width
-            height: 1
+            implicitWidth: parent.width
+            implicitHeight: 1
             color: Colours.m3Colors.m3OutlineVariant
             opacity: 0.4
         }
@@ -96,8 +107,15 @@ ColumnLayout {
         spacing: 0
         currentIndex: root.currentIndex
 
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: mouse => contextMenu.popup(mouse.x, mouse.y)
+        }
+
         ScrollBar.vertical: ScrollBar {
             id: vScroll
+
             policy: ScrollBar.AsNeeded
             contentItem: Rectangle {
                 implicitWidth: 6
