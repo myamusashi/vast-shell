@@ -3,11 +3,22 @@ import QtQuick
 import qs.Configs
 
 Text {
-    font.family: Appearance.fonts.family.sans
-    font.pixelSize: Appearance.fonts.size.medium
-    font.hintingPreference: Font.PreferFullHinting
-    font.letterSpacing: 0
+    id: root
+
+    font {
+        family: Appearance.fonts.family.sans
+        pixelSize: Appearance.fonts.size.medium
+        hintingPreference: Font.PreferFullHinting
+        letterSpacing: 0
+        variableAxes: {
+            "opsz": root.fontInfo.pixelSize
+        }
+    }
+
     renderType: Text.NativeRendering
+    renderTypeQuality: Text.VeryHighRenderTypeQuality
+    antialiasing: true
+    smooth: true
     color: "transparent"
     verticalAlignment: Text.AlignVCenter
     elide: Text.ElideRight
