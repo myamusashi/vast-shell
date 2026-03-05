@@ -50,7 +50,7 @@ Item {
         id: background
 
         anchors.fill: parent
-        radius: 8
+        radius: Appearance.rounding.normal
         color: root.outlined ? "transparent" : root._bgColor
         border.width: root.outlined ? 1 : 0
         border.color: root.outlined ? Qt.alpha(root.color, root.enabled ? 1.0 : 0.38) : "transparent"
@@ -63,6 +63,8 @@ Item {
 
         SimpleRipple {
             anchors.fill: parent
+            xClipRadius: background.radius
+            yClipRadius: background.radius
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
