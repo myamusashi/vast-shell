@@ -19,7 +19,7 @@ Singleton {
     property alias language: adapter.language
 
     onLanguageChanged: {
-        TranslationManager.loadTranslation(root.language, Paths.translateFilePath);
+        TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath);
     }
 
     FileView {
@@ -30,7 +30,7 @@ Singleton {
             if (err !== FileViewError.FileNotFound)
                 console.log("Failed to read config files");
         }
-        onLoaded: TranslationManager.loadTranslation(root.language, Paths.translateFilePath)
+        onLoaded: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
         onAdapterUpdated: writeAdapter()
         onSaveFailed: err => console.log("Failed to save config", FileViewError.toString(err))
 
