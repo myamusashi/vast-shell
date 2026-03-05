@@ -227,10 +227,9 @@ build_m3shapes() {
 
 compile_wallpaper_shaders() {
 	local -r shader_dir="$PROJECT_ROOT/Assets/shaders"
+	local -r transition_dir="$shader_dir/transitions"
 	local -r vert_src="$shader_dir/ImageTransition.vert"
-	local -r frag_src="$shader_dir/ImageTransition.frag"
 	local -r vert_out="$shader_dir/ImageTransition.vert.qsb"
-	local -r frag_out="$shader_dir/ImageTransition.frag.qsb"
 
 	local qsb
 	qsb=$(command -v qsb 2>/dev/null || command -v qsb6 2>/dev/null || true)
@@ -240,31 +239,53 @@ compile_wallpaper_shaders() {
 		return 0
 	}
 
-	[[ -f $vert_src ]] || {
-		warn "Vertex shader not found: $vert_src"
-		return 0
-	}
-	[[ -f $frag_src ]] || {
-		warn "Fragment shader not found: $frag_src"
-		return 0
-	}
+	local -r qsb_flags=(--glsl "450,330,300 es" --hlsl 50 --msl 12)
 
-	if [[ -f $vert_out && -f $frag_out ]]; then
-		if [[ $vert_src -ot $vert_out && $frag_src -ot $frag_out ]]; then
-			log "Wallpaper shaders already compiled and up to date"
-			return 0
-		fi
+	local -ra transitions=(
+		fade wipeDown circleExpand dissolve splitHorizontal
+		slideUp pixelate diagonalWipe boxExpand roll
+	)
+
+	if [[ ! -f $vert_src ]]; then
+		warn "Vertex shader not found: $vert_src"
+	elif [[ ! -f $vert_out || $vert_src -nt $vert_out ]]; then
+		log "Compiling vertex shader..."
+		"$qsb" "${qsb_flags[@]}" -o "$vert_out" "$vert_src" ||
+			die "Failed to compile vertex shader: $vert_src"
+		log "  → $(basename "$vert_out")"
+	else
+		log "Vertex shader up to date"
 	fi
 
-	log "Compiling wallpaper transition shaders..."
+	[[ -d $transition_dir ]] || {
+		warn "Transitions directory not found: $transition_dir — skipping"
+		return 0
+	}
 
-	"$qsb" --glsl "450,330,300 es" --hlsl 50 --msl 12 -o "$vert_out" "$vert_src" ||
-		die "Failed to compile vertex shader: $vert_src"
+	log "Compiling transition shaders..."
+	local failed=0
+	for name in "${transitions[@]}"; do
+		local src="$transition_dir/${name}.frag"
+		local out="$transition_dir/${name}.frag.qsb"
 
-	"$qsb" --glsl "450,330,300 es" --hlsl 50 --msl 12 -o "$frag_out" "$frag_src" ||
-		die "Failed to compile fragment shader: $frag_src"
+		[[ -f $src ]] || {
+			warn "  Missing: ${name}.frag — skipping"
+			continue
+		}
+		[[ -f $out && $src -ot $out ]] && {
+			log "  Up to date: ${name}.frag.qsb"
+			continue
+		}
 
-	log "Shaders compiled → $(basename "$vert_out"), $(basename "$frag_out")"
+		if "$qsb" "${qsb_flags[@]}" -o "$out" "$src"; then
+			log "  → ${name}.frag.qsb"
+		else
+			warn "  FAILED: ${name}.frag.qsb"
+			((failed++)) || true
+		fi
+	done
+
+	((failed == 0)) || warn "$failed transition shader(s) failed to compile"
 }
 
 build_another_ripple() {
