@@ -38,33 +38,7 @@
         devShells = forAllSystems (system: let
             pkgs = pkgsFor system;
         in {
-            default = pkgs.mkShell {
-                packages = [
-                    pkgs.go
-                    pkgs.nil
-                    pkgs.pkg-config
-                    (with pkgs.kdePackages; [
-                        qtdeclarative
-                        qttools
-                        qtbase
-                        qttranslations
-                        qtshadertools
-                    ])
-                    pkgs.llvm
-                    pkgs.gcc
-                    pkgs.gdb
-                    pkgs.cmake
-                    pkgs.clang-tools
-                    pkgs.gopls
-                ];
-
-                shellHook = ''
-                    go build -o ./Assets/go/keystate-bin ./Assets/go/keystate.go
-                    go build -o ./Assets/go/screen-capture ./Assets/go/screen-capture.go
-                    go build -o ./Assets/go/formatting ./Assets/go/formatting.go
-                    echo "mushell environment"
-                '';
-            };
+            default = import ./shell.nix {inherit pkgs;};
         });
     };
 }
