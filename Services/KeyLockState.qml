@@ -17,7 +17,7 @@ Singleton {
         id: lockStateProcess
 
         running: true
-        command: [Paths.rootDir + "/Assets/go/keystate-bin"]
+        command: ["keystate-bin"]
     }
 
     FileView {
