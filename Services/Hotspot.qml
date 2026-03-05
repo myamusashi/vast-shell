@@ -4,6 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import qs.Services
+
 Singleton {
     id: root
 
@@ -18,26 +20,22 @@ Singleton {
     readonly property bool isActive: status === Hotspot.Status.Active
 
     // Prefer a connected ethernet device as upstream
-    readonly property string upstreamInterface: {
-        const eth = SystemUsage.allEthernetDevices.find(d => d.isActive);
-        return eth ? eth.name : SystemUsage.wiredInterface;
-    }
+    readonly property string upstreamInterface: SystemUsage.allEthernetDevices
 
-    // Prefer a disconnected wifi device so we don't drop the current AP connection
-    // readonly property string hotspotInterface: {
-    //     const free = SystemUsage.allWifiDevices?.find(d => !d.isActive);
-    //     return free?.name ?? SystemUsage.wirelessInterface ?? "";
-    // }
+    // prefer a active device as hotspot interface
+    readonly property string hotspotInterface: Wifi.activeWifiDevice.name
 
-    property string ssid: "MyHotspot"
-    property string password: "password123"
-    property string band: "bg" // "bg" = 2.4 GHz, "a" = 5 GHz
-    property string hotspotInterface: "wlp3s0"
+    property string ssid: ""
+    property string password: ""
+    property string band: ""
     property int channel: 6
     property int status: Hotspot.Status.Inactive
     property string errorMessage: ""
 
-    Component.onCompleted: _queryStatus.running = true
+    Component.onCompleted: {
+        console.log(upstreamInterface);
+        _queryStatus.running = true;
+    }
 
     function start() {
         if (root.status === Hotspot.Status.Active || root.status === Hotspot.Status.Starting)
@@ -46,8 +44,16 @@ Singleton {
             _setError("No wireless interface available");
             return;
         }
+
+        // Apply defaults at start time, not at bind time
+        const _ssid = root.ssid || "Quickshell";
+        const _password = root.password || "password123";
+        const _band = root.band || "bg";
+        const _channel = root.channel || 6;
+
         root.status = Hotspot.Status.Starting;
         root.errorMessage = "";
+        _createHotspot.command = ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${root.hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${_ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${_password}" ` + `wifi.band ${_band} ` + `wifi.channel ${_channel}`];
         _createHotspot.running = true;
     }
 
