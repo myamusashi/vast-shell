@@ -117,13 +117,13 @@ Rectangle {
     }
 
     function initializePlaces(homePath) {
-        placesModel.setProperty(0, "path", homePath);
-        placesModel.setProperty(1, "path", StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]);
-        placesModel.setProperty(2, "path", StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]);
-        placesModel.setProperty(3, "path", StandardPaths.standardLocations(StandardPaths.DownloadLocation)[0]);
-        placesModel.setProperty(4, "path", StandardPaths.standardLocations(StandardPaths.MusicLocation)[0]);
-        placesModel.setProperty(5, "path", StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]);
-        placesModel.setProperty(6, "path", StandardPaths.standardLocations(StandardPaths.MoviesLocation)[0]);
+        placesModel.setProperty(0, "path", homePath.toString());
+        placesModel.setProperty(1, "path", StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0].toString());
+        placesModel.setProperty(2, "path", StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0].toString());
+        placesModel.setProperty(3, "path", StandardPaths.standardLocations(StandardPaths.DownloadLocation)[0].toString());
+        placesModel.setProperty(4, "path", StandardPaths.standardLocations(StandardPaths.MusicLocation)[0].toString());
+        placesModel.setProperty(5, "path", StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0].toString());
+        placesModel.setProperty(6, "path", StandardPaths.standardLocations(StandardPaths.MoviesLocation)[0].toString());
     }
 
     function clearSelection() {
