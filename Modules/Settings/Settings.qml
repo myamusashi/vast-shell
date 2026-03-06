@@ -134,13 +134,34 @@ Scope {
                             anchors.fill: parent
                             currentIndex: settingsWindow.currentPage
 
-                            GeneralPage {}
-                            AppearancePage {}
-                            BarPage {}
-                            WallpaperPage {}
-                            WeatherPage {}
-                            LanguagePage {}
-                            InternetPage {}
+                            Loader {
+                                active: stackLayout.currentIndex === 0
+                                sourceComponent: GeneralPage {}
+                            }
+                            Loader {
+                                active: stackLayout.currentIndex === 1
+                                sourceComponent: AppearancePage {}
+                            }
+                            Loader {
+                                active: stackLayout.currentIndex === 2
+                                sourceComponent: BarPage {}
+                            }
+                            Loader {
+                                active: stackLayout.currentIndex === 3
+                                sourceComponent: WallpaperPage {}
+                            }
+                            Loader {
+                                active: stackLayout.currentIndex === 4
+                                sourceComponent: WeatherPage {}
+                            }
+                            Loader {
+                                active: stackLayout.currentIndex === 5
+                                sourceComponent: LanguagePage {}
+                            }
+                            Loader {
+                                active: stackLayout.currentIndex === 6
+                                sourceComponent: InternetPage {}
+                            }
                         }
                     }
                 }
