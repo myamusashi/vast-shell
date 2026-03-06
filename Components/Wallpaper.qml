@@ -128,11 +128,13 @@ Item {
     }
 
     function _commitTransition() {
-        _slot = 1 - _slot;
-        _inactive().source = "";
+        const newSlot = 1 - _slot;
+        const oldImg = (newSlot === 0) ? imgB : imgA;
+        _busy = false;
+        _slot = newSlot;
+        oldImg.source = "";
         fx.progress = 0.0;
         _toImg = null;
-        _busy = false;
         _drainPending();
     }
 
@@ -191,7 +193,7 @@ Item {
         cache: false    // don't hold stale decoded data in Qt's cache
         smooth: true
         layer.enabled: false   // prevent accidental FBO layer promotion
-        visible: (root._slot === 0) && !root._busy
+        visible: root._slot === 0
         onStatusChanged: root._onImgStatus(imgA)
     }
 
@@ -204,7 +206,7 @@ Item {
         cache: false
         smooth: true
         layer.enabled: false
-        visible: (root._slot === 1) && !root._busy
+        visible: root._slot === 1
         onStatusChanged: root._onImgStatus(imgB)
     }
 
@@ -226,22 +228,7 @@ Item {
         property real rollSin: root._typeResolved === 9 ? Math.sin(Math.PI / 2.0 * fx.progress) : 0.0
 
         vertexShader: "root:/Assets/shaders/ImageTransition.vert.qsb"
-        fragmentShader: {
-            const shaders = ["fade"            // 0
-                , "wipeDown"        // 1
-                , "circleExpand"    // 2
-                , "dissolve"        // 3
-                , "splitHorizontal" // 4
-                , "slideUp"         // 5
-                , "pixelate"        // 6
-                , "diagonalWipe"    // 7
-                , "boxExpand"       // 8
-                , "roll"             // 9
-            ];
-            const idx = root._typeResolved;
-            const name = (idx >= 0 && idx < shaders.length) ? shaders[idx] : "fade";
-            return `root:/Assets/shaders/transitions/${name}.frag.qsb`;
-        }
+        fragmentShader: "root:/Assets/shaders/transitions/fade.frag.qsb"
         visible: root._busy
         blending: false
         layer.enabled: false
