@@ -124,12 +124,16 @@ build_go_scripts() {
 	mkdir -p "$gopath"
 
 	cp "$PROJECT_ROOT/Assets/go/keystate.go" "$BUILD_DIR/"
+	cp "$PROJECT_ROOT/Assets/go/screen-capture.go" "$BUILD_DIR/"
+
 	cd "$BUILD_DIR"
-	GOPATH="$gopath" go build -o keystate-bin keystate.go
-	GOPATH="$gopath" go build -o screen-capture screen-capture.go
+
+	GOPATH="$gopath" GO111MODULE=off go build -o keystate-bin keystate.go
+	GOPATH="$gopath" GO111MODULE=off go build -o screen-capture screen-capture.go
+
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$BIN_DIR/keystate-bin"
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/go/keystate-bin"
-	install -Dm755 "$BUILD_DIR/screen-capture" "$PROJECT_ROOT/Assets/go/screen-capture
+	install -Dm755 "$BUILD_DIR/screen-capture" "$PROJECT_ROOT/Assets/go/screen-capture"
 }
 
 build_audio_profiles_plugin() {
@@ -237,7 +241,7 @@ compile_wallpaper_shaders() {
 	qsb=$(command -v qsb 2>/dev/null || command -v qsb6 2>/dev/null || true)
 	[[ -n $qsb ]] || qsb=$(find /usr/lib/qt6 /usr/lib/qt /opt/qt6 -name "qsb" -type f 2>/dev/null | head -1 || true)
 	[[ -n $qsb ]] || {
-		warn "qsb not found — skipping shader compilation (qt6-shadertools required)"
+		warn "qsb not found — skipping shader compilation \(qt6-shadertools required\)"
 		return 0
 	}
 
@@ -287,7 +291,7 @@ compile_wallpaper_shaders() {
 		fi
 	done
 
-	((failed == 0)) || warn "$failed transition shader(s) failed to compile"
+	((failed == 0)) || warn "$failed shader failed to compile"
 }
 
 build_another_ripple() {
@@ -451,10 +455,8 @@ main() {
 
 	rm -rf "$BUILD_DIR"
 
-	log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 	log "System-wide installation complete!"
 	log "Run 'shell' to start quickshell."
-	log "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }
 
 main "$@"

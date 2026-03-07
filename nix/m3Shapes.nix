@@ -43,11 +43,4 @@ stdenv.mkDerivation {
 
         patchelf --set-rpath "${placeholder "out"}/${qt6.qtbase.qtQmlPrefix}/M3Shapes:${qt6.qtbase.outPath}/lib" "$pluginPath"
     '';
-
-    meta = with lib; {
-        description = " A QT port of the androidx shape library ";
-        homepage = "https://github.com/soramanew/m3shapes";
-        platforms = platforms.all;
-        maintainers = [myamusashi];
-    };
 }

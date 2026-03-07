@@ -50,10 +50,8 @@ stdenv.mkDerivation {
         done
     '';
 
-    meta = with lib; {
+    meta = {
         description = "A Ripple effect in QML, that can be used everywhere.";
         homepage = "https://github.com/mmjvox/Another-Ripple";
-        platforms = platforms.linux;
-        license = licenses.mit; # Adjust if license is different
     };
 }

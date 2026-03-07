@@ -1,0 +1,27 @@
+name: QML Format and Types Check
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  qml-format-check:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm \
+            git go qt6-declarative qt6-tools
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check formatting
+        run: |
+          go run Assets/go/formatting.go --skip-lupdate
+          if ! git diff --exit-code; then
+            echo ""
+            echo "Some files are not formatted correctly."
+            echo "Please run 'go run Assets/go/formatting.go' locally and commit the changes."
+            exit 1
+          fi
