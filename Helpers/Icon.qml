@@ -15,19 +15,15 @@ Text {
     property int type: Icon.Material
 
     antialiasing: true
-    layer.enabled: true
-    layer.smooth: true
     color: "transparent"
     renderType: Text.NativeRendering
 
-    font.variableAxes: {
-        "opsz": root.fontInfo.pixelSize,
-        "wght": root.fontInfo.weight
-    }
-
     font {
         family: root.type === Icon.Weather ? "Weather Icons" : Appearance.fonts.family.material
-        pixelSize: Appearance.fonts.size.medium
-        hintingPreference: Font.PreferNoHinting
+        hintingPreference: Font.PreferFullHinting
+        variableAxes: ({
+                "opsz": 24,
+                "wght": 400
+            })
     }
 }
