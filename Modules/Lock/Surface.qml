@@ -183,7 +183,7 @@ WlSessionLockSurface {
                     implicitHeight: 40
                     icon.name: "check"
                     icon.color: Colours.m3Colors.m3Primary
-                    rippleColor: Colours.withAlpha(Colours.m3Colors.m3SecondaryContainer, 0)
+                    rippleColor: Qt.alpha(Colours.m3Colors.m3SecondaryContainer, 0)
                     textColor: Colours.m3Colors.m3Primary
                     text: qsTr("Yes")
                     color: "transparent"

@@ -29,7 +29,7 @@ PopupWidget {
                         text: qsTr("Graphic User Interfaces")
                     },
                     {
-                        color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.5),
+                        color: Qt.alpha(Colours.m3Colors.m3Green, 0.5),
                         text: qsTr("Terminal User Interfaces")
                     }
                 ]
@@ -84,7 +84,7 @@ PopupWidget {
             PieSlice {
                 label: pie.value2
                 value: pie.value2
-                color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.5)
+                color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
                 borderColor: "transparent"
                 labelVisible: true
                 labelColor: "white"

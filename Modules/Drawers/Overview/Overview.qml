@@ -15,13 +15,17 @@ ClippingWrapperRectangle {
 
     anchors.centerIn: parent
 
+    readonly property real monitorAspect: {
+        const m = Hypr.focusedMonitor;
+        return m ? (m.width / m.scale) / (m.height / m.scale) : 16 / 9;
+    }
+    readonly property real contentWidth: Hypr.focusedMonitor ? (Hypr.focusedMonitor.width / Hypr.focusedMonitor.scale) / 1.5 : 0
     property bool isOverviewOpen: GlobalStates.isOverviewOpen
     property real spacing: Appearance.spacing.normal
     property real columns: 5
     property real rows: 2
-    property real contentWidth: (Hypr.focusedMonitor?.width / Hypr.focusedMonitor?.scale) / 1.5
     property real tileWidth: (contentWidth - spacing * (columns + 1)) / columns
-    property real tileHeight: tileWidth * 9 / 16
+    property real tileHeight: tileWidth / monitorAspect
 
     border {
         color: GlobalStates.isOverviewOpen ? Colours.m3Colors.m3Outline : "transparent"

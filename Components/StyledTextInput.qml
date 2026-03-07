@@ -295,14 +295,14 @@ Item {
                 duration: 0
             }
             PauseAnimation {
-                duration: 530
+                duration: Appearance.animations.durations.large
             }
             NAnim {
                 to: 0
                 duration: 0
             }
             PauseAnimation {
-                duration: 530
+                duration: Appearance.animations.durations.large
             }
         }
         onVisibleChanged: {

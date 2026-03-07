@@ -260,6 +260,7 @@ RowLayout {
 
                         implicitHeight: Math.min(contentHeight, 320)
                         model: playerComboBox.delegateModel
+                        cacheBuffer: 0
                         clip: true
                         currentIndex: playerComboBox.currentIndex
 

@@ -99,7 +99,7 @@ MaterialShape {
                 width: 18
                 height: 18
                 radius: Appearance.rounding.normal
-                color: index === currentCategory ? canvas.uvColors[index] : Colours.withAlpha(canvas.uvColors[index], 0.3)
+                color: index === currentCategory ? canvas.uvColors[index] : Qt.alpha(canvas.uvColors[index], 0.3)
 
                 x: parent.width / 2 + Math.cos(angle * Math.PI / 180) * distance - width / 2
                 y: parent.height / 2 + Math.sin(angle * Math.PI / 180) * distance - height / 2

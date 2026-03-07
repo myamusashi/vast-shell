@@ -22,8 +22,8 @@ RowLayout {
     }
 
     Workspaces {
-        Layout.alignment: Qt.AlignCenter
         monitor: root.monitor
+        Layout.alignment: Qt.AlignCenter
     }
 
     WorkspaceName {

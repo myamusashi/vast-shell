@@ -115,7 +115,7 @@ PopupWidget {
 
                     StyledText {
                         text: delegate.modelData.text
-                        color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.7)
+                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.7)
                         font.pixelSize: Appearance.fonts.size.normal
                         Layout.minimumWidth: 120
                         Layout.preferredWidth: 150
@@ -138,7 +138,7 @@ PopupWidget {
                     Layout.fillWidth: true
                     Layout.topMargin: Appearance.spacing.small
                     implicitHeight: 1
-                    color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+                    color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
                     visible: delegate.modelData.header === "" && delegate.index < root.monitorModel.length + 7
                 }
             }

@@ -32,8 +32,8 @@ RowLayout {
     }
 
     StyledButton {
-        readonly property color inactiveTextColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
-        readonly property color inactiveButtonColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+        readonly property color inactiveTextColor: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
+        readonly property color inactiveButtonColor: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
 
         icon.name: "bedtime"
         icon.color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : inactiveTextColor

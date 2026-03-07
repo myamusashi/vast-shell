@@ -12,12 +12,12 @@ import qs.Services
 StyledRect {
     id: root
 
+    readonly property PwNode node: Pipewire.defaultAudioSink
+
     implicitWidth: container.width
     implicitHeight: parent.height
     color: "transparent"
     radius: Appearance.rounding.small
-
-    property PwNode node: Pipewire.defaultAudioSink
 
     Behavior on implicitWidth {
         NAnim {}
@@ -33,7 +33,6 @@ StyledRect {
         spacing: Appearance.spacing.small
 
         Icon {
-            id: iconItem
             type: Icon.Material
             color: Colours.m3Colors.m3OnBackground
             icon: Audio.getIcon(root.node)
@@ -52,14 +51,12 @@ StyledRect {
     MArea {
         anchors.fill: parent
         acceptedButtons: Qt.MiddleButton | Qt.LeftButton
-
+        onWheel: mevent => Audio.wheelAction(mevent, root.node)
         onClicked: mevent => {
             if (mevent.button === Qt.MiddleButton)
                 Audio.toggleMute(root.node);
             else if (mevent.button === Qt.LeftButton)
                 GlobalStates.toggleOSD("volume");
         }
-
-        onWheel: mevent => Audio.wheelAction(mevent, root.node)
     }
 }

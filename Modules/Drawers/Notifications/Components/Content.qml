@@ -43,12 +43,12 @@ Column {
             StyledText {
                 id: timeText
 
-                text: TimeAgo.timeAgoWithIfElse(root.modelData.time)
                 color: Colours.m3Colors.m3OnSurfaceVariant
+                Component.onCompleted: text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
 
                 Timer {
                     interval: 60000
-                    running: true
+                    running: root.visible
                     repeat: true
                     onTriggered: timeText.text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
                 }
@@ -115,11 +115,8 @@ Column {
                 required property var modelData
                 required property int index
 
-                implicitWidth: {
-                    const count = root.modelData.actions.length;
-                    const totalSpacing = (count - 1) * Appearance.spacing.normal;
-                    return (parent.width - totalSpacing) / count;
-                }
+                // distributes evenly if all items have equal implicit width
+                implicitWidth: (parent.width - (root.modelData.actions.length - 1) * Appearance.spacing.normal) / root.modelData.actions.length
                 implicitHeight: 40
                 radius: Appearance.rounding.full
                 color: Colours.m3Colors.m3SurfaceContainerHigh

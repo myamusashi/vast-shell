@@ -13,8 +13,8 @@ Item {
     id: root
 
     required property var modelData
-    property bool hasImage: modelData.image && modelData.image.length > 0
-    property bool hasAppIcon: modelData.appIcon && modelData.appIcon.length > 0
+    readonly property bool hasImage: modelData.image?.length > 0
+    readonly property bool hasAppIcon: modelData.appIcon?.length > 0
     implicitWidth: 40
     implicitHeight: 40
 
@@ -27,7 +27,14 @@ Item {
 
         Loader {
             anchors.centerIn: parent
-            sourceComponent: root.hasImage ? imageComponent : (root.hasAppIcon ? iconComponent : fallbackIconComponent)
+            active: true
+            sourceComponent: {
+                if (root.hasImage)
+                    return imageComponent;
+                if (root.hasAppIcon)
+                    return iconComponent;
+                return fallbackIconComponent;
+            }
         }
     }
 
@@ -76,11 +83,13 @@ Item {
     Loader {
         id: appIcon
 
-        active: root.hasAppIcon
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.rightMargin: -4
-        anchors.bottomMargin: -4
+        anchors {
+            right: parent.right
+            bottom: parent.bottom
+            rightMargin: -4
+            bottomMargin: -4
+        }
+        active: root.hasImage && root.hasAppIcon
         width: 20
         height: 20
         z: 1

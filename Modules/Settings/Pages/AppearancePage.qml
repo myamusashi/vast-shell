@@ -391,13 +391,14 @@ Item {
                 clip: true
                 implicitHeight: contentHeight
                 model: fontPicker.filteredModel
+                cacheBuffer: 0
 
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
                     contentItem: StyledRect {
                         implicitWidth: 4
                         radius: 2
-                        color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     }
                 }
 
@@ -425,12 +426,12 @@ Item {
 
                     background: StyledRect {
                         radius: Appearance.rounding.large
-                        color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
+                        color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
                     }
 
                     contentItem: StyledText {
                         text: fontDelegate.modelData.name
-                        font.family: fontDelegate.modelData.name  // preview the font
+                        font.family: fontDelegate.itemActive || fontDelegate.highlighted ? fontDelegate.modelData.name : ""
                         font.pixelSize: Appearance.fonts.size.normal
                         color: Colours.m3Colors.m3OnSurface
                         verticalAlignment: Text.AlignVCenter

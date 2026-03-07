@@ -25,7 +25,7 @@ Item {
             root.chargeFillIndex = root.batPercentage * 100;
     }
 
-    StyledRect {
+    Rectangle {
         id: batteryBody
 
         implicitWidth: 26
@@ -41,7 +41,7 @@ Item {
 
         border {
             width: 2
-            color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Colours.withAlpha(Colours.m3Colors.m3Outline, 0.5)
+            color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
         }
 
         StyledRect {
@@ -67,7 +67,7 @@ Item {
             }
             radius: parent.radius - 2
 
-            Behavior on width {
+            Behavior on implicitWidth {
                 enabled: !root.batCharging
                 NAnim {}
             }
@@ -94,7 +94,7 @@ Item {
             leftMargin: 0.5
             verticalCenter: parent.verticalCenter
         }
-        color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Colours.withAlpha(Colours.m3Colors.m3Outline, 0.5)
+        color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
         topRightRadius: 1
         bottomRightRadius: 1
     }

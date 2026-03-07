@@ -6,7 +6,7 @@ import qs.Configs
 import qs.Helpers
 import qs.Services
 
-Item {
+WrapperItem {
     implicitWidth: Configs.bar.compact ? parent.width * 0.6 : parent.width
     implicitHeight: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isBarOpen ? 40 : 0
 
@@ -23,7 +23,6 @@ Item {
     }
 
     WrapperRectangle {
-        anchors.fill: parent
         radius: 0
         bottomLeftRadius: Configs.bar.compact ? Appearance.rounding.large : 0
         bottomRightRadius: Configs.bar.compact ? bottomLeftRadius : 0
@@ -31,7 +30,7 @@ Item {
 
         Loader {
             active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isBarOpen
-            asynchronous: true
+            asynchronous: false
             sourceComponent: Item {
                 anchors {
                     fill: parent

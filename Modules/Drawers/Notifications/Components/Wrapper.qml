@@ -39,7 +39,6 @@ Item {
 
     Component.onCompleted: {
         slideInAnim.start();
-        timer.start();
     }
 
     Component.onDestruction: {
@@ -93,10 +92,7 @@ Item {
         property: "x"
         duration: Appearance.animations.durations.small
         easing.bezierCurve: Appearance.animations.curves.standardAccel
-        onFinished: {
-            if (root.isPopup)
-                root.notif.popup = false;
-        }
+        onFinished: root.notif.close()
     }
 
     Behavior on implicitWidth {
@@ -157,7 +153,6 @@ Item {
                         if (Math.abs(root.x) > root.width * 0.45) {
                             swipeOutAnim.to = root.x > 0 ? root.width : -root.width;
                             swipeOutAnim.start();
-                            root.notif.close();
                         } else {
                             root.x = 0;
                             timer.restart();

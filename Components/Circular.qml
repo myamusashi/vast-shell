@@ -1,23 +1,23 @@
 import QtQuick
 import QtQuick.Shapes
 
-import qs.Components
+import qs.Configs
 import qs.Services
+import qs.Components
 
 StyledRect {
     id: root
 
+    property alias circleColor: shapePath.strokeColor
     property alias textSize: styledText.font.pixelSize
     property alias text: styledText.text
 
     required property real value
 
-    property color circleColor: value > 80 ? Colours.m3Colors.m3Error : value > 60 ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary
-    property real fixedSize: 100
     property real textPadding: 20
 
-    implicitWidth: fixedSize
-    implicitHeight: fixedSize
+    implicitWidth: 100
+    implicitHeight: 100
 
     TextMetrics {
         id: textMetrics
@@ -52,7 +52,8 @@ StyledRect {
 
         // Progress arc
         ShapePath {
-            strokeColor: root.circleColor
+            id: shapePath
+
             strokeWidth: 8
             fillColor: "transparent"
             capStyle: ShapePath.RoundCap
@@ -70,10 +71,10 @@ StyledRect {
 
     StyledText {
         id: styledText
+
         anchors.centerIn: parent
-        text: ""
-        font.pixelSize: 12
-        font.bold: true
+        font.pixelSize: Appearance.fonts.size.medium
+        font.weight: Font.DemiBold
         color: Colours.m3Colors.m3OnSurface
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

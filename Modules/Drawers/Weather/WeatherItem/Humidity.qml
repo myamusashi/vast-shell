@@ -106,7 +106,7 @@ MaterialShape {
         preferredRendererType: Shape.CurveRenderer
 
         property alias fillPercentage: waveGeo.fillPercentage
-        property color waveColor: Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4)
+        property color waveColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
 
         ShapePath {
             strokeColor: "transparent"

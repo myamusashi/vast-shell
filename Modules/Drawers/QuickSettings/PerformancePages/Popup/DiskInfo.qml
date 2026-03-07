@@ -41,12 +41,12 @@ PopupWidget {
                     value: SystemUsage.storageAppsFormatted
                 },
                 {
-                    color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.7),
+                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.7),
                     text: qsTr("Boot"),
                     value: SystemUsage.storageSystemFormatted
                 },
                 {
-                    color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.3),
+                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.3),
                     text: qsTr("Free"),
                     value: SystemUsage.storageFreeFormatted
                 }
@@ -201,7 +201,7 @@ PopupWidget {
         StyledRect {
             anchors.fill: parent
             radius: height / 2
-            color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.2)
+            color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
         }
 
         StyledRect {
@@ -212,7 +212,7 @@ PopupWidget {
             }
             width: parent.width * root.systemPlusAppsRatio
             radius: height / 2
-            color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.5)
+            color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
             z: 1
 
             Behavior on width {
@@ -257,7 +257,7 @@ PopupWidget {
         StyledRect {
             anchors.fill: parent
             radius: height / 2
-            color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.2)
+            color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
         }
 
         StyledRect {

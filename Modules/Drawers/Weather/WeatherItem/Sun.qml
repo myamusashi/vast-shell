@@ -115,7 +115,7 @@ MaterialShape {
                 radius: 0
                 bottomLeftRadius: Appearance.rounding.full
                 bottomRightRadius: bottomLeftRadius
-                color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.5)
+                color: Qt.alpha(Colours.m3Colors.m3Surface, 0.5)
 
                 ColumnLayout {
                     anchors.centerIn: parent

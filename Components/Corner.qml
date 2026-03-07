@@ -109,12 +109,11 @@ WrapperItem {
     ]
 
     Shape {
-        antialiasing: true
-        smooth: true
         preferredRendererType: Shape.CurveRenderer
 
         ShapePath {
             id: shapePath
+
             strokeWidth: 0
             strokeColor: "transparent"
             fillColor: "white"

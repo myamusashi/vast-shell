@@ -15,14 +15,14 @@ StyledRect {
 
     required property ShellScreen monitor
 
-    implicitWidth: loader.item.implicitWidth
+    implicitWidth: Configs.bar.workspacesIndicator === "dot" ? loader.item.implicitWidth : loaderInteractiveWp.item.implicitWidth
     implicitHeight: 30
 
     property real workspaceWidth: monitor.width - (reserved[0] + reserved[2])
     property real workspaceHeight: monitor.height - (reserved[1] + reserved[3])
     property real containerWidth: 60
     property real containerHeight: 30
-    property list<int> reserved: monitor.lastIpcObject.reserved
+    property var reserved: Hypr.monitors.values.map(m => m.lastIpcObject.reserved)
     property real scaleFactor: Math.min(containerWidth / workspaceWidth, containerHeight / workspaceHeight)
     property real borderWidth: 2
 
@@ -34,8 +34,8 @@ StyledRect {
         cursorShape: Qt.PointingHandCursor
         propagateComposedEvents: true
         onClicked: mouse => {
-            let loaderPos = mapToItem(loader, mouse.x, mouse.y);
-            if (loader.contains(Qt.point(loaderPos.x, loaderPos.y))) {
+            let loaderPos = mapToItem(loaderInteractiveWp, mouse.x, mouse.y);
+            if (loaderInteractiveWp.contains(Qt.point(loaderPos.x, loaderPos.y))) {
                 mouse.accepted = false;
                 return;
             }
@@ -50,10 +50,16 @@ StyledRect {
         id: loader
 
         anchors.fill: parent
-        asynchronous: true
-        active: true
+        active: Configs.bar.workspacesIndicator === "dot"
+        sourceComponent: dotWorkspaceIndicator
+    }
 
-        sourceComponent: Configs.bar.workspacesIndicator === "dot" ? dotWorkspaceIndicator : interactiveWorkspaceIndicator
+    Loader {
+        id: loaderInteractiveWp
+
+        anchors.fill: parent
+        active: Configs.bar.workspacesIndicator !== "dot"
+        sourceComponent: interactiveWorkspaceIndicator
     }
 
     Component {
@@ -100,7 +106,7 @@ StyledRect {
                     MArea {
                         visible: !delegateRoot.isActive
                         anchors.fill: parent
-                        layerColor: Colours.withAlpha(Colours.m3Colors.m3Primary, 0.8)
+                        layerColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.8)
                         layerRadius: 5
                         onClicked: Hyprland.dispatch("workspace " + delegateRoot.workspaceId)
                     }

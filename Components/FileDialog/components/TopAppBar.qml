@@ -2,10 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Configs
+import qs.Helpers
 import qs.Services
 import qs.Components
-
-import "../controls"
 
 Rectangle {
     id: root
@@ -13,6 +12,7 @@ Rectangle {
     property bool canGoBack: false
     property bool canGoForward: false
     property bool canGoUp: false
+    property bool isLoading: false
     property string currentPath: ""
 
     signal backClicked
@@ -45,43 +45,140 @@ Rectangle {
         anchors.rightMargin: Appearance.margin.normal
         spacing: Appearance.spacing.small
 
-        M3IconButton {
-            icon: "arrow_back"
-            enabled: root.canGoBack
-            onClicked: root.backClicked()
-        }
+        Repeater {
+            model: [
+                {
+                    icon: "arrow_back",
+                    enabled: root.canGoBack,
+                    clicked: () => root.backClicked()
+                },
+                {
+                    icon: "arrow_forward",
+                    enabled: root.canGoForward,
+                    clicked: () => root.forwardClicked()
+                },
+                {
+                    icon: "arrow_upward",
+                    enabled: root.canGoUp,
+                    clicked: () => root.upClicked()
+                },
+                {
+                    icon: "refresh",
+                    spinOnClick: root.isLoading,
+                    clicked: () => root.refreshClicked()
+                },
+            ]
+            delegate: IconButton {
+                required property var modelData
 
-        M3IconButton {
-            icon: "arrow_forward"
-            enabled: root.canGoForward
-            onClicked: root.forwardClicked()
-        }
-
-        M3IconButton {
-            icon: "arrow_upward"
-            enabled: root.canGoUp
-            onClicked: root.upClicked()
-        }
-
-        M3IconButton {
-            icon: "refresh"
-            spinOnClick: true
-            onClicked: root.refreshClicked()
+                Layout.preferredWidth: contentWidth + 20
+                icon: modelData.icon
+                enabled: modelData.enabled
+                isRotate: modelData.spinOnClick
+                mArea.onClicked: modelData.clicked()
+            }
         }
 
         Item {
             implicitWidth: Appearance.spacing.small
         }
 
-        M3FilledTextField {
+        Rectangle {
+            id: textField
+
             Layout.fillWidth: true
-            prefixIcon: "folder_open"
-            text: root.currentPath
-            onAccepted: txt => root.pathEntered(txt)
+            implicitHeight: 48
+            radius: Appearance.rounding.small
+            color: Colours.m3Colors.m3SurfaceContainerHighest
+
+            // Active indicator line
+            Rectangle {
+                anchors {
+                    bottom: parent.bottom
+                    horizontalCenter: parent.horizontalCenter
+                }
+                implicitWidth: input.activeFocus ? parent.width : parent.width - 4
+                implicitHeight: input.activeFocus ? 2 : 1
+                color: input.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+
+                Behavior on implicitWidth {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                        easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+                    }
+                }
+                Behavior on implicitHeight {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
+                Behavior on color {
+                    CAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
+            }
+
+            RowLayout {
+                anchors {
+                    fill: parent
+                    leftMargin: Appearance.margin.larger
+                    rightMargin: Appearance.margin.smaller
+                }
+                spacing: Appearance.spacing.small
+
+                Icon {
+                    icon: "folder_open"
+                    font.pixelSize: Appearance.fonts.size.medium
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                }
+
+                TextInput {
+                    id: input
+
+                    Layout.fillWidth: true
+                    verticalAlignment: TextInput.AlignVCenter
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: root.currentPath
+                    onAccepted: root.pathEntered(text)
+                }
+            }
         }
 
         Item {
             implicitWidth: Appearance.spacing.small
+        }
+    }
+
+    component IconButton: Icon {
+        id: iconButton
+
+        property bool isRotate: false
+        property alias mArea: mArea
+
+        color: mArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.08) : mArea.containsPress ? Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.1) : enabled ? Colours.m3Colors.m3OnSurfaceVariant : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+        font.pixelSize: Appearance.fonts.size.large * 1.2
+        rotation: isRotate ? 0 : 360
+        transformOrigin: Item.Center
+
+        Behavior on color {
+            CAnim {}
+        }
+
+        RotationAnimator on rotation {
+            running: iconButton.isRotate
+            loops: Animation.Infinite
+            duration: Appearance.animations.durations.extraLarge
+            easing.type: Easing.Linear
+        }
+
+        MouseArea {
+            id: mArea
+
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
         }
     }
 }

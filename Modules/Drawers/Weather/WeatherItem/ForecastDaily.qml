@@ -66,7 +66,7 @@ StyledRect {
 
                         required property var modelData
 
-                        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)
+                        color: Qt.alpha(Colours.m3Colors.m3Surface, 0.3)
                         Layout.leftMargin: 10
                         Layout.rightMargin: 10
                         Layout.bottomMargin: 10

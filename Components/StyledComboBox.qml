@@ -55,8 +55,8 @@ ComboBox {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width - x - root.indicator.width - 16
             text: root.displayText_
-            font.weight: Font.Medium
             font.pixelSize: Appearance.fonts.size.normal
+            font.weight: Font.Medium
             color: Colours.m3Colors.m3OnSecondaryContainer
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
@@ -96,14 +96,17 @@ ComboBox {
         implicitHeight: Math.min(itemListView.contentHeight + 16, root.popupMaxHeight)
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-        background: StyledRect {
+        background: Rectangle {
+            id: bgPopup
+
             color: Colours.m3Colors.m3SurfaceContainerLow
             radius: Appearance.rounding.large
+
             Elevation {
                 anchors.fill: parent
                 z: -1
                 level: 2
-                radius: parent.radius
+                radius: bgPopup.radius
             }
         }
 
@@ -111,7 +114,8 @@ ComboBox {
             id: itemListView
 
             clip: true
-            implicitHeight: contentHeight
+            Layout.fillHeight: true
+            cacheBuffer: 0
             model: root.popup.visible ? root.delegateModel : null
             currentIndex: root.currentIndex
 
@@ -120,7 +124,7 @@ ComboBox {
                 contentItem: StyledRect {
                     implicitWidth: 4
                     radius: 2
-                    color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                 }
             }
 
@@ -169,7 +173,7 @@ ComboBox {
                         text: menuDelegate.modelData[root.textRole] ?? ""
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: menuDelegate.highlighted ? Font.Medium : Font.Normal
-                        color: !menuDelegate.itemEnabled ? Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38) : menuDelegate.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
+                        color: !menuDelegate.itemEnabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38) : menuDelegate.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
 
@@ -189,7 +193,7 @@ ComboBox {
                             visible: !menuDelegate.itemEnabled
                             implicitWidth: badgeLabel.implicitWidth + 12
                             implicitHeight: 20
-                            radius: 10
+                            radius: Appearance.rounding.normal
 
                             StyledText {
                                 id: badgeLabel

@@ -22,12 +22,27 @@ Item {
     property int currentIndex: 0
     property bool isSessionOpen: GlobalStates.isSessionOpen
     property bool showConfirmDialog: false
-    property var pendingAction: null
+    property string pendingAction: ""
     property string pendingActionName: ""
 
     implicitWidth: GlobalStates.isSessionOpen ? 80 : 0
     implicitHeight: parent.height * 0.5
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
+
+    function executeAction(action: string): void {
+        const cmds = {
+            "poweroff": ["systemctl", "poweroff"],
+            "reboot": ["systemctl", "reboot"],
+            "suspend": ["systemctl", "suspend"],
+            "logout": ["hyprctl", "dispatch", "exit"],
+            "lockscreen": ["shell", "ipc", "call", "lock", "lock"]
+        };
+        const cmd = cmds[action];
+        if (cmd)
+            Quickshell.execDetached({
+                command: cmd
+            });
+    }
 
     Behavior on implicitWidth {
         NAnim {
@@ -130,13 +145,7 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                         Layout.preferredWidth: 60
                         Layout.preferredHeight: 70
-
-                        color: isHighlighted ? Colours.withAlpha(Colours.m3Colors.m3Secondary, 0.2) : "transparent"
-
-                        Component.onCompleted: {
-                            rectDelegate.animProgress = 0;
-                        }
-
+                        color: isHighlighted ? Qt.alpha(Colours.m3Colors.m3Secondary, 0.2) : "transparent"
                         focus: GlobalStates.isSessionOpen
                         onFocusChanged: {
                             if (focus && GlobalStates.isSessionOpen)
@@ -146,6 +155,10 @@ Item {
                                         firstIcon.children[0].forceActiveFocus();
                                 });
                         }
+                        transform: Translate {
+                            x: (1 - rectDelegate.animProgress) * 120
+                        }
+                        Component.onCompleted: rectDelegate.animProgress = 0
 
                         Timer {
                             id: animTimer
@@ -153,20 +166,6 @@ Item {
                             interval: rectDelegate.animationDelay
                             running: true
                             onTriggered: rectDelegate.animProgress = GlobalStates.isSessionOpen ? 1 : 0
-                        }
-
-                        Connections {
-                            target: root
-                            function onIsSessionOpenChanged() {
-                                if (GlobalStates.isSessionOpen)
-                                    rectDelegate.animProgress = 0;
-
-                                animTimer.restart();
-                            }
-                        }
-
-                        transform: Translate {
-                            x: (1 - rectDelegate.animProgress) * 120
                         }
 
                         Behavior on animProgress {
@@ -182,12 +181,17 @@ Item {
                             color: Colours.m3Colors.m3Primary
                             font.pixelSize: Appearance.fonts.size.large * 3
                             icon: rectDelegate.modelData.icon
+                            scale: mouseArea.pressed ? 0.95 : 1.0
 
                             function handleAction() {
                                 root.pendingAction = rectDelegate.modelData.action;
                                 root.pendingActionName = rectDelegate.modelData.name + "?";
                                 root.showConfirmDialog = true;
                                 GlobalStates.isSessionOpen = false;
+                            }
+
+                            Behavior on scale {
+                                NAnim {}
                             }
 
                             Connections {
@@ -205,16 +209,10 @@ Item {
                                     root.currentIndex--;
                             }
                             Keys.onDownPressed: {
-                                if (root.currentIndex < 4)
+                                if (root.currentIndex < root.sessionActions.length - 1)
                                     root.currentIndex++;
                             }
                             Keys.onEscapePressed: GlobalStates.isSessionOpen = false
-
-                            scale: mouseArea.pressed ? 0.95 : 1.0
-
-                            Behavior on scale {
-                                NAnim {}
-                            }
 
                             MArea {
                                 id: mouseArea
@@ -262,17 +260,17 @@ Item {
 
             onAccepted: {
                 if (root.pendingAction)
-                    root.pendingAction();
+                    root.executeAction(root.pendingAction);
 
                 root.showConfirmDialog = false;
                 GlobalStates.isSessionOpen = false;
-                root.pendingAction = null;
+                root.pendingAction = "";
                 root.pendingActionName = "";
             }
 
             onRejected: {
                 root.showConfirmDialog = false;
-                root.pendingAction = null;
+                root.pendingAction = "";
                 root.pendingActionName = "";
             }
         }

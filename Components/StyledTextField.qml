@@ -37,7 +37,7 @@ TextField {
         color: Colours.m3Colors.m3Background
         radius: Appearance.rounding.small
         border {
-            color: root.focus ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.2)
+            color: root.focus ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.2)
             width: 0
         }
 

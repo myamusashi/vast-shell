@@ -56,7 +56,7 @@ PopupWidget {
 
                 StyledText {
                     text: row.modelData.text
-                    color: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.7)
+                    color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.7)
                     font.pixelSize: Appearance.fonts.size.normal
                     Layout.minimumWidth: 60
                 }
@@ -96,7 +96,7 @@ PopupWidget {
         Rectangle {
             anchors.fill: parent
             radius: height / 2
-            color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.2)
+            color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
         }
 
         Rectangle {
