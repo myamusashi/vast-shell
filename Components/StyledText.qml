@@ -7,7 +7,6 @@ Text {
 
     font {
         family: Appearance.fonts.family.sans
-        pixelSize: Appearance.fonts.size.medium
         hintingPreference: Font.PreferFullHinting
         letterSpacing: 0
     }
