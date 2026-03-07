@@ -89,47 +89,27 @@ Item {
                         {
                             "icon": "power_settings_circle",
                             "name": qsTr("Shutdown"),
-                            "action": () => {
-                                Quickshell.execDetached({
-                                    "command": ["sh", "-c", "systemctl poweroff"]
-                                });
-                            }
+                            "action": "shutdown"
                         },
                         {
                             "icon": "restart_alt",
                             "name": qsTr("Reboot"),
-                            "action": () => {
-                                Quickshell.execDetached({
-                                    "command": ["sh", "-c", "systemctl reboot"]
-                                });
-                            }
+                            "action": "reboot"
                         },
                         {
                             "icon": "sleep",
                             "name": qsTr("Sleep"),
-                            "action": () => {
-                                Quickshell.execDetached({
-                                    "command": ["sh", "-c", "systemctl suspend"]
-                                });
-                            }
+                            "action": "sleep"
                         },
                         {
                             "icon": "door_open",
                             "name": qsTr("Logout"),
-                            "action": () => {
-                                Quickshell.execDetached({
-                                    "command": ["sh", "-c", "hyprctl dispatch exit"]
-                                });
-                            }
+                            "action": "logout"
                         },
                         {
                             "icon": "lock",
                             "name": qsTr("Lockscreen"),
-                            "action": () => {
-                                Quickshell.execDetached({
-                                    "command": ["sh", "-c", "shell ipc call lock lock"]
-                                });
-                            }
+                            "action": "lockscreen"
                         }
                     ]
 
@@ -209,7 +189,7 @@ Item {
                                     root.currentIndex--;
                             }
                             Keys.onDownPressed: {
-                                if (root.currentIndex < root.sessionActions.length - 1)
+                                if (root.currentIndex < 4)
                                     root.currentIndex++;
                             }
                             Keys.onEscapePressed: GlobalStates.isSessionOpen = false
