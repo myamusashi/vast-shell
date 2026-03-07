@@ -41,7 +41,6 @@ Item {
         interval: 100
         onTriggered: {
             root.shapeIndex = (root.shapeIndex + 1) % root.shapeGetters.length;
-
             root.rotationSpeed = 5000;
             rotationAnim.restart();
         }

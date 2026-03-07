@@ -21,10 +21,6 @@ Item {
         rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
     }
 
-    readonly property real perappWidth: {
-        const count = loader.item?.repeater.count ?? 0;
-        return count * itemSize + Math.max(0, count - 1) * itemSpacing;
-    }
     readonly property real sliderHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
     readonly property int itemSize: 40
     readonly property int itemSpacing: Appearance.spacing.large
@@ -64,7 +60,7 @@ Item {
         id: wrapper
 
         anchors.fill: parent
-        implicitWidth: 60 + (root.openPerappVolume ? root.perappWidth + root.itemSpacing : 0)
+        implicitWidth: 60 + (root.openPerappVolume && loader.item ? loader.item.perappWidth + root.itemSpacing : 0)
         color: GlobalStates.drawerColors
         clip: true
         radius: 0
@@ -84,7 +80,7 @@ Item {
             sourceComponent: Item {
                 anchors.fill: parent
 
-                property alias repeater: repeater
+                readonly property real perappWidth: repeater.count * root.itemSize + Math.max(0, repeater.count - 1) * root.itemSpacing
 
                 Row {
                     id: perappContainer
@@ -95,7 +91,7 @@ Item {
                         verticalCenter: parent.verticalCenter
                     }
 
-                    width: root.openPerappVolume ? root.perappWidth : 0
+                    width: root.openPerappVolume ? parent.perappWidth : 0
                     height: mainVolumeColumn.height
                     spacing: root.itemSpacing
                     clip: true
@@ -199,6 +195,7 @@ Item {
 
                     Timer {
                         id: volumeHideTimer
+
                         interval: 500
                         onTriggered: mainVolumeColumn.showVolume = false
                     }
@@ -210,14 +207,19 @@ Item {
                         value: Pipewire.defaultAudioSink.audio.volume
                         onMoved: Pipewire.defaultAudioSink.audio.volume = value
                         onValueChanged: {
-                            if (!pressed) {
-                                mainVolumeColumn.showVolume = true;
+                            mainVolumeColumn.showVolume = true;
+                            if (!pressed)
                                 volumeHideTimer.restart();
-                            }
                         }
                         onPressedChanged: {
-                            if (!pressed)
-                                mainVolumeColumn.showVolume = false;
+                            if (pressed) {
+                                GlobalStates.pauseOSD("volume");
+                                volumeHideTimer.stop();
+                                mainVolumeColumn.showVolume = true;
+                            } else {
+                                GlobalStates.resumeOSD("volume");
+                                volumeHideTimer.restart();
+                            }
                         }
                     }
 
@@ -333,10 +335,14 @@ Item {
                     appVolumeHideTimer.restart();
             }
             onPressedChanged: {
-                if (pressed)
+                if (pressed) {
+                    GlobalStates.pauseOSD("volume");
                     appVolumeHideTimer.stop();
-                else
+                    mixer.showVolume = true;
+                } else {
+                    GlobalStates.resumeOSD("volume");
                     appVolumeHideTimer.restart();
+                }
             }
         }
     }

@@ -275,9 +275,9 @@ Variants {
     component Cornery: WrapperItem {
         id: root
 
+        property alias color: shapePath.fillColor
         property int corner
         property real radius: 20
-        property alias color: shapePath.fillColor
 
         Component.onCompleted: {
             switch (corner) {

@@ -10,19 +10,20 @@ StyledRect {
     property alias trackColor: background.color
     property alias indicatorColor: indicatorPath.fillColor
     property alias cornerRadius: background.radius
+    property alias condition: root.visible
 
-    property bool condition: false
     property real waveAmplitude: 0
     property real waveFrequency: 8
     property real waveAnimationPhase: 0
 
     Layout.fillWidth: true
     height: 4
-    visible: condition
+    visible: false
     color: "transparent"
 
-    StyledRect {
+    Rectangle {
         id: background
+
         anchors.fill: parent
         color: Colours.m3Colors.m3SurfaceContainerHighest
         radius: 2
@@ -39,44 +40,45 @@ StyledRect {
         preferredRendererType: Shape.CurveRenderer
 
         function clampedRect() {
-            var startX = Math.max(0, barPosition);
-            var endX = Math.min(width, barPosition + barWidth);
+            const startX = Math.max(0, barPosition);
+            const endX = Math.min(width, barPosition + barWidth);
             return {
-                startX: startX,
+                startX,
                 drawWidth: endX - startX
             };
         }
 
-        function wavePath() {
-            var r = clampedRect();
-            if (r.drawWidth <= 0 || barPosition > width || (barPosition + barWidth) < 0)
+        function wavePath(r) {
+            if (r.drawWidth <= 0)
                 return "M 0 0";
 
-            var steps = Math.max(Math.floor(r.drawWidth / 2), 20);
-            var d = "";
+            const steps = Math.min(Math.max(Math.floor(r.drawWidth / 8), 12), 60);
+            const halfH = height / 2;
+            const phaseScale = Math.PI * 2 * root.waveFrequency / width;
+            const amp = Math.min(root.waveAmplitude, halfH);  // clamp inside bounds
+            const parts = [];
 
-            // Forward pass — bottom edge of the wave band
-            for (var i = 0; i <= steps; i++) {
-                var x = r.startX + r.drawWidth * (i / steps);
-                var wo = Math.sin((x / width) * Math.PI * 2 * root.waveFrequency + root.waveAnimationPhase) * root.waveAmplitude;
-                var yTop = height / 2 + wo - height / 2;
-                var yBottom = height / 2 + wo + height / 2;
-                d += (i === 0 ? "M " + x + " " + yTop + " L " : " L ") + x + " " + yBottom;
+            // Forward pass — top edge
+            for (let i = 0; i <= steps; i++) {
+                const x = r.startX + r.drawWidth * (i / steps);
+                const wo = Math.sin(x * phaseScale + root.waveAnimationPhase) * amp;
+                parts.push(i === 0 ? `M ${x} ${halfH + wo - halfH}` : `L ${x} ${halfH + wo - halfH}`);
             }
 
-            // Backward pass — top edge of the wave band
-            for (var j = steps; j >= 0; j--) {
-                var x2 = r.startX + r.drawWidth * (j / steps);
-                var wo2 = Math.sin((x2 / width) * Math.PI * 2 * root.waveFrequency + root.waveAnimationPhase) * root.waveAmplitude;
-                d += " L " + x2 + " " + (height / 2 + wo2 - height / 2);
+            // Backward pass — bottom edge
+            for (let j = steps; j >= 0; j--) {
+                const x = r.startX + r.drawWidth * (j / steps);
+                const wo = Math.sin(x * phaseScale + root.waveAnimationPhase) * amp;
+                parts.push(`L ${x} ${halfH + wo + halfH}`);
             }
 
-            return d + " Z";
+            parts.push("Z");
+            return parts.join(" ");
         }
 
         function roundedRectPath() {
             var r = clampedRect();
-            if (r.drawWidth <= 0 || barPosition > width || (barPosition + barWidth) < 0)
+            if (r.drawWidth <= 0)
                 return "M 0 0";
 
             var x = r.startX, w = r.drawWidth, h = height, cr = root.cornerRadius;
@@ -89,8 +91,6 @@ StyledRect {
             strokeColor: "transparent"
 
             PathSvg {
-                // Reactive binding — recomputes automatically whenever any
-                // dependency (barPosition, barWidth, waveAnimationPhase, …) changes.
                 path: root.waveAmplitude > 0 ? indicatorShape.wavePath() : indicatorShape.roundedRectPath()
             }
         }

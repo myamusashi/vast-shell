@@ -17,6 +17,11 @@ Rectangle {
 
     color: Colours.m3Colors.m3Surface
 
+    function xdgPath(type) {
+        const locs = StandardPaths.standardLocations(type);
+        return locs.length > 0 ? locs[0].toString().replace("file://", "") : null;
+    }
+
     Rectangle {
         anchors.right: parent.right
         implicitWidth: 1
@@ -54,51 +59,48 @@ Rectangle {
             currentIndex: -1
             highlightFollowsCurrentItem: false
 
-            model: ListModel {
-                id: placesModel
-
-                ListElement {
-                    label: qsTr("Home")
-                    icon: "home"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Desktop")
-                    icon: "desktop_windows"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Documents")
-                    icon: "description"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Downloads")
-                    icon: "download"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Music")
-                    icon: "music_note"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Pictures")
-                    icon: "image"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Videos")
-                    icon: "movie"
-                    path: ""
-                }
-                ListElement {
-                    label: qsTr("Computer")
-                    icon: "computer"
+            model: [
+                {
+                    label: qsTr("Home"),
+                    icon: "home",
+                    path: root.xdgPath(StandardPaths.HomeLocation)
+                },
+                {
+                    label: qsTr("Desktop"),
+                    icon: "desktop_windows",
+                    path: root.xdgPath(StandardPaths.DesktopLocation)
+                },
+                {
+                    label: qsTr("Documents"),
+                    icon: "description",
+                    path: root.xdgPath(StandardPaths.DocumentsLocation)
+                },
+                {
+                    label: qsTr("Downloads"),
+                    icon: "download",
+                    path: root.xdgPath(StandardPaths.DownloadLocation)
+                },
+                {
+                    label: qsTr("Music"),
+                    icon: "music_note",
+                    path: root.xdgPath(StandardPaths.MusicLocation)
+                },
+                {
+                    label: qsTr("Pictures"),
+                    icon: "image",
+                    path: root.xdgPath(StandardPaths.PicturesLocation)
+                },
+                {
+                    label: qsTr("Videos"),
+                    icon: "movie",
+                    path: root.xdgPath(StandardPaths.MoviesLocation)
+                },
+                {
+                    label: qsTr("Computer"),
+                    icon: "computer",
                     path: "file:///"
-                }
-            }
-
+                },
+            ]
             delegate: PlaceItem {
                 required property var model
                 required property int index
@@ -114,16 +116,6 @@ Rectangle {
                 }
             }
         }
-    }
-
-    function initializePlaces(homePath) {
-        placesModel.setProperty(0, "path", homePath.toString());
-        placesModel.setProperty(1, "path", StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0].toString());
-        placesModel.setProperty(2, "path", StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0].toString());
-        placesModel.setProperty(3, "path", StandardPaths.standardLocations(StandardPaths.DownloadLocation)[0].toString());
-        placesModel.setProperty(4, "path", StandardPaths.standardLocations(StandardPaths.MusicLocation)[0].toString());
-        placesModel.setProperty(5, "path", StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0].toString());
-        placesModel.setProperty(6, "path", StandardPaths.standardLocations(StandardPaths.MoviesLocation)[0].toString());
     }
 
     function clearSelection() {

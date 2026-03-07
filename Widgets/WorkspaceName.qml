@@ -12,8 +12,8 @@ StyledRect {
     id: root
 
     Layout.fillHeight: true
-    color: "transparent"
     implicitWidth: windowNameText.contentWidth
+    color: "transparent"
 
     Behavior on implicitWidth {
         NAnim {

@@ -35,7 +35,7 @@ PanelWindow {
 
     StyledRect {
         anchors.fill: parent
-        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.3)
+        color: Qt.alpha(Colours.m3Colors.m3Surface, 0.3)
 
         RowLayout {
             anchors.fill: parent

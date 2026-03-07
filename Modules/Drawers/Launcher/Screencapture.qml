@@ -108,7 +108,6 @@ WrapperRectangle {
 
                         Layout.fillWidth: true
                         Layout.preferredHeight: 32
-
                         focus: GlobalStates.isScreenCapturePanelOpen
                         onFocusChanged: {
                             if (focus && GlobalStates.isScreenCapturePanelOpen)
@@ -118,9 +117,7 @@ WrapperRectangle {
                                         firstIcon.children[0].forceActiveFocus();
                                 });
                         }
-
                         radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
-
                         color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
 
                         StyledText {

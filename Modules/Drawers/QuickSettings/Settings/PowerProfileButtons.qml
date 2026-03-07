@@ -37,8 +37,8 @@ RowLayout {
             iconButton: modelData.icon
             buttonTitle: modelData.name
             enabled: modelData.profile === PowerProfiles.profile
-            buttonColor: modelData.profile === PowerProfiles.profile ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
-            buttonTextColor: modelData.profile === PowerProfiles.profile ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+            buttonColor: modelData.profile === PowerProfiles.profile ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+            buttonTextColor: modelData.profile === PowerProfiles.profile ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
             onClicked: PowerProfiles.profile = modelData.profile
         }
     }

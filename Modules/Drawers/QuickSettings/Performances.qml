@@ -24,8 +24,6 @@ Item {
 
     property bool anyPopupVisible: batteryInfoPopup.isVisible || networkInfoPopup.isVisible || displayInfoPopup.isVisible || appsInfoPopup.isVisible || ramInfoPopup.isVisible || diskInfoPopup.isVisible || osInfoPopup.isVisible
 
-    objectName: "rootWrapper"
-
     ScrollView {
         anchors.fill: parent
         contentWidth: availableWidth
@@ -179,7 +177,7 @@ Item {
 
                             StyledText {
                                 text: qsTr("Rem. ") + root.batteryRemaining
-                                color: Colours.withAlpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
+                                color: Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
                             }
@@ -257,7 +255,7 @@ Item {
                             StyledText {
                                 Layout.fillWidth: true
                                 text: network.isWired ? qsTr("Link speed: ") + SystemUsage.wiredLinkSpeed + " Mbps" : qsTr("Link speed: ") + SystemUsage.wirelessLinkSpeed + " Mbps"
-                                color: Colours.withAlpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
+                                color: Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
                                 wrapMode: Text.WordWrap
@@ -359,7 +357,8 @@ Item {
                             circleColor: Colours.m3Colors.m3Green
                             text: value + "%"
                             textSize: Appearance.fonts.size.small
-                            fixedSize: 80
+                            implicitWidth: 80
+                            implicitHeight: 80
                         }
 
                         ColumnLayout {
@@ -395,7 +394,8 @@ Item {
                             circleColor: Colours.m3Colors.m3Green
                             text: value + "%"
                             textSize: Appearance.fonts.size.small
-                            fixedSize: 80
+                            implicitWidth: 80
+                            implicitHeight: 80
                         }
 
                         ColumnLayout {
@@ -477,7 +477,7 @@ Item {
                             }
                             StyledText {
                                 text: SystemUsage.uptimeFormatted
-                                color: Colours.withAlpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
+                                color: Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.6)
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
                             }
@@ -637,7 +637,7 @@ Item {
                 }
 
                 AreaSeries {
-                    color: Colours.withAlpha(Colours.m3Colors.m3Green, 0.2)
+                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
                     borderWidth: 0
 
                     upperSeries: LineSeries {
@@ -718,7 +718,7 @@ Item {
     StyledRect {
         anchors.fill: parent
         visible: wrapper.anyPopupVisible
-        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.7)
+        color: Qt.alpha(Colours.m3Colors.m3Surface, 0.7)
         z: 98
 
         MouseArea {

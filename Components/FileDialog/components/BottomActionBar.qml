@@ -1,18 +1,18 @@
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Widgets
 
 import qs.Configs
 import qs.Services
 import qs.Components
 
-import "../controls"
-
 Rectangle {
     id: root
 
     property alias fileName: fileNameField.text
-    property var nameFilters: ["*"]
     property bool hasSelection: false
+    property real labelWidth: Math.max(fileNameLabel.contentWidth, filterLabel.contentWidth) + 10
+    property var nameFilters: ["*"]
 
     signal cancelClicked
     signal openClicked
@@ -50,18 +50,34 @@ Rectangle {
             spacing: Appearance.spacing.normal
 
             StyledText {
+                id: fileNameLabel
+
                 text: qsTr("File name")
-                font.pixelSize: Appearance.fonts.size.small
+                font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurfaceVariant
-                Layout.preferredWidth: 80
+                Layout.preferredWidth: root.labelWidth
             }
 
-            M3FilledTextField {
-                id: fileNameField
-
+            WrapperRectangle {
                 Layout.fillWidth: true
-                text: ""
-                enabled: false
+                implicitHeight: fileNameField.contentHeight + 20
+                margin: Appearance.margin.normal
+                color: "transparent"
+
+                Item {
+                    StyledText {
+                        id: fileNameField
+
+                        font.pixelSize: Appearance.fonts.size.normal
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                    }
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        color: Colours.m3Colors.m3Primary
+                        implicitWidth: parent.width
+                        implicitHeight: 1
+                    }
+                }
             }
         }
 
@@ -70,28 +86,43 @@ Rectangle {
             spacing: Appearance.spacing.normal
 
             StyledText {
+                id: filterLabel
+
                 text: qsTr("Filter")
-                font.pixelSize: Appearance.fonts.size.small
+                font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurfaceVariant
-                Layout.preferredWidth: 80
+                Layout.preferredWidth: root.labelWidth
             }
 
-            M3OutlinedChip {
-                Layout.preferredWidth: 250
-                Layout.fillHeight: true
-                text: root.nameFilters.join(", ")
+            WrapperRectangle {
+                implicitWidth: 250
+                implicitHeight: parent.implicitHeight
+                margin: Appearance.margin.normal
+                color: "transparent"
+                radius: Appearance.rounding.small
+                border {
+                    color: Colours.m3Colors.m3OutlineVariant
+                    width: 2
+                }
+
+                StyledText {
+                    text: root.nameFilters.join(", ")
+                    font.pixelSize: Appearance.fonts.size.normal
+                    color: Colours.m3Colors.m3OnSurface
+                }
             }
 
             Item {
                 Layout.fillWidth: true
             }
 
-            M3TextButton {
+            StyledButton {
                 text: qsTr("Cancel")
+                color: "transparent"
                 onClicked: root.cancelClicked()
             }
 
-            M3FilledButton {
+            StyledButton {
                 text: qsTr("Open")
                 enabled: root.hasSelection
                 onClicked: root.openClicked()

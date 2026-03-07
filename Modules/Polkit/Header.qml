@@ -16,7 +16,7 @@ RowLayout {
         Layout.preferredHeight: 64
         Layout.topMargin: 8
         radius: Appearance.rounding.full
-        color: Colours.withAlpha(Colours.m3Colors.m3Primary, 0.12)
+        color: Qt.alpha(Colours.m3Colors.m3Primary, 0.12)
 
         IconImage {
             id: appIcon

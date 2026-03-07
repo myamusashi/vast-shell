@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
-import M3Shapes
 
 import qs.Configs
 import qs.Helpers
@@ -99,157 +98,13 @@ Item {
             }
 
             RowLayout {
-                Item {
-                    id: passwordField
+                StyledTextInput {
+                    id: passwordInput
 
-                    implicitWidth: 200
-                    implicitHeight: 40
-
-                    readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
-                    property var shape: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
-
-                    TextInput {
-                        id: passwordInput
-
-                        width: 0
-                        height: 0
-                        visible: false
-
-                        echoMode: TextInput.Password
-                        passwordMaskDelay: 0
-                        inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
-                        enabled: !root.pam.unlockInProgress
-
-                        text: root.pam || root.pam.isUnlock ? root.pam.currentText : ""
-
-                        onTextChanged: {
-                            if (root.pam)
-                                root.pam.currentText = text;
-                        }
-
-                        Keys.onReturnPressed: {
-                            if (root.pam && text.length > 0)
-                                root.pam.tryUnlock();
-                        }
-
-                        Component.onCompleted: forceActiveFocus()
-                    }
-
-                    Connections {
-                        target: root.pam
-                        enabled: root.pam !== null
-
-                        function onCurrentTextChanged() {
-                            if (passwordInput.text !== root.pam.currentText)
-                                passwordInput.text = root.pam.currentText;
-                        }
-                    }
-
-                    ListModel {
-                        id: dotsModel
-                    }
-
-                    Connections {
-                        target: passwordInput
-                        function onTextChanged() {
-                            const len = passwordInput.text.length;
-                            while (dotsModel.count < len)
-                                dotsModel.append({});
-                            while (dotsModel.count > len)
-                                dotsModel.remove(dotsModel.count - 1);
-
-                            Qt.callLater(() => dotsView.positionViewAtEnd());
-                        }
-                    }
-
-                    StyledText {
-                        anchors.centerIn: parent
-                        visible: passwordInput.text.length === 0
-                        text: root.pam.showFailure ? qsTr("Password invalid") : qsTr("Enter password")
-                        color: root.pam.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.large
-                    }
-
-                    ListView {
-                        id: dotsView
-
-                        anchors.centerIn: parent
-                        orientation: ListView.Horizontal
-                        spacing: 1
-                        model: dotsModel
-                        clip: true
-
-                        visible: passwordInput.text.length > 0
-                        implicitWidth: Math.min(contentWidth, passwordField.implicitWidth)
-                        implicitHeight: 20
-
-                        Behavior on implicitWidth {
-                            NAnim {
-                                duration: Appearance.animations.durations.small
-                            }
-                        }
-
-                        delegate: MaterialShape {
-                            id: passwordShape
-
-                            required property int index
-
-                            implicitWidth: 20
-                            implicitHeight: 20
-                            shape: passwordField.shape[index % passwordField.shape.length]
-                            color: root.pam.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.pam.isUnlock ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
-
-                            Behavior on color {
-                                CAnim {}
-                            }
-                        }
-
-                        add: Transition {
-                            ParallelAnimation {
-                                NAnim {
-                                    property: "opacity"
-                                    from: 0
-                                    to: 1
-                                    duration: Appearance.animations.durations.small
-                                }
-                                NAnim {
-                                    property: "scale"
-                                    from: 0.5
-                                    to: 1
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
-                        }
-
-                        remove: Transition {
-                            ParallelAnimation {
-                                NAnim {
-                                    property: "opacity"
-                                    from: 1
-                                    to: 0
-                                    duration: Appearance.animations.durations.small
-                                }
-                                NAnim {
-                                    property: "scale"
-                                    from: 1
-                                    to: 0.5
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
-                        }
-
-                        displaced: Transition {
-                            NAnim {
-                                properties: "x"
-                                duration: Appearance.animations.durations.small
-                            }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: passwordInput.forceActiveFocus()
-                    }
+                    implicitWidth: 250
+                    pam: root.pam
+                    placeHolderText: qsTr("Enter password")
+                    passwordMode: true
                 }
 
                 StyledRect {
@@ -261,7 +116,7 @@ Item {
                     implicitWidth: 34
                     implicitHeight: 34
                     radius: Appearance.rounding.full
-                    color: canSubmit ? root.pam.isUnlock ? Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.4)
+                    color: canSubmit ? root.pam.isUnlock ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
                     scale: pressHandler.pressed ? 0.88 : hoverHandler.hovered ? 1.08 : 1.0
 
                     Behavior on color {
@@ -466,7 +321,7 @@ Item {
                                 id: sessionIcon
                                 anchors.fill: parent
                                 icon: sessionBtn.modelData.icon
-                                color: sessionHoverHandler.hovered ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3Primary, 0.65)
+                                color: sessionHoverHandler.hovered ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.65)
                                 font.pixelSize: Appearance.fonts.size.extraLarge
 
                                 Behavior on color {

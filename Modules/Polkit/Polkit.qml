@@ -9,7 +9,7 @@ DialogBox {
     id: root
 
     needKeyboardFocus: true
-    activeAsync: PolAgent.agent.isActive
+    activeAsync: PolAgent.agent?.isActive
     header: Header {}
     body: Body {
         id: bodyPolkit

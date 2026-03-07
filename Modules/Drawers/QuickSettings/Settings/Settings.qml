@@ -57,7 +57,7 @@ Item {
     StyledRect {
         anchors.fill: parent
         visible: wifi.isVisible
-        color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.7)
+        color: Qt.alpha(Colours.m3Colors.m3Surface, 0.7)
         z: 98
 
         MouseArea {

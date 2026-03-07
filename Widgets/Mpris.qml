@@ -10,7 +10,6 @@ import qs.Helpers
 import qs.Services
 
 StyledRect {
-
     readonly property int index: 0
 
     color: "transparent"
@@ -35,42 +34,34 @@ StyledRect {
         spacing: Appearance.spacing.small
 
         RowLayout {
-            Icon {
-                icon: "skip_previous"
-                font.pixelSize: Appearance.fonts.size.large * 1.4
-                color: Colours.m3Colors.m3OnBackground
+            Repeater {
+                model: [
+                    {
+                        icon: "skip_previous",
+                        clicked: () => Players.active?.previous()
+                    },
+                    {
+                        icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle",
+                        clicked: () => Players.active?.togglePlaying()
+                    },
+                    {
+                        icon: "skip_next",
+                        clicked: () => Players.active?.next()
+                    }
+                ]
+                delegate: Icon {
+                    required property var modelData
 
-                MArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    hoverEnabled: true
-                    onClicked: Players.active?.previous()
-                }
-            }
+                    icon: modelData.icon
+                    font.pixelSize: Appearance.fonts.size.large * 1.4
+                    color: Colours.m3Colors.m3OnBackground
 
-            Icon {
-                icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
-                font.pixelSize: Appearance.fonts.size.large * 1.4
-                color: Colours.m3Colors.m3OnBackground
-
-                MArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    hoverEnabled: true
-                    onClicked: Players.active?.togglePlaying()
-                }
-            }
-
-            Icon {
-                icon: "skip_next"
-                font.pixelSize: Appearance.fonts.size.large * 1.4
-                color: Colours.m3Colors.m3OnBackground
-
-                MArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    hoverEnabled: true
-                    onClicked: Players.active?.previous()
+                    MArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+                        onClicked: parent.modelData.clicked()
+                    }
                 }
             }
         }

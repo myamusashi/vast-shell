@@ -124,7 +124,7 @@ ClippingWrapperRectangle {
     Layout.alignment: Qt.AlignTop | Qt.AlignCenter
     Layout.fillWidth: true
     implicitHeight: contentLoader.implicitHeight
-    color: Colours.withAlpha(root.trackArtColors.surfaceVariant, 0.85)
+    color: Qt.alpha(root.trackArtColors.surfaceVariant, 0.85)
     radius: Appearance.rounding.normal
     visible: Players.active
 

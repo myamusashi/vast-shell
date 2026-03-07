@@ -16,7 +16,6 @@ ColumnLayout {
     required property var model
 
     property bool folderHidden: false
-    property bool foldersOnly: false
     property int currentIndex: -1
     property bool hasSelection: currentIndex >= 0
     property string selectedFileName: hasSelection ? model.get(currentIndex, "fileName") : ""

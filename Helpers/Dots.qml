@@ -10,8 +10,10 @@ RowLayout {
 
     anchors.centerIn: parent
 
-    property alias icon: icon
-    property alias text: text
+    property alias icon: icon.icon
+    property alias text: text.text
+    property alias iconSize: icon.font.pixelSize
+    property alias textSize: text.font.pixelSize
 
     height: parent.height ? parent.height : 1
 
@@ -22,10 +24,9 @@ RowLayout {
         implicitWidth: icon.width
         implicitHeight: icon.height
 
-        StyledText {
+        Icon {
             id: icon
 
-            font.family: Appearance.fonts.family.material
             font.pixelSize: Appearance.fonts.size.medium
         }
     }

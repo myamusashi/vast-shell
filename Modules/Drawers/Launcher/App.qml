@@ -27,16 +27,14 @@ Item {
     implicitHeight: GlobalStates.isLauncherOpen ? parent.height * 0.5 : 0
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
-    // Thx caelestia
     function launch(entry: DesktopEntry): void {
         Fuzzy.updateLaunchHistory(entry);
 
-        entry.runInTerminal ? Quickshell.execDetached({
-            "command": ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command],
-            "workingDirectory": entry.workingDirectory
-        }) : Quickshell.execDetached({
-            "command": ["app2unit", "--", ...entry.command],
-            "workingDirectory": entry.workingDirectory
+        const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];
+
+        Quickshell.execDetached({
+            command: cmd,
+            workingDirectory: entry.workingDirectory
         });
     }
 
@@ -79,7 +77,6 @@ Item {
                 anchors.fill: parent
                 anchors.margins: Appearance.margin.large
                 spacing: Appearance.spacing.normal
-                visible: GlobalStates.isLauncherOpen
 
                 StyledTextField {
                     id: search
@@ -136,10 +133,15 @@ Item {
                     }
                     clip: true
                     spacing: 8
-                    cacheBuffer: 100
+                    cacheBuffer: 0
                     highlightMoveDuration: 200
                     maximumFlickVelocity: 3000
                     highlightMoveVelocity: -1
+                    highlightFollowsCurrentItem: true
+                    highlight: StyledRect {
+                        color: Colours.m3Colors.m3SurfaceContainerHigh
+                        width: listView.width
+                    }
                     rebound: Transition {
                         NAnim {
                             properties: "x,y"
@@ -204,6 +206,7 @@ Item {
                         contentItem: RowLayout {
                             spacing: Appearance.spacing.normal
 
+                            z: 99
                             StyledRect {
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.leftMargin: Appearance.margin.normal
@@ -253,10 +256,7 @@ Item {
                             }
                         }
 
-                        background: StyledRect {
-                            anchors.fill: parent
-                            color: listView.currentIndex === delegateItem.index ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-                        }
+                        background: Item {}
 
                         MArea {
                             anchors.fill: parent

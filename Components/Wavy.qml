@@ -9,8 +9,9 @@ import qs.Services
 Slider {
     id: slider
 
-    property color activeColor: Colours.m3Colors.m3Primary
-    property color inactiveColor: Colours.m3Colors.m3SecondaryContainer
+    property alias activeColor: activeShapePath.strokeColor
+    property alias inactiveColor: inactiveShapePath.strokeColor
+
     property int waveAmplitude: 3
     property real waveFrequency: 10
     property int separatorWidth: 8
@@ -42,8 +43,7 @@ Slider {
         id: bg
 
         readonly property real trackStartX: 0
-        readonly property real trackEndX: width
-        readonly property real trackWidth: trackEndX - trackStartX
+        readonly property real trackWidth: width - trackStartX
         readonly property real normalizedValue: slider.visualPosition
 
         x: slider.leftPadding
@@ -86,7 +86,9 @@ Slider {
             }
 
             ShapePath {
-                strokeColor: slider.activeColor
+                id: activeShapePath
+
+                strokeColor: Colours.m3Colors.m3Primary
                 strokeWidth: 4
                 fillColor: "transparent"
                 capStyle: ShapePath.RoundCap
@@ -111,7 +113,9 @@ Slider {
             visible: inactiveWidth > 0 && inactiveStartPos < 1
 
             ShapePath {
-                strokeColor: slider.inactiveColor
+                id: inactiveShapePath
+
+                strokeColor: Colours.m3Colors.m3SecondaryContainer
                 strokeWidth: 4
                 fillColor: "transparent"
                 capStyle: ShapePath.RoundCap
@@ -143,6 +147,7 @@ Slider {
                 duration: Appearance.animations.durations.small
             }
         }
+
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small

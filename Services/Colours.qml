@@ -14,30 +14,9 @@ Singleton {
     readonly property M3GeneratedTemplateComponent m3GeneratedColors: M3GeneratedTemplateComponent {}
     readonly property MatugenTemplateComponent matugenColors: MatugenTemplateComponent {}
     readonly property StaticColorTemplateComponent staticColors: StaticColorTemplateComponent {}
-    readonly property var matugenTemplateColors: {
-        try {
-            return Configs.colors.isDarkMode ? JSON.parse(matugenDarkFile.text()).colors : JSON.parse(matugenLightFile.text()).colors;
-        } catch (e) {
-            console.warn("Failed to parse matugen colors:", e);
-            return {};
-        }
-    }
-
-    readonly property var staticTemplateColors: {
-        try {
-            return JSON.parse(staticColorFile.text());
-        } catch (e) {
-            console.warn("Failed to parse static colors:", e);
-            return {};
-        }
-    }
+    readonly property var matugenTemplateColors: Configs.colors.isDarkMode ? JSON.parse(matugenDarkFile.text()).colors : JSON.parse(matugenLightFile.text()).colors
+    readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
     readonly property M3TemplateColors m3Colors: Configs.colors.useMatugenColor ? matugenColors : Configs.colors.useStaticColors ? staticColors : m3GeneratedColors
-
-    function safeColor(value, fallback) {
-        if (value === undefined || value === null || value === "")
-            return fallback ?? "transparent";
-        return value;
-    }
 
     function clamp01(x) {
         return Math.min(1, Math.max(0, x));
@@ -58,7 +37,7 @@ Singleton {
     }
 
     function getSourceColor() {
-        if (!colorQuantizer.colors || colorQuantizer.colors.length === 0)
+        if (colorQuantizer.colors.length === 0)
             return "#6750A4";
         let maxChroma = 0;
         let sourceColor = colorQuantizer.colors[0];
@@ -202,10 +181,6 @@ Singleton {
         return hctToRgb(newHue, hct.c, hct.t);
     }
 
-    function withAlpha(color, alpha) {
-        return Qt.rgba(color.r, color.g, color.b, alpha);
-    }
-
     FileView {
         id: matugenDarkFile
 
@@ -239,217 +214,211 @@ Singleton {
     }
 
     component StaticColorTemplateComponent: M3TemplateColors {
-        readonly property color m3Background: root.safeColor(root.staticTemplateColors.background, "transparent")
-        readonly property color m3Surface: root.safeColor(root.staticTemplateColors.surface, "transparent")
-        readonly property color m3SurfaceDim: root.safeColor(root.staticTemplateColors.surfaceDim, "transparent")
-        readonly property color m3SurfaceBright: root.safeColor(root.staticTemplateColors.surfaceBright, "transparent")
-        readonly property color m3SurfaceContainerLowest: root.safeColor(root.staticTemplateColors.surfaceContainerLowest, "transparent")
-        readonly property color m3SurfaceContainerLow: root.safeColor(root.staticTemplateColors.surfaceContainerLow, "transparent")
-        readonly property color m3SurfaceContainer: root.safeColor(root.staticTemplateColors.surfaceContainer, "transparent")
-        readonly property color m3SurfaceContainerHigh: root.safeColor(root.staticTemplateColors.surfaceContainerHigh, "transparent")
-        readonly property color m3SurfaceContainerHighest: root.safeColor(root.staticTemplateColors.surfaceContainerHighest, "transparent")
+        readonly property color m3Background: root.staticTemplateColors.background
+        readonly property color m3Surface: root.staticTemplateColors.surface
+        readonly property color m3SurfaceDim: root.staticTemplateColors.surfaceDim
+        readonly property color m3SurfaceBright: root.staticTemplateColors.surfaceBright
+        readonly property color m3SurfaceContainerLowest: root.staticTemplateColors.surfaceContainerLowest
+        readonly property color m3SurfaceContainerLow: root.staticTemplateColors.surfaceContainerLow
+        readonly property color m3SurfaceContainer: root.staticTemplateColors.surfaceContainer
+        readonly property color m3SurfaceContainerHigh: root.staticTemplateColors.surfaceContainerHigh
+        readonly property color m3SurfaceContainerHighest: root.staticTemplateColors.surfaceContainerHighest
 
-        readonly property color m3OnSurface: root.safeColor(root.staticTemplateColors.onSurface, "transparent")
-        readonly property color m3OnSurfaceVariant: root.safeColor(root.staticTemplateColors.onSurfaceVariant, "transparent")
-        readonly property color m3OnBackground: root.safeColor(root.staticTemplateColors.onBackground, "transparent")
+        readonly property color m3OnSurface: root.staticTemplateColors.onSurface
+        readonly property color m3OnSurfaceVariant: root.staticTemplateColors.onSurfaceVariant
+        readonly property color m3OnBackground: root.staticTemplateColors.onBackground
 
-        readonly property color m3Primary: root.safeColor(root.staticTemplateColors.primary, "transparent")
-        readonly property color m3OnPrimary: root.safeColor(root.staticTemplateColors.onPrimary, "transparent")
-        readonly property color m3PrimaryContainer: root.safeColor(root.staticTemplateColors.primaryContainer, "transparent")
-        readonly property color m3OnPrimaryContainer: root.safeColor(root.staticTemplateColors.onPrimaryContainer, "transparent")
-        readonly property color m3PrimaryFixed: root.safeColor(root.staticTemplateColors.primaryFixed, "transparent")
-        readonly property color m3PrimaryFixedDim: root.safeColor(root.staticTemplateColors.primaryFixedDim, "transparent")
-        readonly property color m3OnPrimaryFixed: root.safeColor(root.staticTemplateColors.onPrimaryFixed, "transparent")
-        readonly property color m3OnPrimaryFixedVariant: root.safeColor(root.staticTemplateColors.onPrimaryFixedVariant, "transparent")
+        readonly property color m3Primary: root.staticTemplateColors.primary
+        readonly property color m3OnPrimary: root.staticTemplateColors.onPrimary
+        readonly property color m3PrimaryContainer: root.staticTemplateColors.primaryContainer
+        readonly property color m3OnPrimaryContainer: root.staticTemplateColors.onPrimaryContainer
+        readonly property color m3PrimaryFixed: root.staticTemplateColors.primaryFixed
+        readonly property color m3PrimaryFixedDim: root.staticTemplateColors.primaryFixedDim
+        readonly property color m3OnPrimaryFixed: root.staticTemplateColors.onPrimaryFixed
+        readonly property color m3OnPrimaryFixedVariant: root.staticTemplateColors.onPrimaryFixedVariant
 
-        readonly property color m3Secondary: root.safeColor(root.staticTemplateColors.secondary, "transparent")
-        readonly property color m3OnSecondary: root.safeColor(root.staticTemplateColors.onSecondary, "transparent")
-        readonly property color m3SecondaryContainer: root.safeColor(root.staticTemplateColors.secondaryContainer, "transparent")
-        readonly property color m3OnSecondaryContainer: root.safeColor(root.staticTemplateColors.onSecondaryContainer, "transparent")
-        readonly property color m3SecondaryFixed: root.safeColor(root.staticTemplateColors.secondaryFixed, "transparent")
-        readonly property color m3SecondaryFixedDim: root.safeColor(root.staticTemplateColors.secondaryFixedDim, "transparent")
-        readonly property color m3OnSecondaryFixed: root.safeColor(root.staticTemplateColors.onSecondaryFixed, "transparent")
-        readonly property color m3OnSecondaryFixedVariant: root.safeColor(root.staticTemplateColors.onSecondaryFixedVariant, "transparent")
+        readonly property color m3Secondary: root.staticTemplateColors.secondary
+        readonly property color m3OnSecondary: root.staticTemplateColors.onSecondary
+        readonly property color m3SecondaryContainer: root.staticTemplateColors.secondaryContainer
+        readonly property color m3OnSecondaryContainer: root.staticTemplateColors.onSecondaryContainer
+        readonly property color m3SecondaryFixed: root.staticTemplateColors.secondaryFixed
+        readonly property color m3SecondaryFixedDim: root.staticTemplateColors.secondaryFixedDim
+        readonly property color m3OnSecondaryFixed: root.staticTemplateColors.onSecondaryFixed
+        readonly property color m3OnSecondaryFixedVariant: root.staticTemplateColors.onSecondaryFixedVariant
 
-        readonly property color m3Tertiary: root.safeColor(root.staticTemplateColors.tertiary, "transparent")
-        readonly property color m3OnTertiary: root.safeColor(root.staticTemplateColors.onTertiary, "transparent")
-        readonly property color m3TertiaryContainer: root.safeColor(root.staticTemplateColors.tertiaryContainer, "transparent")
-        readonly property color m3OnTertiaryContainer: root.safeColor(root.staticTemplateColors.onTertiaryContainer, "transparent")
-        readonly property color m3TertiaryFixed: root.safeColor(root.staticTemplateColors.tertiaryFixed, "transparent")
-        readonly property color m3TertiaryFixedDim: root.safeColor(root.staticTemplateColors.tertiaryFixedDim, "transparent")
-        readonly property color m3OnTertiaryFixed: root.safeColor(root.staticTemplateColors.onTertiaryFixed, "transparent")
-        readonly property color m3OnTertiaryFixedVariant: root.safeColor(root.staticTemplateColors.onTertiaryFixedVariant, "transparent")
+        readonly property color m3Tertiary: root.staticTemplateColors.tertiary
+        readonly property color m3OnTertiary: root.staticTemplateColors.onTertiary
+        readonly property color m3TertiaryContainer: root.staticTemplateColors.tertiaryContainer
+        readonly property color m3OnTertiaryContainer: root.staticTemplateColors.onTertiaryContainer
+        readonly property color m3TertiaryFixed: root.staticTemplateColors.tertiaryFixed
+        readonly property color m3TertiaryFixedDim: root.staticTemplateColors.tertiaryFixedDim
+        readonly property color m3OnTertiaryFixed: root.staticTemplateColors.onTertiaryFixed
+        readonly property color m3OnTertiaryFixedVariant: root.staticTemplateColors.onTertiaryFixedVariant
 
-        readonly property color m3Error: root.safeColor(root.staticTemplateColors.error, "transparent")
-        readonly property color m3ErrorContainer: root.safeColor(root.staticTemplateColors.errorContainer, "transparent")
-        readonly property color m3OnError: root.safeColor(root.staticTemplateColors.onError, "transparent")
-        readonly property color m3OnErrorContainer: root.safeColor(root.staticTemplateColors.onErrorContainer, "transparent")
+        readonly property color m3Error: root.staticTemplateColors.error
+        readonly property color m3ErrorContainer: root.staticTemplateColors.errorContainer
+        readonly property color m3OnError: root.staticTemplateColors.onError
+        readonly property color m3OnErrorContainer: root.staticTemplateColors.onErrorContainer
 
-        readonly property color m3InverseSurface: root.safeColor(root.staticTemplateColors.inverseSurface, "transparent")
-        readonly property color m3InverseOnSurface: root.safeColor(root.staticTemplateColors.inverseOnSurface, "transparent")
-        readonly property color m3InversePrimary: root.safeColor(root.staticTemplateColors.inversePrimary, "transparent")
+        readonly property color m3InverseSurface: root.staticTemplateColors.inverseSurface
+        readonly property color m3InverseOnSurface: root.staticTemplateColors.inverseOnSurface
+        readonly property color m3InversePrimary: root.staticTemplateColors.inversePrimary
 
-        readonly property color m3Outline: root.safeColor(root.staticTemplateColors.outline, "transparent")
-        readonly property color m3OutlineVariant: root.safeColor(root.staticTemplateColors.outlineVariant, "transparent")
+        readonly property color m3Outline: root.staticTemplateColors.outline
+        readonly property color m3OutlineVariant: root.staticTemplateColors.outlineVariant
 
-        readonly property color m3Scrim: root.safeColor(root.staticTemplateColors.scrim, "#000000")
-        readonly property color m3Shadow: root.safeColor(root.staticTemplateColors.shadow, "#000000")
-        readonly property color m3SurfaceTint: root.safeColor(root.staticTemplateColors.surfaceTint, "transparent")
-        readonly property color m3SurfaceVariant: root.safeColor(root.staticTemplateColors.surfaceVariant, "transparent")
+        readonly property color m3Scrim: root.staticTemplateColors.scrim
+        readonly property color m3Shadow: root.staticTemplateColors.shadow
+        readonly property color m3SurfaceTint: root.staticTemplateColors.surfaceTint
+        readonly property color m3SurfaceVariant: root.staticTemplateColors.surfaceVariant
 
         readonly property color m3Red: m3Error
-        readonly property color m3Green: root.safeColor(root.hctToRgb(145, 50, 70), "#4CAF50")
-        readonly property color m3Blue: root.safeColor(root.hctToRgb(220, 50, 70), "#2196F3")
-        readonly property color m3Yellow: root.safeColor(root.hctToRgb(90, 60, 70), "#FFEB3B")
+        readonly property color m3Green: root.hctToRgb(145, 50, 70)
+        readonly property color m3Blue: root.hctToRgb(220, 50, 70)
+        readonly property color m3Yellow: root.hctToRgb(90, 60, 70)
     }
 
     component MatugenTemplateComponent: M3TemplateColors {
-        readonly property color m3Background: root.safeColor(root.matugenTemplateColors.background, "transparent")
-        readonly property color m3Surface: root.safeColor(root.matugenTemplateColors.surface, "transparent")
-        readonly property color m3SurfaceDim: root.safeColor(root.matugenTemplateColors.surfaceDim, "transparent")
-        readonly property color m3SurfaceBright: root.safeColor(root.matugenTemplateColors.surfaceBright, "transparent")
-        readonly property color m3SurfaceContainerLowest: root.safeColor(root.matugenTemplateColors.surfaceContainerLowest, "transparent")
-        readonly property color m3SurfaceContainerLow: root.safeColor(root.matugenTemplateColors.surfaceContainerLow, "transparent")
-        readonly property color m3SurfaceContainer: root.safeColor(root.matugenTemplateColors.surfaceContainer, "transparent")
-        readonly property color m3SurfaceContainerHigh: root.safeColor(root.matugenTemplateColors.surfaceContainerHigh, "transparent")
-        readonly property color m3SurfaceContainerHighest: root.safeColor(root.matugenTemplateColors.surfaceContainerHighest, "transparent")
+        readonly property color m3Background: root.matugenTemplateColors.background
+        readonly property color m3Surface: root.matugenTemplateColors.surface
+        readonly property color m3SurfaceDim: root.matugenTemplateColors.surfaceDim
+        readonly property color m3SurfaceBright: root.matugenTemplateColors.surfaceBright
+        readonly property color m3SurfaceContainerLowest: root.matugenTemplateColors.surfaceContainerLowest
+        readonly property color m3SurfaceContainerLow: root.matugenTemplateColors.surfaceContainerLow
+        readonly property color m3SurfaceContainer: root.matugenTemplateColors.surfaceContainer
+        readonly property color m3SurfaceContainerHigh: root.matugenTemplateColors.surfaceContainerHigh
+        readonly property color m3SurfaceContainerHighest: root.matugenTemplateColors.surfaceContainerHighest
 
-        readonly property color m3OnSurface: root.safeColor(root.matugenTemplateColors.onSurface, "transparent")
-        readonly property color m3OnSurfaceVariant: root.safeColor(root.matugenTemplateColors.onSurfaceVariant, "transparent")
-        readonly property color m3OnBackground: root.safeColor(root.matugenTemplateColors.onBackground, "transparent")
+        readonly property color m3OnSurface: root.matugenTemplateColors.onSurface
+        readonly property color m3OnSurfaceVariant: root.matugenTemplateColors.onSurfaceVariant
+        readonly property color m3OnBackground: root.matugenTemplateColors.onBackground
 
-        readonly property color m3Primary: root.safeColor(root.matugenTemplateColors.primary, "transparent")
-        readonly property color m3OnPrimary: root.safeColor(root.matugenTemplateColors.onPrimary, "transparent")
-        readonly property color m3PrimaryContainer: root.safeColor(root.matugenTemplateColors.primaryContainer, "transparent")
-        readonly property color m3OnPrimaryContainer: root.safeColor(root.matugenTemplateColors.onPrimaryContainer, "transparent")
-        readonly property color m3PrimaryFixed: root.safeColor(root.matugenTemplateColors.primaryFixed, "transparent")
-        readonly property color m3PrimaryFixedDim: root.safeColor(root.matugenTemplateColors.primaryFixedDim, "transparent")
-        readonly property color m3OnPrimaryFixed: root.safeColor(root.matugenTemplateColors.onPrimaryFixed, "transparent")
-        readonly property color m3OnPrimaryFixedVariant: root.safeColor(root.matugenTemplateColors.onPrimaryFixedVariant, "transparent")
+        readonly property color m3Primary: root.matugenTemplateColors.primary
+        readonly property color m3OnPrimary: root.matugenTemplateColors.onPrimary
+        readonly property color m3PrimaryContainer: root.matugenTemplateColors.primaryContainer
+        readonly property color m3OnPrimaryContainer: root.matugenTemplateColors.onPrimaryContainer
+        readonly property color m3PrimaryFixed: root.matugenTemplateColors.primaryFixed
+        readonly property color m3PrimaryFixedDim: root.matugenTemplateColors.primaryFixedDim
+        readonly property color m3OnPrimaryFixed: root.matugenTemplateColors.onPrimaryFixed
+        readonly property color m3OnPrimaryFixedVariant: root.matugenTemplateColors.onPrimaryFixedVariant
 
-        readonly property color m3Secondary: root.safeColor(root.matugenTemplateColors.secondary, "transparent")
-        readonly property color m3OnSecondary: root.safeColor(root.matugenTemplateColors.onSecondary, "transparent")
-        readonly property color m3SecondaryContainer: root.safeColor(root.matugenTemplateColors.secondaryContainer, "transparent")
-        readonly property color m3OnSecondaryContainer: root.safeColor(root.matugenTemplateColors.onSecondaryContainer, "transparent")
-        readonly property color m3SecondaryFixed: root.safeColor(root.matugenTemplateColors.secondaryFixed, "transparent")
-        readonly property color m3SecondaryFixedDim: root.safeColor(root.matugenTemplateColors.secondaryFixedDim, "transparent")
-        readonly property color m3OnSecondaryFixed: root.safeColor(root.matugenTemplateColors.onSecondaryFixed, "transparent")
-        readonly property color m3OnSecondaryFixedVariant: root.safeColor(root.matugenTemplateColors.onSecondaryFixedVariant, "transparent")
+        readonly property color m3Secondary: root.matugenTemplateColors.secondary
+        readonly property color m3OnSecondary: root.matugenTemplateColors.onSecondary
+        readonly property color m3SecondaryContainer: root.matugenTemplateColors.secondaryContainer
+        readonly property color m3OnSecondaryContainer: root.matugenTemplateColors.onSecondaryContainer
+        readonly property color m3SecondaryFixed: root.matugenTemplateColors.secondaryFixed
+        readonly property color m3SecondaryFixedDim: root.matugenTemplateColors.secondaryFixedDim
+        readonly property color m3OnSecondaryFixed: root.matugenTemplateColors.onSecondaryFixed
+        readonly property color m3OnSecondaryFixedVariant: root.matugenTemplateColors.onSecondaryFixedVariant
 
-        readonly property color m3Tertiary: root.safeColor(root.matugenTemplateColors.tertiary, "transparent")
-        readonly property color m3OnTertiary: root.safeColor(root.matugenTemplateColors.onTertiary, "transparent")
-        readonly property color m3TertiaryContainer: root.safeColor(root.matugenTemplateColors.tertiaryContainer, "transparent")
-        readonly property color m3OnTertiaryContainer: root.safeColor(root.matugenTemplateColors.onTertiaryContainer, "transparent")
-        readonly property color m3TertiaryFixed: root.safeColor(root.matugenTemplateColors.tertiaryFixed, "transparent")
-        readonly property color m3TertiaryFixedDim: root.safeColor(root.matugenTemplateColors.tertiaryFixedDim, "transparent")
-        readonly property color m3OnTertiaryFixed: root.safeColor(root.matugenTemplateColors.onTertiaryFixed, "transparent")
-        readonly property color m3OnTertiaryFixedVariant: root.safeColor(root.matugenTemplateColors.onTertiaryFixedVariant, "transparent")
+        readonly property color m3Tertiary: root.matugenTemplateColors.tertiary
+        readonly property color m3OnTertiary: root.matugenTemplateColors.onTertiary
+        readonly property color m3TertiaryContainer: root.matugenTemplateColors.tertiaryContainer
+        readonly property color m3OnTertiaryContainer: root.matugenTemplateColors.onTertiaryContainer
+        readonly property color m3TertiaryFixed: root.matugenTemplateColors.tertiaryFixed
+        readonly property color m3TertiaryFixedDim: root.matugenTemplateColors.tertiaryFixedDim
+        readonly property color m3OnTertiaryFixed: root.matugenTemplateColors.onTertiaryFixed
+        readonly property color m3OnTertiaryFixedVariant: root.matugenTemplateColors.onTertiaryFixedVariant
 
-        readonly property color m3Error: root.safeColor(root.matugenTemplateColors.error, "transparent")
-        readonly property color m3ErrorContainer: root.safeColor(root.matugenTemplateColors.errorContainer, "transparent")
-        readonly property color m3OnError: root.safeColor(root.matugenTemplateColors.onError, "transparent")
-        readonly property color m3OnErrorContainer: root.safeColor(root.matugenTemplateColors.onErrorContainer, "transparent")
+        readonly property color m3Error: root.matugenTemplateColors.error
+        readonly property color m3ErrorContainer: root.matugenTemplateColors.errorContainer
+        readonly property color m3OnError: root.matugenTemplateColors.onError
+        readonly property color m3OnErrorContainer: root.matugenTemplateColors.onErrorContainer
 
-        readonly property color m3InverseSurface: root.safeColor(root.matugenTemplateColors.inverseSurface, "transparent")
-        readonly property color m3InverseOnSurface: root.safeColor(root.matugenTemplateColors.inverseOnSurface, "transparent")
-        readonly property color m3InversePrimary: root.safeColor(root.matugenTemplateColors.inversePrimary, "transparent")
+        readonly property color m3InverseSurface: root.matugenTemplateColors.inverseSurface
+        readonly property color m3InverseOnSurface: root.matugenTemplateColors.inverseOnSurface
+        readonly property color m3InversePrimary: root.matugenTemplateColors.inversePrimary
 
-        readonly property color m3Outline: root.safeColor(root.matugenTemplateColors.outline, "transparent")
-        readonly property color m3OutlineVariant: root.safeColor(root.matugenTemplateColors.outlineVariant, "transparent")
+        readonly property color m3Outline: root.matugenTemplateColors.outline
+        readonly property color m3OutlineVariant: root.matugenTemplateColors.outlineVariant
 
-        readonly property color m3Scrim: root.safeColor(root.matugenTemplateColors.scrim, "#000000")
-        readonly property color m3Shadow: root.safeColor(root.matugenTemplateColors.shadow, "#000000")
-        readonly property color m3SurfaceTint: root.safeColor(root.matugenTemplateColors.surfaceTint, "transparent")
-        readonly property color m3SurfaceVariant: root.safeColor(root.matugenTemplateColors.surfaceVariant, "transparent")
+        readonly property color m3Scrim: root.matugenTemplateColors.scrim
+        readonly property color m3Shadow: root.matugenTemplateColors.shadow
+        readonly property color m3SurfaceTint: root.matugenTemplateColors.surfaceTint
+        readonly property color m3SurfaceVariant: root.matugenTemplateColors.surfaceVariant
 
         readonly property color m3Red: m3Error
-        readonly property color m3Green: root.safeColor(root.hctToRgb(145, 50, 70), "#4CAF50")
-        readonly property color m3Blue: root.safeColor(root.hctToRgb(220, 50, 70), "#2196F3")
-        readonly property color m3Yellow: root.safeColor(root.hctToRgb(90, 60, 70), "#FFEB3B")
+        readonly property color m3Green: root.hctToRgb(145, 50, 70)
+        readonly property color m3Blue: root.hctToRgb(220, 50, 70)
+        readonly property color m3Yellow: root.hctToRgb(90, 60, 70)
     }
 
     component M3GeneratedTemplateComponent: M3TemplateColors {
-        readonly property color m3SourceColor: root.safeColor(root.getSourceColor(), "#6750A4")
-        readonly property color m3SecondarySource: root.safeColor(root.createAnalogousColor(m3SourceColor, 60), "#958DA5")
-        readonly property color m3TertiarySource: {
-            let source = root.safeColor(m3SourceColor, "#6750A4");
-            let hct = root.rgbToHct(source);
-            return root.safeColor(root.hctToRgb(hct.h, 4, hct.t), "#938F99");
-        }
+        readonly property color m3SourceColor: root.getSourceColor()
+        readonly property color m3SecondarySource: root.createAnalogousColor(m3SourceColor, 60)
+        readonly property color m3TertiarySource: root.createAnalogousColor(m3SourceColor, 120)
         readonly property color m3NeutralSource: {
-            let source = root.safeColor(m3SourceColor, "#6750A4");
-            let hct = root.rgbToHct(source);
-            return root.safeColor(root.hctToRgb(hct.h, 4, hct.t), "#938F99");
+            let hct = root.rgbToHct(m3SourceColor);
+            return root.hctToRgb(hct.h, 4, hct.t);
         }
         readonly property color m3NeutralVariantSource: {
-            let source = root.safeColor(m3SourceColor, "#6750A4");
-            let hct = root.rgbToHct(source);
-            return root.safeColor(root.hctToRgb(hct.h, 8, hct.t), "#938F99");
+            let hct = root.rgbToHct(m3SourceColor);
+            return root.hctToRgb(hct.h, 8, hct.t);
         }
 
-        readonly property color m3Background: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 6 : 98), Configs.colors.isDarkMode ? "#141218" : "#FEF7FF")
-        readonly property color m3Surface: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 6 : 98), Configs.colors.isDarkMode ? "#141218" : "#FEF7FF")
-        readonly property color m3SurfaceDim: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 6 : 87), Configs.colors.isDarkMode ? "#141218" : "#ECE6F0")
-        readonly property color m3SurfaceBright: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 24 : 98), Configs.colors.isDarkMode ? "#3B383E" : "#FEF7FF")
-        readonly property color m3SurfaceContainerLowest: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 4 : 100), Configs.colors.isDarkMode ? "#0F0D13" : "#FFFFFF")
-        readonly property color m3SurfaceContainerLow: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 10 : 96), Configs.colors.isDarkMode ? "#1D1B20" : "#F7F2FA")
-        readonly property color m3SurfaceContainer: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 12 : 94), Configs.colors.isDarkMode ? "#211F26" : "#F3EDF7")
-        readonly property color m3SurfaceContainerHigh: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 17 : 92), Configs.colors.isDarkMode ? "#2B2930" : "#ECE6F0")
-        readonly property color m3SurfaceContainerHighest: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 22 : 90), Configs.colors.isDarkMode ? "#36343B" : "#E6E0E9")
+        readonly property color m3Background: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 6 : 98)
+        readonly property color m3Surface: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 6 : 98)
+        readonly property color m3SurfaceDim: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 6 : 87)
+        readonly property color m3SurfaceBright: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 24 : 98)
+        readonly property color m3SurfaceContainerLowest: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 4 : 100)
+        readonly property color m3SurfaceContainerLow: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 10 : 96)
+        readonly property color m3SurfaceContainer: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 12 : 94)
+        readonly property color m3SurfaceContainerHigh: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 17 : 92)
+        readonly property color m3SurfaceContainerHighest: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 22 : 90)
 
-        readonly property color m3OnSurface: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 90 : 10), Configs.colors.isDarkMode ? "#E6E0E9" : "#1D1B20")
-        readonly property color m3OnSurfaceVariant: root.safeColor(root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 80 : 30), Configs.colors.isDarkMode ? "#CAC4D0" : "#49454F")
-        readonly property color m3OnBackground: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 90 : 10), Configs.colors.isDarkMode ? "#E6E0E9" : "#1D1B20")
+        readonly property color m3OnSurface: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 90 : 10)
+        readonly property color m3OnSurfaceVariant: root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 80 : 30)
+        readonly property color m3OnBackground: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 90 : 10)
 
-        readonly property color m3Primary: root.safeColor(root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 80 : 40), Configs.colors.isDarkMode ? "#D0BCFF" : "#6750A4")
-        readonly property color m3OnPrimary: root.safeColor(root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 20 : 100), Configs.colors.isDarkMode ? "#381E72" : "#FFFFFF")
-        readonly property color m3PrimaryContainer: root.safeColor(root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 30 : 90), Configs.colors.isDarkMode ? "#4F378B" : "#EADDFF")
-        readonly property color m3OnPrimaryContainer: root.safeColor(root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 90 : 10), Configs.colors.isDarkMode ? "#EADDFF" : "#21005D")
-        readonly property color m3PrimaryFixed: root.safeColor(root.createTonalColor(m3SourceColor, 90), "#EADDFF")
-        readonly property color m3PrimaryFixedDim: root.safeColor(root.createTonalColor(m3SourceColor, 80), "#D0BCFF")
-        readonly property color m3OnPrimaryFixed: root.safeColor(root.createTonalColor(m3SourceColor, 10), "#21005D")
-        readonly property color m3OnPrimaryFixedVariant: root.safeColor(root.createTonalColor(m3SourceColor, 30), "#4F378B")
+        readonly property color m3Primary: root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 80 : 40)
+        readonly property color m3OnPrimary: root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 20 : 100)
+        readonly property color m3PrimaryContainer: root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 30 : 90)
+        readonly property color m3OnPrimaryContainer: root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 90 : 10)
+        readonly property color m3PrimaryFixed: root.createTonalColor(m3SourceColor, 90)
+        readonly property color m3PrimaryFixedDim: root.createTonalColor(m3SourceColor, 80)
+        readonly property color m3OnPrimaryFixed: root.createTonalColor(m3SourceColor, 10)
+        readonly property color m3OnPrimaryFixedVariant: root.createTonalColor(m3SourceColor, 30)
 
-        readonly property color m3Secondary: root.safeColor(root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 80 : 40), Configs.colors.isDarkMode ? "#CCC2DC" : "#625B71")
-        readonly property color m3OnSecondary: root.safeColor(root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 20 : 100), Configs.colors.isDarkMode ? "#332D41" : "#FFFFFF")
-        readonly property color m3SecondaryContainer: root.safeColor(root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 30 : 90), Configs.colors.isDarkMode ? "#4A4458" : "#E8DEF8")
-        readonly property color m3OnSecondaryContainer: root.safeColor(root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 90 : 10), Configs.colors.isDarkMode ? "#E8DEF8" : "#1D192B")
-        readonly property color m3SecondaryFixed: root.safeColor(root.createTonalColor(m3SecondarySource, 90), "#E8DEF8")
-        readonly property color m3SecondaryFixedDim: root.safeColor(root.createTonalColor(m3SecondarySource, 80), "#CCC2DC")
-        readonly property color m3OnSecondaryFixed: root.safeColor(root.createTonalColor(m3SecondarySource, 10), "#1D192B")
-        readonly property color m3OnSecondaryFixedVariant: root.safeColor(root.createTonalColor(m3SecondarySource, 30), "#4A4458")
+        readonly property color m3Secondary: root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 80 : 40)
+        readonly property color m3OnSecondary: root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 20 : 100)
+        readonly property color m3SecondaryContainer: root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 30 : 90)
+        readonly property color m3OnSecondaryContainer: root.createTonalColor(m3SecondarySource, Configs.colors.isDarkMode ? 90 : 10)
+        readonly property color m3SecondaryFixed: root.createTonalColor(m3SecondarySource, 90)
+        readonly property color m3SecondaryFixedDim: root.createTonalColor(m3SecondarySource, 80)
+        readonly property color m3OnSecondaryFixed: root.createTonalColor(m3SecondarySource, 10)
+        readonly property color m3OnSecondaryFixedVariant: root.createTonalColor(m3SecondarySource, 30)
 
-        readonly property color m3Tertiary: root.safeColor(root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 80 : 40), Configs.colors.isDarkMode ? "#EFB8C8" : "#7D5260")
-        readonly property color m3OnTertiary: root.safeColor(root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 20 : 100), Configs.colors.isDarkMode ? "#492532" : "#FFFFFF")
-        readonly property color m3TertiaryContainer: root.safeColor(root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 30 : 90), Configs.colors.isDarkMode ? "#633B48" : "#FFD8E4")
-        readonly property color m3OnTertiaryContainer: root.safeColor(root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 90 : 10), Configs.colors.isDarkMode ? "#FFD8E4" : "#31111D")
-        readonly property color m3TertiaryFixed: root.safeColor(root.createTonalColor(m3TertiarySource, 90), "#FFD8E4")
-        readonly property color m3TertiaryFixedDim: root.safeColor(root.createTonalColor(m3TertiarySource, 80), "#EFB8C8")
-        readonly property color m3OnTertiaryFixed: root.safeColor(root.createTonalColor(m3TertiarySource, 10), "#31111D")
-        readonly property color m3OnTertiaryFixedVariant: root.safeColor(root.createTonalColor(m3TertiarySource, 30), "#633B48")
+        readonly property color m3Tertiary: root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 80 : 40)
+        readonly property color m3OnTertiary: root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 20 : 100)
+        readonly property color m3TertiaryContainer: root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 30 : 90)
+        readonly property color m3OnTertiaryContainer: root.createTonalColor(m3TertiarySource, Configs.colors.isDarkMode ? 90 : 10)
+        readonly property color m3TertiaryFixed: root.createTonalColor(m3TertiarySource, 90)
+        readonly property color m3TertiaryFixedDim: root.createTonalColor(m3TertiarySource, 80)
+        readonly property color m3OnTertiaryFixed: root.createTonalColor(m3TertiarySource, 10)
+        readonly property color m3OnTertiaryFixedVariant: root.createTonalColor(m3TertiarySource, 30)
 
-        readonly property color m3ErrorSource: root.safeColor(root.hctToRgb(25, 84, 40), "#B3261E")
-        readonly property color m3Error: root.safeColor(root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 80 : 40), Configs.colors.isDarkMode ? "#F2B8B5" : "#B3261E")
-        readonly property color m3ErrorContainer: root.safeColor(root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 30 : 90), Configs.colors.isDarkMode ? "#8C1D18" : "#F9DEDC")
-        readonly property color m3OnError: root.safeColor(root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 20 : 100), Configs.colors.isDarkMode ? "#601410" : "#FFFFFF")
-        readonly property color m3OnErrorContainer: root.safeColor(root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 90 : 10), Configs.colors.isDarkMode ? "#F9DEDC" : "#410E0B")
+        readonly property color m3ErrorSource: root.hctToRgb(25, 84, 40)
+        readonly property color m3Error: root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 80 : 40)
+        readonly property color m3ErrorContainer: root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 30 : 90)
+        readonly property color m3OnError: root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 20 : 100)
+        readonly property color m3OnErrorContainer: root.createTonalColor(m3ErrorSource, Configs.colors.isDarkMode ? 90 : 10)
 
-        readonly property color m3InverseSurface: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 90 : 20), Configs.colors.isDarkMode ? "#E6E0E9" : "#322F35")
-        readonly property color m3InverseOnSurface: root.safeColor(root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 20 : 95), Configs.colors.isDarkMode ? "#322F35" : "#F5EFF7")
-        readonly property color m3InversePrimary: root.safeColor(root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 40 : 80), Configs.colors.isDarkMode ? "#6750A4" : "#D0BCFF")
+        readonly property color m3InverseSurface: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 90 : 20)
+        readonly property color m3InverseOnSurface: root.createTonalColor(m3NeutralSource, Configs.colors.isDarkMode ? 20 : 95)
+        readonly property color m3InversePrimary: root.createTonalColor(m3SourceColor, Configs.colors.isDarkMode ? 40 : 80)
 
-        readonly property color m3Outline: root.safeColor(root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 60 : 50), Configs.colors.isDarkMode ? "#948F99" : "#79747E")
-        readonly property color m3OutlineVariant: root.safeColor(root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 30 : 80), Configs.colors.isDarkMode ? "#49454F" : "#CAC4D0")
+        readonly property color m3Outline: root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 60 : 50)
+        readonly property color m3OutlineVariant: root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 30 : 80)
 
         readonly property color m3Scrim: "#000000"
         readonly property color m3Shadow: "#000000"
         readonly property color m3SurfaceTint: m3Primary
-        readonly property color m3SurfaceVariant: root.safeColor(root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 30 : 90), Configs.colors.isDarkMode ? "#49454F" : "#E7E0EC")
+        readonly property color m3SurfaceVariant: root.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 30 : 90)
 
         readonly property color m3Red: m3Error
-        readonly property color m3Green: root.safeColor(root.hctToRgb(145, 50, Configs.colors.isDarkMode ? 70 : 40), Configs.colors.isDarkMode ? "#4CAF50" : "#2E7D32")
-        readonly property color m3Blue: root.safeColor(root.hctToRgb(220, 50, Configs.colors.isDarkMode ? 70 : 40), Configs.colors.isDarkMode ? "#2196F3" : "#1976D2")
-        readonly property color m3Yellow: root.safeColor(root.hctToRgb(90, 60, Configs.colors.isDarkMode ? 70 : 40), Configs.colors.isDarkMode ? "#FFEB3B" : "#FBC02D")
+        readonly property color m3Green: root.hctToRgb(145, 50, Configs.colors.isDarkMode ? 70 : 40)
+        readonly property color m3Blue: root.hctToRgb(220, 50, Configs.colors.isDarkMode ? 70 : 40)
+        readonly property color m3Yellow: root.hctToRgb(90, 60, Configs.colors.isDarkMode ? 70 : 40)
     }
 
     component M3TemplateColors: QtObject {

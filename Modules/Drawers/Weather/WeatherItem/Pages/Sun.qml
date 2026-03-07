@@ -70,7 +70,7 @@ Pages {
                 StyledRect {
                     anchors.bottom: parent.bottom
                     clip: true
-                    color: Colours.withAlpha(Colours.m3Colors.m3Surface, 0.4)
+                    color: Qt.alpha(Colours.m3Colors.m3Surface, 0.4)
                     implicitWidth: parent.width
                     implicitHeight: parent.height * 0.4
                     radius: 0

@@ -92,8 +92,7 @@ Item {
 
                 anchors.fill: parent
                 active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWeatherPanelOpen
-                asynchronous: true
-
+                asynchronous: false
                 sourceComponent: ColumnLayout {
                     id: contentColumn
 
@@ -113,7 +112,6 @@ Item {
 
                         Layout.fillWidth: true
                         active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
-
                         sourceComponent: WrapperRectangle {
                             implicitHeight: summaryText.implicitHeight + 20
                             color: Colours.m3Colors.m3SurfaceContainer

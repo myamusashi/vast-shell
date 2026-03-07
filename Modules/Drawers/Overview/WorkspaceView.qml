@@ -17,33 +17,28 @@ ClippingRectangle {
     required property int index
     required property Item parentWindow
 
+    readonly property real scaleFactor: (wsp?.monitor && implicitWidth > 0) ? monitorLogicalWidth / implicitWidth : 1
+
     property HyprlandWorkspace wsp: Hyprland.workspaces.values.find(s => s.id == (index + 1)) || null
     property real monitorLogicalWidth: (wsp?.monitor) ? (wsp.monitor.width / wsp.monitor.scale) : 1
     property real monitorLogicalHeight: (wsp?.monitor) ? (wsp.monitor.height / wsp.monitor.scale) : 1
     property real monitorLogicalX: (wsp?.monitor) ? (wsp.monitor.x / wsp.monitor.scale) : 0
     property real monitorLogicalY: (wsp?.monitor) ? (wsp.monitor.y / wsp.monitor.scale) : 0
-    property real scaleFactor: (wsp?.monitor) ? (monitorLogicalWidth / implicitWidth) : -1
 
     border {
         width: 2
-        color: wsp?.focused ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnPrimary, 0.5)
+        color: wsp?.focused ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnPrimary, 0.5)
     }
     color: "transparent"
     radius: Appearance.rounding.small
 
     Connections {
-        target: root.wsp ? root.wsp.toplevels : null
+        target: root.wsp?.toplevels ?? null
 
         function onObjectInsertedPost() {
             Hyprland.refreshToplevels();
         }
-        function onObjectRemovedPre() {
-            Hyprland.refreshToplevels();
-        }
         function onObjectRemovedPost() {
-            Hyprland.refreshToplevels();
-        }
-        function onObjectInsertedPre() {
             Hyprland.refreshToplevels();
         }
     }
@@ -86,7 +81,7 @@ ClippingRectangle {
         active: GlobalStates.isOverviewOpen
         sourceComponent: Image {
             source: Paths.currentWallpaper
-            sourceSize: Qt.size(root.width, root.height)
+            sourceSize: Qt.size(300, 300)
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: true
@@ -97,6 +92,7 @@ ClippingRectangle {
         id: repeater
 
         model: root.wsp ? root.wsp.toplevels : []
+        onCountChanged: Hyprland.refreshToplevels()
         delegate: ScreencopyView {
             id: toplevel
 
@@ -104,7 +100,7 @@ ClippingRectangle {
 
             property Toplevel waylandHandle: modelData?.wayland
             property var toplevelData: modelData.lastIpcObject
-            property string address: toplevelData.address ?? null
+            property string address: toplevelData?.address ?? ""
             property int initX: toplevelData?.at?.[0] || 0
             property int initY: toplevelData?.at?.[1] || 0
             property bool isCaught: false
@@ -123,8 +119,6 @@ ClippingRectangle {
             z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : (toplevelData?.floating) ? 1 : 0
             x: baseX / root.scaleFactor
             y: baseY / root.scaleFactor
-
-            Component.onCompleted: Hyprland.refreshToplevels()
 
             Behavior on scale {
                 NAnim {}
@@ -153,10 +147,6 @@ ClippingRectangle {
                         y = !isCaught ? mapped.y : baseY / root.scaleFactor;
                     }
                 }
-
-                Hyprland.refreshWorkspaces();
-                Hyprland.refreshMonitors();
-                Hyprland.refreshToplevels();
             }
 
             IconImage {

@@ -7,7 +7,7 @@ JsonObject {
     property Battery battery: Battery {}
     property bool followFocusMonitor: true
     property bool transparent: false
-    property real alpha: 0.8
+    property real alpha: 1.0
     property bool enableOuterBorder: false
     property int outerBorderSize: 10
 

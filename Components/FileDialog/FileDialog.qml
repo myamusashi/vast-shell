@@ -8,7 +8,6 @@ import Quickshell
 
 import qs.Configs
 import qs.Services
-import qs.Components
 
 import "components"
 
@@ -18,11 +17,11 @@ Scope {
     property var nameFilters: ["*"]
     property bool showHidden: false
     property bool foldersOnly: false
-    signal fileSelected(string path)
-
     property var history: []
     property int historyIndex: -1
     property string currentFolder: "file:///home"
+
+    signal fileSelected(string path)
 
     function openFileDialog() {
         loader.activeAsync = !loader.activeAsync;
@@ -35,21 +34,15 @@ Scope {
         component: FloatingWindow {
             id: window
 
-            title: qsTr("Open File")
+            title: "Open Dialog"
             width: 800
             height: 560
             minimumSize: Qt.size(600, 420)
             color: Colours.m3Colors.m3Surface
 
-            FolderListModel {
-                id: folderModel
-
-                folder: root.currentFolder
-                showHidden: fileListView.folderHidden
-                showDirsFirst: true
-                showDotAndDotDot: false
-                showFiles: !root.foldersOnly
-                nameFilters: root.nameFilters
+            Component.onCompleted: {
+                var home = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
+                navigateTo(home);
             }
 
             function navigateTo(path: string): url {
@@ -57,7 +50,7 @@ Scope {
 
                 // Truncate forward history
                 if (root.historyIndex < root.history.length - 1)
-                    history = root.history.slice(0, root.historyIndex + 1);
+                    root.history = root.history.slice(0, root.historyIndex + 1);
 
                 root.history.push(url);
                 root.historyIndex = root.history.length - 1;
@@ -68,7 +61,7 @@ Scope {
             function goBack() {
                 if (root.historyIndex > 0) {
                     root.historyIndex--;
-                    currentFolder = root.history[root.historyIndex];
+                    root.currentFolder = root.history[root.historyIndex];
                     fileListView.clearSelection();
                 }
             }
@@ -76,7 +69,7 @@ Scope {
             function goForward() {
                 if (root.historyIndex < root.history.length - 1) {
                     root.historyIndex++;
-                    currentFolder = root.history[root.historyIndex];
+                    root.currentFolder = root.history[root.historyIndex];
                     fileListView.clearSelection();
                 }
             }
@@ -102,10 +95,20 @@ Scope {
                 return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
             }
 
-            Component.onCompleted: {
-                var home = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
-                placesSidebar.initializePlaces(home);
-                navigateTo(home);
+            FolderListModel {
+                id: folderModel
+
+                folder: root.currentFolder
+                showHidden: fileListView.folderHidden
+                showDirsFirst: true
+                showDotAndDotDot: false
+                showFiles: !root.foldersOnly
+                nameFilters: root.nameFilters
+
+                onStatusChanged: {
+                    if (status === FolderListModel.Ready)
+                        topAppBar.isLoading = false;
+                }
             }
 
             ColumnLayout {
@@ -113,6 +116,8 @@ Scope {
                 spacing: Appearance.spacing.small
 
                 TopAppBar {
+                    id: topAppBar
+
                     Layout.fillWidth: true
                     canGoBack: root.historyIndex > 0
                     canGoForward: root.historyIndex < root.history.length - 1
@@ -122,7 +127,10 @@ Scope {
                     onBackClicked: window.goBack()
                     onForwardClicked: window.goForward()
                     onUpClicked: window.goUp()
-                    onRefreshClicked: window.refresh()
+                    onRefreshClicked: {
+                        isLoading = true;
+                        window.refresh();
+                    }
                     onPathEntered: path => window.navigateTo(path)
                 }
 
@@ -144,10 +152,8 @@ Scope {
 
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-
                         model: folderModel
                         folderHidden: root.showHidden
-
                         onFolderDoubleClicked: path => window.navigateTo(path)
                         onFileDoubleClicked: path => root.fileSelected(path)
                         onSelectionChanged: fileName => bottomBar.setFileName(fileName)

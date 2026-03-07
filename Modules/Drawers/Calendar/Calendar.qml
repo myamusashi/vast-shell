@@ -26,10 +26,6 @@ Item {
     implicitHeight: isCalendarShow ? 350 : 0
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
-    Behavior on cellWidth {
-        enabled: false
-    }
-
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -63,21 +59,39 @@ Item {
             sourceComponent: ColumnLayout {
                 id: root
 
-                anchors.fill: parent
-                anchors.margins: Appearance.margin.normal
+                anchors {
+                    fill: parent
+                    margins: Appearance.margin.normal
+                }
+
+                property date currentDate: new Date()
+                property int currentYear: currentDate.getFullYear()
+                property int currentMonth: currentDate.getMonth()
+                property var monthNames: buildMonthNames()
+
                 visible: container.isCalendarShow
                 spacing: Appearance.spacing.normal
 
-                readonly property var monthNames: {
+                Component.onCompleted: monthNames = buildMonthNames()
+
+                function buildMonthNames(): var {
                     const locale = Qt.locale();
                     return Array.from({
                         length: 12
                     }, (_, i) => locale.monthName(i));
                 }
-                property date currentDate: new Date()
-                property int currentYear: currentDate.getFullYear()
-                property int currentMonth: currentDate.getMonth()
-                property int cellWidth: Math.floor((width - anchors.margins * 2) / 7.2)
+
+                Timer {
+                    interval: 60000
+                    running: true
+                    repeat: true
+                    triggeredOnStart: false
+                    onTriggered: {
+                        const now = new Date();
+                        if (now.getDate() !== root.currentDate.getDate())
+                            root.currentDate = now;
+                    }
+                }
 
                 RowLayout {
                     Layout.fillWidth: true
@@ -172,7 +186,7 @@ Item {
 
                         required property var model
 
-                        implicitWidth: root.cellWidth
+                        implicitWidth: container.cellWidth
                         implicitHeight: 32
                         color: "transparent"
 
@@ -200,7 +214,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.topMargin: Appearance.spacing.small
 
-                    property int cellWidth: root.cellWidth
+                    property int cellWidth: container.cellWidth
                     property int cellHeight: Math.floor(height / 7)
 
                     month: root.currentMonth
@@ -210,6 +224,13 @@ Item {
                         id: dayItem
 
                         required property var model
+                        readonly property int dayFontWeight: {
+                            if (model.today)
+                                return 1000;
+                            if (model.month === root.currentMonth)
+                                return 600;
+                            return 100;
+                        }
                         property date cellDate: model.date
                         property int dayOfWeek: cellDate.getDay()
 
@@ -246,26 +267,15 @@ Item {
                             color: {
                                 if (dayItem.model.today)
                                     return Colours.m3Colors.m3OnPrimary;
-                                else if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-                                    return Colours.m3Colors.m3Error;
-                                else if (dayItem.model.month === root.currentMonth)
-                                    return Colours.m3Colors.m3OnSurface;
-                                else {
-                                    if (dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6)
-                                        return Colours.withAlpha(Colours.m3Colors.m3Error, 0.2);
-                                    else
-                                        return Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.2);
-                                }
+
+                                const isWeekend = dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6;
+                                const isCurrentMonth = dayItem.model.month === root.currentMonth;
+                                const baseColor = isWeekend ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurface;
+
+                                return isCurrentMonth ? baseColor : Qt.alpha(baseColor, 0.2);
                             }
                             font.pixelSize: Appearance.fonts.size.small * 1.3
-                            font.weight: {
-                                if (dayItem.model.today)
-                                    return 1000;
-                                else if (dayItem.model.month === root.currentMonth)
-                                    return 600;
-                                else
-                                    return 100;
-                            }
+                            font.weight: dayItem.dayFontWeight
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }

@@ -36,14 +36,14 @@ RowLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.fillHeight: true
-                color: ethernetCard.isConnected ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+                color: ethernetCard.isConnected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
                     type: Icon.Material
                     anchors.centerIn: parent
                     icon: "settings_ethernet"
-                    color: ethernetCard.isConnected ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    color: ethernetCard.isConnected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge * 0.8
                 }
             }
@@ -106,14 +106,14 @@ RowLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
-                color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3Primary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.1)
+                color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
                     type: Icon.Material
                     anchors.centerIn: parent
                     icon: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Wifi.getWiFiIcon(Wifi.activeWifiNetwork?.signalStrength ?? 0) : "wifi_off"
-                    color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3OnPrimary : Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge
                 }
             }

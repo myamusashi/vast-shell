@@ -54,16 +54,8 @@ Item {
         topRightRadius: Appearance.rounding.normal
 
         Loader {
-            active: {
-                if (GlobalStates.isWallpaperSwitcherOpen) {
-                    if (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name)
-                        return true;
-                } else if (!GlobalStates.isWallpaperSwitcherOpen && root.implicitHeight === 0)
-                    return false;
-                else
-                    return false;
-            }
-            asynchronous: false
+            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWallpaperSwitcherOpen
+            asynchronous: true
             sourceComponent: ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.spacing.normal
@@ -75,34 +67,35 @@ Item {
                         searchField.forceActiveFocus();
                 }
 
-                StyledTextField {
+                StyledTextInput {
                     id: searchField
 
+                    placeHolderText: qsTr("Search wallpapers")
+                    implicitHeight: 40
+                    onTextChanged: {
+                        WallpaperFileModels.searchQuery = text;
+                        searchDebounceTimer.restart();
+                        if (wallpaperPath.count > 0)
+                            wallpaperPath.currentIndex = 0;
+                    }
+                    Component.onCompleted: text = WallpaperFileModels.searchQuery
+                    Keys.onDownPressed: wallpaperPath.focus = true
+                    Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
+                    Keys.onTabPressed: wallpaperPath.forceActiveFocus()
+                }
+                StyledTextField {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
                     placeholderText: qsTr("Search wallpapers")
                     text: WallpaperFileModels.searchQuery
                     focus: true
-
-                    onTextChanged: {
-                        WallpaperFileModels.searchQuery = text;
-                        searchDebounceTimer.restart();
-
-                        if (wallpaperPath.count > 0)
-                            wallpaperPath.currentIndex = 0;
-                    }
-
-                    Keys.onDownPressed: wallpaperPath.focus = true
-                    Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
-                    Keys.onTabPressed: wallpaperPath.forceActiveFocus()
                 }
 
                 Timer {
                     id: searchDebounceTimer
 
                     interval: 300
-                    repeat: false
-                    onTriggered: WallpaperFileModels.debouncedSearchQuery = WallpaperFileModels.searchQuery
+                    onTriggered: WallpaperFileModels.debouncedSearchQuery = searchField.text
                 }
 
                 PathView {
@@ -116,7 +109,7 @@ Item {
                     readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
 
                     model: ScriptModel {
-                        values: [...WallpaperFileModels.filteredWallpaperList]
+                        values: WallpaperFileModels.filteredWallpaperList
                     }
                     pathItemCount: Configs.wallpaper.visibleWallpaper
                     preferredHighlightBegin: 0.5
@@ -129,15 +122,6 @@ Item {
                             const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
                             currentIndex = idx !== -1 ? idx : 0;
                         });
-                    }
-
-                    onModelChanged: {
-                        if (WallpaperFileModels.debouncedSearchQuery === "" && currentIndex >= 0) {
-                            Qt.callLater(() => {
-                                if (currentIndex < count)
-                                    currentIndex = currentIndex;
-                            });
-                        }
                     }
 
                     path: Path {
@@ -188,8 +172,7 @@ Item {
                             implicitWidth: parent.width - (delegateItem.isCurrent ? Math.max(20, wallpaperPath.unitWidth * 0.3) : Math.max(12, wallpaperPath.unitWidth * 0.2))
                             implicitHeight: parent.height
 
-                            // Center: soft rect | Side: pill — pill radius needs card height not parent
-                            radius: delegateItem.isCurrent ? Appearance.rounding.large ?? 24 : 20
+                            radius: delegateItem.isCurrent ? Appearance.rounding.large : 20
 
                             color: "transparent"
 
@@ -248,7 +231,7 @@ Item {
                                         wallpaperPath.currentIndex = delegateItem.index;
                                     } else {
                                         Quickshell.execDetached({
-                                            "command": ["sh", "-c", `shell ipc call img set ${delegateItem.modelData}`]
+                                            command: ["shell", "ipc", "call", "img", "set", delegateItem.modelData]
                                         });
                                     }
                                 }
@@ -259,7 +242,7 @@ Item {
                     Keys.onPressed: event => {
                         if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                             Quickshell.execDetached({
-                                "command": ["sh", "-c", `shell ipc call img set ${WallpaperFileModels.filteredWallpaperList[currentIndex]}`]
+                                command: ["shell", "ipc", "call", "img", "set", WallpaperFileModels.filteredWallpaperList[currentIndex]]
                             });
                             event.accepted = true;
                         }

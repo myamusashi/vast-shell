@@ -16,7 +16,7 @@ StyledRect {
     property alias loader: loader
 
     radius: Appearance.rounding.normal
-    color: Colours.withAlpha(Colours.m3Colors.m3SurfaceContainer, 0.4)
+    color: Qt.alpha(Colours.m3Colors.m3SurfaceContainer, 0.4)
 
     RowLayout {
         anchors {
@@ -108,6 +108,7 @@ StyledRect {
                 model: ScriptModel {
                     values: [...Notifs.notClosed]
                 }
+                cacheBuffer: 0
                 spacing: Appearance.spacing.normal
                 boundsBehavior: Flickable.StopAtBounds
                 delegate: WrapperItem {

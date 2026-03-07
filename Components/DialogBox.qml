@@ -20,7 +20,6 @@ LazyLoader {
     signal rejected
 
     activeAsync: false
-
     component: PanelWindow {
         id: window
 
@@ -31,7 +30,7 @@ LazyLoader {
             bottom: true
         }
 
-        color: Colours.withAlpha(Colours.m3Colors.m3Background, 0.3)
+        color: Qt.alpha(Colours.m3Colors.m3Background, 0.3)
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 

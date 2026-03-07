@@ -76,7 +76,7 @@ MaterialShape {
 
         // Background track
         ShapePath {
-            strokeColor: Colours.withAlpha(Colours.m3Colors.m3OnSurface, 0.2)
+            strokeColor: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.2)
             strokeWidth: 9
             fillColor: "transparent"
             capStyle: ShapePath.RoundCap
