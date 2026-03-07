@@ -1,0 +1,38 @@
+name: archInstall.sh Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  arch-install:
+    name: Test archInstall.sh
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Prepare environment
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm git sudo
+
+    - name: Run archInstall.sh (Dry Run / Dependency Check)
+      env:
+        CI: true
+        SUDO_USER: builduser
+      run: |
+        useradd -m builduser
+        echo "builduser ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+        chmod +x archInstall.sh   
+
+        sed -i 's/pacman -S --needed/pacman -S --needed --noconfirm/g' archInstall.sh
+        sed -i 's/yay -S --needed/yay -S --needed --noconfirm/g' archInstall.sh
+
+        ./archInstall.sh
