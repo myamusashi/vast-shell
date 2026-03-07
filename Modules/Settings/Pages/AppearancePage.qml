@@ -305,7 +305,7 @@ Item {
 
             text: filePathRow.configValue
             onTextChanged: filePathRow.configChanged(text)
-            Layout.preferredWidth: 300
+            implicitWidth: 300
 
             MArea {
                 anchors.fill: parent

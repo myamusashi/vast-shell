@@ -63,7 +63,7 @@ Item {
 
                     text: Configs.wallpaper.wallpaperDir
                     onTextChanged: Configs.wallpaper.wallpaperDir = text
-                    Layout.preferredWidth: 350
+                    implicitWidth: 350
 
                     MArea {
                         onClicked: {
