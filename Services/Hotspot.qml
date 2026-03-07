@@ -117,9 +117,12 @@ Singleton {
         id: _queryStatus
 
         command: ["nmcli", "-t", "-f", "NAME,STATE", "con", "show", "--active"]
-        onExited: () => {
-            if (stdout.split("\n").some(line => line.startsWith("Hotspot:")))
-                root.status = Hotspot.Status.Active;
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const data = text.trim();
+                if (data.split("\n").some(line => line.startsWith("Hotspot:")))
+                    root.status = Hotspot.Status.Active;
+            }
         }
     }
 }
