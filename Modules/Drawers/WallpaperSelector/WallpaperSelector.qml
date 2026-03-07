@@ -70,8 +70,9 @@ Item {
                 StyledTextInput {
                     id: searchField
 
-                    placeHolderText: qsTr("Search wallpapers")
+                    Layout.fillWidth: true
                     implicitHeight: 40
+                    placeHolderText: qsTr("Search wallpapers")
                     onTextChanged: {
                         WallpaperFileModels.searchQuery = text;
                         searchDebounceTimer.restart();
@@ -82,13 +83,6 @@ Item {
                     Keys.onDownPressed: wallpaperPath.focus = true
                     Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
                     Keys.onTabPressed: wallpaperPath.forceActiveFocus()
-                }
-                StyledTextField {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 40
-                    placeholderText: qsTr("Search wallpapers")
-                    text: WallpaperFileModels.searchQuery
-                    focus: true
                 }
 
                 Timer {
