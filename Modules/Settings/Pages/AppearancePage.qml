@@ -170,7 +170,7 @@ Item {
                         snapEnabled: true
                         showValuePopup: true
                         value: Appearance.fonts.size.scale
-                        onValueChanged: Appearance.fonts.size.scale = value
+                        onMoved: Appearance.fonts.size.scale = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -192,7 +192,7 @@ Item {
                         to: 50
                         stepSize: 1
                         value: Appearance.rounding.normal
-                        onValueChanged: Appearance.rounding.normal = value
+                        onMoved: Appearance.rounding.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -210,7 +210,7 @@ Item {
                         to: 50
                         stepSize: 1
                         value: Appearance.spacing.normal
-                        onValueChanged: Appearance.spacing.normal = value
+                        onMoved: Appearance.spacing.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -228,7 +228,7 @@ Item {
                         to: 50
                         stepSize: 1
                         value: Appearance.padding.normal
-                        onValueChanged: Appearance.padding.normal = value
+                        onMoved: Appearance.padding.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -246,7 +246,7 @@ Item {
                         to: 50
                         stepSize: 1
                         value: Appearance.margin.normal
-                        onValueChanged: Appearance.margin.normal = value
+                        onMoved: Appearance.margin.normal = value
                         Layout.preferredWidth: 200
                     }
                 }
@@ -303,9 +303,9 @@ Item {
         StyledTextField {
             id: pathField
 
-            text: filePathRow.configValue
-            onTextChanged: filePathRow.configChanged(text)
             implicitWidth: 300
+            onEditingFinished: filePathRow.configChanged(text)
+            Component.onCompleted: text = filePathRow.configValue
 
             MArea {
                 anchors.fill: parent
@@ -351,19 +351,17 @@ Item {
             id: searchField
 
             anchors.fill: parent
-            text: fontPicker.configValue
             placeholderText: qsTr("Search font...")
-
             onTextChanged: {
                 fontPicker.searchText = text;
                 if (!popup.visible)
                     popup.open();
             }
-
             onActiveFocusChanged: {
                 if (activeFocus && !popup.visible)
                     popup.open();
             }
+            Component.onCompleted: text = fontPicker.configValue
         }
 
         Popup {
@@ -389,7 +387,6 @@ Item {
                 id: listView
 
                 clip: true
-                implicitHeight: contentHeight
                 model: fontPicker.filteredModel
                 cacheBuffer: 0
 
