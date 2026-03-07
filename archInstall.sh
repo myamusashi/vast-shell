@@ -109,7 +109,7 @@ install_aur_packages() {
 	sudo -u "$aur_user" yay -S --needed --noconfirm "${missing[@]}"
 }
 
-build_keystate() {
+build_go_scripts() {
 	[[ -f $BIN_DIR/keystate-bin ]] && {
 		log "keystate-bin already installed"
 		return 0
@@ -126,8 +126,10 @@ build_keystate() {
 	cp "$PROJECT_ROOT/Assets/go/keystate.go" "$BUILD_DIR/"
 	cd "$BUILD_DIR"
 	GOPATH="$gopath" go build -o keystate-bin keystate.go
+	GOPATH="$gopath" go build -o screen-capture screen-capture.go
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$BIN_DIR/keystate-bin"
 	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/go/keystate-bin"
+	install -Dm755 "$BUILD_DIR/screen-capture" "$PROJECT_ROOT/Assets/go/screen-capture
 }
 
 build_audio_profiles_plugin() {
@@ -437,8 +439,8 @@ main() {
 	install_system_packages
 	setup_aur_helper
 	install_aur_packages
-	build_keystate
-	build_audio_profiles_plugin # replaces build_audioProfiles
+	build_go_scripts
+	build_audio_profiles_plugin
 	build_m3shapes
 	build_another_ripple
 	compile_wallpaper_shaders

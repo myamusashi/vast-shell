@@ -26,7 +26,7 @@
     cmake,
 }: let
     app2unit = callPackage ./app2unit.nix {};
-    keystate-bin = callPackage ./keystate.nix {};
+    go-scripts = callPackage ./go-scripts.nix {};
     material-symbols = callPackage ./material-symbols.nix {};
     m3shapes = callPackage ./m3Shapes.nix {};
     another-ripple = callPackage ./AnotherRipple.nix {};
@@ -144,11 +144,13 @@
               [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
             done
 
-            install -Dm755 ${keystate-bin}/bin/keystate-bin \
-              $out/share/quickshell/Assets/keystate-bin
+            install -Dm755 ${go-scripts}/bin/keystate-bin \
+              $out/share/quickshell/Assets/go/keystate-bin
+            install -Dm755 ${go-scripts}/bin/screen-capture \
+              $out/share/quickshell/Assets/go/screen-capture
             install -Dm755 ${app2unit}/bin/app2unit \
               $out/bin/app2unit
-            install -Dm755 ${keystate-bin}/bin/keystate-bin \
+            install -Dm755 ${go-scripts}/bin/keystate-bin \
               $out/bin/keystate-bin
 
             mkdir -p $out/share/fonts/truetype
@@ -197,7 +199,7 @@
 in {
     inherit
         shell
-        keystate-bin
+        go-scripts
         material-symbols
         app2unit
         runtimeDeps
