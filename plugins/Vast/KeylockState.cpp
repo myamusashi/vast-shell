@@ -1,4 +1,4 @@
-#include "KeylockState.h"
+#include "KeylockState.hpp"
 
 #include <QDir>
 #include <fcntl.h>

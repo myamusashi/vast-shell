@@ -1,4 +1,4 @@
-#include "AudioProfilesModel.h"
+#include "AudioProfilesModel.hpp"
 
 AudioProfilesModel::AudioProfilesModel(QObject* parent) : QAbstractListModel(parent) {}
 

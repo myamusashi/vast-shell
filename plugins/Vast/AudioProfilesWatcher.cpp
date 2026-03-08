@@ -6,7 +6,7 @@
 // The PipeWire C logic is ported directly
 // from audioProfiles.go (i'm delete that files)
 
-#include "AudioProfilesWatcher.h"
+#include "AudioProfilesWatcher.hpp"
 
 #include <QDebug>
 #include <QQmlEngine>

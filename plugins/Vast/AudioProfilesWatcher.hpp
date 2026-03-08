@@ -6,7 +6,7 @@
 #include <QVariantMap>
 #include <QtQml/qqmlregistration.h>
 
-#include "AudioProfilesModel.h"
+#include "AudioProfilesModel.hpp"
 
 // Exposes PipeWire audio-device profile state to QML.
 // The singleton polls the PipeWire thread-loop every 500 ms and emits
