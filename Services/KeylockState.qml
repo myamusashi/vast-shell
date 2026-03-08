@@ -5,6 +5,6 @@ import Quickshell
 import KeylockState
 
 Singleton {
-	readonly property bool capsLock: Keylock.capsLock
-	readonly property bool numLock: Keylock.numLock
+    readonly property bool capsLock: Keylock.capsLock
+    readonly property bool numLock: Keylock.numLock
 }
