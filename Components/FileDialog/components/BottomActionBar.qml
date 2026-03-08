@@ -20,6 +20,10 @@ Rectangle {
     implicitHeight: bottomCol.implicitHeight + (Appearance.margin.normal * 2)
     color: Colours.m3Colors.m3SurfaceContainer
 
+    function setFileName(name) {
+        fileNameField.text = name;
+    }
+
     Elevation {
         anchors.fill: parent
         z: -1
@@ -128,9 +132,5 @@ Rectangle {
                 onClicked: root.openClicked()
             }
         }
-    }
-
-    function setFileName(name) {
-        fileNameField.text = name;
     }
 }

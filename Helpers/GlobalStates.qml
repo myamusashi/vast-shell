@@ -27,6 +27,27 @@ Singleton {
     readonly property int cleanupDelay: 500
     readonly property string currentLanguage: TranslationManager.currentLanguage
 
+    readonly property var osdTimers: ({
+            "volume": volumeTimer,
+            "capslock": capslockTimer,
+            "numlock": numlockTimer
+        })
+
+    readonly property var panelProps: ({
+            "calendar": "isCalendarOpen",
+            "screenCapture": "isScreenCapturePanelOpen",
+            "launcher": "isLauncherOpen",
+            "bar": "isBarOpen",
+            "session": "isSessionOpen",
+            "mediaPlayer": "isMediaPlayerOpen",
+            "notificationCenter": "isNotificationCenterOpen",
+            "quickSettings": "isQuickSettingsOpen",
+            "wallpaperSwitcher": "isWallpaperSwitcherOpen",
+            "overview": "isOverviewOpen",
+            "weather": "isWeatherPanelOpen",
+            "dashboard": "isDashboardOpen"
+        })
+
     property bool isSettingsOpen: false
     property bool isCalendarOpen: false
     property bool isScreenCapturePanelOpen: false
@@ -46,21 +67,6 @@ Singleton {
 
     property var _activeOSDs: ({})
     property var _pausedOSDs: ({})
-
-    readonly property var panelProps: ({
-            "calendar": "isCalendarOpen",
-            "screenCapture": "isScreenCapturePanelOpen",
-            "launcher": "isLauncherOpen",
-            "bar": "isBarOpen",
-            "session": "isSessionOpen",
-            "mediaPlayer": "isMediaPlayerOpen",
-            "notificationCenter": "isNotificationCenterOpen",
-            "quickSettings": "isQuickSettingsOpen",
-            "wallpaperSwitcher": "isWallpaperSwitcherOpen",
-            "overview": "isOverviewOpen",
-            "weather": "isWeatherPanelOpen",
-            "dashboard": "isDashboardOpen"
-        })
 
     function setPanel(name: string, value: bool): void {
         const prop = panelProps[name];
@@ -131,25 +137,6 @@ Singleton {
         onTriggered: root.hideOSD(osdName)
     }
 
-    OSDTimer {
-        id: volumeTimer
-        osdName: "volume"
-    }
-    OSDTimer {
-        id: capslockTimer
-        osdName: "capslock"
-    }
-    OSDTimer {
-        id: numlockTimer
-        osdName: "numlock"
-    }
-
-    readonly property var osdTimers: ({
-            "volume": volumeTimer,
-            "capslock": capslockTimer,
-            "numlock": numlockTimer
-        })
-
     function _startOSDTimer(osdName: string): void {
         osdTimers[osdName]?.restart();
     }
@@ -162,6 +149,19 @@ Singleton {
         const anyVisible = Object.keys(_activeOSDs).some(key => _activeOSDs[key] === true);
         if (!anyVisible)
             cleanupTimer.start();
+    }
+
+    OSDTimer {
+        id: volumeTimer
+        osdName: "volume"
+    }
+    OSDTimer {
+        id: capslockTimer
+        osdName: "capslock"
+    }
+    OSDTimer {
+        id: numlockTimer
+        osdName: "numlock"
     }
 
     // Panel controller component for IpcHandler + GlobalShortcut pairs

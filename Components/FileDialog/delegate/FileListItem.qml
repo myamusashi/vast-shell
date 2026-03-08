@@ -24,6 +24,23 @@ Rectangle {
     clip: true
     color: root.isSelected ? Qt.alpha(Colours.m3Colors.m3Primary, 0.3) : "transparent"
 
+    function getFileExtension(name, folder) {
+        if (folder)
+            return qsTr("Folder");
+        var dot = name.lastIndexOf(".");
+        return dot >= 0 ? name.substring(dot + 1).toUpperCase() + " " + qsTr("file") : qsTr("File");
+    }
+
+    function formatSize(bytes) {
+        if (bytes < 1024)
+            return bytes + " " + qsTr("B");
+        if (bytes < 1048576)
+            return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
+        if (bytes < 1073741824)
+            return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
+        return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
+    }
+
     Behavior on color {
         CAnim {
             duration: Appearance.animations.durations.small
@@ -130,22 +147,5 @@ Rectangle {
         layerRadius: root.radius
         onClicked: root.clicked()
         onDoubleClicked: root.doubleClicked()
-    }
-
-    function getFileExtension(name, folder) {
-        if (folder)
-            return qsTr("Folder");
-        var dot = name.lastIndexOf(".");
-        return dot >= 0 ? name.substring(dot + 1).toUpperCase() + " " + qsTr("file") : qsTr("File");
-    }
-
-    function formatSize(bytes) {
-        if (bytes < 1024)
-            return bytes + " " + qsTr("B");
-        if (bytes < 1048576)
-            return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
-        if (bytes < 1073741824)
-            return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
-        return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
     }
 }

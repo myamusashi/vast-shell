@@ -22,6 +22,10 @@ Rectangle {
         return locs.length > 0 ? locs[0].toString().replace("file://", "") : null;
     }
 
+    function clearSelection() {
+        placesList.currentIndex = -1;
+    }
+
     Rectangle {
         anchors.right: parent.right
         implicitWidth: 1
@@ -116,9 +120,5 @@ Rectangle {
                 }
             }
         }
-    }
-
-    function clearSelection() {
-        placesList.currentIndex = -1;
     }
 }
