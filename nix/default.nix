@@ -145,14 +145,10 @@
               [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
             done
 
-            install -Dm755 ${go-scripts}/bin/keystate-bin \
-              $out/share/quickshell/Assets/go/keystate-bin
             install -Dm755 ${go-scripts}/bin/screen-capture \
               $out/share/quickshell/Assets/go/screen-capture
             install -Dm755 ${app2unit}/bin/app2unit \
               $out/bin/app2unit
-            install -Dm755 ${go-scripts}/bin/keystate-bin \
-              $out/bin/keystate-bin
 
             mkdir -p $out/share/fonts/truetype
             cp -r ${material-symbols}/share/fonts/truetype/* \
