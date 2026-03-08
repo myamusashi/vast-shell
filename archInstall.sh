@@ -110,29 +110,16 @@ install_aur_packages() {
 }
 
 build_go_scripts() {
-	[[ -f $BIN_DIR/keystate-bin ]] && {
-		log "keystate-bin already installed"
-		return 0
-	}
-	[[ -f $PROJECT_ROOT/Assets/go/keystate.go ]] || {
-		warn "keystate.go not found, skipping"
-		return 0
-	}
-
-	log "Building keystate-bin..."
+	log "Building go scripts..."
 	local -r gopath="$BUILD_DIR/gopath"
 	mkdir -p "$gopath"
 
-	cp "$PROJECT_ROOT/Assets/go/keystate.go" "$BUILD_DIR/"
 	cp "$PROJECT_ROOT/Assets/go/screen-capture.go" "$BUILD_DIR/"
 
 	cd "$BUILD_DIR"
 
-	GOPATH="$gopath" GO111MODULE=off go build -o keystate-bin keystate.go
 	GOPATH="$gopath" GO111MODULE=off go build -o screen-capture screen-capture.go
 
-	install -Dm755 "$BUILD_DIR/keystate-bin" "$BIN_DIR/keystate-bin"
-	install -Dm755 "$BUILD_DIR/keystate-bin" "$PROJECT_ROOT/Assets/go/keystate-bin"
 	install -Dm755 "$BUILD_DIR/screen-capture" "$PROJECT_ROOT/Assets/go/screen-capture"
 }
 
@@ -412,8 +399,6 @@ install_quickshell_config() {
 	if [[ -f $INSTALL_DIR/shell.qml ]]; then
 		sed -i 's/ShellRoot {/ShellRoot { settings.watchFiles: false/' "$INSTALL_DIR/shell.qml"
 	fi
-
-	[[ -f $BIN_DIR/keystate-bin ]] && install -Dm755 "$BIN_DIR/keystate-bin" "$INSTALL_DIR/Assets/go/keystate-bin"
 }
 
 create_wrapper() {
