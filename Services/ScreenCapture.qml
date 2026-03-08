@@ -2,11 +2,19 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Vast
 
 import qs.Helpers
 
 Singleton {
     id: root
+
+    ScreenSelection {
+        id: select
+
+        onGeometrySelected: geo => ScreenRecorder.recordSelection(geo)
+        onCancelled: {}
+    }
 
     property var screenshotOptions: ScriptModel {
         values: {
@@ -15,13 +23,13 @@ Singleton {
                     "id": "window",
                     "name": qsTr("Window"),
                     "icon": "select_window_2",
-                    "action": () => root.exec("--screenshot-window")
+                    "action": () => ScreenRecorder.screenshotWindow()
                 },
                 {
                     "id": "selection",
                     "name": qsTr("Selection"),
                     "icon": "select",
-                    "action": () => root.exec("--screenshot-selection")
+                    "action": () => ScreenRecorder.screenshotSelection()
                 }
             ];
 
@@ -30,13 +38,7 @@ Singleton {
                     "id": `output-${screen.name}`,
                     "name": screen.name,
                     "icon": "monitor",
-                    "action": () => root.exec(`--screenshot-output ${screen.name}`)
-                });
-                options.push({
-                    "id": `merge-${screen.name}`,
-                    "name": qsTr("Merge screens"),
-                    "icon": "cell_merge",
-                    "action": () => root.exec(`--screenshot-outputs ${screen.name}`)
+                    "action": () => ScreenRecorder.screenshotOutput(screen.name)
                 });
             });
 
@@ -51,7 +53,12 @@ Singleton {
                     "id": "record-selection",
                     "name": qsTr("Selection"),
                     "icon": "select",
-                    "action": () => root.exec("--screenrecord-selection")
+                    "action": () => {
+                        if (ScreenRecorder.isRecording)
+                            ScreenRecorder.stopRecording;
+                        else
+                            select.open();
+                    }
                 }
             ];
 
@@ -60,17 +67,16 @@ Singleton {
                     "id": `record-output-${screen.name}`,
                     "name": screen.name,
                     "icon": "monitor",
-                    "action": () => root.exec(`--screenrecord-output ${screen.name}`)
+                    "action": () => {
+                        if (ScreenRecorder.isRecording)
+                            ScreenRecorder.stopRecording();
+                        else
+                            ScreenRecorder.startRecording("", screen.name);
+                    }
                 });
             });
 
             return options;
         }
-    }
-
-    function exec(args: string): void {
-        Quickshell.execDetached({
-            "command": [Paths.rootDir + "/Assets/go/screen-capture", ...args.trim().split(/\s+/)]
-        });
     }
 }
