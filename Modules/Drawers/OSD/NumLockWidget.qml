@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import KeylockState
 
 import qs.Components
 import qs.Configs
@@ -41,8 +42,8 @@ Item {
 
             Icon {
                 type: Icon.Material
-                icon: KeyLockState.state.numLock ? "lock" : "lock_open_right"
-                color: KeyLockState.state.numLock ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
+                icon: KeylockState.numLock ? "lock" : "lock_open_right"
+                color: KeylockState.numLock ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
                 font.pixelSize: Appearance.fonts.size.large * 1.5
             }
         }
