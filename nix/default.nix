@@ -26,13 +26,10 @@
     cmake,
 }: let
     app2unit = callPackage ./app2unit.nix {};
-    go-scripts = callPackage ./go-scripts.nix {};
     material-symbols = callPackage ./material-symbols.nix {};
     m3shapes = callPackage ./m3Shapes.nix {};
     another-ripple = callPackage ./AnotherRipple.nix {};
-    audioProfiles = callPackage ./audioProfiles.nix {};
-    translationManager = callPackage ./translationManager.nix {};
-    keylockState = callPackage ./keylockState.nix {};
+    vastPlugin = callPackage ./vastPlugin.nix {};
 
     runtimeDeps = [
         ## utils
@@ -145,8 +142,6 @@
               [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
             done
 
-            install -Dm755 ${go-scripts}/bin/screen-capture \
-              $out/share/quickshell/Assets/go/screen-capture
             install -Dm755 ${app2unit}/bin/app2unit \
               $out/bin/app2unit
 
@@ -161,23 +156,13 @@
                 $out/${qt6.qtbase.qtQmlPrefix}
             fi
 
-            if [ -d "${translationManager}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${translationManager}/${qt6.qtbase.qtQmlPrefix}/* \
-                $out/${qt6.qtbase.qtQmlPrefix}
-            fi
-
-            if [ -d "${audioProfiles}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${audioProfiles}/${qt6.qtbase.qtQmlPrefix}/* \
-                $out/${qt6.qtbase.qtQmlPrefix}
-            fi
-
             if [ -d "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" ]; then
               cp -r ${another-ripple}/${qt6.qtbase.qtQmlPrefix}/* \
                 $out/${qt6.qtbase.qtQmlPrefix}
             fi
 
-            if [ -d "${keylockState}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${keylockState}/${qt6.qtbase.qtQmlPrefix}/* \
+            if [ -d "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${vastPlugin}/${qt6.qtbase.qtQmlPrefix}/* \
                 $out/${qt6.qtbase.qtQmlPrefix}
             fi
 
@@ -187,9 +172,8 @@
                 --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
                 --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
-                --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
-                --prefix QML2_IMPORT_PATH : "${audioProfiles}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
                 --suffix PATH : /run/current-system/sw/bin \
                 --suffix PATH : /etc/profiles/per-user/$USER/bin \
@@ -201,7 +185,6 @@
 in {
     inherit
         shell
-        go-scripts
         material-symbols
         app2unit
         runtimeDeps

@@ -109,36 +109,24 @@ install_aur_packages() {
 	sudo -u "$aur_user" yay -S --needed --noconfirm "${missing[@]}"
 }
 
-build_go_scripts() {
-	log "Building go scripts..."
-	local -r gopath="$BUILD_DIR/gopath"
-	mkdir -p "$gopath"
 
-	cp "$PROJECT_ROOT/Assets/go/screen-capture.go" "$BUILD_DIR/"
 
-	cd "$BUILD_DIR"
-
-	GOPATH="$gopath" GO111MODULE=off go build -o screen-capture screen-capture.go
-
-	install -Dm755 "$BUILD_DIR/screen-capture" "$PROJECT_ROOT/Assets/go/screen-capture"
-}
-
-build_audio_profiles_plugin() {
-	local -r plugin_so="$QML_DIR/AudioProfiles/libAudioProfilesPlugin.so"
+build_vast_plugin() {
+	local -r plugin_so="$QML_DIR/Vast/libVastPlugin.so"
 	[[ -f $plugin_so ]] && {
-		log "AudioProfiles plugin already installed"
+		log "Vast plugin already installed"
 		return 0
 	}
 
-	local -r src="$PROJECT_ROOT/plugins/AudioProfiles"
+	local -r src="$PROJECT_ROOT/plugins/Vast"
 	[[ -d $src ]] || {
-		warn "plugins/AudioProfiles not found, skipping"
+		warn "plugins/Vast not found, skipping"
 		return 0
 	}
 
-	log "Building AudioProfiles Qt plugin..."
-	local -r build="$BUILD_DIR/AudioProfiles-build"
-	local -r install_base="$BUILD_DIR/AudioProfiles-install"
+	log "Building Vast Qt plugin..."
+	local -r build="$BUILD_DIR/Vast-build"
+	local -r install_base="$BUILD_DIR/Vast-install"
 
 	cmake -S "$src" -B "$build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
@@ -146,42 +134,42 @@ build_audio_profiles_plugin() {
 	ninja -C "$build"
 	ninja -C "$build" install
 
-	# CMakeLists.txt installs into $prefix/lib/qt-6/qml/AudioProfiles — try that
-	# path first, then fall back to variants used by different Qt/distro combos.
-	mkdir -p "$QML_DIR/AudioProfiles"
+	mkdir -p "$QML_DIR/Vast"
 	local found=0
 	for dir in \
-		"$install_base/lib/qt-6/qml/AudioProfiles" \
-		"$install_base/lib/qt6/qml/AudioProfiles" \
-		"$install_base/AudioProfiles"; do
+		"$install_base/lib/qt-6/qml/Vast" \
+		"$install_base/lib/qt6/qml/Vast" \
+		"$install_base/Vast"; do
 		if [[ -d $dir ]]; then
-			cp -r "$dir/"* "$QML_DIR/AudioProfiles/"
+			cp -r "$dir/"* "$QML_DIR/Vast/"
 			found=1
 			break
 		fi
 	done
-	((found)) || die "AudioProfiles install tree not found under $install_base"
+	((found)) || die "Vast install tree not found under $install_base"
 
-	local qt_core_lib qt_qml_lib pw_lib
+	local qt_core_lib qt_qml_lib qt_gui_lib qt_quick_lib pw_lib
 	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
+	qt_gui_lib=$(pkg-config --variable=libdir Qt6Gui)
 	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
+	qt_quick_lib=$(pkg-config --variable=libdir Qt6Quick)
 	pw_lib=$(pkg-config --variable=libdir libpipewire-0.3)
 
 	# Backing library — needs PipeWire + Qt
-	local backing="$QML_DIR/AudioProfiles/libAudioProfilesPlugin.so"
+	local backing="$QML_DIR/Vast/libVastPlugin.so"
 	[[ -f $backing ]] &&
 		patchelf --set-rpath \
-			"$QML_DIR/AudioProfiles:$qt_core_lib:$qt_qml_lib:$pw_lib" \
+			"$QML_DIR/Vast:$qt_core_lib:$qt_gui_lib:$qt_qml_lib:$qt_quick_lib:$pw_lib" \
 			"$backing" 2>/dev/null || true
 
 	# Thin QML stub — only needs Qt (loads backing lib from same dir)
-	local stub="$QML_DIR/AudioProfiles/libAudioProfilesQmlPlugin.so"
+	local stub="$QML_DIR/Vast/libVastQmlPlugin.so"
 	[[ -f $stub ]] &&
 		patchelf --set-rpath \
-			"$QML_DIR/AudioProfiles:$qt_core_lib:$qt_qml_lib" \
+			"$QML_DIR/Vast:$qt_core_lib:$qt_gui_lib:$qt_qml_lib:$qt_quick_lib" \
 			"$stub" 2>/dev/null || true
 
-	[[ -f $plugin_so ]] || warn "AudioProfiles plugin .so not found after install — check build output"
+	[[ -f $plugin_so ]] || warn "Vast plugin .so not found after install — check build output"
 }
 
 build_m3shapes() {
@@ -330,40 +318,7 @@ build_another_ripple() {
 	[[ -f $plugin ]] || warn "AnotherRipple plugin not found after installation"
 }
 
-build_translation_manager() {
-	local -r plugin="$QML_DIR/TranslationManager/libTranslationManagerplugin.so"
-	[[ -f $plugin ]] && {
-		log "TranslationManager already installed"
-		return 0
-	}
-	[[ -d $PROJECT_ROOT/plugins/TranslationManager ]] || {
-		warn "TranslationManager not found, skipping"
-		return 0
-	}
 
-	log "Building TranslationManager..."
-	local -r build="$BUILD_DIR/TranslationManager-build"
-
-	cmake -S "$PROJECT_ROOT/plugins/TranslationManager" -B "$build" -G Ninja \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX="$BUILD_DIR/translationmanager-install"
-	ninja -C "$build"
-	ninja -C "$build" install
-
-	mkdir -p "$QML_DIR/TranslationManager"
-	local install_base="$BUILD_DIR/translationmanager-install"
-	[[ -d $install_base/TranslationManager ]] && cp -r "$install_base/TranslationManager/"* "$QML_DIR/TranslationManager/"
-	[[ -d $install_base/lib/qt6/qml/TranslationManager ]] && cp -r "$install_base/lib/qt6/qml/TranslationManager/"* "$QML_DIR/TranslationManager/"
-
-	local qt_core_lib qt_qml_lib
-	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
-	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
-
-	[[ -f $plugin ]] && patchelf --set-rpath "$QML_DIR/TranslationManager:$qt_core_lib:$qt_qml_lib" "$plugin" 2>/dev/null || true
-
-	local lib="$QML_DIR/TranslationManager/libTranslationManager.so"
-	[[ -f $lib ]] && patchelf --set-rpath "$qt_core_lib:$qt_qml_lib" "$lib" 2>/dev/null || true
-}
 
 compile_translations() {
 	[[ -d $PROJECT_ROOT/translations ]] || return 0
@@ -428,12 +383,10 @@ main() {
 	install_system_packages
 	setup_aur_helper
 	install_aur_packages
-	build_go_scripts
-	build_audio_profiles_plugin
+	build_vast_plugin
 	build_m3shapes
 	build_another_ripple
 	compile_wallpaper_shaders
-	build_translation_manager
 	compile_translations
 	install_quickshell_config
 	create_wrapper
