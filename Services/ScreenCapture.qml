@@ -9,13 +9,6 @@ import qs.Helpers
 Singleton {
     id: root
 
-    ScreenSelection {
-        id: select
-
-        onGeometrySelected: geo => ScreenRecorder.recordSelection(geo)
-        onCancelled: {}
-    }
-
     property var screenshotOptions: ScriptModel {
         values: {
             let options = [
@@ -78,5 +71,12 @@ Singleton {
 
             return options;
         }
+	}
+
+    ScreenSelection {
+        id: select
+
+        onGeometrySelected: geo => ScreenRecorder.recordSelection(geo)
+        onCancelled: {}
     }
 }
