@@ -333,7 +333,7 @@ Singleton {
     }
 
     Process {
-		id: vulkanInfoProc
+        id: vulkanInfoProc
 
         command: ["sh", "-c", `
             if command -v vulkaninfo >/dev/null 2>&1; then
@@ -383,7 +383,7 @@ Singleton {
     }
 
     Process {
-		id: openglInfoProc
+        id: openglInfoProc
 
         command: ["sh", "-c", `
             if command -v glxinfo >/dev/null 2>&1; then
@@ -418,7 +418,7 @@ Singleton {
     }
 
     Process {
-		id: vaApiInfoProc
+        id: vaApiInfoProc
 
         command: ["sh", "-c", `
             if command -v vainfo >/dev/null 2>&1; then
@@ -453,7 +453,7 @@ Singleton {
     }
 
     Process {
-		id: vdpauInfoProc
+        id: vdpauInfoProc
 
         command: ["sh", "-c", `
             if command -v vdpauinfo >/dev/null 2>&1; then
@@ -483,7 +483,7 @@ Singleton {
     }
 
     Process {
-		id: intelGpuProc
+        id: intelGpuProc
 
         command: ["sh", "-c", "timeout 1 intel_gpu_top -J -s 500"]
         running: false
@@ -536,7 +536,7 @@ Singleton {
     }
 
     Process {
-		id: intelGpuSysfsProc
+        id: intelGpuSysfsProc
 
         command: ["sh", "-c", `
             cat /sys/class/drm/card0/gt_cur_freq_mhz 2>/dev/null || echo "0"
@@ -561,7 +561,7 @@ Singleton {
     }
 
     FileView {
-		id: meminfoFileView
+        id: meminfoFileView
 
         path: "/proc/meminfo"
         onLoaded: {
@@ -575,7 +575,7 @@ Singleton {
     }
 
     Process {
-		id: diskDfProc
+        id: diskDfProc
 
         command: ["sh", "-c", "df -T 2>/dev/null"]
         stdout: StdioCollector {
@@ -638,7 +638,7 @@ Singleton {
     }
 
     FileView {
-		id: cpuStatFileView
+        id: cpuStatFileView
 
         path: "/proc/stat"
         onLoaded: {
@@ -720,7 +720,7 @@ Singleton {
     }
 
     FileView {
-		id: uptimeFileView
+        id: uptimeFileView
 
         path: "/proc/uptime"
         onLoaded: {
@@ -731,7 +731,7 @@ Singleton {
     }
 
     Process {
-		id: cpuFreqProc
+        id: cpuFreqProc
 
         command: ["sh", "-c", "for c in /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq; do cat \"$c\" 2>/dev/null; done"]
         running: false
@@ -765,7 +765,7 @@ Singleton {
     }
 
     Process {
-		id: temperatureProc
+        id: temperatureProc
 
         command: ["sh", "-c", `
             for hwmon in /sys/class/hwmon/hwmon*; do
