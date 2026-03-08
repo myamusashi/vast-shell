@@ -23,10 +23,8 @@ Loader {
         const ext = getFileExtension(root.modelData.path);
         const videoFormats = ["mkv", "mp4", "webm", "avi"];
 
-        console.log(ext);
-
         if (videoFormats.includes(ext))
-            ScreenRecorder.createThumbnail(root.modelData.path + " " + Paths.cacheDir + "/video-thumbnails");
+            ScreenRecorder.createThumbnail(root.modelData.path, Paths.cacheDir + "/video-thumbnails");
         else
             thumbnailPath = "file://" + root.modelData.path;
     }
@@ -67,10 +65,6 @@ Loader {
             height: 40
             sourceSize: Qt.size(40, 40)
             source: root.thumbnailPath
-
-            Component.onCompleted: {
-                console.log("Thumbnail: " + root.thumbnailPath);
-            }
 
             Rectangle {
                 anchors.fill: parent
