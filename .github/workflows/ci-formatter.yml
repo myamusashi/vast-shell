@@ -2,26 +2,32 @@ name: QML Format and Types Check
 on:
   push:
     branches: [ master ]
-
+  pull_request:
+    branches: [ master ]
 jobs:
   qml-format-check:
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
-      - name: Install dependencies
-        run: |
-          pacman -Syu --noconfirm \
-            git go qt6-declarative qt6-tools
+      - name: git safe directory
+        run: git config --global --add safe.directory '*'
 
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check formatting
+      - name: Install dependencies
         run: |
-          go run Assets/go/formatting.go --skip-lupdate
+          pacman -Syu --noconfirm \
+            git go fd qt6-declarative qt6-tools
+
+      - name: Run QML formatter
+        run: go run Assets/go/formatting.go --skip-lupdate
+
+      - name: Check for uncommitted changes
+        run: |
           if ! git diff --exit-code; then
             echo ""
-            echo "Some files are not formatted correctly."
-            echo "Please run 'go run Assets/go/formatting.go' locally and commit the changes."
+            echo "QML files are not formatted correctly."
+            echo "Run 'go run Assets/go/formatting.go' locally and commit the changes."
             exit 1
           fi
