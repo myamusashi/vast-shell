@@ -347,6 +347,42 @@ void ScreenRecorder::handleRecordingFinished(int exitCode, QProcess::ExitStatus 
     finishRecording(vid);
 }
 
+void ScreenRecorder::createThumbnail(const QString& videoPath, const QString& outputDir) {
+    QFileInfo fi(videoPath);
+    QString   thumb = outputDir + "/" + fi.baseName() + ".png";
+
+    if (QFile::exists(thumb)) {
+        emit thumbnailReady(videoPath, thumb);
+        return;
+    }
+
+    QProcess* ffprobe = new QProcess(this);
+    connect(ffprobe, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, ffprobe, videoPath, thumb](int exitCode, QProcess::ExitStatus) {
+        bool   ok;
+        double duration = QString(ffprobe->readAllStandardOutput()).trimmed().toDouble(&ok);
+        ffprobe->deleteLater();
+
+        double    ts        = (exitCode == 0 && ok) ? duration / 2.0 : 0.0;
+        QString   formatted = QString::asprintf("%02d:%02d:%02d", static_cast<int>(ts / 3600), static_cast<int>(fmod(ts, 3600) / 60), static_cast<int>(fmod(ts, 60)));
+
+        QProcess* ffmpeg = new QProcess(this);
+        connect(ffmpeg, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, ffmpeg, videoPath, thumb](int ffmpegExit, QProcess::ExitStatus) {
+            ffmpeg->deleteLater();
+            if (ffmpegExit == 0 && QFile::exists(thumb))
+                emit thumbnailReady(videoPath, thumb);
+            else
+                emit thumbnailReady(videoPath, "");
+        });
+        ffmpeg->start("ffmpeg",
+                      QStringList() << "-ss" << formatted << "-i" << videoPath << "-vframes" << "1" << "-q:v" << "2"
+                                    << "-vf" << "scale=256:-1" << thumb << "-y" << "-v" << "error");
+    });
+    ffprobe->start("ffprobe",
+                   QStringList() << "-v" << "error"
+                                 << "-show_entries" << "format=duration"
+                                 << "-of" << "default=noprint_wrappers=1:nokey=1" << videoPath);
+}
+
 void ScreenRecorder::finishRecording(const QString& vid) {
     QFileInfo fi(vid);
     QString   thumb = m_thumbnailDir + "/" + fi.baseName() + ".png";
