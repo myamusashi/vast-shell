@@ -45,12 +45,13 @@ type Property struct {
 }
 
 type ComponentStructure struct {
-	ID         *LineInfo
-	Anchors    []LineInfo
-	Properties []PropertyInfo
-	Functions  []LineInfo
-	Behaviors  []LineInfo
-	Objects    []LineInfo
+	ID           *LineInfo
+	Anchors      []LineInfo
+	Properties   []PropertyInfo
+	Functions    []LineInfo
+	Behaviors    []LineInfo
+	Objects      []LineInfo
+	NestedStarts []int
 }
 
 type LineInfo struct {
@@ -194,7 +195,9 @@ func findComponentStructure(lines []string, startIdx int) ComponentStructure {
 			continue
 		}
 
-		braceCount += strings.Count(line, "{") - strings.Count(line, "}")
+		openBraces := strings.Count(line, "{")
+		closeBraces := strings.Count(line, "}")
+		braceCount += openBraces - closeBraces
 
 		currentIndent := len(line) - len(strings.TrimLeft(line, " \t"))
 		if baseIndent == -1 && stripped != "" {
@@ -214,11 +217,33 @@ func findComponentStructure(lines []string, startIdx int) ComponentStructure {
 				structure.Behaviors = append(structure.Behaviors, LineInfo{Index: i, Line: line})
 			} else if regexp.MustCompile(`^[A-Z]\w+\s*\{`).MatchString(stripped) {
 				structure.Objects = append(structure.Objects, LineInfo{Index: i, Line: line})
+				structure.NestedStarts = append(structure.NestedStarts, i) // <-- record for recursion
+			}
+		} else if baseIndent != -1 && currentIndent > baseIndent {
+			if regexp.MustCompile(`^[A-Z]\w+\s*\{`).MatchString(stripped) {
+				structure.NestedStarts = append(structure.NestedStarts, i)
 			}
 		}
+
 		i++
 	}
 	return structure
+}
+
+func collectComponentIssues(lines []string, startIdx int) []string {
+	var issues []string
+	structure := findComponentStructure(lines, startIdx)
+
+	issues = append(issues, checkComponentOrder(structure)...)
+	if len(structure.Properties) > 0 {
+		issues = append(issues, checkPropertyOrder(structure.Properties)...)
+	}
+
+	for _, nestedIdx := range structure.NestedStarts {
+		issues = append(issues, collectComponentIssues(lines, nestedIdx)...)
+	}
+
+	return issues
 }
 
 func checkComponentOrder(structure ComponentStructure) []string {
@@ -366,11 +391,8 @@ func formatQMLFile(filepath string, checkOnly bool) (bool, []string) {
 
 	for i, line := range newLines {
 		if regexp.MustCompile(`^[A-Z]\w+\s*\{`).MatchString(strings.TrimSpace(line)) {
-			structure := findComponentStructure(newLines, i)
-			issues = append(issues, checkComponentOrder(structure)...)
-			if len(structure.Properties) > 0 {
-				issues = append(issues, checkPropertyOrder(structure.Properties)...)
-			}
+			issues = append(issues, collectComponentIssues(newLines, i)...)
+			break
 		}
 	}
 
@@ -389,7 +411,7 @@ func formatQMLFile(filepath string, checkOnly bool) (bool, []string) {
 		}
 	}
 
-	return changed || len(manualIssues) > 0, issues
+	return len(manualIssues) > 0, issues
 }
 
 func findQMLFiles(directory string) []string {
@@ -473,13 +495,11 @@ func runQmlformat(gitRoot string) int {
 		cmd := exec.Command("qmlformat", "-i", fp)
 		cmd.Dir = gitRoot
 		out, err := cmd.CombinedOutput()
-		rel, _ := filepath.Rel(gitRoot, fp)
 		if err != nil {
 			failedFiles++
+			rel, _ := filepath.Rel(gitRoot, fp)
 			fmt.Printf("✗ Failed: %s\n", rel)
 			fmt.Printf("  Error: %s\n", strings.TrimSpace(string(out)))
-		} else {
-			fmt.Printf("✓ Formatted: %s\n", rel)
 		}
 	}
 
