@@ -175,7 +175,7 @@
         <translation>Skala Durasi Animasi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="355"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="354"/>
         <source>Search font...</source>
         <translation>Cari font...</translation>
     </message>
@@ -2064,32 +2064,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="100"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="96"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="109"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="101"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="118"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="106"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="127"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="111"/>
         <source>Lockscreen</source>
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="246"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="226"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Session/Session.qml" line="253"/>
+        <location filename="../Modules/Drawers/Session/Session.qml" line="233"/>
         <source>Do you want to %1?</source>
         <translation>Kamu mau melakukan %1?</translation>
     </message>
@@ -2444,8 +2444,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WallpaperSelector</name>
     <message>
-        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="73"/>
-        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="89"/>
+        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="75"/>
         <source>Search wallpapers</source>
         <translation>Cari wallpapers</translation>
     </message>
@@ -2453,102 +2452,102 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Weather</name>
     <message>
-        <location filename="../Services/Weather.qml" line="262"/>
+        <location filename="../Services/Weather.qml" line="436"/>
         <source>A muggy and warm day — take care in the sun.</source>
         <translation>Hari yang lembab dan hangat — berhati-hatilah terhadap sinar matahari.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="264"/>
+        <location filename="../Services/Weather.qml" line="438"/>
         <source>A humid day with sticky conditions.</source>
         <translation>Hari yang lembab dengan kondisi lengket.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="266"/>
+        <location filename="../Services/Weather.qml" line="440"/>
         <source>A hot day ahead — stay hydrated and seek shade.</source>
         <translation>Hari yang panas di depan — tetap terhidrasi dan cari tempat teduh.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="268"/>
+        <location filename="../Services/Weather.qml" line="442"/>
         <source>A cold day — dress warmly before heading out.</source>
         <translation>Hari yang dingin — berpakaian hangat sebelum keluar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="270"/>
+        <location filename="../Services/Weather.qml" line="444"/>
         <source>A pleasant day with comfortable conditions.</source>
         <translation>Hari yang menyenangkan dengan kondisi nyaman.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="272"/>
+        <location filename="../Services/Weather.qml" line="446"/>
         <source>Today&apos;s weather looks moderate.</source>
         <translation>Cuaca hari ini terlihat sedang.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="279"/>
+        <location filename="../Services/Weather.qml" line="452"/>
         <source>Air quality is poor right now — consider limiting time outside.</source>
         <translation>Kualitas udara buruk saat ini — pertimbangkan untuk membatasi waktu di luar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="284"/>
+        <location filename="../Services/Weather.qml" line="457"/>
         <source>Air quality is moderate — sensitive groups should take precautions.</source>
         <translation>Kualitas udara sedang — kelompok sensitif harus mengambil tindakan pencegahan.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="291"/>
+        <location filename="../Services/Weather.qml" line="463"/>
         <source>UV index is very high (%1) — avoid direct sun exposure.</source>
         <translation>Indeks UV sangat tinggi (%1) — hindari paparan sinar matahari langsung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="296"/>
+        <location filename="../Services/Weather.qml" line="468"/>
         <source>Strong UV levels at %1 — use sun protection.</source>
         <translation>Tingkat UV tinggi pada %1 — gunakan perlindungan matahari.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="303"/>
+        <location filename="../Services/Weather.qml" line="474"/>
         <source>Heavy rain expected — bring an umbrella.</source>
         <translation>Hujan lebat diperkirakan — bawalah payung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="308"/>
+        <location filename="../Services/Weather.qml" line="479"/>
         <source>Light rain possible — keep an umbrella handy.</source>
         <translation>Hujan ringan mungkin terjadi — siapkan payung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="315"/>
+        <location filename="../Services/Weather.qml" line="485"/>
         <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
         <translation>Kondisi sangat berangin dengan kecepatan %1 km/jam — berhati-hatilah di luar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="320"/>
+        <location filename="../Services/Weather.qml" line="490"/>
         <source>Breezy day with winds around %1 km/h.</source>
         <translation>Hari berangin dengan kecepatan angin sekitar %1 km/jam.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="327"/>
+        <location filename="../Services/Weather.qml" line="496"/>
         <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
         <translation>Perubahan suhu besar hari ini: %1° hingga %2° — berpakaian berlapis.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="332"/>
+        <location filename="../Services/Weather.qml" line="501"/>
         <source>Temperature ranging from %1° to %2° today.</source>
         <translation>Suhu berkisar dari %1° hingga %2° hari ini.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="339"/>
+        <location filename="../Services/Weather.qml" line="507"/>
         <source>Very sticky conditions with %1% humidity.</source>
         <translation>Kondisi sangat lengket dengan kelembaban %1%.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="346"/>
+        <location filename="../Services/Weather.qml" line="512"/>
         <source>Poor visibility at %1 km — drive carefully.</source>
         <translation>Jarak pandang buruk pada %1 km — berkendara dengan hati-hati.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="353"/>
+        <location filename="../Services/Weather.qml" line="517"/>
         <source>Perfect weather for outdoor activities.</source>
         <translation>Cuaca sempurna untuk aktivitas luar ruangan.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="366"/>
+        <location filename="../Services/Weather.qml" line="523"/>
         <source>Current temperature is %1° with feels like %2°.</source>
         <translation>Suhu saat ini %1° dengan terasa seperti %2°.</translation>
     </message>
