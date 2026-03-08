@@ -31,6 +31,7 @@ StyledRect {
         case Qt.Key_Return:
         case Qt.Key_Enter:
             root.executeAction();
+            GlobalStates.isScreenCapturePanelOpen = false;
             event.accepted = true;
             break;
         case Qt.Key_Escape:
@@ -104,7 +105,10 @@ StyledRect {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-        onClicked: root.executeAction()
+        onClicked: {
+            root.executeAction();
+            GlobalStates.isScreenCapturePanelOpen = false;
+        }
         onEntered: root.forceActiveFocus()
     }
 }

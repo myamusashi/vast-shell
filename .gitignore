@@ -1,6 +1,7 @@
 Assets/go/screen-capture
 Assets/go/formatting
 Assets/go/keystate-bin
+build/
 .qtcreator
 result/
 result
