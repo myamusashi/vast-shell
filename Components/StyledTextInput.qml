@@ -10,10 +10,10 @@ import qs.Services
 Item {
     id: root
 
-    readonly property alias isFocused: passwordInput.activeFocus
     property alias toggleButtonVisible: toggleButton.visible
     property alias placeHolderText: placeHolderText.text
     property alias text: passwordInput.text
+    readonly property alias isFocused: passwordInput.activeFocus
 
     readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
     readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false

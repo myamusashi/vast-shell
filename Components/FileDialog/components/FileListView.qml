@@ -30,6 +30,11 @@ ColumnLayout {
     spacing: 0
     onFolderHiddenChanged: root.showHiddenToggled(folderHidden)
 
+    function clearSelection() {
+        currentIndex = -1;
+        fileList.currentIndex = -1;
+    }
+
     Rectangle {
         Layout.fillWidth: true
         implicitHeight: 40
@@ -178,10 +183,5 @@ ColumnLayout {
                     root.fileDoubleClicked(filePath);
             }
         }
-    }
-
-    function clearSelection() {
-        currentIndex = -1;
-        fileList.currentIndex = -1;
     }
 }

@@ -10,6 +10,13 @@ import qs.Helpers
 Singleton {
     id: root
 
+    // readonly loading states
+    readonly property bool isInitialLoading: isLoading && !loaded
+    readonly property bool canRefresh: !isLoading
+    readonly property bool hasData: loaded
+    readonly property bool isLoading: weatherLoading || aqiLoading || astronomyLoading
+    readonly property bool isRefreshing: isLoading && loaded
+
     readonly property var weatherIcons: ({
             "0": WeatherIcon.day_sunny,
             "1": WeatherIcon.day_cloudy,
@@ -46,90 +53,6 @@ Singleton {
             "1": WeatherIcon.night_cloudy,
             "2": WeatherIcon.night_cloudy
         })
-
-    // Weather properties
-    property real latitude: 0.0
-    property real longitude: 0.0
-    property string timezone: ""
-    property real elevation: 0.0
-    property string lastUpdateWeather
-    property string weatherCondition: ""
-    property string weatherDescription: ""
-    property string weatherIcon: "air"
-    property int weatherCode: 0
-    property bool isDay: true
-    property int temp: 0
-    property int tempMin: 0
-    property int tempMax: 0
-    property int feelsLike: 0
-    property int humidity: 0
-    property real dewPoint: 0.0
-    property int windSpeed: 0
-    property string windDirection: ""
-    property int windDirectionDegrees: 0
-    property int uvIndex: 0
-    property int pressure: 0
-    property real visibility: 0.0
-    property int cloudCover: 0
-    property real precipitation: 0.0
-    property real precipitationDaily: 0.0
-    property string lastUpdateAstronomy
-    property string sunRise: ""
-    property string sunSet: ""
-    property string dayLength: ""
-    property string moonRise: ""
-    property string moonSet: ""
-    property string moonPhase: ""
-    property int moonIllumination: 0
-    property bool isMoonUp: false
-    property bool isSunUp: false
-
-    property var hourlyForecast: []
-    property var dailyForecast: []
-
-    // AQI properties
-    property string lastUpdateAQI
-    property int europeanAQI: 0
-    property string europeanAQICategory: ""
-    property string europeanAQIColor: ""
-    property string europeanDescription: ""
-    property int usAQI: 0
-    property string usAQICategory: ""
-    property string usAQIColor: ""
-    property string usDescription: ""
-    property real pm10: 0.0
-    property real pm25: 0.0
-    property string dominantPollutant: ""
-    property string healthRecommendation: ""
-    property var hourlyAQIForecast: []
-
-    // Loading states
-    property bool weatherLoaded: false
-    property bool weatherLoading: false
-    property bool aqiLoaded: false
-    property bool aqiLoading: false
-    property bool astronomyLoaded: false
-    property bool astronomyLoading: false
-    property bool loaded: weatherLoaded && aqiLoaded && astronomyLoaded
-    readonly property bool isLoading: weatherLoading || aqiLoading || astronomyLoading
-    readonly property bool isRefreshing: isLoading && loaded
-    readonly property bool isInitialLoading: isLoading && !loaded
-    readonly property bool canRefresh: !isLoading
-    readonly property bool hasData: loaded
-
-    // Locations
-    property string locationName: ""
-    property string locationRegion: ""
-    property string locationCountry: ""
-    property string timeZoneIdentifier: ""
-
-    property string configLatitude: Configs.weather.latitude
-    property string configLongitude: Configs.weather.longitude
-    property int reloadInterval: Configs.weather.reloadTime || 1800000
-
-    property var _activeWeatherRequest: null
-    property var _activeAQIRequest: null
-    property var _activeAstronomyRequest: null
 
     readonly property var weatherSchema: [
         {
@@ -349,6 +272,85 @@ Singleton {
             def: ""
         }
     ]
+
+    // Weather properties
+    property real latitude: 0.0
+    property real longitude: 0.0
+    property string timezone: ""
+    property real elevation: 0.0
+    property string lastUpdateWeather
+    property string weatherCondition: ""
+    property string weatherDescription: ""
+    property string weatherIcon: "air"
+    property int weatherCode: 0
+    property bool isDay: true
+    property int temp: 0
+    property int tempMin: 0
+    property int tempMax: 0
+    property int feelsLike: 0
+    property int humidity: 0
+    property real dewPoint: 0.0
+    property int windSpeed: 0
+    property string windDirection: ""
+    property int windDirectionDegrees: 0
+    property int uvIndex: 0
+    property int pressure: 0
+    property real visibility: 0.0
+    property int cloudCover: 0
+    property real precipitation: 0.0
+    property real precipitationDaily: 0.0
+    property string lastUpdateAstronomy
+    property string sunRise: ""
+    property string sunSet: ""
+    property string dayLength: ""
+    property string moonRise: ""
+    property string moonSet: ""
+    property string moonPhase: ""
+    property int moonIllumination: 0
+    property bool isMoonUp: false
+    property bool isSunUp: false
+
+    property var hourlyForecast: []
+    property var dailyForecast: []
+
+    // AQI properties
+    property string lastUpdateAQI
+    property int europeanAQI: 0
+    property string europeanAQICategory: ""
+    property string europeanAQIColor: ""
+    property string europeanDescription: ""
+    property int usAQI: 0
+    property string usAQICategory: ""
+    property string usAQIColor: ""
+    property string usDescription: ""
+    property real pm10: 0.0
+    property real pm25: 0.0
+    property string dominantPollutant: ""
+    property string healthRecommendation: ""
+    property var hourlyAQIForecast: []
+
+    // Loading states
+    property bool weatherLoaded: false
+    property bool weatherLoading: false
+    property bool aqiLoaded: false
+    property bool aqiLoading: false
+    property bool astronomyLoaded: false
+    property bool astronomyLoading: false
+    property bool loaded: weatherLoaded && aqiLoaded && astronomyLoaded
+
+    // Locations
+    property string locationName: ""
+    property string locationRegion: ""
+    property string locationCountry: ""
+    property string timeZoneIdentifier: ""
+
+    property string configLatitude: Configs.weather.latitude
+    property string configLongitude: Configs.weather.longitude
+    property int reloadInterval: Configs.weather.reloadTime || 1800000
+
+    property var _activeWeatherRequest: null
+    property var _activeAQIRequest: null
+    property var _activeAstronomyRequest: null
 
     function getWeatherIconFromCode(code, isDayTime) {
         if (code === null || code === undefined)
@@ -810,8 +812,14 @@ Singleton {
             root[field.key] = data[field.key] ?? field.def;
     }
 
+    function _reloadIfLoaded() {
+        if (weatherLoaded || aqiLoaded || astronomyLoaded)
+            reload();
+    }
+
     Timer {
         id: reloadTimer
+
         interval: root.reloadInterval
         running: GlobalStates.isWeatherPanelOpen
         repeat: GlobalStates.isWeatherPanelOpen
@@ -821,14 +829,15 @@ Singleton {
 
     Timer {
         id: saveTimer
+
         interval: 100
         onTriggered: storage.setText(JSON.stringify(root.buildSaveData(), null, 2))
     }
 
     FileView {
         id: storage
-        path: Paths.cacheDir + "/weather_shell/weather.json"
 
+        path: Paths.cacheDir + "/weather_shell/weather.json"
         onLoaded: {
             try {
                 const content = text();
@@ -857,7 +866,6 @@ Singleton {
                 root.reload();
             }
         }
-
         onLoadFailed: error => {
             console.log("Weather cache doesn't exist, creating it and fetching data");
             setText("{}");
@@ -875,11 +883,6 @@ Singleton {
                 root[prop] = null;
             }
         }
-    }
-
-    function _reloadIfLoaded() {
-        if (weatherLoaded || aqiLoaded || astronomyLoaded)
-            reload();
     }
     onConfigLatitudeChanged: _reloadIfLoaded()
     onConfigLongitudeChanged: _reloadIfLoaded()

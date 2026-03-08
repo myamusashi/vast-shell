@@ -35,6 +35,8 @@ Slider {
     property alias emptyRectOpacity: emptyRect.opacity
     property alias handleOpacity: handle.opacity
 
+    readonly property bool _popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
+
     readonly property real availableTrackSize: orientation === Qt.Horizontal ? availableWidth - handleGap * 2 : availableHeight - handleGap * 2
     readonly property real trackSize: orientation === Qt.Horizontal ? height - trackSizeDiff : width - trackSizeDiff
     readonly property real handleSize: pressed ? 2 : 4
@@ -60,7 +62,6 @@ Slider {
     property bool showValuePopup: true
     property bool popupOnHoverToo: false
     property var popupValueFormat: v => Math.round(v)
-    readonly property bool _popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
 
     snapMode: (snapEnabled && stepSize > 0) ? Slider.SnapAlways : Slider.NoSnap
     Layout.alignment: orientation === Qt.Horizontal ? Qt.AlignHCenter : Qt.AlignVCenter

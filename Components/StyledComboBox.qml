@@ -12,6 +12,17 @@ import qs.Components
 ComboBox {
     id: root
 
+    readonly property string displayText_: {
+        if (root.currentIndex < 0)
+            return root.placeholderText;
+        const m = root.model;
+        if (!m)
+            return root.placeholderText;
+        const item = m.get ? m.get(root.currentIndex) : m[root.currentIndex];
+        if (!item)
+            return root.placeholderText;
+        return item[root.textRole] ?? root.placeholderText;
+    }
     property string placeholderText: qsTr("Select…")
     property real popupMaxHeight: 280
     property var isItemEnabled: modelData => true
@@ -34,18 +45,6 @@ ComboBox {
                 return;
             }
         }
-    }
-
-    readonly property string displayText_: {
-        if (root.currentIndex < 0)
-            return root.placeholderText;
-        const m = root.model;
-        if (!m)
-            return root.placeholderText;
-        const item = m.get ? m.get(root.currentIndex) : m[root.currentIndex];
-        if (!item)
-            return root.placeholderText;
-        return item[root.textRole] ?? root.placeholderText;
     }
 
     contentItem: Item {

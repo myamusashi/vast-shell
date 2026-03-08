@@ -32,6 +32,13 @@ Singleton {
             format: s => s.toFixed(2) + " MB/s"
         }
     ]
+    readonly property string uptimeFormatted: {
+        const s = Math.floor(uptimeSeconds);
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        return d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m` : `${m}m`;
+    }
 
     property string gpuName: ""
     property string cpuName: ""
@@ -76,13 +83,6 @@ Singleton {
     property bool deepSleepSupported: false
     property real uptimeSeconds: 0
     property string sleepMode: ""
-    readonly property string uptimeFormatted: {
-        const s = Math.floor(uptimeSeconds);
-        const d = Math.floor(s / 86400);
-        const h = Math.floor((s % 86400) / 3600);
-        const m = Math.floor((s % 3600) / 60);
-        return d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m` : `${m}m`;
-    }
 
     // OS info
     property string osName: ""
@@ -899,8 +899,8 @@ Singleton {
     Timer {
         id: mainTimer
 
-        property int updateCycle: 0
         readonly property bool shouldRun: GlobalStates.isDashboardOpen || GlobalStates.isQuickSettingsOpen
+        property int updateCycle: 0
         running: shouldRun
         interval: 2000
         repeat: shouldRun
