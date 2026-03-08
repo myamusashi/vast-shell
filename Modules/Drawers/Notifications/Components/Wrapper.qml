@@ -179,6 +179,7 @@ Item {
                 Content {
                     id: contentLayout
 
+                    width: parent.width - iconLayout.width
                     modelData: root.notif
                 }
             }
