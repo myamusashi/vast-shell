@@ -32,6 +32,7 @@
     another-ripple = callPackage ./AnotherRipple.nix {};
     audioProfiles = callPackage ./audioProfiles.nix {};
     translationManager = callPackage ./translationManager.nix {};
+    keylockState = callPackage ./keylockState.nix {};
 
     runtimeDeps = [
         ## utils
@@ -179,19 +180,24 @@
                 $out/${qt6.qtbase.qtQmlPrefix}
             fi
 
+            if [ -d "${keylockState}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${keylockState}/${qt6.qtbase.qtQmlPrefix}/* \
+                $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+
             makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
               $out/bin/shell \
-                  --add-flags "-p $out/share/quickshell" \
-                  --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
-                  --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
-                  --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
-                  --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
-                  --prefix QML2_IMPORT_PATH : "${audioProfiles}/${qt6.qtbase.qtQmlPrefix}" \
-                  --prefix QML2_IMPORT_PATH : "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" \
-                  --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
-                  --suffix PATH : /run/current-system/sw/bin \
-                  --suffix PATH : /etc/profiles/per-user/$USER/bin \
-                  --suffix PATH : $HOME/.nix-profile/bin
+                --add-flags "-p $out/share/quickshell" \
+                --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
+                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
+                --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
+                --prefix QML2_IMPORT_PATH : "${translationManager}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${audioProfiles}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
+                --suffix PATH : /run/current-system/sw/bin \
+                --suffix PATH : /etc/profiles/per-user/$USER/bin \
+                --suffix PATH : $HOME/.nix-profile/bin
 
             runHook postInstall
         '';
