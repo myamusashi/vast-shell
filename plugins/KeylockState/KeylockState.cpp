@@ -12,52 +12,57 @@ static QList<KeyboardDevice> findKeyboards() {
     QDir                  inputDir("/dev/input");
     const auto            entries = inputDir.entryList({"event*"}, QDir::System);
 
+    qDebug() << "KeylockState: scanning" << entries.size() << "input devices";
+
     for (const QString& entry : entries) {
         const QByteArray path = ("/dev/input/" + entry).toLocal8Bit();
         int              fd   = ::open(path.constData(), O_RDONLY | O_NONBLOCK);
-        if (fd < 0)
+        if (fd < 0) {
+            qDebug() << "KeylockState: cannot open" << path << strerror(errno);
             continue;
+        }
 
-        // check what event types this device supports
         unsigned long evBits = 0;
         if (::ioctl(fd, EVIOCGBIT(0, sizeof(evBits)), &evBits) < 0) {
+            qDebug() << "KeylockState: EVIOCGBIT failed for" << path;
             ::close(fd);
             continue;
         }
 
-        // must have EV_KEY
-        if (!(evBits & (1UL << EV_KEY))) {
+        const bool hasKey = evBits & (1UL << EV_KEY);
+        const bool hasLED = evBits & (1UL << EV_LED);
+        qDebug() << "KeylockState:" << path << "hasKey:" << hasKey << "hasLED:" << hasLED;
+
+        if (!hasKey) {
             ::close(fd);
             continue;
         }
 
-        // must have KEY_CAPSLOCK
-        unsigned long keyBits[(KEY_MAX / 8) + 1] = {};
+        unsigned char keyBits[(KEY_MAX / 8) + 1] = {};
         if (::ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keyBits)), keyBits) < 0) {
             ::close(fd);
             continue;
         }
 
         const bool hasCapsKey = keyBits[KEY_CAPSLOCK / 8] & (1 << (KEY_CAPSLOCK % 8));
+        qDebug() << "KeylockState:" << path << "hasCapsKey:" << hasCapsKey;
+
         if (!hasCapsKey) {
             ::close(fd);
             continue;
         }
 
-        const bool hasLED = evBits & (1UL << EV_LED);
         devices.append({fd, hasLED});
-
-        qDebug("KeylockState: found %s (%s LED)", path.constData(), hasLED ? "with" : "without");
     }
 
     return devices;
 }
 
-KeylockState::KeylockState(QObject* parent) : QObject(parent) {
+Keylock::Keylock(QObject* parent) : QObject(parent) {
     openDevices();
 }
 
-KeylockState::~KeylockState() {
+Keylock::~Keylock() {
     qDeleteAll(m_notifiers);
     m_notifiers.clear();
 
@@ -66,14 +71,16 @@ KeylockState::~KeylockState() {
     m_fds.clear();
 }
 
-void KeylockState::openDevices() {
+void Keylock::openDevices() {
     const auto devices = findKeyboards();
+
+    qDebug() << "KeylockState: found" << devices.size() << "device(s)";
+
     if (devices.isEmpty()) {
-        qWarning("KeylockState: no keyboard found");
+        qWarning("KeylockState: no keyboard found — check /dev/input permissions");
         return;
     }
 
-    // Track fds immediately, before anything can throw
     for (const auto& dev : devices)
         m_fds.append(dev.fd);
 
@@ -81,12 +88,14 @@ void KeylockState::openDevices() {
 
     for (const auto& dev : devices) {
         auto* notifier = new QSocketNotifier(dev.fd, QSocketNotifier::Read);
-        connect(notifier, &QSocketNotifier::activated, this, [this, fd = dev.fd, hasLED = dev.hasLED]() { onReadReady(fd, hasLED); });
+        connect(notifier, &QSocketNotifier::activated, this, [this, fd = dev.fd, hasLED = dev.hasLED]() {
+            onReadReady(fd, hasLED);
+        });
         m_notifiers.append(notifier);
     }
 }
 
-void KeylockState::readInitialState(int fd, bool hasLED) {
+void Keylock::readInitialState(int fd, bool hasLED) {
     if (hasLED) {
         unsigned char ledBits[LED_MAX / 8 + 1] = {};
         if (::ioctl(fd, EVIOCGLED(sizeof(ledBits)), ledBits) < 0)
@@ -94,7 +103,6 @@ void KeylockState::readInitialState(int fd, bool hasLED) {
         m_capsLock = ledBits[LED_CAPSL / 8] & (1 << (LED_CAPSL % 8));
         m_numLock  = ledBits[LED_NUML / 8] & (1 << (LED_NUML % 8));
     } else {
-        // Try VT first
         int ttyFd = ::open("/dev/tty", O_RDONLY);
         if (ttyFd >= 0) {
             unsigned char flags = 0;
@@ -104,18 +112,18 @@ void KeylockState::readInitialState(int fd, bool hasLED) {
             }
             ::close(ttyFd);
         } else {
-            // /dev/tty unavailable, read key state bitmap from evdev
+            // read key state bitmap from evdev
             unsigned long keyState[(KEY_MAX / 8) + 1] = {};
             if (::ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState) == 0) {
                 // EVIOCGKEY gives currently held keys, not toggle state
                 // so we can only default to false here, no reliable fallback
-                qWarning("KeylockState: /dev/tty unavailable, initial state unknown");
+                qWarning("Keylock: /dev/tty unavailable, initial state unknown");
             }
         }
     }
 }
 
-void KeylockState::onReadReady(int fd, bool hasLED) {
+void Keylock::onReadReady(int fd, bool hasLED) {
     input_event ev{};
     while (::read(fd, &ev, sizeof(ev)) == sizeof(ev)) {
         if (hasLED) {

@@ -7,7 +7,6 @@ import Quickshell.Io
 import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 import TranslationManager
-import KeylockState
 
 import qs.Configs
 import qs.Helpers
@@ -22,7 +21,7 @@ Singleton {
     readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
     readonly property bool isNumLockOSDVisible: _activeOSDs["numlock"] || false
-    readonly property color drawerColors: Configs.generals.transparent ? Qt.alpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Backgroundhelglo
+    readonly property color drawerColors: Configs.generals.transparent ? Qt.alpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
     readonly property int osdDisplayDuration: 5000
     readonly property int cleanupDelay: 500
     readonly property string currentLanguage: TranslationManager.currentLanguage
