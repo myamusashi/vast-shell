@@ -1,15 +1,14 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import KeylockState
 
-import qs.Components
 import qs.Configs
 import qs.Helpers
 import qs.Services
+import qs.Components
 
 Item {
-    id: numLockOSD
+    id: root
 
     width: parent.width
     height: GlobalStates.isOSDVisible("numlock") ? 50 : 0
@@ -31,7 +30,7 @@ Item {
         Row {
             anchors.centerIn: parent
             spacing: Appearance.spacing.normal
-            opacity: numLockOSD.height / 50
+            opacity: root.height / 50
 
             StyledText {
                 text: qsTr("Num Lock")

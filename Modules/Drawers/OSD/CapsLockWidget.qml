@@ -1,5 +1,4 @@
 import QtQuick
-import KeylockState
 
 import qs.Components
 import qs.Configs
@@ -7,7 +6,7 @@ import qs.Helpers
 import qs.Services
 
 Item {
-    id: capsLockOSD
+    id: root
 
     width: parent.width
     height: GlobalStates.isOSDVisible("capslock") ? 50 : 0
@@ -29,7 +28,7 @@ Item {
         Row {
             anchors.centerIn: parent
             spacing: Appearance.spacing.normal
-            opacity: capsLockOSD.height / 50
+            opacity: root.height / 50
 
             StyledText {
                 text: qsTr("Caps Lock")

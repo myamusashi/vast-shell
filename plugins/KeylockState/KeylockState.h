@@ -11,7 +11,7 @@ struct KeyboardDevice {
     bool hasLED;
 };
 
-class KeylockState : public QObject {
+class Keylock : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
@@ -20,8 +20,8 @@ class KeylockState : public QObject {
     Q_PROPERTY(bool numLock READ numLock NOTIFY numLockChanged)
 
   public:
-    explicit KeylockState(QObject* parent = nullptr);
-    ~KeylockState();
+    explicit Keylock(QObject* parent = nullptr);
+    ~Keylock();
 
     bool capsLock() const {
         return m_capsLock;
