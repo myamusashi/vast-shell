@@ -38,17 +38,17 @@ PopupWidget {
                 {
                     color: Colours.m3Colors.m3Green,
                     text: qsTr("Root"),
-                    value: SystemUsage.storageAppsFormatted
+                    value: SystemUsage.formatKB(SystemUsage.storageAppsData)
                 },
                 {
                     color: Qt.alpha(Colours.m3Colors.m3Green, 0.7),
                     text: qsTr("Boot"),
-                    value: SystemUsage.storageSystemFormatted
+                    value: SystemUsage.formatKB(SystemUsage.storageSystem)
                 },
                 {
                     color: Qt.alpha(Colours.m3Colors.m3Green, 0.3),
                     text: qsTr("Free"),
-                    value: SystemUsage.storageFreeFormatted
+                    value: SystemUsage.formatKB(SystemUsage.storageFree)
                 }
             ]
             delegate: RowLayout {
