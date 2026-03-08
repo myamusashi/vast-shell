@@ -1,4 +1,4 @@
-#include "TranslationManager.h"
+#include "TranslationManager.hpp"
 
 #include <QDebug>
 
