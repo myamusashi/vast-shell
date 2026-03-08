@@ -11,8 +11,14 @@ import qs.Services
 StyledRect {
     id: root
 
+    FontMetrics {
+        id: windowNameMetrics
+
+        font: windowNameText.font
+    }
+
     Layout.fillHeight: true
-    implicitWidth: windowNameText.contentWidth
+    implicitWidth: windowNameMetrics.advanceWidth(windowNameText.text)
     color: "transparent"
 
     Behavior on implicitWidth {

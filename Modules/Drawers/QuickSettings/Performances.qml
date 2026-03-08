@@ -232,7 +232,14 @@ Item {
                                     spacing: Appearance.spacing.small * 0.4
 
                                     StyledText {
-                                        Layout.preferredWidth: contentWidth
+										id: netLabelDelegate
+
+                                        FontMetrics {
+                                            id: netLabelMetrics
+
+                                            font: netLabelDelegate.font
+                                        }
+                                        Layout.preferredWidth: netLabelMetrics.advanceWidth(netLabelDelegate.text)
                                         text: parent.modelData.label
                                         color: Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.normal

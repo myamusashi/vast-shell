@@ -6,7 +6,6 @@ import QtQuick.Controls
 import Quickshell.Widgets
 
 import qs.Configs
-import qs.Helpers
 import qs.Services
 import qs.Components
 
@@ -171,8 +170,13 @@ Pages {
                         }
 
                         StyledRect {
-                            implicitWidth: aqiTextValue.contentWidth + 20
-                            implicitHeight: aqiTextValue.contentHeight + 5
+                            FontMetrics {
+                                id: aqiMetrics
+
+                                font: aqiTextValue.font
+                            }
+                            implicitWidth: aqiMetrics.advanceWidth(aqiTextValue.text) + 20
+                            implicitHeight: aqiMetrics.height + 5
                             radius: Appearance.rounding.full
                             color: Colours.m3Colors.m3Primary
 

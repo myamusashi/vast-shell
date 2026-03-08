@@ -109,7 +109,6 @@ Singleton {
         return 0;
     }
 
-    // O(1) lookup via pre-built reverse map instead of O(keys) indexOf scan
     function normalizeChar(c: string): string {
         const lower = c.toLowerCase();
         const mapped = charLookup[lower];
@@ -352,7 +351,6 @@ Singleton {
         if (normalizedQuery.length === 0)
             return items;
 
-        // split query into words once, used for multi-word scoring
         const queryWords = normalizedQuery.split(/\s+/).filter(w => w.length > 0);
 
         let results = [];
@@ -362,7 +360,6 @@ Singleton {
             if (typeof searchText !== 'string')
                 continue;
 
-            // pre-compute normalized text and words once per item
             const normalizedText = normalizeText(searchText);
             const tWords = normalizedText.split(/\s+/).filter(w => w.length > 0);
 

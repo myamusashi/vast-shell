@@ -11,7 +11,7 @@ Rectangle {
 
     property alias fileName: fileNameField.text
     property bool hasSelection: false
-    property real labelWidth: Math.max(fileNameLabel.contentWidth, filterLabel.contentWidth) + 10
+    property real labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabel.text)) + 10
     property var nameFilters: ["*"]
 
     signal cancelClicked
@@ -22,6 +22,18 @@ Rectangle {
 
     function setFileName(name) {
         fileNameField.text = name;
+    }
+
+    FontMetrics {
+        id: fileNameMetrics
+
+        font: fileNameLabel.font
+    }
+
+    FontMetrics {
+        id: filterMetrics
+
+        font: filterLabel.font
     }
 
     Elevation {
@@ -63,8 +75,13 @@ Rectangle {
             }
 
             WrapperRectangle {
+                FontMetrics {
+                    id: fieldMetrics
+
+                    font: fileNameField.font
+                }
                 Layout.fillWidth: true
-                implicitHeight: fileNameField.contentHeight + 20
+                implicitHeight: fieldMetrics.height + 20
                 margin: Appearance.margin.normal
                 color: "transparent"
 

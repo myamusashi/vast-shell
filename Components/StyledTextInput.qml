@@ -39,26 +39,20 @@ Item {
         height: 0
         visible: false
 
-        // Always mask internally; we render our own visuals
         echoMode: TextInput.Password
         passwordMaskDelay: 0
         inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
         enabled: !root.unlockInProgress
-
-        // Sync with PAM if bound
         text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
-
         onTextChanged: {
             if (root.pam)
                 root.pam.currentText = text;
         }
-
         Keys.onReturnPressed: {
             if (root.pam && text.length > 0)
                 root.pam.tryUnlock();
             root.accepted();
         }
-
         Component.onCompleted: forceActiveFocus()
     }
 
@@ -270,11 +264,17 @@ Item {
         echoMode: TextInput.Normal
     }
 
+    FontMetrics {
+        id: visibleInputMetrics
+
+        font: visibleInput.font
+    }
+
     Rectangle {
         id: textCaret
 
         anchors.verticalCenter: parent.verticalCenter
-        x: Math.min(visibleInput.x + visibleInput.contentWidth + 2, toggleButton.x - 6)
+        x: Math.min(visibleInput.x + visibleInputMetrics.advanceWidth(visibleInput.text) + 2, toggleButton.x - 6)
         implicitWidth: 2
         implicitHeight: visibleInput.font.pixelSize + 2
         radius: 1

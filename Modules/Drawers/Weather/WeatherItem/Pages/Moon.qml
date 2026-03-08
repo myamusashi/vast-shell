@@ -6,7 +6,6 @@ import QtQuick.Controls
 import Quickshell.Widgets
 
 import qs.Configs
-import qs.Helpers
 import qs.Services
 import qs.Components
 
@@ -106,9 +105,14 @@ Pages {
                         }
 
                         StyledRect {
+                            FontMetrics {
+                                id: illuminationMetrics
+
+                                font: illumination.font
+                            }
                             color: Colours.m3Colors.m3SurfaceContainerHigh
-                            implicitWidth: illumination.contentWidth + 20
-                            implicitHeight: illumination.contentHeight + 15
+                            implicitWidth: illuminationMetrics.advanceWidth(illumination.text) + 20
+                            implicitHeight: illuminationMetrics.height + 15
 
                             StyledText {
                                 id: illumination
@@ -125,9 +129,14 @@ Pages {
                         }
 
                         StyledRect {
+                            FontMetrics {
+                                id: moonRiseMetrics
+
+                                font: moonRise.font
+                            }
                             color: Colours.m3Colors.m3SurfaceContainerHigh
-                            implicitWidth: moonRise.contentWidth + 20
-                            implicitHeight: moonRise.contentHeight + 15
+                            implicitWidth: moonRiseMetrics.advanceWidth(moonRise.text) + 20
+                            implicitHeight: moonRiseMetrics.height + 15
 
                             StyledText {
                                 id: moonRise
@@ -144,9 +153,13 @@ Pages {
                         }
 
                         StyledRect {
+                            FontMetrics {
+                                id: moonSetMetrics
+                                font: moonSet.font
+                            }
                             color: Colours.m3Colors.m3SurfaceContainerHigh
-                            implicitWidth: moonSet.contentWidth + 20
-                            implicitHeight: moonSet.contentHeight + 15
+                            implicitWidth: moonSetMetrics.advanceWidth(moonSet.text) + 20
+                            implicitHeight: moonSetMetrics.height + 15
 
                             StyledText {
                                 id: moonSet

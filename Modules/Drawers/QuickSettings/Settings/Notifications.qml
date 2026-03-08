@@ -33,7 +33,12 @@ StyledRect {
         }
 
         StyledRect {
-            implicitWidth: textClear.contentWidth + 100
+            FontMetrics {
+                id: clearMetrics
+
+                font: textClear.font
+            }
+            implicitWidth: clearMetrics.advanceWidth(textClear.text) + 100
             implicitHeight: 30
             color: Colours.m3Colors.m3SurfaceContainer
 

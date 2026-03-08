@@ -71,7 +71,7 @@ Singleton {
 
             return options;
         }
-	}
+    }
 
     ScreenSelection {
         id: select
