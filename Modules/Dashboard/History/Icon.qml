@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Vast
 
 import qs.Components
 import qs.Configs
@@ -25,7 +26,7 @@ Loader {
         console.log(ext);
 
         if (videoFormats.includes(ext))
-            ScreenCapture.exec("--create-thumbnail " + root.modelData.path + " " + Paths.cacheDir + "/video-thumbnails");
+            ScreenRecorder.createThumbnail(root.modelData.path + " " + Paths.cacheDir + "/video-thumbnails");
         else
             thumbnailPath = "file://" + root.modelData.path;
     }
@@ -36,6 +37,17 @@ Loader {
         if (lastDot === -1 || lastDot === 0)
             return '';
         return filename.substring(lastDot + 1).toLowerCase();
+    }
+
+    Connections {
+        target: ScreenRecorder
+
+        function onThumbnailReady(videoPath, thumbnailPath) {
+            if (videoPath !== root.modelData.path)
+                return;
+            delayTimer.thumbnailData = thumbnailPath !== "" ? "file://" + thumbnailPath : "";
+            delayTimer.start();
+        }
     }
 
     sourceComponent: StyledRect {
