@@ -1449,7 +1449,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Modules/Settings/Pages/InternetPage.qml" line="115"/>
         <source>Bandwidth:</source>
-        <translation>Bandwidth</translation>
+        <translation>Bandwidth:</translation>
     </message>
     <message>
         <location filename="../Modules/Settings/Pages/InternetPage.qml" line="142"/>
@@ -2192,7 +2192,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Modules/Lock/Surface.qml" line="147"/>
         <source>Do you want to %1?</source>
-        <translation>Apakah kamu mau %1</translation>
+        <translation>Apakah kamu mau %1?</translation>
     </message>
     <message>
         <location filename="../Modules/Lock/Surface.qml" line="169"/>
