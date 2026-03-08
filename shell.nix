@@ -31,7 +31,6 @@ pkgs.mkShell {
     ];
 
     shellHook = ''
-        go build -o ./Assets/go/screen-capture ./Assets/go/screen-capture.go
         go build -o ./Assets/go/formatting ./Assets/go/formatting.go
         echo "mushell environment"
     '';
