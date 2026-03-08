@@ -349,22 +349,22 @@
 <context>
     <name>BottomActionBar</name>
     <message>
-        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="55"/>
+        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="59"/>
         <source>File name</source>
         <translation>Nama berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="91"/>
+        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="95"/>
         <source>Filter</source>
         <translation>Filter</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="120"/>
+        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="124"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="126"/>
+        <location filename="../Components/FileDialog/components/BottomActionBar.qml" line="130"/>
         <source>Open</source>
         <translation>Buka</translation>
     </message>
@@ -984,37 +984,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListItem</name>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="137"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="29"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="139"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="31"/>
         <source>file</source>
         <translation>berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="139"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="31"/>
         <source>File</source>
         <translation>Berkas</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="144"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="36"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="146"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="38"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="148"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="40"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="149"/>
+        <location filename="../Components/FileDialog/delegate/FileListItem.qml" line="41"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1022,27 +1022,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListView</name>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="42"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="47"/>
         <source>Show hidden</source>
         <translation>Tampilkan file tersembunyi</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="65"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="70"/>
         <source>Name</source>
         <translation>Nama</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="73"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="78"/>
         <source>Size</source>
         <translation>Ukuran</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="81"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="86"/>
         <source>Type</source>
         <translation>Jenis</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/FileListView.qml" line="89"/>
+        <location filename="../Components/FileDialog/components/FileListView.qml" line="94"/>
         <source>Modified</source>
         <translation>Diubah</translation>
     </message>
@@ -1905,47 +1905,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PlacesSidebar</name>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="43"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="47"/>
         <source>Places</source>
         <translation>Lokasi</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="64"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="68"/>
         <source>Home</source>
         <translation>Beranda</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="69"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="73"/>
         <source>Desktop</source>
         <translation>Desktop</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="74"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="78"/>
         <source>Documents</source>
         <translation>Dokumen</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="79"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="83"/>
         <source>Downloads</source>
         <translation>Unduhan</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="84"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="88"/>
         <source>Music</source>
         <translation>Musik</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="89"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="93"/>
         <source>Pictures</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="94"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="98"/>
         <source>Videos</source>
         <translation>Video</translation>
     </message>
     <message>
-        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="99"/>
+        <location filename="../Components/FileDialog/components/PlacesSidebar.qml" line="103"/>
         <source>Computer</source>
         <translation>Komputer</translation>
     </message>
@@ -2140,12 +2140,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledComboBox</name>
     <message>
-        <location filename="../Components/StyledComboBox.qml" line="15"/>
+        <location filename="../Components/StyledComboBox.qml" line="26"/>
         <source>Select…</source>
         <translation>Pilih...</translation>
     </message>
     <message>
-        <location filename="../Components/StyledComboBox.qml" line="18"/>
+        <location filename="../Components/StyledComboBox.qml" line="29"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -2452,102 +2452,102 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Weather</name>
     <message>
-        <location filename="../Services/Weather.qml" line="436"/>
+        <location filename="../Services/Weather.qml" line="438"/>
         <source>A muggy and warm day — take care in the sun.</source>
         <translation>Hari yang lembab dan hangat — berhati-hatilah terhadap sinar matahari.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="438"/>
+        <location filename="../Services/Weather.qml" line="440"/>
         <source>A humid day with sticky conditions.</source>
         <translation>Hari yang lembab dengan kondisi lengket.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="440"/>
+        <location filename="../Services/Weather.qml" line="442"/>
         <source>A hot day ahead — stay hydrated and seek shade.</source>
         <translation>Hari yang panas di depan — tetap terhidrasi dan cari tempat teduh.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="442"/>
+        <location filename="../Services/Weather.qml" line="444"/>
         <source>A cold day — dress warmly before heading out.</source>
         <translation>Hari yang dingin — berpakaian hangat sebelum keluar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="444"/>
+        <location filename="../Services/Weather.qml" line="446"/>
         <source>A pleasant day with comfortable conditions.</source>
         <translation>Hari yang menyenangkan dengan kondisi nyaman.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="446"/>
+        <location filename="../Services/Weather.qml" line="448"/>
         <source>Today&apos;s weather looks moderate.</source>
         <translation>Cuaca hari ini terlihat sedang.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="452"/>
+        <location filename="../Services/Weather.qml" line="454"/>
         <source>Air quality is poor right now — consider limiting time outside.</source>
         <translation>Kualitas udara buruk saat ini — pertimbangkan untuk membatasi waktu di luar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="457"/>
+        <location filename="../Services/Weather.qml" line="459"/>
         <source>Air quality is moderate — sensitive groups should take precautions.</source>
         <translation>Kualitas udara sedang — kelompok sensitif harus mengambil tindakan pencegahan.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="463"/>
+        <location filename="../Services/Weather.qml" line="465"/>
         <source>UV index is very high (%1) — avoid direct sun exposure.</source>
         <translation>Indeks UV sangat tinggi (%1) — hindari paparan sinar matahari langsung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="468"/>
+        <location filename="../Services/Weather.qml" line="470"/>
         <source>Strong UV levels at %1 — use sun protection.</source>
         <translation>Tingkat UV tinggi pada %1 — gunakan perlindungan matahari.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="474"/>
+        <location filename="../Services/Weather.qml" line="476"/>
         <source>Heavy rain expected — bring an umbrella.</source>
         <translation>Hujan lebat diperkirakan — bawalah payung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="479"/>
+        <location filename="../Services/Weather.qml" line="481"/>
         <source>Light rain possible — keep an umbrella handy.</source>
         <translation>Hujan ringan mungkin terjadi — siapkan payung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="485"/>
+        <location filename="../Services/Weather.qml" line="487"/>
         <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
         <translation>Kondisi sangat berangin dengan kecepatan %1 km/jam — berhati-hatilah di luar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="490"/>
+        <location filename="../Services/Weather.qml" line="492"/>
         <source>Breezy day with winds around %1 km/h.</source>
         <translation>Hari berangin dengan kecepatan angin sekitar %1 km/jam.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="496"/>
+        <location filename="../Services/Weather.qml" line="498"/>
         <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
         <translation>Perubahan suhu besar hari ini: %1° hingga %2° — berpakaian berlapis.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="501"/>
+        <location filename="../Services/Weather.qml" line="503"/>
         <source>Temperature ranging from %1° to %2° today.</source>
         <translation>Suhu berkisar dari %1° hingga %2° hari ini.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="507"/>
+        <location filename="../Services/Weather.qml" line="509"/>
         <source>Very sticky conditions with %1% humidity.</source>
         <translation>Kondisi sangat lengket dengan kelembaban %1%.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="512"/>
+        <location filename="../Services/Weather.qml" line="514"/>
         <source>Poor visibility at %1 km — drive carefully.</source>
         <translation>Jarak pandang buruk pada %1 km — berkendara dengan hati-hati.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="517"/>
+        <location filename="../Services/Weather.qml" line="519"/>
         <source>Perfect weather for outdoor activities.</source>
         <translation>Cuaca sempurna untuk aktivitas luar ruangan.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="523"/>
+        <location filename="../Services/Weather.qml" line="525"/>
         <source>Current temperature is %1° with feels like %2°.</source>
         <translation>Suhu saat ini %1° dengan terasa seperti %2°.</translation>
     </message>
