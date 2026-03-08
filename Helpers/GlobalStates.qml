@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
-import TranslationManager
+import Vast
 
 import qs.Configs
 import qs.Helpers
@@ -62,6 +62,7 @@ Singleton {
     property bool isDashboardOpen: false
     property bool isWeatherPanelOpen: false
     property bool isLockscreenOpen: false
+    property bool isSelectionOpen: false
 
     property string scriptPath: `${Paths.rootDir}/Assets/shell/screen-capture.sh`
 
@@ -164,7 +165,6 @@ Singleton {
         osdName: "numlock"
     }
 
-    // Panel controller component for IpcHandler + GlobalShortcut pairs
     component PanelController: QtObject {
         id: panelController
 

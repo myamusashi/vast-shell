@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 pragma Singleton
 
-import AudioProfiles
+import Vast
 import QtQuick
 import Quickshell
 import Quickshell.Services.Pipewire
