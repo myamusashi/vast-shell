@@ -1,11 +1,17 @@
 #pragma once
 
+#include <QList>
 #include <QObject>
 #include <QSocketNotifier>
 #include <QQmlEngine>
 #include <linux/input.h>
 
-class KeyState : public QObject {
+struct KeyboardDevice {
+    int  fd;
+    bool hasLED;
+};
+
+class KeylockState : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
@@ -14,8 +20,8 @@ class KeyState : public QObject {
     Q_PROPERTY(bool numLock READ numLock NOTIFY numLockChanged)
 
   public:
-    explicit KeyState(QObject* parent = nullptr);
-    ~KeyState();
+    explicit KeylockState(QObject* parent = nullptr);
+    ~KeylockState();
 
     bool capsLock() const {
         return m_capsLock;
@@ -28,15 +34,13 @@ class KeyState : public QObject {
     void capsLockChanged();
     void numLockChanged();
 
-  private slots:
-    void onReadReady();
-
   private:
-    void             openDevice();
-    void             readInitialState();
+    void                    openDevices();
+    void                    readInitialState(int fd, bool hasLED);
+    void                    onReadReady(int fd, bool hasLED);
 
-    int              m_fd       = -1;
-    bool             m_capsLock = false;
-    bool             m_numLock  = false;
-    QSocketNotifier* m_notifier = nullptr;
+    QList<int>              m_fds;
+    QList<QSocketNotifier*> m_notifiers;
+    bool                    m_capsLock = false;
+    bool                    m_numLock  = false;
 };
