@@ -2027,20 +2027,19 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>ScreenCapture</name>
     <message>
-        <location filename="../Services/ScreenCapture.qml" line="16"/>
+        <location filename="../Services/ScreenCapture.qml" line="15"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Services/ScreenCapture.qml" line="22"/>
-        <location filename="../Services/ScreenCapture.qml" line="52"/>
+        <location filename="../Services/ScreenCapture.qml" line="21"/>
+        <location filename="../Services/ScreenCapture.qml" line="45"/>
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
     <message>
-        <location filename="../Services/ScreenCapture.qml" line="37"/>
         <source>Merge screens</source>
-        <translation>Gabungkan layar</translation>
+        <translation type="vanished">Gabungkan layar</translation>
     </message>
 </context>
 <context>

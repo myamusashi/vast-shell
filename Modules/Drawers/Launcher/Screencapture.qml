@@ -163,11 +163,7 @@ WrapperRectangle {
                             optionIndex: index
                             isSelected: index === root.selectedIndex && root.selectedTab === 0
                             maxIndex: ScreenCapture.screenshotOptions.values.length - 1
-
-                            onIndexModel: function (idx) {
-                                root.selectedIndex = idx;
-                            }
-
+                            onIndexModel: idx => root.selectedIndex = idx
                             onClosed: GlobalStates.isScreenCapturePanelOpen = false
                         }
                     }
@@ -190,11 +186,7 @@ WrapperRectangle {
                             optionIndex: index
                             isSelected: index === root.selectedIndex && root.selectedTab === 1
                             maxIndex: ScreenCapture.recordOptions.values.length - 1
-
-                            onIndexModel: function (idx) {
-                                root.selectedIndex = idx;
-                            }
-
+                            onIndexModel: idx => root.selectedIndex = idx
                             onClosed: GlobalStates.isScreenCapturePanelOpen = false
                         }
                     }
