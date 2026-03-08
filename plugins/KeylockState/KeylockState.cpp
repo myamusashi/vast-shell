@@ -12,26 +12,20 @@ static QList<KeyboardDevice> findKeyboards() {
     QDir                  inputDir("/dev/input");
     const auto            entries = inputDir.entryList({"event*"}, QDir::System);
 
-    qDebug() << "KeylockState: scanning" << entries.size() << "input devices";
-
     for (const QString& entry : entries) {
         const QByteArray path = ("/dev/input/" + entry).toLocal8Bit();
         int              fd   = ::open(path.constData(), O_RDONLY | O_NONBLOCK);
-        if (fd < 0) {
-            qDebug() << "KeylockState: cannot open" << path << strerror(errno);
+        if (fd < 0)
             continue;
-        }
 
         unsigned long evBits = 0;
         if (::ioctl(fd, EVIOCGBIT(0, sizeof(evBits)), &evBits) < 0) {
-            qDebug() << "KeylockState: EVIOCGBIT failed for" << path;
             ::close(fd);
             continue;
         }
 
         const bool hasKey = evBits & (1UL << EV_KEY);
         const bool hasLED = evBits & (1UL << EV_LED);
-        qDebug() << "KeylockState:" << path << "hasKey:" << hasKey << "hasLED:" << hasLED;
 
         if (!hasKey) {
             ::close(fd);
@@ -45,7 +39,6 @@ static QList<KeyboardDevice> findKeyboards() {
         }
 
         const bool hasCapsKey = keyBits[KEY_CAPSLOCK / 8] & (1 << (KEY_CAPSLOCK % 8));
-        qDebug() << "KeylockState:" << path << "hasCapsKey:" << hasCapsKey;
 
         if (!hasCapsKey) {
             ::close(fd);
@@ -88,9 +81,7 @@ void Keylock::openDevices() {
 
     for (const auto& dev : devices) {
         auto* notifier = new QSocketNotifier(dev.fd, QSocketNotifier::Read);
-        connect(notifier, &QSocketNotifier::activated, this, [this, fd = dev.fd, hasLED = dev.hasLED]() {
-            onReadReady(fd, hasLED);
-        });
+        connect(notifier, &QSocketNotifier::activated, this, [this, fd = dev.fd, hasLED = dev.hasLED]() { onReadReady(fd, hasLED); });
         m_notifiers.append(notifier);
     }
 }
