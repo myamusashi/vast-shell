@@ -165,8 +165,8 @@ Singleton {
     }
 
     // Panel controller component for IpcHandler + GlobalShortcut pairs
-	component PanelController: QtObject {
-		id: panelController
+    component PanelController: QtObject {
+        id: panelController
 
         required property string panelName
         required property string shortcutName
