@@ -25,7 +25,13 @@ Item {
     required property bool locked
     required property bool showErrorMessage
 
-    implicitWidth: isLockscreenOpen ? topWrapperRect.implicitWidth : lockIcon.contentWidth
+    FontMetrics {
+        id: lockIconMetrics
+
+        font: lockIcon.font
+    }
+
+    implicitWidth: isLockscreenOpen ? topWrapperRect.implicitWidth : lockIconMetrics.advanceWidth(lockIcon.text)
     implicitHeight: 0
 
     Behavior on implicitWidth {

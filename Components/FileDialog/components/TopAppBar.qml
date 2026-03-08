@@ -43,7 +43,7 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: Appearance.margin.normal
         anchors.rightMargin: Appearance.margin.normal
-        spacing: Appearance.spacing.small
+        spacing: 0
 
         Repeater {
             model: [
@@ -69,18 +69,24 @@ Rectangle {
                 },
             ]
             delegate: IconButton {
+                id: iconBtnDelegate
+
                 required property var modelData
 
-                Layout.preferredWidth: contentWidth + 20
+                FontMetrics {
+                    id: iconBtnMetrics
+
+                    font: iconBtnDelegate.font
+                }
+
+                Layout.preferredWidth: iconBtnMetrics.font.pixelSize + Appearance.spacing.large
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 icon: modelData.icon
                 enabled: modelData.enabled
                 isRotate: modelData.spinOnClick
                 mArea.onClicked: modelData.clicked()
             }
-        }
-
-        Item {
-            implicitWidth: Appearance.spacing.small
         }
 
         Rectangle {
@@ -144,10 +150,6 @@ Rectangle {
                     onAccepted: root.pathEntered(text)
                 }
             }
-        }
-
-        Item {
-            implicitWidth: Appearance.spacing.small
         }
     }
 
