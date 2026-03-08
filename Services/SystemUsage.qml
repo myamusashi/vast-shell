@@ -10,7 +10,6 @@ import qs.Helpers
 Singleton {
     id: root
 
-    // gpu, network, disk & mem informations
     readonly property real diskProp: diskUsed / 1048576
     readonly property real diskPercent: diskTotal > 0 ? (diskUsed / diskTotal) * 100 : 0
     readonly property real memProp: memUsed / 1048576
@@ -21,20 +20,19 @@ Singleton {
     readonly property string gpuBandwidthText: `R: ${gpuMemBandwidthRead} MiB/s W: ${gpuMemBandwidthWrite} MiB/s`
     readonly property var speedThresholds: [
         {
-            "limit": 0.01,
-            "format": () => "0.00 MB/s"
+            limit: 0.01,
+            format: () => "0.00 MB/s"
         },
         {
-            "limit": 1,
-            "format": s => (s * 1024).toFixed(2) + " KB/s"
+            limit: 1,
+            format: s => (s * 1024).toFixed(2) + " KB/s"
         },
         {
-            "limit": Infinity,
-            "format": s => s.toFixed(2) + " MB/s"
+            limit: Infinity,
+            format: s => s.toFixed(2) + " MB/s"
         }
     ]
 
-    // GPU name
     property string gpuName: ""
     property string cpuName: ""
 
@@ -53,10 +51,7 @@ Singleton {
     property var vulkanDevices: []
     property var vaApiProfiles: []
 
-    // Storage breakdown
-    readonly property string storageAppsFormatted: (storageAppsData / 1024 / 1024).toFixed(2) + " GB"
-    readonly property string storageSystemFormatted: (storageSystem / 1024 / 1024).toFixed(2) + " GB"
-    readonly property string storageFreeFormatted: (storageFree / 1024 / 1024).toFixed(2) + " GB"
+    // use formatUsage() at call sites
     property real storageAppsData: 0
     property real storageSystem: 0
     property real storageFree: 0
@@ -64,7 +59,7 @@ Singleton {
     // Filesystem info: list of {name, type, mountpoint, usedKB, freeKB, totalKB}
     property var filesystemNames: []
 
-    property var cpuCores: [] // .freqMHz, .percent
+    property var cpuCores: []
     property int cpuCoreCount: 0
     property int cpuMaxFreqKHz: 1
 
@@ -86,11 +81,7 @@ Singleton {
         const d = Math.floor(s / 86400);
         const h = Math.floor((s % 86400) / 3600);
         const m = Math.floor((s % 3600) / 60);
-        if (d > 0)
-            return `${d}d ${h}h ${m}m`;
-        if (h > 0)
-            return `${h}h ${m}m`;
-        return `${m}m`;
+        return d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m` : `${m}m`;
     }
 
     // OS info
@@ -168,11 +159,10 @@ Singleton {
             if (ifaceName !== root.wirelessInterface && ifaceName !== root.wiredInterface)
                 continue;
             interfaces[ifaceName] = {
-                "rxBytes": parseInt(parts[1]) || 0,
-                "txBytes": parseInt(parts[9]) || 0
+                rxBytes: parseInt(parts[1]) || 0,
+                txBytes: parseInt(parts[9]) || 0
             };
         }
-
         return interfaces;
     }
 
@@ -195,25 +185,18 @@ Singleton {
 
         if (previousData && lastUpdateTime > 0) {
             const timeDiffSec = (currentTime - lastUpdateTime) / 1000;
-
             if (timeDiffSec > 0.1) {
                 const prevWireless = previousData[wirelessInterface];
                 const prevWired = previousData[wiredInterface];
 
                 if (wirelessData && prevWireless) {
-                    const rxDiff = wirelessData.rxBytes - prevWireless.rxBytes;
-                    const txDiff = wirelessData.txBytes - prevWireless.txBytes;
-
-                    wirelessDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec);
-                    wirelessUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec);
+                    wirelessDownloadSpeed = Math.max(0, (wirelessData.rxBytes - prevWireless.rxBytes) / 1048576 / timeDiffSec);
+                    wirelessUploadSpeed = Math.max(0, (wirelessData.txBytes - prevWireless.txBytes) / 1048576 / timeDiffSec);
                 }
 
                 if (wiredData && prevWired) {
-                    const rxDiff = wiredData.rxBytes - prevWired.rxBytes;
-                    const txDiff = wiredData.txBytes - prevWired.txBytes;
-
-                    wiredDownloadSpeed = Math.max(0, rxDiff / 1048576 / timeDiffSec);
-                    wiredUploadSpeed = Math.max(0, txDiff / 1048576 / timeDiffSec);
+                    wiredDownloadSpeed = Math.max(0, (wiredData.rxBytes - prevWired.rxBytes) / 1048576 / timeDiffSec);
+                    wiredUploadSpeed = Math.max(0, (wiredData.txBytes - prevWired.txBytes) / 1048576 / timeDiffSec);
                 }
             }
         }
@@ -232,6 +215,26 @@ Singleton {
         return usageMB < 1024 ? usageMB.toFixed(2) + " MB" : (usageMB / 1024).toFixed(2) + " GB";
     }
 
+    function formatKB(kb) {
+        return formatUsage(kb / 1024);
+    }
+
+    function parsePerCoreCpu(data) {
+        const regex = /^cpu(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/gm;
+        const result = {};
+        let m;
+        while ((m = regex.exec(data)) !== null) {
+            const id = parseInt(m[1], 10);
+            const total = parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]) + parseInt(m[5]) + (parseInt(m[6]) || 0);
+            const idle = parseInt(m[5]) + (parseInt(m[6]) || 0);
+            result[id] = {
+                total,
+                idle
+            };
+        }
+        return result;
+    }
+
     FileView {
         id: netDevFileView
 
@@ -245,10 +248,7 @@ Singleton {
         command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/technology"]
         running: true
         stdout: StdioCollector {
-            onStreamFinished: {
-                const technologies = text.trim().split('\n');
-                root.batteryTechnologies = technologies[0] || "Unknown";
-            }
+            onStreamFinished: root.batteryTechnologies = text.trim().split('\n')[0] || "Unknown"
         }
     }
 
@@ -257,25 +257,14 @@ Singleton {
 
         command: ["sh", "-c", `
             nmcli -t -f DEVICE,TYPE,STATE device status | awk -F: '
-            /ethernet/ && !eth_found {
-            print "WIRED_DEV:" $1;
-            print "WIRED_STATE:" $3;
-            eth_found=1
-            }
-            /wifi/ && !wifi_found {
-            print "WIFI_DEV:" $1;
-            wifi_found=1
-            }
-            /^(wg0|CloudflareWARP):/ {
-            print "VPN_DEV:" $1
-            }
-            '
-            `]
+            /ethernet/ && !eth_found { print "WIRED_DEV:" $1; print "WIRED_STATE:" $3; eth_found=1 }
+            /wifi/ && !wifi_found { print "WIFI_DEV:" $1; wifi_found=1 }
+            /^(wg0|CloudflareWARP):/ { print "VPN_DEV:" $1 }
+            '`]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const lines = text.trim().split('\n');
-                for (const line of lines) {
+                for (const line of text.trim().split('\n')) {
                     if (line.startsWith("WIRED_DEV:"))
                         root.wiredInterface = line.substring(10).trim();
                     else if (line.startsWith("WIRED_STATE:"))
@@ -299,15 +288,14 @@ Singleton {
                 const ethDevices = [];
                 for (const line of text.trim().split('\n')) {
                     const [iface, type, state, connection] = line.split(':');
-                    console.log(iface, type, state, connection);
                     if (type !== "ethernet")
                         continue;
                     ethDevices.push({
-                        "interface": iface,
-                        "model": connection || "Unknown Ethernet",
-                        "state": state,
-                        "isActive": state === "connected",
-                        "name": iface
+                        interface: iface,
+                        model: connection || "Unknown Ethernet",
+                        state: state,
+                        isActive: state === "connected",
+                        name: iface
                     });
                 }
                 root.allEthernetDevices = ethDevices;
@@ -318,22 +306,19 @@ Singleton {
     Process {
         id: linkSpeedProc
 
-        property string comm: `
+        command: ["sh", "-c", `
             if [ -n "${root.wiredInterface}" ] && [ -f "/sys/class/net/${root.wiredInterface}/speed" ]; then
                 echo "WIRED_SPEED:$(cat /sys/class/net/${root.wiredInterface}/speed 2>/dev/null || echo 0)"
             else
                 echo "WIRED_SPEED:0"
             fi
-
             if [ -n "${root.wirelessInterface}" ]; then
                 speed=$(iw dev ${root.wirelessInterface} link 2>/dev/null | grep 'tx bitrate:' | awk '{print $3}')
                 echo "WIRELESS_SPEED:\${speed:-0}"
             else
                 echo "WIRELESS_SPEED:0"
             fi
-		`
-
-        command: ["sh", "-c", comm]
+        `]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
@@ -348,25 +333,16 @@ Singleton {
     }
 
     Process {
-        id: vulkanInfoProc
+		id: vulkanInfoProc
 
         command: ["sh", "-c", `
             if command -v vulkaninfo >/dev/null 2>&1; then
                 echo "VULKAN:AVAILABLE"
                 vulkaninfo --summary 2>/dev/null | awk '
                 /Vulkan Instance Version:/ {print "VERSION:" $NF}
-                /GPU id.*deviceName/ {
-                    match($0, /deviceName = (.+)/, arr)
-                    print "DEVICE:" arr[1]
-                }
-                /GPU id.*driverName/ {
-                    match($0, /driverName = (.+)/, arr)
-                    print "DRIVER:" arr[1]
-                }
-                /GPU id.*driverInfo/ {
-                    match($0, /driverInfo = (.+)/, arr)
-                    print "DRIVER_INFO:" arr[1]
-                }
+                /GPU id.*deviceName/ {match($0, /deviceName = (.+)/, arr); print "DEVICE:" arr[1]}
+                /GPU id.*driverName/ {match($0, /driverName = (.+)/, arr); print "DRIVER:" arr[1]}
+                /GPU id.*driverInfo/ {match($0, /driverInfo = (.+)/, arr); print "DRIVER_INFO:" arr[1]}
                 '
             else
                 echo "VULKAN:UNAVAILABLE"
@@ -387,9 +363,8 @@ Singleton {
                     } else if (line.startsWith("VERSION:")) {
                         root.vulkanVersion = line.substring(8).trim();
                     } else if (line.startsWith("DEVICE:")) {
-                        if (currentDevice.name) {
+                        if (currentDevice.name)
                             devices.push(currentDevice);
-                        }
                         currentDevice = {
                             name: line.substring(7).trim()
                         };
@@ -400,38 +375,24 @@ Singleton {
                         currentDevice.driverInfo = line.substring(12).trim();
                     }
                 }
-
-                if (currentDevice.name) {
+                if (currentDevice.name)
                     devices.push(currentDevice);
-                }
-
                 root.vulkanDevices = devices;
             }
         }
     }
 
     Process {
-        id: openglInfoProc
+		id: openglInfoProc
 
         command: ["sh", "-c", `
             if command -v glxinfo >/dev/null 2>&1; then
                 echo "OPENGL:AVAILABLE"
                 glxinfo 2>/dev/null | awk '
-                /^OpenGL version string:/ {
-                    sub(/^OpenGL version string: */, "")
-                    print "GL_VERSION:" $0
-                }
-                /^OpenGL vendor string:/ {
-                    sub(/^OpenGL vendor string: */, "")
-                    print "GL_VENDOR:" $0
-                }
-                /^OpenGL renderer string:/ {
-                    sub(/^OpenGL renderer string: */, "")
-                    print "GL_RENDERER:" $0
-                }
-                /direct rendering:/ {
-                    print "GL_DIRECT:" $NF
-                }
+                /^OpenGL version string:/ {sub(/^OpenGL version string: */, ""); print "GL_VERSION:" $0}
+                /^OpenGL vendor string:/ {sub(/^OpenGL vendor string: */, ""); print "GL_VENDOR:" $0}
+                /^OpenGL renderer string:/ {sub(/^OpenGL renderer string: */, ""); print "GL_RENDERER:" $0}
+                /direct rendering:/ {print "GL_DIRECT:" $NF}
                 '
             else
                 echo "OPENGL:UNAVAILABLE"
@@ -440,9 +401,7 @@ Singleton {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const lines = text.trim().split('\n');
-
-                for (const line of lines) {
+                for (const line of text.trim().split('\n')) {
                     if (line === "OPENGL:AVAILABLE")
                         root.openglAvailable = true;
                     else if (line === "OPENGL:UNAVAILABLE")
@@ -459,26 +418,15 @@ Singleton {
     }
 
     Process {
-        id: vaApiInfoProc
+		id: vaApiInfoProc
 
         command: ["sh", "-c", `
             if command -v vainfo >/dev/null 2>&1; then
                 vainfo 2>/dev/null | awk '
-                /Driver version:/ {
-                    sub(/.*Driver version: */, "")
-                    print "VAAPI_DRIVER:" $0
-                }
-                /VAProfile/ {
-                    if ($2 == ":") {
-                        print "VAAPI_PROFILE:" $1
-                    }
-                }
+                /Driver version:/ {sub(/.*Driver version: */, ""); print "VAAPI_DRIVER:" $0}
+                /VAProfile/ {if ($2 == ":") print "VAAPI_PROFILE:" $1}
                 ' || echo "VAAPI:ERROR"
-                if [ $? -eq 0 ]; then
-                    echo "VAAPI:AVAILABLE"
-                else
-                    echo "VAAPI:UNAVAILABLE"
-                fi
+                if [ $? -eq 0 ]; then echo "VAAPI:AVAILABLE"; else echo "VAAPI:UNAVAILABLE"; fi
             else
                 echo "VAAPI:UNAVAILABLE"
             fi
@@ -499,33 +447,21 @@ Singleton {
                     else if (line.startsWith("VAAPI_PROFILE:"))
                         profiles.push(line.substring(14).trim());
                 }
-
                 root.vaApiProfiles = profiles;
             }
         }
     }
 
     Process {
-        id: vdpauInfoProc
+		id: vdpauInfoProc
 
         command: ["sh", "-c", `
             if command -v vdpauinfo >/dev/null 2>&1; then
                 vdpauinfo 2>/dev/null | awk '
-                /Information string:/ {
-                    sub(/.*Information string: */, "")
-                    print "VDPAU_INFO:" $0
-                }
-                /display:/ {
-                    if ($0 ~ /display:.*\'/) {
-                        print "VDPAU:AVAILABLE"
-                    }
-                }
+                /Information string:/ {sub(/.*Information string: */, ""); print "VDPAU_INFO:" $0}
+                /display:/ {if ($0 ~ /display:.*\\x27/) print "VDPAU:AVAILABLE"}
                 '
-                if [ $? -eq 0 ]; then
-                    echo "VDPAU:AVAILABLE"
-                else
-                    echo "VDPAU:UNAVAILABLE"
-                fi
+                if [ $? -eq 0 ]; then echo "VDPAU:AVAILABLE"; else echo "VDPAU:UNAVAILABLE"; fi
             else
                 echo "VDPAU:UNAVAILABLE"
             fi
@@ -533,9 +469,7 @@ Singleton {
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
-                const lines = text.trim().split('\n');
-
-                for (const line of lines) {
+                for (const line of text.trim().split('\n')) {
                     if (line === "VDPAU:AVAILABLE") {
                         root.vdpauAvailable = true;
                     } else if (line === "VDPAU:UNAVAILABLE") {
@@ -549,7 +483,7 @@ Singleton {
     }
 
     Process {
-        id: intelGpuProc
+		id: intelGpuProc
 
         command: ["sh", "-c", "timeout 1 intel_gpu_top -J -s 500"]
         running: false
@@ -559,42 +493,31 @@ Singleton {
                     const jsonText = text.trim();
                     const cleanedJson = jsonText.endsWith(',') ? jsonText.slice(0, -1) + ']' : jsonText + ']';
                     const dataArray = JSON.parse(cleanedJson);
-
-                    // Get the last sample (most recent data)
                     if (dataArray.length === 0)
                         return;
+
                     const data = dataArray[dataArray.length - 1];
-
-                    // Get GPU usage from render/3d engine
-                    if (data.engines && data.engines["Render/3D"])
+                    if (data.engines?.["Render/3D"])
                         root.gpuUsage = Math.round(data.engines["Render/3D"].busy || 0);
-
-                    // Get power consumption
-                    if (data.power && data.power.GPU)
+                    if (data.power?.GPU)
                         root.gpuPower = data.power.GPU.toFixed(2);
 
                     let totalVramUsed = 0;
-                    if (data.clients)
+                    if (data.clients) {
                         for (const clientId in data.clients) {
                             const client = data.clients[clientId];
-                            if (client.memory && client.memory.system)
+                            if (client.memory?.system)
                                 totalVramUsed += parseInt(client.memory.system.resident) || 0;
                         }
-
-                    // Convert bytes to MB
+                    }
                     root.vramUsed = Math.round(totalVramUsed / 1048576);
 
-                    // Get frequency info
                     if (data.frequency) {
                         root.gpuFreqActual = Math.round(data.frequency.actual || 0);
                         root.gpuFreqRequested = Math.round(data.frequency.requested || 0);
                     }
-
-                    // RC6 (power saving state)
                     if (data.rc6)
                         root.gpuRc6 = data.rc6.value.toFixed(1);
-
-                    // Get memory bandwidth
                     if (data["imc-bandwidth"]) {
                         root.gpuMemBandwidthRead = Math.round(data["imc-bandwidth"].reads || 0);
                         root.gpuMemBandwidthWrite = Math.round(data["imc-bandwidth"].writes || 0);
@@ -612,16 +535,14 @@ Singleton {
         }
     }
 
-    // Fallback
     Process {
-        id: intelGpuSysfsProc
+		id: intelGpuSysfsProc
 
         command: ["sh", "-c", `
             cat /sys/class/drm/card0/gt_cur_freq_mhz 2>/dev/null || echo "0"
             cat /sys/class/drm/card0/gt_max_freq_mhz 2>/dev/null || echo "1"
-
             cat /sys/kernel/debug/dri/0/i915_gem_objects 2>/dev/null | awk '/bytes total/ {print $1}'
-            `]
+        `]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
@@ -632,7 +553,6 @@ Singleton {
                     const vramBytes = parseInt(lines[2]) || 0;
 
                     root.gpuUsage = Math.round((curFreq / maxFreq) * 100);
-
                     if (vramBytes > 0)
                         root.vramUsed = Math.round(vramBytes / 1048576);
                 }
@@ -641,7 +561,7 @@ Singleton {
     }
 
     FileView {
-        id: meminfoFileView
+		id: meminfoFileView
 
         path: "/proc/meminfo"
         onLoaded: {
@@ -655,7 +575,7 @@ Singleton {
     }
 
     Process {
-        id: diskDfProc
+		id: diskDfProc
 
         command: ["sh", "-c", "df -T 2>/dev/null"]
         stdout: StdioCollector {
@@ -687,23 +607,18 @@ Singleton {
                     if (dev.startsWith("/dev/")) {
                         if (!deviceMap.has(dev) || totalKB > deviceMap.get(dev)) {
                             deviceMap.set(dev, totalKB);
-
                             fsList.push({
-                                "name": dev,
-                                "type": fsType,
-                                "mountpoint": mountpoint,
-                                "usedKB": usedKB,
-                                "freeKB": freeKB,
-                                "totalKB": totalKB,
-                                "usedPercent": parseFloat(usedPercent),
-                                "usedFormatted": (usedKB / 1024 / 1024).toFixed(2) + " GB",
-                                "freeFormatted": (freeKB / 1024 / 1024).toFixed(2) + " GB",
-                                "totalFormatted": (totalKB / 1024 / 1024).toFixed(2) + " GB"
+                                name: dev,
+                                type: fsType,
+                                mountpoint: mountpoint,
+                                usedKB: usedKB,
+                                freeKB: freeKB,
+                                totalKB: totalKB,
+                                usedPercent: parseFloat(usedPercent)
                             });
 
                             totalUsed += usedKB;
                             totalFree += freeKB;
-
                             if (mountpoint === "/nix" || mountpoint === "/boot" || mountpoint === "/nix/store")
                                 sysUsed += usedKB;
                             else
@@ -723,15 +638,15 @@ Singleton {
     }
 
     FileView {
-        id: cpuStatFileView
+		id: cpuStatFileView
 
         path: "/proc/stat"
         onLoaded: {
             const data = text();
             const match = data.match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m);
-
             if (!match)
                 return;
+
             const user = parseInt(match[1], 10);
             const nice = parseInt(match[2], 10);
             const system = parseInt(match[3], 10);
@@ -745,20 +660,7 @@ Singleton {
                 root.lastCpuTotal = total;
                 root.lastCpuIdle = idleTotal;
                 root.initialized = true;
-
-                const perCoreRegex = /^cpu(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/gm;
-                const initial = {};
-                let m;
-                while ((m = perCoreRegex.exec(data)) !== null) {
-                    const coreId = parseInt(m[1], 10);
-                    const cTotal = parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]) + parseInt(m[5]) + (parseInt(m[6]) || 0);
-                    const cIdle = parseInt(m[5]) + (parseInt(m[6]) || 0);
-                    initial[coreId] = {
-                        "total": cTotal,
-                        "idle": cIdle
-                    };
-                }
-                root.lastPerCoreCpuData = initial;
+                root.lastPerCoreCpuData = root.parsePerCoreCpu(data);
                 return;
             }
 
@@ -774,38 +676,38 @@ Singleton {
             root.lastCpuIdle = idleTotal;
 
             if (root.lastPerCoreCpuData) {
-                const perCoreRegex = /^cpu(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/gm;
                 const newPerCore = {};
                 const coreResults = root.cpuCores.length > 0 ? [...root.cpuCores] : [];
-                let m;
+                const parsed = root.parsePerCoreCpu(data);
 
-                while ((m = perCoreRegex.exec(data)) !== null) {
-                    const coreId = parseInt(m[1], 10);
-                    const cTotal = parseInt(m[2]) + parseInt(m[3]) + parseInt(m[4]) + parseInt(m[5]) + (parseInt(m[6]) || 0);
-                    const cIdle = parseInt(m[5]) + (parseInt(m[6]) || 0);
+                for (const coreId in parsed) {
+                    const {
+                        total,
+                        idle
+                    } = parsed[coreId];
                     newPerCore[coreId] = {
-                        "total": cTotal,
-                        "idle": cIdle
+                        total,
+                        idle
                     };
 
                     const prev = root.lastPerCoreCpuData[coreId];
                     if (prev) {
-                        const td = cTotal - prev.total;
-                        const id = cIdle - prev.idle;
+                        const td = total - prev.total;
+                        const id = idle - prev.idle;
                         const pct = td > 0 ? Math.round(((td - id) / td) * 100) : 0;
 
-                        // Update or create per-core entry
-                        if (coreId < coreResults.length) {
-                            coreResults[coreId] = {
-                                "core": coreId,
-                                "freqMHz": coreResults[coreId].freqMHz,
-                                "percent": pct
+                        const idx = parseInt(coreId, 10);
+                        if (idx < coreResults.length) {
+                            coreResults[idx] = {
+                                core: idx,
+                                freqMHz: coreResults[idx].freqMHz,
+                                percent: pct
                             };
                         } else {
                             coreResults.push({
-                                "core": coreId,
-                                "freqMHz": 0,
-                                "percent": pct
+                                core: idx,
+                                freqMHz: 0,
+                                percent: pct
                             });
                         }
                     }
@@ -818,7 +720,7 @@ Singleton {
     }
 
     FileView {
-        id: uptimeFileView
+		id: uptimeFileView
 
         path: "/proc/uptime"
         onLoaded: {
@@ -829,7 +731,7 @@ Singleton {
     }
 
     Process {
-        id: cpuFreqProc
+		id: cpuFreqProc
 
         command: ["sh", "-c", "for c in /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq; do cat \"$c\" 2>/dev/null; done"]
         running: false
@@ -845,29 +747,27 @@ Singleton {
 
                     if (i < cores.length) {
                         cores[i] = {
-                            "core": i,
-                            "freqMHz": freqMHz,
-                            "percent": cores[i].percent || 0
+                            core: i,
+                            freqMHz: freqMHz,
+                            percent: cores[i].percent || 0
                         };
                     } else {
                         cores.push({
-                            "core": i,
-                            "freqMHz": freqMHz,
-                            "percent": 0
+                            core: i,
+                            freqMHz: freqMHz,
+                            percent: 0
                         });
                     }
                 }
-
                 root.cpuCores = cores;
             }
         }
     }
 
     Process {
-        id: temperatureProc
+		id: temperatureProc
 
         command: ["sh", "-c", `
-            # CPU package and core temps from coretemp hwmon
             for hwmon in /sys/class/hwmon/hwmon*; do
                 name=$(cat "$hwmon/name" 2>/dev/null)
                 if [ "$name" = "coretemp" ]; then
@@ -880,25 +780,17 @@ Singleton {
                     done
                 fi
             done
-
-            # Battery temp
             for bat in /sys/class/power_supply/BAT*; do
-                if [ -f "$bat/temp" ]; then
-                    echo "BATTEMP:$(cat "$bat/temp" 2>/dev/null)"
-                fi
+                [ -f "$bat/temp" ] && echo "BATTEMP:$(cat "$bat/temp" 2>/dev/null)"
             done
-
-            # dGPU temp (NVIDIA/AMD)
             for card in /sys/class/drm/card*; do
                 if [ -d "$card/device/hwmon" ]; then
                     for hwmon in "$card/device/hwmon/hwmon"*; do
-                        if [ -f "$hwmon/temp1_input" ]; then
-                            echo "GPUTEMP:$(cat "$hwmon/temp1_input" 2>/dev/null)"
-                        fi
+                        [ -f "$hwmon/temp1_input" ] && echo "GPUTEMP:$(cat "$hwmon/temp1_input" 2>/dev/null)"
                     done
                 fi
             done
-            `]
+        `]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
@@ -911,13 +803,12 @@ Singleton {
                         if (parts.length >= 2) {
                             const label = parts[0];
                             const temp = parseInt(parts[1], 10) / 1000;
-
                             if (label.startsWith("Package"))
                                 root.cpuTemp = temp;
                             else if (label.startsWith("Core"))
                                 coreTemps.push({
-                                    "core": coreTemps.length,
-                                    "temp": temp
+                                    core: coreTemps.length,
+                                    temp: temp
                                 });
                         }
                     } else if (line.startsWith("BATTEMP:")) {
@@ -932,7 +823,6 @@ Singleton {
                         }
                     }
                 }
-
                 root.cpuCoreTemps = coreTemps;
                 if (!foundGpuTemp)
                     root.gpuTemp = 0;
@@ -946,9 +836,7 @@ Singleton {
         command: ["sh", "-c", "lscpu | grep 'Model name' | cut -f 2 -d ':' | awk '{$1=$1}1'"]
         running: false
         stdout: StdioCollector {
-            onStreamFinished: {
-                root.cpuName = text.trim();
-            }
+            onStreamFinished: root.cpuName = text.trim()
         }
     }
 
@@ -958,9 +846,7 @@ Singleton {
         command: ["sh", "-c", "lspci 2>/dev/null | grep -i 'vga\\|3d\\|display' | head -1 | sed 's/.*: //'"]
         running: false
         stdout: StdioCollector {
-            onStreamFinished: {
-                root.gpuName = text.trim();
-            }
+            onStreamFinished: root.gpuName = text.trim()
         }
     }
 
@@ -977,7 +863,7 @@ Singleton {
             echo "MAXFREQ:$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 2>/dev/null || echo 1)"
             echo "FLAGS:$(grep -m1 '^flags' /proc/cpuinfo 2>/dev/null | cut -d: -f2- | xargs)"
             echo "MEMSLEEP:$(cat /sys/power/mem_sleep 2>/dev/null || echo '')"
-            `]
+        `]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
@@ -1001,11 +887,10 @@ Singleton {
                     else if (line.startsWith("MEMSLEEP:")) {
                         const sleepStr = line.substring(9);
                         root.deepSleepSupported = sleepStr.includes("deep");
-                        const activeMatch = sleepStr.match(/\[([^\]]+)\]/);
+                        const activeMatch = sleepStr.match(/\\[([^\\]]+)\\]/);
                         root.sleepMode = activeMatch ? activeMatch[1] : "";
                     }
                 }
-
                 root.staticInfoLoaded = true;
             }
         }
@@ -1015,10 +900,10 @@ Singleton {
         id: mainTimer
 
         property int updateCycle: 0
-
-        running: GlobalStates.isDashboardOpen || GlobalStates.isQuickSettingsOpen
+        readonly property bool shouldRun: GlobalStates.isDashboardOpen || GlobalStates.isQuickSettingsOpen
+        running: shouldRun
         interval: 2000
-        repeat: GlobalStates.isDashboardOpen || GlobalStates.isQuickSettingsOpen
+        repeat: shouldRun
         triggeredOnStart: true
 
         onTriggered: {
@@ -1049,19 +934,18 @@ Singleton {
                 linkSpeedProc.running = true;
                 break;
             }
-
             updateCycle = (updateCycle + 1) % 6;
-
-            if (!root.staticInfoLoaded) {
-                gpuNameProc.running = true;
-                cpuNameProc.running = true;
-                osInfoProc.running = true;
-                vulkanInfoProc.running = true;
-                openglInfoProc.running = true;
-                vaApiInfoProc.running = true;
-                vdpauInfoProc.running = true;
-            }
         }
+    }
+
+    Component.onCompleted: {
+        gpuNameProc.running = true;
+        cpuNameProc.running = true;
+        osInfoProc.running = true;
+        vulkanInfoProc.running = true;
+        openglInfoProc.running = true;
+        vaApiInfoProc.running = true;
+        vdpauInfoProc.running = true;
     }
 
     Component.onDestruction: {
