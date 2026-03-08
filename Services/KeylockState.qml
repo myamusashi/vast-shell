@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import KeylockState
+import Vast
 
 Singleton {
     readonly property bool capsLock: Keylock.capsLock

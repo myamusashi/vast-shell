@@ -2,7 +2,7 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Io
-import TranslationManager
+import Vast
 
 import qs.Helpers
 

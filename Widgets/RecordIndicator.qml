@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import Vast
 
 import qs.Configs
 import qs.Helpers
@@ -111,7 +112,7 @@ StyledRect {
 
                 onTapped: {
                     iconStatus.isRecording = !iconStatus.isRecording;
-                    ScreenCapture.exec("--stop-recording");
+                    ScreenRecorder.stopRecording();
                 }
             }
         }
