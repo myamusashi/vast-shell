@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
+import Vast
 
 import qs.Configs
 import qs.Helpers
@@ -20,6 +21,7 @@ Item {
         bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
     }
 
+    property bool isNavigating: false
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
     property int currentIndex: 0
 
@@ -45,9 +47,7 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        Fuzzy.loadLaunchHistory();
-    }
+    Component.onCompleted: Fuzzy.loadLaunchHistory()
 
     Corner {
         location: Qt.BottomLeftCorner
@@ -90,7 +90,9 @@ Item {
                             forceActiveFocus();
                     }
                     onTextChanged: {
-                        root.currentIndex = 0;
+                        root.isNavigating = false;
+                        searchTimer.restart();
+                        listView.currentIndex = listView.count > 0 ? 0 : -1;
                         listView.positionViewAtBeginning();
                     }
                     Keys.onPressed: function (event) {
@@ -110,6 +112,7 @@ Item {
                             break;
                         case Qt.Key_Down:
                             if (listView.count > 0) {
+                                root.isNavigating = true;
                                 listView.focus = true;
                                 event.accepted = true;
                             }
@@ -118,26 +121,45 @@ Item {
                     }
                 }
 
+                StyledText {
+                    id: searchSpeed
+
+                    text: ""
+                    font.pixelSize: Appearance.fonts.size.normal
+                    color: Colours.m3Colors.m3PrimaryFixed
+                }
+
+                ElapsedTimer {
+                    id: searchTimer
+                }
+
                 ListView {
                     id: listView
 
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     model: ScriptModel {
-                        values: Fuzzy.fuzzySearch(DesktopEntries.applications.values // get all apps list
-                        , search.text // get input fields
-                        , "name" // keyword
-                        , 0.55 // threshold
-                        , Fuzzy.getRecencyScore // receny score
-                        )
+                        values: SearchEngine.searchApps(search.text)
                     }
                     clip: true
                     spacing: 8
-                    cacheBuffer: 0
-                    highlightMoveDuration: 200
-                    maximumFlickVelocity: 3000
+                    cacheBuffer: implicitHeight
+                    highlightMoveDuration: root.isNavigating ? 200 : 0
+                    maximumFlickVelocity: 1000
                     highlightMoveVelocity: -1
                     highlightFollowsCurrentItem: true
+                    onCountChanged: {
+                        if (count === 0) {
+                            currentIndex = -1;
+                            searchSpeed.text = "";
+                        } else {
+                            if (currentIndex >= count || currentIndex < 0)
+                                currentIndex = 0;
+                            const ms = searchTimer.elapsedMs();
+                            searchSpeed.text = qsTr("Found %1 apps in %2ms").arg(count).arg(ms);
+                        }
+                    }
+
                     highlight: StyledRect {
                         color: Colours.m3Colors.m3SurfaceContainerHigh
                         width: listView.width
@@ -206,7 +228,6 @@ Item {
                         contentItem: RowLayout {
                             spacing: Appearance.spacing.normal
 
-                            z: 99
                             StyledRect {
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.leftMargin: Appearance.margin.normal
@@ -242,8 +263,6 @@ Item {
                                     elide: Text.ElideRight
                                     font.weight: Font.DemiBold
                                     color: Colours.m3Colors.m3OnSurface
-                                    normalColor: Colours.m3Colors.m3OnSurface
-                                    highlightColor: Colours.m3Colors.m3Primary
                                 }
 
                                 StyledText {
@@ -266,7 +285,6 @@ Item {
                                 root.launch(delegateItem.modelData);
                                 GlobalStates.isLauncherOpen = false;
                             }
-                            onEntered: listView.currentIndex = delegateItem.index
                         }
                         Keys.onPressed: function (event) {
                             switch (event.key) {
