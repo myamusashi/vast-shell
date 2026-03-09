@@ -1,19 +1,6 @@
 #include "SearchResult.hpp"
 #include "FuzzyMatcher.hpp"
 
-SearchResult* SearchResult::makeApp(const QString& title, const QString& subtitle, const QString& icon, double score, const QVariantMap& data, const QVariantList& ranges,
-                                    QObject* parent) {
-    auto* r = new SearchResult(parent);
-    r->setType("app");
-    r->setTitle(title);
-    r->setSubtitle(subtitle);
-    r->setIcon(icon);
-    r->setScore(score);
-    r->setData(data);
-    r->setHighlightRanges(ranges);
-    return r;
-}
-
 SearchResult* SearchResult::makeFile(const QString& title, const QString& subtitle, const QString& icon, double score, const QVariantMap& data, const QVariantList& ranges,
                                      QObject* parent) {
     auto* r = new SearchResult(parent);
@@ -27,9 +14,8 @@ SearchResult* SearchResult::makeFile(const QString& title, const QString& subtit
     return r;
 }
 
-// helpers
 QString SearchResult::highlightedTitle(const QString& color) const {
-    // rebuild HTML from the stored ranges rather than re-running the scorer
+    // Re-build HTML from the stored ranges rather than re-running the scorer.
     if (m_highlightRanges.isEmpty())
         return FuzzyMatcher::escapeHtml(m_title);
 

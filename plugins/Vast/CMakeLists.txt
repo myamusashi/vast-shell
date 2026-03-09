@@ -50,8 +50,6 @@ qt_add_qml_module(VastPlugin
         search/FuzzyMatcher.cpp
         search/SearchResult.hpp
         search/SearchResult.cpp
-        search/AppProvider.hpp
-        search/AppProvider.cpp
         search/FileProvider.hpp
         search/FileProvider.cpp
         search/SearchEngine.hpp

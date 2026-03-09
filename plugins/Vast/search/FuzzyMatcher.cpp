@@ -3,10 +3,12 @@
 #include <QRegularExpression>
 #include <algorithm>
 #include <cmath>
-#include <qtypes.h>
+
+// ── Char normalisation table ──────────────────────────────────────────────────
 
 const QHash<QChar, QChar>& FuzzyMatcher::charLookup() {
     static QHash<QChar, QChar> map = []() {
+        // raw map: canonical → lookalike string (mirrors the QML charMap)
         const struct {
             char        key;
             const char* chars;
@@ -26,6 +28,8 @@ const QHash<QChar, QChar>& FuzzyMatcher::charLookup() {
     return map;
 }
 
+// ── Normalisation ─────────────────────────────────────────────────────────────
+
 QChar FuzzyMatcher::normalizeChar(QChar c) {
     const QChar lower = c.toLower();
     return charLookup().value(lower, lower);
@@ -39,6 +43,8 @@ QString FuzzyMatcher::normalizeText(const QString& text) {
     return out;
 }
 
+// ── HTML helpers ──────────────────────────────────────────────────────────────
+
 QString FuzzyMatcher::escapeHtml(const QString& text) {
     QString out = text;
     out.replace('&', "&amp;");
@@ -49,6 +55,7 @@ QString FuzzyMatcher::escapeHtml(const QString& text) {
     return out;
 }
 
+// Returns [{start, length}, …] covering every match of query inside text.
 QVariantList FuzzyMatcher::highlightRanges(const QString& text, const QString& query) {
     QVariantList ranges;
     if (query.trimmed().isEmpty())
@@ -60,7 +67,7 @@ QVariantList FuzzyMatcher::highlightRanges(const QString& text, const QString& q
 
     const QString normText = normalizeText(text);
 
-    qsizetype     pos = 0;
+    int           pos = 0;
     while ((pos = normText.indexOf(normQuery, pos)) != -1) {
         QVariantMap range;
         range["start"]  = pos;
@@ -82,8 +89,8 @@ QString FuzzyMatcher::highlightedHtml(const QString& text, const QString& query,
     const QString normText = normalizeText(text);
 
     QString       result;
-    qsizetype     last = 0;
-    qsizetype     idx  = normText.indexOf(normQuery);
+    int           last = 0;
+    int           idx  = normText.indexOf(normQuery);
 
     while (idx != -1) {
         if (idx > last)
@@ -102,6 +109,8 @@ QString FuzzyMatcher::highlightedHtml(const QString& text, const QString& query,
 
     return result;
 }
+
+// ── Sub-scores ────────────────────────────────────────────────────────────────
 
 bool FuzzyMatcher::isSubsequence(const QString& q, const QString& t) {
     int qi = 0;
@@ -136,16 +145,16 @@ double FuzzyMatcher::subsequenceScore(const QString& q, const QString& t) {
 
 int FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) {
     if (a.isEmpty())
-        return b.length();
+        return static_cast<int>(b.length());
     if (b.isEmpty())
-        return a.length();
+        return static_cast<int>(a.length());
 
     // Use the shorter string as "columns" to save memory.
     const QString&   shorter = a.length() <= b.length() ? a : b;
     const QString&   longer  = a.length() <= b.length() ? b : a;
 
-    const qsizetype  slen = shorter.length();
-    const qsizetype  llen = longer.length();
+    const int        slen = static_cast<int>(shorter.length());
+    const int        llen = static_cast<int>(longer.length());
 
     std::vector<int> prev(slen + 1), curr(slen + 1);
     for (int i = 0; i <= slen; ++i)
@@ -170,12 +179,13 @@ int FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) {
 }
 
 double FuzzyMatcher::distanceScore(const QString& a, const QString& b) {
-    const int maxLen = std::max(a.length(), b.length());
+    const int maxLen = static_cast<int>(std::max(a.length(), b.length()));
     if (maxLen == 0)
         return 1.0;
 
     // Skip Levenshtein when the length gap makes a good match impossible.
-    if (static_cast<double>(std::abs(a.length() - b.length())) / maxLen > 0.7)
+    const int lenDiff = static_cast<int>(std::abs(a.length() - b.length()));
+    if (static_cast<double>(lenDiff) / maxLen > 0.7)
         return 0.0;
 
     const int    dist  = levenshteinDistance(a, b);
@@ -247,9 +257,8 @@ double FuzzyMatcher::getMultiWordScore(const QStringList& qWords, const QString&
     if (qWords.size() == 1)
         return getScore(qWords[0], t, tWords);
 
-    double          total       = 0.0;
-    int             matched     = 0;
-    const qsizetype total_words = qWords.size();
+    double    total   = 0.0;
+    qsizetype matched = 0;
 
     for (const QString& qw : qWords) {
         const double s = getScore(qw, t, tWords);
@@ -258,11 +267,11 @@ double FuzzyMatcher::getMultiWordScore(const QStringList& qWords, const QString&
             ++matched;
         }
     }
-
-    if (matched < total_words)
+    // All query words must contribute.
+    if (matched < qWords.size())
         return 0.0;
 
-    return total / static_cast<double>(total_words);
+    return total / static_cast<double>(qWords.size());
 }
 
 double FuzzyMatcher::fuzzyScore(const QString& query, const QString& text) {
