@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QAbstractListModel>
 #include <QList>
 #include <QVariantMap>
@@ -9,7 +10,7 @@ struct ProfileEntry {
     QString name;
     QString description;
     QString available;
-    QString readable; // human-friendly label, e.g. "Headphones + Microphone"
+    QString readable;
 };
 
 class AudioProfilesModel : public QAbstractListModel {
@@ -39,7 +40,7 @@ class AudioProfilesModel : public QAbstractListModel {
 
     // QML helper: returns a plain JS object for row i
     Q_INVOKABLE QVariantMap get(int row) const;
-    Q_INVOKABLE int         count() const {
+    Q_INVOKABLE qsizetype   count() const {
         return m_profiles.size();
     }
 
