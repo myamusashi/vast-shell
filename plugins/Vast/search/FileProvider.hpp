@@ -8,6 +8,13 @@
 #include <QObject>
 #include <QString>
 
+// ---------------------------------------------------------------------------
+// FileProvider
+//
+// Async fuzzy search over the filesystem via QtConcurrent.
+// searchAsync() cancels any in-progress search automatically.
+// filesReady(results) is emitted on the main thread when done.
+// ---------------------------------------------------------------------------
 class FileProvider : public QObject {
     Q_OBJECT
 
@@ -16,7 +23,9 @@ class FileProvider : public QObject {
     ~FileProvider() override;
 
     void                 searchAsync(const QString& query, const QString& rootDir, int maxDepth = 3, double threshold = 0.40);
+
     QList<SearchResult*> searchSync(const QString& query, const QString& rootDir, int maxDepth = 2, double threshold = 0.40) const;
+
     void                 cancel();
 
   signals:
@@ -34,7 +43,9 @@ class FileProvider : public QObject {
 
     static QList<FileEntry>               collectFiles(const QString& rootDir, int maxDepth);
     static QString                        mimeIcon(const QString& mimeType, bool isDir);
+
     QList<SearchResult*>                  scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold) const;
+
     QFutureWatcher<QList<SearchResult*>>* m_watcher = nullptr;
     QMimeDatabase                         m_mimeDb;
 };

@@ -1,16 +1,15 @@
-#include "FuzzyMatcher.hpp"
 #include "SearchEngine.hpp"
 
 #include <QDateTime>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QRegularExpression>
 #include <algorithm>
 #include <cmath>
 
 SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
     m_settings     = new QSettings("vast-shell", "myamusashi", this);
-    m_appProvider  = new AppProvider(this);
     m_fileProvider = new FileProvider(this);
 
     connect(m_fileProvider, &FileProvider::filesReady, this, [this](QList<SearchResult*> results) {
@@ -58,26 +57,117 @@ void SearchEngine::saveHistory() {
     m_settings->setValue("launchHistory", QJsonDocument(arr).toJson(QJsonDocument::Compact));
 }
 
+// ── Recency ───────────────────────────────────────────────────────────────────
+
 double SearchEngine::recencyScore(const QString& appId) const {
     const qint64 now = QDateTime::currentMSecsSinceEpoch();
     for (const HistoryEntry& e : m_history) {
         if (e.id == appId) {
-            const double age            = static_cast<double>(now - e.timestamp);
-            const double dayMs          = 86400000.0;
-            const double recencyScore   = std::exp(-age / (dayMs * 7.0));
-            const double frequencyScore = std::min(e.count / 10.0, 1.0);
-            return recencyScore * 0.7 + frequencyScore * 0.3;
+            const double age       = static_cast<double>(now - e.timestamp);
+            const double recency   = std::exp(-age / (86400000.0 * 7.0));
+            const double frequency = std::min(e.count / 10.0, 1.0);
+            return recency * 0.7 + frequency * 0.3;
         }
     }
     return 0.0;
 }
 
-QHash<QString, double> SearchEngine::recencyMap() const {
-    QHash<QString, double> map;
-    map.reserve(m_history.size());
-    for (const HistoryEntry& e : m_history)
-        map.insert(e.id, recencyScore(e.id));
-    return map;
+// ── App scoring ───────────────────────────────────────────────────────────────
+
+double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const {
+    const QString     name        = FuzzyMatcher::normalizeText(entry->property("name").toString());
+    const QString     genericName = FuzzyMatcher::normalizeText(entry->property("genericName").toString());
+    const QString     comment     = FuzzyMatcher::normalizeText(entry->property("comment").toString());
+
+    const QStringList nameWords = name.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+
+    // Primary: name
+    double nameScore = 0.0;
+    if (name == normQuery)
+        nameScore = 1.0;
+    else if (name.contains(normQuery))
+        nameScore = 0.95;
+    else
+        nameScore = FuzzyMatcher::getMultiWordScore(normQueryWords, name, nameWords);
+
+    if (nameScore >= 0.9)
+        return nameScore;
+
+    // Secondary: genericName (x0.7)
+    double genericScore = 0.0;
+    if (!genericName.isEmpty()) {
+        const QStringList gWords = genericName.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        genericScore             = FuzzyMatcher::getMultiWordScore(normQueryWords, genericName, gWords) * 0.7;
+    }
+
+    // Tertiary: comment (x0.5)
+    double commentScore = 0.0;
+    if (!comment.isEmpty()) {
+        const QStringList cWords = comment.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        commentScore             = FuzzyMatcher::getMultiWordScore(normQueryWords, comment, cWords) * 0.5;
+    }
+
+    return std::max({nameScore, genericScore, commentScore});
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
+
+QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& query) const {
+    // No query: return recently launched apps sorted by recency score.
+    if (query.trimmed().isEmpty()) {
+        QList<QPair<double, QVariant>> hits;
+        for (const QVariant& v : apps) {
+            QObject* entry = qvariant_cast<QObject*>(v);
+            if (!entry)
+                continue;
+            const double r = recencyScore(entry->property("id").toString());
+            if (r > 0.0)
+                hits.append({r, v});
+        }
+        std::sort(hits.begin(), hits.end(), [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
+        QVariantList out;
+        out.reserve(hits.size());
+        for (const auto& h : hits)
+            out.append(h.second);
+        return out;
+    }
+
+    const QString     normQuery      = FuzzyMatcher::normalizeText(query).trimmed();
+    const QStringList normQueryWords = normQuery.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+
+    struct Hit {
+        double   score;
+        QVariant variant;
+        QString  name;
+    };
+    QList<Hit> hits;
+
+    for (const QVariant& v : apps) {
+        QObject* entry = qvariant_cast<QObject*>(v);
+        if (!entry)
+            continue;
+
+        const double base = scoreApp(entry, normQueryWords, normQuery);
+        if (base < m_appThreshold)
+            continue;
+
+        const double finalScore = base + recencyScore(entry->property("id").toString()) * FuzzyMatcher::kRecencyWeight;
+
+        hits.append({finalScore, v, entry->property("name").toString()});
+    }
+
+    std::sort(hits.begin(), hits.end(), [](const Hit& a, const Hit& b) {
+        if (std::abs(a.score - b.score) < 0.001)
+            return a.name.length() < b.name.length();
+        return a.score > b.score;
+    });
+
+    // Return the original DesktopEntry* variants — delegate needs no changes.
+    QVariantList out;
+    out.reserve(hits.size());
+    for (const Hit& h : hits)
+        out.append(h.variant);
+    return out;
 }
 
 void SearchEngine::recordLaunch(const QString& appId) {
@@ -109,18 +199,7 @@ void SearchEngine::clearHistory() {
     saveHistory();
 }
 
-void SearchEngine::reloadApps() {
-    m_appProvider->reload();
-}
-
-QVariantList SearchEngine::searchApps(const QString& query) const {
-    const QList<SearchResult*> raw = m_appProvider->search(query, recencyMap(), m_appThreshold);
-    QVariantList               out;
-    out.reserve(raw.size());
-    for (SearchResult* r : raw)
-        out.append(QVariant::fromValue(r));
-    return out;
-}
+// ── File search ───────────────────────────────────────────────────────────────
 
 void SearchEngine::searchFiles(const QString& query, const QString& rootDir, int maxDepth) {
     m_fileProvider->searchAsync(query, rootDir, maxDepth, m_fileThreshold);
@@ -139,16 +218,7 @@ void SearchEngine::cancelFileSearch() {
     m_fileProvider->cancel();
 }
 
-QVariantList SearchEngine::search(const QString& query, const QString& fileRootDir, int fileMaxDepth) const {
-    // apps are synchronous and fast
-    QVariantList results = searchApps(query);
-
-    // kick off async file search if a root dir is provided
-    if (!fileRootDir.isEmpty())
-        const_cast<SearchEngine*>(this)->searchFiles(query, fileRootDir, fileMaxDepth);
-
-    return results;
-}
+// ── Utilities ─────────────────────────────────────────────────────────────────
 
 QString SearchEngine::highlightedHtml(const QString& text, const QString& query, const QString& color) const {
     return FuzzyMatcher::highlightedHtml(text, query, color);

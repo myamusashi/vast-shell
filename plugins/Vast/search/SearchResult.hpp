@@ -6,6 +6,15 @@
 #include <QVariantList>
 #include <QVariantMap>
 
+// ---------------------------------------------------------------------------
+// SearchResult
+//
+// A single search hit returned by SearchEngine. QML sees it as a plain
+// property object; C++ callers build instances via the static factories.
+//
+// App:   type="app",  data keys: id, exec, terminal, categories
+// File:  type="file", data keys: path, isDir, mimeType
+// ---------------------------------------------------------------------------
 class SearchResult : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -44,16 +53,12 @@ class SearchResult : public QObject {
         m_highlightRanges = v;
     }
 
-    static SearchResult* makeApp(const QString& title, const QString& subtitle, const QString& icon, double score, const QVariantMap& data, const QVariantList& ranges,
-                                 QObject* parent = nullptr);
-
     static SearchResult* makeFile(const QString& title, const QString& subtitle, const QString& icon, double score, const QVariantMap& data, const QVariantList& ranges,
                                   QObject* parent = nullptr);
 
     QString              type() const {
         return m_type;
     }
-
     QString title() const {
         return m_title;
     }
@@ -73,6 +78,7 @@ class SearchResult : public QObject {
         return m_highlightRanges;
     }
 
+    // Returns HTML-highlighted title using pre-computed ranges.
     Q_INVOKABLE QString highlightedTitle(const QString& color) const;
 
   private:
