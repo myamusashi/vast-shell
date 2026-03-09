@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <cmath>
 
+// ── Construction ──────────────────────────────────────────────────────────────
+
 SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
     m_settings     = new QSettings("vast-shell", "myamusashi", this);
     m_fileProvider = new FileProvider(this);
@@ -26,6 +28,8 @@ SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
 
     loadHistory();
 }
+
+// ── History persistence ───────────────────────────────────────────────────────
 
 void SearchEngine::loadHistory() {
     m_history.clear();
@@ -113,18 +117,19 @@ double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords,
 // ── Public API ────────────────────────────────────────────────────────────────
 
 QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& query) const {
-    // No query: return recently launched apps sorted by recency score.
+    // No query: show all apps, recently launched ones sorted to the top.
     if (query.trimmed().isEmpty()) {
         QList<QPair<double, QVariant>> hits;
+        hits.reserve(apps.size());
         for (const QVariant& v : apps) {
             QObject* entry = qvariant_cast<QObject*>(v);
             if (!entry)
                 continue;
             const double r = recencyScore(entry->property("id").toString());
-            if (r > 0.0)
-                hits.append({r, v});
+            hits.append({r, v});
         }
-        std::sort(hits.begin(), hits.end(), [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
+        // Stable sort: recency desc, then original order for ties (r == 0).
+        std::stable_sort(hits.begin(), hits.end(), [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
         QVariantList out;
         out.reserve(hits.size());
         for (const auto& h : hits)
