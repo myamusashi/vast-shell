@@ -139,7 +139,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     model: ScriptModel {
-                        values: SearchEngine.searchApps(search.text)
+                        values: SearchEngine.searchApps(DesktopEntries.applications.values, search.text)
                     }
                     clip: true
                     spacing: 8

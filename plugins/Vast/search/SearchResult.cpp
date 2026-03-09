@@ -15,7 +15,6 @@ SearchResult* SearchResult::makeFile(const QString& title, const QString& subtit
 }
 
 QString SearchResult::highlightedTitle(const QString& color) const {
-    // Re-build HTML from the stored ranges rather than re-running the scorer.
     if (m_highlightRanges.isEmpty())
         return FuzzyMatcher::escapeHtml(m_title);
 
