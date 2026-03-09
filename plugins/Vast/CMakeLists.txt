@@ -11,7 +11,7 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(QML_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/Vast")
 
-find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick Concurrent)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PIPEWIRE REQUIRED libpipewire-0.3)
 
@@ -33,8 +33,8 @@ qt_add_library(VastQmlPlugin SHARED)
 qt_add_qml_module(VastPlugin
     URI Vast
     VERSION 1.0
-	PLUGIN_TARGET VastQmlPlugin
-	OUTPUT_DIRECTORY "${QML_OUTPUT_DIR}"
+    PLUGIN_TARGET VastQmlPlugin
+    OUTPUT_DIRECTORY "${QML_OUTPUT_DIR}"
     SOURCES
         AudioProfilesModel.hpp
         AudioProfilesModel.cpp
@@ -46,14 +46,29 @@ qt_add_qml_module(VastPlugin
         TranslationManager.cpp
         ScreenRecorder.hpp
         ScreenRecorder.cpp
+        search/FuzzyMatcher.hpp
+        search/FuzzyMatcher.cpp
+        search/SearchResult.hpp
+        search/SearchResult.cpp
+        search/AppProvider.hpp
+        search/AppProvider.cpp
+        search/FileProvider.hpp
+        search/FileProvider.cpp
+        search/SearchEngine.hpp
+        search/SearchEngine.cpp
 )
 
-target_include_directories(VastPlugin PRIVATE ${PIPEWIRE_INCLUDE_DIRS})
+target_include_directories(VastPlugin PRIVATE
+    ${PIPEWIRE_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/search
+)
+
 target_link_libraries(VastPlugin PRIVATE
     Qt6::Core
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
+    Qt6::Concurrent
     ${PIPEWIRE_LIBRARIES}
 )
 target_compile_options(VastPlugin PRIVATE ${PIPEWIRE_CFLAGS_OTHER})
@@ -79,7 +94,7 @@ if(NOT DEFINED QML_INSTALL_DEST OR QML_INSTALL_DEST STREQUAL "/qt-6/qml/Vast")
     set(QML_INSTALL_DEST "lib/qt-6/qml/Vast")
 endif()
 
-set_target_properties(VastPlugin PROPERTIES INSTALL_RPATH "\$ORIGIN")
+set_target_properties(VastPlugin   PROPERTIES INSTALL_RPATH "\$ORIGIN")
 set_target_properties(VastQmlPlugin PROPERTIES INSTALL_RPATH "\$ORIGIN")
 
 install(TARGETS VastPlugin
@@ -99,7 +114,7 @@ install(
         PATTERN "qmldir"
         PATTERN "*.qmltypes"
         PATTERN "*.qml"
-        PATTERN "*.so" EXCLUDE
+        PATTERN "*.so"  EXCLUDE
         PATTERN "*.dll" EXCLUDE
 )
 
