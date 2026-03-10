@@ -279,7 +279,7 @@ void ScreenRecorder::startRecording(const QString& geometry, const QString& outp
         return;
     }
 
-    m_recordingPid = m_recordingProcess->processId();
+    m_recordingPid = static_cast<int>(m_recordingProcess->processId());
     m_isRecording  = true;
 
     QFile pidFile(m_pidFile);

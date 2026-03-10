@@ -103,7 +103,6 @@ void Keylock::readInitialState(int fd, bool hasLED) {
             }
             ::close(ttyFd);
         } else {
-            // read key state bitmap from evdev
             unsigned long keyState[(KEY_MAX / 8) + 1] = {};
             if (::ioctl(fd, EVIOCGKEY(sizeof(keyState)), keyState) == 0) {
                 // EVIOCGKEY gives currently held keys, not toggle state
