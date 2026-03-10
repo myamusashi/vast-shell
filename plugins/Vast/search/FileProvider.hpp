@@ -8,13 +8,6 @@
 #include <QObject>
 #include <QString>
 
-// ---------------------------------------------------------------------------
-// FileProvider
-//
-// Async fuzzy search over the filesystem via QtConcurrent.
-// searchAsync() cancels any in-progress search automatically.
-// filesReady(results) is emitted on the main thread when done.
-// ---------------------------------------------------------------------------
 class FileProvider : public QObject {
     Q_OBJECT
 

@@ -6,15 +6,8 @@
 #include <QVariantList>
 #include <QVariantMap>
 
-// ---------------------------------------------------------------------------
-// SearchResult
-//
-// A single search hit returned by SearchEngine. QML sees it as a plain
-// property object; C++ callers build instances via the static factories.
-//
 // App:   type="app",  data keys: id, exec, terminal, categories
 // File:  type="file", data keys: path, isDir, mimeType
-// ---------------------------------------------------------------------------
 class SearchResult : public QObject {
     Q_OBJECT
     QML_ELEMENT
