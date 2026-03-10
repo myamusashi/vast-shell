@@ -232,7 +232,7 @@ Item {
                                     spacing: Appearance.spacing.small * 0.4
 
                                     StyledText {
-										id: netLabelDelegate
+                                        id: netLabelDelegate
 
                                         FontMetrics {
                                             id: netLabelMetrics

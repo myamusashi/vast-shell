@@ -89,7 +89,7 @@ Item {
                         {
                             "icon": "power_settings_circle",
                             "name": qsTr("Shutdown"),
-                            "action": "shutdown"
+                            "action": "shutdown now"
                         },
                         {
                             "icon": "restart_alt",
