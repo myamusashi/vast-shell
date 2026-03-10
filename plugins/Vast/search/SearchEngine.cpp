@@ -1,4 +1,5 @@
 #include "SearchEngine.hpp"
+#include "FuzzyMatcher.hpp"
 
 #include <QDateTime>
 #include <QJsonArray>
@@ -7,8 +8,6 @@
 #include <QRegularExpression>
 #include <algorithm>
 #include <cmath>
-
-// ── Construction ──────────────────────────────────────────────────────────────
 
 SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
     m_settings     = new QSettings("vast-shell", "myamusashi", this);
@@ -28,8 +27,6 @@ SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
 
     loadHistory();
 }
-
-// ── History persistence ───────────────────────────────────────────────────────
 
 void SearchEngine::loadHistory() {
     m_history.clear();
@@ -61,8 +58,6 @@ void SearchEngine::saveHistory() {
     m_settings->setValue("launchHistory", QJsonDocument(arr).toJson(QJsonDocument::Compact));
 }
 
-// ── Recency ───────────────────────────────────────────────────────────────────
-
 double SearchEngine::recencyScore(const QString& appId) const {
     const qint64 now = QDateTime::currentMSecsSinceEpoch();
     for (const HistoryEntry& e : m_history) {
@@ -76,8 +71,6 @@ double SearchEngine::recencyScore(const QString& appId) const {
     return 0.0;
 }
 
-// ── App scoring ───────────────────────────────────────────────────────────────
-
 double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const {
     const QString     name        = FuzzyMatcher::normalizeText(entry->property("name").toString());
     const QString     genericName = FuzzyMatcher::normalizeText(entry->property("genericName").toString());
@@ -85,7 +78,6 @@ double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords,
 
     const QStringList nameWords = name.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
-    // Primary: name
     double nameScore = 0.0;
     if (name == normQuery)
         nameScore = 1.0;
@@ -97,14 +89,12 @@ double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords,
     if (nameScore >= 0.9)
         return nameScore;
 
-    // Secondary: genericName (x0.7)
     double genericScore = 0.0;
     if (!genericName.isEmpty()) {
         const QStringList gWords = genericName.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
         genericScore             = FuzzyMatcher::getMultiWordScore(normQueryWords, genericName, gWords) * 0.7;
     }
 
-    // Tertiary: comment (x0.5)
     double commentScore = 0.0;
     if (!comment.isEmpty()) {
         const QStringList cWords = comment.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
@@ -113,8 +103,6 @@ double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords,
 
     return std::max({nameScore, genericScore, commentScore});
 }
-
-// ── Public API ────────────────────────────────────────────────────────────────
 
 QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& query) const {
     // No query: show all apps, recently launched ones sorted to the top.
@@ -167,7 +155,7 @@ QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& q
         return a.score > b.score;
     });
 
-    // Return the original DesktopEntry* variants — delegate needs no changes.
+    // return the original DesktopEntry* variants, delegate needs no changes
     QVariantList out;
     out.reserve(hits.size());
     for (const Hit& h : hits)
@@ -204,8 +192,6 @@ void SearchEngine::clearHistory() {
     saveHistory();
 }
 
-// ── File search ───────────────────────────────────────────────────────────────
-
 void SearchEngine::searchFiles(const QString& query, const QString& rootDir, int maxDepth) {
     m_fileProvider->searchAsync(query, rootDir, maxDepth, m_fileThreshold);
 }
@@ -223,8 +209,7 @@ void SearchEngine::cancelFileSearch() {
     m_fileProvider->cancel();
 }
 
-// ── Utilities ─────────────────────────────────────────────────────────────────
-
+// utils
 QString SearchEngine::highlightedHtml(const QString& text, const QString& query, const QString& color) const {
     return FuzzyMatcher::highlightedHtml(text, query, color);
 }

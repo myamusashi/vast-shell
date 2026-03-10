@@ -1,8 +1,6 @@
 #pragma once
 
 #include "FileProvider.hpp"
-#include "FuzzyMatcher.hpp"
-#include "SearchResult.hpp"
 
 #include <QHash>
 #include <QList>
@@ -11,30 +9,8 @@
 #include <QSettings>
 #include <QString>
 #include <QVariantList>
+#include <qnumeric.h>
 
-// ---------------------------------------------------------------------------
-// SearchEngine  — QML Singleton (URI: Vast)
-//
-// Unified app + file fuzzy search with launch-history recency ranking.
-// The app list is owned by Quickshell (DesktopEntries.applications.values)
-// and passed in directly, so no internal .desktop scanning is needed.
-//
-// QML:
-//   import Vast
-//
-//   // Apps — pass Quickshell's list directly
-//   var apps = SearchEngine.searchApps(DesktopEntries.applications.values, "fire")
-//
-//   // Files — async, listen to filesReady()
-//   SearchEngine.searchFiles("resume", "/home/user", 3)
-//
-//   // Record launch for recency ranking
-//   SearchEngine.recordLaunch(entry.id)
-//
-//   // Utilities
-//   SearchEngine.highlightedHtml(text, query, "#88c0d0")
-//   SearchEngine.score("frf", "Firefox")  // → 0..1
-// ---------------------------------------------------------------------------
 class SearchEngine : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -51,33 +27,21 @@ class SearchEngine : public QObject {
         return inst;
     }
 
-    // ── App search ────────────────────────────────────────────────────────────
-    // apps    — DesktopEntries.applications.values (QVariantList of DesktopEntry*)
-    // query   — raw search text from the user
-    //
-    // Each DesktopEntry is read via QObject::property() for:
-    //   "id", "name", "genericName", "comment", "icon"
-    // Returns the original DesktopEntry* objects sorted by score, so the
-    // existing delegate (modelData.name, modelData.icon, etc.) needs no changes.
     Q_INVOKABLE QVariantList searchApps(const QVariantList& apps, const QString& query) const;
 
-    // ── File search ───────────────────────────────────────────────────────────
     Q_INVOKABLE void         searchFiles(const QString& query, const QString& rootDir, int maxDepth = 3);
     Q_INVOKABLE QVariantList searchFilesSync(const QString& query, const QString& rootDir, int maxDepth = 2) const;
     Q_INVOKABLE void         cancelFileSearch();
 
-    // ── Launch history ────────────────────────────────────────────────────────
-    Q_INVOKABLE void   recordLaunch(const QString& appId);
-    Q_INVOKABLE double recencyScore(const QString& appId) const;
-    Q_INVOKABLE void   clearHistory();
+    Q_INVOKABLE void         recordLaunch(const QString& appId);
+    Q_INVOKABLE double       recencyScore(const QString& appId) const;
+    Q_INVOKABLE void         clearHistory();
 
-    // ── Highlight / score utilities ───────────────────────────────────────────
     Q_INVOKABLE QString      highlightedHtml(const QString& text, const QString& query, const QString& color) const;
     Q_INVOKABLE QVariantList highlightRanges(const QString& text, const QString& query) const;
     Q_INVOKABLE double       score(const QString& query, const QString& text) const;
 
-    // ── Properties ────────────────────────────────────────────────────────────
-    int historyLimit() const {
+    int                      historyLimit() const {
         return m_historyLimit;
     }
     double appThreshold() const {
@@ -94,13 +58,13 @@ class SearchEngine : public QObject {
         }
     }
     void setAppThreshold(double v) {
-        if (m_appThreshold != v) {
+        if (qFuzzyCompare(m_appThreshold, v)) {
             m_appThreshold = v;
             emit appThresholdChanged();
         }
     }
     void setFileThreshold(double v) {
-        if (m_fileThreshold != v) {
+        if (qFuzzyCompare(m_fileThreshold, v)) {
             m_fileThreshold = v;
             emit fileThresholdChanged();
         }
@@ -126,7 +90,6 @@ class SearchEngine : public QObject {
         int     count     = 0;
     };
 
-    // Score a single DesktopEntry QObject against a pre-normalised query.
     double              scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const;
 
     FileProvider*       m_fileProvider = nullptr;
