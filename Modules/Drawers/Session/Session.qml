@@ -31,7 +31,7 @@ Item {
 
     function executeAction(action: string): void {
         const cmds = {
-            "poweroff": ["systemctl", "poweroff"],
+            "shutdown": ["shutdown", "now"],
             "reboot": ["systemctl", "reboot"],
             "suspend": ["systemctl", "suspend"],
             "logout": ["hyprctl", "dispatch", "exit"],
@@ -89,7 +89,7 @@ Item {
                         {
                             "icon": "power_settings_circle",
                             "name": qsTr("Shutdown"),
-                            "action": "shutdown now"
+                            "action": "shutdown"
                         },
                         {
                             "icon": "restart_alt",
