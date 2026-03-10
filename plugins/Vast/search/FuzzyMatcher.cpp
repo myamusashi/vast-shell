@@ -3,12 +3,12 @@
 #include <QRegularExpression>
 #include <algorithm>
 #include <cmath>
+#include <qtypes.h>
 
-// ── Char normalisation table ──────────────────────────────────────────────────
-
+// char normalisation table
 const QHash<QChar, QChar>& FuzzyMatcher::charLookup() {
     static QHash<QChar, QChar> map = []() {
-        // raw map: canonical → lookalike string (mirrors the QML charMap)
+        // raw map: canonical → lookalike string
         const struct {
             char        key;
             const char* chars;
@@ -28,8 +28,6 @@ const QHash<QChar, QChar>& FuzzyMatcher::charLookup() {
     return map;
 }
 
-// ── Normalisation ─────────────────────────────────────────────────────────────
-
 QChar FuzzyMatcher::normalizeChar(QChar c) {
     const QChar lower = c.toLower();
     return charLookup().value(lower, lower);
@@ -43,8 +41,7 @@ QString FuzzyMatcher::normalizeText(const QString& text) {
     return out;
 }
 
-// ── HTML helpers ──────────────────────────────────────────────────────────────
-
+// HTML helpers
 QString FuzzyMatcher::escapeHtml(const QString& text) {
     QString out = text;
     out.replace('&', "&amp;");
@@ -67,7 +64,7 @@ QVariantList FuzzyMatcher::highlightRanges(const QString& text, const QString& q
 
     const QString normText = normalizeText(text);
 
-    int           pos = 0;
+    qsizetype     pos = 0;
     while ((pos = normText.indexOf(normQuery, pos)) != -1) {
         QVariantMap range;
         range["start"]  = pos;
@@ -89,8 +86,8 @@ QString FuzzyMatcher::highlightedHtml(const QString& text, const QString& query,
     const QString normText = normalizeText(text);
 
     QString       result;
-    int           last = 0;
-    int           idx  = normText.indexOf(normQuery);
+    qsizetype     last = 0;
+    qsizetype     idx  = normText.indexOf(normQuery);
 
     while (idx != -1) {
         if (idx > last)
@@ -109,8 +106,6 @@ QString FuzzyMatcher::highlightedHtml(const QString& text, const QString& query,
 
     return result;
 }
-
-// ── Sub-scores ────────────────────────────────────────────────────────────────
 
 bool FuzzyMatcher::isSubsequence(const QString& q, const QString& t) {
     int qi = 0;
@@ -143,33 +138,32 @@ double FuzzyMatcher::subsequenceScore(const QString& q, const QString& t) {
     return std::min(bonus / maxBonus, 1.0);
 }
 
-int FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) {
+qsizetype FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) {
     if (a.isEmpty())
-        return static_cast<int>(b.length());
+        return b.length();
     if (b.isEmpty())
-        return static_cast<int>(a.length());
+        return a.length();
 
-    // Use the shorter string as "columns" to save memory.
-    const QString&   shorter = a.length() <= b.length() ? a : b;
-    const QString&   longer  = a.length() <= b.length() ? b : a;
+    const QString&         shorter = a.length() <= b.length() ? a : b;
+    const QString&         longer  = a.length() <= b.length() ? b : a;
 
-    const int        slen = static_cast<int>(shorter.length());
-    const int        llen = static_cast<int>(longer.length());
+    const qsizetype        slen = shorter.length();
+    const qsizetype        llen = longer.length();
 
-    std::vector<int> prev(slen + 1), curr(slen + 1);
-    for (int i = 0; i <= slen; ++i)
+    std::vector<qsizetype> prev(slen + 1), curr(slen + 1);
+    for (qsizetype i = 0; i <= slen; ++i)
         prev[i] = i;
 
-    for (int i = 1; i <= llen; ++i) {
-        curr[0]    = i;
-        int rowMin = curr[0];
+    for (qsizetype i = 1; i <= llen; ++i) {
+        curr[0]          = i;
+        qsizetype rowMin = curr[0];
 
-        for (int j = 1; j <= slen; ++j) {
-            const int cost = (longer[i - 1] == shorter[j - 1]) ? 0 : 1;
-            curr[j]        = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
-            rowMin         = std::min(rowMin, curr[j]);
+        for (qsizetype j = 1; j <= slen; ++j) {
+            const qsizetype cost = (longer[i - 1] == shorter[j - 1]) ? 0 : 1;
+            curr[j]              = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
+            rowMin               = std::min(rowMin, curr[j]);
         }
-        // Early exit: remaining rows can only get worse.
+
         if (rowMin > slen)
             return rowMin;
 
@@ -188,8 +182,8 @@ double FuzzyMatcher::distanceScore(const QString& a, const QString& b) {
     if (static_cast<double>(lenDiff) / maxLen > 0.7)
         return 0.0;
 
-    const int    dist  = levenshteinDistance(a, b);
-    const double ratio = static_cast<double>(maxLen - dist) / maxLen;
+    const qsizetype dist  = levenshteinDistance(a, b);
+    const double    ratio = static_cast<double>(maxLen - dist) / maxLen;
     return std::pow(ratio, 1.5);
 }
 
@@ -231,8 +225,6 @@ double FuzzyMatcher::acronymScore(const QString& q, const QStringList& tWords) {
         return 0.6;
     return 0.0;
 }
-
-// ── Core scoring entry points ─────────────────────────────────────────────────
 
 double FuzzyMatcher::getScore(const QString& q, const QString& t, const QStringList& tWords) {
     if (t == q)
