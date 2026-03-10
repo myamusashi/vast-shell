@@ -13,7 +13,7 @@ set(QML_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/Vast")
 
 find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick Concurrent)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PIPEWIRE REQUIRED libpipewire-0.3)
+pkg_check_modules(PIPEWIRE REQUIRED IMPORTED_TARGET libpipewire-0.3)
 
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wshadow -Wconversion
@@ -56,7 +56,7 @@ qt_add_qml_module(VastPlugin
         search/SearchEngine.cpp
 )
 
-target_include_directories(VastPlugin PRIVATE
+target_include_directories(VastPlugin SYSTEM PRIVATE
     ${PIPEWIRE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/search
 )
