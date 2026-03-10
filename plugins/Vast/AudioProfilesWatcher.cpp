@@ -247,6 +247,13 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
         if (!param || !spa_pod_is_object(param))
             return;
 
+        // Commit any staged profiles that arrived before this event
+        if (d->staging_count > 0) {
+            memcpy(d->profiles, d->staging, sizeof(ap_profile_entry_t) * static_cast<size_t>(d->staging_count));
+            d->profile_count = d->staging_count;
+            d->staging_count = 0;
+        }
+
         int32_t       pidx  = -1;
         const char*   name  = nullptr;
         const char*   desc  = nullptr;
