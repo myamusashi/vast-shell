@@ -95,7 +95,7 @@ StyledRect {
                     property bool isEmpty: !isOccupied && !isActive
 
                     implicitHeight: parent.height
-                    implicitWidth: height ? height : 1
+                    implicitWidth: isActive ? 40 : (height ? height : 1)
 
                     Behavior on implicitWidth {
                         NAnim {
@@ -115,7 +115,10 @@ StyledRect {
                     StyledRect {
                         id: fgIndicator
 
-                        anchors.centerIn: parent
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            horizontalCenter: parent.horizontalCenter
+                        }
                         implicitWidth: delegateRoot.isActive ? 24 : 8
                         implicitHeight: 8
                         radius: Appearance.rounding.small
@@ -123,7 +126,7 @@ StyledRect {
                             if (delegateRoot.isActive)
                                 return Colours.m3Colors.m3Primary;
                             else if (delegateRoot.isOccupied)
-                                return Colours.m3Colors.m3OnPrimary;
+                                return Colours.m3Colors.m3PrimaryFixedDim;
                             else
                                 return Colours.m3Colors.m3OutlineVariant;
                         }
