@@ -7,10 +7,10 @@ import Quickshell
 import Quickshell.Widgets
 import M3Shapes
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 import "Markdown"
 

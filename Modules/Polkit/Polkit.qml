@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 
-import qs.Components
+import qs.Components.Dialog
 import qs.Services
 
 DialogBox {

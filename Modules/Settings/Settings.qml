@@ -4,10 +4,10 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 
-import qs.Configs
-import qs.Helpers
+import qs.Components.Base
+import qs.Core.Configs
+import qs.Core.States
 import qs.Services
-import qs.Components
 
 import "./Components"
 import "./Pages"

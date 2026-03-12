@@ -4,8 +4,9 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Utils
+import qs.Core.States
+import qs.Core.Configs
 
 Singleton {
     id: root

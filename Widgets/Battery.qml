@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell.Services.UPower
 
-import qs.Components
-import qs.Configs
+import qs.Components.Base
+import qs.Core.Configs
 import qs.Services
 
 Item {

@@ -5,10 +5,10 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.States
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 import "Capture" as Cap
 import "History"

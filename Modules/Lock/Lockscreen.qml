@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 
-import qs.Helpers
+import qs.Core.States
 
 Scope {
     property alias lock: lock

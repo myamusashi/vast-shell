@@ -6,10 +6,11 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Widgets
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.Utils
+import qs.Core.States
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 ClippingRectangle {
     id: root

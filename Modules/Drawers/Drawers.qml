@@ -6,10 +6,11 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Services.UPower
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.States
+import qs.Core.Utils
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 import "Calendar"
 import "Launcher"

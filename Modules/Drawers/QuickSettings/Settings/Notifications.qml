@@ -6,10 +6,11 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Utils
+import qs.Core.Configs
+import qs.Core.States
 import qs.Services
-import qs.Components
+import qs.Components.Base
 import qs.Modules.Drawers.Notifications.Components as N
 
 StyledRect {

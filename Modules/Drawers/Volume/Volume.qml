@@ -7,10 +7,11 @@ import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 
-import qs.Configs
-import qs.Helpers
+import qs.Components.Base
+import qs.Core.Configs
+import qs.Core.Utils
+import qs.Core.States
 import qs.Services
-import qs.Components
 
 Item {
     id: root

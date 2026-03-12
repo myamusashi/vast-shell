@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import qs.Configs
-import qs.Components
+import qs.Core.Configs
+import qs.Components.Base
 import qs.Services
 
 import "../Components"

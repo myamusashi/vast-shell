@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
-import qs.Configs
+import qs.Core.Configs
 import qs.Widgets
 
 RowLayout {

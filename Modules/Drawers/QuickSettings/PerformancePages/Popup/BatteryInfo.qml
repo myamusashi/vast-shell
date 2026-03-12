@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.UPower
 
-import qs.Configs
+import qs.Core.Configs
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 PopupWidget {
     icon: "battery_6_bar"

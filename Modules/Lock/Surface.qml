@@ -6,10 +6,10 @@ import Quickshell.Widgets
 import Quickshell.Wayland
 import Qt5Compat.GraphicalEffects
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.States
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 WlSessionLockSurface {
     id: root
