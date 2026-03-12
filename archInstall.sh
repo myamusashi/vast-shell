@@ -109,8 +109,6 @@ install_aur_packages() {
 	sudo -u "$aur_user" yay -S --needed --noconfirm "${missing[@]}"
 }
 
-
-
 build_vast_plugin() {
 	local -r plugin_so="$QML_DIR/Vast/libVastPlugin.so"
 	[[ -f $plugin_so ]] && {
@@ -118,9 +116,9 @@ build_vast_plugin() {
 		return 0
 	}
 
-	local -r src="$PROJECT_ROOT/plugins/Vast"
+	local -r src="$PROJECT_ROOT/Plugins/Vast"
 	[[ -d $src ]] || {
-		warn "plugins/Vast not found, skipping"
+		warn "Plugins/Vast not found, skipping"
 		return 0
 	}
 
@@ -155,14 +153,13 @@ build_vast_plugin() {
 	qt_quick_lib=$(pkg-config --variable=libdir Qt6Quick)
 	pw_lib=$(pkg-config --variable=libdir libpipewire-0.3)
 
-	# Backing library — needs PipeWire + Qt
+	# needs PipeWire + Qt
 	local backing="$QML_DIR/Vast/libVastPlugin.so"
 	[[ -f $backing ]] &&
 		patchelf --set-rpath \
 			"$QML_DIR/Vast:$qt_core_lib:$qt_gui_lib:$qt_qml_lib:$qt_quick_lib:$pw_lib" \
 			"$backing" 2>/dev/null || true
 
-	# Thin QML stub — only needs Qt (loads backing lib from same dir)
 	local stub="$QML_DIR/Vast/libVastQmlPlugin.so"
 	[[ -f $stub ]] &&
 		patchelf --set-rpath \
