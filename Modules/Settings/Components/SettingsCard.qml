@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Components
-import qs.Configs
+import qs.Components.Base
+import qs.Core.Configs
 import qs.Services
 
 Rectangle {

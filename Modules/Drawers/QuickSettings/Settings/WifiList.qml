@@ -6,9 +6,10 @@ import QtQuick.Controls
 import Quickshell.Widgets
 import Quickshell.Networking
 
-import qs.Components
-import qs.Configs
-import qs.Helpers
+import qs.Components.Base
+import qs.Components.Feedback
+import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 WrapperRectangle {

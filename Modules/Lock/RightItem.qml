@@ -1,8 +1,8 @@
 import QtQuick
 
-import qs.Configs
-import qs.Helpers
-import qs.Components
+import qs.Core.Configs
+import qs.Core.States
+import qs.Components.Base
 import qs.Modules.Drawers.QuickSettings.Settings
 
 Item {

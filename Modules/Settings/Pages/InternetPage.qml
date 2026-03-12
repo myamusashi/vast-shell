@@ -5,10 +5,11 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 import Quickshell.Networking
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
-import qs.Components
+import qs.Components.Base
+import qs.Components.Feedback
 
 import "../Components"
 

@@ -6,7 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
 
-import qs.Helpers
+import qs.Core.Utils
 
 // Thanks to Caelestia once again for your amazing code: https://github.com/caelestia-dots/shell/blob/main/modules/notifications/Notification.qml
 Singleton {

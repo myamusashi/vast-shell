@@ -1,8 +1,8 @@
 import QtQuick
 
-import qs.Components
-import qs.Configs
-import qs.Helpers as H
+import qs.Components.Base
+import qs.Core.Configs
+import qs.Core.Utils as H
 import qs.Services
 
 Item {

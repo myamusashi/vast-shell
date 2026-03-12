@@ -4,10 +4,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
 
-import qs.Configs
-import qs.Helpers
+import qs.Core.Configs
+import qs.Core.States
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 // Thx Confusion_18 for your simple Overview code
 ClippingWrapperRectangle {

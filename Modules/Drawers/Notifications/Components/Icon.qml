@@ -5,8 +5,8 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
-import qs.Components
-import qs.Configs
+import qs.Components.Base
+import qs.Core.Configs
 import qs.Services
 
 Item {

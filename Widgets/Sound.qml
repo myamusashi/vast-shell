@@ -4,9 +4,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
-import qs.Components
-import qs.Configs
-import qs.Helpers
+import qs.Components.Base
+import qs.Core.Configs
+import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 
 StyledRect {

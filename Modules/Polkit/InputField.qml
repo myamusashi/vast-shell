@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Components
+import qs.Components.Base
 
 StyledTextInput {
     id: passwordInput

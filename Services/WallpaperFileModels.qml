@@ -4,7 +4,7 @@ import Qt.labs.folderlistmodel
 import QtQuick
 import Quickshell
 
-import qs.Helpers
+import qs.Core.Utils
 
 Singleton {
     id: root

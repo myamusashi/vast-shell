@@ -25,11 +25,11 @@
     callPackage,
     cmake,
 }: let
-    app2unit = callPackage ./app2unit.nix {};
-    material-symbols = callPackage ./material-symbols.nix {};
-    m3shapes = callPackage ./m3Shapes.nix {};
-    another-ripple = callPackage ./AnotherRipple.nix {};
-    vastPlugin = callPackage ./vastPlugin.nix {};
+    app2unit = callPackage ./packages/app2unit.nix {};
+    material-symbols = callPackage ./packages/material-symbols.nix {};
+    m3shapes = callPackage ./plugins/m3Shapes.nix {};
+    another-ripple = callPackage ./plugins/AnotherRipple.nix {};
+    vastPlugin = callPackage ./plugins/vastPlugin.nix {};
 
     runtimeDeps = [
         ## utils

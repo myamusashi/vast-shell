@@ -9,11 +9,11 @@ import Quickshell.Widgets
 import Quickshell.Networking
 import Quickshell.Services.UPower
 
-import qs.Configs
+import qs.Core.Configs
 import qs.Widgets as WID
-import qs.Helpers
+import qs.Core.Utils
 import qs.Services
-import qs.Components
+import qs.Components.Base
 
 import "PerformancePages/Popup" as POPUP
 

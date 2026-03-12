@@ -3,7 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 
-import qs.Components
+import qs.Components.Base
 import qs.Services
 
 StyledComboBox {
