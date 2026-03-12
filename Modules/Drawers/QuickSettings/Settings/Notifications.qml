@@ -6,9 +6,9 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Notifications
 
-import qs.Core.Utils
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 import qs.Modules.Drawers.Notifications.Components as N
@@ -222,6 +222,7 @@ StyledRect {
                                 N.Content {
                                     id: contentLayout
 
+                                    width: parent.width - iconLayout.width
                                     modelData: root.modelData
                                 }
                             }
