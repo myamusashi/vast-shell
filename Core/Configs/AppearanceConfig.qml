@@ -18,13 +18,13 @@ JsonObject {
     }
 
     component FontSize: JsonObject {
-        property int scale: 1
-        readonly property int small: 12 * scale
-        readonly property int medium: 13 * scale
-        readonly property int normal: 14 * scale
-        readonly property int large: 16 * scale
-        readonly property int larger: 18 * scale
-        readonly property int extraLarge: 30 * scale
+        property real scale: 1.0
+        readonly property real small: 12 * scale
+        readonly property real medium: 13 * scale
+        readonly property real normal: 14 * scale
+        readonly property real large: 16 * scale
+        readonly property real larger: 18 * scale
+        readonly property real extraLarge: 30 * scale
     }
 
     component FontsComponent: JsonObject {
