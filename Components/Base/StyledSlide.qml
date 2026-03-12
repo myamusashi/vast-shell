@@ -20,14 +20,6 @@ Slider {
         XL = 96
     }
 
-    enum HandleSize {
-        XS = 44,
-        S = 44,
-        M = 44,
-        L = 68,
-        XL = 108
-    }
-
     property alias filledRectColor: filledRect.color
     property alias emptyRectColor: emptyRect.color
     property alias handleColor: handle.color
@@ -43,7 +35,6 @@ Slider {
     readonly property real invertedVisualPosition: 1 - visualPosition
     readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
 
-    property bool dotEnd: true
     property bool useAnim: true
     property string icon: ""
     property int iconSize: 0
@@ -52,7 +43,6 @@ Slider {
 
     property real trackSizeDiff: 15
     property real handleGap: 6
-    property real trackDotSize: 4
 
     property bool snapEnabled: false
     property real snapDotSize: 4
@@ -61,7 +51,8 @@ Slider {
 
     property bool showValuePopup: true
     property bool popupOnHoverToo: false
-    property var popupValueFormat: v => Math.round(v)
+    property int popupDecimals: 0
+    property var popupValueFormat: v => v.toFixed(root.popupDecimals)
 
     snapMode: (snapEnabled && stepSize > 0) ? Slider.SnapAlways : Slider.NoSnap
     Layout.alignment: orientation === Qt.Horizontal ? Qt.AlignHCenter : Qt.AlignVCenter
@@ -111,12 +102,14 @@ Slider {
                     when: root.orientation === Qt.Horizontal && !iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
-                        anchors.left: parent.left
-                        anchors.right: undefined
-                        anchors.top: undefined
-                        anchors.bottom: undefined
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: undefined
+                        anchors {
+                            left: parent.left
+                            right: undefined
+                            top: undefined
+                            bottom: undefined
+                            verticalCenter: parent.verticalCenter
+                            horizontalCenter: undefined
+                        }
                     }
                     PropertyChanges {
                         target: iconLoader
@@ -128,12 +121,14 @@ Slider {
                     when: root.orientation === Qt.Horizontal && iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
-                        anchors.left: undefined
-                        anchors.right: parent.right
-                        anchors.top: undefined
-                        anchors.bottom: undefined
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.horizontalCenter: undefined
+                        anchors {
+                            left: undefined
+                            right: parent.right
+                            top: undefined
+                            bottom: undefined
+                            verticalCenter: parent.verticalCenter
+                            horizontalCenter: undefined
+                        }
                     }
                     PropertyChanges {
                         target: iconLoader
@@ -145,12 +140,14 @@ Slider {
                     when: root.orientation === Qt.Vertical && !iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
-                        anchors.left: undefined
-                        anchors.right: undefined
-                        anchors.top: undefined
-                        anchors.bottom: parent.bottom
-                        anchors.verticalCenter: undefined
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors {
+                            left: undefined
+                            right: undefined
+                            top: undefined
+                            bottom: parent.bottom
+                            verticalCenter: undefined
+                            horizontalCenter: parent.horizontalCenter
+                        }
                     }
                     PropertyChanges {
                         target: iconLoader
@@ -162,12 +159,14 @@ Slider {
                     when: root.orientation === Qt.Vertical && iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
-                        anchors.left: undefined
-                        anchors.right: undefined
-                        anchors.top: parent.top
-                        anchors.bottom: undefined
-                        anchors.verticalCenter: undefined
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors {
+                            left: undefined
+                            right: undefined
+                            top: parent.top
+                            bottom: undefined
+                            verticalCenter: undefined
+                            horizontalCenter: parent.horizontalCenter
+                        }
                     }
                     PropertyChanges {
                         target: iconLoader
@@ -180,7 +179,8 @@ Slider {
                 enabled: root.useAnim
                 AnchorAnimation {
                     duration: Appearance.animations.durations.small
-                    easing.type: Easing.InOutQuad
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.animations.curves.standard
                 }
             }
 
