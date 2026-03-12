@@ -65,7 +65,7 @@ ComboBox {
     background: StyledRect {
         implicitWidth: 280
         implicitHeight: 48
-        color: "transparent"
+        color: Colours.m3Colors.m3Surface
     }
 
     indicator: Item {
