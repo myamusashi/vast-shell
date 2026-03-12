@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell.Widgets
 import Quickshell.Networking
 
@@ -139,7 +138,8 @@ WrapperRectangle {
                 implicitHeight: contentHeight
                 interactive: false
                 model: Networking.devices
-                spacing: Appearance.spacing.small
+				spacing: Appearance.spacing.small
+				clip: true
 
                 delegate: ColumnLayout {
                     id: deviceDelegate
