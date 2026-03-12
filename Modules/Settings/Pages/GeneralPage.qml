@@ -83,7 +83,8 @@ Item {
                 StyledSlide {
                     from: 0.1
                     to: 1.0
-                    stepSize: 0.1
+					stepSize: 0.1
+					popupDecimals: 1
                     value: Configs.generals.alpha
                     onValueChanged: Configs.generals.alpha = value
                     Layout.preferredWidth: 200
