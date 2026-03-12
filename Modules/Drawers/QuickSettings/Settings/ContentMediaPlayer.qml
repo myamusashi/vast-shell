@@ -51,7 +51,7 @@ RowLayout {
 
             StyledText {
                 text: Players.active?.trackArtist ?? ""
-                color: root.trackArtColors.onSurfaceVariant
+                color: Qt.alpha(root.trackArtColors.onSurface, 0.8)
                 font.pixelSize: Appearance.fonts.size.small
                 font.weight: Font.DemiBold
                 elide: Text.ElideRight
