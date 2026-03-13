@@ -11,6 +11,8 @@ struct ProfileEntry {
     QString description;
     QString available;
     QString readable;
+
+    auto    operator<=>(const ProfileEntry&) const = default;
 };
 
 class AudioProfilesModel : public QAbstractListModel {
@@ -31,16 +33,16 @@ class AudioProfilesModel : public QAbstractListModel {
     explicit AudioProfilesModel(QObject* parent = nullptr);
 
     // QAbstractListModel
-    int                    rowCount(const QModelIndex& parent = {}) const override;
-    QVariant               data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    QHash<int, QByteArray> roleNames() const override;
+    [[nodiscard]] int                    rowCount(const QModelIndex& parent = {}) const override;
+    [[nodiscard]] QVariant               data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
     // Bulk replacement, always from the Qt main thread
-    void setProfiles(const QList<ProfileEntry>& profiles);
+    void setProfiles(std::span<const ProfileEntry> profiles);
 
     // QML helper: returns a plain JS object for row i
-    Q_INVOKABLE QVariantMap get(int row) const;
-    Q_INVOKABLE qsizetype   count() const {
+    [[nodiscard]] Q_INVOKABLE QVariantMap get(int row) const;
+    [[nodiscard]] Q_INVOKABLE qsizetype   count() const {
         return m_profiles.size();
     }
 

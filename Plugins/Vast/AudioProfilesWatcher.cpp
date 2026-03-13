@@ -9,10 +9,12 @@
 #include <QQmlEngine>
 #include <QStringList>
 
+#include <algorithm>
 #include <memory>
 #include <mutex>
-#include <qtypes.h>
+#include <span>
 #include <stdexcept>
+#include <string_view>
 #include <vector>
 
 extern "C" {
@@ -49,7 +51,6 @@ using UniquePwContext    = std::unique_ptr<pw_context, PwContextDeleter>;
 using UniquePwCore       = std::unique_ptr<pw_core, PwCoreDeleter>;
 using UniquePwRegistry   = std::unique_ptr<pw_registry, PwRegistryDeleter>;
 
-// SPA compat
 #define AP_MAX_PROFILES 64
 #define AP_MAX_STR      256
 
@@ -83,14 +84,12 @@ struct ap_device_node_t {
     int                dirty = 0;
 };
 
-// callbacks must be static free functions for pw C API
-static void ap_registry_event_global(void* data, uint32_t id, uint32_t permissions, const char* type, uint32_t version, const spa_dict* props);
-static void ap_registry_event_global_remove(void* data, uint32_t id);
-static void ap_device_event_info(void* data, const pw_device_info* info);
-static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t index, uint32_t next, const spa_pod* param);
-static void ap_on_proxy_destroy(void* data);
+static void        ap_registry_event_global(void* data, uint32_t id, uint32_t permissions, const char* type, uint32_t version, const spa_dict* props);
+static void        ap_registry_event_global_remove(void* data, uint32_t id);
+static void        ap_device_event_info(void* data, const pw_device_info* info);
+static void        ap_device_event_param(void* data, int seq, uint32_t id, uint32_t index, uint32_t next, const spa_pod* param);
+static void        ap_on_proxy_destroy(void* data);
 
-// Helpers
 static const char* ap_safe_lookup(const spa_dict* dict, const char* key) {
     if (!dict)
         return "";
@@ -107,7 +106,7 @@ static void ap_safe_copy(char* dst, size_t dst_size, const char* src) {
     snprintf(dst, dst_size, "%s", src);
 }
 
-static const char* ap_parse_availability(const spa_pod* val) {
+static std::string_view ap_parse_availability(const spa_pod* val) {
     uint32_t av = 0;
     if (spa_pod_get_id(val, &av) != 0)
         return "unknown";
@@ -120,7 +119,6 @@ static const char* ap_parse_availability(const spa_pod* val) {
 
 class PwApp {
   public:
-    // we want spa_hook addresses must stay stable
     PwApp(const PwApp&)            = delete;
     PwApp& operator=(const PwApp&) = delete;
 
@@ -155,37 +153,32 @@ class PwApp {
 
     ~PwApp() {
         pw_thread_loop_stop(m_loop.get());
-        for (ap_device_node_t* d : m_devices)
-            pw_proxy_destroy(d->proxy);
+        std::ranges::for_each(m_devices, [](ap_device_node_t* d) { pw_proxy_destroy(d->proxy); });
         m_devices.clear();
-
         spa_hook_remove(&m_registry_listener);
     }
 
-    pw_thread_loop* loop() const {
+    [[nodiscard]] pw_thread_loop* loop() const {
         return m_loop.get();
     }
-    pw_registry* registry() const {
+    [[nodiscard]] pw_registry* registry() const {
         return m_registry.get();
     }
 
-    std::vector<ap_device_node_t*> m_devices;
-    spa_hook                       m_registry_listener{};
+    std::vector<ap_device_node_t*>  m_devices;
+    spa_hook                        m_registry_listener{};
 
-    // defined after all callback symbols are visible
     static const pw_registry_events s_registry_events;
     static const pw_device_events   s_device_events;
     static const pw_proxy_events    s_proxy_events;
 
   private:
-    // Destruction is reverse: registry → core → context → loop
     UniquePwThreadLoop m_loop;
     UniquePwContext    m_context;
     UniquePwCore       m_core;
     UniquePwRegistry   m_registry;
 };
 
-// device callbacks
 static void ap_device_event_info(void* data, const pw_device_info* info) {
     auto* d = static_cast<ap_device_node_t*>(data);
 
@@ -213,7 +206,7 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
             if (d->staging_count > 0) {
                 memcpy(d->profiles, d->staging, sizeof(ap_profile_entry_t) * static_cast<size_t>(d->staging_count));
                 d->profile_count = d->staging_count;
-                d->staging_count = 0; // clear so SPA_PARAM_Profile doesn't re-commit
+                d->staging_count = 0;
                 d->dirty         = 1;
             }
             return;
@@ -222,12 +215,12 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
         if (d->staging_count >= AP_MAX_PROFILES)
             return;
 
-        int32_t       pidx  = -1;
-        const char*   name  = nullptr;
-        const char*   desc  = nullptr;
-        const char*   avail = "unknown";
+        int32_t          pidx  = -1;
+        const char*      name  = nullptr;
+        const char*      desc  = nullptr;
+        std::string_view avail = "unknown";
 
-        spa_pod_prop* prop;
+        spa_pod_prop*    prop;
         SPA_POD_OBJECT_FOREACH(reinterpret_cast<const spa_pod_object*>(param), prop) {
             switch (prop->key) {
                 case SPA_PARAM_PROFILE_index: spa_pod_get_int(&prop->value, &pidx); break;
@@ -241,25 +234,24 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
         e->index              = pidx;
         ap_safe_copy(e->name, sizeof(e->name), name ? name : "");
         ap_safe_copy(e->description, sizeof(e->description), desc ? desc : "");
-        ap_safe_copy(e->available, sizeof(e->available), avail);
+        ap_safe_copy(e->available, sizeof(e->available), avail.data());
 
     } else if (id == SPA_PARAM_Profile) {
         if (!param || !spa_pod_is_object(param))
             return;
 
-        // Commit any staged profiles that arrived before this event
         if (d->staging_count > 0) {
             memcpy(d->profiles, d->staging, sizeof(ap_profile_entry_t) * static_cast<size_t>(d->staging_count));
             d->profile_count = d->staging_count;
             d->staging_count = 0;
         }
 
-        int32_t       pidx  = -1;
-        const char*   name  = nullptr;
-        const char*   desc  = nullptr;
-        const char*   avail = "unknown";
+        int32_t          pidx  = -1;
+        const char*      name  = nullptr;
+        const char*      desc  = nullptr;
+        std::string_view avail = "unknown";
 
-        spa_pod_prop* prop;
+        spa_pod_prop*    prop;
         SPA_POD_OBJECT_FOREACH(reinterpret_cast<const spa_pod_object*>(param), prop) {
             switch (prop->key) {
                 case SPA_PARAM_PROFILE_index: spa_pod_get_int(&prop->value, &pidx); break;
@@ -272,7 +264,7 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
         d->active_index = pidx;
         ap_safe_copy(d->active_name, sizeof(d->active_name), name ? name : "");
         ap_safe_copy(d->active_description, sizeof(d->active_description), desc ? desc : "");
-        ap_safe_copy(d->active_available, sizeof(d->active_available), avail);
+        ap_safe_copy(d->active_available, sizeof(d->active_available), avail.data());
         d->dirty = 1;
     }
 }
@@ -284,15 +276,13 @@ static void ap_on_proxy_destroy(void* data) {
     delete d;
 }
 
-// registry callbacks
 static void ap_registry_event_global(void* data, uint32_t id, uint32_t /*permissions*/, const char* type, uint32_t /*version*/, const spa_dict* props) {
     auto* app = static_cast<PwApp*>(data);
 
     if (strcmp(type, PW_TYPE_INTERFACE_Device) != 0)
         return;
 
-    const char* media_class = ap_safe_lookup(props, PW_KEY_MEDIA_CLASS);
-    if (!strstr(media_class, "Audio"))
+    if (!std::string_view(ap_safe_lookup(props, PW_KEY_MEDIA_CLASS)).contains("Audio"))
         return;
 
     auto* d  = new ap_device_node_t();
@@ -307,14 +297,13 @@ static void ap_registry_event_global(void* data, uint32_t id, uint32_t /*permiss
 
     pw_proxy_add_object_listener(d->proxy, &d->device_listener, &PwApp::s_device_events, d);
     pw_proxy_add_listener(d->proxy, &d->proxy_listener, &PwApp::s_proxy_events, d);
-
     app->m_devices.push_back(d);
 }
 
 static void ap_registry_event_global_remove(void* data, uint32_t id) {
     auto* app = static_cast<PwApp*>(data);
 
-    auto  it = std::find_if(app->m_devices.begin(), app->m_devices.end(), [id](const ap_device_node_t* d) { return d->pw_id == id; });
+    auto  it = std::ranges::find_if(app->m_devices, [id](const ap_device_node_t* d) { return d->pw_id == id; });
 
     if (it == app->m_devices.end())
         return;
@@ -344,30 +333,28 @@ const pw_proxy_events PwApp::s_proxy_events = {
     .bound_props = nullptr,
 };
 
-static ap_device_node_t* ap_drain_dirty(PwApp* app) {
-    for (ap_device_node_t* d : app->m_devices) {
-        if (d->dirty && d->profile_count > 0) {
-            d->dirty = 0;
-            return d;
-        }
-    }
-    return nullptr;
+static ap_device_node_t* ap_drain_dirty(std::span<ap_device_node_t* const> devices) {
+    auto it = std::ranges::find_if(devices, [](const ap_device_node_t* d) { return d->dirty && d->profile_count > 0; });
+    if (it == devices.end())
+        return nullptr;
+    (*it)->dirty = 0;
+    return *it;
 }
 
 struct AudioProfilesWatcher::PwState {
     std::unique_ptr<PwApp> app;
 };
 
-// qt impl
 AudioProfilesWatcher* AudioProfilesWatcher::create(QQmlEngine*, QJSEngine*) {
     static AudioProfilesWatcher s_instance;
     return &s_instance;
 }
 
 QString AudioProfilesWatcher::formatProfileName(const QString& name) {
-    if (name == QLatin1String("off"))
+    const std::string_view sv = name.toStdString();
+    if (sv == "off")
         return QStringLiteral("Off");
-    if (name == QLatin1String("pro-audio"))
+    if (sv == "pro-audio")
         return QStringLiteral("Pro Audio");
 
     const QStringList parts = name.split(QLatin1Char('+'));
@@ -385,13 +372,12 @@ QString AudioProfilesWatcher::formatProfileName(const QString& name) {
         for (QString& w : words)
             if (!w.isEmpty())
                 w[0] = w[0].toUpper();
-
         out << words.join(QLatin1Char(' '));
     }
     return out.join(QStringLiteral(" + "));
 }
 
-AudioProfilesWatcher::AudioProfilesWatcher(QObject* parent) : QObject(parent), m_model(new AudioProfilesModel(this)), m_timer(new QTimer(this)), m_pw(new PwState) {
+AudioProfilesWatcher::AudioProfilesWatcher(QObject* parent) : QObject(parent), m_model(new AudioProfilesModel(this)), m_timer(new QTimer(this)), m_pw(std::make_unique<PwState>()) {
     try {
         m_pw->app   = std::make_unique<PwApp>();
         m_connected = true;
@@ -405,7 +391,6 @@ AudioProfilesWatcher::AudioProfilesWatcher(QObject* parent) : QObject(parent), m
 
 AudioProfilesWatcher::~AudioProfilesWatcher() {
     m_timer->stop();
-    delete m_pw;
 }
 
 void AudioProfilesWatcher::poll() {
@@ -424,14 +409,14 @@ void AudioProfilesWatcher::poll() {
     QList<DeviceSnapshot> snapshots;
 
     pw_thread_loop_lock(app->loop());
-    while (ap_device_node_t* d = ap_drain_dirty(app)) {
-        DeviceSnapshot snap;
-        snap.deviceId   = d->pw_id;
-        snap.deviceName = QString::fromUtf8(d->name);
-        snap.activeIdx  = d->active_index;
+    while (ap_device_node_t* d = ap_drain_dirty(app->m_devices)) {
+        const QString  actName = QString::fromUtf8(d->active_name);
 
-        const QString actName = QString::fromUtf8(d->active_name);
-        snap.activeProfile    = {
+        DeviceSnapshot snap;
+        snap.deviceId      = d->pw_id;
+        snap.deviceName    = QString::fromUtf8(d->name);
+        snap.activeIdx     = d->active_index;
+        snap.activeProfile = {
             {QStringLiteral("index"), d->active_index},
             {QStringLiteral("name"), actName},
             {QStringLiteral("description"), QString::fromUtf8(d->active_description)},
@@ -440,9 +425,8 @@ void AudioProfilesWatcher::poll() {
         };
 
         snap.profiles.reserve(d->profile_count);
-        for (int i = 0; i < d->profile_count; ++i) {
-            const ap_profile_entry_t& e  = d->profiles[i];
-            const QString             nm = QString::fromUtf8(e.name);
+        for (const auto& e : std::span(d->profiles, static_cast<size_t>(d->profile_count))) {
+            const QString nm = QString::fromUtf8(e.name);
             snap.profiles.append(ProfileEntry{
                 e.index,
                 nm,

@@ -27,27 +27,27 @@ class SearchEngine : public QObject {
         return inst;
     }
 
-    Q_INVOKABLE QVariantList searchApps(const QVariantList& apps, const QString& query) const;
+    [[nodiscard]] Q_INVOKABLE QVariantList searchApps(const QVariantList& apps, const QString& query) const;
 
-    Q_INVOKABLE void         searchFiles(const QString& query, const QString& rootDir, int maxDepth = 3);
-    Q_INVOKABLE QVariantList searchFilesSync(const QString& query, const QString& rootDir, int maxDepth = 2) const;
-    Q_INVOKABLE void         cancelFileSearch();
+    Q_INVOKABLE void                       searchFiles(const QString& query, const QString& rootDir, int maxDepth = 3);
+    [[nodiscard]] Q_INVOKABLE QVariantList searchFilesSync(const QString& query, const QString& rootDir, int maxDepth = 2) const;
+    Q_INVOKABLE void                       cancelFileSearch();
 
-    Q_INVOKABLE void         recordLaunch(const QString& appId);
-    Q_INVOKABLE double       recencyScore(const QString& appId) const;
-    Q_INVOKABLE void         clearHistory();
+    Q_INVOKABLE void                       recordLaunch(const QString& appId);
+    [[nodiscard]] Q_INVOKABLE double       recencyScore(const QString& appId) const;
+    Q_INVOKABLE void                       clearHistory();
 
-    Q_INVOKABLE QString      highlightedHtml(const QString& text, const QString& query, const QString& color) const;
-    Q_INVOKABLE QVariantList highlightRanges(const QString& text, const QString& query) const;
-    Q_INVOKABLE double       score(const QString& query, const QString& text) const;
+    [[nodiscard]] Q_INVOKABLE QString      highlightedHtml(const QString& text, const QString& query, const QString& color) const;
+    [[nodiscard]] Q_INVOKABLE QVariantList highlightRanges(const QString& text, const QString& query) const;
+    [[nodiscard]] Q_INVOKABLE double       score(const QString& query, const QString& text) const;
 
-    int                      historyLimit() const {
+    [[nodiscard]] int                      historyLimit() const {
         return m_historyLimit;
     }
-    double appThreshold() const {
+    [[nodiscard]] double appThreshold() const {
         return m_appThreshold;
     }
-    double fileThreshold() const {
+    [[nodiscard]] double fileThreshold() const {
         return m_fileThreshold;
     }
 
@@ -58,13 +58,13 @@ class SearchEngine : public QObject {
         }
     }
     void setAppThreshold(double v) {
-        if (qFuzzyCompare(m_appThreshold, v)) {
+        if (!qFuzzyCompare(m_appThreshold, v)) {
             m_appThreshold = v;
             emit appThresholdChanged();
         }
     }
     void setFileThreshold(double v) {
-        if (qFuzzyCompare(m_fileThreshold, v)) {
+        if (!qFuzzyCompare(m_fileThreshold, v)) {
             m_fileThreshold = v;
             emit fileThresholdChanged();
         }

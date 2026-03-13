@@ -6,8 +6,6 @@
 #include <QVariantList>
 #include <QVariantMap>
 
-// App:   type="app",  data keys: id, exec, terminal, categories
-// File:  type="file", data keys: path, isDir, mimeType
 class SearchResult : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -46,33 +44,33 @@ class SearchResult : public QObject {
         m_highlightRanges = v;
     }
 
-    static SearchResult* makeFile(const QString& title, const QString& subtitle, const QString& icon, double score, const QVariantMap& data, const QVariantList& ranges,
-                                  QObject* parent = nullptr);
+    static SearchResult*  makeFile(const QString& title, const QString& subtitle, const QString& icon, double score, const QVariantMap& data, const QVariantList& ranges,
+                                   QObject* parent = nullptr);
 
-    QString              type() const {
+    [[nodiscard]] QString type() const {
         return m_type;
     }
-    QString title() const {
+    [[nodiscard]] QString title() const {
         return m_title;
     }
-    QString subtitle() const {
+    [[nodiscard]] QString subtitle() const {
         return m_subtitle;
     }
-    QString icon() const {
+    [[nodiscard]] QString icon() const {
         return m_icon;
     }
-    double score() const {
+    [[nodiscard]] double score() const {
         return m_score;
     }
-    QVariantMap data() const {
+    [[nodiscard]] QVariantMap data() const {
         return m_data;
     }
-    QVariantList highlightRanges() const {
+    [[nodiscard]] QVariantList highlightRanges() const {
         return m_highlightRanges;
     }
 
     // Returns HTML-highlighted title using pre-computed ranges.
-    Q_INVOKABLE QString highlightedTitle(const QString& color) const;
+    [[nodiscard]] Q_INVOKABLE QString highlightedTitle(const QString& color) const;
 
   private:
     QString      m_type;

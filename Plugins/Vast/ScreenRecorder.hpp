@@ -29,52 +29,52 @@ class ScreenRecorder : public QObject {
     explicit ScreenRecorder(QObject* parent = nullptr);
     ~ScreenRecorder() override;
 
-    bool             isRecording() const;
-    QString          currentOutputFile() const;
+    [[nodiscard]] bool    isRecording() const;
+    [[nodiscard]] QString currentOutputFile() const;
 
-    QString          audioDevice() const;
-    void             setAudioDevice(const QString& device);
+    [[nodiscard]] QString audioDevice() const;
+    void                  setAudioDevice(const QString& device);
 
-    QString          videoCodec() const;
-    void             setVideoCodec(const QString& codec);
+    [[nodiscard]] QString videoCodec() const;
+    void                  setVideoCodec(const QString& codec);
 
-    QString          audioCodec() const;
-    void             setAudioCodec(const QString& codec);
+    [[nodiscard]] QString audioCodec() const;
+    void                  setAudioCodec(const QString& codec);
 
-    QString          driDevice() const;
-    void             setDriDevice(const QString& device);
+    [[nodiscard]] QString driDevice() const;
+    void                  setDriDevice(const QString& device);
 
-    QString          encodeResolution() const;
-    void             setEncodeResolution(const QString& resolution);
+    [[nodiscard]] QString encodeResolution() const;
+    void                  setEncodeResolution(const QString& resolution);
 
-    QString          lowPower() const;
-    void             setLowPower(const QString& power);
+    [[nodiscard]] QString lowPower() const;
+    void                  setLowPower(const QString& power);
 
-    QString          bitrate() const;
-    void             setBitrate(const QString& bitrate);
+    [[nodiscard]] QString bitrate() const;
+    void                  setBitrate(const QString& bitrate);
 
-    int              maxFps() const;
-    void             setMaxFps(int fps);
+    [[nodiscard]] int     maxFps() const;
+    void                  setMaxFps(int fps);
 
-    bool             historyMode() const;
-    void             setHistoryMode(bool history);
+    [[nodiscard]] bool    historyMode() const;
+    void                  setHistoryMode(bool history);
 
-    bool             includeAudio() const;
-    void             setIncludeAudio(bool audio);
+    [[nodiscard]] bool    includeAudio() const;
+    void                  setIncludeAudio(bool audio);
 
-    bool             showCursor() const;
-    void             setShowCursor(bool cursor);
+    [[nodiscard]] bool    showCursor() const;
+    void                  setShowCursor(bool cursor);
 
-    Q_INVOKABLE void createThumbnail(const QString& videoPath, const QString& outputDir);
+    Q_INVOKABLE void      createThumbnail(const QString& videoPath, const QString& outputDir);
 
-    Q_INVOKABLE void startRecording(const QString& geometry = QString(), const QString& output = QString());
-    Q_INVOKABLE void recordSelection(const QString& geometry);
-    Q_INVOKABLE void stopRecording();
-    Q_INVOKABLE void saveHistory();
+    Q_INVOKABLE void      startRecording(const QString& geometry = QString(), const QString& output = QString());
+    Q_INVOKABLE void      recordSelection(const QString& geometry);
+    Q_INVOKABLE void      stopRecording();
+    Q_INVOKABLE void      saveHistory();
 
-    Q_INVOKABLE void screenshotWindow();
-    Q_INVOKABLE void screenshotSelection();
-    Q_INVOKABLE void screenshotOutput(const QString& out = QString());
+    Q_INVOKABLE void      screenshotWindow();
+    Q_INVOKABLE void      screenshotSelection();
+    Q_INVOKABLE void      screenshotOutput(const QString& out = QString());
 
   signals:
     void isRecordingChanged();
@@ -92,7 +92,7 @@ class ScreenRecorder : public QObject {
     void showCursorChanged();
     void thumbnailReady(const QString& videoPath, const QString& thumbnailPath);
 
-  private slots:
+  private:
     void handleRecordingFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
   private:

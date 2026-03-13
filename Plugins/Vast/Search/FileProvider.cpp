@@ -26,10 +26,8 @@ void FileProvider::searchAsync(const QString& query, const QString& rootDir, int
     const int                     dep = maxDepth;
     const double                  thr = threshold;
 
-    QFuture<QList<SearchResult*>> future = QtConcurrent::run([this, q, dir, dep, thr]() {
-        const QList<FileEntry> entries = collectFiles(dir, dep);
-        return scoreEntries(entries, q, thr);
-    });
+    QFuture<QList<SearchResult*>> future =
+        QtConcurrent::run([this, query, rootDir, maxDepth, threshold]() { return scoreEntries(collectFiles(rootDir, maxDepth), query, threshold); });
 
     m_watcher->setFuture(future);
 }
@@ -46,12 +44,12 @@ void FileProvider::cancel() {
 }
 
 QList<FileProvider::FileEntry> FileProvider::collectFiles(const QString& rootDir, int maxDepth) {
-    QList<FileEntry> entries;
-    QMimeDatabase    mimeDb;
+    QList<FileEntry>           entries;
+    static const QMimeDatabase mimeDb;
 
-    const qsizetype  rootDepth = rootDir.count('/');
+    const qsizetype            rootDepth = rootDir.count('/');
 
-    QDirIterator     it(rootDir, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden, QDirIterator::Subdirectories);
+    QDirIterator               it(rootDir, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden, QDirIterator::Subdirectories);
 
     while (it.hasNext()) {
         it.next();
@@ -65,8 +63,8 @@ QList<FileProvider::FileEntry> FileProvider::collectFiles(const QString& rootDir
         if (name.startsWith('.'))
             continue;
         if (fi.isDir()) {
-            static const QStringList skipDirs = {"node_modules", ".git", ".svn", ".hg", "__pycache__", "target", "build", ".cache"};
-            if (skipDirs.contains(name))
+            static constexpr std::array skipDirs{"node_modules", ".git", ".svn", ".hg", "__pycache__", "target", "build", ".cache"};
+            if (std::ranges::contains(skipDirs, std::string_view(name.toStdString())))
                 continue;
         }
 
@@ -115,8 +113,8 @@ QString FileProvider::mimeIcon(const QString& mimeType, bool isDir) {
         {"application/x-executable", "application-x-executable"},
     };
 
-    if (iconMap.contains(mimeType))
-        return iconMap.value(mimeType);
+    if (auto it = iconMap.find(mimeType); it != iconMap.end())
+        return it.value();
 
     const QString super = mimeType.section('/', 0, 0);
     if (super == "image")
@@ -147,7 +145,7 @@ QList<SearchResult*> FileProvider::scoreEntries(const QList<FileEntry>& entries,
             hits.append({&e, s});
     }
 
-    std::sort(hits.begin(), hits.end(), [](const Hit& a, const Hit& b) {
+    std::ranges::sort(hits, [](const Hit& a, const Hit& b) {
         if (std::abs(a.score - b.score) < 0.001)
             return a.entry->name.length() < b.entry->name.length();
         return a.score > b.score;

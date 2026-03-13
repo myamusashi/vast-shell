@@ -11,6 +11,11 @@ struct KeyboardDevice {
     bool hasLED;
 };
 
+struct OpenDevice {
+    int              fd       = -1;
+    QSocketNotifier* notifier = nullptr;
+};
+
 class Keylock : public QObject {
     Q_OBJECT
     QML_ELEMENT
@@ -23,10 +28,10 @@ class Keylock : public QObject {
     explicit Keylock(QObject* parent = nullptr);
     ~Keylock();
 
-    bool capsLock() const {
+    [[nodiscard]] bool capsLock() const {
         return m_capsLock;
     }
-    bool numLock() const {
+    [[nodiscard]] bool numLock() const {
         return m_numLock;
     }
 
@@ -39,8 +44,7 @@ class Keylock : public QObject {
     void                    readInitialState(int fd, bool hasLED);
     void                    onReadReady(int fd, bool hasLED);
 
-    QList<int>              m_fds;
-    QList<QSocketNotifier*> m_notifiers;
+    std::vector<OpenDevice> m_open;
     bool                    m_capsLock = false;
     bool                    m_numLock  = false;
 };

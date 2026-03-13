@@ -60,25 +60,26 @@ void SearchEngine::saveHistory() {
 
 double SearchEngine::recencyScore(const QString& appId) const {
     const qint64 now = QDateTime::currentMSecsSinceEpoch();
-    for (const HistoryEntry& e : m_history) {
-        if (e.id == appId) {
-            const double age       = static_cast<double>(now - e.timestamp);
-            const double recency   = std::exp(-age / (86400000.0 * 7.0));
-            const double frequency = std::min(e.count / 10.0, 1.0);
-            return recency * 0.7 + frequency * 0.3;
-        }
-    }
-    return 0.0;
+    auto         it  = std::ranges::find_if(m_history, [&](const HistoryEntry& e) { return e.id == appId; });
+
+    if (it == m_history.end())
+        return 0.0;
+
+    const double age       = static_cast<double>(now - it->timestamp);
+    const double recency   = std::exp(-age / (86400000.0 * 7.0));
+    const double frequency = std::min(it->count / 10.0, 1.0);
+    return recency * 0.7 + frequency * 0.3;
 }
 
 double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const {
-    const QString     name        = FuzzyMatcher::normalizeText(entry->property("name").toString());
-    const QString     genericName = FuzzyMatcher::normalizeText(entry->property("genericName").toString());
-    const QString     comment     = FuzzyMatcher::normalizeText(entry->property("comment").toString());
+    const QString                   name        = FuzzyMatcher::normalizeText(entry->property("name").toString());
+    const QString                   genericName = FuzzyMatcher::normalizeText(entry->property("genericName").toString());
+    const QString                   comment     = FuzzyMatcher::normalizeText(entry->property("comment").toString());
+    static const QRegularExpression kWhitespace(R"(\s+)");
 
-    const QStringList nameWords = name.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+    const QStringList               nameWords = name.split(kWhitespace, Qt::SkipEmptyParts);
 
-    double nameScore = 0.0;
+    double                          nameScore = 0.0;
     if (name == normQuery)
         nameScore = 1.0;
     else if (name.contains(normQuery))
@@ -91,13 +92,13 @@ double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords,
 
     double genericScore = 0.0;
     if (!genericName.isEmpty()) {
-        const QStringList gWords = genericName.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        const QStringList gWords = genericName.split(kWhitespace, Qt::SkipEmptyParts);
         genericScore             = FuzzyMatcher::getMultiWordScore(normQueryWords, genericName, gWords) * 0.7;
     }
 
     double commentScore = 0.0;
     if (!comment.isEmpty()) {
-        const QStringList cWords = comment.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        const QStringList cWords = comment.split(kWhitespace, Qt::SkipEmptyParts);
         commentScore             = FuzzyMatcher::getMultiWordScore(normQueryWords, comment, cWords) * 0.5;
     }
 
@@ -164,24 +165,18 @@ QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& q
 }
 
 void SearchEngine::recordLaunch(const QString& appId) {
-    const qint64 now   = QDateTime::currentMSecsSinceEpoch();
-    bool         found = false;
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    auto         it  = std::ranges::find_if(m_history, [&](const HistoryEntry& e) { return e.id == appId; });
 
-    for (HistoryEntry& e : m_history) {
-        if (e.id == appId) {
-            e.timestamp = now;
-            e.count     = e.count + 1;
-            found       = true;
-            break;
-        }
-    }
-
-    if (!found)
+    if (it != m_history.end()) {
+        it->timestamp = now;
+        it->count++;
+    } else
         m_history.append({appId, now, 1});
 
     if (m_history.size() > m_historyLimit) {
-        std::sort(m_history.begin(), m_history.end(), [](const HistoryEntry& a, const HistoryEntry& b) { return a.timestamp > b.timestamp; });
-        m_history = m_history.mid(0, m_historyLimit);
+        std::ranges::sort(m_history, [](const HistoryEntry& a, const HistoryEntry& b) { return a.timestamp > b.timestamp; });
+        m_history.resize(m_historyLimit);
     }
 
     saveHistory();

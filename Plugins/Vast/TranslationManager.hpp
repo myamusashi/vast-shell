@@ -1,5 +1,4 @@
-#ifndef TRANSLATIONMANAGER_H
-#define TRANSLATIONMANAGER_H
+#pragma once
 
 #include <QGuiApplication>
 #include <QObject>
@@ -17,11 +16,11 @@ class TranslationManager : public QObject {
 
     explicit TranslationManager(QObject* parent = nullptr);
 
-    QString                 currentLanguage() const;
-    void                    setCurrentLanguage(const QString& language);
+    [[nodiscard]] QString                 currentLanguage() const;
+    void                                  setCurrentLanguage(const QString& language);
 
-    Q_INVOKABLE bool        loadTranslation(const QString& language, const QString& translationPath = DefaultTranslationPath);
-    Q_INVOKABLE QStringList availableLanguages() const;
+    [[nodiscard]] Q_INVOKABLE bool        loadTranslation(const QString& language, const QString& translationPath = DefaultTranslationPath);
+    [[nodiscard]] Q_INVOKABLE QStringList availableLanguages() const;
 
   signals:
     void languageChanged();
@@ -31,5 +30,3 @@ class TranslationManager : public QObject {
     QString           m_currentLanguage;
     const QStringList m_availableLanguages;
 };
-
-#endif // TRANSLATIONMANAGER_H
