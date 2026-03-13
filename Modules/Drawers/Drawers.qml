@@ -448,7 +448,7 @@ Variants {
                     chargeFlash.restart();
             }
             function onPercentageChanged() {
-                const percentage = Math.round(root.batPercentage * 100);
+                const percentage = Math.round(UPower.displayDevice.percentage * 100);
                 const levels = Configs.generals.battery.warnLevels;
                 const warn = levels.find(e => e.level === percentage);
 
