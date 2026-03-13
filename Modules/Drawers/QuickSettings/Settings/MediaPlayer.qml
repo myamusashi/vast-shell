@@ -97,24 +97,17 @@ ClippingWrapperRectangle {
         const tertiaryTone = atTone(0.88);
 
         return {
-            // Surface roles
             surface: toHex(surfaceTone.color),
             surfaceVariant: toHex(surfaceVariantTone.color),
             onSurface: toHex(white.color),
             onSurfaceVariant: toHex(outlineTone.color),
             outline: toHex(outlineTone.color),
-
-            // Primary roles
             primary: toHex(primaryTone.color),
             onPrimary: onColor(primaryTone.lum, white, black),
             primaryContainer: toHex(primaryContainerTone.color),
             onPrimaryContainer: onColor(primaryContainerTone.lum, white, black),
-
-            // Secondary roles
             secondary: toHex(secondaryTone.color),
             onSecondary: onColor(secondaryTone.lum, white, black),
-
-            // Tertiary roles
             tertiary: toHex(tertiaryTone.color),
             onTertiary: onColor(tertiaryTone.lum, white, black)
         };
@@ -212,6 +205,12 @@ ClippingWrapperRectangle {
             Behavior on opacity {
                 NAnim {}
             }
+        }
+
+        FastBlur {
+            anchors.fill: trackArt
+            source: trackArt
+            radius: Configs.generals.coverBlurRadius
         }
 
         Loader {

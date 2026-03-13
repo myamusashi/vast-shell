@@ -69,7 +69,7 @@
     <message>
         <location filename="../Modules/Drawers/Launcher/App.qml" line="160"/>
         <source>Found %1 apps in %2ms</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplikasi ditemukan %1 dalam %2ms</translation>
     </message>
     <message>
         <location filename="../Modules/Drawers/Launcher/App.qml" line="312"/>
@@ -145,42 +145,42 @@
         <translation>Skala Ukuran Font:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="180"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="181"/>
         <source>Shapes &amp; Layout</source>
         <translation>Bentuk &amp; Tata Letak</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="185"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="186"/>
         <source>UI Corner Roundness (Normal):</source>
         <translation>Kelengkungan Sudut UI (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="203"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="204"/>
         <source>Element Spacing (Normal):</source>
         <translation>Jarak Elemen (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="221"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="222"/>
         <source>Padding (Normal):</source>
         <translation>Padding (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="239"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="240"/>
         <source>Margin (Normal):</source>
         <translation>Margin (Normal):</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="256"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="257"/>
         <source>Motion &amp; Animation</source>
         <translation>Gerakan &amp; Animasi</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="261"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="262"/>
         <source>Animation Durations Scale:</source>
         <translation>Skala Durasi Animasi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="354"/>
+        <location filename="../Modules/Settings/Pages/AppearancePage.qml" line="355"/>
         <source>Search font...</source>
         <translation>Cari font...</translation>
     </message>
@@ -1115,32 +1115,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GeneralConfig</name>
     <message>
-        <location filename="../Core/Configs/GeneralConfig.qml" line="18"/>
+        <location filename="../Core/Configs/GeneralConfig.qml" line="20"/>
         <source>Low battery</source>
         <translation>Baterai lemah</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/GeneralConfig.qml" line="19"/>
+        <location filename="../Core/Configs/GeneralConfig.qml" line="21"/>
         <source>You might want to plug in a charger</source>
         <translation>Kamu mungkin mau colok chargernya</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/GeneralConfig.qml" line="24"/>
+        <location filename="../Core/Configs/GeneralConfig.qml" line="26"/>
         <source>Did you see the previous message?</source>
         <translation>Kamu bisa lihat pesan sebelumnya kan?</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/GeneralConfig.qml" line="25"/>
+        <location filename="../Core/Configs/GeneralConfig.qml" line="27"/>
         <source>You should probably plug in a charger &lt;b&gt;now&lt;/b&gt;</source>
         <translation>Kamu mungkin ingin colok charger kamu &lt;b&gt;sekarang&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/GeneralConfig.qml" line="30"/>
+        <location filename="../Core/Configs/GeneralConfig.qml" line="32"/>
         <source>Critical battery level</source>
         <translation>Level baterai kritis</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/GeneralConfig.qml" line="31"/>
+        <location filename="../Core/Configs/GeneralConfig.qml" line="33"/>
         <source>PLUG THE CHARGER RIGHT NOW!!</source>
         <translation>MASUKAN CHARGER NYA SEKARANG!!</translation>
     </message>
@@ -1173,37 +1173,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Alpha Transparansi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="133"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="135"/>
+        <source>How much radius blur for album cover:</source>
+        <translation>Seberapa banyak blur radius untuk cover album:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="154"/>
+        <source>How far the charging indicator spreads on the screen edge:</source>
+        <translation>Seberapa lebar indikator tersebar di border screen:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="172"/>
         <source>Enable Outer Border:</source>
         <translation>Aktifkan Outer Border:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="146"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="185"/>
         <source>Default Applications</source>
         <translation>Aplikasi Default</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="149"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="188"/>
         <source>Terminal:</source>
         <translation>Terminal:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="155"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="194"/>
         <source>File Explorer:</source>
         <translation>Penjelajah File:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="161"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="200"/>
         <source>Image Viewer:</source>
         <translation>Penampil Gambar:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="167"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="206"/>
         <source>Video Viewer:</source>
         <translation>Penampil Video:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="173"/>
+        <location filename="../Modules/Settings/Pages/GeneralPage.qml" line="212"/>
         <source>Audio Settings:</source>
         <translation>Pengaturan Audio:</translation>
     </message>
@@ -1704,7 +1714,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Bersihkan semuanya</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="235"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="236"/>
         <source>No notifications</source>
         <translation>Tidak ada notifikasi</translation>
     </message>
@@ -2597,12 +2607,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WifiList</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="80"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="79"/>
         <source>Internet</source>
         <translation>Internet</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="88"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="87"/>
         <source>Tap/click a network to connect</source>
         <translation>Tap/klik menyambungkan untuk jaringan</translation>
     </message>
@@ -2643,7 +2653,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>ndak tau</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="118"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="117"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>

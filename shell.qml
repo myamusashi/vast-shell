@@ -15,8 +15,6 @@ import qs.Modules.Wallpaper
 import qs.Modules.Settings
 
 ShellRoot {
-    id: root
-
     Lockscreen {}
     Wall {}
     Dashboard {}

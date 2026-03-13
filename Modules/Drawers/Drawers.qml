@@ -353,13 +353,13 @@ Variants {
                 NAnim {
                     target: elev
                     property: "blur"
-                    to: 20
+                    to: Configs.generals.chargingGlowSpread
                     duration: Appearance.animations.durations.large * 0.8
                 }
                 NAnim {
                     target: elev
                     property: "spread"
-                    to: 20
+                    to: Configs.generals.chargingGlowSpread
                     duration: Appearance.animations.durations.large * 0.8
                 }
             }
