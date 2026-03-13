@@ -83,8 +83,8 @@ Item {
                 StyledSlide {
                     from: 0.1
                     to: 1.0
-					stepSize: 0.1
-					popupDecimals: 1
+                    stepSize: 0.1
+                    popupDecimals: 1
                     value: Configs.generals.alpha
                     onValueChanged: Configs.generals.alpha = value
                     Layout.preferredWidth: 200
@@ -125,6 +125,44 @@ Item {
                             return 1.0;
                     }
                     enabled: Configs.generals.transparent
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                StyledText {
+                    text: qsTr("How much radius blur for album cover:")
+                    Layout.fillWidth: true
+                    font.pixelSize: Appearance.fonts.size.large
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                }
+
+                StyledSlide {
+                    from: 1
+                    to: 64
+                    value: Configs.generals.coverBlurRadius
+                    onValueChanged: Configs.generals.coverBlurRadius = value
+                    Layout.preferredWidth: 200
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                StyledText {
+                    text: qsTr("How far the charging indicator spreads on the screen edge:")
+                    Layout.fillWidth: true
+                    font.pixelSize: Appearance.fonts.size.large
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                }
+
+                StyledSlide {
+                    from: 1
+                    to: 64
+                    value: Configs.generals.chargingGlowSpread
+                    onValueChanged: Configs.generals.chargingGlowSpread = value
+                    Layout.preferredWidth: 200
                 }
             }
 

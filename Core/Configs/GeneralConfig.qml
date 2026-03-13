@@ -10,6 +10,8 @@ JsonObject {
     property real alpha: 1.0
     property bool enableOuterBorder: false
     property int outerBorderSize: 10
+    property int coverBlurRadius: 16
+    property int chargingGlowSpread: 10
 
     component Battery: JsonObject {
         property list<var> warnLevels: [

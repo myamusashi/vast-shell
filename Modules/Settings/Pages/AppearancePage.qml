@@ -166,8 +166,8 @@ Item {
                     StyledSlide {
                         from: 0.1
                         to: 2.0
-						stepSize: 0.1
-						popupDecimals: 1
+                        stepSize: 0.1
+                        popupDecimals: 1
                         snapEnabled: true
                         showValuePopup: true
                         value: Appearance.fonts.size.scale

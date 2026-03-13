@@ -138,8 +138,8 @@ WrapperRectangle {
                 implicitHeight: contentHeight
                 interactive: false
                 model: Networking.devices
-				spacing: Appearance.spacing.small
-				clip: true
+                spacing: Appearance.spacing.small
+                clip: true
 
                 delegate: ColumnLayout {
                     id: deviceDelegate
