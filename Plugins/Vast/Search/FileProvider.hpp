@@ -15,11 +15,11 @@ class FileProvider : public QObject {
     explicit FileProvider(QObject* parent = nullptr);
     ~FileProvider() override;
 
-    void                 searchAsync(const QString& query, const QString& rootDir, int maxDepth = 3, double threshold = 0.40);
+    void                               searchAsync(const QString& query, const QString& rootDir, int maxDepth = 3, double threshold = 0.40);
 
-    QList<SearchResult*> searchSync(const QString& query, const QString& rootDir, int maxDepth = 2, double threshold = 0.40) const;
+    [[nodiscard]] QList<SearchResult*> searchSync(const QString& query, const QString& rootDir, int maxDepth = 2, double threshold = 0.40) const;
 
-    void                 cancel();
+    void                               cancel();
 
   signals:
     void filesReady(QList<SearchResult*> results);
@@ -34,11 +34,10 @@ class FileProvider : public QObject {
         QString icon;
     };
 
-    static QList<FileEntry>               collectFiles(const QString& rootDir, int maxDepth);
-    static QString                        mimeIcon(const QString& mimeType, bool isDir);
+    static QList<FileEntry>                               collectFiles(const QString& rootDir, int maxDepth);
+    static QString                                        mimeIcon(const QString& mimeType, bool isDir);
 
-    QList<SearchResult*>                  scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold) const;
+    QList<SearchResult*>                                  scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold) const;
 
     QFutureWatcher<QList<SearchResult*>>* m_watcher = nullptr;
-    QMimeDatabase                         m_mimeDb;
 };

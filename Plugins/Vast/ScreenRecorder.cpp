@@ -164,8 +164,7 @@ QString ScreenRecorder::videoPath() const {
 
 void ScreenRecorder::notify(const QString& summary, const QString& body, const QString& urgency, const QString& icon, const QString& app, const QStringList& actions,
                             bool wait) const {
-    QStringList args;
-    args << "-a" << app;
+    QStringList args{"-a", app};
     if (!urgency.isEmpty() && urgency != "normal")
         args << "-u" << urgency;
     if (!icon.isEmpty())
@@ -178,7 +177,7 @@ void ScreenRecorder::notify(const QString& summary, const QString& body, const Q
     args << summary << body;
 
     QProcess* process = new QProcess(const_cast<ScreenRecorder*>(this));
-    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), process, &QProcess::deleteLater);
+    connect(process, &QProcess::finished, process, &QProcess::deleteLater);
     process->start("notify-send", args);
 }
 
@@ -190,9 +189,8 @@ QStringList ScreenRecorder::getMonitors() const {
     QJsonDocument doc = QJsonDocument::fromJson(process.readAllStandardOutput());
     QJsonArray    arr = doc.array();
     QStringList   monitors;
-    for (int i = 0; i < arr.size(); ++i) {
-        monitors << arr[i].toObject()["name"].toString();
-    }
+    for (const QJsonValue& val : doc.array())
+        monitors << val.toObject()["name"].toString();
     return monitors;
 }
 
@@ -269,7 +267,7 @@ void ScreenRecorder::startRecording(const QString& geometry, const QString& outp
     baseArgs << "-f" << m_currentOutputFile;
 
     m_recordingProcess = new QProcess(this);
-    connect(m_recordingProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &ScreenRecorder::handleRecordingFinished);
+    connect(m_recordingProcess, &QProcess::finished, this, &ScreenRecorder::handleRecordingFinished);
 
     m_recordingProcess->start("wl-screenrec", baseArgs);
     if (!m_recordingProcess->waitForStarted()) {
@@ -357,7 +355,7 @@ void ScreenRecorder::createThumbnail(const QString& videoPath, const QString& ou
     }
 
     QProcess* ffprobe = new QProcess(this);
-    connect(ffprobe, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, ffprobe, videoPath, thumb](int exitCode, QProcess::ExitStatus) {
+    connect(ffprobe, &QProcess::finished, this, [this, ffprobe, videoPath, thumb](int exitCode, QProcess::ExitStatus) {
         bool   ok;
         double duration = QString(ffprobe->readAllStandardOutput()).trimmed().toDouble(&ok);
         ffprobe->deleteLater();
@@ -366,7 +364,7 @@ void ScreenRecorder::createThumbnail(const QString& videoPath, const QString& ou
         QString   formatted = QString::asprintf("%02d:%02d:%02d", static_cast<int>(ts / 3600), static_cast<int>(fmod(ts, 3600) / 60), static_cast<int>(fmod(ts, 60)));
 
         QProcess* ffmpeg = new QProcess(this);
-        connect(ffmpeg, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, ffmpeg, videoPath, thumb](int ffmpegExit, QProcess::ExitStatus) {
+        connect(ffmpeg, &QProcess::finished, this, [this, ffmpeg, videoPath, thumb](int ffmpegExit, QProcess::ExitStatus) {
             ffmpeg->deleteLater();
             if (ffmpegExit == 0 && QFile::exists(thumb))
                 emit thumbnailReady(videoPath, thumb);
@@ -388,7 +386,7 @@ void ScreenRecorder::finishRecording(const QString& vid) {
     QString   thumb = m_thumbnailDir + "/" + fi.baseName() + ".png";
 
     QProcess* ffprobe = new QProcess(this);
-    connect(ffprobe, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, ffprobe, vid, thumb](int exitCode, QProcess::ExitStatus) {
+    connect(ffprobe, &QProcess::finished, this, [this, ffprobe, vid, thumb](int exitCode, QProcess::ExitStatus) {
         bool   ok;
         double duration = QString(ffprobe->readAllStandardOutput()).trimmed().toDouble(&ok);
         ffprobe->deleteLater();
@@ -406,7 +404,7 @@ void ScreenRecorder::finishRecording(const QString& vid) {
         QString   formatted = QString::asprintf("%02d:%02d:%02d", h, m, s);
 
         QProcess* ffmpeg = new QProcess(this);
-        connect(ffmpeg, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, ffmpeg, vid, thumb](int ffmpegExitCode, QProcess::ExitStatus) {
+        connect(ffmpeg, &QProcess::finished, this, [this, ffmpeg, vid, thumb](int ffmpegExitCode, QProcess::ExitStatus) {
             ffmpeg->deleteLater();
             if (ffmpegExitCode == 0 && QFile::exists(thumb)) {
                 notify("Recording Stopped", "Video saved to " + vid, "normal", thumb, "screenrecord");
@@ -434,7 +432,7 @@ void ScreenRecorder::gotoLink(const QString& file, const QString& thumb, bool sh
         QStringList args;
         args << "-a" << "screengrab" << "-i" << icon << "--action" << "default=open link" << "--wait" << "Capture Saved" << file;
 
-        connect(notifyProc, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [notifyProc, file](int, QProcess::ExitStatus) {
+        connect(notifyProc, &QProcess::finished, [notifyProc, file](int, QProcess::ExitStatus) {
             QString action = QString(notifyProc->readAllStandardOutput()).trimmed();
             notifyProc->deleteLater();
 
@@ -456,7 +454,7 @@ void ScreenRecorder::copyToClipboard(const QString& img) const {
     }
 
     QProcess* process = new QProcess(const_cast<ScreenRecorder*>(this));
-    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [process, file](int, QProcess::ExitStatus) {
+    connect(process, &QProcess::finished, [process, file](int, QProcess::ExitStatus) {
         process->deleteLater();
         file->deleteLater();
     });
@@ -471,11 +469,11 @@ void ScreenRecorder::screenshotWindow() {
         QString   img = screenshotPath();
 
         QProcess* process = new QProcess(this);
-        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, process, img](int, QProcess::ExitStatus) {
+        connect(process, &QProcess::finished, this, [this, process, img](int, QProcess::ExitStatus) {
             QString out = QString(process->readAllStandardError() + process->readAllStandardOutput());
             process->deleteLater();
 
-            if (!out.contains("selection cancelled")) {
+            if (!std::string_view(out.toStdString()).contains("selection cancelled")) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
             } else {
@@ -493,10 +491,10 @@ void ScreenRecorder::screenshotSelection() {
     QTimer::singleShot(500, this, [this]() {
         QString   img     = screenshotPath();
         QProcess* process = new QProcess(this);
-        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, process, img](int, QProcess::ExitStatus) {
+        connect(process, &QProcess::finished, this, [this, process, img](int, QProcess::ExitStatus) {
             QString out = process->readAllStandardError() + process->readAllStandardOutput();
             process->deleteLater();
-            if (!out.contains("selection cancelled")) {
+            if (!std::string_view(out.toStdString()).contains("selection cancelled")) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
             } else {
@@ -523,7 +521,7 @@ void ScreenRecorder::screenshotOutput(const QString& out) {
         QString   img = screenshotPath();
 
         QProcess* grim = new QProcess(this);
-        connect(grim, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, grim, img, target](int grimExitCode, QProcess::ExitStatus) {
+        connect(grim, &QProcess::finished, this, [this, grim, img, target](int grimExitCode, QProcess::ExitStatus) {
             grim->deleteLater();
             if (grimExitCode == 0 && QFile::exists(img)) {
                 copyToClipboard(img);

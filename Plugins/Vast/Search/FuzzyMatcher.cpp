@@ -8,19 +8,16 @@
 // char normalisation table
 const QHash<QChar, QChar>& FuzzyMatcher::charLookup() {
     static QHash<QChar, QChar> map = []() {
-        // raw map: canonical → lookalike string
-        const struct {
-            char        key;
-            const char* chars;
-        } entries[] = {
-            {'a', "aàáâãäåāăą4@"}, {'e', "eèéêëēėę3"}, {'i', "iìíîïīįı1!|l"}, {'o', "oòóôõöøōő0"}, {'u', "uùúûüūůű"}, {'c', "cçćč"},
-            {'n', "nñńň"},         {'s', "sśšş5$"},    {'z', "zźżž2"},        {'l', "l1!|i"},      {'g', "g9"},       {'t', "t7+"},
+        static constexpr std::array entries = {
+            std::pair{'a', "aàáâãäåāăą4@"}, std::pair{'e', "eèéêëēėę3"}, std::pair{'i', "iìíîïīįı1!|l"}, std::pair{'o', "oòóôõöøōő0"},
+            std::pair{'u', "uùúûüūůű"},     std::pair{'c', "cçćč"},      std::pair{'n', "nñńň"},         std::pair{'s', "sśšş5$"},
+            std::pair{'z', "zźżž2"},        std::pair{'l', "l1!|i"},     std::pair{'g', "g9"},           std::pair{'t', "t7+"},
         };
         QHash<QChar, QChar> h;
-        for (auto& e : entries) {
-            const QString chars = QString::fromUtf8(e.chars);
-            const QChar   canon(e.key);
-            for (QChar c : chars)
+        for (const auto& [key, chars] : entries) {
+            const QString str = QString::fromUtf8(chars);
+            const QChar   canon(key);
+            for (QChar c : str)
                 h.insert(c, canon);
         }
         return h;
@@ -36,19 +33,24 @@ QChar FuzzyMatcher::normalizeChar(QChar c) {
 QString FuzzyMatcher::normalizeText(const QString& text) {
     QString out;
     out.reserve(text.size());
-    for (QChar c : text)
-        out += normalizeChar(c);
+    std::ranges::transform(text, std::back_inserter(out), &FuzzyMatcher::normalizeChar);
     return out;
 }
 
 // HTML helpers
 QString FuzzyMatcher::escapeHtml(const QString& text) {
-    QString out = text;
-    out.replace('&', "&amp;");
-    out.replace('<', "&lt;");
-    out.replace('>', "&gt;");
-    out.replace('"', "&quot;");
-    out.replace('\'', "&#039;");
+    QString out;
+    out.reserve(text.size() * 1.1);
+    for (QChar c : text) {
+        switch (c.unicode()) {
+            case '&': out += QLatin1String("&amp;"); break;
+            case '<': out += QLatin1String("&lt;"); break;
+            case '>': out += QLatin1String("&gt;"); break;
+            case '"': out += QLatin1String("&quot;"); break;
+            case '\'': out += QLatin1String("&#039;"); break;
+            default: out += c;
+        }
+    }
     return out;
 }
 
@@ -167,7 +169,7 @@ qsizetype FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) 
         if (rowMin > slen)
             return rowMin;
 
-        std::swap(prev, curr);
+        std::iota(prev.begin(), prev.end(), qsizetype{0});
     }
     return prev[slen];
 }
@@ -191,9 +193,8 @@ double FuzzyMatcher::prefixScore(const QString& q, const QString& t, const QStri
     if (t.startsWith(q))
         return (q.length() == t.length()) ? 1.0 : 0.95;
 
-    for (const QString& word : tWords)
-        if (word.startsWith(q))
-            return (q.length() == word.length()) ? 0.9 : 0.85;
+    if (std::ranges::any_of(tWords, [&](const QString& w) { return w.startsWith(q); }))
+        return 0.85;
 
     return 0.0;
 }
@@ -267,6 +268,8 @@ double FuzzyMatcher::getMultiWordScore(const QStringList& qWords, const QString&
 }
 
 double FuzzyMatcher::fuzzyScore(const QString& query, const QString& text) {
+    static const QRegularExpression kWhitespace(R"(\s+)");
+
     if (query.isEmpty())
         return 0.0;
 
@@ -280,8 +283,8 @@ double FuzzyMatcher::fuzzyScore(const QString& query, const QString& text) {
     if (normText.contains(normQuery))
         return 0.95;
 
-    const QStringList tWords     = normText.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
-    const QStringList queryWords = normQuery.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+    const QStringList tWords     = normText.split(kWhitespace, Qt::SkipEmptyParts);
+    const QStringList queryWords = normQuery.split(kWhitespace, Qt::SkipEmptyParts);
 
     return getMultiWordScore(queryWords, normText, tWords);
 }

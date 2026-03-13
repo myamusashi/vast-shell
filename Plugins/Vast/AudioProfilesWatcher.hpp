@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QVariantMap>
 #include <QtQml/qqmlregistration.h>
+#include <memory>
 #include <qtypes.h>
 
 #include "AudioProfilesModel.hpp"
@@ -16,38 +17,33 @@ class AudioProfilesWatcher : public QObject {
 
     Q_PROPERTY(quint32 deviceId READ deviceId NOTIFY deviceInfoChanged)
     Q_PROPERTY(QString deviceName READ deviceName NOTIFY deviceInfoChanged)
-
     Q_PROPERTY(qsizetype activeIndex READ activeIndex NOTIFY activeProfileChanged)
     Q_PROPERTY(QVariantMap activeProfile READ activeProfile NOTIFY activeProfileChanged)
-
-    // roles: index, name, description, available, readable
     Q_PROPERTY(AudioProfilesModel* profiles READ profiles CONSTANT)
-
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
 
   public:
-    // called once by the QML engine
     static AudioProfilesWatcher* create(QQmlEngine* engine, QJSEngine* jsEngine);
 
     explicit AudioProfilesWatcher(QObject* parent = nullptr);
     ~AudioProfilesWatcher() override;
 
-    quint32 deviceId() const {
+    [[nodiscard]] quint32 deviceId() const {
         return m_deviceId;
     }
-    QString deviceName() const {
+    [[nodiscard]] QString deviceName() const {
         return m_deviceName;
     }
-    qsizetype activeIndex() const {
+    [[nodiscard]] qsizetype activeIndex() const {
         return m_activeIndex;
     }
-    QVariantMap activeProfile() const {
+    [[nodiscard]] QVariantMap activeProfile() const {
         return m_activeProfile;
     }
-    AudioProfilesModel* profiles() const {
+    [[nodiscard]] AudioProfilesModel* profiles() const {
         return m_model;
     }
-    bool connected() const {
+    [[nodiscard]] bool connected() const {
         return m_connected;
     }
 
@@ -56,10 +52,9 @@ class AudioProfilesWatcher : public QObject {
     void activeProfileChanged();
     void connectedChanged();
 
-  private slots:
-    void poll();
-
   private:
+    void                poll();
+
     quint32             m_deviceId = 0;
     QString             m_deviceName;
     qsizetype           m_activeIndex = -1;
@@ -69,7 +64,7 @@ class AudioProfilesWatcher : public QObject {
     bool                m_connected = false;
 
     struct PwState;
-    PwState* m_pw = nullptr;
+    std::unique_ptr<PwState>     m_pw;
 
-    static QString formatProfileName(const QString& name);
+    [[nodiscard]] static QString formatProfileName(const QString& name);
 };
