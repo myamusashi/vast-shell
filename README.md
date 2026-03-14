@@ -19,29 +19,21 @@ shell.qml
 │   ├── default.nix
 │   ├── hm-modules.nix
 │   ├── packages/
-│   │   ├── AnotherRipple.nix
 │   │   ├── app2unit.nix
-│   │   ├── m3Shapes.nix
 │   │   ├── material-symbols.nix
 │   │   └── qmlfmt.nix
 │   └── plugins/
 │       ├── vastPlugin.nix
-│       ├── audioProfiles.nix
-│       ├── keylockState.nix
-│       ├── keystate.nix
-│       ├── translationManager.nix
-│       └── go-scripts.nix
+│       ├── AnotherRipple.nix
+│       └── m3Shapes.nix
 │
 ├── Core/
 │   ├── Configs/
 │   ├── States/
 │   └── Utils/
 │
-│
 ├── Components/
 │   ├── Base/
-│   │
-│   │
 │   ├── Dialog/
 │   └── Feedback/
 │
@@ -79,7 +71,11 @@ shell.qml
 │       ├── KeylockState.cpp/hpp
 │       ├── ScreenRecorder.cpp/hpp
 │       ├── TranslationManager.cpp/hpp
-│       └── Search/
+│       └──  Search
+│           ├──  FileProvider.cpp/hpp
+│           ├──  FuzzyMatcher.cpp/hpp
+│           ├──  SearchEngine.cpp/hpp
+│           └──  SearchResult.cpp/hpp
 │
 ├── Assets/
 ├── Data/
