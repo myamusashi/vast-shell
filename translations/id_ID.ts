@@ -377,27 +377,27 @@
 <context>
     <name>BottomItem</name>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="106"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="108"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="284"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="287"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="291"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="294"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="298"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="301"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="305"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="308"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
@@ -1722,7 +1722,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifs</name>
     <message>
-        <location filename="../Services/Notifs.qml" line="219"/>
+        <location filename="../Services/Notifs.qml" line="266"/>
         <source>now</source>
         <translation>Sekarang</translation>
     </message>
