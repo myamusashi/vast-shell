@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -15,50 +16,47 @@ Column {
 
     spacing: Appearance.spacing.small
 
-    Row {
+    RowLayout {
         width: parent.width
         spacing: Appearance.spacing.small
 
-        Row {
-            id: appInfoRow
+        StyledText {
+            Layout.fillWidth: true
+            text: root.modelData.appName
+            font.pixelSize: Appearance.fonts.size.large
+            font.weight: Font.Medium
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            elide: Text.ElideRight
+        }
 
-            width: parent.width - expandButton.width - parent.spacing
-            spacing: Appearance.spacing.normal
+        StyledText {
+            text: "•"
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.large
+            Layout.preferredWidth: implicitWidth
+        }
 
-            StyledText {
-                text: root.modelData.appName
-                font.pixelSize: Appearance.fonts.size.large
-                font.weight: Font.Medium
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                elide: Text.ElideRight
-            }
+        StyledText {
+            id: timeText
 
-            StyledText {
-                text: "•"
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.large
-            }
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            Layout.preferredWidth: implicitWidth
+            Component.onCompleted: text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
 
-            StyledText {
-                id: timeText
-
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                Component.onCompleted: text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
-
-                Timer {
-                    interval: 60000
-                    running: root.visible
-                    repeat: true
-                    onTriggered: timeText.text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
-                }
+            Timer {
+                interval: 60000
+                running: root.visible
+                repeat: true
+                onTriggered: timeText.text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
             }
         }
 
         StyledRect {
             id: expandButton
 
-            implicitWidth: 32
-            implicitHeight: 32
+            Layout.preferredWidth: 32
+            Layout.preferredHeight: 32
+            Layout.alignment: Qt.AlignVCenter
             radius: Appearance.rounding.large
             color: "transparent"
 
@@ -114,7 +112,6 @@ Column {
                 required property var modelData
                 required property int index
 
-                // distributes evenly if all items have equal implicit width
                 implicitWidth: (parent.width - (root.modelData.actions.length - 1) * Appearance.spacing.normal) / root.modelData.actions.length
                 implicitHeight: 40
                 radius: Appearance.rounding.full

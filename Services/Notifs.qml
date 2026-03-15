@@ -19,7 +19,6 @@ Singleton {
 
     property list<Notif> list: []
     property bool loaded: false
-    // Memory management properties
     property int maxNotifications: 100
     property int maxNotificationAge: 604800000 // 7 days in milliseconds
 
@@ -207,40 +206,6 @@ Singleton {
     component Notif: QtObject {
         id: notif
 
-        property bool popup: false
-        property bool closed: false
-
-        property date time: new Date()
-        readonly property string timeStr: {
-            const diff = Time.date.getTime() - time.getTime();
-            const m = Math.floor(diff / 60000);
-
-            if (m < 1)
-                return qsTr("now");
-
-            const h = Math.floor(m / 60);
-            const d = Math.floor(h / 24);
-
-            if (d > 0)
-                return `${d}d`;
-            if (h > 0)
-                return `${h}h`;
-            return `${m}m`;
-        }
-
-        property Notification notification
-        property string id: ""
-        property string summary: ""
-        property string body: ""
-        property string appIcon: ""
-        property string appName: ""
-        property string image: ""
-        property real expireTimeout: 5000
-        property int urgency: NotificationUrgency.Normal
-        property bool resident: false
-        property bool hasActionIcons: false
-        property list<var> actions: []
-
         readonly property Connections conn: Connections {
             target: notif.notification
 
@@ -293,22 +258,64 @@ Singleton {
             }
         }
 
-        function dismissPopup() {
-            popup = false;
+        readonly property string timeStr: {
+            const diff = Time.date.getTime() - time.getTime();
+            const m = Math.floor(diff / 60000);
+
+            if (m < 1)
+                return qsTr("now");
+
+            const h = Math.floor(m / 60);
+            const d = Math.floor(h / 24);
+
+            if (d > 0)
+                return `${d}d`;
+            if (h > 0)
+                return `${h}h`;
+            return `${m}m`;
+        }
+        property bool popup: false
+        property bool closed: false
+
+        property date time: new Date()
+
+        property Notification notification
+        property string id: ""
+        property string summary: ""
+        property string body: ""
+        property string appIcon: ""
+        property string appName: ""
+        property string image: ""
+        property real expireTimeout: 5000
+        property int urgency: NotificationUrgency.Normal
+        property bool resident: false
+        property bool hasActionIcons: false
+        property list<var> actions: []
+        property var locks: new Set()
+
+        function lock(item) {
+            locks.add(item);
+        }
+
+        function unlock(item) {
+            locks.delete(item);
+            if (closed)
+                close();
         }
 
         function close() {
             closed = true;
-            if (root.list.includes(this)) {
+            if (locks.size === 0 && root.list.includes(this)) {
                 root.list = root.list.filter(n => n !== this);
                 if (notification)
                     notification.dismiss();
-
-                // Clean up connections
                 conn.target = null;
-
                 destroy();
             }
+        }
+
+        function dismissPopup() {
+            popup = false;
         }
 
         Component.onCompleted: {

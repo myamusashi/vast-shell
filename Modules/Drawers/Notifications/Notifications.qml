@@ -21,7 +21,7 @@ Item {
 
     property bool hasNotifications: Notifs.popups.length > 0
 
-    implicitWidth: parent.width * 0.25
+    implicitWidth: Math.min(Math.round(parent.width * 0.22), 360)
     implicitHeight: hasNotifications ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
@@ -64,7 +64,7 @@ Item {
                 values: [...Notifs.popups]
             }
 
-            cacheBuffer: 200
+            cacheBuffer: implicitHeight
 
             delegate: Wrapper {
                 required property var modelData
@@ -72,8 +72,6 @@ Item {
 
                 isPopup: true
                 notif: modelData
-                onEntered: modelData.timer?.stop()
-                onExited: modelData.timer?.restart()
             }
         }
     }
