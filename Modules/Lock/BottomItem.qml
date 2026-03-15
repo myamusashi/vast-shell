@@ -64,6 +64,7 @@ Item {
         id: bottomWrapperRect
 
         anchors.fill: parent
+
         color: root.drawerColors
         clip: true
         radius: 0
@@ -91,6 +92,7 @@ Item {
 
                 IconImage {
                     id: icon
+
                     anchors.fill: parent
                     source: Qt.resolvedUrl(`${Paths.home}/.face`)
                     z: 1
@@ -208,6 +210,7 @@ Item {
 
                         Image {
                             id: coverArt
+
                             anchors.fill: parent
                             source: Players.active ? Players.active.trackArtUrl : ""
                             sourceSize: Qt.size(60, 60)
@@ -319,6 +322,7 @@ Item {
 
                             Icon {
                                 id: sessionIcon
+
                                 anchors.fill: parent
                                 icon: sessionBtn.modelData.icon
                                 color: sessionHoverHandler.hovered ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.65)
