@@ -24,7 +24,10 @@ Scope {
     signal fileSelected(string path)
 
     function openFileDialog() {
-        loader.activeAsync = !loader.activeAsync;
+        if (loader.active)
+            loader.item.close();
+        else
+            loader.activeAsync = true;
     }
 
     LazyLoader {
@@ -34,11 +37,12 @@ Scope {
         component: FloatingWindow {
             id: window
 
-            title: "Open Dialog"
+            title: "File Dialog"
             width: 800
             height: 560
             minimumSize: Qt.size(600, 420)
             color: Colours.m3Colors.m3Surface
+            onClosed: loader.activeAsync = false
 
             Component.onCompleted: {
                 var home = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];

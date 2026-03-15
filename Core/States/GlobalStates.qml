@@ -177,6 +177,7 @@ Singleton {
 
         property IpcHandler ipc: IpcHandler {
             target: panelController.panelName
+
             function open(): void {
                 GlobalStates.openPanel(panelController.panelName);
             }

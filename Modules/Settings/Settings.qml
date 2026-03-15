@@ -15,16 +15,13 @@ LazyLoader {
     id: settingsLoader
 
     activeAsync: GlobalStates.isSettingsOpen
-    onActiveChanged: {
-        if (!GlobalStates.isSettingsOpen)
-            settingsLoader.item.closed();
-    }
     component: FloatingWindow {
         id: settingsWindow
 
         property int currentPage: 0
 
         color: "transparent"
+        onClosed: GlobalStates.isSettingsOpen = false
 
         Rectangle {
             id: root
