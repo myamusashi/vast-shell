@@ -9,12 +9,15 @@ import "../Components"
 
 Item {
     id: root
+
     Layout.fillWidth: true
     Layout.fillHeight: true
 
     ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Appearance.margin.large
+        anchors {
+            fill: parent
+            margins: Appearance.margin.large
+        }
         spacing: Appearance.spacing.large
 
         StyledText {

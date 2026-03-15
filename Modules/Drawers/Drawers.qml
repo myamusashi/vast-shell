@@ -308,6 +308,7 @@ Variants {
             preferredRendererType: Shape.CurveRenderer
             ShapePath {
                 id: shapePath
+
                 strokeWidth: 0
                 fillColor: "transparent"
                 startX: root.radius

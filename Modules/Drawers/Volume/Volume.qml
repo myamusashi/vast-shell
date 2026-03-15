@@ -54,6 +54,7 @@ Item {
 
     PwNodeLinkTracker {
         id: linkTracker
+
         node: Pipewire.defaultAudioSink
     }
 
@@ -318,6 +319,7 @@ Item {
 
             Timer {
                 id: appVolumeHideTimer
+
                 interval: 500
                 onTriggered: mixer.showVolume = false
             }

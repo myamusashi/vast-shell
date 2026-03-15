@@ -90,6 +90,7 @@ Item {
 
         StyledText {
             id: styledText
+
             visible: text !== ""
             font.pixelSize: 13
             font.weight: Font.Medium

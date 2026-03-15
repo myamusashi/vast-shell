@@ -61,6 +61,7 @@ Switch {
 
             Loader {
                 id: iconLoader
+
                 active: true
                 anchors.centerIn: parent
                 asynchronous: true

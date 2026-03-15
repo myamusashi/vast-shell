@@ -79,6 +79,7 @@ WrapperRectangle {
 
             Header {
                 id: header
+
                 Layout.fillWidth: true
                 text: ""
                 icon: ""

@@ -548,6 +548,7 @@ Item {
 
             ColumnLayout {
                 id: contentLayout
+
                 Layout.fillWidth: true
                 spacing: Appearance.spacing.small
             }
@@ -654,6 +655,7 @@ Item {
 
                 LineSeries {
                     id: borderLine
+
                     color: Colours.m3Colors.m3Green
                     width: 2
                 }

@@ -21,6 +21,7 @@ ColumnLayout {
 
         Icon {
             id: iconItem
+
             icon: ""
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large * 1.5
@@ -28,6 +29,7 @@ ColumnLayout {
 
         StyledText {
             id: textItem
+
             text: ""
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large * 1.2

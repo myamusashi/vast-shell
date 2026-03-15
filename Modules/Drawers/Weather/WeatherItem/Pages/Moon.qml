@@ -155,6 +155,7 @@ Pages {
                         StyledRect {
                             FontMetrics {
                                 id: moonSetMetrics
+
                                 font: moonSet.font
                             }
                             color: Colours.m3Colors.m3SurfaceContainerHigh

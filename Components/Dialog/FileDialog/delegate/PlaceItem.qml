@@ -36,6 +36,7 @@ Rectangle {
 
         Icon {
             id: iconItem
+
             icon: root.icon
             font.pixelSize: Appearance.fonts.size.large
             color: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant

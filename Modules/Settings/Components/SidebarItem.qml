@@ -88,6 +88,7 @@ Rectangle {
 
         StyledText {
             id: textItem
+
             Layout.fillWidth: true
             font.pixelSize: Appearance.fonts.size.normal
             font.bold: root.isActive

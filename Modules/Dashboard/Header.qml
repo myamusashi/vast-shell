@@ -25,6 +25,7 @@ Item {
 
         Icon {
             id: iconItem
+
             type: Icon.Material
             icon: ""
             color: Colours.m3Colors.m3OnSurface
@@ -33,6 +34,7 @@ Item {
 
         StyledText {
             id: textItem
+
             text: ""
             color: Colours.m3Colors.m3OnSurface
             font.weight: Font.DemiBold

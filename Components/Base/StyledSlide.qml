@@ -317,6 +317,7 @@ Slider {
 
                 StyledText {
                     id: valueLabel
+
                     anchors.centerIn: parent
                     text: root.popupValueFormat(root.value)
                     font.pixelSize: Appearance.fonts.size.small

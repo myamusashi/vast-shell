@@ -88,6 +88,7 @@ StyledRect {
 
         ShapePath {
             id: indicatorPath
+
             fillColor: Colours.m3Colors.m3Primary
             strokeColor: "transparent"
 
