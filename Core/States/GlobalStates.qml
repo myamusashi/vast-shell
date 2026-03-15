@@ -45,7 +45,8 @@ Singleton {
             "wallpaperSwitcher": "isWallpaperSwitcherOpen",
             "overview": "isOverviewOpen",
             "weather": "isWeatherPanelOpen",
-            "dashboard": "isDashboardOpen"
+            "dashboard": "isDashboardOpen",
+            "settings": "isSettingsOpen"
         })
 
     property bool isSettingsOpen: false
@@ -154,14 +155,17 @@ Singleton {
 
     OSDTimer {
         id: volumeTimer
+
         osdName: "volume"
     }
     OSDTimer {
         id: capslockTimer
+
         osdName: "capslock"
     }
     OSDTimer {
         id: numlockTimer
+
         osdName: "numlock"
     }
 
@@ -228,6 +232,10 @@ Singleton {
                 panel: "dashboard",
                 shortcut: "dashboard"
             },
+            {
+                panel: "settings",
+                shortcut: "settings"
+            },
         ]
         delegate: PanelController {
             required property var modelData
@@ -255,6 +263,7 @@ Singleton {
 
     Timer {
         id: cleanupTimer
+
         interval: root.cleanupDelay
         repeat: false
         onTriggered: gc()
