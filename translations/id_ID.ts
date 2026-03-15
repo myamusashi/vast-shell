@@ -1610,7 +1610,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Bulan naik: %1</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="172"/>
+        <location filename="../Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="173"/>
         <source>Moonset: %1</source>
         <translation>Bulan turun: %1</translation>
     </message>
@@ -2111,42 +2111,42 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="69"/>
+        <location filename="../Modules/Settings/Settings.qml" line="58"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="79"/>
+        <location filename="../Modules/Settings/Settings.qml" line="68"/>
         <source>General</source>
         <translation>Umum</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="84"/>
+        <location filename="../Modules/Settings/Settings.qml" line="73"/>
         <source>Appearance</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="89"/>
+        <location filename="../Modules/Settings/Settings.qml" line="78"/>
         <source>Top Bar</source>
         <translation>Bilah Atas</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="94"/>
+        <location filename="../Modules/Settings/Settings.qml" line="83"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="99"/>
+        <location filename="../Modules/Settings/Settings.qml" line="88"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="104"/>
+        <location filename="../Modules/Settings/Settings.qml" line="93"/>
         <source>Language</source>
         <translation>Bahasa</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="109"/>
+        <location filename="../Modules/Settings/Settings.qml" line="98"/>
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
@@ -2154,12 +2154,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledComboBox</name>
     <message>
-        <location filename="../Components/Base/StyledComboBox.qml" line="26"/>
+        <location filename="../Components/Base/StyledComboBox.qml" line="27"/>
         <source>Select…</source>
         <translation>Pilih...</translation>
     </message>
     <message>
-        <location filename="../Components/Base/StyledComboBox.qml" line="29"/>
+        <location filename="../Components/Base/StyledComboBox.qml" line="30"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -2569,37 +2569,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WeatherPage</name>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="21"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="24"/>
         <source>Weather &amp; Location</source>
         <translation>Cuaca &amp; Lokasi</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="29"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="32"/>
         <source>Geographic Data</source>
         <translation>Data Geografis</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="34"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="37"/>
         <source>Latitude:</source>
         <translation>Lintang:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="50"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="53"/>
         <source>Longitude:</source>
         <translation>Bujur:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="65"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="68"/>
         <source>Sync &amp; Overview</source>
         <translation>Sinkronisasi &amp; Ikhtisar</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="70"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="73"/>
         <source>Enable Quick Summary Widget:</source>
         <translation>Aktifkan Widget Ringkasan Cepat:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="84"/>
+        <location filename="../Modules/Settings/Pages/WeatherPage.qml" line="87"/>
         <source>Weather Reload Time (ms):</source>
         <translation>Waktu Muat Ulang Cuaca (md):</translation>
     </message>
