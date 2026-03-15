@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell.Widgets
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -47,11 +48,11 @@ ComboBox {
         }
     }
 
-    contentItem: Item {
+    contentItem: WrapperItem {
         implicitHeight: 48
+        leftMargin: Appearance.margin.normal
 
         StyledText {
-            anchors.verticalCenter: parent.verticalCenter
             width: parent.width - x - root.indicator.width - 16
             text: root.displayText_
             font.pixelSize: Appearance.fonts.size.normal
@@ -68,7 +69,7 @@ ComboBox {
         color: Colours.m3Colors.m3Surface
     }
 
-    indicator: Item {
+    indicator: WrapperItem {
         x: root.width - width - 16
         y: (root.height - height) / 2
         width: 24
