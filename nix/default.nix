@@ -121,6 +121,16 @@
                 || echo "''${name}.frag.qsb FAILED"
             done
 
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/borderProgress.vert.qsb \
+                   Assets/shaders/borderProgress.vert
+
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/borderProgress.frag.qsb \
+                   Assets/shaders/borderProgress.frag
+
             runHook postBuild
         '';
 

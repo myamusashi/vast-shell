@@ -264,6 +264,33 @@ compile_wallpaper_shaders() {
 	done
 
 	((failed == 0)) || warn "$failed shader failed to compile"
+
+	# ── Border progress shaders ──
+	log "Compiling border progress shaders..."
+	local -r border_vert_src="$shader_dir/borderProgress.vert"
+	local -r border_vert_out="$shader_dir/borderProgress.vert.qsb"
+	local -r border_frag_src="$shader_dir/borderProgress.frag"
+	local -r border_frag_out="$shader_dir/borderProgress.frag.qsb"
+
+	if [[ -f $border_vert_src ]]; then
+		if [[ ! -f $border_vert_out || $border_vert_src -nt $border_vert_out ]]; then
+			"$qsb" "${qsb_flags[@]}" -o "$border_vert_out" "$border_vert_src" &&
+				log "  → borderProgress.vert.qsb" ||
+				warn "  FAILED: borderProgress.vert.qsb"
+		else
+			log "  Up to date: borderProgress.vert.qsb"
+		fi
+	fi
+
+	if [[ -f $border_frag_src ]]; then
+		if [[ ! -f $border_frag_out || $border_frag_src -nt $border_frag_out ]]; then
+			"$qsb" "${qsb_flags[@]}" -o "$border_frag_out" "$border_frag_src" &&
+				log "  → borderProgress.frag.qsb" ||
+				warn "  FAILED: borderProgress.frag.qsb"
+		else
+			log "  Up to date: borderProgress.frag.qsb"
+		fi
+	fi
 }
 
 build_another_ripple() {
