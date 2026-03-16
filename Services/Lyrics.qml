@@ -28,8 +28,8 @@ Singleton {
             if (!p)
                 return;
             LyricsProvider.clear();
+            LyricsProvider.setPlayback(0, p.rate, p.isPlaying);
             LyricsProvider.fetch(p.trackTitle, p.trackArtist, p.length);
-            LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
         }
 
         // re-anchor so dead-reckoning stays accurate
