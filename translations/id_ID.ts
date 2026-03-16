@@ -354,24 +354,34 @@
 <context>
     <name>BottomActionBar</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="71"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="72"/>
         <source>File name</source>
         <translation>Nama berkas</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="112"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="72"/>
+        <source>Folder</source>
+        <translation type="unfinished">Folder</translation>
+    </message>
+    <message>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="113"/>
         <source>Filter</source>
         <translation>Filter</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="141"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="144"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="147"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="150"/>
         <source>Open</source>
         <translation>Buka</translation>
+    </message>
+    <message>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="150"/>
+        <source>Select</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -966,22 +976,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="94"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="95"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="96"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="97"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="98"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="99"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="99"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="100"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1027,27 +1037,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListView</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="47"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="48"/>
         <source>Show hidden</source>
         <translation>Tampilkan file tersembunyi</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="70"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="71"/>
         <source>Name</source>
         <translation>Nama</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="78"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="79"/>
         <source>Size</source>
         <translation>Ukuran</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="86"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="87"/>
         <source>Type</source>
         <translation>Jenis</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="94"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="95"/>
         <source>Modified</source>
         <translation>Diubah</translation>
     </message>
@@ -2167,12 +2177,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="124"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="135"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="124"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="135"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
@@ -2430,27 +2440,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Jalur Direktori Wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="88"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="89"/>
         <source>Loaded Wallpaper Count:</source>
         <translation>Jumlah Wallpaper Terdimuat:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="107"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="108"/>
         <source>Transitions &amp; Performance</source>
         <translation>Transisi &amp; Performa</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="112"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="113"/>
         <source>Transition Animation Mode:</source>
         <translation>Mode Animasi Transisi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="167"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="168"/>
         <source>Transition Low Performance Priority:</source>
         <translation>Prioritas Performa Rendah Transisi:</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="181"/>
+        <location filename="../Modules/Settings/Pages/WallpaperPage.qml" line="182"/>
         <source>Transition Duration (ms):</source>
         <translation>Durasi Transisi (md):</translation>
     </message>
