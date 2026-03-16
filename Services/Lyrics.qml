@@ -22,20 +22,6 @@ Singleton {
     property bool _trackJustChanged: false
     property var _offsets: ({})
 
-    function setOffset(ms) {
-        LyricsProvider.setOffsetMs(ms);
-    }
-
-    function saveOffset(title, artist, ms) {
-        const key = `${artist}|${title}`;
-        root._offsets[key] = ms;
-    }
-
-    function loadOffset(title, artist) {
-        const key = `${artist}|${title}`;
-        return root._offsets[key] ?? 0;
-    }
-
     Connections {
         target: Players.active
 
@@ -43,8 +29,6 @@ Singleton {
             const p = Players.active;
             if (!p)
                 return;
-            const savedOffset = root.loadOffset(p.trackTitle, p.trackArtist);
-            LyricsProvider.setOffsetMs(savedOffset);
             LyricsProvider.clear();
             LyricsProvider.setPlayback(0, p.rate, p.isPlaying);
             LyricsProvider.fetch(p.trackTitle, p.trackArtist, p.length);
@@ -65,6 +49,7 @@ Singleton {
 
     Connections {
         target: GlobalStates
+
         function onIsQuickSettingsOpenChanged() {
             if (!GlobalStates.isQuickSettingsOpen)
                 return;
