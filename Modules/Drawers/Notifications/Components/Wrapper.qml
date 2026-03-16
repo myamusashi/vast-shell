@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Services.Notifications
 
+import qs.Components.Feedback
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils as H
@@ -33,8 +34,8 @@ Item {
             _timerRemaining = Math.max(0, _timerRemaining - (Date.now() - _timerStartTime));
             timer.stop();
         }
-        if (borderAnim.running)
-            borderAnim.pause();
+        if (borderAnim.anim.running)
+            borderAnim.anim.pause();
     }
 
     function resumeTimer() {
@@ -43,8 +44,8 @@ Item {
             _timerStartTime = Date.now();
             timer.start();
         }
-        if (borderAnim.paused)
-            borderAnim.resume();
+        if (borderAnim.anim.paused)
+            borderAnim.anim.resume();
     }
 
     function resetTimer() {
@@ -52,7 +53,7 @@ Item {
         timer.interval = _timerDuration;
         _timerStartTime = Date.now();
         timer.restart();
-        borderAnim.restart();
+        borderAnim.anim.restart();
     }
 
     Timer {
@@ -77,7 +78,7 @@ Item {
     ListView.onPooled: {
         slideInAnim.stop();
         slideOutAnim.stop();
-        borderAnim.stop();
+        borderAnim.anim.stop();
     }
 
     ListView.onReused: {
@@ -95,7 +96,7 @@ Item {
         to: 0
         duration: Appearance.animations.durations.emphasized
         easing.bezierCurve: Appearance.animations.curves.emphasized
-        onFinished: borderAnim.start()
+        onFinished: borderAnim.anim.start()
     }
 
     NAnim {
@@ -149,7 +150,6 @@ Item {
         }
         radius: Appearance.rounding.normal
         color: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
-        layer.enabled: borderFx.visible
 
         HoverHandler {
             id: notifHover
@@ -228,33 +228,25 @@ Item {
         }
     }
 
-    ShaderEffect {
-        id: borderFx
-
-        anchors {
-            fill: wrapperRect
+    Rectangle {
+        anchors.fill: wrapperRect
+        border {
+            width: 2.0
+            color: Colours.m3Colors.m3OutlineVariant
         }
-
-        z: 999
-        property var source: wrapperRect
-        property real progress: 1.0
-        property real radius: wrapperRect.radius
-        property real borderWidth: 2.0
-        property vector2d resolution: Qt.vector2d(wrapperRect.width, wrapperRect.height)
-        property color borderColor: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Primary
-
-        vertexShader: "root:/Assets/shaders/borderProgress.vert.qsb"
-        fragmentShader: "root:/Assets/shaders/borderProgress.frag.qsb"
+        radius: wrapperRect.radius
+        color: "transparent"
     }
 
-    NumberAnimation {
+    BorderProgress {
         id: borderAnim
 
-        target: borderFx
-        property: "progress"
-        from: 1.0
-        to: 0.0
-        duration: root._timerDuration
-        onFinished: borderFx.destroy()
+        anchors.fill: wrapperRect
+        source: wrapperRect
+        progress: 1.0
+        radius: wrapperRect.radius
+        borderWidth: 2.0
+        borderColor: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Primary
+        animDuration: root._timerDuration
     }
 }
