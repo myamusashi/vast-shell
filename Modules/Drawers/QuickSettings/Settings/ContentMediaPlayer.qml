@@ -58,14 +58,10 @@ RowLayout {
             scale: Configs.mediaPlayer.showLyrics ? 1 : 0.96
 
             Behavior on opacity {
-                NAnim {
-                    duration: Appearance.animations.durations.normal
-                }
+                NAnim {}
             }
             Behavior on scale {
-                NAnim {
-                    duration: Appearance.animations.durations.normal
-                }
+                NAnim {}
             }
         }
     }
@@ -81,6 +77,7 @@ RowLayout {
                 Layout.leftMargin: Appearance.margin.small
                 implicitWidth: parent.width * 0.5
                 implicitHeight: parent.height
+
                 ClippingRectangle {
                     Layout.alignment: Qt.AlignCenter
                     implicitHeight: 60
@@ -103,7 +100,7 @@ RowLayout {
 
                 Wavy {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 15
+                    Layout.preferredHeight: 10
                     activeColor: root.trackArtColors.primary
                     value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                     enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
@@ -117,7 +114,7 @@ RowLayout {
 
                 RowLayout {
                     Layout.fillWidth: true
-                    spacing: Appearance.spacing.small
+                    spacing: Appearance.spacing.large
 
                     StyledText {
                         text: Players.active?.trackArtist ?? ""
@@ -151,8 +148,8 @@ RowLayout {
                     spacing: Appearance.spacing.normal
 
                     StyledButton {
-                        implicitWidth: 12
-                        implicitHeight: 12
+                        implicitWidth: 18
+                        implicitHeight: 18
                         bgRadius: Appearance.rounding.normal
                         icon.name: "discover_tune"
                         icon.color: root.trackArtColors.primary
@@ -161,8 +158,8 @@ RowLayout {
                     }
 
                     StyledButton {
-                        implicitWidth: 12
-                        implicitHeight: 12
+                        implicitWidth: 18
+                        implicitHeight: 18
                         bgRadius: Appearance.rounding.normal
                         icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
                         icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? root.trackArtColors.primary : root.trackArtColors.outline
@@ -175,8 +172,8 @@ RowLayout {
                     }
 
                     StyledButton {
-                        implicitWidth: 16
-                        implicitHeight: 16
+                        implicitWidth: 22
+                        implicitHeight: 22
                         bgRadius: Appearance.rounding.normal
                         icon.name: "skip_previous"
                         icon.color: root.trackArtColors.onPrimary
@@ -198,8 +195,8 @@ RowLayout {
                     }
 
                     StyledButton {
-                        implicitWidth: 16
-                        implicitHeight: 16
+                        implicitWidth: 22
+                        implicitHeight: 22
                         icon.name: "skip_next"
                         icon.color: root.trackArtColors.onPrimary
                         icon.size: Appearance.fonts.size.large
@@ -209,8 +206,8 @@ RowLayout {
                     }
 
                     StyledButton {
-                        implicitWidth: 12
-                        implicitHeight: 12
+                        implicitWidth: 18
+                        implicitHeight: 18
                         bgRadius: Appearance.rounding.normal
                         icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
                         icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.trackArtColors.primary : root.trackArtColors.outline
@@ -246,9 +243,10 @@ RowLayout {
                 target: Players.active
 
                 function onTrackChanged() {
-                    if (LyricsProvider.currentLineIndex < 0)
+                    if (LyricsProvider.currentLineIndex < 0) {
+                        LyricsProvider.fetch(Players.active.trackTitle, Players.active.trackArtist, Players.active.length);
                         lyricsView.listView.positionViewAtBeginning();
-                    else
+                    } else
                         lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
                 }
 
@@ -257,6 +255,10 @@ RowLayout {
                         lyricsView.listView.positionViewAtBeginning();
                     else
                         lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
+                }
+
+                function onPositionChanged() {
+                    LyricsProvider.setPlayback(Players.active.position, Players.active.rate, Players.active.isPlaying);
                 }
             }
 
@@ -268,6 +270,7 @@ RowLayout {
                 implicitWidth: parent.width * 0.4
                 implicitHeight: parent.height
                 activeColor: root.trackArtColors.primary
+                inactiveColor: root.trackArtColors.onSurfaceVariant
             }
         }
     }
@@ -354,9 +357,13 @@ RowLayout {
                         implicitHeight: 24
                         bgRadius: Appearance.rounding.normal
                         icon.name: "lyrics"
-                        icon.color: root.trackArtColors.primary
+                        icon.color: enabled ? root.trackArtColors.primary : root.trackArtColors.onSurfaceVariant
                         color: "transparent"
-                        onClicked: Configs.mediaPlayer.showLyrics = true
+                        enabled: LyricsProvider.state === LyricsProvider.State.Ready
+                        onClicked: {
+                            if (LyricsProvider.state === LyricsProvider.State.Ready)
+                                Configs.mediaPlayer.showLyrics = true;
+                        }
                     }
 
                     StyledButton {
@@ -443,6 +450,8 @@ RowLayout {
                     onActivated: index => {
                         currentIndex = index;
                         Players.index = index;
+                        const player = Players.players[index];
+                        LyricsProvider.fetch(player.trackTitle, player.trackArtist, player.length);
                     }
 
                     contentItem: Row {
