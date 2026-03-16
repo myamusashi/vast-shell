@@ -10,24 +10,28 @@ import qs.Services
 Item {
     id: root
 
+    readonly property alias isFocused: passwordInput.activeFocus
     property alias toggleButtonVisible: toggleButton.visible
     property alias placeHolderText: placeHolderText.text
     property alias text: passwordInput.text
-    readonly property alias isFocused: passwordInput.activeFocus
 
     readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
     readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false
     readonly property bool showFailure: root.pam ? root.pam.showFailure : false
+
     readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
+    readonly property int dotStep: 24
 
     property var pam: null
     property bool passwordMode: false
+    property bool selectedAll: false
 
     function forceActiveFocus() {
         passwordInput.forceActiveFocus();
     }
 
     signal accepted
+    signal editingFinished
 
     implicitWidth: 240
     implicitHeight: 44
@@ -44,19 +48,41 @@ Item {
         inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
         enabled: !root.unlockInProgress
         text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
+
         onTextChanged: {
+            root.selectedAll = false;
             if (root.pam)
                 root.pam.currentText = text;
+
+            const len = text.length;
+            while (dotsModel.count < len)
+                dotsModel.append({});
+            while (dotsModel.count > len)
+                dotsModel.remove(dotsModel.count - 1);
         }
+
+        onCursorPositionChanged: Qt.callLater(() => {
+            if (root.passwordMode && dotsModel.count > 0)
+                dotsView.positionViewAtIndex(Math.max(0, cursorPosition - 1), ListView.Contain);
+        })
+
         Keys.onReturnPressed: {
             if (root.pam && text.length > 0)
                 root.pam.tryUnlock();
             root.accepted();
         }
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
+                root.selectedAll = text.length > 0;
+                event.accepted = true;
+            } else if (!(event.modifiers & Qt.ControlModifier)) {
+                root.selectedAll = false;
+            }
+        }
+
         Component.onCompleted: forceActiveFocus()
     }
 
-    // Keep sync when PAM changes externally
     Connections {
         target: root.pam
         enabled: root.pam !== null
@@ -71,22 +97,8 @@ Item {
         id: dotsModel
     }
 
-    Connections {
-        target: passwordInput
-
-        function onTextChanged() {
-            const len = passwordInput.text.length;
-            while (dotsModel.count < len)
-                dotsModel.append({});
-            while (dotsModel.count > len)
-                dotsModel.remove(dotsModel.count - 1);
-            Qt.callLater(() => dotsView.positionViewAtEnd());
-        }
-    }
-
     Rectangle {
         id: bg
-
         anchors.fill: parent
         radius: height / 2
         color: Colours.m3Colors.m3SurfaceVariant
@@ -102,7 +114,6 @@ Item {
             width: root.isFocused ? 2 : 0
         }
         opacity: root.isFocused ? 1 : 0
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
@@ -116,8 +127,8 @@ Item {
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
-            right: parent.right
             leftMargin: Appearance.margin.large
+            right: parent.right
             rightMargin: Appearance.margin.large
         }
         visible: passwordInput.text.length === 0
@@ -126,17 +137,66 @@ Item {
         font.pixelSize: Appearance.fonts.size.large
     }
 
+    Rectangle {
+        anchors {
+            left: parent.left
+            leftMargin: Appearance.margin.large - 4
+            verticalCenter: parent.verticalCenter
+        }
+        implicitWidth: dotsView.implicitWidth + 8
+        implicitHeight: 28
+        radius: 6
+        color: Colours.m3Colors.m3Primary
+        opacity: root.selectedAll && root.passwordMode ? 0.25 : 0.0
+        visible: root.passwordMode && passwordInput.text.length > 0
+
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+        Behavior on implicitWidth {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+    }
+
+    Rectangle {
+        anchors {
+            left: parent.left
+            leftMargin: 8
+            verticalCenter: parent.verticalCenter
+        }
+        implicitWidth: Math.min(visibleInputMetrics.advanceWidth(visibleInput.text) + 8, toggleButton.x - 12)
+        implicitHeight: visibleInput.font.pixelSize + 6
+        radius: 4
+        color: Colours.m3Colors.m3Primary
+        opacity: root.selectedAll && !root.passwordMode ? 0.25 : 0.0
+        visible: !root.passwordMode && passwordInput.text.length > 0
+
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+        Behavior on implicitWidth {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+    }
+
     ListView {
         id: dotsView
 
         anchors {
             left: parent.left
-            right: toggleButton.left
-            verticalCenter: parent.verticalCenter
             leftMargin: Appearance.margin.large
+            right: toggleButton.left
             rightMargin: Appearance.margin.large
+            verticalCenter: parent.verticalCenter
         }
-
         orientation: ListView.Horizontal
         spacing: 4
         model: dotsModel
@@ -153,12 +213,10 @@ Item {
 
         delegate: MaterialShape {
             required property int index
-
             implicitWidth: 20
             implicitHeight: 20
             shape: root.shapeList[index % root.shapeList.length]
             color: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
-
             Behavior on color {
                 CAnim {}
             }
@@ -207,8 +265,13 @@ Item {
     Rectangle {
         id: dotsCaret
 
-        x: dotsView.visible ? dotsView.x + Math.min(dotsView.contentWidth, dotsView.width) + 3 : 12
         anchors.verticalCenter: parent.verticalCenter
+        x: {
+            if (!dotsView.visible)
+                return 12;
+
+            return passwordInput.cursorPosition * root.dotStep - dotsView.contentX + (root.passwordMode ? 15 : 0);
+        }
         implicitWidth: 2
         implicitHeight: 20
         radius: 1
@@ -224,7 +287,6 @@ Item {
         SequentialAnimation on opacity {
             running: dotsCaret.visible
             loops: Animation.Infinite
-
             NAnim {
                 to: 1
                 duration: 0
@@ -249,12 +311,11 @@ Item {
 
         anchors {
             left: parent.left
-            right: toggleButton.left
-            verticalCenter: parent.verticalCenter
             leftMargin: 12
+            right: toggleButton.left
             rightMargin: 4
+            verticalCenter: parent.verticalCenter
         }
-
         visible: !root.passwordMode && passwordInput.text.length > 0
         readOnly: true
         text: passwordInput.text
@@ -262,19 +323,20 @@ Item {
         font.pixelSize: Appearance.fonts.size.large
         clip: true
         echoMode: TextInput.Normal
+
+        Keys.onReturnPressed: root.editingFinished()
     }
 
     FontMetrics {
         id: visibleInputMetrics
-
         font: visibleInput.font
     }
 
     Rectangle {
         id: textCaret
 
+        x: Math.min(visibleInput.x + visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, passwordInput.cursorPosition)), toggleButton.x - 8)
         anchors.verticalCenter: parent.verticalCenter
-        x: Math.min(visibleInput.x + visibleInputMetrics.advanceWidth(visibleInput.text) + 2, toggleButton.x - 6)
         implicitWidth: 2
         implicitHeight: visibleInput.font.pixelSize + 2
         radius: 1
@@ -305,10 +367,8 @@ Item {
                 duration: Appearance.animations.durations.large
             }
         }
-        onVisibleChanged: {
-            if (visible)
-                opacity = 1;
-        }
+        onVisibleChanged: if (visible)
+            opacity = 1
     }
 
     Item {
@@ -316,10 +376,9 @@ Item {
 
         anchors {
             right: parent.right
-            verticalCenter: parent.verticalCenter
             rightMargin: Appearance.margin.normal
+            verticalCenter: parent.verticalCenter
         }
-
         implicitWidth: 32
         implicitHeight: 32
         z: 1
@@ -330,7 +389,6 @@ Item {
             font.pixelSize: Appearance.fonts.size.large * 1.5
             opacity: root.passwordMode ? 1.0 : 0.0
             scale: root.passwordMode ? 1.0 : 0.5
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -351,7 +409,6 @@ Item {
             font.pixelSize: Appearance.fonts.size.large * 1.5
             opacity: root.passwordMode ? 0.0 : 1.0
             scale: root.passwordMode ? 0.5 : 1.0
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
