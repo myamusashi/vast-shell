@@ -17,10 +17,9 @@ Singleton {
     property alias weather: adapter.weather
     property alias widgets: adapter.widgets
     property alias language: adapter.language
+    property alias mediaPlayer: adapter.mediaPlayer
 
-    onLanguageChanged: {
-        TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath);
-    }
+    onLanguageChanged: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
 
     FileView {
         path: Paths.shellDir + "/configurations.json"
@@ -45,6 +44,7 @@ Singleton {
             property BarConfig bar: BarConfig {}
             property NotificationConfig notification: NotificationConfig {}
             property LocalizationConfig language: LocalizationConfig {}
+            property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {}
             property var widgets: [
                 {}
             ]
