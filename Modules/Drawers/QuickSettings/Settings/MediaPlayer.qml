@@ -11,6 +11,7 @@ import qs.Core.Configs
 import qs.Core.States
 import qs.Services
 import qs.Components.Base
+import qs.Widgets
 
 ClippingWrapperRectangle {
     id: root
@@ -116,8 +117,8 @@ ClippingWrapperRectangle {
 
     Layout.alignment: Qt.AlignTop | Qt.AlignCenter
     Layout.fillWidth: true
-    implicitHeight: contentLoader.implicitHeight
-    color: Qt.alpha(root.trackArtColors.surfaceVariant, 0.85)
+    implicitHeight: 150
+    color: Qt.alpha(root.trackArtColors.primary, 0.53)
     radius: Appearance.rounding.normal
     visible: Players.active
 
@@ -126,6 +127,11 @@ ClippingWrapperRectangle {
         const s = Math.floor(seconds % 60);
         const h = Math.floor(seconds / 3600);
         return h > 0 ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}` : `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    Component.onCompleted: {
+        const url = Players.active?.trackArtUrl ?? "";
+        url.startsWith("http") ? artDownloader.download(url) : root.cachedArtPath = url;
     }
 
     Process {
@@ -166,21 +172,12 @@ ClippingWrapperRectangle {
         }
     }
 
-    Component.onCompleted: {
-        const url = Players.active?.trackArtUrl ?? "";
-        url.startsWith("http") ? artDownloader.download(url) : root.cachedArtPath = url;
-    }
-
     ColorQuantizer {
         id: colorTrackArt
 
         source: Qt.resolvedUrl(root.cachedArtPath !== "" ? root.cachedArtPath : "root:/Assets/images/kuru.gif")
         depth: 3
         rescaleSize: 64
-    }
-
-    HoverHandler {
-        id: mouseHandler
     }
 
     Item {
@@ -192,14 +189,14 @@ ClippingWrapperRectangle {
             anchors.fill: parent
             source: Players.active?.trackArtUrl
             fillMode: Image.PreserveAspectCrop
-            opacity: mouseHandler.hovered ? 0.12 : 1
+            opacity: 0.12
             cache: false
             asynchronous: true
             visible: !!Players.active?.trackArtUrl
             layer.enabled: true
             layer.effect: FastBlur {
                 source: trackArt
-                radius: 16
+                radius: Configs.generals.coverBlurRadius
             }
 
             Behavior on opacity {
@@ -207,22 +204,15 @@ ClippingWrapperRectangle {
             }
         }
 
-        FastBlur {
-            anchors.fill: trackArt
-            source: trackArt
-            radius: Configs.generals.coverBlurRadius
-        }
-
         Loader {
             id: contentLoader
 
-            width: parent.width
+            anchors.fill: parent
             active: GlobalStates.isQuickSettingsOpen
             asynchronous: true
             sourceComponent: ContentMediaPlayer {
                 width: contentLoader.width
                 trackArtColors: root.trackArtColors
-                hovered: mouseHandler.hovered
                 formatTime: root.formatTime
             }
         }
