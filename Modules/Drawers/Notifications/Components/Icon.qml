@@ -18,7 +18,7 @@ Item {
     implicitWidth: 40
     implicitHeight: 40
 
-    StyledRect {
+    ClippingRectangle {
         anchors.centerIn: parent
         implicitWidth: 40
         implicitHeight: 40
@@ -26,7 +26,7 @@ Item {
         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : root.modelData.urgency === NotificationUrgency.Low ? Colours.m3Colors.m3SecondaryContainer : Colours.m3Colors.m3PrimaryContainer
 
         Loader {
-            anchors.centerIn: parent
+            anchors.fill: parent
             active: true
             sourceComponent: {
                 if (root.hasImage)
