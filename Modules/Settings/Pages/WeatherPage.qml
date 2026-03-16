@@ -39,11 +39,11 @@ Item {
                     font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
-                StyledTextField {
+                StyledTextInput {
                     text: Configs.weather.latitude
                     onTextChanged: Configs.weather.latitude = text
                     Layout.preferredWidth: 250
-                    placeholderText: "e.g., -6.200000"
+                    placeHolderText: "e.g., -6.200000"
                 }
             }
 
@@ -55,11 +55,11 @@ Item {
                     font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
-                StyledTextField {
+                StyledTextInput {
                     text: Configs.weather.longitude
                     onTextChanged: Configs.weather.longitude = text
                     Layout.preferredWidth: 250
-                    placeholderText: "e.g., 106.816666"
+                    placeHolderText: "e.g., 106.816666"
                 }
             }
         }
@@ -89,7 +89,7 @@ Item {
                     font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
-                StyledTextField {
+                StyledTextInput {
                     text: Configs.weather.reloadTime.toString()
                     onTextChanged: {
                         var parsed = parseInt(text);

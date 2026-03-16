@@ -58,7 +58,7 @@ Item {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
 
-                StyledTextField {
+                StyledTextInput {
                     id: wallpaperDirField
 
                     text: Configs.wallpaper.wallpaperDir
@@ -76,7 +76,8 @@ Item {
                 FileDialog {
                     id: fileDialog
 
-                    nameFilters: ["*.jpg", "*.png", "*.jpeg", "*.JPG", "*.PNG"]
+                    foldersOnly: true
+                    selectFolder: true
                     showHidden: true
                     onFileSelected: path => Configs.wallpaper.wallpaperDir = path
                 }

@@ -39,11 +39,11 @@ Item {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
 
-                StyledTextField {
+                StyledTextInput {
                     text: Configs.language.language
                     onTextChanged: Configs.language.language = text
                     Layout.preferredWidth: 200
-                    placeholderText: "e.g., id-ID or en-US"
+                    placeHolderText: "e.g., id-ID or en-US"
                 }
             }
         }

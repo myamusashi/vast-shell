@@ -301,7 +301,7 @@ Item {
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
 
-        StyledTextField {
+        StyledTextInput {
             id: pathField
 
             implicitWidth: 300
@@ -329,7 +329,7 @@ Item {
     component FontPicker: Item {
         id: fontPicker
 
-        property alias searchField: searchField.placeholderText
+        property alias searchField: searchField.placeHolderText
         property string configValue
         signal configChanged(string value)
 
@@ -348,11 +348,11 @@ Item {
             return result;
         }
 
-        StyledTextField {
+        StyledTextInput {
             id: searchField
 
             anchors.fill: parent
-            placeholderText: qsTr("Search font...")
+            placeHolderText: qsTr("Search font...")
             onTextChanged: {
                 fontPicker.searchText = text;
                 if (!popup.visible)
