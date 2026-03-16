@@ -16,6 +16,7 @@ ColumnLayout {
     required property var model
 
     property bool folderHidden: false
+    property bool selectFolder: false
     property int currentIndex: -1
     property bool hasSelection: currentIndex >= 0
     property string selectedFileName: hasSelection ? model.get(currentIndex, "fileName") : ""
@@ -174,12 +175,16 @@ ColumnLayout {
             onClicked: {
                 fileList.currentIndex = index;
                 root.currentIndex = index;
-                root.selectionChanged(isFolder ? "" : fileName);
+                if (root.selectFolder) {
+                    root.selectionChanged(fileName);
+                } else {
+                    root.selectionChanged(isFolder ? "" : fileName);
+                }
             }
             onDoubleClicked: {
                 if (isFolder)
                     root.folderDoubleClicked(filePath);
-                else
+                else if (!root.selectFolder)
                     root.fileDoubleClicked(filePath);
             }
         }

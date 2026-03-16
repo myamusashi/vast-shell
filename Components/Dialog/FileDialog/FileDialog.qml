@@ -17,6 +17,7 @@ Scope {
     property var nameFilters: ["*"]
     property bool showHidden: false
     property bool foldersOnly: false
+    property bool selectFolder: false
     property var history: []
     property int historyIndex: -1
     property string currentFolder: "file:///home"
@@ -158,6 +159,7 @@ Scope {
                         Layout.fillHeight: true
                         model: folderModel
                         folderHidden: root.showHidden
+                        selectFolder: root.selectFolder
                         onFolderDoubleClicked: path => window.navigateTo(path)
                         onFileDoubleClicked: path => root.fileSelected(path)
                         onSelectionChanged: fileName => bottomBar.setFileName(fileName)
@@ -169,16 +171,28 @@ Scope {
 
                     Layout.fillWidth: true
                     nameFilters: root.nameFilters
+                    selectFolder: root.selectFolder
                     hasSelection: fileListView.hasSelection || fileName.length > 0
                     onCancelClicked: loader.activeAsync = false
                     onOpenClicked: {
-                        if (fileListView.currentIsFolder)
-                            window.navigateTo(fileListView.currentFilePath);
-                        else if (fileListView.hasSelection)
-                            root.fileSelected(fileListView.currentFilePath);
-                        else if (fileName.length > 0) {
-                            var p = root.currentFolder.toString().replace("file://", "") + "/" + fileName;
-                            root.fileSelected(p);
+                        if (root.selectFolder) {
+                            if (fileListView.currentIsFolder)
+                                root.fileSelected(fileListView.currentFilePath);
+                            else if (fileName.length > 0) {
+                                var p = root.currentFolder.toString().replace("file://", "") + "/" + fileName;
+                                root.fileSelected(p);
+                            } else {
+                                root.fileSelected(root.currentFolder.toString().replace("file://", ""));
+                            }
+                        } else {
+                            if (fileListView.currentIsFolder)
+                                window.navigateTo(fileListView.currentFilePath);
+                            else if (fileListView.hasSelection)
+                                root.fileSelected(fileListView.currentFilePath);
+                            else if (fileName.length > 0) {
+                                var p = root.currentFolder.toString().replace("file://", "") + "/" + fileName;
+                                root.fileSelected(p);
+                            }
                         }
                     }
                 }

@@ -11,6 +11,7 @@ Rectangle {
 
     property alias fileName: fileNameField.text
     property bool hasSelection: false
+    property bool selectFolder: false
     property real labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabel.text)) + 10
     property var nameFilters: ["*"]
 
@@ -68,7 +69,7 @@ Rectangle {
             StyledText {
                 id: fileNameLabel
 
-                text: qsTr("File name")
+                text: root.selectFolder ? qsTr("Folder") : qsTr("File name")
                 font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: root.labelWidth
@@ -113,6 +114,7 @@ Rectangle {
                 font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: root.labelWidth
+                visible: !root.selectFolder
             }
 
             WrapperRectangle {
@@ -125,6 +127,7 @@ Rectangle {
                     color: Colours.m3Colors.m3OutlineVariant
                     width: 2
                 }
+                visible: !root.selectFolder
 
                 StyledText {
                     text: root.nameFilters.join(", ")
@@ -144,8 +147,8 @@ Rectangle {
             }
 
             StyledButton {
-                text: qsTr("Open")
-                enabled: root.hasSelection
+                text: root.selectFolder ? qsTr("Select") : qsTr("Open")
+                enabled: root.selectFolder ? true : root.hasSelection
                 onClicked: root.openClicked()
             }
         }
