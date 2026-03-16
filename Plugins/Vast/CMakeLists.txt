@@ -42,6 +42,8 @@ qt_add_qml_module(VastPlugin
         AudioProfilesWatcher.cpp
         KeylockState.hpp
         KeylockState.cpp
+        LyricsProvider.cpp
+        LyricsProvider.hpp
         TranslationManager.hpp
         TranslationManager.cpp
         ScreenRecorder.hpp
@@ -66,6 +68,7 @@ target_link_libraries(VastPlugin PRIVATE
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
+    Qt6::Network
     Qt6::Concurrent
     ${PIPEWIRE_LIBRARIES}
 )
@@ -77,6 +80,7 @@ target_link_libraries(VastQmlPlugin PRIVATE
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
+    Qt6::Network
 )
 
 file(MAKE_DIRECTORY "${QML_OUTPUT_DIR}")
