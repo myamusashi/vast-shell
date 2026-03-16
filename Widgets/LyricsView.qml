@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Vast
 
 import qs.Core.Configs
 import qs.Services
@@ -19,7 +20,7 @@ Item {
         id: listView
 
         anchors.fill: parent
-        model: Lyrics.wordLines
+        model: LyricsProvider.wordLines
         spacing: 16
         clip: true
         cacheBuffer: 0
@@ -33,7 +34,7 @@ Item {
         Binding {
             target: listView
             property: "currentIndex"
-            value: Lyrics.currentLineIndex
+            value: LyricsProvider.currentLineIndex
         }
 
         Connections {
@@ -50,7 +51,7 @@ Item {
             required property var modelData
             required property int index
 
-            readonly property bool isActiveLine: index === Lyrics.currentLineIndex
+            readonly property bool isActiveLine: index === LyricsProvider.currentLineIndex
 
             width: listView.width
             spacing: 6
@@ -64,13 +65,13 @@ Item {
 
             Behavior on scale {
                 NAnim {
-                    duration: 200
+                    duration: Math.max(200, LyricsProvider.currentWordDuration)
                     easing.bezierCurve: Appearance.animations.curves.emphasized
                 }
             }
             Behavior on opacity {
                 NAnim {
-                    duration: 150
+                    duration: Math.max(150, LyricsProvider.currentWordDuration)
                     easing.bezierCurve: Appearance.animations.curves.emphasized
                 }
             }
@@ -84,11 +85,12 @@ Item {
                     text: modelData.text
                     font.pixelSize: Appearance.fonts.size.large
                     font.weight: Font.DemiBold
+                    font.family: "Noto Sans"
                     color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
 
                     Behavior on color {
                         CAnim {
-                            duration: 150
+                            duration: Math.max(150, LyricsProvider.currentWordDuration)
                             easing.bezierCurve: Appearance.animations.curves.emphasized
                         }
                     }

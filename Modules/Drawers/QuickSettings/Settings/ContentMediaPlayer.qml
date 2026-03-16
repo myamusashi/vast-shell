@@ -7,6 +7,7 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
+import Vast
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -235,10 +236,28 @@ RowLayout {
             }
 
             Component.onCompleted: {
-                if (Lyrics.currentLineIndex < 0)
+                if (LyricsProvider.currentLineIndex < 0)
                     lyricsView.listView.positionViewAtBeginning();
                 else
-                    lyricsView.listView.positionViewAtIndex(Lyrics.currentLineIndex, ListView.Center);
+                    lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
+            }
+
+            Connections {
+                target: Players.active
+
+                function onTrackChanged() {
+                    if (LyricsProvider.currentLineIndex < 0)
+                        lyricsView.listView.positionViewAtBeginning();
+                    else
+                        lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
+                }
+
+                function onPostTrackChanged() {
+                    if (LyricsProvider.currentLineIndex < 0)
+                        lyricsView.listView.positionViewAtBeginning();
+                    else
+                        lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
+                }
             }
 
             LyricsView {
