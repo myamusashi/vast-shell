@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
 import Vast
 
 import qs.Core.Configs
@@ -20,7 +21,7 @@ Item {
         id: listView
 
         anchors.fill: parent
-        model: LyricsProvider.wordLines
+        model: LyricsProvider.lines
         spacing: 16
         clip: true
         cacheBuffer: 0
@@ -45,16 +46,15 @@ Item {
             }
         }
 
-        delegate: Flow {
+        delegate: Column {
             id: lineDelegate
 
             required property var modelData
             required property int index
-
             readonly property bool isActiveLine: index === LyricsProvider.currentLineIndex
 
             width: listView.width
-            spacing: 6
+            spacing: 4
 
             scale: isActiveLine ? 1.0 : 0.9
             opacity: {
@@ -76,23 +76,45 @@ Item {
                 }
             }
 
-            Repeater {
-                model: lineDelegate.modelData.words
+            Flow {
+                width: parent.width
+                spacing: 0
 
-                delegate: StyledText {
-                    required property var modelData
+                Repeater {
+                    model: lineDelegate.modelData.text
 
-                    text: modelData.text
-                    font.pixelSize: Appearance.fonts.size.large
-                    font.weight: Font.DemiBold
-                    font.family: "Noto Sans"
-                    color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                    delegate: StyledText {
+                        required property var modelData
+                        text: modelData
+                        font.pixelSize: Appearance.fonts.size.large
+                        font.weight: Font.DemiBold
+                        font.family: "Noto Sans"
+                        color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
 
-                    Behavior on color {
-                        CAnim {
-                            duration: Math.max(150, LyricsProvider.currentWordDuration)
-                            easing.bezierCurve: Appearance.animations.curves.emphasized
+                        Behavior on color {
+                            CAnim {
+                                duration: Math.max(150, LyricsProvider.currentWordDuration)
+                                easing.bezierCurve: Appearance.animations.curves.emphasized
+                            }
                         }
+                    }
+                }
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                wrapMode: Text.Wrap
+                text: `(${lineDelegate.modelData.translation})`
+                visible: lineDelegate.modelData.translation !== ""
+                font.pixelSize: Appearance.fonts.size.normal
+                font.family: "Noto Sans"
+                color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                opacity: 0.7
+
+                Behavior on color {
+                    CAnim {
+                        duration: Math.max(150, LyricsProvider.currentWordDuration)
+                        easing.bezierCurve: Appearance.animations.curves.emphasized
                     }
                 }
             }
