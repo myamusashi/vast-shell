@@ -966,22 +966,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="90"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="94"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="92"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="96"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="94"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="98"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="95"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="99"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -2111,42 +2111,42 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="58"/>
+        <location filename="../Modules/Settings/Settings.qml" line="55"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="68"/>
+        <location filename="../Modules/Settings/Settings.qml" line="65"/>
         <source>General</source>
         <translation>Umum</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="73"/>
+        <location filename="../Modules/Settings/Settings.qml" line="70"/>
         <source>Appearance</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="78"/>
+        <location filename="../Modules/Settings/Settings.qml" line="75"/>
         <source>Top Bar</source>
         <translation>Bilah Atas</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="83"/>
+        <location filename="../Modules/Settings/Settings.qml" line="80"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="88"/>
+        <location filename="../Modules/Settings/Settings.qml" line="85"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="93"/>
+        <location filename="../Modules/Settings/Settings.qml" line="90"/>
         <source>Language</source>
         <translation>Bahasa</translation>
     </message>
     <message>
-        <location filename="../Modules/Settings/Settings.qml" line="98"/>
+        <location filename="../Modules/Settings/Settings.qml" line="95"/>
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
