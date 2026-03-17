@@ -93,7 +93,6 @@ Item {
                     }
                     onTextChanged: {
                         root.isNavigating = false;
-                        searchTimer.restart();
                         listView.currentIndex = listView.count > 0 ? 0 : -1;
                         listView.positionViewAtBeginning();
                     }
@@ -131,10 +130,6 @@ Item {
                     color: Colours.m3Colors.m3PrimaryFixed
                 }
 
-                ElapsedTimer {
-                    id: searchTimer
-                }
-
                 ListView {
                     id: listView
 
@@ -150,18 +145,6 @@ Item {
                     maximumFlickVelocity: 1000
                     highlightMoveVelocity: -1
                     highlightFollowsCurrentItem: true
-                    onCountChanged: {
-                        if (count === 0) {
-                            currentIndex = -1;
-                            searchSpeed.text = "";
-                        } else {
-                            if (currentIndex >= count || currentIndex < 0)
-                                currentIndex = 0;
-                            const ms = searchTimer.elapsedMs();
-                            searchSpeed.text = qsTr("Found %1 apps in %2ms").arg(count).arg(ms);
-                        }
-                    }
-
                     highlight: StyledRect {
                         color: Colours.m3Colors.m3SurfaceContainerHigh
                         width: listView.width
