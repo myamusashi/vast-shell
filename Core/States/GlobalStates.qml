@@ -246,6 +246,14 @@ Singleton {
     }
 
     IpcHandler {
+        target: "toast"
+
+        function open(header: string, description: string, icon: string, duration: int): void {
+            ToastService.show(description, header, icon, duration);
+        }
+    }
+
+    IpcHandler {
         target: "img"
 
         function set(path: string): void {
@@ -276,6 +284,7 @@ Singleton {
 
     Connections {
         target: KeylockState
+
         function onCapsLockChanged() {
             root.showOSD("capslock");
         }
@@ -286,6 +295,7 @@ Singleton {
 
     Connections {
         target: Pipewire.defaultAudioSink.audio
+
         function onVolumeChanged() {
             root.showOSD("volume");
         }
