@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 
 import qs.Core.Utils
+import qs.Services
 
 Singleton {
     id: root
@@ -37,14 +38,18 @@ Singleton {
                 } catch (e) {
                     if (onError)
                         onError("Failed to parse JSON", e);
-                    else
+                    else {
                         console.error("Failed to parse JSON:", e);
+                        ToastService.show(qsTr("Failed to parse Calendar JSON: %1").arg(e), qsTr("Calendar"), "calendar-symbolic", 3000);
+                    }
                 }
             } else {
                 if (onError)
                     onError("Request failed", response.status);
-                else
+                else {
                     console.error("Request failed with status:", response.status);
+                    ToastService.show(qsTr("Calendar request failed: %1").arg(response.status), qsTr("Calendar"), "calendar-symbolic", 3000);
+                }
             }
         });
     }

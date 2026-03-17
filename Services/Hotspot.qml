@@ -34,6 +34,7 @@ Singleton {
 
     Component.onCompleted: {
         console.log(upstreamInterface);
+        ToastService.show(qsTr("Upstream Interface: %1").arg(upstreamInterface), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         _queryStatus.running = true;
     }
 
@@ -72,6 +73,7 @@ Singleton {
         root.errorMessage = msg;
         root.status = Hotspot.Status.ErrorStatus;
         console.warn("[Hotspot] Error:", msg);
+        ToastService.show(qsTr("[Hotspot] Error: %1").arg(msg), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
     }
 
     Process {
@@ -98,6 +100,7 @@ Singleton {
             }
             root.status = Hotspot.Status.Active;
             console.info("[Hotspot] Active on", root.hotspotInterface, "| SSID:", root.ssid);
+            ToastService.show(qsTr("[Hotspot] Active on %1 | SSID: %2").arg(root.hotspotInterface).arg(root.ssid), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         }
     }
 
@@ -106,10 +109,13 @@ Singleton {
 
         command: ["bash", "-c", "nmcli con down Hotspot; nmcli con delete Hotspot"]
         onExited: code => {
-            if (code !== 0)
+            if (code !== 0) {
                 console.warn("[Hotspot] Stop exited with code", code, stderr);
+                ToastService.show(qsTr("[Hotspot] Stop exited with code %1: %2").arg(code).arg(stderr), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
+            }
             root.status = Hotspot.Status.Inactive;
             console.info("[Hotspot] Hotspot stopped");
+            ToastService.show(qsTr("Hotspot stopped"), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         }
     }
 

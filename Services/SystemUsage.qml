@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 
 import qs.Core.States
+import qs.Services
 
 Singleton {
     id: root
@@ -524,13 +525,16 @@ Singleton {
                     }
                 } catch (e) {
                     console.log("Failed to parse intel_gpu_top output:", e);
+                    ToastService.show(qsTr("Failed to parse intel_gpu_top output: %1").arg(e), qsTr("System Usage"), "system-component-symbolic", 3000);
                 }
             }
         }
         stderr: StdioCollector {
             onStreamFinished: {
-                if (text.trim().length > 0)
+                if (text.trim().length > 0) {
                     console.log("intel_gpu_top error:", text.trim());
+                    ToastService.show(qsTr("intel_gpu_top error: %1").arg(text.trim()), qsTr("System Usage"), "system-component-symbolic", 3000);
+                }
             }
         }
     }

@@ -4,6 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import qs.Services
+
 Singleton {
     id: root
 
@@ -70,6 +72,7 @@ Singleton {
             onStreamFinished: {
                 if (this.text.trim() !== "") {
                     console.warn("brightnessctl error:", this.text.trim());
+                    ToastService.show(qsTr("brightnessctl error: %1").arg(this.text.trim()), qsTr("Brightness"), "display-brightness-symbolic", 3000);
                     root.available = false;
                 }
             }
@@ -83,8 +86,10 @@ Singleton {
         stdout: StdioCollector {}
         stderr: StdioCollector {
             onStreamFinished: {
-                if (this.text.trim() !== "")
+                if (this.text.trim() !== "") {
                     console.warn("Failed to set brightness:", this.text.trim());
+                    ToastService.show(qsTr("Failed to set brightness: %1").arg(this.text.trim()), qsTr("Brightness"), "display-brightness-symbolic", 3000);
+                }
             }
         }
     }

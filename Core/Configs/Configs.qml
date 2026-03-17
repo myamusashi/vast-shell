@@ -5,6 +5,7 @@ import Quickshell.Io
 import Vast
 
 import qs.Core.Utils
+import qs.Services
 
 Singleton {
     id: root
@@ -26,12 +27,17 @@ Singleton {
         watchChanges: true
         onFileChanged: reload()
         onLoadFailed: err => {
-            if (err !== FileViewError.FileNotFound)
+            if (err !== FileViewError.FileNotFound) {
                 console.log("Failed to read config files");
+                ToastService.show(qsTr("Failed to read config files"), qsTr("Configuration"), "configure", 3000);
+            }
         }
         onLoaded: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
         onAdapterUpdated: writeAdapter()
-        onSaveFailed: err => console.log("Failed to save config", FileViewError.toString(err))
+        onSaveFailed: err => {
+            console.log("Failed to save config", FileViewError.toString(err));
+            ToastService.show(qsTr("Failed to save config: %1").arg(FileViewError.toString(err)), qsTr("Configuration"), "configure", 3000);
+        }
 
         JsonAdapter {
             id: adapter

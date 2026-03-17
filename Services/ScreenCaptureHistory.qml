@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 
 import qs.Core.Utils
+import qs.Services
 
 Singleton {
     id: root
@@ -21,6 +22,7 @@ Singleton {
             return lines.map(line => JSON.parse(line));
         } catch (e) {
             console.error("Failed to parse file metadata:", e);
+            ToastService.show(qsTr("Failed to parse file metadata: %1").arg(e), qsTr("Screen Capture"), "camera-photo-symbolic", 3000);
             return [];
         }
     }

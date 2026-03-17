@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import M3Shapes
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -10,10 +11,10 @@ import qs.Services
 Item {
     id: root
 
-    readonly property alias isFocused: passwordInput.activeFocus
     property alias toggleButtonVisible: toggleButton.visible
     property alias placeHolderText: placeHolderText.text
     property alias text: passwordInput.text
+    readonly property alias isFocused: passwordInput.activeFocus
 
     readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
     readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false
@@ -99,6 +100,7 @@ Item {
 
     Rectangle {
         id: bg
+
         anchors.fill: parent
         radius: height / 2
         color: Colours.m3Colors.m3SurfaceVariant
@@ -329,6 +331,7 @@ Item {
 
     FontMetrics {
         id: visibleInputMetrics
+
         font: visibleInput.font
     }
 

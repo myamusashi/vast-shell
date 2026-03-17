@@ -7,6 +7,7 @@ import Quickshell.Io
 import Quickshell.Services.Notifications
 
 import qs.Core.Utils
+import qs.Services
 
 // Thanks to Caelestia once again for your amazing code: https://github.com/caelestia-dots/shell/blob/main/modules/notifications/Notification.qml
 Singleton {
@@ -36,6 +37,7 @@ Singleton {
 
         if (oldNotifications.length > 0) {
             console.log(`Cleaning up ${oldNotifications.length} old notification(s)`);
+            ToastService.show(qsTr("Cleaning up %1 old notification(s)").arg(oldNotifications.length), qsTr("Notifications"), "dialog-information", 3000);
             for (const notif of oldNotifications)
                 notif.close();
         }
@@ -53,6 +55,7 @@ Singleton {
             const toRemove = currentCount - root.maxNotifications + 1; // +1 to make room for new one
 
             console.log(`Removing ${toRemove} oldest notification(s) to enforce limit`);
+            ToastService.show(qsTr("Removing %1 oldest notification(s) to enforce limit").arg(toRemove), qsTr("Notifications"), "dialog-information", 3000);
             for (let i = 0; i < toRemove && i < sortedNotifs.length; i++)
                 sortedNotifs[i].close();
         }
@@ -141,6 +144,7 @@ Singleton {
             try {
                 const content = text();
                 if (!content || content.trim() === "") {
+                    ToastService.show(qsTr("No cached notifications found"), qsTr("Notifications"));
                     console.log("No cached notifications found");
                     root.loaded = true;
                     return;
@@ -149,6 +153,7 @@ Singleton {
                 const data = JSON.parse(content);
                 if (!Array.isArray(data)) {
                     console.error("Invalid notification cache format");
+                    ToastService.show(qsTr("Invalid notification cache format"), qsTr("Notifications"), "dialog-error", 3000);
                     root.loaded = true;
                     return;
                 }
@@ -189,15 +194,18 @@ Singleton {
 
                 root.list.sort((a, b) => b.time - a.time);
                 console.log(`Loaded ${loadedCount} notification(s) from cache`);
+                ToastService.show(qsTr("Loaded %1 notification(s) from cache").arg(loadedCount), qsTr("Notifications"), "dialog-information", 3000);
                 root.loaded = true;
             } catch (error) {
                 console.error("Failed to load notifications:", error);
+                ToastService.show(qsTr("Failed to load notifications: %1").arg(error), qsTr("Notifications"), "dialog-error", 3000);
                 root.loaded = true;
             }
         }
 
         onLoadFailed: error => {
             console.log("Notification cache doesn't exist, creating it");
+            ToastService.show(qsTr("Notification cache doesn't exist, creating it"), qsTr("Notifications"), "dialog-information", 3000);
             setText("[]");
             root.loaded = true;
         }
@@ -359,6 +367,7 @@ Singleton {
                 notif.close();
             } catch (e) {
                 console.error("Error cleaning up notification:", e);
+                ToastService.show(qsTr("Error cleaning up notification: %1").arg(e), qsTr("Notifications"), "dialog-error", 3000);
             }
         }
     }
