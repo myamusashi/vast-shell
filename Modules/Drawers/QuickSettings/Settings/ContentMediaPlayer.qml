@@ -270,7 +270,7 @@ RowLayout {
                 implicitWidth: parent.width * 0.4
                 implicitHeight: parent.height
                 activeColor: root.trackArtColors.primary
-                inactiveColor: root.trackArtColors.onSurfaceVariant
+                inactiveColor: root.trackArtColors.tertiary
             }
         }
     }
