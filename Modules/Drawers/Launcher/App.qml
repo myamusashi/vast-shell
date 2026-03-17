@@ -86,6 +86,7 @@ Item {
                     implicitHeight: 60
                     placeHolderText: qsTr("Search")
                     focus: GlobalStates.isLauncherOpen
+                    toggleButtonVisible: false
                     onFocusChanged: {
                         if (focus)
                             forceActiveFocus();

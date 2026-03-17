@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
+
 import qs.Core.Configs
 import qs.Components.Base
 import qs.Services
+
 import "../Components"
 
 Item {
@@ -44,6 +46,7 @@ Item {
                     onTextChanged: Configs.language.language = text
                     Layout.preferredWidth: 200
                     placeHolderText: "e.g., id-ID or en-US"
+                    toggleButtonVisible: false
                 }
             }
         }

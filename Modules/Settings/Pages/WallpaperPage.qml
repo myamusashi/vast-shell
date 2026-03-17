@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Core.Configs
-import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 import qs.Components.Dialog.FileDialog
@@ -64,8 +63,12 @@ Item {
                     text: Configs.wallpaper.wallpaperDir
                     onTextChanged: Configs.wallpaper.wallpaperDir = text
                     implicitWidth: 350
+                    toggleButtonVisible: false
 
-                    MArea {
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
                         onClicked: {
                             wallpaperDirField.forceActiveFocus();
                             fileDialog.openFileDialog();
@@ -85,6 +88,7 @@ Item {
 
             RowLayout {
                 Layout.fillWidth: true
+
                 StyledText {
                     text: qsTr("Loaded Wallpaper Count:")
                     Layout.fillWidth: true

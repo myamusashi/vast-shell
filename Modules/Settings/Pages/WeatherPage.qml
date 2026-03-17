@@ -44,6 +44,7 @@ Item {
                     onTextChanged: Configs.weather.latitude = text
                     Layout.preferredWidth: 250
                     placeHolderText: "e.g., -6.200000"
+                    toggleButtonVisible: false
                 }
             }
 
@@ -60,6 +61,7 @@ Item {
                     onTextChanged: Configs.weather.longitude = text
                     Layout.preferredWidth: 250
                     placeHolderText: "e.g., 106.816666"
+                    toggleButtonVisible: false
                 }
             }
         }
@@ -98,6 +100,7 @@ Item {
                         }
                     }
                     Layout.preferredWidth: 200
+                    toggleButtonVisible: false
                 }
             }
         }

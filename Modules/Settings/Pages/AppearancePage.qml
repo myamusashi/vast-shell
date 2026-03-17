@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import qs.Core.Configs
-import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 import qs.Components.Dialog.FileDialog
@@ -306,10 +305,13 @@ Item {
 
             implicitWidth: 300
             onEditingFinished: filePathRow.configChanged(text)
+            toggleButtonVisible: false
             Component.onCompleted: text = filePathRow.configValue
 
-            MArea {
+            MouseArea {
                 anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
                 onClicked: {
                     pathField.forceActiveFocus();
                     fileDialog.openFileDialog();
@@ -362,6 +364,7 @@ Item {
                 if (activeFocus && !popup.visible)
                     popup.open();
             }
+            toggleButtonVisible: false
             Component.onCompleted: text = fontPicker.configValue
         }
 

@@ -74,6 +74,7 @@ Item {
                     Layout.fillWidth: true
                     implicitHeight: 40
                     placeHolderText: qsTr("Search wallpapers")
+                    toggleButtonVisible: false
                     onTextChanged: {
                         WallpaperFileModels.searchQuery = text;
                         searchDebounceTimer.restart();
