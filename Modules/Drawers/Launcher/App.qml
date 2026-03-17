@@ -79,12 +79,12 @@ Item {
                 anchors.margins: Appearance.margin.large
                 spacing: Appearance.spacing.normal
 
-                StyledTextField {
+                StyledTextInput {
                     id: search
 
                     implicitWidth: parent.width
                     implicitHeight: 60
-                    placeholderText: qsTr("Search")
+                    placeHolderText: qsTr("Search")
                     focus: GlobalStates.isLauncherOpen
                     onFocusChanged: {
                         if (focus)
