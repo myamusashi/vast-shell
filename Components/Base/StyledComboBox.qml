@@ -69,11 +69,11 @@ ComboBox {
         color: Colours.m3Colors.m3Surface
     }
 
-    indicator: WrapperItem {
+    indicator: Item {
         x: root.width - width - 16
         y: (root.height - height) / 2
-        width: 24
-        height: 24
+        implicitWidth: 24
+        implicitHeight: 24
 
         Icon {
             anchors.centerIn: parent
@@ -83,9 +83,7 @@ ComboBox {
             rotation: root.popup.visible ? 180 : 0
 
             Behavior on rotation {
-                NAnim {
-                    duration: Appearance.animations.durations.normal
-                }
+                NAnim {}
             }
         }
     }
