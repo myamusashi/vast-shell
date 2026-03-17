@@ -7,6 +7,7 @@
 import QtQuick
 import Quickshell
 
+import qs.Components.Feedback
 import qs.Modules.Drawers
 import qs.Modules.Lock
 import qs.Modules.Polkit
@@ -21,4 +22,5 @@ ShellRoot {
     Polkit {}
     Drawers {}
     Settings {}
+    Toast {}
 }
