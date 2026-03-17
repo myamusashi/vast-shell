@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 
@@ -82,19 +81,24 @@ LazyLoader {
                             pageIndex: 3
                         }
                         SidebarItem {
+                            text: qsTr("Media Player")
+                            iconName: "genres"
+                            pageIndex: 4
+                        }
+                        SidebarItem {
                             text: qsTr("Weather")
                             iconName: "cloud"
-                            pageIndex: 4
+                            pageIndex: 5
                         }
                         SidebarItem {
                             text: qsTr("Language")
                             iconName: "language"
-                            pageIndex: 5
+                            pageIndex: 6
                         }
                         SidebarItem {
                             text: qsTr("Network & Internet")
                             iconName: "wifi"
-                            pageIndex: 6
+                            pageIndex: 7
                         }
 
                         Item {
@@ -138,14 +142,18 @@ LazyLoader {
                         }
                         Loader {
                             active: stackLayout.currentIndex === 4
-                            sourceComponent: WeatherPage {}
+                            sourceComponent: MediaPlayerPage {}
                         }
                         Loader {
                             active: stackLayout.currentIndex === 5
-                            sourceComponent: LanguagePage {}
+                            sourceComponent: WeatherPage {}
                         }
                         Loader {
                             active: stackLayout.currentIndex === 6
+                            sourceComponent: LanguagePage {}
+                        }
+                        Loader {
+                            active: stackLayout.currentIndex === 7
                             sourceComponent: InternetPage {}
                         }
                     }
