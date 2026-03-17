@@ -31,9 +31,9 @@ LazyLoader {
                 horizontalCenter: parent.horizontalCenter
             }
             implicitWidth: parent.width
-            implicitHeight: contentHeight
+            implicitHeight: parent.height
             model: ToastService.model
-            cacheBuffer: implicitHeight
+            cacheBuffer: 0
             spacing: Appearance.spacing.small
             verticalLayoutDirection: ListView.BottomToTop
 
