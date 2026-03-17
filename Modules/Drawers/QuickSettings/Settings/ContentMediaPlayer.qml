@@ -83,6 +83,7 @@ RowLayout {
                     implicitHeight: 60
                     implicitWidth: 60
                     radius: Appearance.rounding.full
+
                     Image {
                         id: trackArt
 
@@ -101,7 +102,7 @@ RowLayout {
                 Wavy {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 10
-                    activeColor: root.trackArtColors.primary
+                    activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                     value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                     enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                     onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
@@ -118,7 +119,7 @@ RowLayout {
 
                     StyledText {
                         text: Players.active?.trackArtist ?? ""
-                        color: Qt.alpha(root.trackArtColors.onSurface, 0.8)
+                        color: Configs.mediaPlayer.dynamicColorsCover ? Qt.alpha(root.trackArtColors.onSurface, 0.8) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.8)
                         font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.DemiBold
                         elide: Text.ElideRight
@@ -130,7 +131,7 @@ RowLayout {
 
                     StyledText {
                         text: Players.active == null ? "0:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}`
-                        color: root.trackArtColors.onSurface
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.DemiBold
 
@@ -152,7 +153,7 @@ RowLayout {
                         implicitHeight: 18
                         bgRadius: Appearance.rounding.normal
                         icon.name: "discover_tune"
-                        icon.color: root.trackArtColors.primary
+                        icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                         color: "transparent"
                         onClicked: Configs.mediaPlayer.showLyrics = false
                     }
@@ -162,7 +163,7 @@ RowLayout {
                         implicitHeight: 18
                         bgRadius: Appearance.rounding.normal
                         icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
-                        icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? root.trackArtColors.primary : root.trackArtColors.outline
+                        icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         color: "transparent"
                         enabled: Players.active?.shuffleSupported
                         onClicked: {
@@ -176,15 +177,15 @@ RowLayout {
                         implicitHeight: 22
                         bgRadius: Appearance.rounding.normal
                         icon.name: "skip_previous"
-                        icon.color: root.trackArtColors.onPrimary
+                        icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onPrimary : Colours.m3Colors.m3OnPrimary
                         icon.size: Appearance.fonts.size.large
-                        color: root.trackArtColors.primary
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                         onClicked: Players.active?.previous()
                     }
 
                     Icon {
                         icon: Players.active?.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
-                        color: root.trackArtColors.onSurface
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.extraLarge
                         MArea {
                             anchors.fill: parent
@@ -198,10 +199,10 @@ RowLayout {
                         implicitWidth: 22
                         implicitHeight: 22
                         icon.name: "skip_next"
-                        icon.color: root.trackArtColors.onPrimary
+                        icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onPrimary : Colours.m3Colors.m3OnPrimary
                         icon.size: Appearance.fonts.size.large
                         bgRadius: Appearance.rounding.normal
-                        color: root.trackArtColors.primary
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                         onClicked: Players.active?.next()
                     }
 
@@ -210,7 +211,7 @@ RowLayout {
                         implicitHeight: 18
                         bgRadius: Appearance.rounding.normal
                         icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
-                        icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.trackArtColors.primary : root.trackArtColors.outline
+                        icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         color: "transparent"
                         enabled: Players.active?.loopSupported
                         onClicked: {
@@ -269,8 +270,8 @@ RowLayout {
                 Layout.rightMargin: Appearance.margin.small
                 implicitWidth: parent.width * 0.4
                 implicitHeight: parent.height
-                activeColor: root.trackArtColors.primary
-                inactiveColor: root.trackArtColors.tertiary
+                activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+                inactiveColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.tertiary : Colours.m3Colors.m3Tertiary
             }
         }
     }
@@ -290,7 +291,7 @@ RowLayout {
             StyledText {
                 Layout.fillWidth: true
                 text: Players.active?.trackTitle ?? ""
-                color: root.trackArtColors.onSurface
+                color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
                 wrapMode: Text.NoWrap
@@ -303,7 +304,7 @@ RowLayout {
 
                 StyledText {
                     text: Players.active?.trackArtist ?? ""
-                    color: Qt.alpha(root.trackArtColors.onSurface, 0.8)
+                    color: Configs.mediaPlayer.dynamicColorsCover ? Qt.alpha(root.trackArtColors.onSurface, 0.8) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.8)
                     font.pixelSize: Appearance.fonts.size.small
                     font.weight: Font.DemiBold
                     elide: Text.ElideRight
@@ -315,7 +316,7 @@ RowLayout {
 
                 StyledText {
                     text: Players.active == null ? "0:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}`
-                    color: root.trackArtColors.onSurface
+                    color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.small
                     font.weight: Font.DemiBold
 
@@ -330,8 +331,8 @@ RowLayout {
 
             Wavy {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 28
-                activeColor: root.trackArtColors.primary
+                implicitWidth: 28
+                activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                 value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                 enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                 onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
@@ -357,7 +358,7 @@ RowLayout {
                         implicitHeight: 24
                         bgRadius: Appearance.rounding.normal
                         icon.name: "lyrics"
-                        icon.color: enabled ? root.trackArtColors.primary : root.trackArtColors.onSurfaceVariant
+                        icon.color: enabled ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurfaceVariant : Colours.m3Colors.m3OnSurfaceVariant)
                         color: "transparent"
                         enabled: LyricsProvider.state === LyricsProvider.State.Ready
                         onClicked: {
@@ -371,7 +372,7 @@ RowLayout {
                         implicitHeight: 24
                         bgRadius: Appearance.rounding.normal
                         icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
-                        icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? root.trackArtColors.primary : root.trackArtColors.outline
+                        icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         color: "transparent"
                         enabled: Players.active?.shuffleSupported
                         onClicked: {
@@ -385,14 +386,14 @@ RowLayout {
                         implicitHeight: 32
                         bgRadius: Appearance.rounding.normal
                         icon.name: "skip_previous"
-                        icon.color: root.trackArtColors.onPrimary
-                        color: root.trackArtColors.primary
+                        icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onPrimary : Colours.m3Colors.m3OnPrimary
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                         onClicked: Players.active?.previous()
                     }
 
                     Icon {
                         icon: Players.active?.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
-                        color: root.trackArtColors.onSurface
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.extraLarge * 1.2
                         MArea {
                             anchors.fill: parent
@@ -406,9 +407,9 @@ RowLayout {
                         implicitWidth: 32
                         implicitHeight: 32
                         icon.name: "skip_next"
-                        icon.color: root.trackArtColors.onPrimary
+                        icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onPrimary : Colours.m3Colors.m3OnPrimary
                         bgRadius: Appearance.rounding.normal
-                        color: root.trackArtColors.primary
+                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                         onClicked: Players.active?.next()
                     }
 
@@ -417,7 +418,7 @@ RowLayout {
                         implicitHeight: 24
                         bgRadius: Appearance.rounding.normal
                         icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
-                        icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.trackArtColors.primary : root.trackArtColors.outline
+                        icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         color: "transparent"
                         enabled: Players.active?.loopSupported
                         onClicked: {
@@ -469,7 +470,7 @@ RowLayout {
                         StyledText {
                             anchors.verticalCenter: parent.verticalCenter
                             text: Players.active?.desktopEntry ?? "No Player"
-                            color: root.trackArtColors.onSurface
+                            color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.large
                             elide: Text.ElideRight
                             maximumLineCount: 1
@@ -513,7 +514,7 @@ RowLayout {
                         }
 
                         background: StyledRect {
-                            color: root.trackArtColors.surfaceVariant
+                            color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.surfaceVariant : Colours.m3Colors.m3SurfaceVariant
                             radius: Appearance.rounding.large
 
                             Elevation {
@@ -571,7 +572,7 @@ RowLayout {
                             }
                             radius: Appearance.rounding.normal
                             height: parent.height
-                            color: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Qt.darker(root.trackArtColors.primary, 1.5) : "transparent"
+                            color: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Qt.darker(Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary, 1.5) : "transparent"
 
                             Behavior on color {
                                 CAnim {
@@ -583,7 +584,7 @@ RowLayout {
                                 anchors.fill: parent
                                 xClipRadius: itemBg.radius
                                 yClipRadius: itemBg.radius
-                                color: root.trackArtColors.primary
+                                color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                             }
                         }
 
@@ -609,7 +610,7 @@ RowLayout {
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: parent.width - 16 - parent.spacing
                                 text: itemDel.modelData.desktopEntry ?? ""
-                                color: root.trackArtColors.onSurface
+                                color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: playerComboBox.currentIndex === itemDel.index ? Font.Medium : Font.Normal
                                 elide: Text.ElideRight
