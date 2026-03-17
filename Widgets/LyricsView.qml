@@ -86,10 +86,18 @@ Item {
                     delegate: StyledText {
                         required property var modelData
                         text: modelData
-                        font.pixelSize: Appearance.fonts.size.large
-                        font.weight: Font.DemiBold
-                        font.family: "Noto Sans"
+                        font {
+                            pixelSize: Appearance.fonts.size.large
+                            weight: Font.DemiBold
+                            family: "Noto Sans"
+                            hintingPreference: Font.PreferNoHinting
+                            kerning: true
+                            preferShaping: true
+                        }
                         color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                        renderType: Text.QtRendering
+                        style: Text.Raised
+                        styleColor: "#80000000"
 
                         Behavior on color {
                             CAnim {
@@ -106,9 +114,17 @@ Item {
                 wrapMode: Text.Wrap
                 text: `(${lineDelegate.modelData.translation})`
                 visible: lineDelegate.modelData.translation !== ""
-                font.pixelSize: Appearance.fonts.size.normal
-                font.family: "Noto Sans"
+                font {
+                    pixelSize: Appearance.fonts.size.normal
+                    weight: Font.DemiBold
+                    family: "Noto Sans"
+                    hintingPreference: Font.PreferNoHinting
+                    kerning: true
+                    preferShaping: true
+                }
                 color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                style: Text.Raised
+                styleColor: "#80000000"
                 opacity: 0.7
 
                 Behavior on color {
