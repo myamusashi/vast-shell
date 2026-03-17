@@ -361,7 +361,7 @@
     <message>
         <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="72"/>
         <source>Folder</source>
-        <translation type="unfinished">Folder</translation>
+        <translation>Folder</translation>
     </message>
     <message>
         <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="113"/>
@@ -381,7 +381,7 @@
     <message>
         <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="150"/>
         <source>Select</source>
-        <translation type="unfinished"></translation>
+        <translation>Pilih</translation>
     </message>
 </context>
 <context>
@@ -413,11 +413,49 @@
     </message>
 </context>
 <context>
+    <name>Brightness</name>
+    <message>
+        <location filename="../Services/Brightness.qml" line="75"/>
+        <source>brightnessctl error: %1</source>
+        <translation>brightnessctl error: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/Brightness.qml" line="75"/>
+        <location filename="../Services/Brightness.qml" line="91"/>
+        <source>Brightness</source>
+        <translation>Kecerahan</translation>
+    </message>
+    <message>
+        <location filename="../Services/Brightness.qml" line="91"/>
+        <source>Failed to set brightness: %1</source>
+        <translation>Gagal mengatur kecerahan: %1</translation>
+    </message>
+</context>
+<context>
     <name>BrightnessControls</name>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="42"/>
         <source>Night mode</source>
         <translation>Mode Malam</translation>
+    </message>
+</context>
+<context>
+    <name>CalendarMajorEvents</name>
+    <message>
+        <location filename="../Services/CalendarMajorEvents.qml" line="43"/>
+        <source>Failed to parse Calendar JSON: %1</source>
+        <translation>Gagal memuat data Kalender JSON: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/CalendarMajorEvents.qml" line="43"/>
+        <location filename="../Services/CalendarMajorEvents.qml" line="51"/>
+        <source>Calendar</source>
+        <translation>Kalender</translation>
+    </message>
+    <message>
+        <location filename="../Services/CalendarMajorEvents.qml" line="51"/>
+        <source>Calendar request failed: %1</source>
+        <translation>Permintaan Kalender gagal: %1</translation>
     </message>
 </context>
 <context>
@@ -565,6 +603,25 @@
         <location filename="../Modules/Drawers/Weather/WeatherItem/Cloudiness.qml" line="46"/>
         <source>Cloudiness</source>
         <translation>Mendung</translation>
+    </message>
+</context>
+<context>
+    <name>Configs</name>
+    <message>
+        <location filename="../Core/Configs/Configs.qml" line="32"/>
+        <source>Failed to read config files</source>
+        <translation>Gagal membaca berkas konfigurasi</translation>
+    </message>
+    <message>
+        <location filename="../Core/Configs/Configs.qml" line="32"/>
+        <location filename="../Core/Configs/Configs.qml" line="39"/>
+        <source>Configuration</source>
+        <translation>Konfigurasi</translation>
+    </message>
+    <message>
+        <location filename="../Core/Configs/Configs.qml" line="39"/>
+        <source>Failed to save config: %1</source>
+        <translation>Gagal menyimpan konfigurasi: %1</translation>
     </message>
 </context>
 <context>
@@ -1403,6 +1460,43 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>Hotspot</name>
+    <message>
+        <location filename="../Services/Hotspot.qml" line="37"/>
+        <source>Upstream Interface: %1</source>
+        <translation>Antarmuka Upstream: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/Hotspot.qml" line="37"/>
+        <location filename="../Services/Hotspot.qml" line="76"/>
+        <location filename="../Services/Hotspot.qml" line="103"/>
+        <location filename="../Services/Hotspot.qml" line="114"/>
+        <location filename="../Services/Hotspot.qml" line="118"/>
+        <source>Hotspot</source>
+        <translation>Hotspot</translation>
+    </message>
+    <message>
+        <location filename="../Services/Hotspot.qml" line="76"/>
+        <source>[Hotspot] Error: %1</source>
+        <translation>[Hotspot] Kesalahan: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/Hotspot.qml" line="103"/>
+        <source>[Hotspot] Active on %1 | SSID: %2</source>
+        <translation>[Hotspot] Aktif di %1 | SSID: %2</translation>
+    </message>
+    <message>
+        <location filename="../Services/Hotspot.qml" line="114"/>
+        <source>[Hotspot] Stop exited with code %1: %2</source>
+        <translation>[Hotspot] Berhenti dengan kode %1: %2</translation>
+    </message>
+    <message>
+        <location filename="../Services/Hotspot.qml" line="118"/>
+        <source>Hotspot stopped</source>
+        <translation>Hotspot dihentikan</translation>
+    </message>
+</context>
+<context>
     <name>Humidity</name>
     <message>
         <location filename="../Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="50"/>
@@ -1732,9 +1826,61 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifs</name>
     <message>
-        <location filename="../Services/Notifs.qml" line="266"/>
+        <location filename="../Services/Notifs.qml" line="40"/>
+        <source>Cleaning up %1 old notification(s)</source>
+        <translation>Membersihkan %1 notifikasi lama</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="40"/>
+        <location filename="../Services/Notifs.qml" line="58"/>
+        <location filename="../Services/Notifs.qml" line="147"/>
+        <location filename="../Services/Notifs.qml" line="156"/>
+        <location filename="../Services/Notifs.qml" line="197"/>
+        <location filename="../Services/Notifs.qml" line="201"/>
+        <location filename="../Services/Notifs.qml" line="208"/>
+        <location filename="../Services/Notifs.qml" line="370"/>
+        <source>Notifications</source>
+        <translation>Notifikasi</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="58"/>
+        <source>Removing %1 oldest notification(s) to enforce limit</source>
+        <translation>Menghapus %1 notifikasi terlama untuk menegakkan batas</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="147"/>
+        <source>No cached notifications found</source>
+        <translation>Tidak ada notifikasi tersimpan</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="156"/>
+        <source>Invalid notification cache format</source>
+        <translation>Format cache notifikasi tidak valid</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="197"/>
+        <source>Loaded %1 notification(s) from cache</source>
+        <translation>Memuat %1 notifikasi dari cache</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="201"/>
+        <source>Failed to load notifications: %1</source>
+        <translation>Gagal memuat notifikasi: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="208"/>
+        <source>Notification cache doesn&apos;t exist, creating it</source>
+        <translation>Cache notifikasi tidak ada, sedang membuat</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="274"/>
         <source>now</source>
         <translation>Sekarang</translation>
+    </message>
+    <message>
+        <location filename="../Services/Notifs.qml" line="370"/>
+        <source>Error cleaning up notification: %1</source>
+        <translation>Kesalahan saat membersihkan notifikasi: %1</translation>
     </message>
 </context>
 <context>
@@ -2068,6 +2214,19 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>ScreenCaptureHistory</name>
+    <message>
+        <location filename="../Services/ScreenCaptureHistory.qml" line="25"/>
+        <source>Failed to parse file metadata: %1</source>
+        <translation>Gagal memuat berkas metadata: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/ScreenCaptureHistory.qml" line="25"/>
+        <source>Screen Capture</source>
+        <translation>Tangkapan Layar</translation>
+    </message>
+</context>
+<context>
     <name>Screencapture</name>
     <message>
         <location filename="../Modules/Drawers/Launcher/Screencapture.qml" line="101"/>
@@ -2177,12 +2336,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="135"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="137"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="135"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="137"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
@@ -2227,6 +2386,25 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Lock/Surface.qml" line="188"/>
         <source>Yes</source>
         <translation>Ya</translation>
+    </message>
+</context>
+<context>
+    <name>SystemUsage</name>
+    <message>
+        <location filename="../Services/SystemUsage.qml" line="528"/>
+        <source>Failed to parse intel_gpu_top output: %1</source>
+        <translation>Gagal memuat data intel_gpu_top: %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemUsage.qml" line="528"/>
+        <location filename="../Services/SystemUsage.qml" line="536"/>
+        <source>System Usage</source>
+        <translation>Penggunaan Sistem</translation>
+    </message>
+    <message>
+        <location filename="../Services/SystemUsage.qml" line="536"/>
+        <source>intel_gpu_top error: %1</source>
+        <translation>intel_gpu_top:error:%1</translation>
     </message>
 </context>
 <context>
@@ -2476,104 +2654,222 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Weather</name>
     <message>
-        <location filename="../Services/Weather.qml" line="439"/>
+        <location filename="../Services/Weather.qml" line="440"/>
         <source>A muggy and warm day — take care in the sun.</source>
         <translation>Hari yang lembab dan hangat — berhati-hatilah terhadap sinar matahari.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="441"/>
+        <location filename="../Services/Weather.qml" line="442"/>
         <source>A humid day with sticky conditions.</source>
         <translation>Hari yang lembab dengan kondisi lengket.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="443"/>
+        <location filename="../Services/Weather.qml" line="444"/>
         <source>A hot day ahead — stay hydrated and seek shade.</source>
         <translation>Hari yang panas di depan — tetap terhidrasi dan cari tempat teduh.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="445"/>
+        <location filename="../Services/Weather.qml" line="446"/>
         <source>A cold day — dress warmly before heading out.</source>
         <translation>Hari yang dingin — berpakaian hangat sebelum keluar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="447"/>
+        <location filename="../Services/Weather.qml" line="448"/>
         <source>A pleasant day with comfortable conditions.</source>
         <translation>Hari yang menyenangkan dengan kondisi nyaman.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="449"/>
+        <location filename="../Services/Weather.qml" line="450"/>
         <source>Today&apos;s weather looks moderate.</source>
         <translation>Cuaca hari ini terlihat sedang.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="455"/>
+        <location filename="../Services/Weather.qml" line="456"/>
         <source>Air quality is poor right now — consider limiting time outside.</source>
         <translation>Kualitas udara buruk saat ini — pertimbangkan untuk membatasi waktu di luar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="460"/>
+        <location filename="../Services/Weather.qml" line="461"/>
         <source>Air quality is moderate — sensitive groups should take precautions.</source>
         <translation>Kualitas udara sedang — kelompok sensitif harus mengambil tindakan pencegahan.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="466"/>
+        <location filename="../Services/Weather.qml" line="467"/>
         <source>UV index is very high (%1) — avoid direct sun exposure.</source>
         <translation>Indeks UV sangat tinggi (%1) — hindari paparan sinar matahari langsung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="471"/>
+        <location filename="../Services/Weather.qml" line="472"/>
         <source>Strong UV levels at %1 — use sun protection.</source>
         <translation>Tingkat UV tinggi pada %1 — gunakan perlindungan matahari.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="477"/>
+        <location filename="../Services/Weather.qml" line="478"/>
         <source>Heavy rain expected — bring an umbrella.</source>
         <translation>Hujan lebat diperkirakan — bawalah payung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="482"/>
+        <location filename="../Services/Weather.qml" line="483"/>
         <source>Light rain possible — keep an umbrella handy.</source>
         <translation>Hujan ringan mungkin terjadi — siapkan payung.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="488"/>
+        <location filename="../Services/Weather.qml" line="489"/>
         <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
         <translation>Kondisi sangat berangin dengan kecepatan %1 km/jam — berhati-hatilah di luar.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="493"/>
+        <location filename="../Services/Weather.qml" line="494"/>
         <source>Breezy day with winds around %1 km/h.</source>
         <translation>Hari berangin dengan kecepatan angin sekitar %1 km/jam.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="499"/>
+        <location filename="../Services/Weather.qml" line="500"/>
         <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
         <translation>Perubahan suhu besar hari ini: %1° hingga %2° — berpakaian berlapis.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="504"/>
+        <location filename="../Services/Weather.qml" line="505"/>
         <source>Temperature ranging from %1° to %2° today.</source>
         <translation>Suhu berkisar dari %1° hingga %2° hari ini.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="510"/>
+        <location filename="../Services/Weather.qml" line="511"/>
         <source>Very sticky conditions with %1% humidity.</source>
         <translation>Kondisi sangat lengket dengan kelembaban %1%.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="515"/>
+        <location filename="../Services/Weather.qml" line="516"/>
         <source>Poor visibility at %1 km — drive carefully.</source>
         <translation>Jarak pandang buruk pada %1 km — berkendara dengan hati-hati.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="520"/>
+        <location filename="../Services/Weather.qml" line="521"/>
         <source>Perfect weather for outdoor activities.</source>
         <translation>Cuaca sempurna untuk aktivitas luar ruangan.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="526"/>
+        <location filename="../Services/Weather.qml" line="527"/>
         <source>Current temperature is %1° with feels like %2°.</source>
         <translation>Suhu saat ini %1° dengan terasa seperti %2°.</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="550"/>
+        <source>Invalid coordinates for %1</source>
+        <translation>Koordinat tidak valid untuk %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="550"/>
+        <location filename="../Services/Weather.qml" line="555"/>
+        <location filename="../Services/Weather.qml" line="583"/>
+        <location filename="../Services/Weather.qml" line="588"/>
+        <location filename="../Services/Weather.qml" line="596"/>
+        <location filename="../Services/Weather.qml" line="646"/>
+        <location filename="../Services/Weather.qml" line="651"/>
+        <location filename="../Services/Weather.qml" line="727"/>
+        <location filename="../Services/Weather.qml" line="730"/>
+        <location filename="../Services/Weather.qml" line="775"/>
+        <location filename="../Services/Weather.qml" line="778"/>
+        <location filename="../Services/Weather.qml" line="806"/>
+        <location filename="../Services/Weather.qml" line="809"/>
+        <location filename="../Services/Weather.qml" line="859"/>
+        <location filename="../Services/Weather.qml" line="866"/>
+        <location filename="../Services/Weather.qml" line="875"/>
+        <location filename="../Services/Weather.qml" line="877"/>
+        <location filename="../Services/Weather.qml" line="883"/>
+        <location filename="../Services/Weather.qml" line="889"/>
+        <source>Weather</source>
+        <translation>Cuaca</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="555"/>
+        <source>%1 request already in progress</source>
+        <translation>Permintaan %1 sedang berlangsung</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="583"/>
+        <source>Failed to parse %1 JSON: %2</source>
+        <translation>Gagal mengurai %1 JSON: %2</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="588"/>
+        <source>%1 request failed: %2</source>
+        <translation>Permintaan %1 gagal: %2</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="596"/>
+        <source>%1 %2 - keeping cached data</source>
+        <translation>%1 %2 - mempertahankan data cache</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="646"/>
+        <source>Refreshing weather data</source>
+        <translation>Memperbarui data cuaca</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="651"/>
+        <source>Cannot refresh: already loading</source>
+        <translation>Tidak dapat memperbarui: sedang memuat</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="727"/>
+        <source>Weather data updated successfully</source>
+        <translation>Data cuaca berhasil diperbarui</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="730"/>
+        <source>Failed to update weather data</source>
+        <translation>Gagal memperbarui data cuaca</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="775"/>
+        <source>AQI data updated successfully</source>
+        <translation>Data AQI berhasil diperbarui</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="778"/>
+        <source>Failed to update AQI data</source>
+        <translation>Gagal memperbarui data AQI</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="806"/>
+        <source>Astronomy data updated successfully</source>
+        <translation>Data astronomi berhasil diperbarui</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="809"/>
+        <source>Failed to update astronomy data</source>
+        <translation>Gagal memperbarui data astronomi</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="859"/>
+        <source>No cached weather data found, fetching fresh data</source>
+        <translation>Tidak ada data cuaca tersimpan, mengambil data baru</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="866"/>
+        <source>Loading weather data from cache...</source>
+        <translation>Memuat data cuaca dari cache...</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="875"/>
+        <source>Loaded weather data from cache (%1 minutes old)</source>
+        <translation>Data cuaca dimuat dari cache (umur %1 menit)</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="877"/>
+        <source>Fetching fresh weather data in background...</source>
+        <translation>Mengambil data cuaca baru di latar belakang...</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="883"/>
+        <source>Failed to load weather cache</source>
+        <translation>Gagal memuat cache cuaca</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="889"/>
+        <source>Weather cache doesn&apos;t exist, creating it and fetching data</source>
+        <translation>Cache cuaca tidak ada, membuat dan mengambil data</translation>
     </message>
 </context>
 <context>
