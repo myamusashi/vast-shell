@@ -79,6 +79,18 @@ Item {
                 anchors.margins: Appearance.margin.large
                 spacing: Appearance.spacing.normal
 
+                Timer {
+                    id: searchDebounce
+
+                    interval: 80
+                    repeat: false
+                    onTriggered: {
+                        root.isNavigating = false;
+                        listView.currentIndex = listView.count > 0 ? 0 : -1;
+                        listView.positionViewAtBeginning();
+                    }
+                }
+
                 StyledTextInput {
                     id: search
 
@@ -91,11 +103,7 @@ Item {
                         if (focus)
                             forceActiveFocus();
                     }
-                    onTextChanged: {
-                        root.isNavigating = false;
-                        listView.currentIndex = listView.count > 0 ? 0 : -1;
-                        listView.positionViewAtBeginning();
-                    }
+                    onTextChanged: searchDebounce.restart()
                     Keys.onPressed: function (event) {
                         switch (event.key) {
                         case Qt.Key_Return:
@@ -125,10 +133,12 @@ Item {
                 ListView {
                     id: listView
 
+                    property var searchResults: SearchEngine.searchApps(DesktopEntries.applications.values, search.text)
+
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     model: ScriptModel {
-                        values: SearchEngine.searchApps(DesktopEntries.applications.values, search.text)
+                        values: listView.searchResults
                     }
                     clip: true
                     spacing: 8
