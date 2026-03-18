@@ -245,6 +245,89 @@ sudo xbps-install -S pipewire wireplumber iw libnotify polkit \
                      wl-clipboard ffmpeg foot hyprland findutils grep sed gawk util-linux
 ```
 
+# Translations
+> [!NOTE]
+> `lupdate` and `lrelease` are provided by `qt6-tools` (Arch).
+> On NixOS they are available via `qt6.qttools`.
+
+Vast-shell uses Qt's built-in translation system. Translation files live in the `translations/` directory:
+
+- `.ts` — source translation file (XML, human-editable)
+- `.qm` — compiled binary used at runtime (generated, do not edit)
+
+Currently included locales:
+
+| Locale | Language |
+|---|---|
+| `id_ID` | Indonesian |
+
+---
+
+### Adding a New Language
+
+**1. Generate a new `.ts` file from the source**
+```bash
+lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+```
+
+Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE`.
+
+**2. Open and translate the file**
+
+You can edit the `.ts` file directly in any text editor, or use Qt Linguist for a GUI:
+```bash
+linguist translations/your_locale.ts
+```
+
+Each string entry looks like this — fill in the `<translation>` tag:
+```xml
+<message>
+    <source>Search applications</source>
+    <translation>Rechercher des applications</translation>
+</message>
+```
+
+**3. Compile the `.ts` to `.qm`**
+```bash
+lrelease translations/your_locale.ts
+```
+
+This generates `translations/your_locale.qm` which the shell loads at runtime.
+
+---
+
+### Updating an Existing Translation
+
+When new strings are added to the shell, sync them into the existing `.ts` file first:
+```bash
+lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+```
+
+This adds new untranslated entries without overwriting your existing translations. Then open the file, fill in the new entries, and recompile:
+```bash
+lrelease translations/your_locale.ts
+```
+
+### Qt Linguist
+
+The recommended way to translate vast-shell is with **Qt Linguist** — a dedicated GUI translation editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, lets you mark strings as finished, and warns you about missing or outdated translations.
+
+<img width="720" height="720" alt="image" src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" />
+
+<table>
+  <tr>
+    <td>✅ Visual side-by-side source and translation editing</td>
+    <td>✅ Translation progress tracker per file</td>
+  </tr>
+  <tr>
+    <td>✅ Marks unfinished and obsolete strings</td>
+    <td>✅ Built-in phrase book and search</td>
+  </tr>
+</table>
+
+
+---
+
 # Project tree
 ```md
 shell.qml
