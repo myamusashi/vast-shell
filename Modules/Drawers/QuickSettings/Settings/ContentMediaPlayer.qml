@@ -104,7 +104,6 @@ RowLayout {
                     Layout.preferredHeight: 10
                     activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                     value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
-                    enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                     onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
 
                     FrameAnimation {

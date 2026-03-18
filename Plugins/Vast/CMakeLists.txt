@@ -12,6 +12,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(QML_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/Vast")
 
 find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick Concurrent)
+qt_policy(SET QTP0001 NEW)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PIPEWIRE REQUIRED IMPORTED_TARGET libpipewire-0.3)
 

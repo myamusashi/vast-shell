@@ -19,7 +19,7 @@ QString SearchResult::highlightedTitle(const QString& color) const {
         return FuzzyMatcher::escapeHtml(m_title);
 
     QString result;
-    int last = 0;
+    int     last = 0;
 
     for (const QVariant& rv : m_highlightRanges) {
         const auto rm     = rv.toMap();

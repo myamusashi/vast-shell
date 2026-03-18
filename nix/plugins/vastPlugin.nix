@@ -4,6 +4,8 @@
     cmake,
     qt6,
     patchelf,
+    spirv-tools,
+    glslang,
     pipewire,
     pkg-config,
 }:
@@ -16,14 +18,18 @@ stdenv.mkDerivation {
     nativeBuildInputs = [
         cmake
         qt6.wrapQtAppsHook
+        qt6.qtshadertools
         patchelf
         pkg-config
+        spirv-tools
+        glslang
     ];
 
     buildInputs = [
         qt6.qtbase
         qt6.qtdeclarative
         pipewire
+        qt6.qtshadertools
     ];
 
     cmakeFlags = [

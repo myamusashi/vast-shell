@@ -67,12 +67,11 @@
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="161"/>
         <source>Found %1 apps in %2ms</source>
-        <translation>Aplikasi ditemukan %1 dalam %2ms</translation>
+        <translation type="vanished">Aplikasi ditemukan %1 dalam %2ms</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="313"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="296"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
