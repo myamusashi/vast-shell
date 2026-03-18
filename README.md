@@ -1,4 +1,5 @@
 ![Last Commit](https://img.shields.io/github/last-commit/myamusashi/vast-shell?label=last+commit&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
+![Commits](https://img.shields.io/github/commit-activity/t/myamusashi/vast-shell?label=commits&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Stars](https://img.shields.io/github/stars/myamusashi/vast-shell?label=stars&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Repo Size](https://img.shields.io/github/repo-size/myamusashi/vast-shell?label=repo+size&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Nix](https://img.shields.io/badge/nix-flakes-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=nixos&logoColor=89b4fa)
@@ -279,7 +280,7 @@ You can edit the `.ts` file directly in any text editor, or use Qt Linguist for 
 linguist translations/your_locale.ts
 ```
 
-Each string entry looks like this — fill in the `<translation>` tag:
+Each string entry looks like this, fill in the `<translation>` tag:
 ```xml
 <message>
     <source>Search applications</source>
@@ -310,7 +311,7 @@ lrelease translations/your_locale.ts
 
 ### Qt Linguist
 
-The recommended way to translate vast-shell is with **Qt Linguist** — a dedicated GUI translation editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, lets you mark strings as finished, and warns you about missing or outdated translations.
+The recommended way to translate vast-shell is with **Qt Linguist**, a dedicated GUI translation editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, lets you mark strings as finished, and warns you about missing or outdated translations.
 
 <img width="720" height="720" alt="image" src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" />
 
