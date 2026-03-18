@@ -122,14 +122,6 @@ Item {
                     }
                 }
 
-                StyledText {
-                    id: searchSpeed
-
-                    text: ""
-                    font.pixelSize: Appearance.fonts.size.normal
-                    color: Colours.m3Colors.m3PrimaryFixed
-                }
-
                 ListView {
                     id: listView
 
