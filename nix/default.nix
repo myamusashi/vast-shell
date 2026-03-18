@@ -100,18 +100,14 @@
             runHook preBuild
 
             echo "Compile Translations..."
-
             if [ -d "translations" ]; then
                 ${qt6.qttools}/bin/lrelease translations/*.ts
             fi
-
             echo "Compile shaders..."
-
             ${qt6.qtshadertools}/bin/qsb \
                 --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                 -o Assets/shaders/ImageTransition.vert.qsb \
                    Assets/shaders/ImageTransition.vert
-
             for name in fade wipeDown circleExpand dissolve splitHorizontal slideUp pixelate diagonalWipe boxExpand roll; do
                 ${qt6.qtshadertools}/bin/qsb \
                     --glsl "450,330,300 es" --hlsl 50 --msl 12 \
@@ -120,16 +116,30 @@
                 && echo "''${name}.frag.qsb" \
                 || echo "''${name}.frag.qsb FAILED"
             done
-
             ${qt6.qtshadertools}/bin/qsb \
                 --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                 -o Assets/shaders/borderProgress.vert.qsb \
                    Assets/shaders/borderProgress.vert
-
             ${qt6.qtshadertools}/bin/qsb \
                 --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                 -o Assets/shaders/borderProgress.frag.qsb \
                    Assets/shaders/borderProgress.frag
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/wavy.vert.qsb \
+                   Assets/shaders/wavy.vert
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/wavy.frag.qsb \
+                   Assets/shaders/wavy.frag
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/waveForm.vert.qsb \
+                   Assets/shaders/waveForm.vert
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/waveForm.frag.qsb \
+                   Assets/shaders/waveForm.frag
 
             runHook postBuild
         '';

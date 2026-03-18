@@ -49,7 +49,7 @@ install_system_packages() {
 	local -r pkg_list=(
 		base-devel git cmake ninja extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		pipewire
+		rust pipewire
 		findutils grep sed gawk util-linux libnotify wireplumber
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 	)
@@ -90,7 +90,7 @@ install_aur_packages() {
 	local -r aur_user="${SUDO_USER:-}"
 	local -a missing=()
 	local -r pkg_list=(
-		quickshell-git matugen-bin wl-screenrec ttf-weather-icons
+		quickshell-git matugen-bin ttf-weather-icons
 		app2unit ttf-material-symbols-variable-git
 	)
 
@@ -105,8 +105,11 @@ install_aur_packages() {
 	}
 	[[ -n $aur_user ]] || die "AUR builds require a non-root user. Run with sudo."
 
-	log "Installing ${#missing[@]} AUR packages..."
 	sudo -u "$aur_user" yay -S --needed --noconfirm "${missing[@]}"
+
+	log "Installing wl-screenrec (optional)..."
+	sudo -u "$aur_user" yay -S --needed --noconfirm wl-screenrec ||
+		warn "wl-screenrec failed to install — screen recording unavailable"
 }
 
 build_vast_plugin() {
@@ -203,7 +206,7 @@ build_m3shapes() {
 	fi
 }
 
-compile_wallpaper_shaders() {
+compile_shaders() {
 	local -r shader_dir="$PROJECT_ROOT/Assets/shaders"
 	local -r transition_dir="$shader_dir/transitions"
 	local -r vert_src="$shader_dir/ImageTransition.vert"
@@ -265,7 +268,6 @@ compile_wallpaper_shaders() {
 
 	((failed == 0)) || warn "$failed shader failed to compile"
 
-	# ── Border progress shaders ──
 	log "Compiling border progress shaders..."
 	local -r border_vert_src="$shader_dir/borderProgress.vert"
 	local -r border_vert_out="$shader_dir/borderProgress.vert.qsb"
@@ -289,6 +291,56 @@ compile_wallpaper_shaders() {
 				warn "  FAILED: borderProgress.frag.qsb"
 		else
 			log "  Up to date: borderProgress.frag.qsb"
+		fi
+	fi
+
+	log "Compiling wavy and wave form..."
+	local -r wavy_vert_src="$shader_dir/wavy.vert"
+	local -r wavy_vert_out="$shader_dir/wavy.vert.qsb"
+	local -r wavy_frag_src="$shader_dir/wavy.frag"
+	local -r wavy_frag_out="$shader_dir/wavy.frag.qsb"
+	local -r waveForm_vert_src="$shader_dir/waveForm.vert"
+	local -r waveForm_vert_out="$shader_dir/waveForm.vert.qsb"
+	local -r waveForm_frag_src="$shader_dir/waveForm.frag"
+	local -r waveForm_frag_out="$shader_dir/waveForm.frag.qsb"
+
+	if [[ -f $wavy_vert_src ]]; then
+		if [[ ! -f $wavy_vert_out || $wavy_vert_src -nt $wavy_vert_out ]]; then
+			"$qsb" "${qsb_flags[@]}" -o "$wavy_vert_out" "$wavy_vert_src" &&
+				log "  → wavy.vert.qsb" ||
+				warn "  FAILED: wavy.vert.qsb"
+		else
+			log "  Up to date: wavy.vert.qsb"
+		fi
+	fi
+
+	if [[ -f $wavy_frag_src ]]; then
+		if [[ ! -f $wavy_frag_out || $wavy_frag_src -nt $wavy_frag_out ]]; then
+			"$qsb" "${qsb_flags[@]}" -o "$wavy_frag_out" "$wavy_frag_src" &&
+				log "  → wavy.frag.qsb" ||
+				warn "  FAILED: wavy.frag.qsb"
+		else
+			log "  Up to date: wavy.frag.qsb"
+		fi
+	fi
+
+	if [[ -f $waveForm_vert_src ]]; then
+		if [[ ! -f $waveForm_vert_out || $waveForm_vert_src -nt $waveForm_vert_out ]]; then
+			"$qsb" "${qsb_flags[@]}" -o "$waveForm_vert_out" "$waveForm_vert_src" &&
+				log "  → waveForm.vert.qsb" ||
+				warn "  FAILED: waveForm.vert.qsb"
+		else
+			log "  Up to date: waveForm.vert.qsb"
+		fi
+	fi
+
+	if [[ -f $waveForm_frag_src ]]; then
+		if [[ ! -f $waveForm_frag_out || $waveForm_frag_src -nt $waveForm_frag_out ]]; then
+			"$qsb" "${qsb_flags[@]}" -o "$waveForm_frag_out" "$waveForm_frag_src" &&
+				log "  → waveForm.frag.qsb" ||
+				warn "  FAILED: waveForm.frag.qsb"
+		else
+			log "  Up to date: waveForm.frag.qsb"
 		fi
 	fi
 }
@@ -341,8 +393,6 @@ build_another_ripple() {
 
 	[[ -f $plugin ]] || warn "AnotherRipple plugin not found after installation"
 }
-
-
 
 compile_translations() {
 	[[ -d $PROJECT_ROOT/translations ]] || return 0
@@ -410,7 +460,7 @@ main() {
 	build_vast_plugin
 	build_m3shapes
 	build_another_ripple
-	compile_wallpaper_shaders
+	compile_shaders
 	compile_translations
 	install_quickshell_config
 	create_wrapper
