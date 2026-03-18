@@ -448,37 +448,36 @@ shell.qml
 └── translations/
 ```
 ---
-
 ## Upcoming Features
 
 > [!NOTE]
 > These features are planned and may change in scope or priority. Contributions are welcome!
 
 ### KDE Connect Integration
-- Clipboard sync between devices
-- File sharing between desktop and mobile
-- Device presence detection and pairing UI
+- [ ] Clipboard sync between devices
+- [ ] File sharing between desktop and mobile
+- [ ] Device presence detection and pairing UI
 
 ### Bluetooth
-- Bluetooth device discovery and pairing
-- Connection management and status indicator in the Quick Settings panel and settings window
+- [ ] Bluetooth device discovery and pairing
+- [ ] Connection management and status indicator in the Quick Settings panel and settings window
 
 ### Screen Capture Rework
-- screen recording overlay inspired by OBS Studio
-- Window selection mode for targeted recording
-- Merged multi-monitor screenshot support
-- Reduced external dependencies, less reliance on `slurp`, `hyprshot` and `grim`
+- [ ] Screen recording overlay inspired by OBS Studio
+- [ ] Window selection mode for targeted recording
+- [ ] Merged multi-monitor screenshot support
+- [ ] Reduced external dependencies — less reliance on `slurp`, `hyprshot`, and `grim`
 
 ### VPN & Tunnel Detection
-- Warp (Cloudflare) tunnel support
-- WireGuard connection detection and status
-- Generic VPN connection indicator in the settigs network page 
+- [ ] Warp (Cloudflare) tunnel support
+- [ ] WireGuard connection detection and status
+- [ ] Generic VPN connection indicator in the settings network page
 
 ### Clipboard Manager
-- Persistent clipboard history
-- Image preview support
-- Selected text snippets with source context
-- Built-in, using sqlite or cliphist for clip monitor
+- [ ] Persistent clipboard history
+- [ ] Image preview support
+- [ ] Selected text snippets with source context
+- [ ] Built-in, using `sqlite` or `cliphist` for clip monitoring
 
 ---
 
