@@ -182,18 +182,18 @@ Pages {
             Rectangle {
                 anchors.bottom: parent.bottom
                 x: slider.leftPadding + (slider.availableWidth - width) / 2
-                implicitWidth: 40
-                implicitHeight: slider.value <= 5 ? 40 : slider.availableHeight * slider.position + 40 + Appearance.spacing.small
+                implicitWidth: slider.trackWidth * 1.2
+                implicitHeight: slider.availableHeight * slider.position + shape.height
                 radius: slider.trackWidth / 2
                 color: slider.trackColor
 
                 MaterialShape {
+                    id: shape
+
                     anchors {
+                        top: parent.top
                         horizontalCenter: parent.horizontalCenter
-                        verticalCenter: parent.verticalCenter
                     }
-                    x: (parent.width - width) / 2
-                    y: parent.height - height
                     implicitWidth: 35
                     implicitHeight: 35
                     color: slider.handleColor
@@ -202,11 +202,12 @@ Pages {
                     ColumnLayout {
                         anchors.centerIn: parent
                         spacing: 0
+
                         StyledText {
                             Layout.alignment: Qt.AlignCenter
                             text: Math.round(slider.value)
                             color: slider.handleTextColor
-                            font.pixelSize: Appearance.fonts.size.normal
+                            font.pixelSize: Appearance.fonts.size.medium
                             font.bold: true
                         }
 

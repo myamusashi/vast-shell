@@ -102,7 +102,7 @@ Pages {
 
                                 spacing: Appearance.spacing.small
 
-                                HumiditySlider {
+                                WindSlider {
                                     implicitWidth: 30
                                     implicitHeight: 150
                                     value: parent.modelData.windSpeed
@@ -160,7 +160,7 @@ Pages {
         }
     }
 
-    component HumiditySlider: Slider {
+    component WindSlider: Slider {
         id: slider
 
         property alias windShapeRotation: shape.rotation
@@ -194,7 +194,7 @@ Pages {
                 anchors.bottom: parent.bottom
                 x: slider.leftPadding + (slider.availableWidth - width) / 2
                 implicitWidth: slider.trackWidth * 1.2
-                implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small
+                implicitHeight: slider.availableHeight * slider.position + shape.height
                 radius: slider.trackWidth / 2
                 color: slider.trackColor
                 WrapperItem {

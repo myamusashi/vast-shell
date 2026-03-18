@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell.Widgets
 
+import qs.Core.States
 import qs.Core.Configs
-import qs.Services
 import qs.Components.Base
 
 WrapperRectangle {
@@ -19,7 +19,7 @@ WrapperRectangle {
     opacity: isOpen ? 1.0 : 0.0
     transformOrigin: Item.Center
     margin: Appearance.margin.normal
-    color: Colours.m3Colors.m3Surface
+    color: GlobalStates.drawerColors
 
     transform: Translate {
         x: root.isOpen ? 0 : root.zoomOriginX - root.width / 2

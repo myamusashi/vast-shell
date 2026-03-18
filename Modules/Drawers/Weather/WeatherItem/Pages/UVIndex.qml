@@ -182,11 +182,13 @@ Pages {
                 anchors.bottom: parent.bottom
                 x: slider.leftPadding + (slider.availableWidth - width) / 2
                 implicitWidth: slider.trackWidth * 1.2
-                implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small
+                implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small + shape.height
                 radius: slider.trackWidth / 2
                 color: slider.trackColor
 
                 MaterialShape {
+                    id: shape
+
                     anchors {
                         top: parent.top
                         horizontalCenter: parent.horizontalCenter
