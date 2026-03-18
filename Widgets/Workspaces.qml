@@ -84,7 +84,11 @@ StyledRect {
             clip: true
             spacing: 0
             Repeater {
-                model: Math.max(Configs.bar.visibleWorkspace, container.focusedWorkspace >= Configs.bar.visibleWorkspace ? container.focusedWorkspace + 1 : Configs.bar.visibleWorkspace)
+                model: {
+                    const maxOccupied = Object.keys(container.occupied).filter(id => container.occupied[id]).reduce((max, id) => Math.max(max, parseInt(id)), 0);
+                    const minFromFocus = container.focusedWorkspace >= Configs.bar.visibleWorkspace ? container.focusedWorkspace : Configs.bar.visibleWorkspace;
+                    return Math.max(Configs.bar.visibleWorkspace, minFromFocus, maxOccupied);
+                }
                 delegate: Item {
                     id: delegateRoot
 
