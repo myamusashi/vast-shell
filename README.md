@@ -1,15 +1,22 @@
-<h1 align=center>vast-shell</h1>
+<h1 align="center">vast-shell</h1>
+
+<div align="center">
 
 ![Last Commit](https://img.shields.io/github/last-commit/myamusashi/vast-shell?label=last+commit&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Commits](https://img.shields.io/github/commit-activity/t/myamusashi/vast-shell?label=commits&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Stars](https://img.shields.io/github/stars/myamusashi/vast-shell?label=stars&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Repo Size](https://img.shields.io/github/repo-size/myamusashi/vast-shell?label=repo+size&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
+
 ![Nix](https://img.shields.io/badge/nix-flakes-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=nixos&logoColor=89b4fa)
 ![C++](https://img.shields.io/badge/c%2B%2B-23-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=cplusplus&logoColor=89b4fa)
 ![QML](https://img.shields.io/badge/qml-quickshell-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=qt&logoColor=89b4fa)
 
+</div>
+
 > [!WARNING]
 > This project is still in **active development**. Some features may be incomplete or change without notice, but it is usable as a daily driver. Issues and feedback are welcome!
+
+---
 
 ## Showcase
 
@@ -17,11 +24,11 @@
 
 https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 
----
-
 ### Preview
 
-<table>
+<details>
+  <summary>Image preview</summary>
+  <table>
   <tr>
     <td align="center"><img src="https://github.com/user-attachments/assets/447c0b4a-a5b4-41ec-8f4a-05b57f523edb" width="480"/><br/>Bar & Workspaces</td>
     <td align="center"><img src="https://github.com/user-attachments/assets/a34f1a9f-f9ed-4f82-991f-e68e79e54fec" width="480"/><br/>Quick Settings</td>
@@ -39,6 +46,9 @@ https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
     <td align="center"><img src="https://github.com/user-attachments/assets/7ba86a61-f957-440d-9aa8-0eb6c84c766c" width="480"/><br/>Settings</td>
   </tr>
 </table>
+</details>
+
+---
 
 ## Features
 
@@ -65,7 +75,7 @@ https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 
 ### Modules
 - **Calendar** — month view with major event highlights
-- **Weather** — detailed weather widget with hourly and daily forecast, AQI, UV index, moon phase, wind, humidity, pressure, precipitation, and visibility pages
+- **Weather** — detailed widget with hourly and daily forecast, AQI, UV index, moon phase, wind, humidity, pressure, precipitation, and visibility pages
 - **Lockscreen** — PAM-authenticated lockscreen with clock and wallpaper
 - **Polkit** — graphical polkit authentication agent
 - **Wallpaper Selector** — wallpaper browser with live preview
@@ -75,29 +85,32 @@ https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 - **Material Design 3** — MD3-based component library
 - **matugen integration** — dynamic color scheme generation from wallpaper
 - **Wallpaper transitions** — GPU-accelerated GLSL transition effects (fade, dissolve, wipe, circle expand, pixelate, roll, and more)
-- **Wavy / waveform shader** — animated waveform visual component
+- **Wavy / waveform shader** — animated waveform visual on the media player slider
 - **Border progress shader** — GPU-rendered animated border for notifications
 
 ### Widgets
 - **Clock** — time and date display
 - **Workspaces** — Hyprland workspace indicators
-- **Tray** — system tray with tray menu
+- **Tray** — system tray with context menu
 - **Battery** — battery status and percentage
 - **Lyrics View** — synchronized lyrics display for the current track
 - **Record Indicator** — live screen recording status indicator
-- **Audio Profiles** — quick audio profile switcher widget
+- **Audio Profiles** — quick audio profile switcher
 - **Notification Dots** — unread notification badge
 
 ### Plugins (C++23)
 - **`SearchEngine`** — fuzzy file and app search with `FuzzyMatcher`
 - **`AudioProfilesWatcher`** — PipeWire audio profile monitoring
-- **`KeylockState`** — caps lock and num lock state
-- **`LyricsProvider`** — lyrics fetching and sync provider
-- **`TranslationManager`** — runtime locale switching
+- **`KeylockState`** — caps lock and num lock state via evdev
+- **`LyricsProvider`** — lyrics fetching and sync from lrclib.net
+- **`ScreenRecorder`** — screen recording control singleton
+- **`TranslationManager`** — runtime locale switching without restart
 
 ### Localization
 - Indonesian (`id_ID`) translation included
 - Runtime language switching without restart
+
+---
 
 ## Installation
 
@@ -139,20 +152,19 @@ The module registers a systemd user service (`quickshell-shell.service`) that au
 ### Arch Linux
 
 > [!IMPORTANT]
-> Run with `sudo`.
-
-Clone the repo and run the install script:
+> Requires Arch Linux or an Arch-based distro. Run with `sudo`.
 ```bash
 git clone https://github.com/myamusashi/vast-shell.git
 cd vast-shell
 sudo ./archInstall.sh
 ```
-start the shell with:
+
+The script will install all dependencies, build the plugins, compile shaders, and set up the shell. Once complete, start it with:
 ```bash
 shell
 ```
 
-#### Runtime dependencies
+#### Runtime Dependencies
 
 | Category | Packages |
 |---|---|
@@ -160,21 +172,32 @@ shell
 | Qt | `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-shadertools` |
 | Media | `ffmpeg`, `wireplumber`, `wl-clipboard`, `wl-screenrec` |
 | Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons` |
-| Other | `matugen-bin`, `app2unit`|
+| Other | `matugen-bin`, `app2unit` |
 
 ---
 
+### Other Distros
+
 > [!WARNING]
-> Package names, availability, and versions listed here were accurate at the time of writing but **may be outdated or unavailable** depending on your distro version and repo state. Always verify package names against your distro's official package index before installing:
+> Package names, availability, and versions listed below were accurate at the time of writing but **may be outdated or unavailable** depending on your distro version and repo state. Always verify against your distro's official package index before installing. If a package is missing or renamed, check your distro's community wiki or forums. PRs to keep this list updated are welcome.
 >
 > - **Fedora** → https://packages.fedoraproject.org
 > - **openSUSE** → https://software.opensuse.org
 > - **Gentoo** → https://packages.gentoo.org
 > - **Void** → https://voidlinux.org/packages
->
-> If a package is missing or renamed, check your distro's community wiki or forums. PRs to keep this list updated are welcome.
 
-### Fedora
+The following packages must be built from source regardless of distro:
+
+| Package | Source |
+|---|---|
+| `quickshell` | https://github.com/quickshell/quickshell |
+| `matugen` | https://github.com/InioX/matugen |
+| `app2unit` | https://github.com/valpackett/app2unit |
+| `wl-screenrec` | https://github.com/russelltg/wl-screenrec |
+| Material Symbols font | https://github.com/google/material-design-icons |
+| Weather Icons font | https://github.com/erikflowers/weather-icons |
+
+#### Fedora
 ```bash
 # System & build
 sudo dnf install git cmake ninja-build extra-cmake-modules patchelf pkgconf \
@@ -191,12 +214,10 @@ sudo dnf install pipewire wireplumber iw libnotify polkit \
 ```
 
 > [!NOTE]
-> `ffmpeg` requires [RPM Fusion](https://rpmfusion.org) — `sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm`
-> `qt6-qtgraphs` is not yet packaged in Fedora repos — build from source if required.
+> `ffmpeg` requires [RPM Fusion](https://rpmfusion.org): `sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm`
+> `qt6-qtgraphs` is not yet packaged in Fedora — build from source if required.
 
----
-
-### openSUSE Tumbleweed
+#### openSUSE Tumbleweed
 ```bash
 # System & build
 sudo zypper install git cmake ninja extra-cmake-modules patchelf pkgconf \
@@ -212,9 +233,7 @@ sudo zypper install pipewire wireplumber iw libnotify-tools polkit \
                     wl-clipboard ffmpeg foot hyprland findutils grep sed gawk util-linux
 ```
 
----
-
-### Gentoo
+#### Gentoo
 ```bash
 # System & build
 sudo emerge -av dev-vcs/git dev-build/cmake dev-build/ninja \
@@ -233,9 +252,7 @@ sudo emerge -av media-video/pipewire media-video/wireplumber net-wireless/iw \
                 gui-wm/hyprland sys-apps/util-linux
 ```
 
----
-
-### Void Linux
+#### Void Linux
 ```bash
 # System & build
 sudo xbps-install -S git cmake ninja extra-cmake-modules patchelf pkgconf \
@@ -251,10 +268,9 @@ sudo xbps-install -S pipewire wireplumber iw libnotify polkit \
                      wl-clipboard ffmpeg foot hyprland findutils grep sed gawk util-linux
 ```
 
-# Translations
-> [!NOTE]
-> `lupdate` and `lrelease` are provided by `qt6-tools` (Arch).
-> On NixOS they are available via `qt6.qttools`.
+---
+
+## Translations
 
 Vast-shell uses Qt's built-in translation system. Translation files live in the `translations/` directory:
 
@@ -267,58 +283,14 @@ Currently included locales:
 |---|---|
 | `id_ID` | Indonesian |
 
----
-
-### Adding a New Language
-
-**1. Generate a new `.ts` file from the source**
-```bash
-lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
-```
-
-Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE`.
-
-**2. Open and translate the file**
-
-You can edit the `.ts` file directly in any text editor, or use Qt Linguist for a GUI:
-```bash
-linguist translations/your_locale.ts
-```
-
-Each string entry looks like this, fill in the `<translation>` tag:
-```xml
-<message>
-    <source>Search applications</source>
-    <translation>Rechercher des applications</translation>
-</message>
-```
-
-**3. Compile the `.ts` to `.qm`**
-```bash
-lrelease translations/your_locale.ts
-```
-
-This generates `translations/your_locale.qm` which the shell loads at runtime.
-
----
-
-### Updating an Existing Translation
-
-When new strings are added to the shell, sync them into the existing `.ts` file first:
-```bash
-lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
-```
-
-This adds new untranslated entries without overwriting your existing translations. Then open the file, fill in the new entries, and recompile:
-```bash
-lrelease translations/your_locale.ts
-```
+> [!NOTE]
+> `lupdate` and `lrelease` are provided by `qt6-tools` (Arch) or `qt6-tools-dev-tools` (Debian/Ubuntu). On NixOS they are available via `qt6.qttools`.
 
 ### Qt Linguist
 
-The recommended way to translate vast-shell is with **Qt Linguist**, a dedicated GUI translation editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, lets you mark strings as finished, and warns you about missing or outdated translations.
+The recommended way to translate vast-shell is with **Qt Linguist** — a dedicated GUI translation editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, lets you mark strings as finished, and warns about missing or outdated entries.
 
-<img width="720" height="720" alt="image" src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" />
+<img src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" width="720"/>
 
 <table>
   <tr>
@@ -330,11 +302,64 @@ The recommended way to translate vast-shell is with **Qt Linguist**, a dedicated
     <td>✅ Built-in phrase book and search</td>
   </tr>
 </table>
+```bash
+linguist translations/your_locale.ts
+```
+
+### Adding a New Language
+
+**1. Generate a new `.ts` file from the source**
+```bash
+lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+```
+
+Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE`.
+
+**2. Open in Qt Linguist and translate**
+```bash
+linguist translations/your_locale.ts
+```
+
+Or edit by hand — fill in the `<translation>` tag for each entry:
+```xml
+<message>
+    <source>Search applications</source>
+    <translation>Rechercher des applications</translation>
+</message>
+```
+
+**3. Compile to `.qm`**
+```bash
+lrelease translations/your_locale.ts
+```
+
+### Updating an Existing Translation
+
+Sync new strings into an existing `.ts` file without overwriting existing translations:
+```bash
+lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+```
+
+Open in Linguist, fill in entries marked as **Unfinished**, then recompile:
+```bash
+lrelease translations/your_locale.ts
+```
+
+### NixOS
+
+Translations are compiled automatically during the build phase — no manual steps needed.
+
+### Arch Linux
+
+The `archInstall.sh` script compiles translations automatically. To recompile manually:
+```bash
+/usr/lib/qt6/bin/lrelease translations/*.ts
+```
 
 ---
 
-# Project tree
-```md
+## Project Structure
+```
 shell.qml
 ├── archInstall.sh
 ├── flake.nix
@@ -452,7 +477,9 @@ shell.qml
 ├── patches/
 └── translations/
 ```
+
 ---
+
 ## Upcoming Features
 
 > [!NOTE]
@@ -488,14 +515,14 @@ shell.qml
 
 ## Credits
 
-Thanks to everyone in the Quickshell Discord server for helping me with my questions, especially **@m7moud_el_zayat** for the advice
+Thanks to everyone in the Quickshell Discord server for helping me with my questions, especially **@m7moud_el_zayat** for the advice.
 
-Thanks to **@outfoxxed** for [this](https://github.com/quickshell-mirror/quickshell) beautiful project
+Thanks to **@outfoxxed** for [this beautiful project](https://github.com/quickshell-mirror/quickshell).
 
-Thanks to **[@Soramane](https://github.com/caelestia-dots/shell)** for the inspiration, I took a lot of reference from your shell and thanks for the material shapes too (yoink some of his code too)
+Thanks to **[@Soramane](https://github.com/caelestia-dots/shell)** for the inspiration, I took a lot of reference from your shell and thanks for the material shapes too (and yoink your code).
 
-Thanks to **[@Rexcrazy804](https://github.com/Rexcrazy804/Zaphkiel)** for the kuru-kuru
+Thanks to **[@Rexcrazy804](https://github.com/Rexcrazy804/Zaphkiel)** for the kuru-kuru.
 
 #### Honorable Mention
 
-Check out [qtengine](https://github.com/kossLAN/qtengine) by **@koss** — a Qt config that doesn't suck
+Check out [qtengine](https://github.com/kossLAN/qtengine) by **@koss** — a qt config that doesn't suck.
