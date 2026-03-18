@@ -8,7 +8,7 @@
 		"fonts": {
 			"family": {
 				"material": "Material Symbols Rounded",
-				"mono": "Maple Mono NF",
+				"mono": "Hack",
 				"sans": "Google Sans Flex"
 			},
 			"size": {
@@ -18,21 +18,21 @@
 	},
 	"bar": {
 		"alwaysOpenBar": true,
-		"barHeight": 48,
+		"barHeight": 35,
 		"compact": false,
-		"visibleWorkspace": 5,
+		"visibleWorkspace": 4,
 		"workspacesIndicator": "dot"
 	},
 	"colors": {
 		"isDarkMode": true,
-		"matugenConfigPathForDarkColor": "/home/<user>/.config/shell/dark-colors.json",
-		"matugenConfigPathForLightColor": "/home/<user>/.config/shell/light-colors.json",
-		"staticColorsPath": "/home/<user>/.config/shell/colors.json",
+		"matugenConfigPathForDarkColor": "/home/myamusashi/.config/shell/dark-colors.json",
+		"matugenConfigPathForLightColor": "/home/myamusashi/.config/shell/light-colors.json",
+		"staticColorsPath": "/home/myamusashi/.config/shell/colors.json",
 		"useMatugenColor": true,
 		"useStaticColors": false
 	},
 	"generals": {
-		"alpha": 0.5,
+		"alpha": 1,
 		"apps": {
 			"audio": "pavucontrol-qt",
 			"fileExplorer": "pcmanfm-qt",
@@ -42,46 +42,57 @@
 			"videoViewer": "mpv"
 		},
 		"battery": {
+			"criticalLevel": 3,
 			"warnLevels": [
 				{
 					"icon": "battery-020",
 					"level": 20,
-					"urgency": "normal",
-					"message": "Dude, plug your charger",
-					"title": "Low battery"
+					"message": "Kamu mungkin mau colok chargernya",
+					"title": "Baterai lemah"
 				},
 				{
 					"icon": "battery-010",
 					"level": 10,
-					"urgency": "low",
-					"message": "Dude, your battery dying",
-					"title": "Battery dying"
+					"message": "Kamu mungkin ingin colok charger kamu <b>sekarang</b>",
+					"title": "Kamu bisa lihat pesan sebelumnya kan?"
 				},
 				{
 					"icon": "battery-000",
 					"level": 5,
-					"urgency": "critical",
-					"message": "PUT IT IN NOW",
-					"title": "Critical level"
+					"message": "MASUKAN CHARGER NYA SEKARANG!!",
+					"title": "Level baterai kritis"
 				}
 			]
 		},
-		"enableOuterBorder": false,
+		"chargingGlowSpread": 20,
+		"coverBlurRadius": 1,
+		"enableOuterBorder": true,
 		"followFocusMonitor": true,
-		"outerBorderSize": 5,
-		"transparent": false
+		"outerBorderSize": 10,
+		"transparent": true
 	},
-	"language": "",
+	"language": {
+		"language": ""
+	},
+	"mediaPlayer": {
+		"dynamicColorsCover": true,
+		"showLyrics": false,
+		"sliderType": "WaveForm"
+	},
+	"notification": {
+		"maximumNotification": 100,
+		"maximumNotificationAge": 604800000
+	},
 	"wallpaper": {
 		"enabledWallpaper": true,
-		"transition": "random",
-		"transitionDuration": 600,
+		"transition": "circle",
+		"transitionDuration": 500,
 		"transitionLowPerfMode": false,
 		"visibleWallpaper": 3,
-		"wallpaperDir": "/home/<user>/Pictures/wallpapers"
+		"wallpaperDir": "/home/myamusashi/Pictures/wallpapers"
 	},
 	"weather": {
-		"enableQuickSummary": true,
+		"enableQuickSummary": false,
 		"latitude": "",
 		"longitude": "",
 		"reloadTime": 1800000
