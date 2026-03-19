@@ -31,8 +31,6 @@ Item {
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     function launch(entry: DesktopEntry): void {
-        Fuzzy.updateLaunchHistory(entry);
-
         const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];
 
         Quickshell.execDetached({
@@ -47,8 +45,6 @@ Item {
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
-
-    Component.onCompleted: Fuzzy.loadLaunchHistory()
 
     Corner {
         location: Qt.BottomLeftCorner
