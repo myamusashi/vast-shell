@@ -4,36 +4,41 @@ layout(location = 0) noperspective in vec2 texCoord;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform FragBuf {
-    mat4  qt_Matrix;     // offset  0
-    float qt_Opacity;    // offset 64
-    float progress;      // offset 68
-    float smoothAmount;  // offset 72
-    float aspect;        // offset 76
-    vec2  resolution;    // offset 80
-    vec2  invResolution; // offset 88
-    float rollCos;       // offset 96
-    float rollSin;       // offset 100
+    mat4  qt_Matrix;
+    float qt_Opacity;
+    float progress;
+    float smoothAmount;
+    float aspect;
+    vec2  resolution;
+    vec2  invResolution;
 } ubuf;
 
 layout(binding = 1) uniform sampler2D source1;
 layout(binding = 2) uniform sampler2D source2;
 
 void main() {
-    vec2  uv  = texCoord;
-    vec2  res = ubuf.resolution;
-    float rx  = (1.0 - uv.x) * res.x;
-    float ry  =        uv.y   * res.y;
-    vec2  rot = vec2(
-        rx * ubuf.rollCos - ry * ubuf.rollSin,
-        rx * ubuf.rollSin + ry * ubuf.rollCos
-    );
+    vec2  uv    = texCoord;
+    float p     = ubuf.progress;
 
-    bool inBounds = rot.x >= 0.0 && rot.x < res.x
-                 && rot.y >= 0.0 && rot.y < res.y;
+    // Roll edge sweeps left-to-right: right side reveals source2 first
+    float edge  = 1.0 - p;   // leading edge in UV X, starts at 1, ends at 0
 
-    vec3 col = inBounds
-        ? texture(source1, vec2(1.0 - rot.x, rot.y) * ubuf.invResolution).rgb
-        : texture(source2, uv).rgb;
+    // Soft crease width
+    float crease = 0.08;
 
-    fragColor = vec4(col, 1.0) * ubuf.qt_Opacity;
+    if (uv.x > edge + crease) {
+        // Fully revealed — show incoming image
+        fragColor = texture(source2, uv) * ubuf.qt_Opacity;
+    } else if (uv.x > edge) {
+        // Inside the crease — blend with a shading gradient to sell the curl
+        float t     = (uv.x - edge) / crease;
+        float shade = 1.0 - t * 0.45;   // darken the curl surface
+        vec4  c1    = texture(source1, uv);
+        vec4  c2    = texture(source2, uv);
+        fragColor   = mix(c1 * shade, c2, smoothstep(0.0, 1.0, t)) * ubuf.qt_Opacity;
+    } else {
+        // Not yet rolled — show outgoing image, slight shadow near crease
+        float shadow = smoothstep(0.0, crease * 2.0, uv.x - edge + crease * 2.0);
+        fragColor = texture(source1, uv) * (0.75 + 0.25 * shadow) * ubuf.qt_Opacity;
+    }
 }

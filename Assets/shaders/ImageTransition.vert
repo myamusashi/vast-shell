@@ -13,8 +13,6 @@ layout(std140, binding = 0) uniform VertBuf {
     float aspect;        // offset 76
     vec2  resolution;    // offset 80
     vec2  invResolution; // offset 88
-    float rollCos;       // offset 96
-    float rollSin;       // offset 100
 } ubuf;
 
 void main() {

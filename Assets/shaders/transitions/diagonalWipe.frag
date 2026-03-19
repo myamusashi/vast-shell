@@ -11,8 +11,6 @@ layout(std140, binding = 0) uniform FragBuf {
     float aspect;        // offset 76
     vec2  resolution;    // offset 80
     vec2  invResolution; // offset 88
-    float rollCos;       // offset 96
-    float rollSin;       // offset 100
 } ubuf;
 
 layout(binding = 1) uniform sampler2D source1;
@@ -20,12 +18,12 @@ layout(binding = 2) uniform sampler2D source2;
 
 void main() {
     vec2  uv   = texCoord;
-    float diag = uv.x + uv.y;
+    float diag = 2.0 - (uv.x + uv.y);
     float edge = ubuf.progress * 2.0;
     float t    = smoothstep(edge - ubuf.smoothAmount, edge, diag);
     vec3  col  = mix(
-        texture(source1, uv).rgb,
         texture(source2, uv).rgb,
+        texture(source1, uv).rgb,
         t
     );
     fragColor = vec4(col, 1.0) * ubuf.qt_Opacity;

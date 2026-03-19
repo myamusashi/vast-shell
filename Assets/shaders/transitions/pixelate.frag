@@ -11,8 +11,6 @@ layout(std140, binding = 0) uniform FragBuf {
     float aspect;        // offset 76
     vec2  resolution;    // offset 80
     vec2  invResolution; // offset 88
-    float rollCos;       // offset 96
-    float rollSin;       // offset 100
 } ubuf;
 
 layout(binding = 1) uniform sampler2D source1;
@@ -21,16 +19,17 @@ layout(binding = 2) uniform sampler2D source2;
 void main() {
     vec2  uv   = texCoord;
     float p    = ubuf.progress;
-    float ramp = (p < 0.5) ? p * 2.0 : (1.0 - p) * 2.0;
-    float bsz  = max(1.0, ramp * 48.0);
 
-    vec2 uv2 = (floor(uv * ubuf.resolution / bsz) * bsz + 0.5)
-               * ubuf.invResolution;
+    float ramp    = (p < 0.5) ? p * 2.0 : (1.0 - p) * 2.0;
+    // UV-space block size — 0.001 floor prevents divide-by-zero at p=0/1
+    float blkSize = ramp * 0.06 + 0.001;
 
-    vec3 col = mix(
-        texture(source1, uv2).rgb,
-        texture(source2, uv2).rgb,
-        p
-    );
+    // Snap uv to nearest block centre — no resolution uniform needed
+    vec2 uv2 = floor(uv / blkSize) * blkSize + blkSize * 0.5;
+
+    vec3 col = (p < 0.5)
+        ? texture(source1, uv2).rgb
+        : texture(source2, uv2).rgb;
+
     fragColor = vec4(col, 1.0) * ubuf.qt_Opacity;
 }
