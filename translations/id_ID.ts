@@ -62,7 +62,7 @@
 <context>
     <name>App</name>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="99"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="95"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>
@@ -71,7 +71,7 @@
         <translation type="vanished">Aplikasi ditemukan %1 dalam %2ms</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Launcher/App.qml" line="298"/>
+        <location filename="../Modules/Drawers/Launcher/App.qml" line="295"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
@@ -386,27 +386,27 @@
 <context>
     <name>BottomItem</name>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="108"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="116"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="287"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="301"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="294"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="308"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="301"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="315"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="308"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="322"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
@@ -1032,22 +1032,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="95"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="107"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="97"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="109"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="99"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="111"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="100"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="112"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -2678,7 +2678,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WallpaperSelector</name>
     <message>
-        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="76"/>
+        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="77"/>
         <source>Search wallpapers</source>
         <translation>Cari wallpapers</translation>
     </message>
