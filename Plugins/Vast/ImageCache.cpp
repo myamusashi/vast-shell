@@ -2,8 +2,8 @@
 
 #include <QImageReader>
 #include <QMutexLocker>
-#include <QThreadPool>
 #include <QRunnable>
+#include <QThreadPool>
 
 class DecodeTask : public QObject, public QRunnable {
     Q_OBJECT
@@ -18,15 +18,10 @@ class DecodeTask : public QObject, public QRunnable {
         if (m_targetSize.isValid())
             reader.setScaledSize(reader.size().scaled(m_targetSize, Qt::KeepAspectRatioByExpanding));
 
-        QImage img = reader.read();
-        if (img.isNull()) {
-            qWarning() << "[ImageCache] Failed to decode:" << m_path;
-            emit m_cache->imageReady(m_path);
-            return;
-        }
+        if (reader.read().isNull())
+            qWarning() << "[ImageCache] Failed to preload:" << m_path;
 
-        img = img.convertToFormat(QImage::Format_RGBA8888);
-        m_cache->store(m_path, std::move(img));
+        m_cache->store(m_path);
         emit m_cache->imageReady(m_path);
     }
 
@@ -57,7 +52,7 @@ ImageCache* ImageCache::instance() {
 void ImageCache::preload(const QString& path, QSize targetSize) {
     {
         QMutexLocker lock(&m_mutex);
-        if (m_cache.contains(path) || m_loading.contains(path))
+        if (m_done.contains(path) || m_loading.contains(path))
             return;
         m_loading.insert(path);
     }
@@ -66,21 +61,12 @@ void ImageCache::preload(const QString& path, QSize targetSize) {
 
 void ImageCache::evict(const QString& path) {
     QMutexLocker lock(&m_mutex);
-    m_cache.remove(path);
+    m_done.remove(path);
+    m_loading.remove(path);
 }
 
-bool ImageCache::isCached(const QString& path) const {
-    QMutexLocker lock(&m_mutex);
-    return m_cache.contains(path);
-}
-
-QImage ImageCache::get(const QString& path) const {
-    QMutexLocker lock(&m_mutex);
-    return m_cache.value(path);
-}
-
-void ImageCache::store(const QString& path, QImage image) {
+void ImageCache::store(const QString& path) {
     QMutexLocker lock(&m_mutex);
     m_loading.remove(path);
-    m_cache.insert(path, std::move(image));
+    m_done.insert(path);
 }

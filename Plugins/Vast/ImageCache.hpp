@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QHash>
-#include <QImage>
 #include <QMutex>
 #include <QObject>
 #include <QSet>
@@ -14,26 +12,23 @@ class ImageCache : public QObject {
     QML_NAMED_ELEMENT(ImageCache)
 
   public:
-    static ImageCache*             create(QQmlEngine*, QJSEngine*);
-    static ImageCache*             instance();
+    static ImageCache* create(QQmlEngine*, QJSEngine*);
+    static ImageCache* instance();
 
-    Q_INVOKABLE void               preload(const QString& path, QSize targetSize = {});
-    Q_INVOKABLE void               evict(const QString& path);
-    [[nodiscard]] Q_INVOKABLE bool isCached(const QString& path) const;
-
-    QImage                         get(const QString& path) const;
+    Q_INVOKABLE void   preload(const QString& path, QSize targetSize = {});
+    Q_INVOKABLE void   evict(const QString& path);
 
   signals:
     void imageReady(const QString& path);
 
   private:
     explicit ImageCache(QObject* parent = nullptr);
-    static ImageCache*     s_instance;
+    static ImageCache* s_instance;
 
-    mutable QMutex         m_mutex;
-    QHash<QString, QImage> m_cache;
-    QSet<QString>          m_loading;
+    mutable QMutex     m_mutex;
+    QSet<QString>      m_loading;
+    QSet<QString>      m_done;
 
-    void                   store(const QString& path, QImage image);
+    void               store(const QString& path);
     friend class DecodeTask;
 };
