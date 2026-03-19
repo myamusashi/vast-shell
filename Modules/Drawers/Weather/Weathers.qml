@@ -22,11 +22,11 @@ Item {
         verticalCenter: parent.verticalCenter
     }
 
+    readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
+
     implicitHeight: parent.height
     implicitWidth: GlobalStates.isWeatherPanelOpen ? parent.width * 0.25 : 0
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
-
-    readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
 
     Behavior on implicitWidth {
         NAnim {
@@ -59,7 +59,7 @@ Item {
             id: flickable
 
             contentWidth: width
-            contentHeight: mainLoader.item ? mainLoader.item.implicitHeight + 40 : 0
+            contentHeight: contentColumn.implicitHeight + 40
             clip: true
             boundsBehavior: Flickable.StopAtBounds
 
@@ -87,69 +87,68 @@ Item {
                     opacity: 0.3
                 }
             }
+            ColumnLayout {
+                id: contentColumn
 
-            Loader {
-                id: mainLoader
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    margins: 20
+                }
 
-                anchors.fill: parent
-                active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWeatherPanelOpen
-                asynchronous: false
-                sourceComponent: ColumnLayout {
-                    id: contentColumn
+                visible: GlobalStates.isWeatherPanelOpen
+                spacing: Appearance.spacing.normal
 
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        top: parent.top
-                        margins: 20
-                    }
+                Headers {}
 
-                    spacing: Appearance.spacing.normal
+                Loader {
+                    id: summaryLoader
 
-                    Headers {}
+                    Layout.fillWidth: true
+                    active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
+                    asynchronous: true
+                    sourceComponent: WrapperRectangle {
+                        implicitHeight: summaryText.implicitHeight + 20
+                        color: Colours.m3Colors.m3SurfaceContainer
+                        radius: Appearance.rounding.normal
+                        margin: Appearance.margin.normal
 
-                    Loader {
-                        id: summaryLoader
+                        StyledText {
+                            id: summaryText
 
-                        Layout.fillWidth: true
-                        active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
-                        sourceComponent: WrapperRectangle {
-                            implicitHeight: summaryText.implicitHeight + 20
-                            color: Colours.m3Colors.m3SurfaceContainer
-                            radius: Appearance.rounding.normal
-                            margin: Appearance.margin.normal
-
-                            StyledText {
-                                id: summaryText
-
-                                text: Weather.getQuickSummary()
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.small
-                                wrapMode: Text.WordWrap
-                                horizontalAlignment: Text.AlignLeft
-                            }
+                            text: Weather.getQuickSummary()
+                            color: Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.small
+                            wrapMode: Text.WordWrap
+                            horizontalAlignment: Text.AlignLeft
                         }
                     }
+                }
 
-                    Loader {
-                        id: forecastLoader
+                Loader {
+                    Layout.fillWidth: true
+                    active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
+                    asynchronous: true
+                    sourceComponent: ColumnLayout {
+                        spacing: Appearance.spacing.large
 
-                        Layout.fillWidth: true
-                        active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
-                        asynchronous: true
+                        WI.ForecastHourly {
+                            Layout.fillWidth: true
+                        }
 
-                        sourceComponent: ColumnLayout {
-                            spacing: Appearance.spacing.large
-
-                            WI.ForecastHourly {
-                                Layout.fillWidth: true
-                            }
-
-                            WI.ForecastDaily {
-                                Layout.fillWidth: true
-                            }
+                        WI.ForecastDaily {
+                            Layout.fillWidth: true
                         }
                     }
+                }
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignCenter
+                    columns: 2
+                    columnSpacing: Appearance.spacing.large
+                    rowSpacing: Appearance.spacing.large
 
                     GridLayout {
                         Layout.fillWidth: true
@@ -158,249 +157,52 @@ Item {
                         columnSpacing: Appearance.spacing.large
                         rowSpacing: Appearance.spacing.large
 
-                        GridLayout {
-                            Layout.fillWidth: true
-                            Layout.alignment: Qt.AlignCenter
-                            columns: 2
-                            columnSpacing: Appearance.spacing.large
-                            rowSpacing: Appearance.spacing.large
+                        Card {
+                            zoomPage: humidityPages
+                            content: WI.Humidity {}
+                        }
+                        Card {
+                            zoomPage: sunPages
+                            content: WI.Sun {}
+                        }
+                        Card {
+                            zoomPage: pressurePages
+                            content: WI.Pressure {}
+                        }
+                        Card {
+                            zoomPage: visibilityPages
+                            content: WI.Visibility {}
+                        }
+                        Card {
+                            zoomPage: windPages
+                            content: WI.Wind {}
+                        }
+                        Card {
+                            zoomPage: uvIndexPages
+                            content: WI.UVIndex {}
+                        }
+                        Card {
+                            zoomPage: aqiPages
+                            content: WI.AQI {}
+                        }
+                        Card {
+                            zoomPage: precipitationPages
+                            content: WI.Precipitation {}
+                        }
+                        Card {
+                            zoomPage: moonPages
+                            content: WI.Moon {}
+                        }
 
-                            Loader {
-                                id: humidityCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Humidity {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                humidityPages.zoomOriginX = humidityCard.mapToItem(root, 0, 0).x + humidityCard.width / 2;
-                                                humidityPages.zoomOriginY = humidityCard.mapToItem(root, 0, 0).y + humidityCard.height / 2;
-                                                humidityPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: sunCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Sun {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                sunPages.zoomOriginX = sunCard.mapToItem(root, 0, 0).x + sunCard.width / 2;
-                                                sunPages.zoomOriginY = sunCard.mapToItem(root, 0, 0).y + sunCard.height / 2;
-                                                sunPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: pressureCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Pressure {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                pressurePages.zoomOriginX = pressureCard.mapToItem(root, 0, 0).x + pressureCard.width / 2;
-                                                pressurePages.zoomOriginY = pressureCard.mapToItem(root, 0, 0).y + pressureCard.height / 2;
-                                                pressurePages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: visibilityCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Visibility {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                visibilityPages.zoomOriginX = visibilityCard.mapToItem(root, 0, 0).x + visibilityCard.width / 2;
-                                                visibilityPages.zoomOriginY = visibilityCard.mapToItem(root, 0, 0).y + visibilityCard.height / 2;
-                                                visibilityPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: windCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Wind {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                windPages.zoomOriginX = windCard.mapToItem(root, 0, 0).x + windCard.width / 2;
-                                                windPages.zoomOriginY = windCard.mapToItem(root, 0, 0).y + windCard.height / 2;
-                                                windPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: uvIndexCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                asynchronous: true
-                                sourceComponent: Component {
-                                    WI.UVIndex {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                uvIndexPages.zoomOriginX = uvIndexCard.mapToItem(root, 0, 0).x + uvIndexCard.width / 2;
-                                                uvIndexPages.zoomOriginY = uvIndexCard.mapToItem(root, 0, 0).y + uvIndexCard.height / 2;
-                                                uvIndexPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: aqiCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.AQI {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                aqiPages.zoomOriginX = aqiCard.mapToItem(root, 0, 0).x + aqiCard.width / 2;
-                                                aqiPages.zoomOriginY = aqiCard.mapToItem(root, 0, 0).y + aqiCard.height / 2;
-                                                aqiPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: precipitationCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Precipitation {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            onClicked: {
-                                                precipitationPages.zoomOriginX = precipitationCard.mapToItem(root, 0, 0).x + precipitationCard.width / 2;
-                                                precipitationPages.zoomOriginY = precipitationCard.mapToItem(root, 0, 0).y + precipitationCard.height / 2;
-                                                precipitationPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: moonCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Moon {
-                                        anchors.fill: parent
-                                        MArea {
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            cursorShape: Qt.PointingHandCursor
-                                            enabled: !root.anyPageOpen
-                                            z: 999
-                                            onClicked: {
-                                                moonPages.zoomOriginX = moonCard.mapToItem(root, 0, 0).x + moonCard.width / 2;
-                                                moonPages.zoomOriginY = moonCard.mapToItem(root, 0, 0).y + moonCard.height / 2;
-                                                moonPages.isOpen = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Loader {
-                                id: cloudinessCard
-
-                                Layout.preferredWidth: 150
-                                Layout.preferredHeight: 150
-                                active: GlobalStates.isWeatherPanelOpen
-                                sourceComponent: Component {
-                                    WI.Cloudiness {
-                                        anchors.fill: parent
-                                    }
-                                }
-                            }
+                        WI.Cloudiness {
+                            implicitWidth: 150
+                            implicitHeight: 150
                         }
                     }
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 20
-                    }
+                }
+                Item {
+                    Layout.fillHeight: true
+                    Layout.preferredHeight: 20
                 }
             }
         }
@@ -451,5 +253,32 @@ Item {
 
     WP.UVIndex {
         id: uvIndexPages
+    }
+
+    component Card: Item {
+        id: cardRoot
+
+        default property alias content: contentLoader.sourceComponent
+        required property var zoomPage
+
+        implicitWidth: 150
+        implicitHeight: 150
+
+        Loader {
+            id: contentLoader
+
+            anchors.fill: parent
+        }
+
+        MArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            enabled: !root.anyPageOpen
+            onClicked: {
+                cardRoot.zoomPage.zoomOriginX = cardRoot.mapToItem(root, 0, 0).x + cardRoot.width / 2;
+                cardRoot.zoomPage.zoomOriginY = cardRoot.mapToItem(root, 0, 0).y + cardRoot.height / 2;
+                cardRoot.zoomPage.isOpen = true;
+            }
+        }
     }
 }
