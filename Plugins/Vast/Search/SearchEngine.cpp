@@ -20,7 +20,6 @@ SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
         QVariantList vl;
         vl.reserve(results.size());
         for (SearchResult* r : results) {
-            r->moveToThread(this->thread());
             r->setParent(this);
             vl.append(QVariant::fromValue(r));
         }

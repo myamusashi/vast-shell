@@ -21,8 +21,15 @@ void FileProvider::searchAsync(const QString& query, const QString& rootDir, int
     cancel();
     emit                          searchStarted();
 
-    QFuture<QList<SearchResult*>> future =
-        QtConcurrent::run([this, query, rootDir, maxDepth, threshold]() { return scoreEntries(collectFiles(rootDir, maxDepth), query, threshold, nullptr); });
+    QFuture<QList<SearchResult*>> future = QtConcurrent::run([this, query, rootDir, maxDepth, threshold]() {
+        auto results = scoreEntries(collectFiles(rootDir, maxDepth), query, threshold, nullptr);
+
+        auto* mainThread = QCoreApplication::instance()->thread();
+        for (SearchResult* r : results)
+            r->moveToThread(mainThread);
+
+        return results;
+    });
 
     m_watcher->setFuture(future);
 }
