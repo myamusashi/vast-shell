@@ -167,21 +167,6 @@ Item {
         fx.invResolution = Qt.vector2d(1.0 / w, 1.0 / h);
 
         imgA.source = Paths.currentWallpaper;
-
-        let i = 0;
-        function warmNext() {
-            if (i >= root._shaderNames.length) {
-                fx.fragmentShader = `root:/Assets/shaders/transitions/fade.frag.qsb`;
-                fx.visible = false;
-                fx.visible = Qt.binding(() => root._busy);
-                return;
-            }
-            fx.fragmentShader = `root:/Assets/shaders/transitions/${root._shaderNames[i]}.frag.qsb`;
-            fx.visible = true;
-            i++;
-            Qt.callLater(warmNext);
-        }
-        warmNext();
     }
 
     Image {
@@ -190,10 +175,9 @@ Item {
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
-        cache: false    // don't hold stale decoded data in Qt's cache
-        smooth: true
-        layer.enabled: false   // prevent accidental FBO layer promotion
-        visible: root._slot === 0
+        cache: true
+        layer.enabled: true
+        visible: !root._busy && root._slot === 0
         onStatusChanged: root._onImgStatus(imgA)
     }
 
@@ -203,10 +187,9 @@ Item {
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
-        cache: false
-        smooth: true
-        layer.enabled: false
-        visible: root._slot === 1
+        cache: true
+        layer.enabled: true
+        visible: !root._busy && root._slot === 1
         onStatusChanged: root._onImgStatus(imgB)
     }
 
@@ -215,17 +198,14 @@ Item {
 
         anchors.fill: parent
 
-        // Textures
         property var source1: imgA
         property var source2: imgB
 
         property real progress: 0.0
         property real smoothAmount: 0.05
         property real aspect: root.height > 0.0 ? root.height / root.width : 1.0
-        property vector2d resolution: Qt.vector2d(1920, 1080)
-        property vector2d invResolution: Qt.vector2d(1.0 / 1920.0, 1.0 / 1080.0)
-        property real rollCos: root._typeResolved === 9 ? Math.cos(Math.PI / 2.0 * fx.progress) : 1.0
-        property real rollSin: root._typeResolved === 9 ? Math.sin(Math.PI / 2.0 * fx.progress) : 0.0
+        property vector2d resolution: Qt.vector2d(720, 1280)
+        property vector2d invResolution: Qt.vector2d(1.0 / 720, 1.0 / 1280.0)
 
         vertexShader: "root:/Assets/shaders/ImageTransition.vert.qsb"
         fragmentShader: "root:/Assets/shaders/transitions/fade.frag.qsb"
@@ -234,7 +214,7 @@ Item {
         layer.enabled: false
     }
 
-    NAnim {
+    NumberAnimation {
         id: anim
 
         target: fx
@@ -242,19 +222,8 @@ Item {
         from: 0.0
         to: 1.0
         duration: Configs.wallpaper.transitionDuration
+        easing.type: Easing.Linear
         onStopped: root._commitTransition()
-    }
-
-    // update sourceSize and resolution only when idle.
-    onWidthChanged: {
-        imgA.sourceSize.width = width;
-        imgB.sourceSize.width = width;
-        root._updateResolution();
-    }
-    onHeightChanged: {
-        imgA.sourceSize.height = height;
-        imgB.sourceSize.height = height;
-        root._updateResolution();
     }
 
     // Wallpaper change signal
