@@ -357,6 +357,204 @@ sudo xbps-install -S pipewire wireplumber iw libnotify polkit \
 
 ---
 
+## Configuration
+
+Vast-shell can be customized by editing the JSON files in the `Data/` directory.
+
+### Main Configuration ([configurations.json](file:///home/myamusashi/shell/Data/configurations.json))
+
+This file contains the primary settings for the shell, organized into several categories:
+
+| Category | Description |
+|---|---|
+| **Appearance** | Font families (Material, Mono, Sans) and animation scale. |
+| **Bar** | Bar height, workspace visibility, and indicator style. |
+| **Colors** | Toggle dark mode, enable Matugen dynamic colors or auto generate from quickshell. |
+| **Generals** | Default applications, battery warning levels, transparency, and borders. |
+| **Media Player** | Lyrics visibility, slider style (WaveForm/Wavy), and dynamic cover colors. |
+| **Notifications** | Maximum notification count and age. |
+| **Wallpaper** | Transition effects, duration, and wallpaper directory. |
+| **Weather** | Location coordinates (lat/long) and refresh interval. |
+
+<details>
+<summary>View configurations.json</summary>
+
+```json
+{
+	"appearance": {
+		"animations": {
+			"durations": {
+				"scale": 1
+			}
+		},
+		"fonts": {
+			"family": {
+				"material": "Material Symbols Rounded",
+				"mono": "Hack",
+				"sans": "Google Sans Flex"
+			},
+			"size": {
+				"scale": 1
+			}
+		}
+	},
+	"bar": {
+		"alwaysOpenBar": true,
+		"barHeight": 35,
+		"compact": false,
+		"visibleWorkspace": 4,
+		"workspacesIndicator": "dot"
+	},
+	"colors": {
+		"isDarkMode": true,
+		"matugenConfigPathForDarkColor": "/home/myamusashi/.config/shell/dark-colors.json",
+		"matugenConfigPathForLightColor": "/home/myamusashi/.config/shell/light-colors.json",
+		"useMatugenColor": true,
+		"useStaticColors": false
+	},
+	"generals": {
+		"alpha": 1,
+		"apps": {
+			"audio": "pavucontrol-qt",
+			"fileExplorer": "pcmanfm-qt",
+			"imageViewer": "lximage-qt",
+			"playback": "mpv",
+			"terminal": "foot",
+			"videoViewer": "mpv"
+		},
+		"battery": {
+			"criticalLevel": 3,
+			"warnLevels": [
+				{
+					"icon": "battery-020",
+					"level": 20,
+					"message": "Kamu mungkin mau colok chargernya",
+					"title": "Baterai lemah"
+				},
+				{
+					"icon": "battery-010",
+					"level": 10,
+					"message": "Kamu mungkin ingin colok charger kamu <b>sekarang</b>",
+					"title": "Kamu bisa lihat pesan sebelumnya kan?"
+				},
+				{
+					"icon": "battery-000",
+					"level": 5,
+					"message": "MASUKAN CHARGER NYA SEKARANG!!",
+					"title": "Level baterai kritis"
+				}
+			]
+		},
+		"chargingGlowSpread": 20,
+		"coverBlurRadius": 1,
+		"enableOuterBorder": true,
+		"followFocusMonitor": true,
+		"outerBorderSize": 10,
+		"transparent": true
+	},
+	"language": {
+		"language": ""
+	},
+	"mediaPlayer": {
+		"dynamicColorsCover": true,
+		"showLyrics": false,
+		"sliderType": "WaveForm"
+	},
+	"notification": {
+		"maximumNotification": 100,
+		"maximumNotificationAge": 604800000
+	},
+	"wallpaper": {
+		"enabledWallpaper": true,
+		"transition": "circle",
+		"transitionDuration": 500,
+		"transitionLowPerfMode": false,
+		"visibleWallpaper": 3,
+		"wallpaperDir": "/home/myamusashi/Pictures/wallpapers"
+	},
+	"weather": {
+		"enableQuickSummary": false,
+		"latitude": "",
+		"longitude": "",
+		"reloadTime": 1800000
+	}
+}
+```
+
+</details>
+
+### Matugen ([matugen/](file:///home/myamusashi/shell/Data/matugen))
+
+The `matugen` directory contains configuration and templates for dynamic color generation.
+- `matugen.toml` — main configuration for the Matugen tool.
+- `dark-colors.json` / `light-colors.json` — generated color schemes.
+
+<details>
+<summary>View dynamic colors example (dark)</summary>
+
+```json
+{
+	"colors": {
+		"background": "#171217",
+		"error": "#ffb4ab",
+		"errorContainer": "#93000a",
+		"inverseOnSurface": "#342f34",
+		"inversePrimary": "#7a4f80",
+		"inverseSurface": "#eadfe6",
+		"onBackground": "#eadfe6",
+		"onError": "#690005",
+		"onErrorContainer": "#ffdad6",
+		"onPrimary": "#48204f",
+		"onPrimaryContainer": "#fed6ff",
+		"onPrimaryFixed": "#300939",
+		"onPrimaryFixedVariant": "#603767",
+		"onSecondary": "#3b2b3c",
+		"onSecondaryContainer": "#f4dbf2",
+		"onSecondaryFixed": "#251726",
+		"onSecondaryFixedVariant": "#524153",
+		"onSurface": "#eadfe6",
+		"onSurfaceVariant": "#cfc3cd",
+		"onTertiary": "#4c2520",
+		"onTertiaryContainer": "#ffdad5",
+		"onTertiaryFixed": "#33110d",
+		"onTertiaryFixedVariant": "#673b35",
+		"outline": "#988d97",
+		"outlineVariant": "#4d444c",
+		"primary": "#eab5ee",
+		"primaryContainer": "#603767",
+		"primaryFixed": "#fed6ff",
+		"primaryFixedDim": "#eab5ee",
+		"scrim": "#000000",
+		"secondary": "#d7bfd5",
+		"secondaryContainer": "#524153",
+		"secondaryFixed": "#f4dbf2",
+		"secondaryFixedDim": "#d7bfd5",
+		"shadow": "#000000",
+		"sourceColor": "#ce8fd6",
+		"surface": "#171217",
+		"surfaceBright": "#3d373d",
+		"surfaceContainer": "#231e23",
+		"surfaceContainerHigh": "#2e282d",
+		"surfaceContainerHighest": "#393338",
+		"surfaceContainerLow": "#1f1a1f",
+		"surfaceContainerLowest": "#110d11",
+		"surfaceDim": "#171217",
+		"surfaceTint": "#eab5ee",
+		"surfaceVariant": "#4d444c",
+		"tertiary": "#f5b8af",
+		"tertiaryContainer": "#673b35",
+		"tertiaryFixed": "#ffdad5",
+		"tertiaryFixedDim": "#f5b8af",
+		
+		"end": "end"
+	}
+}
+```
+
+</details>
+
+---
+
 ## Translations
 
 Vast-shell uses Qt's built-in translation system. Translation files live in the `translations/` directory:
