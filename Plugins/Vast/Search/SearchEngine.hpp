@@ -29,7 +29,6 @@ class SearchEngine : public QObject {
 
     [[nodiscard]] Q_INVOKABLE QVariantList searchApps(const QVariantList& apps, const QString& query) const;
     [[nodiscard]] Q_INVOKABLE QVariantList searchFiles(const QVariantList& files, const QString& query) const;
-    Q_INVOKABLE void                       cancelFileSearch();
 
     Q_INVOKABLE void                       recordLaunch(const QString& appId);
     [[nodiscard]] Q_INVOKABLE double       recencyScore(const QString& appId) const;
