@@ -49,6 +49,10 @@ qt_add_qml_module(VastPlugin
         TranslationManager.cpp
         ScreenRecorder.hpp
         ScreenRecorder.cpp
+		ImageCache.cpp
+		ImageCache.hpp
+		WallpaperImageProvider.cpp
+		WallpaperImageProvider.hpp
         Search/FuzzyMatcher.hpp
         Search/FuzzyMatcher.cpp
         Search/SearchResult.hpp
