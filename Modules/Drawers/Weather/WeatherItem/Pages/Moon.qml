@@ -182,9 +182,20 @@ Pages {
                     }
 
                     Image {
+                        readonly property var moonPhaseMap: ({
+                                "New Moon": "NewMoon",
+                                "Waxing Crescent": "WaxingCrescentMoon",
+                                "First Quarter": "FirstQuarterMoon",
+                                "Waxing Gibbous": "WaxingGibbousMoon",
+                                "Full Moon": "FullMoon",
+                                "Waning Gibbous": "WaningGibbousMoon",
+                                "Last Quarter": "LastQuarterMoon",
+                                "Waning Crescent": "WaningCrescentMoon"
+                            })
+
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 120
-                        source: `root:/Assets/weather_icon/${Weather.moonPhase.trim().replace(/ /g, '')}.svg`
+                        source: `root:/Assets/weather_icon/${moonPhaseMap[Weather.moonPhase.trim()] ?? "FullMoon"}.svg`
                         sourceSize: Qt.size(120, 120)
                         fillMode: Image.PreserveAspectFit
                         cache: true
