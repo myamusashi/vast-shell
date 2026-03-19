@@ -12,6 +12,7 @@ import qs.Core.States
 import qs.Services
 import qs.Components.Base
 import qs.Widgets
+import Vast
 
 ClippingWrapperRectangle {
     id: root
@@ -166,9 +167,16 @@ ClippingWrapperRectangle {
     Connections {
         target: Players.active
 
-        function onTrackArtUrlChanged() {
+        function onTrackChanged() {
             const url = Players.active?.trackArtUrl ?? "";
-            url.startsWith("http") ? artDownloader.download(url) : root.cachedArtPath = url;
+            if (url.startsWith("http"))
+                artDownloader.download(url);
+            else
+                root.cachedArtPath = url;
+
+            const localPath = url.replace("file://", "");
+            if (localPath && !url.startsWith("http"))
+                ImageCache.preload(localPath, Qt.size(300, 300));
         }
     }
 

@@ -77,7 +77,7 @@ StyledRect {
                     height: Appearance.fonts.size.large * 1.2
                     source: parent.iconSource
                     asynchronous: true
-
+                    backer.cache: true
                     smooth: true
                     mipmap: true
                 }

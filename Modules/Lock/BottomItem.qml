@@ -10,6 +10,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+import Vast
 
 Item {
     id: root
@@ -93,9 +94,10 @@ Item {
                 IconImage {
                     id: icon
 
-                    anchors.fill: parent
                     source: Qt.resolvedUrl(`${Paths.home}/.face`)
                     z: 1
+                    backer.cache: true
+                    asynchronous: true
                 }
             }
 
@@ -203,17 +205,37 @@ Item {
                     spacing: Appearance.spacing.small
 
                     ClippingRectangle {
-                        implicitWidth: 60
-                        implicitHeight: 60
+                        implicitWidth: 64
+                        implicitHeight: 64
                         radius: Appearance.rounding.full
                         color: "transparent"
+
+                        Connections {
+                            target: Players
+
+                            function onActiveChanged() {
+                                const art = Players.active?.trackArtUrl.toString().replace("file://", "");
+                                if (art)
+                                    ImageCache.preload(art, Qt.size(64, 64));
+                            }
+                        }
+
+                        Connections {
+                            target: Players.active
+
+                            function onTrackChanged() {
+                                const art = Players.active?.trackArtUrl.toString().replace("file://", "");
+                                if (art)
+                                    ImageCache.preload(art, Qt.size(64, 64));
+                            }
+                        }
 
                         Image {
                             id: coverArt
 
                             anchors.fill: parent
                             source: Players.active ? Players.active.trackArtUrl : ""
-                            sourceSize: Qt.size(60, 60)
+                            sourceSize: Qt.size(64, 64)
                             fillMode: Image.PreserveAspectCrop
                             cache: false
                             asynchronous: true

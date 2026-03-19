@@ -114,10 +114,6 @@ Item {
                     preferredHighlightEnd: 0.5
                     clip: true
                     cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
-                    onIsCurrentChanged: {
-                        if (isCurrent)
-                            ImageCache.preload(delegateItem.modelData, Qt.size(Screen.width, Screen.height));
-                    }
 
                     Component.onCompleted: {
                         Qt.callLater(() => {
@@ -143,6 +139,11 @@ Item {
                         required property int index
 
                         readonly property bool isCurrent: PathView.isCurrentItem
+
+                        onIsCurrentChanged: {
+                            if (isCurrent)
+                                ImageCache.preload(delegateItem.modelData, Qt.size(Screen.width, Screen.height));
+                        }
 
                         // Center card = 2 units wide, side cards = 1 unit wide
                         implicitWidth: isCurrent ? wallpaperPath.unitWidth * 2 : wallpaperPath.unitWidth

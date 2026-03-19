@@ -228,6 +228,7 @@ Item {
                                 IconImage {
                                     anchors.centerIn: parent
                                     implicitSize: parent.height
+                                    backer.cache: true
                                     source: Quickshell.iconPath(delegateItem.modelData.icon, "image-missing")
                                     asynchronous: true
                                 }
