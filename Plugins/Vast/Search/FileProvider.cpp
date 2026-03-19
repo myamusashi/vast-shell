@@ -9,25 +9,42 @@
 #include <algorithm>
 
 FileProvider::FileProvider(QObject* parent) : QObject(parent) {
-    m_watcher = new QFutureWatcher<QList<SearchResult*>>(this);
-    connect(m_watcher, &QFutureWatcher<QList<SearchResult*>>::finished, this, [this]() { emit filesReady(m_watcher->result()); });
+    m_watcher      = new QFutureWatcher<QList<SearchResult*>>(this);
+    m_cacheWatcher = new QFutureWatcher<QList<FileEntry>>(this);
+
+    connect(m_cacheWatcher, &QFutureWatcher<QList<FileEntry>>::finished, this, [this]() {
+        m_cachedEntries = m_cacheWatcher->result();
+        m_cacheReady    = true;
+    });
 }
 
 FileProvider::~FileProvider() {
     cancel();
 }
 
+void FileProvider::warmCache(const QString& rootDir, int maxDepth) {
+    if (m_cacheReady && m_cachedDir == rootDir && m_cachedDepth == maxDepth)
+        return;
+
+    m_cachedDir   = rootDir;
+    m_cachedDepth = maxDepth;
+    m_cacheReady  = false;
+
+    m_cacheWatcher->setFuture(QtConcurrent::run([rootDir, maxDepth]() { return collectFiles(rootDir, maxDepth); }));
+}
+
 void FileProvider::searchAsync(const QString& query, const QString& rootDir, int maxDepth, double threshold) {
     cancel();
-    emit                          searchStarted();
+    emit searchStarted();
 
-    QFuture<QList<SearchResult*>> future = QtConcurrent::run([this, query, rootDir, maxDepth, threshold]() {
-        auto results = scoreEntries(collectFiles(rootDir, maxDepth), query, threshold, nullptr);
+    // use cache if available, otherwise collect inline
+    QList<FileEntry>              entries = m_cacheReady && m_cachedDir == rootDir && m_cachedDepth == maxDepth ? m_cachedEntries : collectFiles(rootDir, maxDepth);
 
+    QFuture<QList<SearchResult*>> future = QtConcurrent::run([this, entries, query, threshold]() {
+        auto  results    = scoreEntries(entries, query, threshold, nullptr);
         auto* mainThread = QCoreApplication::instance()->thread();
         for (SearchResult* r : results)
             r->moveToThread(mainThread);
-
         return results;
     });
 

@@ -19,6 +19,8 @@ class FileProvider : public QObject {
     [[nodiscard]] QList<SearchResult*> searchSync(const QString& query, const QString& rootDir, int maxDepth = 2, double threshold = 0.40) const;
     void                               cancel();
 
+    void                               warmCache(const QString& rootDir, int maxDepth);
+
   signals:
     void filesReady(QList<SearchResult*> results);
     void searchStarted();
@@ -31,6 +33,12 @@ class FileProvider : public QObject {
         QString mimeType;
         QString icon;
     };
+
+    QFutureWatcher<QList<FileEntry>>*     m_cacheWatcher = nullptr;
+    QList<FileEntry>                      m_cachedEntries;
+    QString                               m_cachedDir;
+    int                                   m_cachedDepth = -1;
+    bool                                  m_cacheReady  = false;
 
     static QList<FileEntry>               collectFiles(const QString& rootDir, int maxDepth);
     static QString                        mimeIcon(const QString& mimeType, bool isDir);
