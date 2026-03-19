@@ -157,7 +157,6 @@ ClippingRectangle {
                 width: 25
                 height: 25
                 backer.cache: true
-                backer.asynchronous: true
             }
 
             MArea {
