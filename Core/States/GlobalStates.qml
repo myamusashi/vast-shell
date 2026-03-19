@@ -257,16 +257,14 @@ Singleton {
         target: "img"
 
         function set(path: string): void {
+            ImageCache.preload(path, Qt.size(Screen.width, Screen.height));
+
             Quickshell.execDetached({
                 command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
             });
             Quickshell.execDetached({
                 command: ["matugen", "image", path]
             });
-        }
-
-        function get(): string {
-            return Paths.currentWallpaper;
         }
     }
 

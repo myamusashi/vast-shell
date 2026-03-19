@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
+import Vast
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -102,6 +103,7 @@ Item {
 
                     // Center card gets 2 "units", each side card gets 1 "unit"
                     // Total units = Configs.wallpaper.visibleWallpaper + 1 (center counts double)
+                    readonly property bool isCurrent: PathView.isCurrentItem
                     readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
 
                     model: ScriptModel {
@@ -112,6 +114,10 @@ Item {
                     preferredHighlightEnd: 0.5
                     clip: true
                     cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
+                    onIsCurrentChanged: {
+                        if (isCurrent)
+                            ImageCache.preload(delegateItem.modelData, Qt.size(Screen.width, Screen.height));
+                    }
 
                     Component.onCompleted: {
                         Qt.callLater(() => {

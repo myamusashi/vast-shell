@@ -127,14 +127,29 @@ Item {
         anim.restart();
     }
 
+    function _toProviderUrl(path) {
+        const p = path.toString();
+        if (p.startsWith("image://wallpaper/"))
+            return p;
+        return "image://wallpaper/" + (p.startsWith("/") ? p.slice(1) : p);
+    }
+
     function _commitTransition() {
         const newSlot = 1 - _slot;
         const oldImg = (newSlot === 0) ? imgB : imgA;
+        const oldUrl = oldImg.source.toString();
+
         _busy = false;
         _slot = newSlot;
         oldImg.source = "";
         fx.progress = 0.0;
         _toImg = null;
+
+        if (oldUrl.startsWith("image://wallpaper/")) {
+            const filePath = "/" + oldUrl.slice("image://wallpaper/".length);
+            ImageCache.evict(filePath);
+        }
+
         _drainPending();
     }
 
@@ -166,7 +181,7 @@ Item {
         fx.resolution = Qt.vector2d(w, h);
         fx.invResolution = Qt.vector2d(1.0 / w, 1.0 / h);
 
-        imgA.source = Paths.currentWallpaper;
+        imgA.source = _toProviderUrl(Paths.currentWallpaper);
     }
 
     Image {
@@ -231,7 +246,7 @@ Item {
         target: Paths
 
         function onCurrentWallpaperChanged() {
-            root.load(Paths.currentWallpaper);
+            root.load(root._toProviderUrl(Paths.currentWallpaper));
         }
     }
 }

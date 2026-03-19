@@ -36,5 +36,6 @@ class WallpaperResponse : public QQuickImageResponse {
 };
 
 QQuickImageResponse* WallpaperImageProvider::requestImageResponse(const QString& id, const QSize& requestedSize) {
-    return new WallpaperResponse(id, requestedSize);
+    const QString path = "/" + id;
+    return new WallpaperResponse(path, requestedSize);
 }
