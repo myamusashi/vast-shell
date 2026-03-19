@@ -27,7 +27,7 @@ layout(std140, binding = 0) uniform buf {
 float waveHeight(float px) {
     const float PI2 = 6.283185307;
     float t         = px / w;
-    float raw       = (1.0 + sin(t * PI2 * freq + phase)) * 0.5;
+    float raw       = (1.0 + sin(t * PI2 * freq + phase)) * 0.4;
     float shaped    = pow(raw, pow_);
     float available = pos;
     float total     = ramp + rampIn;
