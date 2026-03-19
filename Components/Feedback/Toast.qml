@@ -19,11 +19,11 @@ LazyLoader {
         anchors.bottom: true
         margins.bottom: Appearance.margin.large
         mask: Region {} // ignore mouse input
-        WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.layer: Hypr.focusedWsHasFullscreen ? WlrLayer.Background : WlrLayer.Overlay
         exclusionMode: ExclusionMode.Ignore
         color: "transparent"
         implicitWidth: 350
-        implicitHeight: 400
+        implicitHeight: 300
 
         ListView {
             anchors {
@@ -33,7 +33,7 @@ LazyLoader {
             implicitWidth: parent.width
             implicitHeight: parent.height
             model: ToastService.model
-            cacheBuffer: 0
+            cacheBuffer: implicitHeight
             spacing: Appearance.spacing.small
             verticalLayoutDirection: ListView.BottomToTop
 
@@ -100,6 +100,7 @@ LazyLoader {
                         IconImage {
                             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                             implicitSize: 48
+                            backer.cache: true
                             asynchronous: true
                             source: Quickshell.iconPath(delegate.icon, "image-missing")
                         }
