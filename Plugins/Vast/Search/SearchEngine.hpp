@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FileProvider.hpp"
+#include "SearchResult.hpp"
 
 #include <QHash>
 #include <QList>
@@ -28,9 +28,7 @@ class SearchEngine : public QObject {
     }
 
     [[nodiscard]] Q_INVOKABLE QVariantList searchApps(const QVariantList& apps, const QString& query) const;
-
-    Q_INVOKABLE void                       searchFiles(const QString& query, const QString& rootDir, int maxDepth = 3);
-    [[nodiscard]] Q_INVOKABLE QVariantList searchFilesSync(const QString& query, const QString& rootDir, int maxDepth = 2);
+    [[nodiscard]] Q_INVOKABLE QVariantList searchFiles(const QVariantList& files, const QString& query) const;
     Q_INVOKABLE void                       cancelFileSearch();
 
     Q_INVOKABLE void                       recordLaunch(const QString& appId);
@@ -92,8 +90,7 @@ class SearchEngine : public QObject {
 
     double               scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const;
 
-    FileProvider*        m_fileProvider = nullptr;
-    QSettings*           m_settings     = nullptr;
+    QSettings*           m_settings = nullptr;
 
     QList<SearchResult*> m_fileResults;
     QList<HistoryEntry>  m_history;

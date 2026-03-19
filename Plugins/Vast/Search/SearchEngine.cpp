@@ -11,23 +11,6 @@
 
 SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
     m_settings     = new QSettings("vast-shell", "myamusashi", this);
-    m_fileProvider = new FileProvider(this);
-
-    connect(m_fileProvider, &FileProvider::filesReady, this, [this](QList<SearchResult*> results) {
-        qDeleteAll(m_fileResults);
-        m_fileResults = results;
-
-        QVariantList vl;
-        vl.reserve(results.size());
-        for (SearchResult* r : results) {
-            r->setParent(this);
-            vl.append(QVariant::fromValue(r));
-        }
-        emit filesReady(vl);
-    });
-
-    connect(m_fileProvider, &FileProvider::searchStarted, this, &SearchEngine::fileSearchStarted);
-
     loadHistory();
 }
 
@@ -187,25 +170,35 @@ void SearchEngine::clearHistory() {
     saveHistory();
 }
 
-void SearchEngine::searchFiles(const QString& query, const QString& rootDir, int maxDepth) {
-    m_fileProvider->searchAsync(query, rootDir, maxDepth, m_fileThreshold);
-}
+QVariantList SearchEngine::searchFiles(const QVariantList& files, const QString& query) const {
+    if (query.trimmed().isEmpty())
+        return files;
 
-QVariantList SearchEngine::searchFilesSync(const QString& query, const QString& rootDir, int maxDepth) {
-    qDeleteAll(m_fileResults);
-    m_fileResults = m_fileProvider->searchSync(query, rootDir, maxDepth, m_fileThreshold);
+    struct Hit {
+        double   score;
+        QVariant variant;
+        QString  name;
+    };
+    QList<Hit> hits;
+
+    for (const QVariant& v : files) {
+        const QString name = v.toMap().value("fileName").toString();
+        const double  s    = FuzzyMatcher::fuzzyScore(query, name);
+        if (s >= m_fileThreshold)
+            hits.append({s, v, name});
+    }
+
+    std::sort(hits.begin(), hits.end(), [](const Hit& a, const Hit& b) {
+        if (std::abs(a.score - b.score) < 0.001)
+            return a.name.length() < b.name.length();
+        return a.score > b.score;
+    });
 
     QVariantList out;
-    out.reserve(m_fileResults.size());
-    for (SearchResult* r : m_fileResults) {
-        r->setParent(this);
-        out.append(QVariant::fromValue(r));
-    }
+    out.reserve(hits.size());
+    for (const Hit& h : hits)
+        out.append(h.variant);
     return out;
-}
-
-void SearchEngine::cancelFileSearch() {
-    m_fileProvider->cancel();
 }
 
 QString SearchEngine::highlightedHtml(const QString& text, const QString& query, const QString& color) const {
