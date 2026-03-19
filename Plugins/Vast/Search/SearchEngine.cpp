@@ -14,9 +14,13 @@ SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
     m_fileProvider = new FileProvider(this);
 
     connect(m_fileProvider, &FileProvider::filesReady, this, [this](QList<SearchResult*> results) {
+        qDeleteAll(m_fileResults);
+        m_fileResults = results;
+
         QVariantList vl;
         vl.reserve(results.size());
         for (SearchResult* r : results) {
+            r->moveToThread(this->thread());
             r->setParent(this);
             vl.append(QVariant::fromValue(r));
         }
@@ -106,7 +110,6 @@ double SearchEngine::scoreApp(QObject* entry, const QStringList& normQueryWords,
 }
 
 QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& query) const {
-    // No query: show all apps, recently launched ones sorted to the top.
     if (query.trimmed().isEmpty()) {
         QList<QPair<double, QVariant>> hits;
         hits.reserve(apps.size());
@@ -117,7 +120,6 @@ QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& q
             const double r = recencyScore(entry->property("id").toString());
             hits.append({r, v});
         }
-        // Stable sort: recency desc, then original order for ties (r == 0).
         std::stable_sort(hits.begin(), hits.end(), [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
         QVariantList out;
         out.reserve(hits.size());
@@ -156,7 +158,6 @@ QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& q
         return a.score > b.score;
     });
 
-    // return the original DesktopEntry* variants, delegate needs no changes
     QVariantList out;
     out.reserve(hits.size());
     for (const Hit& h : hits)
@@ -191,12 +192,16 @@ void SearchEngine::searchFiles(const QString& query, const QString& rootDir, int
     m_fileProvider->searchAsync(query, rootDir, maxDepth, m_fileThreshold);
 }
 
-QVariantList SearchEngine::searchFilesSync(const QString& query, const QString& rootDir, int maxDepth) const {
-    const QList<SearchResult*> raw = m_fileProvider->searchSync(query, rootDir, maxDepth, m_fileThreshold);
-    QVariantList               out;
-    out.reserve(raw.size());
-    for (SearchResult* r : raw)
+QVariantList SearchEngine::searchFilesSync(const QString& query, const QString& rootDir, int maxDepth) {
+    qDeleteAll(m_fileResults);
+    m_fileResults = m_fileProvider->searchSync(query, rootDir, maxDepth, m_fileThreshold);
+
+    QVariantList out;
+    out.reserve(m_fileResults.size());
+    for (SearchResult* r : m_fileResults) {
+        r->setParent(this);
         out.append(QVariant::fromValue(r));
+    }
     return out;
 }
 
@@ -204,7 +209,6 @@ void SearchEngine::cancelFileSearch() {
     m_fileProvider->cancel();
 }
 
-// utils
 QString SearchEngine::highlightedHtml(const QString& text, const QString& query, const QString& color) const {
     return FuzzyMatcher::highlightedHtml(text, query, color);
 }

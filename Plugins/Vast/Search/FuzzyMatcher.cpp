@@ -37,11 +37,10 @@ QString FuzzyMatcher::normalizeText(const QString& text) {
     return out;
 }
 
-// HTML helpers
 QString FuzzyMatcher::escapeHtml(const QString& text) {
     QString out;
-    out.reserve(text.size() * 1.1);
-    for (QChar c : text) {
+    out.reserve(text.size() + text.size() / 10);
+    for (QChar c : text)
         switch (c.unicode()) {
             case '&': out += QLatin1String("&amp;"); break;
             case '<': out += QLatin1String("&lt;"); break;
@@ -50,11 +49,11 @@ QString FuzzyMatcher::escapeHtml(const QString& text) {
             case '\'': out += QLatin1String("&#039;"); break;
             default: out += c;
         }
-    }
+
     return out;
 }
 
-// Returns [{start, length}, …] covering every match of query inside text.
+// returns [{start, length}, …] covering every match of query inside text
 QVariantList FuzzyMatcher::highlightRanges(const QString& text, const QString& query) {
     QVariantList ranges;
     if (query.trimmed().isEmpty())
@@ -140,19 +139,19 @@ double FuzzyMatcher::subsequenceScore(const QString& q, const QString& t) {
     return std::min(bonus / maxBonus, 1.0);
 }
 
-qsizetype FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) {
+[[nodiscard]] qsizetype FuzzyMatcher::levenshteinDistance(const QString& a, const QString& b) {
     if (a.isEmpty())
         return b.length();
     if (b.isEmpty())
         return a.length();
 
-    const QString&         shorter = a.length() <= b.length() ? a : b;
-    const QString&         longer  = a.length() <= b.length() ? b : a;
+    const QString&     shorter = a.length() <= b.length() ? a : b;
+    const QString&     longer  = a.length() <= b.length() ? b : a;
 
-    const qsizetype        slen = shorter.length();
-    const qsizetype        llen = longer.length();
+    const qsizetype    slen = shorter.length();
+    const qsizetype    llen = longer.length();
 
-    std::vector<qsizetype> prev(slen + 1), curr(slen + 1);
+    QVector<qsizetype> prev(slen + 1), curr(slen + 1);
     for (qsizetype i = 0; i <= slen; ++i)
         prev[i] = i;
 
@@ -179,7 +178,7 @@ double FuzzyMatcher::distanceScore(const QString& a, const QString& b) {
     if (maxLen == 0)
         return 1.0;
 
-    // Skip Levenshtein when the length gap makes a good match impossible.
+    // skip Levenshtein when the length gap makes a good match impossible
     const int lenDiff = static_cast<int>(std::abs(a.length() - b.length()));
     if (static_cast<double>(lenDiff) / maxLen > 0.7)
         return 0.0;
@@ -200,10 +199,13 @@ double FuzzyMatcher::prefixScore(const QString& q, const QString& t, const QStri
 }
 
 double FuzzyMatcher::wordBoundaryScore(const QString& q, const QStringList& tWords) {
-    double best = 0.0;
+    const double qlen = double(q.length());
+    double       best = 0.0;
+
     for (const QString& word : tWords)
         if (word.contains(q))
-            best = std::max(best, static_cast<double>(q.length()) / word.length());
+            best = std::max(best, qlen / double(word.length()));
+
     return best;
 }
 
@@ -260,7 +262,7 @@ double FuzzyMatcher::getMultiWordScore(const QStringList& qWords, const QString&
             ++matched;
         }
     }
-    // All query words must contribute.
+    // all query words must contribute
     if (matched < qWords.size())
         return 0.0;
 

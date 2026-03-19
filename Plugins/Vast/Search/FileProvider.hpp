@@ -16,9 +16,7 @@ class FileProvider : public QObject {
     ~FileProvider() override;
 
     void                               searchAsync(const QString& query, const QString& rootDir, int maxDepth = 3, double threshold = 0.40);
-
     [[nodiscard]] QList<SearchResult*> searchSync(const QString& query, const QString& rootDir, int maxDepth = 2, double threshold = 0.40) const;
-
     void                               cancel();
 
   signals:
@@ -34,10 +32,10 @@ class FileProvider : public QObject {
         QString icon;
     };
 
-    static QList<FileEntry>                               collectFiles(const QString& rootDir, int maxDepth);
-    static QString                                        mimeIcon(const QString& mimeType, bool isDir);
+    static QList<FileEntry>               collectFiles(const QString& rootDir, int maxDepth);
+    static QString                        mimeIcon(const QString& mimeType, bool isDir);
 
-    QList<SearchResult*>                                  scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold) const;
+    QList<SearchResult*>                  scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold, QObject* parent) const;
 
     QFutureWatcher<QList<SearchResult*>>* m_watcher = nullptr;
 };

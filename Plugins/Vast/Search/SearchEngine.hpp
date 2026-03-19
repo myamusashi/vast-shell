@@ -30,7 +30,7 @@ class SearchEngine : public QObject {
     [[nodiscard]] Q_INVOKABLE QVariantList searchApps(const QVariantList& apps, const QString& query) const;
 
     Q_INVOKABLE void                       searchFiles(const QString& query, const QString& rootDir, int maxDepth = 3);
-    [[nodiscard]] Q_INVOKABLE QVariantList searchFilesSync(const QString& query, const QString& rootDir, int maxDepth = 2) const;
+    [[nodiscard]] Q_INVOKABLE QVariantList searchFilesSync(const QString& query, const QString& rootDir, int maxDepth = 2);
     Q_INVOKABLE void                       cancelFileSearch();
 
     Q_INVOKABLE void                       recordLaunch(const QString& appId);
@@ -90,13 +90,14 @@ class SearchEngine : public QObject {
         int     count     = 0;
     };
 
-    double              scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const;
+    double               scoreApp(QObject* entry, const QStringList& normQueryWords, const QString& normQuery) const;
 
-    FileProvider*       m_fileProvider = nullptr;
-    QSettings*          m_settings     = nullptr;
+    FileProvider*        m_fileProvider = nullptr;
+    QSettings*           m_settings     = nullptr;
 
-    QList<HistoryEntry> m_history;
-    int                 m_historyLimit  = 50;
-    double              m_appThreshold  = 0.35;
-    double              m_fileThreshold = 0.40;
+    QList<SearchResult*> m_fileResults;
+    QList<HistoryEntry>  m_history;
+    int                  m_historyLimit  = 50;
+    double               m_appThreshold  = 0.35;
+    double               m_fileThreshold = 0.40;
 };

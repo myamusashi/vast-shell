@@ -69,7 +69,6 @@ class SearchResult : public QObject {
         return m_highlightRanges;
     }
 
-    // Returns HTML-highlighted title using pre-computed ranges.
     [[nodiscard]] Q_INVOKABLE QString highlightedTitle(const QString& color) const;
 
   private:

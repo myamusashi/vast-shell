@@ -16,29 +16,23 @@ class FuzzyMatcher {
     static constexpr double kAcronymWeight      = 0.25;
     static constexpr double kRecencyWeight      = 0.40;
 
-    static QChar   normalizeChar(QChar c);
-    static QString normalizeText(const QString& text);
-
-    static QVariantList highlightRanges(const QString& text, const QString& query);
-
-    static QString highlightedHtml(const QString& text, const QString& query, const QString& color);
-
-    static QString escapeHtml(const QString& text);
-
-    static double getScore(const QString& q, const QString& t, const QStringList& tWords);
-
-    static double getMultiWordScore(const QStringList& qWords, const QString& t, const QStringList& tWords);
-
-    static double fuzzyScore(const QString& query, const QString& text);
+    [[nodiscard]] static QChar        normalizeChar(QChar c);
+    [[nodiscard]] static QString      normalizeText(const QString& text);
+    [[nodiscard]] static QVariantList highlightRanges(const QString& text, const QString& query);
+    [[nodiscard]] static QString      highlightedHtml(const QString& text, const QString& query, const QString& color);
+    [[nodiscard]] static QString      escapeHtml(const QString& text);
+    [[nodiscard]] static double       getScore(const QString& q, const QString& t, const QStringList& tWords);
+    [[nodiscard]] static double       getMultiWordScore(const QStringList& qWords, const QString& t, const QStringList& tWords);
+    [[nodiscard]] static double       fuzzyScore(const QString& query, const QString& text);
 
   private:
-    static bool                       isSubsequence(const QString& q, const QString& t);
-    static double                     subsequenceScore(const QString& q, const QString& t);
-    static qsizetype                  levenshteinDistance(const QString& a, const QString& b);
-    static double                     distanceScore(const QString& a, const QString& b);
-    static double                     prefixScore(const QString& q, const QString& t, const QStringList& tWords);
-    static double                     wordBoundaryScore(const QString& q, const QStringList& tWords);
-    static double                     acronymScore(const QString& q, const QStringList& tWords);
+    [[nodiscard]] static bool                       isSubsequence(const QString& q, const QString& t);
+    [[nodiscard]] static double                     subsequenceScore(const QString& q, const QString& t);
+    [[nodiscard]] static qsizetype                  levenshteinDistance(const QString& a, const QString& b);
+    [[nodiscard]] static double                     distanceScore(const QString& a, const QString& b);
+    [[nodiscard]] static double                     prefixScore(const QString& q, const QString& t, const QStringList& tWords);
+    [[nodiscard]] static double                     wordBoundaryScore(const QString& q, const QStringList& tWords);
+    [[nodiscard]] static double                     acronymScore(const QString& q, const QStringList& tWords);
 
-    static const QHash<QChar, QChar>& charLookup();
+    [[nodiscard]] static const QHash<QChar, QChar>& charLookup();
 };

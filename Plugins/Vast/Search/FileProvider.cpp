@@ -21,19 +21,14 @@ void FileProvider::searchAsync(const QString& query, const QString& rootDir, int
     cancel();
     emit                          searchStarted();
 
-    const QString                 q   = query;
-    const QString                 dir = rootDir;
-    const int                     dep = maxDepth;
-    const double                  thr = threshold;
-
     QFuture<QList<SearchResult*>> future =
-        QtConcurrent::run([this, query, rootDir, maxDepth, threshold]() { return scoreEntries(collectFiles(rootDir, maxDepth), query, threshold); });
+        QtConcurrent::run([this, query, rootDir, maxDepth, threshold]() { return scoreEntries(collectFiles(rootDir, maxDepth), query, threshold, nullptr); });
 
     m_watcher->setFuture(future);
 }
 
 QList<SearchResult*> FileProvider::searchSync(const QString& query, const QString& rootDir, int maxDepth, double threshold) const {
-    return scoreEntries(collectFiles(rootDir, maxDepth), query, threshold);
+    return scoreEntries(collectFiles(rootDir, maxDepth), query, threshold, nullptr);
 }
 
 void FileProvider::cancel() {
@@ -62,6 +57,7 @@ QList<FileProvider::FileEntry> FileProvider::collectFiles(const QString& rootDir
         const QString name = fi.fileName();
         if (name.startsWith('.'))
             continue;
+
         if (fi.isDir()) {
             static constexpr std::array skipDirs{"node_modules", ".git", ".svn", ".hg", "__pycache__", "target", "build", ".cache"};
             if (std::ranges::contains(skipDirs, std::string_view(name.toStdString())))
@@ -129,7 +125,7 @@ QString FileProvider::mimeIcon(const QString& mimeType, bool isDir) {
     return "unknown";
 }
 
-QList<SearchResult*> FileProvider::scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold) const {
+QList<SearchResult*> FileProvider::scoreEntries(const QList<FileEntry>& entries, const QString& query, double threshold, QObject* parent) const {
     if (query.trimmed().isEmpty())
         return {};
 
@@ -167,7 +163,7 @@ QList<SearchResult*> FileProvider::scoreEntries(const QList<FileEntry>& entries,
         QString            subtitle = e.path;
         subtitle.chop(e.name.length() + (e.path.endsWith(e.name) ? 0 : 1));
 
-        results.append(SearchResult::makeFile(e.name, subtitle, e.icon, h.score, data, ranges, nullptr));
+        results.append(SearchResult::makeFile(e.name, subtitle, e.icon, h.score, data, ranges, parent));
     }
 
     return results;
