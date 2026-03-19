@@ -110,6 +110,93 @@ https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 - Indonesian (`id_ID`) translation included
 - Runtime language switching without restart
 
+### Global shortcut (Hyprland only)
+
+- quickshell:wallpaperSwitcher
+- quickshell:layershell
+- quickshell:appLauncher
+- quickshell:screencaptureLauncher
+- quickshell:overview
+- quickshell:QuickSettings
+- quickshell:session
+- quickshell:weather
+- quickshell:dashboard
+- quickshell:settings
+
+**How to use Hyprland global shortcuts**
+
+```
+hyprctl dispatch global quickshell:appLauncher
+```
+
+### Ipc call
+
+```txt
+target weather
+  function toggle(): void
+  function open(): void
+  function close(): void
+target screenCapture
+  function toggle(): void
+  function open(): void
+  function close(): void
+target bar
+  function toggle(): void
+  function open(): void
+  function close(): void
+target toast
+  function open(header: string, description: string, icon: string, duration: int): void
+target quickSettings
+  function toggle(): void
+  function open(): void
+  function close(): void
+target img
+  function get(): string
+  function set(path: string): void
+target launcher
+  function toggle(): void
+  function open(): void
+  function close(): void
+target session
+  function toggle(): void
+  function open(): void
+  function close(): void
+target dashboard
+  function toggle(): void
+  function open(): void
+  function close(): void
+target settings
+  function toggle(): void
+  function open(): void
+  function close(): void
+target overview
+  function toggle(): void
+  function open(): void
+  function close(): void
+target wallpaperSwitcher
+  function toggle(): void
+  function open(): void
+  function close(): void
+target lock
+  function unlock(): void
+  function isLocked(): bool
+  function lock(): void
+```
+
+**How to use ipc handler from quickshell**
+
+```sh
+quickshell -c <shell directory> ipc call wallpaperSwitcher toggle
+
+or
+
+qs -c <shell directory> ipc call wallpaperSwitcher toggle
+
+or
+
+shell ipc call wallpaperSwitcher toggle
+```
+
 ---
 
 ## Installation
