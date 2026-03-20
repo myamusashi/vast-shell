@@ -67,10 +67,6 @@
         <translation>Cari</translation>
     </message>
     <message>
-        <source>Found %1 apps in %2ms</source>
-        <translation type="vanished">Aplikasi ditemukan %1 dalam %2ms</translation>
-    </message>
-    <message>
         <location filename="../Modules/Drawers/Launcher/App.qml" line="295"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
@@ -386,27 +382,27 @@
 <context>
     <name>BottomItem</name>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="116"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="110"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="301"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="309"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="308"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="316"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="315"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="323"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Modules/Lock/BottomItem.qml" line="322"/>
+        <location filename="../Modules/Lock/BottomItem.qml" line="330"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
@@ -1032,22 +1028,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="107"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="95"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="109"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="97"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="111"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="99"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="112"/>
+        <location filename="../Components/Dialog/FileDialog/FileDialog.qml" line="100"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1098,22 +1094,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Tampilkan file tersembunyi</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="71"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="75"/>
         <source>Name</source>
         <translation>Nama</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="79"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="83"/>
         <source>Size</source>
         <translation>Ukuran</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="87"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="91"/>
         <source>Type</source>
         <translation>Jenis</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="95"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="99"/>
         <source>Modified</source>
         <translation>Diubah</translation>
     </message>
@@ -2235,10 +2231,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
-    <message>
-        <source>Merge screens</source>
-        <translation type="vanished">Gabungkan layar</translation>
-    </message>
 </context>
 <context>
     <name>ScreenCaptureHistory</name>
@@ -2786,122 +2778,54 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Suhu saat ini %1° dengan terasa seperti %2°.</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="550"/>
-        <source>Invalid coordinates for %1</source>
-        <translation>Koordinat tidak valid untuk %1</translation>
+        <location filename="../Services/Weather.qml" line="549"/>
+        <source>Invalid coordinates</source>
+        <translation>Koordinat tidak valid untuk</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="550"/>
-        <location filename="../Services/Weather.qml" line="555"/>
+        <location filename="../Services/Weather.qml" line="577"/>
+        <source>%1 updated</source>
+        <translation>Perbarui %1</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="579"/>
+        <source>%1 failed: bad data</source>
+        <translation>gagal %1: data buruk</translation>
+    </message>
+    <message>
         <location filename="../Services/Weather.qml" line="583"/>
-        <location filename="../Services/Weather.qml" line="588"/>
+        <source>%1 failed (%2)</source>
+        <translation>gagal %1 (%2)</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="590"/>
+        <source>%1 %2</source>
+        <translation>%1 %2</translation>
+    </message>
+    <message>
         <location filename="../Services/Weather.qml" line="596"/>
-        <location filename="../Services/Weather.qml" line="646"/>
-        <location filename="../Services/Weather.qml" line="651"/>
-        <location filename="../Services/Weather.qml" line="727"/>
-        <location filename="../Services/Weather.qml" line="730"/>
-        <location filename="../Services/Weather.qml" line="775"/>
-        <location filename="../Services/Weather.qml" line="778"/>
-        <location filename="../Services/Weather.qml" line="806"/>
-        <location filename="../Services/Weather.qml" line="809"/>
-        <location filename="../Services/Weather.qml" line="859"/>
-        <location filename="../Services/Weather.qml" line="866"/>
-        <location filename="../Services/Weather.qml" line="875"/>
-        <location filename="../Services/Weather.qml" line="877"/>
-        <location filename="../Services/Weather.qml" line="883"/>
-        <location filename="../Services/Weather.qml" line="889"/>
+        <source>network error</source>
+        <translation>gagal jaringan</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="597"/>
+        <source>timed out</source>
+        <translation>waktu habis</translation>
+    </message>
+    <message>
+        <location filename="../Services/Weather.qml" line="549"/>
+        <location filename="../Services/Weather.qml" line="577"/>
+        <location filename="../Services/Weather.qml" line="579"/>
+        <location filename="../Services/Weather.qml" line="583"/>
+        <location filename="../Services/Weather.qml" line="590"/>
+        <location filename="../Services/Weather.qml" line="845"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Services/Weather.qml" line="555"/>
-        <source>%1 request already in progress</source>
-        <translation>Permintaan %1 sedang berlangsung</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="583"/>
-        <source>Failed to parse %1 JSON: %2</source>
-        <translation>Gagal mengurai %1 JSON: %2</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="588"/>
-        <source>%1 request failed: %2</source>
-        <translation>Permintaan %1 gagal: %2</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="596"/>
-        <source>%1 %2 - keeping cached data</source>
-        <translation>%1 %2 - mempertahankan data cache</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="646"/>
-        <source>Refreshing weather data</source>
-        <translation>Memperbarui data cuaca</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="651"/>
-        <source>Cannot refresh: already loading</source>
-        <translation>Tidak dapat memperbarui: sedang memuat</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="727"/>
-        <source>Weather data updated successfully</source>
-        <translation>Data cuaca berhasil diperbarui</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="730"/>
-        <source>Failed to update weather data</source>
-        <translation>Gagal memperbarui data cuaca</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="775"/>
-        <source>AQI data updated successfully</source>
-        <translation>Data AQI berhasil diperbarui</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="778"/>
-        <source>Failed to update AQI data</source>
-        <translation>Gagal memperbarui data AQI</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="806"/>
-        <source>Astronomy data updated successfully</source>
-        <translation>Data astronomi berhasil diperbarui</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="809"/>
-        <source>Failed to update astronomy data</source>
-        <translation>Gagal memperbarui data astronomi</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="859"/>
+        <location filename="../Services/Weather.qml" line="845"/>
         <source>No cached weather data found, fetching fresh data</source>
         <translation>Tidak ada data cuaca tersimpan, mengambil data baru</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="866"/>
-        <source>Loading weather data from cache...</source>
-        <translation>Memuat data cuaca dari cache...</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="875"/>
-        <source>Loaded weather data from cache (%1 minutes old)</source>
-        <translation>Data cuaca dimuat dari cache (umur %1 menit)</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="877"/>
-        <source>Fetching fresh weather data in background...</source>
-        <translation>Mengambil data cuaca baru di latar belakang...</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="883"/>
-        <source>Failed to load weather cache</source>
-        <translation>Gagal memuat cache cuaca</translation>
-    </message>
-    <message>
-        <location filename="../Services/Weather.qml" line="889"/>
-        <source>Weather cache doesn&apos;t exist, creating it and fetching data</source>
-        <translation>Cache cuaca tidak ada, membuat dan mengambil data</translation>
     </message>
 </context>
 <context>
