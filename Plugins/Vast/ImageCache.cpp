@@ -66,7 +66,6 @@ void ImageCache::preload(const QString& path, QSize targetSize) {
 }
 
 QString ImageCache::saveProviderImage(const QString& qsUrl, const QString& cacheKey) {
-    // Check if already saved
     {
         QMutexLocker lock(&m_mutex);
         if (m_keyToPath.contains(cacheKey))
@@ -114,6 +113,18 @@ QString ImageCache::saveProviderImage(const QString& qsUrl, const QString& cache
         m_keyToPath.insert(cacheKey, fileUrl);
     }
     return fileUrl;
+}
+
+void ImageCache::evict(const QString& path) {
+    QMutexLocker lock(&m_mutex);
+    m_done.remove(path);
+    m_loading.remove(path);
+}
+
+void ImageCache::store(const QString& path) {
+    QMutexLocker lock(&m_mutex);
+    m_loading.remove(path);
+    m_done.insert(path);
 }
 
 QString ImageCache::cachedPath(const QString& cacheKey) const {
