@@ -546,15 +546,11 @@ Singleton {
         const lat = parseFloat(configLatitude);
         const lon = parseFloat(configLongitude);
         if (isNaN(lat) || isNaN(lon)) {
-            console.log(`Invalid coordinates for ${config.label}`);
-            ToastService.show(qsTr("Invalid coordinates for %1").arg(config.label), qsTr("Weather"), "weather-clear-symbolic", 3000);
+            ToastService.show(qsTr("Invalid coordinates"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             return;
         }
-        if (root[config.loadingProp]) {
-            console.log(`${config.label} request already in progress`);
-            ToastService.show(qsTr("%1 request already in progress").arg(config.label), qsTr("Weather"), "weather-clear-symbolic", 3000);
+        if (root[config.loadingProp])
             return;
-        }
 
         if (root[config.requestProp]) {
             try {
@@ -578,29 +574,27 @@ Singleton {
             if (request.status === 200) {
                 try {
                     config.onSuccess(JSON.parse(request.responseText));
+                    ToastService.show(qsTr("%1 updated").arg(config.label), qsTr("Weather"), "weather-clear-symbolic", 2000);
                 } catch (e) {
-                    console.error(`Failed to parse ${config.label} JSON:`, e);
-                    ToastService.show(qsTr("Failed to parse %1 JSON: %2").arg(config.label).arg(e), qsTr("Weather"), "weather-clear-symbolic", 3000);
+                    ToastService.show(qsTr("%1 failed: bad data").arg(config.label), qsTr("Weather"), "weather-error-symbolic", 3000);
                     root[config.loadingProp] = false;
                 }
             } else {
-                console.error(`${config.label} request failed:`, request.status);
-                ToastService.show(qsTr("%1 request failed: %2").arg(config.label).arg(request.status), qsTr("Weather"), "weather-clear-symbolic", 3000);
+                ToastService.show(qsTr("%1 failed (%2)").arg(config.label).arg(request.status), qsTr("Weather"), "weather-error-symbolic", 3000);
                 root[config.loadingProp] = false;
             }
             _cleanupRequest(request);
         };
 
         const fail = reason => () => {
-                console.error(`${config.label} ${reason} - keeping cached data`);
-                ToastService.show(qsTr("%1 %2 - keeping cached data").arg(config.label).arg(reason), qsTr("Weather"), "weather-clear-symbolic", 3000);
+                ToastService.show(qsTr("%1 %2").arg(config.label).arg(reason), qsTr("Weather"), "weather-error-symbolic", 3000);
                 if (request === root[config.requestProp])
                     root[config.requestProp] = null;
                 root[config.loadingProp] = false;
                 _cleanupRequest(request);
             };
-        request.onerror = fail("network error");
-        request.ontimeout = fail("timeout");
+        request.onerror = fail(qsTr("network error"));
+        request.ontimeout = fail(qsTr("timed out"));
 
         request.open("GET", `${config.url}?latitude=${lat}&longitude=${lon}`);
         request.send();
@@ -643,12 +637,10 @@ Singleton {
     function refresh() {
         if (canRefresh) {
             console.log("[WEATHER SERVICES] Refresh/reload weather data");
-            ToastService.show(qsTr("Refreshing weather data"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             reload();
             return true;
         } else {
             console.log("[WEATHER SERVICES] Cannot refresh: already loading");
-            ToastService.show(qsTr("Cannot refresh: already loading"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             return false;
         }
     }
@@ -724,10 +716,8 @@ Singleton {
 
             saveTimer.restart();
             console.log("Weather data updated successfully");
-            ToastService.show(qsTr("Weather data updated successfully"), qsTr("Weather"), "weather-clear-symbolic", 3000);
         } catch (e) {
             console.error("Failed to update weather data:", e);
-            ToastService.show(qsTr("Failed to update weather data"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             weatherLoading = false;
         }
     }
@@ -772,10 +762,8 @@ Singleton {
                     }));
 
             saveTimer.restart();
-            ToastService.show(qsTr("AQI data updated successfully"), qsTr("Weather"), "weather-clear-symbolic", 3000);
         } catch (e) {
             console.error("Failed to update AQI data:", e);
-            ToastService.show(qsTr("Failed to update AQI data"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             aqiLoading = false;
         }
     }
@@ -803,10 +791,8 @@ Singleton {
             lastUpdateAstronomy = loc.localtime || Date.now();
 
             saveTimer.restart();
-            ToastService.show(qsTr("Astronomy data updated successfully"), qsTr("Weather"), "weather-clear-symbolic", 3000);
         } catch (e) {
             console.error("Failed to update astronomy data:", e);
-            ToastService.show(qsTr("Failed to update astronomy data"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             astronomyLoading = false;
         }
     }
@@ -863,7 +849,6 @@ Singleton {
 
                 const data = JSON.parse(content);
                 console.log("Loading weather data from cache...");
-                ToastService.show(qsTr("Loading weather data from cache..."), qsTr("Weather"), "weather-clear-symbolic", 3000);
                 root.restoreFromCache(data);
 
                 root.weatherLoaded = true;
@@ -872,21 +857,17 @@ Singleton {
 
                 const age = Math.floor((Date.now() - (data.timestamp || 0)) / 60000);
                 console.log(`Loaded weather data from cache (${age} minutes old)`);
-                ToastService.show(qsTr("Loaded weather data from cache (%1 minutes old)").arg(age), qsTr("Weather"), "weather-clear-symbolic", 3000);
                 console.log("Fetching fresh weather data in background...");
-                ToastService.show(qsTr("Fetching fresh weather data in background..."), qsTr("Weather"), "weather-clear-symbolic", 3000);
 
                 reloadTimer.start();
                 root.reload();
             } catch (error) {
                 console.error("Failed to load weather cache:", error);
-                ToastService.show(qsTr("Failed to load weather cache"), qsTr("Weather"), "weather-clear-symbolic", 3000);
                 root.reload();
             }
         }
         onLoadFailed: error => {
             console.log("Weather cache doesn't exist, creating it and fetching data");
-            ToastService.show(qsTr("Weather cache doesn't exist, creating it and fetching data"), qsTr("Weather"), "weather-clear-symbolic", 3000);
             setText("{}");
             root.reload();
         }
