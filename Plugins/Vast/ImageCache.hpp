@@ -2,6 +2,7 @@
 
 #include <QMutex>
 #include <QObject>
+#include <QThreadPool>
 #include <QSet>
 #include <QHash>
 #include <QSize>
