@@ -327,6 +327,17 @@ Singleton {
             }
         }
 
+        function closeQuiet() {
+            closed = true;
+            if (locks.size === 0 && root.list.includes(this)) {
+                root.list = root.list.filter(n => n !== this);
+                if (notification)
+                    notification.dismiss();
+                conn.target = null;
+                destroy();
+            }
+        }
+
         function dismissPopup() {
             popup = false;
         }
@@ -336,14 +347,14 @@ Singleton {
                 return;
 
             const raw = notification.image ?? "";
-            imageCache = raw.startsWith("image://") ? ImageCache.saveProviderImage(raw, "notif-" + notification.id) : raw;
+            const cachedImage = raw.startsWith("image://") ? ImageCache.saveProviderImage(raw, "notif-" + notification.id) : raw;
 
             id = notification.id;
             summary = notification.summary;
             body = notification.body;
             appIcon = notification.appIcon;
             appName = notification.appName;
-            image = imageCache;
+            image = cachedImage;
             expireTimeout = notification.expireTimeout;
             urgency = notification.urgency;
             resident = notification.resident;
@@ -356,7 +367,6 @@ Singleton {
         }
 
         Component.onDestruction: {
-            // Ensure connections are cleaned up
             if (conn.target)
                 conn.target = null;
         }
@@ -372,10 +382,9 @@ Singleton {
         cleanupTimer.stop();
         for (const notif of root.list.slice()) {
             try {
-                notif.close();
+                notif.closeQuiet();
             } catch (e) {
                 console.error("Error cleaning up notification:", e);
-                ToastService.show(qsTr("Error cleaning up notification: %1").arg(e), qsTr("Notifications"), "dialog-error", 3000);
             }
         }
     }
