@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
+import Vast
 
 import qs.Core.Utils
 import qs.Services
@@ -129,9 +130,8 @@ Singleton {
                 notification: notif
             });
 
-            if (comp) {
+            if (comp)
                 root.list = [comp, ...root.list];
-            }
         }
     }
 
@@ -167,6 +167,9 @@ Singleton {
                     if (notifAge > root.maxNotificationAge)
                         continue;
 
+                    const key = "notif-" + notifData.id;
+                    const stableUrl = notifData.image?.startsWith("image://") ? ImageCache.saveProviderImage(notifData.image, key) : (notifData.image ?? "");
+
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
                         id: notifData.id,
@@ -174,7 +177,7 @@ Singleton {
                         body: notifData.body,
                         appIcon: notifData.appIcon,
                         appName: notifData.appName,
-                        image: notifData.image,
+                        image: stableUrl,
                         expireTimeout: notifData.expireTimeout,
                         urgency: notifData.urgency,
                         resident: notifData.resident,
@@ -238,7 +241,8 @@ Singleton {
             }
 
             function onImageChanged() {
-                notif.image = notif.notification.image;
+                const raw = notif.notification.image ?? "";
+                notif.image = raw.startsWith("image://") ? ImageCache.saveProviderImage(raw, "notif-" + notif.id) : raw;
             }
 
             function onExpireTimeoutChanged() {
@@ -315,6 +319,7 @@ Singleton {
             closed = true;
             if (locks.size === 0 && root.list.includes(this)) {
                 root.list = root.list.filter(n => n !== this);
+                ImageCache.evictKey("notif-" + id);
                 if (notification)
                     notification.dismiss();
                 conn.target = null;
@@ -330,12 +335,15 @@ Singleton {
             if (!notification)
                 return;
 
+            const raw = notification.image ?? "";
+            imageCache = raw.startsWith("image://") ? ImageCache.saveProviderImage(raw, "notif-" + notification.id) : raw;
+
             id = notification.id;
             summary = notification.summary;
             body = notification.body;
             appIcon = notification.appIcon;
             appName = notification.appName;
-            image = notification.image;
+            image = imageCache;
             expireTimeout = notification.expireTimeout;
             urgency = notification.urgency;
             resident = notification.resident;
