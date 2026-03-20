@@ -9,15 +9,7 @@
 ![C++](https://img.shields.io/badge/c%2B%2B-23-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=cplusplus&logoColor=89b4fa)
 ![QML](https://img.shields.io/badge/qml-quickshell-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=qt&logoColor=89b4fa)
 
-
-<div align="center">
-	<img width="1920" height="1080" alt="Preview" src="https://github.com/user-attachments/assets/8df0a484-f60b-44e5-831f-255e0cf4df8d" />
-</div>
-
-<div align="center">
-
-
-</div>
+![Preview](https://github.com/user-attachments/assets/8df0a484-f60b-44e5-831f-255e0cf4df8d)
 
 > [!WARNING]
 > This project is still in **active development**. Some features may be incomplete or change without notice, but it is usable as a daily driver. Issues and feedback are welcome!
