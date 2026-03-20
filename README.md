@@ -189,15 +189,20 @@ The script will install all dependencies, build the plugins, compile shaders, an
 shell
 ```
 
+#### Build Dependencies
+
+- **Compiler/Build**: `cmake`, `qt6-shadertools` (for `qsb`), `qt6-tools` (for `lrelease`)
+- **Qt (build)**: `qt6-base`, `qt6-declarative`, `qt6-multimedia`
+
 #### Runtime Dependencies
 
-| Category | Packages |
-|---|---|
-| System | `hyprland`, `quickshell-git`, `foot`, `polkit`, `iw`, `libnotify` |
-| Qt | `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-shadertools` |
-| Media | `ffmpeg`, `wireplumber`, `wl-clipboard`, `wl-screenrec` |
-| Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons` |
-| Other | `matugen-bin`, `app2unit` |
+- **Shell**: `quickshell-git`, `hyprland`, `foot`, `polkit`
+- **Qt**: `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-5compat`, `qt6-graphs`, `kf6-qtmultimedia`
+- **Media**: `ffmpeg`, `wireplumber`, `wl-clipboard`, `wl-screenrec`
+- **Network / Notifications**: `iw`, `libnotify`
+- **Fonts**: `ttf-material-symbols-variable-git`, `ttf-weather-icons`, `google sans flex` (optional), `Hack` (optional)
+- **Utils**: `findutils`, `grep`, `gawk`, `sed`, `util-linux`
+- **Other**: `matugen-bin`, `app2unit`
 
 ---
 
