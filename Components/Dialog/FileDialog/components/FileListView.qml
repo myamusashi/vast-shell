@@ -62,10 +62,14 @@ ColumnLayout {
         RowLayout {
             anchors {
                 fill: parent
-                leftMargin: 48
+                leftMargin: Appearance.margin.small
                 rightMargin: Appearance.margin.normal
             }
-            spacing: 0
+            spacing: Appearance.spacing.small
+
+            Item {
+                Layout.preferredWidth: 32
+            }
 
             StyledText {
                 text: qsTr("Name")
@@ -89,7 +93,7 @@ ColumnLayout {
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 90
-                leftPadding: Appearance.padding.normal
+                leftPadding: 10
             }
             StyledText {
                 text: qsTr("Modified")
@@ -97,7 +101,7 @@ ColumnLayout {
                 font.bold: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: 110
-                leftPadding: Appearance.padding.smaller
+                leftPadding: 6
             }
         }
     }

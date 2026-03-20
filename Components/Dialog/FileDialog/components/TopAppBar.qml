@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 
@@ -22,7 +24,7 @@ Rectangle {
     signal pathEntered(string path)
     signal showHiddenToggled
 
-    height: 64
+    implicitHeight: 64
     color: Colours.m3Colors.m3SurfaceContainer
 
     Elevation {

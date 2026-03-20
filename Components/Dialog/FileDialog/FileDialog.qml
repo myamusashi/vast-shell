@@ -39,8 +39,8 @@ Scope {
             id: window
 
             title: "File Dialog"
-            width: 800
-            height: 560
+            implicitWidth: 800
+            implicitHeight: 560
             minimumSize: Qt.size(600, 420)
             color: Colours.m3Colors.m3Surface
             onClosed: loader.activeAsync = false
