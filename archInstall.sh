@@ -44,12 +44,12 @@ check_distro() {
 
 install_system_packages() {
 	local -a missing=()
-	# go removed — audioProfiles is now a Qt plugin, not a Go binary
-	# pipewire and pkgconf added — required to build the AudioProfiles plugin
+	# ddcutil added — required for external monitor brightness via DDC/CI
+	# i2c-tools added — provides i2cdetect for debugging
 	local -r pkg_list=(
 		base-devel git cmake ninja extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		rust pipewire
+		rust pipewire ddcutil i2c-tools
 		findutils grep sed gawk util-linux libnotify wireplumber
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 	)
@@ -112,6 +112,59 @@ install_aur_packages() {
 		warn "wl-screenrec failed to install — screen recording unavailable"
 }
 
+# ensures the current user is in the i2c and video groups,
+# and that i2c-dev is loaded now + persisted across reboots.
+setup_i2c() {
+	local -r target_user="${SUDO_USER:-}"
+
+	if ! lsmod | grep -q "^i2c_dev"; then
+		log "Loading i2c-dev kernel module..."
+		modprobe i2c-dev || warn "modprobe i2c-dev failed — DDC/CI may not work this session"
+	else
+		log "i2c-dev already loaded"
+	fi
+
+	if [[ ! -f /etc/modules-load.d/i2c-dev.conf ]]; then
+		log "Persisting i2c-dev via /etc/modules-load.d..."
+		echo "i2c-dev" >/etc/modules-load.d/i2c-dev.conf
+	fi
+
+	local -r udev_rule="/etc/udev/rules.d/45-ddcutil-i2c.rules"
+	if [[ ! -f $udev_rule ]]; then
+		log "Installing udev rule for DDC/CI access..."
+		cat >"$udev_rule" <<'EOF'
+KERNEL=="i2c-[0-9]*", TAG+="uaccess", GROUP="i2c", MODE="0660"
+EOF
+		udevadm control --reload-rules
+		udevadm trigger --subsystem-match=i2c
+	fi
+
+	if [[ -n $target_user ]]; then
+		local -a groups_to_add=()
+		id -nG "$target_user" | grep -qw "i2c" || groups_to_add+=("i2c")
+		id -nG "$target_user" | grep -qw "video" || groups_to_add+=("video")
+
+		if ((${#groups_to_add[@]})); then
+			log "Adding $target_user to groups: ${groups_to_add[*]}"
+			usermod -aG "$(
+				IFS=,
+				echo "${groups_to_add[*]}"
+			)" "$target_user"
+			warn "Group changes take effect on next login — DDC/CI may fail until then"
+		else
+			log "User $target_user already in i2c and video groups"
+		fi
+	else
+		warn "SUDO_USER not set — skipping group assignment. Add yourself to i2c and video groups manually."
+	fi
+
+	if compgen -G "/dev/i2c-*" >/dev/null 2>&1; then
+		log "DDC/CI devices found: $(ls /dev/i2c-* | tr '\n' ' ')"
+	else
+		warn "No /dev/i2c-* devices found — external monitor brightness control unavailable"
+	fi
+}
+
 build_vast_plugin() {
 	local -r plugin_so="$QML_DIR/Vast/libVastPlugin.so"
 	[[ -f $plugin_so ]] && {
@@ -149,18 +202,18 @@ build_vast_plugin() {
 	done
 	((found)) || die "Vast install tree not found under $install_base"
 
-	local qt_core_lib qt_qml_lib qt_gui_lib qt_quick_lib pw_lib
+	local qt_core_lib qt_qml_lib qt_gui_lib qt_quick_lib pw_lib ddc_lib
 	qt_core_lib=$(pkg-config --variable=libdir Qt6Core)
 	qt_gui_lib=$(pkg-config --variable=libdir Qt6Gui)
 	qt_qml_lib=$(pkg-config --variable=libdir Qt6Qml)
 	qt_quick_lib=$(pkg-config --variable=libdir Qt6Quick)
 	pw_lib=$(pkg-config --variable=libdir libpipewire-0.3)
+	ddc_lib=$(pkg-config --variable=libdir ddcutil)
 
-	# needs PipeWire + Qt
 	local backing="$QML_DIR/Vast/libVastPlugin.so"
 	[[ -f $backing ]] &&
 		patchelf --set-rpath \
-			"$QML_DIR/Vast:$qt_core_lib:$qt_gui_lib:$qt_qml_lib:$qt_quick_lib:$pw_lib" \
+			"$QML_DIR/Vast:$qt_core_lib:$qt_gui_lib:$qt_qml_lib:$qt_quick_lib:$pw_lib:$ddc_lib" \
 			"$backing" 2>/dev/null || true
 
 	local stub="$QML_DIR/Vast/libVastQmlPlugin.so"
@@ -457,6 +510,7 @@ main() {
 	install_system_packages
 	setup_aur_helper
 	install_aur_packages
+	setup_i2c
 	build_vast_plugin
 	build_m3shapes
 	build_another_ripple
