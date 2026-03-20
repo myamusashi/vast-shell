@@ -1,7 +1,5 @@
 <h1 align="center">vast-shell</h1>
 
-<div align="center">
-
 ![Last Commit](https://img.shields.io/github/last-commit/myamusashi/vast-shell?label=last+commit&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Commits](https://img.shields.io/github/commit-activity/t/myamusashi/vast-shell?label=commits&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Stars](https://img.shields.io/github/stars/myamusashi/vast-shell?label=stars&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
@@ -10,6 +8,14 @@
 ![Nix](https://img.shields.io/badge/nix-flakes-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=nixos&logoColor=89b4fa)
 ![C++](https://img.shields.io/badge/c%2B%2B-23-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=cplusplus&logoColor=89b4fa)
 ![QML](https://img.shields.io/badge/qml-quickshell-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=qt&logoColor=89b4fa)
+
+
+<div align="center">
+	<img width="1920" height="1080" alt="Preview" src="https://github.com/user-attachments/assets/8df0a484-f60b-44e5-831f-255e0cf4df8d" />
+</div>
+
+<div align="center">
+
 
 </div>
 
