@@ -2,95 +2,103 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import Quickshell.Io
 
+import Vast
 import qs.Services
 
 Singleton {
     id: root
 
-    property bool available: false
-    property int maxValue: 100
+    readonly property bool available: root.primaryId !== ""
+    readonly property int maxValue: 100
+
     property int value: 0
+    property string primaryId: ""
+    property var displays: []
 
-    function setBrightness(newValue) {
-        if (!root.available)
-            return;
-        const clampedValue = Math.max(0, Math.min(root.maxValue, Math.round(newValue)));
-        setBrightnessProcess.command = ["brightnessctl", "set", clampedValue.toString()];
-        setBrightnessProcess.running = true;
-        root.value = clampedValue;
+    function _refresh() {
+        const list = BrightnessManager.displays();
+        root.displays = list;
+        if (root.primaryId === "") {
+            const internal = list.find(d => d.isInternal);
+            root.primaryId = (internal ?? list[0])?.id ?? "";
+        }
+        const primary = list.find(d => d.id === root.primaryId);
+        if (primary)
+            root.value = primary.brightness;
     }
 
-    function setBrightnessPercent(percent) {
+    function setBrightness(newValue: int) {
         if (!root.available)
             return;
-        const clampedPercent = Math.max(0, Math.min(100, Math.round(percent)));
-
-        setBrightnessProcess.command = ["brightnessctl", "set", clampedPercent.toString() + "%"];
-        setBrightnessProcess.running = true;
+        BrightnessManager.setBrightness(root.primaryId, newValue);
     }
 
-    function increaseBrightness(amount) {
+    function setBrightnessPercent(percent: int) {
         if (!root.available)
             return;
-        setBrightnessProcess.command = ["brightnessctl", "set", Math.round(amount).toString() + "%+"];
-        setBrightnessProcess.running = true;
+        BrightnessManager.setBrightness(root.primaryId, percent);
     }
 
-    function decreaseBrightness(amount) {
+    function increaseBrightness(amount: int) {
         if (!root.available)
             return;
-        setBrightnessProcess.command = ["brightnessctl", "set", Math.round(amount).toString() + "%-"];
-        setBrightnessProcess.running = true;
+        BrightnessManager.setBrightness(root.primaryId, Math.min(100, root.value + Math.round(amount)));
     }
 
-    Process {
-        id: getBrightness
+    function decreaseBrightness(amount: int) {
+        if (!root.available)
+            return;
+        BrightnessManager.setBrightness(root.primaryId, Math.max(0, root.value - Math.round(amount)));
+    }
 
-        command: ["brightnessctl", "info"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const lines = this.text.trim().split("\n");
-                for (let line of lines) {
-                    if (line.includes("Current brightness:")) {
-                        const match = line.match(/Current brightness:\s*(\d+)\s*\((\d+)%\)/);
-                        if (match)
-                            root.value = parseInt(match[1]); // Hanya satu assignment
-                    } else if (line.includes("Max brightness:")) {
-                        const match = line.match(/Max brightness:\s*(\d+)/);
-                        if (match)
-                            root.maxValue = parseInt(match[1]);
-                    }
-                }
-                root.available = true;
-            }
+    function setBrightnessForDisplay(displayId: string, percent: int) {
+        BrightnessManager.setBrightness(displayId, percent);
+    }
+
+    function setBrightnessGroup(targets: var) {
+        BrightnessManager.setBrightnessGroup(targets);
+    }
+
+    function setBrightnessAll(percent: int) {
+        BrightnessManager.setBrightnessAll(percent);
+    }
+
+    function saveProfile(name: string, targets: var) {
+        BrightnessManager.saveProfile(name, targets);
+    }
+
+    function applyProfile(name: string) {
+        BrightnessManager.applyProfile(name);
+    }
+
+    function removeProfile(name: string) {
+        BrightnessManager.removeProfile(name);
+    }
+
+    function profileNames(): var {
+        return BrightnessManager.profileNames();
+    }
+
+    Component.onCompleted: BrightnessManager.initialize()
+
+    Connections {
+        target: BrightnessManager
+
+        function onBrightnessChanged(displayId: string, percent: int) {
+            root.displays = BrightnessManager.displays();
+
+            if (displayId === root.primaryId)
+                root.value = percent;
         }
 
-        stderr: StdioCollector {
-            onStreamFinished: {
-                if (this.text.trim() !== "") {
-                    console.warn("brightnessctl error:", this.text.trim());
-                    ToastService.show(qsTr("brightnessctl error: %1").arg(this.text.trim()), qsTr("Brightness"), "display-brightness-symbolic", 3000);
-                    root.available = false;
-                }
-            }
+        function onDisplayListChanged() {
+            root._refresh();
         }
-    }
 
-    Process {
-        id: setBrightnessProcess
-
-        running: false
-        stdout: StdioCollector {}
-        stderr: StdioCollector {
-            onStreamFinished: {
-                if (this.text.trim() !== "") {
-                    console.warn("Failed to set brightness:", this.text.trim());
-                    ToastService.show(qsTr("Failed to set brightness: %1").arg(this.text.trim()), qsTr("Brightness"), "display-brightness-symbolic", 3000);
-                }
-            }
+        function onInitializationFailed(reason: string) {
+            console.warn("BrightnessManager init failed:", reason);
+            ToastService.show(qsTr("Brightness unavailable: %1").arg(reason), qsTr("Brightness"), "display-brightness-symbolic", 3000);
         }
     }
 }

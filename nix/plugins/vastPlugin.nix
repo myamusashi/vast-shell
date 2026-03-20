@@ -4,32 +4,27 @@
     cmake,
     qt6,
     patchelf,
-    spirv-tools,
-    glslang,
     pipewire,
+    ddcutil,
     pkg-config,
 }:
 stdenv.mkDerivation {
     pname = "vast-plugin";
     version = "1.0";
-
     src = ../../Plugins/Vast;
 
     nativeBuildInputs = [
         cmake
         qt6.wrapQtAppsHook
-        qt6.qtshadertools
         patchelf
         pkg-config
-        spirv-tools
-        glslang
     ];
 
     buildInputs = [
         qt6.qtbase
         qt6.qtdeclarative
         pipewire
-        qt6.qtshadertools
+        ddcutil
     ];
 
     cmakeFlags = [
@@ -40,22 +35,30 @@ stdenv.mkDerivation {
     postInstall = ''
         PLUGIN_DIR="$out/${qt6.qtbase.qtQmlPrefix}/Vast"
 
-        # needs to find PipeWire + Qt at runtime
         if [ -f "$PLUGIN_DIR/libVastPlugin.so" ]; then
           patchelf --set-rpath \
-            "$PLUGIN_DIR:${lib.makeLibraryPath [qt6.qtbase qt6.qtdeclarative pipewire]}" \
+            "$PLUGIN_DIR:${lib.makeLibraryPath [
+            qt6.qtbase
+            qt6.qtdeclarative
+            pipewire
+            ddcutil
+        ]}" \
             "$PLUGIN_DIR/libVastPlugin.so"
         fi
 
         if [ -f "$PLUGIN_DIR/libVastQmlPlugin.so" ]; then
           patchelf --set-rpath \
-            "$PLUGIN_DIR:${lib.makeLibraryPath [qt6.qtbase qt6.qtdeclarative]}" \
+            "$PLUGIN_DIR:${lib.makeLibraryPath [
+            qt6.qtbase
+            qt6.qtdeclarative
+        ]}" \
             "$PLUGIN_DIR/libVastQmlPlugin.so"
         fi
     '';
 
     meta = with lib; {
         description = "Unified Vast Plugin for Quickshell";
+        license = licenses.gpl3Plus;
         platforms = platforms.linux;
     };
 }

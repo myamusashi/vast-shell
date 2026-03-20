@@ -15,6 +15,7 @@ find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick Concurrent)
 qt_policy(SET QTP0001 NEW)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PIPEWIRE REQUIRED IMPORTED_TARGET libpipewire-0.3)
+pkg_check_modules(DDCUTIL REQUIRED IMPORTED_TARGET ddcutil)
 
 add_compile_options(
     -Wall -Wextra -Wpedantic -Wshadow -Wconversion
@@ -41,6 +42,8 @@ qt_add_qml_module(VastPlugin
         AudioProfilesModel.cpp
         AudioProfilesWatcher.hpp
         AudioProfilesWatcher.cpp
+        BrightnessManager.hpp
+        BrightnessManager.cpp
         KeylockState.hpp
         KeylockState.cpp
         LyricsProvider.cpp
@@ -49,8 +52,8 @@ qt_add_qml_module(VastPlugin
         TranslationManager.cpp
         ScreenRecorder.hpp
         ScreenRecorder.cpp
-		ImageCache.cpp
-		ImageCache.hpp
+        ImageCache.cpp
+        ImageCache.hpp
         Search/FuzzyMatcher.hpp
         Search/FuzzyMatcher.cpp
         Search/SearchResult.hpp
@@ -61,7 +64,8 @@ qt_add_qml_module(VastPlugin
 
 target_include_directories(VastPlugin SYSTEM PRIVATE
     ${PIPEWIRE_INCLUDE_DIRS}
-	${CMAKE_CURRENT_SOURCE_DIR}/Search
+    ${DDCUTIL_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Search
 )
 
 target_link_libraries(VastPlugin PRIVATE
@@ -72,8 +76,13 @@ target_link_libraries(VastPlugin PRIVATE
     Qt6::Network
     Qt6::Concurrent
     ${PIPEWIRE_LIBRARIES}
+    ${DDCUTIL_LIBRARIES}
 )
-target_compile_options(VastPlugin PRIVATE ${PIPEWIRE_CFLAGS_OTHER})
+
+target_compile_options(VastPlugin PRIVATE
+    ${PIPEWIRE_CFLAGS_OTHER}
+    ${DDCUTIL_CFLAGS_OTHER}
+)
 
 target_link_libraries(VastQmlPlugin PRIVATE
     VastPlugin
@@ -97,7 +106,7 @@ if(NOT DEFINED QML_INSTALL_DEST OR QML_INSTALL_DEST STREQUAL "/qt-6/qml/Vast")
     set(QML_INSTALL_DEST "lib/qt-6/qml/Vast")
 endif()
 
-set_target_properties(VastPlugin   PROPERTIES INSTALL_RPATH "\$ORIGIN")
+set_target_properties(VastPlugin    PROPERTIES INSTALL_RPATH "\$ORIGIN")
 set_target_properties(VastQmlPlugin PROPERTIES INSTALL_RPATH "\$ORIGIN")
 
 install(TARGETS VastPlugin

@@ -17,18 +17,9 @@ RowLayout {
         icon: "brightness_5"
         iconSize: Appearance.fonts.size.large * 1.5
         to: Brightness.maxValue || 1
-        value: Brightness.value
 
-        onMoved: debounceTimer.restart()
-
-        Timer {
-            id: debounceTimer
-
-            interval: 150
-            repeat: false
-            running: false
-            onTriggered: Brightness.setBrightness(brightnessSlider.value)
-        }
+        value: brightnessSlider.pressed ? brightnessSlider.value : Brightness.value
+        onMoved: Brightness.setBrightnessAll(brightnessSlider.value)
     }
 
     StyledButton {

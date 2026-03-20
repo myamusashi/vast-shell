@@ -8,6 +8,7 @@ pkgs.mkShell {
     buildInputs = [
         pkgs.qt6Packages.qtbase
         pkgs.qt6Packages.qtdeclarative
+		pkgs.ddcutil
         pkgs.pipewire.dev
     ];
 
