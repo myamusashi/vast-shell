@@ -16,6 +16,11 @@ Item {
     property alias text: passwordInput.text
     readonly property alias isFocused: passwordInput.activeFocus
 
+    readonly property bool hasSelection: passwordInput.selectionStart !== passwordInput.selectionEnd
+    readonly property bool selectedAll: passwordInput.selectionStart === 0 && passwordInput.selectionEnd === passwordInput.text.length && passwordInput.text.length > 0
+    readonly property int selectionStart: passwordInput.selectionStart
+    readonly property int selectionEnd: passwordInput.selectionEnd
+
     readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
     readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false
     readonly property bool showFailure: root.pam ? root.pam.showFailure : false
@@ -25,7 +30,6 @@ Item {
 
     property var pam: null
     property bool passwordMode: false
-    property bool selectedAll: false
 
     function forceActiveFocus() {
         passwordInput.forceActiveFocus();
@@ -49,9 +53,9 @@ Item {
         inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
         enabled: !root.unlockInProgress
         text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
+        clip: true
 
         onTextChanged: {
-            root.selectedAll = false;
             if (root.pam)
                 root.pam.currentText = text;
 
@@ -72,12 +76,19 @@ Item {
                 root.pam.tryUnlock();
             root.accepted();
         }
+
+        Keys.onEscapePressed: event => {
+            if (root.hasSelection) {
+                passwordInput.cursorPosition = passwordInput.selectionEnd;
+                passwordInput.deselect();
+                event.accepted = true;
+            }
+        }
+
         Keys.onPressed: event => {
             if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
-                root.selectedAll = text.length > 0;
+                passwordInput.selectAll();
                 event.accepted = true;
-            } else if (!(event.modifiers & Qt.ControlModifier)) {
-                root.selectedAll = false;
             }
         }
 
@@ -139,52 +150,80 @@ Item {
         font.pixelSize: Appearance.fonts.size.large
     }
 
-    Rectangle {
+    Item {
         anchors {
             left: parent.left
             leftMargin: Appearance.margin.large - 4
+            right: toggleButton.left
+            rightMargin: Appearance.margin.large
             verticalCenter: parent.verticalCenter
         }
-        implicitWidth: dotsView.implicitWidth + 8
         implicitHeight: 28
-        radius: 6
-        color: Colours.m3Colors.m3Primary
-        opacity: root.selectedAll && root.passwordMode ? 0.25 : 0.0
-        visible: root.passwordMode && passwordInput.text.length > 0
+        clip: true
 
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            x: root.selectionStart * root.dotStep
+            implicitWidth: (root.selectionEnd - root.selectionStart) * root.dotStep + 4
+            implicitHeight: 28
+            radius: 6
+            color: Colours.m3Colors.m3Primary
+            opacity: root.hasSelection && root.passwordMode ? 0.25 : 0.0
+            visible: root.passwordMode && passwordInput.text.length > 0
+
+            Behavior on opacity {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
             }
-        }
-        Behavior on implicitWidth {
-            NAnim {
-                duration: Appearance.animations.durations.small
+            Behavior on implicitWidth {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+            Behavior on x {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
             }
         }
     }
 
-    Rectangle {
+    Item {
         anchors {
             left: parent.left
             leftMargin: 8
+            right: toggleButton.left
+            rightMargin: 4
             verticalCenter: parent.verticalCenter
         }
-        implicitWidth: Math.min(visibleInputMetrics.advanceWidth(visibleInput.text) + 8, toggleButton.x - 12)
         implicitHeight: visibleInput.font.pixelSize + 6
-        radius: 4
-        color: Colours.m3Colors.m3Primary
-        opacity: root.selectedAll && !root.passwordMode ? 0.25 : 0.0
-        visible: !root.passwordMode && passwordInput.text.length > 0
+        clip: true
 
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            x: visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, root.selectionStart))
+            implicitWidth: visibleInputMetrics.advanceWidth(visibleInput.text.substring(root.selectionStart, root.selectionEnd)) + 4
+            implicitHeight: visibleInput.font.pixelSize + 6
+            radius: 4
+            color: Colours.m3Colors.m3Primary
+            opacity: root.hasSelection && !root.passwordMode ? 0.25 : 0.0
+            visible: !root.passwordMode && passwordInput.text.length > 0
+
+            Behavior on opacity {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
             }
-        }
-        Behavior on implicitWidth {
-            NAnim {
-                duration: Appearance.animations.durations.small
+            Behavior on implicitWidth {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+            Behavior on x {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
             }
         }
     }
@@ -215,10 +254,13 @@ Item {
 
         delegate: MaterialShape {
             required property int index
+
             implicitWidth: 20
             implicitHeight: 20
             shape: root.shapeList[index % root.shapeList.length]
             color: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+            visible: root.passwordMode
+
             Behavior on color {
                 CAnim {}
             }
@@ -278,7 +320,7 @@ Item {
         implicitHeight: 20
         radius: 1
         color: Colours.m3Colors.m3Primary
-        visible: root.passwordMode && root.isFocused && !root.unlockInProgress
+        visible: root.passwordMode && root.isFocused && !root.unlockInProgress && !root.hasSelection
 
         Behavior on x {
             NAnim {
@@ -323,8 +365,8 @@ Item {
         text: passwordInput.text
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.large
-        clip: true
         echoMode: TextInput.Normal
+        clip: true
 
         Keys.onReturnPressed: root.editingFinished()
     }
@@ -344,7 +386,7 @@ Item {
         implicitHeight: visibleInput.font.pixelSize + 2
         radius: 1
         color: Colours.m3Colors.m3Primary
-        visible: !root.passwordMode && root.isFocused && !root.unlockInProgress
+        visible: !root.passwordMode && root.isFocused && !root.unlockInProgress && !root.hasSelection
 
         Behavior on x {
             NAnim {
