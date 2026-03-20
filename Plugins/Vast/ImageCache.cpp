@@ -7,11 +7,14 @@
 #include <QDir>
 #include <QFile>
 #include <QQuickImageProvider>
+#include <expected>
+#include <shared_mutex>
 
 using namespace Qt::StringLiterals;
 
 class DecodeTask : public QObject, public QRunnable {
     Q_OBJECT
+
   public:
     DecodeTask(ImageCache* cache, const QString& path, QSize targetSize) : m_cache(cache), m_path(path), m_targetSize(targetSize) {
         setAutoDelete(true);
@@ -57,7 +60,7 @@ ImageCache* ImageCache::instance() {
 
 void ImageCache::preload(const QString& path, QSize targetSize) {
     {
-        QMutexLocker lock(&m_mutex);
+        std::unique_lock lock(m_rwMutex);
         if (m_done.contains(path) || m_loading.contains(path))
             return;
         m_loading.insert(path);
@@ -65,15 +68,17 @@ void ImageCache::preload(const QString& path, QSize targetSize) {
     QThreadPool::globalInstance()->start(new DecodeTask(this, path, targetSize));
 }
 
-QString ImageCache::saveProviderImage(const QString& qsUrl, const QString& cacheKey) {
+std::expected<QString, ImageCacheError> ImageCache::saveProviderImage(const QString& qsUrl, const QString& cacheKey) {
     {
-        QMutexLocker lock(&m_mutex);
+        std::shared_lock lock(m_rwMutex);
         if (m_keyToPath.contains(cacheKey))
             return m_keyToPath.value(cacheKey);
     }
 
-    if (!m_engine || !qsUrl.startsWith(u"image://"_s))
-        return {};
+    if (!m_engine)
+        return std::unexpected(ImageCacheError::NoEngine);
+    if (!qsUrl.startsWith(u"image://"_s))
+        return std::unexpected(ImageCacheError::InvalidUrl);
 
     // Parse "image://qsimage/7/1"
     //   host  = "qsimage"
@@ -88,53 +93,51 @@ QString ImageCache::saveProviderImage(const QString& qsUrl, const QString& cache
 
     auto*         base     = m_engine->imageProvider(providerName);
     auto*         provider = dynamic_cast<QQuickImageProvider*>(base);
-    if (!provider || provider->imageType() != QQmlImageProviderBase::Image)
-        return {};
+    if (!provider)
+        return std::unexpected(ImageCacheError::NoProvider);
+    if (provider->imageType() != QQmlImageProviderBase::Image)
+        return std::unexpected(ImageCacheError::ProviderTypeMismatch);
 
     QSize        size;
     const QImage img = provider->requestImage(imageId, &size, {});
-    if (img.isNull()) {
-        qWarning() << "[ImageCache] Provider returned null image for" << qsUrl;
-        return {};
-    }
+    if (img.isNull())
+        return std::unexpected(ImageCacheError::NullImage);
 
     const QString dir  = u"/tmp/vast-shell/notif-images"_s;
     const QString path = u"%1/%2.png"_s.arg(dir, cacheKey);
     QDir{}.mkpath(dir);
 
-    if (!img.save(path)) {
-        qWarning() << "[ImageCache] Failed to save notification image to" << path;
-        return {};
-    }
+    if (!img.save(path))
+        return std::unexpected(ImageCacheError::SaveFailed);
 
     const QString fileUrl = u"file://"_s + path;
     {
-        QMutexLocker lock(&m_mutex);
+        std::unique_lock lock(m_rwMutex);
         m_keyToPath.insert(cacheKey, fileUrl);
     }
     return fileUrl;
 }
 
 void ImageCache::evict(const QString& path) {
-    QMutexLocker lock(&m_mutex);
+    std::unique_lock lock(m_rwMutex);
     m_done.remove(path);
     m_loading.remove(path);
 }
 
 void ImageCache::store(const QString& path) {
-    QMutexLocker lock(&m_mutex);
+    std::unique_lock lock(m_rwMutex);
     m_loading.remove(path);
     m_done.insert(path);
 }
 
 QString ImageCache::cachedPath(const QString& cacheKey) const {
-    QMutexLocker lock(&m_mutex);
+    std::shared_lock lock(m_rwMutex);
     return m_keyToPath.value(cacheKey);
 }
 
 void ImageCache::evictKey(const QString& cacheKey) {
-    QMutexLocker  lock(&m_mutex);
-    const QString path = m_keyToPath.take(cacheKey);
+    std::unique_lock lock(m_rwMutex);
+    const QString    path = m_keyToPath.take(cacheKey);
     if (!path.isEmpty())
         QFile::remove(path.mid(7));
 }

@@ -6,6 +6,17 @@
 #include <QHash>
 #include <QSize>
 #include <QtQml/qqml.h>
+#include <expected>
+#include <shared_mutex>
+
+enum class ImageCacheError {
+    NoEngine,
+    InvalidUrl,
+    NoProvider,
+    ProviderTypeMismatch,
+    NullImage,
+    SaveFailed,
+};
 
 class QQmlEngine;
 
@@ -15,31 +26,43 @@ class ImageCache : public QObject {
     QML_NAMED_ELEMENT(ImageCache)
 
   public:
-    static ImageCache*                create(QQmlEngine*, QJSEngine*);
-    static ImageCache*                instance();
+    static ImageCache* create(QQmlEngine*, QJSEngine*);
+    static ImageCache* instance();
+    ~ImageCache() {
+        QThreadPool::globalInstance()->waitForDone();
+    }
 
-    Q_INVOKABLE void                  preload(const QString& path, QSize targetSize = {});
-    Q_INVOKABLE void                  evict(const QString& path);
+    Q_INVOKABLE void    preload(const QString& path, QSize targetSize = {});
+    Q_INVOKABLE void    evict(const QString& path);
 
-    [[nodiscard]] Q_INVOKABLE QString saveProviderImage(const QString& qsUrl, const QString& cacheKey);
-    [[nodiscard]] Q_INVOKABLE QString cachedPath(const QString& cacheKey) const;
+    Q_INVOKABLE QString saveProviderImageQml(const QString& url, const QString& key) {
+        auto result = saveProviderImage(url, key);
+        if (!result) {
+            qWarning() << "[ImageCache] saveProviderImage failed:" << static_cast<int>(result.error());
+            return {};
+        }
+        return *result;
+    }
+    [[nodiscard]] std::expected<QString, ImageCacheError> saveProviderImage(const QString& qsUrl, const QString& cacheKey);
+    [[nodiscard]] Q_INVOKABLE QString                     cachedPath(const QString& cacheKey) const;
 
-    Q_INVOKABLE void                  evictKey(const QString& cacheKey);
+    Q_INVOKABLE void                                      evictKey(const QString& cacheKey);
 
   signals:
     void imageReady(const QString& path);
 
   private:
     explicit ImageCache(QObject* parent = nullptr);
-    static ImageCache*      s_instance;
+    static ImageCache*        s_instance;
 
-    QQmlEngine*             m_engine = nullptr;
+    QQmlEngine*               m_engine = nullptr;
 
-    mutable QMutex          m_mutex;
-    QSet<QString>           m_loading;
-    QSet<QString>           m_done;
-    QHash<QString, QString> m_keyToPath;
+    mutable std::shared_mutex m_rwMutex;
 
-    void                    store(const QString& path);
+    QSet<QString>             m_loading;
+    QSet<QString>             m_done;
+    QHash<QString, QString>   m_keyToPath;
+
+    void                      store(const QString& path);
     friend class DecodeTask;
 };
