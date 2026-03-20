@@ -50,66 +50,6 @@ https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 
 ---
 
-## Features
-
-### Shell Components
-- **Bar** — top/bottom status bar with left, middle, and right sections
-- **Overview** — workspace overview with window thumbnails
-- **Launcher** — fuzzy search app launcher with highlighted matches and animated delegates
-- **OSD** — on-screen display for volume, brightness, caps lock, and num lock
-- **Session** — power menu (shutdown, reboot, logout, suspend)
-
-### Quick Settings Panel
-- **Network** — Wi-Fi toggle with full network list and hotspot control
-- **Brightness** — display brightness slider
-- **Volume** — per-app audio mixer and output selector
-- **Audio Profiles** — PipeWire sink/source profile switching
-- **Media Player** — MPRIS-based playback controls with lyrics view
-- **Notifications** — notification center with border-progress animations
-- **Performance** — live CPU, RAM, disk, battery, network, and display info popups
-- **Power Profiles** — power/performance mode switching
-
-### Dashboard
-- **System Monitor** — detailed CPU, RAM, disk, and network usage
-- **Screen Capture** — screenshot and screen recording with history
-
-### Modules
-- **Calendar** — month view with major event highlights
-- **Weather** — detailed widget with hourly and daily forecast, AQI, UV index, moon phase, wind, humidity, pressure, precipitation, and visibility pages
-- **Lockscreen** — PAM-authenticated lockscreen with clock and wallpaper
-- **Polkit** — graphical polkit authentication agent
-- **Wallpaper Selector** — wallpaper browser with live preview
-- **Settings** — full settings UI with pages for appearance, bar, general, internet, language, media player, wallpaper, and weather
-
-### Theming & Visuals
-- **Material Design 3** — MD3-based component library
-- **matugen integration** — dynamic color scheme generation from wallpaper
-- **Wallpaper transitions** — GPU-accelerated GLSL transition effects (fade, dissolve, wipe, circle expand, pixelate, roll, and more)
-- **Wavy / waveform shader** — animated waveform visual on the media player slider
-- **Border progress shader** — GPU-rendered animated border for notifications
-
-### Widgets
-- **Clock** — time and date display
-- **Workspaces** — Hyprland workspace indicators
-- **Tray** — system tray with context menu
-- **Battery** — battery status and percentage
-- **Lyrics View** — synchronized lyrics display for the current track
-- **Record Indicator** — live screen recording status indicator
-- **Audio Profiles** — quick audio profile switcher
-- **Notification Dots** — unread notification badge
-
-### Plugins (C++23)
-- **`SearchEngine`** — fuzzy file and app search with `FuzzyMatcher`
-- **`AudioProfilesWatcher`** — PipeWire audio profile monitoring
-- **`KeylockState`** — caps lock and num lock state via evdev
-- **`LyricsProvider`** — lyrics fetching and sync from lrclib.net
-- **`ScreenRecorder`** — screen recording control singleton
-- **`TranslationManager`** — runtime locale switching without restart
-
-### Localization
-- Indonesian (`id_ID`) translation included
-- Runtime language switching without restart
-
 ### Global shortcut (Hyprland only)
 
 - quickshell:wallpaperSwitcher
@@ -192,7 +132,7 @@ or
 
 qs -c <shell directory> ipc call wallpaperSwitcher toggle
 
-or
+or if you install from archInstall or flake nix
 
 shell ipc call wallpaperSwitcher toggle
 ```
