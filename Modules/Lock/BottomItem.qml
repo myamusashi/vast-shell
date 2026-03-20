@@ -84,7 +84,7 @@ Item {
             }
             spacing: Appearance.spacing.normal
 
-            ClippingRectangle {
+            ClippingWrapperRectangle {
                 implicitWidth: 60
                 implicitHeight: 60
                 radius: Appearance.rounding.full
