@@ -31,8 +31,6 @@ Item {
             sourceComponent: {
                 if (root.hasImage)
                     return imageComponent;
-                if (root.hasAppIcon)
-                    return iconComponent;
                 return fallbackIconComponent;
             }
         }
@@ -41,42 +39,33 @@ Item {
     Component {
         id: imageComponent
 
-        Image {
-            width: 36
-            height: 36
+        IconImage {
+            implicitSize: 36
             source: Qt.resolvedUrl(root.modelData.image)
-            fillMode: Image.PreserveAspectFit
-            cache: true
+            backer.cache: true
             asynchronous: true
-            sourceSize: Qt.size(36, 36)
         }
     }
 
     Component {
         id: iconComponent
 
-        Image {
-            width: 24
-            height: 24
+        IconImage {
+            implicitSize: 24
             source: Quickshell.iconPath(root.modelData.appIcon)
-            fillMode: Image.PreserveAspectFit
-            cache: true
+            backer.cache: true
             asynchronous: true
-            sourceSize: Qt.size(24, 24)
         }
     }
 
     Component {
         id: fallbackIconComponent
 
-        Image {
-            width: 30
-            height: 30
-            source: "root:/Assets/images/notif-icon-image-fallback.jpg"
-            fillMode: Image.PreserveAspectFit
-            cache: true
+        IconImage {
+            implicitSize: 30
+            source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : "root:/Assets/images/notif-icon-image-fallback.jpg"
+            backer.cache: true
             asynchronous: true
-            sourceSize: Qt.size(30, 30)
         }
     }
 
@@ -96,22 +85,24 @@ Item {
         sourceComponent: StyledRect {
             implicitWidth: 20
             implicitHeight: 20
+            border {
+                color: Colours.m3Colors.m3OutlineVariant
+                width: 1.5
+            }
             radius: 10
             color: Colours.m3Colors.m3Surface
-            border.color: Colours.m3Colors.m3OutlineVariant
-            border.width: 1.5
-            ClippingRectangle {
+
+            ClippingWrapperRectangle {
                 anchors.centerIn: parent
                 radius: 8
                 implicitWidth: 16
                 implicitHeight: 16
-                Image {
-                    anchors.fill: parent
+
+                IconImage {
+                    implicitSize: 16
                     source: Quickshell.iconPath(root.modelData.appIcon)
-                    fillMode: Image.PreserveAspectFit
-                    cache: true
+                    backer.cache: true
                     asynchronous: true
-                    sourceSize: Qt.size(16, 16)
                 }
             }
         }
