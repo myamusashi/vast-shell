@@ -25,10 +25,10 @@
 	},
 	"colors": {
 		"isDarkMode": true,
-		"matugenConfigPathForDarkColor": "/home/myamusashi/.config/shell/dark-colors.json",
-		"matugenConfigPathForLightColor": "/home/myamusashi/.config/shell/light-colors.json",
-		"staticColorsPath": "/home/myamusashi/.config/shell/colors.json",
-		"useMatugenColor": true,
+		"matugenConfigPathForDarkColor": "$HOME/.config/vast-shell/dark-colors.json",
+		"matugenConfigPathForLightColor": "$HOME/.config/vast-shell/light-colors.json",
+		"staticColorsPath": "$HOME/.config/vast-shell/colors.json",
+		"useMatugenColor": false,
 		"useStaticColors": false
 	},
 	"generals": {
@@ -89,7 +89,7 @@
 		"transitionDuration": 500,
 		"transitionLowPerfMode": false,
 		"visibleWallpaper": 3,
-		"wallpaperDir": "/home/myamusashi/Pictures/wallpapers"
+		"wallpaperDir": "$HOME/Pictures/wallpapers"
 	},
 	"weather": {
 		"enableQuickSummary": false,
