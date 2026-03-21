@@ -117,6 +117,11 @@ install_aur_packages() {
 setup_i2c() {
 	local -r target_user="${SUDO_USER:-}"
 
+	[[ -d /run/udev ]] || {
+		warn "No udev detected — skipping i2c setup"
+		return 0
+	}
+
 	if ! lsmod | grep -q "^i2c_dev"; then
 		log "Loading i2c-dev kernel module..."
 		modprobe i2c-dev || warn "modprobe i2c-dev failed — DDC/CI may not work this session"
@@ -135,8 +140,8 @@ setup_i2c() {
 		cat >"$udev_rule" <<'EOF'
 KERNEL=="i2c-[0-9]*", TAG+="uaccess", GROUP="i2c", MODE="0660"
 EOF
-		udevadm control --reload-rules
-		udevadm trigger --subsystem-match=i2c
+		udevadm control --reload-rules 2>/dev/null || warn "udevadm reload failed — skipping"
+		udevadm trigger --subsystem-match=i2c 2>/dev/null || true
 	fi
 
 	if [[ -n $target_user ]]; then
