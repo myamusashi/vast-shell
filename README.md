@@ -143,7 +143,9 @@ shell ipc call wallpaperSwitcher toggle
 
 Add vast-shell to your flake inputs:
 ```nix
-inputs.vast-shell.url = "github:myamusashi/vast-shell";
+inputs.vast-shell = {
+	url = "github:myamusashi/vast-shell";
+};
 ```
 
 Then include the package in your system or home configuration:
@@ -307,17 +309,6 @@ Vast-shell can be customized by editing the JSON files in the `Data/` directory.
 ### Main Configuration ([configurations.json](file:///home/myamusashi/shell/Data/configurations.json))
 
 This file contains the primary settings for the shell, organized into several categories:
-
-| Category | Description |
-|---|---|
-| **Appearance** | Font families (Material, Mono, Sans) and animation scale. |
-| **Bar** | Bar height, workspace visibility, and indicator style. |
-| **Colors** | Toggle dark mode, enable Matugen dynamic colors or auto generate from quickshell. |
-| **Generals** | Default applications, battery warning levels, transparency, and borders. |
-| **Media Player** | Lyrics visibility, slider style (WaveForm/Wavy), and dynamic cover colors. |
-| **Notifications** | Maximum notification count and age. |
-| **Wallpaper** | Transition effects, duration, and wallpaper directory. |
-| **Weather** | Location coordinates (lat/long) and refresh interval. |
 
 <details>
 <summary>View configurations.json</summary>
