@@ -101,9 +101,21 @@ file(WRITE "${QML_OUTPUT_DIR}/qmldir"
     "typeinfo Vast.qmltypes\n"
 )
 
-set(QML_INSTALL_DEST "${CMAKE_INSTALL_LIBDIR}/qt-6/qml/Vast")
-if(NOT DEFINED QML_INSTALL_DEST OR QML_INSTALL_DEST STREQUAL "/qt-6/qml/Vast")
-    set(QML_INSTALL_DEST "lib/qt-6/qml/Vast")
+include(GNUInstallDirs)
+
+execute_process(
+    COMMAND ${QT_QMAKE_EXECUTABLE} -query QML2_IMPORT_PATH
+    OUTPUT_VARIABLE QT_QML_IMPORT_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+if(DEFINED QML_INSTALL_DEST)
+    # explicitly passed in (e.g. from Nix)
+elseif(QT_QML_IMPORT_PATH)
+    file(RELATIVE_PATH QML_REL_PATH "/" "${QT_QML_IMPORT_PATH}")
+    set(QML_INSTALL_DEST "${QML_REL_PATH}/Vast")
+else()
+    set(QML_INSTALL_DEST "${CMAKE_INSTALL_LIBDIR}/qt6/qml/Vast")
 endif()
 
 set_target_properties(VastPlugin    PROPERTIES INSTALL_RPATH "\$ORIGIN")

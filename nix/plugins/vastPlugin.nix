@@ -30,7 +30,10 @@ stdenv.mkDerivation {
     cmakeFlags = [
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
+        "-DQML_INSTALL_DEST=lib/qt-6/qml/Vast"
     ];
+
+    dontWrapQtApps = true;
 
     postInstall = ''
         PLUGIN_DIR="$out/${qt6.qtbase.qtQmlPrefix}/Vast"
