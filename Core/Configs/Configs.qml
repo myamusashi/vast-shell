@@ -16,7 +16,6 @@ Singleton {
     property alias generals: adapter.generals
     property alias wallpaper: adapter.wallpaper
     property alias weather: adapter.weather
-    property alias widgets: adapter.widgets
     property alias language: adapter.language
     property alias mediaPlayer: adapter.mediaPlayer
 
