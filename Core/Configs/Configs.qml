@@ -51,9 +51,6 @@ Singleton {
             property NotificationConfig notification: NotificationConfig {}
             property LocalizationConfig language: LocalizationConfig {}
             property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {}
-            property var widgets: [
-                {}
-            ]
         }
     }
 }
