@@ -90,8 +90,8 @@ install_aur_packages() {
 	local -r aur_user="${SUDO_USER:-}"
 	local -a missing=()
 	local -r pkg_list=(
-		quickshell-git matugen-bin ttf-weather-icons
-		app2unit ttf-material-symbols-variable-git
+		google-breakpad matugen-bin ttf-weather-icons
+		app2unit ttf-material-symbols-variable-git quickshell-git
 	)
 
 	log "Checking AUR packages..."
@@ -196,8 +196,10 @@ build_vast_plugin() {
 	mkdir -p "$QML_DIR/Vast"
 	local found=0
 	for dir in \
-		"$install_base/lib/qt-6/qml/Vast" \
+		"$install_base/usr/lib/qt6/qml/Vast" \
+		"$install_base/usr/lib/qt-6/qml/Vast" \
 		"$install_base/lib/qt6/qml/Vast" \
+		"$install_base/lib/qt-6/qml/Vast" \
 		"$install_base/Vast"; do
 		if [[ -d $dir ]]; then
 			cp -r "$dir/"* "$QML_DIR/Vast/"
@@ -255,7 +257,7 @@ build_m3shapes() {
 	mkdir -p "$QML_DIR/M3Shapes"
 	local install_base="$BUILD_DIR/m3shapes-install"
 	[[ -d $install_base/M3Shapes ]] && cp -r "$install_base/M3Shapes/"* "$QML_DIR/M3Shapes/"
-	[[ -d $install_base/lib/qt6/qml/M3Shapes ]] && cp -r "$install_base/lib/qt6/qml/M3Shapes/"* "$QML_DIR/M3Shapes/"
+	[[ -d $install_base/usr/lib/qt6/qml/M3Shapes ]] && cp -r "$install_base/usr/lib/qt6/qml/M3Shapes/"* "$QML_DIR/M3Shapes/"
 
 	if [[ -f $plugin ]]; then
 		local qt_core_lib
@@ -426,16 +428,18 @@ build_another_ripple() {
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 		-DCMAKE_INSTALL_PREFIX="$BUILD_DIR/anotherripple-install" \
-		-DINSTALL_QMLDIR="lib/qt6/qml"
+		-DINSTALL_QMLDIR="usr/lib/qt6/qml"
 	ninja -C "$src/build"
 	ninja -C "$src/build" install
 
 	mkdir -p "$QML_DIR/AnotherRipple"
 	local install_base="$BUILD_DIR/anotherripple-install"
 	for dir in \
-		"$install_base/AnotherRipple" \
+		"$install_base/usr/lib/qt6/qml/AnotherRipple" \
+		"$install_base/usr/lib/qt-6/qml/AnotherRipple" \
 		"$install_base/lib/qt6/qml/AnotherRipple" \
-		"$install_base/lib/qt-6/qml/AnotherRipple"; do
+		"$install_base/lib/qt-6/qml/AnotherRipple" \
+		"$install_base/AnotherRipple"; do
 		[[ -d $dir ]] && cp -r "$dir/"* "$QML_DIR/AnotherRipple/"
 	done
 
