@@ -410,26 +410,20 @@
 <context>
     <name>Brightness</name>
     <message>
-        <location filename="../Services/Brightness.qml" line="75"/>
-        <source>brightnessctl error: %1</source>
-        <translation>brightnessctl error: %1</translation>
-    </message>
-    <message>
-        <location filename="../Services/Brightness.qml" line="75"/>
-        <location filename="../Services/Brightness.qml" line="91"/>
+        <location filename="../Services/Brightness.qml" line="101"/>
         <source>Brightness</source>
         <translation>Kecerahan</translation>
     </message>
     <message>
-        <location filename="../Services/Brightness.qml" line="91"/>
-        <source>Failed to set brightness: %1</source>
-        <translation>Gagal mengatur kecerahan: %1</translation>
+        <location filename="../Services/Brightness.qml" line="101"/>
+        <source>Brightness unavailable: %1</source>
+        <translation>Brightness tidak tersedia: %1</translation>
     </message>
 </context>
 <context>
     <name>BrightnessControls</name>
     <message>
-        <location filename="../Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="42"/>
+        <location filename="../Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="33"/>
         <source>Night mode</source>
         <translation>Mode Malam</translation>
     </message>
@@ -1849,24 +1843,23 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifs</name>
     <message>
-        <location filename="../Services/Notifs.qml" line="40"/>
+        <location filename="../Services/Notifs.qml" line="41"/>
         <source>Cleaning up %1 old notification(s)</source>
         <translation>Membersihkan %1 notifikasi lama</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="40"/>
-        <location filename="../Services/Notifs.qml" line="58"/>
+        <location filename="../Services/Notifs.qml" line="41"/>
+        <location filename="../Services/Notifs.qml" line="59"/>
         <location filename="../Services/Notifs.qml" line="147"/>
         <location filename="../Services/Notifs.qml" line="156"/>
-        <location filename="../Services/Notifs.qml" line="197"/>
-        <location filename="../Services/Notifs.qml" line="201"/>
-        <location filename="../Services/Notifs.qml" line="208"/>
-        <location filename="../Services/Notifs.qml" line="370"/>
+        <location filename="../Services/Notifs.qml" line="200"/>
+        <location filename="../Services/Notifs.qml" line="204"/>
+        <location filename="../Services/Notifs.qml" line="211"/>
         <source>Notifications</source>
         <translation>Notifikasi</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="58"/>
+        <location filename="../Services/Notifs.qml" line="59"/>
         <source>Removing %1 oldest notification(s) to enforce limit</source>
         <translation>Menghapus %1 notifikasi terlama untuk menegakkan batas</translation>
     </message>
@@ -1881,29 +1874,24 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Format cache notifikasi tidak valid</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="197"/>
+        <location filename="../Services/Notifs.qml" line="200"/>
         <source>Loaded %1 notification(s) from cache</source>
         <translation>Memuat %1 notifikasi dari cache</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="201"/>
+        <location filename="../Services/Notifs.qml" line="204"/>
         <source>Failed to load notifications: %1</source>
         <translation>Gagal memuat notifikasi: %1</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="208"/>
+        <location filename="../Services/Notifs.qml" line="211"/>
         <source>Notification cache doesn&apos;t exist, creating it</source>
         <translation>Cache notifikasi tidak ada, sedang membuat</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="274"/>
+        <location filename="../Services/Notifs.qml" line="278"/>
         <source>now</source>
         <translation>Sekarang</translation>
-    </message>
-    <message>
-        <location filename="../Services/Notifs.qml" line="370"/>
-        <source>Error cleaning up notification: %1</source>
-        <translation>Kesalahan saat membersihkan notifikasi: %1</translation>
     </message>
 </context>
 <context>
@@ -2360,12 +2348,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="137"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="148"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="137"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="148"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
