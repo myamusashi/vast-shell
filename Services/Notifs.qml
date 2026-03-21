@@ -168,7 +168,7 @@ Singleton {
                         continue;
 
                     const key = "notif-" + notifData.id;
-                    const stableUrl = notifData.image?.startsWith("image://") ? ImageCache.saveProviderImage(notifData.image, key) : (notifData.image ?? "");
+                    const stableUrl = notifData.image?.startsWith("image://") ? ImageCache.saveProviderImageQml(notifData.image, key) : (notifData.image ?? "");
 
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
@@ -242,7 +242,7 @@ Singleton {
 
             function onImageChanged() {
                 const raw = notif.notification.image ?? "";
-                notif.image = raw.startsWith("image://") ? ImageCache.saveProviderImage(raw, "notif-" + notif.id) : raw;
+                notif.image = raw.startsWith("image://") ? ImageCache.saveProviderImageQml(raw, "notif-" + notif.id) : raw;
             }
 
             function onExpireTimeoutChanged() {
@@ -347,7 +347,7 @@ Singleton {
                 return;
 
             const raw = notification.image ?? "";
-            const cachedImage = raw.startsWith("image://") ? ImageCache.saveProviderImage(raw, "notif-" + notification.id) : raw;
+            const cachedImage = raw.startsWith("image://") ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id) : raw;
 
             id = notification.id;
             summary = notification.summary;
