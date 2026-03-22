@@ -33,6 +33,7 @@ class ImageCache : public QObject {
         QThreadPool::globalInstance()->waitForDone();
     }
 
+    Q_INVOKABLE QString copyAndPreload(const QString& path, QSize targetSize = {});
     Q_INVOKABLE void    preload(const QString& path, QSize targetSize = {});
     Q_INVOKABLE void    evict(const QString& path);
 

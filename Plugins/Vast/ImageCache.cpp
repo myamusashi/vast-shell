@@ -58,6 +58,23 @@ ImageCache* ImageCache::instance() {
     return s_instance;
 }
 
+QString ImageCache::copyAndPreload(const QString& path, QSize targetSize) {
+    QImage img(path);
+    if (img.isNull()) {
+        qWarning() << "[ImageCache] copyAndPreload: could not read" << path;
+        return {};
+    }
+
+    const QString stablePath = u"/tmp/vast-shell/art-cache/%1.png"_s.arg(QString::number(qHash(path), 16));
+    QDir{}.mkpath(u"/tmp/vast-shell/art-cache"_s);
+
+    if (!img.save(stablePath))
+        return {};
+
+    preload(stablePath, targetSize);
+    return u"file://"_s + stablePath;
+}
+
 void ImageCache::preload(const QString& path, QSize targetSize) {
     {
         std::unique_lock lock(m_rwMutex);
