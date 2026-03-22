@@ -1,5 +1,7 @@
 <h1 align="center">vast-shell</h1>
 
+![Preview](https://github.com/user-attachments/assets/8df0a484-f60b-44e5-831f-255e0cf4df8d)
+
 ![Last Commit](https://img.shields.io/github/last-commit/myamusashi/vast-shell?label=last+commit&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Commits](https://img.shields.io/github/commit-activity/t/myamusashi/vast-shell?label=commits&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
 ![Stars](https://img.shields.io/github/stars/myamusashi/vast-shell?label=stars&style=for-the-badge&color=cba6f7&labelColor=1e1e2e)
@@ -8,8 +10,6 @@
 ![Nix](https://img.shields.io/badge/nix-flakes-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=nixos&logoColor=89b4fa)
 ![C++](https://img.shields.io/badge/c%2B%2B-23-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=cplusplus&logoColor=89b4fa)
 ![QML](https://img.shields.io/badge/qml-quickshell-89b4fa?style=for-the-badge&labelColor=1e1e2e&logo=qt&logoColor=89b4fa)
-
-![Preview](https://github.com/user-attachments/assets/8df0a484-f60b-44e5-831f-255e0cf4df8d)
 
 > [!WARNING]
 > This project is still in **active development**. Some features may be incomplete or change without notice, but it is usable as a daily driver. Issues and feedback are welcome!
@@ -206,6 +206,12 @@ shell
 - **Utils**: `findutils`, `grep`, `gawk`, `sed`, `util-linux`
 - **Other**: `matugen-bin`, `app2unit`
 
+> [!IMPORTANT]
+> **Brightness Control (ddcutil)**: Controlling external monitor brightness requires non-root access to I2C devices.
+> - `archInstall.sh` handles this automatically for Arch Linux users.
+> - For manual setup, ensure the `i2c-dev` module is loaded and you have the appropriate udev rules (see `setup_i2c` function in `archInstall.sh` for details).
+> - You must also be a member of the `i2c` and `video` groups.
+
 ---
 
 ### Other Distros
@@ -304,14 +310,35 @@ sudo xbps-install -S pipewire wireplumber iw libnotify polkit \
 
 ## Configuration
 
-Vast-shell can be customized by editing the JSON files in the `Data/` directory.
+Vast-shell is customized by editing JSON files in the `Data/` directory of the repository or in your user configuration directory.
 
 ### Main Configuration ([configurations.json](file:///home/myamusashi/shell/Data/configurations.json))
 
-This file contains the primary settings for the shell, organized into several categories:
+This file contains the primary settings for the shell.
+
+###### Setup
+
+1. Create the config directory and copy the data files:
+
+```bash
+mkdir -p ~/.config/vast-shell
+# Replace /path/to/vast-shell with the actual path where you cloned the repository
+cp -r /path/to/vast-shell/Data/{colors.json,configurations.json} ~/.config/vast-shell/
+```
+
+If you want to use Matugen color generation:
+
+```bash
+mkdir -p ~/.config/matugen
+touch ~/.config/matugen/config.toml
+```
+
+Copy the content from `Data/matugen/matugen.toml` to `~/.config/matugen/config.toml` and adjust the paths to your home directory.
+
+2. Open `~/.config/vast-shell/configurations.json` and adjust the settings to your liking.
 
 <details>
-<summary>View configurations.json</summary>
+<summary>View full configurations.json structure</summary>
 
 ```json
 {
@@ -330,24 +357,52 @@ This file contains the primary settings for the shell, organized into several ca
 			"size": {
 				"scale": 1
 			}
+		},
+		"margin": {
+			"small": 5,
+			"smaller": 7,
+			"normal": 10,
+			"larger": 12,
+			"large": 15
+		},
+		"padding": {
+			"small": 5,
+			"smaller": 7,
+			"normal": 10,
+			"larger": 12,
+			"large": 15
+		},
+		"rounding": {
+			"small": 12,
+			"normal": 17,
+			"large": 25,
+			"full": 1000
+		},
+		"spacing": {
+			"small": 7,
+			"smaller": 10,
+			"normal": 12,
+			"larger": 15,
+			"large": 20
 		}
 	},
 	"bar": {
 		"alwaysOpenBar": true,
-		"barHeight": 35,
+		"barHeight": 40,
 		"compact": false,
-		"visibleWorkspace": 4,
+		"visibleWorkspace": 5,
 		"workspacesIndicator": "dot"
 	},
 	"colors": {
 		"isDarkMode": true,
-		"matugenConfigPathForDarkColor": "/home/myamusashi/.config/shell/dark-colors.json",
-		"matugenConfigPathForLightColor": "/home/myamusashi/.config/shell/light-colors.json",
-		"useMatugenColor": true,
+		"matugenConfigPathForDarkColor": "$HOME/.config/vast-shell/dark-colors.json",
+		"matugenConfigPathForLightColor": "$HOME/.config/vast-shell/light-colors.json",
+		"staticColorsPath": "$HOME/.config/vast-shell/colors.json",
+		"useMatugenColor": false,
 		"useStaticColors": false
 	},
 	"generals": {
-		"alpha": 1,
+		"alpha": 1.0,
 		"apps": {
 			"audio": "pavucontrol-qt",
 			"fileExplorer": "pcmanfm-qt",
@@ -379,12 +434,12 @@ This file contains the primary settings for the shell, organized into several ca
 				}
 			]
 		},
-		"chargingGlowSpread": 20,
-		"coverBlurRadius": 1,
-		"enableOuterBorder": true,
+		"chargingGlowSpread": 10,
+		"coverBlurRadius": 16,
+		"enableOuterBorder": false,
 		"followFocusMonitor": true,
 		"outerBorderSize": 10,
-		"transparent": true
+		"transparent": false
 	},
 	"language": {
 		"language": ""
@@ -400,16 +455,16 @@ This file contains the primary settings for the shell, organized into several ca
 	},
 	"wallpaper": {
 		"enabledWallpaper": true,
-		"transition": "circle",
-		"transitionDuration": 500,
+		"transition": "random",
+		"transitionDuration": 300,
 		"transitionLowPerfMode": false,
 		"visibleWallpaper": 3,
-		"wallpaperDir": "/home/myamusashi/Pictures/wallpapers"
+		"wallpaperDir": "$HOME/Pictures/wallpapers"
 	},
 	"weather": {
 		"enableQuickSummary": false,
-		"latitude": "",
-		"longitude": "",
+		"latitude": "-0",
+		"longitude": "0",
 		"reloadTime": 1800000
 	}
 }
@@ -417,9 +472,69 @@ This file contains the primary settings for the shell, organized into several ca
 
 </details>
 
+### Configuration Details
+
+#### Appearance
+| Key | Default | Description |
+|---|---|---|
+| `animations.durations.scale` | `1` | Global scale for animation durations. |
+| `fonts.family` | `material`, `mono`, `sans` | Font families for different text types. |
+| `fonts.size.scale` | `1.0` | Global font size scale. |
+| `margin`, `padding`, `rounding`, `spacing` | `small`...`large` | Detailed layout sizing (pixel values). |
+
+#### Bar
+| Key | Default | Description |
+|---|---|---|
+| `alwaysOpenBar` | `true` | Whether the bar is always visible. |
+| `barHeight` | `40` | Height of the bar in pixels. |
+| `compact` | `false` | Enable compact mode for the bar. |
+| `visibleWorkspace` | `5` | Number of workspaces to show in the bar. |
+| `workspacesIndicator` | `"dot"` | Style of workspace indicator (`dot` or `interactive`). |
+
+#### Colors
+| Key | Default | Description |
+|---|---|---|
+| `isDarkMode` | `true` | Prefer dark mode themes. |
+| `useMatugenColor` | `false` | Use dynamic colors generated from wallpaper. |
+| `useStaticColors` | `false` | Use static colors from `colors.json`. |
+| `staticColorsPath` | `$HOME/.config/vast-shell/colors.json` | Path to your static color scheme. |
+
+[!NOTE]
+If both flags are true (useMatugenColor and useStaticColors), Matugen takes priority.
+
+#### Generals
+| Key | Default | Description |
+|---|---|---|
+| `alpha` | `1.0` | Transparency level for shell elements. |
+| `transparent` | `false` | Enable transparency for shell elements. |
+| `enableOuterBorder` | `false` | Enable a border around the entire shell layout. |
+| `outerBorderSize` | `10` | Size of the outer border. |
+| `coverBlurRadius` | `16` | Blur radius for media covers. |
+| `chargingGlowSpread` | `10` | Spread of the glow effect when charging. |
+| `apps` | `terminal`, `audio`, etc. | Default applications for various tasks. |
+| `battery.warnLevels` | `[...]` | Battery levels and notification messages. |
+
+#### Media Player
+| Key | Default | Description |
+|---|---|---|
+| `showLyrics` | `false` | Automatically fetch and show lyrics. |
+| `dynamicColorsCover` | `true` | Adapt colors based on the current track's cover art. |
+| `sliderType` | `"Wavy"` | Progress bar style (`Wavy` or `WaveForm`). |
+
+#### Wallpaper & Weather
+| Category | Key | Default | Description |
+|---|---|---|---|
+| **Wallpaper** | `transition` | `"random"` | Transition effect (`circle`, `fade`, `random`, etc.). |
+| **Wallpaper** | `wallpaperDir` | `$HOME/Pictures/wallpapers` | Directory to pick wallpapers from. |
+| **Weather** | `latitude`, `longitude` | `"-6.4028"`, `"106.7744"` | Location for weather data. |
+| **Weather** | `reloadTime` | `180000` | Refresh interval in milliseconds (3 mins). |
+
+---
+
 ### Matugen ([matugen/](file:///home/myamusashi/shell/Data/matugen))
 
 The `matugen` directory contains configuration and templates for dynamic color generation.
+
 - `matugen.toml` — main configuration for the Matugen tool.
 - `dark-colors.json` / `light-colors.json` — generated color schemes.
 
