@@ -216,7 +216,7 @@ Item {
                             function onActiveChanged() {
                                 const art = Players.active?.trackArtUrl.toString().replace("file://", "");
                                 if (art)
-                                    ImageCache.preload(art, Qt.size(64, 64));
+                                    ImageCache.copyAndPreload(art, Qt.size(64, 64));
                             }
                         }
 
@@ -226,7 +226,7 @@ Item {
                             function onTrackChanged() {
                                 const art = Players.active?.trackArtUrl.toString().replace("file://", "");
                                 if (art)
-                                    ImageCache.preload(art, Qt.size(64, 64));
+                                    ImageCache.copyAndPreload(art, Qt.size(64, 64));
                             }
                         }
 

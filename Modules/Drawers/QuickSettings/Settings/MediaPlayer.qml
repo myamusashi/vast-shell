@@ -176,7 +176,7 @@ ClippingWrapperRectangle {
 
             const localPath = url.replace("file://", "");
             if (localPath && !url.startsWith("http"))
-                ImageCache.preload(localPath, Qt.size(300, 300));
+                ImageCache.copyAndPreload(localPath, Qt.size(300, 300));
         }
     }
 
