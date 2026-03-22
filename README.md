@@ -18,122 +18,68 @@
 
 ## Showcase
 
-### Video
-
 https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 
-### Preview
-
 <details>
-  <summary>Image preview</summary>
+  <summary>Screenshots</summary>
+  <br/>
   <table>
-  <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/447c0b4a-a5b4-41ec-8f4a-05b57f523edb" width="480"/><br/>Bar & Workspaces</td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/a34f1a9f-f9ed-4f82-991f-e68e79e54fec" width="480"/><br/>Quick Settings</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/6283c0b6-6055-4fd0-900a-0dabafac46a3" width="480"/><br/>Launcher</td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/8049ec79-ade0-47d5-b2d8-cb5c5a25e895" width="480"/><br/>Notifications</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/74ddfbbd-269a-48fb-8380-bd11b0bcc82f" width="480"/><br/>Weather</td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/01cd558e-9beb-48a2-930c-bb48cfa493d4" width="480"/><br/>Dashboard</td>
-  </tr>
-  <tr>
-    <td align="center"><img src="https://github.com/user-attachments/assets/9995e862-e6ff-45ee-88d8-68dbb98226e1" width="480"/><br/>Lockscreen</td>
-    <td align="center"><img src="https://github.com/user-attachments/assets/7ba86a61-f957-440d-9aa8-0eb6c84c766c" width="480"/><br/>Settings</td>
-  </tr>
-</table>
+    <tr>
+      <td align="center"><img src="https://github.com/user-attachments/assets/447c0b4a-a5b4-41ec-8f4a-05b57f523edb" width="480"/><br/>Bar & Workspaces</td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/a34f1a9f-f9ed-4f82-991f-e68e79e54fec" width="480"/><br/>Quick Settings</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://github.com/user-attachments/assets/6283c0b6-6055-4fd0-900a-0dabafac46a3" width="480"/><br/>Launcher</td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/8049ec79-ade0-47d5-b2d8-cb5c5a25e895" width="480"/><br/>Notifications</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://github.com/user-attachments/assets/74ddfbbd-269a-48fb-8380-bd11b0bcc82f" width="480"/><br/>Weather</td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/01cd558e-9beb-48a2-930c-bb48cfa493d4" width="480"/><br/>Dashboard</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://github.com/user-attachments/assets/9995e862-e6ff-45ee-88d8-68dbb98226e1" width="480"/><br/>Lockscreen</td>
+      <td align="center"><img src="https://github.com/user-attachments/assets/7ba86a61-f957-440d-9aa8-0eb6c84c766c" width="480"/><br/>Settings</td>
+    </tr>
+  </table>
 </details>
 
 ---
 
-### Global shortcut (Hyprland only)
+## Usage
 
-- quickshell:wallpaperSwitcher
-- quickshell:layershell
-- quickshell:appLauncher
-- quickshell:screencaptureLauncher
-- quickshell:overview
-- quickshell:QuickSettings
-- quickshell:session
-- quickshell:weather
-- quickshell:dashboard
-- quickshell:settings
+### Hyprland Global Shortcuts
 
-**How to use Hyprland global shortcuts**
-
-```
-hyprctl dispatch global quickshell:appLauncher
-```
-
-### Ipc call
-
-```txt
-target weather
-  function toggle(): void
-  function open(): void
-  function close(): void
-target screenCapture
-  function toggle(): void
-  function open(): void
-  function close(): void
-target bar
-  function toggle(): void
-  function open(): void
-  function close(): void
-target toast
-  function open(header: string, description: string, icon: string, duration: int): void
-target quickSettings
-  function toggle(): void
-  function open(): void
-  function close(): void
-target img
-  function get(): string
-  function set(path: string): void
-target launcher
-  function toggle(): void
-  function open(): void
-  function close(): void
-target session
-  function toggle(): void
-  function open(): void
-  function close(): void
-target dashboard
-  function toggle(): void
-  function open(): void
-  function close(): void
-target settings
-  function toggle(): void
-  function open(): void
-  function close(): void
-target overview
-  function toggle(): void
-  function open(): void
-  function close(): void
-target wallpaperSwitcher
-  function toggle(): void
-  function open(): void
-  function close(): void
-target lock
-  function unlock(): void
-  function isLocked(): bool
-  function lock(): void
-```
-
-**How to use ipc handler from quickshell**
+Dispatch a panel or action directly from Hyprland:
 
 ```sh
-quickshell -c <shell directory> ipc call wallpaperSwitcher toggle
-
-or
-
-qs -c <shell directory> ipc call wallpaperSwitcher toggle
-
-or if you install from archInstall or flake nix
-
-shell ipc call wallpaperSwitcher toggle
+hyprctl dispatch global quickshell:<target>
 ```
+
+Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `screencaptureLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`
+
+### IPC
+
+Call shell functions from a script or keybind:
+
+```sh
+# Full form
+quickshell -c <shell directory> ipc call <target> <function>
+
+# Short alias
+qs -c <shell directory> ipc call <target> <function>
+
+# If installed via archInstall.sh or the Nix flake
+shell ipc call <target> <function>
+```
+
+**Available targets and functions:**
+
+| Target | Functions |
+|---|---|
+| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture` | `toggle()`, `open()`, `close()` |
+| `toast` | `open(header: string, description: string, icon: string, duration: int)` |
+| `img` | `get(): string`, `set(path: string)` |
+| `lock` | `lock()`, `unlock()`, `isLocked(): bool` |
 
 ---
 
@@ -142,13 +88,15 @@ shell ipc call wallpaperSwitcher toggle
 ### NixOS (Flakes)
 
 Add vast-shell to your flake inputs:
+
 ```nix
 inputs.vast-shell = {
-	url = "github:myamusashi/vast-shell";
+  url = "github:myamusashi/vast-shell";
 };
 ```
 
 Then include the package in your system or home configuration:
+
 ```nix
 environment.systemPackages = [
   inputs.vast-shell.packages.${system}.default
@@ -158,6 +106,7 @@ environment.systemPackages = [
 #### Home Manager
 
 Import the module and enable it:
+
 ```nix
 imports = [ inputs.vast-shell.homeManagerModules.default ];
 
@@ -180,51 +129,56 @@ The module registers a systemd user service (`quickshell-shell.service`) that au
 
 > [!IMPORTANT]
 > Requires Arch Linux or an Arch-based distro. Run with `sudo`.
+
 ```bash
 git clone https://github.com/myamusashi/vast-shell.git
 cd vast-shell
 sudo ./archInstall.sh
 ```
 
-The script will install all dependencies, build the plugins, compile shaders, and set up the shell. Once complete, start it with:
+The script installs all dependencies, builds the plugins, compiles shaders, and sets up the shell. Once complete, start it with:
+
 ```bash
 shell
 ```
 
-#### Build Dependencies
+#### Dependencies
 
-- **Compiler/Build**: `cmake`, `qt6-shadertools` (for `qsb`), `qt6-tools` (for `lrelease`)
-- **Qt (build)**: `qt6-base`, `qt6-declarative`, `qt6-multimedia`
+**Build**
 
-#### Runtime Dependencies
+| Package | Purpose |
+|---|---|
+| `cmake`, `qt6-shadertools`, `qt6-tools` | Build system, shader compiler (`qsb`), translation compiler (`lrelease`) |
+| `qt6-base`, `qt6-declarative`, `qt6-multimedia` | Qt6 build-time libraries |
 
-- **Shell**: `quickshell-git`, `hyprland`, `foot`, `polkit`
-- **Qt**: `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-5compat`, `qt6-graphs`, `kf6-qtmultimedia`
-- **Media**: `ffmpeg`, `wireplumber`, `wl-clipboard`, `wl-screenrec`
-- **Network / Notifications**: `iw`, `libnotify`
-- **Fonts**: `ttf-material-symbols-variable-git`, `ttf-weather-icons`, `google sans flex` (optional), `Hack` (optional)
-- **Utils**: `findutils`, `grep`, `gawk`, `sed`, `util-linux`
-- **Other**: `matugen-bin`, `app2unit`
+**Runtime**
+
+| Category | Packages |
+|---|---|
+| Shell | `quickshell-git`, `hyprland`, `foot`, `polkit` |
+| Qt6 | `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-5compat`, `qt6-graphs`, `kf6-qtmultimedia` |
+| Media | `ffmpeg`, `wireplumber`, `wl-clipboard`, `wl-screenrec` |
+| Network / Notifications | `iw`, `libnotify` |
+| Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons`, `google-sans-flex` (optional), `Hack` (optional) |
+| Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
+| Other | `matugen-bin`, `app2unit` |
 
 > [!IMPORTANT]
-> **Brightness Control (ddcutil)**: Controlling external monitor brightness requires non-root access to I2C devices.
-> - `archInstall.sh` handles this automatically for Arch Linux users.
-> - For manual setup, ensure the `i2c-dev` module is loaded and you have the appropriate udev rules (see `setup_i2c` function in `archInstall.sh` for details).
-> - You must also be a member of the `i2c` and `video` groups.
+> **Brightness control (ddcutil):** Controlling external monitor brightness requires non-root access to I2C devices. `archInstall.sh` handles this automatically. For manual setup, load the `i2c-dev` module, apply the appropriate udev rules (see `setup_i2c` in `archInstall.sh`), and add your user to the `i2c` and `video` groups.
 
 ---
 
 ### Other Distros
 
 > [!WARNING]
-> Package names, availability, and versions listed below were accurate at the time of writing but **may be outdated or unavailable** depending on your distro version and repo state. Always verify against your distro's official package index before installing. If a package is missing or renamed, check your distro's community wiki or forums. PRs to keep this list updated are welcome.
+> Package names below were accurate at time of writing but **may be outdated**. Always verify against your distro's official package index. PRs to keep this list updated are welcome.
 >
 > - **Fedora** → https://packages.fedoraproject.org
 > - **openSUSE** → https://software.opensuse.org
 > - **Gentoo** → https://packages.gentoo.org
 > - **Void** → https://voidlinux.org/packages
 
-The following packages must be built from source regardless of distro:
+The following packages must always be built from source, regardless of distro:
 
 | Package | Source |
 |---|---|
@@ -235,7 +189,9 @@ The following packages must be built from source regardless of distro:
 | Material Symbols font | https://github.com/google/material-design-icons |
 | Weather Icons font | https://github.com/erikflowers/weather-icons |
 
-#### Fedora
+<details>
+<summary>Fedora</summary>
+
 ```bash
 # System & build
 sudo dnf install git cmake ninja-build extra-cmake-modules patchelf pkgconf \
@@ -253,9 +209,14 @@ sudo dnf install pipewire wireplumber iw libnotify polkit \
 
 > [!NOTE]
 > `ffmpeg` requires [RPM Fusion](https://rpmfusion.org): `sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm`
+>
 > `qt6-qtgraphs` is not yet packaged in Fedora — build from source if required.
 
-#### openSUSE Tumbleweed
+</details>
+
+<details>
+<summary>openSUSE Tumbleweed</summary>
+
 ```bash
 # System & build
 sudo zypper install git cmake ninja extra-cmake-modules patchelf pkgconf \
@@ -271,7 +232,11 @@ sudo zypper install pipewire wireplumber iw libnotify-tools polkit \
                     wl-clipboard ffmpeg foot hyprland findutils grep sed gawk util-linux
 ```
 
-#### Gentoo
+</details>
+
+<details>
+<summary>Gentoo</summary>
+
 ```bash
 # System & build
 sudo emerge -av dev-vcs/git dev-build/cmake dev-build/ninja \
@@ -290,7 +255,11 @@ sudo emerge -av media-video/pipewire media-video/wireplumber net-wireless/iw \
                 gui-wm/hyprland sys-apps/util-linux
 ```
 
-#### Void Linux
+</details>
+
+<details>
+<summary>Void Linux</summary>
+
 ```bash
 # System & build
 sudo xbps-install -S git cmake ninja extra-cmake-modules patchelf pkgconf \
@@ -306,297 +275,258 @@ sudo xbps-install -S pipewire wireplumber iw libnotify polkit \
                      wl-clipboard ffmpeg foot hyprland findutils grep sed gawk util-linux
 ```
 
+</details>
+
 ---
 
 ## Configuration
 
-Vast-shell is customized by editing JSON files in the `Data/` directory of the repository or in your user configuration directory.
+Vast-shell is configured by editing JSON files in the `Data/` directory or in your user config directory (`~/.config/vast-shell/`).
 
-### Main Configuration ([configurations.json](file:///home/myamusashi/shell/Data/configurations.json))
-
-This file contains the primary settings for the shell.
-
-###### Setup
-
-1. Create the config directory and copy the data files:
+### Setup
 
 ```bash
 mkdir -p ~/.config/vast-shell
-# Replace /path/to/vast-shell with the actual path where you cloned the repository
 cp -r /path/to/vast-shell/Data/{colors.json,configurations.json} ~/.config/vast-shell/
 ```
 
-If you want to use Matugen color generation:
+For Matugen color generation:
 
 ```bash
 mkdir -p ~/.config/matugen
 touch ~/.config/matugen/config.toml
+# Copy Data/matugen/matugen.toml content here and adjust paths
 ```
 
-Copy the content from `Data/matugen/matugen.toml` to `~/.config/matugen/config.toml` and adjust the paths to your home directory.
-
-2. Open `~/.config/vast-shell/configurations.json` and adjust the settings to your liking.
+### configurations.json
 
 <details>
-<summary>View full configurations.json structure</summary>
+<summary>View full structure</summary>
 
 ```json
 {
-	"appearance": {
-		"animations": {
-			"durations": {
-				"scale": 1
-			}
-		},
-		"fonts": {
-			"family": {
-				"material": "Material Symbols Rounded",
-				"mono": "Hack",
-				"sans": "Google Sans Flex"
-			},
-			"size": {
-				"scale": 1
-			}
-		},
-		"margin": {
-			"small": 5,
-			"smaller": 7,
-			"normal": 10,
-			"larger": 12,
-			"large": 15
-		},
-		"padding": {
-			"small": 5,
-			"smaller": 7,
-			"normal": 10,
-			"larger": 12,
-			"large": 15
-		},
-		"rounding": {
-			"small": 12,
-			"normal": 17,
-			"large": 25,
-			"full": 1000
-		},
-		"spacing": {
-			"small": 7,
-			"smaller": 10,
-			"normal": 12,
-			"larger": 15,
-			"large": 20
-		}
-	},
-	"bar": {
-		"alwaysOpenBar": true,
-		"barHeight": 40,
-		"compact": false,
-		"visibleWorkspace": 5,
-		"workspacesIndicator": "dot"
-	},
-	"colors": {
-		"isDarkMode": true,
-		"matugenConfigPathForDarkColor": "$HOME/.config/vast-shell/dark-colors.json",
-		"matugenConfigPathForLightColor": "$HOME/.config/vast-shell/light-colors.json",
-		"staticColorsPath": "$HOME/.config/vast-shell/colors.json",
-		"useMatugenColor": false,
-		"useStaticColors": false
-	},
-	"generals": {
-		"alpha": 1.0,
-		"apps": {
-			"audio": "pavucontrol-qt",
-			"fileExplorer": "pcmanfm-qt",
-			"imageViewer": "lximage-qt",
-			"playback": "mpv",
-			"terminal": "foot",
-			"videoViewer": "mpv"
-		},
-		"battery": {
-			"criticalLevel": 3,
-			"warnLevels": [
-				{
-					"icon": "battery-020",
-					"level": 20,
-					"message": "Kamu mungkin mau colok chargernya",
-					"title": "Baterai lemah"
-				},
-				{
-					"icon": "battery-010",
-					"level": 10,
-					"message": "Kamu mungkin ingin colok charger kamu <b>sekarang</b>",
-					"title": "Kamu bisa lihat pesan sebelumnya kan?"
-				},
-				{
-					"icon": "battery-000",
-					"level": 5,
-					"message": "MASUKAN CHARGER NYA SEKARANG!!",
-					"title": "Level baterai kritis"
-				}
-			]
-		},
-		"chargingGlowSpread": 10,
-		"coverBlurRadius": 16,
-		"enableOuterBorder": false,
-		"followFocusMonitor": true,
-		"outerBorderSize": 10,
-		"transparent": false
-	},
-	"language": {
-		"language": ""
-	},
-	"mediaPlayer": {
-		"dynamicColorsCover": true,
-		"showLyrics": false,
-		"sliderType": "WaveForm"
-	},
-	"notification": {
-		"maximumNotification": 100,
-		"maximumNotificationAge": 604800000
-	},
-	"wallpaper": {
-		"enabledWallpaper": true,
-		"transition": "random",
-		"transitionDuration": 300,
-		"transitionLowPerfMode": false,
-		"visibleWallpaper": 3,
-		"wallpaperDir": "$HOME/Pictures/wallpapers"
-	},
-	"weather": {
-		"enableQuickSummary": false,
-		"latitude": "-0",
-		"longitude": "0",
-		"reloadTime": 1800000
-	}
+  "appearance": {
+    "animations": { "durations": { "scale": 1 } },
+    "fonts": {
+      "family": {
+        "material": "Material Symbols Rounded",
+        "mono": "Hack",
+        "sans": "Google Sans Flex"
+      },
+      "size": { "scale": 1 }
+    },
+    "margin":  { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
+    "padding": { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
+    "rounding": { "small": 12, "normal": 17, "large": 25, "full": 1000 },
+    "spacing":  { "small": 7, "smaller": 10, "normal": 12, "larger": 15, "large": 20 }
+  },
+  "bar": {
+    "alwaysOpenBar": true,
+    "barHeight": 40,
+    "compact": false,
+    "visibleWorkspace": 5,
+    "workspacesIndicator": "dot"
+  },
+  "colors": {
+    "isDarkMode": true,
+    "matugenConfigPathForDarkColor":  "$HOME/.config/vast-shell/dark-colors.json",
+    "matugenConfigPathForLightColor": "$HOME/.config/vast-shell/light-colors.json",
+    "staticColorsPath": "$HOME/.config/vast-shell/colors.json",
+    "useMatugenColor": false,
+    "useStaticColors": false
+  },
+  "generals": {
+    "alpha": 1.0,
+    "apps": {
+      "audio": "pavucontrol-qt",
+      "fileExplorer": "pcmanfm-qt",
+      "imageViewer": "lximage-qt",
+      "playback": "mpv",
+      "terminal": "foot",
+      "videoViewer": "mpv"
+    },
+    "battery": {
+      "criticalLevel": 3,
+      "warnLevels": [
+        { "icon": "battery-020", "level": 20, "message": "Kamu mungkin mau colok chargernya",           "title": "Baterai lemah" },
+        { "icon": "battery-010", "level": 10, "message": "Kamu mungkin ingin colok charger kamu <b>sekarang</b>", "title": "Kamu bisa lihat pesan sebelumnya kan?" },
+        { "icon": "battery-000", "level": 5,  "message": "MASUKAN CHARGER NYA SEKARANG!!",              "title": "Level baterai kritis" }
+      ]
+    },
+    "chargingGlowSpread": 10,
+    "coverBlurRadius": 16,
+    "enableOuterBorder": false,
+    "followFocusMonitor": true,
+    "outerBorderSize": 10,
+    "transparent": false
+  },
+  "language": { "language": "" },
+  "mediaPlayer": {
+    "dynamicColorsCover": true,
+    "showLyrics": false,
+    "sliderType": "WaveForm"
+  },
+  "notification": {
+    "maximumNotification": 100,
+    "maximumNotificationAge": 604800000
+  },
+  "wallpaper": {
+    "enabledWallpaper": true,
+    "transition": "random",
+    "transitionDuration": 300,
+    "transitionLowPerfMode": false,
+    "visibleWallpaper": 3,
+    "wallpaperDir": "$HOME/Pictures/wallpapers"
+  },
+  "weather": {
+    "enableQuickSummary": false,
+    "latitude": "-6.4028",
+    "longitude": "106.7744",
+    "reloadTime": 1800000
+  }
 }
 ```
 
 </details>
 
-### Configuration Details
+### Reference
 
 #### Appearance
+
 | Key | Default | Description |
 |---|---|---|
-| `animations.durations.scale` | `1` | Global scale for animation durations. |
-| `fonts.family` | `material`, `mono`, `sans` | Font families for different text types. |
+| `animations.durations.scale` | `1` | Global scale for all animation durations. |
+| `fonts.family` | — | Font families for `material`, `mono`, and `sans` text. |
 | `fonts.size.scale` | `1.0` | Global font size scale. |
-| `margin`, `padding`, `rounding`, `spacing` | `small`...`large` | Detailed layout sizing (pixel values). |
+| `margin` / `padding` / `rounding` / `spacing` | `small`…`large` | Layout sizing in pixels. |
 
 #### Bar
+
 | Key | Default | Description |
 |---|---|---|
-| `alwaysOpenBar` | `true` | Whether the bar is always visible. |
-| `barHeight` | `40` | Height of the bar in pixels. |
-| `compact` | `false` | Enable compact mode for the bar. |
-| `visibleWorkspace` | `5` | Number of workspaces to show in the bar. |
-| `workspacesIndicator` | `"dot"` | Style of workspace indicator (`dot` or `interactive`). |
+| `alwaysOpenBar` | `true` | Keep the bar always visible. |
+| `barHeight` | `40` | Bar height in pixels. |
+| `compact` | `false` | Enable compact bar mode. |
+| `visibleWorkspace` | `5` | Number of workspaces shown. |
+| `workspacesIndicator` | `"dot"` | Workspace indicator style (`dot` or `interactive`). |
 
 #### Colors
+
 | Key | Default | Description |
 |---|---|---|
-| `isDarkMode` | `true` | Prefer dark mode themes. |
-| `useMatugenColor` | `false` | Use dynamic colors generated from wallpaper. |
-| `useStaticColors` | `false` | Use static colors from `colors.json`. |
-| `staticColorsPath` | `$HOME/.config/vast-shell/colors.json` | Path to your static color scheme. |
+| `isDarkMode` | `true` | Prefer dark mode. |
+| `useMatugenColor` | `false` | Generate colors dynamically from the current wallpaper. |
+| `useStaticColors` | `false` | Use a fixed color scheme from `colors.json`. |
+| `staticColorsPath` | `$HOME/.config/vast-shell/colors.json` | Path to your static color scheme file. |
 
-[!NOTE]
-If both flags are true (useMatugenColor and useStaticColors), Matugen takes priority.
+> [!NOTE]
+> If both `useMatugenColor` and `useStaticColors` are `true`, Matugen takes priority.
 
 #### Generals
+
 | Key | Default | Description |
 |---|---|---|
-| `alpha` | `1.0` | Transparency level for shell elements. |
+| `alpha` | `1.0` | Global transparency level. |
 | `transparent` | `false` | Enable transparency for shell elements. |
-| `enableOuterBorder` | `false` | Enable a border around the entire shell layout. |
-| `outerBorderSize` | `10` | Size of the outer border. |
-| `coverBlurRadius` | `16` | Blur radius for media covers. |
-| `chargingGlowSpread` | `10` | Spread of the glow effect when charging. |
-| `apps` | `terminal`, `audio`, etc. | Default applications for various tasks. |
-| `battery.warnLevels` | `[...]` | Battery levels and notification messages. |
+| `enableOuterBorder` | `false` | Draw a border around the shell layout. |
+| `outerBorderSize` | `10` | Outer border thickness in pixels. |
+| `coverBlurRadius` | `16` | Blur radius applied to media cover art. |
+| `chargingGlowSpread` | `10` | Glow spread radius when the device is charging. |
+| `apps` | — | Default applications for terminal, audio, file manager, etc. |
+| `battery.warnLevels` | — | Battery thresholds with custom notification titles and messages. |
 
 #### Media Player
+
 | Key | Default | Description |
 |---|---|---|
-| `showLyrics` | `false` | Automatically fetch and show lyrics. |
-| `dynamicColorsCover` | `true` | Adapt colors based on the current track's cover art. |
-| `sliderType` | `"Wavy"` | Progress bar style (`Wavy` or `WaveForm`). |
+| `showLyrics` | `false` | Auto-fetch and display synced lyrics. |
+| `dynamicColorsCover` | `true` | Adapt UI colors from the current track's cover art. |
+| `sliderType` | `"WaveForm"` | Progress bar style (`WaveForm` or `Wavy`). |
 
-#### Wallpaper & Weather
-| Category | Key | Default | Description |
-|---|---|---|---|
-| **Wallpaper** | `transition` | `"random"` | Transition effect (`circle`, `fade`, `random`, etc.). |
-| **Wallpaper** | `wallpaperDir` | `$HOME/Pictures/wallpapers` | Directory to pick wallpapers from. |
-| **Weather** | `latitude`, `longitude` | `"-6.4028"`, `"106.7744"` | Location for weather data. |
-| **Weather** | `reloadTime` | `180000` | Refresh interval in milliseconds (3 mins). |
+#### Wallpaper
+
+| Key | Default | Description |
+|---|---|---|
+| `transition` | `"random"` | Transition effect (`fade`, `circle`, `wipe`, `random`, etc.). |
+| `transitionDuration` | `300` | Transition duration in milliseconds. |
+| `transitionLowPerfMode` | `false` | Reduce transition quality for lower-end hardware. |
+| `wallpaperDir` | `$HOME/Pictures/wallpapers` | Directory to source wallpapers from. |
+| `visibleWallpaper` | `3` | Number of wallpapers shown in the picker. |
+
+#### Weather
+
+| Key | Default | Description |
+|---|---|---|
+| `latitude` / `longitude` | — | Your location coordinates for weather data. |
+| `reloadTime` | `1800000` | Weather refresh interval in milliseconds (30 min). |
+| `enableQuickSummary` | `false` | Show a compact weather summary in the bar. |
 
 ---
 
-### Matugen ([matugen/](file:///home/myamusashi/shell/Data/matugen))
+### Matugen
 
-The `matugen` directory contains configuration and templates for dynamic color generation.
+The `Data/matugen/` directory contains the Matugen config and color templates:
 
-- `matugen.toml` — main configuration for the Matugen tool.
-- `dark-colors.json` / `light-colors.json` — generated color schemes.
+- `matugen.toml` — main Matugen configuration
+- `dark-colors.json` / `light-colors.json` — generated color output
 
 <details>
-<summary>View dynamic colors example (dark)</summary>
+<summary>Example generated color scheme (dark)</summary>
 
 ```json
 {
-	"colors": {
-		"background": "#171217",
-		"error": "#ffb4ab",
-		"errorContainer": "#93000a",
-		"inverseOnSurface": "#342f34",
-		"inversePrimary": "#7a4f80",
-		"inverseSurface": "#eadfe6",
-		"onBackground": "#eadfe6",
-		"onError": "#690005",
-		"onErrorContainer": "#ffdad6",
-		"onPrimary": "#48204f",
-		"onPrimaryContainer": "#fed6ff",
-		"onPrimaryFixed": "#300939",
-		"onPrimaryFixedVariant": "#603767",
-		"onSecondary": "#3b2b3c",
-		"onSecondaryContainer": "#f4dbf2",
-		"onSecondaryFixed": "#251726",
-		"onSecondaryFixedVariant": "#524153",
-		"onSurface": "#eadfe6",
-		"onSurfaceVariant": "#cfc3cd",
-		"onTertiary": "#4c2520",
-		"onTertiaryContainer": "#ffdad5",
-		"onTertiaryFixed": "#33110d",
-		"onTertiaryFixedVariant": "#673b35",
-		"outline": "#988d97",
-		"outlineVariant": "#4d444c",
-		"primary": "#eab5ee",
-		"primaryContainer": "#603767",
-		"primaryFixed": "#fed6ff",
-		"primaryFixedDim": "#eab5ee",
-		"scrim": "#000000",
-		"secondary": "#d7bfd5",
-		"secondaryContainer": "#524153",
-		"secondaryFixed": "#f4dbf2",
-		"secondaryFixedDim": "#d7bfd5",
-		"shadow": "#000000",
-		"sourceColor": "#ce8fd6",
-		"surface": "#171217",
-		"surfaceBright": "#3d373d",
-		"surfaceContainer": "#231e23",
-		"surfaceContainerHigh": "#2e282d",
-		"surfaceContainerHighest": "#393338",
-		"surfaceContainerLow": "#1f1a1f",
-		"surfaceContainerLowest": "#110d11",
-		"surfaceDim": "#171217",
-		"surfaceTint": "#eab5ee",
-		"surfaceVariant": "#4d444c",
-		"tertiary": "#f5b8af",
-		"tertiaryContainer": "#673b35",
-		"tertiaryFixed": "#ffdad5",
-		"tertiaryFixedDim": "#f5b8af",
-		
-		"end": "end"
-	}
+  "colors": {
+    "background": "#171217",
+    "error": "#ffb4ab",
+    "errorContainer": "#93000a",
+    "inverseOnSurface": "#342f34",
+    "inversePrimary": "#7a4f80",
+    "inverseSurface": "#eadfe6",
+    "onBackground": "#eadfe6",
+    "onError": "#690005",
+    "onErrorContainer": "#ffdad6",
+    "onPrimary": "#48204f",
+    "onPrimaryContainer": "#fed6ff",
+    "onPrimaryFixed": "#300939",
+    "onPrimaryFixedVariant": "#603767",
+    "onSecondary": "#3b2b3c",
+    "onSecondaryContainer": "#f4dbf2",
+    "onSecondaryFixed": "#251726",
+    "onSecondaryFixedVariant": "#524153",
+    "onSurface": "#eadfe6",
+    "onSurfaceVariant": "#cfc3cd",
+    "onTertiary": "#4c2520",
+    "onTertiaryContainer": "#ffdad5",
+    "onTertiaryFixed": "#33110d",
+    "onTertiaryFixedVariant": "#673b35",
+    "outline": "#988d97",
+    "outlineVariant": "#4d444c",
+    "primary": "#eab5ee",
+    "primaryContainer": "#603767",
+    "primaryFixed": "#fed6ff",
+    "primaryFixedDim": "#eab5ee",
+    "scrim": "#000000",
+    "secondary": "#d7bfd5",
+    "secondaryContainer": "#524153",
+    "secondaryFixed": "#f4dbf2",
+    "secondaryFixedDim": "#d7bfd5",
+    "shadow": "#000000",
+    "sourceColor": "#ce8fd6",
+    "surface": "#171217",
+    "surfaceBright": "#3d373d",
+    "surfaceContainer": "#231e23",
+    "surfaceContainerHigh": "#2e282d",
+    "surfaceContainerHighest": "#393338",
+    "surfaceContainerLow": "#1f1a1f",
+    "surfaceContainerLowest": "#110d11",
+    "surfaceDim": "#171217",
+    "surfaceTint": "#eab5ee",
+    "surfaceVariant": "#4d444c",
+    "tertiary": "#f5b8af",
+    "tertiaryContainer": "#673b35",
+    "tertiaryFixed": "#ffdad5",
+    "tertiaryFixedDim": "#f5b8af"
+  }
 }
 ```
 
@@ -606,86 +536,68 @@ The `matugen` directory contains configuration and templates for dynamic color g
 
 ## Translations
 
-Vast-shell uses Qt's built-in translation system. Translation files live in the `translations/` directory:
+Vast-shell uses Qt's built-in translation system. Translation files live in `translations/`:
 
-- `.ts` — source translation file (XML, human-editable)
-- `.qm` — compiled binary used at runtime (generated, do not edit)
-
-Currently included locales:
+- `.ts` — source file (XML, human-editable)
+- `.qm` — compiled binary used at runtime (do not edit directly)
 
 | Locale | Language |
 |---|---|
 | `id_ID` | Indonesian |
 
 > [!NOTE]
-> `lupdate` and `lrelease` are provided by `qt6-tools` (Arch) or `qt6-tools-dev-tools` (Debian/Ubuntu). On NixOS they are available via `qt6.qttools`.
+> `lupdate` and `lrelease` are provided by `qt6-tools` (Arch), `qt6-tools-dev-tools` (Debian/Ubuntu), or `qt6.qttools` (NixOS).
 
 ### Qt Linguist
 
-The recommended way to translate vast-shell is with **Qt Linguist** — a dedicated GUI translation editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, lets you mark strings as finished, and warns about missing or outdated entries.
+The recommended way to translate vast-shell is with **Qt Linguist**, a GUI editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, and warns about missing or outdated entries.
 
 <img src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" width="720"/>
 
 <table>
   <tr>
-    <td>✅ Visual side-by-side source and translation editing</td>
-    <td>✅ Translation progress tracker per file</td>
+    <td>✅ Visual side-by-side editing</td>
+    <td>✅ Progress tracker per file</td>
   </tr>
   <tr>
     <td>✅ Marks unfinished and obsolete strings</td>
     <td>✅ Built-in phrase book and search</td>
   </tr>
 </table>
+
 ```bash
 linguist translations/your_locale.ts
 ```
 
 ### Adding a New Language
 
-**1. Generate a new `.ts` file from the source**
 ```bash
+# 1. Generate the .ts file
 lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+
+# 2. Translate in Qt Linguist (or edit the XML by hand)
+linguist translations/your_locale.ts
+
+# 3. Compile to .qm
+lrelease translations/your_locale.ts
 ```
 
 Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE`.
 
-**2. Open in Qt Linguist and translate**
-```bash
-linguist translations/your_locale.ts
-```
-
-Or edit by hand — fill in the `<translation>` tag for each entry:
-```xml
-<message>
-    <source>Search applications</source>
-    <translation>Rechercher des applications</translation>
-</message>
-```
-
-**3. Compile to `.qm`**
-```bash
-lrelease translations/your_locale.ts
-```
-
 ### Updating an Existing Translation
 
-Sync new strings into an existing `.ts` file without overwriting existing translations:
 ```bash
+# Sync new strings without overwriting existing translations
 lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
-```
 
-Open in Linguist, fill in entries marked as **Unfinished**, then recompile:
-```bash
+# Open in Linguist, finish unfinished entries, then recompile
 lrelease translations/your_locale.ts
 ```
 
-### NixOS
+**NixOS:** Translations are compiled automatically during the build phase — no manual steps needed.
 
-Translations are compiled automatically during the build phase — no manual steps needed.
+**Arch Linux:** `archInstall.sh` compiles translations automatically. To recompile manually:
 
-### Arch Linux
-
-The `archInstall.sh` script compiles translations automatically. To recompile manually:
 ```bash
 /usr/lib/qt6/bin/lrelease translations/*.ts
 ```
@@ -693,24 +605,18 @@ The `archInstall.sh` script compiles translations automatically. To recompile ma
 ---
 
 ## Project Structure
+
 ```
-shell.qml
+vast-shell/
+├── shell.qml
 ├── archInstall.sh
-├── flake.nix
-├── flake.lock
-├── shell.nix
+├── flake.nix / flake.lock / shell.nix
 │
 ├── nix/
 │   ├── default.nix
 │   ├── hm-modules.nix
-│   ├── packages/
-│   │   ├── app2unit.nix
-│   │   ├── material-symbols.nix
-│   │   └── qmlfmt.nix
-│   └── plugins/
-│       ├── vastPlugin.nix
-│       ├── AnotherRipple.nix
-│       └── m3Shapes.nix
+│   ├── packages/          # app2unit, material-symbols, qmlfmt
+│   └── plugins/           # vastPlugin, AnotherRipple, m3Shapes
 │
 ├── Core/
 │   ├── Configs/
@@ -719,95 +625,46 @@ shell.qml
 │
 ├── Components/
 │   ├── Base/
-│   ├── Dialog/
-│   │   └── FileDialog/
+│   ├── Dialog/FileDialog/
 │   └── Feedback/
 │
-├── Services/
-│   ├── Audio.qml
-│   ├── Battery.qml
-│   ├── Brightness.qml
-│   ├── Colours.qml
-│   ├── Hotspot.qml
-│   ├── Hypr.qml
-│   ├── Lyrics.qml
-│   ├── Notifs.qml
-│   ├── SystemUsage.qml
-│   ├── Weather.qml
-│   ├── http.js
-│   └── ...
+├── Services/              # Audio, Battery, Brightness, Colours,
+│                          # Hotspot, Hypr, Lyrics, Notifs,
+│                          # SystemUsage, Weather, http.js …
 │
 ├── Modules/
-│   ├── Drawers/
-│   │   ├── Drawers.qml
-│   │   ├── Bar/
-│   │   ├── Calendar/
-│   │   ├── Launcher/
-│   │   ├── Notifications/
-│   │   ├── OSD/
-│   │   ├── Overview/
-│   │   ├── QuickSettings/
-│   │   ├── Session/
-│   │   ├── Volume/
-│   │   ├── WallpaperSelector/
-│   │   └── Weather/
-│   ├── Dashboard/
-│   ├── Lock/
-│   ├── Polkit/
-│   ├── Settings/
-│   └── Wallpaper/
+│   └── Drawers/           # Bar, Calendar, Launcher, Notifications,
+│       │                  # OSD, Overview, QuickSettings, Session,
+│       │                  # Volume, WallpaperSelector, Weather
+│       ├── Dashboard/
+│       ├── Lock/
+│       ├── Polkit/
+│       ├── Settings/
+│       └── Wallpaper/
 │
-├── Widgets/
-│   ├── AudioProfiles.qml
-│   ├── Battery.qml
-│   ├── Clock.qml
-│   ├── LyricsView.qml
-│   ├── Mpris.qml
-│   ├── RecordIndicator.qml
-│   ├── Tray.qml
-│   ├── Workspaces.qml
-│   └── ...
+├── Widgets/               # AudioProfiles, Battery, Clock, LyricsView,
+│                          # Mpris, RecordIndicator, Tray, Workspaces …
 │
-├── Plugins/
-│   └── Vast/
-│       ├── CMakeLists.txt
-│       ├── AudioProfilesModel.cpp/hpp
-│       ├── AudioProfilesWatcher.cpp/hpp
-│       ├── KeylockState.cpp/hpp
-│       ├── LyricsProvider.cpp/hpp
-│       ├── ScreenRecorder.cpp/hpp
-│       ├── TranslationManager.cpp/hpp
-│       └── Search/
-│           ├── FileProvider.cpp/hpp
-│           ├── FuzzyMatcher.cpp/hpp
-│           ├── SearchEngine.cpp/hpp
-│           └── SearchResult.cpp/hpp
+├── Plugins/Vast/
+│   ├── CMakeLists.txt
+│   ├── AudioProfilesModel.cpp/hpp
+│   ├── AudioProfilesWatcher.cpp/hpp
+│   ├── KeylockState.cpp/hpp
+│   ├── LyricsProvider.cpp/hpp
+│   ├── ScreenRecorder.cpp/hpp
+│   ├── TranslationManager.cpp/hpp
+│   └── Search/            # FileProvider, FuzzyMatcher, SearchEngine, SearchResult
 │
 ├── Assets/
-│   ├── go/
-│   │   └── formatting.go
+│   ├── go/formatting.go
 │   ├── images/
 │   ├── pam.d/
-│   ├── shaders/
-│   │   ├── borderProgress.frag/vert
-│   │   ├── ImageTransition.vert
-│   │   ├── waveForm.frag/vert
-│   │   ├── wavy.frag/vert
-│   │   └── transitions/
-│   │       ├── boxExpand.frag
-│   │       ├── circleExpand.frag
-│   │       ├── diagonalWipe.frag
-│   │       ├── dissolve.frag
-│   │       ├── fade.frag
-│   │       ├── pixelate.frag
-│   │       ├── roll.frag
-│   │       ├── slideUp.frag
-│   │       ├── splitHorizontal.frag
-│   │       └── wipeDown.frag
+│   ├── shaders/           # borderProgress, waveForm, wavy, ImageTransition
+│   │   └── transitions/   # boxExpand, circleExpand, diagonalWipe, dissolve,
+│   │                      # fade, pixelate, roll, slideUp, splitHorizontal, wipeDown
 │   └── weather_icon/
 │
-├── Data/
-│   └── matugen/
+├── Data/matugen/
 ├── patches/
 └── translations/
 ```
@@ -819,44 +676,40 @@ shell.qml
 > [!NOTE]
 > These features are planned and may change in scope or priority. Contributions are welcome!
 
-### KDE Connect Integration
+**KDE Connect**
 - [ ] Clipboard sync between devices
 - [ ] File sharing between desktop and mobile
 - [ ] Device presence detection and pairing UI
 
-### Bluetooth
-- [ ] Bluetooth device discovery and pairing
-- [ ] Connection management and status indicator in the Quick Settings panel and settings window
+**Bluetooth**
+- [ ] Device discovery and pairing
+- [ ] Connection management and status in Quick Settings
 
-### Screen Capture Rework
-- [ ] Screen recording overlay inspired by OBS Studio
+**Screen Capture Rework**
+- [ ] Recording overlay inspired by OBS Studio
 - [ ] Window selection mode for targeted recording
 - [ ] Merged multi-monitor screenshot support
-- [ ] Reduced external dependencies — less reliance on `slurp`, `hyprshot`, and `grim`
+- [ ] Reduced external dependencies (less reliance on `slurp`, `hyprshot`, `grim`)
 
-### VPN & Tunnel Detection
-- [ ] Warp (Cloudflare) tunnel support
-- [ ] WireGuard connection detection and status
-- [ ] Generic VPN connection indicator in the settings network page
+**VPN & Tunnel Detection**
+- [ ] Warp (Cloudflare) and WireGuard connection detection
+- [ ] Generic VPN status indicator in the network settings page
 
-### Clipboard Manager
-- [ ] Persistent clipboard history
-- [ ] Image preview support
+**Clipboard Manager**
+- [ ] Persistent clipboard history with image preview
 - [ ] Selected text snippets with source context
-- [ ] Built-in, using `sqlite` or `cliphist` for clip monitoring
+- [ ] Built-in storage via `sqlite` or `cliphist`
 
 ---
 
 ## Credits
 
-Thanks to everyone in the Quickshell Discord server for helping me with my questions, especially **@m7moud_el_zayat** for the advice.
+Thanks to everyone in the Quickshell Discord server, especially **@m7moud_el_zayat** for the advice.
 
-Thanks to **@outfoxxed** for [this beautiful project](https://github.com/quickshell-mirror/quickshell).
+Thanks to **@outfoxxed** for [quickshell](https://github.com/quickshell-mirror/quickshell).
 
-Thanks to **[@Soramane](https://github.com/caelestia-dots/shell)** for the inspiration, I took a lot of reference from your shell and thanks for the material shapes too (and yoink your code).
+Thanks to **[@Soramane](https://github.com/caelestia-dots/shell)** for the inspiration — lots of references taken from your shell, and thanks for the material shapes too.
 
 Thanks to **[@Rexcrazy804](https://github.com/Rexcrazy804/Zaphkiel)** for the kuru-kuru.
 
-#### Honorable Mention
-
-Check out [qtengine](https://github.com/kossLAN/qtengine) by **@koss** — a qt config that doesn't suck.
+Also check out [qtengine](https://github.com/kossLAN/qtengine) by **@koss** — a Qt config that doesn't suck.
