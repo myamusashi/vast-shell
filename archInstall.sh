@@ -492,6 +492,41 @@ install_quickshell_config() {
 	fi
 }
 
+setup_user_config() {
+	local -r target_user="${SUDO_USER:-$USER}"
+	local -r user_home=$(getent passwd "$target_user" | cut -d: -f6)
+
+	[[ -n $user_home ]] || {
+		warn "Could not determine home directory for $target_user — skipping user config setup"
+		return 0
+	}
+
+	local -r vast_config_dir="$user_home/.config/vast-shell"
+	local -r matugen_config_dir="$user_home/.config/matugen"
+
+	log "Setting up user configuration for $target_user..."
+
+	# Create directories
+	mkdir -p "$vast_config_dir" "$matugen_config_dir"
+
+	# Copy vast-shell data
+	cp -r "$PROJECT_ROOT/Data/"* "$vast_config_dir/"
+
+	# Setup matugen config
+	if [[ ! -f "$matugen_config_dir/config.toml" ]]; then
+		if [[ -f "$PROJECT_ROOT/Data/matugen/matugen.toml" ]]; then
+			cp "$PROJECT_ROOT/Data/matugen/matugen.toml" "$matugen_config_dir/config.toml"
+			# Replace placeholder paths in matugen config
+			sed -i "s|/home/<user>|$user_home|g" "$matugen_config_dir/config.toml"
+			# Fix input_path after flattening Data/ contents into vast-shell config dir
+			sed -i "s|vast-shell/Data/matugen/|vast-shell/matugen/|g" "$matugen_config_dir/config.toml"
+		fi
+	fi
+
+	# Fix ownership
+	chown -R "$target_user:$target_user" "$vast_config_dir" "$matugen_config_dir"
+}
+
 create_wrapper() {
 	log "Creating wrapper script..."
 	cat >"$BIN_DIR/shell" <<'EOF'
@@ -526,8 +561,9 @@ main() {
 	compile_shaders
 	compile_translations
 	install_quickshell_config
+	setup_user_config
 	create_wrapper
-
+	
 	rm -rf "$BUILD_DIR"
 
 	log "System-wide installation complete!"
