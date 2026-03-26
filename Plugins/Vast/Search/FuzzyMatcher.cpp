@@ -151,7 +151,7 @@ double FuzzyMatcher::subsequenceScore(const QString& q, const QString& t) {
     const qsizetype    slen = shorter.length();
     const qsizetype    llen = longer.length();
 
-    QVector<qsizetype> prev(slen + 1), curr(slen + 1);
+    std::vector<qsizetype> prev(static_cast<size_t>(slen + 1)), curr(static_cast<size_t>(slen + 1));
     for (qsizetype i = 0; i <= slen; ++i)
         prev[i] = i;
 
@@ -168,9 +168,9 @@ double FuzzyMatcher::subsequenceScore(const QString& q, const QString& t) {
         if (rowMin > slen)
             return rowMin;
 
-        std::iota(prev.begin(), prev.end(), qsizetype{0});
+        std::swap(prev, curr);
     }
-    return prev[slen];
+    return curr[static_cast<size_t>(slen)];
 }
 
 double FuzzyMatcher::distanceScore(const QString& a, const QString& b) {

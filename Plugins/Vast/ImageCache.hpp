@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QMutex>
 #include <QObject>
 #include <QThreadPool>
 #include <QSet>

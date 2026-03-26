@@ -102,7 +102,7 @@ QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& q
             const double r = recencyScore(entry->property("id").toString());
             hits.append({r, v});
         }
-        std::stable_sort(hits.begin(), hits.end(), [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
+        std::ranges::stable_sort(hits, [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
         QVariantList out;
         out.reserve(hits.size());
         for (const auto& h : hits)
@@ -134,7 +134,7 @@ QVariantList SearchEngine::searchApps(const QVariantList& apps, const QString& q
         hits.append({finalScore, v, entry->property("name").toString()});
     }
 
-    std::sort(hits.begin(), hits.end(), [](const Hit& a, const Hit& b) {
+    std::ranges::sort(hits, [](const Hit& a, const Hit& b) {
         if (std::abs(a.score - b.score) < 0.001)
             return a.name.length() < b.name.length();
         return a.score > b.score;
@@ -188,7 +188,7 @@ QVariantList SearchEngine::searchFiles(const QVariantList& files, const QString&
             hits.append({s, v, name});
     }
 
-    std::sort(hits.begin(), hits.end(), [](const Hit& a, const Hit& b) {
+    std::ranges::sort(hits, [](const Hit& a, const Hit& b) {
         if (std::abs(a.score - b.score) < 0.001)
             return a.name.length() < b.name.length();
         return a.score > b.score;

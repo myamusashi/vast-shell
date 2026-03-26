@@ -15,12 +15,13 @@ QVariant AudioProfilesModel::data(const QModelIndex& index, int role) const {
 
     const auto& [idx, name, desc, avail, read] = m_profiles.at(index.row());
 
-    switch (std::to_underlying(static_cast<Roles>(role))) {
-        case std::to_underlying(IndexRole): return idx;
-        case std::to_underlying(NameRole): return name;
-        case std::to_underlying(DescriptionRole): return desc;
-        case std::to_underlying(AvailableRole): return avail;
-        case std::to_underlying(ReadableRole): return read;
+    using enum Roles;
+    switch (static_cast<Roles>(role)) {
+        case IndexRole: return idx;
+        case NameRole: return name;
+        case DescriptionRole: return desc;
+        case AvailableRole: return avail;
+        case ReadableRole: return read;
         default: return {};
     }
 }

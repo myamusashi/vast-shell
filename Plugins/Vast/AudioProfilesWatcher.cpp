@@ -46,14 +46,14 @@ using UniquePwContext    = std::unique_ptr<pw_context, PwContextDeleter>;
 using UniquePwCore       = std::unique_ptr<pw_core, PwCoreDeleter>;
 using UniquePwRegistry   = std::unique_ptr<pw_registry, PwRegistryDeleter>;
 
-#define AP_MAX_PROFILES 64
-#define AP_MAX_STR      256
+constexpr int kMaxProfiles = 64;
+constexpr int kMaxStr      = 256;
 
 struct ap_profile_entry_t {
-    int32_t index;
-    char    name[AP_MAX_STR];
-    char    description[AP_MAX_STR];
-    char    available[32];
+    int32_t                    index;
+    std::array<char, kMaxStr>  name{};
+    std::array<char, kMaxStr>  description{};
+    std::array<char, 32>       available{};
 };
 
 struct ap_device_node_t {
@@ -61,22 +61,22 @@ struct ap_device_node_t {
     spa_hook           device_listener{};
     spa_hook           proxy_listener{};
 
-    uint32_t           pw_id = 0;
-    char               name[AP_MAX_STR]{};
+    uint32_t                                  pw_id = 0;
+    std::array<char, kMaxStr>                 name{};
 
-    ap_profile_entry_t profiles[AP_MAX_PROFILES]{};
-    int                profile_count = 0;
+    std::array<ap_profile_entry_t, kMaxProfiles> profiles{};
+    int                                       profile_count = 0;
 
-    ap_profile_entry_t staging[AP_MAX_PROFILES]{};
-    int                staging_count = 0;
-    int                enum_seq      = 0;
+    std::array<ap_profile_entry_t, kMaxProfiles> staging{};
+    int                                       staging_count = 0;
+    int                                       enum_seq      = 0;
 
-    int32_t            active_index = -1;
-    char               active_name[AP_MAX_STR]{};
-    char               active_description[AP_MAX_STR]{};
-    char               active_available[32]{};
+    int32_t                                   active_index = -1;
+    std::array<char, kMaxStr>                 active_name{};
+    std::array<char, kMaxStr>                 active_description{};
+    std::array<char, 32>                      active_available{};
 
-    int                dirty = 0;
+    int                                       dirty = 0;
 };
 
 static void        ap_registry_event_global(void* data, uint32_t id, uint32_t permissions, const char* type, uint32_t version, const spa_dict* props);
@@ -92,13 +92,13 @@ static const char* ap_safe_lookup(const spa_dict* dict, const char* key) {
     return v ? v : "";
 }
 
-static void ap_safe_copy(char* dst, size_t dst_size, const char* src) {
-    if (!src || dst_size == 0) {
-        if (dst_size > 0)
-            dst[0] = '\0';
+template <std::size_t N>
+static void ap_safe_copy(std::array<char, N>& dst, const char* src) {
+    if (!src) {
+        dst[0] = '\0';
         return;
     }
-    snprintf(dst, dst_size, "%s", src);
+    std::snprintf(dst.data(), N, "%s", src);
 }
 
 static std::string_view ap_parse_availability(const spa_pod* val) {
@@ -180,7 +180,7 @@ static void ap_device_event_info(void* data, const pw_device_info* info) {
     if (info->props) {
         const char* n = ap_safe_lookup(info->props, PW_KEY_DEVICE_NAME);
         if (*n)
-            ap_safe_copy(d->name, sizeof(d->name), n);
+            ap_safe_copy(d->name, n);
     }
 
     if (info->change_mask & PW_DEVICE_CHANGE_MASK_PARAMS) {
@@ -199,7 +199,7 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
 
         if (!param || !spa_pod_is_object(param)) {
             if (d->staging_count > 0) {
-                memcpy(d->profiles, d->staging, sizeof(ap_profile_entry_t) * static_cast<size_t>(d->staging_count));
+                std::copy_n(d->staging.begin(), static_cast<size_t>(d->staging_count), d->profiles.begin());
                 d->profile_count = d->staging_count;
                 d->staging_count = 0;
                 d->dirty         = 1;
@@ -207,7 +207,7 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
             return;
         }
 
-        if (d->staging_count >= AP_MAX_PROFILES)
+        if (d->staging_count >= kMaxProfiles)
             return;
 
         int32_t          pidx  = -1;
@@ -225,18 +225,18 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
             }
         }
 
-        ap_profile_entry_t* e = &d->staging[d->staging_count++];
-        e->index              = pidx;
-        ap_safe_copy(e->name, sizeof(e->name), name ? name : "");
-        ap_safe_copy(e->description, sizeof(e->description), desc ? desc : "");
-        ap_safe_copy(e->available, sizeof(e->available), avail.data());
+        auto& e  = d->staging[d->staging_count++];
+        e.index  = pidx;
+        ap_safe_copy(e.name, name ? name : "");
+        ap_safe_copy(e.description, desc ? desc : "");
+        ap_safe_copy(e.available, avail.data());
 
     } else if (id == SPA_PARAM_Profile) {
         if (!param || !spa_pod_is_object(param))
             return;
 
         if (d->staging_count > 0) {
-            memcpy(d->profiles, d->staging, sizeof(ap_profile_entry_t) * static_cast<size_t>(d->staging_count));
+            std::copy_n(d->staging.begin(), static_cast<size_t>(d->staging_count), d->profiles.begin());
             d->profile_count = d->staging_count;
             d->staging_count = 0;
         }
@@ -257,9 +257,9 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
         }
 
         d->active_index = pidx;
-        ap_safe_copy(d->active_name, sizeof(d->active_name), name ? name : "");
-        ap_safe_copy(d->active_description, sizeof(d->active_description), desc ? desc : "");
-        ap_safe_copy(d->active_available, sizeof(d->active_available), avail.data());
+        ap_safe_copy(d->active_name, name ? name : "");
+        ap_safe_copy(d->active_description, desc ? desc : "");
+        ap_safe_copy(d->active_available, avail.data());
         d->dirty = 1;
     }
 }
@@ -282,7 +282,7 @@ static void ap_registry_event_global(void* data, uint32_t id, uint32_t /*permiss
 
     auto* d  = new ap_device_node_t();
     d->pw_id = id;
-    ap_safe_copy(d->name, sizeof(d->name), ap_safe_lookup(props, PW_KEY_DEVICE_NAME));
+    ap_safe_copy(d->name, ap_safe_lookup(props, PW_KEY_DEVICE_NAME));
 
     d->proxy = static_cast<pw_proxy*>(pw_registry_bind(app->registry(), id, PW_TYPE_INTERFACE_Device, PW_VERSION_DEVICE, 0));
     if (!d->proxy) {
@@ -346,10 +346,9 @@ AudioProfilesWatcher* AudioProfilesWatcher::create(QQmlEngine*, QJSEngine*) {
 }
 
 QString AudioProfilesWatcher::formatProfileName(const QString& name) {
-    const std::string_view sv = name.toStdString();
-    if (sv == "off")
+    if (name == u"off")
         return QStringLiteral("Off");
-    if (sv == "pro-audio")
+    if (name == u"pro-audio")
         return QStringLiteral("Pro Audio");
 
     const QStringList parts = name.split(QLatin1Char('+'));
@@ -405,28 +404,28 @@ void AudioProfilesWatcher::poll() {
 
     pw_thread_loop_lock(app->loop());
     while (ap_device_node_t* d = ap_drain_dirty(app->m_devices)) {
-        const QString  actName = QString::fromUtf8(d->active_name);
+        const QString  actName = QString::fromUtf8(d->active_name.data());
 
         DeviceSnapshot snap;
         snap.deviceId      = d->pw_id;
-        snap.deviceName    = QString::fromUtf8(d->name);
+        snap.deviceName    = QString::fromUtf8(d->name.data());
         snap.activeIdx     = d->active_index;
         snap.activeProfile = {
             {QStringLiteral("index"), d->active_index},
             {QStringLiteral("name"), actName},
-            {QStringLiteral("description"), QString::fromUtf8(d->active_description)},
-            {QStringLiteral("available"), QString::fromUtf8(d->active_available)},
+            {QStringLiteral("description"), QString::fromUtf8(d->active_description.data())},
+            {QStringLiteral("available"), QString::fromUtf8(d->active_available.data())},
             {QStringLiteral("readable"), formatProfileName(actName)},
         };
 
         snap.profiles.reserve(d->profile_count);
-        for (const auto& e : std::span(d->profiles, static_cast<size_t>(d->profile_count))) {
-            const QString nm = QString::fromUtf8(e.name);
+        for (const auto& e : std::span(d->profiles.data(), static_cast<size_t>(d->profile_count))) {
+            const QString nm = QString::fromUtf8(e.name.data());
             snap.profiles.append(ProfileEntry{
                 e.index,
                 nm,
-                QString::fromUtf8(e.description),
-                QString::fromUtf8(e.available),
+                QString::fromUtf8(e.description.data()),
+                QString::fromUtf8(e.available.data()),
                 formatProfileName(nm),
             });
         }

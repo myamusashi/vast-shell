@@ -77,6 +77,7 @@ void Keylock::openDevices() {
         auto* notifier = new QSocketNotifier(dev.fd, QSocketNotifier::Read);
         connect(notifier, &QSocketNotifier::activated, this, [this, fd = dev.fd, hasLED = dev.hasLED] { onReadReady(fd, hasLED); });
         m_open.push_back({dev.fd, notifier});
+        readInitialState(dev.fd, dev.hasLED);
     }
 }
 

@@ -12,6 +12,8 @@
 #include <QStandardPaths>
 #include <QUrlQuery>
 
+#include <algorithm>
+
 LyricsProvider::LyricsProvider(QObject* parent) : QObject(parent), m_nam(new QNetworkAccessManager(this)) {
     m_wordTimer.setSingleShot(true);
     m_wordTimer.setTimerType(Qt::PreciseTimer);
@@ -134,15 +136,9 @@ void LyricsProvider::clear() {
 }
 
 void LyricsProvider::seekTo(qint64 posMs) {
-    qsizetype lo = 0, hi = m_boundaries.size() - 1, found = -1;
-    while (lo <= hi) {
-        const qsizetype mid = (lo + hi) / 2;
-        if (m_boundaries[mid].timeMs <= posMs) {
-            found = mid;
-            lo    = mid + 1;
-        } else
-            hi = mid - 1;
-    }
+    // Find the last boundary with timeMs <= posMs using upper_bound - 1
+    auto it = std::ranges::upper_bound(m_boundaries, posMs, {}, &WordBoundary::timeMs);
+    const qsizetype found = (it != m_boundaries.begin()) ? std::distance(m_boundaries.begin(), std::prev(it)) : -1;
 
     const int newLine = (found >= 0) ? m_boundaries[found].lineIndex : -1;
     const int newWord = (found >= 0) ? m_boundaries[found].wordIndex : -1;
@@ -241,7 +237,7 @@ void LyricsProvider::rebuildBoundaries() {
             m_boundaries.append({t, li, wi});
         }
     }
-    std::stable_sort(m_boundaries.begin(), m_boundaries.end(), [](const WordBoundary& a, const WordBoundary& b) { return a.timeMs < b.timeMs; });
+    std::ranges::stable_sort(m_boundaries, {}, &WordBoundary::timeMs);
 }
 
 void LyricsProvider::setState(State s) {

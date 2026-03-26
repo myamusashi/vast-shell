@@ -15,7 +15,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-ScreenRecorder::ScreenRecorder(QObject* parent) : QObject(parent), m_isRecording(false), m_recordingPid(-1), m_recordingProcess(nullptr) {
+ScreenRecorder::ScreenRecorder(QObject* parent) : QObject(parent) {
     QString home    = QDir::homePath();
     m_screenshotDir = home + "/Pictures/screenshot";
     m_videoDir      = home + "/Videos/Shell";
@@ -25,7 +25,7 @@ ScreenRecorder::ScreenRecorder(QObject* parent) : QObject(parent), m_isRecording
     checkActiveRecording();
 }
 
-ScreenRecorder::~ScreenRecorder() {}
+ScreenRecorder::~ScreenRecorder() = default;
 
 void ScreenRecorder::ensureDirectories() const {
     QDir().mkpath(m_screenshotDir);
@@ -187,7 +187,6 @@ QStringList ScreenRecorder::getMonitors() const {
     process.waitForFinished();
 
     QJsonDocument doc = QJsonDocument::fromJson(process.readAllStandardOutput());
-    QJsonArray    arr = doc.array();
     QStringList   monitors;
     for (const QJsonValue& val : doc.array())
         monitors << val.toObject()["name"].toString();
@@ -473,7 +472,7 @@ void ScreenRecorder::screenshotWindow() {
             QString out = QString(process->readAllStandardError() + process->readAllStandardOutput());
             process->deleteLater();
 
-            if (!std::string_view(out.toStdString()).contains("selection cancelled")) {
+            if (!out.contains(u"selection cancelled")) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
             } else {
@@ -494,7 +493,7 @@ void ScreenRecorder::screenshotSelection() {
         connect(process, &QProcess::finished, this, [this, process, img](int, QProcess::ExitStatus) {
             QString out = process->readAllStandardError() + process->readAllStandardOutput();
             process->deleteLater();
-            if (!std::string_view(out.toStdString()).contains("selection cancelled")) {
+            if (!out.contains(u"selection cancelled")) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
             } else {

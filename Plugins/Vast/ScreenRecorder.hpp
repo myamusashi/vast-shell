@@ -108,10 +108,10 @@ class ScreenRecorder : public QObject {
     void          copyToClipboard(const QString& img) const;
     void          finishRecording(const QString& vid);
 
-    bool          m_isRecording;
+    bool          m_isRecording{false};
     QString       m_currentOutputFile;
-    int           m_recordingPid;
-    QProcess*     m_recordingProcess;
+    int           m_recordingPid{-1};
+    QProcess*     m_recordingProcess{nullptr};
 
     QString       m_audioDevice;
     QString       m_videoCodec;
