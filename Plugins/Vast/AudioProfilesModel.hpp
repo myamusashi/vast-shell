@@ -32,15 +32,12 @@ class AudioProfilesModel : public QAbstractListModel {
 
     explicit AudioProfilesModel(QObject* parent = nullptr);
 
-    // QAbstractListModel
     [[nodiscard]] int                    rowCount(const QModelIndex& parent = {}) const override;
     [[nodiscard]] QVariant               data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
-    // Bulk replacement, always from the Qt main thread
     void setProfiles(std::span<const ProfileEntry> profiles);
 
-    // QML helper: returns a plain JS object for row i
     [[nodiscard]] Q_INVOKABLE QVariantMap get(int row) const;
     [[nodiscard]] Q_INVOKABLE qsizetype   count() const {
         return m_profiles.size();

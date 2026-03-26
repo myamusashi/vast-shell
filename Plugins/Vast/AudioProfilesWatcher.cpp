@@ -1,8 +1,3 @@
-// PipeWire runs on its own thread via pw_thread_loop.
-// Qt properties live on the main thread.
-// The QTimer::poll() slot locks the PW loop,
-// copies whatever changed, then updates properties
-
 #include "AudioProfilesWatcher.hpp"
 
 #include <QDebug>

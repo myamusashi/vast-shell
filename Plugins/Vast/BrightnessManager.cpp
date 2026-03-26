@@ -182,8 +182,6 @@ namespace vast {
     }
 
     void BrightnessManager::spawnWorkerThread(const QString& id, DisplayWorker& worker) {
-        // capture by reference, safe because "DisplayWorker" outlives the jthread
-        // unique_ptr moves ownership into m_workers but the object stays in place
         worker.spawnThread([this, &worker, id](std::stop_token st) { workerLoop(id, worker, std::move(st)); });
     }
 
@@ -196,8 +194,7 @@ namespace vast {
             const int          percent = clampPercent(*maybeValue);
             const DisplayMeta& meta    = worker.meta();
 
-            // dispatch to the correct I/O path based on display type
-            const auto result = [&]() -> std::expected<void, BrightnessError> {
+            const auto         result = [&]() -> std::expected<void, BrightnessError> {
                 switch (meta.type) {
                     case DisplayType::Ddc: return writeDdcBrightness(meta.ddcHandle, percent);
                     case DisplayType::Backlight: return writeBacklightBrightness(meta.backlightPath, percent);
@@ -257,9 +254,7 @@ namespace vast {
         std::shared_lock lock(m_workersMutex);
         const int        v = clampPercent(percent);
 
-        // Phase 1
         std::ranges::for_each(m_workers, [v](const auto& kv) { kv.second->pushPending(v); });
-        // Phase 2
         std::ranges::for_each(m_workers, [](const auto& kv) { kv.second->notifyWorker(); });
     }
 
