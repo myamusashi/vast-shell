@@ -51,13 +51,21 @@ namespace Vast {
     }
 
     void ClipboardModel::prepend(const ClipboardEntry& entry) {
-        // pinned entries always precede unpinned; within each group, newest first.
+        const int existing = indexById(entry.id);
+        if (existing >= 0) {
+            if (!m_filtering) {
+                beginRemoveRows({}, existing, existing);
+                m_entries.removeAt(existing);
+                endRemoveRows();
+            } else
+                m_entries.removeAt(existing);
+        }
         const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
             if (entry.pinned && !e.pinned)
-                return true; // entry wins: pinned before unpinned
+                return true;
             if (!entry.pinned && e.pinned)
-                return false;                      // existing wins: pinned block
-            return entry.timestamp >= e.timestamp; // same pin group: newer first
+                return false;
+            return entry.timestamp >= e.timestamp;
         });
 
         const int  rawRow = static_cast<int>(std::distance(m_entries.begin(), insertPos));

@@ -1,10 +1,12 @@
 #include "ClipboardDatabase.hpp"
+#include "ClipboardEntry.hpp"
 
 #include <QDateTime>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QUuid>
 #include <QVariant>
+#include <QtCore/qtypes.h>
 
 namespace Vast {
 
@@ -95,6 +97,17 @@ namespace Vast {
             bump.bindValue(QStringLiteral(":ts"), QDateTime::currentMSecsSinceEpoch());
             bump.bindValue(QStringLiteral(":hash"), QString::fromLatin1(entry.hash.toHex()));
             bump.exec();
+
+            QSqlQuery fetchQ{m_db};
+            fetchQ.prepare(QStringLiteral("SELECT id FROM clipboard_entries WHERE hash = :hash LIMIT 1"));
+            fetchQ.exec();
+            if (fetchQ.next()) {
+                const qint64 existingId = fetchQ.value(0).toLongLong();
+                auto         fetched    = fetchById(existingId);
+
+                if (fetched)
+                    emit entryInserted(*fetched);
+            }
             // Return -1 as a sentinel: "not inserted, was duplicate"
             return -1LL;
         }
