@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QThread>
 #include <QString>
+#include <QtQml/qqmlregistration.h>
 
 #include <memory>
 
@@ -20,6 +21,8 @@ namespace Vast {
 
     class ClipboardManager : public QObject {
         Q_OBJECT
+        QML_ELEMENT
+        QML_SINGLETON
         Q_DISABLE_COPY(ClipboardManager)
 
         Q_PROPERTY(Vast::ClipboardModel* model READ model CONSTANT)

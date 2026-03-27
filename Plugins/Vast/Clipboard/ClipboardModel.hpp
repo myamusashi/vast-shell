@@ -3,6 +3,7 @@
 #include "ClipboardEntry.hpp"
 
 #include <QAbstractListModel>
+#include <QtQml/qqmlregistration.h>
 
 namespace Vast {
 
@@ -15,6 +16,8 @@ namespace Vast {
 
     class ClipboardModel : public QAbstractListModel {
         Q_OBJECT
+        QML_ELEMENT
+        QML_UNCREATABLE("Access via ClipboardManager.model")
         Q_DISABLE_COPY(ClipboardModel)
 
         Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
