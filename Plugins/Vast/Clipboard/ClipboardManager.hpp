@@ -78,7 +78,6 @@ namespace Vast {
         void requestSetPin(qint64 id, bool pinned);
         void requestClearUnpinned();
         void requestPrune(int maxEntries, qint64 maxBytes);
-        void requestFetchById(qint64 id);
 
       private slots:
         // Receives entryInserted from ClipboardDatabase (worker thread → main).
@@ -86,21 +85,14 @@ namespace Vast {
         void onEntryRemoved(qint64 id);
         void onEntryPinChanged(qint64 id, bool pinned);
 
-        // Receives the full entry for preview after requestFetchById.
-        void onFullEntryReady(Vast::ClipboardEntry entry);
-
       private:
         void                               connectWorkerSignals();
         void                               loadAllEntries();
 
         ClipboardModel*                    m_model   = nullptr;
         ClipboardWatcher*                  m_watcher = nullptr;
-
         std::unique_ptr<QThread>           m_workerThread{};
         std::unique_ptr<ClipboardDatabase> m_database{};
-
-        QVariantMap                        m_pendingPreview{};
-        qint64                             m_pendingPreviewId = -1;
 
         int                                m_maxEntries   = 500;
         int                                m_maxMegabytes = 64;
