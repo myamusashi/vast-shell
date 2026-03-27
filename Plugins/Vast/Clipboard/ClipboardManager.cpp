@@ -21,7 +21,6 @@ namespace Vast {
     }
 
     void ClipboardManager::initialize(const QString& dbPath) {
-        // 1. Set up the worker thread and database
         m_workerThread = std::make_unique<QThread>();
         m_database     = std::make_unique<ClipboardDatabase>();
 
@@ -31,9 +30,8 @@ namespace Vast {
 
         m_workerThread->start();
 
-        // Open the database on the worker thread via a queued invoke.
-        // We use a blocking queued call here so that loadAllEntries() can follow
-        // immediately after open() completes.
+        // we use a blocking queued call here so that loadAllEntries() can follow
+        // immediately after open() completes
         QMetaObject::invokeMethod(
             m_database.get(),
             [this, dbPath] {
@@ -42,10 +40,8 @@ namespace Vast {
             },
             Qt::BlockingQueuedConnection);
 
-        // 2. Load existing entries into the model
         loadAllEntries();
 
-        // 3. Start watching the clipboard
         m_watcher->start();
     }
 
@@ -69,7 +65,7 @@ namespace Vast {
     }
 
     void ClipboardManager::loadAllEntries() {
-        // Blocking call on worker thread to get the initial entry list.
+        // Blocking call on worker thread to get the initial entry list
         QList<ClipboardEntry> entries;
         QMetaObject::invokeMethod(
             m_database.get(),
@@ -108,7 +104,13 @@ namespace Vast {
         emit         maxEntriesChanged();
 
         const qint64 maxBytes = static_cast<qint64>(m_maxMegabytes) * 1024 * 1024;
-        QMetaObject::invokeMethod(m_database.get(), [this, maxBytes] { m_database->pruneToLimit(m_maxEntries, maxBytes); }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(
+            m_database.get(),
+            [this, maxBytes] {
+                if (const auto result = m_database->pruneToLimit(m_maxEntries, maxBytes); !result)
+                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << result.error();
+            },
+            Qt::QueuedConnection);
     }
 
     void ClipboardManager::setMaxMegabytes(int mb) {
@@ -118,7 +120,13 @@ namespace Vast {
         emit         maxMegabytesChanged();
 
         const qint64 maxBytes = static_cast<qint64>(mb) * 1024 * 1024;
-        QMetaObject::invokeMethod(m_database.get(), [this, maxBytes] { m_database->pruneToLimit(m_maxEntries, maxBytes); }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(
+            m_database.get(),
+            [this, maxBytes] {
+                if (const auto result = m_database->pruneToLimit(m_maxEntries, maxBytes); !result)
+                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << result.error();
+            },
+            Qt::QueuedConnection);
     }
 
     void ClipboardManager::setEnabled(bool enabled) {
@@ -132,7 +140,7 @@ namespace Vast {
     void ClipboardManager::copyToClipboard(qint64 id) {
         // We need the full entry (including data BLOB for images).
         // Fetch synchronously from the worker, acceptable since this is
-        // a direct user action (button press), not a hot path.
+        // a direct user action (button press), not a hot path
         ClipboardEntry entry;
         QMetaObject::invokeMethod(
             m_database.get(),
@@ -147,7 +155,7 @@ namespace Vast {
             return;
 
         // Temporarily disable the watcher so copying back to clipboard
-        // doesn't create a duplicate DB entry.
+        // doesn't create a duplicate DB entry
         m_watcher->setEnabled(false);
 
         auto* mime = new QMimeData{};
@@ -177,12 +185,11 @@ namespace Vast {
 
         QGuiApplication::clipboard()->setMimeData(mime);
 
-        // Re-enable after a short defer so the clipboard event loop has flushed.
+        // Re-enable after a short defer so the clipboard event loop has flushed
         QMetaObject::invokeMethod(this, [this] { m_watcher->setEnabled(m_enabled); }, Qt::QueuedConnection);
     }
 
     void ClipboardManager::pin(qint64 id, bool pinned) {
-        // Optimistic update: update model immediately for responsive UI.
         m_model->setPinById(id, pinned);
         emit requestSetPin(id, pinned);
     }
@@ -193,7 +200,6 @@ namespace Vast {
     }
 
     void ClipboardManager::clearUnpinned() {
-        // Reset the model and reload (simpler than tracking which ids were deleted).
         emit requestClearUnpinned();
 
         QMetaObject::invokeMethod(this, [this] { loadAllEntries(); }, Qt::QueuedConnection);
@@ -201,7 +207,7 @@ namespace Vast {
 
     void ClipboardManager::search(const QString& query) {
         // TODO: wire FuzzyMatcher scoring here once ClipboardManager
-        // is connected to the existing Vast::FuzzyMatcher singleton.
+        // is connected to the existing Vast::FuzzyMatcher singleton
         m_model->setFilter(query);
     }
 
@@ -241,7 +247,13 @@ namespace Vast {
         m_model->prepend(entry);
 
         const qint64 maxBytes = static_cast<qint64>(m_maxMegabytes) * 1024 * 1024;
-        QMetaObject::invokeMethod(m_database.get(), [this, maxBytes] { m_database->pruneToLimit(m_maxEntries, maxBytes); }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(
+            m_database.get(),
+            [this, maxBytes] {
+                if (const auto result = m_database->pruneToLimit(m_maxEntries, maxBytes); !result)
+                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << result.error();
+            },
+            Qt::QueuedConnection);
     }
 
     void ClipboardManager::onEntryRemoved(qint64 id) {

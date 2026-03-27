@@ -25,8 +25,8 @@ namespace Vast {
       public:
         enum Roles {
             IdRole = Qt::UserRole,
-            TypeRole,      // "text" | "html" | "image" | "files"
-            PreviewRole,   // truncated text snippet or empty for images
+            TypeRole,
+            PreviewRole,
             TimestampRole,
             PinnedRole,
             SourceAppRole,
@@ -42,43 +42,29 @@ namespace Vast {
         [[nodiscard]] QVariant               data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
         [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
-        // Populate from initial DB fetch
-        void reset(QList<ClipboardEntry> entries);
+        void                                 reset(QList<ClipboardEntry> entries);
+        void                                 prepend(const ClipboardEntry& entry);
+        void                                 removeById(qint64 id);
+        void                                 setPinById(qint64 id, bool pinned);
+        void                                 setFilter(const QString& query);
 
-        // Prepend a newly-inserted entry and re-sort
-        void prepend(const ClipboardEntry& entry);
-
-        void removeById(qint64 id);
-
-        // Update pinned state of an entry
-        void setPinById(qint64 id, bool pinned);
-
-        // Filter by fuzzy query string. Pass empty string to clear filter
-        void setFilter(const QString& query);
-
-        // Return entry id at the given visible row (respects current filter)
-        [[nodiscard]] Q_INVOKABLE qint64 idAtRow(int row) const;
+        [[nodiscard]] Q_INVOKABLE qint64     idAtRow(int row) const;
 
       signals:
         void countChanged();
 
       private:
-        // Returns a short preview string (≤ 120 chars) for the role
-        [[nodiscard]] static QString makePreview(const ClipboardEntry& e);
+        [[nodiscard]] static QString        makePreview(const ClipboardEntry& e);
+        [[nodiscard]] int                   indexById(qint64 id) const;
 
-        // Finds the index in m_entries by id. Returns -1 if not found
-        [[nodiscard]] int indexById(qint64 id) const;
+        void                                rebuildFilter();
 
-        // Rebuilds m_filtered from m_entries based on m_filterQuery
-        void rebuildFilter();
-
-        // The current visible list (pointer into m_entries or filtered subset)
         [[nodiscard]] const ClipboardEntry& visibleAt(int row) const;
         [[nodiscard]] int                   visibleCount() const;
 
-        QList<ClipboardEntry> m_entries{};
-        QList<int>            m_filtered{}; // indices into m_entries
-        QString               m_filterQuery{};
-        bool                  m_filtering = false;
+        QList<ClipboardEntry>               m_entries{};
+        QList<int>                          m_filtered{};
+        QString                             m_filterQuery{};
+        bool                                m_filtering = false;
     };
 }

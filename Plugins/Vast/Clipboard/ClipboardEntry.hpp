@@ -13,16 +13,16 @@ namespace Vast {
     };
 
     struct ClipboardEntry {
-        qint64        id   = -1;
-        ClipboardType type = ClipboardType::Text;
-        QString       content; // text / html / newline-separated file URIs
-        QByteArray    data;    // PNG-compressed image bytes (empty for text)
-        QString       mimeType{};
-        QByteArray    hash{}; // SHA-256 of the canonical payload
-        bool          pinned = false;
-        QString       sourceApp{};
-        qint64        sizeBytes = 0;
-        qint64        timestamp = 0;
+        qint64             id   = -1;
+        ClipboardType      type = ClipboardType::Text;
+        QString            content;
+        QByteArray         data;
+        QString            mimeType{};
+        QByteArray         hash{};
+        bool               pinned = false;
+        QString            sourceApp{};
+        qint64             sizeBytes = 0;
+        qint64             timestamp = 0;
 
         [[nodiscard]] bool isImage() const noexcept {
             return type == ClipboardType::Image;

@@ -78,10 +78,9 @@ namespace Vast {
             QStringLiteral("CREATE INDEX IF NOT EXISTS idx_hash ON clipboard_entries(hash)"),
         };
 
-        for (const auto& ddl : indices) {
+        for (const auto& ddl : indices)
             if (!q.exec(ddl))
                 return std::unexpected(lastError());
-        }
 
         return {};
     }
@@ -308,11 +307,11 @@ namespace Vast {
         // When includeData is true, column 3 is 'data' and shifts subsequent columns by 1.
         const int off = includeData ? 1 : 0;
 
-        e.id        = q.value(0).toLongLong();
-        e.type      = ClipboardEntry::typeFromString(q.value(1).toString());
-        e.content   = q.value(2).toString();
+        e.id      = q.value(0).toLongLong();
+        e.type    = ClipboardEntry::typeFromString(q.value(1).toString());
+        e.content = q.value(2).toString();
         if (includeData)
-            e.data  = q.value(3).toByteArray();
+            e.data = q.value(3).toByteArray();
         e.mimeType  = q.value(3 + off).toString();
         e.hash      = QByteArray::fromHex(q.value(4 + off).toString().toLatin1());
         e.pinned    = q.value(5 + off).toInt() != 0;

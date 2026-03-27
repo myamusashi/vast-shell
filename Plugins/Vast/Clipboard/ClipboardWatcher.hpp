@@ -25,7 +25,7 @@ namespace Vast {
         explicit ClipboardWatcher(QObject* parent = nullptr);
         ~ClipboardWatcher() override;
 
-        void start();
+        void               start();
 
         void               setEnabled(bool enabled) noexcept;
         [[nodiscard]] bool isEnabled() const noexcept;
@@ -42,20 +42,13 @@ namespace Vast {
         [[nodiscard]] static std::optional<ClipboardEntry> buildImageEntry(const QClipboard* cb, const QString& sourceApp);
         [[nodiscard]] static std::optional<ClipboardEntry> buildFilesEntry(const QClipboard* cb, const QString& sourceApp);
 
-        // Calls `hyprctl -j activewindow` synchronously
-        // Returns the window class string (e.g. "firefox", "kitty") or empty
-        [[nodiscard]] static QString resolveSourceApp();
+        [[nodiscard]] static QString                       resolveSourceApp();
+        [[nodiscard]] static QByteArray                    sha256(const QByteArray& data);
+        [[nodiscard]] static QByteArray                    compressImage(const QImage& image);
 
-        // SHA-256 over arbitrary bytes, used as deduplication key
-        [[nodiscard]] static QByteArray sha256(const QByteArray& data);
+        static void                                        finalise(ClipboardEntry& entry, const QByteArray& hashPayload, const QString& sourceApp);
 
-        // QImage → PNG-compressed QByteArray for BLOB storage
-        [[nodiscard]] static QByteArray compressImage(const QImage& image);
-
-        // Populate the common fields on a partially-built entry
-        static void finalise(ClipboardEntry& entry, const QByteArray& hashPayload, const QString& sourceApp);
-
-        std::atomic<bool> m_enabled{false};
-        bool              m_started{false};
+        std::atomic<bool>                                  m_enabled{false};
+        bool                                               m_started{false};
     };
 }

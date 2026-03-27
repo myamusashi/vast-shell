@@ -18,32 +18,18 @@ namespace Vast {
         explicit ClipboardDatabase(QObject* parent = nullptr);
         ~ClipboardDatabase() override;
 
-        [[nodiscard]] std::expected<void, QString> open(const QString& dbPath);
-        void                                       close();
-        [[nodiscard]] bool                         isOpen() const noexcept;
-
-        // returns the new row id, or std::unexpected on error
-        [[nodiscard]] std::expected<qint64, QString> insert(const ClipboardEntry& entry);
-        // hard-delete a single row
-        [[nodiscard]] std::expected<void, QString> remove(qint64 id);
-
-        [[nodiscard]] std::expected<void, QString> setPin(qint64 id, bool pinned);
-        [[nodiscard]] std::expected<void, QString> clearUnpinned();
-
-        [[nodiscard]] std::expected<void, QString> pruneToLimit(int maxEntries, qint64 maxBytes);
-
-        // entry to avoid heavy BLOB insert on duplicate copy events
-        [[nodiscard]] bool existsByHash(const QByteArray& hash);
-
-        // fetch all entries ordered by pinned DESC, timestamp DESC
-        // Data (BLOB) is NOT loaded here, use fetchById for full preview
+        [[nodiscard]] std::expected<void, QString>                  open(const QString& dbPath);
+        void                                                        close();
+        [[nodiscard]] bool                                          isOpen() const noexcept;
+        [[nodiscard]] std::expected<qint64, QString>                insert(const ClipboardEntry& entry);
+        [[nodiscard]] std::expected<void, QString>                  remove(qint64 id);
+        [[nodiscard]] std::expected<void, QString>                  setPin(qint64 id, bool pinned);
+        [[nodiscard]] std::expected<void, QString>                  clearUnpinned();
+        [[nodiscard]] std::expected<void, QString>                  pruneToLimit(int maxEntries, qint64 maxBytes);
+        [[nodiscard]] bool                                          existsByHash(const QByteArray& hash);
         [[nodiscard]] std::expected<QList<ClipboardEntry>, QString> fetchAll();
-
-        // fetch a single entry including the BLOB, for preview panel
-        [[nodiscard]] std::expected<ClipboardEntry, QString> fetchById(qint64 id);
-
-        // return total size_bytes of all rows combined
-        [[nodiscard]] std::expected<qint64, QString> totalSizeBytes();
+        [[nodiscard]] std::expected<ClipboardEntry, QString>        fetchById(qint64 id);
+        [[nodiscard]] std::expected<qint64, QString>                totalSizeBytes();
 
       signals:
         void entryInserted(Vast::ClipboardEntry entry);
