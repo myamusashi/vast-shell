@@ -11,6 +11,7 @@
 #include <QMimeData>
 #include <QProcess>
 #include <QUrl>
+#include <QDebug>
 
 namespace Vast {
 
@@ -38,14 +39,22 @@ namespace Vast {
     }
 
     void ClipboardWatcher::onDataChanged() {
-        if (!m_enabled.load(std::memory_order_acquire))
+        if (!m_enabled.load(std::memory_order_acquire)) {
+            qDebug() << "[ClipboardWatcher] dataChanged ignored because disabled";
             return;
+        }
+
+        qDebug() << "[ClipboardWatcher] dataChanged received!";
 
         const auto* cb   = QGuiApplication::clipboard();
         const auto* mime = cb->mimeData();
 
-        if (!mime || mime->formats().isEmpty())
+        if (!mime || mime->formats().isEmpty()) {
+            qDebug() << "[ClipboardWatcher] No valid formats, ignoring" << (mime ? mime->formats() : QStringList{});
             return;
+        }
+
+        qDebug() << "[ClipboardWatcher] Formats:" << mime->formats();
 
         // Resolve source app FIRST, while the clipboard owner's window is still
         // active (hyprctl reads the currently focused window at call-time)
