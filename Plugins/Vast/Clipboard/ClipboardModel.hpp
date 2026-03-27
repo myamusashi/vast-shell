@@ -3,6 +3,7 @@
 #include "ClipboardEntry.hpp"
 
 #include <QAbstractListModel>
+#include <QtCore/qlist.h>
 #include <QtQml/qqmlregistration.h>
 
 namespace Vast {
@@ -38,17 +39,18 @@ namespace Vast {
         explicit ClipboardModel(QObject* parent = nullptr);
         ~ClipboardModel() override = default;
 
-        [[nodiscard]] int                    rowCount(const QModelIndex& parent = {}) const override;
-        [[nodiscard]] QVariant               data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-        [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
+        [[nodiscard]] int                          rowCount(const QModelIndex& parent = {}) const override;
+        [[nodiscard]] QVariant                     data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+        [[nodiscard]] QHash<int, QByteArray>       roleNames() const override;
+        [[nodiscard]] const QList<ClipboardEntry>& allEntries() const noexcept;
 
-        void                                 reset(QList<ClipboardEntry> entries);
-        void                                 prepend(const ClipboardEntry& entry);
-        void                                 removeById(qint64 id);
-        void                                 setPinById(qint64 id, bool pinned);
-        void                                 setFilter(const QString& query);
+        void                                       reset(QList<ClipboardEntry> entries);
+        void                                       prepend(const ClipboardEntry& entry);
+        void                                       removeById(qint64 id);
+        void                                       setPinById(qint64 id, bool pinned);
+        void                                       setFilter(const QString& query, const QList<qint64>& orderedIds = {});
 
-        [[nodiscard]] Q_INVOKABLE qint64     idAtRow(int row) const;
+        [[nodiscard]] Q_INVOKABLE qint64           idAtRow(int row) const;
 
       signals:
         void countChanged();

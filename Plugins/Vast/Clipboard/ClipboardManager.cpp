@@ -1,6 +1,7 @@
 #include "ClipboardManager.hpp"
 #include "ClipboardDatabase.hpp"
 #include "ClipboardWatcher.hpp"
+#include "../Search/FuzzyMatcher.hpp"
 
 #include <QGuiApplication>
 #include <QClipboard>
@@ -206,9 +207,31 @@ namespace Vast {
     }
 
     void ClipboardManager::search(const QString& query) {
-        // TODO: wire FuzzyMatcher scoring here once ClipboardManager
-        // is connected to the existing Vast::FuzzyMatcher singleton
-        m_model->setFilter(query);
+        if (query.isEmpty()) {
+            m_model->setFilter({}, {});
+            return;
+        }
+
+        const auto&                  entries = m_model->allEntries();
+        QList<QPair<double, qint64>> scored;
+        scored.reserve(entries.size());
+
+        for (const auto& entry : entries) {
+            const QString haystack = entry.isImage() ? entry.sourceApp : entry.content.left(500) + u' ' + entry.sourceApp;
+
+            const double  s = FuzzyMatcher::fuzzyScore(query, haystack);
+            if (s > 0.0)
+                scored.append({s, entry.id});
+        }
+
+        std::ranges::sort(scored, [](const auto& a, const auto& b) { return a.first > b.first; });
+
+        QList<qint64> orderedIds;
+        orderedIds.reserve(scored.size());
+        for (const auto& [s, id] : scored)
+            orderedIds.append(id);
+
+        m_model->setFilter(query, orderedIds);
     }
 
     QVariantMap ClipboardManager::fullEntry(qint64 id) {

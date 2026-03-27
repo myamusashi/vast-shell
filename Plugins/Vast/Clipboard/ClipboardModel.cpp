@@ -120,11 +120,26 @@ namespace Vast {
         emit countChanged();
     }
 
-    void ClipboardModel::setFilter(const QString& query) {
+    void ClipboardModel::setFilter(const QString& query, const QList<qint64>& orderedIds) {
+        beginResetModel();
         m_filterQuery = query;
         m_filtering   = !query.isEmpty();
-        rebuildFilter();
+        m_filtered.clear();
+
+        if (m_filtering) {
+            for (qint64 id : orderedIds) {
+                const int idx = indexById(id);
+                if (idx >= 0)
+                    m_filtered.append(idx);
+            }
+        }
+
+        endResetModel();
         emit countChanged();
+    }
+
+    const QList<ClipboardEntry>& ClipboardModel::allEntries() const noexcept {
+        return m_entries;
     }
 
     void ClipboardModel::rebuildFilter() {
