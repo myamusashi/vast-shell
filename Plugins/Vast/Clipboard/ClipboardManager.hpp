@@ -38,7 +38,7 @@ namespace Vast {
         ~ClipboardManager() override;
 
         // Called once by the plugin init path.
-        void                          initialize(const QString& dbPath);
+        Q_INVOKABLE void              initialize(const QString& dbPath);
 
         [[nodiscard]] ClipboardModel* model() const noexcept;
 
