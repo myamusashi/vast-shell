@@ -132,6 +132,12 @@ namespace Vast {
                 if (idx >= 0)
                     m_filtered.append(idx);
             }
+        } else {
+            std::ranges::stable_sort(m_entries, [](const ClipboardEntry& a, const ClipboardEntry& b) {
+                if (a.pinned != b.pinned)
+                    return a.pinned > b.pinned;
+                return a.timestamp > b.timestamp;
+            });
         }
 
         endResetModel();
