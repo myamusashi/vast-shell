@@ -13,6 +13,7 @@ import qs.Services
 import qs.Components.Base
 
 import "Calendar"
+import "Clipboard"
 import "Launcher"
 import "QuickSettings"
 import "Overview"
@@ -46,6 +47,8 @@ Variants {
             if (GlobalStates.isWallpaperSwitcherOpen)
                 return true;
             if (GlobalStates.isScreenCapturePanelOpen)
+                return true;
+            if (GlobalStates.isClipboardOpen)
                 return true;
             return false;
         }
@@ -207,6 +210,10 @@ Variants {
             }
         }
 
+        Clipboard {
+            id: clipboard
+        }
+
         Calendar {
             id: cal
         }
@@ -221,13 +228,9 @@ Variants {
             onWidthChanged: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? volume.anchors.rightMargin = session.width + Configs.generals.outerBorderSize : 0
         }
 
-        WallpaperSelector {
-            id: wallpaperSelector
-        }
+        WallpaperSelector {}
 
-        Screencapture {
-            id: screenCapture
-        }
+        Screencapture {}
 
         OSD {
             id: osd

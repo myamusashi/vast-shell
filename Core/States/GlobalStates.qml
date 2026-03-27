@@ -15,6 +15,11 @@ import qs.Services
 Singleton {
     id: root
 
+    Component.onCompleted: {
+		ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`);
+		ClipboardManager.enabled = true;
+    }
+
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
@@ -46,9 +51,11 @@ Singleton {
             "overview": "isOverviewOpen",
             "weather": "isWeatherPanelOpen",
             "dashboard": "isDashboardOpen",
-            "settings": "isSettingsOpen"
+            "settings": "isSettingsOpen",
+            "clipboard": "isClipboardOpen"
         })
 
+    property bool isClipboardOpen: false
     property bool isSettingsOpen: false
     property bool isCalendarOpen: false
     property bool isScreenCapturePanelOpen: false
@@ -236,6 +243,10 @@ Singleton {
             {
                 panel: "settings",
                 shortcut: "settings"
+			},
+			{
+                panel: "clipboard",
+                shortcut: "clipboard"
             },
         ]
         delegate: PanelController {

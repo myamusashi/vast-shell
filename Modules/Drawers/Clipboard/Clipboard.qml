@@ -1,0 +1,332 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import Quickshell.Widgets
+import Vast
+
+import qs.Core.Configs
+import qs.Core.States
+import qs.Core.Utils
+import qs.Services
+import qs.Components.Base
+
+WrapperRectangle {
+    id: root
+
+    anchors.centerIn: parent
+
+    signal closeRequested
+
+    implicitWidth: d.listWidth + d.previewWidth
+    implicitHeight: GlobalStates.isClipboardOpen ? 520 : 0
+    radius: Appearance.rounding.normal
+    color: Colours.m3Colors.m3SurfaceContainerLow
+
+    Behavior on implicitHeight {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+
+    QtObject {
+        id: d
+
+        readonly property int listWidth: 320
+        readonly property int previewWidth: 400
+
+        property bool previewFocused: false
+    }
+
+    Loader {
+        id: loader
+
+        active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isClipboardOpen
+        asynchronous: true
+        sourceComponent: FocusScope {
+            id: scope
+
+            readonly property int currentId: {
+                if (entryList.currentIndex < 0 || !entryList.currentItem)
+                    return -1;
+                return entryList.currentItem.entryId;
+            }
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                Item {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 48
+
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: 1
+                        color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
+                    }
+
+                    RowLayout {
+                        anchors {
+                            fill: parent
+                            leftMargin: Appearance.margin.large
+                            rightMargin: Appearance.margin.large
+                            topMargin: Appearance.margin.smaller
+                            bottomMargin: Appearance.margin.smaller
+                        }
+                        spacing: Appearance.spacing.smaller
+
+                        Icon {
+                            icon: "search"
+                            font.pixelSize: Appearance.fonts.size.larger
+                            color: searchField.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+
+                            Behavior on color {
+                                CAnim {}
+                            }
+                        }
+
+                        StyledTextInput {
+                            id: searchField
+
+                            Layout.fillWidth: true
+
+                            placeHolderText: qsTr("Search clipboard…")
+							onTextChanged: ClipboardManager.search(text)
+							passwordMode: false
+
+                            Keys.onPressed: event => {
+                                if (event.key === Qt.Key_Escape) {
+                                    text = "";
+                                    event.accepted = true;
+                                } else {
+                                    root.closeRequested();
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Up) {
+                                    entryList.decrementCurrentIndex();
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Down) {
+                                    entryList.incrementCurrentIndex();
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                    if (scope.currentId >= 0)
+                                        ClipboardManager.copyToClipboard(scope.currentId);
+                                    event.accepted = true;
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: ClipboardManager.model.count
+                            font.pixelSize: Appearance.fonts.size.small
+                            color: Colours.m3Colors.m3OnSurfaceVariant
+                            visible: searchField.text.length === 0
+                        }
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: Appearance.spacing.small
+
+                    Item {
+                        Layout.preferredWidth: d.listWidth
+                        Layout.fillHeight: true
+
+                        ListView {
+                            id: entryList
+
+                            anchors {
+                                fill: parent
+                                topMargin: Appearance.margin.small
+                                bottomMargin: Appearance.margin.small
+                            }
+
+                            clip: true
+                            currentIndex: 0
+                            cacheBuffer: implicitHeight
+                            focus: !d.previewFocused
+                            model: ClipboardManager.model
+                            ScrollBar.vertical: ScrollBar {
+                                policy: ScrollBar.AsNeeded
+                            }
+                            maximumFlickVelocity: 1000
+                            highlightMoveVelocity: -1
+                            highlightFollowsCurrentItem: true
+                            highlight: StyledRect {
+                                color: Colours.m3Colors.m3SurfaceContainerHigh
+                                width: entryList.width
+                            }
+                            highlightRangeMode: ListView.ApplyRange
+                            preferredHighlightBegin: 64
+                            preferredHighlightEnd: height - 64
+
+                            rebound: Transition {
+                                NAnim {
+                                    properties: "x,y"
+                                }
+                            }
+
+                            add: Transition {
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    from: 0
+                                    to: 1
+                                }
+                            }
+
+                            remove: Transition {
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    from: 1
+                                    to: 0
+                                }
+                            }
+
+                            move: Transition {
+                                NAnim {
+                                    property: "y"
+                                }
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+
+                            addDisplaced: Transition {
+                                NAnim {
+                                    property: "y"
+                                    duration: Appearance.animations.durations.small
+                                }
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+
+                            displaced: Transition {
+                                NAnim {
+                                    property: "y"
+                                }
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+
+                            Keys.onPressed: event => {
+                                if (event.key === Qt.Key_Escape) {
+                                    GlobalStates.isClipboardOpen = false;
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Up) {
+                                    decrementCurrentIndex();
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Down) {
+                                    incrementCurrentIndex();
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                    if (scope.currentId >= 0)
+                                        ClipboardManager.copyToClipboard(scope.currentId);
+                                    event.accepted = true;
+                                }
+
+                                if (event.key === Qt.Key_Delete) {
+                                    const item = currentItem;
+                                    if (scope.currentId >= 0 && item && !item.pinned)
+                                        ClipboardManager.remove(scope.currentId);
+                                    event.accepted = true;
+                                }
+
+                                if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_P) {
+                                    if (scope.currentId >= 0 && currentItem)
+                                        ClipboardManager.pin(scope.currentId, !currentItem.pinned);
+                                    event.accepted = true;
+                                    return;
+                                }
+
+                                if (event.key === Qt.Key_Tab) {
+                                    d.previewFocused = true;
+                                    event.accepted = true;
+                                }
+                            }
+
+                            delegate: ClipboardItemDelegate {
+                                required property var modelData
+
+                                entryId: modelData.entryId
+                                type: modelData.type
+                                preview: modelData.preview
+                                timestamp: modelData.timestamp
+                                pinned: modelData.pinned
+                                sourceApp: modelData.sourceApp
+                                isSelected: ListView.isCurrentItem
+                                implicitWidth: ListView.view.width
+
+                                onActivated: ClipboardManager.copyToClipboard(entryId)
+                                onPinToggled: (id, s) => ClipboardManager.pin(id, s)
+                                onRemoveRequested: id => ClipboardManager.remove(id)
+                            }
+
+                            StyledText {
+                                anchors.centerIn: parent
+                                visible: entryList.count === 0
+                                text: searchField.text.length > 0 ? qsTr("No results for ") + searchField.text : qsTr("Clipboard is empty")
+                                font.pixelSize: Appearance.fonts.size.medium
+                                color: Colours.m3Colors.m3OnSurfaceVariant
+                            }
+                        }
+                    }
+
+					Rectangle {
+						Layout.fillWidth: true
+                        Layout.preferredHeight: 1
+                        color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
+                    }
+
+                    FocusScope {
+                        id: previewScope
+
+                        Layout.preferredWidth: d.previewWidth
+                        Layout.fillHeight: true
+                        focus: d.previewFocused
+
+                        Keys.onPressed: event => {
+                            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Escape) {
+                                d.previewFocused = false;
+                                entryList.forceActiveFocus();
+                                event.accepted = true;
+                            }
+                        }
+
+                        ClipboardPreview {
+                            anchors.fill: parent
+                            focus: previewScope.activeFocus
+
+                            entryId: scope.currentId
+
+                            onCopyRequested: id => ClipboardManager.copyToClipboard(id)
+                            onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
