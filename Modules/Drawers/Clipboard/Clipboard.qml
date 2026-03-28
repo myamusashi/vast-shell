@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Widgets
+import Quickshell.Wayland
 import Vast
 
 import qs.Core.Configs
@@ -19,7 +20,6 @@ WrapperRectangle {
 
     signal closeRequested
 
-    clip: true
     implicitWidth: d.listWidth + d.previewWidth
     implicitHeight: GlobalStates.isClipboardOpen ? 520 : 0
     radius: Appearance.rounding.normal
@@ -53,6 +53,12 @@ WrapperRectangle {
                 if (entryList.currentIndex < 0 || !entryList.currentItem)
                     return -1;
                 return entryList.currentItem.entryId;
+            }
+
+            Binding {
+                target: ClipboardManager
+                property: "activeWindow"
+                value: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.appId : ""
             }
 
             ColumnLayout {
@@ -157,7 +163,9 @@ WrapperRectangle {
 
                             clip: true
                             currentIndex: 0
-                            cacheBuffer: implicitHeight
+                            cacheBuffer: 0
+                            displayMarginBeginning: 0
+                            displayMarginEnd: 0
                             model: ClipboardManager.model
                             ScrollBar.vertical: ScrollBar {
                                 policy: ScrollBar.AsNeeded
