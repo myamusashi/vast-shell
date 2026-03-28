@@ -51,15 +51,34 @@ namespace Vast {
     }
 
     void ClipboardModel::prepend(const ClipboardEntry& entry) {
+        if (m_filtering) {
+            beginResetModel();
+            const int existing = indexById(entry.id);
+            if (existing >= 0)
+                m_entries.removeAt(existing);
+
+            const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
+                if (entry.pinned && !e.pinned)
+                    return true;
+                if (!entry.pinned && e.pinned)
+                    return false;
+                return entry.timestamp >= e.timestamp;
+            });
+
+            m_entries.insert(insertPos, entry);
+            rebuildFilter();
+            endResetModel();
+            emit countChanged();
+            return;
+        }
+
         const int existing = indexById(entry.id);
         if (existing >= 0) {
-            if (!m_filtering) {
-                beginRemoveRows({}, existing, existing);
-                m_entries.removeAt(existing);
-                endRemoveRows();
-            } else
-                m_entries.removeAt(existing);
+            beginRemoveRows({}, existing, existing);
+            m_entries.removeAt(existing);
+            endRemoveRows();
         }
+        
         const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
             if (entry.pinned && !e.pinned)
                 return true;
@@ -69,16 +88,12 @@ namespace Vast {
         });
 
         const int  rawRow = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+        
+        beginInsertRows({}, rawRow, rawRow);
         m_entries.insert(insertPos, entry);
-
-        if (m_filtering) {
-            rebuildFilter();
-            emit countChanged();
-        } else {
-            beginInsertRows({}, rawRow, rawRow);
-            endInsertRows();
-            emit countChanged();
-        }
+        endInsertRows();
+        
+        emit countChanged();
     }
 
     void ClipboardModel::removeById(qint64 id) {

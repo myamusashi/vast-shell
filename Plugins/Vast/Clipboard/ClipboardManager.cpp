@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QImage>
 #include <QUrl>
+#include <QTimer>
 
 namespace Vast {
 
@@ -191,8 +192,9 @@ namespace Vast {
         // The database handles duplicates by updating the timestamp and emitting an insert event.
         emit requestInsert(entry);
 
-        // Re-enable after a short defer so the clipboard event loop has flushed
-        QMetaObject::invokeMethod(this, [this] { m_watcher->setEnabled(m_enabled); }, Qt::QueuedConnection);
+        // Re-enable after a short delay (500ms) so the asynchronous Wayland clipboard event
+        // echo doesn't trigger a second requestInsert which breaks QML animations.
+        QTimer::singleShot(500, this, [this] { m_watcher->setEnabled(m_enabled); });
     }
 
     void ClipboardManager::pin(qint64 id, bool pinned) {
