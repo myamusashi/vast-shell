@@ -29,11 +29,8 @@ namespace Vast {
         m_database->moveToThread(m_workerThread.get());
 
         connectWorkerSignals();
-
         m_workerThread->start();
 
-        // we use a blocking queued call here so that loadAllEntries() can follow
-        // immediately after open() completes
         QMetaObject::invokeMethod(
             m_database.get(),
             [this, dbPath] {
@@ -43,31 +40,25 @@ namespace Vast {
             Qt::BlockingQueuedConnection);
 
         loadAllEntries();
-
         m_watcher->start();
     }
 
     void ClipboardManager::connectWorkerSignals() {
-        // Manager → Database (main → worker)
         connect(this, &ClipboardManager::requestInsert, m_database.get(), &ClipboardDatabase::insert, Qt::QueuedConnection);
         connect(this, &ClipboardManager::requestRemove, m_database.get(), &ClipboardDatabase::remove, Qt::QueuedConnection);
         connect(this, &ClipboardManager::requestSetPin, m_database.get(), &ClipboardDatabase::setPin, Qt::QueuedConnection);
         connect(this, &ClipboardManager::requestClearUnpinned, m_database.get(), &ClipboardDatabase::clearUnpinned, Qt::QueuedConnection);
 
-        // Database → Manager (worker → main)
         connect(m_database.get(), &ClipboardDatabase::entryInserted, this, &ClipboardManager::onEntryInserted, Qt::QueuedConnection);
         connect(m_database.get(), &ClipboardDatabase::entryRemoved, this, &ClipboardManager::onEntryRemoved, Qt::QueuedConnection);
         connect(m_database.get(), &ClipboardDatabase::entryPinChanged, this, &ClipboardManager::onEntryPinChanged, Qt::QueuedConnection);
 
-        // Watcher → Manager (both main thread — direct connection is fine)
-        connect(m_watcher, &ClipboardWatcher::newEntry, this, [this](const ClipboardEntry& entry) {
-            // Forward to DB worker
-            emit requestInsert(entry);
-        });
+        connect(this, &ClipboardManager::_fullEntryFetched, this, &ClipboardManager::onFullEntryFetched, Qt::QueuedConnection);
+
+        connect(m_watcher, &ClipboardWatcher::newEntry, this, [this](const ClipboardEntry& entry) { emit requestInsert(entry); });
     }
 
     void ClipboardManager::loadAllEntries() {
-        // Blocking call on worker thread to get the initial entry list
         QList<ClipboardEntry> entries;
         QMetaObject::invokeMethod(
             m_database.get(),
@@ -99,18 +90,22 @@ namespace Vast {
         return m_enabled;
     }
 
+    QString ClipboardManager::activeWindow() const noexcept {
+        return m_activeWindow;
+    }
+
     void ClipboardManager::setMaxEntries(int max) {
         if (m_maxEntries == max)
             return;
+
         m_maxEntries = max;
         emit         maxEntriesChanged();
-
         const qint64 maxBytes = static_cast<qint64>(m_maxMegabytes) * 1024 * 1024;
         QMetaObject::invokeMethod(
             m_database.get(),
             [this, maxBytes] {
-                if (const auto result = m_database->pruneToLimit(m_maxEntries, maxBytes); !result)
-                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << result.error();
+                if (const auto r = m_database->pruneToLimit(m_maxEntries, maxBytes); !r)
+                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << r.error();
             },
             Qt::QueuedConnection);
     }
@@ -120,13 +115,12 @@ namespace Vast {
             return;
         m_maxMegabytes = mb;
         emit         maxMegabytesChanged();
-
         const qint64 maxBytes = static_cast<qint64>(mb) * 1024 * 1024;
         QMetaObject::invokeMethod(
             m_database.get(),
             [this, maxBytes] {
-                if (const auto result = m_database->pruneToLimit(m_maxEntries, maxBytes); !result)
-                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << result.error();
+                if (const auto r = m_database->pruneToLimit(m_maxEntries, maxBytes); !r)
+                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << r.error();
             },
             Qt::QueuedConnection);
     }
@@ -139,10 +133,6 @@ namespace Vast {
         emit enabledChanged();
     }
 
-    QString ClipboardManager::activeWindow() const noexcept {
-        return m_activeWindow;
-    }
-
     void ClipboardManager::setActiveWindow(const QString& window) {
         if (m_activeWindow == window)
             return;
@@ -150,10 +140,51 @@ namespace Vast {
         emit activeWindowChanged();
     }
 
+    void ClipboardManager::requestFullEntry(qint64 id) {
+        m_pendingEntryId = id;
+
+        if (id < 0)
+            return;
+
+        QMetaObject::invokeMethod(
+            m_database.get(),
+            [this, id] {
+                auto result = m_database->fetchById(id);
+                if (!result) {
+                    qWarning() << "[ClipboardDatabase] fetchById failed:" << result.error();
+                    return;
+                }
+                emit _fullEntryFetched(std::move(*result));
+            },
+            Qt::QueuedConnection);
+    }
+
+    void ClipboardManager::onFullEntryFetched(ClipboardEntry entry) {
+        // If the user moved to a different entry while the worker was busy,
+        // this response is stale, drop it silently
+        if (entry.id != m_pendingEntryId)
+            return;
+
+        QVariantMap map;
+        map[QStringLiteral("id")]        = entry.id;
+        map[QStringLiteral("type")]      = entry.typeString();
+        map[QStringLiteral("content")]   = entry.content;
+        map[QStringLiteral("mimeType")]  = entry.mimeType;
+        map[QStringLiteral("pinned")]    = entry.pinned;
+        map[QStringLiteral("sourceApp")] = entry.sourceApp;
+        map[QStringLiteral("sizeBytes")] = entry.sizeBytes;
+        map[QStringLiteral("timestamp")] = entry.timestamp;
+
+        if (entry.isImage() && !entry.data.isEmpty())
+            map[QStringLiteral("imageData")] = QString::fromLatin1(entry.data.toBase64());
+
+        emit fullEntryReady(map);
+    }
+
     void ClipboardManager::copyToClipboard(qint64 id) {
-        // We need the full entry (including data BLOB for images).
-        // Fetch synchronously from the worker, acceptable since this is
-        // a direct user action (button press), not a hot path
+        // copyToClipboard is a deliberate user action, not on a hot path,
+        // so blocking is acceptable here. The BLOB is needed immediately
+        // to set clipboard data before returning
         ClipboardEntry entry;
         QMetaObject::invokeMethod(
             m_database.get(),
@@ -167,8 +198,6 @@ namespace Vast {
         if (entry.id < 0)
             return;
 
-        // Temporarily disable the watcher so copying back to clipboard
-        // doesn't create a duplicate DB entry
         m_watcher->setEnabled(false);
 
         auto* mime = new QMimeData{};
@@ -197,15 +226,9 @@ namespace Vast {
         }
 
         QGuiApplication::clipboard()->setMimeData(mime);
-
-        // Synchronously bump the item to the top in the UI model immediately (client-side reorder)
         m_model->bumpToTop(id);
-
-        // Trigger an insert request to bump the timestamp in the persistent database
         emit requestInsert(entry);
 
-        // Re-enable after a short delay (500ms) so the asynchronous Wayland clipboard event
-        // echo doesn't trigger a second requestInsert which breaks QML animations.
         QTimer::singleShot(500, this, [this] { m_watcher->setEnabled(m_enabled); });
     }
 
@@ -221,7 +244,6 @@ namespace Vast {
 
     void ClipboardManager::clearUnpinned() {
         emit requestClearUnpinned();
-
         QMetaObject::invokeMethod(this, [this] { loadAllEntries(); }, Qt::QueuedConnection);
     }
 
@@ -253,38 +275,6 @@ namespace Vast {
         m_model->setFilter(query, orderedIds);
     }
 
-    QVariantMap ClipboardManager::fullEntry(qint64 id) {
-        ClipboardEntry entry;
-        QMetaObject::invokeMethod(
-            m_database.get(),
-            [this, id, &entry] {
-                auto result = m_database->fetchById(id);
-                if (result)
-                    entry = std::move(*result);
-            },
-            Qt::BlockingQueuedConnection);
-
-        if (entry.id < 0)
-            return {};
-
-        QVariantMap map;
-        map[QStringLiteral("id")]        = entry.id;
-        map[QStringLiteral("type")]      = entry.typeString();
-        map[QStringLiteral("content")]   = entry.content;
-        map[QStringLiteral("mimeType")]  = entry.mimeType;
-        map[QStringLiteral("pinned")]    = entry.pinned;
-        map[QStringLiteral("sourceApp")] = entry.sourceApp;
-        map[QStringLiteral("sizeBytes")] = entry.sizeBytes;
-        map[QStringLiteral("timestamp")] = entry.timestamp;
-
-        // Image data: encode to base64 so QML can use:
-        //   Image { source: "data:image/png;base64," + entry.imageData }
-        if (entry.isImage() && !entry.data.isEmpty())
-            map[QStringLiteral("imageData")] = QString::fromLatin1(entry.data.toBase64());
-
-        return map;
-    }
-
     void ClipboardManager::onEntryInserted(ClipboardEntry entry) {
         m_model->prepend(entry);
 
@@ -292,8 +282,8 @@ namespace Vast {
         QMetaObject::invokeMethod(
             m_database.get(),
             [this, maxBytes] {
-                if (const auto result = m_database->pruneToLimit(m_maxEntries, maxBytes); !result)
-                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << result.error();
+                if (const auto r = m_database->pruneToLimit(m_maxEntries, maxBytes); !r)
+                    qWarning() << "[ClipboardDatabase] pruneToLimit failed:" << r.error();
             },
             Qt::QueuedConnection);
     }
@@ -305,4 +295,5 @@ namespace Vast {
     void ClipboardManager::onEntryPinChanged(qint64 id, bool pinned) {
         m_model->setPinById(id, pinned);
     }
+
 }

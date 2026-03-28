@@ -1,5 +1,3 @@
-pragma ComponentBehavior: Bound
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -9,6 +7,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+import qs.Components.Feedback
 
 Item {
     id: root
@@ -18,28 +17,36 @@ Item {
     signal copyRequested(int id)
     signal pinToggled(int id, bool newState)
 
+    //  1. Clear stale display state immediately
+    //  2. Kick off an async fetch, never blocks the render loop
+    //  3. Connections below receives fullEntryReady() when the worker is done
     onEntryIdChanged: {
-        if (root.entryId < 0) {
-            d.entry = {};
-            d.isImage = false;
-            d.content = "";
-            d.imageData = "";
-            d.sourceApp = "";
-            d.pinned = false;
-            d.sizeBytes = 0;
-            d.timestamp = "";
-            return;
-        }
+        d.clear();
 
-        const e = ClipboardManager.fullEntry(root.entryId);
-        d.entry = e;
-        d.isImage = e.type === "image";
-        d.content = e.content ?? "";
-        d.imageData = e.imageData ?? "";
-        d.sourceApp = e.sourceApp ?? "";
-        d.pinned = e.pinned ?? false;
-        d.sizeBytes = e.sizeBytes ?? 0;
-        d.timestamp = root.formatTimestamp(e.timestamp ?? 0);
+        if (root.entryId >= 0) {
+            d.loading = true;
+            ClipboardManager.requestFullEntry(root.entryId);
+        }
+    }
+
+    Connections {
+        target: ClipboardManager
+
+        function onFullEntryReady(entry) {
+            // Drop stale responses if user moved selection during fetch
+            if (entry.id !== root.entryId)
+                return;
+            d.entryType = entry.type ?? "text";
+            d.isImage = entry.type === "image";
+            d.content = entry.content ?? "";
+            d.sourceApp = entry.sourceApp ?? "";
+            d.pinned = entry.pinned ?? false;
+            d.sizeBytes = entry.sizeBytes ?? 0;
+            d.timestamp = root.formatTimestamp(entry.timestamp ?? 0);
+
+            d.imageData = entry.imageData ?? "";
+            d.loading = false;
+        }
     }
 
     function formatTimestamp(ms: int): string {
@@ -59,7 +66,7 @@ Item {
     QtObject {
         id: d
 
-        property var entry: ({})
+        property bool loading: false
         property bool isImage: false
         property string imageData: ""
         property string content: ""
@@ -67,6 +74,19 @@ Item {
         property string timestamp: ""
         property bool pinned: false
         property int sizeBytes: 0
+        property string entryType: "text"
+
+        function clear() {
+            loading = false;
+            isImage = false;
+            imageData = "";
+            content = "";
+            sourceApp = "";
+            timestamp = "";
+            pinned = false;
+            sizeBytes = 0;
+            entryType = "text";
+        }
     }
 
     Column {
@@ -89,11 +109,18 @@ Item {
         }
     }
 
+	LoadingIndicator {
+		anchors.centerIn: parent
+        implicitWidth: 30
+        implicitHeight: 30
+        status: root.entryId >= 0 && d.loading
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Appearance.margin.normal
         spacing: Appearance.spacing.large
-        visible: root.entryId >= 0
+        visible: root.entryId >= 0 && !d.loading
 
         RowLayout {
             Layout.fillWidth: true
@@ -136,7 +163,6 @@ Item {
 
                         StyledText {
                             id: srcLabel
-
                             anchors.centerIn: parent
                             text: d.sourceApp
                             font.pixelSize: Appearance.fonts.size.small
@@ -162,7 +188,7 @@ Item {
                 }
             }
 
-            // Pin
+            // Pin button
             StyledRect {
                 implicitWidth: 32
                 implicitHeight: 32
@@ -178,12 +204,11 @@ Item {
 
                 MArea {
                     id: pinArea
-
                     onClicked: root.pinToggled(root.entryId, !d.pinned)
                 }
             }
 
-            // Copy
+            // Copy button
             StyledRect {
                 implicitWidth: 80
                 implicitHeight: 32
@@ -209,7 +234,6 @@ Item {
 
                 MArea {
                     id: copyArea
-
                     onClicked: root.copyRequested(root.entryId)
                 }
             }
@@ -221,6 +245,7 @@ Item {
             color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
         }
 
+        // Text preview
         ScrollView {
             id: textScroll
 
@@ -237,17 +262,14 @@ Item {
                     contentItem.contentY = Math.max(0, contentItem.contentY - height);
                     event.accepted = true;
                 }
-
                 if (event.key === Qt.Key_PageDown) {
                     contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + height);
                     event.accepted = true;
                 }
-
                 if (event.key === Qt.Key_Up) {
                     contentItem.contentY = Math.max(0, contentItem.contentY - 40);
                     event.accepted = true;
                 }
-
                 if (event.key === Qt.Key_Down) {
                     contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + 40);
                     event.accepted = true;
@@ -256,12 +278,12 @@ Item {
 
             TextEdit {
                 width: textScroll.width
-                text: d.entry.type === "html" ? ("```\n" + d.content + "\n```") : d.content
+                text: d.entryType === "html" ? ("```\n" + d.content + "\n```") : d.content
                 readOnly: true
                 selectByMouse: true
                 selectByKeyboard: true
                 wrapMode: TextEdit.Wrap
-                textFormat: d.entry.type === "html" ? TextEdit.MarkdownText : TextEdit.PlainText
+                textFormat: d.entryType === "html" ? TextEdit.MarkdownText : TextEdit.PlainText
 
                 font.pixelSize: Appearance.fonts.size.medium
                 font.family: Appearance.fonts.family.mono
@@ -269,16 +291,18 @@ Item {
 
                 selectionColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.35)
                 selectedTextColor: Colours.m3Colors.m3OnSurface
-
                 padding: Appearance.padding.small
             }
         }
 
+        // Image preview
         ScrollView {
             id: imageScroll
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+            // When visible flips false the Image element is hidden and
+            // Qt releases the decoded GPU texture.
             visible: d.isImage
             clip: true
 
@@ -292,7 +316,6 @@ Item {
 
             WheelHandler {
                 id: imageZoom
-
                 property real scale: 1.0
                 acceptedModifiers: Qt.ControlModifier
                 onWheel: event => {
@@ -302,38 +325,34 @@ Item {
             }
 
             Item {
-                width: Math.max(imageScroll.width, loader.item.paintedWidth * imageZoom.scale)
-                height: Math.max(imageScroll.height, loader.item.paintedHeight * imageZoom.scale)
+                width: Math.max(imageScroll.width, img.paintedWidth * imageZoom.scale)
+                height: Math.max(imageScroll.height, img.paintedHeight * imageZoom.scale)
 
-                Loader {
-                    id: loader
+                Image {
+                    id: img
 
+                    anchors.centerIn: parent
                     width: imageScroll.width * imageZoom.scale
                     height: imageScroll.height * imageZoom.scale
-                    active: d.isImage
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
                     asynchronous: true
-                    sourceComponent: Image {
-                        id: img
 
-                        anchors.centerIn: parent
-                        width: Configs.clipboard.preview.sourceWidth
-                        height: Configs.clipboard.preview.sourceHeight
-                        source: d.isImage && d.imageData.length > 0 ? "data:image/png;base64," + d.imageData : ""
-                        sourceSize: Qt.size(Configs.clipboard.preview.sourceSizeWidth, Configs.clipboard.preview.sourceSizeHeight)
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        asynchronous: true
-                        opacity: status === Image.Ready ? 1.0 : 0.0
+                    // Setting source to "" immediately releases the old texture.
+                    // d.imageData is cleared by d.clear() on every selection
+                    // change, so the previous image is freed before the next
+                    // one is fetched.
+                    source: d.imageData.length > 0 ? "data:image/png;base64," + d.imageData : ""
 
-                        Behavior on opacity {
-                            NAnim {}
-                        }
+                    opacity: status === Image.Ready ? 1.0 : 0.0
+                    Behavior on opacity {
+                        NAnim {}
                     }
                 }
 
                 StyledText {
                     anchors.centerIn: parent
-                    visible: loader.item.status === Image.Loading
+                    visible: img.status === Image.Loading
                     text: qsTr("Loading…")
                     font.pixelSize: Appearance.fonts.size.medium
                     color: Colours.m3Colors.m3Secondary
