@@ -74,9 +74,32 @@ namespace Vast {
 
         const int existing = indexById(entry.id);
         if (existing >= 0) {
-            beginRemoveRows({}, existing, existing);
-            m_entries.removeAt(existing);
-            endRemoveRows();
+            // Find insertion point, skipping the existing item so distance is calculated
+            // as if it was already removed, but iterators reflect current memory.
+            const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
+                if (e.id == entry.id) return false;
+                if (entry.pinned && !e.pinned) return true;
+                if (!entry.pinned && e.pinned) return false;
+                return entry.timestamp >= e.timestamp;
+            });
+            
+            const int dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+            
+            if (existing != dest) {
+                int destChild = dest > existing ? dest + 1 : dest;
+                beginMoveRows({}, existing, existing, {}, destChild);
+                auto item = m_entries.takeAt(existing);
+                
+                int insertIdx = dest > existing ? dest - 1 : dest;
+                item.timestamp = entry.timestamp;
+                m_entries.insert(insertIdx, std::move(item));
+                endMoveRows();
+                emit dataChanged(index(insertIdx, 0), index(insertIdx, 0));
+            } else {
+                m_entries[existing].timestamp = entry.timestamp;
+                emit dataChanged(index(existing, 0), index(existing, 0));
+            }
+            return;
         }
         
         const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
