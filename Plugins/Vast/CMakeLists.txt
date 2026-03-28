@@ -11,7 +11,7 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(QML_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/qml/Vast")
 
-find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick Concurrent)
+find_package(Qt6 6.3 REQUIRED COMPONENTS Core Gui Qml Quick Concurrent Sql)
 qt_policy(SET QTP0001 NEW)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PIPEWIRE REQUIRED IMPORTED_TARGET libpipewire-0.3)
@@ -54,6 +54,15 @@ qt_add_qml_module(VastPlugin
         ScreenRecorder.cpp
         ImageCache.cpp
         ImageCache.hpp
+        Clipboard/ClipboardEntry.hpp
+        Clipboard/ClipboardModel.hpp
+        Clipboard/ClipboardModel.cpp
+        Clipboard/ClipboardManager.hpp
+        Clipboard/ClipboardManager.cpp
+        Clipboard/ClipboardWatcher.hpp
+        Clipboard/ClipboardWatcher.cpp
+        Clipboard/ClipboardDatabase.hpp
+        Clipboard/ClipboardDatabase.cpp
         Search/FuzzyMatcher.hpp
         Search/FuzzyMatcher.cpp
         Search/SearchResult.hpp
@@ -65,6 +74,7 @@ qt_add_qml_module(VastPlugin
 target_include_directories(VastPlugin SYSTEM PRIVATE
     ${PIPEWIRE_INCLUDE_DIRS}
     ${DDCUTIL_INCLUDE_DIRS}
+	${CMAKE_CURRENT_SOURCE_DIR}/Clipboard
     ${CMAKE_CURRENT_SOURCE_DIR}/Search
 )
 
@@ -75,6 +85,7 @@ target_link_libraries(VastPlugin PRIVATE
     Qt6::Quick
     Qt6::Network
     Qt6::Concurrent
+	Qt6::Sql
     ${PIPEWIRE_LIBRARIES}
     ${DDCUTIL_LIBRARIES}
 )

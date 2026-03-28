@@ -484,6 +484,85 @@
     </message>
 </context>
 <context>
+    <name>Clipboard</name>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="100"/>
+        <source>Search clipboard…</source>
+        <translation>Cari di clipboard...</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="295"/>
+        <source>No results for </source>
+        <translation>Tidak ada hasil untuk </translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="295"/>
+        <source>Clipboard is empty</source>
+        <translation>Clipboard kosong</translation>
+    </message>
+</context>
+<context>
+    <name>ClipboardItemDelegate</name>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="123"/>
+        <source>Image</source>
+        <translation>Gambar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="123"/>
+        <source>Files (%1)</source>
+        <translation>Files (%1)</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="123"/>
+        <source>(empty)</source>
+        <translation>(Kosong)</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="160"/>
+        <source>just now</source>
+        <translation>Saat ini</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="162"/>
+        <source>%1m ago</source>
+        <translation>%1m lalu</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="164"/>
+        <source>%1h ago</source>
+        <translation>%1j lalu</translation>
+    </message>
+</context>
+<context>
+    <name>ClipboardPreview</name>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="84"/>
+        <source>Select an entry to preview</source>
+        <translation>Pilih entri untuk pratinjau</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="122"/>
+        <source>Image</source>
+        <translation>Gambar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="122"/>
+        <source>Text</source>
+        <translation>Teks</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="201"/>
+        <source>Copy</source>
+        <translation>Salin</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="328"/>
+        <source>Loading…</source>
+        <translation>Memuat...</translation>
+    </message>
+</context>
+<context>
     <name>Clock</name>
     <message>
         <location filename="../Modules/Lock/Clock.qml" line="19"/>
@@ -597,18 +676,18 @@
 <context>
     <name>Configs</name>
     <message>
-        <location filename="../Core/Configs/Configs.qml" line="32"/>
+        <location filename="../Core/Configs/Configs.qml" line="31"/>
         <source>Failed to read config files</source>
         <translation>Gagal membaca berkas konfigurasi</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/Configs.qml" line="32"/>
-        <location filename="../Core/Configs/Configs.qml" line="39"/>
+        <location filename="../Core/Configs/Configs.qml" line="31"/>
+        <location filename="../Core/Configs/Configs.qml" line="38"/>
         <source>Configuration</source>
         <translation>Konfigurasi</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/Configs.qml" line="39"/>
+        <location filename="../Core/Configs/Configs.qml" line="38"/>
         <source>Failed to save config: %1</source>
         <translation>Gagal menyimpan konfigurasi: %1</translation>
     </message>
