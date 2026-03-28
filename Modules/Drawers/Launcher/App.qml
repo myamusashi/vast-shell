@@ -137,7 +137,7 @@ Item {
                         values: listView.searchResults
                     }
                     clip: true
-                    spacing: 8
+                    spacing: Appearance.spacing.normal
                     cacheBuffer: implicitHeight
                     highlightMoveDuration: root.isNavigating ? 200 : 0
                     maximumFlickVelocity: 1000

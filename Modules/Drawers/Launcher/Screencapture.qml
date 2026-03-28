@@ -32,7 +32,7 @@ WrapperRectangle {
 
     Behavior on implicitHeight {
         NAnim {
-            duration: Appearance.animations.durations.large
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
