@@ -186,6 +186,11 @@ namespace Vast {
 
         QGuiApplication::clipboard()->setMimeData(mime);
 
+        // Manually trigger an insert request to bump the timestamp and reorder the list
+        // Since the watcher is disabled, this ensures the UI moves the entry to the top.
+        // The database handles duplicates by updating the timestamp and emitting an insert event.
+        emit requestInsert(entry);
+
         // Re-enable after a short defer so the clipboard event loop has flushed
         QMetaObject::invokeMethod(this, [this] { m_watcher->setEnabled(m_enabled); }, Qt::QueuedConnection);
     }
