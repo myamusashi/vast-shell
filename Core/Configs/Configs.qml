@@ -18,6 +18,7 @@ Singleton {
     property alias weather: adapter.weather
     property alias language: adapter.language
     property alias mediaPlayer: adapter.mediaPlayer
+    property alias clipboard: adapter.clipboard
 
     onLanguageChanged: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
 
@@ -43,6 +44,7 @@ Singleton {
 
             property AppearanceConfig appearance: AppearanceConfig {}
             property ColorSystemConfig colors: ColorSystemConfig {}
+            property ClipboardConfig clipboard: ClipboardConfig {}
             property GeneralConfig generals: GeneralConfig {}
             property WallpaperConfig wallpaper: WallpaperConfig {}
             property WeatherConfig weather: WeatherConfig {}
