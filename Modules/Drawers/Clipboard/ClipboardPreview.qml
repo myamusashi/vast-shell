@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -300,31 +302,38 @@ Item {
             }
 
             Item {
-                width: Math.max(imageScroll.width, img.paintedWidth * imageZoom.scale)
-                height: Math.max(imageScroll.height, img.paintedHeight * imageZoom.scale)
+                width: Math.max(imageScroll.width, loader.item.paintedWidth * imageZoom.scale)
+                height: Math.max(imageScroll.height, loader.item.paintedHeight * imageZoom.scale)
 
-                Image {
-                    id: img
-
-                    anchors.centerIn: parent
-
-                    source: d.isImage && d.imageData.length > 0 ? "data:image/png;base64," + d.imageData : ""
+                Loader {
+                    id: loader
 
                     width: imageScroll.width * imageZoom.scale
                     height: imageScroll.height * imageZoom.scale
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
+                    active: d.isImage
                     asynchronous: true
+                    sourceComponent: Image {
+                        id: img
 
-                    opacity: status === Image.Ready ? 1.0 : 0.0
-                    Behavior on opacity {
-                        NAnim {}
+                        anchors.centerIn: parent
+                        width: Configs.clipboard.preview.sourceWidth
+                        height: Configs.clipboard.preview.sourceHeight
+                        source: d.isImage && d.imageData.length > 0 ? "data:image/png;base64," + d.imageData : ""
+                        sourceSize: Qt.size(Configs.clipboard.preview.sourceSizeWidth, Configs.clipboard.preview.sourceSizeHeight)
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        asynchronous: true
+                        opacity: status === Image.Ready ? 1.0 : 0.0
+
+                        Behavior on opacity {
+                            NAnim {}
+                        }
                     }
                 }
 
                 StyledText {
                     anchors.centerIn: parent
-                    visible: img.status === Image.Loading
+                    visible: loader.item.status === Image.Loading
                     text: qsTr("Loading…")
                     font.pixelSize: Appearance.fonts.size.medium
                     color: Colours.m3Colors.m3Secondary
