@@ -5,10 +5,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
-import Quickshell.Wayland
 import Quickshell.Services.Pipewire
 import Vast
-
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -17,20 +15,12 @@ import qs.Services
 Singleton {
     id: root
 
-    Component.onCompleted: {
-        ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`);
-        ClipboardManager.enabled = true;
-    }
-
-    Binding {
-        target: ClipboardManager
-        property: "activeWindow"
-        value: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.appId : ""
-    }
+    Component.onCompleted: ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`)
 
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
+
     readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
     readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
     readonly property bool isNumLockOSDVisible: _activeOSDs["numlock"] || false
@@ -297,6 +287,17 @@ Singleton {
 
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
+    }
+
+    Connections {
+        target: Configs.clipboard
+
+        function onEnabledChanged() {
+            if (Configs.clipboard.enabled)
+                ClipboardManager.enabled = true;
+            else
+                ClipboardManager.enabled = false;
+        }
     }
 
     Connections {
