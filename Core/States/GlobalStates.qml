@@ -5,8 +5,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
+import Quickshell.Wayland
 import Quickshell.Services.Pipewire
 import Vast
+
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -18,6 +20,12 @@ Singleton {
     Component.onCompleted: {
         ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`);
         ClipboardManager.enabled = true;
+    }
+
+    Binding {
+        target: ClipboardManager
+        property: "activeWindow"
+        value: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.appId : ""
     }
 
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
