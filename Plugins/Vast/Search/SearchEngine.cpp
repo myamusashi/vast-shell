@@ -10,7 +10,7 @@
 #include <cmath>
 
 SearchEngine::SearchEngine(QObject* parent) : QObject(parent) {
-    m_settings     = new QSettings("vast-shell", "myamusashi", this);
+    m_settings = new QSettings("vast-shell", "myamusashi", this);
     loadHistory();
 }
 

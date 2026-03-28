@@ -137,14 +137,14 @@ void LyricsProvider::clear() {
 
 void LyricsProvider::seekTo(qint64 posMs) {
     // Find the last boundary with timeMs <= posMs using upper_bound - 1
-    auto it = std::ranges::upper_bound(m_boundaries, posMs, {}, &WordBoundary::timeMs);
+    auto            it    = std::ranges::upper_bound(m_boundaries, posMs, {}, &WordBoundary::timeMs);
     const qsizetype found = (it != m_boundaries.begin()) ? std::distance(m_boundaries.begin(), std::prev(it)) : -1;
 
-    const int newLine = (found >= 0) ? m_boundaries[found].lineIndex : -1;
-    const int newWord = (found >= 0) ? m_boundaries[found].wordIndex : -1;
+    const int       newLine = (found >= 0) ? m_boundaries[found].lineIndex : -1;
+    const int       newWord = (found >= 0) ? m_boundaries[found].wordIndex : -1;
 
-    bool      durationChanged = false;
-    qint64    newDuration     = 0;
+    bool            durationChanged = false;
+    qint64          newDuration     = 0;
     if (newLine >= 0 && newWord >= 0 && newLine < m_wordLines.size()) {
         const auto wl    = m_wordLines[newLine].toMap();
         const auto words = wl["words"].toList();
@@ -341,7 +341,7 @@ bool LyricsProvider::parseLrc(const QString& lrc, double totalDurationSecs) {
 
     rebuildBoundaries();
     setState(State::Ready);
-    emit lyricsChanged();
+    emit         lyricsChanged();
 
     const qint64 posMs = currentPositionMs();
     seekTo(posMs);

@@ -145,11 +145,11 @@ double FuzzyMatcher::subsequenceScore(const QString& q, const QString& t) {
     if (b.isEmpty())
         return a.length();
 
-    const QString&     shorter = a.length() <= b.length() ? a : b;
-    const QString&     longer  = a.length() <= b.length() ? b : a;
+    const QString&         shorter = a.length() <= b.length() ? a : b;
+    const QString&         longer  = a.length() <= b.length() ? b : a;
 
-    const qsizetype    slen = shorter.length();
-    const qsizetype    llen = longer.length();
+    const qsizetype        slen = shorter.length();
+    const qsizetype        llen = longer.length();
 
     std::vector<qsizetype> prev(static_cast<size_t>(slen + 1)), curr(static_cast<size_t>(slen + 1));
     for (qsizetype i = 0; i <= slen; ++i)

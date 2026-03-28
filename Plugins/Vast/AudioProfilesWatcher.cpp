@@ -50,33 +50,33 @@ constexpr int kMaxProfiles = 64;
 constexpr int kMaxStr      = 256;
 
 struct ap_profile_entry_t {
-    int32_t                    index;
-    std::array<char, kMaxStr>  name{};
-    std::array<char, kMaxStr>  description{};
-    std::array<char, 32>       available{};
+    int32_t                   index;
+    std::array<char, kMaxStr> name{};
+    std::array<char, kMaxStr> description{};
+    std::array<char, 32>      available{};
 };
 
 struct ap_device_node_t {
-    pw_proxy*          proxy = nullptr;
-    spa_hook           device_listener{};
-    spa_hook           proxy_listener{};
+    pw_proxy*                                    proxy = nullptr;
+    spa_hook                                     device_listener{};
+    spa_hook                                     proxy_listener{};
 
-    uint32_t                                  pw_id = 0;
-    std::array<char, kMaxStr>                 name{};
+    uint32_t                                     pw_id = 0;
+    std::array<char, kMaxStr>                    name{};
 
     std::array<ap_profile_entry_t, kMaxProfiles> profiles{};
-    int                                       profile_count = 0;
+    int                                          profile_count = 0;
 
     std::array<ap_profile_entry_t, kMaxProfiles> staging{};
-    int                                       staging_count = 0;
-    int                                       enum_seq      = 0;
+    int                                          staging_count = 0;
+    int                                          enum_seq      = 0;
 
-    int32_t                                   active_index = -1;
-    std::array<char, kMaxStr>                 active_name{};
-    std::array<char, kMaxStr>                 active_description{};
-    std::array<char, 32>                      active_available{};
+    int32_t                                      active_index = -1;
+    std::array<char, kMaxStr>                    active_name{};
+    std::array<char, kMaxStr>                    active_description{};
+    std::array<char, 32>                         active_available{};
 
-    int                                       dirty = 0;
+    int                                          dirty = 0;
 };
 
 static void        ap_registry_event_global(void* data, uint32_t id, uint32_t permissions, const char* type, uint32_t version, const spa_dict* props);
@@ -225,8 +225,8 @@ static void ap_device_event_param(void* data, int seq, uint32_t id, uint32_t /*i
             }
         }
 
-        auto& e  = d->staging[d->staging_count++];
-        e.index  = pidx;
+        auto& e = d->staging[d->staging_count++];
+        e.index = pidx;
         ap_safe_copy(e.name, name ? name : "");
         ap_safe_copy(e.description, desc ? desc : "");
         ap_safe_copy(e.available, avail.data());
