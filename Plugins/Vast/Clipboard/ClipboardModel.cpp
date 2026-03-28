@@ -182,6 +182,50 @@ namespace Vast {
         emit countChanged();
     }
 
+    void ClipboardModel::bumpToTop(qint64 id) {
+        const int existing = indexById(id);
+        if (existing < 0) return;
+
+        m_entries[existing].timestamp = QDateTime::currentMSecsSinceEpoch();
+
+        if (m_filtering) {
+            beginResetModel();
+            auto item = m_entries.takeAt(existing);
+            const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
+                if (item.pinned && !e.pinned) return true;
+                if (!item.pinned && e.pinned) return false;
+                return item.timestamp >= e.timestamp;
+            });
+            m_entries.insert(insertPos, std::move(item));
+            rebuildFilter();
+            endResetModel();
+            emit countChanged();
+            return;
+        }
+
+        const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
+            if (e.id == id) return false;
+            auto const& item = m_entries[existing];
+            if (item.pinned && !e.pinned) return true;
+            if (!item.pinned && e.pinned) return false;
+            return item.timestamp >= e.timestamp;
+        });
+
+        const int dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+        if (existing != dest) {
+            int destChild = dest > existing ? dest + 1 : dest;
+            beginMoveRows({}, existing, existing, {}, destChild);
+            auto item = m_entries.takeAt(existing);
+            
+            int insertIdx = dest > existing ? dest - 1 : dest;
+            m_entries.insert(insertIdx, std::move(item));
+            endMoveRows();
+            emit dataChanged(index(insertIdx, 0), index(insertIdx, 0));
+        } else {
+            emit dataChanged(index(existing, 0), index(existing, 0));
+        }
+    }
+
     const QList<ClipboardEntry>& ClipboardModel::allEntries() const noexcept {
         return m_entries;
     }

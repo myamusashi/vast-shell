@@ -187,9 +187,10 @@ namespace Vast {
 
         QGuiApplication::clipboard()->setMimeData(mime);
 
-        // Manually trigger an insert request to bump the timestamp and reorder the list
-        // Since the watcher is disabled, this ensures the UI moves the entry to the top.
-        // The database handles duplicates by updating the timestamp and emitting an insert event.
+        // Synchronously bump the item to the top in the UI model immediately (client-side reorder)
+        m_model->bumpToTop(id);
+
+        // Trigger an insert request to bump the timestamp in the persistent database
         emit requestInsert(entry);
 
         // Re-enable after a short delay (500ms) so the asynchronous Wayland clipboard event

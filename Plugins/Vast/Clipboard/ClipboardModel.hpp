@@ -50,6 +50,8 @@ namespace Vast {
         void                                       setPinById(qint64 id, bool pinned);
         void                                       setFilter(const QString& query, const QList<qint64>& orderedIds = {});
 
+        void                                       bumpToTop(qint64 id);
+
         [[nodiscard]] Q_INVOKABLE qint64           idAtRow(int row) const;
 
       signals:
