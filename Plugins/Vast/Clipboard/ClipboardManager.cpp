@@ -139,6 +139,17 @@ namespace Vast {
         emit enabledChanged();
     }
 
+    QString ClipboardManager::activeWindow() const noexcept {
+        return m_activeWindow;
+    }
+
+    void ClipboardManager::setActiveWindow(const QString& window) {
+        if (m_activeWindow == window)
+            return;
+        m_activeWindow = window;
+        emit activeWindowChanged();
+    }
+
     void ClipboardManager::copyToClipboard(qint64 id) {
         // We need the full entry (including data BLOB for images).
         // Fetch synchronously from the worker, acceptable since this is

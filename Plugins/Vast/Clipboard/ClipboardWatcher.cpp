@@ -1,4 +1,5 @@
 #include "ClipboardWatcher.hpp"
+#include "ClipboardManager.hpp"
 
 #include <QGuiApplication>
 #include <QBuffer>
@@ -11,6 +12,7 @@
 #include <QMimeData>
 #include <QProcess>
 #include <QUrl>
+#include <QtConcurrent>
 
 namespace Vast {
 
@@ -47,17 +49,32 @@ namespace Vast {
         if (!mime || mime->formats().isEmpty())
             return;
 
-        // Resolve source app FIRST, while the clipboard owner's window is still
-        // active (hyprctl reads the currently focused window at call-time)
-        const QString sourceApp = resolveSourceApp();
+        const auto*   manager   = qobject_cast<ClipboardManager*>(parent());
+        const QString sourceApp = manager ? manager->activeWindow() : QString{};
 
-        // Priority order: image > html > files > plain text
-        // HTML is checked before plain text because rich text apps set both
+        if (mime->hasImage()) {
+            const QImage image = cb->image();
+            if (!image.isNull()) {
+                QtConcurrent::run([this, image, sourceApp]() {
+                    const QByteArray png = compressImage(image);
+                    if (png.isEmpty())
+                        return;
+
+                    ClipboardEntry entry;
+                    entry.type     = ClipboardType::Image;
+                    entry.mimeType = QStringLiteral("image/png");
+                    entry.data     = png;
+
+                    finalise(entry, png, sourceApp);
+
+                    QMetaObject::invokeMethod(this, [this, e = std::move(entry)]() { emit newEntry(e); }, Qt::QueuedConnection);
+                });
+            }
+            return;
+        }
+
         std::optional<ClipboardEntry> entry;
-
-        if (mime->hasImage())
-            entry = buildImageEntry(cb, sourceApp);
-        else if (mime->hasHtml())
+        if (mime->hasHtml())
             entry = buildHtmlEntry(cb, sourceApp);
         else if (mime->hasUrls())
             entry = buildFilesEntry(cb, sourceApp);
@@ -95,27 +112,7 @@ namespace Vast {
         entry.content  = plain.isEmpty() ? html : plain; // plain for search/preview
         entry.mimeType = QStringLiteral("text/html");
 
-        // Hash the html payload for accurate deduplication.
         finalise(entry, html.toUtf8(), sourceApp);
-        return entry;
-    }
-
-    std::optional<ClipboardEntry> ClipboardWatcher::buildImageEntry(const QClipboard* cb, const QString& sourceApp) {
-        const QImage image = cb->image();
-        if (image.isNull())
-            return std::nullopt;
-
-        const QByteArray png = compressImage(image);
-        if (png.isEmpty())
-            return std::nullopt;
-
-        ClipboardEntry entry;
-        entry.type     = ClipboardType::Image;
-        entry.mimeType = QStringLiteral("image/png");
-        entry.data     = png;
-        // Leave content empty — image entries match on sourceApp only in fuzzy search.
-
-        finalise(entry, png, sourceApp);
         return entry;
     }
 
@@ -126,7 +123,6 @@ namespace Vast {
         if (urls.isEmpty())
             return std::nullopt;
 
-        // Store as newline-separated local paths (or URLs for remote ones).
         QStringList paths;
         paths.reserve(urls.size());
         for (const QUrl& url : urls)
@@ -148,25 +144,7 @@ namespace Vast {
         entry.timestamp = QDateTime::currentMSecsSinceEpoch();
         entry.sourceApp = sourceApp;
 
-        // sizeBytes reflects actual storage cost:
-        // text entries: UTF-8 byte count; image entries: compressed PNG size
         entry.sizeBytes = entry.data.isEmpty() ? static_cast<qint64>(entry.content.toUtf8().size()) : static_cast<qint64>(entry.data.size());
-    }
-
-    QString ClipboardWatcher::resolveSourceApp() {
-        // hyprctl is Hyprland-specific. On other compositors this returns empty,
-        // which is a safe fallback, the entry is still stored without a source
-        QProcess proc;
-        proc.start(QStringLiteral("hyprctl"), QStringList{QStringLiteral("-j"), QStringLiteral("activewindow")});
-
-        if (!proc.waitForFinished(300 /*ms*/))
-            return {};
-
-        const auto json = QJsonDocument::fromJson(proc.readAllStandardOutput());
-        if (json.isNull() || !json.isObject())
-            return {};
-
-        return json.object().value(QStringLiteral("class")).toString();
     }
 
     QByteArray ClipboardWatcher::sha256(const QByteArray& data) {
@@ -183,11 +161,9 @@ namespace Vast {
         QBuffer    buf{&bytes};
         buf.open(QIODevice::WriteOnly);
 
-        // PNG quality argument is ignored by Qt's PNG encoder (it controls zlib compression level via negative values; -1 = default)
         if (!scaled.save(&buf, "PNG", -1))
             return {};
 
         return bytes;
     }
-
 }

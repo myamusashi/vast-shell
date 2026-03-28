@@ -105,9 +105,12 @@ namespace Vast {
                 const qint64 existingId = fetchQ.value(0).toLongLong();
                 auto         fetched    = fetchById(existingId);
 
-                if (fetched)
+                if (fetched) {
+                    fetched->data.clear();
                     emit entryInserted(*fetched);
+                }
             }
+
             // Return -1 as a sentinel: "not inserted, was duplicate"
             return -1LL;
         }
@@ -137,6 +140,7 @@ namespace Vast {
 
         ClipboardEntry inserted = entry;
         inserted.id             = newId;
+        inserted.data.clear();
 
         emit entryInserted(inserted);
 
@@ -197,19 +201,39 @@ namespace Vast {
                 const int unpinnedCount = countQ.value(0).toInt();
                 const int excess        = unpinnedCount - maxEntries;
                 if (excess > 0) {
-                    QSqlQuery pruneQ{m_db};
-                    pruneQ.prepare(QStringLiteral(R"sql(
-                    DELETE FROM clipboard_entries
-                    WHERE id IN (
+                    QSqlQuery getQ{m_db};
+                    getQ.prepare(QStringLiteral(R"sql(
                         SELECT id FROM clipboard_entries
                         WHERE pinned = 0
                         ORDER BY timestamp ASC
                         LIMIT :excess
-                    )
-                )sql"));
-                    pruneQ.bindValue(QStringLiteral(":excess"), excess);
-                    if (!pruneQ.exec())
-                        return std::unexpected(lastError());
+                    )sql"));
+                    getQ.bindValue(QStringLiteral(":excess"), excess);
+
+                    QList<qint64> idsToRemove;
+                    if (getQ.exec()) {
+                        while (getQ.next())
+                            idsToRemove.append(getQ.value(0).toLongLong());
+                    }
+
+                    if (!idsToRemove.isEmpty()) {
+                        QSqlQuery pruneQ{m_db};
+                        pruneQ.prepare(QStringLiteral(R"sql(
+                            DELETE FROM clipboard_entries
+                            WHERE id IN (
+                                SELECT id FROM clipboard_entries
+                                WHERE pinned = 0
+                                ORDER BY timestamp ASC
+                                LIMIT :excess
+                            )
+                        )sql"));
+                        pruneQ.bindValue(QStringLiteral(":excess"), excess);
+                        if (!pruneQ.exec())
+                            return std::unexpected(lastError());
+
+                        for (qint64 id : idsToRemove)
+                            emit entryRemoved(id);
+                    }
                 }
             }
         }
@@ -224,22 +248,28 @@ namespace Vast {
                 if (*sizeResult <= maxBytes)
                     break;
 
-                QSqlQuery  pruneQ{m_db};
-                const bool ok = pruneQ.exec(QStringLiteral(R"sql(
-					DELETE FROM clipboard_entries
-					WHERE id = (
-						SELECT id FROM clipboard_entries
-						WHERE pinned = 0
-						ORDER BY timestamp ASC
-						LIMIT 1
-					)
-				)sql"));
+                QSqlQuery getQ{m_db};
+                getQ.exec(QStringLiteral(R"sql(
+                    SELECT id FROM clipboard_entries
+                    WHERE pinned = 0
+                    ORDER BY timestamp ASC
+                    LIMIT 1
+                )sql"));
+                qint64 idToRemove = -1;
+                if (getQ.next())
+                    idToRemove = getQ.value(0).toLongLong();
 
-                if (!ok)
+                if (idToRemove < 0)
+                    break;
+
+                QSqlQuery pruneQ{m_db};
+                pruneQ.prepare(QStringLiteral("DELETE FROM clipboard_entries WHERE id = :id"));
+                pruneQ.bindValue(QStringLiteral(":id"), idToRemove);
+
+                if (!pruneQ.exec())
                     return std::unexpected(lastError());
 
-                if (pruneQ.numRowsAffected() == 0)
-                    break;
+                emit entryRemoved(idToRemove);
             }
         }
 

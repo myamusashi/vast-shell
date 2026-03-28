@@ -77,20 +77,23 @@ namespace Vast {
             // Find insertion point, skipping the existing item so distance is calculated
             // as if it was already removed, but iterators reflect current memory.
             const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
-                if (e.id == entry.id) return false;
-                if (entry.pinned && !e.pinned) return true;
-                if (!entry.pinned && e.pinned) return false;
+                if (e.id == entry.id)
+                    return false;
+                if (entry.pinned && !e.pinned)
+                    return true;
+                if (!entry.pinned && e.pinned)
+                    return false;
                 return entry.timestamp >= e.timestamp;
             });
-            
-            const int dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
-            
+
+            const int  dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+
             if (existing != dest) {
                 int destChild = dest > existing ? dest + 1 : dest;
                 beginMoveRows({}, existing, existing, {}, destChild);
                 auto item = m_entries.takeAt(existing);
-                
-                int insertIdx = dest > existing ? dest - 1 : dest;
+
+                int  insertIdx = dest > existing ? dest - 1 : dest;
                 item.timestamp = entry.timestamp;
                 m_entries.insert(insertIdx, std::move(item));
                 endMoveRows();
@@ -101,7 +104,7 @@ namespace Vast {
             }
             return;
         }
-        
+
         const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
             if (entry.pinned && !e.pinned)
                 return true;
@@ -111,11 +114,11 @@ namespace Vast {
         });
 
         const int  rawRow = static_cast<int>(std::distance(m_entries.begin(), insertPos));
-        
+
         beginInsertRows({}, rawRow, rawRow);
         m_entries.insert(insertPos, entry);
         endInsertRows();
-        
+
         emit countChanged();
     }
 
@@ -184,16 +187,19 @@ namespace Vast {
 
     void ClipboardModel::bumpToTop(qint64 id) {
         const int existing = indexById(id);
-        if (existing < 0) return;
+        if (existing < 0)
+            return;
 
         m_entries[existing].timestamp = QDateTime::currentMSecsSinceEpoch();
 
         if (m_filtering) {
             beginResetModel();
-            auto item = m_entries.takeAt(existing);
+            auto       item      = m_entries.takeAt(existing);
             const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
-                if (item.pinned && !e.pinned) return true;
-                if (!item.pinned && e.pinned) return false;
+                if (item.pinned && !e.pinned)
+                    return true;
+                if (!item.pinned && e.pinned)
+                    return false;
                 return item.timestamp >= e.timestamp;
             });
             m_entries.insert(insertPos, std::move(item));
@@ -204,20 +210,23 @@ namespace Vast {
         }
 
         const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
-            if (e.id == id) return false;
+            if (e.id == id)
+                return false;
             auto const& item = m_entries[existing];
-            if (item.pinned && !e.pinned) return true;
-            if (!item.pinned && e.pinned) return false;
+            if (item.pinned && !e.pinned)
+                return true;
+            if (!item.pinned && e.pinned)
+                return false;
             return item.timestamp >= e.timestamp;
         });
 
-        const int dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+        const int  dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
         if (existing != dest) {
             int destChild = dest > existing ? dest + 1 : dest;
             beginMoveRows({}, existing, existing, {}, destChild);
             auto item = m_entries.takeAt(existing);
-            
-            int insertIdx = dest > existing ? dest - 1 : dest;
+
+            int  insertIdx = dest > existing ? dest - 1 : dest;
             m_entries.insert(insertIdx, std::move(item));
             endMoveRows();
             emit dataChanged(index(insertIdx, 0), index(insertIdx, 0));

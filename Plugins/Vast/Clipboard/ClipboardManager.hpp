@@ -28,6 +28,7 @@ namespace Vast {
         Q_PROPERTY(int maxEntries READ maxEntries WRITE setMaxEntries NOTIFY maxEntriesChanged)
         Q_PROPERTY(int maxMegabytes READ maxMegabytes WRITE setMaxMegabytes NOTIFY maxMegabytesChanged)
         Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+        Q_PROPERTY(QString activeWindow READ activeWindow WRITE setActiveWindow NOTIFY activeWindowChanged)
 
       public:
         explicit ClipboardManager(QObject* parent = nullptr);
@@ -44,6 +45,9 @@ namespace Vast {
         void                          setMaxEntries(int max);
         void                          setMaxMegabytes(int mb);
         void                          setEnabled(bool enabled);
+        void                          setActiveWindow(const QString& window);
+
+        [[nodiscard]] QString         activeWindow() const noexcept;
 
         Q_INVOKABLE void              copyToClipboard(qint64 id);
         Q_INVOKABLE void              pin(qint64 id, bool pinned);
@@ -57,6 +61,7 @@ namespace Vast {
         void maxEntriesChanged();
         void maxMegabytesChanged();
         void enabledChanged();
+        void activeWindowChanged();
 
         void requestInsert(Vast::ClipboardEntry entry);
         void requestRemove(qint64 id);
@@ -81,5 +86,6 @@ namespace Vast {
         int                                m_maxEntries   = 500;
         int                                m_maxMegabytes = 64;
         bool                               m_enabled      = true;
+        QString                            m_activeWindow{};
     };
 }

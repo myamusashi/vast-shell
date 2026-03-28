@@ -39,7 +39,6 @@ namespace Vast {
       private:
         [[nodiscard]] static std::optional<ClipboardEntry> buildTextEntry(const QClipboard* cb, const QString& sourceApp);
         [[nodiscard]] static std::optional<ClipboardEntry> buildHtmlEntry(const QClipboard* cb, const QString& sourceApp);
-        [[nodiscard]] static std::optional<ClipboardEntry> buildImageEntry(const QClipboard* cb, const QString& sourceApp);
         [[nodiscard]] static std::optional<ClipboardEntry> buildFilesEntry(const QClipboard* cb, const QString& sourceApp);
 
         [[nodiscard]] static QString                       resolveSourceApp();
