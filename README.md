@@ -55,7 +55,7 @@ Dispatch a panel or action directly from Hyprland:
 hyprctl dispatch global quickshell:<target>
 ```
 
-Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `screencaptureLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`
+Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `screencaptureLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`, `clipboard`
 
 ### IPC
 
@@ -76,7 +76,7 @@ shell ipc call <target> <function>
 
 | Target | Functions |
 |---|---|
-| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture` | `toggle()`, `open()`, `close()` |
+| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture`, `clipboard` | `toggle()`, `open()`, `close()` |
 | `toast` | `open(header: string, description: string, icon: string, duration: int)` |
 | `img` | `get(): string`, `set(path: string)` |
 | `lock` | `lock()`, `unlock()`, `isLocked(): bool` |
@@ -628,9 +628,11 @@ vast-shell/
 │   ├── Dialog/FileDialog/
 │   └── Feedback/
 │
-├── Services/              # Audio, Battery, Brightness, Colours,
-│                          # Hotspot, Hypr, Lyrics, Notifs,
-│                          # SystemUsage, Weather, http.js …
+├── Services/              # Audio, Battery, Brightness, Calendar, Colours,
+│                          # Hotspot, Hypr, Lyrics, Notifs, Privacy, Record
+│                          # SystemUsage, Weather, ToastService, WallpaperFileModels
+│                          # Wifi, ScreenCapture, ScreenCaptureHistory, PolAgent, Players, Hotspot
+│                          # Fontlist, Hyprsunset, KeylockState
 │
 ├── Modules/
 │   └── Drawers/           # Bar, Calendar, Launcher, Notifications,
@@ -643,7 +645,9 @@ vast-shell/
 │       └── Wallpaper/
 │
 ├── Widgets/               # AudioProfiles, Battery, Clock, LyricsView,
-│                          # Mpris, RecordIndicator, Tray, Workspaces …
+│                          # Mpris, RecordIndicator, Tray, Workspaces,
+│                          # WorkspaceName, Sound, OsText, MixerEntry,
+│                          # MixerEntry
 │
 ├── Plugins/Vast/
 │   ├── CMakeLists.txt
@@ -653,7 +657,8 @@ vast-shell/
 │   ├── LyricsProvider.cpp/hpp
 │   ├── ScreenRecorder.cpp/hpp
 │   ├── TranslationManager.cpp/hpp
-│   └── Search/            # FileProvider, FuzzyMatcher, SearchEngine, SearchResult
+    ├── Clipboard/         # Database, Model, Watcher, Manager, Entry
+│   └── Search/            # FuzzyMatcher, SearchEngine, SearchResult
 │
 ├── Assets/
 │   ├── go/formatting.go
@@ -664,8 +669,7 @@ vast-shell/
 │   │                      # fade, pixelate, roll, slideUp, splitHorizontal, wipeDown
 │   └── weather_icon/
 │
-├── Data/matugen/
-├── patches/
+├── Data/ # Matugen/, configurations.json
 └── translations/
 ```
 
@@ -696,9 +700,9 @@ vast-shell/
 - [ ] Generic VPN status indicator in the network settings page
 
 **Clipboard Manager**
-- [ ] Persistent clipboard history with image preview
-- [ ] Selected text snippets with source context
-- [ ] Built-in storage via `sqlite` or `cliphist`
+- [x] Persistent clipboard history with image preview
+- [x] Selected text snippets with source context
+- [x] Built-in storage via `sqlite`
 
 ---
 
@@ -709,7 +713,5 @@ Thanks to everyone in the Quickshell Discord server, especially **@m7moud_el_zay
 Thanks to **@outfoxxed** for [quickshell](https://github.com/quickshell-mirror/quickshell).
 
 Thanks to **[@Soramane](https://github.com/caelestia-dots/shell)** for the inspiration — lots of references taken from your shell, and thanks for the material shapes too.
-
-Thanks to **[@Rexcrazy804](https://github.com/Rexcrazy804/Zaphkiel)** for the kuru-kuru.
 
 Also check out [qtengine](https://github.com/kossLAN/qtengine) by **@koss** — a Qt config that doesn't suck.
