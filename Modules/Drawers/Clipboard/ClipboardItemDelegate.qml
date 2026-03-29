@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Vast
 
 import qs.Core.States
@@ -8,7 +9,7 @@ import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 
-Item {
+ItemDelegate {
     id: root
 
     required property int index
@@ -41,18 +42,15 @@ Item {
     signal pinToggled(var id, bool pinned)
     signal removeRequested(var id)
 
-    implicitWidth: parent?.width ?? 0
-    implicitHeight: 64
+    width: ListView.view?.width ?? parent?.width ?? 320
+    height: 64
+    hoverEnabled: true
+    highlighted: root.isSelected
+    onClicked: root.activated()
 
-    StyledRect {
-        id: bg
-
-        anchors {
-            fill: parent
-            margins: 2
-        }
+    background: Rectangle {
         radius: Appearance.rounding.small
-        color: root.isSelected ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : hoverHandler.hovered ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.04) : "transparent"
+        color: "transparent"
 
         Rectangle {
             anchors {
@@ -66,145 +64,135 @@ Item {
             color: Colours.m3Colors.m3Primary
             visible: root.pinned
         }
+    }
 
-        RowLayout {
-            anchors {
-                fill: parent
-                leftMargin: root.pinned ? Appearance.margin.large : Appearance.margin.normal
-                rightMargin: Appearance.margin.smaller
-                topMargin: Appearance.margin.small
-                bottomMargin: Appearance.margin.small
+    contentItem: RowLayout {
+        spacing: Appearance.spacing.smaller
+
+        Item {
+            Layout.preferredWidth: root.pinned ? Appearance.margin.large - Appearance.margin.normal : 0
+        }
+
+        Rectangle {
+            Layout.alignment: Qt.AlignVCenter
+            implicitWidth: 32
+            implicitHeight: 32
+            radius: Appearance.rounding.small
+            color: {
+                switch (root.type) {
+                case "image":
+                    return Qt.alpha(Colours.m3Colors.m3Blue, 0.2);
+                case "html":
+                    return Qt.alpha(Colours.m3Colors.m3Tertiary, 0.2);
+                case "files":
+                    return Qt.alpha(Colours.m3Colors.m3Green, 0.2);
+                default:
+                    return Qt.alpha(Colours.m3Colors.m3OnSurface, 0.06);
+                }
             }
-            spacing: Appearance.spacing.smaller
 
-            StyledRect {
-                Layout.alignment: Qt.AlignVCenter
-                implicitWidth: 32
-                implicitHeight: implicitWidth
-                radius: Appearance.rounding.small
-                color: typeColor()
-
-                function typeColor(): color {
+            Icon {
+                anchors.centerIn: parent
+                icon: {
                     switch (root.type) {
                     case "image":
-                        return Qt.alpha(Colours.m3Colors.m3Blue, 0.2);
+                        return "image";
                     case "html":
-                        return Qt.alpha(Colours.m3Colors.m3Tertiary, 0.2);
+                        return "code";
                     case "files":
-                        return Qt.alpha(Colours.m3Colors.m3Green, 0.2);
+                        return "folder";
                     default:
-                        return Qt.alpha(Colours.m3Colors.m3OnSurface, 0.06);
+                        return "notes";
                     }
                 }
-
-                Icon {
-                    anchors.centerIn: parent
-                    icon: {
-                        switch (root.type) {
-                        case "image":
-                            return "image";
-                        case "html":
-                            return "code";
-                        case "files":
-                            return "folder";
-                        default:
-                            return "notes";
-                        }
-                    }
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: {
-                        switch (root.type) {
-                        case "image":
-                            return Colours.m3Colors.m3Blue;
-                        case "html":
-                            return Colours.m3Colors.m3Tertiary;
-                        case "files":
-                            return Colours.m3Colors.m3Green;
-                        default:
-                            return Colours.m3Colors.m3OnSurface;
-                        }
+                font.pixelSize: Appearance.fonts.size.large
+                color: {
+                    switch (root.type) {
+                    case "image":
+                        return Colours.m3Colors.m3Blue;
+                    case "html":
+                        return Colours.m3Colors.m3Tertiary;
+                    case "files":
+                        return Colours.m3Colors.m3Green;
+                    default:
+                        return Colours.m3Colors.m3OnSurface;
                     }
                 }
             }
+        }
 
-            ColumnLayout {
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
+            spacing: 2
+
+            StyledText {
+                readonly property int fileCount: root.isFiles ? root.preview.split("\n").length : 0
+
                 Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                spacing: 2
+                text: root.isImage ? qsTr("Image") : root.isFiles ? qsTr("Files (%1)").arg(fileCount) : root.preview || qsTr("(empty)")
+                color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.medium
+                maximumLineCount: 2
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                elide: Text.ElideRight
+            }
+
+            RowLayout {
+                spacing: Appearance.spacing.small
+                visible: root.sourceApp !== ""
 
                 StyledText {
-                    readonly property int fileCount: root.isFiles ? root.preview.split("\n").length : 0
-
-                    Layout.fillWidth: true
-                    text: root.isImage ? qsTr("Image") : root.isFiles ? qsTr("Files (%1)").arg(fileCount) : root.preview || qsTr("(empty)")
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.medium
-                    maximumLineCount: 2
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    text: root.sourceApp
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
                     elide: Text.ElideRight
+                    Layout.maximumWidth: 120
                 }
 
-                RowLayout {
-                    spacing: Appearance.spacing.small
-                    visible: root.sourceApp !== ""
+                StyledText {
+                    text: "·"
+                    color: Colours.m3Colors.m3OutlineVariant
+                    font.pixelSize: Appearance.fonts.size.small
+                }
 
-                    StyledText {
-                        text: root.sourceApp
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.small
-                        elide: Text.ElideRight
-                        Layout.maximumWidth: 120
-                    }
-
-                    StyledText {
-                        text: "·"
-                        color: Colours.m3Colors.m3OutlineVariant
-                        font.pixelSize: Appearance.fonts.size.small
-                    }
-
-                    StyledText {
-                        text: root.formattedTime
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.small
-                    }
+                StyledText {
+                    text: root.formattedTime
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
                 }
             }
+        }
 
-            Item {
-                Layout.preferredWidth: 28
-                Layout.preferredHeight: 28
-                Layout.alignment: Qt.AlignVCenter
-                visible: hoverHandler.hovered || root.pinned
-                opacity: pinHover.containsMouse ? 1.0 : 0.6
+        Item {
+            Layout.preferredWidth: 28
+            Layout.preferredHeight: 28
+            Layout.alignment: Qt.AlignVCenter
+            visible: root.hovered || root.pinned
+            opacity: pinArea.containsMouse ? 1.0 : 0.6
 
-                Behavior on opacity {
-                    NAnim {}
-                }
+            Behavior on opacity {
+                NAnim {}
+            }
 
-                Icon {
-                    anchors.centerIn: parent
-                    icon: root.pinned ? "keep" : "keep_off"
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: root.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-                }
+            Icon {
+                anchors.centerIn: parent
+                icon: root.pinned ? "keep" : "keep_off"
+                font.pixelSize: Appearance.fonts.size.large
+                color: root.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+            }
 
-                MouseArea {
-                    id: pinHover
+            MouseArea {
+                id: pinArea
 
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: root.pinToggled(root.entryId, !root.pinned)
-                }
+                anchors.fill: parent
+                hoverEnabled: true
+                onClicked: root.pinToggled(root.entryId, !root.pinned)
             }
         }
     }
 
-    HoverHandler {
-        id: hoverHandler
-    }
-
     TapHandler {
-        onTapped: root.activated()
         onDoubleTapped: {
             ClipboardManager.copyToClipboard(root.entryId);
             GlobalStates.isClipboardOpen = false;
