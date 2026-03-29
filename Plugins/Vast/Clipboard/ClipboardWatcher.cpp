@@ -55,7 +55,9 @@ namespace Vast {
         if (mime->hasImage()) {
             const QImage image = cb->image();
             if (!image.isNull()) {
-                QtConcurrent::run([this, image, sourceApp]() {
+                QPointer<ClipboardWatcher> self{this};
+
+                QThreadPool::globalInstance()->start([self, image, sourceApp]() {
                     const QByteArray png = compressImage(image);
                     if (png.isEmpty())
                         return;
@@ -64,10 +66,15 @@ namespace Vast {
                     entry.type     = ClipboardType::Image;
                     entry.mimeType = QStringLiteral("image/png");
                     entry.data     = png;
-
                     finalise(entry, png, sourceApp);
 
-                    QMetaObject::invokeMethod(this, [this, e = std::move(entry)]() { emit newEntry(e); }, Qt::QueuedConnection);
+                    QMetaObject::invokeMethod(
+                        QCoreApplication::instance(),
+                        [self, e = std::move(entry)]() mutable {
+                            if (self)
+                                emit self->newEntry(e);
+                        },
+                        Qt::QueuedConnection);
                 });
             }
             return;
@@ -109,7 +116,7 @@ namespace Vast {
 
         ClipboardEntry entry;
         entry.type     = ClipboardType::Html;
-        entry.content  = plain.isEmpty() ? html : plain; // plain for search/preview
+        entry.content  = plain.isEmpty() ? html : plain;
         entry.mimeType = QStringLiteral("text/html");
 
         finalise(entry, html.toUtf8(), sourceApp);
