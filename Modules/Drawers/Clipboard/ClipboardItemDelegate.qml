@@ -23,6 +23,20 @@ Item {
     readonly property bool isImage: root.type === "image"
     readonly property bool isFiles: root.type === "files"
 
+    readonly property string formattedTime: {
+        const d = new Date(root.timestamp);
+        const now = new Date();
+        const diff = now - d;
+
+        if (diff < 60000)
+            return qsTr("just now");
+        if (diff < 3600000)
+            return qsTr("%1m ago").arg(Math.floor(diff / 60000));
+        if (diff < 86400000)
+            return qsTr("%1h ago").arg(Math.floor(diff / 3600000));
+        return d.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+    }
+
     signal activated
     signal pinToggled(var id, bool pinned)
     signal removeRequested(var id)
@@ -119,8 +133,10 @@ Item {
                 spacing: 2
 
                 StyledText {
+                    readonly property int fileCount: root.isFiles ? root.preview.split("\n").length : 0
+
                     Layout.fillWidth: true
-                    text: root.isImage ? qsTr("Image") : root.isFiles ? qsTr("Files (%1)").arg(root.preview.split("\n").length) : root.preview || qsTr("(empty)")
+                    text: root.isImage ? qsTr("Image") : root.isFiles ? qsTr("Files (%1)").arg(fileCount) : root.preview || qsTr("(empty)")
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.medium
                     maximumLineCount: 2
@@ -147,23 +163,9 @@ Item {
                     }
 
                     StyledText {
-                        text: formatTimestamp(root.timestamp)
+                        text: root.formattedTime
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.small
-
-                        function formatTimestamp(ms: var): string {
-                            const d = new Date(ms);
-                            const now = new Date();
-                            const diff = now - d;
-
-                            if (diff < 60000)
-                                return qsTr("just now");
-                            if (diff < 3600000)
-                                return qsTr("%1m ago").arg(Math.floor(diff / 60000));
-                            if (diff < 86400000)
-                                return qsTr("%1h ago").arg(Math.floor(diff / 3600000));
-                            return d.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
-                        }
                     }
                 }
             }
