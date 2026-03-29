@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Wayland
 import Vast
@@ -20,7 +21,7 @@ WrapperRectangle {
 
     signal closeRequested
 
-    implicitWidth: d.listWidth + d.previewWidth
+    implicitWidth: d.listWidth + (Configs.clipboard.enablePreview ? (d.previewWidth + Appearance.spacing.small * 2) : 0)
     implicitHeight: GlobalStates.isClipboardOpen ? 520 : 0
     radius: Appearance.rounding.normal
     color: Colours.m3Colors.m3SurfaceContainerLow
@@ -39,6 +40,17 @@ WrapperRectangle {
         readonly property int previewWidth: 400
 
         property bool previewFocused: false
+    }
+
+    FileView {
+        path: `${Paths.cacheDir}/clipboard.db`
+        watchChanges: false
+        onLoadFailed: err => {
+            if (err === FileViewError.FileNotFound) {
+                ToastService.show(qsTr("Clipboard database not found, created it"), qsTr("Clipboard"), "edit-paste");
+                ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`);
+            }
+        }
     }
 
     Loader {
@@ -129,6 +141,32 @@ WrapperRectangle {
 
                                 if (event.key === Qt.Key_Down) {
                                     entryList.incrementCurrentIndex();
+                                    event.accepted = true;
+                                }
+
+                                if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_T) {
+                                    Configs.clipboard.enablePreview = !Configs.clipboard.enablePreview;
+                                    event.accepted = true;
+                                    return;
+                                }
+
+                                if (event.key === Qt.Key_Delete) {
+                                    const item = entryList.currentItem;
+                                    if (scope.currentId >= 0 && item && !item.pinned)
+                                        ClipboardManager.remove(scope.currentId);
+                                    event.accepted = true;
+                                }
+
+                                if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_P) {
+                                    const item = entryList.currentItem;
+                                    if (scope.currentId >= 0 && item)
+                                        ClipboardManager.pin(scope.currentId, !item.pinned);
+                                    event.accepted = true;
+                                    return;
+                                }
+
+                                if (event.key === Qt.Key_Tab) {
+                                    d.previewFocused = true;
                                     event.accepted = true;
                                 }
                             }
@@ -234,49 +272,6 @@ WrapperRectangle {
                                 }
                             }
 
-                            Keys.onPressed: event => {
-                                if (event.key === Qt.Key_Escape) {
-                                    GlobalStates.isClipboardOpen = false;
-                                    event.accepted = true;
-                                }
-
-                                if (event.key === Qt.Key_Up) {
-                                    decrementCurrentIndex();
-                                    event.accepted = true;
-                                }
-
-                                if (event.key === Qt.Key_Down) {
-                                    incrementCurrentIndex();
-                                    event.accepted = true;
-                                }
-
-                                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                                    if (scope.currentId >= 0)
-                                        ClipboardManager.copyToClipboard(scope.currentId);
-                                    GlobalStates.isClipboardOpen = false;
-                                    event.accepted = true;
-                                }
-
-                                if (event.key === Qt.Key_Delete) {
-                                    const item = currentItem;
-                                    if (scope.currentId >= 0 && item && !item.pinned)
-                                        ClipboardManager.remove(scope.currentId);
-                                    event.accepted = true;
-                                }
-
-                                if ((event.modifiers & Qt.ControlModifier) && event.key === Qt.Key_P) {
-                                    if (scope.currentId >= 0 && currentItem)
-                                        ClipboardManager.pin(scope.currentId, !currentItem.pinned);
-                                    event.accepted = true;
-                                    return;
-                                }
-
-                                if (event.key === Qt.Key_Tab) {
-                                    d.previewFocused = true;
-                                    event.accepted = true;
-                                }
-                            }
-
                             delegate: ClipboardItemDelegate {
                                 required property var modelData
 
@@ -307,37 +302,51 @@ WrapperRectangle {
                         }
                     }
 
-                    Rectangle {
+                    Loader {
+                        id: previewLoader
+
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
-                    }
-
-                    FocusScope {
-                        id: previewScope
-
-                        Layout.preferredWidth: d.previewWidth
                         Layout.fillHeight: true
-                        focus: d.previewFocused
+                        active: Configs.clipboard.enablePreview
+                        visible: active
 
-                        Keys.onPressed: event => {
-                            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Escape) {
-                                d.previewFocused = false;
-                                entryList.forceActiveFocus();
-                                event.accepted = true;
-                            }
-                        }
-
-                        ClipboardPreview {
+                        sourceComponent: RowLayout {
                             anchors.fill: parent
-                            focus: previewScope.activeFocus
-                            entryId: scope.currentId
+                            spacing: Appearance.spacing.small
 
-                            onCopyRequested: id => {
-                                ClipboardManager.copyToClipboard(id);
-                                GlobalStates.isClipboardOpen = false;
+                            Rectangle {
+                                Layout.preferredWidth: 1
+                                Layout.fillHeight: true
+                                color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
                             }
-                            onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
+
+                            FocusScope {
+                                id: previewScope
+
+                                Layout.preferredWidth: d.previewWidth
+                                Layout.fillHeight: true
+                                focus: d.previewFocused
+
+                                Keys.onPressed: event => {
+                                    if (event.key === Qt.Key_Tab || event.key === Qt.Key_Escape) {
+                                        d.previewFocused = false;
+                                        entryList.forceActiveFocus();
+                                        event.accepted = true;
+                                    }
+                                }
+
+                                ClipboardPreview {
+                                    anchors.fill: parent
+                                    focus: previewScope.activeFocus
+                                    entryId: scope.currentId
+
+                                    onCopyRequested: id => {
+                                        ClipboardManager.copyToClipboard(id);
+                                        GlobalStates.isClipboardOpen = false;
+                                    }
+                                    onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
+                                }
+                            }
                         }
                     }
                 }
