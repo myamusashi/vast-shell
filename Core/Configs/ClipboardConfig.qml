@@ -3,6 +3,7 @@ import Quickshell.Io
 
 JsonObject {
     property bool enabled: false
+    property bool enablePreview: false
     property Preview preview: Preview {}
 
     component Preview: JsonObject {

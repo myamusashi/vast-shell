@@ -15,8 +15,6 @@ import qs.Services
 Singleton {
     id: root
 
-    Component.onCompleted: ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`)
-
     readonly property alias isVolumeOSDShow: root.isVolumeOSDVisible
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
