@@ -4,18 +4,12 @@
 
 #include <QObject>
 #include <QClipboard>
+#include <QPointer>
 
 #include <atomic>
+#include <optional>
 
 namespace Vast {
-
-    // Listens to QClipboard::dataChanged() on the main thread, classifies the
-    // MIME payload, compresses images, computes SHA-256, resolves the source app
-    // via hyprctl, then emits newEntry() for ClipboardDatabase to persist
-    //
-    // Lives on the MAIN thread, QClipboard requires it.
-    // Heavy work (image compression) is kept synchronous but brief enough for
-    // clipboard events (user-paced, not high-frequency)
 
     class ClipboardWatcher : public QObject {
         Q_OBJECT
@@ -41,7 +35,6 @@ namespace Vast {
         [[nodiscard]] static std::optional<ClipboardEntry> buildHtmlEntry(const QClipboard* cb, const QString& sourceApp);
         [[nodiscard]] static std::optional<ClipboardEntry> buildFilesEntry(const QClipboard* cb, const QString& sourceApp);
 
-        [[nodiscard]] static QString                       resolveSourceApp();
         [[nodiscard]] static QByteArray                    sha256(const QByteArray& data);
         [[nodiscard]] static QByteArray                    compressImage(const QImage& image);
 
@@ -49,11 +42,6 @@ namespace Vast {
 
         std::atomic<bool>                                  m_enabled{false};
         bool                                               m_started{false};
-
-        // Fix 2: guards against the Wayland clipboard ownership-change event that
-        // fires dataChanged even when the image content is byte-for-byte identical.
-        // Only used for images — text/html/files are cheap and must always flow
-        // through so external re-copies correctly bump those entries to the top.
         QByteArray                                         m_lastImageHash{};
     };
 }

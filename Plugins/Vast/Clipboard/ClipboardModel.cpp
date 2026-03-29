@@ -18,33 +18,34 @@ namespace Vast {
         if (!index.isValid() || index.row() >= visibleCount())
             return {};
 
-        const ClipboardEntry& e = visibleAt(index.row());
+        const auto& e = visibleAt(index.row());
 
         switch (static_cast<Roles>(role)) {
-            case IdRole: return e.id;
-            case TypeRole: return e.typeString();
-            case PreviewRole: return makePreview(e);
-            case TimestampRole: return e.timestamp;
-            case PinnedRole: return e.pinned;
-            case SourceAppRole: return e.sourceApp;
-            case MimeTypeRole: return e.mimeType;
-            case SizeBytesRole: return e.sizeBytes;
+            case Roles::IdRole: return e.id;
+            case Roles::TypeRole: return e.typeString();
+            case Roles::PreviewRole: return makePreview(e);
+            case Roles::TimestampRole: return e.timestamp;
+            case Roles::PinnedRole: return e.pinned;
+            case Roles::SourceAppRole: return e.sourceApp;
+            case Roles::MimeTypeRole: return e.mimeType;
+            case Roles::SizeBytesRole: return e.sizeBytes;
         }
         return {};
     }
 
     QHash<int, QByteArray> ClipboardModel::roleNames() const {
         return {
-            {IdRole, "entryId"},    {TypeRole, "type"},           {PreviewRole, "preview"},   {TimestampRole, "timestamp"},
-            {PinnedRole, "pinned"}, {SourceAppRole, "sourceApp"}, {MimeTypeRole, "mimeType"}, {SizeBytesRole, "sizeBytes"},
+            {static_cast<int>(Roles::IdRole), "entryId"},          {static_cast<int>(Roles::TypeRole), "type"},           {static_cast<int>(Roles::PreviewRole), "preview"},
+            {static_cast<int>(Roles::TimestampRole), "timestamp"}, {static_cast<int>(Roles::PinnedRole), "pinned"},       {static_cast<int>(Roles::SourceAppRole), "sourceApp"},
+            {static_cast<int>(Roles::MimeTypeRole), "mimeType"},   {static_cast<int>(Roles::SizeBytesRole), "sizeBytes"},
         };
     }
 
     void ClipboardModel::reset(QList<ClipboardEntry> entries) {
         beginResetModel();
-        m_entries     = std::move(entries);
-        m_filtering   = false;
-        m_filterQuery = {};
+        m_entries   = std::move(entries);
+        m_filtering = false;
+        m_filterQuery.clear();
         m_filtered.clear();
         endResetModel();
         emit countChanged();
@@ -74,8 +75,6 @@ namespace Vast {
 
         const int existing = indexById(entry.id);
         if (existing >= 0) {
-            // Find insertion point, skipping the existing item so distance is calculated
-            // as if it was already removed, but iterators reflect current memory.
             const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
                 if (e.id == entry.id)
                     return false;
@@ -152,9 +151,9 @@ namespace Vast {
             return a.timestamp > b.timestamp;
         });
 
-        if (m_filtering) {
+        if (m_filtering)
             rebuildFilter();
-        } else {
+        else {
             beginResetModel();
             endResetModel();
         }
@@ -168,10 +167,11 @@ namespace Vast {
         m_filtered.clear();
 
         if (m_filtering) {
+            m_filtered.reserve(static_cast<size_t>(orderedIds.size()));
             for (qint64 id : orderedIds) {
                 const int idx = indexById(id);
                 if (idx >= 0)
-                    m_filtered.append(idx);
+                    m_filtered.push_back(idx);
             }
         } else {
             std::ranges::stable_sort(m_entries, [](const ClipboardEntry& a, const ClipboardEntry& b) {
@@ -212,7 +212,7 @@ namespace Vast {
         const auto insertPos = std::ranges::find_if(m_entries, [&](const ClipboardEntry& e) {
             if (e.id == id)
                 return false;
-            auto const& item = m_entries[existing];
+            const auto& item = m_entries[existing];
             if (item.pinned && !e.pinned)
                 return true;
             if (!item.pinned && e.pinned)
@@ -247,14 +247,11 @@ namespace Vast {
 
         const QString lower = m_filterQuery.toLower();
 
-        // ClipboardManager may swap this for FuzzyMatcher
-        // scoring once the fuzzy layer is wired up, but the model itself stays
-        // unaware of the matching algorithm.
         for (int i = 0; i < m_entries.size(); ++i) {
-            const ClipboardEntry& e       = m_entries[i];
-            const bool            matches = e.content.toLower().contains(lower) || e.sourceApp.toLower().contains(lower) || e.mimeType.toLower().contains(lower);
+            const auto& e       = m_entries[i];
+            const bool  matches = e.content.toLower().contains(lower) || e.sourceApp.toLower().contains(lower) || e.mimeType.toLower().contains(lower);
             if (matches)
-                m_filtered.append(i);
+                m_filtered.push_back(i);
         }
     }
 
@@ -265,7 +262,7 @@ namespace Vast {
     }
 
     const ClipboardEntry& ClipboardModel::visibleAt(int row) const {
-        return m_filtering ? m_entries[m_filtered[row]] : m_entries[row];
+        return m_filtering ? m_entries[m_filtered[static_cast<size_t>(row)]] : m_entries[row];
     }
 
     int ClipboardModel::visibleCount() const {
@@ -281,10 +278,9 @@ namespace Vast {
 
     QString ClipboardModel::makePreview(const ClipboardEntry& e) {
         if (e.isImage())
-            return {}; // QML delegate shows thumbnail via fullEntry() instead
+            return {};
 
         constexpr int kMaxChars = 120;
-
         const QString collapsed = e.content.simplified();
         return collapsed.length() > kMaxChars ? collapsed.left(kMaxChars) + QStringLiteral("…") : collapsed;
     }

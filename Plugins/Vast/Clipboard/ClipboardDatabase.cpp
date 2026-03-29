@@ -6,32 +6,34 @@
 #include <QSqlQuery>
 #include <QUuid>
 #include <QVariant>
-#include <QtCore/qtypes.h>
+
+#include <array>
 
 namespace Vast {
 
-    ClipboardDatabase::ClipboardDatabase(QObject* parent) : QObject{parent} {
-        m_connectionName = QStringLiteral("VastClipboard_") % QUuid::createUuid().toString(QUuid::WithoutBraces);
-    }
+    ClipboardDatabase::ClipboardDatabase(QObject* parent) :
+        QObject{parent}, m_connectionName{QStringLiteral("VastClipboard_") % QUuid::createUuid().toString(QUuid::WithoutBraces)} {}
 
     ClipboardDatabase::~ClipboardDatabase() {
         close();
     }
 
-    std::expected<void, QString> ClipboardDatabase::open(const QString& dbPath) {
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::open(const QString& dbPath) {
         if (m_open)
             return std::unexpected(QStringLiteral("Database already open"));
 
-        m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), m_connectionName);
-        m_db.setDatabaseName(dbPath);
+        m_db.emplace(QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), m_connectionName));
+        m_db->setDatabaseName(dbPath);
+        m_db->setConnectOptions(QStringLiteral("QSQLITE_BUSY_TIMEOUT=100"));
 
-        if (!m_db.open())
+        if (!m_db->open())
             return std::unexpected(lastError());
 
-        QSqlQuery pragma{m_db};
-        pragma.exec(QStringLiteral("PRAGMA journal_mode=WAL"));
-        pragma.exec(QStringLiteral("PRAGMA foreign_keys=ON"));
-        pragma.exec(QStringLiteral("PRAGMA synchronous=NORMAL"));
+        QSqlQuery                            pragma{*m_db};
+        constexpr std::array<const char*, 4> pragmas{{"PRAGMA journal_mode=WAL", "PRAGMA foreign_keys=ON", "PRAGMA synchronous=NORMAL", "PRAGMA threads=0"}};
+
+        for (const auto* sql : pragmas)
+            pragma.exec(QString::fromUtf8(sql));
 
         if (auto result = createSchema(); !result)
             return std::unexpected(result.error());
@@ -41,90 +43,86 @@ namespace Vast {
     }
 
     void ClipboardDatabase::close() {
-        if (!m_open)
+        if (!m_open || !m_db)
             return;
 
-        m_db.close();
+        m_db->close();
         QSqlDatabase::removeDatabase(m_connectionName);
+        m_db.reset();
         m_open = false;
     }
 
-    bool ClipboardDatabase::isOpen() const noexcept {
-        return m_open && m_db.isOpen();
+    [[nodiscard]] bool ClipboardDatabase::isOpen() const noexcept {
+        return m_open && m_db && m_db->isOpen();
     }
 
-    std::expected<void, QString> ClipboardDatabase::createSchema() {
-        QSqlQuery  q{m_db};
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::createSchema() {
+        if (!m_db)
+            return std::unexpected(QStringLiteral("Database not initialized"));
 
-        const bool ok = q.exec(QStringLiteral(R"sql(
-			CREATE TABLE IF NOT EXISTS clipboard_entries (
-				id          INTEGER PRIMARY KEY AUTOINCREMENT,
-				type        TEXT    NOT NULL,
-				content     TEXT,
-				data        BLOB,
-				mime_type   TEXT    NOT NULL DEFAULT '',
-				hash        TEXT    NOT NULL UNIQUE,
-				pinned      INTEGER NOT NULL DEFAULT 0,
-				source_app  TEXT             DEFAULT '',
-				size_bytes  INTEGER NOT NULL DEFAULT 0,
-				timestamp   INTEGER NOT NULL
-			);
-		)sql"));
+        QSqlQuery      q{*m_db};
 
-        if (!ok)
+        constexpr auto createTable = R"sql(
+            CREATE TABLE IF NOT EXISTS clipboard_entries (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                type        TEXT    NOT NULL,
+                content     TEXT,
+                data        BLOB,
+                mime_type   TEXT    NOT NULL DEFAULT '',
+                hash        TEXT    NOT NULL UNIQUE,
+                pinned      INTEGER NOT NULL DEFAULT 0,
+                source_app  TEXT             DEFAULT '',
+                size_bytes  INTEGER NOT NULL DEFAULT 0,
+                timestamp   INTEGER NOT NULL
+            )
+        )sql";
+
+        if (!q.exec(QString::fromUtf8(createTable)))
             return std::unexpected(lastError());
 
-        const std::array indices = {
-            QStringLiteral("CREATE INDEX IF NOT EXISTS idx_ts ON clipboard_entries(timestamp DESC)"),
-            QStringLiteral("CREATE INDEX IF NOT EXISTS idx_pinned ON clipboard_entries(pinned, timestamp DESC)"),
-            QStringLiteral("CREATE INDEX IF NOT EXISTS idx_hash ON clipboard_entries(hash)"),
-        };
+        constexpr std::array<const char*, 3> indices{{"CREATE INDEX IF NOT EXISTS idx_ts ON clipboard_entries(timestamp DESC)",
+                                                      "CREATE INDEX IF NOT EXISTS idx_pinned ON clipboard_entries(pinned, timestamp DESC)",
+                                                      "CREATE INDEX IF NOT EXISTS idx_hash ON clipboard_entries(hash)"}};
 
-        for (const auto& ddl : indices)
-            if (!q.exec(ddl))
+        for (const auto* sql : indices)
+            if (!q.exec(QString::fromUtf8(sql)))
                 return std::unexpected(lastError());
 
         return {};
     }
 
-    std::expected<qint64, QString> ClipboardDatabase::insert(const ClipboardEntry& entry) {
-        if (!m_open)
+    [[nodiscard]] std::expected<qint64, QString> ClipboardDatabase::insert(const ClipboardEntry& entry) {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
         if (existsByHash(entry.hash)) {
-            // Fetch the existing id first — the previous code was missing
-            // bindValue(":hash") on fetchQ so it always silently failed.
-            QSqlQuery fetchQ{m_db};
+            QSqlQuery fetchQ{*m_db};
             fetchQ.prepare(QStringLiteral("SELECT id FROM clipboard_entries WHERE hash = :hash LIMIT 1"));
             fetchQ.bindValue(QStringLiteral(":hash"), QString::fromLatin1(entry.hash.toHex()));
-            fetchQ.exec();
 
-            if (fetchQ.next()) {
-                const qint64 existingId = fetchQ.value(0).toLongLong();
+            if (!fetchQ.exec() || !fetchQ.next())
+                return std::unexpected(lastError());
 
-                // Bump timestamp so it sorts to top on next load
-                if (auto r = bumpTimestamp(existingId); !r)
-                    qWarning() << "[ClipboardDatabase] bumpTimestamp failed:" << r.error();
+            const qint64 existingId = fetchQ.value(0).toLongLong();
 
-                // Notify the model to move the existing entry to top
-                auto fetched = fetchById(existingId);
-                if (fetched) {
-                    fetched->data.clear();
-                    emit entryInserted(*fetched);
-                }
+            if (auto r = bumpTimestamp(existingId); !r)
+                qWarning() << "[ClipboardDatabase] bumpTimestamp failed:" << r.error();
+
+            if (auto fetched = fetchById(existingId)) {
+                fetched->data.clear();
+                emit entryInserted(*fetched);
             }
 
-            // Return -1 as a sentinel: "not inserted, was duplicate"
             return -1LL;
         }
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         q.prepare(QStringLiteral(R"sql(
-			INSERT INTO clipboard_entries
-				(type, content, data, mime_type, hash, pinned, source_app, size_bytes, timestamp)
-			VALUES
-				(:type, :content, :data, :mime_type, :hash, :pinned, :source_app, :size_bytes, :timestamp)
-		)sql"));
+            INSERT INTO clipboard_entries
+                (type, content, data, mime_type, hash, pinned, source_app, size_bytes, timestamp)
+            VALUES
+                (:type, :content, :data, :mime_type, :hash, :pinned, :source_app, :size_bytes, :timestamp)
+        )sql"));
 
         q.bindValue(QStringLiteral(":type"), entry.typeString());
         q.bindValue(QStringLiteral(":content"), entry.content);
@@ -139,22 +137,21 @@ namespace Vast {
         if (!q.exec())
             return std::unexpected(lastError());
 
-        const qint64   newId = q.lastInsertId().toLongLong();
+        const qint64 newId = q.lastInsertId().toLongLong();
 
-        ClipboardEntry inserted = entry;
-        inserted.id             = newId;
+        auto         inserted = entry;
+        inserted.id           = newId;
         inserted.data.clear();
 
         emit entryInserted(inserted);
-
         return newId;
     }
 
-    std::expected<void, QString> ClipboardDatabase::remove(qint64 id) {
-        if (!m_open)
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::remove(qint64 id) {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         q.prepare(QStringLiteral("DELETE FROM clipboard_entries WHERE id = :id"));
         q.bindValue(QStringLiteral(":id"), id);
 
@@ -165,11 +162,11 @@ namespace Vast {
         return {};
     }
 
-    std::expected<void, QString> ClipboardDatabase::setPin(qint64 id, bool pinned) {
-        if (!m_open)
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::setPin(qint64 id, bool pinned) {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         q.prepare(QStringLiteral("UPDATE clipboard_entries SET pinned = :pinned WHERE id = :id"));
         q.bindValue(QStringLiteral(":pinned"), pinned ? 1 : 0);
         q.bindValue(QStringLiteral(":id"), id);
@@ -181,11 +178,11 @@ namespace Vast {
         return {};
     }
 
-    std::expected<void, QString> ClipboardDatabase::bumpTimestamp(qint64 id) {
-        if (!m_open)
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::bumpTimestamp(qint64 id) {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         q.prepare(QStringLiteral("UPDATE clipboard_entries SET timestamp = :ts WHERE id = :id"));
         q.bindValue(QStringLiteral(":ts"), QDateTime::currentMSecsSinceEpoch());
         q.bindValue(QStringLiteral(":id"), id);
@@ -196,91 +193,64 @@ namespace Vast {
         return {};
     }
 
-    std::expected<void, QString> ClipboardDatabase::clearUnpinned() {
-        if (!m_open)
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::clearUnpinned() {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         if (!q.exec(QStringLiteral("DELETE FROM clipboard_entries WHERE pinned = 0")))
             return std::unexpected(lastError());
 
         return {};
     }
 
-    std::expected<void, QString> ClipboardDatabase::pruneToLimit(int maxEntries, qint64 maxBytes) {
-        if (!m_open)
+    [[nodiscard]] std::expected<void, QString> ClipboardDatabase::pruneToLimit(int maxEntries, qint64 maxBytes) {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        // 1. enforce entry count limit
         if (maxEntries > 0) {
-            QSqlQuery countQ{m_db};
-            countQ.exec(QStringLiteral("SELECT COUNT(*) FROM clipboard_entries WHERE pinned = 0"));
+            QSqlQuery countQ{*m_db};
+            if (!countQ.exec(QStringLiteral("SELECT COUNT(*) FROM clipboard_entries WHERE pinned = 0")))
+                return std::unexpected(lastError());
+
             if (countQ.next()) {
-                const int unpinnedCount = countQ.value(0).toInt();
-                const int excess        = unpinnedCount - maxEntries;
+                const int excess = countQ.value(0).toInt() - maxEntries;
                 if (excess > 0) {
-                    QSqlQuery getQ{m_db};
-                    getQ.prepare(QStringLiteral(R"sql(
-                        SELECT id FROM clipboard_entries
-                        WHERE pinned = 0
-                        ORDER BY timestamp ASC
-                        LIMIT :excess
+                    QSqlQuery pruneQ{*m_db};
+                    pruneQ.prepare(QStringLiteral(R"sql(
+                        DELETE FROM clipboard_entries
+                        WHERE id IN (
+                            SELECT id FROM clipboard_entries
+                            WHERE pinned = 0
+                            ORDER BY timestamp ASC
+                            LIMIT :excess
+                        )
                     )sql"));
-                    getQ.bindValue(QStringLiteral(":excess"), excess);
-
-                    QList<qint64> idsToRemove;
-                    if (getQ.exec()) {
-                        while (getQ.next())
-                            idsToRemove.append(getQ.value(0).toLongLong());
-                    }
-
-                    if (!idsToRemove.isEmpty()) {
-                        QSqlQuery pruneQ{m_db};
-                        pruneQ.prepare(QStringLiteral(R"sql(
-                            DELETE FROM clipboard_entries
-                            WHERE id IN (
-                                SELECT id FROM clipboard_entries
-                                WHERE pinned = 0
-                                ORDER BY timestamp ASC
-                                LIMIT :excess
-                            )
-                        )sql"));
-                        pruneQ.bindValue(QStringLiteral(":excess"), excess);
-                        if (!pruneQ.exec())
-                            return std::unexpected(lastError());
-
-                        for (qint64 id : idsToRemove)
-                            emit entryRemoved(id);
-                    }
+                    pruneQ.bindValue(QStringLiteral(":excess"), excess);
+                    if (!pruneQ.exec())
+                        return std::unexpected(lastError());
                 }
             }
         }
 
-        // 2. enforce byte-size limit (outer loop, prune one row at a time so we don't overshoot by deleting too many)
         if (maxBytes > 0) {
-            while (true) {
+            constexpr int maxIterations{100};
+
+            for (int i = 0; i < maxIterations; ++i) {
                 auto sizeResult = totalSizeBytes();
-                if (!sizeResult)
-                    return std::unexpected(sizeResult.error());
-
-                if (*sizeResult <= maxBytes)
+                if (!sizeResult || *sizeResult <= maxBytes)
                     break;
 
-                QSqlQuery getQ{m_db};
-                getQ.exec(QStringLiteral(R"sql(
-                    SELECT id FROM clipboard_entries
-                    WHERE pinned = 0
-                    ORDER BY timestamp ASC
-                    LIMIT 1
-                )sql"));
-                qint64 idToRemove = -1;
-                if (getQ.next())
-                    idToRemove = getQ.value(0).toLongLong();
+                QSqlQuery getQ{*m_db};
+                if (!getQ.exec(QStringLiteral("SELECT id FROM clipboard_entries WHERE pinned = 0 ORDER BY timestamp ASC LIMIT 1")))
+                    return std::unexpected(lastError());
 
-                if (idToRemove < 0)
+                if (!getQ.next())
                     break;
 
-                QSqlQuery pruneQ{m_db};
+                const qint64 idToRemove = getQ.value(0).toLongLong();
+
+                QSqlQuery    pruneQ{*m_db};
                 pruneQ.prepare(QStringLiteral("DELETE FROM clipboard_entries WHERE id = :id"));
                 pruneQ.bindValue(QStringLiteral(":id"), idToRemove);
 
@@ -294,49 +264,48 @@ namespace Vast {
         return {};
     }
 
-    bool ClipboardDatabase::existsByHash(const QByteArray& hash) {
-        if (!m_open)
+    [[nodiscard]] bool ClipboardDatabase::existsByHash(const QByteArray& hash) {
+        if (!m_open || !m_db)
             return false;
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         q.prepare(QStringLiteral("SELECT 1 FROM clipboard_entries WHERE hash = :hash LIMIT 1"));
         q.bindValue(QStringLiteral(":hash"), QString::fromLatin1(hash.toHex()));
-        q.exec();
-        return q.next();
+
+        return q.exec() && q.next();
     }
 
-    std::expected<QList<ClipboardEntry>, QString> ClipboardDatabase::fetchAll() {
-        if (!m_open)
+    [[nodiscard]] std::expected<QList<ClipboardEntry>, QString> ClipboardDatabase::fetchAll() {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery  q{m_db};
-        const bool ok = q.exec(QStringLiteral(R"sql(
-			SELECT id, type, content, mime_type, hash, pinned, source_app, size_bytes, timestamp
-			FROM clipboard_entries
-			ORDER BY pinned DESC, timestamp DESC
-		)sql"));
-
-        if (!ok)
+        QSqlQuery q{*m_db};
+        if (!q.exec(QStringLiteral(R"sql(
+				SELECT id, type, content, mime_type, hash, pinned, source_app, size_bytes, timestamp
+				FROM clipboard_entries
+				ORDER BY pinned DESC, timestamp DESC
+			)sql"))) {
             return std::unexpected(lastError());
+        }
 
         QList<ClipboardEntry> entries;
         while (q.next())
-            entries.append(rowToEntry(q, /*includeData=*/false));
+            entries.append(rowToEntry(q, false));
 
         return entries;
     }
 
-    std::expected<ClipboardEntry, QString> ClipboardDatabase::fetchById(qint64 id) {
-        if (!m_open)
+    [[nodiscard]] std::expected<ClipboardEntry, QString> ClipboardDatabase::fetchById(qint64 id) {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         q.prepare(QStringLiteral(R"sql(
-			SELECT id, type, content, data, mime_type, hash, pinned, source_app, size_bytes, timestamp
-			FROM clipboard_entries
-			WHERE id = :id
-			LIMIT 1
-		)sql"));
+            SELECT id, type, content, data, mime_type, hash, pinned, source_app, size_bytes, timestamp
+            FROM clipboard_entries
+            WHERE id = :id
+            LIMIT 1
+        )sql"));
         q.bindValue(QStringLiteral(":id"), id);
 
         if (!q.exec())
@@ -345,14 +314,14 @@ namespace Vast {
         if (!q.next())
             return std::unexpected(QStringLiteral("No entry found with id %1").arg(id));
 
-        return rowToEntry(q, /*includeData=*/true);
+        return rowToEntry(q, true);
     }
 
-    std::expected<qint64, QString> ClipboardDatabase::totalSizeBytes() {
-        if (!m_open)
+    [[nodiscard]] std::expected<qint64, QString> ClipboardDatabase::totalSizeBytes() {
+        if (!m_open || !m_db)
             return std::unexpected(QStringLiteral("Database is not open"));
 
-        QSqlQuery q{m_db};
+        QSqlQuery q{*m_db};
         if (!q.exec(QStringLiteral("SELECT COALESCE(SUM(size_bytes), 0) FROM clipboard_entries")))
             return std::unexpected(lastError());
 
@@ -364,15 +333,15 @@ namespace Vast {
 
     ClipboardEntry ClipboardDatabase::rowToEntry(const QSqlQuery& q, bool includeData) {
         ClipboardEntry e;
-
-        // When includeData is true, column 3 is 'data' and shifts subsequent columns by 1.
-        const int off = includeData ? 1 : 0;
+        const int      off = includeData ? 1 : 0;
 
         e.id      = q.value(0).toLongLong();
         e.type    = ClipboardEntry::typeFromString(q.value(1).toString());
         e.content = q.value(2).toString();
+
         if (includeData)
             e.data = q.value(3).toByteArray();
+
         e.mimeType  = q.value(3 + off).toString();
         e.hash      = QByteArray::fromHex(q.value(4 + off).toString().toLatin1());
         e.pinned    = q.value(5 + off).toInt() != 0;
@@ -383,7 +352,7 @@ namespace Vast {
         return e;
     }
 
-    QString ClipboardDatabase::lastError() const {
-        return m_db.lastError().text();
+    [[nodiscard]] QString ClipboardDatabase::lastError() const {
+        return m_db ? m_db->lastError().text() : QStringLiteral("Database not initialized");
     }
 }

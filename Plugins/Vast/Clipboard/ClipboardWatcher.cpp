@@ -7,10 +7,7 @@
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QImage>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QMimeData>
-#include <QProcess>
 #include <QUrl>
 #include <QtConcurrent>
 
@@ -35,7 +32,7 @@ namespace Vast {
         m_enabled.store(enabled, std::memory_order_release);
     }
 
-    bool ClipboardWatcher::isEnabled() const noexcept {
+    [[nodiscard]] bool ClipboardWatcher::isEnabled() const noexcept {
         return m_enabled.load(std::memory_order_acquire);
     }
 
@@ -54,46 +51,43 @@ namespace Vast {
 
         if (mime->hasImage()) {
             const QImage image = cb->image();
-            if (!image.isNull()) {
-                QPointer<ClipboardWatcher> self{this};
+            if (image.isNull())
+                return;
 
-                QThreadPool::globalInstance()->start([self, image, sourceApp]() {
-                    const QByteArray png = compressImage(image);
-                    if (png.isEmpty())
-                        return;
+            QPointer<ClipboardWatcher> self{this};
 
-                    // Compute hash once here; reused for both the duplicate guard
-                    // and the ClipboardEntry so finalise() never re-hashes.
-                    const QByteArray hash = sha256(png);
+            QThreadPool::globalInstance()->start([self, image, sourceApp]() {
+                const QByteArray png = compressImage(image);
+                if (png.isEmpty())
+                    return;
 
-                    QMetaObject::invokeMethod(
-                        QCoreApplication::instance(),
-                        [self, png, hash, sourceApp]() mutable {
-                            if (!self)
-                                return;
+                const QByteArray hash = sha256(png);
 
-                            // Fix 2: Wayland fires dataChanged on every clipboard
-                            // ownership transfer (opening any drawer, switching
-                            // windows), even when image content is identical.
-                            // Skip the expensive insert/model path entirely.
-                            if (hash == self->m_lastImageHash)
-                                return;
-                            self->m_lastImageHash = hash;
+                QMetaObject::invokeMethod(
+                    QCoreApplication::instance(),
+                    [self, png, hash, sourceApp]() mutable {
+                        if (!self)
+                            return;
 
-                            ClipboardEntry entry;
-                            entry.type      = ClipboardType::Image;
-                            entry.mimeType  = QStringLiteral("image/png");
-                            entry.data      = png;
-                            entry.hash      = hash;  // reuse, don't re-hash
-                            entry.timestamp = QDateTime::currentMSecsSinceEpoch();
-                            entry.sourceApp = sourceApp;
-                            entry.sizeBytes = static_cast<qint64>(png.size());
+                        if (hash == self->m_lastImageHash)
+                            return;
+                        self->m_lastImageHash = hash;
 
-                            emit self->newEntry(entry);
-                        },
-                        Qt::QueuedConnection);
-                });
-            }
+                        ClipboardEntry entry{.id        = -1,
+                                             .type      = ClipboardType::Image,
+                                             .content   = {},
+                                             .data      = png,
+                                             .mimeType  = QStringLiteral("image/png"),
+                                             .hash      = hash,
+                                             .pinned    = false,
+                                             .sourceApp = sourceApp,
+                                             .sizeBytes = static_cast<qint64>(png.size()),
+                                             .timestamp = QDateTime::currentMSecsSinceEpoch()};
+
+                        emit           self->newEntry(entry);
+                    },
+                    Qt::QueuedConnection);
+            });
             return;
         }
 
@@ -109,21 +103,27 @@ namespace Vast {
             emit newEntry(std::move(*entry));
     }
 
-    std::optional<ClipboardEntry> ClipboardWatcher::buildTextEntry(const QClipboard* cb, const QString& sourceApp) {
+    [[nodiscard]] std::optional<ClipboardEntry> ClipboardWatcher::buildTextEntry(const QClipboard* cb, const QString& sourceApp) {
         const QString text = cb->text();
         if (text.trimmed().isEmpty())
             return std::nullopt;
 
-        ClipboardEntry entry;
-        entry.type     = ClipboardType::Text;
-        entry.content  = text;
-        entry.mimeType = QStringLiteral("text/plain");
+        ClipboardEntry entry{.id        = -1,
+                             .type      = ClipboardType::Text,
+                             .content   = text,
+                             .data      = {},
+                             .mimeType  = QStringLiteral("text/plain"),
+                             .hash      = {},
+                             .pinned    = false,
+                             .sourceApp = {},
+                             .sizeBytes = 0,
+                             .timestamp = 0};
 
         finalise(entry, text.toUtf8(), sourceApp);
         return entry;
     }
 
-    std::optional<ClipboardEntry> ClipboardWatcher::buildHtmlEntry(const QClipboard* cb, const QString& sourceApp) {
+    [[nodiscard]] std::optional<ClipboardEntry> ClipboardWatcher::buildHtmlEntry(const QClipboard* cb, const QString& sourceApp) {
         const auto*   mime  = cb->mimeData();
         const QString html  = mime->html();
         const QString plain = mime->hasText() ? mime->text() : QString{};
@@ -131,16 +131,22 @@ namespace Vast {
         if (html.trimmed().isEmpty())
             return std::nullopt;
 
-        ClipboardEntry entry;
-        entry.type     = ClipboardType::Html;
-        entry.content  = plain.isEmpty() ? html : plain;
-        entry.mimeType = QStringLiteral("text/html");
+        ClipboardEntry entry{.id        = -1,
+                             .type      = ClipboardType::Html,
+                             .content   = plain.isEmpty() ? html : plain,
+                             .data      = {},
+                             .mimeType  = QStringLiteral("text/html"),
+                             .hash      = {},
+                             .pinned    = false,
+                             .sourceApp = {},
+                             .sizeBytes = 0,
+                             .timestamp = 0};
 
         finalise(entry, html.toUtf8(), sourceApp);
         return entry;
     }
 
-    std::optional<ClipboardEntry> ClipboardWatcher::buildFilesEntry(const QClipboard* cb, const QString& sourceApp) {
+    [[nodiscard]] std::optional<ClipboardEntry> ClipboardWatcher::buildFilesEntry(const QClipboard* cb, const QString& sourceApp) {
         const auto* mime = cb->mimeData();
         const auto  urls = mime->urls();
 
@@ -149,15 +155,21 @@ namespace Vast {
 
         QStringList paths;
         paths.reserve(urls.size());
-        for (const QUrl& url : urls)
+        for (const auto& url : urls)
             paths.append(url.isLocalFile() ? url.toLocalFile() : url.toString());
 
         const QString  content = paths.join(u'\n');
 
-        ClipboardEntry entry;
-        entry.type     = ClipboardType::Files;
-        entry.content  = content;
-        entry.mimeType = QStringLiteral("text/uri-list");
+        ClipboardEntry entry{.id        = -1,
+                             .type      = ClipboardType::Files,
+                             .content   = content,
+                             .data      = {},
+                             .mimeType  = QStringLiteral("text/uri-list"),
+                             .hash      = {},
+                             .pinned    = false,
+                             .sourceApp = {},
+                             .sizeBytes = 0,
+                             .timestamp = 0};
 
         finalise(entry, content.toUtf8(), sourceApp);
         return entry;
@@ -167,15 +179,14 @@ namespace Vast {
         entry.hash      = sha256(hashPayload);
         entry.timestamp = QDateTime::currentMSecsSinceEpoch();
         entry.sourceApp = sourceApp;
-
         entry.sizeBytes = entry.data.isEmpty() ? static_cast<qint64>(entry.content.toUtf8().size()) : static_cast<qint64>(entry.data.size());
     }
 
-    QByteArray ClipboardWatcher::sha256(const QByteArray& data) {
+    [[nodiscard]] QByteArray ClipboardWatcher::sha256(const QByteArray& data) {
         return QCryptographicHash::hash(data, QCryptographicHash::Sha256);
     }
 
-    QByteArray ClipboardWatcher::compressImage(const QImage& image) {
+    [[nodiscard]] QByteArray ClipboardWatcher::compressImage(const QImage& image) {
         constexpr int kMaxDimension = 2048;
 
         const QImage  scaled =

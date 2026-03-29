@@ -3,17 +3,12 @@
 #include "ClipboardEntry.hpp"
 
 #include <QAbstractListModel>
-#include <QtCore/qlist.h>
+#include <QList>
 #include <QtQml/qqmlregistration.h>
 
-namespace Vast {
+#include <vector>
 
-    // Two lists are maintained:
-    //   m_entries   — full list, source of truth
-    //   m_filtered  — indices into m_entries, rebuilt on search()
-    //
-    // The model exposes m_filtered when a search query is active, m_entries
-    // otherwise, so the ListView never needs to know about filtering
+namespace Vast {
 
     class ClipboardModel : public QAbstractListModel {
         Q_OBJECT
@@ -24,7 +19,7 @@ namespace Vast {
         Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
       public:
-        enum Roles {
+        enum class Roles : int {
             IdRole = Qt::UserRole,
             TypeRole,
             PreviewRole,
@@ -66,9 +61,9 @@ namespace Vast {
         [[nodiscard]] const ClipboardEntry& visibleAt(int row) const;
         [[nodiscard]] int                   visibleCount() const;
 
-        QList<ClipboardEntry>               m_entries{};
-        QList<int>                          m_filtered{};
-        QString                             m_filterQuery{};
-        bool                                m_filtering = false;
+        QList<ClipboardEntry>               m_entries;
+        std::vector<int>                    m_filtered;
+        QString                             m_filterQuery;
+        bool                                m_filtering{false};
     };
 }

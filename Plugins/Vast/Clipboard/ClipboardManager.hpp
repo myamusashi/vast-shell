@@ -4,10 +4,11 @@
 #include "ClipboardEntry.hpp"
 
 #include <QObject>
-#include <QThread>
 #include <QString>
+#include <QPointer>
 
 #include <memory>
+#include <atomic>
 
 namespace Vast {
 
@@ -30,7 +31,7 @@ namespace Vast {
         explicit ClipboardManager(QObject* parent = nullptr);
         ~ClipboardManager() override;
 
-        Q_INVOKABLE void              initialize(const QString& dbPath);
+        [[nodiscard]] bool            initialize(const QString& dbPath);
 
         [[nodiscard]] ClipboardModel* model() const noexcept;
         [[nodiscard]] int             maxEntries() const noexcept;
@@ -43,54 +44,34 @@ namespace Vast {
         void                          setEnabled(bool enabled);
         void                          setActiveWindow(const QString& window);
 
-        Q_INVOKABLE void              copyToClipboard(qint64 id);
-        Q_INVOKABLE void              pin(qint64 id, bool pinned);
-        Q_INVOKABLE void              remove(qint64 id);
-        Q_INVOKABLE void              clearUnpinned();
-        Q_INVOKABLE void              search(const QString& query);
-
-        // Emits fullEntryReady(map) on the main thread when the DB fetch
-        // and base64 encoding are done, never blocks the render loop.
-        // Stale responses (rapid selection changes) are silently dropped
-        Q_INVOKABLE void requestFullEntry(qint64 id);
+        [[nodiscard]] bool            copyToClipboard(qint64 id);
+        void                          pin(qint64 id, bool pinned);
+        void                          remove(qint64 id);
+        [[nodiscard]] bool            clearUnpinned();
+        void                          search(const QString& query);
+        void                          requestFullEntry(qint64 id);
 
       signals:
         void maxEntriesChanged();
         void maxMegabytesChanged();
         void enabledChanged();
         void activeWindowChanged();
-
         void fullEntryReady(QVariantMap entry);
 
-        void requestInsert(Vast::ClipboardEntry entry);
-        void requestRemove(qint64 id);
-        void requestSetPin(qint64 id, bool pinned);
-        void requestBumpTimestamp(qint64 id);  // Fix 1a: silent DB-only bump, no model side-effect
-        void requestClearUnpinned();
-        void requestPrune(int maxEntries, qint64 maxBytes);
-
-        void _fullEntryFetched(Vast::ClipboardEntry entry);
-
-      private slots:
-        void onEntryInserted(Vast::ClipboardEntry entry);
-        void onEntryRemoved(qint64 id);
-        void onEntryPinChanged(qint64 id, bool pinned);
-        void onFullEntryFetched(Vast::ClipboardEntry entry);
-
       private:
-        void                               connectWorkerSignals();
+        void                               setupConnections();
         void                               loadAllEntries();
+        void                               pruneIfNeeded();
 
-        ClipboardModel*                    m_model   = nullptr;
-        ClipboardWatcher*                  m_watcher = nullptr;
-        std::unique_ptr<QThread>           m_workerThread{};
-        std::unique_ptr<ClipboardDatabase> m_database{};
+        QPointer<ClipboardModel>           m_model;
+        std::unique_ptr<ClipboardWatcher>  m_watcher;
+        std::unique_ptr<ClipboardDatabase> m_database;
 
-        qint64  m_pendingEntryId = -1;
+        std::atomic<qint64>                m_pendingEntryId{-1};
+        std::atomic<int>                   m_maxEntries{500};
+        std::atomic<int>                   m_maxMegabytes{64};
+        std::atomic<bool>                  m_enabled{true};
 
-        int     m_maxEntries   = 500;
-        int     m_maxMegabytes = 64;
-        bool    m_enabled      = true;
-        QString m_activeWindow{};
+        QString                            m_activeWindow;
     };
 }

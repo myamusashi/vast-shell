@@ -7,6 +7,7 @@
 #include <QString>
 
 #include <expected>
+#include <optional>
 
 namespace Vast {
 
@@ -21,6 +22,7 @@ namespace Vast {
         [[nodiscard]] std::expected<void, QString>                  open(const QString& dbPath);
         void                                                        close();
         [[nodiscard]] bool                                          isOpen() const noexcept;
+
         [[nodiscard]] std::expected<qint64, QString>                insert(const ClipboardEntry& entry);
         [[nodiscard]] std::expected<void, QString>                  remove(qint64 id);
         [[nodiscard]] std::expected<void, QString>                  setPin(qint64 id, bool pinned);
@@ -42,8 +44,8 @@ namespace Vast {
         [[nodiscard]] static ClipboardEntry        rowToEntry(const QSqlQuery& q, bool includeData = false);
         [[nodiscard]] QString                      lastError() const;
 
-        QSqlDatabase                               m_db{};
-        QString                                    m_connectionName{};
-        bool                                       m_open = false;
+        std::optional<QSqlDatabase>                m_db;
+        QString                                    m_connectionName;
+        bool                                       m_open{false};
     };
 }

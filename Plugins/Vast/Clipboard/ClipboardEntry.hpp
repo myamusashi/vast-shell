@@ -2,6 +2,8 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QMetaType>
+#include <QList>
 
 namespace Vast {
 
@@ -13,18 +15,18 @@ namespace Vast {
     };
 
     struct ClipboardEntry {
-        qint64             id   = -1;
-        ClipboardType      type = ClipboardType::Text;
-        QString            content;
-        QByteArray         data;
-        QString            mimeType{};
-        QByteArray         hash{};
-        bool               pinned = false;
-        QString            sourceApp{};
-        qint64             sizeBytes = 0;
-        qint64             timestamp = 0;
+        qint64                       id{-1};
+        ClipboardType                type{ClipboardType::Text};
+        QString                      content;
+        QByteArray                   data;
+        QString                      mimeType;
+        QByteArray                   hash;
+        bool                         pinned{false};
+        QString                      sourceApp;
+        qint64                       sizeBytes{0};
+        qint64                       timestamp{0};
 
-        [[nodiscard]] bool isImage() const noexcept {
+        [[nodiscard]] constexpr bool isImage() const noexcept {
             return type == ClipboardType::Image;
         }
 
@@ -48,5 +50,7 @@ namespace Vast {
             return ClipboardType::Text;
         }
     };
-
 }
+
+Q_DECLARE_METATYPE(Vast::ClipboardEntry)
+Q_DECLARE_METATYPE(Vast::ClipboardType)
