@@ -10,7 +10,6 @@ import Vast
 import qs.Core.Utils
 import qs.Services
 
-// Thanks to Caelestia once again for your amazing code: https://github.com/caelestia-dots/shell/blob/main/modules/notifications/Notification.qml
 Singleton {
     id: root
 
@@ -22,7 +21,7 @@ Singleton {
     property list<Notif> list: []
     property bool loaded: false
     property int maxNotifications: 100
-    property int maxNotificationAge: 604800000 // 7 days in milliseconds
+    property int maxNotificationAge: 604800000
 
     function clearAll() {
         for (const notif of root.list.slice())
@@ -47,13 +46,11 @@ Singleton {
     function enforceNotificationLimit() {
         cleanupOldNotifications();
 
-        // check if we're at the limit
         const currentCount = root.notClosed.length;
 
         if (currentCount >= root.maxNotifications) {
-            // Sort by time (oldest first) and remove excess
             const sortedNotifs = root.notClosed.slice().sort((a, b) => a.time - b.time);
-            const toRemove = currentCount - root.maxNotifications + 1; // +1 to make room for new one
+            const toRemove = currentCount - root.maxNotifications + 1;
 
             console.log(`Removing ${toRemove} oldest notification(s) to enforce limit`);
             ToastService.show(qsTr("Removing %1 oldest notification(s) to enforce limit").arg(toRemove), qsTr("Notifications"), "dialog-information", 3000);
@@ -92,7 +89,7 @@ Singleton {
     Timer {
         id: cleanupTimer
 
-        interval: 3600000 // Run cleanup every hour
+        interval: 3600000
         running: true
         repeat: true
         triggeredOnStart: false
@@ -122,7 +119,6 @@ Singleton {
         onNotification: notif => {
             notif.tracked = true;
 
-            // Check if we need to clean up before adding a new notification
             root.enforceNotificationLimit();
 
             const comp = notifComponent.createObject(root, {
@@ -162,13 +158,12 @@ Singleton {
                 let loadedCount = 0;
 
                 for (const notifData of data) {
-                    // Skip notifications that are too old
                     const notifAge = now - notifData.time;
                     if (notifAge > root.maxNotificationAge)
                         continue;
 
                     const key = "notif-" + notifData.id;
-                    const stableUrl = notifData.image?.startsWith("image://") ? ImageCache.saveProviderImageQml(notifData.image, key) : (notifData.image ?? "");
+                    const stableUrl = notifData.desktopEntry === "spotify" ? ImageCache.saveProviderImageQml(notifData.image, key) : (notifData.image ?? "");
 
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
@@ -190,7 +185,6 @@ Singleton {
                         loadedCount++;
                     }
 
-                    // Stop loading if we've reached the max limit
                     if (loadedCount >= root.maxNotifications)
                         break;
                 }
@@ -242,7 +236,7 @@ Singleton {
 
             function onImageChanged() {
                 const raw = notif.notification.image ?? "";
-                notif.image = raw.startsWith("image://") ? ImageCache.saveProviderImageQml(raw, "notif-" + notif.id) : raw;
+                notif.image = notif.notification.desktopEntry === "spotify" ? ImageCache.saveProviderImageQml(raw, "notif-" + notif.id) : raw;
             }
 
             function onExpireTimeoutChanged() {
@@ -347,7 +341,7 @@ Singleton {
                 return;
 
             const raw = notification.image ?? "";
-            const cachedImage = raw.startsWith("image://") ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id) : raw;
+            const cachedImage = notification.desktopEntry === "spotify" ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id) : raw;
 
             id = notification.id;
             summary = notification.summary;
