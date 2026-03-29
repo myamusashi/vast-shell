@@ -7,7 +7,8 @@ import Quickshell.Wayland
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
-import qs.Components.Base
+
+import "../Base"
 
 LazyLoader {
     id: loader

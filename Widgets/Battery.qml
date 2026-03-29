@@ -1,9 +1,10 @@
 import QtQuick
 import Quickshell.Services.UPower
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
+
+import "../Components/Base"
 
 Item {
     id: root

@@ -4,9 +4,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Wayland
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
+
+import "../Components/Base"
 
 StyledRect {
     id: root

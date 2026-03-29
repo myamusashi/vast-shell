@@ -3,7 +3,8 @@ import QtQuick.Shapes
 import QtQuick.Layouts
 
 import qs.Services
-import qs.Components.Base
+
+import "../Base"
 
 StyledRect {
     id: root

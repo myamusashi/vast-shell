@@ -4,10 +4,11 @@ import QtQuick
 import Quickshell
 import Quickshell.Wayland
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+
+import "../Base"
 
 LazyLoader {
     id: root

@@ -5,10 +5,11 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.SystemTray
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+
+import "../Components/Base"
 
 StyledRect {
     id: root

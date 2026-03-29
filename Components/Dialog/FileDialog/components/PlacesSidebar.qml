@@ -6,8 +6,8 @@ import QtQuick.Layouts
 
 import qs.Core.Configs
 import qs.Services
-import qs.Components.Base
 
+import "../../../Base"
 import "../delegate"
 
 Rectangle {

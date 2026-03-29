@@ -4,10 +4,11 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+
+import "../Components/Base"
 
 StyledRect {
     readonly property int index: 0

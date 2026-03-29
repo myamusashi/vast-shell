@@ -5,11 +5,12 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Services
+
+import "../Components/Base"
 
 StyledRect {
     id: root

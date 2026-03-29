@@ -6,7 +6,7 @@ import Vast
 
 import qs.Core.Configs
 import qs.Services
-import qs.Components.Base
+import "../Components/Base"
 
 Item {
     id: root

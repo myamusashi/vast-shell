@@ -1,10 +1,11 @@
 import QtQuick
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Services
+
+import "../Components/Base"
 
 StyledRect {
     id: clock

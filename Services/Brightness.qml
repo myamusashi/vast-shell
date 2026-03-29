@@ -2,8 +2,8 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-
 import Vast
+
 import qs.Services
 
 Singleton {

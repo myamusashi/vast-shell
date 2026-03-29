@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import M3Shapes
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services

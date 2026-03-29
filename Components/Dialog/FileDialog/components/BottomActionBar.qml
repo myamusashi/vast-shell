@@ -4,7 +4,8 @@ import Quickshell.Widgets
 
 import qs.Core.Configs
 import qs.Services
-import qs.Components.Base
+
+import "../../../Base"
 
 Rectangle {
     id: root

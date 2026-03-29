@@ -3,8 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 
-import qs.Components.Base
 import qs.Services
+
+import "../Components/Base"
 
 StyledComboBox {
     model: Audio.models

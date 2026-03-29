@@ -1,7 +1,8 @@
 import QtQuick
 
 import qs.Services
-import qs.Components.Base
+
+import "../Base"
 
 Item {
     id: root

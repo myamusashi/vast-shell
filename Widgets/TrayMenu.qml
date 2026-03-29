@@ -5,10 +5,10 @@ import QtQuick.Layouts
 
 import Quickshell
 
-import qs.Components.Base
-import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+
+import "../Components/Base"
 
 Rectangle {
     id: root
