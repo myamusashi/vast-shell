@@ -45,6 +45,7 @@ WrapperRectangle {
     FileView {
         path: `${Paths.cacheDir}/clipboard.db`
         watchChanges: false
+        onLoaded: ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`)
         onLoadFailed: err => {
             if (err === FileViewError.FileNotFound) {
                 ToastService.show(qsTr("Clipboard database not found, created it"), qsTr("Clipboard"), "edit-paste");
