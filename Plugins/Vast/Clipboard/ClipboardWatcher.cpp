@@ -62,17 +62,34 @@ namespace Vast {
                     if (png.isEmpty())
                         return;
 
-                    ClipboardEntry entry;
-                    entry.type     = ClipboardType::Image;
-                    entry.mimeType = QStringLiteral("image/png");
-                    entry.data     = png;
-                    finalise(entry, png, sourceApp);
+                    // Compute hash once here; reused for both the duplicate guard
+                    // and the ClipboardEntry so finalise() never re-hashes.
+                    const QByteArray hash = sha256(png);
 
                     QMetaObject::invokeMethod(
                         QCoreApplication::instance(),
-                        [self, e = std::move(entry)]() mutable {
-                            if (self)
-                                emit self->newEntry(e);
+                        [self, png, hash, sourceApp]() mutable {
+                            if (!self)
+                                return;
+
+                            // Fix 2: Wayland fires dataChanged on every clipboard
+                            // ownership transfer (opening any drawer, switching
+                            // windows), even when image content is identical.
+                            // Skip the expensive insert/model path entirely.
+                            if (hash == self->m_lastImageHash)
+                                return;
+                            self->m_lastImageHash = hash;
+
+                            ClipboardEntry entry;
+                            entry.type      = ClipboardType::Image;
+                            entry.mimeType  = QStringLiteral("image/png");
+                            entry.data      = png;
+                            entry.hash      = hash;  // reuse, don't re-hash
+                            entry.timestamp = QDateTime::currentMSecsSinceEpoch();
+                            entry.sourceApp = sourceApp;
+                            entry.sizeBytes = static_cast<qint64>(png.size());
+
+                            emit self->newEntry(entry);
                         },
                         Qt::QueuedConnection);
                 });

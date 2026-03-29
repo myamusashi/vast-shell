@@ -49,5 +49,11 @@ namespace Vast {
 
         std::atomic<bool>                                  m_enabled{false};
         bool                                               m_started{false};
+
+        // Fix 2: guards against the Wayland clipboard ownership-change event that
+        // fires dataChanged even when the image content is byte-for-byte identical.
+        // Only used for images — text/html/files are cheap and must always flow
+        // through so external re-copies correctly bump those entries to the top.
+        QByteArray                                         m_lastImageHash{};
     };
 }

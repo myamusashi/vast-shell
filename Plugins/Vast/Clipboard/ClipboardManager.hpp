@@ -65,6 +65,7 @@ namespace Vast {
         void requestInsert(Vast::ClipboardEntry entry);
         void requestRemove(qint64 id);
         void requestSetPin(qint64 id, bool pinned);
+        void requestBumpTimestamp(qint64 id);  // Fix 1a: silent DB-only bump, no model side-effect
         void requestClearUnpinned();
         void requestPrune(int maxEntries, qint64 maxBytes);
 

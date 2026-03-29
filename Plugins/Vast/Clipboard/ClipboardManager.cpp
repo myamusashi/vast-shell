@@ -47,6 +47,7 @@ namespace Vast {
         connect(this, &ClipboardManager::requestInsert, m_database.get(), &ClipboardDatabase::insert, Qt::QueuedConnection);
         connect(this, &ClipboardManager::requestRemove, m_database.get(), &ClipboardDatabase::remove, Qt::QueuedConnection);
         connect(this, &ClipboardManager::requestSetPin, m_database.get(), &ClipboardDatabase::setPin, Qt::QueuedConnection);
+        connect(this, &ClipboardManager::requestBumpTimestamp, m_database.get(), &ClipboardDatabase::bumpTimestamp, Qt::QueuedConnection);
         connect(this, &ClipboardManager::requestClearUnpinned, m_database.get(), &ClipboardDatabase::clearUnpinned, Qt::QueuedConnection);
 
         connect(m_database.get(), &ClipboardDatabase::entryInserted, this, &ClipboardManager::onEntryInserted, Qt::QueuedConnection);
@@ -227,7 +228,11 @@ namespace Vast {
 
         QGuiApplication::clipboard()->setMimeData(mime);
         m_model->bumpToTop(id);
-        emit requestInsert(entry);
+
+        // Fix 1a: only bump the DB timestamp — do NOT re-insert.
+        // requestInsert would trigger entryInserted → onEntryInserted → prepend(),
+        // causing a second model reorder on top of bumpToTop() above.
+        emit requestBumpTimestamp(id);
 
         QTimer::singleShot(500, this, [this] { m_watcher->setEnabled(m_enabled); });
     }

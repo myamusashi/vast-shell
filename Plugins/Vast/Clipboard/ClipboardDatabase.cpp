@@ -92,19 +92,22 @@ namespace Vast {
             return std::unexpected(QStringLiteral("Database is not open"));
 
         if (existsByHash(entry.hash)) {
-            QSqlQuery bump{m_db};
-            bump.prepare(QStringLiteral("UPDATE clipboard_entries SET timestamp = :ts WHERE hash = :hash"));
-            bump.bindValue(QStringLiteral(":ts"), QDateTime::currentMSecsSinceEpoch());
-            bump.bindValue(QStringLiteral(":hash"), QString::fromLatin1(entry.hash.toHex()));
-            bump.exec();
-
+            // Fetch the existing id first — the previous code was missing
+            // bindValue(":hash") on fetchQ so it always silently failed.
             QSqlQuery fetchQ{m_db};
             fetchQ.prepare(QStringLiteral("SELECT id FROM clipboard_entries WHERE hash = :hash LIMIT 1"));
+            fetchQ.bindValue(QStringLiteral(":hash"), QString::fromLatin1(entry.hash.toHex()));
             fetchQ.exec();
+
             if (fetchQ.next()) {
                 const qint64 existingId = fetchQ.value(0).toLongLong();
-                auto         fetched    = fetchById(existingId);
 
+                // Bump timestamp so it sorts to top on next load
+                if (auto r = bumpTimestamp(existingId); !r)
+                    qWarning() << "[ClipboardDatabase] bumpTimestamp failed:" << r.error();
+
+                // Notify the model to move the existing entry to top
+                auto fetched = fetchById(existingId);
                 if (fetched) {
                     fetched->data.clear();
                     emit entryInserted(*fetched);
@@ -175,6 +178,21 @@ namespace Vast {
             return std::unexpected(lastError());
 
         emit entryPinChanged(id, pinned);
+        return {};
+    }
+
+    std::expected<void, QString> ClipboardDatabase::bumpTimestamp(qint64 id) {
+        if (!m_open)
+            return std::unexpected(QStringLiteral("Database is not open"));
+
+        QSqlQuery q{m_db};
+        q.prepare(QStringLiteral("UPDATE clipboard_entries SET timestamp = :ts WHERE id = :id"));
+        q.bindValue(QStringLiteral(":ts"), QDateTime::currentMSecsSinceEpoch());
+        q.bindValue(QStringLiteral(":id"), id);
+
+        if (!q.exec())
+            return std::unexpected(lastError());
+
         return {};
     }
 
