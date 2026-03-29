@@ -31,25 +31,25 @@ namespace Vast {
         explicit ClipboardManager(QObject* parent = nullptr);
         ~ClipboardManager() override;
 
-        [[nodiscard]] bool            initialize(const QString& dbPath);
+        Q_INVOKABLE [[nodiscard]] bool initialize(const QString& dbPath);
 
-        [[nodiscard]] ClipboardModel* model() const noexcept;
-        [[nodiscard]] int             maxEntries() const noexcept;
-        [[nodiscard]] int             maxMegabytes() const noexcept;
-        [[nodiscard]] bool            isEnabled() const noexcept;
-        [[nodiscard]] QString         activeWindow() const noexcept;
+        [[nodiscard]] ClipboardModel*  model() const noexcept;
+        [[nodiscard]] int              maxEntries() const noexcept;
+        [[nodiscard]] int              maxMegabytes() const noexcept;
+        [[nodiscard]] bool             isEnabled() const noexcept;
+        [[nodiscard]] QString          activeWindow() const noexcept;
 
-        void                          setMaxEntries(int max);
-        void                          setMaxMegabytes(int mb);
-        void                          setEnabled(bool enabled);
-        void                          setActiveWindow(const QString& window);
+        void                           setMaxEntries(int max);
+        void                           setMaxMegabytes(int mb);
+        void                           setEnabled(bool enabled);
+        void                           setActiveWindow(const QString& window);
 
-        [[nodiscard]] bool            copyToClipboard(qint64 id);
-        void                          pin(qint64 id, bool pinned);
-        void                          remove(qint64 id);
-        [[nodiscard]] bool            clearUnpinned();
-        void                          search(const QString& query);
-        void                          requestFullEntry(qint64 id);
+        Q_INVOKABLE [[nodiscard]] bool copyToClipboard(qint64 id);
+        Q_INVOKABLE void               pin(qint64 id, bool pinned);
+        Q_INVOKABLE void               remove(qint64 id);
+        Q_INVOKABLE [[nodiscard]] bool clearUnpinned();
+        Q_INVOKABLE void               search(const QString& query);
+        Q_INVOKABLE void               requestFullEntry(qint64 id);
 
       signals:
         void maxEntriesChanged();
