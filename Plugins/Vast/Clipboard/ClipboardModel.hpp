@@ -4,7 +4,7 @@
 
 #include <QAbstractListModel>
 #include <QList>
-#include <QtQml/qqmlregistration.h>
+#include <QtQmlIntegration/qqmlintegration.h>
 
 #include <vector>
 
@@ -61,9 +61,9 @@ namespace Vast {
         [[nodiscard]] const ClipboardEntry& visibleAt(int row) const;
         [[nodiscard]] int                   visibleCount() const;
 
-        QList<ClipboardEntry>               m_entries;
-        std::vector<int>                    m_filtered;
-        QString                             m_filterQuery;
+        QList<ClipboardEntry>               m_entries{};
+        std::vector<int>                    m_filtered{};
+        QString                             m_filterQuery{};
         bool                                m_filtering{false};
     };
 }

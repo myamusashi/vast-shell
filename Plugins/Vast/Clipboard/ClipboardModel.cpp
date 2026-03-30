@@ -85,14 +85,22 @@ namespace Vast {
                 return entry.timestamp >= e.timestamp;
             });
 
-            const int  dest = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+            // insertIdx is the true final slot after takeAt shifts indices.
+            // Guard on insertIdx (not dest): when the item is already at the
+            // correct position, findIf skips self then matches the immediately
+            // following element, yielding dest=existing+1 but insertIdx=existing.
+            // Using dest as the guard would trigger a bogus beginMoveRows that
+            // mismatches the view and leaves a delegate showing stale data.
+            const int dest      = static_cast<int>(std::distance(m_entries.begin(), insertPos));
+            const int insertIdx = dest > existing ? dest - 1 : dest;
 
-            if (existing != dest) {
-                int destChild = dest > existing ? dest + 1 : dest;
-                beginMoveRows({}, existing, existing, {}, destChild);
+            if (existing != insertIdx) {
+                // destChild = dest (not dest+1): for a same-parent downward move
+                // Qt expects destinationChild = dest so the view shift matches
+                // what takeAt+insert(insertIdx) produces in m_entries
+                beginMoveRows({}, existing, existing, {}, dest);
                 auto item = m_entries.takeAt(existing);
 
-                int  insertIdx = dest > existing ? dest - 1 : dest;
                 item.timestamp = entry.timestamp;
                 m_entries.insert(insertIdx, std::move(item));
                 endMoveRows();
