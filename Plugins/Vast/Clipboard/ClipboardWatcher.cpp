@@ -31,6 +31,10 @@ namespace Vast {
         m_enabled = enabled;
     }
 
+    void ClipboardWatcher::setSelfCopyHash(const QByteArray& hash) noexcept {
+        m_selfCopyHash = hash;
+    }
+
     [[nodiscard]] bool ClipboardWatcher::isEnabled() const noexcept {
         return m_enabled;
     }
@@ -47,6 +51,23 @@ namespace Vast {
 
         const auto*   manager   = qobject_cast<ClipboardManager*>(parent());
         const QString sourceApp = manager ? manager->activeWindow() : QString{};
+
+        // skip events that we triggered ourselves via copyToClipboard
+        // compute a quick hash to compare before doing any real work
+        if (!m_selfCopyHash.isEmpty()) {
+            if (mime) {
+                const QByteArray payload = mime->hasImage() ? QByteArray{} // image: compared below via m_lastImageHash
+                    :
+                    mime->hasHtml() ? mime->html().toUtf8() :
+                    mime->hasUrls() ? mime->urls().first().toString().toUtf8() :
+                                      mime->text().toUtf8();
+                if (!payload.isEmpty() && sha256(payload) == m_selfCopyHash) {
+                    m_selfCopyHash.clear();
+                    return;
+                }
+            }
+            m_selfCopyHash.clear();
+        }
 
         if (mime->hasImage()) {
             const QImage image = cb->image();

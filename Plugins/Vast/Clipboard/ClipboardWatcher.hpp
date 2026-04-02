@@ -21,6 +21,7 @@ namespace Vast {
         void               start();
 
         void               setEnabled(bool enabled) noexcept;
+        void               setSelfCopyHash(const QByteArray& hash) noexcept;
         [[nodiscard]] bool isEnabled() const noexcept;
 
       signals:
@@ -39,8 +40,9 @@ namespace Vast {
 
         static void                                        finalise(ClipboardEntry& entry, const QByteArray& hashPayload, const QString& sourceApp);
 
-        bool       m_enabled{false};
-        bool       m_started{false};
-        QByteArray m_lastImageHash{};
+        bool                                               m_enabled{false};
+        QByteArray                                         m_selfCopyHash{};
+        bool                                               m_started{false};
+        QByteArray                                         m_lastImageHash{};
     };
 }

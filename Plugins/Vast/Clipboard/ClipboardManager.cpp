@@ -157,7 +157,7 @@ namespace Vast {
             return false;
 
         if (m_watcher)
-            m_watcher->setEnabled(false);
+            m_watcher->setSelfCopyHash(entry.hash);
 
         auto mime = std::make_unique<QMimeData>();
 
@@ -187,9 +187,15 @@ namespace Vast {
 
         QGuiApplication::clipboard()->setMimeData(mime.release());
 
-        QTimer::singleShot(500, this, [this]() {
-            if (m_watcher)
-                m_watcher->setEnabled(m_enabled);
+        const bool alreadyTop = m_model && m_model->idAtRow(0) == id;
+
+        if (!alreadyTop && m_model)
+            m_model->bumpToTop(id);
+
+        QTimer::singleShot(0, this, [this, id, alreadyTop]() {
+            if (!alreadyTop && m_database)
+                if (auto r = m_database->bumpTimestamp(id); !r)
+                    qWarning() << "[ClipboardManager] bumpTimestamp failed:" << r.error();
         });
 
         return true;
