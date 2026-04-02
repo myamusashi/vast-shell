@@ -92,15 +92,15 @@ namespace Vast {
     }
 
     int ClipboardManager::maxEntries() const noexcept {
-        return m_maxEntries.load(std::memory_order_relaxed);
+        return m_maxEntries;
     }
 
     int ClipboardManager::maxMegabytes() const noexcept {
-        return m_maxMegabytes.load(std::memory_order_relaxed);
+        return m_maxMegabytes;
     }
 
     bool ClipboardManager::isEnabled() const noexcept {
-        return m_enabled.load(std::memory_order_relaxed);
+        return m_enabled;
     }
 
     QString ClipboardManager::activeWindow() const noexcept {
@@ -108,31 +108,28 @@ namespace Vast {
     }
 
     void ClipboardManager::setMaxEntries(int max) {
-        int expected = m_maxEntries.load(std::memory_order_relaxed);
-        if (expected == max)
+        if (m_maxEntries == max)
             return;
 
-        m_maxEntries.store(max, std::memory_order_relaxed);
+        m_maxEntries = max;
         emit maxEntriesChanged();
         pruneIfNeeded();
     }
 
     void ClipboardManager::setMaxMegabytes(int mb) {
-        int expected = m_maxMegabytes.load(std::memory_order_relaxed);
-        if (expected == mb)
+        if (m_maxMegabytes == mb)
             return;
 
-        m_maxMegabytes.store(mb, std::memory_order_relaxed);
+        m_maxMegabytes = mb;
         emit maxMegabytesChanged();
         pruneIfNeeded();
     }
 
     void ClipboardManager::setEnabled(bool enabled) {
-        bool expected = m_enabled.load(std::memory_order_relaxed);
-        if (expected == enabled)
+        if (m_enabled == enabled)
             return;
 
-        m_enabled.store(enabled, std::memory_order_relaxed);
+        m_enabled = enabled;
         if (m_watcher)
             m_watcher->setEnabled(enabled);
         emit enabledChanged();
@@ -181,9 +178,8 @@ namespace Vast {
                 const auto  paths = entry.content.split(u'\n', Qt::SkipEmptyParts);
                 QList<QUrl> urls;
                 urls.reserve(paths.size());
-                for (const auto& path : paths) {
+                for (const auto& path : paths)
                     urls.append(QUrl::fromLocalFile(path));
-                }
                 mime->setUrls(urls);
                 break;
             }
@@ -202,7 +198,7 @@ namespace Vast {
 
         QTimer::singleShot(500, this, [this]() {
             if (m_watcher)
-                m_watcher->setEnabled(m_enabled.load(std::memory_order_relaxed));
+                m_watcher->setEnabled(m_enabled);
         });
 
         return true;
@@ -244,7 +240,7 @@ namespace Vast {
     }
 
     void ClipboardManager::requestFullEntry(qint64 id) {
-        m_pendingEntryId.store(id, std::memory_order_relaxed);
+        m_pendingEntryId = id;
         if (id < 0 || !m_database)
             return;
 
@@ -255,7 +251,7 @@ namespace Vast {
                 return;
             }
 
-            if (id != m_pendingEntryId.load(std::memory_order_relaxed))
+            if (id != m_pendingEntryId)
                 return;
 
             auto        entry = std::move(*result);
@@ -308,9 +304,8 @@ namespace Vast {
     }
 
     void ClipboardManager::pruneIfNeeded() {
-        const qint64 maxBytes = static_cast<qint64>(m_maxMegabytes.load(std::memory_order_relaxed)) * 1024 * 1024;
-
-        const int    maxEntries = m_maxEntries.load(std::memory_order_relaxed);
+        const qint64 maxBytes   = static_cast<qint64>(m_maxMegabytes) * 1024 * 1024;
+        const int    maxEntries = m_maxEntries;
 
         QTimer::singleShot(0, this, [this, maxEntries, maxBytes]() {
             if (!m_database)

@@ -9,7 +9,6 @@
 #include <QImage>
 #include <QMimeData>
 #include <QUrl>
-#include <QtConcurrent>
 
 namespace Vast {
 
@@ -25,19 +24,19 @@ namespace Vast {
         connect(cb, &QClipboard::dataChanged, this, &ClipboardWatcher::onDataChanged);
 
         m_started = true;
-        m_enabled.store(true, std::memory_order_release);
+        m_enabled = true;
     }
 
     void ClipboardWatcher::setEnabled(bool enabled) noexcept {
-        m_enabled.store(enabled, std::memory_order_release);
+        m_enabled = enabled;
     }
 
     [[nodiscard]] bool ClipboardWatcher::isEnabled() const noexcept {
-        return m_enabled.load(std::memory_order_acquire);
+        return m_enabled;
     }
 
     void ClipboardWatcher::onDataChanged() {
-        if (!m_enabled.load(std::memory_order_acquire))
+        if (!m_enabled)
             return;
 
         const auto* cb   = QGuiApplication::clipboard();
@@ -54,40 +53,27 @@ namespace Vast {
             if (image.isNull())
                 return;
 
-            QPointer<ClipboardWatcher> self{this};
+            const QByteArray png = compressImage(image);
+            if (png.isEmpty())
+                return;
 
-            QThreadPool::globalInstance()->start([self, image, sourceApp]() {
-                const QByteArray png = compressImage(image);
-                if (png.isEmpty())
-                    return;
+            const QByteArray hash = sha256(png);
+            if (hash == m_lastImageHash)
+                return;
+            m_lastImageHash = hash;
 
-                const QByteArray hash = sha256(png);
+            ClipboardEntry entry{.id        = -1,
+                                 .type      = ClipboardType::Image,
+                                 .content   = {},
+                                 .data      = png,
+                                 .mimeType  = QStringLiteral("image/png"),
+                                 .hash      = hash,
+                                 .pinned    = false,
+                                 .sourceApp = sourceApp,
+                                 .sizeBytes = static_cast<qint64>(png.size()),
+                                 .timestamp = QDateTime::currentMSecsSinceEpoch()};
 
-                QMetaObject::invokeMethod(
-                    QCoreApplication::instance(),
-                    [self, png, hash, sourceApp]() mutable {
-                        if (!self)
-                            return;
-
-                        if (hash == self->m_lastImageHash)
-                            return;
-                        self->m_lastImageHash = hash;
-
-                        ClipboardEntry entry{.id        = -1,
-                                             .type      = ClipboardType::Image,
-                                             .content   = {},
-                                             .data      = png,
-                                             .mimeType  = QStringLiteral("image/png"),
-                                             .hash      = hash,
-                                             .pinned    = false,
-                                             .sourceApp = sourceApp,
-                                             .sizeBytes = static_cast<qint64>(png.size()),
-                                             .timestamp = QDateTime::currentMSecsSinceEpoch()};
-
-                        emit           self->newEntry(entry);
-                    },
-                    Qt::QueuedConnection);
-            });
+            emit           newEntry(entry);
             return;
         }
 

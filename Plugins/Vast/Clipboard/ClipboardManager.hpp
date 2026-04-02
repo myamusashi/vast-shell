@@ -8,7 +8,6 @@
 #include <QPointer>
 
 #include <memory>
-#include <atomic>
 
 namespace Vast {
 
@@ -67,10 +66,10 @@ namespace Vast {
         std::unique_ptr<ClipboardWatcher>  m_watcher;
         std::unique_ptr<ClipboardDatabase> m_database;
 
-        std::atomic<qint64>                m_pendingEntryId{-1};
-        std::atomic<int>                   m_maxEntries{500};
-        std::atomic<int>                   m_maxMegabytes{64};
-        std::atomic<bool>                  m_enabled{true};
+        qint64                             m_pendingEntryId{-1};
+        int                                m_maxEntries{500};
+        int                                m_maxMegabytes{64};
+        bool                               m_enabled{true};
 
         QString                            m_activeWindow;
     };
