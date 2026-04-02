@@ -270,7 +270,7 @@ Singleton {
                 command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
             });
             Quickshell.execDetached({
-                command: ["matugen", "image", path]
+                command: ["matugen", "image", path, "--source-color-index", "2"]
             });
         }
     }
