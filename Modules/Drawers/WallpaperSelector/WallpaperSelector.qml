@@ -225,7 +225,6 @@ Item {
                             }
 
                             MArea {
-                                anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
 
                                 onClicked: {
