@@ -77,6 +77,7 @@ Singleton {
                         appIcon: n.appIcon,
                         appName: n.appName,
                         image: n.image,
+                        desktopEntry: n.desktopEntry,
                         expireTimeout: n.expireTimeout,
                         urgency: n.urgency,
                         resident: n.resident,
@@ -163,7 +164,8 @@ Singleton {
                         continue;
 
                     const key = "notif-" + notifData.id;
-                    const stableUrl = notifData.desktopEntry === "spotify" ? ImageCache.saveProviderImageQml(notifData.image, key) : (notifData.image ?? "");
+                    const rawImage = notifData.image ?? "";
+                    const stableUrl = rawImage.startsWith("image://") ? ImageCache.saveProviderImageQml(rawImage, key) : rawImage;
 
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
@@ -173,6 +175,7 @@ Singleton {
                         appIcon: notifData.appIcon,
                         appName: notifData.appName,
                         image: stableUrl,
+                        desktopEntry: notifData.desktopEntry,
                         expireTimeout: notifData.expireTimeout,
                         urgency: notifData.urgency,
                         resident: notifData.resident,
@@ -284,6 +287,8 @@ Singleton {
         property bool closed: false
 
         property date time: new Date()
+
+        property string desktopEntry: ""
 
         property Notification notification
         property string id: ""
