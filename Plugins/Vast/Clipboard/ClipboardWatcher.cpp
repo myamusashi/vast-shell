@@ -1,4 +1,5 @@
 #include "ClipboardWatcher.hpp"
+#include "ClipboardEntry.hpp"
 #include "ClipboardManager.hpp"
 
 #include <QGuiApplication>
@@ -32,7 +33,9 @@ namespace Vast {
     }
 
     void ClipboardWatcher::setSelfCopyHash(const QByteArray& hash) noexcept {
-        m_selfCopyHash = hash;
+        // each copyToClipboard registers 2 credits to absorb wl
+        // double dataChanged fire (once on ownership take, once on settle)
+        m_selfCopyHashes[hash] += 2;
     }
 
     [[nodiscard]] bool ClipboardWatcher::isEnabled() const noexcept {
@@ -52,21 +55,22 @@ namespace Vast {
         const auto*   manager   = qobject_cast<ClipboardManager*>(parent());
         const QString sourceApp = manager ? manager->activeWindow() : QString{};
 
-        // skip events that we triggered ourselves via copyToClipboard
-        // compute a quick hash to compare before doing any real work
-        if (!m_selfCopyHash.isEmpty()) {
+        if (!m_selfCopyHashes.isEmpty()) {
             if (mime) {
-                const QByteArray payload = mime->hasImage() ? QByteArray{} // image: compared below via m_lastImageHash
-                    :
-                    mime->hasHtml() ? mime->html().toUtf8() :
-                    mime->hasUrls() ? mime->urls().first().toString().toUtf8() :
-                                      mime->text().toUtf8();
-                if (!payload.isEmpty() && sha256(payload) == m_selfCopyHash) {
-                    m_selfCopyHash.clear();
-                    return;
+                const QByteArray payload = mime->hasImage() ? QByteArray{} :
+                    mime->hasHtml()                         ? mime->html().toUtf8() :
+                    mime->hasUrls()                         ? mime->urls().first().toString().toUtf8() :
+                                                              mime->text().toUtf8();
+                if (!payload.isEmpty()) {
+                    const QByteArray h  = sha256(payload);
+                    auto             it = m_selfCopyHashes.find(h);
+                    if (it != m_selfCopyHashes.end()) {
+                        if (--it.value() <= 0)
+                            m_selfCopyHashes.erase(it);
+                        return;
+                    }
                 }
             }
-            m_selfCopyHash.clear();
         }
 
         if (mime->hasImage()) {
@@ -194,7 +198,8 @@ namespace Vast {
     }
 
     [[nodiscard]] QByteArray ClipboardWatcher::compressImage(const QImage& image) {
-        constexpr int kMaxDimension = 512;
+        // 256px
+        constexpr int kMaxDimension = 256;
 
         const QImage  scaled =
             (image.width() > kMaxDimension || image.height() > kMaxDimension) ? image.scaled(kMaxDimension, kMaxDimension, Qt::KeepAspectRatio, Qt::SmoothTransformation) : image;

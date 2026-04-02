@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QClipboard>
 #include <QPointer>
+#include <QHash>
+#include <QByteArray>
 
 #include <optional>
 
@@ -41,7 +43,7 @@ namespace Vast {
         static void                                        finalise(ClipboardEntry& entry, const QByteArray& hashPayload, const QString& sourceApp);
 
         bool                                               m_enabled{false};
-        QByteArray                                         m_selfCopyHash{};
+        QHash<QByteArray, int>                             m_selfCopyHashes{};
         bool                                               m_started{false};
         QByteArray                                         m_lastImageHash{};
     };
