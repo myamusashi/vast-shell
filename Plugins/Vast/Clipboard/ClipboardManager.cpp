@@ -187,15 +187,6 @@ namespace Vast {
 
         QGuiApplication::clipboard()->setMimeData(mime.release());
 
-        if (m_model)
-            m_model->bumpToTop(id);
-
-        QTimer::singleShot(0, this, [this, id]() {
-            if (m_database)
-                if (auto r = m_database->bumpTimestamp(id); !r)
-                    qWarning() << "[ClipboardManager] bumpTimestamp failed:" << r.error();
-        });
-
         QTimer::singleShot(500, this, [this]() {
             if (m_watcher)
                 m_watcher->setEnabled(m_enabled);
