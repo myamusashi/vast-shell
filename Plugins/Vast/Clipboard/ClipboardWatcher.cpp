@@ -173,7 +173,7 @@ namespace Vast {
     }
 
     [[nodiscard]] QByteArray ClipboardWatcher::compressImage(const QImage& image) {
-        constexpr int kMaxDimension = 2048;
+        constexpr int kMaxDimension = 512;
 
         const QImage  scaled =
             (image.width() > kMaxDimension || image.height() > kMaxDimension) ? image.scaled(kMaxDimension, kMaxDimension, Qt::KeepAspectRatio, Qt::SmoothTransformation) : image;
