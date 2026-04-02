@@ -25,7 +25,6 @@ Item {
 
     implicitWidth: parent.width * 0.6
     implicitHeight: GlobalStates.isWallpaperSwitcherOpen ? parent.height * 0.3 : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     Behavior on implicitHeight {
         NAnim {

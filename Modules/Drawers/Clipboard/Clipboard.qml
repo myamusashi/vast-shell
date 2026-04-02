@@ -81,6 +81,9 @@ WrapperRectangle {
                 return entryList.currentItem.entryId;
             }
 
+            Component.onCompleted: {
+                searchField.forceActiveFocus();
+            }
             spacing: 0
 
             Item {
@@ -121,10 +124,6 @@ WrapperRectangle {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 35
 
-                        Component.onCompleted: {
-                            forceActiveFocus();
-                        }
-
                         placeHolderText: qsTr("Search clipboard…")
                         onTextChanged: {
                             ClipboardManager.search(text);
@@ -134,16 +133,13 @@ WrapperRectangle {
                         toggleButtonVisible: false
 
                         onAccepted: {
-                            if (clipboardLayout.currentId >= 0)
+                            if (clipboardLayout.currentId >= 0) {
                                 ClipboardManager.copyToClipboard(clipboardLayout.currentId);
+                                GlobalStates.isClipboardOpen = false;
+                            }
                         }
 
                         Keys.onPressed: event => {
-                            if (event.key === Qt.Key_Escape) {
-                                GlobalStates.isClipboardOpen = false;
-                                event.accepted = true;
-                            }
-
                             if (event.key === Qt.Key_Up) {
                                 entryList.decrementCurrentIndex();
                                 event.accepted = true;
@@ -151,6 +147,11 @@ WrapperRectangle {
 
                             if (event.key === Qt.Key_Down) {
                                 entryList.incrementCurrentIndex();
+                                event.accepted = true;
+                            }
+
+                            if (event.key === Qt.Key_Q) {
+                                GlobalStates.isClipboardOpen = false;
                                 event.accepted = true;
                             }
 
@@ -290,10 +291,7 @@ WrapperRectangle {
                             isSelected: ListView.isCurrentItem
                             implicitWidth: ListView.view.width
 
-                            onActivated: {
-                                ClipboardManager.copyToClipboard(entryId);
-                                GlobalStates.isClipboardOpen = false;
-                            }
+                            onActivated: ClipboardManager.copyToClipboard(entryId)
                             onPinToggled: (id, s) => ClipboardManager.pin(id, s)
                             onRemoveRequested: id => ClipboardManager.remove(id)
                         }
@@ -331,10 +329,7 @@ WrapperRectangle {
                             Layout.fillHeight: true
                             entryId: clipboardLayout.currentId
 
-                            onCopyRequested: id => {
-                                ClipboardManager.copyToClipboard(id);
-                                GlobalStates.isClipboardOpen = false;
-                            }
+                            onCopyRequested: id => ClipboardManager.copyToClipboard(id)
                             onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
                         }
                     }
