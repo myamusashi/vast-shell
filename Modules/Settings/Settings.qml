@@ -100,6 +100,16 @@ LazyLoader {
                             iconName: "wifi"
                             pageIndex: 7
                         }
+                        SidebarItem {
+                            text: qsTr("Clipboard")
+                            iconName: "assignment"
+                            pageIndex: 8
+                        }
+                        SidebarItem {
+                            text: qsTr("Notification")
+                            iconName: "notifications"
+                            pageIndex: 9
+                        }
 
                         Item {
                             Layout.fillHeight: true
@@ -155,6 +165,14 @@ LazyLoader {
                         Loader {
                             active: stackLayout.currentIndex === 7
                             sourceComponent: InternetPage {}
+                        }
+                        Loader {
+                            active: stackLayout.currentIndex === 8
+                            sourceComponent: ClipboardPage {}
+                        }
+                        Loader {
+                            active: stackLayout.currentIndex === 9
+                            sourceComponent: NotificationPage {}
                         }
                     }
                 }
