@@ -201,7 +201,7 @@
 <context>
     <name>AudioCapture</name>
     <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="160"/>
+        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="169"/>
         <source>LINUX DEFAULT OUTPUT</source>
         <translation>LINUX DEFAULT OUTPUT</translation>
     </message>
@@ -209,7 +209,7 @@
 <context>
     <name>AudioProfiles</name>
     <message>
-        <location filename="../Widgets/AudioProfiles.qml" line="15"/>
+        <location filename="../Widgets/AudioProfiles.qml" line="16"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -349,32 +349,32 @@
 <context>
     <name>BottomActionBar</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="72"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="75"/>
         <source>File name</source>
         <translation>Nama berkas</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="72"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="75"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="113"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="119"/>
         <source>Filter</source>
         <translation>Filter</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="144"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="151"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="150"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="157"/>
         <source>Open</source>
         <translation>Buka</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="150"/>
+        <location filename="../Components/Dialog/FileDialog/components/BottomActionBar.qml" line="157"/>
         <source>Select</source>
         <translation>Pilih</translation>
     </message>
@@ -458,27 +458,27 @@
 <context>
     <name>Capture</name>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="111"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="114"/>
         <source>Capture</source>
         <translation>Tangkapan</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="153"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="156"/>
         <source>Screenshot</source>
         <translation>Tangkapan Layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="161"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="164"/>
         <source>Start</source>
         <translation>Mulai</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="171"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="174"/>
         <source>Microphone</source>
         <translation>Mikrofon</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="251"/>
+        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="254"/>
         <source>See my captures</source>
         <translation>Lihat tangkapan layar</translation>
     </message>
@@ -486,17 +486,27 @@
 <context>
     <name>Clipboard</name>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="100"/>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="58"/>
+        <source>Clipboard database not found, created it</source>
+        <translation>database clipboard tidak ditemukan, buat file database</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="58"/>
+        <source>Clipboard</source>
+        <translation>Clipboard</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="127"/>
         <source>Search clipboard…</source>
         <translation>Cari di clipboard...</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="297"/>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="302"/>
         <source>No results for </source>
         <translation>Tidak ada hasil untuk </translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="297"/>
+        <location filename="../Modules/Drawers/Clipboard/Clipboard.qml" line="302"/>
         <source>Clipboard is empty</source>
         <translation>Clipboard kosong</translation>
     </message>
@@ -504,60 +514,98 @@
 <context>
     <name>ClipboardItemDelegate</name>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="123"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="133"/>
         <source>Image</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="123"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="133"/>
         <source>Files (%1)</source>
         <translation>Files (%1)</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="123"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="133"/>
         <source>(empty)</source>
         <translation>(Kosong)</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="160"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="33"/>
         <source>just now</source>
         <translation>Saat ini</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="162"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="35"/>
         <source>%1m ago</source>
         <translation>%1m lalu</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="164"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardItemDelegate.qml" line="37"/>
         <source>%1h ago</source>
         <translation>%1j lalu</translation>
     </message>
 </context>
 <context>
+    <name>ClipboardPage</name>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="22"/>
+        <source>Clipboard configurations</source>
+        <translation>konfigurasi clipboard</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="30"/>
+        <source>General Settings</source>
+        <translation>Pengaturan Umum</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="36"/>
+        <source>Enable Clipboard:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="52"/>
+        <source>Enable Image Previews:</source>
+        <translation>Aktifkan preview gambar:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="66"/>
+        <source>Preview Dimensions</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="73"/>
+        <source>Preview Width:</source>
+        <translation>Lebar preview:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/ClipboardPage.qml" line="93"/>
+        <source>Preview Height:</source>
+        <translation>Tinggi preview:</translation>
+    </message>
+</context>
+<context>
     <name>ClipboardPreview</name>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="86"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="106"/>
         <source>Select an entry to preview</source>
         <translation>Pilih entri untuk pratinjau</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="124"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="151"/>
         <source>Image</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="124"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="151"/>
         <source>Text</source>
         <translation>Teks</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="203"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="228"/>
         <source>Copy</source>
         <translation>Salin</translation>
     </message>
     <message>
-        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="337"/>
+        <location filename="../Modules/Drawers/Clipboard/ClipboardPreview.qml" line="356"/>
         <source>Loading…</source>
         <translation>Memuat...</translation>
     </message>
@@ -676,18 +724,18 @@
 <context>
     <name>Configs</name>
     <message>
-        <location filename="../Core/Configs/Configs.qml" line="32"/>
+        <location filename="../Core/Configs/Configs.qml" line="33"/>
         <source>Failed to read config files</source>
         <translation>Gagal membaca berkas konfigurasi</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/Configs.qml" line="32"/>
-        <location filename="../Core/Configs/Configs.qml" line="39"/>
+        <location filename="../Core/Configs/Configs.qml" line="33"/>
+        <location filename="../Core/Configs/Configs.qml" line="40"/>
         <source>Configuration</source>
         <translation>Konfigurasi</translation>
     </message>
     <message>
-        <location filename="../Core/Configs/Configs.qml" line="39"/>
+        <location filename="../Core/Configs/Configs.qml" line="40"/>
         <source>Failed to save config: %1</source>
         <translation>Gagal menyimpan konfigurasi: %1</translation>
     </message>
@@ -708,7 +756,7 @@
 <context>
     <name>Dashboard</name>
     <message>
-        <location filename="../Modules/Dashboard/Dashboard.qml" line="120"/>
+        <location filename="../Modules/Dashboard/Dashboard.qml" line="121"/>
         <source>WIP</source>
         <translation>WIP</translation>
     </message>
@@ -961,12 +1009,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DialogBox</name>
     <message>
-        <location filename="../Components/Dialog/DialogBox.qml" line="104"/>
+        <location filename="../Components/Dialog/DialogBox.qml" line="105"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/DialogBox.qml" line="115"/>
+        <location filename="../Components/Dialog/DialogBox.qml" line="116"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1124,37 +1172,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListItem</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="29"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="30"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="31"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="32"/>
         <source>file</source>
         <translation>berkas</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="31"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="32"/>
         <source>File</source>
         <translation>Berkas</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="36"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="37"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="38"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="39"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="40"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="41"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="41"/>
+        <location filename="../Components/Dialog/FileDialog/delegate/FileListItem.qml" line="42"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
@@ -1162,27 +1210,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListView</name>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="48"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="55"/>
         <source>Show hidden</source>
         <translation>Tampilkan file tersembunyi</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="75"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="82"/>
         <source>Name</source>
         <translation>Nama</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="83"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="90"/>
         <source>Size</source>
         <translation>Ukuran</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="91"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="98"/>
         <source>Type</source>
         <translation>Jenis</translation>
     </message>
     <message>
-        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="99"/>
+        <location filename="../Components/Dialog/FileDialog/components/FileListView.qml" line="106"/>
         <source>Modified</source>
         <translation>Diubah</translation>
     </message>
@@ -1907,6 +1955,29 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>NotificationPage</name>
+    <message>
+        <location filename="../Modules/Settings/Pages/NotificationPage.qml" line="22"/>
+        <source>Notification configurations</source>
+        <translation>Konfigurasi notifikasi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/NotificationPage.qml" line="30"/>
+        <source>Notification Limits</source>
+        <translation>Limit notifikasi</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/NotificationPage.qml" line="36"/>
+        <source>Maximum Notifications:</source>
+        <translation>Maximal notifikasi:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Pages/NotificationPage.qml" line="56"/>
+        <source>Maximum Notification Age (Days):</source>
+        <translation>Maksimal umur notifikasi (hari):</translation>
+    </message>
+</context>
+<context>
     <name>Notifications</name>
     <message>
         <location filename="../Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="52"/>
@@ -1922,53 +1993,53 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifs</name>
     <message>
-        <location filename="../Services/Notifs.qml" line="41"/>
+        <location filename="../Services/Notifs.qml" line="40"/>
         <source>Cleaning up %1 old notification(s)</source>
         <translation>Membersihkan %1 notifikasi lama</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="41"/>
-        <location filename="../Services/Notifs.qml" line="59"/>
-        <location filename="../Services/Notifs.qml" line="147"/>
-        <location filename="../Services/Notifs.qml" line="156"/>
-        <location filename="../Services/Notifs.qml" line="200"/>
-        <location filename="../Services/Notifs.qml" line="204"/>
-        <location filename="../Services/Notifs.qml" line="211"/>
+        <location filename="../Services/Notifs.qml" line="40"/>
+        <location filename="../Services/Notifs.qml" line="56"/>
+        <location filename="../Services/Notifs.qml" line="144"/>
+        <location filename="../Services/Notifs.qml" line="153"/>
+        <location filename="../Services/Notifs.qml" line="197"/>
+        <location filename="../Services/Notifs.qml" line="201"/>
+        <location filename="../Services/Notifs.qml" line="208"/>
         <source>Notifications</source>
         <translation>Notifikasi</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="59"/>
+        <location filename="../Services/Notifs.qml" line="56"/>
         <source>Removing %1 oldest notification(s) to enforce limit</source>
         <translation>Menghapus %1 notifikasi terlama untuk menegakkan batas</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="147"/>
+        <location filename="../Services/Notifs.qml" line="144"/>
         <source>No cached notifications found</source>
         <translation>Tidak ada notifikasi tersimpan</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="156"/>
+        <location filename="../Services/Notifs.qml" line="153"/>
         <source>Invalid notification cache format</source>
         <translation>Format cache notifikasi tidak valid</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="200"/>
+        <location filename="../Services/Notifs.qml" line="197"/>
         <source>Loaded %1 notification(s) from cache</source>
         <translation>Memuat %1 notifikasi dari cache</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="204"/>
+        <location filename="../Services/Notifs.qml" line="201"/>
         <source>Failed to load notifications: %1</source>
         <translation>Gagal memuat notifikasi: %1</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="211"/>
+        <location filename="../Services/Notifs.qml" line="208"/>
         <source>Notification cache doesn&apos;t exist, creating it</source>
         <translation>Cache notifikasi tidak ada, sedang membuat</translation>
     </message>
     <message>
-        <location filename="../Services/Notifs.qml" line="278"/>
+        <location filename="../Services/Notifs.qml" line="275"/>
         <source>now</source>
         <translation>Sekarang</translation>
     </message>
@@ -2410,6 +2481,16 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
+    <message>
+        <location filename="../Modules/Settings/Settings.qml" line="104"/>
+        <source>Clipboard</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Settings/Settings.qml" line="109"/>
+        <source>Notification</source>
+        <translation>Notifikasi</translation>
+    </message>
 </context>
 <context>
     <name>StyledComboBox</name>
@@ -2427,12 +2508,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="148"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="159"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Components/Base/StyledTextInput.qml" line="148"/>
+        <location filename="../Components/Base/StyledTextInput.qml" line="159"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
@@ -2501,118 +2582,106 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>TimeAgo</name>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="15"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="27"/>
         <source>just now</source>
         <translation>Saat ini</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="17"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="29"/>
         <source>%1 seconds ago</source>
         <translation>%1 Detik lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="19"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="31"/>
         <source>1 minute ago</source>
         <translation>1 menit lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="19"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="31"/>
         <source>%1 minutes ago</source>
         <translation>%1 menit lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="21"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="33"/>
         <source>1 hour ago</source>
         <translation>1 jam lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="21"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="33"/>
         <source>%1 hours ago</source>
         <translation>%1 jam lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="23"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="35"/>
         <source>1 day ago</source>
         <translation>1 hari lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="23"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="35"/>
         <source>%1 days ago</source>
         <translation>%1 hari lalu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="41"/>
-        <location filename="../Core/Utils/TimeAgo.qml" line="64"/>
-        <location filename="../Core/Utils/TimeAgo.qml" line="104"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="53"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="76"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="115"/>
         <source>PM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="41"/>
-        <location filename="../Core/Utils/TimeAgo.qml" line="64"/>
-        <location filename="../Core/Utils/TimeAgo.qml" line="104"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="53"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="76"/>
+        <location filename="../Core/Utils/TimeAgo.qml" line="115"/>
         <source>AM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Jan</source>
-        <translation>Jan</translation>
+        <translation type="vanished">Jan</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Feb</source>
-        <translation>Feb</translation>
+        <translation type="vanished">Feb</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Mar</source>
-        <translation>Mar</translation>
+        <translation type="vanished">Mar</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Apr</source>
-        <translation>Apr</translation>
+        <translation type="vanished">Apr</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>May</source>
-        <translation>Mei</translation>
+        <translation type="vanished">Mei</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Jun</source>
-        <translation>Jun</translation>
+        <translation type="vanished">Jun</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Jul</source>
-        <translation>Jul</translation>
+        <translation type="vanished">Jul</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Aug</source>
-        <translation>Agu</translation>
+        <translation type="vanished">Agu</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Sep</source>
-        <translation>Sep</translation>
+        <translation type="vanished">Sep</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Oct</source>
-        <translation>Okt</translation>
+        <translation type="vanished">Okt</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Nov</source>
-        <translation>Nov</translation>
+        <translation type="vanished">Nov</translation>
     </message>
     <message>
-        <location filename="../Core/Utils/TimeAgo.qml" line="98"/>
         <source>Dec</source>
-        <translation>Des</translation>
+        <translation type="vanished">Des</translation>
     </message>
 </context>
 <context>
@@ -2737,7 +2806,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WallpaperSelector</name>
     <message>
-        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="77"/>
+        <location filename="../Modules/Drawers/WallpaperSelector/WallpaperSelector.qml" line="76"/>
         <source>Search wallpapers</source>
         <translation>Cari wallpapers</translation>
     </message>
