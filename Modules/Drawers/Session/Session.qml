@@ -101,7 +101,7 @@ Item {
                         {
                             "icon": "sleep",
                             "name": qsTr("Sleep"),
-                            "action": "sleep"
+                            "action": "suspend"
                         },
                         {
                             "icon": "door_open",
