@@ -36,7 +36,7 @@ Item {
             "shutdown": ["shutdown", "now"],
             "reboot": ["systemctl", "reboot"],
             "suspend": ["systemctl", "suspend"],
-            "logout": ["hyprctl", "dispatch", "exit"],
+            "logout": ["hyprctl", "dispatch", "hl.exit()"],
             "lockscreen": ["shell", "ipc", "call", "lock", "lock"]
         };
         const cmd = cmds[action];

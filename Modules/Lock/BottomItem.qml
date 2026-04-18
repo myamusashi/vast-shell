@@ -329,7 +329,7 @@ Item {
                                 icon: "door_open",
                                 name: qsTr("Logout"),
                                 action: () => Quickshell.execDetached({
-                                        command: ["hyprctl", "dispatch", "exit"]
+                                        command: ["hyprctl", "dispatch", "hl.exit()"]
                                     })
                             },
                         ]

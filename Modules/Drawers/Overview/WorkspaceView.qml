@@ -59,8 +59,10 @@ ClippingRectangle {
             const toplevel = drag.source;
             if (toplevel.modelData.workspace !== root.wsp) {
                 const address = toplevel.modelData.address;
-                Hypr.dispatch(`movetoworkspacesilent ${root.index + 1}, address:0x${address}`);
-                Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`);
+                Hypr.dispatch(`hl.window.move({ follow = false, workspace = "${root.index + 1}" })`);
+                Qt.callLater(() => {
+                    Hypr.dispatch(`hl.window.move({ x = ${toplevel.initX}, y = ${toplevel.initY} })`);
+                });
             }
 
             Hyprland.refreshWorkspaces();
@@ -73,7 +75,7 @@ ClippingRectangle {
         anchors.fill: parent
         onClicked: {
             if (root.wsp !== Hypr.focusedWorkspace)
-                Hypr.dispatch("workspace " + (root.index + 1));
+                Hypr.dispatch("hl.workspace(" + (root.index + 1) + ")");
         }
     }
 
@@ -189,7 +191,7 @@ ClippingRectangle {
                             const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
                             const globalX = Math.round(mapped.x * root.scaleFactor + root.monitorLogicalX);
                             const globalY = Math.round(mapped.y * root.scaleFactor + root.monitorLogicalY);
-                            Hypr.dispatch(`movewindowpixel exact ${globalX} ${globalY}, address:${toplevel.address}`);
+                            Hypr.dispatch(`hl.window.move({ x = "${globalX}", y = "${globalY}"})`);
                         }
                         toplevel.Drag.drop();
                     }

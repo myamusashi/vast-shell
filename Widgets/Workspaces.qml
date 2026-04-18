@@ -43,7 +43,7 @@ StyledRect {
             }
 
             Quickshell.execDetached({
-                "command": ["sh", "-c", "hyprctl dispatch global quickshell:overview"]
+                "command": ["sh", "-c", "hyprctl dispatch 'hl.global(\"quickshell:overview\")'"]
             });
         }
     }
@@ -114,7 +114,7 @@ StyledRect {
                         anchors.fill: parent
                         layerColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.8)
                         layerRadius: 5
-                        onClicked: Hyprland.dispatch("workspace " + delegateRoot.workspaceId)
+                        onClicked: Hyprland.dispatch("hl.workspace(" + delegateRoot.workspaceId + ")")
                     }
 
                     StyledRect {
@@ -211,8 +211,8 @@ StyledRect {
 
                             if (toplevel.modelData.workspace !== workspaceContainer.workspace) {
                                 const address = toplevel.modelData.address;
-                                Hypr.dispatch(`movetoworkspacesilent ${workspaceContainer.index + 1}, address:0x${address}`);
-                                Hypr.dispatch(`movewindowpixel exact ${toplevel.initX} ${toplevel.initY}, address:0x${address}`);
+                                Hypr.dispatch("hl.movetoworkspacesilent(" + (workspaceContainer.index + 1) + ", \"address:0x" + address + "\")");
+                                Hypr.dispatch("hl.movewindowpixel(\"exact " + toplevel.initX + " " + toplevel.initY + "\", \"address:0x" + address + "\")");
                             }
                         }
                     }
@@ -221,7 +221,7 @@ StyledRect {
                         anchors.fill: parent
                         onClicked: {
                             if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                                Hypr.dispatch("workspace " + (parent.index + 1));
+                                Hypr.dispatch("hl.workspace(" + (parent.index + 1) + ")");
                         }
                     }
 
@@ -327,7 +327,7 @@ StyledRect {
                                         const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
                                         const nx = Math.round((mapped.x - toplevel.centerOffsetX) / workspaceContainer.scaleFactor + workspaceContainer.wsReserved[0] + workspaceContainer.monitorLogicalX);
                                         const ny = Math.round((mapped.y - toplevel.centerOffsetY) / workspaceContainer.scaleFactor + workspaceContainer.wsReserved[1] + workspaceContainer.monitorLogicalY);
-                                        Hypr.dispatch(`movewindowpixel exact ${nx} ${ny}, address:0x${toplevel.modelData.address}`);
+                                        Hypr.dispatch("hl.movewindowpixel(\"exact " + nx + " " + ny + "\", \"address:0x" + toplevel.modelData.address + "\")");
                                         toplevel.Drag.drop();
                                     }
                                 }

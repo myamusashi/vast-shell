@@ -15,7 +15,7 @@ Singleton {
     }
 
     function switchWorkspace(w: int): void {
-        Hyprland.dispatch("workspace " + w);
+        Hyprland.dispatch("hl.workspace(" + w + ")");
     }
 
     function findMaxId(): int {
