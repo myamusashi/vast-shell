@@ -119,7 +119,7 @@ ClippingWrapperRectangle {
     Layout.alignment: Qt.AlignTop | Qt.AlignCenter
     Layout.fillWidth: true
     implicitHeight: 150
-    color: Qt.alpha(root.trackArtColors.primary, 0.53)
+    color: Qt.alpha("#000000", 0.5)
     radius: Appearance.rounding.normal
     visible: Players.active
 
@@ -197,7 +197,7 @@ ClippingWrapperRectangle {
             anchors.fill: parent
             source: Players.active?.trackArtUrl
             fillMode: Image.PreserveAspectCrop
-            opacity: 0.12
+            opacity: 0.7
             cache: false
             asynchronous: true
             visible: !!Players.active?.trackArtUrl

@@ -24,6 +24,14 @@ RowLayout {
         return "0:00";
     }
 
+    function cleanDesktopEntry(entry: string): string {
+        if (!entry || entry === "No Player")
+            return entry;
+        const parts = entry.split(".");
+        const name = parts[parts.length - 1];
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
     spacing: Appearance.spacing.small
 
     Item {
@@ -460,7 +468,7 @@ RowLayout {
 
                         IconImage {
                             anchors.verticalCenter: parent.verticalCenter
-                            source: Players.active ? Quickshell.iconPath(Players.active.desktopEntry) : ""
+                            source: Quickshell.iconPath(DesktopEntries.heuristicLookup(Players.active.desktopEntry)?.icon, "image-missing")
                             implicitWidth: 20
                             implicitHeight: 20
                             asynchronous: true
@@ -468,7 +476,8 @@ RowLayout {
 
                         StyledText {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: Players.active?.desktopEntry ?? "No Player"
+                            width: 100
+                            text: root.cleanDesktopEntry(Players.active?.desktopEntry) ?? "No Player"
                             color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.large
                             elide: Text.ElideRight
@@ -599,7 +608,7 @@ RowLayout {
 
                             IconImage {
                                 anchors.verticalCenter: parent.verticalCenter
-                                source: Quickshell.iconPath(itemDel.modelData.desktopEntry, "image-missing")
+                                source: Quickshell.iconPath(DesktopEntries.heuristicLookup(itemDel.modelData.desktopEntry)?.icon, "image-missing")
                                 asynchronous: true
                                 implicitWidth: 20
                                 implicitHeight: 20
@@ -607,8 +616,7 @@ RowLayout {
 
                             StyledText {
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: parent.width - 16 - parent.spacing
-                                text: itemDel.modelData.desktopEntry ?? ""
+                                text: root.cleanDesktopEntry(itemDel.modelData.desktopEntry) ?? ""
                                 color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: playerComboBox.currentIndex === itemDel.index ? Font.Medium : Font.Normal
