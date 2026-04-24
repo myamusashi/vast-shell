@@ -114,7 +114,7 @@ StyledRect {
                         anchors.fill: parent
                         layerColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.8)
                         layerRadius: 5
-                        onClicked: Hyprland.dispatch("hl.workspace(" + delegateRoot.workspaceId + ")")
+                        onClicked: Workspaces.switchWorkspace(delegateRoot.workspaceId)
                     }
 
                     StyledRect {
@@ -221,7 +221,7 @@ StyledRect {
                         anchors.fill: parent
                         onClicked: {
                             if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                                Hypr.dispatch("hl.workspace(" + (parent.index + 1) + ")");
+                                Workspaces.switchWorkspace(parent.index + 1);
                         }
                     }
 
