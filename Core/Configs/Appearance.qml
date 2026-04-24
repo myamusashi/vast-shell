@@ -4,6 +4,8 @@ import Quickshell
 
 // Yoink this from Caelestia
 Singleton {
+	id: root
+
     property AppearanceConfig.AnimationsComponent animations: Configs.appearance.animations
     property AppearanceConfig.FontsComponent fonts: Configs.appearance.fonts
     property AppearanceConfig.RoundingComponent rounding: Configs.appearance.rounding

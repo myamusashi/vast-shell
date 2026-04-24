@@ -29,6 +29,20 @@ Item {
         }
     }
 
+    function formatTimestamp(ms: int): string {
+        if (ms <= 0)
+            return "";
+        return new Date(ms).toLocaleString(Qt.locale(), "MMM d, hh:mm ap");
+    }
+
+    function formatSize(bytes: int): string {
+        if (bytes < 1024)
+            return bytes + " B";
+        if (bytes < 1048576)
+            return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / 1048576).toFixed(1) + " MB";
+    }
+
     Connections {
         target: ClipboardManager
 
@@ -47,20 +61,6 @@ Item {
             d.imageData = entry.imageData ?? "";
             d.loading = false;
         }
-    }
-
-    function formatTimestamp(ms: int): string {
-        if (ms <= 0)
-            return "";
-        return new Date(ms).toLocaleString(Qt.locale(), "MMM d, hh:mm ap");
-    }
-
-    function formatSize(bytes: int): string {
-        if (bytes < 1024)
-            return bytes + " B";
-        if (bytes < 1048576)
-            return (bytes / 1024).toFixed(1) + " KB";
-        return (bytes / 1048576).toFixed(1) + " MB";
     }
 
     QtObject {
@@ -109,8 +109,8 @@ Item {
         }
     }
 
-	LoadingIndicator {
-		anchors.centerIn: parent
+    LoadingIndicator {
+        anchors.centerIn: parent
         implicitWidth: 30
         implicitHeight: 30
         status: root.entryId >= 0 && d.loading

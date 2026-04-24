@@ -20,7 +20,7 @@ Item {
         rightMargin: Configs.generals.outerBorderSize
     }
 
-    property bool isCalendarShow: GlobalStates.isCalendarOpen
+    readonly property bool isCalendarShow: GlobalStates.isCalendarOpen
     property int cellWidth: Math.floor((width - anchors.margins * 2) / 7.2)
 
     implicitWidth: parent.width * 0.2
@@ -57,230 +57,234 @@ Item {
         Loader {
             active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && container.isCalendarShow
             asynchronous: true
-            sourceComponent: ColumnLayout {
-                id: root
-
+            sourceComponent: CalendarLayout {
                 anchors {
                     fill: parent
                     margins: Appearance.margin.normal
                 }
+            }
+        }
+    }
 
-                property date currentDate: new Date()
-                property int currentYear: currentDate.getFullYear()
-                property int currentMonth: currentDate.getMonth()
-                property var monthNames: buildMonthNames()
+    component CalendarLayout: ColumnLayout {
+        id: root
 
-                visible: container.isCalendarShow
-                spacing: Appearance.spacing.normal
+        property date currentDate: new Date()
+        property int currentYear: currentDate.getFullYear()
+        property int currentMonth: currentDate.getMonth()
+        property var monthNames: buildMonthNames()
 
-                Component.onCompleted: monthNames = buildMonthNames()
+        visible: container.isCalendarShow
+        spacing: Appearance.spacing.normal
 
-                function buildMonthNames(): var {
-                    const locale = Qt.locale();
-                    return Array.from({
-                        length: 12
-                    }, (_, i) => locale.monthName(i));
+        Component.onCompleted: Qt.callLater(() => {
+            monthNames = buildMonthNames();
+        })
+
+        function buildMonthNames(): var {
+            const locale = Qt.locale();
+            return Array.from({
+                length: 12
+            }, (_, i) => locale.monthName(i));
+        }
+
+        Timer {
+            interval: 60000
+            running: true
+            repeat: true
+            triggeredOnStart: false
+            onTriggered: {
+                const now = new Date();
+                if (now.getDate() !== root.currentDate.getDate())
+                    root.currentDate = now;
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 48
+            spacing: Appearance.spacing.normal
+
+            StyledRect {
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
+                radius: Appearance.rounding.full
+                color: "transparent"
+
+                Icon {
+                    id: prevIcon
+
+                    anchors.centerIn: parent
+                    icon: "chevron_left"
+                    font.pixelSize: Appearance.fonts.size.large * 2
+                    color: Colours.m3Colors.m3OnPrimaryContainer
                 }
 
-                Timer {
-                    interval: 60000
-                    running: true
-                    repeat: true
-                    triggeredOnStart: false
-                    onTriggered: {
-                        const now = new Date();
-                        if (now.getDate() !== root.currentDate.getDate())
-                            root.currentDate = now;
-                    }
-                }
+                MArea {
+                    id: prevMArea
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 48
-                    spacing: Appearance.spacing.normal
+                    anchors.fill: parent
 
-                    StyledRect {
-                        Layout.preferredWidth: 40
-                        Layout.preferredHeight: 40
-                        radius: Appearance.rounding.full
-                        color: "transparent"
+                    cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
 
-                        Icon {
-                            id: prevIcon
-
-                            anchors.centerIn: parent
-                            icon: "chevron_left"
-                            font.pixelSize: Appearance.fonts.size.large * 2
-                            color: Colours.m3Colors.m3OnPrimaryContainer
-                        }
-
-                        MArea {
-                            id: prevMArea
-
-                            anchors.fill: parent
-
-                            cursorShape: Qt.PointingHandCursor
-                            hoverEnabled: true
-
-                            onClicked: {
-                                root.currentMonth = root.currentMonth - 1;
-                                if (root.currentMonth < 0) {
-                                    root.currentMonth = 11;
-                                    root.currentYear = root.currentYear - 1;
-                                }
-                            }
-                        }
-                    }
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        text: root.monthNames[root.currentMonth] + " " + root.currentYear
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        font.weight: 600
-
-                        color: Colours.m3Colors.m3OnBackground
-                        font.pixelSize: Appearance.fonts.size.large
-                    }
-
-                    StyledRect {
-                        Layout.preferredWidth: 40
-                        Layout.preferredHeight: 40
-                        radius: Appearance.rounding.full
-                        color: "transparent"
-
-                        Icon {
-                            id: nextIcon
-
-                            anchors.centerIn: parent
-                            icon: "chevron_right"
-                            font.pixelSize: Appearance.fonts.size.large * 2
-                            color: Colours.m3Colors.m3Primary
-                        }
-
-                        MArea {
-                            id: nextMArea
-
-                            anchors.fill: parent
-
-                            cursorShape: Qt.PointingHandCursor
-                            hoverEnabled: true
-
-                            onClicked: {
-                                root.currentMonth = root.currentMonth + 1;
-                                if (root.currentMonth > 11) {
-                                    root.currentMonth = 0;
-                                    root.currentYear = root.currentYear + 1;
-                                }
-                            }
+                    onClicked: {
+                        root.currentMonth = root.currentMonth - 1;
+                        if (root.currentMonth < 0) {
+                            root.currentMonth = 11;
+                            root.currentYear = root.currentYear - 1;
                         }
                     }
                 }
+            }
 
-                DayOfWeekRow {
-                    Layout.fillWidth: true
-                    Layout.topMargin: Appearance.spacing.small
-                    Layout.preferredHeight: 32
+            StyledText {
+                Layout.fillWidth: true
+                text: root.monthNames[root.currentMonth] + " " + root.currentYear
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.weight: 600
 
-                    delegate: StyledRect {
-                        id: daysOfWeekDelegate
+                color: Colours.m3Colors.m3OnBackground
+                font.pixelSize: Appearance.fonts.size.large
+            }
 
-                        required property var model
+            StyledRect {
+                Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
+                radius: Appearance.rounding.full
+                color: "transparent"
 
-                        implicitWidth: container.cellWidth
-                        implicitHeight: 32
-                        color: "transparent"
+                Icon {
+                    id: nextIcon
 
-                        StyledText {
-                            anchors.centerIn: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            text: daysOfWeekDelegate.model.shortName
-                            color: {
-                                if (daysOfWeekDelegate.model.shortName === "Sun" || daysOfWeekDelegate.model.shortName === "Sat")
-                                    return Colours.m3Colors.m3Error;
-                                else
-                                    return Colours.m3Colors.m3OnSurface;
-                            }
-                            font.pixelSize: Appearance.fonts.size.small * 1.2
-                            font.weight: 600
+                    anchors.centerIn: parent
+                    icon: "chevron_right"
+                    font.pixelSize: Appearance.fonts.size.large * 2
+                    color: Colours.m3Colors.m3Primary
+                }
+
+                MArea {
+                    id: nextMArea
+
+                    anchors.fill: parent
+
+                    cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
+
+                    onClicked: {
+                        root.currentMonth = root.currentMonth + 1;
+                        if (root.currentMonth > 11) {
+                            root.currentMonth = 0;
+                            root.currentYear = root.currentYear + 1;
                         }
                     }
                 }
+            }
+        }
 
-                MonthGrid {
-                    id: monthGrid
+        DayOfWeekRow {
+            Layout.fillWidth: true
+            Layout.topMargin: Appearance.spacing.small
+            Layout.preferredHeight: 32
 
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.topMargin: Appearance.spacing.small
+            delegate: StyledRect {
+                id: daysOfWeekDelegate
 
-                    property int cellWidth: container.cellWidth
-                    property int cellHeight: Math.floor(height / 7)
+                required property var model
 
-                    month: root.currentMonth
-                    year: root.currentYear
+                implicitWidth: container.cellWidth
+                implicitHeight: 32
+                color: "transparent"
 
-                    delegate: StyledRect {
-                        id: dayItem
-
-                        required property var model
-                        readonly property int dayFontWeight: {
-                            if (model.today)
-                                return 1000;
-                            if (model.month === root.currentMonth)
-                                return 600;
-                            return 100;
-                        }
-                        property date cellDate: model.date
-                        property int dayOfWeek: cellDate.getDay()
-
-                        width: monthGrid.cellWidth
-                        height: monthGrid.cellHeight
-
-                        color: {
-                            if (dayItem.model.today)
-                                return Colours.m3Colors.m3Primary;
-                            else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
-                                return Colours.m3Colors.m3SurfaceVariant;
-
-                            return "transparent";
-                        }
-
-                        radius: Appearance.rounding.small
-
-                        implicitWidth: 40
-                        implicitHeight: 40
-
-                        MArea {
-                            id: mouseArea
-
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            visible: dayItem.model.month === root.currentMonth
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {}
-                        }
-
-                        StyledText {
-                            anchors.centerIn: parent
-                            text: Qt.formatDate(dayItem.model.date, "d")
-                            color: {
-                                if (dayItem.model.today)
-                                    return Colours.m3Colors.m3OnPrimary;
-
-                                const isWeekend = dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6;
-                                const isCurrentMonth = dayItem.model.month === root.currentMonth;
-                                const baseColor = isWeekend ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurface;
-
-                                return isCurrentMonth ? baseColor : Qt.alpha(baseColor, 0.2);
-                            }
-                            font.pixelSize: Appearance.fonts.size.small * 1.3
-                            font.weight: dayItem.dayFontWeight
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                        }
+                StyledText {
+                    anchors.centerIn: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: daysOfWeekDelegate.model.shortName
+                    color: {
+                        if (daysOfWeekDelegate.model.shortName === "Sun" || daysOfWeekDelegate.model.shortName === "Sat")
+                            return Colours.m3Colors.m3Error;
+                        else
+                            return Colours.m3Colors.m3OnSurface;
                     }
+                    font.pixelSize: Appearance.fonts.size.small * 1.2
+                    font.weight: 600
+                }
+            }
+        }
+
+        MonthGrid {
+            id: monthGrid
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.topMargin: Appearance.spacing.small
+
+            property int cellWidth: container.cellWidth
+            property int cellHeight: Math.floor(height / 7)
+
+            month: root.currentMonth
+            year: root.currentYear
+
+            delegate: StyledRect {
+                id: dayItem
+
+                required property var model
+                readonly property int dayFontWeight: {
+                    if (model.today)
+                        return 1000;
+                    if (model.month === root.currentMonth)
+                        return 600;
+                    return 100;
+                }
+                property date cellDate: model.date
+                property int dayOfWeek: cellDate.getDay()
+
+                width: monthGrid.cellWidth
+                height: monthGrid.cellHeight
+
+                color: {
+                    if (dayItem.model.today)
+                        return Colours.m3Colors.m3Primary;
+                    else if (mouseArea.containsMouse && dayItem.model.month === root.currentMonth)
+                        return Colours.m3Colors.m3SurfaceVariant;
+
+                    return "transparent";
+                }
+
+                radius: Appearance.rounding.small
+
+                implicitWidth: 40
+                implicitHeight: 40
+
+                MArea {
+                    id: mouseArea
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    visible: dayItem.model.month === root.currentMonth
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {}
+                }
+
+                StyledText {
+                    anchors.centerIn: parent
+                    text: Qt.formatDate(dayItem.model.date, "d")
+                    color: {
+                        if (dayItem.model.today)
+                            return Colours.m3Colors.m3OnPrimary;
+
+                        const isWeekend = dayItem.dayOfWeek === 0 || dayItem.dayOfWeek === 6;
+                        const isCurrentMonth = dayItem.model.month === root.currentMonth;
+                        const baseColor = isWeekend ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurface;
+
+                        return isCurrentMonth ? baseColor : Qt.alpha(baseColor, 0.2);
+                    }
+                    font.pixelSize: Appearance.fonts.size.small * 1.3
+                    font.weight: dayItem.dayFontWeight
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }

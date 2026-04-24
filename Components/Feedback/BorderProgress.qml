@@ -7,9 +7,7 @@ import "../Base"
 Item {
     id: root
 
-    anchors {
-        fill: parent
-    }
+    anchors.fill: parent
 
     property alias source: borderFx.source
     property alias progress: borderFx.progress
@@ -22,11 +20,8 @@ Item {
     ShaderEffect {
         id: borderFx
 
-        anchors {
-            fill: parent
-        }
+        anchors.fill: parent
 
-        z: 999
         property var source: ({})
         property real progress: 1.0
         property real radius: source.radius
@@ -34,6 +29,7 @@ Item {
         property vector2d resolution: Qt.vector2d(source.width, source.height)
         property color borderColor: Colours.m3Colors.m3Primary
 
+        z: 999
         vertexShader: "root:/Assets/shaders/borderProgress.vert.qsb"
         fragmentShader: "root:/Assets/shaders/borderProgress.frag.qsb"
     }

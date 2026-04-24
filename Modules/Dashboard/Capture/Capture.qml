@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
@@ -76,16 +75,19 @@ WrapperRectangle {
         Control {}
         SeeMyCapture {}
 
-        StyledRect {
+        Loader {
             Layout.fillWidth: true
             Layout.preferredHeight: 15
-            visible: root.isExpandSeeMyCaptureOpen
+            active: root.isExpandSeeMyCaptureOpen
+            sourceComponent: StyledRect {}
         }
 
-        AudioCapture {
-            visible: root.isExpandSeeMyCaptureOpen
-            state: root.state
-            onTabClicked: index => root.state = index
+        Loader {
+            active: root.isExpandSeeMyCaptureOpen
+            sourceComponent: AudioCapture {
+                state: root.state
+                onTabClicked: index => root.state = index
+            }
         }
     }
 

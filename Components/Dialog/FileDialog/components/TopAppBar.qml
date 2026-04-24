@@ -102,27 +102,31 @@ Rectangle {
 
             // Active indicator line
             Rectangle {
+                id: activeIndicatorLine
+
                 anchors {
                     bottom: parent.bottom
                     horizontalCenter: parent.horizontalCenter
                 }
-                implicitWidth: input.activeFocus ? parent.width : parent.width - 4
-                implicitHeight: input.activeFocus ? 2 : 1
-                color: input.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                implicitWidth: parent.width - 4
+                implicitHeight: 1
+                color: Colours.m3Colors.m3OnSurfaceVariant
 
-                Behavior on implicitWidth {
-                    NAnim {
-                        duration: Appearance.animations.durations.small
-                        easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
+                states: [
+                    State {
+                        name: "activeFocus"
+                        when: input.activeFocus
+                        PropertyChanges {
+                            target: activeIndicatorLine
+                            implicitWidth: parent.width
+                            implicitHeight: 2
+                            color: Colours.m3Colors.m3Primary
+                        }
                     }
-                }
-                Behavior on implicitHeight {
+                ]
+
+                transitions: Transition {
                     NAnim {
-                        duration: Appearance.animations.durations.small
-                    }
-                }
-                Behavior on color {
-                    CAnim {
                         duration: Appearance.animations.durations.small
                     }
                 }

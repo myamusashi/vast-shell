@@ -74,45 +74,7 @@ StyledRect {
                         }
                     ]
 
-                    delegate: StyledRect {
-                        id: tabDelegate
-
-                        required property var modelData
-
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 50
-                        color: root.currentTab === modelData.index ? Colours.m3Colors.m3PrimaryContainer : "transparent"
-                        radius: Appearance.rounding.small
-
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 8
-                            spacing: 2
-
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: tabDelegate.modelData.name
-                                font.pixelSize: Appearance.fonts.size.small
-                                font.weight: Font.Medium
-                                color: root.currentTab === tabDelegate.modelData.index ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
-                            }
-
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: tabDelegate.modelData.value
-                                font.pixelSize: Appearance.fonts.size.large
-                                font.weight: Font.Bold
-                                color: root.currentTab === tabDelegate.modelData.index ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurface
-                            }
-                        }
-
-                        MArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            hoverEnabled: true
-                            onClicked: root.currentTab = tabDelegate.modelData.index
-                        }
-                    }
+                    delegate: TabDelegate {}
                 }
 
                 Item {
@@ -126,11 +88,14 @@ StyledRect {
                 Layout.margins: 12
                 spacing: Appearance.spacing.large
 
-                Graphic {
+                Loader {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    visible: root.visible
-                    metricType: root.currentTab
+                    active: root.visible
+                    sourceComponent: Graphic {
+                        visible: root.visible
+                        metricType: root.currentTab
+                    }
                 }
             }
         }
@@ -314,6 +279,46 @@ StyledRect {
                     width: 2
                 }
             }
+        }
+    }
+
+    component TabDelegate: StyledRect {
+        id: tabDelegate
+
+        required property var modelData
+
+        Layout.fillWidth: true
+        Layout.preferredHeight: 50
+        color: root.currentTab === modelData.index ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+        radius: Appearance.rounding.small
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 8
+            spacing: 2
+
+            StyledText {
+                Layout.fillWidth: true
+                text: tabDelegate.modelData.name
+                font.pixelSize: Appearance.fonts.size.small
+                font.weight: Font.Medium
+                color: root.currentTab === tabDelegate.modelData.index ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+            }
+
+            StyledText {
+                Layout.fillWidth: true
+                text: tabDelegate.modelData.value
+                font.pixelSize: Appearance.fonts.size.large
+                font.weight: Font.Bold
+                color: root.currentTab === tabDelegate.modelData.index ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurface
+            }
+        }
+
+        MArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            hoverEnabled: true
+            onClicked: root.currentTab = tabDelegate.modelData.index
         }
     }
 }

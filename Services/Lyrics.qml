@@ -64,7 +64,9 @@ Singleton {
         const p = Players.active;
         if (!p?.trackTitle)
             return;
-        LyricsProvider.fetch(p.trackTitle, p.trackArtist, p.length);
-        LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
+        Qt.callLater(() => {
+            LyricsProvider.fetch(p.trackTitle, p.trackArtist, p.length);
+            LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
+        });
     }
 }

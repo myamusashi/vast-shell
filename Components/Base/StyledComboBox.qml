@@ -40,7 +40,8 @@ ComboBox {
             return;
         const count = root.model?.count ?? root.model?.length ?? 0;
         for (let i = 0; i < count; i++) {
-            const v = root.model.get ? root.model.get(i)[root.valueRole] : root.model[i]?.[root.valueRole];
+            const item = root.model[i];
+            const v = item ? item[root.valueRole] : undefined;
             if (v === root.currentValue) {
                 root.currentIndex = i;
                 return;
@@ -101,7 +102,6 @@ ComboBox {
             radius: Appearance.rounding.large
 
             Elevation {
-                anchors.fill: parent
                 z: -1
                 level: 2
                 radius: bgPopup.radius
@@ -112,8 +112,7 @@ ComboBox {
             id: itemListView
 
             clip: true
-            Layout.fillHeight: true
-            cacheBuffer: 0
+            cacheBuffer: implicitHeight
             model: root.popup.visible ? root.delegateModel : null
             currentIndex: root.currentIndex
 
@@ -133,101 +132,14 @@ ComboBox {
                 height: 8
             }
 
-            delegate: ItemDelegate {
-                id: menuDelegate
-
+            delegate: MenuDelegate {
                 required property var modelData
                 required property int index
 
-                readonly property bool itemEnabled: root.isItemEnabled(modelData)
-                readonly property bool itemActive: root.isItemActive(modelData, index)
-
-                width: itemListView.width
-                height: 52
-                leftPadding: 16
-                rightPadding: 16
-                topPadding: 0
-                bottomPadding: 0
-                highlighted: root.highlightedIndex === index
-                enabled: itemEnabled
-
-                background: StyledRect {
-                    radius: Appearance.rounding.large
-                    color: menuDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : "transparent"
-
-                    Behavior on color {
-                        CAnim {
-                            duration: Appearance.animations.durations.small
-                        }
-                    }
-                }
-
-                contentItem: RowLayout {
-                    anchors.verticalCenter: parent.verticalCenter
-                    spacing: Appearance.spacing.small
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        text: menuDelegate.modelData[root.textRole] ?? ""
-                        font.pixelSize: Appearance.fonts.size.normal
-                        font.weight: menuDelegate.highlighted ? Font.Medium : Font.Normal
-                        color: !menuDelegate.itemEnabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38) : menuDelegate.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-
-                        Behavior on color {
-                            CAnim {
-                                duration: Appearance.animations.durations.small
-                            }
-                        }
-                    }
-
-                    Item {
-                        Layout.alignment: Qt.AlignRight
-                        Layout.rightMargin: Appearance.margin.large
-
-                        StyledRect {
-                            anchors.centerIn: parent
-                            visible: !menuDelegate.itemEnabled
-                            implicitWidth: badgeLabel.implicitWidth + 12
-                            implicitHeight: 20
-                            radius: Appearance.rounding.normal
-
-                            StyledText {
-                                id: badgeLabel
-
-                                anchors.centerIn: parent
-                                text: root.disabledLabel(menuDelegate.modelData)
-                                font.pixelSize: Appearance.fonts.size.small
-                                font.weight: Font.Medium
-                                color: Colours.m3Colors.m3Error
-                            }
-                        }
-
-                        Icon {
-                            anchors.centerIn: parent
-                            icon: "check"
-                            font.pixelSize: Appearance.fonts.size.large * 1.3
-                            color: Colours.m3Colors.m3Primary
-                            visible: menuDelegate.itemActive
-                            scale: visible ? 1.0 : 0.0
-
-                            Behavior on scale {
-                                NAnim {
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
-                        }
-                    }
-                }
-
-                onClicked: {
-                    if (!menuDelegate.itemEnabled)
-                        return;
-                    root.currentIndex = index;
-                    root.activated(index);
-                    root.popup.close();
-                }
+                modelMenu: modelData
+                indexMenu: index
+                itemEnabled: root.isItemEnabled(modelData)
+                itemActive: root.isItemActive(modelData, index)
             }
         }
 
@@ -251,6 +163,114 @@ ComboBox {
                 from: 1
                 to: 0
                 duration: Appearance.animations.durations.small
+            }
+        }
+    }
+
+    component MenuDelegate: ItemDelegate {
+        id: menuDelegate
+
+        required property var modelMenu
+        required property int indexMenu
+        required property bool itemEnabled
+        required property bool itemActive
+
+        width: itemListView.width
+        height: 52
+        leftPadding: 16
+        rightPadding: 16
+        topPadding: 0
+        bottomPadding: 0
+        highlighted: root.highlightedIndex === indexMenu
+        enabled: itemEnabled
+
+        background: StyledRect {
+            radius: Appearance.rounding.large
+            color: menuDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : "transparent"
+
+            Behavior on color {
+                CAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+        }
+
+        contentItem: BoxContent {}
+
+        onClicked: {
+            if (!menuDelegate.itemEnabled)
+                return;
+            root.currentIndex = indexMenu;
+            root.activated(indexMenu);
+            root.popup.close();
+        }
+    }
+
+    component BoxContent: RowLayout {
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: Appearance.spacing.small
+
+        StyledText {
+            Layout.fillWidth: true
+            text: menuDelegate.modelMenu[root.textRole] ?? ""
+            font.pixelSize: Appearance.fonts.size.normal
+            font.weight: menuDelegate.highlighted ? Font.Medium : Font.Normal
+            color: !menuDelegate.itemEnabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38) : menuDelegate.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+
+            Behavior on color {
+                CAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+        }
+
+        Item {
+            Layout.alignment: Qt.AlignRight
+            Layout.rightMargin: Appearance.margin.large
+        }
+
+        BadgeComponent {
+            Layout.alignment: Qt.AlignCenter
+        }
+        CheckComponent {
+            Layout.alignment: Qt.AlignCenter
+        }
+    }
+
+    component BadgeComponent: Loader {
+        active: !menuDelegate.itemEnabled
+        asynchronous: false
+        sourceComponent: StyledRect {
+            anchors.centerIn: parent
+            radius: Appearance.rounding.normal
+
+            StyledText {
+                id: badgeLabel
+
+                anchors.centerIn: parent
+                text: root.disabledLabel(menuDelegate.modelMenu)
+                font.pixelSize: Appearance.fonts.size.small
+                font.weight: Font.Medium
+                color: Colours.m3Colors.m3Error
+            }
+        }
+    }
+
+    component CheckComponent: Loader {
+        active: menuDelegate.itemActive
+        asynchronous: false
+        sourceComponent: Icon {
+            anchors.centerIn: parent
+            icon: "check"
+            font.pixelSize: Appearance.fonts.size.large * 1.3
+            color: Colours.m3Colors.m3Primary
+            visible: menuDelegate.itemActive
+            scale: visible ? 1.0 : 0.0
+
+            Behavior on scale {
+                NAnim {}
             }
         }
     }

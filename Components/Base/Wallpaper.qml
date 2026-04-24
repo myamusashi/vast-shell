@@ -210,8 +210,8 @@ Item {
         property real progress: 0.0
         property real smoothAmount: 0.05
         property real aspect: root.height > 0.0 ? root.height / root.width : 1.0
-        property vector2d resolution: Qt.vector2d(720, 1280)
-        property vector2d invResolution: Qt.vector2d(1.0 / 720, 1.0 / 1280.0)
+        property vector2d resolution: Qt.vector2d(720, 720)
+        property vector2d invResolution: Qt.vector2d(1.0 / 720, 1.0 / 720.0)
 
         vertexShader: "root:/Assets/shaders/ImageTransition.vert.qsb"
         fragmentShader: "root:/Assets/shaders/transitions/fade.frag.qsb"

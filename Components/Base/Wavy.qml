@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 
@@ -25,7 +27,7 @@ Slider {
     // WaveForm
     property real waveFreqBeach: 3.8
     property real wavePow: 0.90
-    property real waveFloor: 0.36
+    property real waveFloor: 0.44
     property real waveRamp: 0.1
     property real waveRampIn: 0.1
     property real waveMaxAmpRatio: 0.50
@@ -52,7 +54,7 @@ Slider {
     onEnableWaveChanged: waveTransition = enableWave ? 1.0 : 0.0
 
     // FrameAnimation adds a fixed delta every frame regardless of the current
-    // phase value, so pause/resume has zero effect on perceived speed
+    // phase value, so pause/resume has zero effect on perceived speed.
     // fmod keeps the value in [0, 2π] without ever accumulating float error
     FrameAnimation {
         id: wavyPhaseDriver
@@ -76,29 +78,45 @@ Slider {
         width: slider.availableWidth
         implicitHeight: 40
 
-        ShaderEffect {
+        Loader {
             anchors.fill: parent
-            visible: slider.isWavy
-            blending: true
-
-            property color activeColor: slider.activeColor
-            property color inactiveColor: slider.inactiveColor
-            property real w: width
-            property real cy: height * 0.5
-            property real activeW: Math.max(0, width * slider.visualPosition - slider.separatorWidth * 0.5)
-            property real inactSt: Math.min(width, width * slider.visualPosition + slider.separatorWidth * 0.5)
-            property real freq: slider.waveFrequency
-            property real amp: slider.waveAmplitude * slider.waveTransition
-            property real phase: slider.waveAnimPhase
-            property real strokeHalf: 0.75
-
-            vertexShader: "root:/Assets/shaders/wavy.vert.qsb"
-            fragmentShader: "root:/Assets/shaders/wavy.frag.qsb"
+            active: slider.isWavy
+            sourceComponent: wavyShaderComponent
         }
 
-        ShaderEffect {
+        Component {
+            id: wavyShaderComponent
+
+            ShaderEffect {
+                blending: true
+
+                property color activeColor: slider.activeColor
+                property color inactiveColor: slider.inactiveColor
+                property real w: width
+                property real cy: height * 0.5
+                property real activeW: Math.max(0, width * slider.visualPosition - slider.separatorWidth * 0.5)
+                property real inactSt: Math.min(width, width * slider.visualPosition + slider.separatorWidth * 0.5)
+                property real freq: slider.waveFrequency
+                property real amp: slider.waveAmplitude * slider.waveTransition
+                property real phase: slider.waveAnimPhase
+                property real strokeHalf: 0.75
+
+                vertexShader: "root:/Assets/shaders/wavy.vert.qsb"
+                fragmentShader: "root:/Assets/shaders/wavy.frag.qsb"
+            }
+        }
+
+        Loader {
             anchors.fill: parent
-            visible: slider.isWaveForm
+            active: slider.isWaveForm
+            sourceComponent: waveFormShaderComponent
+        }
+    }
+
+    Component {
+        id: waveFormShaderComponent
+
+        ShaderEffect {
             blending: true
 
             property color activeColor: slider.activeColor

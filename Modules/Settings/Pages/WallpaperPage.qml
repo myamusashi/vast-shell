@@ -102,7 +102,7 @@ Item {
                     snapEnabled: true
                     showValuePopup: true
                     value: Configs.wallpaper.visibleWallpaper
-                    onValueChanged: Configs.wallpaper.visibleWallpaper = value
+                    onMoved: Configs.wallpaper.visibleWallpaper = value
                     Layout.preferredWidth: 200
                 }
             }
@@ -193,7 +193,7 @@ Item {
                     to: 2000
                     stepSize: 50
                     value: Configs.wallpaper.transitionDuration
-                    onValueChanged: Configs.wallpaper.transitionDuration = value
+                    onMoved: Configs.wallpaper.transitionDuration = value
                     Layout.preferredWidth: 200
                 }
             }

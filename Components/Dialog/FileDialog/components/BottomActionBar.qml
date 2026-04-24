@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
@@ -13,7 +15,7 @@ Rectangle {
     property alias fileName: fileNameField.text
     property bool hasSelection: false
     property bool selectFolder: false
-    property real labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabel.text)) + 10
+    property real labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabelLoader.item.text)) + 10
     property var nameFilters: ["*"]
 
     signal cancelClicked
@@ -35,7 +37,7 @@ Rectangle {
     FontMetrics {
         id: filterMetrics
 
-        font: filterLabel.font
+        font: filterLabelLoader.item.font
     }
 
     Elevation {
@@ -108,32 +110,36 @@ Rectangle {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
 
-            StyledText {
-                id: filterLabel
+            Loader {
+                id: filterLabelLoader
 
-                text: qsTr("Filter")
-                font.pixelSize: Appearance.fonts.size.normal
-                color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: root.labelWidth
-                visible: !root.selectFolder
+                active: !root.selectFolder
+                sourceComponent: StyledText {
+                    text: qsTr("Filter")
+                    font.pixelSize: Appearance.fonts.size.normal
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                }
             }
 
-            WrapperRectangle {
-                implicitWidth: 250
-                implicitHeight: parent.implicitHeight
-                margin: Appearance.margin.normal
-                color: "transparent"
-                radius: Appearance.rounding.small
-                border {
-                    color: Colours.m3Colors.m3OutlineVariant
-                    width: 2
-                }
-                visible: !root.selectFolder
+            Loader {
+                Layout.preferredWidth: 250
+                Layout.fillHeight: true
+                active: !root.selectFolder
+                sourceComponent: WrapperRectangle {
+                    margin: Appearance.margin.normal
+                    color: "transparent"
+                    radius: Appearance.rounding.small
+                    border {
+                        color: Colours.m3Colors.m3OutlineVariant
+                        width: 2
+                    }
 
-                StyledText {
-                    text: root.nameFilters.join(", ")
-                    font.pixelSize: Appearance.fonts.size.normal
-                    color: Colours.m3Colors.m3OnSurface
+                    StyledText {
+                        text: root.nameFilters.join(", ")
+                        font.pixelSize: Appearance.fonts.size.normal
+                        color: Colours.m3Colors.m3OnSurface
+                    }
                 }
             }
 

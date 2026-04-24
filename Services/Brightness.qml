@@ -80,7 +80,9 @@ Singleton {
         return BrightnessManager.profileNames();
     }
 
-    Component.onCompleted: BrightnessManager.initialize()
+    Component.onCompleted: Qt.callLater(() => {
+        BrightnessManager.initialize();
+    })
 
     Connections {
         target: BrightnessManager

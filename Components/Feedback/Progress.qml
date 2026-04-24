@@ -57,7 +57,7 @@ StyledRect {
             const steps = Math.min(Math.max(Math.floor(r.drawWidth / 8), 12), 60);
             const halfH = height / 2;
             const phaseScale = Math.PI * 2 * root.waveFrequency / width;
-            const amp = Math.min(root.waveAmplitude, halfH);  // clamp inside bounds
+            const amp = Math.min(root.waveAmplitude, halfH);
             const parts = [];
 
             // Forward pass — top edge

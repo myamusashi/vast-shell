@@ -1,8 +1,20 @@
 pragma Singleton
 
+import QtQuick
 import Quickshell
 
 Singleton {
+    id: root
+
+    readonly property var monthNames: {
+        var locale = Qt.locale();
+        var names = [];
+        for (var i = 0; i < 12; i++) {
+            names.push(locale.monthName(i, Locale.ShortFormat));
+        }
+        return names;
+    }
+
     function timeAgoWithIfElse(timestamp) {
         const date = new Date(timestamp);
         const seconds = Math.floor((new Date() - date) / 1000);
@@ -95,7 +107,6 @@ Singleton {
     function formatTimestampWithTime(timestamp) {
         const date = new Date(timestamp);
         const day = String(date.getDate()).padStart(2, '0');
-        const monthNames = [qsTr("Jan"), qsTr("Feb"), qsTr("Mar"), qsTr("Apr"), qsTr("May"), qsTr("Jun"), qsTr("Jul"), qsTr("Aug"), qsTr("Sep"), qsTr("Oct"), qsTr("Nov"), qsTr("Dec")];
         const month = monthNames[date.getMonth()];
         const year = date.getFullYear();
 
@@ -130,9 +141,8 @@ Singleton {
         };
 
         let result = format;
-        for (const [key, value] of Object.entries(replacements)) {
+        for (const [key, value] of Object.entries(replacements))
             result = result.replace(key, value);
-        }
 
         return result;
     }

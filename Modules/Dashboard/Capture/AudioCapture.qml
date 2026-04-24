@@ -59,19 +59,26 @@ StyledRect {
 
         Repeater {
             model: ["Mix", "Voice"]
+            delegate: mixAndVoiceComponent
+        }
 
-            delegate: Item {
+        Component {
+            id: mixAndVoiceComponent
+
+            Item {
                 id: delegate
 
                 required property var modelData
                 required property int index
+
+                readonly property bool isCurrentIndex: root.state === delegate.index
 
                 Layout.fillWidth: true
                 implicitHeight: 40
 
                 StyledRect {
                     anchors.fill: parent
-                    color: root.state === delegate.index ? Colours.m3Colors.m3Primary : "transparent"
+                    color: delegate.isCurrentIndex ? Colours.m3Colors.m3Primary : "transparent"
                     opacity: 0.1
                     radius: 0
                 }
@@ -82,24 +89,26 @@ StyledRect {
                     anchors.centerIn: parent
                     text: delegate.modelData.toUpperCase()
                     font.pixelSize: Appearance.fonts.size.small
-                    font.bold: root.state === delegate.index
-                    color: root.state === delegate.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                    font.bold: delegate.isCurrentIndex
+                    color: delegate.isCurrentIndex ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 }
 
-                StyledRect {
+                Loader {
                     anchors {
                         bottom: parent.bottom
                         left: parent.left
                         right: parent.right
                     }
-                    implicitHeight: 2
-                    color: Colours.m3Colors.m3Primary
-                    visible: root.state === delegate.index
-                    opacity: visible ? 1 : 0
-                    radius: 0
+                    active: delegate.isCurrentIndex
+                    sourceComponent: StyledRect {
+                        implicitHeight: 2
+                        color: Colours.m3Colors.m3Primary
+                        opacity: visible ? 1 : 0
+                        radius: 0
 
-                    Behavior on opacity {
-                        NAnim {}
+                        Behavior on opacity {
+                            NAnim {}
+                        }
                     }
                 }
 
@@ -128,22 +137,21 @@ StyledRect {
             id: contentView
 
             StyledRect {
-                implicitHeight: 250
+                id: contentRect
+
                 property int viewIndex: 0
+
+                implicitHeight: 250
 
                 Loader {
                     anchors.fill: parent
-                    active: parent.viewIndex === 0
-                    visible: active
-
+                    active: contentRect.viewIndex === 0
                     sourceComponent: Mix {}
                 }
 
                 Loader {
                     anchors.fill: parent
-                    active: parent.viewIndex === 1
-                    visible: active
-
+                    active: contentRect.viewIndex === 1
                     sourceComponent: Voice {}
                 }
             }
@@ -156,6 +164,7 @@ StyledRect {
         anchors.rightMargin: 10
         anchors.leftMargin: 10
         spacing: Appearance.spacing.normal
+
         StyledText {
             text: qsTr("LINUX DEFAULT OUTPUT")
             font.pixelSize: Appearance.fonts.size.large
@@ -166,95 +175,98 @@ StyledRect {
             Layout.fillWidth: true
             Layout.fillHeight: true
             contentWidth: availableWidth
-            implicitHeight: contentLayout.implicitHeight
+            implicitHeight: parent.height
             clip: true
 
-            RowLayout {
-                id: contentLayout
-
-                anchors.fill: parent
-                Layout.margins: 15
-                spacing: 20
-
-                ColumnLayout {
-                    Layout.margins: 10
-                    Layout.alignment: Qt.AlignTop
-
-                    PwNodeLinkTracker {
-                        id: linkTracker
-
-                        node: Pipewire.defaultAudioSink
-                    }
-
-                    MixerEntry {
-                        node: Pipewire.defaultAudioSink
-                        useCustomProperties: true
-                        customProperty: AudioProfiles {}
-                    }
-
-                    Rectangle {
-                        Layout.fillWidth: true
-                        color: Colours.m3Colors.m3Outline
-                        implicitHeight: 1
-                    }
-
-                    ColumnLayout {
-                        Layout.fillHeight: true
-                        Layout.topMargin: 20
-                        Repeater {
-                            model: ScriptModel {
-                                values: [...linkTracker.linkGroups]
-                            }
-
-                            delegate: Item {
-                                id: delegateTracker
-
-                                required property PwLinkGroup modelData
-                                Layout.fillWidth: true
-                                implicitHeight: rowLayout.implicitHeight
-
-                                RowLayout {
-                                    id: rowLayout
-
-                                    anchors.fill: parent
-                                    spacing: 10
-
-                                    IconImage {
-                                        source: {
-                                            const name = delegateTracker.modelData.source.name;
-                                            const appName = name.split(".").pop();
-
-                                            // alright man
-                                            let isZen = appName === "zen" || appName === "zen-twilight" || appName === "Twilight" || appName === "twilight";
-
-                                            if (isZen) {
-                                                const entry = DesktopEntries.heuristicLookup("zen-twilight") ?? DesktopEntries.heuristicLookup("zen");
-                                                return Quickshell.iconPath(entry?.icon, "image-missing");
-                                            }
-
-                                            return Quickshell.iconPath(DesktopEntries.heuristicLookup(appName)?.icon, "image-missing");
-                                        }
-                                        asynchronous: true
-                                        Layout.preferredWidth: 60
-                                        Layout.preferredHeight: 60
-                                        Layout.alignment: Qt.AlignVCenter
-                                    }
-
-                                    MixerEntry {
-                                        Layout.fillWidth: true
-                                        node: delegateTracker.modelData.source
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            MixContentLayout {}
         }
 
         Item {
             Layout.fillHeight: true
         }
     }
+
+    component MixContentLayout: RowLayout {
+        id: contentLayout
+
+        anchors.fill: parent
+        Layout.margins: 15
+        spacing: 20
+
+        ColumnLayout {
+            Layout.margins: 10
+            Layout.alignment: Qt.AlignTop
+
+            PwNodeLinkTracker {
+                id: linkTracker
+
+                node: Pipewire.defaultAudioSink
+            }
+
+            MixerEntry {
+                node: Pipewire.defaultAudioSink
+                useCustomProperties: true
+                customProperty: AudioProfiles {}
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                color: Colours.m3Colors.m3Outline
+                implicitHeight: 1
+            }
+
+            ColumnLayout {
+                Layout.fillHeight: true
+                Layout.topMargin: 20
+                Repeater {
+                    model: ScriptModel {
+                        values: [...linkTracker.linkGroups]
+                    }
+
+                    delegate: Item {
+                        id: delegateTracker
+
+                        required property PwLinkGroup modelData
+                        Layout.fillWidth: true
+                        implicitHeight: rowLayout.implicitHeight
+
+                        RowLayout {
+                            id: rowLayout
+
+                            anchors.fill: parent
+                            spacing: 10
+
+                            IconImage {
+                                source: {
+                                    const name = delegateTracker.modelData.source.name;
+                                    const appName = name.split(".").pop();
+
+                                    // alright man
+                                    let isZen = appName === "zen" || appName === "zen-twilight" || appName === "Twilight" || appName === "twilight";
+
+                                    if (isZen) {
+                                        const entry = DesktopEntries.heuristicLookup("zen-twilight") ?? DesktopEntries.heuristicLookup("zen");
+                                        return Quickshell.iconPath(entry?.icon, "image-missing");
+                                    }
+
+                                    return Quickshell.iconPath(DesktopEntries.heuristicLookup(appName)?.icon, "image-missing");
+                                }
+                                asynchronous: true
+                                Layout.preferredWidth: 60
+                                Layout.preferredHeight: 60
+                                Layout.alignment: Qt.AlignVCenter
+                            }
+
+                            MixerEntry {
+                                Layout.fillWidth: true
+                                node: delegateTracker.modelData.source
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     component Voice: ColumnLayout {}
 }

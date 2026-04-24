@@ -70,8 +70,8 @@ Item {
                     from: 20
                     to: 100
                     stepSize: 1
-                    value: Configs.bar.barHeight
-                    onValueChanged: Configs.bar.barHeight = value
+					value: Configs.bar.barHeight
+					onMoved: Configs.bar.barHeight = value
                     Layout.preferredWidth: 200
                 }
             }
@@ -120,8 +120,8 @@ Item {
                     stepSize: 1
                     snapEnabled: true
                     showValuePopup: true
-                    value: Configs.bar.visibleWorkspace
-                    onValueChanged: Configs.bar.visibleWorkspace = value
+					value: Configs.bar.visibleWorkspace
+					onMoved: Configs.bar.visibleWorkspace = value
                     Layout.preferredWidth: 200
                 }
             }

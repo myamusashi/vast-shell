@@ -205,9 +205,8 @@ void ScreenRecorder::checkActiveRecording() {
                 m_isRecording  = true;
 
                 QFile videoFile(m_videoFile);
-                if (videoFile.open(QIODevice::ReadOnly)) {
+                if (videoFile.open(QIODevice::ReadOnly))
                     m_currentOutputFile = videoFile.readAll().trimmed();
-                }
 
                 emit isRecordingChanged();
                 emit currentOutputFileChanged();
@@ -248,20 +247,18 @@ void ScreenRecorder::startRecording(const QString& geometry, const QString& outp
     if (!m_showCursor)
         baseArgs << "--no-cursor";
     if (m_historyMode)
-        baseArgs << "--history" << "30"; // Example: 30 seconds
+        baseArgs << "--history" << "30";
 
     if (m_includeAudio) {
         baseArgs << "--audio";
-        if (!m_audioDevice.isEmpty()) {
+        if (!m_audioDevice.isEmpty())
             baseArgs << "--audio-device" << m_audioDevice;
-        }
     }
 
-    if (!geometry.isEmpty()) {
+    if (!geometry.isEmpty())
         baseArgs << "-g" << geometry;
-    } else if (!output.isEmpty()) {
+    else if (!output.isEmpty())
         baseArgs << "-o" << output;
-    }
 
     baseArgs << "-f" << m_currentOutputFile;
 
@@ -435,9 +432,8 @@ void ScreenRecorder::gotoLink(const QString& file, const QString& thumb, bool sh
             QString action = QString(notifyProc->readAllStandardOutput()).trimmed();
             notifyProc->deleteLater();
 
-            if (action == "default") {
+            if (action == "default")
                 QProcess::startDetached("xdg-open", QStringList() << file);
-            }
         });
         notifyProc->start("notify-send", args);
     } else {
@@ -475,9 +471,8 @@ void ScreenRecorder::screenshotWindow() {
             if (!out.contains(u"selection cancelled")) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
-            } else {
+            } else
                 notify("Screenshot Failed", "Failed to take screenshot.", "critical", "dialog-error", "Screen Capture");
-            }
         });
 
         QStringList args;
@@ -496,9 +491,8 @@ void ScreenRecorder::screenshotSelection() {
             if (!out.contains(u"selection cancelled")) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
-            } else {
+            } else
                 notify("Screenshot Failed", "Selection cancelled.", "critical", "dialog-error", "Screen Capture");
-            }
         });
         process->start("hyprshot", QStringList() << "-m" << "region" << "-d" << "-s" << "-o" << m_screenshotDir << "-f" << QFileInfo(img).fileName());
     });
@@ -513,9 +507,8 @@ void ScreenRecorder::screenshotOutput(const QString& out) {
         }
 
         QString target = monitors.first();
-        if (!out.isEmpty() && monitors.contains(out)) {
+        if (!out.isEmpty() && monitors.contains(out))
             target = out;
-        }
 
         QString   img = screenshotPath();
 
@@ -525,9 +518,8 @@ void ScreenRecorder::screenshotOutput(const QString& out) {
             if (grimExitCode == 0 && QFile::exists(img)) {
                 copyToClipboard(img);
                 gotoLink(img, img, true);
-            } else {
+            } else
                 notify("Screenshot Failed", "Failed to take screenshot on " + target + ".", "critical", "dialog-error", "Screen Capture");
-            }
         });
         grim->start("grim", QStringList() << "-c" << "-o" << target << img);
     });

@@ -30,18 +30,16 @@ Menu {
 
     enter: Transition {
         ParallelAnimation {
-            NumberAnimation {
+            NAnim {
                 property: "opacity"
                 from: 0.0
                 to: 1.0
-                duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.emphasized
             }
-            NumberAnimation {
+            NAnim {
                 property: "scale"
                 from: 0.85
                 to: 1.0
-                duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.emphasized
             }
         }
@@ -49,14 +47,14 @@ Menu {
 
     exit: Transition {
         ParallelAnimation {
-            NumberAnimation {
+            NAnim {
                 property: "opacity"
                 from: 1.0
                 to: 0.0
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
             }
-            NumberAnimation {
+            NAnim {
                 property: "scale"
                 from: 1.0
                 to: 0.85

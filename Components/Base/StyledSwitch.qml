@@ -14,50 +14,121 @@ Switch {
     property string onIcon: "check"
     property string offIcon: "close"
 
+    property string _currentIcon: offIcon
+    property color _currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
+
+    states: [
+        State {
+            name: "unchecked"
+            when: !root.checked && !root.down
+            PropertyChanges {
+                target: track
+                color: Colours.m3Colors.m3SurfaceContainerHighest
+                border.color: Colours.m3Colors.m3Outline
+            }
+            PropertyChanges {
+                target: handle
+                x: handle.margin
+                width: 16
+                height: 16
+                color: Colours.m3Colors.m3Outline
+            }
+            PropertyChanges {
+                target: root
+                _currentIcon: offIcon
+                _currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
+            }
+        },
+        State {
+            name: "checked"
+            when: root.checked && !root.down
+            PropertyChanges {
+                target: track
+                color: Colours.m3Colors.m3Primary
+                border.color: "transparent"
+            }
+            PropertyChanges {
+                target: handle
+                x: track.width - 28 - handle.margin
+                width: 28
+                height: 24
+                color: Colours.m3Colors.m3OnPrimary
+            }
+            PropertyChanges {
+                target: root
+                _currentIcon: onIcon
+                _currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
+            }
+        },
+        State {
+            name: "pressedUnchecked"
+            when: root.down && !root.checked
+            PropertyChanges {
+                target: track
+                color: Colours.m3Colors.m3SurfaceContainerHighest
+                border.color: Colours.m3Colors.m3Outline
+            }
+            PropertyChanges {
+                target: handle
+                x: handle.margin
+                width: 28
+                height: 28
+                color: Colours.m3Colors.m3Outline
+            }
+            PropertyChanges {
+                target: root
+                _currentIcon: offIcon
+                _currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
+            }
+        },
+        State {
+            name: "pressedChecked"
+            when: root.down && root.checked
+            PropertyChanges {
+                target: track
+                color: Colours.m3Colors.m3Primary
+                border.color: "transparent"
+            }
+            PropertyChanges {
+                target: handle
+                x: track.width - 28 - handle.margin
+                width: 28
+                height: 28
+                color: Colours.m3Colors.m3OnPrimary
+            }
+            PropertyChanges {
+                target: root
+                _currentIcon: onIcon
+                _currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
+            }
+        }
+    ]
+
+    transitions: Transition {
+        NAnim {
+            properties: "x,width,height"
+            easing.bezierCurve: Appearance.animations.curves.emphasized
+            duration: Appearance.animations.durations.small
+        }
+    }
+
     indicator: StyledRect {
+        id: track
+
         implicitWidth: 52
         implicitHeight: 32
         x: root.leftPadding
         y: parent.height / 2 - height / 2
         radius: Appearance.rounding.full
-        color: root.checked ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainerHighest
         border.width: 2
-        border.color: root.checked ? "transparent" : Colours.m3Colors.m3Outline
 
         StyledRect {
             id: handle
 
             readonly property int margin: 4
-            readonly property bool isActive: root.down || root.checked
-            readonly property int targetX: root.checked ? parent.width - targetWidth - margin : margin
-            readonly property int targetWidth: isActive ? 28 : 16
-            readonly property int targetHeight: root.down ? 28 : (root.checked ? 24 : 16)
 
-            x: targetX
             y: (parent.height - height) / 2
-            width: targetWidth
-            height: targetHeight
             radius: Appearance.rounding.full
-            color: isActive ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
-
-            Behavior on x {
-                NAnim {
-                    easing.bezierCurve: Appearance.animations.curves.emphasized
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on height {
-                NAnim {
-                    easing.bezierCurve: Appearance.animations.curves.emphasized
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on width {
-                NAnim {
-                    easing.bezierCurve: Appearance.animations.curves.emphasized
-                    duration: Appearance.animations.durations.small
-                }
-            }
 
             Loader {
                 id: iconLoader
@@ -66,8 +137,8 @@ Switch {
                 anchors.centerIn: parent
                 asynchronous: true
                 sourceComponent: Icon {
-                    icon: root.checked ? root.onIcon : root.offIcon
-                    color: root.checked ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3SurfaceContainerHighest
+                    icon: root._currentIcon
+                    color: root._currentIconColor
                     font.pixelSize: Appearance.fonts.size.medium
                 }
             }

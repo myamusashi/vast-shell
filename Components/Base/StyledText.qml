@@ -18,9 +18,11 @@ Text {
     verticalAlignment: Text.AlignVCenter
     elide: Text.ElideRight
 
-    Component.onCompleted: font.variableAxes = {
-        "wght": 650,
-        "opsz": 24,
-        "opsz": root.font.pixelSize
+    Component.onCompleted: {
+        font.variableAxes = {
+            "wght": 650,
+            "opsz": 24,
+            "opsz": root.font.pixelSize
+        };
     }
 }

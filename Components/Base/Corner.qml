@@ -10,8 +10,16 @@ WrapperItem {
     property alias color: shapePath.fillColor
     property alias radius: root.implicitWidth
 
-    property int location: Qt.TopRightCorner
-    property int extensionSide: Qt.Vertical
+    required property int location
+    required property int extensionSide
+
+    readonly property bool isTopRight: location === Qt.TopRightCorner
+    readonly property bool isTopLeft: location === Qt.TopLeftCorner
+    readonly property bool isBottomRight: location === Qt.BottomRightCorner
+    readonly property bool isBottomLeft: location === Qt.BottomLeftCorner
+
+    readonly property bool isVertical: extensionSide === Qt.Vertical
+    readonly property bool isHorizontal: extensionSide === Qt.Horizontal
 
     margin: -1
     implicitWidth: 30
@@ -21,89 +29,109 @@ WrapperItem {
         NAnim {}
     }
 
-    rotation: {
-        if (location === Qt.TopRightCorner)
-            return extensionSide === Qt.Vertical ? 0 : 180;
-        else if (location === Qt.TopLeftCorner)
-            return extensionSide === Qt.Vertical ? 90 : 270;
-        else if (location === Qt.BottomRightCorner)
-            return extensionSide === Qt.Vertical ? 270 : 90;
-        else if (location === Qt.BottomLeftCorner)
-            return extensionSide === Qt.Vertical ? 180 : 0;
-        return 0;
-    }
-
     states: [
         State {
             name: "TR_Vert"
-            when: root.location === Qt.TopRightCorner && root.extensionSide === Qt.Vertical
+            when: root.isTopRight && root.isVertical
             AnchorChanges {
                 target: root
                 anchors.bottom: parent.top
                 anchors.right: parent.right
+            }
+            PropertyChanges {
+                target: root
+                rotation: 0
             }
         },
         State {
             name: "TR_Horiz"
-            when: root.location === Qt.TopRightCorner && root.extensionSide === Qt.Horizontal
+            when: root.isTopRight && root.isHorizontal
             AnchorChanges {
                 target: root
                 anchors.top: parent.top
                 anchors.left: parent.right
             }
+            PropertyChanges {
+                target: root
+                rotation: 180
+            }
         },
         State {
             name: "TL_Vert"
-            when: root.location === Qt.TopLeftCorner && root.extensionSide === Qt.Vertical
+            when: root.isTopLeft && root.isVertical
             AnchorChanges {
                 target: root
                 anchors.bottom: parent.top
                 anchors.left: parent.left
             }
+            PropertyChanges {
+                target: root
+                rotation: 90
+            }
         },
         State {
             name: "TL_Horiz"
-            when: root.location === Qt.TopLeftCorner && root.extensionSide === Qt.Horizontal
+            when: root.isTopLeft && root.isHorizontal
             AnchorChanges {
                 target: root
                 anchors.top: parent.top
                 anchors.right: parent.left
             }
+            PropertyChanges {
+                target: root
+                rotation: 270
+            }
         },
         State {
             name: "BR_Vert"
-            when: root.location === Qt.BottomRightCorner && root.extensionSide === Qt.Vertical
+            when: root.isBottomRight && root.isVertical
             AnchorChanges {
                 target: root
                 anchors.top: parent.bottom
                 anchors.right: parent.right
             }
+            PropertyChanges {
+                target: root
+                rotation: 270
+            }
         },
         State {
             name: "BR_Horiz"
-            when: root.location === Qt.BottomRightCorner && root.extensionSide === Qt.Horizontal
+            when: root.isBottomRight && root.isHorizontal
             AnchorChanges {
                 target: root
                 anchors.bottom: parent.bottom
                 anchors.left: parent.right
             }
+            PropertyChanges {
+                target: root
+                rotation: 90
+            }
         },
         State {
             name: "BL_Vert"
-            when: root.location === Qt.BottomLeftCorner && root.extensionSide === Qt.Vertical
+            when: root.isBottomLeft && root.isVertical
             AnchorChanges {
                 target: root
                 anchors.top: parent.bottom
                 anchors.left: parent.left
             }
+            PropertyChanges {
+                target: root
+                rotation: 180
+            }
         },
         State {
             name: "BL_Horiz"
-            when: root.location === Qt.BottomLeftCorner && root.extensionSide === Qt.Horizontal
+            when: root.isBottomLeft && root.isHorizontal
             AnchorChanges {
                 target: root
                 anchors.bottom: parent.bottom
                 anchors.right: parent.left
+            }
+            PropertyChanges {
+                target: root
+                rotation: 0
             }
         }
     ]

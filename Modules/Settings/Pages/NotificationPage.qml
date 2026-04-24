@@ -43,8 +43,8 @@ Item {
                     from: 10
                     to: 500
                     stepSize: 10
-                    value: Configs.notification.maximumNotification
-                    onValueChanged: Configs.notification.maximumNotification = value
+					value: Configs.notification.maximumNotification
+					onMoved: Configs.notification.maximumNotification = value
                     Layout.preferredWidth: 200
                 }
             }
@@ -63,15 +63,15 @@ Item {
                     from: 1
                     to: 30
                     stepSize: 1
-                    value: Configs.notification.maximumNotificationAge / 86400000
-                    onValueChanged: Configs.notification.maximumNotificationAge = value * 86400000
+					value: Configs.notification.maximumNotificationAge / 86400000
+					onMoved: Configs.notification.maximumNotificationAge = value * 86400000
                     Layout.preferredWidth: 200
                 }
             }
-		}
+        }
 
-		Item {
-			Layout.fillHeight: true
-		}
+        Item {
+            Layout.fillHeight: true
+        }
     }
 }

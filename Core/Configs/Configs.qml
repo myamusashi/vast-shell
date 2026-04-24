@@ -19,6 +19,7 @@ Singleton {
     property alias language: adapter.language
     property alias mediaPlayer: adapter.mediaPlayer
     property alias clipboard: adapter.clipboard
+    property alias notification: adapter.notification
 
     onLanguageChanged: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
 

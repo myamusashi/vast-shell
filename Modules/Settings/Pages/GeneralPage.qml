@@ -85,8 +85,8 @@ Item {
                     to: 1.0
                     stepSize: 0.1
                     popupDecimals: 1
-                    value: Configs.generals.alpha
-                    onValueChanged: Configs.generals.alpha = value
+					value: Configs.generals.alpha
+					onMoved: Configs.generals.alpha = value
                     Layout.preferredWidth: 200
                     filledRectColor: {
                         if (!enabled)
@@ -141,8 +141,8 @@ Item {
                 StyledSlide {
                     from: 1
                     to: 64
-                    value: Configs.generals.coverBlurRadius
-                    onValueChanged: Configs.generals.coverBlurRadius = value
+					value: Configs.generals.coverBlurRadius
+					onMoved: Configs.generals.coverBlurRadius = value
                     Layout.preferredWidth: 200
                 }
             }
@@ -160,8 +160,8 @@ Item {
                 StyledSlide {
                     from: 1
                     to: 64
-                    value: Configs.generals.chargingGlowSpread
-                    onValueChanged: Configs.generals.chargingGlowSpread = value
+					value: Configs.generals.chargingGlowSpread
+					onMoved: Configs.generals.chargingGlowSpread = value
                     Layout.preferredWidth: 200
                 }
             }

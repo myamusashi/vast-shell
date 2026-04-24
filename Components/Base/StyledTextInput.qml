@@ -3,15 +3,17 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import M3Shapes
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+
+import "TextInputComponents/" as TI
 
 Item {
     id: root
 
     property alias toggleButtonVisible: toggleButton.visible
-    property alias placeHolderText: placeHolderText.text
     property alias text: passwordInput.text
     readonly property alias isFocused: passwordInput.activeFocus
 
@@ -26,7 +28,9 @@ Item {
 
     readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
     readonly property int dotStep: 24
+    readonly property bool hasText: passwordInput.text.length > 0
 
+    property string placeHolderText: ""
     property var pam: null
     property bool passwordMode: false
 
@@ -45,7 +49,6 @@ Item {
 
         width: 0
         height: 0
-        visible: false
 
         echoMode: TextInput.Password
         passwordMaskDelay: 0
@@ -66,8 +69,11 @@ Item {
         }
 
         onCursorPositionChanged: Qt.callLater(() => {
-            if (root.passwordMode && dotsModel.count > 0)
-                dotsView.positionViewAtIndex(Math.max(0, cursorPosition - 1), ListView.Contain);
+            if (root.passwordMode && dotsModel.count > 0) {
+                const dotsView = passwordModeLoader.item?.dotsView ?? null;
+                if (dotsView)
+                    dotsView.positionViewAtIndex(Math.max(0, cursorPosition - 1), ListView.Contain);
+            }
         })
 
         Keys.onReturnPressed: {
@@ -133,8 +139,7 @@ Item {
         }
     }
 
-    StyledText {
-        id: placeHolderText
+    Loader {
 
         anchors {
             verticalCenter: parent.verticalCenter
@@ -143,276 +148,64 @@ Item {
             right: parent.right
             rightMargin: Appearance.margin.large
         }
-        visible: passwordInput.text.length === 0
-        text: root.showFailure ? qsTr("Password invalid") : qsTr("Enter password")
-        color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
-        font.pixelSize: Appearance.fonts.size.large
+        active: !root.hasText
+        sourceComponent: placeHolderComponent
     }
 
-    Item {
-        anchors {
-            left: parent.left
-            leftMargin: Appearance.margin.large - 4
-            right: toggleButton.left
-            rightMargin: Appearance.margin.large
-            verticalCenter: parent.verticalCenter
-        }
-        implicitHeight: 28
-        clip: true
+    Component {
+        id: placeHolderComponent
 
-        Rectangle {
-            anchors.verticalCenter: parent.verticalCenter
-            x: root.selectionStart * root.dotStep
-            implicitWidth: (root.selectionEnd - root.selectionStart) * root.dotStep + 4
-            implicitHeight: 28
-            radius: 6
-            color: Colours.m3Colors.m3Primary
-            opacity: root.hasSelection && root.passwordMode ? 0.25 : 0.0
-            visible: root.passwordMode && passwordInput.text.length > 0
-
-            Behavior on opacity {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on implicitWidth {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
+        StyledText {
+            text: root.placeHolderText !== "" ? root.placeHolderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
+            color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.large
         }
     }
 
-    Item {
-        anchors {
-            left: parent.left
-            leftMargin: 8
-            right: toggleButton.left
-            rightMargin: 4
-            verticalCenter: parent.verticalCenter
-        }
-        implicitHeight: visibleInput.font.pixelSize + 6
-        clip: true
+    Loader {
+        id: passwordModeLoader
 
-        Rectangle {
-            anchors.verticalCenter: parent.verticalCenter
-            x: visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, root.selectionStart))
-            implicitWidth: visibleInputMetrics.advanceWidth(visibleInput.text.substring(root.selectionStart, root.selectionEnd)) + 4
-            implicitHeight: visibleInput.font.pixelSize + 6
-            radius: 4
-            color: Colours.m3Colors.m3Primary
-            opacity: root.hasSelection && !root.passwordMode ? 0.25 : 0.0
-            visible: !root.passwordMode && passwordInput.text.length > 0
+        anchors.fill: parent
+        active: root.passwordMode
+        sourceComponent: passwordModeComponent
+    }
 
-            Behavior on opacity {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on implicitWidth {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
+    Component {
+        id: passwordModeComponent
+
+        TI.PasswordInput {
+            isFocused: root.isFocused
+            isUnlocked: root.isUnlocked
+            unlockInProgress: root.unlockInProgress
+            hasSelection: root.hasSelection
+            passwordInput: passwordInput
+            toggleButton: toggleButton
+            selectionStart: root.selectionStart
+            selectionEnd: root.selectionEnd
+            dotsModel: dotsModel
         }
     }
 
-    ListView {
-        id: dotsView
+    Loader {
+        id: visibleModeLoader
 
-        anchors {
-            left: parent.left
-            leftMargin: Appearance.margin.large
-            right: toggleButton.left
-            rightMargin: Appearance.margin.large
-            verticalCenter: parent.verticalCenter
-        }
-        orientation: ListView.Horizontal
-        spacing: 4
-        model: dotsModel
-        clip: true
-        visible: root.passwordMode && passwordInput.text.length > 0
-        implicitWidth: Math.min(contentWidth, parent.width - toggleButton.width - 20)
-        implicitHeight: 20
-
-        Behavior on implicitWidth {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
-
-        delegate: MaterialShape {
-            required property int index
-
-            implicitWidth: 20
-            implicitHeight: 20
-            shape: root.shapeList[index % root.shapeList.length]
-            color: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
-            visible: root.passwordMode
-
-            Behavior on color {
-                CAnim {}
-            }
-        }
-
-        add: Transition {
-            ParallelAnimation {
-                NAnim {
-                    property: "opacity"
-                    from: 0
-                    to: 1
-                    duration: Appearance.animations.durations.small
-                }
-                NAnim {
-                    property: "scale"
-                    from: 0.5
-                    to: 1
-                    duration: Appearance.animations.durations.small
-                }
-            }
-        }
-        remove: Transition {
-            ParallelAnimation {
-                NAnim {
-                    property: "opacity"
-                    from: 1
-                    to: 0
-                    duration: Appearance.animations.durations.small
-                }
-                NAnim {
-                    property: "scale"
-                    from: 1
-                    to: 0.5
-                    duration: Appearance.animations.durations.small
-                }
-            }
-        }
-        displaced: Transition {
-            NAnim {
-                properties: "x"
-                duration: Appearance.animations.durations.small
-            }
-        }
+        anchors.fill: parent
+        active: !root.passwordMode && root.hasText
+        sourceComponent: visibleModeComponent
     }
 
-    Rectangle {
-        id: dotsCaret
+    Component {
+        id: visibleModeComponent
 
-        anchors.verticalCenter: parent.verticalCenter
-        x: {
-            if (!dotsView.visible)
-                return 12;
-
-            return passwordInput.cursorPosition * root.dotStep - dotsView.contentX + (root.passwordMode ? 15 : 0);
+        TI.VisibleInput {
+            isFocused: root.isFocused
+            unlockInProgress: root.unlockInProgress
+            hasSelection: root.hasSelection
+            passwordInput: passwordInput
+            toggleButton: toggleButton
+            selectionStart: root.selectionStart
+            selectionEnd: root.selectionEnd
         }
-        implicitWidth: 2
-        implicitHeight: 20
-        radius: 1
-        color: Colours.m3Colors.m3Primary
-        visible: root.passwordMode && root.isFocused && !root.unlockInProgress && !root.hasSelection
-
-        Behavior on x {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
-
-        SequentialAnimation on opacity {
-            running: dotsCaret.visible
-            loops: Animation.Infinite
-            NAnim {
-                to: 1
-                duration: 0
-            }
-            PauseAnimation {
-                duration: 530
-            }
-            NAnim {
-                to: 0
-                duration: 0
-            }
-            PauseAnimation {
-                duration: 530
-            }
-        }
-        onVisibleChanged: if (visible)
-            opacity = 1
-    }
-
-    TextInput {
-        id: visibleInput
-
-        anchors {
-            left: parent.left
-            leftMargin: 12
-            right: toggleButton.left
-            rightMargin: 4
-            verticalCenter: parent.verticalCenter
-        }
-        visible: !root.passwordMode && passwordInput.text.length > 0
-        readOnly: true
-        text: passwordInput.text
-        color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.large
-        echoMode: TextInput.Normal
-        clip: true
-
-        Keys.onReturnPressed: root.editingFinished()
-    }
-
-    FontMetrics {
-        id: visibleInputMetrics
-
-        font: visibleInput.font
-    }
-
-    Rectangle {
-        id: textCaret
-
-        x: Math.min(visibleInput.x + visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, passwordInput.cursorPosition)), toggleButton.x - 8)
-        anchors.verticalCenter: parent.verticalCenter
-        implicitWidth: 2
-        implicitHeight: visibleInput.font.pixelSize + 2
-        radius: 1
-        color: Colours.m3Colors.m3Primary
-        visible: !root.passwordMode && root.isFocused && !root.unlockInProgress && !root.hasSelection
-
-        Behavior on x {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
-
-        SequentialAnimation on opacity {
-            running: textCaret.visible
-            loops: Animation.Infinite
-            NAnim {
-                to: 1
-                duration: 0
-            }
-            PauseAnimation {
-                duration: Appearance.animations.durations.large
-            }
-            NAnim {
-                to: 0
-                duration: 0
-            }
-            PauseAnimation {
-                duration: Appearance.animations.durations.large
-            }
-        }
-        onVisibleChanged: if (visible)
-            opacity = 1
     }
 
     Item {

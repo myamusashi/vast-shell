@@ -1,0 +1,206 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import M3Shapes
+import QtQml.Models
+
+import qs.Components.Base
+import qs.Core.Configs
+import qs.Services
+
+Item {
+    id: root
+
+    required property bool isFocused
+    required property bool isUnlocked
+    required property bool unlockInProgress
+    required property bool hasSelection
+    required property Item passwordInput
+    required property Item toggleButton
+    required property int selectionStart
+    required property int selectionEnd
+    required property ListModel dotsModel
+
+    readonly property int dotStep: 24
+    readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
+
+    Item {
+        anchors {
+            left: parent.left
+            leftMargin: Appearance.margin.large - 4
+            right: parent.right
+            rightMargin: root.toggleButton.width + Appearance.margin.normal + Appearance.margin.large
+            verticalCenter: parent.verticalCenter
+        }
+        implicitHeight: 28
+        clip: true
+
+        Rectangle {
+            id: passwordRectSelected
+
+            anchors.verticalCenter: parent.verticalCenter
+            x: root.selectionStart * root.dotStep
+            implicitWidth: (root.selectionEnd - root.selectionStart) * root.dotStep + radius
+            implicitHeight: 28
+            radius: 2
+            color: Colours.m3Colors.m3Primary
+            opacity: 0.0
+
+            states: [
+                State {
+                    name: "selection"
+                    when: root.hasSelection
+                    PropertyChanges {
+                        target: passwordRectSelected
+                        opacity: 0.25
+                    }
+                }
+            ]
+
+            transitions: [
+                Transition {
+                    from: "*"
+                    to: "*"
+                    NAnim {
+                        properties: "opacity"
+                        duration: Appearance.animations.durations.small
+                    }
+                }
+            ]
+
+            Behavior on implicitWidth {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+            Behavior on x {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+        }
+    }
+
+    ListView {
+        id: dotsView
+
+        anchors {
+            left: parent.left
+            leftMargin: Appearance.margin.large
+            right: parent.right
+            rightMargin: root.toggleButton.width + Appearance.margin.normal + Appearance.margin.large
+            verticalCenter: parent.verticalCenter
+        }
+        orientation: ListView.Horizontal
+        spacing: 4
+        model: root.dotsModel
+        clip: true
+        implicitWidth: Math.min(contentWidth, parent.width - root.toggleButton.width - 20)
+        implicitHeight: 20
+
+        Behavior on implicitWidth {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+
+        delegate: MaterialShape {
+            required property int index
+
+            implicitWidth: 20
+            implicitHeight: 20
+            shape: root.shapeList[index % root.shapeList.length]
+            color: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+
+            Behavior on color {
+                CAnim {}
+            }
+        }
+
+        add: Transition {
+            ParallelAnimation {
+                NAnim {
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: Appearance.animations.durations.small
+                }
+                NAnim {
+                    property: "scale"
+                    from: 0.5
+                    to: 1
+                    duration: Appearance.animations.durations.small
+                }
+            }
+        }
+        remove: Transition {
+            ParallelAnimation {
+                NAnim {
+                    property: "opacity"
+                    from: 1
+                    to: 0
+                    duration: Appearance.animations.durations.small
+                }
+                NAnim {
+                    property: "scale"
+                    from: 1
+                    to: 0.5
+                    duration: Appearance.animations.durations.small
+                }
+            }
+        }
+        displaced: Transition {
+            NAnim {
+                properties: "x"
+                duration: Appearance.animations.durations.small
+            }
+        }
+    }
+
+    Rectangle {
+        id: dotsCaret
+
+        anchors.verticalCenter: parent.verticalCenter
+        x: {
+            if (!dotsView.visible)
+                return 12;
+
+            return root.passwordInput.cursorPosition * root.dotStep - dotsView.contentX + 15;
+        }
+        implicitWidth: 2
+        implicitHeight: 20
+        radius: 1
+        color: Colours.m3Colors.m3Primary
+        visible: root.isFocused && !root.unlockInProgress && !root.hasSelection
+
+        onVisibleChanged: {
+            if (visible)
+                opacity = 1;
+        }
+
+        Behavior on x {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+
+        SequentialAnimation on opacity {
+            running: dotsCaret.visible
+            loops: Animation.Infinite
+            NAnim {
+                to: 1
+                duration: 0
+            }
+            PauseAnimation {
+                duration: 530
+            }
+            NAnim {
+                to: 0
+                duration: 0
+            }
+            PauseAnimation {
+                duration: 530
+            }
+        }
+    }
+}

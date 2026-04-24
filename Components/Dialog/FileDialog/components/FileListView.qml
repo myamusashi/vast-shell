@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import QtQml.Models
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -19,9 +20,9 @@ ColumnLayout {
     property bool selectFolder: false
     property int currentIndex: -1
     property bool hasSelection: currentIndex >= 0
-    property string selectedFileName: hasSelection ? model.get(currentIndex, "fileName") : ""
-    property string currentFilePath: hasSelection ? model.get(currentIndex, "filePath") : ""
-    property bool currentIsFolder: hasSelection ? model.isFolder(currentIndex) : false
+    property string selectedFileName: hasSelection ? visualModel.items.get(currentIndex).model.fileName : ""
+    property string currentFilePath: hasSelection ? visualModel.items.get(currentIndex).model.filePath : ""
+    property bool currentIsFolder: hasSelection ? visualModel.items.get(currentIndex).model.isFolder : false
 
     signal showHiddenToggled(bool hidden)
     signal folderDoubleClicked(string path)
@@ -34,6 +35,12 @@ ColumnLayout {
     function clearSelection() {
         currentIndex = -1;
         fileList.currentIndex = -1;
+    }
+
+    DelegateModel {
+        id: visualModel
+
+        model: root.model
     }
 
     Rectangle {

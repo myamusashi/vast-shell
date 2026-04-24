@@ -29,8 +29,11 @@ Slider {
 
     readonly property bool _popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
 
-    readonly property real availableTrackSize: orientation === Qt.Horizontal ? availableWidth - handleGap * 2 : availableHeight - handleGap * 2
-    readonly property real trackSize: orientation === Qt.Horizontal ? height - trackSizeDiff : width - trackSizeDiff
+    readonly property bool isHorizontal: orientation === Qt.Horizontal
+    readonly property bool isVertical: root.orientation === Qt.Vertical
+
+    readonly property real availableTrackSize: isHorizontal ? availableWidth - handleGap * 2 : availableHeight - handleGap * 2
+    readonly property real trackSize: isHorizontal ? height - trackSizeDiff : width - trackSizeDiff
     readonly property real handleSize: pressed ? 2 : 4
     readonly property real invertedVisualPosition: 1 - visualPosition
     readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
@@ -38,8 +41,8 @@ Slider {
     property bool useAnim: true
     property string icon: ""
     property int iconSize: 0
-    property int valueWidth: orientation === Qt.Horizontal ? 200 : StyledSlide.ContainerSize.M
-    property int valueHeight: orientation === Qt.Horizontal ? StyledSlide.ContainerSize.M : 200
+    property int valueWidth: isHorizontal ? 200 : StyledSlide.ContainerSize.M
+    property int valueHeight: isHorizontal ? StyledSlide.ContainerSize.M : 200
 
     property real trackSizeDiff: 15
     property real handleGap: 6
@@ -47,7 +50,7 @@ Slider {
     property bool snapEnabled: false
     property real snapDotSize: 4
     property color snapDotFilledColor: Colours.m3Colors.m3OnPrimary
-    property color snapDotEmptyColor: Colours.m3Colors.m3OnSurfaceVariant
+    property color snapDotEmptyColor: Colours.m3Colors.m3OnSurfaceVariant // qmllint:ignore
 
     property bool showValuePopup: true
     property bool popupOnHoverToo: false
@@ -55,7 +58,7 @@ Slider {
     property var popupValueFormat: v => v.toFixed(root.popupDecimals)
 
     snapMode: (snapEnabled && stepSize > 0) ? Slider.SnapAlways : Slider.NoSnap
-    Layout.alignment: orientation === Qt.Horizontal ? Qt.AlignHCenter : Qt.AlignVCenter
+    Layout.alignment: isHorizontal ? Qt.AlignHCenter : Qt.AlignVCenter
     hoverEnabled: true
     implicitWidth: valueWidth
     implicitHeight: valueHeight
@@ -64,7 +67,7 @@ Slider {
         anchors.fill: parent
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
         onPressed: mouse => {
-            if (root.orientation === Qt.Vertical) {
+            if (root.isVertical) {
                 var pos = 1 - ((mouse.y - root.topPadding) / root.availableHeight);
                 pos = Math.max(0, Math.min(1, pos));
                 var newValue = root.from + (pos * (root.to - root.from));
@@ -91,7 +94,7 @@ Slider {
             readonly property real iconSpaceNeeded: effectiveIconSize + 20
             readonly property real emptyWidthH: root.handleGap + ((1 - root.visualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
             readonly property real emptyHeightV: root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
-            readonly property bool iconInEmpty: root.orientation === Qt.Horizontal ? emptyWidthH > iconSpaceNeeded : emptyHeightV > iconSpaceNeeded
+            readonly property bool iconInEmpty: root.isHorizontal ? emptyWidthH > iconSpaceNeeded : emptyHeightV > iconSpaceNeeded
 
             active: root.icon !== ""
             z: 10
@@ -99,7 +102,7 @@ Slider {
             states: [
                 State {
                     name: "hFilled"
-                    when: root.orientation === Qt.Horizontal && !iconLoader.iconInEmpty
+                    when: root.isHorizontal && !iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
                         anchors {
@@ -118,7 +121,7 @@ Slider {
                 },
                 State {
                     name: "hEmpty"
-                    when: root.orientation === Qt.Horizontal && iconLoader.iconInEmpty
+                    when: root.isHorizontal && iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
                         anchors {
@@ -137,7 +140,7 @@ Slider {
                 },
                 State {
                     name: "vFilled"
-                    when: root.orientation === Qt.Vertical && !iconLoader.iconInEmpty
+                    when: root.isVertical && !iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
                         anchors {
@@ -156,7 +159,7 @@ Slider {
                 },
                 State {
                     name: "vEmpty"
-                    when: root.orientation === Qt.Vertical && iconLoader.iconInEmpty
+                    when: root.isVertical && iconLoader.iconInEmpty
                     AnchorChanges {
                         target: iconLoader
                         anchors {
@@ -195,13 +198,13 @@ Slider {
             id: filledRect
 
             anchors {
-                verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
-                left: root.orientation === Qt.Horizontal ? parent.left : undefined
-                horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
-                bottom: root.orientation === Qt.Vertical ? parent.bottom : undefined
+                verticalCenter: root.isHorizontal ? parent.verticalCenter : undefined
+                left: root.isHorizontal ? parent.left : undefined
+                horizontalCenter: root.isVertical ? parent.horizontalCenter : undefined
+                bottom: root.isVertical ? parent.bottom : undefined
             }
-            width: root.orientation === Qt.Horizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap) : root.trackSize
-            height: root.orientation === Qt.Horizontal ? root.trackSize : root.handleGap + (root.invertedVisualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
+            width: root.isHorizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap) : root.trackSize
+            height: root.isHorizontal ? root.trackSize : root.handleGap + (root.invertedVisualPosition * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
             color: Colours.m3Colors.m3Primary
             radius: Appearance.rounding.small * 0.5
             opacity: 1.0
@@ -211,13 +214,13 @@ Slider {
             id: emptyRect
 
             anchors {
-                verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
-                right: root.orientation === Qt.Horizontal ? parent.right : undefined
-                horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
-                top: root.orientation === Qt.Vertical ? parent.top : undefined
+                verticalCenter: root.isHorizontal ? parent.verticalCenter : undefined
+                right: root.isHorizontal ? parent.right : undefined
+                horizontalCenter: root.isVertical ? parent.horizontalCenter : undefined
+                top: root.isVertical ? parent.top : undefined
             }
-            width: root.orientation === Qt.Horizontal ? root.handleGap + ((1 - root.visualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap) : root.trackSize
-            height: root.orientation === Qt.Horizontal ? root.trackSize : root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
+            width: root.isHorizontal ? root.handleGap + ((1 - root.visualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap) : root.trackSize
+            height: root.isHorizontal ? root.trackSize : root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - (root.handleSize / 2 + root.handleGap)
             color: Colours.m3Colors.m3SurfaceContainerHighest
             radius: Appearance.rounding.small * 0.5
             opacity: 1.0
@@ -239,8 +242,8 @@ Slider {
                 radius: root.snapDotSize / 2
                 color: isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor
 
-                x: root.orientation === Qt.Horizontal ? root.handleGap + (normalPos * root.availableTrackSize) - root.snapDotSize / 2 : (parent.width - root.snapDotSize) / 2
-                y: root.orientation === Qt.Vertical ? root.handleGap + ((1 - normalPos) * root.availableTrackSize) - root.snapDotSize / 2 : (parent.height - root.snapDotSize) / 2
+                x: root.isHorizontal ? root.handleGap + (normalPos * root.availableTrackSize) - root.snapDotSize / 2 : (parent.width - root.snapDotSize) / 2
+                y: root.isVertical ? root.handleGap + ((1 - normalPos) * root.availableTrackSize) - root.snapDotSize / 2 : (parent.height - root.snapDotSize) / 2
                 z: 5
 
                 Behavior on color {
@@ -255,12 +258,12 @@ Slider {
     handle: StyledRect {
         id: handle
 
-        width: root.orientation === Qt.Horizontal ? root.handleSize : root.width
-        height: root.orientation === Qt.Horizontal ? root.height : root.handleSize
-        x: root.orientation === Qt.Horizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - width / 2 : 0
-        y: root.orientation === Qt.Vertical ? root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - height / 2 : 0
-        anchors.verticalCenter: root.orientation === Qt.Horizontal ? parent.verticalCenter : undefined
-        anchors.horizontalCenter: root.orientation === Qt.Vertical ? parent.horizontalCenter : undefined
+        width: root.isHorizontal ? root.handleSize : root.width
+        height: root.isHorizontal ? root.height : root.handleSize
+        x: root.isHorizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - width / 2 : 0
+        y: root.isVertical ? root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - height / 2 : 0
+        anchors.verticalCenter: root.isHorizontal ? parent.verticalCenter : undefined
+        anchors.horizontalCenter: root.isVertical ? parent.horizontalCenter : undefined
         color: Colours.m3Colors.m3Primary
         opacity: 1.0
 
@@ -276,17 +279,17 @@ Slider {
         Item {
             id: valuePopupRoot
 
-            x: root.orientation === Qt.Horizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
-            y: root.orientation === Qt.Horizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
+            x: root.isHorizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
+            y: root.isHorizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
 
-            width: valuePopupBubble.width + (root.orientation === Qt.Vertical ? caret.caretSize + 2 : 0)
-            height: valuePopupBubble.height + (root.orientation === Qt.Horizontal ? caret.caretSize + 2 : 0)
+            width: valuePopupBubble.width + (root.isVertical ? caret.caretSize + 2 : 0)
+            height: valuePopupBubble.height + (root.isHorizontal ? caret.caretSize + 2 : 0)
             z: 20
             visible: root._popupVisible
             opacity: visible ? 1.0 : 0.0
             scale: visible ? 1.0 : 0.82
 
-            transformOrigin: root.orientation === Qt.Horizontal ? Item.Bottom : Item.Right
+            transformOrigin: root.isHorizontal ? Item.Bottom : Item.Right
 
             Behavior on opacity {
                 enabled: root.useAnim
@@ -330,16 +333,16 @@ Slider {
                 id: caret
 
                 anchors {
-                    horizontalCenter: root.orientation === Qt.Horizontal ? valuePopupBubble.horizontalCenter : undefined
-                    top: root.orientation === Qt.Horizontal ? valuePopupBubble.bottom : undefined
-                    left: root.orientation === Qt.Vertical ? valuePopupBubble.right : undefined
-                    verticalCenter: root.orientation === Qt.Vertical ? valuePopupBubble.verticalCenter : undefined
+                    horizontalCenter: root.isHorizontal ? valuePopupBubble.horizontalCenter : undefined
+                    top: root.isHorizontal ? valuePopupBubble.bottom : undefined
+                    left: root.isVertical ? valuePopupBubble.right : undefined
+                    verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
                 }
 
                 readonly property int caretSize: 6
 
-                width: root.orientation === Qt.Horizontal ? caretSize * 2 : caretSize
-                height: root.orientation === Qt.Horizontal ? caretSize : caretSize * 2
+                width: root.isHorizontal ? caretSize * 2 : caretSize
+                height: root.isHorizontal ? caretSize : caretSize * 2
                 preferredRendererType: Shape.CurveRenderer
 
                 ShapePath {
@@ -353,8 +356,8 @@ Slider {
                     // Horizontal ▼: (0,0) → (12,0) → (6,6)
                     // Vertical   ▶: (0,0) → (0,12) → (6,6)
                     PathLine {
-                        x: root.orientation === Qt.Horizontal ? caret.caretSize * 2 : 0
-                        y: root.orientation === Qt.Horizontal ? 0 : caret.caretSize * 2
+                        x: root.isHorizontal ? caret.caretSize * 2 : 0
+                        y: root.isHorizontal ? 0 : caret.caretSize * 2
                     }
                     PathLine {
                         x: caret.caretSize

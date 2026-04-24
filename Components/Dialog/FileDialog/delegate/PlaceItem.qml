@@ -7,7 +7,7 @@ import qs.Services
 
 import "../../../Base"
 
-Rectangle {
+StyledRect {
     id: root
 
     required property string icon
@@ -20,12 +20,6 @@ Rectangle {
     radius: Appearance.rounding.small
     clip: true
     color: isSelected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
-
-    Behavior on color {
-        CAnim {
-            duration: Appearance.animations.durations.small
-        }
-    }
 
     RowLayout {
         anchors {

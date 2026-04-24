@@ -1,9 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Wayland
+import Quickshell.Widgets
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
@@ -68,72 +69,61 @@ LazyLoader {
                 }
             }
 
-            delegate: WrapperItem {
-                id: delegate
-
-                required property int index
-                required property string description
-                required property string header
-                required property string icon
-                required property int duration
-
+            delegate: ToastDelegate {
                 implicitWidth: ListView.view.width
-                implicitHeight: rect.implicitHeight
+            }
+        }
+    }
 
-                WrapperRectangle {
-                    id: rect
+    component ToastDelegate: WrapperRectangle {
+        id: root
 
-                    implicitWidth: parent.width
-                    color: GlobalStates.drawerColors
-                    margin: Appearance.margin.normal
-                    radius: Appearance.rounding.full
+        required property int index
+        required property string description
+        required property string header
+        required property string icon
+        required property int duration
 
-                    RowLayout {
-                        id: rowLayout
+        margin: Configs.generals.enableOuterBorder ? Appearance.margin.normal + Configs.generals.outerBorderSize : Appearance.margin.normal
+        color: GlobalStates.drawerColors
+        radius: Appearance.rounding.full
 
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                            margins: Appearance.margin.normal
-                        }
+        RowLayout {
+            id: rowLayout
 
-                        IconImage {
-                            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                            implicitSize: 48
-                            backer.cache: true
-                            asynchronous: true
-                            source: Quickshell.iconPath(delegate.icon, "image-missing")
-                        }
+            IconImage {
+                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                implicitSize: 48
+                backer.cache: true
+                asynchronous: true
+                source: Quickshell.iconPath(root.icon, "image-missing")
+            }
 
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: Appearance.spacing.small
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: Appearance.spacing.small
 
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: delegate.header
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.large
-                                wrapMode: Text.Wrap
-                            }
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: delegate.description
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                wrapMode: Text.Wrap
-                            }
-                        }
-                    }
+                StyledText {
+                    Layout.fillWidth: true
+                    text: root.header
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.large
+                    wrapMode: Text.Wrap
                 }
-
-                Timer {
-                    interval: delegate.duration
-                    running: true
-                    onTriggered: ToastService.model.remove(delegate.index)
+                StyledText {
+                    Layout.fillWidth: true
+                    text: root.description
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    wrapMode: Text.Wrap
                 }
             }
+        }
+
+        Timer {
+            interval: root.duration
+            running: true
+            onTriggered: ToastService.model.remove(root.index)
         }
     }
 }
