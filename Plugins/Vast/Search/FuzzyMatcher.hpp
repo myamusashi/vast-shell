@@ -9,12 +9,12 @@
 
 class FuzzyMatcher {
   public:
-    static constexpr double kPrefixWeight       = 0.30;
-    static constexpr double kDistanceWeight     = 0.20;
-    static constexpr double kConsecutiveWeight  = 0.15;
-    static constexpr double kWordBoundaryWeight = 0.10;
-    static constexpr double kAcronymWeight      = 0.25;
-    static constexpr double kRecencyWeight      = 0.40;
+    static constexpr double           kPrefixWeight       = 0.30;
+    static constexpr double           kDistanceWeight     = 0.20;
+    static constexpr double           kConsecutiveWeight  = 0.15;
+    static constexpr double           kWordBoundaryWeight = 0.10;
+    static constexpr double           kAcronymWeight      = 0.25;
+    static constexpr double           kRecencyWeight      = 0.40;
 
     [[nodiscard]] static QChar        normalizeChar(QChar c);
     [[nodiscard]] static QString      normalizeText(const QString& text);
