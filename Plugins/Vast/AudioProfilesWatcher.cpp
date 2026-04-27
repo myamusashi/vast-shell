@@ -378,9 +378,10 @@ AudioProfilesWatcher::AudioProfilesWatcher(QObject* parent) : QObject(parent), m
         emit connectedChanged();
     } catch (const std::exception& e) { qWarning("AudioProfilesWatcher: failed to connect to PipeWire: %s", e.what()); }
 
-    m_timer->setInterval(100);
+    m_timer->setSingleShot(true);
     connect(m_timer, &QTimer::timeout, this, &AudioProfilesWatcher::poll);
-    m_timer->start();
+    if (m_connected)
+        m_timer->start(kMinPollMs);
 }
 
 AudioProfilesWatcher::~AudioProfilesWatcher() {
@@ -433,8 +434,15 @@ void AudioProfilesWatcher::poll() {
     }
     pw_thread_loop_unlock(app->loop());
 
-    if (snapshots.isEmpty())
+    if (snapshots.isEmpty()) {
+        // Nothing dirty — exponential backoff to reduce idle CPU
+        m_pollIntervalMs = std::min(m_pollIntervalMs * 2, kMaxPollMs);
+        m_timer->start(m_pollIntervalMs);
         return;
+    }
+
+    // Activity detected — reset to fast polling
+    m_pollIntervalMs = kMinPollMs;
 
     for (const DeviceSnapshot& snap : snapshots) {
         const bool deviceChanged  = (m_deviceId != snap.deviceId || m_deviceName != snap.deviceName);
@@ -451,4 +459,6 @@ void AudioProfilesWatcher::poll() {
         if (profileChanged)
             emit activeProfileChanged();
     }
+
+    m_timer->start(m_pollIntervalMs);
 }

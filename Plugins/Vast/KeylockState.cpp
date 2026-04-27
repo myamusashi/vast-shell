@@ -109,8 +109,10 @@ void Keylock::readInitialState(int fd, bool hasLED) {
 }
 
 void Keylock::onReadReady(int fd, bool hasLED) {
-    input_event ev{};
-    while (::read(fd, &ev, sizeof(ev)) == sizeof(ev)) {
+    input_event   ev{};
+    constexpr int kMaxEventsPerBatch = 64;
+    int           processed          = 0;
+    while (::read(fd, &ev, sizeof(ev)) == sizeof(ev) && ++processed <= kMaxEventsPerBatch) {
         if (hasLED) {
             if (ev.type != EV_LED)
                 continue;

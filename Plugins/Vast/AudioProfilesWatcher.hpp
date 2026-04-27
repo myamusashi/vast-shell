@@ -53,15 +53,19 @@ class AudioProfilesWatcher : public QObject {
     void connectedChanged();
 
   private:
-    void                poll();
+    void                 poll();
 
-    quint32             m_deviceId = 0;
-    QString             m_deviceName;
-    qsizetype           m_activeIndex = -1;
-    QVariantMap         m_activeProfile;
-    AudioProfilesModel* m_model     = nullptr;
-    QTimer*             m_timer     = nullptr;
-    bool                m_connected = false;
+    static constexpr int kMinPollMs = 100;
+    static constexpr int kMaxPollMs = 2000;
+
+    quint32              m_deviceId = 0;
+    QString              m_deviceName;
+    qsizetype            m_activeIndex = -1;
+    QVariantMap          m_activeProfile;
+    AudioProfilesModel*  m_model          = nullptr;
+    QTimer*              m_timer          = nullptr;
+    int                  m_pollIntervalMs = kMinPollMs;
+    bool                 m_connected      = false;
 
     struct PwState;
     std::unique_ptr<PwState>     m_pw;

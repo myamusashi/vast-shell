@@ -171,18 +171,17 @@ void LyricsProvider::seekTo(qint64 posMs) {
 }
 
 void LyricsProvider::scheduleNext() {
+    const qint64 nowMs = currentPositionMs();
+
+    // Skip past all boundaries already in the past (iterative, no recursion)
+    while (m_boundaryPos < m_boundaries.size() && m_boundaries[m_boundaryPos].timeMs <= nowMs) {
+        ++m_boundaryPos;
+    }
+
     if (m_boundaryPos >= m_boundaries.size())
         return;
 
-    const qint64 nextTimeMs = m_boundaries[m_boundaryPos].timeMs;
-    const qint64 nowMs      = currentPositionMs();
-    const qint64 delayMs    = nextTimeMs - nowMs;
-
-    if (delayMs < 0) {
-        ++m_boundaryPos;
-        scheduleNext();
-        return;
-    }
+    const qint64 delayMs = m_boundaries[m_boundaryPos].timeMs - nowMs;
     if (delayMs > 60'000)
         return;
 

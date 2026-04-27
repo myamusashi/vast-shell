@@ -9,6 +9,7 @@
 #include <QDateTime>
 #include <QImage>
 #include <QMimeData>
+#include <QThreadPool>
 #include <QUrl>
 
 namespace Vast {
@@ -78,27 +79,38 @@ namespace Vast {
             if (image.isNull())
                 return;
 
-            const QByteArray png = compressImage(image);
-            if (png.isEmpty())
-                return;
+            // Offload expensive compression + hashing to thread pool.
+            // ClipboardWatcher lives for the entire application lifetime,
+            // so 'this' is guaranteed valid when the pool task runs.
+            QThreadPool::globalInstance()->start([this, image, sourceApp]() {
+                const QByteArray png = compressImage(image);
+                if (png.isEmpty())
+                    return;
 
-            const QByteArray hash = sha256(png);
-            if (hash == m_lastImageHash)
-                return;
-            m_lastImageHash = hash;
+                const QByteArray hash = sha256(png);
 
-            ClipboardEntry entry{.id        = -1,
-                                 .type      = ClipboardType::Image,
-                                 .content   = {},
-                                 .data      = png,
-                                 .mimeType  = QStringLiteral("image/png"),
-                                 .hash      = hash,
-                                 .pinned    = false,
-                                 .sourceApp = sourceApp,
-                                 .sizeBytes = static_cast<qint64>(png.size()),
-                                 .timestamp = QDateTime::currentMSecsSinceEpoch()};
+                QMetaObject::invokeMethod(
+                    this,
+                    [this, png, hash, sourceApp]() {
+                        if (hash == m_lastImageHash)
+                            return;
+                        m_lastImageHash = hash;
 
-            emit           newEntry(entry);
+                        ClipboardEntry entry{.id        = -1,
+                                             .type      = ClipboardType::Image,
+                                             .content   = {},
+                                             .data      = png,
+                                             .mimeType  = QStringLiteral("image/png"),
+                                             .hash      = hash,
+                                             .pinned    = false,
+                                             .sourceApp = sourceApp,
+                                             .sizeBytes = static_cast<qint64>(png.size()),
+                                             .timestamp = QDateTime::currentMSecsSinceEpoch()};
+
+                        emit           newEntry(entry);
+                    },
+                    Qt::QueuedConnection);
+            });
             return;
         }
 
