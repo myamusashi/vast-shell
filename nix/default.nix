@@ -103,19 +103,24 @@
             if [ -d "translations" ]; then
                 ${qt6.qttools}/bin/lrelease translations/*.ts
             fi
+
+            echo "Cleaning old shaders..."
+            find Assets/shaders -name "*.qsb" -delete
+
             echo "Compile shaders..."
             ${qt6.qtshadertools}/bin/qsb \
                 --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                 -o Assets/shaders/ImageTransition.vert.qsb \
                    Assets/shaders/ImageTransition.vert
+
             for name in fade wipeDown circleExpand dissolve splitHorizontal slideUp pixelate diagonalWipe boxExpand roll; do
+                echo "Compiling ''${name}.frag..."
                 ${qt6.qtshadertools}/bin/qsb \
                     --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                     -o Assets/shaders/transitions/''${name}.frag.qsb \
-                       Assets/shaders/transitions/''${name}.frag \
-                && echo "''${name}.frag.qsb" \
-                || echo "''${name}.frag.qsb FAILED"
+                       Assets/shaders/transitions/''${name}.frag
             done
+
             ${qt6.qtshadertools}/bin/qsb \
                 --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                 -o Assets/shaders/borderProgress.vert.qsb \
