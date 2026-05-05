@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 Slider {
@@ -101,8 +102,8 @@ Slider {
                 property real phase: slider.waveAnimPhase
                 property real strokeHalf: 0.75
 
-                vertexShader: "root:/Assets/shaders/wavy.vert.qsb"
-                fragmentShader: "root:/Assets/shaders/wavy.frag.qsb"
+                vertexShader: Paths.rootDir + "/Assets/shaders/wavy.vert.qsb"
+                fragmentShader: Paths.rootDir + "/Assets/shaders/wavy.frag.qsb"
             }
         }
 
@@ -136,8 +137,8 @@ Slider {
             property real tr: slider.waveTransition
             property real strokeHalf: 0.9
 
-            vertexShader: "root:/Assets/shaders/waveForm.vert.qsb"
-            fragmentShader: "root:/Assets/shaders/waveForm.frag.qsb"
+            vertexShader: Paths.rootDir + "/Assets/shaders/waveForm.vert.qsb"
+            fragmentShader: Paths.rootDir + "/Assets/shaders/waveForm.frag.qsb"
         }
     }
 

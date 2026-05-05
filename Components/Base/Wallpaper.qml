@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell
 import Vast
 
 import qs.Core.Configs
@@ -84,7 +85,7 @@ Item {
         }
 
         const name = _shaderNames[_typeResolved] ?? "fade";
-        fx.fragmentShader = `root:/Assets/shaders/transitions/${name}.frag.qsb`;
+        fx.fragmentShader = `${Paths.rootDir}/Assets/shaders/transitions/${name}.frag.qsb`;
 
         if (_slot === 0) {
             fx.source1 = imgA;
@@ -213,8 +214,8 @@ Item {
         property vector2d resolution: Qt.vector2d(720, 720)
         property vector2d invResolution: Qt.vector2d(1.0 / 720, 1.0 / 720.0)
 
-        vertexShader: "root:/Assets/shaders/ImageTransition.vert.qsb"
-        fragmentShader: "root:/Assets/shaders/transitions/fade.frag.qsb"
+        vertexShader: Paths.rootDir + "/Assets/shaders/ImageTransition.vert.qsb"
+        fragmentShader: Paths.rootDir + "/Assets/shaders/transitions/fade.frag.qsb"
         visible: root._busy
         blending: false
         layer.enabled: false

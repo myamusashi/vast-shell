@@ -1,5 +1,6 @@
 import QtQuick
 
+import qs.Core.Utils
 import qs.Services
 
 import "../Base"
@@ -30,8 +31,8 @@ Item {
         property color borderColor: Colours.m3Colors.m3Primary
 
         z: 999
-        vertexShader: "root:/Assets/shaders/borderProgress.vert.qsb"
-        fragmentShader: "root:/Assets/shaders/borderProgress.frag.qsb"
+        vertexShader: Paths.rootDir + "/Assets/shaders/borderProgress.vert.qsb"
+        fragmentShader: Paths.rootDir + "/Assets/shaders/borderProgress.frag.qsb"
     }
 
     NAnim {
