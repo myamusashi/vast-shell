@@ -9,6 +9,7 @@
 #include <QDateTime>
 #include <QImage>
 #include <QMimeData>
+#include <QThread>
 #include <QThreadPool>
 #include <QUrl>
 
@@ -34,8 +35,6 @@ namespace Vast {
     }
 
     void ClipboardWatcher::setSelfCopyHash(const QByteArray& hash) noexcept {
-        // each copyToClipboard registers 2 credits to absorb wl
-        // double dataChanged fire (once on ownership take, once on settle)
         m_selfCopyHashes[hash] += 2;
     }
 
@@ -79,10 +78,9 @@ namespace Vast {
             if (image.isNull())
                 return;
 
-            // Offload expensive compression + hashing to thread pool.
-            // ClipboardWatcher lives for the entire application lifetime,
-            // so 'this' is guaranteed valid when the pool task runs.
             QThreadPool::globalInstance()->start([this, image, sourceApp]() {
+                QThread::currentThread()->setPriority(QThread::LowPriority);
+
                 const QByteArray png = compressImage(image);
                 if (png.isEmpty())
                     return;
@@ -92,6 +90,13 @@ namespace Vast {
                 QMetaObject::invokeMethod(
                     this,
                     [this, png, hash, sourceApp]() {
+                        auto it = m_selfCopyHashes.find(hash);
+                        if (it != m_selfCopyHashes.end()) {
+                            if (--it.value() <= 0)
+                                m_selfCopyHashes.erase(it);
+                            return;
+                        }
+
                         if (hash == m_lastImageHash)
                             return;
                         m_lastImageHash = hash;
@@ -210,17 +215,26 @@ namespace Vast {
     }
 
     [[nodiscard]] QByteArray ClipboardWatcher::compressImage(const QImage& image) {
-        // 256px
-        constexpr int kMaxDimension = 256;
+        // don't worry about this, we don't want this shit get overflow 
+        constexpr qint64 kMaxPixels = 4'000'000LL;
 
-        const QImage  scaled =
-            (image.width() > kMaxDimension || image.height() > kMaxDimension) ? image.scaled(kMaxDimension, kMaxDimension, Qt::KeepAspectRatio, Qt::SmoothTransformation) : image;
+        const qint64 pixels = static_cast<qint64>(image.width()) * image.height();
+
+        QImage downscaled;
+        if (pixels > kMaxPixels) {
+            const qreal factor = qSqrt(static_cast<qreal>(kMaxPixels) / static_cast<qreal>(pixels));
+            const int   w      = qMax(1, qRound(image.width()  * factor));
+            const int   h      = qMax(1, qRound(image.height() * factor));
+            downscaled = image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+        }
+
+        const QImage& src = downscaled.isNull() ? image : downscaled;
 
         QByteArray bytes;
         QBuffer    buf{&bytes};
         buf.open(QIODevice::WriteOnly);
 
-        if (!scaled.save(&buf, "PNG", -1))
+        if (!src.save(&buf, "PNG", 1))
             return {};
 
         return bytes;
