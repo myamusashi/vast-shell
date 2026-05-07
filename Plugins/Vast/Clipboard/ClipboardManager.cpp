@@ -324,8 +324,8 @@ namespace Vast {
             map[QStringLiteral("sizeBytes")] = entry.sizeBytes;
             map[QStringLiteral("timestamp")] = entry.timestamp;
 
-            if (entry.isImage() && !entry.data.isEmpty())
-                map[QStringLiteral("imageData")] = QString::fromLatin1(entry.data.toBase64());
+            if (entry.isImage())
+                map[QStringLiteral("previewPath")] = QStringLiteral("/tmp/vast-shell/clipboard-preview/%1.png").arg(entry.id);
 
             emit fullEntryReady(std::move(map));
         });
