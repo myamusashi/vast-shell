@@ -5,6 +5,10 @@ JsonObject {
     property bool enabled: false
     property bool enablePreview: false
     property Preview preview: Preview {}
+    property int listEntries: 15
+    property int maxEntries: 300
+    property real width: 300
+    property real height: 400
 
     component Preview: JsonObject {
         property real sourceWidth: 300
