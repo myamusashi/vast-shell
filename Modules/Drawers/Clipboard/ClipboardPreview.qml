@@ -17,9 +17,6 @@ Item {
     signal copyRequested(int id)
     signal pinToggled(int id, bool newState)
 
-    //  1. Clear stale display state immediately
-    //  2. Kick off an async fetch, never blocks the render loop
-    //  3. Connections below receives fullEntryReady() when the worker is done
     onEntryIdChanged: {
         d.clear();
 
@@ -58,7 +55,8 @@ Item {
             d.sizeBytes = entry.sizeBytes ?? 0;
             d.timestamp = root.formatTimestamp(entry.timestamp ?? 0);
 
-            d.imageData = entry.imageData ?? "";
+            d.previewPath = entry.previewPath ?? "";
+
             d.loading = false;
         }
     }
@@ -342,7 +340,8 @@ Item {
                     // d.imageData is cleared by d.clear() on every selection
                     // change, so the previous image is freed before the next
                     // one is fetched.
-                    source: d.imageData.length > 0 ? "data:image/png;base64," + d.imageData : ""
+                    source: d.previewPath.length > 0 ? ("file://" + d.previewPath) : ""
+                    sourceSize: Qt.size(300, 300)
 
                     opacity: status === Image.Ready ? 1.0 : 0.0
                     Behavior on opacity {
