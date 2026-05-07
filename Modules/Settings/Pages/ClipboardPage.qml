@@ -80,8 +80,8 @@ Item {
                     from: 100
                     to: 1000
                     stepSize: 10
-					value: Configs.clipboard.preview.sourceWidth
-					onMoved: Configs.clipboard.preview.sourceWidth = value
+                    value: Configs.clipboard.preview.sourceWidth
+                    onMoved: Configs.clipboard.preview.sourceWidth = value
                     Layout.preferredWidth: 200
                 }
             }
@@ -100,8 +100,8 @@ Item {
                     from: 100
                     to: 1000
                     stepSize: 10
-					value: Configs.clipboard.preview.sourceHeight
-					onMoved: Configs.clipboard.preview.sourceHeight = value
+                    value: Configs.clipboard.preview.sourceHeight
+                    onMoved: Configs.clipboard.preview.sourceHeight = value
                     Layout.preferredWidth: 200
                 }
             }

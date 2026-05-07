@@ -75,7 +75,7 @@ ClippingRectangle {
         anchors.fill: parent
         onClicked: {
             if (root.wsp !== Hypr.focusedWorkspace)
-                Workspaces.switchWorkspace(root.index + 1)
+                Workspaces.switchWorkspace(root.index + 1);
         }
     }
 
