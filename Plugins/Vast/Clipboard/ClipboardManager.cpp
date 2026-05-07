@@ -4,10 +4,12 @@
 #include "../Search/FuzzyMatcher.hpp"
 
 #include <QGuiApplication>
+#include <QThreadPool>
 #include <QClipboard>
 #include <QMimeData>
 #include <QTimer>
 #include <QImage>
+#include <QDir>
 #include <QUrl>
 
 namespace Vast {
@@ -53,10 +55,14 @@ namespace Vast {
         connect(
             m_database.get(), &ClipboardDatabase::entryInserted, this,
             [this](const ClipboardEntry& entry) {
-                if (m_model) {
-                    m_model->prepend(entry);
-                    pruneIfNeeded();
-                }
+                if (!m_model)
+                    return;
+
+                m_model->prepend(entry);
+                pruneIfNeeded();
+
+                if (entry.isImage() && !entry.data.isEmpty())
+                    writePreviewFile(entry.id, entry.data);
             },
             Qt::QueuedConnection);
 
@@ -81,10 +87,64 @@ namespace Vast {
         if (!m_database || !m_model)
             return;
 
-        if (auto result = m_database->fetchAll())
-            m_model->reset(std::move(*result));
-        else
+        auto result = m_database->fetchAll();
+        if (!result) {
             qWarning() << "[ClipboardManager] fetchAll failed:" << result.error();
+            return;
+        }
+
+        m_model->reset(std::move(*result));
+
+        for (const auto& entry : m_model->allEntries()) {
+            if (!entry.isImage())
+                continue;
+
+            const QString path = QStringLiteral("/tmp/vast-shell/clipboard-preview/%1.png").arg(entry.id);
+            if (QFile::exists(path))
+                continue;
+
+            QTimer::singleShot(0, this, [this, id = entry.id]() {
+                if (!m_database)
+                    return;
+                auto r = m_database->fetchById(id);
+                if (!r || !r->isImage() || r->data.isEmpty())
+                    return;
+
+                QByteArray data = r->data;
+                QThreadPool::globalInstance()->start([id, data = std::move(data)]() {
+                    QThread::currentThread()->setPriority(QThread::LowPriority);
+                    writePreviewFileBackground(id, data);
+                });
+            });
+        }
+    }
+
+    void ClipboardManager::writePreviewFile(qint64 id, const QByteArray& pngData) {
+        QThreadPool::globalInstance()->start([id, pngData]() {
+            QThread::currentThread()->setPriority(QThread::LowPriority);
+            writePreviewFileBackground(id, pngData);
+        });
+    }
+
+    void ClipboardManager::writePreviewFileBackground(qint64 id, QByteArray pngData) {
+        const QString dir  = QStringLiteral("/tmp/vast-shell/clipboard-preview");
+        const QString path = QStringLiteral("%1/%2.png").arg(dir).arg(id);
+
+        QDir{}.mkpath(dir);
+
+        QImage img;
+        if (!img.loadFromData(pngData, "PNG"))
+            return;
+
+        constexpr int kThumbMaxDim = 400;
+        const QImage  thumb =
+            (img.width() > kThumbMaxDim || img.height() > kThumbMaxDim) ? img.scaled(kThumbMaxDim, kThumbMaxDim, Qt::KeepAspectRatio, Qt::SmoothTransformation) : img;
+
+        thumb.save(path, "PNG");
+    }
+
+    void ClipboardManager::removePreviewFile(qint64 id) {
+        QFile::remove(QStringLiteral("/tmp/vast-shell/clipboard-preview/%1.png").arg(id));
     }
 
     ClipboardModel* ClipboardManager::model() const noexcept {
@@ -215,6 +275,8 @@ namespace Vast {
     void ClipboardManager::remove(qint64 id) {
         if (m_model)
             m_model->removeById(id);
+
+        removePreviewFile(id);
 
         QTimer::singleShot(0, this, [this, id]() {
             if (m_database)

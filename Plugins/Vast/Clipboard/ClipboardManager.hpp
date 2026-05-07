@@ -61,6 +61,9 @@ namespace Vast {
         void                               setupConnections();
         void                               loadAllEntries();
         void                               pruneIfNeeded();
+        void                               writePreviewFile(qint64 id, const QByteArray& pngData);
+        static void                        writePreviewFileBackground(qint64 id, QByteArray pngData);
+        void                               removePreviewFile(qint64 id);
 
         QPointer<ClipboardModel>           m_model;
         std::unique_ptr<ClipboardWatcher>  m_watcher;
