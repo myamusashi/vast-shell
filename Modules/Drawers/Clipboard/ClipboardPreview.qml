@@ -66,7 +66,7 @@ Item {
 
         property bool loading: false
         property bool isImage: false
-        property string imageData: ""
+        property string previewPath: ""
         property string content: ""
         property string sourceApp: ""
         property string timestamp: ""
@@ -77,7 +77,7 @@ Item {
         function clear() {
             loading = false;
             isImage = false;
-            imageData = "";
+            previewPath = "";
             content = "";
             sourceApp = "";
             timestamp = "";
@@ -336,10 +336,6 @@ Item {
                     smooth: true
                     asynchronous: true
 
-                    // Setting source to "" immediately releases the old texture.
-                    // d.imageData is cleared by d.clear() on every selection
-                    // change, so the previous image is freed before the next
-                    // one is fetched.
                     source: d.previewPath.length > 0 ? ("file://" + d.previewPath) : ""
                     sourceSize: Qt.size(300, 300)
 
