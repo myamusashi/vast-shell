@@ -23,8 +23,6 @@ LazyLoader {
 
     activeAsync: false
     component: PanelWindow {
-        id: window
-
         anchors {
             left: true
             right: true

@@ -12,12 +12,8 @@ import qs.Services
 import "../Base"
 
 LazyLoader {
-    id: loader
-
     activeAsync: ToastService.model.count > 0
     component: PanelWindow {
-        id: window
-
         anchors.bottom: true
         margins.bottom: Appearance.margin.large
         mask: Region {} // ignore mouse input
