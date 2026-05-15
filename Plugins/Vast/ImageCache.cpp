@@ -145,6 +145,14 @@ void ImageCache::store(const QString& path) {
     std::unique_lock lock(m_rwMutex);
     m_loading.remove(path);
     m_done.insert(path);
+
+    constexpr qsizetype kMaxCacheEntries = 200;
+    if (m_done.size() > kMaxCacheEntries) {
+        auto      it       = m_done.begin();
+        const qsizetype toRemove = m_done.size() - kMaxCacheEntries;
+        for (int i = 0; i < toRemove && it != m_done.end(); ++i)
+            it = m_done.erase(it);
+    }
 }
 
 QString ImageCache::cachedPath(const QString& cacheKey) const {
