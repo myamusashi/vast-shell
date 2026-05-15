@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -13,18 +15,14 @@ import "./Pages"
 LazyLoader {
     id: settingsLoader
 
+    property int currentPage: 0
+
     activeAsync: GlobalStates.isSettingsOpen
     component: FloatingWindow {
-        id: settingsWindow
-
-        property int currentPage: 0
-
         color: "transparent"
         onClosed: GlobalStates.isSettingsOpen = false
 
         Rectangle {
-            id: root
-
             anchors.fill: parent
             color: GlobalStates.drawerColors
             radius: Appearance.rounding.large
@@ -132,7 +130,7 @@ LazyLoader {
                         id: stackLayout
 
                         anchors.fill: parent
-                        currentIndex: settingsWindow.currentPage
+                        currentIndex: settingsLoader.currentPage
 
                         Loader {
                             active: stackLayout.currentIndex === 0
