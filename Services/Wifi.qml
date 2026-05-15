@@ -9,7 +9,7 @@ Singleton {
     id: root
 
     readonly property list<WifiDevice> devices: Networking.devices ? Networking.devices.values : []
-    readonly property list<Network> networks: (devices.length > 0 && devices[0].networks) ? devices[0].networks.values : []
+    readonly property list<Network> networks: activeWifiDevice ? (activeWifiDevice.networks?.values ?? []) : []
     readonly property WifiDevice activeWifiDevice: devices[0] ?? null
     readonly property WifiNetwork activeWifiNetwork: networks[0] ?? null
 
