@@ -245,11 +245,11 @@ WrapperRectangle {
 
                                     StyledText {
                                         text: ({
-                                                [NetworkState.Connected]: qsTr("Connected"),
-                                                [NetworkState.Disconnected]: qsTr("Disconnected"),
-                                                [NetworkState.Disconnecting]: qsTr("Disconnecting"),
-                                                [NetworkState.Connecting]: qsTr("Connecting"),
-                                                [NetworkState.Unknown]: qsTr("Unknown")
+                                                [networkDelegate.modelData?.state.Connected]: qsTr("Connected"),
+                                                [networkDelegate.modelData?.state.Disconnected]: qsTr("Disconnected"),
+                                                [networkDelegate.modelData?.state.Disconnecting]: qsTr("Disconnecting"),
+                                                [networkDelegate.modelData?.state.Connecting]: qsTr("Connecting"),
+                                                [networkDelegate.modelData?.state.Unknown]: qsTr("Unknown")
                                             })[networkDelegate.modelData?.state] ?? qsTr("Unknown")
                                         color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.small
@@ -268,10 +268,5 @@ WrapperRectangle {
                 }
             }
         }
-    }
-
-    Component.onCompleted: {
-        if (Wifi.activeWifiDevice)
-            Wifi.activeWifiDevice.scannerEnabled = true;
     }
 }
