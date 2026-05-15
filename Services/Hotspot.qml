@@ -33,7 +33,6 @@ Singleton {
     property string errorMessage: ""
 
     Component.onCompleted: {
-        console.log(upstreamInterface);
         ToastService.show(qsTr("Upstream Interface: %1").arg(upstreamInterface), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         _queryStatus.running = true;
     }

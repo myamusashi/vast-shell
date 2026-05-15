@@ -8,9 +8,9 @@ import Quickshell.Networking
 Singleton {
     id: root
 
-    readonly property list<WifiDevice> devices: Networking.devices ? Networking.devices.values : []
-    readonly property list<Network> networks: activeWifiDevice ? (activeWifiDevice.networks?.values ?? []) : []
+    readonly property list<WifiDevice> devices: Networking.devices.values.filter(d => d.deviceType === DeviceType.Wifi)
     readonly property WifiDevice activeWifiDevice: devices[0] ?? null
+    readonly property list<Network> networks: activeWifiDevice ? (activeWifiDevice.networks?.values ?? []) : []
     readonly property WifiNetwork activeWifiNetwork: networks[0] ?? null
 
     function getWiFiIcon(strength) {
