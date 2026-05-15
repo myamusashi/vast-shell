@@ -602,7 +602,7 @@ Singleton {
 
     function reloadWeather() {
         _fetchData({
-            url: "https://weather.myamusashi.space/v1/forecast",
+            url: "https://weather.myamusashi.cc/v1/forecast",
             loadingProp: "weatherLoading",
             requestProp: "_activeWeatherRequest",
             onSuccess: updateWeatherData,
@@ -611,7 +611,7 @@ Singleton {
     }
     function reloadAQI() {
         _fetchData({
-            url: "https://aqi.myamusashi.space/v1/aqi",
+            url: "https://aqi.myamusashi.cc/v1/aqi",
             loadingProp: "aqiLoading",
             requestProp: "_activeAQIRequest",
             onSuccess: updateAQIData,
@@ -620,7 +620,7 @@ Singleton {
     }
     function reloadAstronomy() {
         _fetchData({
-            url: "https://astronomy.myamusashi.space/v1/astronomy",
+            url: "https://astronomy.myamusashi.cc/v1/astronomy",
             loadingProp: "astronomyLoading",
             requestProp: "_activeAstronomyRequest",
             onSuccess: updateAstronomyData,
