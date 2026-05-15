@@ -12,7 +12,7 @@ Rectangle {
     property alias text: textItem.text
     property alias iconName: iconItem.icon
     property int pageIndex: 0
-    property bool isActive: pageIndex === settingsWindow.currentPage
+    property bool isActive: pageIndex === settingsLoader.currentPage
 
     Layout.fillWidth: true
     Layout.preferredHeight: 48
@@ -105,7 +105,7 @@ Rectangle {
         layerColor: "transparent"
         layerRadius: root.radius
         anchors.fill: parent
-        onClicked: settingsWindow.currentPage = root.pageIndex
+        onClicked: settingsLoader.currentPage = root.pageIndex
 
         Rectangle {
             anchors.fill: parent

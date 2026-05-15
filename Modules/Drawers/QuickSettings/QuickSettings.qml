@@ -216,7 +216,9 @@ Item {
             }
         }
 
-        Loader {
+		Loader {
+			id: pageLoader
+
             anchors.fill: parent
             asynchronous: true
             sourceComponent: animRoot.content
