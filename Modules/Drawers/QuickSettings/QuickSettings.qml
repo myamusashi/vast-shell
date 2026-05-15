@@ -220,12 +220,14 @@ Item {
             anchors.fill: parent
             asynchronous: true
             sourceComponent: animRoot.content
+            active: animRoot.currentIndex === animRoot.pageIndex
 
-            property bool visited: false
-            active: animRoot.currentIndex === animRoot.pageIndex || visited
-            onActiveChanged: {
-                if (active)
-                    visited = true;
+            Timer {
+                id: unloadTimer
+
+                interval: 30000
+                running: !pageLoader.active
+                onTriggered: {}
             }
         }
     }
