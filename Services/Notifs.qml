@@ -28,6 +28,16 @@ Singleton {
             notif.close();
     }
 
+    function forceCleanup() {
+        const now = Date.now();
+        for (const notif of root.list.slice()) {
+            if (now - notif.time.getTime() > root.maxNotificationAge * 2) {
+                notif.locks.clear();
+                notif.close();
+            }
+        }
+    }
+
     function cleanupOldNotifications() {
         const now = Date.now();
         const oldNotifications = root.list.filter(n => {
@@ -85,6 +95,13 @@ Singleton {
                         actions: n.actions
                     })), null, 2));
         }
+    }
+
+    Timer {
+        interval: 3600000
+        running: true
+        repeat: true
+        onTriggered: root.forceCleanup()
     }
 
     Timer {
