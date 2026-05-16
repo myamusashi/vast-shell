@@ -45,6 +45,7 @@ ImageCache* ImageCache::s_instance = nullptr;
 
 ImageCache::ImageCache(QObject* parent) : QObject(parent) {
     s_instance = this;
+    loadIndex();
 }
 
 ImageCache* ImageCache::create(QQmlEngine* engine, QJSEngine*) {
@@ -131,6 +132,8 @@ std::expected<QString, ImageCacheError> ImageCache::saveProviderImage(const QStr
     {
         std::unique_lock lock(m_rwMutex);
         m_keyToPath.insert(cacheKey, fileUrl);
+        lock.unlock();
+        saveIndex();
     }
     return fileUrl;
 }
@@ -148,7 +151,7 @@ void ImageCache::store(const QString& path) {
 
     constexpr qsizetype kMaxCacheEntries = 200;
     if (m_done.size() > kMaxCacheEntries) {
-        auto      it       = m_done.begin();
+        auto            it       = m_done.begin();
         const qsizetype toRemove = m_done.size() - kMaxCacheEntries;
         for (int i = 0; i < toRemove && it != m_done.end(); ++i)
             it = m_done.erase(it);
@@ -165,4 +168,42 @@ void ImageCache::evictKey(const QString& cacheKey) {
     const QString    path = m_keyToPath.take(cacheKey);
     if (!path.isEmpty())
         QFile::remove(path.mid(7));
+}
+
+QString ImageCache::indexPath() const {
+    return u"/tmp/vast-shell/notif-images/.index.json"_s;
+}
+
+void ImageCache::loadIndex() {
+    QFile f(indexPath());
+    if (!f.open(QIODevice::ReadOnly))
+        return;
+
+    const auto doc = QJsonDocument::fromJson(f.readAll());
+    if (!doc.isObject())
+        return;
+
+    std::unique_lock lock(m_rwMutex);
+    const auto       obj = doc.object();
+    for (auto it = obj.begin(); it != obj.end(); ++it) {
+        const QString filePath = it.value().toString();
+        if (QFile::exists(filePath)) {
+            m_keyToPath.insert(it.key(), filePath);
+            m_done.insert(filePath);
+        }
+    }
+}
+
+void ImageCache::saveIndex() {
+    std::shared_lock lock(m_rwMutex);
+    QJsonObject      obj;
+    for (auto it = m_keyToPath.constBegin(); it != m_keyToPath.constEnd(); ++it) {
+        obj.insert(it.key(), it.value());
+    }
+    lock.unlock();
+
+    QFile f(indexPath());
+    QDir().mkpath(QFileInfo(f).absolutePath());
+    if (f.open(QIODevice::WriteOnly))
+        f.write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
 }

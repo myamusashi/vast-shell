@@ -56,6 +56,10 @@ class ImageCache : public QObject {
     explicit ImageCache(QObject* parent = nullptr);
     static ImageCache*        s_instance;
 
+    void                      loadIndex();
+    void                      saveIndex();
+    QString                   indexPath() const;
+
     QQmlEngine*               m_engine = nullptr;
 
     mutable std::shared_mutex m_rwMutex;
