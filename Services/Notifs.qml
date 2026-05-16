@@ -190,16 +190,11 @@ Singleton {
                     if (notifAge > root.maxNotificationAge)
                         continue;
 
-                    const key = "notif-" + notifData.id;
                     const raw = notifData.image ?? "";
-
-                    let stableUrl = "";
-                    if (raw.startsWith("image://")) {
-                        const key = "notif-" + notifData.id;
-                        const cachedFile = "/tmp/vast-shell/notif-images/" + key + ".png";
-                        stableUrl = "";
-                    } else
-                        stableUrl = raw;
+                    // image:// URLs are provider-ephemeral and cannot survive a reload;
+                    // they should never appear in JSON after the saveTimer fix, but discard
+                    // any that slipped through from an older cache.
+                    const stableUrl = raw.startsWith("image://") ? "" : raw;
 
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
@@ -390,7 +385,9 @@ Singleton {
                 return;
 
             const raw = notification.image ?? "";
-            const cachedImage = notification.desktopEntry === "spotify" ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id) : raw;
+            const cachedImage = raw.startsWith("image://")
+                ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id)
+                : raw;
 
             id = notification.id;
             summary = notification.summary;
