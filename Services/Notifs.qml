@@ -77,23 +77,33 @@ Singleton {
     Timer {
         id: saveTimer
 
-        interval: 50
+        interval: 2000
         onTriggered: {
-            storage.setText(JSON.stringify(root.notClosed.map(n => ({
-                        time: n.time.getTime(),
-                        id: n.id,
-                        summary: n.summary,
-                        body: n.body,
-                        appIcon: n.appIcon,
-                        appName: n.appName,
-                        image: n.image,
-                        desktopEntry: n.desktopEntry,
-                        expireTimeout: n.expireTimeout,
-                        urgency: n.urgency,
-                        resident: n.resident,
-                        hasActionIcons: n.hasActionIcons,
-                        actions: n.actions
-                    })), null, 2));
+            storage.setText(JSON.stringify(root.notClosed.map(n => {
+                let persistentImage = n.image ?? "";
+
+                if (persistentImage.startsWith("image://")) {
+                    const key = "notif-" + n.id;
+                    const cached = ImageCache.cachedPath(key);
+                    persistentImage = cached || "";
+                }
+
+                return {
+                    time: n.time.getTime(),
+                    id: n.id,
+                    summary: n.summary,
+                    body: n.body,
+                    appIcon: n.appIcon,
+                    appName: n.appName,
+                    image: persistentImage,
+                    desktopEntry: n.desktopEntry,
+                    expireTimeout: n.expireTimeout,
+                    urgency: n.urgency,
+                    resident: n.resident,
+                    hasActionIcons: n.hasActionIcons,
+                    actions: n.actions
+                };
+            }), null, 2));
         }
     }
 
@@ -181,8 +191,15 @@ Singleton {
                         continue;
 
                     const key = "notif-" + notifData.id;
-                    const rawImage = notifData.image ?? "";
-                    const stableUrl = rawImage.startsWith("image://") ? ImageCache.saveProviderImageQml(rawImage, key) : rawImage;
+                    const raw = notifData.image ?? "";
+
+                    let stableUrl = "";
+                    if (raw.startsWith("image://")) {
+                        const key = "notif-" + notifData.id;
+                        const cachedFile = "/tmp/vast-shell/notif-images/" + key + ".png";
+                        stableUrl = "";
+                    } else
+                        stableUrl = raw;
 
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
@@ -256,7 +273,17 @@ Singleton {
 
             function onImageChanged() {
                 const raw = notif.notification.image ?? "";
-                notif.image = notif.notification.desktopEntry === "spotify" ? ImageCache.saveProviderImageQml(raw, "notif-" + notif.id) : raw;
+
+                if (!raw || raw === "") {
+                    notif.image = "";
+                    return;
+                }
+
+                if (raw.startsWith("image://")) {
+                    if (notif.notification && notif.notification.id)
+                        notif.image = ImageCache.saveProviderImageQml(raw, "notif-" + notif.notification.id);
+                } else
+                    notif.image = raw;
             }
 
             function onExpireTimeoutChanged() {
