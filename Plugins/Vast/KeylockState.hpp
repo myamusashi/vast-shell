@@ -40,11 +40,18 @@ class Keylock : public QObject {
     void numLockChanged();
 
   private:
+    struct OpenDevice {
+        int              fd       = -1;
+        QSocketNotifier* notifier = nullptr;
+    };
+
     void                    openDevices();
     void                    readInitialState(int fd, bool hasLED);
     void                    onReadReady(int fd, bool hasLED);
 
     std::vector<OpenDevice> m_open;
-    bool                    m_capsLock = false;
-    bool                    m_numLock  = false;
+    bool                    m_capsLock     = false;
+    bool                    m_numLock      = false;
+    bool                    m_lastCapsLock = false;
+    bool                    m_lastNumLock  = false;
 };
