@@ -9,6 +9,8 @@
 
 #include <memory>
 
+class QTimer;
+
 namespace Vast {
 
     class ClipboardDatabase;
@@ -64,10 +66,14 @@ namespace Vast {
         void                               writePreviewFile(qint64 id, const QByteArray& pngData);
         static void                        writePreviewFileBackground(qint64 id, QByteArray pngData);
         void                               removePreviewFile(qint64 id);
+        void                               performSearch(const QString& query);
 
         QPointer<ClipboardModel>           m_model;
         std::unique_ptr<ClipboardWatcher>  m_watcher;
         std::unique_ptr<ClipboardDatabase> m_database;
+
+        QTimer*                            m_searchDebounce{nullptr};
+        QString                            m_pendingQuery;
 
         qint64                             m_pendingEntryId{-1};
         int                                m_maxEntries{500};

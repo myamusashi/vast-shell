@@ -9,6 +9,7 @@
 #include <QByteArray>
 
 #include <optional>
+#include <atomic>
 
 namespace Vast {
 
@@ -46,5 +47,7 @@ namespace Vast {
         QHash<QByteArray, int>                             m_selfCopyHashes{};
         bool                                               m_started{false};
         QByteArray                                         m_lastImageHash{};
+        std::atomic<quint64>                               m_copySequence{0};
+        quint64                                            m_lastProcessedSequence{0};
     };
 }

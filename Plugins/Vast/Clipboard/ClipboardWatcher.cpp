@@ -52,6 +52,9 @@ namespace Vast {
         if (!mime || mime->formats().isEmpty())
             return;
 
+        const quint64 seq               = ++m_copySequence;
+        const qint64  capturedTimestamp = QDateTime::currentMSecsSinceEpoch();
+
         const auto*   manager   = qobject_cast<ClipboardManager*>(parent());
         const QString sourceApp = manager ? manager->activeWindow() : QString{};
 
@@ -67,6 +70,9 @@ namespace Vast {
                     if (it != m_selfCopyHashes.end()) {
                         if (--it.value() <= 0)
                             m_selfCopyHashes.erase(it);
+                        // Do NOT advance m_lastProcessedSequence here.
+                        // A self-copy discard must not block a concurrent valid image task
+                        // that was spawned before this event but finishes after.
                         return;
                     }
                 }
@@ -78,7 +84,7 @@ namespace Vast {
             if (image.isNull())
                 return;
 
-            QThreadPool::globalInstance()->start([this, image, sourceApp]() {
+            QThreadPool::globalInstance()->start([this, image, sourceApp, seq, capturedTimestamp]() {
                 QThread::currentThread()->setPriority(QThread::LowPriority);
 
                 const QByteArray png = compressImage(image);
@@ -89,17 +95,28 @@ namespace Vast {
 
                 QMetaObject::invokeMethod(
                     this,
-                    [this, png, hash, sourceApp]() {
+                    [this, png, hash, sourceApp, seq, capturedTimestamp]() {
+                        // Discard task if a *newer* image has already been committed.
+                        if (seq < m_lastProcessedSequence)
+                            return;
+
+                        // Check self-copy for image: payload was empty at dispatch time
+                        // so hash-based detection is done here, after compression.
                         auto it = m_selfCopyHashes.find(hash);
                         if (it != m_selfCopyHashes.end()) {
                             if (--it.value() <= 0)
                                 m_selfCopyHashes.erase(it);
+                            // Do NOT advance m_lastProcessedSequence: a self-copy image
+                            // discard must not prevent older in-flight tasks from committing.
                             return;
                         }
 
                         if (hash == m_lastImageHash)
                             return;
-                        m_lastImageHash = hash;
+
+                        // Only commit the sequence number on a real, successful emit.
+                        m_lastProcessedSequence = seq;
+                        m_lastImageHash         = hash;
 
                         ClipboardEntry entry{.id        = -1,
                                              .type      = ClipboardType::Image,
@@ -110,7 +127,7 @@ namespace Vast {
                                              .pinned    = false,
                                              .sourceApp = sourceApp,
                                              .sizeBytes = static_cast<qint64>(png.size()),
-                                             .timestamp = QDateTime::currentMSecsSinceEpoch()};
+                                             .timestamp = capturedTimestamp};
 
                         emit           newEntry(entry);
                     },
@@ -119,13 +136,20 @@ namespace Vast {
             return;
         }
 
+        // For non-image types, commit sequence immediately (synchronous path).
+        m_lastProcessedSequence = seq;
+
         std::optional<ClipboardEntry> entry;
-        if (mime->hasHtml())
+        if (mime->hasHtml()) {
+            m_lastImageHash.clear();
             entry = buildHtmlEntry(cb, sourceApp);
-        else if (mime->hasUrls())
+        } else if (mime->hasUrls()) {
+            m_lastImageHash.clear();
             entry = buildFilesEntry(cb, sourceApp);
-        else if (mime->hasText())
+        } else if (mime->hasText()) {
+            m_lastImageHash.clear();
             entry = buildTextEntry(cb, sourceApp);
+        }
 
         if (entry.has_value())
             emit newEntry(std::move(*entry));
@@ -215,23 +239,23 @@ namespace Vast {
     }
 
     [[nodiscard]] QByteArray ClipboardWatcher::compressImage(const QImage& image) {
-        // don't worry about this, we don't want this shit get overflow 
+        // don't worry about this, we don't want this shit get overflow
         constexpr qint64 kMaxPixels = 4'000'000LL;
 
-        const qint64 pixels = static_cast<qint64>(image.width()) * image.height();
+        const qint64     pixels = static_cast<qint64>(image.width()) * image.height();
 
-        QImage downscaled;
+        QImage           downscaled;
         if (pixels > kMaxPixels) {
             const qreal factor = qSqrt(static_cast<qreal>(kMaxPixels) / static_cast<qreal>(pixels));
-            const int   w      = qMax(1, qRound(image.width()  * factor));
+            const int   w      = qMax(1, qRound(image.width() * factor));
             const int   h      = qMax(1, qRound(image.height() * factor));
-            downscaled = image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+            downscaled         = image.scaled(w, h, Qt::IgnoreAspectRatio, Qt::FastTransformation);
         }
 
         const QImage& src = downscaled.isNull() ? image : downscaled;
 
-        QByteArray bytes;
-        QBuffer    buf{&bytes};
+        QByteArray    bytes;
+        QBuffer       buf{&bytes};
         buf.open(QIODevice::WriteOnly);
 
         if (!src.save(&buf, "PNG", 1))

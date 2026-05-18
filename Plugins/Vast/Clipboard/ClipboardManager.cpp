@@ -12,11 +12,19 @@
 #include <QDir>
 #include <QUrl>
 
+#include <algorithm>
+#include <functional>
+
 namespace Vast {
 
     ClipboardManager::ClipboardManager(QObject* parent) :
-        QObject{parent}, m_model{new ClipboardModel{this}}, m_watcher{std::make_unique<ClipboardWatcher>(this)}, m_database{std::make_unique<ClipboardDatabase>(this)} {
+        QObject{parent}, m_model{new ClipboardModel{this}}, m_watcher{std::make_unique<ClipboardWatcher>(this)}, m_database{std::make_unique<ClipboardDatabase>(this)},
+        m_searchDebounce{new QTimer{this}} {
         qRegisterMetaType<ClipboardEntry>();
+
+        m_searchDebounce->setSingleShot(true);
+        m_searchDebounce->setInterval(150);
+        connect(m_searchDebounce, &QTimer::timeout, this, [this]() { performSearch(m_pendingQuery); });
     }
 
     ClipboardManager::~ClipboardManager() = default;
@@ -336,23 +344,34 @@ namespace Vast {
             return;
 
         if (query.isEmpty()) {
+            if (m_searchDebounce)
+                m_searchDebounce->stop();
             m_model->setFilter({}, {});
             return;
         }
+
+        m_pendingQuery = query;
+        if (m_searchDebounce)
+            m_searchDebounce->start();
+    }
+
+    void ClipboardManager::performSearch(const QString& query) {
+        if (!m_model || query.isEmpty())
+            return;
 
         const auto&                            entries = m_model->allEntries();
         std::vector<std::pair<double, qint64>> scored;
         scored.reserve(static_cast<size_t>(entries.size()));
 
         for (const auto& entry : entries) {
-            const QString haystack = entry.isImage() ? entry.sourceApp : entry.content.left(500) + u' ' + entry.sourceApp;
+            const QString haystack = entry.isImage() ? entry.sourceApp : entry.content.left(200) + u' ' + entry.sourceApp;
 
             const double  score = FuzzyMatcher::fuzzyScore(query, haystack);
             if (score > 0.0)
                 scored.emplace_back(score, entry.id);
         }
 
-        std::ranges::sort(scored, {}, [](const auto& pair) { return pair.first; });
+        std::ranges::sort(scored, std::ranges::greater{}, [](const auto& pair) { return pair.first; });
 
         QList<qint64> orderedIds;
         orderedIds.reserve(static_cast<qsizetype>(scored.size()));
