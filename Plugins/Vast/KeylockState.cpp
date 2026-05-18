@@ -2,6 +2,8 @@
 
 #include <QDir>
 #include <fcntl.h>
+#include <cerrno>
+#include <algorithm>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/input.h>
@@ -137,48 +139,65 @@ void Keylock::readInitialState(int fd, bool hasLED) {
 }
 
 void Keylock::onReadReady(int fd, bool hasLED) {
-    QSocketNotifier* notifier = nullptr;
-    for (auto& d : m_open) {
-        if (d.fd == fd) {
-            notifier = d.notifier;
-            break;
-        }
-    }
+    auto it = std::find_if(m_open.begin(), m_open.end(), [fd](const OpenDevice& d) { return d.fd == fd; });
+    if (it == m_open.end())
+        return;
 
+    QSocketNotifier* notifier = it->notifier;
     if (notifier)
         notifier->setEnabled(false);
 
     input_event   ev{};
     constexpr int kMaxEventsPerBatch = 64;
     int           processed          = 0;
+    bool          removeDevice       = false;
 
-    while (::read(fd, &ev, sizeof(ev)) == sizeof(ev) && ++processed <= kMaxEventsPerBatch) {
-        if (hasLED) {
-            if (ev.type != EV_LED)
-                continue;
+    while (processed < kMaxEventsPerBatch) {
+        ssize_t bytes = ::read(fd, &ev, sizeof(ev));
+        if (bytes == static_cast<ssize_t>(sizeof(ev))) {
+            ++processed;
 
-            const bool val = ev.value != 0;
-            if (ev.code == LED_CAPSL && m_capsLock != val) {
-                m_capsLock = val;
-                emit capsLockChanged();
-            } else if (ev.code == LED_NUML && m_numLock != val) {
-                m_numLock = val;
-                emit numLockChanged();
+            if (hasLED) {
+                if (ev.type != EV_LED)
+                    continue;  // read next event
+
+                const bool val = ev.value != 0;
+                if (ev.code == LED_CAPSL && m_capsLock != val) {
+                    m_capsLock = val;
+                    emit capsLockChanged();
+                } else if (ev.code == LED_NUML && m_numLock != val) {
+                    m_numLock = val;
+                    emit numLockChanged();
+                }
+            } else {
+                if (ev.type != EV_KEY || ev.value != 1)
+                    continue;  // read next event
+
+                if (ev.code == KEY_CAPSLOCK) {
+                    m_capsLock = !m_capsLock;
+                    emit capsLockChanged();
+                } else if (ev.code == KEY_NUMLOCK) {
+                    m_numLock = !m_numLock;
+                    emit numLockChanged();
+                }
             }
+        } else if (bytes < 0) {
+            if (errno != EAGAIN && errno != EWOULDBLOCK)
+                removeDevice = true;  // error: ENODEV, EIO, etc.
+            break;
         } else {
-            if (ev.type != EV_KEY || ev.value != 1)
-                continue;
-
-            if (ev.code == KEY_CAPSLOCK) {
-                m_capsLock = !m_capsLock;
-                emit capsLockChanged();
-            } else if (ev.code == KEY_NUMLOCK) {
-                m_numLock = !m_numLock;
-                emit numLockChanged();
-            }
+            // EOF / partial read — device disconnected
+            removeDevice = true;
+            break;
         }
     }
 
-    if (notifier)
+    if (removeDevice) {
+        it->notifier = nullptr;
+        delete notifier;
+        ::close(fd);
+        m_open.erase(it);
+    } else if (notifier) {
         notifier->setEnabled(true);
+    }
 }
