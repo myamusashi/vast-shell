@@ -85,6 +85,7 @@
             qt6.qtbase
             qt6.qtdeclarative
             qt6.qtmultimedia
+			qt6.qtgraphs
             qt6.qt5compat
             kdePackages.qtmultimedia
         ];
@@ -199,6 +200,7 @@
                 --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
