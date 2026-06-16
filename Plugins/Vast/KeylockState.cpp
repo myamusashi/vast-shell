@@ -159,7 +159,7 @@ void Keylock::onReadReady(int fd, bool hasLED) {
 
             if (hasLED) {
                 if (ev.type != EV_LED)
-                    continue;  // read next event
+                    continue; // read next event
 
                 const bool val = ev.value != 0;
                 if (ev.code == LED_CAPSL && m_capsLock != val) {
@@ -171,7 +171,7 @@ void Keylock::onReadReady(int fd, bool hasLED) {
                 }
             } else {
                 if (ev.type != EV_KEY || ev.value != 1)
-                    continue;  // read next event
+                    continue; // read next event
 
                 if (ev.code == KEY_CAPSLOCK) {
                     m_capsLock = !m_capsLock;
@@ -183,7 +183,7 @@ void Keylock::onReadReady(int fd, bool hasLED) {
             }
         } else if (bytes < 0) {
             if (errno != EAGAIN && errno != EWOULDBLOCK)
-                removeDevice = true;  // error: ENODEV, EIO, etc.
+                removeDevice = true; // error: ENODEV, EIO, etc.
             break;
         } else {
             // EOF / partial read — device disconnected
