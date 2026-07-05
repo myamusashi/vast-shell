@@ -296,6 +296,8 @@ Item {
     }
 
     function screenshotSelection(action) {
+        delayTimer.running = false;
+        delayTimer.pendingFn = null;
         root._pendingAction = "region";
         const screen = Quickshell.screens[0];
         if (!screen) {
@@ -306,10 +308,14 @@ Item {
         captureLoader._targetScreen = screen;
         captureLoader._targetWidth = screen.width;
         captureLoader._targetHeight = screen.height;
-        captureLoader.active = true;
+        delayTimer.interval = 2000;
+        delayTimer.pendingFn = () => { captureLoader.active = true; };
+        delayTimer.running = true;
     }
 
     function screenshotOutput(target, action) {
+        delayTimer.running = false;
+        delayTimer.pendingFn = null;
         root._pendingAction = action || "save+copy";
         const screen = Quickshell.screens.find(s => s.name === target) ?? Quickshell.screens[0];
         if (!screen) {
@@ -319,7 +325,9 @@ Item {
         captureLoader._targetScreen = screen;
         captureLoader._targetWidth = screen.width;
         captureLoader._targetHeight = screen.height;
-        captureLoader.active = true;
+        delayTimer.interval = 2000;
+        delayTimer.pendingFn = () => { captureLoader.active = true; };
+        delayTimer.running = true;
     }
 
     function copyToClipboard(img) {
