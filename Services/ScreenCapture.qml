@@ -5,6 +5,7 @@ import Quickshell
 import Vast
 
 import qs.Core.Utils
+import qs.Services.ScreenRecorder
 
 Singleton {
     id: root
@@ -48,7 +49,7 @@ Singleton {
                     "icon": "select",
                     "action": () => {
                         if (ScreenRecorder.isRecording)
-                            ScreenRecorder.stopRecording;
+                            ScreenRecorder.stopRecording();
                         else
                             select.open();
                     }

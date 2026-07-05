@@ -50,8 +50,6 @@ qt_add_qml_module(VastPlugin
         LyricsProvider.hpp
         TranslationManager.hpp
         TranslationManager.cpp
-        ScreenRecorder.hpp
-        ScreenRecorder.cpp
         ImageCache.cpp
         ImageCache.hpp
         Clipboard/ClipboardEntry.hpp

@@ -385,9 +385,7 @@ Singleton {
                 return;
 
             const raw = notification.image ?? "";
-            const cachedImage = raw.startsWith("image://")
-                ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id)
-                : raw;
+            const cachedImage = raw.startsWith("image://") ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id) : raw;
 
             id = notification.id;
             summary = notification.summary;

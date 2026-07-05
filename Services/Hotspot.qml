@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Networking
 
 import qs.Services
 
@@ -23,7 +24,13 @@ Singleton {
     readonly property string upstreamInterface: SystemUsage.allEthernetDevices
 
     // prefer a active device as hotspot interface
-    readonly property string hotspotInterface: Wifi.activeWifiDevice.name
+    readonly property string hotspotInterface: {
+        for (const d of Networking.devices) {
+            if (d.type === DeviceType.Wifi)
+                return d.name ?? "";
+        }
+        return "";
+    }
 
     property string ssid: ""
     property string password: ""

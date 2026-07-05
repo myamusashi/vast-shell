@@ -71,7 +71,7 @@ RowLayout {
                 }
 
                 StyledText {
-                    text: SystemUsage.statusWiredInterface === "connected" ? qsTr("Connected") : qsTr("Not Connected")
+                    text: ethernetCard.isConnected ? qsTr("Connected") : qsTr("Not Connected")
                     font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }
@@ -86,6 +86,13 @@ RowLayout {
         implicitHeight: 70
         color: Colours.m3Colors.m3SurfaceContainer
         radius: Appearance.rounding.normal
+
+        // Pure declarative bindings — no manual update functions needed
+        readonly property WifiDevice wifiDevice: Networking.devices.values.find(d => d.type === DeviceType.Wifi) ?? null
+
+        readonly property var connectedNetwork: wifiDevice?.networks.values.find(n => n.connected) ?? null
+
+        readonly property bool isConnected: Networking.wifiEnabled && (connectedNetwork?.connected ?? false)
 
         MArea {
             anchors.fill: parent
@@ -106,14 +113,27 @@ RowLayout {
             Rectangle {
                 Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
-                color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+                color: wifiCard.isConnected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
                     type: Icon.Material
                     anchors.centerIn: parent
-                    icon: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Wifi.getWiFiIcon(Wifi.activeWifiNetwork?.signalStrength ?? 0) : "wifi_off"
-                    color: Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    icon: {
+                        if (!wifiCard.isConnected)
+                            return "wifi_off";
+                        const s = wifiCard.connectedNetwork.signalStrength;
+                        if (s >= 0.8)
+                            return "network_wifi";
+                        if (s >= 0.5)
+                            return "network_wifi_3_bar";
+                        if (s >= 0.3)
+                            return "network_wifi_2_bar";
+                        if (s >= 0.15)
+                            return "network_wifi_1_bar";
+                        return "signal_wifi_0_bar";
+                    }
+                    color: wifiCard.isConnected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge
                 }
             }
@@ -129,12 +149,7 @@ RowLayout {
                 }
 
                 StyledText {
-                    text: {
-                        if (Networking.wifiEnabled && Wifi.activeWifiNetwork?.connected)
-                            return Wifi.activeWifiNetwork?.name ?? "";
-                        else
-                            return qsTr("WiFi Disconnected");
-                    }
+                    text: wifiCard.isConnected ? wifiCard.connectedNetwork.name : qsTr("WiFi Disconnected")
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.Medium
                     width: parent.width

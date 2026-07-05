@@ -2,14 +2,15 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Widgets
 import Quickshell.Networking
 
+import qs.Components.Feedback
 import qs.Core.Configs
 import qs.Core.Utils
-import qs.Services
 import qs.Components.Base
-import qs.Components.Feedback
+import qs.Services
 
 import "../Components"
 
@@ -18,6 +19,26 @@ Item {
 
     Layout.fillWidth: true
     Layout.fillHeight: true
+
+    readonly property var _activeWifiDevice: {
+        for (const d of Networking.devices) {
+            if (d.type === DeviceType.Wifi)
+                return d;
+        }
+        return null;
+    }
+
+    function _wifiIcon(strength) {
+        if (strength >= 0.8)
+            return "network_wifi";
+        if (strength >= 0.5)
+            return "network_wifi_3_bar";
+        if (strength >= 0.3)
+            return "network_wifi_2_bar";
+        if (strength >= 0.15)
+            return "network_wifi_1_bar";
+        return "signal_wifi_0_bar";
+    }
 
     ColumnLayout {
         anchors {
@@ -47,7 +68,6 @@ Item {
                 width: parent.width
                 spacing: Appearance.spacing.normal
 
-                // ── Hotspot ────────────────────────────────────────
                 SettingsCard {
                     title: qsTr("Hotspot")
 
@@ -156,7 +176,9 @@ Item {
                             Layout.preferredWidth: 52
                             Layout.preferredHeight: 32
                             checked: Networking.wifiEnabled
-                            onToggled: Networking.wifiEnabled = checked
+                            onToggled: Qt.callLater(() => {
+                                Networking.wifiEnabled = checked;
+                            })
                         }
                     }
 
@@ -169,13 +191,6 @@ Item {
                             implicitWidth: parent.width
                             implicitHeight: 4
                             color: Colours.m3Colors.m3SurfaceContainerHighest
-                        }
-
-                        Progress {
-                            anchors.centerIn: parent
-                            implicitWidth: parent.width
-                            implicitHeight: 4
-                            condition: Wifi.activeWifiDevice?.scannerEnabled && Networking.wifiEnabled
                         }
                     }
 
@@ -191,28 +206,51 @@ Item {
                         delegate: ColumnLayout {
                             id: deviceDelegate
 
-                            required property WifiDevice modelData
+                            required property var modelData
 
                             width: wifiListView.width
 
+                            RowLayout {
+                                Layout.fillWidth: true
+                                visible: deviceDelegate.modelData.type === DeviceType.Wifi
+                                spacing: Appearance.spacing.small
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                StyledText {
+                                    text: qsTr("Scanner")
+                                    color: Colours.m3Colors.m3OnSurfaceVariant
+                                    font.pixelSize: Appearance.fonts.size.small
+                                }
+
+                                StyledSwitch {
+                                    checked: deviceDelegate.modelData.scannerEnabled
+                                    onToggled: deviceDelegate.modelData.scannerEnabled = checked
+                                }
+                            }
+
                             Repeater {
-                                model: {
-                                    if (deviceDelegate.modelData.type !== DeviceType.Wifi)
-                                        return [];
-                                    return [...deviceDelegate.modelData.networks.values].sort((a, b) => {
-                                        if (a.connected !== b.connected)
-                                            return b.connected - a.connected;
-                                        return b.signalStrength - a.signalStrength;
-                                    });
+                                model: ScriptModel {
+                                    values: {
+                                        if (deviceDelegate.modelData.type !== DeviceType.Wifi)
+                                            return [];
+                                        return [...deviceDelegate.modelData.networks.values].sort((a, b) => {
+                                            if (a.connected !== b.connected)
+                                                return b.connected - a.connected;
+                                            return b.signalStrength - a.signalStrength;
+                                        });
+                                    }
                                 }
 
                                 delegate: WrapperRectangle {
                                     id: networkDelegate
 
-                                    required property WifiNetwork modelData
+                                    required property var modelData
 
                                     Layout.fillWidth: true
-                                    color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                                    color: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
                                     radius: Appearance.rounding.large
                                     margin: Appearance.margin.small
 
@@ -266,14 +304,25 @@ Item {
                                             Icon {
                                                 anchors.fill: parent
                                                 icon: "signal_wifi_0_bar"
-                                                color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.large * 1.5
                                             }
 
                                             Icon {
                                                 anchors.fill: parent
-                                                icon: Wifi.getWiFiIcon(networkDelegate.modelData?.signalStrength ?? 0)
-                                                color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                                icon: {
+                                                    const p = Math.round((modelData?.signalStrength ?? 0) * 100);
+                                                    if (p >= 80)
+                                                        return "network_wifi";
+                                                    if (p >= 50)
+                                                        return "network_wifi_3_bar";
+                                                    if (p >= 30)
+                                                        return "network_wifi_2_bar";
+                                                    if (p >= 15)
+                                                        return "network_wifi_1_bar";
+                                                    return "signal_wifi_0_bar";
+                                                }
+                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.large * 1.5
                                             }
                                         }
@@ -284,29 +333,23 @@ Item {
 
                                             StyledText {
                                                 Layout.fillWidth: true
-                                                text: networkDelegate.modelData?.name ?? ""
+                                                text: modelData?.name ?? ""
                                                 elide: Text.ElideRight
-                                                color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.normal
                                             }
 
                                             StyledText {
-                                                text: ({
-                                                        [networkDelegate.modelData?.state.Connected]: qsTr("Connected"),
-                                                        [networkDelegate.modelData?.state.Disconnected]: qsTr("Disconnected"),
-                                                        [networkDelegate.modelData?.state.Disconnecting]: qsTr("Disconnecting"),
-                                                        [networkDelegate.modelData?.state.Connecting]: qsTr("Connecting"),
-                                                        [networkDelegate.modelData?.state.Unknown]: qsTr("Unknown")
-                                                    })[networkDelegate.modelData?.state] ?? qsTr("Unknown")
-                                                color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                                text: ConnectionState.toString(modelData.state)
+                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                                 font.pixelSize: Appearance.fonts.size.small
                                             }
                                         }
 
                                         Icon {
-                                            visible: networkDelegate.modelData && !networkDelegate.modelData.known
+                                            visible: modelData && !modelData.known
                                             icon: "lock"
-                                            color: networkDelegate.modelData?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                            color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                             font.pixelSize: Appearance.fonts.size.normal
                                         }
                                     }

@@ -216,8 +216,8 @@ Item {
             }
         }
 
-		Loader {
-			id: pageLoader
+        Loader {
+            id: pageLoader
 
             anchors.fill: parent
             asynchronous: true

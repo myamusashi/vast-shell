@@ -14,6 +14,14 @@ Item {
     property alias wifi: wifi
     readonly property bool isConnected: SystemUsage.statusWiredInterface === "connected"
 
+    readonly property string _wifiDeviceName: {
+        for (const d of Networking.devices) {
+            if (d.type === DeviceType.Wifi)
+                return d.name ?? "?";
+        }
+        return "?";
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: Appearance.spacing.normal
@@ -34,7 +42,7 @@ Item {
 
             StyledText {
                 font.pixelSize: Appearance.fonts.size.small
-                text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${Wifi.activeWifiDevice.name})` : "Not connected"
+                text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${content._wifiDeviceName})` : "Not connected"
                 color: Colours.m3Colors.m3OnSurface
             }
         }

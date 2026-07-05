@@ -5,6 +5,7 @@ import Vast
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+import qs.Services.ScreenRecorder
 
 import "../Components/Base"
 

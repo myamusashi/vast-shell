@@ -85,7 +85,7 @@
             qt6.qtbase
             qt6.qtdeclarative
             qt6.qtmultimedia
-			qt6.qtgraphs
+            qt6.qtgraphs
             qt6.qt5compat
             kdePackages.qtmultimedia
         ];

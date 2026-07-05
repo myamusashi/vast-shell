@@ -1,32 +1,29 @@
 {pkgs}:
 pkgs.mkShell {
-    nativeBuildInputs = [
-        pkgs.qt6Packages.wrapQtAppsHook
-        pkgs.cmake
+    nativeBuildInputs = with pkgs; [
+        qt6.wrapQtAppsHook
+        cmake
     ];
 
-    buildInputs = [
-        pkgs.qt6Packages.qtbase
-        pkgs.qt6Packages.qtdeclarative
-        pkgs.ddcutil
-        pkgs.pipewire.dev
+    buildInputs = with pkgs; [
+        qt6.qtbase
+        qt6.qtdeclarative
+        qt6.qt5compat
+        qt6.qttranslations
+        ddcutil
+        pipewire.dev
     ];
 
-    packages = [
-        pkgs.go
-        pkgs.nil
-        pkgs.pkg-config
-        (with pkgs.kdePackages; [
-            qtdeclarative
-            qttools
-            qtbase
-            qttranslations
-            qtshadertools
-        ])
-        pkgs.gcc
-        pkgs.gdb
-        pkgs.cmake
-        pkgs.clang-tools
+    packages = with pkgs; [
+        go
+        nil
+        pkg-config
+        qt6.qttools
+        qt6.qtshadertools
+        gcc
+        gdb
+        cmake
+        clang-tools
     ];
 
     shellHook = ''
