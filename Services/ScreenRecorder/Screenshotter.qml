@@ -40,6 +40,7 @@ Item {
         component: PanelWindow {
             id: captureWin
             visible: true
+            color: "transparent"
             screen: captureLoader._targetScreen
             implicitWidth: captureLoader._targetWidth
             implicitHeight: captureLoader._targetHeight
