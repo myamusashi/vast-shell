@@ -147,6 +147,15 @@ Singleton {
         onNotification: notif => {
             notif.tracked = true;
 
+            console.log("Notifs: notification received", JSON.stringify({
+                id: notif.id,
+                summary: notif.summary,
+                body: notif.body,
+                appIcon: notif.appIcon,
+                appName: notif.appName,
+                image: notif.image,
+            }));
+
             root.enforceNotificationLimit();
 
             const comp = notifComponent.createObject(root, {
@@ -269,14 +278,27 @@ Singleton {
             function onImageChanged() {
                 const raw = notif.notification.image ?? "";
 
+                console.log("Notifs: image changed", JSON.stringify({
+                    raw: raw,
+                    id: notif.notification?.id,
+                    startsWithImageProtocol: raw.startsWith("image://"),
+                }));
+
                 if (!raw || raw === "") {
                     notif.image = "";
                     return;
                 }
 
                 if (raw.startsWith("image://")) {
-                    if (notif.notification && notif.notification.id)
+                    if (raw.startsWith("image://icon//")) {
+                        // image://icon//path → file:///path (Qt icon protocol for absolute file paths)
+                        notif.image = "file:///" + raw.slice("image://icon//".length);
+                    } else if (raw.startsWith("image://icon/")) {
+                        // image://icon/name (icon theme name, keep as-is — Qt handles it natively)
+                        notif.image = raw;
+                    } else if (notif.notification && notif.notification.id) {
                         notif.image = ImageCache.saveProviderImageQml(raw, "notif-" + notif.notification.id);
+                    }
                 } else
                     notif.image = raw;
             }
@@ -385,7 +407,22 @@ Singleton {
                 return;
 
             const raw = notification.image ?? "";
-            const cachedImage = raw.startsWith("image://") ? ImageCache.saveProviderImageQml(raw, "notif-" + notification.id) : raw;
+            console.log("Notifs: Notif.onCompleted", JSON.stringify({
+                rawImage: raw,
+                id: notification.id,
+                appIcon: notification.appIcon,
+                appName: notification.appName,
+                summary: notification.summary,
+            }));
+            let cachedImage = raw;
+            if (raw.startsWith("image://")) {
+                if (raw.startsWith("image://icon//"))
+                    cachedImage = "file:///" + raw.slice("image://icon//".length);
+                else if (raw.startsWith("image://icon/"))
+                    cachedImage = raw;
+                else
+                    cachedImage = ImageCache.saveProviderImageQml(raw, "notif-" + notification.id);
+            }
 
             id = notification.id;
             summary = notification.summary;
