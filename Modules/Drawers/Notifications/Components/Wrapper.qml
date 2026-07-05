@@ -213,7 +213,7 @@ Item {
             }
             spacing: Appearance.spacing.normal
 
-            Icon {
+            NotifIcon {
                 id: iconLayout
 
                 modelData: root.notif

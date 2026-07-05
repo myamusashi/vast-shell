@@ -213,7 +213,7 @@ StyledRect {
                                 }
                                 spacing: Appearance.spacing.normal
 
-                                N.Icon {
+                                N.NotifIcon {
                                     id: iconLayout
 
                                     modelData: root.modelData

@@ -45,7 +45,12 @@ Item {
             backer.cache: true
             asynchronous: true
         }
-    }
+	}
+
+	Component.onCompleted: {
+		console.log(root.modelData.image);
+		console.log(root.modelData.appIcon);
+	}
 
     Component {
         id: iconComponent
@@ -63,7 +68,7 @@ Item {
 
         IconImage {
             implicitSize: 30
-            source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : "root:/Assets/images/notif-icon-image-fallback.jpg"
+            source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : root.modelData.image
             backer.cache: true
             asynchronous: true
         }
