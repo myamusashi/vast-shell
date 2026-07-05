@@ -4,6 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import "shellUtils.js" as Utils
+
 Singleton {
     id: root
 
@@ -13,6 +15,7 @@ Singleton {
 
     property bool isRecording: false
     property string currentOutputFile: ""
+    property int recordingPid: -1
 
     property string audioDevice: ""
     property string videoCodec: ""
@@ -26,7 +29,14 @@ Singleton {
     property bool includeAudio: false
     property bool showCursor: true
 
+    property string _pendingVideoPath
+    property string _pendingOutputDir
+    property var _pendingCallback
+
     signal thumbnailReady(string videoPath, string thumbnailPath)
+
+    readonly property string pidFile: "/tmp/wl-screenrec.pid"
+    readonly property string videoStateFile: "/tmp/wl-screenrec.video"
 
     onAudioDeviceChanged: {}
     onVideoCodecChanged: {}
@@ -42,53 +52,180 @@ Singleton {
     onIsRecordingChanged: {}
     onCurrentOutputFileChanged: {}
 
-    RecordingBackend {
-        id: backend
-
-        videoDir: root.videoDir
-        thumbnailDir: root.thumbnailDir
-
-        onIsRecordingChanged: {
-            root.isRecording = backend.isRecording;
-            if (!backend.isRecording)
-                root.currentOutputFile = "";
-            root.isRecordingChanged();
-        }
-
-        onCurrentOutputFileChanged: {
-            root.currentOutputFile = backend.currentOutputFile;
-            root.currentOutputFileChanged();
-        }
-
-        onNotify: (summary, body, urgency, icon, app) => {
-            root.sendNotification(summary, body, urgency, icon, app);
-        }
-
-        onRecordingFinished: videoPath => {
-            root.onRecordingStopped(videoPath);
-        }
-    }
-
     Screenshotter {
         id: screenshotter
 
         screenshotDir: root.screenshotDir
-        thumbnailDir: root.thumbnailDir
 
         onNotify: (summary, body, urgency, icon, app) => {
             root.sendNotification(summary, body, urgency, icon, app);
         }
+    }
 
-        onGotoLink: (file, thumb) => {
-            root.gotoLink(file, thumb, true);
+    Process {
+        id: recordingProcess
+
+        stdinEnabled: false
+
+        onStarted: {
+            const pid = Number(processId);
+            if (pid > 0) {
+                root.recordingPid = pid;
+                root.isRecording = true;
+                writePidFile.running = true;
+            }
+        }
+
+        onExited: (code, status) => {
+            root.recordingPid = -1;
+            if (root.isRecording) {
+                root.isRecording = false;
+                const vid = root.currentOutputFile;
+                root.currentOutputFile = "";
+                killTimer.running = false;
+                root.cleanupFiles();
+                root.onRecordingStopped(vid);
+            }
         }
     }
 
-    ThumbnailGenerator {
-        id: thumbnailGen
+    Process {
+        id: writePidFile
 
-        onThumbnailReady: (videoPath, thumbnailPath) => {
-            root.thumbnailReady(videoPath, thumbnailPath);
+        command: ["sh", "-c", "echo " + root.recordingPid + " > " + root.pidFile + "; echo '" + root.currentOutputFile.replace(/'/g, "'\\''") + "' > " + root.videoStateFile]
+        running: false
+    }
+
+    Process {
+        id: removePidFile
+
+        command: ["rm", "-f", root.pidFile, root.videoStateFile]
+        running: false
+    }
+
+    Process {
+        id: checkProcess
+        running: false
+        command: ["sh", "-c", "cat /tmp/wl-screenrec.pid 2>/dev/null; echo '---'; cat /tmp/wl-screenrec.video 2>/dev/null"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const out = text;
+                const parts = out.split("---");
+                const pidStr = (parts[0] || "").trim();
+                const videoStr = (parts[1] || "").trim();
+                const pid = parseInt(pidStr, 10);
+
+                if (pid > 0 && videoStr) {
+                    verifyProcess._targetPid = pid;
+                    verifyProcess._targetVideo = videoStr;
+                    verifyProcess.command = ["kill", "-s", "0", String(pid)];
+                    verifyProcess.running = true;
+                } else {
+                    root.cleanupFiles();
+                }
+            }
+        }
+    }
+
+    Process {
+        id: verifyProcess
+
+        property int _targetPid: -1
+        property string _targetVideo: ""
+        running: false
+
+        onExited: (code, status) => {
+            const pid = verifyProcess._targetPid;
+            const video = verifyProcess._targetVideo;
+            verifyProcess._targetPid = -1;
+            verifyProcess._targetVideo = "";
+
+            if (pid > 0 && video) {
+                if (code === 0) {
+                    root.recordingPid = pid;
+                    root.isRecording = true;
+                    root.currentOutputFile = video;
+                    root.sendNotification("Recording Restored", "Adopted active recording from previous session.", "normal", "", "screenrecord");
+                } else {
+                    root.cleanupFiles();
+                }
+            }
+        }
+    }
+
+    Timer {
+        id: killTimer
+
+        onTriggered: {
+            if (root.isRecording && root.recordingPid > 0)
+                recordingProcess.signal(9);
+        }
+    }
+
+    Process {
+        id: ffprobeProcess
+
+        property string _videoPath
+
+        command: ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", _videoPath]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const trimmed = text.trim();
+                const duration = parseFloat(trimmed);
+                const ts = isNaN(duration) ? 0 : duration / 2.0;
+
+                const h = Math.floor(ts / 3600);
+                const m = Math.floor((ts % 3600) / 60);
+                const s = Math.floor(ts % 60);
+                const formatted = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+
+                const fi = root._pendingVideoPath.split("/").pop();
+                const baseName = fi.substring(0, fi.lastIndexOf("."));
+                const thumb = root._pendingOutputDir + "/" + baseName + ".png";
+
+                ffmpegProcess._seek = formatted;
+                ffmpegProcess._videoPath = root._pendingVideoPath;
+                ffmpegProcess._thumb = thumb;
+                ffmpegProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: ffmpegProcess
+
+        property string _seek
+        property string _videoPath
+        property string _thumb
+
+        command: ["ffmpeg", "-ss", _seek, "-i", _videoPath, "-vframes", "1", "-q:v", "2", "-vf", "scale=256:-1", _thumb, "-y", "-v", "error"]
+
+        onExited: (exitCode, exitStatus) => {
+            const vp = root._pendingVideoPath;
+            const tp = (exitCode === 0) ? ffmpegProcess._thumb : "";
+            const cb = root._pendingCallback;
+            root._pendingVideoPath = "";
+            root._pendingOutputDir = "";
+            root._pendingCallback = null;
+            root.thumbnailReady(vp, tp);
+            if (cb)
+                cb(vp, tp);
+        }
+    }
+
+    Process {
+        id: actionNotifyProcess
+
+        property string _file
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const action = text.trim();
+                if (action === "default")
+                    Quickshell.execDetached({
+                        command: ["xdg-open", actionNotifyProcess._file]
+                    });
+            }
         }
     }
 
@@ -96,18 +233,25 @@ Singleton {
         Quickshell.execDetached({
             command: ["mkdir", "-p", root.screenshotDir, root.videoDir, root.thumbnailDir]
         });
-        backend.checkActiveRecording();
+        root.checkActiveRecording();
         root.isRecordingChanged();
         root.currentOutputFileChanged();
     }
 
-    function createThumbnail(videoPath, outputDir) {
-        thumbnailGen.generate(videoPath, outputDir, (vp, tp) => {
-            root.thumbnailReady(vp, tp);
-        });
+    function checkActiveRecording() {
+        checkProcess.running = true;
+    }
+
+    function cleanupFiles() {
+        removePidFile.running = true;
     }
 
     function startRecording(geometry, output) {
+        if (root.isRecording) {
+            root.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
+            return;
+        }
+
         const cfg = {
             videoCodec: root.videoCodec,
             audioCodec: root.audioCodec,
@@ -121,7 +265,15 @@ Singleton {
             includeAudio: root.includeAudio,
             audioDevice: root.audioDevice
         };
-        backend.startRecording(geometry, output, cfg);
+
+        const path = Utils.videoPath(root.videoDir);
+        root.currentOutputFile = path;
+
+        const args = Utils.buildWlScreenrecArgs(cfg, geometry, output);
+        args.push("-f", path);
+
+        recordingProcess.command = args;
+        recordingProcess.running = true;
     }
 
     function recordSelection(geometry) {
@@ -133,33 +285,59 @@ Singleton {
     }
 
     function stopRecording() {
-        backend.stopRecording();
+        if (!root.isRecording || root.recordingPid <= 0) {
+            root.sendNotification("Recording Failed", "No active recording found.", "critical", "dialog-error", "Screen Record");
+            return;
+        }
+
+        recordingProcess.signal(2);
+
+        killTimer.interval = 10000;
+        killTimer.repeat = false;
+        killTimer.running = true;
     }
 
     function saveHistory() {
-        backend.saveHistory();
+        if (root.isRecording && root.recordingPid > 0) {
+            recordingProcess.signal(10);
+            root.sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
+        }
     }
 
-    function screenshotWindow() {
-        screenshotter.screenshotWindow();
+    function createThumbnail(videoPath, outputDir) {
+        root.generate(videoPath, outputDir, (vp, tp) => {
+            root.thumbnailReady(vp, tp);
+        });
     }
 
-    function screenshotSelection() {
-        screenshotter.screenshotSelection();
+    function generate(videoPath, outputDir, callback) {
+        _pendingVideoPath = videoPath;
+        _pendingOutputDir = outputDir;
+        _pendingCallback = callback;
+        ffprobeProcess._videoPath = videoPath;
+        ffprobeProcess.running = true;
     }
 
-    function screenshotOutput(out) {
+    function screenshotWindow(action) {
+        screenshotter.screenshotWindow(action);
+    }
+
+    function screenshotSelection(action) {
+        screenshotter.screenshotSelection(action);
+    }
+
+    function screenshotOutput(out, action) {
         screenshotter.getMonitors(monitors => {
             if (monitors.length === 0) {
                 root.sendNotification("Screenshot Failed", "No monitors found.", "critical", "dialog-error", "Screen Capture");
                 return;
             }
-            screenshotter.screenshotOutput(out && monitors.includes(out) ? out : monitors[0]);
+            screenshotter.screenshotOutput(out && monitors.includes(out) ? out : monitors[0], action);
         });
     }
 
     function onRecordingStopped(videoPath) {
-        thumbnailGen.generate(videoPath, root.thumbnailDir, (vp, tp) => {
+        root.generate(videoPath, root.thumbnailDir, (vp, tp) => {
             if (tp)
                 root.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", tp, "screenrecord");
             else
@@ -182,7 +360,7 @@ Singleton {
 
     function gotoLink(file, thumb, showNotification) {
         if (showNotification) {
-            const args = ["-a", "screengrab"];
+            const args = ["notify-send", "-a", "screengrab"];
             if (thumb)
                 args.push("-i", thumb);
             args.push("--action", "default=open link", "--wait", "Capture Saved", file);
@@ -193,22 +371,6 @@ Singleton {
             Quickshell.execDetached({
                 command: ["xdg-open", file]
             });
-        }
-    }
-
-    Process {
-        id: actionNotifyProcess
-
-        property string _file
-
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const action = text.trim();
-                if (action === "default")
-                    Quickshell.execDetached({
-                        command: ["xdg-open", actionNotifyProcess._file]
-                    });
-            }
         }
     }
 }

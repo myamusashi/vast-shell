@@ -11,6 +11,7 @@ import Vast
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+import qs.Services.ScreenRecorder
 
 Singleton {
     id: root
@@ -272,6 +273,20 @@ Singleton {
             Quickshell.execDetached({
                 command: ["matugen", "image", path, "--source-color-index", "2"]
             });
+        }
+    }
+
+    IpcHandler {
+        target: "capture"
+
+        function screen(action: string): void {
+            ScreenRecorder.screenshotOutput(Quickshell.screens[0]?.name ?? "", action);
+        }
+        function region(action: string): void {
+            ScreenRecorder.screenshotSelection(action);
+        }
+        function window(action: string): void {
+            ScreenRecorder.screenshotWindow(action);
         }
     }
 

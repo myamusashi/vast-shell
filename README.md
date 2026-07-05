@@ -693,7 +693,7 @@ vast-shell/
 - [ ] Recording overlay inspired by OBS Studio
 - [ ] Window selection mode for targeted recording
 - [ ] Merged multi-monitor screenshot support
-- [ ] Reduced external dependencies (less reliance on `slurp`, `hyprshot`, `grim`)
+- [x] Reduced external dependencies (less reliance on `slurp`, `hyprshot`, `grim`)
 
 **VPN & Tunnel Detection**
 - [ ] Warp (Cloudflare) and WireGuard connection detection

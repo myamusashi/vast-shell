@@ -2,7 +2,6 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import Vast
 
 import qs.Core.Utils
 import qs.Services.ScreenRecorder
@@ -17,13 +16,13 @@ Singleton {
                     "id": "window",
                     "name": qsTr("Window"),
                     "icon": "select_window_2",
-                    "action": () => ScreenRecorder.screenshotWindow()
+                    "action": () => ScreenRecorder.screenshotWindow("save+copy")
                 },
                 {
                     "id": "selection",
                     "name": qsTr("Selection"),
                     "icon": "select",
-                    "action": () => ScreenRecorder.screenshotSelection()
+                    "action": () => ScreenRecorder.screenshotSelection("save+copy")
                 }
             ];
 
@@ -32,7 +31,7 @@ Singleton {
                     "id": `output-${screen.name}`,
                     "name": screen.name,
                     "icon": "monitor",
-                    "action": () => ScreenRecorder.screenshotOutput(screen.name)
+                    "action": () => ScreenRecorder.screenshotOutput(screen.name, "save+copy")
                 });
             });
 
