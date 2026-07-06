@@ -109,9 +109,6 @@ Item {
             id: compositeWin
             visible: true
             color: "transparent"
-            x: -99999
-            y: -99999
-            opacity: 0
             screen: Quickshell.screens[0]
 
             Canvas {
@@ -181,22 +178,21 @@ Item {
 
     property bool _selectionOpen: false
 
+    // Shared selection state in virtual desktop logical pixels
+    property point _selStart: Qt.point(0, 0)
+    property point _selEnd: Qt.point(0, 0)
+    property bool _selDragging: false
+
+    // Hidden crop engine — loaded when selection finishes
     LazyLoader {
-        id: selectionLoader
-        activeAsync: root._selectionOpen
+        id: cropEngine
+        activeAsync: false
         component: PanelWindow {
             visible: true
-            anchors {
-                top: true
-                left: true
-                right: true
-                bottom: true
-            }
             color: "transparent"
-
-            property point startPos
-            property point endPos
-            property bool selecting: false
+            x: -99999
+            y: -99999
+            opacity: 0
 
             Image {
                 id: cropImage
@@ -207,9 +203,8 @@ Item {
                 cache: false
 
                 onStatusChanged: {
-                    if (status === Image.Ready && sourceClipRect.width > 0 && sourceClipRect.height > 0) {
+                    if (status === Image.Ready && sourceClipRect.width > 0 && sourceClipRect.height > 0)
                         cropGrabTimer.restart();
-                    }
                 }
             }
 
@@ -226,21 +221,49 @@ Item {
                         } else {
                             root.notify("Screenshot Failed", "Failed to save cropped image.", "critical", "dialog-error", "Screenshot");
                         }
+                        cropEngine.active = false;
                         root._selectionOpen = false;
                         root._frozenImageUrl = "";
                     });
                 }
             }
 
-            Item {
-                id: focusCatcher
-                anchors.fill: parent
-                focus: true
+            function doCrop(sourceUrl, x, y, w, h) {
+                cropImage.sourceClipRect = Qt.rect(x, y, w, h);
+                cropImage.source = sourceUrl;
+            }
+        }
+    }
 
-                Keys.onEscapePressed: {
-                    root._selectionOpen = false;
-                    root._frozenImageUrl = "";
-                }
+    // Multi-window selection overlay — one PanelWindow per screen
+    Instantiator {
+        id: selOverlay
+        model: Quickshell.screens
+        active: root._selectionOpen
+
+        delegate: PanelWindow {
+            required property ShellScreen modelData
+
+            visible: true
+            color: "transparent"
+            anchors {
+                top: true
+                left: true
+                right: true
+                bottom: true
+            }
+
+            readonly property real _ox: modelData.x
+            readonly property real _oy: modelData.y
+
+            Image {
+                source: root._frozenImageUrl
+                x: -_ox
+                y: -_oy
+                width: Utils.totalBounds(Quickshell.screens).width
+                height: Utils.totalBounds(Quickshell.screens).height
+                cache: false
+                fillMode: Image.PreserveAspectCrop
             }
 
             Rectangle {
@@ -249,11 +272,11 @@ Item {
             }
 
             Rectangle {
-                visible: selecting
-                x: Math.min(startPos.x, endPos.x)
-                y: Math.min(startPos.y, endPos.y)
-                width: Math.abs(endPos.x - startPos.x)
-                height: Math.abs(endPos.y - startPos.y)
+                visible: root._selDragging
+                x: Math.min(root._selStart.x, root._selEnd.x) - _ox
+                y: Math.min(root._selStart.y, root._selEnd.y) - _oy
+                width: Math.abs(root._selEnd.x - root._selStart.x)
+                height: Math.abs(root._selEnd.y - root._selStart.y)
                 color: "transparent"
                 border.color: "white"
                 border.width: 2
@@ -264,42 +287,53 @@ Item {
                 }
             }
 
+            Item {
+                id: focusCatcher
+                anchors.fill: parent
+                focus: root._selectionOpen
+                Keys.onEscapePressed: {
+                    root._selectionOpen = false;
+                    root._frozenImageUrl = "";
+                }
+                Component.onCompleted: forceActiveFocus()
+            }
+
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.CrossCursor
 
                 onPressed: e => {
-                    startPos = Qt.point(e.x, e.y);
-                    endPos = Qt.point(e.x, e.y);
-                    selecting = true;
-                    focusCatcher.forceActiveFocus();
+                    root._selStart = Qt.point(e.x + _ox, e.y + _oy);
+                    root._selEnd = root._selStart;
+                    root._selDragging = true;
                 }
                 onPositionChanged: e => {
-                    if (selecting)
-                        endPos = Qt.point(e.x, e.y);
+                    if (root._selDragging)
+                        root._selEnd = Qt.point(e.x + _ox, e.y + _oy);
                 }
                 onReleased: e => {
-                    selecting = false;
+                    if (!root._selDragging) return;
+                    root._selDragging = false;
 
-                    const lx = Math.min(startPos.x, e.x);
-                    const ly = Math.min(startPos.y, e.y);
-                    const lw = Math.abs(e.x - startPos.x);
-                    const lh = Math.abs(e.y - startPos.y);
+                    const vx = Math.min(root._selStart.x, root._selEnd.x);
+                    const vy = Math.min(root._selStart.y, root._selEnd.y);
+                    const vw = Math.abs(root._selEnd.x - root._selStart.x);
+                    const vh = Math.abs(root._selEnd.y - root._selStart.y);
 
-                    if (lw < 5 || lh < 5) {
+                    if (vw < 5 || vh < 5) {
                         root._selectionOpen = false;
                         root._frozenImageUrl = "";
                         return;
                     }
 
                     const s = root._regionScale;
-                    const gx = Math.round(lx * s);
-                    const gy = Math.round(ly * s);
-                    const gw = Math.round(lw * s);
-                    const gh = Math.round(lh * s);
+                    const gx = Math.round(vx * s);
+                    const gy = Math.round(vy * s);
+                    const gw = Math.round(vw * s);
+                    const gh = Math.round(vh * s);
 
-                    cropImage.sourceClipRect = Qt.rect(gx, gy, gw, gh);
-                    cropImage.source = root._frozenImageUrl;
+                    cropEngine.active = true;
+                    cropEngine.item.doCrop(root._frozenImageUrl, gx, gy, gw, gh);
                 }
             }
         }
