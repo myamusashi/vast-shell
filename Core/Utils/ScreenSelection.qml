@@ -13,6 +13,10 @@ LazyLoader {
     property point endPos
     property bool selecting: false
 
+    property string mode: "single"
+    property var virtualScreens: []
+    property string frozenImageUrl: ""
+
     signal geometrySelected(string geometry)
     signal cancelled
 
@@ -23,7 +27,15 @@ LazyLoader {
         GlobalStates.isSelectionOpen = true;
     }
 
+    function openCrossMonitor(frozenUrl) {
+        mode = "cross-monitor";
+        frozenImageUrl = frozenUrl;
+        open();
+    }
+
     function close() {
+        mode = "single";
+        frozenImageUrl = "";
         GlobalStates.isSelectionOpen = false;
     }
 
@@ -36,6 +48,14 @@ LazyLoader {
             bottom: true
         }
         color: "transparent"
+
+        Image {
+            anchors.fill: parent
+            source: root.mode === "cross-monitor" ? root.frozenImageUrl : ""
+            visible: root.mode === "cross-monitor" && root.frozenImageUrl !== ""
+            cache: false
+            fillMode: Image.PreserveAspectCrop
+        }
 
         Rectangle {
             anchors.fill: parent
