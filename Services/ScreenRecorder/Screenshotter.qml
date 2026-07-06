@@ -19,7 +19,13 @@ Item {
     property string _pendingWindowAction: ""
     property real _regionScale: 1
 
+    property var _allScreenPaths: []
+    property int _captureIndex: 0
+    property var _captureDoneCallback: null
+    property bool _isMultiCapturing: false
+
     signal notify(string summary, string body, string urgency, string icon, string app)
+
     ScreenshotSaver {
         id: saver
         screenshotDir: root.screenshotDir
@@ -45,6 +51,8 @@ Item {
             implicitWidth: captureLoader._targetWidth
             implicitHeight: captureLoader._targetHeight
 
+            property bool _done: false
+
             ScreencopyView {
                 id: scv
                 anchors.fill: parent
@@ -53,10 +61,21 @@ Item {
                 paintCursor: false
 
                 onHasContentChanged: {
-                    if (!hasContent)
+                    if (!hasContent || captureWin._done)
                         return;
+                    captureWin._done = true;
 
-                    if (root._pendingAction === "region") {
+                    if (root._isMultiCapturing) {
+                        scv.grabToImage(result => {
+                            const screen = captureLoader._targetScreen;
+                            const path = Utils.screenshotPath(root.screenshotDir);
+                            if (result.saveToFile(path)) {
+                                root._allScreenPaths.push({ screen: screen, path: "file://" + path });
+                            }
+                            captureLoader.active = false;
+                            root._captureNext();
+                        });
+                    } else if (root._pendingAction === "region") {
                         scv.grabToImage(result => {
                             const path = Utils.screenshotPath(root.screenshotDir);
                             if (result.saveToFile(path)) {
@@ -74,6 +93,87 @@ Item {
                             captureLoader.active = false;
                         });
                     }
+                }
+            }
+        }
+    }
+
+    LazyLoader {
+        id: compositeLoader
+
+        activeAsync: false
+
+        property string _resultPath: ""
+
+        component: PanelWindow {
+            id: compositeWin
+            visible: true
+            color: "transparent"
+            x: -99999
+            y: -99999
+            opacity: 0
+            screen: Quickshell.screens[0]
+
+            Canvas {
+                id: compositeCanvas
+
+                property int _imagesToLoad: 0
+                property int _imagesLoaded: 0
+
+                onImageLoaded: {
+                    _imagesLoaded++;
+                    if (_imagesLoaded >= _imagesToLoad)
+                        requestPaint();
+                }
+
+                onPaint: {
+                    const ctx = getContext("2d");
+                    if (!ctx) return;
+                    const screens = root._allScreenPaths;
+                    const bounds = Utils.totalBounds(screens.map(e => e.screen));
+                    ctx.clearRect(0, 0, bounds.width, bounds.height);
+                    for (let i = 0; i < screens.length; i++) {
+                        const s = screens[i].screen;
+                        ctx.drawImage(screens[i].path, s.x, s.y, s.width, s.height);
+                    }
+                    grabTimer.restart();
+                }
+            }
+
+            onVisibleChanged: {
+                if (!visible) return;
+                const screens = root._allScreenPaths;
+                if (screens.length === 0) {
+                    compositeLoader.active = false;
+                    return;
+                }
+                const bounds = Utils.totalBounds(screens.map(e => e.screen));
+                compositeCanvas.width = bounds.width;
+                compositeCanvas.height = bounds.height;
+                compositeCanvas._imagesToLoad = screens.length;
+                compositeCanvas._imagesLoaded = 0;
+                for (let i = 0; i < screens.length; i++)
+                    compositeCanvas.loadImage(screens[i].path);
+            }
+
+            Timer {
+                id: grabTimer
+                interval: 50
+                repeat: false
+                onTriggered: {
+                    compositeCanvas.grabToImage(result => {
+                        const path = Utils.screenshotPath(root.screenshotDir);
+                        if (result.saveToFile(path)) {
+                            compositeLoader._resultPath = "file://" + path;
+                        }
+                        compositeLoader.active = false;
+                        root._isMultiCapturing = false;
+                        if (root._captureDoneCallback) {
+                            const cb = root._captureDoneCallback;
+                            root._captureDoneCallback = null;
+                            cb(compositeLoader._resultPath);
+                        }
+                    });
                 }
             }
         }
@@ -198,10 +298,6 @@ Item {
                     const gw = Math.round(lw * s);
                     const gh = Math.round(lh * s);
 
-                    // Set crop region and source — triggers the
-                    // Image load → onStatusChanged → timer → grabToImage
-                    // pipeline.  The window stays open until the grab
-                    // callback closes it.
                     cropImage.sourceClipRect = Qt.rect(gx, gy, gw, gh);
                     cropImage.source = root._frozenImageUrl;
                 }
@@ -298,19 +394,33 @@ Item {
     function screenshotSelection(action) {
         delayTimer.running = false;
         delayTimer.pendingFn = null;
-        root._pendingAction = "region";
-        const screen = Quickshell.screens[0];
-        if (!screen) {
-            root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
-            return;
+
+        if (Quickshell.screens.length <= 1) {
+            root._pendingAction = "region";
+            const screen = Quickshell.screens[0];
+            if (!screen) {
+                root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
+                return;
+            }
+            root._regionScale = Hyprland.monitorFor(screen)?.scale ?? 1;
+            captureLoader._targetScreen = screen;
+            captureLoader._targetWidth = screen.width;
+            captureLoader._targetHeight = screen.height;
+            delayTimer.interval = 2000;
+            delayTimer.pendingFn = () => { captureLoader.active = true; };
+            delayTimer.running = true;
+        } else {
+            root._regionScale = 1;
+            delayTimer.interval = 2000;
+            delayTimer.pendingFn = () => {
+                root._freezeAllScreens(path => {
+                    root._frozenImageUrl = path;
+                    root._regionScale = 1;
+                    root._selectionOpen = true;
+                });
+            };
+            delayTimer.running = true;
         }
-        root._regionScale = Hyprland.monitorFor(screen)?.scale ?? 1;
-        captureLoader._targetScreen = screen;
-        captureLoader._targetWidth = screen.width;
-        captureLoader._targetHeight = screen.height;
-        delayTimer.interval = 2000;
-        delayTimer.pendingFn = () => { captureLoader.active = true; };
-        delayTimer.running = true;
     }
 
     function screenshotOutput(target, action) {
@@ -328,6 +438,51 @@ Item {
         delayTimer.interval = 2000;
         delayTimer.pendingFn = () => { captureLoader.active = true; };
         delayTimer.running = true;
+    }
+
+    function screenshotAllOutputs(action) {
+        delayTimer.running = false;
+        delayTimer.pendingFn = null;
+        delayTimer.interval = 2000;
+        delayTimer.pendingFn = () => {
+            root._freezeAllScreens(path => {
+                const filePath = path.startsWith("file://") ? path.slice(7) : path;
+                saver._copyFile(filePath);
+            });
+        };
+        delayTimer.running = true;
+    }
+
+    function _freezeAllScreens(callback) {
+        root._allScreenPaths = [];
+        root._captureIndex = 0;
+        root._captureDoneCallback = callback;
+        root._isMultiCapturing = true;
+        root._captureNext();
+    }
+
+    function _captureNext() {
+        const screens = Quickshell.screens;
+        if (root._captureIndex >= screens.length) {
+            root._compositeAllCaptures();
+            return;
+        }
+        const screen = screens[root._captureIndex];
+        root._captureIndex++;
+        captureLoader._targetScreen = screen;
+        captureLoader._targetWidth = screen.width;
+        captureLoader._targetHeight = screen.height;
+        captureLoader._targetToplevel = null;
+        captureLoader.active = true;
+    }
+
+    function _compositeAllCaptures() {
+        if (root._allScreenPaths.length === 0) {
+            root._isMultiCapturing = false;
+            root.notify("Screenshot Failed", "No screens captured.", "critical", "dialog-error", "Screenshot");
+            return;
+        }
+        compositeLoader.active = true;
     }
 
     function copyToClipboard(img) {

@@ -13,6 +13,12 @@ Singleton {
         values: {
             let options = [
                 {
+                    "id": "all-monitors",
+                    "name": qsTr("All monitors"),
+                    "icon": "monitors",
+                    "action": () => ScreenRecorder.screenshotAllOutputs("save+copy")
+                },
+                {
                     "id": "window",
                     "name": qsTr("Window"),
                     "icon": "select_window_2",

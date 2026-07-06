@@ -326,6 +326,10 @@ Singleton {
         screenshotter.screenshotSelection(action);
     }
 
+    function screenshotAllOutputs(action) {
+        screenshotter.screenshotAllOutputs(action);
+    }
+
     function screenshotOutput(out, action) {
         screenshotter.getMonitors(monitors => {
             if (monitors.length === 0) {

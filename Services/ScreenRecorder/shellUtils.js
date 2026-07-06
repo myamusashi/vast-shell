@@ -17,6 +17,27 @@ function videoPath(videoDir) {
     return videoDir + "/" + generateTimestamp() + ".mp4";
 }
 
+function intersectRect(a, b) {
+    var x = Math.max(a.x, b.x);
+    var y = Math.max(a.y, b.y);
+    var x2 = Math.min(a.x + a.width, b.x + b.width);
+    var y2 = Math.min(a.y + a.height, b.y + b.height);
+    if (x2 <= x || y2 <= y) return null;
+    return { x: x, y: y, width: x2 - x, height: y2 - y };
+}
+
+function totalBounds(screens) {
+    var maxX = 0, maxY = 0;
+    for (var i = 0; i < screens.length; i++) {
+        var s = screens[i];
+        var right = s.x + s.width;
+        var bottom = s.y + s.height;
+        if (right > maxX) maxX = right;
+        if (bottom > maxY) maxY = bottom;
+    }
+    return { width: maxX, height: maxY };
+}
+
 function buildWlScreenrecArgs(cfg, geometry, output) {
     const args = ["--capture-backend", "ext-image-copy-capture"];
     if (cfg.videoCodec && cfg.videoCodec !== "auto")
