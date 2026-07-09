@@ -243,6 +243,7 @@ Item {
             Layout.preferredWidth: 250
             model: ScriptModel {
                 id: appModel
+
                 values: {
                     const apps = [...DesktopEntries.applications.values];
                     const filtered = apps.filter(e => appSetting.categories.every(c => e.categories.includes(c)));

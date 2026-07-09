@@ -234,6 +234,7 @@ WrapperRectangle {
 
                         GridView {
                             id: entryList
+
                             width: verticalFlick.width
                             height: Math.max(1, Configs.clipboard.listEntries) * (64 + Appearance.spacing.small)
 
@@ -371,6 +372,7 @@ WrapperRectangle {
                     // Page Indicator
                     Row {
                         id: pageIndicatorRow
+
                         anchors.bottom: hbar.top
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.bottomMargin: Appearance.margin.small
@@ -399,6 +401,7 @@ WrapperRectangle {
 
                     ScrollBar {
                         id: hbar
+
                         anchors.bottom: parent.bottom
                         anchors.left: parent.left
                         anchors.right: parent.right

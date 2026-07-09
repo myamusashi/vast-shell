@@ -161,6 +161,7 @@ Item {
 
                         StyledText {
                             id: srcLabel
+
                             anchors.centerIn: parent
                             text: d.sourceApp
                             font.pixelSize: Appearance.fonts.size.small
@@ -202,6 +203,7 @@ Item {
 
                 MArea {
                     id: pinArea
+
                     onClicked: root.pinToggled(root.entryId, !d.pinned)
                 }
             }
@@ -232,6 +234,7 @@ Item {
 
                 MArea {
                     id: copyArea
+
                     onClicked: root.copyRequested(root.entryId)
                 }
             }
@@ -314,6 +317,7 @@ Item {
 
             WheelHandler {
                 id: imageZoom
+
                 property real scale: 1.0
                 acceptedModifiers: Qt.ControlModifier
                 onWheel: event => {

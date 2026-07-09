@@ -105,6 +105,7 @@ Singleton {
 
     Process {
         id: checkProcess
+
         running: false
         command: ["sh", "-c", "cat /tmp/wl-screenrec.pid 2>/dev/null; echo '---'; cat /tmp/wl-screenrec.video 2>/dev/null"]
         stdout: StdioCollector {

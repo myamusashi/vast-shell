@@ -47,6 +47,7 @@ Rectangle {
 
             transform: Rotation {
                 id: flipRotation
+
                 origin.x: iconItem.width / 2
                 origin.y: iconItem.height / 2
                 axis {
