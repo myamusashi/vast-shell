@@ -16,6 +16,7 @@ Singleton {
     property bool isRecording: false
     property string currentOutputFile: ""
     property int recordingPid: -1
+    property int recordingElapsedSeconds: 0
 
     property string audioDevice: ""
     property string videoCodec: ""
@@ -49,7 +50,14 @@ Singleton {
     onHistoryModeChanged: {}
     onIncludeAudioChanged: {}
     onShowCursorChanged: {}
-    onIsRecordingChanged: {}
+    onIsRecordingChanged: {
+        if (root.isRecording) {
+            root.recordingElapsedSeconds = 0;
+            elapsedTimer.start();
+        } else {
+            elapsedTimer.stop();
+        }
+    }
     onCurrentOutputFileChanged: {}
 
     Screenshotter {
@@ -94,6 +102,14 @@ Singleton {
 
         command: ["sh", "-c", "echo " + root.recordingPid + " > " + root.pidFile + "; echo '" + root.currentOutputFile.replace(/'/g, "'\\''") + "' > " + root.videoStateFile]
         running: false
+    }
+
+    Timer {
+        id: elapsedTimer
+
+        interval: 1000
+        repeat: true
+        onTriggered: root.recordingElapsedSeconds++
     }
 
     Process {

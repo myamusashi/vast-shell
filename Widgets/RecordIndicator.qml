@@ -18,8 +18,6 @@ StyledRect {
     visible: ScreenRecorder.isRecording
     color: "transparent"
 
-    property int _elapsedSeconds: 0
-
     function formatTime(seconds) {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
@@ -116,26 +114,11 @@ StyledRect {
         }
 
         StyledText {
-            text: root.formatTime(root._elapsedSeconds)
+            text: root.formatTime(ScreenRecorder.recordingElapsedSeconds)
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
         }
     }
 
-    Timer {
-        id: elapsedTimer
-
-        interval: 1000
-        repeat: true
-        onTriggered: root._elapsedSeconds++
-    }
-
-    onVisibleChanged: {
-        if (visible) {
-            _elapsedSeconds = 0;
-            elapsedTimer.start();
-        } else {
-            elapsedTimer.stop();
-        }
-    }
+    
 }
