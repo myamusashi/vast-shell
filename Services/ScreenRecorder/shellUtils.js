@@ -13,6 +13,10 @@ function screenshotPath(screenshotDir) {
     return screenshotDir + "/" + generateTimestamp() + ".png";
 }
 
+function tempCapturePath() {
+    return "/tmp/quickshell-capture-" + generateTimestamp() + ".png";
+}
+
 function videoPath(videoDir) {
     return videoDir + "/" + generateTimestamp() + ".mp4";
 }
@@ -39,7 +43,7 @@ function totalBounds(screens) {
 }
 
 function buildWlScreenrecArgs(cfg, geometry, output) {
-    const args = ["--capture-backend", "ext-image-copy-capture"];
+    const args = ["wl-screenrec", "--capture-backend", "ext-image-copy-capture"];
     if (cfg.videoCodec && cfg.videoCodec !== "auto")
         args.push("--codec", cfg.videoCodec);
     if (cfg.audioCodec && cfg.audioCodec !== "auto")
