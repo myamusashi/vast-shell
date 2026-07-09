@@ -68,6 +68,7 @@ Singleton {
     property bool isWeatherPanelOpen: false
     property bool isLockscreenOpen: false
     property bool isSelectionOpen: false
+    property bool isScreenshotSelectionOpen: false
 
     property string scriptPath: `${Paths.rootDir}/Assets/shell/screen-capture.sh`
 

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 
 import qs.Core.States
 import qs.Services
@@ -48,6 +49,7 @@ LazyLoader {
             bottom: true
         }
         color: "transparent"
+        WlrLayershell.layer: WlrLayer.Overlay
 
         Image {
             anchors.fill: parent
