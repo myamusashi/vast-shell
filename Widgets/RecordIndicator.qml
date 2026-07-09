@@ -15,18 +15,18 @@ StyledRect {
     Layout.alignment: Qt.AlignCenter
 
     implicitWidth: row.width
-    visible: Record.isRecordingControlOpen
+    visible: ScreenRecorder.isRecording
     color: "transparent"
 
+    property int _elapsedSeconds: 0
+
     function formatTime(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
-
-        if (hours > 0)
-            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        if (h > 0)
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
 
     RowLayout {
@@ -38,7 +38,6 @@ StyledRect {
             id: iconStatus
 
             property bool isHovering: false
-            property bool isRecording: false
 
             Layout.preferredWidth: 30
             Layout.preferredHeight: 30
@@ -112,17 +111,31 @@ StyledRect {
             TapHandler {
                 id: tapHandler
 
-                onTapped: {
-                    iconStatus.isRecording = !iconStatus.isRecording;
-                    ScreenRecorder.stopRecording();
-                }
+                onTapped: ScreenRecorder.stopRecording()
             }
         }
 
         StyledText {
-            text: root.formatTime(Record.recordingSeconds)
+            text: root.formatTime(root._elapsedSeconds)
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
+        }
+    }
+
+    Timer {
+        id: elapsedTimer
+
+        interval: 1000
+        repeat: true
+        onTriggered: root._elapsedSeconds++
+    }
+
+    onVisibleChanged: {
+        if (visible) {
+            _elapsedSeconds = 0;
+            elapsedTimer.start();
+        } else {
+            elapsedTimer.stop();
         }
     }
 }
