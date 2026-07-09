@@ -45,12 +45,12 @@ Item {
             backer.cache: true
             asynchronous: true
         }
-	}
+    }
 
-	Component.onCompleted: {
-		console.log(root.modelData.image);
-		console.log(root.modelData.appIcon);
-	}
+    Component.onCompleted: {
+        console.log(root.modelData.image);
+        console.log(root.modelData.appIcon);
+    }
 
     Component {
         id: iconComponent
