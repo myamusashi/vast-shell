@@ -119,6 +119,4 @@ StyledRect {
             font.bold: true
         }
     }
-
-    
 }

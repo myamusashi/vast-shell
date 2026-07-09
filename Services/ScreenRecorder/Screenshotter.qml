@@ -79,6 +79,7 @@ Item {
             width: captureLoader._targetWidth
             height: captureLoader._targetHeight
             exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
 
             property bool _done: false
@@ -186,6 +187,7 @@ Item {
             color: "transparent"
             screen: Quickshell.screens[0]
             exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
 
             Canvas {
@@ -281,6 +283,7 @@ Item {
         component: PanelWindow {
             visible: true
             exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
             color: "transparent"
 
@@ -343,6 +346,7 @@ Item {
             exclusionMode: ExclusionMode.Ignore
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.namespace: "shell:screenshot-overlay"
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
 
             anchors {
                 top: true
@@ -390,6 +394,7 @@ Item {
 
                 anchors.fill: parent
                 focus: root._selectionOpen
+
                 Keys.onEscapePressed: {
                     root._selectionOpen = false;
                     root._frozenImageUrl = "";
@@ -480,6 +485,7 @@ Item {
         component: PanelWindow {
             visible: true
             exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
 
             anchors {
