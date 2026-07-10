@@ -111,7 +111,7 @@ WlSessionLockSurface {
         anchors.fill: parent
 
         radius: 0
-        color: Qt.alpha(Colours.m3Colors.m3Background, 0.3)
+        color: "transparent"
 
         Component.onCompleted: {
             lockSequence.start();
