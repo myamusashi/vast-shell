@@ -52,7 +52,7 @@ Item {
         anchors.centerIn: parent
         implicitWidth: parent.width
         implicitHeight: parent.height
-        color: Colours.m3Colors.m3OnPrimary
+        color: Colours.m3Colors.m3Primary
         shape: root.shapeGetters[root.shapeIndex]
 
         RotationAnimator {

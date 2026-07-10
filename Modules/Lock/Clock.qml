@@ -35,7 +35,6 @@ WrapperRectangle {
     RowLayout {
         id: clockLayout
 
-        opacity: 0
         spacing: Appearance.spacing.normal
 
         StyledText {

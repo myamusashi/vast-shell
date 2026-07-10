@@ -20,6 +20,7 @@ pkgs.mkShell {
         pkg-config
         qt6.qttools
         qt6.qtshadertools
+        rembg
         gcc
         gdb
         cmake

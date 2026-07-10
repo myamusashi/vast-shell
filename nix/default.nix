@@ -17,6 +17,7 @@
     ffmpeg,
     wireplumber,
     foot,
+    rembg,
     kdePackages,
     polkit,
     patchelf,
@@ -38,6 +39,9 @@
         gawk
         gnused
         util-linux
+
+        ## For created a depth wallpaper
+        rembg
 
         ## pipewire for changing sinks
         wireplumber

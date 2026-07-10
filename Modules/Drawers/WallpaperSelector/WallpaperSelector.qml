@@ -108,6 +108,7 @@ Item {
                     model: ScriptModel {
                         values: WallpaperFileModels.filteredWallpaperList
                     }
+
                     pathItemCount: Configs.wallpaper.visibleWallpaper
                     preferredHighlightBegin: 0.5
                     preferredHighlightEnd: 0.5

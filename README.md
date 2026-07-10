@@ -182,6 +182,7 @@ shell
 | Network / Notifications | `iw`, `libnotify` |
 | Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons`, `google-sans-flex` (optional), `Hack` (optional) |
 | Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
+| AI / Depth Wallpaper | `python-rembg` |
 | Other | `matugen-bin`, `app2unit` |
 
 > [!IMPORTANT]
@@ -193,6 +194,8 @@ shell
 
 > [!WARNING]
 > Package names below were accurate at time of writing but **may be outdated**. Always verify against your distro's official package index. PRs to keep this list updated are welcome.
+>
+> **`rembg`** is not available in most distro repositories. Install it via `pip install rembg` (requires Python 3.9+). NixOS users get it automatically via the flake definition.
 >
 > - **Fedora** → https://packages.fedoraproject.org
 > - **openSUSE** → https://software.opensuse.org

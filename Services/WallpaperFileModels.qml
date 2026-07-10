@@ -28,7 +28,7 @@ Singleton {
         id: wallpaperFolder
 
         folder: Qt.resolvedUrl(Paths.wallpaperDir)
-        nameFilters: ["*.jpg", "*.jpeg", "*.png"]
+        nameFilters: [ "*.png", "*.jpg", "*.jpeg"]
         showDirs: false
         showDotAndDotDot: false
         showHidden: false

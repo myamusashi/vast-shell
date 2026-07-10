@@ -199,6 +199,10 @@ Item {
             }
         }
 
+        DepthWallpaperSection {
+            Layout.fillWidth: true
+        }
+
         Item {
             Layout.fillHeight: true
         }
