@@ -30,7 +30,7 @@ CACHEDIR=$(realpath $2)
 SRCHASH=$(sha256sum "$SRCIMG" | awk '{print substr($1, 0, 10)}')
 
 DSTDIR=${CACHEDIR}/foregrounds
-DSTIMG=${DSTDIR}/${SRCHASH}
+DSTIMG=${DSTDIR}/${SRCHASH}.png
 mkdir -p "$DSTDIR"
 
 if [ -f "${DSTIMG}" ]; then
