@@ -20,7 +20,16 @@ pkgs.mkShell {
         pkg-config
         qt6.qttools
         qt6.qtshadertools
-        rembg
+        (python3Packages.rembg.overridePythonAttrs (old: {
+            dependencies =
+                old.dependencies
+                ++ (with python3Packages; [
+                    click
+                    filetype
+                    watchdog
+                ]);
+            postInstall = "";
+        }))
         gcc
         gdb
         cmake

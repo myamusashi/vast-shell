@@ -38,6 +38,7 @@
             ++ (with python3Packages; [
                 click
                 filetype
+                watchdog
             ]);
         postInstall = "";
     });
