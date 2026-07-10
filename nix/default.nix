@@ -23,6 +23,7 @@
     patchelf,
     hyprland,
     qt6,
+    python3Packages,
     callPackage,
     cmake,
 }: let
@@ -31,6 +32,15 @@
     m3shapes = callPackage ./plugins/m3Shapes.nix {};
     another-ripple = callPackage ./plugins/AnotherRipple.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
+    rembg = python3Packages.rembg.overridePythonAttrs (old: {
+        dependencies =
+            old.dependencies
+            ++ (with python3Packages; [
+                click
+                filetype
+            ]);
+        postInstall = "";
+    });
 
     runtimeDeps = [
         ## utils
