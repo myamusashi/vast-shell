@@ -19,6 +19,7 @@ Item {
     property alias leftCorner: topLeftCorner
     property alias rightCorner: topRightCorner
     property alias iconName: lockIcon.icon
+    property alias clockLayout: clockItem.clockLayout
 
     required property bool isLockscreenOpen
     required property color drawerColors
@@ -70,6 +71,12 @@ Item {
 
         RowLayout {
             spacing: 0
+
+            Clock {
+                id: clockItem
+
+                Layout.alignment: Qt.AlignCenter
+            }
 
             Icon {
                 id: lockIcon

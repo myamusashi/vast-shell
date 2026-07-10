@@ -30,6 +30,7 @@ Item {
     required property color drawerColors
     required property var pam
 
+    property string inputBuffer: ""
     property bool isUnlock: false
 
     // Prefer explicit height so children aren't clipped unexpectedly
@@ -101,82 +102,74 @@ Item {
                 }
             }
 
-            RowLayout {
-                StyledTextInput {
-                    id: passwordInput
+            StyledRect {
+                id: submitBtn
 
-                    implicitWidth: 250
-                    pam: root.pam
-                    placeHolderText: qsTr("Enter password")
-                    passwordMode: true
+                readonly property bool loading: root.pam.unlockInProgress
+                readonly property bool canSubmit: root.pam && root.inputBuffer.length > 0
+
+                implicitWidth: 34
+                implicitHeight: 34
+                radius: Appearance.rounding.full
+                color: canSubmit ? root.pam.isUnlock ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
+                scale: pressHandler.pressed ? 0.88 : hoverHandler.hovered ? 1.08 : 1.0
+
+                Behavior on color {
+                    CAnim {
+                        duration: Appearance.animations.durations.small
+                    }
                 }
 
-                StyledRect {
-                    id: submitBtn
-
-                    readonly property bool loading: root.pam.unlockInProgress
-                    readonly property bool canSubmit: root.pam && passwordInput.text.length > 0
-
-                    implicitWidth: 34
-                    implicitHeight: 34
-                    radius: Appearance.rounding.full
-                    color: canSubmit ? root.pam.isUnlock ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
-                    scale: pressHandler.pressed ? 0.88 : hoverHandler.hovered ? 1.08 : 1.0
-
-                    Behavior on color {
-                        CAnim {
-                            duration: Appearance.animations.durations.small
-                        }
+                Behavior on scale {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
                     }
+                }
 
-                    Behavior on scale {
+                Icon {
+                    anchors.centerIn: parent
+                    icon: submitBtn.loading ? "refresh" : "arrow_right_alt"
+                    color: Colours.m3Colors.m3OnPrimary
+                    font.pixelSize: Appearance.fonts.size.large * 1.3
+                    opacity: submitBtn.loading ? 0.85 : 1.0
+
+                    Behavior on opacity {
                         NAnim {
                             duration: Appearance.animations.durations.small
                         }
                     }
 
-                    Icon {
-                        anchors.centerIn: parent
-                        icon: submitBtn.loading ? "refresh" : "arrow_right_alt"
-                        color: Colours.m3Colors.m3OnPrimary
-                        font.pixelSize: Appearance.fonts.size.large * 1.3
-                        opacity: submitBtn.loading ? 0.85 : 1.0
+                    RotationAnimator on rotation {
+                        id: spinAnim
 
-                        Behavior on opacity {
-                            NAnim {
-                                duration: Appearance.animations.durations.small
-                            }
-                        }
-
-                        RotationAnimator on rotation {
-                            id: spinAnim
-
-                            running: submitBtn.loading
-                            from: 0
-                            to: 360
-                            duration: 900
-                            loops: Animation.Infinite
-                            easing.type: Easing.Linear
-                        }
-
-                        NAnim on rotation {
-                            running: !submitBtn.loading
-                            to: 0
-                            duration: 0
-                        }
+                        running: submitBtn.loading
+                        from: 0
+                        to: 360
+                        duration: 900
+                        loops: Animation.Infinite
+                        easing.type: Easing.Linear
                     }
 
-                    HoverHandler {
-                        id: hoverHandler
-
-                        cursorShape: submitBtn.canSubmit ? Qt.PointingHandCursor : Qt.ForbiddenCursor
+                    NAnim on rotation {
+                        running: !submitBtn.loading
+                        to: 0
+                        duration: 0
                     }
+                }
 
-                    TapHandler {
-                        id: pressHandler
+                HoverHandler {
+                    id: hoverHandler
 
-                        enabled: submitBtn.canSubmit && !submitBtn.loading
-                        onTapped: root.pam.tryUnlock()
+                    cursorShape: submitBtn.canSubmit ? Qt.PointingHandCursor : Qt.ForbiddenCursor
+                }
+
+                TapHandler {
+                    id: pressHandler
+
+                    enabled: submitBtn.canSubmit && !submitBtn.loading
+                    onTapped: {
+                        root.pam.currentText = root.inputBuffer;
+                        root.pam.tryUnlock();
                     }
                 }
             }

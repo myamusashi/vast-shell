@@ -22,6 +22,24 @@ WlSessionLockSurface {
 
     color: "transparent"
 
+    property string inputBuffer: ""
+    property string maskedBuffer: ""
+    readonly property list<string> maskChars: ["m", "y", "a", "m", "u", "s", "a", "s", "h", "i"]
+    property bool isAllSelected: false
+
+    onInputBufferChanged: {
+        var diff = root.inputBuffer.length - root.maskedBuffer.length;
+        while (diff > 0) {
+            root.maskedBuffer += root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+            diff--;
+        }
+        while (diff < 0) {
+            root.maskedBuffer = root.maskedBuffer.substring(0, root.maskedBuffer.length - 1);
+            diff++;
+        }
+        root.isAllSelected = false;
+    }
+
     Connections {
         target: root.lock
 
@@ -36,10 +54,14 @@ WlSessionLockSurface {
         enabled: root.pam !== null
 
         function onShowFailureChanged() {
-            if (root.pam.showFailure)
+            if (root.pam.showFailure) {
                 root.showErrorMessage = true;
-            else
+                root.inputBuffer = "";
+                root.maskedBuffer = "";
+                errorShakeAnimation.start();
+            } else {
                 root.showErrorMessage = false;
+            }
         }
     }
 
@@ -71,11 +93,57 @@ WlSessionLockSurface {
             lockSequence.start();
         }
 
-        Clock {
-            id: centerClock
+        focus: true
 
-            anchors.centerIn: parent
-            z: 1
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                if (root.inputBuffer.length > 0) {
+                    root.pam.currentText = root.inputBuffer;
+                    root.pam.tryUnlock();
+                }
+                event.accepted = true;
+                return;
+            }
+
+            if (event.key === Qt.Key_Backspace) {
+                if (root.isAllSelected) {
+                    root.inputBuffer = "";
+                    root.isAllSelected = false;
+                } else if (event.modifiers & Qt.ControlModifier) {
+                    const idx = root.inputBuffer.lastIndexOf(' ');
+                    root.inputBuffer = root.inputBuffer.substring(0, idx > -1 ? idx : 0);
+                } else if (root.inputBuffer.length > 0) {
+                    root.inputBuffer = root.inputBuffer.substring(0, root.inputBuffer.length - 1);
+                }
+                event.accepted = true;
+                return;
+            }
+
+            if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
+                root.isAllSelected = true;
+                event.accepted = true;
+                return;
+            }
+
+            if (event.key === Qt.Key_Escape) {
+                if (root.isAllSelected) {
+                    root.isAllSelected = false;
+                } else {
+                    root.inputBuffer = "";
+                }
+                event.accepted = true;
+                return;
+            }
+
+            const text = event.text;
+            if (text.length === 1 && text.charCodeAt(0) >= 32) {
+                if (root.isAllSelected) {
+                    root.inputBuffer = "";
+                    root.isAllSelected = false;
+                }
+                root.inputBuffer += text;
+                event.accepted = true;
+            }
         }
 
         TopItem {
@@ -100,6 +168,51 @@ WlSessionLockSurface {
             drawerColors: GlobalStates.drawerColors
             isUnlock: root.pam.isUnlock
             pam: root.pam
+            inputBuffer: root.inputBuffer
+        }
+
+        StyledText {
+            id: passwordDisplay
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            text: root.maskedBuffer.length > 0 ? root.maskedBuffer : (root.showErrorMessage ? "" : "·")
+            color: root.showErrorMessage ? Colours.m3Colors.m3Error : root.isAllSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.extraLarge * 5
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            z: 1
+            opacity: root.inputBuffer.length > 0 || root.showErrorMessage ? 1.0 : 0.3
+
+            transform: Translate {
+                id: passwordShake
+                x: 0
+            }
+        }
+
+        StyledText {
+            id: errorLabel
+
+            anchors {
+                top: passwordDisplay.bottom
+                topMargin: 16
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            text: "WRONG"
+            color: Colours.m3Colors.m3Error
+            font.pixelSize: Appearance.fonts.size.large
+            font.bold: true
+            opacity: root.showErrorMessage ? 1 : 0
+
+            Behavior on opacity {
+                NAnim {
+                    duration: 200
+                }
+            }
         }
     }
 
@@ -228,7 +341,7 @@ WlSessionLockSurface {
             }
 
             NAnim {
-                target: centerClock.clockLayout
+                target: topItem.clockLayout
                 property: "opacity"
                 to: 1
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -391,7 +504,7 @@ WlSessionLockSurface {
             }
 
             NAnim {
-                target: centerClock.clockLayout
+                target: topItem.clockLayout
                 property: "opacity"
                 to: 0
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -460,6 +573,60 @@ WlSessionLockSurface {
                 root.pam.isUnlock = false;
                 root.pam.currentText = "";
             }
+        }
+    }
+
+    Timer {
+        id: jitterTimer
+        interval: 2500
+        repeat: true
+        running: root.inputBuffer.length > 0
+        onTriggered: {
+            const idx = Math.floor(Math.random() * root.inputBuffer.length);
+            const arr = root.maskedBuffer.split('');
+            arr[idx] = root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+            root.maskedBuffer = arr.join('');
+        }
+    }
+
+    SequentialAnimation {
+        id: errorShakeAnimation
+
+        NumberAnimation {
+            target: passwordShake
+            property: "x"
+            to: 12
+            duration: 50
+        }
+        NumberAnimation {
+            target: passwordShake
+            property: "x"
+            to: -12
+            duration: 50
+        }
+        NumberAnimation {
+            target: passwordShake
+            property: "x"
+            to: 8
+            duration: 50
+        }
+        NumberAnimation {
+            target: passwordShake
+            property: "x"
+            to: -8
+            duration: 50
+        }
+        NumberAnimation {
+            target: passwordShake
+            property: "x"
+            to: 4
+            duration: 50
+        }
+        NumberAnimation {
+            target: passwordShake
+            property: "x"
+            to: 0
+            duration: 50
         }
     }
 }

@@ -32,10 +32,19 @@ WrapperRectangle {
         onTriggered: root.currentDate = new Date()
     }
 
-    ColumnLayout {
+    RowLayout {
         id: clockLayout
 
         opacity: 0
+        spacing: Appearance.spacing.normal
+
+        StyledText {
+            Layout.alignment: Qt.AlignCenter
+            font.pixelSize: Appearance.fonts.size.large
+            font.weight: Font.Medium
+            color: Colours.m3Colors.m3OnSurface
+            text: qsTr("%1 %2").arg(root.currentDate.getDate()).arg(root.getMonthName(root.currentDate.getMonth()))
+        }
 
         StyledText {
             Layout.alignment: Qt.AlignCenter
@@ -46,7 +55,7 @@ WrapperRectangle {
                 const minutes = root.currentDate.getMinutes().toString().padStart(2, '0');
                 return `${hours}:${minutes}`;
             }
-            font.pixelSize: Appearance.fonts.size.extraLarge * 3
+            font.pixelSize: Appearance.fonts.size.extraLarge
             font.weight: Font.Medium
         }
 
@@ -56,14 +65,6 @@ WrapperRectangle {
             font.weight: Font.Medium
             color: Colours.m3Colors.m3OnSurface
             text: root.getDayName(root.currentDate.getDay())
-        }
-
-        StyledText {
-            Layout.alignment: Qt.AlignCenter
-            font.pixelSize: Appearance.fonts.size.large
-            font.weight: Font.Medium
-            color: Colours.m3Colors.m3OnSurface
-            text: qsTr("%1 %2").arg(root.currentDate.getDate()).arg(root.getMonthName(root.currentDate.getMonth()))
         }
     }
 }
