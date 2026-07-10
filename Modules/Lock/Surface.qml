@@ -65,19 +65,21 @@ WlSessionLockSurface {
         }
     }
 
-    ScreencopyView {
+    Item {
         id: wallpaper
 
         anchors.fill: parent
 
-        property int blurSize: 0
+        Wallpaper {
+            anchors.fill: parent
+        }
 
-        captureSource: root.screen
-        live: false
-        layer.enabled: true
-        layer.effect: FastBlur {
-            source: wallpaper
-            radius: wallpaper.blurSize
+        opacity: 0
+
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+            }
         }
     }
 
@@ -350,8 +352,10 @@ WlSessionLockSurface {
 
             NAnim {
                 target: wallpaper
-                property: "blurSize"
-                to: 64
+                property: "opacity"
+                to: 1
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
 
             NAnim {
@@ -513,8 +517,10 @@ WlSessionLockSurface {
 
             NAnim {
                 target: wallpaper
-                property: "blurSize"
+                property: "opacity"
                 to: 0
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
 
             NAnim {
