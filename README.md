@@ -16,6 +16,27 @@
 
 ---
 
+## Table of Contents
+
+- [Showcase](#showcase)
+- [Usage](#usage)
+  - [Hyprland Global Shortcuts](#hyprland-global-shortcuts)
+  - [IPC](#ipc)
+- [Installation](#installation)
+  - [NixOS (Flakes)](#nixos-flakes)
+  - [Arch Linux](#arch-linux)
+  - [Other Distros](#other-distros)
+- [Configuration](#configuration)
+  - [configurations.json](#configurationsjson)
+  - [Reference](#reference)
+  - [Matugen](#matugen)
+- [Translations](#translations)
+- [Project Structure](#project-structure)
+- [Upcoming Features](#upcoming-features)
+- [Credits](#credits)
+
+---
+
 ## Showcase
 
 https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
