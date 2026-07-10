@@ -70,7 +70,7 @@ Singleton {
             }
         }
 
-        onExited: function(code) {
+        onExited: function (code) {
             if (code !== 0 && root.state !== "done") {
                 root.state = "error";
                 root.errorMessage = "Foreground extraction failed (exit " + code + ")";

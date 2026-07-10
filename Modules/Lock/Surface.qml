@@ -18,10 +18,10 @@ WlSessionLockSurface {
     property bool isClosing: false
     property bool showErrorMessage: false
 
-	property string inputBuffer: ""
-	property string maskedBuffer: ""
-	property bool isAllSelected: false
-	readonly property list<string> maskChars: ["║", "║▌█", "║▌", "▌│", "█║", "𝄂▌║", "▌│", "█║", "𝄂▌║"]
+    property string inputBuffer: ""
+    property string maskedBuffer: ""
+    property bool isAllSelected: false
+    readonly property list<string> maskChars: ["║", "║▌█", "║▌", "▌│", "█║", "𝄂▌║", "▌│", "█║", "𝄂▌║"]
 
     color: "transparent"
     property bool zoomedIn: false

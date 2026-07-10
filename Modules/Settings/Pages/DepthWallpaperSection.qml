@@ -44,18 +44,18 @@ Item {
                     StyledText {
                         text: {
                             switch (DepthWallpaperController.state) {
-                                case "processing": return qsTr("Generating depth map\u2026");
-                                case "done": return qsTr("Depth wallpaper ready");
-                                case "error": return DepthWallpaperController.errorMessage;
-                                default: return "";
+                            case "processing":
+                                return qsTr("Generating depth map\u2026");
+                            case "done":
+                                return qsTr("Depth wallpaper ready");
+                            case "error":
+                                return DepthWallpaperController.errorMessage;
+                            default:
+                                return "";
                             }
                         }
                         font.pixelSize: Appearance.fonts.size.medium
-                        color: DepthWallpaperController.state === "error"
-                            ? Colours.m3Colors.m3Error
-                            : DepthWallpaperController.state === "done"
-                                ? Colours.m3Colors.m3Green
-                                : Colours.m3Colors.m3OnSurfaceVariant
+                        color: DepthWallpaperController.state === "error" ? Colours.m3Colors.m3Error : DepthWallpaperController.state === "done" ? Colours.m3Colors.m3Green : Colours.m3Colors.m3OnSurfaceVariant
                         visible: text !== ""
                     }
                 }
@@ -120,9 +120,7 @@ Item {
 
                     Image {
                         anchors.fill: parent
-                        source: DepthWallpaperController.state === "done"
-                            ? "file://" + DepthWallpaperController.fgPath
-                            : ""
+                        source: DepthWallpaperController.state === "done" ? "file://" + DepthWallpaperController.fgPath : ""
                         fillMode: Image.PreserveAspectCrop
                         asynchronous: true
                         visible: source !== ""
@@ -163,10 +161,14 @@ Item {
                         }
                         text: {
                             switch (DepthWallpaperController.state) {
-                                case "processing": return qsTr("Processing");
-                                case "done": return qsTr("Foreground");
-                                case "error": return qsTr("Error");
-                                default: return qsTr("Not generated");
+                            case "processing":
+                                return qsTr("Processing");
+                            case "done":
+                                return qsTr("Foreground");
+                            case "error":
+                                return qsTr("Error");
+                            default:
+                                return qsTr("Not generated");
                             }
                         }
                         font.pixelSize: Appearance.fonts.size.small

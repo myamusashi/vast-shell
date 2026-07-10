@@ -36,8 +36,12 @@ Item {
     implicitWidth: isLockscreenOpen ? bottomWrapperRect.implicitWidth : lockIconMetrics.advanceWidth(lockIcon.text)
     implicitHeight: 0
 
-    Behavior on implicitWidth { NAnim {} }
-    Behavior on implicitHeight { NAnim {} }
+    Behavior on implicitWidth {
+        NAnim {}
+    }
+    Behavior on implicitHeight {
+        NAnim {}
+    }
 
     WrapperRectangle {
         id: bottomWrapperRect
@@ -93,14 +97,62 @@ Item {
                     id: shakeAnim
                     running: root.showErrorMessage
 
-                    NAnim { target: lockIcon; property: "rotation"; to: 18; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    NAnim { target: lockIcon; property: "rotation"; to: -18; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    NAnim { target: lockIcon; property: "rotation"; to: 12; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    NAnim { target: lockIcon; property: "rotation"; to: -12; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    NAnim { target: lockIcon; property: "rotation"; to: 6; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    NAnim { target: lockIcon; property: "rotation"; to: -6; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    NAnim { target: lockIcon; property: "rotation"; to: 0; duration: 100; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
-                    CAnim { target: lockIcon; property: "color"; to: Colours.m3Colors.m3Red; duration: Appearance.animations.durations.small; easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: 18
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: -18
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: 12
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: -12
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: 6
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: -6
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    NAnim {
+                        target: lockIcon
+                        property: "rotation"
+                        to: 0
+                        duration: 100
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
+                    CAnim {
+                        target: lockIcon
+                        property: "color"
+                        to: Colours.m3Colors.m3Red
+                        duration: Appearance.animations.durations.small
+                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    }
                 }
             }
 
@@ -116,7 +168,9 @@ Item {
                 visible: root.showErrorMessage
 
                 Behavior on opacity {
-                    NAnim { duration: 200 }
+                    NAnim {
+                        duration: 200
+                    }
                 }
             }
 
@@ -137,8 +191,16 @@ Item {
                 color: canSubmit ? root.pam.isUnlock ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
                 scale: pressHandler.pressed ? 0.88 : hoverHandler.hovered ? 1.08 : 1.0
 
-                Behavior on color { CAnim { duration: Appearance.animations.durations.small } }
-                Behavior on scale { NAnim { duration: Appearance.animations.durations.small } }
+                Behavior on color {
+                    CAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
+                Behavior on scale {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
 
                 Icon {
                     anchors.centerIn: parent
@@ -147,18 +209,26 @@ Item {
                     font.pixelSize: Appearance.fonts.size.large * 1.3
                     opacity: submitBtn.loading ? 0.85 : 1.0
 
-                    Behavior on opacity { NAnim { duration: Appearance.animations.durations.small } }
+                    Behavior on opacity {
+                        NAnim {
+                            duration: Appearance.animations.durations.small
+                        }
+                    }
 
                     RotationAnimator on rotation {
                         id: spinAnim
                         running: submitBtn.loading
-                        from: 0; to: 360; duration: 900; loops: Animation.Infinite
+                        from: 0
+                        to: 360
+                        duration: 900
+                        loops: Animation.Infinite
                         easing.type: Easing.Linear
                     }
 
                     NAnim on rotation {
                         running: !submitBtn.loading
-                        to: 0; duration: 0
+                        to: 0
+                        duration: 0
                     }
                 }
 
