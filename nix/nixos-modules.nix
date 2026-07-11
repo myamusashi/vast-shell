@@ -41,19 +41,16 @@ in {
         ];
 
         systemd.user.services.quickshell-shell = {
-            Unit = {
-                Description = "Shell widget using quickshell";
-                After = ["graphical-session.target"];
-                PartOf = ["graphical-session.target"];
-            };
-            Service = {
+            description = "Shell widget using quickshell";
+            after = ["graphical-session.target"];
+            partOf = ["graphical-session.target"];
+            wantedBy = ["graphical-session.target"];
+
+            serviceConfig = {
                 Type = "exec";
                 ExecStart = "${cfg.package}/bin/shell";
                 Restart = "on-failure";
                 Slice = "session.slice";
-            };
-            Install = {
-                WantedBy = ["graphical-session.target"];
             };
         };
     };
