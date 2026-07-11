@@ -14,15 +14,7 @@ import qs.Services
 WrapperRectangle {
     id: root
 
-    property bool scanner: false
-    readonly property var _activeWifiDevice: {
-        for (const d of Networking.devices) {
-            if (d.type === DeviceType.Wifi)
-                return d;
-        }
-        return null;
-    }
-
+	property bool isScannerEnabled: true
     property bool isVisible: false
     property real zoomOriginX: parent.width / 2
     property real zoomOriginY: parent.height / 2
@@ -131,30 +123,31 @@ WrapperRectangle {
                         Networking.wifiEnabled = checked;
                     })
                 }
-            }
+			}
 
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Scanner")
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
-
-                Item {
+			    RowLayout {
                     Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Scanner")
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.normal
+					}
+
+					Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSwitch {
+                        Layout.preferredWidth: 52
+                        Layout.preferredHeight: 32
+                        checked: root.isScannerEnabled
+						onToggled: Qt.callLater(() => {
+							root.isScannerEnabled = checked
+						})
+                    }
                 }
 
-                StyledSwitch {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 32
-                    checked: root.scanner
-                    onToggled: Qt.callLater(() => {
-                        root.scanner = checked;
-                    })
-                }
-            }
 
             ListView {
                 id: devicesListView
@@ -171,13 +164,19 @@ WrapperRectangle {
 
                     required property var modelData
 
-                    width: devicesListView.width
+					width: devicesListView.width
 
-                    readonly property bool _scannerSync: {
-                        if (modelData)
-                            modelData.scannerEnabled = root.scanner;
-                        return root.scanner;
-                    }
+					Connections {
+						target: root
+
+						function onIsScannerEnabledChanged() {
+							deviceDelegate.modelData.scannerEnabled = root.isScannerEnabled;
+						}
+					}
+
+					Component.onCompleted: {
+						modelData.scannerEnabled = root.isScannerEnabled;
+					}
 
                     Repeater {
                         model: ScriptModel {
@@ -194,19 +193,45 @@ WrapperRectangle {
 
                         delegate: WrapperRectangle {
                             id: networkDelegate
+                            property color _target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                            on_TargetChanged: {
+                                _cAnim.stop()
+                                _cFrom = color
+                                _cTo = _target
+                                _cActive = true
+                                _cBlend = 0.0
+                                _cAnim.start()
+                            }
+
+                            property color _cFrom
+                            property color _cTo
+                            property bool _cActive: false
+                            property real _cBlend: 1.0
+
+                            on_CBlendChanged: {
+                                if (!_cActive) return
+                                if (_cBlend >= 1) {
+                                    color = _cTo
+                                    _cActive = false
+                                } else if (_cBlend > 0) {
+                                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                                }
+                            }
+
+                            NAnim {
+                                id: _cAnim
+                                target: networkDelegate
+                                property: "_cBlend"
+                                from: 0.0
+                                to: 1.0
+                                duration: Appearance.animations.durations.small
+                            }
 
                             required property var modelData
 
                             Layout.fillWidth: true
-                            color: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
                             radius: Appearance.rounding.large
                             margin: Appearance.margin.small
-
-                            Behavior on color {
-                                CAnim {
-                                    duration: Appearance.animations.durations.small
-                                }
-                            }
 
                             TapHandler {
                                 id: networkTap
@@ -252,14 +277,14 @@ WrapperRectangle {
                                     Icon {
                                         anchors.fill: parent
                                         icon: "signal_wifi_0_bar"
-                                        color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.large * 1.5
                                     }
 
                                     Icon {
                                         anchors.fill: parent
                                         icon: {
-                                            const p = Math.round((modelData?.signalStrength ?? 0) * 100);
+                                            const p = Math.round((networkDelegate.modelData?.signalStrength ?? 0) * 100);
                                             if (p >= 80)
                                                 return "network_wifi";
                                             if (p >= 50)
@@ -270,7 +295,7 @@ WrapperRectangle {
                                                 return "network_wifi_1_bar";
                                             return "signal_wifi_0_bar";
                                         }
-                                        color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.large * 1.5
                                     }
                                 }
@@ -281,23 +306,23 @@ WrapperRectangle {
 
                                     StyledText {
                                         Layout.fillWidth: true
-                                        text: modelData?.name ?? ""
+                                        text: networkDelegate.modelData?.name ?? ""
                                         elide: Text.ElideRight
-                                        color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.normal
                                     }
 
                                     StyledText {
-                                        text: ConnectionState.toString(modelData.state)
-                                        color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                        text: ConnectionState.toString(networkDelegate.modelData.state)
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.small
                                     }
                                 }
 
                                 Icon {
-                                    visible: modelData && !modelData.known
+                                    visible: networkDelegate.modelData && !networkDelegate.modelData.known
                                     icon: "lock"
-                                    color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                    color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                     font.pixelSize: Appearance.fonts.size.normal
                                 }
                             }
