@@ -85,7 +85,32 @@ Item {
             }
 
             Icon {
-                id: lockIcon
+				id: lockIcon
+
+                property color _c0From
+                property color _c0To
+                property bool _c0Active: false
+                property real _c0Blend: 1.0
+
+				on_C0BlendChanged: {
+                    if (!_c0Active) return
+                    if (_c0Blend >= 1) {
+                        color = _c0To
+                        _c0Active = false
+                    } else if (_c0Blend > 0) {
+                        color = Colours.blendColors(_c0From, _c0To, _c0Blend)
+                    }
+                }
+
+                NumberAnimation {
+                    id: _c0Anim
+                    target: lockIcon
+                    property: "_c0Blend"
+                    from: 0.0
+                    to: 1.0
+                    duration: Appearance.animations.durations.small
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                }
 
                 Layout.alignment: Qt.AlignCenter
                 icon: "lock"
@@ -146,12 +171,15 @@ Item {
                         duration: 100
                         easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     }
-                    CAnim {
-                        target: lockIcon
-                        property: "color"
-                        to: Colours.m3Colors.m3Red
-                        duration: Appearance.animations.durations.small
-                        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    ScriptAction {
+                        script: {
+                            _c0Anim.stop()
+                            _c0From = lockIcon.color
+                            _c0To = Colours.m3Colors.m3Red
+                            _c0Active = true
+                            _c0Blend = 0.0
+                            _c0Anim.start()
+                        }
                     }
                 }
             }
@@ -182,19 +210,47 @@ Item {
             StyledRect {
                 id: submitBtn
 
+                property color _c1From
+                property color _c1To
+                property bool _c1Active: false
+                property real _c1Blend: 1.0
+
+                on_C1BlendChanged: {
+                    if (!_c1Active) return
+                    if (_c1Blend >= 1) {
+                        color = _c1To
+                        _c1Active = false
+                    } else if (_c1Blend > 0) {
+                        color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+                    }
+                }
+
+                NumberAnimation {
+                    id: _c1Anim
+                    target: submitBtn
+                    property: "_c1Blend"
+                    from: 0.0
+                    to: 1.0
+                    duration: Appearance.animations.durations.small
+                }
+
                 readonly property bool loading: root.pam.unlockInProgress
                 readonly property bool canSubmit: root.pam && root.inputBuffer.length > 0
+
+                property color _submitTarget: canSubmit ? root.pam.isUnlock ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
 
                 implicitWidth: 34
                 implicitHeight: 34
                 radius: Appearance.rounding.full
-                color: canSubmit ? root.pam.isUnlock ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
                 scale: pressHandler.pressed ? 0.88 : hoverHandler.hovered ? 1.08 : 1.0
 
-                Behavior on color {
-                    CAnim {
-                        duration: Appearance.animations.durations.small
-                    }
+                on_SubmitTargetChanged: {
+                    _c1Anim.stop()
+                    _c1From = submitBtn.color
+                    _c1To = _submitTarget
+                    _c1Active = true
+                    _c1Blend = 0.0
+                    _c1Anim.start()
                 }
                 Behavior on scale {
                     NAnim {

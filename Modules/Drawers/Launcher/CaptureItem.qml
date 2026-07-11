@@ -80,16 +80,44 @@ StyledRect {
         }
 
         Icon {
+            id: captureIcon
+            property color _target: root.isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Outline
+            property color _cFrom
+            property color _cTo
+            property bool _cActive: false
+            property real _cBlend: 1.0
+            on_CBlendChanged: {
+                if (!_cActive) return
+                if (_cBlend >= 1) {
+                    color = _cTo
+                    _cActive = false
+                } else if (_cBlend > 0) {
+                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                }
+            }
+            on_TargetChanged: {
+                _cAnim.stop()
+                _cFrom = color
+                _cTo = _target
+                _cActive = true
+                _cBlend = 0.0
+                _cAnim.start()
+            }
+
             type: Icon.Material
             icon: root.optionData.icon
-            color: root.isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Outline
             font.pixelSize: Appearance.fonts.size.large
             Layout.alignment: Qt.AlignVCenter
 
-            Behavior on color {
-                CAnim {
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
+            NumberAnimation {
+                id: _cAnim
+                target: captureIcon
+                property: "_cBlend"
+                from: 0.0
+                to: 1.0
+                duration: Appearance.animations.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
         }
 

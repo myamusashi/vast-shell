@@ -26,6 +26,32 @@ WlSessionLockSurface {
     color: "transparent"
     property bool zoomedIn: false
 
+    property color _cFrom
+    property color _cTo
+    property bool _cActive: false
+	property real _cBlend: 1.0
+
+    on_CBlendChanged: {
+        if (!_cActive) return
+        if (_cBlend >= 1) {
+            bottomItem.lockIcon.color = _cTo
+            _cActive = false
+        } else if (_cBlend > 0) {
+            bottomItem.lockIcon.color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+        }
+    }
+
+    NumberAnimation {
+        id: _cAnim
+        target: root
+        property: "_cBlend"
+        from: 0.0
+        to: 1.0
+        duration: Appearance.animations.durations.small
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+    }
+
     onInputBufferChanged: {
         var diff = root.inputBuffer.length - root.maskedBuffer.length;
         var grew = diff > 0;
@@ -358,16 +384,16 @@ WlSessionLockSurface {
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
-        CAnim {
-            target: bottomItem.lockIcon
-            property: "color"
-            to: Colours.m3Colors.m3Green
-            duration: Appearance.animations.durations.small
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-        }
-
         ScriptAction {
-            script: bottomItem.iconName = "lock_open_right"
+            script: {
+                _cAnim.stop()
+                _cFrom = bottomItem.lockIcon.color
+                _cTo = Colours.m3Colors.m3Green
+                _cActive = true
+                _cBlend = 0.0
+                _cAnim.start()
+                bottomItem.iconName = "lock_open_right";
+            }
         }
 
         PauseAnimation {

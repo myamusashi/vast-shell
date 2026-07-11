@@ -85,6 +85,31 @@ Item {
 
                     delegate: StyledText {
                         required property var modelData
+                        property color _c0From
+                        property color _c0To
+                        property bool _c0Active: false
+                        property real _c0Blend: 1.0
+
+                        on_C0BlendChanged: {
+                            if (!_c0Active) return
+                            if (_c0Blend >= 1) {
+                                color = _c0To
+                                _c0Active = false
+                            } else if (_c0Blend > 0) {
+                                color = Colours.blendColors(_c0From, _c0To, _c0Blend)
+                            }
+                        }
+
+                        NumberAnimation {
+                            id: _c0Anim
+                            target: parent
+                            property: "_c0Blend"
+                            from: 0.0
+                            to: 1.0
+                            duration: Math.max(150, LyricsProvider.currentWordDuration)
+                            easing.bezierCurve: Appearance.animations.curves.emphasized
+                        }
+
                         text: modelData
                         font {
                             pixelSize: Appearance.fonts.size.large
@@ -94,22 +119,50 @@ Item {
                             kerning: true
                             preferShaping: true
                         }
-                        color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                        property color _lyricTarget: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
                         renderType: Text.QtRendering
                         style: Text.Raised
                         styleColor: "#80000000"
 
-                        Behavior on color {
-                            CAnim {
-                                duration: Math.max(150, LyricsProvider.currentWordDuration)
-                                easing.bezierCurve: Appearance.animations.curves.emphasized
-                            }
+                        on_LyricTargetChanged: {
+                            _c0Anim.stop()
+                            _c0From = parent.color
+                            _c0To = _lyricTarget
+                            _c0Active = true
+                            _c0Blend = 0.0
+                            _c0Anim.start()
                         }
                     }
                 }
             }
 
             StyledText {
+                id: translationText
+                property color _c1From
+                property color _c1To
+                property bool _c1Active: false
+                property real _c1Blend: 1.0
+
+                on_C1BlendChanged: {
+                    if (!_c1Active) return
+                    if (_c1Blend >= 1) {
+                        color = _c1To
+                        _c1Active = false
+                    } else if (_c1Blend > 0) {
+                        color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+                    }
+                }
+
+                NumberAnimation {
+                    id: _c1Anim
+                    target: translationText
+                    property: "_c1Blend"
+                    from: 0.0
+                    to: 1.0
+                    duration: Math.max(150, LyricsProvider.currentWordDuration)
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
+                }
+
                 Layout.fillWidth: true
                 wrapMode: Text.Wrap
                 text: `(${lineDelegate.modelData.translation})`
@@ -122,16 +175,18 @@ Item {
                     kerning: true
                     preferShaping: true
                 }
-                color: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                property color _transTarget: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
                 style: Text.Raised
                 styleColor: "#80000000"
                 opacity: 0.7
 
-                Behavior on color {
-                    CAnim {
-                        duration: Math.max(150, LyricsProvider.currentWordDuration)
-                        easing.bezierCurve: Appearance.animations.curves.emphasized
-                    }
+                on_TransTargetChanged: {
+                    _c1Anim.stop()
+                    _c1From = translationText.color
+                    _c1To = _transTarget
+                    _c1Active = true
+                    _c1Blend = 0.0
+                    _c1Anim.start()
                 }
             }
         }

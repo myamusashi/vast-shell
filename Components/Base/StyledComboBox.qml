@@ -185,13 +185,41 @@ ComboBox {
         enabled: itemEnabled
 
         background: StyledRect {
-            radius: Appearance.rounding.large
-            color: menuDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : "transparent"
+            id: menuBg
+            property color _c0From
+            property color _c0To
+            property bool _c0Active: false
+            property real _c0Blend: 1.0
 
-            Behavior on color {
-                CAnim {
-                    duration: Appearance.animations.durations.small
+            on_C0BlendChanged: {
+                if (!_c0Active) return
+                if (_c0Blend >= 1) {
+                    color = _c0To
+                    _c0Active = false
+                } else if (_c0Blend > 0) {
+                    color = Colours.blendColors(_c0From, _c0To, _c0Blend)
                 }
+            }
+
+            NumberAnimation {
+                id: _c0Anim
+                target: menuBg
+                property: "_c0Blend"
+                from: 0.0
+                to: 1.0
+                duration: Appearance.animations.durations.small
+            }
+
+            radius: Appearance.rounding.large
+            property color _menuBgTarget: menuDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : "transparent"
+
+            on_MenuBgTargetChanged: {
+                _c0Anim.stop()
+                _c0From = menuBg.color
+                _c0To = _menuBgTarget
+                _c0Active = true
+                _c0Blend = 0.0
+                _c0Anim.start()
             }
         }
 
@@ -211,18 +239,46 @@ ComboBox {
         spacing: Appearance.spacing.small
 
         StyledText {
+            id: boxLabel
+            property color _c1From
+            property color _c1To
+            property bool _c1Active: false
+            property real _c1Blend: 1.0
+
+            on_C1BlendChanged: {
+                if (!_c1Active) return
+                if (_c1Blend >= 1) {
+                    color = _c1To
+                    _c1Active = false
+                } else if (_c1Blend > 0) {
+                    color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+                }
+            }
+
+            NumberAnimation {
+                id: _c1Anim
+                target: boxLabel
+                property: "_c1Blend"
+                from: 0.0
+                to: 1.0
+                duration: Appearance.animations.durations.small
+            }
+
             Layout.fillWidth: true
             text: menuDelegate.modelMenu[root.textRole] ?? ""
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: menuDelegate.highlighted ? Font.Medium : Font.Normal
-            color: !menuDelegate.itemEnabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38) : menuDelegate.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
+            property color _boxLabelTarget: !menuDelegate.itemEnabled ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38) : menuDelegate.highlighted ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
 
-            Behavior on color {
-                CAnim {
-                    duration: Appearance.animations.durations.small
-                }
+            on_BoxLabelTargetChanged: {
+                _c1Anim.stop()
+                _c1From = boxLabel.color
+                _c1To = _boxLabelTarget
+                _c1Active = true
+                _c1Blend = 0.0
+                _c1Anim.start()
             }
         }
 

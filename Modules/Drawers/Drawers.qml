@@ -336,23 +336,75 @@ Variants {
 
     component ElevatedCharging: Elevation {
         id: elev
+        property color _c0From
+        property color _c0To
+        property bool _c0Active: false
+        property real _c0Blend: 1.0
+
+        on_C0BlendChanged: {
+            if (!_c0Active) return
+            if (_c0Blend >= 1) {
+                color = _c0To
+                _c0Active = false
+            } else if (_c0Blend > 0) {
+                color = Colours.blendColors(_c0From, _c0To, _c0Blend)
+            }
+        }
+
+        NumberAnimation {
+            id: _c0Anim
+            target: elev
+            property: "_c0Blend"
+            from: 0.0
+            to: 1.0
+            duration: Appearance.animations.durations.large * 0.8
+        }
+
+        property color _c1From
+        property color _c1To
+        property bool _c1Active: false
+        property real _c1Blend: 1.0
+
+        on_C1BlendChanged: {
+            if (!_c1Active) return
+            if (_c1Blend >= 1) {
+                color = _c1To
+                _c1Active = false
+            } else if (_c1Blend > 0) {
+                color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+            }
+        }
+
+        NumberAnimation {
+            id: _c1Anim
+            target: elev
+            property: "_c1Blend"
+            from: 0.0
+            to: 1.0
+            duration: Appearance.animations.durations.large
+        }
 
         anchors.fill: parent
         color: "transparent"
         blur: 0
         spread: 0
         z: -1
+
         level: 3
 
         SequentialAnimation {
             id: chargeFlash
 
             ParallelAnimation {
-                CAnim {
-                    target: elev
-                    property: "color"
-                    to: Colours.m3Colors.m3Green
-                    duration: Appearance.animations.durations.large * 0.8
+                ScriptAction {
+                    script: {
+                            _c0Anim.stop()
+                            _c0From = elev.color
+                            _c0To = Colours.m3Colors.m3Green
+                            _c0Active = true
+                            _c0Blend = 0.0
+                            _c0Anim.start()
+                        }
                 }
                 NAnim {
                     target: elev
@@ -373,11 +425,15 @@ Variants {
             }
 
             ParallelAnimation {
-                CAnim {
-                    target: elev
-                    property: "color"
-                    to: "transparent"
-                    duration: Appearance.animations.durations.large
+                ScriptAction {
+                    script: {
+                            _c1Anim.stop()
+                            _c1From = elev.color
+                            _c1To = "transparent"
+                            _c1Active = true
+                            _c1Blend = 0.0
+                            _c1Anim.start()
+                        }
                 }
                 NAnim {
                     target: elev
@@ -398,11 +454,15 @@ Variants {
             id: lowFlash
 
             ParallelAnimation {
-                CAnim {
-                    target: elev
-                    property: "color"
-                    to: Colours.m3Colors.m3Red
-                    duration: Appearance.animations.durations.large * 0.8
+                ScriptAction {
+                    script: {
+                            _c0Anim.stop()
+                            _c0From = elev.color
+                            _c0To = Colours.m3Colors.m3Red
+                            _c0Active = true
+                            _c0Blend = 0.0
+                            _c0Anim.start()
+                        }
                 }
                 NAnim {
                     target: elev
@@ -423,11 +483,15 @@ Variants {
             }
 
             ParallelAnimation {
-                CAnim {
-                    target: elev
-                    property: "color"
-                    to: "transparent"
-                    duration: Appearance.animations.durations.large
+                ScriptAction {
+                    script: {
+                            _c1Anim.stop()
+                            _c1From = elev.color
+                            _c1To = "transparent"
+                            _c1Active = true
+                            _c1Blend = 0.0
+                            _c1Anim.start()
+                        }
                 }
                 NAnim {
                     target: elev

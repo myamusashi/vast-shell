@@ -205,6 +205,40 @@ PopupWidget {
         }
 
         StyledRect {
+            id: systemAppsBar
+            property color _c0From
+            property color _c0To
+            property bool _c0Active: false
+            property real _c0Blend: 1.0
+
+            on_C0BlendChanged: {
+                if (!_c0Active) return
+                if (_c0Blend >= 1) {
+                    color = _c0To
+                    _c0Active = false
+                } else if (_c0Blend > 0) {
+                    color = Colours.blendColors(_c0From, _c0To, _c0Blend)
+                }
+            }
+
+            NumberAnimation {
+                id: _c0Anim
+                target: systemAppsBar
+                property: "_c0Blend"
+                from: 0.0
+                to: 1.0
+            }
+
+            property color _target: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
+            on_TargetChanged: {
+                _c0Anim.stop()
+                _c0From = systemAppsBar.color
+                _c0To = _target
+                _c0Active = true
+                _c0Blend = 0.0
+                _c0Anim.start()
+            }
+
             anchors {
                 left: parent.left
                 top: parent.top
@@ -212,18 +246,48 @@ PopupWidget {
             }
             width: parent.width * root.systemPlusAppsRatio
             radius: height / 2
-            color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
             z: 1
 
             Behavior on width {
                 NAnim {}
             }
-            Behavior on color {
-                CAnim {}
-            }
         }
 
         StyledRect {
+            id: appsBar
+            property color _c1From
+            property color _c1To
+            property bool _c1Active: false
+            property real _c1Blend: 1.0
+
+            on_C1BlendChanged: {
+                if (!_c1Active) return
+                if (_c1Blend >= 1) {
+                    color = _c1To
+                    _c1Active = false
+                } else if (_c1Blend > 0) {
+                    color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+                }
+            }
+
+            NumberAnimation {
+                id: _c1Anim
+                target: appsBar
+                property: "_c1Blend"
+                from: 0.0
+                to: 1.0
+            }
+
+            property color _target: Colours.m3Colors.m3Green
+            on_TargetChanged: {
+                _c1Anim.stop()
+                _c1From = appsBar.color
+                _c1To = _target
+                _c1Active = true
+                _c1Blend = 0.0
+                _c1Anim.start()
+            }
+
             anchors {
                 left: parent.left
                 top: parent.top
@@ -231,14 +295,10 @@ PopupWidget {
             }
             width: parent.width * root.appsRatio
             radius: height / 2
-            color: Colours.m3Colors.m3Green
             z: 2
 
             Behavior on width {
                 NAnim {}
-            }
-            Behavior on color {
-                CAnim {}
             }
         }
     }
@@ -261,6 +321,40 @@ PopupWidget {
         }
 
         StyledRect {
+            id: usedBar
+            property color _c2From
+            property color _c2To
+            property bool _c2Active: false
+            property real _c2Blend: 1.0
+
+            on_C2BlendChanged: {
+                if (!_c2Active) return
+                if (_c2Blend >= 1) {
+                    color = _c2To
+                    _c2Active = false
+                } else if (_c2Blend > 0) {
+                    color = Colours.blendColors(_c2From, _c2To, _c2Blend)
+                }
+            }
+
+            NumberAnimation {
+                id: _c2Anim
+                target: usedBar
+                property: "_c2Blend"
+                from: 0.0
+                to: 1.0
+            }
+
+            property color _target: Colours.m3Colors.m3Green
+            on_TargetChanged: {
+                _c2Anim.stop()
+                _c2From = usedBar.color
+                _c2To = _target
+                _c2Active = true
+                _c2Blend = 0.0
+                _c2Anim.start()
+            }
+
             anchors {
                 left: parent.left
                 top: parent.top
@@ -268,14 +362,9 @@ PopupWidget {
             }
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
-            color: Colours.m3Colors.m3Green
 
             Behavior on implicitWidth {
                 NAnim {}
-            }
-
-            Behavior on color {
-                CAnim {}
             }
         }
     }

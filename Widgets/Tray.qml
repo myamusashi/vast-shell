@@ -61,14 +61,42 @@ StyledRect {
 
                 StyledRect {
                     id: bgTrayIcon
+                    property color _target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
+                    property color _cFrom
+                    property color _cTo
+                    property bool _cActive: false
+                    property real _cBlend: 1.0
+                    on_CBlendChanged: {
+                        if (!_cActive) return
+                        if (_cBlend >= 1) {
+                            color = _cTo
+                            _cActive = false
+                        } else if (_cBlend > 0) {
+                            color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                        }
+                    }
+                    on_TargetChanged: {
+                        _cAnim.stop()
+                        _cFrom = color
+                        _cTo = _target
+                        _cActive = true
+                        _cBlend = 0.0
+                        _cAnim.start()
+                    }
 
                     width: 25
                     height: 25
                     radius: Appearance.rounding.normal
-                    color: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
 
-                    Behavior on color {
-                        CAnim {}
+                    NumberAnimation {
+                        id: _cAnim
+                        target: bgTrayIcon
+                        property: "_cBlend"
+                        from: 0.0
+                        to: 1.0
+                        duration: Appearance.animations.durations.normal
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Appearance.animations.curves.standard
                     }
                 }
 

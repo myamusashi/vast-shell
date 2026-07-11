@@ -214,14 +214,42 @@ Item {
                             }
 
                             Rectangle {
+                                id: dimOverlay
+                                property color _target: Qt.rgba(0, 0, 0, delegateItem.isCurrent ? 0.0 : 0.22)
+                                property color _cFrom
+                                property color _cTo
+                                property bool _cActive: false
+                                property real _cBlend: 1.0
+                                on_CBlendChanged: {
+                                    if (!_cActive) return
+                                    if (_cBlend >= 1) {
+                                        color = _cTo
+                                        _cActive = false
+                                    } else if (_cBlend > 0) {
+                                        color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                                    }
+                                }
+                                on_TargetChanged: {
+                                    _cAnim.stop()
+                                    _cFrom = color
+                                    _cTo = _target
+                                    _cActive = true
+                                    _cBlend = 0.0
+                                    _cAnim.start()
+                                }
+
                                 anchors.fill: parent
                                 radius: cardRect.radius
-                                color: Qt.rgba(0, 0, 0, delegateItem.isCurrent ? 0.0 : 0.22)
 
-                                Behavior on color {
-                                    CAnim {
-                                        duration: Appearance.animations.durations.normal
-                                    }
+                                NumberAnimation {
+                                    id: _cAnim
+                                    target: dimOverlay
+                                    property: "_cBlend"
+                                    from: 0.0
+                                    to: 1.0
+                                    duration: Appearance.animations.durations.normal
+                                    easing.type: Easing.BezierSpline
+                                    easing.bezierCurve: Appearance.animations.curves.standard
                                 }
                             }
 

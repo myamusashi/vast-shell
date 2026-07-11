@@ -241,15 +241,43 @@ Slider {
                 height: root.snapDotSize
                 radius: root.snapDotSize / 2
                 color: isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor
+                property color _cFrom
+                property color _cTo
+                property bool _cActive: false
+				property real _cBlend: 1.0
+				
+                on_CBlendChanged: {
+                    if (!_cActive) return
+                    if (_cBlend >= 1) {
+                        color = _cTo
+                        _cActive = false
+                    } else if (_cBlend > 0) {
+                        color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                    }
+                }
 
                 x: root.isHorizontal ? root.handleGap + (normalPos * root.availableTrackSize) - root.snapDotSize / 2 : (parent.width - root.snapDotSize) / 2
                 y: root.isVertical ? root.handleGap + ((1 - normalPos) * root.availableTrackSize) - root.snapDotSize / 2 : (parent.height - root.snapDotSize) / 2
                 z: 5
 
-                Behavior on color {
-                    CAnim {
-                        duration: Appearance.animations.durations.small
-                    }
+                onIsFilledChanged: {
+                    _cAnim.stop()
+                    _cFrom = color
+                    _cTo = isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor
+                    _cActive = true
+                    _cBlend = 0.0
+                    _cAnim.start()
+                }
+
+                NumberAnimation {
+                    id: _cAnim
+                    target: snapDot
+                    property: "_cBlend"
+                    from: 0.0
+                    to: 1.0
+                    duration: Appearance.animations.durations.small
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.animations.curves.standard
                 }
             }
         }

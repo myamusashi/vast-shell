@@ -105,15 +105,45 @@ Item {
         }
 
         delegate: MaterialShape {
+            id: shapeDelegate
             required property int index
 
             implicitWidth: 20
             implicitHeight: 20
             shape: root.shapeList[index % root.shapeList.length]
-            color: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+            property color _shapeTarget: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+            property color _cFrom
+            property color _cTo
+            property bool _cActive: false
+            property real _cBlend: 1.0
+            on_CBlendChanged: {
+                if (!_cActive) return
+                if (_cBlend >= 1) {
+                    color = _cTo
+                    _cActive = false
+                } else if (_cBlend > 0) {
+                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                }
+            }
 
-            Behavior on color {
-                CAnim {}
+            on_ShapeTargetChanged: {
+                _cAnim.stop()
+                _cFrom = color
+                _cTo = _shapeTarget
+                _cActive = true
+                _cBlend = 0.0
+                _cAnim.start()
+            }
+
+            NumberAnimation {
+                id: _cAnim
+                target: shapeDelegate
+                property: "_cBlend"
+                from: 0.0
+                to: 1.0
+                duration: Appearance.animations.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.animations.curves.standard
             }
         }
 

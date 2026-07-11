@@ -100,6 +100,30 @@ PopupWidget {
         }
 
         Rectangle {
+            id: usedBar
+            property color _target: Colours.m3Colors.m3Green
+            property color _cFrom
+            property color _cTo
+            property bool _cActive: false
+            property real _cBlend: 1.0
+            on_CBlendChanged: {
+                if (!_cActive) return
+                if (_cBlend >= 1) {
+                    color = _cTo
+                    _cActive = false
+                } else if (_cBlend > 0) {
+                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                }
+            }
+            on_TargetChanged: {
+                _cAnim.stop()
+                _cFrom = color
+                _cTo = _target
+                _cActive = true
+                _cBlend = 0.0
+                _cAnim.start()
+            }
+
             anchors {
                 left: parent.left
                 top: parent.top
@@ -107,14 +131,20 @@ PopupWidget {
             }
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
-            color: Colours.m3Colors.m3Green
 
             Behavior on implicitWidth {
                 NAnim {}
             }
 
-            Behavior on color {
-                CAnim {}
+            NumberAnimation {
+                id: _cAnim
+                target: usedBar
+                property: "_cBlend"
+                from: 0.0
+                to: 1.0
+                duration: Appearance.animations.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.animations.curves.standard
             }
         }
     }

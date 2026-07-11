@@ -166,13 +166,41 @@ Rectangle {
         property bool isRotate: false
         property alias mArea: mArea
 
-        color: mArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.08) : mArea.containsPress ? Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.1) : enabled ? Colours.m3Colors.m3OnSurfaceVariant : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+        property color _target: mArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.08) : mArea.containsPress ? Qt.alpha(Colours.m3Colors.m3OnSurfaceVariant, 0.1) : enabled ? Colours.m3Colors.m3OnSurfaceVariant : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+        property color _cFrom
+        property color _cTo
+        property bool _cActive: false
+        property real _cBlend: 1.0
+        on_CBlendChanged: {
+            if (!_cActive) return
+            if (_cBlend >= 1) {
+                color = _cTo
+                _cActive = false
+            } else if (_cBlend > 0) {
+                color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+            }
+        }
+        on_TargetChanged: {
+            _cAnim.stop()
+            _cFrom = color
+            _cTo = _target
+            _cActive = true
+            _cBlend = 0.0
+            _cAnim.start()
+        }
         font.pixelSize: Appearance.fonts.size.large * 1.2
         rotation: isRotate ? 0 : 360
         transformOrigin: Item.Center
 
-        Behavior on color {
-            CAnim {}
+        NumberAnimation {
+            id: _cAnim
+            target: iconButton
+            property: "_cBlend"
+            from: 0.0
+            to: 1.0
+            duration: Appearance.animations.durations.normal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Appearance.animations.curves.standard
         }
 
         RotationAnimator on rotation {

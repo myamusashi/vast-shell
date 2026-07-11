@@ -109,12 +109,42 @@ WrapperRectangle {
                     spacing: Appearance.spacing.smaller
 
                     Icon {
+                        id: searchIcon
+                        property color _target: searchField.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                        property color _cFrom
+                        property color _cTo
+                        property bool _cActive: false
+                        property real _cBlend: 1.0
+                        on_CBlendChanged: {
+                            if (!_cActive) return
+                            if (_cBlend >= 1) {
+                                color = _cTo
+                                _cActive = false
+                            } else if (_cBlend > 0) {
+                                color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                            }
+                        }
+                        on_TargetChanged: {
+                            _cAnim.stop()
+                            _cFrom = color
+                            _cTo = _target
+                            _cActive = true
+                            _cBlend = 0.0
+                            _cAnim.start()
+                        }
+
                         icon: "search"
                         font.pixelSize: Appearance.fonts.size.larger
-                        color: searchField.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
 
-                        Behavior on color {
-                            CAnim {}
+                        NumberAnimation {
+                            id: _cAnim
+                            target: searchIcon
+                            property: "_cBlend"
+                            from: 0.0
+                            to: 1.0
+                            duration: Appearance.animations.durations.normal
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Appearance.animations.curves.standard
                         }
                     }
 

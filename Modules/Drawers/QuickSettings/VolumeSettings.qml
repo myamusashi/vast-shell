@@ -51,17 +51,45 @@ ScrollView {
                     spacing: Appearance.spacing.small
 
                     StyledRect {
+                        id: sinkIndicator
+                        property color _target: root.currentSinkIndex === del.index ? Colours.m3Colors.m3Primary : "transparent"
+                        property color _cFrom
+                        property color _cTo
+                        property bool _cActive: false
+                        property real _cBlend: 1.0
+                        on_CBlendChanged: {
+                            if (!_cActive) return
+                            if (_cBlend >= 1) {
+                                color = _cTo
+                                _cActive = false
+                            } else if (_cBlend > 0) {
+                                color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                            }
+                        }
+                        on_TargetChanged: {
+                            _cAnim.stop()
+                            _cFrom = color
+                            _cTo = _target
+                            _cActive = true
+                            _cBlend = 0.0
+                            _cAnim.start()
+                        }
+
                         implicitWidth: 15
                         implicitHeight: 15
                         radius: Appearance.rounding.full
-                        color: root.currentSinkIndex === del.index ? Colours.m3Colors.m3Primary : "transparent"
                         border.width: 2
                         border.color: Colours.m3Colors.m3Primary
 
-                        Behavior on color {
-                            CAnim {
-                                duration: Appearance.animations.durations.small
-                            }
+                        NumberAnimation {
+                            id: _cAnim
+                            target: sinkIndicator
+                            property: "_cBlend"
+                            from: 0.0
+                            to: 1.0
+                            duration: Appearance.animations.durations.small
+                            easing.type: Easing.BezierSpline
+                            easing.bezierCurve: Appearance.animations.curves.standard
                         }
                     }
 
