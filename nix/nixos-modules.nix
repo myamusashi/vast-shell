@@ -5,16 +5,15 @@
     ...
 }: let
     cfg = config.programs.quickshell-shell;
-    system = pkgs.system;
 
-    material-symbols = pkgs.callPackage ./material-symbols.nix {};
+    material-symbols = pkgs.callPackage ./packages/material-symbols.nix {};
 in {
     options.programs.quickshell-shell = {
         enable = lib.mkEnableOption "quickshell shell";
 
         package = lib.mkOption {
             type = lib.types.package;
-            default = self.packages.${system}.default;
+            default = self.packages.${pkgs.system}.default;
             description = "The quickshell-shell package to use";
         };
 
@@ -32,15 +31,14 @@ in {
     };
 
     config = lib.mkIf cfg.enable {
-        home.packages =
+        environment.systemPackages =
             [cfg.package]
-            ++ cfg.extraPackages
-            ++ lib.optionals cfg.installFonts [
-                lib.optionals
-                material-symbols
-            ];
+            ++ cfg.extraPackages;
 
-        fonts.fontconfig.enable = lib.mkDefault true;
+        fonts.packages = lib.optionals cfg.installFonts [
+            material-symbols
+            pkgs.weather-icons
+        ];
 
         systemd.user.services.quickshell-shell = {
             Unit = {

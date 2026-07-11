@@ -31,7 +31,7 @@
                 inherit quickshell;
             });
 
-        homeManagerModules.default = import ./nix/hm-modules.nix {
+        nixosModules.default = import ./nix/nixos-modules.nix {
             inherit self;
         };
 

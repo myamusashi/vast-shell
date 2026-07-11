@@ -32,16 +32,6 @@
     m3shapes = callPackage ./plugins/m3Shapes.nix {};
     another-ripple = callPackage ./plugins/AnotherRipple.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
-    rembg = python3Packages.rembg.overridePythonAttrs (old: {
-        dependencies =
-            old.dependencies
-            ++ (with python3Packages; [
-                click
-                filetype
-                watchdog
-            ]);
-        postInstall = "";
-    });
 
     runtimeDeps = [
         ## utils
@@ -212,7 +202,7 @@
               $out/bin/shell \
                 --add-flags "-p $out/share/quickshell" \
                 --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
-                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts" \
+                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
@@ -220,8 +210,6 @@
                 --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
                 --suffix PATH : /run/current-system/sw/bin \
-                --suffix PATH : /etc/profiles/per-user/$USER/bin \
-                --suffix PATH : $HOME/.nix-profile/bin
 
             runHook postInstall
         '';

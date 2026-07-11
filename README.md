@@ -116,7 +116,9 @@ inputs.vast-shell = {
 };
 ```
 
-Then include the package in your system or home configuration:
+Then you can either add the package directly, or use the NixOS module:
+
+**Option 1 — Add the package directly:**
 
 ```nix
 environment.systemPackages = [
@@ -124,25 +126,25 @@ environment.systemPackages = [
 ];
 ```
 
-#### Home Manager
-
-Import the module and enable it:
+**Option 2 — Use the NixOS module (recommended):**
 
 ```nix
-imports = [ inputs.vast-shell.homeManagerModules.default ];
+{
+  imports = [ inputs.vast-shell.nixosModules.default ];
 
-programs.quickshell-shell = {
-  enable = true;
+  programs.quickshell-shell = {
+    enable = true;
 
-  # Optional: install extra packages accessible to the shell
-  extraPackages = with pkgs; [ spotify ];
+    # Optional: install extra packages accessible to the shell
+    extraPackages = with pkgs; [ spotify ];
 
-  # Optional: disable font installation if you manage fonts separately
-  installFonts = false;
-};
+    # Optional: disable font installation if you manage fonts separately
+    installFonts = false;
+  };
+}
 ```
 
-The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session.
+The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, and automatically installs required fonts (`material-symbols`, `weather-icons`).
 
 ---
 
@@ -638,7 +640,7 @@ vast-shell/
 │
 ├── nix/
 │   ├── default.nix
-│   ├── hm-modules.nix
+│   ├── nixos-modules.nix
 │   ├── packages/          # app2unit, material-symbols, qmlfmt
 │   └── plugins/           # vastPlugin, AnotherRipple, m3Shapes
 │
