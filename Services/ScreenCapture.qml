@@ -15,7 +15,7 @@ Singleton {
                 {
                     "id": "all-monitors",
                     "name": qsTr("All monitors"),
-                    "icon": "monitors",
+                    "icon": "split_scene_right",
                     "action": () => ScreenRecorder.screenshotAllOutputs("save+copy")
                 },
                 {
