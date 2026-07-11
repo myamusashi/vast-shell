@@ -9,8 +9,4 @@ Rectangle {
     implicitHeight: 0
     color: "transparent"
     radius: Appearance.rounding.normal
-
-    Behavior on color {
-        CAnim {}
-    }
 }
