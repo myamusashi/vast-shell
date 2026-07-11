@@ -22,6 +22,53 @@ Singleton {
         return Math.min(1, Math.max(0, x));
     }
 
+    // ── OKLab perceptual color space ─────────────────────────────────────────
+    // Converts between sRGB and OKLab for perceptually uniform color blending.
+    // Use blendColors() for smooth theme transitions and animations.
+    // Do NOT use for M3 tonal palette work — that lives in HCT (rgbToHct/hctToRgb).
+
+    function oklabFromColor(c: color): var {
+        const l = 0.4122214708 * c.r + 0.5363325363 * c.g + 0.0514459929 * c.b;
+        const m = 0.2119034982 * c.r + 0.6806995451 * c.g + 0.1073969566 * c.b;
+        const s = 0.0883024619 * c.r + 0.2817188376 * c.g + 0.6299787005 * c.b;
+
+        const l_ = Math.cbrt(l);
+        const m_ = Math.cbrt(m);
+        const s_ = Math.cbrt(s);
+
+        return {
+            l: 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_,
+            a: 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_,
+            b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_
+        };
+    }
+
+    function oklabToColor(lab: var, alpha: double): color {
+        const l_ = lab.l + 0.3963377774 * lab.a + 0.2158037573 * lab.b;
+        const m_ = lab.l - 0.1055613458 * lab.a - 0.0638541728 * lab.b;
+        const s_ = lab.l - 0.0894841775 * lab.a - 1.2914855480 * lab.b;
+
+        const l = l_ * l_ * l_;
+        const m = m_ * m_ * m_;
+        const s = s_ * s_ * s_;
+
+        return Qt.rgba(clamp01(+4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s), clamp01(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s), clamp01(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s), alpha);
+    }
+
+    // Blend two Qt colors perceptually in OKLab space.
+    // t=0.0 → src, t=1.0 → dst
+    function blendColors(src: color, dst: color, t: double): color {
+        const s = oklabFromColor(src);
+        const d = oklabFromColor(dst);
+        return oklabToColor({
+            l: s.l + (d.l - s.l) * t,
+            a: s.a + (d.a - s.a) * t,
+            b: s.b + (d.b - s.b) * t
+        }, src.a + (dst.a - src.a) * t);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+
     function overlayColor(baseColor, targetColor, overlayOpacity) {
         if (overlayOpacity <= 0)
             // Impossible to influence the base
