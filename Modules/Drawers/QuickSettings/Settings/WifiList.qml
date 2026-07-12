@@ -14,7 +14,7 @@ import qs.Services
 WrapperRectangle {
     id: root
 
-	property bool isScannerEnabled: true
+    property bool isScannerEnabled: true
     property bool isVisible: false
     property real zoomOriginX: parent.width / 2
     property real zoomOriginY: parent.height / 2
@@ -123,31 +123,30 @@ WrapperRectangle {
                         Networking.wifiEnabled = checked;
                     })
                 }
-			}
+            }
 
-			    RowLayout {
-                    Layout.fillWidth: true
+            RowLayout {
+                Layout.fillWidth: true
 
-                    StyledText {
-                        text: qsTr("Scanner")
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.normal
-					}
-
-					Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledSwitch {
-                        Layout.preferredWidth: 52
-                        Layout.preferredHeight: 32
-                        checked: root.isScannerEnabled
-						onToggled: Qt.callLater(() => {
-							root.isScannerEnabled = checked
-						})
-                    }
+                StyledText {
+                    text: qsTr("Scanner")
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.normal
                 }
 
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                StyledSwitch {
+                    Layout.preferredWidth: 52
+                    Layout.preferredHeight: 32
+                    checked: root.isScannerEnabled
+                    onToggled: Qt.callLater(() => {
+                        root.isScannerEnabled = checked;
+                    })
+                }
+            }
 
             ListView {
                 id: devicesListView
@@ -164,19 +163,19 @@ WrapperRectangle {
 
                     required property var modelData
 
-					width: devicesListView.width
+                    width: devicesListView.width
 
-					Connections {
-						target: root
+                    Connections {
+                        target: root
 
-						function onIsScannerEnabledChanged() {
-							deviceDelegate.modelData.scannerEnabled = root.isScannerEnabled;
-						}
-					}
+                        function onIsScannerEnabledChanged() {
+                            deviceDelegate.modelData.scannerEnabled = root.isScannerEnabled;
+                        }
+                    }
 
-					Component.onCompleted: {
-						modelData.scannerEnabled = root.isScannerEnabled;
-					}
+                    Component.onCompleted: {
+                        modelData.scannerEnabled = root.isScannerEnabled;
+                    }
 
                     Repeater {
                         model: ScriptModel {
@@ -193,35 +192,36 @@ WrapperRectangle {
 
                         delegate: WrapperRectangle {
                             id: networkDelegate
-                            property color _target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-                            on_TargetChanged: {
-                                _cAnim.stop()
-                                _cFrom = color
-                                _cTo = _target
-                                _cActive = true
-                                _cBlend = 0.0
-                                _cAnim.start()
+                            property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                            onTargetChanged: {
+                                cAnim.stop();
+                                cFrom = color;
+                                cTo = target;
+                                cActive = true;
+                                cBlend = 0.0;
+                                cAnim.start();
                             }
 
-                            property color _cFrom
-                            property color _cTo
-                            property bool _cActive: false
-                            property real _cBlend: 1.0
+                            property color cFrom
+                            property color cTo
+                            property bool cActive: false
+                            property real cBlend: 1.0
 
-                            on_CBlendChanged: {
-                                if (!_cActive) return
-                                if (_cBlend >= 1) {
-                                    color = _cTo
-                                    _cActive = false
-                                } else if (_cBlend > 0) {
-                                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                            onCBlendChanged: {
+                                if (!cActive)
+                                    return;
+                                if (cBlend >= 1) {
+                                    color = cTo;
+                                    cActive = false;
+                                } else if (cBlend > 0) {
+                                    color = Colours.blendColors(cFrom, cTo, cBlend);
                                 }
                             }
 
                             NAnim {
-                                id: _cAnim
+                                id: cAnim
                                 target: networkDelegate
-                                property: "_cBlend"
+                                property: "cBlend"
                                 from: 0.0
                                 to: 1.0
                                 duration: Appearance.animations.durations.small

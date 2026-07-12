@@ -10,6 +10,7 @@ import qs.Core.Utils
 import qs.Services
 
 import "../Components/Base"
+import qs.Components.Base
 
 StyledRect {
     id: root
@@ -61,42 +62,40 @@ StyledRect {
 
                 StyledRect {
                     id: bgTrayIcon
-                    property color _target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
-                    property color _cFrom
-                    property color _cTo
-                    property bool _cActive: false
-                    property real _cBlend: 1.0
-                    on_CBlendChanged: {
-                        if (!_cActive) return
-                        if (_cBlend >= 1) {
-                            color = _cTo
-                            _cActive = false
-                        } else if (_cBlend > 0) {
-                            color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                    property color target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
+                    property color cFrom
+                    property color cTo
+                    property bool cActive: false
+                    property real cBlend: 1.0
+                    onCBlendChanged: {
+                        if (!cActive)
+                            return;
+                        if (cBlend >= 1) {
+                            color = cTo;
+                            cActive = false;
+                        } else if (cBlend > 0) {
+                            color = Colours.blendColors(cFrom, cTo, cBlend);
                         }
                     }
-                    on_TargetChanged: {
-                        _cAnim.stop()
-                        _cFrom = color
-                        _cTo = _target
-                        _cActive = true
-                        _cBlend = 0.0
-                        _cAnim.start()
+                    onTargetChanged: {
+                        cAnim.stop();
+                        cFrom = color;
+                        cTo = target;
+                        cActive = true;
+                        cBlend = 0.0;
+                        cAnim.start();
                     }
 
                     width: 25
                     height: 25
                     radius: Appearance.rounding.normal
 
-                    NumberAnimation {
-                        id: _cAnim
+                    NAnim {
+                        id: cAnim
                         target: bgTrayIcon
-                        property: "_cBlend"
+                        property: "cBlend"
                         from: 0.0
                         to: 1.0
-                        duration: Appearance.animations.durations.normal
-                        easing.type: Easing.BezierSpline
-                        easing.bezierCurve: Appearance.animations.curves.standard
                     }
                 }
 

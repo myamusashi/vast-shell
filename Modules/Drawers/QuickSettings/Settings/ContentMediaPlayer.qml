@@ -572,27 +572,28 @@ RowLayout {
 
                         background: StyledRect {
                             id: itemBg
-                            property color _target: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Qt.darker(Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary, 1.5) : "transparent"
-                            property color _cFrom
-                            property color _cTo
-                            property bool _cActive: false
-                            property real _cBlend: 1.0
-                            on_CBlendChanged: {
-                                if (!_cActive) return
-                                if (_cBlend >= 1) {
-                                    color = _cTo
-                                    _cActive = false
-                                } else if (_cBlend > 0) {
-                                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                            property color target: (playerComboBox.currentIndex === itemDel.index || itemDel.highlighted) ? Qt.darker(Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary, 1.5) : "transparent"
+                            property color cFrom
+                            property color cTo
+                            property bool cActive: false
+                            property real cBlend: 1.0
+                            onCBlendChanged: {
+                                if (!cActive)
+                                    return;
+                                if (cBlend >= 1) {
+                                    color = cTo;
+                                    cActive = false;
+                                } else if (cBlend > 0) {
+                                    color = Colours.blendColors(cFrom, cTo, cBlend);
                                 }
                             }
-                            on_TargetChanged: {
-                                _cAnim.stop()
-                                _cFrom = color
-                                _cTo = _target
-                                _cActive = true
-                                _cBlend = 0.0
-                                _cAnim.start()
+                            onTargetChanged: {
+                                cAnim.stop();
+                                cFrom = color;
+                                cTo = target;
+                                cActive = true;
+                                cBlend = 0.0;
+                                cAnim.start();
                             }
 
                             anchors {
@@ -603,15 +604,13 @@ RowLayout {
                             radius: Appearance.rounding.normal
                             height: parent.height
 
-                            NumberAnimation {
-                                id: _cAnim
+                            NAnim {
+                                id: cAnim
                                 target: itemBg
-                                property: "_cBlend"
+                                property: "cBlend"
                                 from: 0.0
                                 to: 1.0
                                 duration: Appearance.animations.durations.small
-                                easing.type: Easing.BezierSpline
-                                easing.bezierCurve: Appearance.animations.curves.standard
                             }
 
                             SimpleRipple {

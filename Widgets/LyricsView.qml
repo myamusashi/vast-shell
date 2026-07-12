@@ -7,6 +7,7 @@ import Vast
 import qs.Core.Configs
 import qs.Services
 import "../Components/Base"
+import qs.Components.Base
 
 Item {
     id: root
@@ -84,26 +85,29 @@ Item {
                     model: lineDelegate.modelData.text
 
                     delegate: StyledText {
-                        required property var modelData
-                        property color _c0From
-                        property color _c0To
-                        property bool _c0Active: false
-                        property real _c0Blend: 1.0
+                        id: flowText
 
-                        on_C0BlendChanged: {
-                            if (!_c0Active) return
-                            if (_c0Blend >= 1) {
-                                color = _c0To
-                                _c0Active = false
-                            } else if (_c0Blend > 0) {
-                                color = Colours.blendColors(_c0From, _c0To, _c0Blend)
+                        required property var modelData
+                        property color c0From
+                        property color c0To
+                        property bool c0Active: false
+                        property real c0Blend: 1.0
+
+                        onC0BlendChanged: {
+                            if (!c0Active)
+                                return;
+                            if (c0Blend >= 1) {
+                                color = c0To;
+                                c0Active = false;
+                            } else if (c0Blend > 0) {
+                                color = Colours.blendColors(c0From, c0To, c0Blend);
                             }
                         }
 
-                        NumberAnimation {
-                            id: _c0Anim
-                            target: parent
-                            property: "_c0Blend"
+                        NAnim {
+                            id: c0Anim
+                            target: flowText
+                            property: "c0Blend"
                             from: 0.0
                             to: 1.0
                             duration: Math.max(150, LyricsProvider.currentWordDuration)
@@ -119,18 +123,18 @@ Item {
                             kerning: true
                             preferShaping: true
                         }
-                        property color _lyricTarget: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                        property color lyricTarget: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
                         renderType: Text.QtRendering
                         style: Text.Raised
                         styleColor: "#80000000"
 
-                        on_LyricTargetChanged: {
-                            _c0Anim.stop()
-                            _c0From = parent.color
-                            _c0To = _lyricTarget
-                            _c0Active = true
-                            _c0Blend = 0.0
-                            _c0Anim.start()
+                        onLyricTargetChanged: {
+                            c0Anim.stop();
+                            c0From = flowText.color;
+                            c0To = lyricTarget;
+                            c0Active = true;
+                            c0Blend = 0.0;
+                            c0Anim.start();
                         }
                     }
                 }
@@ -138,25 +142,26 @@ Item {
 
             StyledText {
                 id: translationText
-                property color _c1From
-                property color _c1To
-                property bool _c1Active: false
-                property real _c1Blend: 1.0
+                property color c1From
+                property color c1To
+                property bool c1Active: false
+                property real c1Blend: 1.0
 
-                on_C1BlendChanged: {
-                    if (!_c1Active) return
-                    if (_c1Blend >= 1) {
-                        color = _c1To
-                        _c1Active = false
-                    } else if (_c1Blend > 0) {
-                        color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+                onC1BlendChanged: {
+                    if (!c1Active)
+                        return;
+                    if (c1Blend >= 1) {
+                        color = c1To;
+                        c1Active = false;
+                    } else if (c1Blend > 0) {
+                        color = Colours.blendColors(c1From, c1To, c1Blend);
                     }
                 }
 
-                NumberAnimation {
-                    id: _c1Anim
+                NAnim {
+                    id: c1Anim
                     target: translationText
-                    property: "_c1Blend"
+                    property: "c1Blend"
                     from: 0.0
                     to: 1.0
                     duration: Math.max(150, LyricsProvider.currentWordDuration)
@@ -175,18 +180,18 @@ Item {
                     kerning: true
                     preferShaping: true
                 }
-                property color _transTarget: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
+                property color transTarget: lineDelegate.isActiveLine ? root.activeColor : root.inactiveColor
                 style: Text.Raised
                 styleColor: "#80000000"
                 opacity: 0.7
 
-                on_TransTargetChanged: {
-                    _c1Anim.stop()
-                    _c1From = translationText.color
-                    _c1To = _transTarget
-                    _c1Active = true
-                    _c1Blend = 0.0
-                    _c1Anim.start()
+                onTransTargetChanged: {
+                    c1Anim.stop();
+                    c1From = translationText.color;
+                    c1To = transTarget;
+                    c1Active = true;
+                    c1Blend = 0.0;
+                    c1Anim.start();
                 }
             }
         }
