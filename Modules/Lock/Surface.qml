@@ -26,29 +26,29 @@ WlSessionLockSurface {
     color: "transparent"
     property bool zoomedIn: false
 
-    property color _cFrom
-    property color _cTo
-    property bool _cActive: false
-	property real _cBlend: 1.0
+    property color cFrom
+    property color cTo
+    property bool cActive: false
+    property real cBlend: 1.0
 
-    on_CBlendChanged: {
-        if (!_cActive) return
-        if (_cBlend >= 1) {
-            bottomItem.lockIcon.color = _cTo
-            _cActive = false
-        } else if (_cBlend > 0) {
-            bottomItem.lockIcon.color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+    onCBlendChanged: {
+        if (!cActive)
+            return;
+        if (cBlend >= 1) {
+            bottomItem.lockIcon.color = cTo;
+            cActive = false;
+        } else if (cBlend > 0) {
+            bottomItem.lockIcon.color = Colours.blendColors(cFrom, cTo, cBlend);
         }
     }
 
-    NumberAnimation {
-        id: _cAnim
+    NAnim {
+        id: cAnim
         target: root
-        property: "_cBlend"
+        property: "cBlend"
         from: 0.0
         to: 1.0
         duration: Appearance.animations.durations.small
-        easing.type: Easing.BezierSpline
         easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
     }
 
@@ -386,12 +386,12 @@ WlSessionLockSurface {
         }
         ScriptAction {
             script: {
-                _cAnim.stop()
-                _cFrom = bottomItem.lockIcon.color
-                _cTo = Colours.m3Colors.m3Green
-                _cActive = true
-                _cBlend = 0.0
-                _cAnim.start()
+                cAnim.stop();
+                cFrom = bottomItem.lockIcon.color;
+                cTo = Colours.m3Colors.m3Green;
+                cActive = true;
+                cBlend = 0.0;
+                cAnim.start();
                 bottomItem.iconName = "lock_open_right";
             }
         }
@@ -538,7 +538,15 @@ WlSessionLockSurface {
             NAnim {
                 target: wallpaper
                 property: "scale"
-                to: 1.05
+                to: 1.12
+                duration: Appearance.animations.durations.normal
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
+                target: wallpaper
+                property: "blurRadius"
+                to: 30
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
@@ -546,13 +554,13 @@ WlSessionLockSurface {
             NAnim {
                 target: fgLayer
                 property: "scale"
-                to: 1.05
+                to: 1.12
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
 
             NAnim {
-                target: bottomItem.contentLayout
+                target: bottomItem
                 property: "opacity"
                 to: 0
                 duration: Appearance.animations.durations.small
@@ -582,6 +590,14 @@ WlSessionLockSurface {
             }
 
             NAnim {
+                target: wallpaper
+                property: "blurRadius"
+                to: 10
+                duration: Appearance.animations.durations.small
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+
+            NAnim {
                 target: fgLayer
                 property: "scale"
                 to: 1.0
@@ -590,7 +606,7 @@ WlSessionLockSurface {
             }
 
             NAnim {
-                target: bottomItem.contentLayout
+                target: bottomItem
                 property: "opacity"
                 to: 1
                 duration: Appearance.animations.durations.small
