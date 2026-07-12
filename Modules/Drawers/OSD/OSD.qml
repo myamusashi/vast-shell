@@ -49,18 +49,11 @@ Item {
         }
     }
 
-    Corner {
-        location: Qt.BottomRightCorner
+    CornerPair {
+        location1: Qt.BottomRightCorner
+        location2: Qt.BottomLeftCorner
         extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomLeftCorner
-        extensionSide: Qt.Horizontal
-        radius: (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) ? 40 : 0
-        color: GlobalStates.drawerColors
+        active: GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")
     }
 
     StyledRect {

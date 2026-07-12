@@ -36,18 +36,11 @@ Item {
         }
     }
 
-    Corner {
-        location: Qt.TopLeftCorner
+    CornerPair {
+        location1: Qt.TopLeftCorner
+        location2: Qt.BottomLeftCorner
         extensionSide: Qt.Vertical
-        radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomLeftCorner
-        extensionSide: Qt.Vertical
-        radius: GlobalStates.isQuickSettingsOpen ? 40 : 0
-        color: GlobalStates.drawerColors
+        active: GlobalStates.isQuickSettingsOpen
     }
 
     WrapperRectangle {

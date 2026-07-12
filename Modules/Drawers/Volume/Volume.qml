@@ -38,18 +38,11 @@ Item {
         }
     }
 
-    Corner {
-        location: Qt.TopRightCorner
+    CornerPair {
+        location1: Qt.TopRightCorner
+        location2: Qt.BottomRightCorner
         extensionSide: Qt.Vertical
-        radius: GlobalStates.isOSDVisible("volume") ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomRightCorner
-        extensionSide: Qt.Vertical
-        radius: GlobalStates.isOSDVisible("volume") ? 40 : 0
-        color: GlobalStates.drawerColors
+        active: GlobalStates.isOSDVisible("volume")
     }
 
     PwNodeLinkTracker {

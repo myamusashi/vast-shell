@@ -17,9 +17,9 @@ Item {
     required property var notif
 
     property bool isPopup: false
-    property real _timerDuration: 3000
-    property real _timerStartTime: 0
-    property real _timerRemaining: _timerDuration
+    property real timerDuration: 3000
+    property real timerStartTime: 0
+    property real timerRemaining: timerDuration
 
     signal entered
     signal exited
@@ -31,7 +31,7 @@ Item {
 
     function pauseTimer() {
         if (timer.running) {
-            _timerRemaining = Math.max(0, _timerRemaining - (Date.now() - _timerStartTime));
+            timerRemaining = Math.max(0, timerRemaining - (Date.now() - timerStartTime));
             timer.stop();
         }
         if (borderAnim.anim.running)
@@ -39,9 +39,9 @@ Item {
     }
 
     function resumeTimer() {
-        if (!timer.running && _timerRemaining > 0) {
-            timer.interval = _timerRemaining;
-            _timerStartTime = Date.now();
+        if (!timer.running && timerRemaining > 0) {
+            timer.interval = timerRemaining;
+            timerStartTime = Date.now();
             timer.start();
         }
         if (borderAnim.anim.paused)
@@ -49,9 +49,9 @@ Item {
     }
 
     function resetTimer() {
-        _timerRemaining = _timerDuration;
-        timer.interval = _timerDuration;
-        _timerStartTime = Date.now();
+        timerRemaining = timerDuration;
+        timer.interval = timerDuration;
+        timerStartTime = Date.now();
         timer.restart();
         borderAnim.anim.restart();
     }
@@ -59,13 +59,13 @@ Item {
     Timer {
         id: timer
 
-        interval: root._timerDuration
+        interval: root.timerDuration
         onTriggered: slideOutAnim.start()
     }
 
     Component.onCompleted: {
         slideInAnim.start();
-        _timerStartTime = Date.now();
+        timerStartTime = Date.now();
         timer.start();
     }
 
@@ -247,6 +247,6 @@ Item {
         radius: wrapperRect.radius
         borderWidth: 2.0
         borderColor: root.notif.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Primary
-        animDuration: root._timerDuration
+        animDuration: root.timerDuration
     }
 }

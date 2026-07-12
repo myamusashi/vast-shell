@@ -34,18 +34,12 @@ Item {
         }
     }
 
-    Corner {
-        location: Qt.TopLeftCorner
-        extensionSide: Qt.Horizontal
-        radius: GlobalStates.isCalendarOpen ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomRightCorner
-        extensionSide: Qt.Vertical
-        radius: GlobalStates.isCalendarOpen ? 40 : 0
-        color: GlobalStates.drawerColors
+    CornerPair {
+        location1: Qt.TopLeftCorner
+        location2: Qt.BottomRightCorner
+        extensionSide1: Qt.Horizontal
+        extensionSide2: Qt.Vertical
+        active: GlobalStates.isCalendarOpen
     }
 
     WrapperRectangle {

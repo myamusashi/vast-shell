@@ -336,49 +336,51 @@ Variants {
 
     component ElevatedCharging: Elevation {
         id: elev
-        property color _c0From
-        property color _c0To
-        property bool _c0Active: false
-        property real _c0Blend: 1.0
+        property color c0From
+        property color c0To
+        property bool c0Active: false
+        property real c0Blend: 1.0
 
-        on_C0BlendChanged: {
-            if (!_c0Active) return
-            if (_c0Blend >= 1) {
-                color = _c0To
-                _c0Active = false
-            } else if (_c0Blend > 0) {
-                color = Colours.blendColors(_c0From, _c0To, _c0Blend)
+        onC0BlendChanged: {
+            if (!c0Active)
+                return;
+            if (c0Blend >= 1) {
+                color = c0To;
+                c0Active = false;
+            } else if (c0Blend > 0) {
+                color = Colours.blendColors(c0From, c0To, c0Blend);
             }
         }
 
-        NumberAnimation {
-            id: _c0Anim
+        NAnim {
+            id: c0Anim
             target: elev
-            property: "_c0Blend"
+            property: "c0Blend"
             from: 0.0
             to: 1.0
             duration: Appearance.animations.durations.large * 0.8
         }
 
-        property color _c1From
-        property color _c1To
-        property bool _c1Active: false
-        property real _c1Blend: 1.0
+        property color c1From
+        property color c1To
+        property bool c1Active: false
+        property real c1Blend: 1.0
 
-        on_C1BlendChanged: {
-            if (!_c1Active) return
-            if (_c1Blend >= 1) {
-                color = _c1To
-                _c1Active = false
-            } else if (_c1Blend > 0) {
-                color = Colours.blendColors(_c1From, _c1To, _c1Blend)
+        onC1BlendChanged: {
+            if (!c1Active)
+                return;
+            if (c1Blend >= 1) {
+                color = c1To;
+                c1Active = false;
+            } else if (c1Blend > 0) {
+                color = Colours.blendColors(c1From, c1To, c1Blend);
             }
         }
 
-        NumberAnimation {
-            id: _c1Anim
+        NAnim {
+            id: c1Anim
             target: elev
-            property: "_c1Blend"
+            property: "c1Blend"
             from: 0.0
             to: 1.0
             duration: Appearance.animations.durations.large
@@ -398,13 +400,13 @@ Variants {
             ParallelAnimation {
                 ScriptAction {
                     script: {
-                            _c0Anim.stop()
-                            _c0From = elev.color
-                            _c0To = Colours.m3Colors.m3Green
-                            _c0Active = true
-                            _c0Blend = 0.0
-                            _c0Anim.start()
-                        }
+                        c0Anim.stop();
+                        c0From = elev.color;
+                        c0To = Colours.m3Colors.m3Green;
+                        c0Active = true;
+                        c0Blend = 0.0;
+                        c0Anim.start();
+                    }
                 }
                 NAnim {
                     target: elev
@@ -427,13 +429,13 @@ Variants {
             ParallelAnimation {
                 ScriptAction {
                     script: {
-                            _c1Anim.stop()
-                            _c1From = elev.color
-                            _c1To = "transparent"
-                            _c1Active = true
-                            _c1Blend = 0.0
-                            _c1Anim.start()
-                        }
+                        c1Anim.stop();
+                        c1From = elev.color;
+                        c1To = "transparent";
+                        c1Active = true;
+                        c1Blend = 0.0;
+                        c1Anim.start();
+                    }
                 }
                 NAnim {
                     target: elev
@@ -456,13 +458,13 @@ Variants {
             ParallelAnimation {
                 ScriptAction {
                     script: {
-                            _c0Anim.stop()
-                            _c0From = elev.color
-                            _c0To = Colours.m3Colors.m3Red
-                            _c0Active = true
-                            _c0Blend = 0.0
-                            _c0Anim.start()
-                        }
+                        c0Anim.stop();
+                        c0From = elev.color;
+                        c0To = Colours.m3Colors.m3Red;
+                        c0Active = true;
+                        c0Blend = 0.0;
+                        c0Anim.start();
+                    }
                 }
                 NAnim {
                     target: elev
@@ -485,13 +487,13 @@ Variants {
             ParallelAnimation {
                 ScriptAction {
                     script: {
-                            _c1Anim.stop()
-                            _c1From = elev.color
-                            _c1To = "transparent"
-                            _c1Active = true
-                            _c1Blend = 0.0
-                            _c1Anim.start()
-                        }
+                        c1Anim.stop();
+                        c1From = elev.color;
+                        c1To = "transparent";
+                        c1Active = true;
+                        c1Blend = 0.0;
+                        c1Anim.start();
+                    }
                 }
                 NAnim {
                     target: elev

@@ -35,16 +35,11 @@ Item {
         }
     }
 
-    Repeater {
-        model: [Qt.TopLeftCorner, Qt.BottomLeftCorner]
-        Corner {
-            required property var modelData
-
-            location: modelData
-            extensionSide: Qt.Horizontal
-            radius: GlobalStates.isWeatherPanelOpen ? 40 : 0
-            color: GlobalStates.drawerColors
-        }
+    CornerPair {
+        location1: Qt.TopLeftCorner
+        location2: Qt.BottomLeftCorner
+        extensionSide: Qt.Horizontal
+        active: GlobalStates.isWeatherPanelOpen
     }
 
     WrapperRectangle {

@@ -33,18 +33,11 @@ Item {
         }
     }
 
-    Corner {
-        location: Qt.BottomRightCorner
+    CornerPair {
+        location1: Qt.BottomRightCorner
+        location2: Qt.BottomLeftCorner
         extensionSide: Qt.Horizontal
-        radius: GlobalStates.isWallpaperSwitcherOpen ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomLeftCorner
-        extensionSide: Qt.Horizontal
-        radius: GlobalStates.isWallpaperSwitcherOpen ? 40 : 0
-        color: GlobalStates.drawerColors
+        active: GlobalStates.isWallpaperSwitcherOpen
     }
 
     WrapperRectangle {
@@ -57,127 +50,100 @@ Item {
         Loader {
             active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWallpaperSwitcherOpen
             asynchronous: true
-            sourceComponent: ColumnLayout {
+            sourceComponent: FocusCage {
+                active: GlobalStates.isWallpaperSwitcherOpen
+                defaultFocus: searchField
+
                 anchors.fill: parent
                 anchors.margins: Appearance.spacing.normal
-                spacing: Appearance.spacing.normal
 
-                focus: GlobalStates.isWallpaperSwitcherOpen
-                onFocusChanged: {
-                    if (GlobalStates.isWallpaperSwitcherOpen)
-                        searchField.forceActiveFocus();
-                }
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: Appearance.spacing.normal
 
-                StyledTextInput {
-                    id: searchField
+                    StyledTextInput {
+                        id: searchField
 
-                    Layout.fillWidth: true
-                    implicitHeight: 40
-                    placeHolderText: qsTr("Search wallpapers")
-                    toggleButtonVisible: false
-                    onTextChanged: {
-                        WallpaperFileModels.searchQuery = text;
-                        searchDebounceTimer.restart();
-                        if (wallpaperPath.count > 0)
-                            wallpaperPath.currentIndex = 0;
-                    }
-                    Component.onCompleted: text = WallpaperFileModels.searchQuery
-                    Keys.onDownPressed: wallpaperPath.focus = true
-                    Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
-                    Keys.onTabPressed: wallpaperPath.forceActiveFocus()
-                }
-
-                Timer {
-                    id: searchDebounceTimer
-
-                    interval: 300
-                    onTriggered: WallpaperFileModels.debouncedSearchQuery = searchField.text
-                }
-
-                PathView {
-                    id: wallpaperPath
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    // Center card gets 2 "units", each side card gets 1 "unit"
-                    // Total units = Configs.wallpaper.visibleWallpaper + 1 (center counts double)
-                    readonly property bool isCurrent: PathView.isCurrentItem
-                    readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
-
-                    model: ScriptModel {
-                        values: WallpaperFileModels.filteredWallpaperList
-                    }
-
-                    pathItemCount: Configs.wallpaper.visibleWallpaper
-                    preferredHighlightBegin: 0.5
-                    preferredHighlightEnd: 0.5
-                    clip: true
-                    cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
-
-                    Component.onCompleted: {
-                        Qt.callLater(() => {
-                            const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
-                            currentIndex = idx !== -1 ? idx : 0;
-                        });
-                    }
-
-                    path: Path {
-                        startX: 0
-                        startY: wallpaperPath.height / 2
-
-                        PathLine {
-                            x: wallpaperPath.width
-                            y: wallpaperPath.height / 2
+                        Layout.fillWidth: true
+                        implicitHeight: 40
+                        placeHolderText: qsTr("Search wallpapers")
+                        toggleButtonVisible: false
+                        onTextChanged: {
+                            WallpaperFileModels.searchQuery = text;
+                            searchDebounceTimer.restart();
+                            if (wallpaperPath.count > 0)
+                                wallpaperPath.currentIndex = 0;
                         }
+                        Component.onCompleted: text = WallpaperFileModels.searchQuery
+                        Keys.onDownPressed: wallpaperPath.focus = true
+                        Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
+                        Keys.onTabPressed: wallpaperPath.forceActiveFocus()
                     }
 
-                    delegate: Item {
-                        id: delegateItem
+                    Timer {
+                        id: searchDebounceTimer
 
-                        required property var modelData
-                        required property int index
+                        interval: 300
+                        onTriggered: WallpaperFileModels.debouncedSearchQuery = searchField.text
+                    }
 
+                    PathView {
+                        id: wallpaperPath
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        // Center card gets 2 "units", each side card gets 1 "unit"
+                        // Total units = Configs.wallpaper.visibleWallpaper + 1 (center counts double)
                         readonly property bool isCurrent: PathView.isCurrentItem
+                        readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
 
-                        onIsCurrentChanged: {
-                            if (isCurrent)
-                                ImageCache.preload(delegateItem.modelData, Qt.size(Screen.width, Screen.height));
+                        model: ScriptModel {
+                            values: WallpaperFileModels.filteredWallpaperList
                         }
 
-                        // Center card = 2 units wide, side cards = 1 unit wide
-                        implicitWidth: isCurrent ? wallpaperPath.unitWidth * 2 : wallpaperPath.unitWidth
-                        implicitHeight: wallpaperPath.height
+                        pathItemCount: Configs.wallpaper.visibleWallpaper
+                        preferredHighlightBegin: 0.5
+                        preferredHighlightEnd: 0.5
+                        clip: true
+                        cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
 
-                        z: isCurrent ? 100 : 1
-                        opacity: isCurrent ? 1.0 : 0.92
+                        Component.onCompleted: {
+                            Qt.callLater(() => {
+                                const idx = WallpaperFileModels.wallpaperList.indexOf(Paths.currentWallpaper);
+                                currentIndex = idx !== -1 ? idx : 0;
+                            });
+                        }
 
-                        Behavior on implicitWidth {
-                            NAnim {
-                                duration: Appearance.animations.durations.normal
-                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                        path: Path {
+                            startX: 0
+                            startY: wallpaperPath.height / 2
+
+                            PathLine {
+                                x: wallpaperPath.width
+                                y: wallpaperPath.height / 2
                             }
                         }
 
-                        Behavior on opacity {
-                            NAnim {
-                                duration: Appearance.animations.durations.normal
-                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                        delegate: Item {
+                            id: delegateItem
+
+                            required property var modelData
+                            required property int index
+
+                            readonly property bool isCurrent: PathView.isCurrentItem
+
+                            onIsCurrentChanged: {
+                                if (isCurrent)
+                                    ImageCache.preload(delegateItem.modelData, Qt.size(Screen.width, Screen.height));
                             }
-                        }
 
-                        ClippingRectangle {
-                            id: cardRect
+                            // Center card = 2 units wide, side cards = 1 unit wide
+                            implicitWidth: isCurrent ? wallpaperPath.unitWidth * 2 : wallpaperPath.unitWidth
+                            implicitHeight: wallpaperPath.height
 
-                            anchors.centerIn: parent
-
-                            // Gap between cards scales with unit width so it looks proportional at any count
-                            implicitWidth: parent.width - (delegateItem.isCurrent ? Math.max(20, wallpaperPath.unitWidth * 0.3) : Math.max(12, wallpaperPath.unitWidth * 0.2))
-                            implicitHeight: parent.height
-
-                            radius: delegateItem.isCurrent ? Appearance.rounding.large : 20
-
-                            color: "transparent"
+                            z: isCurrent ? 100 : 1
+                            opacity: isCurrent ? 1.0 : 0.92
 
                             Behavior on implicitWidth {
                                 NAnim {
@@ -185,121 +151,147 @@ Item {
                                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                                 }
                             }
-                            Behavior on implicitHeight {
-                                NAnim {
-                                    duration: Appearance.animations.durations.normal
-                                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                                }
-                            }
-                            Behavior on radius {
+
+                            Behavior on opacity {
                                 NAnim {
                                     duration: Appearance.animations.durations.normal
                                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                                 }
                             }
 
-                            Image {
-                                anchors.fill: parent
-                                source: "file://" + delegateItem.modelData
-                                sourceSize: Qt.size(200, 200)
-                                fillMode: Image.PreserveAspectCrop
-                                asynchronous: true
-                                cache: true
+                            ClippingRectangle {
+                                id: cardRect
 
-                                Elevation {
+                                anchors.centerIn: parent
+
+                                // Gap between cards scales with unit width so it looks proportional at any count
+                                implicitWidth: parent.width - (delegateItem.isCurrent ? Math.max(20, wallpaperPath.unitWidth * 0.3) : Math.max(12, wallpaperPath.unitWidth * 0.2))
+                                implicitHeight: parent.height
+
+                                radius: delegateItem.isCurrent ? Appearance.rounding.large : 20
+
+                                color: "transparent"
+
+                                Behavior on implicitWidth {
+                                    NAnim {
+                                        duration: Appearance.animations.durations.normal
+                                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                                    }
+                                }
+                                Behavior on implicitHeight {
+                                    NAnim {
+                                        duration: Appearance.animations.durations.normal
+                                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                                    }
+                                }
+                                Behavior on radius {
+                                    NAnim {
+                                        duration: Appearance.animations.durations.normal
+                                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                                    }
+                                }
+
+                                Image {
                                     anchors.fill: parent
-                                    z: -1
-                                    level: 3
-                                }
-                            }
+                                    source: "file://" + delegateItem.modelData
+                                    sourceSize: Qt.size(200, 200)
+                                    fillMode: Image.PreserveAspectCrop
+                                    asynchronous: true
+                                    cache: true
 
-                            Rectangle {
-                                id: dimOverlay
-                                property color _target: Qt.rgba(0, 0, 0, delegateItem.isCurrent ? 0.0 : 0.22)
-                                property color _cFrom
-                                property color _cTo
-                                property bool _cActive: false
-                                property real _cBlend: 1.0
-                                on_CBlendChanged: {
-                                    if (!_cActive) return
-                                    if (_cBlend >= 1) {
-                                        color = _cTo
-                                        _cActive = false
-                                    } else if (_cBlend > 0) {
-                                        color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                                    Elevation {
+                                        anchors.fill: parent
+                                        z: -1
+                                        level: 3
                                     }
                                 }
-                                on_TargetChanged: {
-                                    _cAnim.stop()
-                                    _cFrom = color
-                                    _cTo = _target
-                                    _cActive = true
-                                    _cBlend = 0.0
-                                    _cAnim.start()
-                                }
 
-                                anchors.fill: parent
-                                radius: cardRect.radius
+                                Rectangle {
+                                    id: dimOverlay
+                                    property color target: Qt.rgba(0, 0, 0, delegateItem.isCurrent ? 0.0 : 0.22)
+                                    property color cFrom
+                                    property color cTo
+                                    property bool cActive: false
+                                    property real cBlend: 1.0
+                                    onCBlendChanged: {
+                                        if (!cActive)
+                                            return;
+                                        if (cBlend >= 1) {
+                                            color = cTo;
+                                            cActive = false;
+                                        } else if (cBlend > 0) {
+                                            color = Colours.blendColors(cFrom, cTo, cBlend);
+                                        }
+                                    }
+                                    onTargetChanged: {
+                                        cAnim.stop();
+                                        cFrom = color;
+                                        cTo = target;
+                                        cActive = true;
+                                        cBlend = 0.0;
+                                        cAnim.start();
+                                    }
 
-                                NumberAnimation {
-                                    id: _cAnim
-                                    target: dimOverlay
-                                    property: "_cBlend"
-                                    from: 0.0
-                                    to: 1.0
-                                    duration: Appearance.animations.durations.normal
-                                    easing.type: Easing.BezierSpline
-                                    easing.bezierCurve: Appearance.animations.curves.standard
-                                }
-                            }
+                                    anchors.fill: parent
+                                    radius: cardRect.radius
 
-                            MArea {
-                                cursorShape: Qt.PointingHandCursor
-
-                                onClicked: {
-                                    if (!delegateItem.isCurrent) {
-                                        wallpaperPath.currentIndex = delegateItem.index;
-                                    } else {
-                                        Quickshell.execDetached({
-                                            command: ["shell", "ipc", "call", "img", "set", delegateItem.modelData]
-                                        });
+                                    NAnim {
+                                        id: cAnim
+                                        target: dimOverlay
+                                        property: "cBlend"
+                                        from: 0.0
+                                        to: 1.0
                                     }
                                 }
+
+                                MArea {
+                                    cursorShape: Qt.PointingHandCursor
+
+                                    onClicked: {
+                                        if (!delegateItem.isCurrent) {
+                                            wallpaperPath.currentIndex = delegateItem.index;
+                                        } else {
+                                            Quickshell.execDetached({
+                                                command: ["shell", "ipc", "call", "img", "set", delegateItem.modelData]
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Keys.onPressed: event => {
+                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                Quickshell.execDetached({
+                                    command: ["shell", "ipc", "call", "img", "set", WallpaperFileModels.filteredWallpaperList[currentIndex]]
+                                });
+                                event.accepted = true;
+                            }
+                            if (event.key === Qt.Key_Escape) {
+                                GlobalStates.isWallpaperSwitcherOpen = false;
+                                event.accepted = true;
+                            }
+                            if (event.key === Qt.Key_Tab) {
+                                searchField.forceActiveFocus();
+                                event.accepted = true;
+                            }
+                            if (event.key === Qt.Key_Left) {
+                                decrementCurrentIndex();
+                                event.accepted = true;
+                            }
+                            if (event.key === Qt.Key_Right) {
+                                incrementCurrentIndex();
+                                event.accepted = true;
                             }
                         }
                     }
 
-                    Keys.onPressed: event => {
-                        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                            Quickshell.execDetached({
-                                command: ["shell", "ipc", "call", "img", "set", WallpaperFileModels.filteredWallpaperList[currentIndex]]
-                            });
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Escape) {
-                            GlobalStates.isWallpaperSwitcherOpen = false;
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Tab) {
-                            searchField.forceActiveFocus();
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Left) {
-                            decrementCurrentIndex();
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Right) {
-                            incrementCurrentIndex();
-                            event.accepted = true;
-                        }
+                    StyledText {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.small
                     }
-                }
-
-                StyledText {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: wallpaperPath.count > 0 ? (wallpaperPath.currentIndex + 1) + " / " + wallpaperPath.count : "0 / 0"
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.small
                 }
             }
         }

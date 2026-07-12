@@ -53,18 +53,11 @@ Item {
         }
     }
 
-    Corner {
-        location: Qt.TopRightCorner
+    CornerPair {
+        location1: Qt.TopRightCorner
+        location2: Qt.BottomRightCorner
         extensionSide: Qt.Vertical
-        radius: GlobalStates.isSessionOpen ? 40 : 0
-        color: GlobalStates.drawerColors
-    }
-
-    Corner {
-        location: Qt.BottomRightCorner
-        extensionSide: Qt.Vertical
-        radius: GlobalStates.isSessionOpen ? 40 : 0
-        color: GlobalStates.drawerColors
+        active: GlobalStates.isSessionOpen
     }
 
     StyledRect {
