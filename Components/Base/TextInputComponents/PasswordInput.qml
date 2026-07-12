@@ -111,39 +111,37 @@ Item {
             implicitWidth: 20
             implicitHeight: 20
             shape: root.shapeList[index % root.shapeList.length]
-            property color _shapeTarget: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
-            property color _cFrom
-            property color _cTo
-            property bool _cActive: false
-            property real _cBlend: 1.0
-            on_CBlendChanged: {
-                if (!_cActive) return
-                if (_cBlend >= 1) {
-                    color = _cTo
-                    _cActive = false
-                } else if (_cBlend > 0) {
-                    color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+            property color shapeTarget: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+            property color cFrom
+            property color cTo
+            property bool cActive: false
+            property real cBlend: 1.0
+            onCBlendChanged: {
+                if (!cActive)
+                    return;
+                if (cBlend >= 1) {
+                    color = cTo;
+                    cActive = false;
+                } else if (cBlend > 0) {
+                    color = Colours.blendColors(cFrom, cTo, cBlend);
                 }
             }
 
-            on_ShapeTargetChanged: {
-                _cAnim.stop()
-                _cFrom = color
-                _cTo = _shapeTarget
-                _cActive = true
-                _cBlend = 0.0
-                _cAnim.start()
+            onShapeTargetChanged: {
+                cAnim.stop();
+                cFrom = color;
+                cTo = shapeTarget;
+                cActive = true;
+                cBlend = 0.0;
+                cAnim.start();
             }
 
-            NumberAnimation {
-                id: _cAnim
+            NAnim {
+                id: cAnim
                 target: shapeDelegate
-                property: "_cBlend"
+                property: "cBlend"
                 from: 0.0
                 to: 1.0
-                duration: Appearance.animations.durations.normal
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.animations.curves.standard
             }
         }
 

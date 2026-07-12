@@ -27,7 +27,7 @@ Slider {
     property alias emptyRectOpacity: emptyRect.opacity
     property alias handleOpacity: handle.opacity
 
-    readonly property bool _popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
+    readonly property bool popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
 
     readonly property bool isHorizontal: orientation === Qt.Horizontal
     readonly property bool isVertical: root.orientation === Qt.Vertical
@@ -241,18 +241,19 @@ Slider {
                 height: root.snapDotSize
                 radius: root.snapDotSize / 2
                 color: isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor
-                property color _cFrom
-                property color _cTo
-                property bool _cActive: false
-				property real _cBlend: 1.0
-				
-                on_CBlendChanged: {
-                    if (!_cActive) return
-                    if (_cBlend >= 1) {
-                        color = _cTo
-                        _cActive = false
-                    } else if (_cBlend > 0) {
-                        color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                property color cFrom
+                property color cTo
+                property bool cActive: false
+                property real cBlend: 1.0
+
+                onCBlendChanged: {
+                    if (!cActive)
+                        return;
+                    if (cBlend >= 1) {
+                        color = cTo;
+                        cActive = false;
+                    } else if (cBlend > 0) {
+                        color = Colours.blendColors(cFrom, cTo, cBlend);
                     }
                 }
 
@@ -261,23 +262,21 @@ Slider {
                 z: 5
 
                 onIsFilledChanged: {
-                    _cAnim.stop()
-                    _cFrom = color
-                    _cTo = isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor
-                    _cActive = true
-                    _cBlend = 0.0
-                    _cAnim.start()
+                    cAnim.stop();
+                    cFrom = color;
+                    cTo = isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor;
+                    cActive = true;
+                    cBlend = 0.0;
+                    cAnim.start();
                 }
 
-                NumberAnimation {
-                    id: _cAnim
+                NAnim {
+                    id: cAnim
                     target: snapDot
-                    property: "_cBlend"
+                    property: "cBlend"
                     from: 0.0
                     to: 1.0
                     duration: Appearance.animations.durations.small
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.animations.curves.standard
                 }
             }
         }
@@ -313,7 +312,7 @@ Slider {
             width: valuePopupBubble.width + (root.isVertical ? caret.caretSize + 2 : 0)
             height: valuePopupBubble.height + (root.isHorizontal ? caret.caretSize + 2 : 0)
             z: 20
-            visible: root._popupVisible
+            visible: root.popupVisible
             opacity: visible ? 1.0 : 0.0
             scale: visible ? 1.0 : 0.82
 
