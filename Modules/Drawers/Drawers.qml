@@ -196,18 +196,10 @@ Variants {
 
         App {
             id: app
-
-            onHeightChanged: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? osd.anchors.bottomMargin = app.height + Configs.generals.outerBorderSize : 0
         }
 
         Bar {
             id: bar
-
-            onHeightChanged: {
-                cal.anchors.topMargin = exclusiveTop.zone;
-                quickSettings.anchors.topMargin = exclusiveTop.zone;
-                notif.anchors.topMargin = exclusiveTop.zone;
-            }
         }
 
         Clipboard {
@@ -216,6 +208,7 @@ Variants {
 
         Calendar {
             id: cal
+            anchors.topMargin: topBar.height
         }
 
         QuickSettings {
@@ -224,8 +217,6 @@ Variants {
 
         Session {
             id: session
-
-            onWidthChanged: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? volume.anchors.rightMargin = session.width + Configs.generals.outerBorderSize : 0
         }
 
         WallpaperSelector {}
@@ -234,18 +225,21 @@ Variants {
 
         OSD {
             id: osd
+            anchors.bottomMargin: app.height + Configs.generals.outerBorderSize
         }
 
         Overview {}
 
         Notifications {
             id: notif
+            anchors.topMargin: topBar.height
         }
 
         Weathers {}
 
         Volume {
             id: volume
+            anchors.rightMargin: session.width + Configs.generals.outerBorderSize
         }
 
         Rectangle {
