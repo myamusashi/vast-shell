@@ -431,6 +431,151 @@ Singleton {
         }
     }
 
+    function getWeatherStatus(code) {
+        var codes = {
+            0: "Clear sky",
+            1: "Mainly clear",
+            2: "Partly cloudy",
+            3: "Overcast",
+            45: "Fog",
+            48: "Depositing rime fog",
+            51: "Light drizzle",
+            53: "Moderate drizzle",
+            55: "Dense drizzle",
+            56: "Light freezing drizzle",
+            57: "Dense freezing drizzle",
+            61: "Slight rain",
+            63: "Moderate rain",
+            65: "Heavy rain",
+            66: "Light freezing rain",
+            67: "Heavy freezing rain",
+            71: "Slight snow",
+            73: "Moderate snow",
+            75: "Heavy snow",
+            77: "Snow grains",
+            80: "Slight rain showers",
+            81: "Moderate rain showers",
+            82: "Violent rain showers",
+            85: "Slight snow showers",
+            86: "Heavy snow showers",
+            95: "Thunderstorm",
+            96: "Thunderstorm with slight hail",
+            99: "Thunderstorm with heavy hail"
+        };
+        return codes[code] || "Unknown";
+    }
+
+    function getWindDirectionText(degrees) {
+        var directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        var index = Math.round(degrees / 22.5) % 16;
+        return directions[index];
+    }
+
+    function getEuropeanAQIInfo(aqi) {
+        if (aqi <= 25)
+            return {
+                category: "Good",
+                color: "#50F0E6",
+                description: "Air quality is excellent. Ideal for outdoor activities."
+            };
+        if (aqi <= 50)
+            return {
+                category: "Fair",
+                color: "#50CCAA",
+                description: "Air quality is generally acceptable for most individuals."
+            };
+        if (aqi <= 75)
+            return {
+                category: "Moderate",
+                color: "#F0E641",
+                description: "Air quality is acceptable. However, sensitive individuals should consider limiting prolonged outdoor exertion."
+            };
+        if (aqi <= 100)
+            return {
+                category: "Poor",
+                color: "#FF5050",
+                description: "Air quality is unhealthy for sensitive groups. The general public should limit prolonged outdoor exertion."
+            };
+        if (aqi <= 150)
+            return {
+                category: "Very Poor",
+                color: "#960032",
+                description: "Health alert: Everyone may experience health effects. Avoid prolonged outdoor exertion."
+            };
+        return {
+            category: "Extremely Poor",
+            color: "#7D2181",
+            description: "Health warning of emergency conditions. Everyone may experience serious health effects. Avoid all outdoor activities."
+        };
+    }
+
+    function getUSAQIInfo(aqi) {
+        if (aqi <= 50)
+            return {
+                category: "Good",
+                color: "#00E400",
+                description: "Air quality is satisfactory, and air pollution poses little or no risk."
+            };
+        if (aqi <= 100)
+            return {
+                category: "Moderate",
+                color: "#FFFF00",
+                description: "Air quality is acceptable. However, unusually sensitive people should consider reducing prolonged outdoor exertion."
+            };
+        if (aqi <= 150)
+            return {
+                category: "Unhealthy for Sensitive Groups",
+                color: "#FF7E00",
+                description: "Members of sensitive groups may experience health effects. The general public is less likely to be affected."
+            };
+        if (aqi <= 200)
+            return {
+                category: "Unhealthy",
+                color: "#FF0000",
+                description: "Everyone may begin to experience health effects. Members of sensitive groups may experience more serious health effects."
+            };
+        if (aqi <= 300)
+            return {
+                category: "Very Unhealthy",
+                color: "#8F3F97",
+                description: "Health alert: Everyone may experience more serious health effects. Avoid outdoor activities."
+            };
+        return {
+            category: "Hazardous",
+            color: "#7E0023",
+            description: "Health warnings of emergency conditions. The entire population is more likely to be affected. Avoid all outdoor exertion."
+        };
+    }
+
+    function getDominantPollutant(pm25, pm10) {
+        var pm25Ratio = pm25 / 15.0;
+        var pm10Ratio = pm10 / 45.0;
+        if (pm25Ratio > pm10Ratio && pm25 > 15)
+            return "PM2.5";
+        if (pm10 > 45)
+            return "PM10";
+        if (pm25 > pm10)
+            return "PM2.5";
+        return "PM10";
+    }
+
+    function getHealthRecommendation(euAQI, usAQI, pm25, pm10) {
+        var maxAQI = euAQI;
+        if (usAQI > 150)
+            maxAQI = usAQI;
+        if (maxAQI <= 50)
+            return "Perfect day for outdoor activities! Air quality is excellent.";
+        if (maxAQI <= 75)
+            return "Good for most outdoor activities. Sensitive individuals (children, elderly, those with respiratory conditions) should be cautious.";
+        if (maxAQI <= 100)
+            return "Consider limiting prolonged outdoor activities, especially if you're sensitive to air pollution. Take more breaks during outdoor exercise.";
+        if (maxAQI <= 150)
+            return "Reduce prolonged or heavy outdoor exertion. Reschedule strenuous activities or take more breaks. Sensitive groups should avoid prolonged outdoor activities.";
+        if (maxAQI <= 200)
+            return "Avoid prolonged outdoor exertion. Everyone should reduce outdoor activities. Keep outdoor activities short and less strenuous.";
+        return "Avoid all outdoor physical activities. Stay indoors, keep windows closed, and use air purifiers if available. Sensitive groups should remain indoors.";
+    }
+
     function getQuickSummary() {
         if (!weatherLoaded)
             return "";
@@ -573,6 +718,7 @@ Singleton {
 
             if (request.status === 200) {
                 try {
+                    console.log("[WEATHER] %1 response received, parsing...".arg(config.label));
                     config.onSuccess(JSON.parse(request.responseText));
                     ToastService.show(qsTr("%1 updated").arg(config.label), qsTr("Weather"), "weather-clear-symbolic", 2000);
                 } catch (e) {
@@ -596,13 +742,17 @@ Singleton {
         request.onerror = fail(qsTr("network error"));
         request.ontimeout = fail(qsTr("timed out"));
 
-        request.open("GET", `${config.url}?latitude=${lat}&longitude=${lon}`);
+        var separator = config.url.indexOf('?') >= 0 ? '&' : '?';
+        var fullUrl = `${config.url}${separator}latitude=${lat}&longitude=${lon}`;
+        console.log("[WEATHER] Request URL: " + fullUrl);
+        request.open("GET", fullUrl);
         request.send();
     }
 
     function reloadWeather() {
+        console.log("[WEATHER] Fetching weather data from Open-Meteo...");
         fetchData({
-            url: "https://weather.myamusashi.cc/v1/forecast",
+            url: "https://api.open-meteo.com/v1/forecast" + "?current=precipitation,rain,wind_speed_10m,wind_direction_10m,cloud_cover,surface_pressure,weather_code,relative_humidity_2m,temperature_2m,apparent_temperature,is_day" + "&daily=sunrise,sunset,uv_index_max,weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,precipitation_hours,rain_sum,showers_sum,surface_pressure_mean,visibility_mean,wind_speed_10m_mean,wind_direction_10m_dominant,relative_humidity_2m_max,relative_humidity_2m_min,relative_humidity_2m_mean,dew_point_2m_mean,cloud_cover_mean" + "&hourly=temperature_2m,weather_code,wind_speed_10m,precipitation,precipitation_probability,rain,visibility,cloud_cover,surface_pressure,wind_direction_10m,relative_humidity_2m,uv_index,is_day,showers,dew_point_2m" + "&timezone=auto&forecast_days=7",
             loadingProp: "weatherLoading",
             requestProp: "activeWeatherRequest",
             onSuccess: updateWeatherData,
@@ -610,8 +760,9 @@ Singleton {
         });
     }
     function reloadAQI() {
+        console.log("[WEATHER] Fetching AQI data from Open-Meteo...");
         fetchData({
-            url: "https://aqi.myamusashi.cc/v1/aqi",
+            url: "https://air-quality-api.open-meteo.com/v1/air-quality" + "?current=european_aqi,us_aqi" + "&hourly=pm10,pm2_5,european_aqi,us_aqi" + "&timezone=auto&forecast_days=1",
             loadingProp: "aqiLoading",
             requestProp: "activeAQIRequest",
             onSuccess: updateAQIData,
@@ -619,13 +770,75 @@ Singleton {
         });
     }
     function reloadAstronomy() {
-        fetchData({
-            url: "https://astronomy.myamusashi.cc/v1/astronomy",
-            loadingProp: "astronomyLoading",
-            requestProp: "activeAstronomyRequest",
-            onSuccess: updateAstronomyData,
-            label: "Astronomy"
-        });
+        console.log("[WEATHER] Fetching astronomy data from WeatherAPI.com...");
+        var lat = parseFloat(configLatitude);
+        var lon = parseFloat(configLongitude);
+        if (isNaN(lat) || isNaN(lon)) {
+            ToastService.show(qsTr("Invalid coordinates"), qsTr("Weather"), "weather-clear-symbolic", 3000);
+            return;
+        }
+        var key = Configs.weather.astronomyApiKey;
+        if (!key) {
+            console.log("No astronomy API key configured, skipping astronomy fetch");
+            ToastService.show(qsTr("No astronomy API key configured"), qsTr("Weather"), "weather-error-symbolic", 3000);
+            astronomyLoading = false;
+            return;
+        }
+        if (astronomyLoading)
+            return;
+
+        if (activeAstronomyRequest) {
+            try {
+                activeAstronomyRequest.abort();
+            } catch (e) {}
+            cleanupRequest(activeAstronomyRequest);
+            activeAstronomyRequest = null;
+        }
+
+        var today = new Date();
+        var dateStr = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0');
+
+        astronomyLoading = true;
+        var request = new XMLHttpRequest();
+        activeAstronomyRequest = request;
+        request.timeout = 30000;
+
+        request.onreadystatechange = function () {
+            if (request.readyState !== XMLHttpRequest.DONE)
+                return;
+            if (request === activeAstronomyRequest)
+                activeAstronomyRequest = null;
+
+            if (request.status === 200) {
+                try {
+                    updateAstronomyData(JSON.parse(request.responseText));
+                } catch (e) {
+                    ToastService.show(qsTr("Astronomy failed: bad data"), qsTr("Weather"), "weather-error-symbolic", 3000);
+                    astronomyLoading = false;
+                }
+            } else {
+                ToastService.show(qsTr("Astronomy failed (%1)").arg(request.status), qsTr("Weather"), "weather-error-symbolic", 3000);
+                astronomyLoading = false;
+            }
+            cleanupRequest(request);
+        };
+
+        var fail = function (reason) {
+            return function () {
+                ToastService.show(qsTr("Astronomy %1").arg(reason), qsTr("Weather"), "weather-error-symbolic", 3000);
+                if (request === activeAstronomyRequest)
+                    activeAstronomyRequest = null;
+                astronomyLoading = false;
+                cleanupRequest(request);
+            };
+        };
+        request.onerror = fail(qsTr("network error"));
+        request.ontimeout = fail(qsTr("timed out"));
+
+        var url = "https://api.weatherapi.com/v1/astronomy.json" + "?key=" + encodeURIComponent(key) + "&q=" + lat.toFixed(4) + "," + lon.toFixed(4) + "&dt=" + dateStr;
+        console.log("[WEATHER] Request URL: " + url.replace(encodeURIComponent(key), "***"));
+        request.open("GET", url);
+        request.send();
     }
 
     function reload() {
@@ -647,75 +860,89 @@ Singleton {
 
     function updateWeatherData(json) {
         try {
-            const loc = json.location || {}, cur = json.current || {}, det = json.details || {};
-            const hourly = json.hourly_forecast || [], daily = json.daily_forecast || {};
-            const hum = det.humidity || {}, wind = det.wind || {};
+            var cur = json.current || {}, hourly = json.hourly || {}, daily = json.daily || {};
 
             weatherLoaded = true;
             weatherLoading = false;
-            lastUpdateWeather = cur.last_update || Date.now();
-            latitude = loc.latitude || 0.0;
-            longitude = loc.longitude || 0.0;
-            timezone = loc.timezone || "";
-            elevation = loc.elevation || 0.0;
+            lastUpdateWeather = Date.now();
+            latitude = json.latitude || 0.0;
+            longitude = json.longitude || 0.0;
+            timezone = json.timezone || "";
+            elevation = json.elevation || 0.0;
 
-            temp = Math.round(cur.temperature || 0);
-            feelsLike = Math.round(cur.feels_like || 0);
-            tempMin = Math.round(cur.min_temp || 0);
-            tempMax = Math.round(cur.max_temp || 0);
+            var statusText = getWeatherStatus(cur.weather_code || 0);
+            var isDayTime = cur.is_day === 1;
+
+            temp = Math.round(cur.temperature_2m || 0);
+            feelsLike = Math.round(cur.apparent_temperature || 0);
+            tempMin = Math.round(daily.temperature_2m_min?.[0] || 0);
+            tempMax = Math.round(daily.temperature_2m_max?.[0] || 0);
             weatherCode = cur.weather_code || 0;
-            weatherCondition = cur.status || "";
-            weatherDescription = cur.status || "";
-            isDay = cur.is_day || false;
-            weatherIcon = getWeatherIconFromCode(cur.weather_code, cur.is_day);
+            weatherCondition = statusText;
+            weatherDescription = statusText;
+            isDay = isDayTime;
+            weatherIcon = getWeatherIconFromCode(cur.weather_code, isDayTime);
 
-            humidity = hum.percentage || 0;
-            dewPoint = hum.dew_point || 0.0;
-            windSpeed = Math.round(wind.speed_kmh || 0);
-            windDirection = wind.direction_text || "";
-            windDirectionDegrees = wind.direction_degrees || 0;
-            uvIndex = Math.round(det.uv_index || 0);
-            pressure = Math.round(det.surface_pressure_hpa || 0);
-            visibility = det.visibility_km || 0.0;
-            cloudCover = det.cloudiness_percent || 0;
-            precipitation = det.precipitation_current_mm || 0.0;
-            precipitationDaily = det.precipitation_daily_mm || 0.0;
+            humidity = cur.relative_humidity_2m || 0;
+            dewPoint = hourly.dew_point_2m?.[0] || 0.0;
+            windSpeed = Math.round(cur.wind_speed_10m || 0);
+            windDirection = getWindDirectionText(cur.wind_direction_10m || 0);
+            windDirectionDegrees = cur.wind_direction_10m || 0;
+            uvIndex = Math.round(daily.uv_index_max?.[0] || 0);
+            pressure = Math.round(cur.surface_pressure || 0);
+            visibility = (daily.visibility_mean?.[0] || 0) / 1000;
+            cloudCover = cur.cloud_cover || 0;
+            precipitation = cur.precipitation || 0.0;
+            precipitationDaily = daily.precipitation_sum?.[0] || 0.0;
 
-            hourlyForecast = hourly.map(h => ({
-                        time: formatTime(h.time),
-                        fullTime: h.time,
-                        temperature: Math.round(h.temperature),
-                        humidity: h.humidity,
-                        weatherCode: h.weather_code,
-                        weatherIcon: getWeatherIconFromCode(h.weather_code, h.is_day),
-                        isDay: h.is_day,
-                        precipitation: h.precipitation_mm || 0.0,
-                        probability: h.probability_percent || 0,
-                        pressure: h.pressure_hpa || 0.0,
-                        windSpeed: h.wind.speed_kmh || 0.0,
-                        windDirectionDegrees: h.wind.direction_degrees || 0,
-                        windDirectionText: h.wind.direction_text || ""
-                    }));
+            var newHourly = [];
+            for (var i = 0; i < (hourly.time || []).length && i < 24; i++) {
+                var hIsDay = hourly.is_day?.[i] === 1;
+                newHourly.push({
+                    time: formatTime(hourly.time[i]),
+                    fullTime: hourly.time[i],
+                    temperature: Math.round(hourly.temperature_2m?.[i] || 0),
+                    humidity: hourly.relative_humidity_2m?.[i] || 0,
+                    weatherCode: hourly.weather_code?.[i] || 0,
+                    weatherIcon: getWeatherIconFromCode(hourly.weather_code?.[i], hIsDay),
+                    isDay: hIsDay,
+                    precipitation: hourly.precipitation?.[i] || 0.0,
+                    probability: hourly.precipitation_probability?.[i] || 0,
+                    pressure: hourly.surface_pressure?.[i] || 0.0,
+                    windSpeed: hourly.wind_speed_10m?.[i] || 0.0,
+                    windDirectionDegrees: hourly.wind_direction_10m?.[i] || 0,
+                    windDirectionText: getWindDirectionText(hourly.wind_direction_10m?.[i] || 0)
+                });
+            }
+            hourlyForecast = newHourly;
 
-            dailyForecast = daily.map(d => ({
-                        date: d.date,
-                        day: d.day,
-                        dateFormatted: d.date_formatted,
-                        maxTemp: Math.round(d.max_temp),
-                        minTemp: Math.round(d.min_temp),
-                        humidity: d.humidity,
-                        weatherCode: d.weather_code,
-                        weatherIcon: getWeatherIconFromCode(d.weather_code, true),
-                        rainProbability: d.rain_probability,
-                        sunrise: formatTime(d.sunrise),
-                        sunset: formatTime(d.sunset),
-                        precipitation: d.precipitation_mm || 0.0,
-                        rain: d.rain_mm || 0.0,
-                        showers: d.showers_mm || 0.0
-                    }));
+            var newDaily = [];
+            for (var j = 0; j < (daily.time || []).length; j++) {
+                var d = new Date(daily.time[j]);
+                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                newDaily.push({
+                    date: daily.time[j],
+                    day: d.toLocaleDateString("en-US", {
+                        weekday: "long"
+                    }),
+                    dateFormatted: String(d.getDate()).padStart(2, "0") + "/" + months[d.getMonth()],
+                    maxTemp: Math.round(daily.temperature_2m_max?.[j] || 0),
+                    minTemp: Math.round(daily.temperature_2m_min?.[j] || 0),
+                    humidity: daily.relative_humidity_2m_mean?.[j] || 0,
+                    weatherCode: daily.weather_code?.[j] || 0,
+                    weatherIcon: getWeatherIconFromCode(daily.weather_code?.[j], true),
+                    rainProbability: daily.precipitation_probability_max?.[j] || 0,
+                    sunrise: formatTime(daily.sunrise?.[j] || ""),
+                    sunset: formatTime(daily.sunset?.[j] || ""),
+                    precipitation: daily.precipitation_sum?.[j] || 0.0,
+                    rain: daily.rain_sum?.[j] || 0.0,
+                    showers: daily.showers_sum?.[j] || 0.0
+                });
+            }
+            dailyForecast = newDaily;
 
             saveTimer.restart();
-            console.log("Weather data updated successfully");
+            console.log("[WEATHER] Weather data updated — %1 hourly, %2 daily".arg(hourlyForecast.length).arg(dailyForecast.length));
         } catch (e) {
             console.error("Failed to update weather data:", e);
             weatherLoading = false;
@@ -724,44 +951,58 @@ Singleton {
 
     function updateAQIData(json) {
         try {
-            const loc = json.location || {}, cur = json.current || {}, hourly = json.hourly_forecast || [];
+            var cur = json.current || {}, hourly = json.hourly || {};
 
             aqiLoaded = true;
             aqiLoading = false;
-            lastUpdateAQI = cur.last_update || Date.now();
+            lastUpdateAQI = Date.now();
+
+            var euAQI = cur.european_aqi || 0;
+            var usAQIval = cur.us_aqi || 0;
+            var currentPM10 = hourly.pm10?.[0] || 0.0;
+            var currentPM25 = hourly.pm2_5?.[0] || 0.0;
 
             if (!latitude) {
-                latitude = loc.latitude || 0.0;
-                longitude = loc.longitude || 0.0;
-                timezone = loc.timezone || "";
-                elevation = loc.elevation || 0.0;
+                latitude = json.latitude || 0.0;
+                longitude = json.longitude || 0.0;
+                timezone = json.timezone || "";
             }
 
-            europeanAQI = cur.european_aqi || 0;
-            europeanAQICategory = cur.european_aqi_category || "";
-            europeanAQIColor = cur.european_aqi_color || "";
-            europeanDescription = cur.european_description || "";
-            usAQI = cur.us_aqi || 0;
-            usAQICategory = cur.us_aqi_category || "";
-            usAQIColor = cur.us_aqi_color || "";
-            usDescription = cur.us_description || "";
-            pm10 = cur.pm10_ugm3 || 0.0;
-            pm25 = cur.pm25_ugm3 || 0.0;
-            dominantPollutant = cur.dominant_pollutant || "";
-            healthRecommendation = json.health_recommendation || "";
+            var euInfo = getEuropeanAQIInfo(euAQI);
+            var usInfo = getUSAQIInfo(usAQIval);
 
-            hourlyAQIForecast = hourly.map(h => ({
-                        time: formatTime(h.time),
-                        fullTime: h.time,
-                        europeanAQI: h.european_aqi,
-                        europeanAQICategory: h.european_aqi_category,
-                        usAQI: h.us_aqi,
-                        usAQICategory: h.us_aqi_category,
-                        pm10: h.pm10_ugm3,
-                        pm25: h.pm25_ugm3
-                    }));
+            europeanAQI = euAQI;
+            europeanAQICategory = euInfo.category;
+            europeanAQIColor = euInfo.color;
+            europeanDescription = euInfo.description;
+            usAQI = usAQIval;
+            usAQICategory = usInfo.category;
+            usAQIColor = usInfo.color;
+            usDescription = usInfo.description;
+            pm10 = currentPM10;
+            pm25 = currentPM25;
+            dominantPollutant = getDominantPollutant(currentPM25, currentPM10);
+            healthRecommendation = getHealthRecommendation(euAQI, usAQIval, currentPM25, currentPM10);
+
+            var newAQIHourly = [];
+            for (var i = 0; i < (hourly.time || []).length; i++) {
+                var heu = hourly.european_aqi?.[i] || 0;
+                var hus = hourly.us_aqi?.[i] || 0;
+                newAQIHourly.push({
+                    time: formatTime(hourly.time[i]),
+                    fullTime: hourly.time[i],
+                    europeanAQI: heu,
+                    europeanAQICategory: getEuropeanAQIInfo(heu).category,
+                    usAQI: hus,
+                    usAQICategory: getUSAQIInfo(hus).category,
+                    pm10: hourly.pm10?.[i] || 0.0,
+                    pm25: hourly.pm2_5?.[i] || 0.0
+                });
+            }
+            hourlyAQIForecast = newAQIHourly;
 
             saveTimer.restart();
+            console.log("[WEATHER] AQI data updated — EU: %1, US: %2".arg(europeanAQI).arg(usAQI));
         } catch (e) {
             console.error("Failed to update AQI data:", e);
             aqiLoading = false;
@@ -770,7 +1011,7 @@ Singleton {
 
     function updateAstronomyData(json) {
         try {
-            const astro = json.astro || {}, loc = json.location || {};
+            const astro = json.astronomy?.astro || {}, loc = json.location || {};
             astronomyLoaded = true;
             astronomyLoading = false;
 
@@ -788,9 +1029,10 @@ Singleton {
             locationRegion = loc.region || "";
             locationCountry = loc.country || "";
             timeZoneIdentifier = loc.tz_id || "";
-            lastUpdateAstronomy = loc.localtime || Date.now();
+            lastUpdateAstronomy = Date.now();
 
             saveTimer.restart();
+            console.log("[WEATHER] Astronomy data updated — %1, %2".arg(locationName).arg(locationCountry));
         } catch (e) {
             console.error("Failed to update astronomy data:", e);
             astronomyLoading = false;

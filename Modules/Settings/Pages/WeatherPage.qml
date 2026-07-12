@@ -39,6 +39,22 @@ SettingsPageBase {
     }
 
     SettingsCard {
+        title: qsTr("Astronomy API")
+
+        SettingRow {
+            label: qsTr("WeatherAPI.com Key:")
+
+            StyledTextInput {
+                text: Configs.weather.astronomyApiKey
+                onTextChanged: Configs.weather.astronomyApiKey = text
+                Layout.preferredWidth: 300
+                placeHolderText: qsTr("Enter your WeatherAPI.com API key")
+                toggleButtonVisible: false
+            }
+        }
+    }
+
+    SettingsCard {
         title: qsTr("Sync & Overview")
 
         SettingRow {
