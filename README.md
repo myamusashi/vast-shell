@@ -487,6 +487,34 @@ touch ~/.config/matugen/config.toml
 | `reloadTime` | `1800000` | Weather refresh interval in milliseconds (30 min). |
 | `enableQuickSummary` | `false` | Show a compact weather summary in the bar. |
 
+#### Depth Wallpaper
+
+> [!NOTE]
+> Depth wallpaper extracts the foreground subject from your wallpaper and layers it separately over a blurred background, creating a **parallax depth effect** on the lock screen.
+
+**How it works:**
+
+1. When enabled, the first wallpaper change triggers foreground extraction via `rembg`
+2. `rembg` processes the image using the **BiRefNet-portrait** model to separate the foreground subject from the background
+3. The extracted foreground is cached by content hash so subsequent uses of the same wallpaper are instant
+4. On the lock screen, the wallpaper blurs and the foreground layer sits on top with independent scaling
+
+**Model details:**
+
+| Property | Value |
+|---|---|
+| Model | `birefnet-portrait` (BiRefNet for portraits/foregrounds) |
+| Download size | ~176 MB (downloaded once on first use) |
+| RAM usage during inference | ~800 MB – 1.5 GB |
+| Processing time (GPU) | ~2 – 8 seconds |
+| Processing time (CPU) | ~10 – 40 seconds |
+
+> [!TIP]
+> - Processing runs **asynchronously** in the background — you can continue using the shell normally
+> - The extracted foreground is cached in `~/.cache/vast-shell/depthwp/foregrounds/`
+> - To reprocess a wallpaper, delete its cached foreground from that directory and trigger a wallpaper change
+> - GPU acceleration requires `onnxruntime` with CUDA support — `pip install onnxruntime-gpu`
+
 ---
 
 ### Matugen
@@ -645,58 +673,87 @@ vast-shell/
 │   └── plugins/           # vastPlugin, AnotherRipple, m3Shapes
 │
 ├── Core/
-│   ├── Configs/
-│   ├── States/
-│   └── Utils/
+│   ├── Configs/           # Appearance, Bar, Clipboard, ColorSystem, General,
+│   │                      # Localization, MediaPlayer, Notification, Wallpaper, Weather
+│   ├── States/            # GlobalStates, Workspaces
+│   └── Utils/             # DistroAscii, Dots, HighlightText, Icon, Log,
+│                          # MArea, Paths, ScreenSelection, Time, TimeAgo, WeatherIcon
 │
 ├── Components/
-│   ├── Base/
-│   ├── Dialog/FileDialog/
-│   └── Feedback/
+│   ├── Base/              # CAnim, Circular, Corner, CornerPair, Elevation,
+│   │                      # FocusCage, NAnim, SettingRow, StyledButton,
+│   │                      # StyledComboBox, StyledMenu, StyledMenuItem,
+│   │                      # StyledRect, StyledSlide, StyledSwitch,
+│   │                      # StyledText, StyledTextInput, TextInputComponents,
+│   │                      # Wallpaper, Wavy
+│   ├── Dialog/
+│   │   ├── DialogBox.qml
+│   │   └── FileDialog/    # BottomActionBar, FileListView, PlacesSidebar,
+│   │                      # TopAppBar, FileListItem, PlaceItem
+│   └── Feedback/          # BorderProgress, LoadingIndicator, Progress, Toast
 │
-├── Services/              # Audio, Battery, Brightness, Calendar, Colours,
-│                          # Hotspot, Hypr, Lyrics, Notifs, Privacy, Record
-│                          # SystemUsage, Weather, ToastService, WallpaperFileModels
-│                          # Wifi, ScreenCapture, ScreenCaptureHistory, PolAgent, Players, Hotspot
-│                          # Fontlist, Hyprsunset, KeylockState
+├── Services/              # Audio, Battery, Brightness, CalendarMajorEvents,
+│                          # Colours, DepthWallpaperController, Fontlist, Hotspot,
+│                          # Hypr, Hyprsunset, KeylockState, Lyrics, Notifs,
+│                          # Players, PolAgent, Privacy, Record, ScreenCapture,
+│                          # ScreenCaptureHistory, ScreenRecorder, SystemUsage,
+│                          # ToastService, WallpaperFileModels, Weather
 │
 ├── Modules/
-│   └── Drawers/           # Bar, Calendar, Launcher, Notifications,
-│       │                  # OSD, Overview, QuickSettings, Session,
-│       │                  # Volume, WallpaperSelector, Weather
-│       ├── Dashboard/
-│       ├── Lock/
-│       ├── Polkit/
-│       ├── Settings/
-│       └── Wallpaper/
+│   ├── Dashboard/         # Capture, ControlBar, Header, History, Performance
+│   ├── Drawers/
+│   │   ├── Bar/           # Bar, Left, Middle, Right
+│   │   ├── Calendar/
+│   │   ├── Clipboard/     # ClipboardItemDelegate, ClipboardPreview
+│   │   ├── Launcher/      # App, CaptureItem, Screencapture
+│   │   ├── Notifications/ # Components/Content, NotifIcon, Wrapper
+│   │   ├── OSD/           # CapsLockWidget, NumLockWidget
+│   │   ├── Overview/      # Overview, WorkspaceView
+│   │   ├── QuickSettings/ # PerformancePages, Settings, VolumeSettings
+│   │   ├── Session/
+│   │   ├── Volume/
+│   │   ├── WallpaperSelector/
+│   │   └── Weather/       # Headers, WeatherItem/* (Pages, AQI, Cloudiness,
+│   │                      # ForecastDaily, ForecastHourly, Humidity, Moon,
+│   │                      # Precipitation, Pressure, Sun, UVIndex, Visibility, Wind)
+│   ├── Lock/              # BottomItem, Clock, Lockscreen, Pam, Surface
+│   ├── Polkit/            # Body, Header, InputField
+│   ├── Settings/
+│   │   ├── Components/    # SettingsCard, SettingsPageBase, SidebarItem
+│   │   ├── Pages/         # Appearance, Bar, Clipboard, DepthWallpaperSection,
+│   │   │                  # General, Internet, Language, MediaPlayer,
+│   │   │                  # Notification, Wallpaper, Weather
+│   │   └── Settings.qml
+│   └── Wallpaper/         # Wall
 │
 ├── Widgets/               # AudioProfiles, Battery, Clock, LyricsView,
-│                          # Mpris, RecordIndicator, Tray, Workspaces,
-│                          # WorkspaceName, Sound, OsText, MixerEntry,
-│                          # MixerEntry
+│                          # MixerEntry, Mpris, NotificationDots, OsText,
+│                          # RecordIndicator, Sound, Tray, TrayMenu,
+│                          # WorkspaceName, Workspaces
 │
 ├── Plugins/Vast/
 │   ├── CMakeLists.txt
 │   ├── AudioProfilesModel.cpp/hpp
 │   ├── AudioProfilesWatcher.cpp/hpp
+│   ├── BrightnessManager.cpp/hpp
+│   ├── ImageCache.cpp/hpp
 │   ├── KeylockState.cpp/hpp
 │   ├── LyricsProvider.cpp/hpp
-│   ├── ScreenRecorder.cpp/hpp
-│   ├── TranslationManager.cpp/hpp
-    ├── Clipboard/         # Database, Model, Watcher, Manager, Entry
-│   └── Search/            # FuzzyMatcher, SearchEngine, SearchResult
+│   ├── Clipboard/         # Database, Entry, Manager, Model, Watcher
+│   ├── Search/            # FuzzyMatcher, SearchEngine, SearchResult
+│   └── TranslationManager.cpp/hpp
 │
 ├── Assets/
 │   ├── go/formatting.go
 │   ├── images/
-│   ├── pam.d/
 │   ├── shaders/           # borderProgress, waveForm, wavy, ImageTransition
 │   │   └── transitions/   # boxExpand, circleExpand, diagonalWipe, dissolve,
 │   │                      # fade, pixelate, roll, slideUp, splitHorizontal, wipeDown
-│   └── weather_icon/
+│   ├── shell/extract-fg.sh
+│   └── weather_icon/      # Moon phase SVGs
 │
-├── Data/ # Matugen/, configurations.json
-└── translations/
+├── Data/                  # colors.json, configurations.json, matugen/
+└── translations/          # id_ID.ts
 ```
 
 ---
