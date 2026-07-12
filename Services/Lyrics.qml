@@ -19,8 +19,8 @@ Singleton {
     readonly property int currentLineIndex: LyricsProvider.currentLineIndex
     readonly property int currentWordIndex: LyricsProvider.currentWordIndex
     readonly property real currentWordDuration: LyricsProvider.currentWordDuration
-    property bool _trackJustChanged: false
-    property var _offsets: ({})
+    property bool trackJustChanged: false
+    property var offsets: ({})
 
     Connections {
         target: Players.active

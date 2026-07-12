@@ -350,9 +350,9 @@ Singleton {
     property string configLongitude: Configs.weather.longitude
     property int reloadInterval: Configs.weather.reloadTime || 1800000
 
-    property var _activeWeatherRequest: null
-    property var _activeAQIRequest: null
-    property var _activeAstronomyRequest: null
+    property var activeWeatherRequest: null
+    property var activeAQIRequest: null
+    property var activeAstronomyRequest: null
 
     function getWeatherIconFromCode(code, isDayTime) {
         if (code === null || code === undefined)
@@ -530,7 +530,7 @@ Singleton {
         return isFinal.length === 0 ? "" : isFinal[0] + "\n\n• " + isFinal.slice(1).join("\n\n• ");
     }
 
-    function _cleanupRequest(request) {
+    function cleanupRequest(request) {
         if (request) {
             try {
                 request.onreadystatechange = null;
@@ -542,7 +542,7 @@ Singleton {
         }
     }
 
-    function _fetchData(config) {
+    function fetchData(config) {
         const lat = parseFloat(configLatitude);
         const lon = parseFloat(configLongitude);
         if (isNaN(lat) || isNaN(lon)) {
@@ -556,7 +556,7 @@ Singleton {
             try {
                 root[config.requestProp].abort();
             } catch (e) {}
-            _cleanupRequest(root[config.requestProp]);
+            cleanupRequest(root[config.requestProp]);
             root[config.requestProp] = null;
         }
 
@@ -583,7 +583,7 @@ Singleton {
                 ToastService.show(qsTr("%1 failed (%2)").arg(config.label).arg(request.status), qsTr("Weather"), "weather-error-symbolic", 3000);
                 root[config.loadingProp] = false;
             }
-            _cleanupRequest(request);
+            cleanupRequest(request);
         };
 
         const fail = reason => () => {
@@ -591,7 +591,7 @@ Singleton {
                 if (request === root[config.requestProp])
                     root[config.requestProp] = null;
                 root[config.loadingProp] = false;
-                _cleanupRequest(request);
+                cleanupRequest(request);
             };
         request.onerror = fail(qsTr("network error"));
         request.ontimeout = fail(qsTr("timed out"));
@@ -601,28 +601,28 @@ Singleton {
     }
 
     function reloadWeather() {
-        _fetchData({
+        fetchData({
             url: "https://weather.myamusashi.cc/v1/forecast",
             loadingProp: "weatherLoading",
-            requestProp: "_activeWeatherRequest",
+            requestProp: "activeWeatherRequest",
             onSuccess: updateWeatherData,
             label: "Weather"
         });
     }
     function reloadAQI() {
-        _fetchData({
+        fetchData({
             url: "https://aqi.myamusashi.cc/v1/aqi",
             loadingProp: "aqiLoading",
-            requestProp: "_activeAQIRequest",
+            requestProp: "activeAQIRequest",
             onSuccess: updateAQIData,
             label: "AQI"
         });
     }
     function reloadAstronomy() {
-        _fetchData({
+        fetchData({
             url: "https://astronomy.myamusashi.cc/v1/astronomy",
             loadingProp: "astronomyLoading",
-            requestProp: "_activeAstronomyRequest",
+            requestProp: "activeAstronomyRequest",
             onSuccess: updateAstronomyData,
             label: "Astronomy"
         });
@@ -811,7 +811,7 @@ Singleton {
             root[field.key] = data[field.key] ?? field.def;
     }
 
-    function _reloadIfLoaded() {
+    function reloadIfLoaded() {
         if (weatherLoaded || aqiLoaded || astronomyLoaded)
             reload();
     }
@@ -874,16 +874,16 @@ Singleton {
     }
 
     Component.onDestruction: {
-        for (const prop of ["_activeWeatherRequest", "_activeAQIRequest", "_activeAstronomyRequest"]) {
+        for (const prop of ["activeWeatherRequest", "activeAQIRequest", "activeAstronomyRequest"]) {
             if (root[prop]) {
                 try {
                     root[prop].abort();
                 } catch (e) {}
-                _cleanupRequest(root[prop]);
+                cleanupRequest(root[prop]);
                 root[prop] = null;
             }
         }
     }
-    onConfigLatitudeChanged: _reloadIfLoaded()
-    onConfigLongitudeChanged: _reloadIfLoaded()
+    onConfigLatitudeChanged: reloadIfLoaded()
+    onConfigLongitudeChanged: reloadIfLoaded()
 }

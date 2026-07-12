@@ -28,21 +28,21 @@ Item {
             root.saved(path);
 
         if (action === "copy" || action === "save+copy")
-            root._copyFile(path);
+            root.copyFile(path);
     }
 
-    function _copyFile(path) {
-        wlCopy._imgPath = path;
+    function copyFile(path) {
+        wlCopy.imgPath = path;
         wlCopy.running = true;
     }
 
     Process {
         id: wlCopy
 
-        property string _imgPath
+        property string imgPath
 
         command: {
-            const p = _imgPath;
+            const p = imgPath;
             if (!p)
                 return ["true"];
             return ["sh", "-c", "cat '" + p.replace(/'/g, "'\\''") + "' | wl-copy"];

@@ -20,9 +20,9 @@ Singleton {
     readonly property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
     readonly property alias isNumLockOSDShow: root.isNumLockOSDVisible
 
-    readonly property bool isVolumeOSDVisible: _activeOSDs["volume"] || false
-    readonly property bool isCapsLockOSDVisible: _activeOSDs["capslock"] || false
-    readonly property bool isNumLockOSDVisible: _activeOSDs["numlock"] || false
+    readonly property bool isVolumeOSDVisible: activeOSDs["volume"] || false
+    readonly property bool isCapsLockOSDVisible: activeOSDs["capslock"] || false
+    readonly property bool isNumLockOSDVisible: activeOSDs["numlock"] || false
 
     readonly property color drawerColors: Configs.generals.transparent ? Qt.alpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
     readonly property int osdDisplayDuration: 5000
@@ -72,8 +72,8 @@ Singleton {
 
     property string scriptPath: `${Paths.rootDir}/Assets/shell/screen-capture.sh`
 
-    property var _activeOSDs: ({})
-    property var _pausedOSDs: ({})
+    property var activeOSDs: ({})
+    property var pausedOSDs: ({})
 
     function setPanel(name: string, value: bool): void {
         const prop = panelProps[name];
@@ -99,42 +99,42 @@ Singleton {
     function showOSD(osdName) {
         if (!osdName)
             return;
-        _activeOSDs[osdName] = true;
-        _activeOSDsChanged();
-        if (!_pausedOSDs[osdName])
-            _startOSDTimer(osdName);
+        activeOSDs[osdName] = true;
+        activeOSDsChanged();
+        if (!pausedOSDs[osdName])
+            startOSDTimer(osdName);
     }
 
     function hideOSD(osdName) {
         if (!osdName)
             return;
-        _activeOSDs[osdName] = false;
-        _pausedOSDs[osdName] = false;
-        _activeOSDsChanged();
-        _stopOSDTimer(osdName);
-        _checkAndClosePanelWindow();
+        activeOSDs[osdName] = false;
+        pausedOSDs[osdName] = false;
+        activeOSDsChanged();
+        stopOSDTimer(osdName);
+        checkAndClosePanelWindow();
     }
 
     function toggleOSD(osdName) {
-        _activeOSDs[osdName] ? hideOSD(osdName) : showOSD(osdName);
+        activeOSDs[osdName] ? hideOSD(osdName) : showOSD(osdName);
     }
 
     function isOSDVisible(osdName) {
-        return _activeOSDs[osdName] || false;
+        return activeOSDs[osdName] || false;
     }
 
     function pauseOSD(osdName) {
-        if (!osdName || !_activeOSDs[osdName])
+        if (!osdName || !activeOSDs[osdName])
             return;
-        _pausedOSDs[osdName] = true;
-        _stopOSDTimer(osdName);
+        pausedOSDs[osdName] = true;
+        stopOSDTimer(osdName);
     }
 
     function resumeOSD(osdName) {
-        if (!osdName || !_activeOSDs[osdName])
+        if (!osdName || !activeOSDs[osdName])
             return;
-        _pausedOSDs[osdName] = false;
-        _startOSDTimer(osdName);
+        pausedOSDs[osdName] = false;
+        startOSDTimer(osdName);
     }
 
     component OSDTimer: Timer {
@@ -144,16 +144,16 @@ Singleton {
         onTriggered: root.hideOSD(osdName)
     }
 
-    function _startOSDTimer(osdName: string): void {
+    function startOSDTimer(osdName: string): void {
         osdTimers[osdName]?.restart();
     }
 
-    function _stopOSDTimer(osdName: string): void {
+    function stopOSDTimer(osdName: string): void {
         osdTimers[osdName]?.stop();
     }
 
-    function _checkAndClosePanelWindow() {
-        const anyVisible = Object.keys(_activeOSDs).some(key => _activeOSDs[key] === true);
+    function checkAndClosePanelWindow() {
+        const anyVisible = Object.keys(activeOSDs).some(key => activeOSDs[key] === true);
         if (!anyVisible)
             cleanupTimer.start();
     }

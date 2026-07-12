@@ -6,15 +6,15 @@ import Quickshell
 Singleton {
     id: root
 
-    readonly property int fontCount: _fontListModel.count
+    readonly property int fontCount: fontListModel.count
     property ListModel fontListModel: ListModel {
-        id: _fontListModel
+        id: fontListModel
     }
 
     Component.onCompleted: {
         const fonts = Qt.fontFamilies();
         for (let i = 0; i < fonts.length; i++) {
-            _fontListModel.append({
+            fontListModel.append({
                 name: fonts[i],
                 index: i
             });
@@ -22,8 +22,8 @@ Singleton {
     }
 
     function indexOfFont(familyName) {
-        for (let i = 0; i < _fontListModel.count; i++)
-            if (_fontListModel.get(i).name === familyName)
+        for (let i = 0; i < fontListModel.count; i++)
+            if (fontListModel.get(i).name === familyName)
                 return i;
 
         return -1;

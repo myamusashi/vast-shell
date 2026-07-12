@@ -41,41 +41,41 @@ Singleton {
 
     Component.onCompleted: {
         ToastService.show(qsTr("Upstream Interface: %1").arg(upstreamInterface), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
-        _queryStatus.running = true;
+        queryStatus.running = true;
     }
 
     function start() {
         if (root.status === Hotspot.Status.Active || root.status === Hotspot.Status.Starting)
             return;
         if (!root.hotspotInterface) {
-            _setError("No wireless interface available");
+            setError("No wireless interface available");
             return;
         }
 
         // Apply defaults at start time, not at bind time
-        const _ssid = root.ssid || "Quickshell";
-        const _password = root.password || "password123";
-        const _band = root.band || "bg";
-        const _channel = root.channel || 6;
+        const ssid = root.ssid || "Quickshell";
+        const password = root.password || "password123";
+        const band = root.band || "bg";
+        const channel = root.channel || 6;
 
         root.status = Hotspot.Status.Starting;
         root.errorMessage = "";
-        _createHotspot.command = ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${root.hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${_ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${_password}" ` + `wifi.band ${_band} ` + `wifi.channel ${_channel}`];
-        _createHotspot.running = true;
+        createHotspot.command = ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${root.hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${password}" ` + `wifi.band ${band} ` + `wifi.channel ${channel}`];
+        createHotspot.running = true;
     }
 
     function stop() {
         if (root.status !== Hotspot.Status.Active)
             return;
         root.status = Hotspot.Status.Stopping;
-        _stopHotspot.running = true;
+        stopHotspot.running = true;
     }
 
     function toggle() {
         isActive ? stop() : start();
     }
 
-    function _setError(msg) {
+    function setError(msg) {
         root.errorMessage = msg;
         root.status = Hotspot.Status.ErrorStatus;
         console.warn("[Hotspot] Error:", msg);
@@ -83,25 +83,25 @@ Singleton {
     }
 
     Process {
-        id: _createHotspot
+        id: createHotspot
 
         command: ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${root.hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${root.ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${root.password}" ` + `wifi.band ${root.band} ` + `wifi.channel ${root.channel}`]
         onExited: code => {
             if (code !== 0) {
-                root._setError("Failed to create hotspot connection: " + stderr);
+                root.setError("Failed to create hotspot connection: " + stderr);
                 return;
             }
-            _startHotspot.running = true;
+            startHotspot.running = true;
         }
     }
 
     Process {
-        id: _startHotspot
+        id: startHotspot
 
         command: ["nmcli", "con", "up", "Hotspot"]
         onExited: code => {
             if (code !== 0) {
-                root._setError("Failed to bring up hotspot: " + stderr);
+                root.setError("Failed to bring up hotspot: " + stderr);
                 return;
             }
             root.status = Hotspot.Status.Active;
@@ -111,7 +111,7 @@ Singleton {
     }
 
     Process {
-        id: _stopHotspot
+        id: stopHotspot
 
         command: ["bash", "-c", "nmcli con down Hotspot; nmcli con delete Hotspot"]
         onExited: code => {
@@ -126,7 +126,7 @@ Singleton {
     }
 
     Process {
-        id: _queryStatus
+        id: queryStatus
 
         command: ["nmcli", "-t", "-f", "NAME,STATE", "con", "show", "--active"]
         stdout: StdioCollector {

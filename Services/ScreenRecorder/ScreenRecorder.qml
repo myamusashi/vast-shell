@@ -30,9 +30,9 @@ Singleton {
     property bool includeAudio: false
     property bool showCursor: true
 
-    property string _pendingVideoPath
-    property string _pendingOutputDir
-    property var _pendingCallback
+    property string pendingVideoPath
+    property string pendingOutputDir
+    property var pendingCallback
 
     signal thumbnailReady(string videoPath, string thumbnailPath)
 
@@ -133,8 +133,8 @@ Singleton {
                 const pid = parseInt(pidStr, 10);
 
                 if (pid > 0 && videoStr) {
-                    verifyProcess._targetPid = pid;
-                    verifyProcess._targetVideo = videoStr;
+                    verifyProcess.targetPid = pid;
+                    verifyProcess.targetVideo = videoStr;
                     verifyProcess.command = ["kill", "-s", "0", String(pid)];
                     verifyProcess.running = true;
                 } else {
@@ -147,15 +147,15 @@ Singleton {
     Process {
         id: verifyProcess
 
-        property int _targetPid: -1
-        property string _targetVideo: ""
+        property int targetPid: -1
+        property string targetVideo: ""
         running: false
 
         onExited: (code, status) => {
-            const pid = verifyProcess._targetPid;
-            const video = verifyProcess._targetVideo;
-            verifyProcess._targetPid = -1;
-            verifyProcess._targetVideo = "";
+            const pid = verifyProcess.targetPid;
+            const video = verifyProcess.targetVideo;
+            verifyProcess.targetPid = -1;
+            verifyProcess.targetVideo = "";
 
             if (pid > 0 && video) {
                 if (code === 0) {
@@ -182,9 +182,9 @@ Singleton {
     Process {
         id: ffprobeProcess
 
-        property string _videoPath
+        property string videoPath
 
-        command: ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", _videoPath]
+        command: ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", videoPath]
         stdout: StdioCollector {
             onStreamFinished: {
                 const trimmed = text.trim();
@@ -196,13 +196,13 @@ Singleton {
                 const s = Math.floor(ts % 60);
                 const formatted = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
 
-                const fi = root._pendingVideoPath.split("/").pop();
+                const fi = root.pendingVideoPath.split("/").pop();
                 const baseName = fi.substring(0, fi.lastIndexOf("."));
-                const thumb = root._pendingOutputDir + "/" + baseName + ".png";
+                const thumb = root.pendingOutputDir + "/" + baseName + ".png";
 
-                ffmpegProcess._seek = formatted;
-                ffmpegProcess._videoPath = root._pendingVideoPath;
-                ffmpegProcess._thumb = thumb;
+                ffmpegProcess.seek = formatted;
+                ffmpegProcess.videoPath = root.pendingVideoPath;
+                ffmpegProcess.thumb = thumb;
                 ffmpegProcess.running = true;
             }
         }
@@ -211,19 +211,19 @@ Singleton {
     Process {
         id: ffmpegProcess
 
-        property string _seek
-        property string _videoPath
-        property string _thumb
+        property string seek
+        property string videoPath
+        property string thumb
 
-        command: ["ffmpeg", "-ss", _seek, "-i", _videoPath, "-vframes", "1", "-q:v", "2", "-vf", "scale=256:-1", _thumb, "-y", "-v", "error"]
+        command: ["ffmpeg", "-ss", seek, "-i", videoPath, "-vframes", "1", "-q:v", "2", "-vf", "scale=256:-1", thumb, "-y", "-v", "error"]
 
         onExited: (exitCode, exitStatus) => {
-            const vp = root._pendingVideoPath;
-            const tp = (exitCode === 0) ? ffmpegProcess._thumb : "";
-            const cb = root._pendingCallback;
-            root._pendingVideoPath = "";
-            root._pendingOutputDir = "";
-            root._pendingCallback = null;
+            const vp = root.pendingVideoPath;
+            const tp = (exitCode === 0) ? ffmpegProcess.thumb : "";
+            const cb = root.pendingCallback;
+            root.pendingVideoPath = "";
+            root.pendingOutputDir = "";
+            root.pendingCallback = null;
             root.thumbnailReady(vp, tp);
             if (cb)
                 cb(vp, tp);
@@ -233,14 +233,14 @@ Singleton {
     Process {
         id: actionNotifyProcess
 
-        property string _file
+        property string file
 
         stdout: StdioCollector {
             onStreamFinished: {
                 const action = text.trim();
                 if (action === "default")
                     Quickshell.execDetached({
-                        command: ["xdg-open", actionNotifyProcess._file]
+                        command: ["xdg-open", actionNotifyProcess.file]
                     });
             }
         }
@@ -328,10 +328,10 @@ Singleton {
     }
 
     function generate(videoPath, outputDir, callback) {
-        _pendingVideoPath = videoPath;
-        _pendingOutputDir = outputDir;
-        _pendingCallback = callback;
-        ffprobeProcess._videoPath = videoPath;
+        pendingVideoPath = videoPath;
+        pendingOutputDir = outputDir;
+        pendingCallback = callback;
+        ffprobeProcess.videoPath = videoPath;
         ffprobeProcess.running = true;
     }
 
@@ -385,7 +385,7 @@ Singleton {
             if (thumb)
                 args.push("-i", thumb);
             args.push("--action", "default=open link", "--wait", "Capture Saved", file);
-            actionNotifyProcess._file = file;
+            actionNotifyProcess.file = file;
             actionNotifyProcess.command = args;
             actionNotifyProcess.running = true;
         } else {

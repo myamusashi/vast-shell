@@ -16,7 +16,7 @@ Singleton {
     property string primaryId: ""
     property var displays: []
 
-    function _refresh() {
+    function refresh() {
         const list = BrightnessManager.displays();
         root.displays = list;
         if (root.primaryId === "") {
@@ -95,7 +95,7 @@ Singleton {
         }
 
         function onDisplayListChanged() {
-            root._refresh();
+            root.refresh();
         }
 
         function onInitializationFailed(reason: string) {
