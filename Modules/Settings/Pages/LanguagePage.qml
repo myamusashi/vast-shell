@@ -7,52 +7,22 @@ import qs.Services
 
 import "../Components"
 
-Item {
-    id: root
+SettingsPageBase {
+    pageTitle: qsTr("System Language")
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    SettingsCard {
+        title: qsTr("Locale Preference")
 
-    ColumnLayout {
-        anchors {
-            fill: parent
-            margins: Appearance.margin.large
-        }
-        spacing: Appearance.spacing.large
+        SettingRow {
+            label: qsTr("Current Language:")
 
-        StyledText {
-            Layout.bottomMargin: Appearance.margin.normal
-            text: qsTr("System Language")
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            font.bold: true
-            color: Colours.m3Colors.m3OnSurface
-        }
-
-        SettingsCard {
-            title: qsTr("Locale Preference")
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Current Language:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledTextInput {
-                    text: Configs.language.language
-                    onTextChanged: Configs.language.language = text
-                    Layout.preferredWidth: 200
-                    placeHolderText: "e.g., id-ID or en-US"
-                    toggleButtonVisible: false
-                }
+            StyledTextInput {
+                text: Configs.language.language
+                onTextChanged: Configs.language.language = text
+                Layout.preferredWidth: 200
+                placeHolderText: "e.g., id-ID or en-US"
+                toggleButtonVisible: false
             }
-        }
-
-        Item {
-            Layout.fillHeight: true
         }
     }
 }

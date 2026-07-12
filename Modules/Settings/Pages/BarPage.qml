@@ -8,127 +8,81 @@ import qs.Services
 
 import "../Components"
 
-Item {
-    id: root
+SettingsPageBase {
+    pageTitle: qsTr("Top Bar Configuration")
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    SettingsCard {
+        title: qsTr("Layout & Behavior")
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Appearance.margin.large
-        spacing: Appearance.spacing.large
+        SettingRow {
+            label: qsTr("Always Open Bar:")
 
-        StyledText {
-            text: qsTr("Top Bar Configuration")
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            font.bold: true
-            color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Appearance.margin.normal
-        }
-
-        SettingsCard {
-            title: qsTr("Layout & Behavior")
-
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Always Open Bar:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSwitch {
-                    checked: Configs.bar.alwaysOpenBar
-                    onCheckedChanged: Configs.bar.alwaysOpenBar = checked
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Compact Navigation Bar:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSwitch {
-                    checked: Configs.bar.compact
-                    onCheckedChanged: Configs.bar.compact = checked
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Bar Height:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSlide {
-                    from: 20
-                    to: 100
-                    stepSize: 1
-                    value: Configs.bar.barHeight
-                    onMoved: Configs.bar.barHeight = value
-                    Layout.preferredWidth: 200
-                }
+            StyledSwitch {
+                checked: Configs.bar.alwaysOpenBar
+                onCheckedChanged: Configs.bar.alwaysOpenBar = checked
             }
         }
 
-        SettingsCard {
-            title: qsTr("Workspace Display")
+        SettingRow {
+            label: qsTr("Compact Navigation Bar:")
 
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Workspace Indicator Style:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    ToolTip.text: "Available values: 'dot', 'interactive'"
-                }
-                StyledComboBox {
-                    model: [
-                        {
-                            display: "dot"
-                        },
-                        {
-                            display: "interactive"
-                        }
-                    ]
-                    Layout.preferredWidth: 200
-                    currentIndex: -1
-                    placeholderText: Configs.bar.workspacesIndicator
-                    isItemActive: (md, _) => md.display === Configs.bar.workspacesIndicator
-                    onActivated: index => Configs.bar.workspacesIndicator = model[index].display
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Number of Visible Workspaces:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSlide {
-                    from: 1
-                    to: 15
-                    stepSize: 1
-                    snapEnabled: true
-                    showValuePopup: true
-                    value: Configs.bar.visibleWorkspace
-                    onMoved: Configs.bar.visibleWorkspace = value
-                    Layout.preferredWidth: 200
-                }
+            StyledSwitch {
+                checked: Configs.bar.compact
+                onCheckedChanged: Configs.bar.compact = checked
             }
         }
 
-        Item {
-            Layout.fillHeight: true
+        SettingRow {
+            label: qsTr("Bar Height:")
+
+            StyledSlide {
+                from: 20
+                to: 100
+                stepSize: 1
+                value: Configs.bar.barHeight
+                onMoved: Configs.bar.barHeight = value
+                Layout.preferredWidth: 200
+            }
+        }
+    }
+
+    SettingsCard {
+        title: qsTr("Workspace Display")
+
+        SettingRow {
+            label: qsTr("Workspace Indicator Style:")
+
+            StyledComboBox {
+                ToolTip.text: "Available values: 'dot', 'interactive'"
+                model: [
+                    {
+                        display: "dot"
+                    },
+                    {
+                        display: "interactive"
+                    }
+                ]
+                Layout.preferredWidth: 200
+                currentIndex: -1
+                placeholderText: Configs.bar.workspacesIndicator
+                isItemActive: (md, _) => md.display === Configs.bar.workspacesIndicator
+                onActivated: index => Configs.bar.workspacesIndicator = model[index].display
+            }
+        }
+
+        SettingRow {
+            label: qsTr("Number of Visible Workspaces:")
+
+            StyledSlide {
+                from: 1
+                to: 15
+                stepSize: 1
+                snapEnabled: true
+                showValuePopup: true
+                value: Configs.bar.visibleWorkspace
+                onMoved: Configs.bar.visibleWorkspace = value
+                Layout.preferredWidth: 200
+            }
         }
     }
 }

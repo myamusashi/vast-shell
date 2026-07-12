@@ -7,108 +7,59 @@ import qs.Services
 
 import "../Components"
 
-Item {
-    id: root
+SettingsPageBase {
+    pageTitle: qsTr("Clipboard configurations")
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    SettingsCard {
+        title: qsTr("General Settings")
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Appearance.margin.large
-        spacing: Appearance.spacing.large
+        SettingRow {
+            label: qsTr("Enable Clipboard:")
 
-        StyledText {
-            text: qsTr("Clipboard configurations")
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            font.bold: true
-            color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Appearance.margin.normal
-        }
-
-        SettingsCard {
-            title: qsTr("General Settings")
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Enable Clipboard:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledSwitch {
-                    checked: Configs.clipboard.enabled
-                    onCheckedChanged: Configs.clipboard.enabled = checked
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Enable Image Previews:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledSwitch {
-                    checked: Configs.clipboard.enablePreview
-                    onCheckedChanged: Configs.clipboard.enablePreview = checked
-                }
+            StyledSwitch {
+                checked: Configs.clipboard.enabled
+                onCheckedChanged: Configs.clipboard.enabled = checked
             }
         }
 
-        SettingsCard {
-            title: qsTr("Preview Dimensions")
-            visible: Configs.clipboard.enablePreview
+        SettingRow {
+            label: qsTr("Enable Image Previews:")
 
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Preview Width:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledSlide {
-                    from: 100
-                    to: 1000
-                    stepSize: 10
-                    value: Configs.clipboard.preview.sourceWidth
-                    onMoved: Configs.clipboard.preview.sourceWidth = value
-                    Layout.preferredWidth: 200
-                }
+            StyledSwitch {
+                checked: Configs.clipboard.enablePreview
+                onCheckedChanged: Configs.clipboard.enablePreview = checked
             }
+        }
+    }
 
-            RowLayout {
-                Layout.fillWidth: true
+    SettingsCard {
+        title: qsTr("Preview Dimensions")
+        visible: Configs.clipboard.enablePreview
 
-                StyledText {
-                    text: qsTr("Preview Height:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
+        SettingRow {
+            label: qsTr("Preview Width:")
 
-                StyledSlide {
-                    from: 100
-                    to: 1000
-                    stepSize: 10
-                    value: Configs.clipboard.preview.sourceHeight
-                    onMoved: Configs.clipboard.preview.sourceHeight = value
-                    Layout.preferredWidth: 200
-                }
+            StyledSlide {
+                from: 100
+                to: 1000
+                stepSize: 10
+                value: Configs.clipboard.preview.sourceWidth
+                onMoved: Configs.clipboard.preview.sourceWidth = value
+                Layout.preferredWidth: 200
             }
         }
 
-        Item {
-            Layout.fillHeight: true
+        SettingRow {
+            label: qsTr("Preview Height:")
+
+            StyledSlide {
+                from: 100
+                to: 1000
+                stepSize: 10
+                value: Configs.clipboard.preview.sourceHeight
+                onMoved: Configs.clipboard.preview.sourceHeight = value
+                Layout.preferredWidth: 200
+            }
         }
     }
 }

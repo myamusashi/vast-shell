@@ -8,203 +8,146 @@ import qs.Components.Dialog.FileDialog
 
 import "../Components"
 
-Item {
-    id: root
+SettingsPageBase {
+    pageTitle: qsTr("Wallpaper Engine")
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    SettingsCard {
+        title: qsTr("Image Sourcing")
 
-    ColumnLayout {
-        anchors {
-            fill: parent
-            margins: Appearance.margin.large
-        }
-        spacing: Appearance.spacing.large
+        SettingRow {
+            label: qsTr("Enable Wallpaper:")
 
-        StyledText {
-            text: qsTr("Wallpaper Engine")
-            font {
-                pixelSize: Appearance.fonts.size.extraLarge
-                bold: true
+            StyledSwitch {
+                checked: Configs.wallpaper.enabledWallpaper
+                onCheckedChanged: Configs.wallpaper.enabledWallpaper = checked
             }
-            color: Colours.m3Colors.m3OnSurface
-            Layout.bottomMargin: Appearance.margin.normal
         }
 
-        SettingsCard {
-            title: qsTr("Image Sourcing")
+        SettingRow {
+            label: qsTr("Wallpaper Directory Path:")
 
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Enable Wallpaper:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSwitch {
-                    checked: Configs.wallpaper.enabledWallpaper
-                    onCheckedChanged: Configs.wallpaper.enabledWallpaper = checked
-                }
-            }
+            StyledTextInput {
+                id: wallpaperDirField
 
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Wallpaper Directory Path:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
+                text: Configs.wallpaper.wallpaperDir
+                onTextChanged: Configs.wallpaper.wallpaperDir = text
+                implicitWidth: 350
+                toggleButtonVisible: false
 
-                StyledTextInput {
-                    id: wallpaperDirField
-
-                    text: Configs.wallpaper.wallpaperDir
-                    onTextChanged: Configs.wallpaper.wallpaperDir = text
-                    implicitWidth: 350
-                    toggleButtonVisible: false
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            wallpaperDirField.forceActiveFocus();
-                            fileDialog.openFileDialog();
-                        }
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        wallpaperDirField.forceActiveFocus();
+                        fileDialog.openFileDialog();
                     }
                 }
-
-                FileDialog {
-                    id: fileDialog
-
-                    foldersOnly: true
-                    selectFolder: true
-                    showHidden: true
-                    onFileSelected: path => Configs.wallpaper.wallpaperDir = path
-                }
             }
 
-            RowLayout {
-                Layout.fillWidth: true
+            FileDialog {
+                id: fileDialog
 
-                StyledText {
-                    text: qsTr("Loaded Wallpaper Count:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSlide {
-                    from: 1
-                    to: 10
-                    stepSize: 1
-                    snapEnabled: true
-                    showValuePopup: true
-                    value: Configs.wallpaper.visibleWallpaper
-                    onMoved: Configs.wallpaper.visibleWallpaper = value
-                    Layout.preferredWidth: 200
-                }
+                foldersOnly: true
+                selectFolder: true
+                showHidden: true
+                onFileSelected: path => Configs.wallpaper.wallpaperDir = path
             }
         }
 
-        SettingsCard {
-            title: qsTr("Transitions & Performance")
+        SettingRow {
+            label: qsTr("Loaded Wallpaper Count:")
 
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Transition Animation Mode:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledComboBox {
-                    model: [
-                        {
-                            display: "none"
-                        },
-                        {
-                            display: "random"
-                        },
-                        {
-                            display: "fade"
-                        },
-                        {
-                            display: "wipedown"
-                        },
-                        {
-                            display: "circle"
-                        },
-                        {
-                            display: "dissolve"
-                        },
-                        {
-                            display: "splitH"
-                        },
-                        {
-                            display: "slideup"
-                        },
-                        {
-                            display: "pixelate"
-                        },
-                        {
-                            display: "diagonal"
-                        },
-                        {
-                            display: "box"
-                        },
-                        {
-                            display: "roll"
-                        }
-                    ]
-                    Layout.preferredWidth: 200
-                    currentIndex: -1
-                    placeholderText: Configs.wallpaper.transition
-                    isItemActive: (md, _) => md.display === Configs.wallpaper.transition
-                    onActivated: index => Configs.wallpaper.transition = model[index].display
-                }
+            StyledSlide {
+                from: 1
+                to: 10
+                stepSize: 1
+                snapEnabled: true
+                showValuePopup: true
+                value: Configs.wallpaper.visibleWallpaper
+                onMoved: Configs.wallpaper.visibleWallpaper = value
+                Layout.preferredWidth: 200
             }
+        }
+    }
 
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Transition Low Performance Priority:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSwitch {
-                    checked: Configs.wallpaper.transitionLowPerfMode
-                    onCheckedChanged: Configs.wallpaper.transitionLowPerfMode = checked
-                }
-            }
+    SettingsCard {
+        title: qsTr("Transitions & Performance")
 
-            RowLayout {
-                Layout.fillWidth: true
-                StyledText {
-                    text: qsTr("Transition Duration (ms):")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-                StyledSlide {
-                    from: 100
-                    to: 2000
-                    stepSize: 50
-                    value: Configs.wallpaper.transitionDuration
-                    onMoved: Configs.wallpaper.transitionDuration = value
-                    Layout.preferredWidth: 200
-                }
+        SettingRow {
+            label: qsTr("Transition Animation Mode:")
+
+            StyledComboBox {
+                model: [
+                    {
+                        display: "none"
+                    },
+                    {
+                        display: "random"
+                    },
+                    {
+                        display: "fade"
+                    },
+                    {
+                        display: "wipedown"
+                    },
+                    {
+                        display: "circle"
+                    },
+                    {
+                        display: "dissolve"
+                    },
+                    {
+                        display: "splitH"
+                    },
+                    {
+                        display: "slideup"
+                    },
+                    {
+                        display: "pixelate"
+                    },
+                    {
+                        display: "diagonal"
+                    },
+                    {
+                        display: "box"
+                    },
+                    {
+                        display: "roll"
+                    }
+                ]
+                Layout.preferredWidth: 200
+                currentIndex: -1
+                placeholderText: Configs.wallpaper.transition
+                isItemActive: (md, _) => md.display === Configs.wallpaper.transition
+                onActivated: index => Configs.wallpaper.transition = model[index].display
             }
         }
 
-        DepthWallpaperSection {
-            Layout.fillWidth: true
+        SettingRow {
+            label: qsTr("Transition Low Performance Priority:")
+
+            StyledSwitch {
+                checked: Configs.wallpaper.transitionLowPerfMode
+                onCheckedChanged: Configs.wallpaper.transitionLowPerfMode = checked
+            }
         }
 
-        Item {
-            Layout.fillHeight: true
+        SettingRow {
+            label: qsTr("Transition Duration (ms):")
+
+            StyledSlide {
+                from: 100
+                to: 2000
+                stepSize: 50
+                value: Configs.wallpaper.transitionDuration
+                onMoved: Configs.wallpaper.transitionDuration = value
+                Layout.preferredWidth: 200
+            }
         }
+    }
+
+    DepthWallpaperSection {
+        Layout.fillWidth: true
     }
 }

@@ -7,98 +7,54 @@ import qs.Services
 
 import "../Components"
 
-Item {
-    id: root
+SettingsPageBase {
+    pageTitle: qsTr("Media Player")
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    SettingsCard {
+        title: qsTr("Player Preferences")
 
-    ColumnLayout {
-        anchors {
-            fill: parent
-            margins: Appearance.margin.large
-        }
-        spacing: Appearance.spacing.large
+        SettingRow {
+            label: qsTr("Enable lyrics in media player:")
 
-        StyledText {
-            Layout.bottomMargin: Appearance.margin.normal
-            text: qsTr("Media Player")
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            font.bold: true
-            color: Colours.m3Colors.m3OnSurface
-        }
-
-        SettingsCard {
-            title: qsTr("Player Preferences")
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Enable lyrics in media player:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledSwitch {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 32
-                    checked: Configs.mediaPlayer.showLyrics
-                    onToggled: Configs.mediaPlayer.showLyrics = checked
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Enable dynamic colors from cover art:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledSwitch {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 32
-                    checked: Configs.mediaPlayer.dynamicColorsCover
-                    onToggled: Configs.mediaPlayer.dynamicColorsCover = checked
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Slider type:")
-                    Layout.fillWidth: true
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledComboBox {
-                    id: waveTypeCombo
-
-                    Layout.preferredWidth: 250
-                    model: [
-                        {
-                            display: "Wavy"
-                        },
-                        {
-                            display: "WaveForm"
-                        }
-                    ]
-                    currentIndex: -1
-                    placeholderText: Configs.mediaPlayer.sliderType
-                    isItemActive: (md, _) => md.display === Configs.mediaPlayer.sliderType
-                    onActivated: index => Configs.mediaPlayer.sliderType = model[index].display
-                }
+            StyledSwitch {
+                Layout.preferredWidth: 52
+                Layout.preferredHeight: 32
+                checked: Configs.mediaPlayer.showLyrics
+                onToggled: Configs.mediaPlayer.showLyrics = checked
             }
         }
 
-        Item {
-            Layout.fillHeight: true
+        SettingRow {
+            label: qsTr("Enable dynamic colors from cover art:")
+
+            StyledSwitch {
+                Layout.preferredWidth: 52
+                Layout.preferredHeight: 32
+                checked: Configs.mediaPlayer.dynamicColorsCover
+                onToggled: Configs.mediaPlayer.dynamicColorsCover = checked
+            }
+        }
+
+        SettingRow {
+            label: qsTr("Slider type:")
+
+            StyledComboBox {
+                id: waveTypeCombo
+
+                Layout.preferredWidth: 250
+                model: [
+                    {
+                        display: "Wavy"
+                    },
+                    {
+                        display: "WaveForm"
+                    }
+                ]
+                currentIndex: -1
+                placeholderText: Configs.mediaPlayer.sliderType
+                isItemActive: (md, _) => md.display === Configs.mediaPlayer.sliderType
+                onActivated: index => Configs.mediaPlayer.sliderType = model[index].display
+            }
         }
     }
 }

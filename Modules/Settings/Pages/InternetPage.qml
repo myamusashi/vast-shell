@@ -20,7 +20,7 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    readonly property var _activeWifiDevice: {
+    readonly property var activeWifiDevice: {
         for (const d of Networking.devices) {
             if (d.type === DeviceType.Wifi)
                 return d;
@@ -28,7 +28,7 @@ Item {
         return null;
     }
 
-    function _wifiIcon(strength) {
+    function wifiIcon(strength) {
         if (strength >= 0.8)
             return "network_wifi";
         if (strength >= 0.5)
@@ -83,7 +83,7 @@ Item {
                         color: Colours.m3Colors.m3Error
                     }
 
-                    LabeledRow {
+                    SettingRow {
                         label: qsTr("Enable hotspot & sharing internet:")
 
                         StyledSwitch {
@@ -94,7 +94,7 @@ Item {
                         }
                     }
 
-                    LabeledRow {
+                    SettingRow {
                         label: qsTr("User hotspot:")
 
                         StyledTextInput {
@@ -107,7 +107,7 @@ Item {
                         }
                     }
 
-                    LabeledRow {
+                    SettingRow {
                         label: qsTr("Password hotspot:")
 
                         StyledTextInput {
@@ -121,7 +121,7 @@ Item {
                         }
                     }
 
-                    LabeledRow {
+                    SettingRow {
                         label: qsTr("Hotspot interface:")
 
                         StyledTextInput {
@@ -132,7 +132,7 @@ Item {
                         }
                     }
 
-                    LabeledRow {
+                    SettingRow {
                         label: qsTr("Bandwidth:")
 
                         StyledComboBox {
@@ -162,15 +162,8 @@ Item {
                 SettingsCard {
                     title: qsTr("Wi-Fi")
 
-                    RowLayout {
-                        Layout.fillWidth: true
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: qsTr("Enable Wi-Fi:")
-                            font.pixelSize: Appearance.fonts.size.large
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                        }
+                    SettingRow {
+                        label: qsTr("Enable Wi-Fi:")
 
                         StyledSwitch {
                             Layout.preferredWidth: 52
@@ -194,6 +187,30 @@ Item {
                         }
                     }
 
+                    RowLayout {
+                        Layout.fillWidth: true
+                        visible: activeWifiDevice !== null
+                        spacing: Appearance.spacing.small
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        StyledText {
+                            text: qsTr("Scanner")
+                            color: Colours.m3Colors.m3OnSurfaceVariant
+                            font.pixelSize: Appearance.fonts.size.small
+                        }
+
+                        StyledSwitch {
+                            checked: activeWifiDevice?.scannerEnabled ?? false
+                            onToggled: {
+                                if (activeWifiDevice)
+                                    activeWifiDevice.scannerEnabled = checked;
+                            }
+                        }
+                    }
+
                     ListView {
                         id: wifiListView
 
@@ -210,27 +227,6 @@ Item {
 
                             width: wifiListView.width
 
-                            RowLayout {
-                                Layout.fillWidth: true
-                                visible: deviceDelegate.modelData.type === DeviceType.Wifi
-                                spacing: Appearance.spacing.small
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                StyledText {
-                                    text: qsTr("Scanner")
-                                    color: Colours.m3Colors.m3OnSurfaceVariant
-                                    font.pixelSize: Appearance.fonts.size.small
-                                }
-
-                                StyledSwitch {
-                                    checked: deviceDelegate.modelData.scannerEnabled
-                                    onToggled: deviceDelegate.modelData.scannerEnabled = checked
-                                }
-                            }
-
                             Repeater {
                                 model: ScriptModel {
                                     values: {
@@ -246,27 +242,28 @@ Item {
 
                                 delegate: WrapperRectangle {
                                     id: networkDelegate
-                                    property color _target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-                                    property color _cFrom
-                                    property color _cTo
-                                    property bool _cActive: false
-                                    property real _cBlend: 1.0
-                                    on_CBlendChanged: {
-                                        if (!_cActive) return
-                                        if (_cBlend >= 1) {
-                                            color = _cTo
-                                            _cActive = false
-                                        } else if (_cBlend > 0) {
-                                            color = Colours.blendColors(_cFrom, _cTo, _cBlend)
+                                    property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                                    property color cFrom
+                                    property color cTo
+                                    property bool cActive: false
+                                    property real cBlend: 1.0
+                                    onCBlendChanged: {
+                                        if (!cActive)
+                                            return;
+                                        if (cBlend >= 1) {
+                                            color = cTo;
+                                            cActive = false;
+                                        } else if (cBlend > 0) {
+                                            color = Colours.blendColors(cFrom, cTo, cBlend);
                                         }
                                     }
-                                    on_TargetChanged: {
-                                        _cAnim.stop()
-                                        _cFrom = color
-                                        _cTo = _target
-                                        _cActive = true
-                                        _cBlend = 0.0
-                                        _cAnim.start()
+                                    onTargetChanged: {
+                                        cAnim.stop();
+                                        cFrom = color;
+                                        cTo = target;
+                                        cActive = true;
+                                        cBlend = 0.0;
+                                        cAnim.start();
                                     }
 
                                     required property var modelData
@@ -275,15 +272,13 @@ Item {
                                     radius: Appearance.rounding.large
                                     margin: Appearance.margin.small
 
-                                    NumberAnimation {
-                                        id: _cAnim
+                                    NAnim {
+                                        id: cAnim
                                         target: networkDelegate
-                                        property: "_cBlend"
+                                        property: "cBlend"
                                         from: 0.0
                                         to: 1.0
                                         duration: Appearance.animations.durations.small
-                                        easing.type: Easing.BezierSpline
-                                        easing.bezierCurve: Appearance.animations.curves.standard
                                     }
 
                                     TapHandler {
@@ -389,18 +384,6 @@ Item {
                     Layout.fillHeight: true
                 }
             }
-        }
-    }
-
-    component LabeledRow: RowLayout {
-        Layout.fillWidth: true
-        required property string label
-
-        StyledText {
-            Layout.fillWidth: true
-            text: parent.label
-            font.pixelSize: Appearance.fonts.size.large
-            color: Colours.m3Colors.m3OnSurfaceVariant
         }
     }
 }

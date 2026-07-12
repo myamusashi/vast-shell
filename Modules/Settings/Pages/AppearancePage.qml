@@ -44,43 +44,24 @@ Item {
             SettingsCard {
                 title: qsTr("Color System")
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Dark Mode:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
-
+                SettingRow {
+                    label: qsTr("Dark Mode:")
                     StyledSwitch {
                         checked: Configs.colors.isDarkMode
                         onCheckedChanged: Configs.colors.isDarkMode = checked
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Use Static Colors:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Use Static Colors:")
                     StyledSwitch {
                         checked: Configs.colors.useStaticColors
                         onCheckedChanged: Configs.colors.useStaticColors = checked
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Use Matugen Colors:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Use Matugen Colors:")
                     StyledSwitch {
                         checked: Configs.colors.useMatugenColor
                         onCheckedChanged: Configs.colors.useMatugenColor = checked
@@ -109,14 +90,8 @@ Item {
             SettingsCard {
                 title: qsTr("Typography System")
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Sans Serif Font:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Sans Serif Font:")
                     FontPicker {
                         Layout.preferredWidth: 250
                         searchField: Appearance.fonts.family.sans
@@ -124,14 +99,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Monospace Font:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Monospace Font:")
                     FontPicker {
                         Layout.preferredWidth: 250
                         searchField: Appearance.fonts.family.mono
@@ -139,14 +108,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Material Icon Font:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Material Icon Font:")
                     FontPicker {
                         Layout.preferredWidth: 250
                         searchField: Appearance.fonts.family.material
@@ -154,14 +117,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Font Size Scale:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Font Size Scale:")
                     StyledSlide {
                         from: 0.1
                         to: 2.0
@@ -179,14 +136,8 @@ Item {
             SettingsCard {
                 title: qsTr("Shapes & Layout")
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("UI Corner Roundness (Normal):")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("UI Corner Roundness (Normal):")
                     StyledSlide {
                         from: 0
                         to: 50
@@ -197,14 +148,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Element Spacing (Normal):")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Element Spacing (Normal):")
                     StyledSlide {
                         from: 0
                         to: 50
@@ -215,14 +160,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Padding (Normal):")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Padding (Normal):")
                     StyledSlide {
                         from: 0
                         to: 50
@@ -233,14 +172,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Margin (Normal):")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
+                SettingRow {
+                    label: qsTr("Margin (Normal):")
                     StyledSlide {
                         from: 0
                         to: 50
@@ -255,15 +188,8 @@ Item {
             SettingsCard {
                 title: qsTr("Motion & Animation")
 
-                RowLayout {
-                    Layout.fillWidth: true
-                    StyledText {
-                        text: qsTr("Animation Durations Scale:")
-                        Layout.fillWidth: true
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
-
+                SettingRow {
+                    label: qsTr("Animation Durations Scale:")
                     StyledSlide {
                         from: 1
                         to: 5
