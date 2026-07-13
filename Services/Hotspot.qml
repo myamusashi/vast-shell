@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -24,13 +25,7 @@ Singleton {
     readonly property string upstreamInterface: SystemUsage.allEthernetDevices
 
     // prefer a active device as hotspot interface
-    readonly property string hotspotInterface: {
-        for (const d of Networking.devices) {
-            if (d.type === DeviceType.Wifi)
-                return d.name ?? "";
-        }
-        return "";
-    }
+    readonly property string hotspotInterface: wifiDevicePicker.hotspotInterface
 
     property string ssid: ""
     property string password: ""
@@ -42,6 +37,27 @@ Singleton {
     Component.onCompleted: {
         ToastService.show(qsTr("Upstream Interface: %1").arg(upstreamInterface), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         queryStatus.running = true;
+    }
+
+    Instantiator {
+        id: wifiDevicePicker
+        model: Networking.devices
+
+        delegate: QtObject {
+            required property NetworkDevice modelData
+
+            readonly property bool isWifi: modelData.type === DeviceType.Wifi
+            readonly property string ifname: isWifi ? (modelData.name ?? "") : ""
+        }
+
+        readonly property string hotspotInterface: {
+            for (let i = 0; i < count; i++) {
+                const item = objectAt(i);
+                if (item && item.isWifi && item.ifname)
+                    return item.ifname;
+            }
+            return "";
+        }
     }
 
     function start() {
@@ -85,10 +101,11 @@ Singleton {
     Process {
         id: createHotspot
 
-        command: ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${root.hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${root.ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${root.password}" ` + `wifi.band ${root.band} ` + `wifi.channel ${root.channel}`]
+        command: []
+        stderr: StdioCollector {}
         onExited: code => {
             if (code !== 0) {
-                root.setError("Failed to create hotspot connection: " + stderr);
+                root.setError("Failed to create hotspot connection: " + stderr.text);
                 return;
             }
             startHotspot.running = true;
@@ -99,9 +116,10 @@ Singleton {
         id: startHotspot
 
         command: ["nmcli", "con", "up", "Hotspot"]
+        stderr: StdioCollector {}
         onExited: code => {
             if (code !== 0) {
-                root.setError("Failed to bring up hotspot: " + stderr);
+                root.setError("Failed to bring up hotspot: " + stderr.text);
                 return;
             }
             root.status = Hotspot.Status.Active;
@@ -114,10 +132,11 @@ Singleton {
         id: stopHotspot
 
         command: ["bash", "-c", "nmcli con down Hotspot; nmcli con delete Hotspot"]
+        stderr: StdioCollector {}
         onExited: code => {
             if (code !== 0) {
-                console.warn("[Hotspot] Stop exited with code", code, stderr);
-                ToastService.show(qsTr("[Hotspot] Stop exited with code %1: %2").arg(code).arg(stderr), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
+                console.warn("[Hotspot] Stop exited with code", code, stderr.text);
+                ToastService.show(qsTr("[Hotspot] Stop exited with code %1: %2").arg(code).arg(stderr.text), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
             }
             root.status = Hotspot.Status.Inactive;
             console.info("[Hotspot] Hotspot stopped");
@@ -129,11 +148,18 @@ Singleton {
         id: queryStatus
 
         command: ["nmcli", "-t", "-f", "NAME,STATE", "con", "show", "--active"]
+        stderr: StdioCollector {}
         stdout: StdioCollector {
             onStreamFinished: {
                 const data = text.trim();
                 if (data.split("\n").some(line => line.startsWith("Hotspot:")))
                     root.status = Hotspot.Status.Active;
+            }
+        }
+        onExited: code => {
+            if (code !== 0) {
+                console.warn("[Hotspot] Status query failed (", code, "):", stderr.text);
+                root.status = Hotspot.Status.Inactive;
             }
         }
     }

@@ -70,6 +70,8 @@ Singleton {
     property bool isSelectionOpen: false
     property bool isScreenshotSelectionOpen: false
 
+    property bool isWifiScannerOpen: true
+
     property string scriptPath: `${Paths.rootDir}/Assets/shell/screen-capture.sh`
 
     property var activeOSDs: ({})

@@ -7,14 +7,15 @@ import Quickshell.Widgets
 import Quickshell.Networking
 
 import qs.Components.Base
+import qs.Components.Feedback
 import qs.Core.Configs
+import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
 WrapperRectangle {
     id: root
 
-    property bool isScannerEnabled: true
     property bool isVisible: false
     property real zoomOriginX: parent.width / 2
     property real zoomOriginY: parent.height / 2
@@ -89,17 +90,9 @@ WrapperRectangle {
                 font.weight: Font.DemiBold
             }
 
-            Item {
-                Layout.alignment: Qt.AlignCenter
+            Progress {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 5
-
-                StyledRect {
-                    anchors.centerIn: parent
-                    implicitWidth: parent.width * 0.5
-                    implicitHeight: 4
-                    color: Colours.m3Colors.m3SurfaceContainerHighest
-                }
+                condition: GlobalStates.isWifiScannerOpen && root.isVisible
             }
 
             RowLayout {
@@ -125,29 +118,6 @@ WrapperRectangle {
                 }
             }
 
-            RowLayout {
-                Layout.fillWidth: true
-
-                StyledText {
-                    text: qsTr("Scanner")
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                StyledSwitch {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 32
-                    checked: root.isScannerEnabled
-                    onToggled: Qt.callLater(() => {
-                        root.isScannerEnabled = checked;
-                    })
-                }
-            }
-
             ListView {
                 id: devicesListView
 
@@ -161,7 +131,7 @@ WrapperRectangle {
                 delegate: ColumnLayout {
                     id: deviceDelegate
 
-                    required property var modelData
+                    required property WifiDevice modelData
 
                     width: devicesListView.width
 
@@ -169,12 +139,12 @@ WrapperRectangle {
                         target: root
 
                         function onIsScannerEnabledChanged() {
-                            deviceDelegate.modelData.scannerEnabled = root.isScannerEnabled;
+                            deviceDelegate.modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
                         }
                     }
 
                     Component.onCompleted: {
-                        modelData.scannerEnabled = root.isScannerEnabled;
+                        modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
                     }
 
                     Repeater {

@@ -8,6 +8,7 @@ import Quickshell.Networking
 
 import qs.Components.Feedback
 import qs.Core.Configs
+import qs.Core.States
 import qs.Core.Utils
 import qs.Components.Base
 import qs.Services
@@ -90,7 +91,7 @@ Item {
                             Layout.alignment: Qt.AlignRight
                             checked: Hotspot.isActive
                             enabled: Hotspot.status !== Hotspot.Status.Starting && Hotspot.status !== Hotspot.Status.Stopping
-                            onCheckedChanged: Hotspot.toggle()
+                            onToggled: Hotspot.toggle()
                         }
                     }
 
@@ -104,6 +105,7 @@ Item {
                             toggleButtonVisible: false
                             enabled: !Hotspot.isActive
                             opacity: enabled ? 1.0 : 0.5
+                            onTextChanged: Hotspot.ssid = text
                         }
                     }
 
@@ -129,6 +131,8 @@ Item {
                             placeHolderText: qsTr("Default: %1").arg(Hotspot.hotspotInterface || qsTr("none detected"))
                             passwordMode: false
                             toggleButtonVisible: false
+                            enabled: false
+                            opacity: 0.7
                         }
                     }
 
@@ -137,7 +141,7 @@ Item {
 
                         StyledComboBox {
                             implicitWidth: 240
-                            currentIndex: -1
+                            currentIndex: Hotspot.band === "a" ? 1 : 0
                             model: [
                                 {
                                     display: "bg (2.4 GHz)"
@@ -152,10 +156,20 @@ Item {
 
                     StyledButton {
                         Layout.alignment: Qt.AlignRight
-                        text: "Apply"
+                        text: qsTr("Apply && Restart")
                         textColor: Colours.m3Colors.m3OnPrimary
                         color: Colours.m3Colors.m3Primary
-                        onClicked: Hotspot.toggle()
+                        onClicked: {
+                            if (Hotspot.isActive) {
+                                Hotspot.stop();
+                                // Wait briefly then restart with new settings
+                                Qt.callLater(function () {
+                                    Qt.callLater(Hotspot.start);
+                                });
+                            } else {
+                                Hotspot.start();
+                            }
+                        }
                     }
                 }
 
@@ -175,40 +189,9 @@ Item {
                         }
                     }
 
-                    Item {
+                    Progress {
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 5
-
-                        StyledRect {
-                            anchors.centerIn: parent
-                            implicitWidth: parent.width
-                            implicitHeight: 4
-                            color: Colours.m3Colors.m3SurfaceContainerHighest
-                        }
-                    }
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        visible: activeWifiDevice !== null
-                        spacing: Appearance.spacing.small
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        StyledText {
-                            text: qsTr("Scanner")
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            font.pixelSize: Appearance.fonts.size.small
-                        }
-
-                        StyledSwitch {
-                            checked: activeWifiDevice?.scannerEnabled ?? false
-                            onToggled: {
-                                if (activeWifiDevice)
-                                    activeWifiDevice.scannerEnabled = checked;
-                            }
-                        }
+                        condition: GlobalStates.isWifiScannerOpen
                     }
 
                     ListView {
@@ -242,6 +225,7 @@ Item {
 
                                 delegate: WrapperRectangle {
                                     id: networkDelegate
+
                                     property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
                                     property color cFrom
                                     property color cTo
@@ -325,14 +309,14 @@ Item {
                                             Icon {
                                                 anchors.fill: parent
                                                 icon: "signal_wifi_0_bar"
-                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.large * 1.5
                                             }
 
                                             Icon {
                                                 anchors.fill: parent
                                                 icon: {
-                                                    const p = Math.round((modelData?.signalStrength ?? 0) * 100);
+                                                    const p = Math.round((networkDelegate.modelData?.signalStrength ?? 0) * 100);
                                                     if (p >= 80)
                                                         return "network_wifi";
                                                     if (p >= 50)
@@ -343,7 +327,7 @@ Item {
                                                         return "network_wifi_1_bar";
                                                     return "signal_wifi_0_bar";
                                                 }
-                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.large * 1.5
                                             }
                                         }
@@ -354,23 +338,23 @@ Item {
 
                                             StyledText {
                                                 Layout.fillWidth: true
-                                                text: modelData?.name ?? ""
+                                                text: networkDelegate.modelData?.name ?? ""
                                                 elide: Text.ElideRight
-                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.normal
                                             }
 
                                             StyledText {
-                                                text: ConnectionState.toString(modelData.state)
-                                                color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                                text: ConnectionState.toString(networkDelegate.modelData.state)
+                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                                 font.pixelSize: Appearance.fonts.size.small
                                             }
                                         }
 
                                         Icon {
-                                            visible: modelData && !modelData.known
+                                            visible: networkDelegate.modelData?.known === false
                                             icon: "lock"
-                                            color: modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                            color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                             font.pixelSize: Appearance.fonts.size.normal
                                         }
                                     }
