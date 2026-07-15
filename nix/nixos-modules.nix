@@ -47,10 +47,16 @@ in {
             wantedBy = ["graphical-session.target"];
 
             serviceConfig = {
-                Type = "exec";
+                Type = "simple";
                 ExecStart = "${cfg.package}/bin/shell";
                 Restart = "on-failure";
-                Slice = "session.slice";
+                RestartSec = "5s";
+                Environment = [
+                    "WAYLAND_DISPLAY=wayland-1"
+                    "XDG_RUNTIME_DIR=/run/user/%U"
+                    "QT_QPA_PLATFORM=wayland"
+                    "DISPLAY=:0"
+                ];
             };
         };
     };
