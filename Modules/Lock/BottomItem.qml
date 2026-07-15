@@ -58,6 +58,7 @@ Item {
             id: bottomWrapperRect
 
             Layout.fillHeight: true
+            implicitHeight: mediaLayout.implicitHeight + Appearance.margin.small * 2
             color: root.drawerColors
             clip: true
             radius: Appearance.rounding.normal
