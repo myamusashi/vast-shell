@@ -95,6 +95,7 @@ Pages {
 
                 RowLayout {
                     ColumnLayout {
+                        Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.alignment: Qt.AlignLeft
 
@@ -105,14 +106,9 @@ Pages {
                         }
 
                         StyledRect {
-                            FontMetrics {
-                                id: illuminationMetrics
-
-                                font: illumination.font
-                            }
                             color: Colours.m3Colors.m3SurfaceContainerHigh
-                            implicitWidth: illuminationMetrics.advanceWidth(illumination.text) + 20
-                            implicitHeight: illuminationMetrics.height + 15
+                            implicitWidth: illumination.implicitWidth + Appearance.margin.normal * 2
+                            implicitHeight: illumination.implicitHeight + 15
 
                             StyledText {
                                 id: illumination
@@ -129,14 +125,9 @@ Pages {
                         }
 
                         StyledRect {
-                            FontMetrics {
-                                id: moonRiseMetrics
-
-                                font: moonRise.font
-                            }
                             color: Colours.m3Colors.m3SurfaceContainerHigh
-                            implicitWidth: moonRiseMetrics.advanceWidth(moonRise.text) + 20
-                            implicitHeight: moonRiseMetrics.height + 15
+                            implicitWidth: moonRise.implicitWidth + Appearance.margin.normal * 2
+                            implicitHeight: moonRise.implicitHeight + 15
 
                             StyledText {
                                 id: moonRise
@@ -153,14 +144,9 @@ Pages {
                         }
 
                         StyledRect {
-                            FontMetrics {
-                                id: moonSetMetrics
-
-                                font: moonSet.font
-                            }
                             color: Colours.m3Colors.m3SurfaceContainerHigh
-                            implicitWidth: moonSetMetrics.advanceWidth(moonSet.text) + 20
-                            implicitHeight: moonSetMetrics.height + 15
+                            implicitWidth: moonSet.implicitWidth + Appearance.margin.normal * 2
+                            implicitHeight: moonSet.implicitHeight + 15
 
                             StyledText {
                                 id: moonSet
