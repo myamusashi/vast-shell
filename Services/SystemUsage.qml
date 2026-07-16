@@ -128,6 +128,7 @@ Singleton {
     property string gpuPower: "0.00"
     property string gpuRc6: "0.0"
     property int cpuPerc: 0
+    property bool useGpuSysfsOnly: false
     property int gpuUsage: 0
     property int vramUsed: 0
     property int gpuFreqActual: 0
@@ -531,9 +532,14 @@ Singleton {
         }
         stderr: StdioCollector {
             onStreamFinished: {
-                if (text.trim().length > 0) {
-                    console.log("intel_gpu_top error:", text.trim());
-                    ToastService.show(qsTr("intel_gpu_top error: %1").arg(text.trim()), qsTr("System Usage"), "system-component-symbolic", 3000);
+                const err = text.trim();
+                if (err.length > 0) {
+                    if (/denied|paranoid|permission/i.test(err)) {
+                        root.useGpuSysfsOnly = true;
+                    } else {
+                        console.log("intel_gpu_top error:", err);
+                        ToastService.show(qsTr("intel_gpu_top error: %1").arg(err), qsTr("System Usage"), "system-component-symbolic", 3000);
+                    }
                 }
             }
         }
@@ -924,7 +930,10 @@ Singleton {
                 diskDfProc.running = true;
                 break;
             case 2:
-                intelGpuProc.running = true;
+                if (root.useGpuSysfsOnly)
+                    intelGpuSysfsProc.running = true;
+                else
+                    intelGpuProc.running = true;
                 break;
             case 3:
                 intelGpuSysfsProc.running = true;
