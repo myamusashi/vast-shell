@@ -267,7 +267,6 @@ WlSessionLockSurface {
         z: 3
 
         isLockscreenOpen: GlobalStates.isLockscreenOpen
-        drawerColors: GlobalStates.drawerColors
         pam: root.pam
         inputBuffer: root.inputBuffer
         showErrorMessage: root.showErrorMessage
