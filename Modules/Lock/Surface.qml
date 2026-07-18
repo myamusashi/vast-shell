@@ -577,6 +577,11 @@ WlSessionLockSurface {
         }
     }
 
+    CapsLockPopup {
+        anchors.centerIn: parent
+        z: 999
+    }
+
     SequentialAnimation {
         id: zoomOutAnimation
 
