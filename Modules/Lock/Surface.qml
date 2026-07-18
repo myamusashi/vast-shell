@@ -203,16 +203,6 @@ WlSessionLockSurface {
             }
         }
 
-        BottomItem {
-            id: bottomItem
-
-            isLockscreenOpen: GlobalStates.isLockscreenOpen
-            drawerColors: GlobalStates.drawerColors
-            pam: root.pam
-            inputBuffer: root.inputBuffer
-            showErrorMessage: root.showErrorMessage
-        }
-
         StyledText {
             id: passwordDisplay
 
@@ -270,6 +260,17 @@ WlSessionLockSurface {
                 easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             }
         }
+    }
+
+    BottomItem {
+        id: bottomItem
+        z: 3
+
+        isLockscreenOpen: GlobalStates.isLockscreenOpen
+        drawerColors: GlobalStates.drawerColors
+        pam: root.pam
+        inputBuffer: root.inputBuffer
+        showErrorMessage: root.showErrorMessage
     }
 
     SequentialAnimation {
