@@ -125,7 +125,7 @@ SettingsPageBase {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         onClicked: Quickshell.execDetached({
-                            command: ["qs", "-c", "lock", "ipc", "call", "img", "set", delegateRoot.modelData]
+                            command: ["shell", "ipc", "call", "img", "set", delegateRoot.modelData]
                         })
                     }
                 }
