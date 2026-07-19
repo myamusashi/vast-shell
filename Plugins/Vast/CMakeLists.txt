@@ -42,6 +42,10 @@ qt_add_qml_module(VastPlugin
         AudioProfilesModel.cpp
         AudioProfilesWatcher.hpp
         AudioProfilesWatcher.cpp
+        AudioDevicesModel.hpp
+        AudioDevicesModel.cpp
+        AudioDevicesWatcher.hpp
+        AudioDevicesWatcher.cpp
         BrightnessManager.hpp
         BrightnessManager.cpp
         KeylockState.hpp
