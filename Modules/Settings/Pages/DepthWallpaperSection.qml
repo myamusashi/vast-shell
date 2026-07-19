@@ -28,37 +28,8 @@ Item {
         SettingsCard {
             title: qsTr("Depth Wallpaper")
 
-            RowLayout {
-                Layout.fillWidth: true
-
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: Appearance.spacing.small
-
-                    StyledText {
-                        text: qsTr("Enable Depth Wallpaper")
-                        font.pixelSize: Appearance.fonts.size.large
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                    }
-
-                    StyledText {
-                        text: {
-                            switch (DepthWallpaperController.state) {
-                            case "processing":
-                                return qsTr("Generating depth map\u2026");
-                            case "done":
-                                return qsTr("Depth wallpaper ready");
-                            case "error":
-                                return DepthWallpaperController.errorMessage;
-                            default:
-                                return "";
-                            }
-                        }
-                        font.pixelSize: Appearance.fonts.size.medium
-                        color: DepthWallpaperController.state === "error" ? Colours.m3Colors.m3Error : DepthWallpaperController.state === "done" ? Colours.m3Colors.m3Green : Colours.m3Colors.m3OnSurfaceVariant
-                        visible: text !== ""
-                    }
-                }
+            SettingRow {
+                label: qsTr("Enable Depth Wallpaper")
 
                 StyledSwitch {
                     checked: Configs.wallpaper.depthWallpaperEnabled
@@ -66,19 +37,40 @@ Item {
                 }
             }
 
-            RowLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignRight
-                spacing: Appearance.spacing.small
-                visible: Configs.wallpaper.depthWallpaperEnabled && DepthWallpaperController.state !== "processing"
+            SettingRow {
+                label: qsTr("Auto-process on wallpaper change:")
 
-                StyledButton {
-                    text: qsTr("Re-generate")
-                    icon.name: "refresh"
-                    implicitHeight: 36
-                    enabled: DepthWallpaperController.state !== "processing"
-                    onClicked: DepthWallpaperController.runRembg()
+                StyledSwitch {
+                    checked: Configs.wallpaper.autoProcessedDepthWallpaper
+                    onCheckedChanged: Configs.wallpaper.autoProcessedDepthWallpaper = checked
                 }
+            }
+
+            StyledButton {
+                text: qsTr("Re-generate")
+                icon.name: "refresh"
+                implicitHeight: 36
+                visible: Configs.wallpaper.depthWallpaperEnabled && DepthWallpaperController.state !== "processing"
+                enabled: DepthWallpaperController.state !== "processing"
+                onClicked: DepthWallpaperController.runRembg()
+            }
+
+            StyledText {
+                text: {
+                    switch (DepthWallpaperController.state) {
+                    case "processing":
+                        return qsTr("Generating depth map\u2026");
+                    case "done":
+                        return qsTr("Depth wallpaper ready");
+                    case "error":
+                        return DepthWallpaperController.errorMessage;
+                    default:
+                        return "";
+                    }
+                }
+                font.pixelSize: Appearance.fonts.size.medium
+                color: DepthWallpaperController.state === "error" ? Colours.m3Colors.m3Error : DepthWallpaperController.state === "done" ? Colours.m3Colors.m3Green : Colours.m3Colors.m3OnSurfaceVariant
+                visible: text !== ""
             }
 
             RowLayout {

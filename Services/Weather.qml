@@ -348,7 +348,7 @@ Singleton {
 
     property string configLatitude: Configs.weather.latitude
     property string configLongitude: Configs.weather.longitude
-    property int reloadInterval: Configs.weather.reloadTime || 1800000
+    property int reloadInterval: (Configs.weather.reloadTime || 1800) * 1000
 
     property var activeWeatherRequest: null
     property var activeAQIRequest: null

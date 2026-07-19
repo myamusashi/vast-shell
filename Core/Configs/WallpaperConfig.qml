@@ -9,6 +9,7 @@ JsonObject {
     property bool transitionLowPerfMode: false
     property int transitionDuration: 300
     property bool depthWallpaperEnabled: true
+    property bool autoProcessedDepthWallpaper: false
     property string depthWallpaperSource: ""
     property string depthFgPath: ""
 }

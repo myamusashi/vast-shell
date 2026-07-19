@@ -15,33 +15,22 @@ Item {
     property double shapePadding: 12
     property var shapeGetters: [MaterialShape.Oval, MaterialShape.SoftBurst, MaterialShape.Pentagon, MaterialShape.Pill, MaterialShape.Sunny, MaterialShape.Cookie4Sided]
     property int shapeIndex: 0
-    property int rotationSpeed: 5000
 
     implicitWidth: 30
     implicitHeight: 30
     visible: status
 
     Timer {
-        id: morphTimer
+        id: animTimer
 
-        interval: 1500
+        interval: 3000
         running: root.status
         repeat: root.status
-        onTriggered: {
-            root.rotationSpeed = 2000;
-            rotationAnim.restart();
-
-            morphDelay.start();
-        }
-    }
-
-    Timer {
-        id: morphDelay
-
-        interval: 100
+        triggeredOnStart: true
         onTriggered: {
             root.shapeIndex = (root.shapeIndex + 1) % root.shapeGetters.length;
-            root.rotationSpeed = 5000;
+            rotationAnim.from = shapeCanvas.rotation;
+            rotationAnim.to = shapeCanvas.rotation + 360;
             rotationAnim.restart();
         }
     }
@@ -55,16 +44,33 @@ Item {
         color: Colours.m3Colors.m3Primary
         shape: root.shapeGetters[root.shapeIndex]
 
-        RotationAnimator {
+        Behavior on shape {
+            SpringAnimation {
+                spring: 5
+                damping: 0.3
+                epsilon: 0.1
+            }
+        }
+
+        NumberAnimation {
             id: rotationAnim
 
             target: shapeCanvas
-            loops: Animation.Infinite
-            from: shapeCanvas.rotation
-            to: shapeCanvas.rotation + 360
-            duration: root.rotationSpeed
-            easing.type: Easing.OutQuart
-            running: true
+            property: "rotation"
+            from: 0
+            to: 360
+            duration: 3000
+            easing.type: Easing.OutBack
+        }
+
+        scale: root.status ? 1 : 0
+
+        Behavior on scale {
+            SpringAnimation {
+                spring: 5
+                damping: 0.3
+                epsilon: 0.1
+            }
         }
     }
 }

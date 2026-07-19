@@ -66,15 +66,35 @@ SettingsPageBase {
             }
         }
 
-        SettingRow {
-            label: qsTr("Weather Reload Time (ms):")
+        RowLayout {
+            Layout.fillWidth: true
+
+            StyledText {
+                text: qsTr("Weather Reload Time (s):")
+                font.pixelSize: Appearance.fonts.size.large
+                color: Colours.m3Colors.m3OnSurfaceVariant
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            StyledText {
+                text: {
+                    var secs = Configs.weather.reloadTime / 1000;
+                    var mins = Math.round(secs / 60);
+                    return qsTr("(%1 min)").arg(mins);
+                }
+                font.pixelSize: Appearance.fonts.size.medium
+                color: Colours.m3Colors.m3OnSurfaceVariant
+            }
 
             StyledTextInput {
-                text: Configs.weather.reloadTime.toString()
+                text: (Configs.weather.reloadTime / 1000).toString()
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0) {
-                        Configs.weather.reloadTime = parsed;
+                        Configs.weather.reloadTime = parsed * 1000;
                     }
                 }
                 Layout.preferredWidth: 200

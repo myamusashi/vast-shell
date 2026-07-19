@@ -13,7 +13,7 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
-    default property alias content: contentArea.data
+    default property alias content: contentLayout.data
     property string pageTitle
 
     ColumnLayout {
@@ -31,13 +31,18 @@ Item {
             Layout.bottomMargin: Appearance.margin.normal
         }
 
-        ColumnLayout {
-            id: contentArea
-            spacing: Appearance.spacing.large
-        }
-
-        Item {
+        Flickable {
+            Layout.fillWidth: true
             Layout.fillHeight: true
+            clip: true
+            contentHeight: contentLayout.implicitHeight
+            interactive: contentHeight > height
+
+            ColumnLayout {
+                id: contentLayout
+                width: parent.width
+                spacing: Appearance.spacing.large
+            }
         }
     }
 }

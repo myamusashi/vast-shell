@@ -1,5 +1,8 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 
 import qs.Core.Configs
 import qs.Services
@@ -11,8 +14,128 @@ import "../Components"
 SettingsPageBase {
     pageTitle: qsTr("Wallpaper Engine")
 
+    DepthWallpaperSection {
+        Layout.fillWidth: true
+    }
+
+    SettingsCard {
+        title: qsTr("Wallpaper Picker")
+        visible: WallpaperFileModels.wallpaperList.length > 0
+        Layout.fillWidth: true
+
+        StyledTextInput {
+            id: searchField
+            Layout.fillWidth: true
+            placeHolderText: qsTr("Search wallpapers\u2026")
+            toggleButtonVisible: false
+            onTextChanged: {
+                WallpaperFileModels.searchQuery = text;
+                searchDebounceTimer.restart();
+            }
+        }
+
+        Timer {
+            id: searchDebounceTimer
+            interval: 300
+            onTriggered: WallpaperFileModels.debouncedSearchQuery = searchField.text
+        }
+
+        PathView {
+            id: wallpaperPath
+            Layout.fillWidth: true
+            Layout.minimumHeight: 160
+            clip: true
+            pathItemCount: 5
+            preferredHighlightBegin: 0.5
+            preferredHighlightEnd: 0.5
+            cacheItemCount: pathItemCount + 2
+
+            model: ScriptModel {
+                values: WallpaperFileModels.filteredWallpaperList
+            }
+
+            path: Path {
+                startX: 0
+                startY: wallpaperPath.height / 2
+
+                PathLine {
+                    x: wallpaperPath.width
+                    y: wallpaperPath.height / 2
+                }
+            }
+
+            delegate: Item {
+                id: delegateRoot
+
+                required property var modelData
+                readonly property real itemWidth: wallpaperPath.width / wallpaperPath.pathItemCount
+
+                implicitWidth: itemWidth
+                implicitHeight: itemWidth * 0.65
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: Appearance.rounding.small
+                    color: Colours.m3Colors.m3SurfaceContainerHigh
+                    border.color: delegateRoot.modelData === WallpaperFileModels.currentWallpaper ? Colours.m3Colors.m3Primary : "transparent"
+                    border.width: delegateRoot.modelData === WallpaperFileModels.currentWallpaper ? 2 : 0
+
+                    Image {
+                        anchors.fill: parent
+                        anchors.bottomMargin: fileNameText.implicitHeight + 4
+                        source: (width > 0 && height > 0) ? delegateRoot.modelData : ""
+                        sourceSize: Qt.size(150, 150)
+                        fillMode: Image.PreserveAspectCrop
+                        asynchronous: true
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        radius: parent.radius
+                        color: Qt.alpha(Colours.m3Colors.m3Primary, 0.15)
+                        visible: delegateRoot.modelData === WallpaperFileModels.currentWallpaper
+                    }
+
+                    Rectangle {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
+                        height: fileNameText.implicitHeight + 4
+                        color: "transparent"
+
+                        StyledText {
+                            id: fileNameText
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                verticalCenter: parent.verticalCenter
+                                margins: 2
+                            }
+                            text: delegateRoot.modelData.split('/').pop()
+                            font.pixelSize: Appearance.fonts.size.small
+                            color: "white"
+                            elide: Text.ElideRight
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: Quickshell.execDetached({
+                            command: ["qs", "-c", "lock", "ipc", "call", "img", "set", delegateRoot.modelData]
+                        })
+                    }
+                }
+            }
+        }
+    }
+
     SettingsCard {
         title: qsTr("Image Sourcing")
+        Layout.fillWidth: true
 
         SettingRow {
             label: qsTr("Enable Wallpaper:")
@@ -28,7 +151,6 @@ SettingsPageBase {
 
             StyledTextInput {
                 id: wallpaperDirField
-
                 text: Configs.wallpaper.wallpaperDir
                 onTextChanged: Configs.wallpaper.wallpaperDir = text
                 implicitWidth: 350
@@ -47,7 +169,6 @@ SettingsPageBase {
 
             FileDialog {
                 id: fileDialog
-
                 foldersOnly: true
                 selectFolder: true
                 showHidden: true
@@ -73,6 +194,7 @@ SettingsPageBase {
 
     SettingsCard {
         title: qsTr("Transitions & Performance")
+        Layout.fillWidth: true
 
         SettingRow {
             label: qsTr("Transition Animation Mode:")
@@ -145,9 +267,5 @@ SettingsPageBase {
                 Layout.preferredWidth: 200
             }
         }
-    }
-
-    DepthWallpaperSection {
-        Layout.fillWidth: true
     }
 }

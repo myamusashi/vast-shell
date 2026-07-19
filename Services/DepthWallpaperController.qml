@@ -6,6 +6,7 @@ import Quickshell.Io
 
 import qs.Core.Configs
 import qs.Core.Utils
+import qs.Services
 
 Singleton {
     id: root
@@ -40,6 +41,7 @@ Singleton {
 
     function runRembg() {
         root.state = "processing";
+        ToastService.show(qsTr("Generating depth wallpaper\u2026"), qsTr("Depth Wallpaper"), "image", 0);
         generateFg.running = true;
     }
 
@@ -71,9 +73,12 @@ Singleton {
         }
 
         onExited: function (code) {
-            if (code !== 0 && root.state !== "done") {
+            if (code === 0 && root.state === "done") {
+                ToastService.show(qsTr("Depth wallpaper ready"), qsTr("Depth Wallpaper"), "image", 5000);
+            } else if (code !== 0 && root.state !== "done") {
                 root.state = "error";
                 root.errorMessage = "Foreground extraction failed (exit " + code + ")";
+                ToastService.show(qsTr("Foreground extraction failed"), qsTr("Depth Wallpaper"), "error", 5000);
             }
         }
     }
@@ -88,6 +93,18 @@ Singleton {
         function onDepthWallpaperEnabledChanged() {
             if (Configs.wallpaper.depthWallpaperEnabled && root.state !== "done" && root.state !== "processing") {
                 root.checkOrGenerate();
+            }
+        }
+    }
+
+    Connections {
+        target: Paths
+
+        function onCurrentWallpaperChanged() {
+            if (Configs.wallpaper.autoProcessedDepthWallpaper && Configs.wallpaper.depthWallpaperEnabled) {
+                root.state = "idle";
+                root.fgPath = "";
+                root.runRembg();
             }
         }
     }
