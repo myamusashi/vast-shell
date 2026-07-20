@@ -24,6 +24,7 @@ import "Weather"
 import "OSD"
 import "Bar"
 import "Volume"
+import "ScreenRecorder"
 
 Variants {
     model: Quickshell.screens
@@ -222,6 +223,8 @@ Variants {
         WallpaperSelector {}
 
         Screencapture {}
+
+        ScreenRecorder {}
 
         OSD {
             id: osd

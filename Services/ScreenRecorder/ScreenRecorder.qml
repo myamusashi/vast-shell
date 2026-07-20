@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Vast
 
 import "shellUtils.js" as Utils
 
@@ -13,12 +14,16 @@ Singleton {
     readonly property string videoDir: Quickshell.env("HOME") + "/Videos/Shell"
     readonly property string thumbnailDir: Quickshell.env("HOME") + "/.cache/thumbnails/normal"
 
+    readonly property bool connectedAudioDevice: AudioDevicesWatcher.connected
+    readonly property int audioDevicesCount: AudioDevicesWatcher.devices.count()
+
     property bool isRecording: false
     property string currentOutputFile: ""
     property int recordingPid: -1
     property int recordingElapsedSeconds: 0
 
     property string audioDevice: ""
+    property string audioDeviceDescription: ""
     property string videoCodec: ""
     property string audioCodec: ""
     property string driDevice: ""
@@ -34,12 +39,19 @@ Singleton {
     property string pendingOutputDir
     property var pendingCallback
 
+    property var _cache: []
+    property var defaultSink: sinks()[0] ?? null
+    property var defaultSource: sources()[0] ?? null
+
+    signal devicesChanged
+
     signal thumbnailReady(string videoPath, string thumbnailPath)
 
     readonly property string pidFile: "/tmp/wl-screenrec.pid"
     readonly property string videoStateFile: "/tmp/wl-screenrec.video"
 
     onAudioDeviceChanged: {}
+    onAudioDeviceDescriptionChanged: {}
     onVideoCodecChanged: {}
     onAudioCodecChanged: {}
     onDriDeviceChanged: {}
@@ -59,6 +71,17 @@ Singleton {
         }
     }
     onCurrentOutputFileChanged: {}
+
+    Connections {
+        target: AudioDevicesWatcher
+
+        function onDevicesChanged() {
+            root.rebuild();
+        }
+        function onConnectedChanged() {
+            root.rebuild();
+        }
+    }
 
     Screenshotter {
         id: screenshotter
@@ -253,6 +276,39 @@ Singleton {
         root.checkActiveRecording();
         root.isRecordingChanged();
         root.currentOutputFileChanged();
+    }
+
+    function rebuild() {
+        const m = AudioDevicesWatcher.devices;
+        const arr = [];
+        for (let i = 0; i < m.count(); i++)
+            arr.push(m.get(i));
+        _cache = arr;
+        devicesChanged();
+    }
+
+    function all() {
+        return _cache;
+    }
+
+    function sinks() {
+        return _cache.filter(d => d.mediaClass === "sink" && !d.isMonitor);
+    }
+    function sources() {
+        return _cache.filter(d => d.mediaClass === "source" && !d.isMonitor);
+    }
+    function monitors() {
+        return _cache.filter(d => d.isMonitor);
+    }
+    function inputs() {
+        return _cache.filter(d => d.mediaClass === "source");
+    }
+
+    function byName(name) {
+        return _cache.find(d => d.name === name) ?? null;
+    }
+    function byId(id) {
+        return _cache.find(d => d.id === id) ?? null;
     }
 
     function checkActiveRecording() {

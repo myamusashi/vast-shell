@@ -764,8 +764,6 @@ vast-shell/
 > These features are planned and may change in scope or priority. Contributions are welcome!
 
 **KDE Connect**
-- [ ] Clipboard sync between devices
-- [ ] File sharing between desktop and mobile
 - [ ] Device presence detection and pairing UI
 
 **Bluetooth**
@@ -773,9 +771,9 @@ vast-shell/
 - [ ] Connection management and status in Quick Settings
 
 **Screen Capture Rework**
-- [ ] Recording overlay inspired by OBS Studio
-- [ ] Window selection mode for targeted recording
-- [ ] Merged multi-monitor screenshot support
+- [x] Redesign the screen recorder
+- [ ] Window selection mode for targeted recording (we need to wait the wl-screenrec release that feature)
+- [x] Merged multi-monitor screenshot support
 - [x] Reduced external dependencies (less reliance on `slurp`, `hyprshot`, `grim`)
 
 **VPN & Tunnel Detection**

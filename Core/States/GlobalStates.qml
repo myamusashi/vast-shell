@@ -49,7 +49,8 @@ Singleton {
             "weather": "isWeatherPanelOpen",
             "dashboard": "isDashboardOpen",
             "settings": "isSettingsOpen",
-            "clipboard": "isClipboardOpen"
+            "clipboard": "isClipboardOpen",
+            "recordingPanel": "isRecordingPanelOpen"
         })
 
     property bool isClipboardOpen: false
@@ -69,6 +70,7 @@ Singleton {
     property bool isLockscreenOpen: false
     property bool isSelectionOpen: false
     property bool isScreenshotSelectionOpen: false
+    property bool isRecordingPanelOpen: false
 
     property bool isWifiScannerOpen: true
 
@@ -248,6 +250,10 @@ Singleton {
                 panel: "clipboard",
                 shortcut: "clipboard"
             },
+            {
+                panel: "recordingPanel",
+                shortcut: "recordingPanel"
+            },
         ]
         delegate: PanelController {
             required property var modelData
@@ -290,6 +296,26 @@ Singleton {
         }
         function window(action: string): void {
             ScreenRecorder.screenshotWindow(action);
+        }
+    }
+
+    IpcHandler {
+        target: "recorder"
+
+        function start(): void {
+            ScreenRecorder.startRecording("", Quickshell.screens[0]?.name ?? "");
+        }
+        function stop(): void {
+            ScreenRecorder.stopRecording();
+        }
+        function toggle(): void {
+            if (ScreenRecorder.isRecording)
+                ScreenRecorder.stopRecording();
+            else
+                ScreenRecorder.startRecording("", Quickshell.screens[0]?.name ?? "");
+        }
+        function status(): bool {
+            return ScreenRecorder.isRecording;
         }
     }
 

@@ -85,4 +85,17 @@ Singleton {
         onGeometrySelected: geo => ScreenRecorder.recordSelection(geo)
         onCancelled: {}
     }
+
+    function openRegionSelector(): void {
+        if (!ScreenRecorder.isRecording)
+            select.open();
+    }
+
+    function startRecording(output: string): void {
+        ScreenRecorder.startRecording("", output);
+    }
+
+    function stopRecording(): void {
+        ScreenRecorder.stopRecording();
+    }
 }

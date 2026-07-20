@@ -2171,6 +2171,106 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>PageAudio</name>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageAudio.qml" line="47"/>
+        <source>Audio Input</source>
+        <translation>Input Audio</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageAudio.qml" line="90"/>
+        <source>Microphones</source>
+        <translation>Mikrofon</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageAudio.qml" line="125"/>
+        <source>Desktop Audio</source>
+        <translation>Audio Desktop</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageAudio.qml" line="161"/>
+        <source>No Audio</source>
+        <translation>Tidak ada Audio</translation>
+    </message>
+</context>
+<context>
+    <name>PageMain</name>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="21"/>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="25"/>
+        <source>No Audio</source>
+        <translation>Tidak ada Audio</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="29"/>
+        <source>Choose an audio source...</source>
+        <translation>Pilih sumber audio</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="87"/>
+        <source>Source</source>
+        <translation>Sumber</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="99"/>
+        <source>Full Screen</source>
+        <translation>Layar Penuh</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="103"/>
+        <source>Region</source>
+        <translation>Wilayah</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="163"/>
+        <source>Monitor:</source>
+        <translation>Monitor:</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="274"/>
+        <source>Settings</source>
+        <translation>Pengaturan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="350"/>
+        <source>Stop</source>
+        <translation>Berhenti</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageMain.qml" line="350"/>
+        <source>Start Recording</source>
+        <translation>Mulai Merekam</translation>
+    </message>
+</context>
+<context>
+    <name>PageSettings</name>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageSettings.qml" line="45"/>
+        <source>Settings</source>
+        <translation>Pengaturan</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageSettings.qml" line="82"/>
+        <source>Frame Rate</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageSettings.qml" line="129"/>
+        <source>Bitrate</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageSettings.qml" line="184"/>
+        <source>Show Cursor</source>
+        <translation>Menampilkan Kursor</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/PageSettings.qml" line="208"/>
+        <source>Replay Buffer</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>Performance</name>
     <message>
         <location filename="../Modules/Dashboard/Performance.qml" line="35"/>
@@ -2477,6 +2577,19 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Services/ScreenCaptureHistory.qml" line="25"/>
         <source>Screen Capture</source>
         <translation>Tangkapan Layar</translation>
+    </message>
+</context>
+<context>
+    <name>ScreenRecorder</name>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/ScreenRecorder.qml" line="75"/>
+        <source>Screen Recorder</source>
+        <translation>Perekam Layar</translation>
+    </message>
+    <message>
+        <location filename="../Modules/Drawers/ScreenRecorder/ScreenRecorder.qml" line="136"/>
+        <source>Recording</source>
+        <translation>Perekaman</translation>
     </message>
 </context>
 <context>

@@ -62,13 +62,13 @@ WrapperRectangle {
                     event.accepted = true;
                     break;
                 case Qt.Key_Down:
-                    const maxIndex = root.selectedTab === 0 ? ScreenCapture.screenshotOptions.values.length - 1 : ScreenCapture.recordOptions.values.length - 1;
+                    const maxIndex = ScreenCapture.screenshotOptions.values.length - 1;
                     root.selectedIndex = Math.min(maxIndex, root.selectedIndex + 1);
                     event.accepted = true;
                     break;
                 case Qt.Key_Return:
                 case Qt.Key_Enter:
-                    const repeater = root.selectedTab === 0 ? screenshotRepeater : recordRepeater;
+                    const repeater = screenshotRepeater;
                     const item = repeater.itemAt(root.selectedIndex);
                     if (item && item.optionData.action) {
                         item.optionData.action();
@@ -95,45 +95,35 @@ WrapperRectangle {
                 Layout.fillWidth: true
                 spacing: 0
 
-                Repeater {
-                    id: tabRepeater
+                StyledRect {
+                    id: tabItem
 
-                    model: [qsTr("Screenshot"), qsTr("Screen record")]
-                    delegate: StyledRect {
-                        id: tabItem
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 32
+                    focus: GlobalStates.isScreenCapturePanelOpen
+                    onFocusChanged: {
+                        if (focus && GlobalStates.isScreenCapturePanelOpen)
+                            Qt.callLater(() => {
+                                let firstIcon = tabRepeater.itemAt(root.selectedTab);
+                                if (firstIcon)
+                                    firstIcon.children[0].forceActiveFocus();
+                            });
+                    }
+                    radius: Appearance.rounding.normal
+                    color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
 
-                        required property string modelData
-                        required property int index
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: qsTr("Screenshoot")
+                        color: tabItem.isSelected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: tabItem.isSelected ? Font.DemiBold : Font.Normal
+                    }
 
-                        readonly property bool isSelected: root.selectedTab === index
-
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 32
-                        focus: GlobalStates.isScreenCapturePanelOpen
-                        onFocusChanged: {
-                            if (focus && GlobalStates.isScreenCapturePanelOpen)
-                                Qt.callLater(() => {
-                                    let firstIcon = tabRepeater.itemAt(root.selectedTab);
-                                    if (firstIcon)
-                                        firstIcon.children[0].forceActiveFocus();
-                                });
-                        }
-                        radius: index === 0 ? Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0) : Qt.vector4d(Appearance.rounding.normal, Appearance.rounding.normal, 0, 0)
-                        color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
-
-                        StyledText {
-                            anchors.centerIn: parent
-                            text: tabItem.modelData
-                            color: tabItem.isSelected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
-                            font.pixelSize: Appearance.fonts.size.normal * 0.9
-                            font.weight: tabItem.isSelected ? Font.DemiBold : Font.Normal
-                        }
-
-                        MArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: root.selectedTab = tabItem.index
-                        }
+                    MArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.selectedTab = tabItem.index
                     }
                 }
             }
@@ -164,29 +154,6 @@ WrapperRectangle {
                             optionIndex: index
                             isSelected: index === root.selectedIndex && root.selectedTab === 0
                             maxIndex: ScreenCapture.screenshotOptions.values.length - 1
-                            onIndexModel: idx => root.selectedIndex = idx
-                            onClosed: GlobalStates.isScreenCapturePanelOpen = false
-                        }
-                    }
-                }
-
-                ColumnLayout {
-                    spacing: Appearance.spacing.small
-
-                    Repeater {
-                        id: recordRepeater
-
-                        model: ScreenCapture.recordOptions
-                        delegate: CaptureItem {
-                            required property var modelData
-                            required property int index
-
-                            Layout.preferredHeight: 38
-                            Layout.fillWidth: true
-                            optionData: modelData
-                            optionIndex: index
-                            isSelected: index === root.selectedIndex && root.selectedTab === 1
-                            maxIndex: ScreenCapture.recordOptions.values.length - 1
                             onIndexModel: idx => root.selectedIndex = idx
                             onClosed: GlobalStates.isScreenCapturePanelOpen = false
                         }
