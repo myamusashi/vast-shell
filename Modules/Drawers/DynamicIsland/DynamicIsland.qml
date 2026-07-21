@@ -211,38 +211,74 @@ Item {
 
             DraggingContent {
                 active: root.isDragging
-                onImplicitWidthChanged: if (root.isDragging) Qt.callLater(root.updateContentSize)
-                onImplicitHeightChanged: if (root.isDragging) Qt.callLater(root.updateContentSize)
+                onImplicitWidthChanged: {
+                    if (root.isDragging)
+                        Qt.callLater(root.updateContentSize);
+                }
+                onImplicitHeightChanged: {
+                    if (root.isDragging)
+                        Qt.callLater(root.updateContentSize);
+                }
             }
             FilesDroppedContent {
                 island: root
                 active: root.isFilesDropped
-                onImplicitWidthChanged: if (root.isFilesDropped) Qt.callLater(root.updateContentSize)
-                onImplicitHeightChanged: if (root.isFilesDropped) Qt.callLater(root.updateContentSize)
+                onImplicitWidthChanged: {
+                    if (root.isFilesDropped)
+                        Qt.callLater(root.updateContentSize);
+                }
+                onImplicitHeightChanged: {
+                    if (root.isFilesDropped)
+                        Qt.callLater(root.updateContentSize);
+                }
             }
             DeviceListContent {
                 island: root
                 active: root.isSelectingDevice
-                onImplicitWidthChanged: if (root.isSelectingDevice) Qt.callLater(root.updateContentSize)
-                onImplicitHeightChanged: if (root.isSelectingDevice) Qt.callLater(root.updateContentSize)
+                onImplicitWidthChanged: {
+                    if (root.isSelectingDevice)
+                        Qt.callLater(root.updateContentSize);
+                }
+                onImplicitHeightChanged: {
+                    if (root.isSelectingDevice)
+                        Qt.callLater(root.updateContentSize);
+                }
             }
             ConfirmDeviceContent {
                 island: root
                 active: root.isConfirmDevice
-                onImplicitWidthChanged: if (root.isConfirmDevice) Qt.callLater(root.updateContentSize)
-                onImplicitHeightChanged: if (root.isConfirmDevice) Qt.callLater(root.updateContentSize)
+                onImplicitWidthChanged: {
+                    if (root.isConfirmDevice)
+                        Qt.callLater(root.updateContentSize);
+                }
+                onImplicitHeightChanged: {
+                    if (root.isConfirmDevice)
+                        Qt.callLater(root.updateContentSize);
+                }
             }
             ProgressContent {
                 island: root
                 active: root.isTransferring
-                onImplicitWidthChanged: if (root.isTransferring) Qt.callLater(root.updateContentSize)
-                onImplicitHeightChanged: if (root.isTransferring) Qt.callLater(root.updateContentSize)
+                onImplicitWidthChanged: {
+                    if (root.isTransferring)
+                        Qt.callLater(root.updateContentSize);
+                }
+                onImplicitHeightChanged: {
+                    if (root.isTransferring)
+                        Qt.callLater(root.updateContentSize);
+                }
             }
             DoneContent {
                 island: root
                 active: root.isCompleted
-                onImplicitWidthChanged: if (root.isCompleted) Qt.callLater(root.updateContentSize)
-                onImplicitHeightChanged: if (root.isCompleted) Qt.callLater(root.updateContentSize)
+                onImplicitWidthChanged: {
+                    if (root.isCompleted)
+                        Qt.callLater(root.updateContentSize);
+                }
+                onImplicitHeightChanged: {
+                    if (root.isCompleted)
+                        Qt.callLater(root.updateContentSize);
+                }
             }
         }
     }

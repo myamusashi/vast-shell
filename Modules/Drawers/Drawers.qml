@@ -235,7 +235,6 @@ Variants {
             anchors.bottomMargin: app.height + Configs.generals.outerBorderSize
         }
 
-
         Notifications {
             id: notif
             anchors.topMargin: topBar.height
