@@ -21,6 +21,7 @@ Singleton {
     property alias clipboard: adapter.clipboard
     property alias notification: adapter.notification
     property alias kdeConnect: adapter.kdeConnect
+    property alias screenRecorder: adapter.screenRecorder
 
     onLanguageChanged: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
 
@@ -55,6 +56,7 @@ Singleton {
             property LocalizationConfig language: LocalizationConfig {}
             property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {}
             property KDEConnectConfig kdeConnect: KDEConnectConfig {}
+            property ScreenRecorderConfig screenRecorder: ScreenRecorderConfig {}
         }
     }
 }
