@@ -76,7 +76,7 @@ Dispatch a panel or action directly from Hyprland:
 hyprctl dispatch global quickshell:<target>
 ```
 
-Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `screencaptureLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`, `clipboard`
+Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `screencaptureLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`, `clipboard`, `kdeConnect`
 
 ### IPC
 
@@ -96,11 +96,12 @@ shell ipc call <target> <function>
 **Available targets and functions:**
 
 | Target | Functions |
-|---|---|
-| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture`, `clipboard` | `toggle()`, `open()`, `close()` |
+|---|---|---|
+| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture`, `clipboard`, `recordingPanel` | `toggle()`, `open()`, `close()` |
 | `toast` | `open(header: string, description: string, icon: string, duration: int)` |
 | `img` | `get(): string`, `set(path: string)` |
 | `lock` | `lock()`, `unlock()`, `isLocked(): bool` |
+| `recorder` | `start()`, `stop()`, `toggle()`, `status(): bool` |
 
 ---
 
@@ -409,6 +410,10 @@ touch ~/.config/matugen/config.toml
     "latitude": "-6.4028",
     "longitude": "106.7744",
     "reloadTime": 1800000
+  },
+  "kdeConnect": {
+    "pollingEnabled": true,
+    "pollInterval": 15000
   }
 }
 ```
@@ -486,6 +491,13 @@ touch ~/.config/matugen/config.toml
 | `latitude` / `longitude` | — | Your location coordinates for weather data. |
 | `reloadTime` | `1800000` | Weather refresh interval in milliseconds (30 min). |
 | `enableQuickSummary` | `false` | Show a compact weather summary in the bar. |
+
+#### KDE Connect
+
+| Key | Default | Description |
+|---|---|---|
+| `pollingEnabled` | `true` | Enable periodic device discovery. |
+| `pollInterval` | `15000` | Poll interval in milliseconds (15 s). |
 
 #### Depth Wallpaper
 
@@ -674,7 +686,8 @@ vast-shell/
 │
 ├── Core/
 │   ├── Configs/           # Appearance, Bar, Clipboard, ColorSystem, General,
-│   │                      # Localization, MediaPlayer, Notification, Wallpaper, Weather
+│   │                      # KDEConnect, Localization, MediaPlayer, Notification,
+│   │                      # Wallpaper, Weather
 │   ├── States/            # GlobalStates, Workspaces
 │   └── Utils/             # DistroAscii, Dots, HighlightText, Icon, Log,
 │                          # MArea, Paths, ScreenSelection, Time, TimeAgo, WeatherIcon
@@ -705,6 +718,8 @@ vast-shell/
 │   │   ├── Bar/           # Bar, Left, Middle, Right
 │   │   ├── Calendar/
 │   │   ├── Clipboard/     # ClipboardItemDelegate, ClipboardPreview
+│   │   ├── DynamicIsland/ # ConfirmDeviceContent, DeviceListContent, DoneContent,
+│   │   │                  # DraggingContent, DynamicIsland, FilesDroppedContent, ProgressContent
 │   │   ├── Launcher/      # App, CaptureItem, Screencapture
 │   │   ├── Notifications/ # Components/Content, NotifIcon, Wrapper
 │   │   ├── OSD/           # CapsLockWidget, NumLockWidget
@@ -721,7 +736,7 @@ vast-shell/
 │   ├── Settings/
 │   │   ├── Components/    # SettingsCard, SettingsPageBase, SidebarItem
 │   │   ├── Pages/         # Appearance, Bar, Clipboard, DepthWallpaperSection,
-│   │   │                  # General, Internet, Language, MediaPlayer,
+│   │   │                  # General, Internet, KDEConnect, Language, MediaPlayer,
 │   │   │                  # Notification, Wallpaper, Weather
 │   │   └── Settings.qml
 │   └── Wallpaper/         # Wall
@@ -764,7 +779,9 @@ vast-shell/
 > These features are planned and may change in scope or priority. Contributions are welcome!
 
 **KDE Connect**
-- [ ] Device presence detection and pairing UI
+- [x] Device discovery, pairing, and transfer UI
+- [x] Drag-and-drop file sharing via Dynamic Island
+- [x] Settings page with polling controls and device management
 
 **Bluetooth**
 - [ ] Device discovery and pairing
