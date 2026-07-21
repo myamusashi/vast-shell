@@ -199,8 +199,8 @@ Singleton {
         }
 
         property GlobalShortcut shortcut: GlobalShortcut {
-            name: shortcutName
-            onPressed: root.togglePanel(root.panelName)
+            name: panelController.shortcutName
+            onPressed: root.togglePanel(panelController.panelName)
         }
     }
 
@@ -212,15 +212,15 @@ Singleton {
             },
             {
                 panel: "bar",
-                shortcut: "layershell"
+                shortcut: "bar"
             },
             {
                 panel: "launcher",
-                shortcut: "appLauncher"
+                shortcut: "launcher"
             },
             {
                 panel: "screenCapture",
-                shortcut: "screencaptureLauncher"
+                shortcut: "screenCapture"
             },
             {
                 panel: "overview",
@@ -228,7 +228,7 @@ Singleton {
             },
             {
                 panel: "quickSettings",
-                shortcut: "QuickSettings"
+                shortcut: "quickSettings"
             },
             {
                 panel: "session",
