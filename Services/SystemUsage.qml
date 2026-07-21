@@ -909,7 +909,7 @@ Singleton {
     Timer {
         id: mainTimer
 
-        readonly property bool shouldRun: GlobalStates.isDashboardOpen || GlobalStates.isQuickSettingsOpen
+        readonly property bool shouldRun: GlobalStates.isQuickSettingsOpen
         property int updateCycle: 0
         running: shouldRun
         interval: 2000

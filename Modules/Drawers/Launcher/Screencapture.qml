@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell.Widgets
 
 import qs.Components.Base
@@ -9,6 +10,8 @@ import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Services
+
+import "History" as Hist
 
 WrapperRectangle {
     id: root
@@ -62,17 +65,21 @@ WrapperRectangle {
                     event.accepted = true;
                     break;
                 case Qt.Key_Down:
-                    const maxIndex = ScreenCapture.screenshotOptions.values.length - 1;
+                    const maxIndex = root.selectedTab === 0
+                        ? ScreenCapture.screenshotOptions.values.length - 1
+                        : ScreenCaptureHistory.screenshotFiles.length - 1;
                     root.selectedIndex = Math.min(maxIndex, root.selectedIndex + 1);
                     event.accepted = true;
                     break;
                 case Qt.Key_Return:
                 case Qt.Key_Enter:
-                    const repeater = screenshotRepeater;
-                    const item = repeater.itemAt(root.selectedIndex);
-                    if (item && item.optionData.action) {
-                        item.optionData.action();
-                        GlobalStates.isScreenCapturePanelOpen = false;
+                    if (root.selectedTab === 0) {
+                        const repeater = screenshotRepeater;
+                        const item = repeater.itemAt(root.selectedIndex);
+                        if (item && item.optionData.action) {
+                            item.optionData.action();
+                            GlobalStates.isScreenCapturePanelOpen = false;
+                        }
                     }
                     event.accepted = true;
                     break;
@@ -96,25 +103,25 @@ WrapperRectangle {
                 spacing: 0
 
                 StyledRect {
-                    id: tabItem
+                    id: captureTab
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 32
-                    focus: GlobalStates.isScreenCapturePanelOpen
+                    focus: GlobalStates.isScreenCapturePanelOpen && root.selectedTab === 0
                     readonly property bool isSelected: root.selectedTab === 0
                     onFocusChanged: {
                         if (focus && GlobalStates.isScreenCapturePanelOpen)
-                            tabItem.forceActiveFocus();
+                            captureTab.forceActiveFocus();
                     }
                     radius: Appearance.rounding.normal
                     color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
 
                     StyledText {
                         anchors.centerIn: parent
-                        text: qsTr("Screenshoot")
-                        color: tabItem.isSelected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
+                        text: qsTr("Capture")
+                        color: captureTab.isSelected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
                         font.pixelSize: Appearance.fonts.size.normal
-                        font.weight: tabItem.isSelected ? Font.DemiBold : Font.Normal
+                        font.weight: captureTab.isSelected ? Font.DemiBold : Font.Normal
                     }
 
                     MArea {
@@ -123,13 +130,36 @@ WrapperRectangle {
                         onClicked: root.selectedTab = 0
                     }
                 }
+
+                StyledRect {
+                    id: historyTab
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 32
+                    readonly property bool isSelected: root.selectedTab === 1
+                    radius: Appearance.rounding.normal
+                    color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: qsTr("History")
+                        color: historyTab.isSelected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3Outline
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: historyTab.isSelected ? Font.DemiBold : Font.Normal
+                    }
+
+                    MArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.selectedTab = 1
+                    }
+                }
             }
 
             StackLayout {
                 id: stackLayout
 
                 Layout.fillWidth: true
-                Layout.fillHeight: true
                 currentIndex: root.selectedTab
 
                 ColumnLayout {
@@ -153,6 +183,48 @@ WrapperRectangle {
                             maxIndex: ScreenCapture.screenshotOptions.values.length - 1
                             onIndexModel: idx => root.selectedIndex = idx
                             onClosed: GlobalStates.isScreenCapturePanelOpen = false
+                        }
+                    }
+                }
+
+                ScrollView {
+                    id: historyScroll
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: Math.min(historyFlickable.contentHeight + 20, Hypr.focusedMonitor.height * 0.4)
+                    clip: true
+
+                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+                    Flickable {
+                        id: historyFlickable
+
+                        contentWidth: width
+                        contentHeight: historyColumn.implicitHeight
+                        boundsBehavior: Flickable.StopAtBounds
+                        clip: true
+
+                        Column {
+                            id: historyColumn
+
+                            width: historyFlickable.width
+                            spacing: Appearance.spacing.small
+
+                            Repeater {
+                                model: ScriptModel {
+                                    values: [...ScreenCaptureHistory.screenshotFiles]
+                                }
+                                delegate: Hist.Wrapper {}
+                            }
+
+                            StyledText {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                visible: ScreenCaptureHistory.screenshotFiles.length === 0
+                                text: qsTr("No captures yet")
+                                color: Colours.m3Colors.m3OnSurfaceVariant
+                                font.pixelSize: Appearance.fonts.size.normal
+                            }
                         }
                     }
                 }

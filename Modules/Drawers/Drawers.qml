@@ -16,7 +16,6 @@ import "Calendar"
 import "Clipboard"
 import "Launcher"
 import "QuickSettings"
-import "Overview"
 import "Notifications"
 import "Session"
 import "WallpaperSelector"
@@ -236,7 +235,6 @@ Variants {
             anchors.bottomMargin: app.height + Configs.generals.outerBorderSize
         }
 
-        Overview {}
 
         Notifications {
             id: notif

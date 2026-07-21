@@ -45,9 +45,7 @@ Singleton {
             "notificationCenter": "isNotificationCenterOpen",
             "quickSettings": "isQuickSettingsOpen",
             "wallpaperSwitcher": "isWallpaperSwitcherOpen",
-            "overview": "isOverviewOpen",
             "weather": "isWeatherPanelOpen",
-            "dashboard": "isDashboardOpen",
             "settings": "isSettingsOpen",
             "clipboard": "isClipboardOpen",
             "recordingPanel": "isRecordingPanelOpen"
@@ -64,8 +62,6 @@ Singleton {
     property bool isNotificationCenterOpen: false
     property bool isQuickSettingsOpen: false
     property bool isWallpaperSwitcherOpen: false
-    property bool isOverviewOpen: false
-    property bool isDashboardOpen: false
     property bool isWeatherPanelOpen: false
     property bool isLockscreenOpen: false
     property bool isSelectionOpen: false
@@ -223,10 +219,6 @@ Singleton {
                 shortcut: "screenCapture"
             },
             {
-                panel: "overview",
-                shortcut: "overview"
-            },
-            {
                 panel: "quickSettings",
                 shortcut: "quickSettings"
             },
@@ -237,10 +229,6 @@ Singleton {
             {
                 panel: "weather",
                 shortcut: "weather"
-            },
-            {
-                panel: "dashboard",
-                shortcut: "dashboard"
             },
             {
                 panel: "settings",

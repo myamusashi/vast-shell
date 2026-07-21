@@ -11,14 +11,12 @@ import qs.Components.Feedback
 import qs.Modules.Drawers
 import qs.Modules.Lock
 import qs.Modules.Polkit
-import qs.Modules.Dashboard
 import qs.Modules.Wallpaper
 import qs.Modules.Settings
 
 ShellRoot {
     Lockscreen {}
     Wall {}
-    Dashboard {}
     Polkit {}
     Drawers {}
     Settings {}

@@ -199,14 +199,6 @@
     </message>
 </context>
 <context>
-    <name>AudioCapture</name>
-    <message>
-        <location filename="../Modules/Dashboard/Capture/AudioCapture.qml" line="169"/>
-        <source>LINUX DEFAULT OUTPUT</source>
-        <translation>LINUX DEFAULT OUTPUT</translation>
-    </message>
-</context>
-<context>
     <name>AudioProfiles</name>
     <message>
         <location filename="../Widgets/AudioProfiles.qml" line="16"/>
@@ -456,34 +448,6 @@
         <location filename="../Modules/Drawers/OSD/CapsLockWidget.qml" line="35"/>
         <source>Caps Lock</source>
         <translation>Caps Lock</translation>
-    </message>
-</context>
-<context>
-    <name>Capture</name>
-    <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="113"/>
-        <source>Capture</source>
-        <translation>Tangkapan</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="155"/>
-        <source>Screenshot</source>
-        <translation>Tangkapan Layar</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="163"/>
-        <source>Start</source>
-        <translation>Mulai</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="173"/>
-        <source>Microphone</source>
-        <translation>Mikrofon</translation>
-    </message>
-    <message>
-        <location filename="../Modules/Dashboard/Capture/Capture.qml" line="253"/>
-        <source>See my captures</source>
-        <translation>Lihat tangkapan layar</translation>
     </message>
 </context>
 <context>
@@ -746,22 +710,14 @@
 <context>
     <name>Content</name>
     <message>
-        <location filename="../Modules/Dashboard/History/Content.qml" line="41"/>
+        <location filename="../Modules/Drawers/Launcher/History/Content.qml" line="41"/>
         <source>Screen capture</source>
         <translation>Tangkapan Layar</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/History/Content.qml" line="133"/>
+        <location filename="../Modules/Drawers/Launcher/History/Content.qml" line="133"/>
         <source>Open files</source>
         <translation>Membuka berkas</translation>
-    </message>
-</context>
-<context>
-    <name>Dashboard</name>
-    <message>
-        <location filename="../Modules/Dashboard/Dashboard.qml" line="121"/>
-        <source>WIP</source>
-        <translation>WIP</translation>
     </message>
 </context>
 <context>
@@ -1656,12 +1612,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>History</name>
     <message>
-        <location filename="../Modules/Dashboard/History/History.qml" line="23"/>
+        <location filename="../Modules/Drawers/Launcher/History/History.qml" line="23"/>
         <source>Recent screenshot</source>
         <translation>Tangkapan layar terbaru</translation>
     </message>
     <message>
-        <location filename="../Modules/Dashboard/History/History.qml" line="56"/>
+        <location filename="../Modules/Drawers/Launcher/History/History.qml" line="56"/>
         <source>Recent screen record</source>
         <translation>Rekaman layar terbaru</translation>
     </message>
@@ -2268,14 +2224,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Modules/Drawers/ScreenRecorder/PageSettings.qml" line="208"/>
         <source>Replay Buffer</source>
         <translation></translation>
-    </message>
-</context>
-<context>
-    <name>Performance</name>
-    <message>
-        <location filename="../Modules/Dashboard/Performance.qml" line="35"/>
-        <source>Performance</source>
-        <translation>Performa</translation>
     </message>
 </context>
 <context>

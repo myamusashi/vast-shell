@@ -18,7 +18,7 @@ Loader {
     property string thumbnailPath: ""
     property bool showLoading: true
 
-    active: GlobalStates.isDashboardOpen
+    active: true
     width: 70
     height: 70
 
