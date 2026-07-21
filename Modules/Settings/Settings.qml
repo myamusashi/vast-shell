@@ -113,6 +113,11 @@ LazyLoader {
                             iconName: "smartphone"
                             pageIndex: 10
                         }
+                        SidebarItem {
+                            text: qsTr("Screen Recorder")
+                            iconName: "screen_record"
+                            pageIndex: 11
+                        }
 
                         Item {
                             Layout.fillHeight: true
@@ -180,6 +185,10 @@ LazyLoader {
                         Loader {
                             active: stackLayout.currentIndex === 10
                             sourceComponent: KDEConnectPage {}
+                        }
+                        Loader {
+                            active: stackLayout.currentIndex === 11
+                            sourceComponent: ScreenRecorderPage {}
                         }
                     }
                 }
