@@ -26,75 +26,42 @@ Column {
 
     Row {
         width: parent.width
-        spacing: Appearance.spacing.small
+        spacing: 4
 
-        Item {
-            width: parent.width - parent.spacing
-            height: appNameRow.height
-
-            Row {
-                id: appNameRow
-
-                spacing: Appearance.spacing.normal
-
-                StyledText {
-                    text: qsTr("Screen capture")
-                    font.pixelSize: Appearance.fonts.size.large
-                    font.weight: Font.Medium
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    elide: Text.ElideRight
-                }
-
-                StyledText {
-                    text: "•"
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.large
-                }
-
-                StyledText {
-                    text: {
-                        const timestamp = root.modelData.created;
-                        const date = new Date(timestamp * 1000);
-                        return date.toLocaleString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit',
-                            hour12: true
-                        });
-                    }
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-            }
+        StyledText {
+            width: parent.width
+            text: root.modelData.name
+            font.pixelSize: Appearance.fonts.size.medium
+            font.weight: Font.Medium
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            elide: Text.ElideRight
         }
     }
 
     StyledText {
         width: parent.width
-        text: root.modelData.name
-        font.pixelSize: Appearance.fonts.size.medium
-        font.weight: Font.DemiBold
-        color: Colours.m3Colors.m3OnSurface
-        elide: Text.ElideRight
-        wrapMode: Text.Wrap
-        maximumLineCount: 2
-    }
-
-    StyledText {
-        width: parent.width
-        text: root.modelData.path
-        font.pixelSize: Appearance.fonts.size.medium
-        color: Colours.m3Colors.m3OnSurface
-        textFormat: Text.StyledText
-        wrapMode: Text.Wrap
+        text: {
+            const timestamp = root.modelData.created;
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+        font.pixelSize: Appearance.fonts.size.small
+        color: Colours.m3Colors.m3OnSurfaceVariant
     }
 
     StyledRect {
-        width: (parent.width - parent.children.length - 1) / parent.children.length + 10
-        height: 40
+        width: Math.min(implicitWidth, parent.width)
+        height: 32
         color: Colours.m3Colors.m3SurfaceContainerHigh
         radius: Appearance.rounding.full
+
+        implicitWidth: openText.implicitWidth + 24
 
         StyledRect {
             anchors.fill: parent
@@ -129,9 +96,11 @@ Column {
         }
 
         StyledText {
+            id: openText
+
             anchors.centerIn: parent
-            text: qsTr("Open files")
-            font.pixelSize: Appearance.fonts.size.medium
+            text: qsTr("Open")
+            font.pixelSize: Appearance.fonts.size.small
             font.weight: Font.Medium
             color: Colours.m3Colors.m3OnBackground
             elide: Text.ElideRight

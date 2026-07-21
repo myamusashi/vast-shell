@@ -19,8 +19,8 @@ Loader {
     property bool showLoading: true
 
     active: true
-    width: 70
-    height: 70
+    width: 44
+    height: 44
 
     Component.onCompleted: {
         const ext = getFileExtension(root.modelData.path);
@@ -52,8 +52,8 @@ Loader {
     }
 
     sourceComponent: StyledRect {
-        implicitWidth: 70
-        implicitHeight: 70
+        implicitWidth: 44
+        implicitHeight: 44
         radius: Appearance.rounding.full
         color: Colours.m3Colors.m3PrimaryContainer
 
@@ -64,9 +64,9 @@ Loader {
             fillMode: Image.PreserveAspectCrop
             cache: true
             asynchronous: true
-            width: 40
-            height: 40
-            sourceSize: Qt.size(40, 40)
+            width: 28
+            height: 28
+            sourceSize: Qt.size(28, 28)
             source: root.thumbnailPath
 
             Rectangle {

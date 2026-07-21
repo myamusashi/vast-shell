@@ -15,7 +15,7 @@ Item {
     signal animationCompleted
 
     width: parent.width
-    height: isRemoving ? 0 : contentLayout.height * 1.3
+    height: isRemoving ? 0 : contentLayout.height + 16
     clip: true
     opacity: 0
     y: 50
@@ -88,7 +88,6 @@ Item {
         color: Colours.m3Colors.m3SurfaceContainer
         radius: Appearance.rounding.normal
         anchors.leftMargin: 10
-        clip: true
 
         H.MArea {
             id: delegateMouseNotif
@@ -118,9 +117,9 @@ Item {
         Row {
             anchors {
                 fill: parent
-                margins: 10
+                margins: 8
             }
-            spacing: Appearance.spacing.normal
+            spacing: Appearance.spacing.small
 
             Icon {
                 id: iconLayout

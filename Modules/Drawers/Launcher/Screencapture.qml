@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
@@ -13,7 +14,7 @@ import qs.Services
 
 import "History" as Hist
 
-WrapperRectangle {
+ClippingWrapperRectangle {
     id: root
 
     anchors.centerIn: parent
@@ -22,6 +23,8 @@ WrapperRectangle {
     property int selectedIndex: 0
     property int selectedTab: 0
 
+    readonly property real maxH: Hypr.focusedMonitor.height * 0.55
+
     border {
         color: GlobalStates.isScreenCapturePanelOpen ? Colours.m3Colors.m3Outline : "transparent"
         width: 2
@@ -29,14 +32,19 @@ WrapperRectangle {
     color: GlobalStates.drawerColors
     clip: true
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
-    implicitWidth: 300
-    implicitHeight: GlobalStates.isScreenCapturePanelOpen && loader.item ? loader.item.implicitHeight + 50 : 0
+    implicitWidth: root.selectedTab === 0 ? 300 : 340
+    implicitHeight: GlobalStates.isScreenCapturePanelOpen && loader.item ? Math.min(loader.item.implicitHeight + 20, root.maxH) : 0
     radius: Appearance.rounding.normal
+
+    Behavior on implicitWidth {
+        NAnim {
+            duration: 200
+        }
+    }
 
     Behavior on implicitHeight {
         NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            duration: 200
         }
     }
 
@@ -46,7 +54,11 @@ WrapperRectangle {
         active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isScreenCapturePanelOpen
         asynchronous: true
         sourceComponent: ColumnLayout {
-            anchors.fill: parent
+            id: innerLayout
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
             anchors.margins: Appearance.margin.normal
             spacing: Appearance.spacing.small
 
@@ -65,9 +77,7 @@ WrapperRectangle {
                     event.accepted = true;
                     break;
                 case Qt.Key_Down:
-                    const maxIndex = root.selectedTab === 0
-                        ? ScreenCapture.screenshotOptions.values.length - 1
-                        : ScreenCaptureHistory.screenshotFiles.length - 1;
+                    const maxIndex = root.selectedTab === 0 ? ScreenCapture.screenshotOptions.values.length - 1 : ScreenCaptureHistory.screenshotFiles.length - 1;
                     root.selectedIndex = Math.min(maxIndex, root.selectedIndex + 1);
                     event.accepted = true;
                     break;
@@ -136,6 +146,7 @@ WrapperRectangle {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 32
+                    focus: GlobalStates.isScreenCapturePanelOpen && root.selectedTab === 1
                     readonly property bool isSelected: root.selectedTab === 1
                     radius: Appearance.rounding.normal
                     color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
@@ -160,7 +171,9 @@ WrapperRectangle {
                 id: stackLayout
 
                 Layout.fillWidth: true
+                Layout.preferredHeight: root.selectedTab === 0 ? screenshotLayout.implicitHeight : Math.min(historyFlickable.contentHeight + 10, root.maxH * 0.65)
                 currentIndex: root.selectedTab
+                clip: true
 
                 ColumnLayout {
                     id: screenshotLayout
@@ -191,7 +204,7 @@ WrapperRectangle {
                     id: historyScroll
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: Math.min(historyFlickable.contentHeight + 20, Hypr.focusedMonitor.height * 0.4)
+                    Layout.preferredHeight: Math.min(historyFlickable.contentHeight + 10, root.maxH * 0.65)
                     clip: true
 
                     ScrollBar.vertical.policy: ScrollBar.AsNeeded
