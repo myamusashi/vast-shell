@@ -19,6 +19,29 @@ SettingsPageBase {
     }
 
     SettingsCard {
+        title: qsTr("Pick Wallpaper File")
+        Layout.fillWidth: true
+
+        SettingRow {
+            label: qsTr("Select a wallpaper image file:")
+
+            StyledButton {
+                icon.name: "image"
+                text: qsTr("Browse\u2026")
+                onClicked: pickWallpaperDialog.openFileDialog()
+            }
+
+            FileDialog {
+                id: pickWallpaperDialog
+                nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.svg", "*.webp"]
+                onFileSelected: path => Quickshell.execDetached({
+                    command: ["shell", "ipc", "call", "img", "set", path]
+                })
+            }
+        }
+    }
+
+    SettingsCard {
         title: qsTr("Wallpaper Picker")
         visible: WallpaperFileModels.wallpaperList.length > 0
         Layout.fillWidth: true
