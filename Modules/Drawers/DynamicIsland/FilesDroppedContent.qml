@@ -13,20 +13,23 @@ Item {
     id: root
 
     required property var island
+    required property bool active
 
     readonly property int fileCount: root.island.droppedFiles.length
     readonly property real maxContentHeight: fileCount * 18 + (fileCount > 1 ? fileCount - 1 : 0) * 4
     readonly property real visibleHeight: Math.min(200, maxContentHeight)
 
-    readonly property real fileNameMaxWidth: {
+    readonly property real fileNameMaxWidth: root.active ? computeMaxWidth() : 0
+
+    implicitWidth: Math.max(220, fileNameMaxWidth + 80)
+    implicitHeight: visibleHeight + 56
+
+    function computeMaxWidth() {
         var maximum = 0;
         for (var i = 0; i < fileCount; i++)
             maximum = Math.max(maximum, String(root.island.droppedFiles[i]).split("/").pop().length);
         return Math.min(300, maximum * 8 + 40);
     }
-
-    implicitWidth: Math.max(220, fileNameMaxWidth + 80)
-    implicitHeight: visibleHeight + 56
 
     StyledText {
         anchors {
@@ -35,6 +38,7 @@ Item {
             topMargin: 8
         }
 
+        visible: root.active
         text: qsTr("%1 file(s)").arg(fileCount)
         font.pixelSize: Appearance.fonts.size.normal
         font.weight: Font.DemiBold
@@ -59,6 +63,7 @@ Item {
         clip: true
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
+        visible: root.active
 
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
@@ -92,6 +97,7 @@ Item {
             margins: 4
         }
 
+        visible: root.active
         implicitWidth: Math.max(72, nextLabel.implicitWidth + 24)
         implicitHeight: 28
         radius: Appearance.rounding.small

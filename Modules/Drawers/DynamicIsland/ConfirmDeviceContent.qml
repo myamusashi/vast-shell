@@ -12,9 +12,10 @@ Item {
     id: root
 
     required property var island
+    required property bool active
 
     implicitWidth: Math.max(240, confirmColumnLayout.implicitWidth + 48)
-    implicitHeight: confirmColumnLayout.implicitHeight + 32
+    implicitHeight: Math.max(140, confirmColumnLayout.implicitHeight + 48)
 
     ColumnLayout {
         id: confirmColumnLayout
@@ -37,7 +38,7 @@ Item {
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: implicitWidth
-                text: root.island.droppedFiles.map(f => f.split("/").pop()).join(", ")
+                text: root.island.droppedFiles.map(f => String(f).split("/").pop()).join(", ")
                 font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 elide: Text.ElideMiddle

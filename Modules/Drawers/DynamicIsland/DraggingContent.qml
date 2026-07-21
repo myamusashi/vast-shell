@@ -9,6 +9,10 @@ import qs.Core.Utils
 import qs.Services
 
 Item {
+    id: root
+
+    required property bool active
+
     implicitWidth: draggingRowLayout.implicitWidth + 32
     implicitHeight: 44
 
@@ -17,6 +21,7 @@ Item {
 
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
+        visible: root.active
 
         Icon {
             icon: "upload_file"

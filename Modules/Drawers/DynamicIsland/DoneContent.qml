@@ -12,6 +12,7 @@ RowLayout {
     id: root
 
     required property var island
+    required property bool active
 
     implicitWidth: doneRowLayout.implicitWidth + 32
     implicitHeight: 44
@@ -21,6 +22,7 @@ RowLayout {
         id: doneRowLayout
 
         spacing: Appearance.spacing.normal
+        visible: root.active
 
         Icon {
             icon: root.island.transferSuccess ? "check_circle" : "error"

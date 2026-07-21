@@ -7,7 +7,6 @@ import Quickshell.Widgets
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
-import qs.Core.Utils
 import qs.Services
 
 import "."
@@ -30,18 +29,23 @@ Item {
         Completed
     }
 
-    readonly property bool islandVisible: root.currentState !== DynamicIsland.State.Idle
-
-    property bool hovered: false
     property int currentState: DynamicIsland.State.Idle
     property var droppedFiles: []
     property var selectedDevice: null
     property bool transferSuccess: false
 
-    implicitWidth: root.islandVisible ? island.contentWidth : bar.width * 0.35
-    implicitHeight: root.islandVisible ? island.contentHeight + Configs.bar.barHeight + 20 : Configs.bar.barHeight + 40
+    implicitWidth: bar.width * 0.35
+    implicitHeight: Configs.bar.barHeight + (currentState == DynamicIsland.State.Idle ? 0 : 120)
 
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
+
+    readonly property bool islandVisible: root.currentState !== DynamicIsland.State.Idle
+    readonly property bool isDragging: root.currentState === DynamicIsland.State.Dragging
+    readonly property bool isFilesDropped: root.currentState === DynamicIsland.State.FilesDropped
+    readonly property bool isSelectingDevice: root.currentState === DynamicIsland.State.SelectingDevice
+    readonly property bool isConfirmDevice: root.currentState === DynamicIsland.State.ConfirmDevice
+    readonly property bool isTransferring: root.currentState === DynamicIsland.State.Transferring
+    readonly property bool isCompleted: root.currentState === DynamicIsland.State.Completed
 
     function startTransfer() {
         root.currentState = DynamicIsland.State.Transferring;
@@ -78,10 +82,10 @@ Item {
     }
 
     function updateContentSize() {
-        var childIndex = stackLayout.currentIndex;
         var children = stackLayout.children;
-        if (childIndex >= 0 && childIndex < children.length) {
-            var child = children[childIndex];
+        var index = stackLayout.currentIndex;
+        if (index >= 0 && index < children.length) {
+            var child = children[index];
             island.contentWidth = Math.max(120, child.implicitWidth + 24);
             island.contentHeight = Math.max(44, child.implicitHeight + 16);
         }
@@ -105,28 +109,10 @@ Item {
         onTriggered: root.dismiss()
     }
 
-    Rectangle {
-        id: hitZone
-
-        anchors {
-            fill: parent
-            topMargin: -20
-        }
-
-        color: "transparent"
-
-        HoverHandler {
-            id: hoverHandler
-
-            margin: 12
-            onHoveredChanged: root.hovered = hovered
-        }
-    }
-
     DropArea {
         id: dropArea
 
-        anchors.fill: hitZone
+        anchors.fill: parent
 
         onEntered: drag => {
             if (drag.hasUrls && (root.currentState === DynamicIsland.State.Idle || root.currentState === DynamicIsland.State.FilesDropped))
@@ -156,7 +142,7 @@ Item {
         id: island
 
         anchors {
-            top: hitZone.top
+            top: parent.top
             topMargin: Configs.bar.barHeight
             horizontalCenter: parent.horizontalCenter
         }
@@ -216,7 +202,7 @@ Item {
                 }
             }
 
-            onCurrentIndexChanged: root.updateContentSize()
+            onCurrentIndexChanged: Qt.callLater(root.updateContentSize)
 
             Item {
                 implicitWidth: 0
@@ -224,33 +210,39 @@ Item {
             }
 
             DraggingContent {
-                onImplicitWidthChanged: root.updateContentSize()
-                onImplicitHeightChanged: root.updateContentSize()
+                active: root.isDragging
+                onImplicitWidthChanged: if (root.isDragging) Qt.callLater(root.updateContentSize)
+                onImplicitHeightChanged: if (root.isDragging) Qt.callLater(root.updateContentSize)
             }
             FilesDroppedContent {
                 island: root
-                onImplicitWidthChanged: root.updateContentSize()
-                onImplicitHeightChanged: root.updateContentSize()
+                active: root.isFilesDropped
+                onImplicitWidthChanged: if (root.isFilesDropped) Qt.callLater(root.updateContentSize)
+                onImplicitHeightChanged: if (root.isFilesDropped) Qt.callLater(root.updateContentSize)
             }
             DeviceListContent {
                 island: root
-                onImplicitWidthChanged: root.updateContentSize()
-                onImplicitHeightChanged: root.updateContentSize()
+                active: root.isSelectingDevice
+                onImplicitWidthChanged: if (root.isSelectingDevice) Qt.callLater(root.updateContentSize)
+                onImplicitHeightChanged: if (root.isSelectingDevice) Qt.callLater(root.updateContentSize)
             }
             ConfirmDeviceContent {
                 island: root
-                onImplicitWidthChanged: root.updateContentSize()
-                onImplicitHeightChanged: root.updateContentSize()
+                active: root.isConfirmDevice
+                onImplicitWidthChanged: if (root.isConfirmDevice) Qt.callLater(root.updateContentSize)
+                onImplicitHeightChanged: if (root.isConfirmDevice) Qt.callLater(root.updateContentSize)
             }
             ProgressContent {
                 island: root
-                onImplicitWidthChanged: root.updateContentSize()
-                onImplicitHeightChanged: root.updateContentSize()
+                active: root.isTransferring
+                onImplicitWidthChanged: if (root.isTransferring) Qt.callLater(root.updateContentSize)
+                onImplicitHeightChanged: if (root.isTransferring) Qt.callLater(root.updateContentSize)
             }
             DoneContent {
                 island: root
-                onImplicitWidthChanged: root.updateContentSize()
-                onImplicitHeightChanged: root.updateContentSize()
+                active: root.isCompleted
+                onImplicitWidthChanged: if (root.isCompleted) Qt.callLater(root.updateContentSize)
+                onImplicitHeightChanged: if (root.isCompleted) Qt.callLater(root.updateContentSize)
             }
         }
     }

@@ -13,13 +13,17 @@ Item {
     id: root
 
     required property var island
+    required property bool active
 
     readonly property int deviceCount: KDEConnect.availableDevices.length
     readonly property real rowHeight: 36
     readonly property real maxContentHeight: deviceCount * rowHeight + (deviceCount > 1 ? deviceCount - 1 : 0) * 4
     readonly property real visibleHeight: Math.min(200, maxContentHeight)
 
-    implicitWidth: {
+    implicitWidth: root.active ? computeActiveWidth() : 180
+    implicitHeight: Math.max(44, visibleHeight + 40)
+
+    function computeActiveWidth() {
         if (root.deviceCount === 0)
             return 220;
         var maximum = 0;
@@ -29,7 +33,6 @@ Item {
         }
         return Math.max(180, maximum + 104);
     }
-    implicitHeight: Math.max(44, visibleHeight + 40)
 
     TextMetrics {
         id: deviceMetrics
@@ -39,7 +42,7 @@ Item {
 
     Loader {
         anchors.centerIn: parent
-        active: root.deviceCount === 0
+        active: root.active && root.deviceCount === 0
         sourceComponent: StyledText {
             text: qsTr("No devices available")
             font.pixelSize: Appearance.fonts.size.normal
@@ -65,6 +68,7 @@ Item {
         clip: true
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
+        visible: root.active
 
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
@@ -131,6 +135,7 @@ Item {
             margins: 4
         }
 
+        visible: root.active
         implicitWidth: Math.max(64, backLabel.implicitWidth + 20)
         implicitHeight: 26
         radius: Appearance.rounding.small

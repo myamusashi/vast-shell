@@ -13,6 +13,7 @@ RowLayout {
     id: root
 
     required property var island
+    required property bool active
 
     implicitWidth: progressRowLayout.implicitWidth + 48
     implicitHeight: 44
@@ -22,6 +23,7 @@ RowLayout {
         id: progressRowLayout
 
         spacing: Appearance.spacing.normal
+        visible: root.active
 
         Rectangle {
             implicitWidth: 20
@@ -33,7 +35,7 @@ RowLayout {
                 to: 360
                 duration: 1000
                 loops: Animation.Infinite
-                running: true
+                running: root.active
             }
 
             Shape {
@@ -41,6 +43,7 @@ RowLayout {
                 height: 16
                 width: 16
                 preferredRendererType: Shape.CurveRenderer
+                visible: root.active
 
                 ShapePath {
                     strokeColor: Colours.m3Colors.m3Primary
