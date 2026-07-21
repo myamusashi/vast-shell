@@ -30,7 +30,7 @@ Item {
         Completed
     }
 
-    readonly property bool islandVisible: root.hovered || root.currentState !== DynamicIsland.State.Idle
+    readonly property bool islandVisible: root.currentState !== DynamicIsland.State.Idle
 
     property bool hovered: false
     property int currentState: DynamicIsland.State.Idle
