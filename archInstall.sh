@@ -30,8 +30,9 @@ init_globals() {
 	PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)" || die "Failed to determine project root"
 	M3SHAPES_REV="1c8e6751febf230d7f94bf8015eaeb643bb4521e"
 	ANOTHER_RIPPLE_REV="main"
+	WL_SCREENREC_REV="cc280b238ab99cdeefa70afcceaf09a1f98fe982"
 
-	readonly INSTALL_DIR BIN_DIR FONT_DIR QML_DIR BUILD_DIR PROJECT_ROOT M3SHAPES_REV ANOTHER_RIPPLE_REV
+	readonly INSTALL_DIR BIN_DIR FONT_DIR QML_DIR BUILD_DIR PROJECT_ROOT M3SHAPES_REV ANOTHER_RIPPLE_REV WL_SCREENREC_REV
 }
 
 check_root() {
@@ -108,9 +109,8 @@ install_aur_packages() {
 
 	sudo -u "$aur_user" yay -S --needed --noconfirm "${missing[@]}"
 
-	log "Installing wl-screenrec (optional)..."
-	sudo -u "$aur_user" yay -S --needed --noconfirm wl-screenrec ||
-		warn "wl-screenrec failed to install — screen recording unavailable"
+	log "Installing wl-screenrec from fork..."
+	build_wl_screenrec
 }
 
 # ensures the current user is in the i2c and video groups,
@@ -544,6 +544,47 @@ EOF
 	chmod +x "$BIN_DIR/shell"
 }
 
+build_wl_screenrec() {
+	local -r binary="/usr/local/bin/wl-screenrec"
+	[[ -f $binary ]] && {
+		log "wl-screenrec already installed"
+		return 0
+	}
+
+	log "Building wl-screenrec from fork..."
+	local -r src="$BUILD_DIR/wl-screenrec"
+
+	[[ -d $src ]] || git clone https://github.com/myamusashi/wl-screenrec.git "$src"
+	git -C "$src" checkout "$WL_SCREENREC_REV" 2>/dev/null || {
+		git -C "$src" fetch
+		git -C "$src" checkout "$WL_SCREENREC_REV"
+	}
+
+	pushd "$src" >/dev/null
+	cargo build --release || warn "wl-screenrec build failed — screen recording unavailable"
+	[[ -f target/release/wl-screenrec ]] && install -Dm755 target/release/wl-screenrec "$binary"
+	popd >/dev/null
+
+	[[ -f $binary ]] || warn "wl-screenrec binary not found after build"
+}
+
+cleanup_build_deps() {
+	local -r build_deps=(
+		base-devel cmake ninja extra-cmake-modules patchelf pkgconf
+		qt6-shadertools qt6-tools rust git
+	)
+
+	local -a to_remove=()
+	for pkg in "${build_deps[@]}"; do
+		pacman -Qi "$pkg" &>/dev/null && to_remove+=("$pkg")
+	done
+
+	if ((${#to_remove[@]})); then
+		log "Removing build-time dependencies: ${to_remove[*]}"
+		pacman -Rns --noconfirm "${to_remove[@]}" || warn "Failed to remove some build dependencies"
+	fi
+}
+
 main() {
 	init_globals
 	check_root
@@ -561,6 +602,7 @@ main() {
 	build_another_ripple
 	compile_shaders
 	compile_translations
+	cleanup_build_deps
 	install_quickshell_config
 	setup_user_config
 	create_wrapper
