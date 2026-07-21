@@ -3,7 +3,10 @@
 
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-        wl-screenrec-fork = "github:myamusashi/wl-screenrec";
+        wl-screenrec-fork = {
+			url = "github:myamusashi/wl-screenrec";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
         quickshell = {
             url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
             inputs.nixpkgs.follows = "nixpkgs";
