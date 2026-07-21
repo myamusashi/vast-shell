@@ -27,7 +27,7 @@ WrapperRectangle {
     clip: true
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
     implicitWidth: 300
-    implicitHeight: GlobalStates.isScreenCapturePanelOpen ? loader.item.implicitHeight + 50 : 0
+    implicitHeight: GlobalStates.isScreenCapturePanelOpen && loader.item ? loader.item.implicitHeight + 50 : 0
     radius: Appearance.rounding.normal
 
     Behavior on implicitHeight {
@@ -101,13 +101,10 @@ WrapperRectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 32
                     focus: GlobalStates.isScreenCapturePanelOpen
+                    readonly property bool isSelected: root.selectedTab === 0
                     onFocusChanged: {
                         if (focus && GlobalStates.isScreenCapturePanelOpen)
-                            Qt.callLater(() => {
-                                let firstIcon = tabRepeater.itemAt(root.selectedTab);
-                                if (firstIcon)
-                                    firstIcon.children[0].forceActiveFocus();
-                            });
+                            tabItem.forceActiveFocus();
                     }
                     radius: Appearance.rounding.normal
                     color: isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Surface
@@ -123,7 +120,7 @@ WrapperRectangle {
                     MArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: root.selectedTab = tabItem.index
+                        onClicked: root.selectedTab = 0
                     }
                 }
             }

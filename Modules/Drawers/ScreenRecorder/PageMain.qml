@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Hyprland
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -18,34 +17,8 @@ StyledRect {
 
     property int sourceMode: 0
     property string selectedMonitor: Quickshell.screens[0]?.name ?? ""
-    property string selectedToplevel: ""
 
     property string audioLabel: qsTr("No Audio")
-
-    readonly property var filteredToplevels: {
-        if (!Hypr.toplevels)
-            return [];
-        const arr = [];
-        for (let i = 0; i < Hypr.toplevels.length; i++) {
-            const t = Hypr.toplevels[i];
-            if (t.workspace?.id === Hypr.activeWsId)
-                arr.push(t);
-        }
-        return arr;
-    }
-
-    readonly property var toplevelModel: {
-        const list = root.filteredToplevels;
-        const model = [];
-        for (let i = 0; i < list.length; i++) {
-            const ipc = list[i].lastIpcObject;
-            model.push({
-                display: ipc?.class ?? ipc?.title ?? "?",
-                appId: ipc?.class ?? ""
-            });
-        }
-        return model;
-    }
 
     function updateAudioLabel() {
         if (!ScreenRecorder.includeAudio) {
@@ -72,6 +45,7 @@ StyledRect {
 
     signal openAudio
     signal openSettings
+    signal openHistory
 
     color: "transparent"
     radius: 0
@@ -233,41 +207,6 @@ StyledRect {
                             }
                         }
                     }
-
-                    Loader {
-                        active: root.sourceMode === 2
-                        Layout.preferredHeight: active ? implicitHeight : 0
-                        Layout.fillHeight: true
-
-                        sourceComponent: ColumnLayout {
-                            spacing: Appearance.spacing.small
-
-                            StyledText {
-                                text: qsTr("Window:")
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                            }
-
-                            StyledComboBox {
-                                textRole: "display"
-                                model: root.toplevelModel
-                                currentIndex: {
-                                    if (!root.selectedToplevel)
-                                        return -1;
-                                    for (let i = 0; i < root.toplevelModel.length; i++) {
-                                        if (root.toplevelModel[i].appId === root.selectedToplevel)
-                                            return i;
-                                    }
-                                    return -1;
-                                }
-                                onActivated: index => {
-                                    const item = root.toplevelModel[index];
-                                    if (item)
-                                        root.selectedToplevel = item.appId;
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
@@ -360,6 +299,51 @@ StyledRect {
                 }
             }
 
+            StyledRect {
+                Layout.fillWidth: true
+                Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
+                color: historyRowMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.05) : "transparent"
+                radius: Appearance.rounding.small
+
+                RowLayout {
+                    anchors {
+                        fill: parent
+                        leftMargin: Appearance.margin.smaller
+                        rightMargin: Appearance.margin.smaller
+                    }
+                    spacing: Appearance.spacing.small
+
+                    Icon {
+                        type: Icon.Material
+                        icon: "history"
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.medium
+                    }
+
+                    StyledText {
+                        text: qsTr("Recordings")
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.normal
+                        Layout.fillWidth: true
+                    }
+
+                    Icon {
+                        type: Icon.Material
+                        icon: "chevron_right"
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.medium
+                    }
+                }
+
+                MArea {
+                    id: historyRowMouseArea
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
+                    onClicked: root.openHistory()
+                }
+            }
+
             Item {
                 Layout.fillHeight: true
             }
@@ -439,12 +423,7 @@ StyledRect {
                                         ScreenCapture.openRegionSelector();
                                         break;
                                     case 2:
-                                        if (root.selectedToplevel) {
-                                            GlobalStates.isRecordingPanelOpen = false;
-                                            ScreenRecorder.recordToplevel(root.selectedToplevel);
-                                        } else {
-                                            ScreenCapture.recordWindow();
-                                        }
+                                        ScreenCapture.recordWindow();
                                         break;
                                     }
                                 }

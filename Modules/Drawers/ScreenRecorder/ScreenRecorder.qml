@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -25,6 +26,18 @@ Item {
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name
 
     property int currentPage: 0
+
+    property bool isHistoryOpen: false
+    onIsHistoryOpenChanged: {
+        if (isHistoryOpen)
+            ScreenCaptureHistory.reloadFiles();
+    }
+
+    function openVideoFile(path) {
+        Quickshell.execDetached({
+            command: [Configs.generals.apps.videoViewer, path]
+        });
+    }
 
     CornerPair {
         location1: Qt.BottomLeftCorner
@@ -172,6 +185,10 @@ Item {
                     PageMain {
                         onOpenAudio: root.currentPage = 1
                         onOpenSettings: root.currentPage = 2
+                        onOpenHistory: {
+                            root.isHistoryOpen = true;
+                            root.currentPage = 3;
+                        }
                     }
 
                     PageAudio {
@@ -180,6 +197,11 @@ Item {
 
                     PageSettings {
                         onGoBack: root.currentPage = 0
+                    }
+
+                    PageHistory {
+                        onGoBack: root.currentPage = 0
+                        onOpenFile: path => root.openVideoFile(path)
                     }
                 }
             }
