@@ -7,6 +7,7 @@ import Qt.labs.folderlistmodel
 import Quickshell
 
 import qs.Core.Configs
+import qs.Components.Base
 import qs.Services
 
 import "components"
@@ -159,7 +160,87 @@ LazyLoader {
                     selectFolder: root.selectFolder
                     onFolderDoubleClicked: path => window.navigateTo(path)
                     onFileDoubleClicked: path => root.fileSelected(path)
-                    onSelectionChanged: fileName => bottomBar.setFileName(fileName)
+                    onSelectionChanged: (fileName, filePath, fileSize, fileModified, isImage) => {
+                        bottomBar.setFileName(fileName);
+                        previewPanel.imageFileSelected = isImage;
+                        previewPanel.selectedFilePath = filePath;
+                        previewPanel.fileSize = fileSize;
+                        previewPanel.fileModified = fileModified;
+                        previewPanel.fileName = fileName;
+                    }
+                }
+
+                Rectangle {
+                    id: previewPanel
+                    property bool imageFileSelected: false
+                    property string selectedFilePath: ""
+                    property int fileSize: 0
+                    property var fileModified
+                    property string fileName: ""
+                    Layout.preferredWidth: 200
+                    Layout.fillHeight: true
+                    color: Colours.m3Colors.m3SurfaceContainerHigh
+                    visible: fileListView.hasSelection && !fileListView.currentIsFolder && imageFileSelected
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: Appearance.margin.normal
+                        spacing: Appearance.spacing.normal
+
+                        StyledText {
+                            text: qsTr("Preview")
+                            font.pixelSize: Appearance.fonts.size.normal
+                            font.bold: true
+                            color: Colours.m3Colors.m3OnSurface
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            Image {
+                                anchors.centerIn: parent
+                                width: Math.min(parent.width, implicitWidth)
+                                height: Math.min(parent.height, implicitHeight)
+                                source: previewPanel.visible ? "file://" + previewPanel.selectedFilePath : ""
+                                sourceSize: Qt.size(400, 400)
+                                fillMode: Image.PreserveAspectFit
+                                asynchronous: true
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: Appearance.spacing.small
+
+                            StyledText {
+                                text: previewPanel.fileName
+                                font.pixelSize: Appearance.fonts.size.small
+                                color: Colours.m3Colors.m3OnSurface
+                                elide: Text.ElideRight
+                                Layout.fillWidth: true
+                            }
+
+                            StyledText {
+                                text: {
+                                    if (previewPanel.fileSize < 1024)
+                                        return previewPanel.fileSize + " B";
+                                    if (previewPanel.fileSize < 1048576)
+                                        return (previewPanel.fileSize / 1024).toFixed(1) + " KiB";
+                                    return (previewPanel.fileSize / 1048576).toFixed(1) + " MiB";
+                                }
+                                font.pixelSize: Appearance.fonts.size.small
+                                color: Colours.m3Colors.m3OnSurfaceVariant
+                            }
+
+                            StyledText {
+                                text: Qt.formatDateTime(previewPanel.fileModified, "yyyy-MM-dd hh:mm")
+                                font.pixelSize: Appearance.fonts.size.small
+                                color: Colours.m3Colors.m3OnSurfaceVariant
+                            }
+                        }
+                    }
                 }
             }
 

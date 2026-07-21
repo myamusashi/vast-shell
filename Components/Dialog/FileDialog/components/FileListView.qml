@@ -20,14 +20,16 @@ ColumnLayout {
     property bool selectFolder: false
     property int currentIndex: -1
     property bool hasSelection: currentIndex >= 0
-    property string selectedFileName: hasSelection ? visualModel.items.get(currentIndex).model.fileName : ""
-    property string currentFilePath: hasSelection ? visualModel.items.get(currentIndex).model.filePath : ""
-    property bool currentIsFolder: hasSelection ? visualModel.items.get(currentIndex).model.isFolder : false
+    property string selectedFileName: hasSelection && currentIndex < visualModel.items.count ? visualModel.items.get(currentIndex).model.fileName : ""
+    property string currentFilePath: hasSelection && currentIndex < visualModel.items.count ? visualModel.items.get(currentIndex).model.filePath : ""
+    property bool currentIsFolder: hasSelection && currentIndex < visualModel.items.count ? visualModel.items.get(currentIndex).model.isFolder : false
+
+    property bool currentIsImage: hasSelection && !currentIsFolder && /\.(png|jpg|jpeg|gif|bmp|svg|webp)$/i.test(selectedFileName)
 
     signal showHiddenToggled(bool hidden)
     signal folderDoubleClicked(string path)
     signal fileDoubleClicked(string path)
-    signal selectionChanged(string fileName)
+    signal selectionChanged(string fileName, string filePath, int fileSize, var fileModified, bool isImage)
 
     spacing: 0
     onFolderHiddenChanged: root.showHiddenToggled(folderHidden)
@@ -186,10 +188,11 @@ ColumnLayout {
             onClicked: {
                 fileList.currentIndex = index;
                 root.currentIndex = index;
+                var img = !isFolder && /\.(png|jpg|jpeg|gif|bmp|svg|webp)$/i.test(fileName);
                 if (root.selectFolder) {
-                    root.selectionChanged(fileName);
+                    root.selectionChanged(fileName, filePath, fileSize, fileModified, false);
                 } else {
-                    root.selectionChanged(isFolder ? "" : fileName);
+                    root.selectionChanged(isFolder ? "" : fileName, filePath, fileSize, fileModified, img);
                 }
             }
             onDoubleClicked: {

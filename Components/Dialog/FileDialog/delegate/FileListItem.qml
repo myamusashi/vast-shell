@@ -18,7 +18,6 @@ Rectangle {
     property bool isFolder: false
     property bool isSelected: false
     property int itemIndex: 0
-
     signal clicked
     signal doubleClicked
 
