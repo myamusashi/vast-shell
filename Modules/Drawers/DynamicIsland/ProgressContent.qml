@@ -66,7 +66,9 @@ RowLayout {
             color: Colours.m3Colors.m3OnSurface
         }
 
-        Item { Layout.fillWidth: true }
+        Item {
+            Layout.fillWidth: true
+        }
 
         Rectangle {
             implicitWidth: cancelLabel.implicitWidth + 16

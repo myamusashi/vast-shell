@@ -29,9 +29,7 @@ RowLayout {
         }
 
         StyledText {
-            text: root.island.transferSuccess
-                ? qsTr("Sent to %1").arg(root.island.selectedDevice?.name ?? "")
-                : qsTr("Transfer cancelled")
+            text: root.island.transferSuccess ? qsTr("Sent to %1").arg(root.island.selectedDevice?.name ?? "") : qsTr("Transfer cancelled")
             font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurface
         }

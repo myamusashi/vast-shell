@@ -65,7 +65,7 @@ Variants {
         mask: Region {
             regions: childRegions.instances
             item: cornersArea
-			intersection: Intersection.Subtract
+            intersection: Intersection.Subtract
         }
 
         Variants {
@@ -75,9 +75,9 @@ Variants {
             delegate: Region {
                 required property Item modelData
                 item: modelData
-				intersection: Intersection.Xor
+                intersection: Intersection.Xor
             }
-		}
+        }
 
         Scope {
             Exclusion {

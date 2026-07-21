@@ -108,6 +108,11 @@ LazyLoader {
                             iconName: "notifications"
                             pageIndex: 9
                         }
+                        SidebarItem {
+                            text: qsTr("KDE Connect")
+                            iconName: "smartphone"
+                            pageIndex: 10
+                        }
 
                         Item {
                             Layout.fillHeight: true
@@ -171,6 +176,10 @@ LazyLoader {
                         Loader {
                             active: stackLayout.currentIndex === 9
                             sourceComponent: NotificationPage {}
+                        }
+                        Loader {
+                            active: stackLayout.currentIndex === 10
+                            sourceComponent: KDEConnectPage {}
                         }
                     }
                 }

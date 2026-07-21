@@ -50,8 +50,8 @@ Item {
         color: GlobalStates.drawerColors
         clip: true
 
-		Loader {
-			anchors.fill: parent
+        Loader {
+            anchors.fill: parent
             active: GlobalStates.isRecordingPanelOpen
             sourceComponent: ColumnLayout {
                 anchors.fill: parent

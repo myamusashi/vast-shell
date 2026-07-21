@@ -20,6 +20,7 @@ Singleton {
     property alias mediaPlayer: adapter.mediaPlayer
     property alias clipboard: adapter.clipboard
     property alias notification: adapter.notification
+    property alias kdeConnect: adapter.kdeConnect
 
     onLanguageChanged: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
 
@@ -53,6 +54,7 @@ Singleton {
             property NotificationConfig notification: NotificationConfig {}
             property LocalizationConfig language: LocalizationConfig {}
             property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {}
+            property KDEConnectConfig kdeConnect: KDEConnectConfig {}
         }
     }
 }

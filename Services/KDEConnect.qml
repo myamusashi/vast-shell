@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import qs.Core.Configs
 import qs.Services
 
 Singleton {
@@ -58,7 +59,9 @@ Singleton {
             args.push("--ping-msg", message);
         else
             args.push("--ping");
-        const p = pingProcess.createObject(root, { command: args });
+        const p = pingProcess.createObject(root, {
+            command: args
+        });
         p.running = true;
     }
 
@@ -138,7 +141,10 @@ Singleton {
         for (const line of lines) {
             const match = line.match(/^(\S+)\s+(.+)$/);
             if (match)
-                result.push({ id: match[1], name: match[2].trim() });
+                result.push({
+                    id: match[1],
+                    name: match[2].trim()
+                });
         }
         return result;
     }
@@ -149,15 +155,19 @@ Singleton {
         for (const line of lines) {
             const match = line.match(/^-\s+(.+?):\s+(\S+)\s+(.+)$/);
             if (match)
-                result.push({ name: match[1], id: match[2], info: match[3].trim() });
+                result.push({
+                    name: match[1],
+                    id: match[2],
+                    info: match[3].trim()
+                });
         }
         return result;
     }
 
     Timer {
         id: pollTimer
-        interval: root.pollInterval
-        running: root.polling
+        interval: Configs.kdeConnect.pollInterval
+        running: Configs.kdeConnect.pollingEnabled
         repeat: true
         triggeredOnStart: true
         onTriggered: root.refresh()
@@ -207,7 +217,7 @@ Singleton {
         id: shareFileProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] shareFile failed:", stderr.text);
                 destroy();
@@ -219,7 +229,7 @@ Singleton {
         id: shareTextProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] shareText failed:", stderr.text);
                 destroy();
@@ -231,7 +241,7 @@ Singleton {
         id: clipboardProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] sendClipboard failed:", stderr.text);
                 destroy();
@@ -243,7 +253,7 @@ Singleton {
         id: pingProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] ping failed:", stderr.text);
                 destroy();
@@ -255,7 +265,7 @@ Singleton {
         id: ringProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] ring failed:", stderr.text);
                 destroy();
@@ -267,7 +277,7 @@ Singleton {
         id: lockProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] lock failed:", stderr.text);
                 destroy();
@@ -279,7 +289,7 @@ Singleton {
         id: unlockProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] unlock failed:", stderr.text);
                 destroy();
@@ -291,7 +301,7 @@ Singleton {
         id: pairProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] pair failed:", stderr.text);
                 destroy();
@@ -303,7 +313,7 @@ Singleton {
         id: unpairProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] unpair failed:", stderr.text);
                 destroy();
@@ -315,7 +325,7 @@ Singleton {
         id: smsProcess
         Process {
             stderr: StdioCollector {}
-            onExited: (code) => {
+            onExited: code => {
                 if (code !== 0)
                     console.warn("[KDEConnect] sendSms failed:", stderr.text);
                 destroy();

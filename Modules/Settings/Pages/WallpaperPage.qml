@@ -35,8 +35,8 @@ SettingsPageBase {
                 id: pickWallpaperDialog
                 nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.svg", "*.webp"]
                 onFileSelected: path => Quickshell.execDetached({
-                    command: ["shell", "ipc", "call", "img", "set", path]
-                })
+                        command: ["shell", "ipc", "call", "img", "set", path]
+                    })
             }
         }
     }

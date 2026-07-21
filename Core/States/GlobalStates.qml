@@ -50,7 +50,7 @@ Singleton {
             "dashboard": "isDashboardOpen",
             "settings": "isSettingsOpen",
             "clipboard": "isClipboardOpen",
-            "recordingPanel": "isRecordingPanelOpen",
+            "recordingPanel": "isRecordingPanelOpen"
         })
 
     property bool isClipboardOpen: false
