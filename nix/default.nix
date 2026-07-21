@@ -10,10 +10,10 @@
     libnotify,
     iw,
     quickshell,
+    wl-screenrec-fork,
     util-linux,
     matugen,
     wl-clipboard,
-    wl-screenrec,
     ffmpeg,
     wireplumber,
     foot,
@@ -59,7 +59,7 @@
         ## generated colors, copy-paste, screenrecord, thumbnails
         matugen
         wl-clipboard
-        wl-screenrec
+        wl-screenrec-fork
         ffmpeg
 
         ## terminal for running apps with app2unit and a compositor

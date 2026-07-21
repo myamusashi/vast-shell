@@ -50,7 +50,7 @@ Singleton {
             "dashboard": "isDashboardOpen",
             "settings": "isSettingsOpen",
             "clipboard": "isClipboardOpen",
-            "recordingPanel": "isRecordingPanelOpen"
+            "recordingPanel": "isRecordingPanelOpen",
         })
 
     property bool isClipboardOpen: false
@@ -188,19 +188,19 @@ Singleton {
             target: panelController.panelName
 
             function open(): void {
-                GlobalStates.openPanel(panelController.panelName);
+                root.openPanel(panelController.panelName);
             }
             function close(): void {
-                GlobalStates.closePanel(panelController.panelName);
+                root.closePanel(panelController.panelName);
             }
             function toggle(): void {
-                GlobalStates.togglePanel(panelController.panelName);
+                root.togglePanel(panelController.panelName);
             }
         }
 
         property GlobalShortcut shortcut: GlobalShortcut {
-            name: panelController.shortcutName
-            onPressed: GlobalStates.togglePanel(panelController.panelName)
+            name: shortcutName
+            onPressed: root.togglePanel(root.panelName)
         }
     }
 

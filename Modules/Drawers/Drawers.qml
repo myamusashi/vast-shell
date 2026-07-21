@@ -25,6 +25,7 @@ import "OSD"
 import "Bar"
 import "Volume"
 import "ScreenRecorder"
+import "DynamicIsland"
 
 Variants {
     model: Quickshell.screens
@@ -64,7 +65,7 @@ Variants {
         mask: Region {
             regions: childRegions.instances
             item: cornersArea
-            intersection: Intersection.Subtract
+			intersection: Intersection.Subtract
         }
 
         Variants {
@@ -74,9 +75,9 @@ Variants {
             delegate: Region {
                 required property Item modelData
                 item: modelData
-                intersection: Intersection.Xor
+				intersection: Intersection.Xor
             }
-        }
+		}
 
         Scope {
             Exclusion {
@@ -201,6 +202,10 @@ Variants {
 
         Bar {
             id: bar
+        }
+
+        DynamicIsland {
+            id: dynamicIsland
         }
 
         Clipboard {

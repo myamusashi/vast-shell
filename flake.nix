@@ -3,6 +3,7 @@
 
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+        wl-screenrec-fork = "github:myamusashi/wl-screenrec";
         quickshell = {
             url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -13,6 +14,7 @@
         self,
         nixpkgs,
         quickshell,
+        wl-screenrec-fork,
     }: let
         systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
 
@@ -28,7 +30,7 @@
             pkgs = pkgsFor system;
         in
             pkgs.callPackage ./nix/default.nix {
-                inherit quickshell;
+                inherit quickshell wl-screenrec-fork;
             });
 
         nixosModules.default = import ./nix/nixos-modules.nix {
