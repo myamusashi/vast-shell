@@ -25,11 +25,44 @@ StyledRect {
         anchors.fill: parent
         spacing: Appearance.spacing.small
 
-        StyledText {
-            text: qsTr("Recordings")
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.normal
-            font.weight: Font.DemiBold
+        StyledRect {
+            Layout.fillWidth: true
+            Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
+            color: "transparent"
+            radius: Appearance.rounding.small
+
+            RowLayout {
+                anchors {
+                    fill: parent
+                    leftMargin: Appearance.spacing.small
+                }
+                spacing: Appearance.spacing.small
+
+                Icon {
+                    type: Icon.Material
+                    icon: "arrow_back"
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.large
+                }
+
+                StyledText {
+                    text: qsTr("Recordings")
+                    color: Colours.m3Colors.m3OnSurface
+                    font.weight: Font.DemiBold
+                    font.pixelSize: Appearance.fonts.size.normal
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
+            MArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+                onClicked: root.goBack()
+            }
         }
 
         ListView {
@@ -61,17 +94,10 @@ StyledRect {
 
                 width: listView.width
                 height: 56
-                color: listView.currentIndex === index
-                    ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15)
-                    : (delegateMouse.containsMouse
-                        ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08)
-                        : "transparent")
+                color: listView.currentIndex === index ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15) : (delegateMouse.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
                 radius: Appearance.rounding.small
 
-                Component.onCompleted: ScreenRecorder.createThumbnail(
-                    modelData.path,
-                    Paths.cacheDir + "/video-thumbnails"
-                )
+                Component.onCompleted: ScreenRecorder.createThumbnail(modelData.path, Paths.cacheDir + "/video-thumbnails")
 
                 Connections {
                     target: ScreenRecorder
@@ -122,8 +148,7 @@ StyledRect {
                                 icon: "play_circle"
                                 color: Colours.m3Colors.m3OnPrimaryContainer
                                 font.pixelSize: 20
-                                visible: thumbImage.status !== Image.Ready
-                                    && thumbImage.status !== Image.Loading
+                                visible: thumbImage.status !== Image.Ready && thumbImage.status !== Image.Loading
                             }
                         }
                     }
@@ -135,9 +160,7 @@ StyledRect {
 
                         StyledText {
                             text: modelData.name
-                            color: listView.currentIndex === index
-                                ? Colours.m3Colors.m3Primary
-                                : Colours.m3Colors.m3OnSurface
+                            color: listView.currentIndex === index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Font.Medium
                             elide: Text.ElideRight
@@ -189,9 +212,7 @@ StyledRect {
             }
 
             Keys.onReturnPressed: {
-                const item = listView.model.get
-                    ? listView.model.get(listView.currentIndex)
-                    : listView.model[listView.currentIndex];
+                const item = listView.model.get ? listView.model.get(listView.currentIndex) : listView.model[listView.currentIndex];
                 if (item)
                     root.openFile(item.path);
             }

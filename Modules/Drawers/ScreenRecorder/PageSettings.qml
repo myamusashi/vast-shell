@@ -62,162 +62,239 @@ StyledRect {
             }
         }
 
-        ScrollView {
+        Flickable {
+            id: flickable
+
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            contentWidth: width
+            contentHeight: settingsColumn.implicitHeight
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
+            }
 
             ColumnLayout {
-                width: parent.width
-                spacing: Appearance.spacing.small
+                id: settingsColumn
 
-                RowLayout {
-                    spacing: Appearance.spacing.smaller
+                width: flickable.width
+                spacing: Appearance.spacing.normal
 
-                    ColumnLayout {
-                        spacing: Appearance.padding.small
-                        Layout.fillWidth: true
-
-                        StyledText {
-                            text: qsTr("Frame Rate")
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            font.pixelSize: Appearance.fonts.size.normal
+                SettingSection {
+                    label: qsTr("Frame Rate")
+                    model: [
+                        {
+                            text: "30 FPS",
+                            value: 30
+                        },
+                        {
+                            text: "60 FPS",
+                            value: 60
+                        },
+                        {
+                            text: "120 FPS",
+                            value: 120
                         }
+                    ]
+                    selectedValue: ScreenRecorder.maxFps
+                    onSelected: ScreenRecorder.maxFps = value
+                }
 
-                        RowLayout {
-                            spacing: Appearance.spacing.small
+                SettingSection {
+                    label: qsTr("Bitrate")
+                    model: [
+                        {
+                            text: "1 MB",
+                            value: "1 MB"
+                        },
+                        {
+                            text: "5 MB",
+                            value: "5 MB"
+                        },
+                        {
+                            text: "10 MB",
+                            value: "10 MB"
+                        },
+                        {
+                            text: "20 MB",
+                            value: "20 MB"
+                        }
+                    ]
+                    selectedValue: ScreenRecorder.bitrate
+                    onSelected: ScreenRecorder.bitrate = value
+                }
 
-                            Repeater {
-                                model: [30, 60, 120]
+                SettingSection {
+                    label: qsTr("Video Codec")
+                    model: [
+                        {
+                            text: "Auto",
+                            value: ""
+                        },
+                        {
+                            text: "AVC",
+                            value: "avc"
+                        },
+                        {
+                            text: "HEVC",
+                            value: "hevc"
+                        },
+                        {
+                            text: "VP8",
+                            value: "vp8"
+                        },
+                        {
+                            text: "VP9",
+                            value: "vp9"
+                        },
+                        {
+                            text: "AV1",
+                            value: "av1"
+                        }
+                    ]
+                    selectedValue: ScreenRecorder.videoCodec
+                    onSelected: ScreenRecorder.videoCodec = value
+                }
 
-                                delegate: StyledRect {
-                                    id: fpsDelegate
+                SettingSection {
+                    label: qsTr("Audio Codec")
+                    model: [
+                        {
+                            text: "Auto",
+                            value: ""
+                        },
+                        {
+                            text: "AAC",
+                            value: "aac"
+                        },
+                        {
+                            text: "MP3",
+                            value: "mp3"
+                        },
+                        {
+                            text: "FLAC",
+                            value: "flac"
+                        },
+                        {
+                            text: "Opus",
+                            value: "opus"
+                        }
+                    ]
+                    selectedValue: ScreenRecorder.audioCodec
+                    onSelected: ScreenRecorder.audioCodec = value
+                }
 
-                                    required property int modelData
+                SettingSection {
+                    label: qsTr("Power Mode")
+                    model: [
+                        {
+                            text: qsTr("Auto"),
+                            value: "auto"
+                        },
+                        {
+                            text: qsTr("Low"),
+                            value: "on"
+                        },
+                        {
+                            text: qsTr("Normal"),
+                            value: "off"
+                        }
+                    ]
+                    selectedValue: ScreenRecorder.lowPower
+                    onSelected: ScreenRecorder.lowPower = value
+                }
 
-                                    Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
-                                    implicitWidth: fpsLabel.implicitWidth + Appearance.margin.smaller
-                                    color: ScreenRecorder.maxFps === modelData ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (fpsButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-                                    radius: Appearance.rounding.small
-
-                                    StyledText {
-                                        id: fpsLabel
-                                        anchors.centerIn: parent
-                                        text: fpsDelegate.modelData + " FPS"
-                                        color: ScreenRecorder.maxFps === fpsDelegate.modelData ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                        font.weight: ScreenRecorder.maxFps === fpsDelegate.modelData ? Font.DemiBold : Font.Normal
-                                    }
-
-                                    MArea {
-                                        id: fpsButtonMouseArea
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: ScreenRecorder.maxFps = fpsDelegate.modelData
-                                    }
-                                }
-                            }
+                SettingSection {
+                    label: qsTr("Toggles")
+                    model: [
+                        {
+                            text: qsTr("Show Cursor"),
+                            value: "cursor"
+                        },
+                        {
+                            text: qsTr("Replay Buffer"),
+                            value: "history"
+                        }
+                    ]
+                    selectedValue: ""
+                    extraActive: item => {
+                        switch (item.value) {
+                        case "cursor":
+                            return ScreenRecorder.showCursor;
+                        case "history":
+                            return ScreenRecorder.historyMode;
+                        default:
+                            return false;
                         }
                     }
-
-                    ColumnLayout {
-                        spacing: Appearance.padding.small
-                        Layout.fillWidth: true
-
-                        StyledText {
-                            text: qsTr("Bitrate")
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            font.pixelSize: Appearance.fonts.size.normal
-                        }
-
-                        RowLayout {
-                            spacing: Appearance.spacing.small
-
-                            Repeater {
-                                model: ["1 MB", "5 MB", "10 MB", "20 MB"]
-
-                                delegate: StyledRect {
-                                    id: bitDelegate
-
-                                    required property string modelData
-
-                                    Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
-                                    implicitWidth: bitrateLabel.implicitWidth + Appearance.margin.small
-                                    color: ScreenRecorder.bitrate === modelData ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (bitrateButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-                                    radius: Appearance.rounding.small
-
-                                    StyledText {
-                                        id: bitrateLabel
-                                        anchors.centerIn: parent
-                                        text: bitDelegate.modelData
-                                        color: ScreenRecorder.bitrate === bitDelegate.modelData ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                        font.weight: ScreenRecorder.bitrate === bitDelegate.modelData ? Font.DemiBold : Font.Normal
-                                    }
-
-                                    MArea {
-                                        id: bitrateButtonMouseArea
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: ScreenRecorder.bitrate = bitDelegate.modelData
-                                    }
-                                }
-                            }
+                    onSelected: value => {
+                        switch (value) {
+                        case "cursor":
+                            ScreenRecorder.showCursor = !ScreenRecorder.showCursor;
+                            break;
+                        case "history":
+                            ScreenRecorder.historyMode = !ScreenRecorder.historyMode;
+                            break;
                         }
                     }
                 }
+            }
+        }
+    }
 
-                RowLayout {
-                    spacing: Appearance.spacing.small
+    component SettingSection: ColumnLayout {
+        id: section
 
-                    StyledRect {
-                        Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
-                        implicitWidth: cursorLabel.implicitWidth + Appearance.margin.smaller
-                        color: ScreenRecorder.showCursor ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (cursorButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-                        radius: Appearance.rounding.small
+        spacing: Appearance.spacing.small
 
-                        StyledText {
-                            id: cursorLabel
-                            anchors.centerIn: parent
-                            text: qsTr("Show Cursor")
-                            color: ScreenRecorder.showCursor ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: ScreenRecorder.showCursor ? Font.DemiBold : Font.Normal
-                        }
+        required property string label
+        required property var model
+        required property var selectedValue
+        property var extraActive: null
+        signal selected(var value)
 
-                        MArea {
-                            id: cursorButtonMouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: ScreenRecorder.showCursor = !ScreenRecorder.showCursor
-                        }
+        StyledText {
+            text: section.label
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.normal
+        }
+
+        GridLayout {
+            Layout.fillWidth: true
+            columns: 2
+            columnSpacing: Appearance.spacing.small
+            rowSpacing: Appearance.spacing.small
+
+            Repeater {
+                model: section.model
+
+                delegate: StyledRect {
+                    required property var modelData
+
+                    readonly property var value: modelData.value ?? modelData
+                    readonly property bool active: section.extraActive ? section.extraActive(modelData) : section.selectedValue === value
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 40
+                    color: active ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (pillMouse.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
+                    radius: Appearance.rounding.small
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: modelData.text ?? modelData
+                        color: active ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: active ? Font.DemiBold : Font.Normal
                     }
 
-                    StyledRect {
-                        Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
-                        implicitWidth: historyLabel.implicitWidth + Appearance.margin.smaller
-                        color: ScreenRecorder.historyMode ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (historyButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-                        radius: Appearance.rounding.small
-
-                        StyledText {
-                            id: historyLabel
-                            anchors.centerIn: parent
-                            text: qsTr("Replay Buffer")
-                            color: ScreenRecorder.historyMode ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: ScreenRecorder.historyMode ? Font.DemiBold : Font.Normal
-                        }
-
-                        MArea {
-                            id: historyButtonMouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: ScreenRecorder.historyMode = !ScreenRecorder.historyMode
-                        }
+                    MArea {
+                        id: pillMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: section.selected(value)
                     }
                 }
             }
