@@ -42,7 +42,7 @@ function totalBounds(screens) {
     return { width: maxX, height: maxY };
 }
 
-function buildWlScreenrecArgs(cfg, geometry, output) {
+function buildWlScreenrecArgs(cfg, geometry, output, toplevelFilter) {
     const args = ["wl-screenrec", "--capture-backend", "ext-image-copy-capture"];
     if (cfg.videoCodec && cfg.videoCodec !== "auto")
         args.push("--codec", cfg.videoCodec);
@@ -65,7 +65,9 @@ function buildWlScreenrecArgs(cfg, geometry, output) {
         if (cfg.audioDevice)
             args.push("--audio-device", cfg.audioDevice);
     }
-    if (geometry)
+    if (toplevelFilter)
+        args.push("--toplevel", toplevelFilter);
+    else if (geometry)
         args.push("-g", geometry);
     else if (output)
         args.push("-o", output);

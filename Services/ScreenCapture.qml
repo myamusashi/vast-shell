@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
+import qs.Core.States
 import qs.Core.Utils
 import qs.Services.ScreenRecorder
 
@@ -93,6 +94,18 @@ Singleton {
 
     function startRecording(output: string): void {
         ScreenRecorder.startRecording("", output);
+    }
+
+    function recordWindow(): void {
+        if (ScreenRecorder.isRecording) {
+            ScreenRecorder.stopRecording();
+            return;
+        }
+        GlobalStates.isRecordingPanelOpen = false;
+        ScreenRecorder.pickWindowForRecord(appId => {
+            if (appId)
+                ScreenRecorder.recordToplevel(appId);
+        });
     }
 
     function stopRecording(): void {

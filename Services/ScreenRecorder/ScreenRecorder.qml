@@ -349,12 +349,50 @@ Singleton {
         recordingProcess.running = true;
     }
 
+    function startRecordingToplevel(appId) {
+        if (root.isRecording) {
+            root.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
+            return;
+        }
+
+        const cfg = {
+            videoCodec: root.videoCodec,
+            audioCodec: root.audioCodec,
+            encodeResolution: root.encodeResolution,
+            driDevice: root.driDevice,
+            lowPower: root.lowPower,
+            maxFps: root.maxFps,
+            bitrate: root.bitrate,
+            showCursor: root.showCursor,
+            historyMode: root.historyMode,
+            includeAudio: root.includeAudio,
+            audioDevice: root.audioDevice
+        };
+
+        const path = Utils.videoPath(root.videoDir);
+        root.currentOutputFile = path;
+
+        const args = Utils.buildWlScreenrecArgs(cfg, "", "", "app-id=" + appId);
+        args.push("-f", path);
+
+        recordingProcess.command = args;
+        recordingProcess.running = true;
+    }
+
     function recordSelection(geometry) {
         if (root.isRecording) {
             stopRecording();
             return;
         }
         startRecording(geometry, "");
+    }
+
+    function recordToplevel(appId) {
+        if (root.isRecording) {
+            stopRecording();
+            return;
+        }
+        startRecordingToplevel(appId);
     }
 
     function stopRecording() {
@@ -393,6 +431,10 @@ Singleton {
 
     function screenshotWindow(action) {
         screenshotter.screenshotWindow(action);
+    }
+
+    function pickWindowForRecord(callback) {
+        screenshotter.pickWindowForRecord(callback);
     }
 
     function screenshotSelection(action) {

@@ -789,7 +789,7 @@ vast-shell/
 
 **Screen Capture Rework**
 - [x] Redesign the screen recorder
-- [ ] Window selection mode for targeted recording (we need to wait the wl-screenrec release that feature)
+- [x] Window selection mode for targeted recording
 - [x] Merged multi-monitor screenshot support
 - [x] Reduced external dependencies (less reliance on `slurp`, `hyprshot`, `grim`)
 

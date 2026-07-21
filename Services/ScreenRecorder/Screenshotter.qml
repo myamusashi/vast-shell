@@ -23,6 +23,7 @@ Item {
     property bool windowPickerOpen: false
     property string pendingWindowAction: ""
     property real regionScale: 1
+    property var pickForRecordCallback: null
 
     property var allScreenPaths: []
     property int captureIndex: 0
@@ -501,7 +502,10 @@ Item {
 
                 anchors.fill: parent
                 focus: true
-                Keys.onEscapePressed: root.windowPickerOpen = false
+                Keys.onEscapePressed: {
+                    root.pickForRecordCallback = null;
+                    root.windowPickerOpen = false;
+                }
                 Component.onCompleted: forceActiveFocus()
             }
 
@@ -511,7 +515,10 @@ Item {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.windowPickerOpen = false
+                    onClicked: {
+                        root.pickForRecordCallback = null;
+                        root.windowPickerOpen = false;
+                    }
                 }
             }
 
@@ -630,6 +637,14 @@ Item {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
+                            if (root.pickForRecordCallback) {
+                                const appId = modelData.lastIpcObject?.class;
+                                const cb = root.pickForRecordCallback;
+                                root.pickForRecordCallback = null;
+                                root.windowPickerOpen = false;
+                                cb(appId);
+                                return;
+                            }
                             const ipc = modelData.lastIpcObject;
                             const size = ipc?.size ?? [0, 0];
                             const ws = Hypr.focusedWorkspace;
@@ -651,7 +666,14 @@ Item {
 
     function screenshotWindow(action) {
         console.log("screenshotWindow: opening window picker, action:", action);
+        root.pickForRecordCallback = null;
         root.pendingWindowAction = action || "save+copy";
+        root.windowPickerOpen = true;
+    }
+
+    function pickWindowForRecord(callback) {
+        console.log("pickWindowForRecord: opening window picker for recording");
+        root.pickForRecordCallback = callback;
         root.windowPickerOpen = true;
     }
 
