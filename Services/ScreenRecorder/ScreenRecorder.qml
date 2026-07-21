@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Vast
 
+import qs.Core.Configs
 import "shellUtils.js" as Utils
 
 Singleton {
@@ -52,16 +53,38 @@ Singleton {
 
     onAudioDeviceChanged: {}
     onAudioDeviceDescriptionChanged: {}
-    onVideoCodecChanged: {}
-    onAudioCodecChanged: {}
+    onVideoCodecChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.videoCodec = root.videoCodec;
+    }
+    onAudioCodecChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.audioCodec = root.audioCodec;
+    }
     onDriDeviceChanged: {}
     onEncodeResolutionChanged: {}
-    onLowPowerChanged: {}
-    onBitrateChanged: {}
-    onMaxFpsChanged: {}
-    onHistoryModeChanged: {}
+    onLowPowerChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.lowPower = root.lowPower;
+    }
+    onBitrateChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.bitrate = root.bitrate;
+    }
+    onMaxFpsChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.maxFps = root.maxFps;
+    }
+    onHistoryModeChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.historyMode = root.historyMode;
+    }
     onIncludeAudioChanged: {}
-    onShowCursorChanged: {}
+    onShowCursorChanged: {
+        if (!_loadingFromConfig)
+            Configs.screenRecorder.showCursor = root.showCursor;
+    }
+    property bool _loadingFromConfig: false
     onIsRecordingChanged: {
         if (root.isRecording) {
             root.recordingElapsedSeconds = 0;
@@ -276,6 +299,15 @@ Singleton {
         root.checkActiveRecording();
         root.isRecordingChanged();
         root.currentOutputFileChanged();
+        root._loadingFromConfig = true;
+        root.maxFps = Configs.screenRecorder.maxFps;
+        root.bitrate = Configs.screenRecorder.bitrate;
+        root.videoCodec = Configs.screenRecorder.videoCodec;
+        root.audioCodec = Configs.screenRecorder.audioCodec;
+        root.lowPower = Configs.screenRecorder.lowPower;
+        root.showCursor = Configs.screenRecorder.showCursor;
+        root.historyMode = Configs.screenRecorder.historyMode;
+        root._loadingFromConfig = false;
     }
 
     function rebuild() {

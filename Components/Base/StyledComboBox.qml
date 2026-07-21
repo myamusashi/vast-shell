@@ -33,15 +33,19 @@ ComboBox {
     textRole: "display"
     valueRole: ""
     onCurrentValueChanged: syncIndex()
-    onModelChanged: Qt.callLater(syncIndex)
+    onModelChanged: syncIndex()
+    onValueRoleChanged: syncIndex()
+    Component.onCompleted: syncIndex()
 
     function syncIndex() {
-        if (root.valueRole === "" || root.currentValue === null)
+        if (root.valueRole === "" || root.currentValue === null || root.currentValue === undefined)
             return;
         const count = root.model?.count ?? root.model?.length ?? 0;
         for (let i = 0; i < count; i++) {
             const item = root.model[i];
-            const v = item ? item[root.valueRole] : undefined;
+            if (!item)
+                continue;
+            const v = item[root.valueRole];
             if (v === root.currentValue) {
                 root.currentIndex = i;
                 return;
@@ -68,6 +72,8 @@ ComboBox {
         implicitWidth: 280
         implicitHeight: 48
         color: Colours.m3Colors.m3Surface
+        border.color: Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
+        border.width: 1
     }
 
     indicator: Item {
