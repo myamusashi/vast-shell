@@ -50,7 +50,7 @@ install_system_packages() {
 	local -r pkg_list=(
 		base-devel git cmake ninja extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		rust pipewire ddcutil i2c-tools
+		rust pipewire ddcutil i2c-tools go
 		findutils grep sed gawk util-linux libnotify wireplumber
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 	)
@@ -489,6 +489,12 @@ install_quickshell_config() {
 	if [[ -f $INSTALL_DIR/Qml/shell.qml ]]; then
 		sed -i 's/ShellRoot {/ShellRoot { settings.watchFiles: false/' "$INSTALL_DIR/Qml/shell.qml"
 	fi
+
+	log "Setting global VAST_SHELL_DIRECTORY..."
+	cat >/etc/profile.d/vast-shell.sh <<'EOF'
+export VAST_SHELL_DIRECTORY="/usr/local/share/quickshell"
+EOF
+	chmod 644 /etc/profile.d/vast-shell.sh
 }
 
 setup_user_config() {
@@ -566,6 +572,43 @@ build_wl_screenrec() {
 	[[ -f $binary ]] || warn "wl-screenrec binary not found after build"
 }
 
+build_vastctl() {
+	local -r binary="$BIN_DIR/vastctl"
+	[[ -f $binary ]] && {
+		log "vastctl already installed"
+		return 0
+	}
+	command -v go &>/dev/null || {
+		warn "Go not found — skipping vastctl build. Install go: pacman -S go"
+		return 0
+	}
+
+	log "Building vastctl..."
+	pushd "$PROJECT_ROOT/vastctl" >/dev/null
+	go mod tidy
+	go build -ldflags="-s -w" -o "$binary" . || {
+		warn "vastctl build failed"
+		popd >/dev/null
+		return 0
+	}
+	popd >/dev/null
+
+	# shell completions
+	mkdir -p /usr/share/bash-completion/completions
+	"$binary" completion bash > /usr/share/bash-completion/completions/vastctl
+
+	mkdir -p /usr/share/fish/vendor_completions.d
+	"$binary" completion fish > /usr/share/fish/vendor_completions.d/vastctl.fish
+
+	mkdir -p /usr/share/zsh/site-functions
+	"$binary" completion zsh > /usr/share/zsh/site-functions/_vastctl
+
+	mkdir -p /usr/share/nushell/completions
+	"$binary" completion nushell > /usr/share/nushell/completions/vastctl.nu
+
+	log "vastctl installed to $BIN_DIR"
+}
+
 cleanup_build_deps() {
 	local -r build_deps=(
 		base-devel cmake ninja extra-cmake-modules patchelf pkgconf
@@ -598,6 +641,7 @@ main() {
 	build_vast_plugin
 	build_m3shapes
 	build_another_ripple
+	build_vastctl
 	compile_shaders
 	compile_translations
 	cleanup_build_deps

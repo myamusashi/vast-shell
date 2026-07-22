@@ -31,6 +31,8 @@ in {
     };
 
     config = lib.mkIf cfg.enable {
+        environment.variables.VAST_SHELL_DIRECTORY = "${cfg.package}/share/quickshell";
+
         environment.systemPackages =
             [cfg.package]
             ++ cfg.extraPackages;

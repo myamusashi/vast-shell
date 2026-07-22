@@ -32,6 +32,7 @@
     m3shapes = callPackage ./plugins/m3Shapes.nix {};
     another-ripple = callPackage ./plugins/AnotherRipple.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
+    vastctl = callPackage ./packages/vastctl.nix {};
 
     runtimeDeps = [
         ## utils
@@ -206,6 +207,7 @@
 in {
     inherit
         shell
+        vastctl
         material-symbols
         app2unit
         runtimeDeps
