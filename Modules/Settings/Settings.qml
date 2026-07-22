@@ -118,6 +118,11 @@ LazyLoader {
                             iconName: "screen_record"
                             pageIndex: 11
                         }
+                        SidebarItem {
+                            text: qsTr("Idle")
+                            iconName: "hourglass"
+                            pageIndex: 12
+                        }
 
                         Item {
                             Layout.fillHeight: true
@@ -189,6 +194,10 @@ LazyLoader {
                         Loader {
                             active: stackLayout.currentIndex === 11
                             sourceComponent: ScreenRecorderPage {}
+                        }
+                        Loader {
+                            active: stackLayout.currentIndex === 12
+                            sourceComponent: IdlePage {}
                         }
                     }
                 }

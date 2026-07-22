@@ -4,6 +4,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Wayland
 import Quickshell.Hyprland
 import Quickshell.Services.Pipewire
 import Vast
@@ -346,6 +347,39 @@ Singleton {
 
         function onVolumeChanged() {
             root.showOSD("volume");
+        }
+    }
+
+    Instantiator {
+        model: Configs.idle.timeouts
+        delegate: IdleMonitor {
+            required property var modelData
+            readonly property int timeoutMonitor: modelData.timeoutMonitor ?? 60
+            readonly property string onTimeout: modelData["on-timeout"] ?? ""
+            readonly property string onResume: modelData["on-resume"] ?? ""
+            property bool fired: false
+
+            enabled: Configs.idle.enabled
+            respectInhibitors: true
+            timeout: timeoutMonitor
+
+            onIsIdleChanged: {
+                if (isIdle && !fired) {
+                    fired = true;
+                    if (onTimeout) {
+                        Quickshell.execDetached({
+                            command: ["sh", "-c", onTimeout]
+                        });
+                    }
+                } else if (!isIdle && fired) {
+                    fired = false;
+                    if (onResume) {
+                        Quickshell.execDetached({
+                            command: ["sh", "-c", onResume]
+                        });
+                    }
+                }
+            }
         }
     }
 }
