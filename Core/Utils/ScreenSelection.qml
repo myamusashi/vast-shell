@@ -49,6 +49,7 @@ LazyLoader {
             bottom: true
         }
         color: "transparent"
+        WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
         WlrLayershell.layer: WlrLayer.Overlay
 
         Image {
@@ -110,9 +111,17 @@ LazyLoader {
             }
         }
 
-        Keys.onEscapePressed: {
-            root.close();
-            root.cancelled();
+        Item {
+            id: focusCatcher
+
+            anchors.fill: parent
+            focus: GlobalStates.isSelectionOpen
+
+            Keys.onEscapePressed: {
+                root.close();
+                root.cancelled();
+            }
+            Component.onCompleted: forceActiveFocus()
         }
     }
 }
