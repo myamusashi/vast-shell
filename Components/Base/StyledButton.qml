@@ -62,14 +62,6 @@ Item {
             }
         },
         State {
-            name: "hovered"
-            when: root.enabled && root.hovered && !root.pressed
-            PropertyChanges {
-                target: background
-                scale: 1.02
-            }
-        },
-        State {
             name: "normal"
             when: root.enabled && !root.hovered && !root.pressed
         }
@@ -93,7 +85,7 @@ Item {
         radius: Appearance.rounding.normal
         color: root.outlined ? "transparent" : root.bgColor
         border.width: root.outlined ? 1 : 0
-        border.color: root.outlined ? Qt.alpha(root.color, root.enabled ? 1.0 : 0.38) : "transparent"
+        border.color: root.outlined ? Qt.alpha(Colours.m3Colors.m3OnSurface, root.enabled ? 1.0 : 0.38) : "transparent"
         transformOrigin: Item.Center
 
         SimpleRipple {
