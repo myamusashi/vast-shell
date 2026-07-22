@@ -68,6 +68,50 @@ https://github.com/user-attachments/assets/11651d0e-6929-4404-a24f-7e3dabc95ad1
 
 ## Usage
 
+### vastctl (CLI Companion)
+
+`vastctl` is a standalone Go binary for scripting vast-shell from the command line. It can launch the shell in the background and control every feature through IPC.
+
+```
+vastctl
+├── wallpaper get / set
+├── brightness get / set
+├── audio profile list / set
+│       device list / set
+├── volume system get / set / mute / unmute / toggle-mute
+│       app list / set <id> / mute <id> / unmute <id> / toggle-mute <id>
+├── capture screen / region / window [action]
+├── record start / stop / toggle / status
+├── mpris play-pause / next / previous / stop / list
+├── lock lock / unlock / status
+├── idle on / off / status
+├── keylock capslock / numlock
+├── hypr dispatch / shortcuts list
+├── daemon start / stop / restart / status [-v]
+└── completion bash / fish / zsh / nushell
+```
+
+#### Daemon auto-start
+
+On the first IPC call, `vastctl` automatically launches quickshell in the background if it's not running. Explicit control is available:
+
+```sh
+vastctl daemon start               # silent by default
+vastctl daemon start --verbose     # show quickshell logs
+vastctl daemon status
+vastctl daemon restart
+vastctl daemon stop
+```
+
+#### Shell completions
+
+```sh
+vastctl completion bash   | sudo tee /etc/bash_completion.d/vastctl
+vastctl completion fish   | sudo tee /usr/share/fish/vendor_completions.d/vastctl.fish
+vastctl completion zsh    | sudo tee /usr/share/zsh/site-functions/_vastctl
+vastctl completion nushell | sudo tee /usr/share/nushell/completions/vastctl.nu
+```
+
 ### Hyprland Global Shortcuts
 
 Dispatch a panel or action directly from Hyprland:
@@ -96,12 +140,19 @@ shell ipc call <target> <function>
 **Available targets and functions:**
 
 | Target | Functions |
-|---|---|---|
+|---|---|
 | `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture`, `clipboard`, `recordingPanel` | `toggle()`, `open()`, `close()` |
 | `toast` | `open(header: string, description: string, icon: string, duration: int)` |
 | `img` | `get(): string`, `set(path: string)` |
 | `lock` | `lock()`, `unlock()`, `isLocked(): bool` |
 | `recorder` | `start()`, `stop()`, `toggle()`, `status(): bool` |
+| `capture` | `screen(action: string)`, `region(action: string)`, `window(action: string)` |
+| `brightness` | `get(): string`, `set(percent: int)` |
+| `audio` | `deviceList(): string`, `deviceSet(name: string)`, `profileList(): string`, `profileSet(name: string)` |
+| `volume` | `systemGet(): string`, `systemSet(percent: int)`, `systemMute()`, `systemUnmute()`, `systemToggleMute()`, `appList(): string`, `appSet(id: int, percent: int)`, `appMute(id: int)`, `appUnmute(id: int)`, `appToggleMute(id: int)` |
+| `mpris` | `playPause()`, `next()`, `previous()`, `stop()`, `list(): string` |
+| `idle` | `on()`, `off()`, `status(): bool` |
+| `keylock` | `capslock(): bool`, `numlock(): bool` |
 
 ---
 
@@ -678,97 +729,117 @@ vast-shell/
 ├── archInstall.sh
 ├── flake.nix / flake.lock / shell.nix
 │
+├── vastctl/
+│   ├── main.go
+│   ├── go.mod / go.sum
+│   ├── cmd/                    # audio, brightness, capture, daemon,
+│   │                           # hypr, idle, keylock, lock, mpris,
+│   │                           # record, root, volume, wallpaper
+│   └── internal/
+│       ├── hypr/dispatch.go    # hyprctl wrapper
+│       └── ipc/client.go       # shell ipc call client + daemon launcher
+│
 ├── nix/
 │   ├── default.nix
 │   ├── nixos-modules.nix
-│   ├── packages/          # app2unit, material-symbols, qmlfmt
-│   └── plugins/           # vastPlugin, AnotherRipple, m3Shapes
+│   ├── packages/
+│   │   ├── app2unit.nix
+│   │   ├── material-symbols.nix
+│   │   ├── qmlfmt.nix
+│   │   └── vastctl.nix
+│   └── plugins/
+│       ├── AnotherRipple.nix
+│       ├── m3Shapes.nix
+│       └── vastPlugin.nix
 │
-├── Core/
-│   ├── Configs/           # Appearance, Bar, Clipboard, ColorSystem, General,
-│   │                      # KDEConnect, Localization, MediaPlayer, Notification,
-│   │                      # Wallpaper, Weather
-│   ├── States/            # GlobalStates, Workspaces
-│   └── Utils/             # DistroAscii, Dots, HighlightText, Icon, Log,
-│                          # MArea, Paths, ScreenSelection, Time, TimeAgo, WeatherIcon
-│
-├── Components/
-│   ├── Base/              # CAnim, Circular, Corner, CornerPair, Elevation,
-│   │                      # FocusCage, NAnim, SettingRow, StyledButton,
-│   │                      # StyledComboBox, StyledMenu, StyledMenuItem,
-│   │                      # StyledRect, StyledSlide, StyledSwitch,
-│   │                      # StyledText, StyledTextInput, TextInputComponents,
-│   │                      # Wallpaper, Wavy
-│   ├── Dialog/
-│   │   ├── DialogBox.qml
-│   │   └── FileDialog/    # BottomActionBar, FileListView, PlacesSidebar,
-│   │                      # TopAppBar, FileListItem, PlaceItem
-│   └── Feedback/          # BorderProgress, LoadingIndicator, Progress, Toast
-│
-├── Services/              # Audio, Battery, Brightness, CalendarMajorEvents,
-│                          # Colours, DepthWallpaperController, Fontlist, Hotspot,
-│                          # Hypr, Hyprsunset, KeylockState, Lyrics, Notifs,
-│                          # Players, PolAgent, Privacy, Record, ScreenCapture,
-│                          # ScreenCaptureHistory, ScreenRecorder, SystemUsage,
-│                          # ToastService, WallpaperFileModels, Weather
-│
-├── Modules/
-│   ├── Dashboard/         # Capture, ControlBar, Header, History, Performance
-│   ├── Drawers/
-│   │   ├── Bar/           # Bar, Left, Middle, Right
-│   │   ├── Calendar/
-│   │   ├── Clipboard/     # ClipboardItemDelegate, ClipboardPreview
-│   │   ├── DynamicIsland/ # ConfirmDeviceContent, DeviceListContent, DoneContent,
-│   │   │                  # DraggingContent, DynamicIsland, FilesDroppedContent, ProgressContent
-│   │   ├── Launcher/      # App, CaptureItem, Screencapture
-│   │   ├── Notifications/ # Components/Content, NotifIcon, Wrapper
-│   │   ├── OSD/           # CapsLockWidget, NumLockWidget
-│   │   ├── Overview/      # Overview, WorkspaceView
-│   │   ├── QuickSettings/ # PerformancePages, Settings, VolumeSettings
-│   │   ├── Session/
-│   │   ├── Volume/
-│   │   ├── WallpaperSelector/
-│   │   └── Weather/       # Headers, WeatherItem/* (Pages, AQI, Cloudiness,
-│   │                      # ForecastDaily, ForecastHourly, Humidity, Moon,
-│   │                      # Precipitation, Pressure, Sun, UVIndex, Visibility, Wind)
-│   ├── Lock/              # BottomItem, Clock, Lockscreen, Pam, Surface
-│   ├── Polkit/            # Body, Header, InputField
-│   ├── Settings/
-│   │   ├── Components/    # SettingsCard, SettingsPageBase, SidebarItem
-│   │   ├── Pages/         # Appearance, Bar, Clipboard, DepthWallpaperSection,
-│   │   │                  # General, Internet, KDEConnect, Language, MediaPlayer,
-│   │   │                  # Notification, Wallpaper, Weather
-│   │   └── Settings.qml
-│   └── Wallpaper/         # Wall
-│
-├── Widgets/               # AudioProfiles, Battery, Clock, LyricsView,
-│                          # MixerEntry, Mpris, NotificationDots, OsText,
-│                          # RecordIndicator, Sound, Tray, TrayMenu,
-│                          # WorkspaceName, Workspaces
+├── Qml/
+│   ├── shell.qml
+│   ├── Components/
+│   │   ├── Base/              # CAnim, Circular, Corner, CornerPair, Elevation,
+│   │   │                      # FocusCage, NAnim, SettingRow, StyledButton,
+│   │   │                      # StyledComboBox, StyledMenu, StyledMenuItem,
+│   │   │                      # StyledRect, StyledSlide, StyledSwitch,
+│   │   │                      # StyledText, StyledTextInput, Wallpaper, Wavy
+│   │   ├── Dialog/
+│   │   │   ├── DialogBox.qml
+│   │   │   └── FileDialog/    # BottomActionBar, FileListView, PlacesSidebar,
+│   │   │                      # TopAppBar, FileListItem, PlaceItem
+│   │   └── Feedback/          # BorderProgress, LoadingIndicator, Progress, Toast
+│   │
+│   ├── Core/
+│   │   ├── Configs/           # Appearance, Bar, Clipboard, ColorSystem, General,
+│   │   │                      # Idle, KDEConnect, Localization, MediaPlayer,
+│   │   │                      # Notification, ScreenRecorder, Wallpaper, Weather
+│   │   ├── States/            # GlobalStates (IPC handlers, OSD, panels),
+│   │   │                      # Workspaces
+│   │   └── Utils/             # DistroAscii, Dots, HighlightText, Icon, Log,
+│   │                          # MArea, Paths, ScreenSelection, Time, TimeAgo, WeatherIcon
+│   │
+│   ├── Services/              # Audio, Battery, Brightness, CalendarMajorEvents,
+│   │                          # Colours, DepthWallpaperController, Fontlist, Hotspot,
+│   │                          # Hypr, Hyprsunset, KeylockState, Lyrics, Notifs,
+│   │                          # Players, PolAgent, Privacy, Record, ScreenCapture,
+│   │                          # ScreenCaptureHistory, SystemUsage, ToastService,
+│   │                          # WallpaperFileModels, Weather
+│   │   └── ScreenRecorder/    # ScreenRecorder, ScreenshotSaver, Screenshotter
+│   │
+│   ├── Modules/
+│   │   ├── Drawers/
+│   │   │   ├── Bar/           # Bar, Left, Middle, Right
+│   │   │   ├── Calendar/
+│   │   │   ├── Clipboard/     # ClipboardItemDelegate, ClipboardPreview
+│   │   │   ├── DynamicIsland/ # ConfirmDeviceContent, DeviceListContent, DoneContent,
+│   │   │   │                  # DraggingContent, FilesDroppedContent, ProgressContent
+│   │   │   ├── Launcher/      # App, CaptureItem, Screencapture, History
+│   │   │   ├── Notifications/ # Content, NotifIcon, Wrapper
+│   │   │   ├── OSD/           # CapsLockWidget, NumLockWidget
+│   │   │   ├── QuickSettings/ # PerformancePages, VolumeSettings, WiFi, Network, Battery
+│   │   │   ├── ScreenRecorder/# AudioDeviceItem, PageAudio, PageHistory, PageMain, PageSettings
+│   │   │   ├── Session/
+│   │   │   ├── Volume/
+│   │   │   ├── WallpaperSelector/
+│   │   │   └── Weather/       # Headers, WeatherItem/* (AQI, Cloudiness, Forecast, Humidity,
+│   │   │                      # Moon, Precipitation, Pressure, Sun, UVIndex, Visibility, Wind)
+│   │   ├── Lock/              # Bar, BottomItem, CapsLockPopup, Clock,
+│   │   │                      # Lockscreen, MediaPlayer, Pam, Surface
+│   │   ├── Polkit/            # Body, Header, InputField
+│   │   ├── Settings/
+│   │   │   ├── Components/    # SettingsCard, SettingsPageBase, SidebarItem
+│   │   │   └── Pages/         # Appearance, Bar, Clipboard, DepthWallpaperSection,
+│   │   │                      # General, Idle, Internet, KDEConnect, Language,
+│   │   │                      # MediaPlayer, Notification, ScreenRecorder, Wallpaper, Weather
+│   │   └── Wallpaper/         # Wall
+│   │
+│   └── Widgets/               # AudioProfiles, Battery, Clock, LyricsView,
+│                              # MixerEntry, Mpris, NotificationDots, OsText,
+│                              # RecordIndicator, Sound, Tray, TrayMenu,
+│                              # WorkspaceName, Workspaces
 │
 ├── Plugins/Vast/
 │   ├── CMakeLists.txt
-│   ├── AudioProfilesModel.cpp/hpp
-│   ├── AudioProfilesWatcher.cpp/hpp
-│   ├── BrightnessManager.cpp/hpp
-│   ├── ImageCache.cpp/hpp
-│   ├── KeylockState.cpp/hpp
-│   ├── LyricsProvider.cpp/hpp
-│   ├── Clipboard/         # Database, Entry, Manager, Model, Watcher
-│   ├── Search/            # FuzzyMatcher, SearchEngine, SearchResult
-│   └── TranslationManager.cpp/hpp
+│   ├── AudioDevicesModel.{cpp,hpp}
+│   ├── AudioDevicesWatcher.{cpp,hpp}
+│   ├── AudioProfilesModel.{cpp,hpp}
+│   ├── AudioProfilesWatcher.{cpp,hpp}
+│   ├── BrightnessManager.{cpp,hpp}
+│   ├── ImageCache.{cpp,hpp}
+│   ├── KeylockState.{cpp,hpp}
+│   ├── LyricsProvider.{cpp,hpp}
+│   ├── TranslationManager.{cpp,hpp}
+│   ├── Clipboard/             # Database, Entry, Manager, Model, Watcher
+│   └── Search/                # FuzzyMatcher, SearchEngine, SearchResult
 │
 ├── Assets/
-│   ├── go/formatting.go
-│   ├── images/
-│   ├── shaders/           # borderProgress, waveForm, wavy, ImageTransition
-│   │   └── transitions/   # boxExpand, circleExpand, diagonalWipe, dissolve,
-│   │                      # fade, pixelate, roll, slideUp, splitHorizontal, wipeDown
-│   ├── shell/extract-fg.sh
-│   └── weather_icon/      # Moon phase SVGs
+│   ├── go/formatting.go       # QML auto-formatter / linter
+│   ├── images/                # image_not_found, wallpaper fallbacks
+│   ├── shaders/               # borderProgress, waveForm, wavy, ImageTransition
+│   │   └── transitions/       # boxExpand, circleExpand, diagonalWipe, dissolve,
+│   │                          # fade, pixelate, roll, slideUp, splitHorizontal, wipeDown
+│   ├── shell/extract-fg.sh    # Depth wallpaper foreground extraction
+│   └── weather_icon/          # Moon phase SVGs
 │
-├── Data/                  # colors.json, configurations.json, matugen/
-└── translations/          # id_ID.ts
+├── Data/                      # matugen.toml, color templates
+└── translations/              # id_ID.ts, id_ID.qm
 ```
 
 ---
