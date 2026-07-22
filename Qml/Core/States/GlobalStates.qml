@@ -272,6 +272,10 @@ Singleton {
                 command: ["matugen", "image", path, "--source-color-index", "2"]
             });
         }
+        function get(): string {
+            const data = Utils.readFile(Paths.currentWallpaperFile);
+            return data.trim();
+        }
     }
 
     IpcHandler {
@@ -305,6 +309,207 @@ Singleton {
         }
         function status(): bool {
             return ScreenRecorder.isRecording;
+        }
+    }
+
+    IpcHandler {
+        target: "brightness"
+
+        function get(): string {
+            const list = BrightnessManager.displays();
+            return JSON.stringify(list);
+        }
+        function set(percent: int): void {
+            BrightnessManager.setBrightnessAll(percent);
+        }
+    }
+
+    IpcHandler {
+        target: "audio"
+
+        function deviceList(): string {
+            const model = AudioDevicesWatcher.devices;
+            const count = model.count();
+            const result = [];
+            for (let i = 0; i < count; i++) {
+                const d = model.get(i);
+                result.push({
+                    id: d.id,
+                    name: d.name,
+                    description: d.description,
+                    mediaClass: d.mediaClass,
+                    state: d.state,
+                    isMonitor: d.isMonitor,
+                    monitorOf: d.monitorOf,
+                });
+            }
+            return JSON.stringify(result);
+        }
+
+        function deviceSet(name: string): void {
+            Quickshell.execDetached({
+                command: ["wpctl", "set-default", name]
+            });
+        }
+
+        function profileList(): string {
+            const model = AudioProfilesWatcher.profiles;
+            const count = model.count();
+            const result = {
+                deviceId: AudioProfilesWatcher.deviceId,
+                deviceName: AudioProfilesWatcher.deviceName,
+                activeIndex: AudioProfilesWatcher.activeIndex,
+                profiles: [],
+            };
+            for (let i = 0; i < count; i++) {
+                const p = model.get(i);
+                result.profiles.push({
+                    index: p.index,
+                    name: p.name,
+                    description: p.description,
+                    available: p.available,
+                    readable: p.readable,
+                });
+            }
+            return JSON.stringify(result);
+        }
+
+        function profileSet(name: string): void {
+            Quickshell.execDetached({
+                command: ["wpctl", "set-profile", String(AudioProfilesWatcher.deviceId), name]
+            });
+        }
+    }
+
+    IpcHandler {
+        target: "mpris"
+
+        function playPause(): void {
+            Players.active?.playPause()
+        }
+        function next(): void {
+            Players.active?.next()
+        }
+        function previous(): void {
+            Players.active?.previous()
+        }
+        function stop(): void {
+            Players.active?.stop()
+        }
+        function list(): string {
+            const result = [];
+            const list = Players.players;
+            for (let i = 0; i < list.length; i++) {
+                const p = list[i];
+                result.push({
+                    identity: p.identity,
+                    trackTitle: p.trackTitle,
+                    trackArtist: p.trackArtist,
+                    playbackStatus: p.playbackStatus,
+                    volume: p.volume,
+                });
+            }
+            return JSON.stringify(result);
+        }
+    }
+
+    IpcHandler {
+        target: "idle"
+
+        function on(): void {
+            Configs.idle.enabled = true
+        }
+        function off(): void {
+            Configs.idle.enabled = false
+        }
+        function status(): bool {
+            return Configs.idle.enabled
+        }
+    }
+
+    IpcHandler {
+        target: "volume"
+
+        function systemGet(): string {
+            const sink = Pipewire.defaultAudioSink;
+            return JSON.stringify({
+                volume: sink.audio.volume,
+                muted: sink.audio.muted,
+            });
+        }
+        function systemSet(percent: int): void {
+            Pipewire.defaultAudioSink.audio.volume = Math.max(0.0, Math.min(1.0, percent / 100));
+        }
+        function systemMute(): void {
+            Pipewire.defaultAudioSink.audio.muted = true;
+        }
+        function systemUnmute(): void {
+            Pipewire.defaultAudioSink.audio.muted = false;
+        }
+        function systemToggleMute(): void {
+            Pipewire.defaultAudioSink.audio.muted = !Pipewire.defaultAudioSink.audio.muted;
+        }
+        function appList(): string {
+            const streams = Pipewire.nodes.values.filter(n => n.isStream);
+            const result = [];
+            for (const s of streams) {
+                result.push({
+                    id: s.id,
+                    name: s.name,
+                    appName: s.properties["application.name"] ?? s.description ?? s.name,
+                    mediaName: s.properties["media.name"] ?? "",
+                    volume: s.audio.volume,
+                    muted: s.audio.muted,
+                });
+            }
+            return JSON.stringify(result);
+        }
+        function appSet(id: int, percent: int): void {
+            const streams = Pipewire.nodes.values.filter(n => n.isStream);
+            for (const s of streams) {
+                if (s.id === id) {
+                    s.audio.volume = Math.max(0.0, Math.min(1.0, percent / 100));
+                    break;
+                }
+            }
+        }
+        function appMute(id: int): void {
+            const streams = Pipewire.nodes.values.filter(n => n.isStream);
+            for (const s of streams) {
+                if (s.id === id) {
+                    s.audio.muted = true;
+                    break;
+                }
+            }
+        }
+        function appUnmute(id: int): void {
+            const streams = Pipewire.nodes.values.filter(n => n.isStream);
+            for (const s of streams) {
+                if (s.id === id) {
+                    s.audio.muted = false;
+                    break;
+                }
+            }
+        }
+        function appToggleMute(id: int): void {
+            const streams = Pipewire.nodes.values.filter(n => n.isStream);
+            for (const s of streams) {
+                if (s.id === id) {
+                    s.audio.muted = !s.audio.muted;
+                    break;
+                }
+            }
+        }
+    }
+
+    IpcHandler {
+        target: "keylock"
+
+        function capslock(): bool {
+            return KeylockState.capsLock;
+        }
+        function numlock(): bool {
+            return KeylockState.numLock;
         }
     }
 
