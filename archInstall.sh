@@ -481,15 +481,13 @@ install_quickshell_config() {
 
 	find "$PROJECT_ROOT" -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} "$INSTALL_DIR/" \; 2>/dev/null || true
 
-	for dir in Assets Components Widgets; do
-		[[ -d $PROJECT_ROOT/$dir ]] && cp -r "$PROJECT_ROOT/$dir" "$INSTALL_DIR/"
-	done
+	[[ -d $PROJECT_ROOT/Assets ]] && cp -r "$PROJECT_ROOT/Assets" "$INSTALL_DIR/"
 
 	chmod -R 755 "$INSTALL_DIR"
 	chown -R root:root "$INSTALL_DIR"
 
-	if [[ -f $INSTALL_DIR/shell.qml ]]; then
-		sed -i 's/ShellRoot {/ShellRoot { settings.watchFiles: false/' "$INSTALL_DIR/shell.qml"
+	if [[ -f $INSTALL_DIR/Qml/shell.qml ]]; then
+		sed -i 's/ShellRoot {/ShellRoot { settings.watchFiles: false/' "$INSTALL_DIR/Qml/shell.qml"
 	fi
 }
 
@@ -539,7 +537,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin${HOME:
 export PATH="$PATH:/opt/bin:/usr/games:/usr/local/games"
 export PATH="$PATH:/var/lib/flatpak/exports/bin${HOME:+:$HOME/.local/share/flatpak/exports/bin}"
 [[ -d /snap/bin ]] && export PATH="$PATH:/snap/bin"
-exec quickshell -p "$QUICKSHELL_CONFIG_DIR" "$@"
+exec quickshell -p "$QUICKSHELL_CONFIG_DIR/Qml" "$@"
 EOF
 	chmod +x "$BIN_DIR/shell"
 }

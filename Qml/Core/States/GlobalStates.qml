@@ -71,7 +71,7 @@ Singleton {
 
     property bool isWifiScannerOpen: true
 
-    property string scriptPath: `${Paths.rootDir}/Assets/shell/screen-capture.sh`
+    property string scriptPath: `${Paths.projectRoot}/Assets/shell/screen-capture.sh`
 
     property var activeOSDs: ({})
     property var pausedOSDs: ({})

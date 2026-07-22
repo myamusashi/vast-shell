@@ -152,7 +152,7 @@ StyledRect {
 
     ColorQuantizer {
         id: colorTrackArt
-        source: Qt.resolvedUrl(mediaPlayerRect.cachedArtPath !== "" ? mediaPlayerRect.cachedArtPath : "root:/Assets/images/kuru.gif")
+        source: Qt.resolvedUrl(mediaPlayerRect.cachedArtPath !== "" ? mediaPlayerRect.cachedArtPath : `file://${Paths.projectRoot}/Assets/images/kuru.gif`)
         depth: 3
         rescaleSize: 64
     }

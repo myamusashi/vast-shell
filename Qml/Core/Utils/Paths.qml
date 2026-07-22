@@ -14,6 +14,7 @@ Singleton {
     readonly property string videos: Quickshell.env("XDG_VIDEOS_DIR") || `${home}/Videos`
 
     readonly property string rootDir: Quickshell.shellDir
+    readonly property string projectRoot: rootDir.substring(0, rootDir.lastIndexOf('/'))
     readonly property string configDir: Quickshell.env("XDG_CONFIG_DIR") || `${home}/.config`
     readonly property string shellDir: `${configDir}/vast-shell`
     readonly property string stateDir: `${home}/.local/state`
@@ -26,7 +27,7 @@ Singleton {
 
     readonly property string recordDir: `${videos}/Shell`
 
-    readonly property string translateFilePath: `${rootDir}/translations`
+    readonly property string translateFilePath: `${projectRoot}/translations`
 
     function pathToBreadcrumb(path) {
         if (!path || typeof path !== 'string')

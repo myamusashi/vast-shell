@@ -96,7 +96,7 @@
         ];
 
         postPatch = ''
-            substituteInPlace shell.qml \
+            substituteInPlace Qml/shell.qml \
               --replace-fail 'ShellRoot {' 'ShellRoot { settings.watchFiles: false'
         '';
 
@@ -163,17 +163,6 @@
             shopt -s extglob
             cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
 
-            for dir in Assets Components Widgets; do
-              if [ -d "$dir" ]; then
-                mkdir -p "$out/share/quickshell/$dir"
-                cp -r "$dir"/* "$out/share/quickshell/$dir/" 2>/dev/null || true
-              fi
-            done
-
-            for file in *.qml; do
-              [ -f "$file" ] && cp "$file" "$out/share/quickshell/" || true
-            done
-
             install -Dm755 ${app2unit}/bin/app2unit \
               $out/bin/app2unit
 
@@ -200,7 +189,7 @@
 
             makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
               $out/bin/shell \
-                --add-flags "-p $out/share/quickshell" \
+                --add-flags "-p $out/share/quickshell/Qml" \
                 --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
                 --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \

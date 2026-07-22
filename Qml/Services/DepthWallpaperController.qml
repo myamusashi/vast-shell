@@ -17,7 +17,7 @@ Singleton {
     readonly property bool generating: generateFg.running
 
     readonly property string cacheDir: Paths.home + "/.cache/vast-shell/depthwp"
-    readonly property string scriptPath: Paths.rootDir + "/Assets/shell/extract-fg.sh"
+    readonly property string scriptPath: Paths.projectRoot + "/Assets/shell/extract-fg.sh"
 
     function onToggle(enabled) {
         if (enabled) {

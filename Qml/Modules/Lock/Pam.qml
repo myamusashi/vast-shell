@@ -29,7 +29,7 @@ Scope {
         id: pam
 
         config: "password.conf"
-        configDirectory: "root:/Assets/pam.d"
+        configDirectory: `file://${Paths.projectRoot}/Assets/pam.d`
 
         onPamMessage: {
             if (this.responseRequired)

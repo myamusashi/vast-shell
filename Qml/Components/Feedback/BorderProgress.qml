@@ -31,8 +31,8 @@ Item {
         property color borderColor: Colours.m3Colors.m3Primary
 
         z: 999
-        vertexShader: Paths.rootDir + "/Assets/shaders/borderProgress.vert.qsb"
-        fragmentShader: Paths.rootDir + "/Assets/shaders/borderProgress.frag.qsb"
+        vertexShader: Paths.projectRoot + "/Assets/shaders/borderProgress.vert.qsb"
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/borderProgress.frag.qsb"
     }
 
     NAnim {

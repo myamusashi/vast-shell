@@ -102,8 +102,8 @@ Slider {
                 property real phase: slider.waveAnimPhase
                 property real strokeHalf: 0.75
 
-                vertexShader: Paths.rootDir + "/Assets/shaders/wavy.vert.qsb"
-                fragmentShader: Paths.rootDir + "/Assets/shaders/wavy.frag.qsb"
+                vertexShader: Paths.projectRoot + "/Assets/shaders/wavy.vert.qsb"
+                fragmentShader: Paths.projectRoot + "/Assets/shaders/wavy.frag.qsb"
             }
         }
 
@@ -137,8 +137,8 @@ Slider {
             property real tr: slider.waveTransition
             property real strokeHalf: 0.9
 
-            vertexShader: Paths.rootDir + "/Assets/shaders/waveForm.vert.qsb"
-            fragmentShader: Paths.rootDir + "/Assets/shaders/waveForm.frag.qsb"
+            vertexShader: Paths.projectRoot + "/Assets/shaders/waveForm.vert.qsb"
+            fragmentShader: Paths.projectRoot + "/Assets/shaders/waveForm.frag.qsb"
         }
     }
 

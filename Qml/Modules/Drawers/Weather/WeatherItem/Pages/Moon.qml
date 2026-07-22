@@ -181,7 +181,7 @@ Pages {
 
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 120
-                        source: `root:/Assets/weather_icon/${moonPhaseMap[Weather.moonPhase.trim()] ?? "FullMoon"}.svg`
+                        source: `${Paths.projectRoot}/Assets/weather_icon/${moonPhaseMap[Weather.moonPhase.trim()] ?? "FullMoon"}.svg`
                         sourceSize: Qt.size(120, 120)
                         fillMode: Image.PreserveAspectFit
                         cache: true

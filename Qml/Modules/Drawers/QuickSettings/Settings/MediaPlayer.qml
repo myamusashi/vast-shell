@@ -183,7 +183,7 @@ ClippingWrapperRectangle {
     ColorQuantizer {
         id: colorTrackArt
 
-        source: Qt.resolvedUrl(root.cachedArtPath !== "" ? root.cachedArtPath : "root:/Assets/images/kuru.gif")
+        source: Qt.resolvedUrl(root.cachedArtPath !== "" ? root.cachedArtPath : `file://${Paths.projectRoot}/Assets/images/kuru.gif`)
         depth: 3
         rescaleSize: 64
     }
