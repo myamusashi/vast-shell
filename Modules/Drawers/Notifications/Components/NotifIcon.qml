@@ -47,11 +47,6 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        console.log(root.modelData.image);
-        console.log(root.modelData.appIcon);
-    }
-
     Component {
         id: iconComponent
 

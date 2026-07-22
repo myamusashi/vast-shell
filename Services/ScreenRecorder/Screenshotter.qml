@@ -77,8 +77,8 @@ Item {
             visible: true
             color: "transparent"
             screen: captureLoader.targetScreen
-            width: captureLoader.targetWidth
-            height: captureLoader.targetHeight
+            implicitHeight: captureLoader.targetHeight
+            implicitWidth: captureLoader.targetWidth
             exclusionMode: ExclusionMode.Ignore
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
@@ -182,8 +182,6 @@ Item {
         property string resultPath: ""
 
         component: PanelWindow {
-            id: compositeWin
-
             visible: true
             color: "transparent"
             screen: Quickshell.screens[0]
