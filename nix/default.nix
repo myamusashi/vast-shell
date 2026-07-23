@@ -167,6 +167,9 @@
             install -Dm755 ${app2unit}/bin/app2unit \
               $out/bin/app2unit
 
+            install -Dm755 ${vastctl}/bin/vastctl \
+              $out/bin/vastctl
+
             mkdir -p $out/share/fonts/truetype
             cp -r ${material-symbols}/share/fonts/truetype/* \
               $out/share/fonts/truetype/
@@ -212,5 +215,5 @@ in {
         app2unit
         runtimeDeps
         ;
-    default = vastctl;
+    default = shell;
 }
