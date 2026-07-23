@@ -50,7 +50,7 @@ in {
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "${cfg.package}/bin/shell";
+                ExecStart = "${cfg.package}/bin/vastctl daemon start --foreground";
                 Restart = "on-failure";
                 RestartSec = "5s";
                 Environment = [
