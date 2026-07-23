@@ -10,11 +10,11 @@ var mprisCmd = &cobra.Command{
 	Long:  "Play, pause, skip tracks, and list active media players via Quickshell.Services.Mpris.",
 }
 
-var mprisPlayPauseCmd = &cobra.Command{
-	Use:   "play-pause",
-	Short: "Toggle play/pause on the active player",
+var mprisTogglePlayingCmd = &cobra.Command{
+	Use:   "toggle-playing",
+	Short: "Toggle (play / pause) on the active player",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return ipcCallVoid("mpris", "playPause")
+		return ipcCallVoid("mpris", "togglePlaying")
 	},
 }
 
@@ -52,7 +52,7 @@ var mprisListCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(mprisCmd)
-	mprisCmd.AddCommand(mprisPlayPauseCmd)
+	mprisCmd.AddCommand(mprisTogglePlayingCmd)
 	mprisCmd.AddCommand(mprisNextCmd)
 	mprisCmd.AddCommand(mprisPreviousCmd)
 	mprisCmd.AddCommand(mprisStopCmd)

@@ -384,8 +384,8 @@ Singleton {
     IpcHandler {
         target: "mpris"
 
-        function playPause(): void {
-            Players.active?.playPause()
+        function togglePlaying(): void {
+            Players.active?.togglePlaying()
         }
         function next(): void {
             Players.active?.next()

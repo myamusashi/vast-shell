@@ -82,7 +82,7 @@ vastctl
 │       app list / set <id> / mute <id> / unmute <id> / toggle-mute <id>
 ├── capture screen / region / window [action]
 ├── record start / stop / toggle / status
-├── mpris play-pause / next / previous / stop / list
+├── mpris toggle-playing / next / previous / stop / list
 ├── lock lock / unlock / status
 ├── idle on / off / status
 ├── keylock capslock / numlock
@@ -150,7 +150,7 @@ shell ipc call <target> <function>
 | `brightness` | `get(): string`, `set(percent: int)` |
 | `audio` | `deviceList(): string`, `deviceSet(name: string)`, `profileList(): string`, `profileSet(name: string)` |
 | `volume` | `systemGet(): string`, `systemSet(percent: int)`, `systemMute()`, `systemUnmute()`, `systemToggleMute()`, `appList(): string`, `appSet(id: int, percent: int)`, `appMute(id: int)`, `appUnmute(id: int)`, `appToggleMute(id: int)` |
-| `mpris` | `playPause()`, `next()`, `previous()`, `stop()`, `list(): string` |
+| `mpris` | `togglePlaying()`, `next()`, `previous()`, `stop()`, `list(): string` |
 | `idle` | `on()`, `off()`, `status(): bool` |
 | `keylock` | `capslock(): bool`, `numlock(): bool` |
 
