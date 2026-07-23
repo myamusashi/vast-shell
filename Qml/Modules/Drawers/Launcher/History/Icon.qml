@@ -1,12 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Vast
 
 import qs.Components.Base
 import qs.Components.Feedback
 import qs.Core.Configs
-import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 import qs.Services.ScreenRecorder

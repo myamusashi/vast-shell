@@ -6,6 +6,8 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pam
 
+import qs.Core.Utils
+
 Scope {
     id: root
 
