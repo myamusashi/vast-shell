@@ -7,13 +7,28 @@ import (
 	"strings"
 )
 
-// Tree renders a JSON array of flat objects as a directory-tree style listing.
-// Each object is printed as a top-level entry with its fields indented underneath.
-// Returns an error if the input is not a valid JSON array.
+// Tree renders JSON input as a directory-tree style listing.
+// For a JSON array, each element becomes a top-level entry with fields indented.
+// For a JSON object, fields are listed directly under the root.
+// For scalars (bool, number, string), it returns the value as-is.
 func Tree(raw string) (string, error) {
+	raw = strings.TrimSpace(raw)
+	if raw == "" || raw == "null" {
+		return "(empty)", nil
+	}
+	if len(raw) >= 2 && raw[0] == '[' {
+		return treeArray(raw)
+	}
+	if len(raw) >= 2 && raw[0] == '{' {
+		return treeObject(raw)
+	}
+	return raw, nil
+}
+
+func treeArray(raw string) (string, error) {
 	var items []map[string]json.RawMessage
 	if err := json.Unmarshal([]byte(raw), &items); err != nil {
-		return "", fmt.Errorf("tree: input is not a JSON array: %w", err)
+		return "", fmt.Errorf("tree: invalid JSON array: %w", err)
 	}
 	if len(items) == 0 {
 		return "(empty)", nil
@@ -22,6 +37,32 @@ func Tree(raw string) (string, error) {
 	for i, item := range items {
 		last := i == len(items)-1
 		printItem(sb, "", item, last)
+	}
+	return sb.String(), nil
+}
+
+func treeObject(raw string) (string, error) {
+	var obj map[string]json.RawMessage
+	if err := json.Unmarshal([]byte(raw), &obj); err != nil {
+		return "", fmt.Errorf("tree: invalid JSON object: %w", err)
+	}
+	if len(obj) == 0 {
+		return "(empty)", nil
+	}
+	sb := new(strings.Builder)
+	fields := sortedKeys(obj)
+	for i, k := range fields {
+		last := i == len(fields)-1
+		conn := branch
+		if last {
+			conn = corner
+		}
+		val := formatValue(obj[k])
+		sb.WriteString(conn)
+		sb.WriteString(k)
+		sb.WriteString(": ")
+		sb.WriteString(val)
+		sb.WriteByte('\n')
 	}
 	return sb.String(), nil
 }

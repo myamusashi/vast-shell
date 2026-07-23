@@ -34,10 +34,33 @@ func TestTreeBrightness(t *testing.T) {
 }
 
 func TestTreeSingleObject(t *testing.T) {
-	raw := `{"hello": "world"}`
-	_, err := Tree(raw)
-	if err == nil {
-		t.Fatal("expected error for non-array input")
+	raw := `{"capsLock": true, "numLock": false}`
+	out, err := Tree(raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log("\n" + out)
+}
+
+func TestTreeScalar(t *testing.T) {
+	raw := `true`
+	out, err := Tree(raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out != "true" {
+		t.Fatalf("expected true, got %q", out)
+	}
+}
+
+func TestTreeStringScalar(t *testing.T) {
+	raw := `"hello"`
+	out, err := Tree(raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out != `"hello"` {
+		t.Fatalf("expected \"hello\", got %q", out)
 	}
 }
 

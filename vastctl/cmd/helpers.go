@@ -14,11 +14,9 @@ func ipcCallPrint(target, method string, args ...string) error {
 		return err
 	}
 	if prettier {
-		tree, treeErr := pretty.Tree(output)
-		if treeErr != nil {
-			return treeErr
+		if tree, treeErr := pretty.Tree(output); treeErr == nil {
+			output = tree
 		}
-		output = tree
 	}
 	fmt.Println(output)
 	return nil
