@@ -170,6 +170,12 @@
             install -Dm755 ${vastctl}/bin/vastctl \
               $out/bin/vastctl
 
+            mkdir -p $out/share
+            cp -r ${vastctl}/share/bash-completion $out/share/ 2>/dev/null || true
+            cp -r ${vastctl}/share/fish $out/share/ 2>/dev/null || true
+            cp -r ${vastctl}/share/zsh $out/share/ 2>/dev/null || true
+            cp -r ${vastctl}/share/nushell $out/share/ 2>/dev/null || true
+
             mkdir -p $out/share/fonts/truetype
             cp -r ${material-symbols}/share/fonts/truetype/* \
               $out/share/fonts/truetype/
