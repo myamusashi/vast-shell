@@ -3,12 +3,14 @@ package cmd
 import (
 	"os/exec"
 	"strings"
+	"syscall"
 
 	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
 var daemonVerbose bool
+var daemonForeground bool
 
 var daemonCmd = &cobra.Command{
 	Use:   "daemon",
@@ -71,12 +73,20 @@ var daemonStatusCmd = &cobra.Command{
 func startDaemon(cmd *cobra.Command) error {
 	bin, args := ipc.ShellBinArgs()
 	proc := exec.Command(bin, args...)
-	if !daemonVerbose {
-		proc.Stdout = nil
-		proc.Stderr = nil
-	} else {
+	if daemonForeground {
 		proc.Stdout = cmd.OutOrStdout()
 		proc.Stderr = cmd.ErrOrStderr()
+		// Forward signals so systemd can manage the process.
+		proc.SysProcAttr = &syscall.SysProcAttr{Setpgid: false}
+	} else if daemonVerbose {
+		proc.Stdout = cmd.OutOrStdout()
+		proc.Stderr = cmd.ErrOrStderr()
+	}
+	if daemonForeground {
+		if err := proc.Run(); err != nil {
+			return err
+		}
+		return nil
 	}
 	if err := proc.Start(); err != nil {
 		return err
@@ -108,6 +118,7 @@ func plural(n int) string {
 
 func init() {
 	daemonCmd.PersistentFlags().BoolVarP(&daemonVerbose, "verbose", "v", false, "Show quickshell output")
+	daemonCmd.PersistentFlags().BoolVarP(&daemonForeground, "foreground", "f", false, "Run in foreground (blocking, for systemd)")
 	rootCmd.AddCommand(daemonCmd)
 	daemonCmd.AddCommand(daemonStartCmd)
 	daemonCmd.AddCommand(daemonStopCmd)
