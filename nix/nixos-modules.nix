@@ -58,6 +58,7 @@ in {
                     "XDG_RUNTIME_DIR=/run/user/%U"
                     "QT_QPA_PLATFORM=wayland"
                     "DISPLAY=:0"
+                    "PATH=${cfg.package}/bin"
                 ];
             };
         };
