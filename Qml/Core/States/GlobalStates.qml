@@ -395,6 +395,9 @@ Singleton {
         }
         function stop(): void {
             Players.active?.stop()
+		}
+		function status(): bool {
+            return Players.active?.isPlaying
         }
         function list(): string {
             const result = [];
@@ -404,9 +407,10 @@ Singleton {
                 result.push({
                     identity: p.identity,
                     trackTitle: p.trackTitle,
-                    trackArtist: p.trackArtist,
-                    playbackStatus: p.playbackStatus,
-                    volume: p.volume,
+					trackArtist: p.trackArtist,
+					playbackStatus: p.playbackStatus,
+					volume: p.volume,
+					status: p.isPlaying,
                 });
             }
             return JSON.stringify(result);

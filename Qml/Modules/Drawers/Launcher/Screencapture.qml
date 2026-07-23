@@ -27,7 +27,7 @@ ClippingWrapperRectangle {
 
     border {
         color: GlobalStates.isScreenCapturePanelOpen ? Colours.m3Colors.m3Outline : "transparent"
-        width: 2
+        width: GlobalStates.isScreenCapturePanelOpen ? 2 : 0
     }
     color: GlobalStates.drawerColors
     clip: true
@@ -38,13 +38,13 @@ ClippingWrapperRectangle {
 
     Behavior on implicitWidth {
         NAnim {
-            duration: 200
+            duration: Appearance.animations.durations.normal
         }
     }
 
     Behavior on implicitHeight {
         NAnim {
-            duration: 200
+            duration: Appearance.animations.durations.normal
         }
     }
 
@@ -56,10 +56,12 @@ ClippingWrapperRectangle {
         sourceComponent: ColumnLayout {
             id: innerLayout
 
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.margins: Appearance.margin.normal
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                margins: Appearance.margin.normal
+            }
             spacing: Appearance.spacing.small
 
             Keys.onPressed: function (event) {
