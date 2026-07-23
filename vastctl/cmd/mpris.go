@@ -50,6 +50,14 @@ var mprisListCmd = &cobra.Command{
 	},
 }
 
+var mprisStatusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "status active media players",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return ipcCallPrint("mpris", "status")
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(mprisCmd)
 	mprisCmd.AddCommand(mprisTogglePlayingCmd)
@@ -57,4 +65,5 @@ func init() {
 	mprisCmd.AddCommand(mprisPreviousCmd)
 	mprisCmd.AddCommand(mprisStopCmd)
 	mprisCmd.AddCommand(mprisListCmd)
+	mprisCmd.AddCommand(mprisStatusCmd)
 }
