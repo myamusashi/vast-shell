@@ -5,12 +5,20 @@ import (
 	"strconv"
 
 	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
+	"github.com/myamusashi/vast-shell/vastctl/internal/pretty"
 )
 
 func ipcCallPrint(target, method string, args ...string) error {
 	output, err := ipc.Call(target, method, args...)
 	if err != nil {
 		return err
+	}
+	if prettier {
+		tree, treeErr := pretty.Tree(output)
+		if treeErr != nil {
+			return treeErr
+		}
+		output = tree
 	}
 	fmt.Println(output)
 	return nil

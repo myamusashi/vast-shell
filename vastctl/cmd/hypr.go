@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/myamusashi/vast-shell/vastctl/internal/hypr"
+	"github.com/myamusashi/vast-shell/vastctl/internal/pretty"
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +31,18 @@ var shortcutsListCmd = &cobra.Command{
 		shortcuts, err := hypr.ListShortcuts()
 		if err != nil {
 			return err
+		}
+		if prettier {
+			b, err := json.Marshal(shortcuts)
+			if err != nil {
+				return err
+			}
+			tree, err := pretty.Tree(string(b))
+			if err != nil {
+				return err
+			}
+			fmt.Println(tree)
+			return nil
 		}
 		if len(shortcuts) == 0 {
 			fmt.Println("No quickshell shortcuts found.")
