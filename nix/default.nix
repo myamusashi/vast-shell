@@ -35,47 +35,32 @@
     vastctl = callPackage ./packages/vastctl.nix {};
 
     runtimeDeps = [
-        ## utils
         findutils
         gnugrep
         gawk
         gnused
         util-linux
-
-        ## For created a depth wallpaper
         rembg
-
-        ## pipewire for changing sinks
         wireplumber
-
-        ## network, polkit, notify
         iw
         libnotify
         polkit
-
-        ## Icons & symbols and weather icons
         weather-icons
         material-symbols
-
-        ## generated colors, copy-paste, screenrecord, thumbnails
         matugen
         wl-clipboard
         wl-screenrec-fork
         ffmpeg
-
-        ## terminal for running apps with app2unit and a compositor
         foot
         hyprland
-
-        ## Qt packages
         kdePackages.qtmultimedia
         qt6.qt5compat
         qt6.qtbase
         qt6.qtgraphs
     ];
 
-    shell = stdenv.mkDerivation {
-        pname = "shell";
+    vast-shell = stdenv.mkDerivation {
+        pname = "vast-shell";
         version = "0.1.0";
         src = ../.;
 
@@ -164,43 +149,16 @@
             shopt -s extglob
             cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
 
-            install -Dm755 ${app2unit}/bin/app2unit \
-              $out/bin/app2unit
+            install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
 
-            install -Dm755 ${vastctl}/bin/vastctl \
-              $out/bin/vastctl
-
-            mkdir -p $out/share
             cp -r ${vastctl}/share/bash-completion $out/share/ 2>/dev/null || true
             cp -r ${vastctl}/share/fish $out/share/ 2>/dev/null || true
             cp -r ${vastctl}/share/zsh $out/share/ 2>/dev/null || true
             cp -r ${vastctl}/share/nushell $out/share/ 2>/dev/null || true
 
-            mkdir -p $out/share/fonts/truetype
-            cp -r ${material-symbols}/share/fonts/truetype/* \
-              $out/share/fonts/truetype/
-
-            mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
-
-            if [ -d "${m3shapes}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${m3shapes}/${qt6.qtbase.qtQmlPrefix}/* \
-                $out/${qt6.qtbase.qtQmlPrefix}
-            fi
-
-            if [ -d "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${another-ripple}/${qt6.qtbase.qtQmlPrefix}/* \
-                $out/${qt6.qtbase.qtQmlPrefix}
-            fi
-
-            if [ -d "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" ]; then
-              cp -r ${vastPlugin}/${qt6.qtbase.qtQmlPrefix}/* \
-                $out/${qt6.qtbase.qtQmlPrefix}
-            fi
-
-            makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
-              $out/bin/shell \
-                --add-flags "-p $out/share/quickshell/Qml" \
-                --set QUICKSHELL_CONFIG_DIR "$out/share/quickshell" \
+            makeWrapper ${vastctl}/bin/vastctl \
+              $out/bin/vastctl \
+                --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
                 --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
@@ -210,16 +168,29 @@
                 --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
                 --suffix PATH : /run/current-system/sw/bin \
 
+            mkdir -p $out/share/fonts/truetype
+            cp -r ${material-symbols}/share/fonts/truetype/* $out/share/fonts/truetype/
+
+            mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
+            if [ -d "${m3shapes}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${m3shapes}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+            if [ -d "${another-ripple}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${another-ripple}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+            if [ -d "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${vastPlugin}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+
             runHook postInstall
         '';
     };
 in {
     inherit
-        shell
         vastctl
         material-symbols
         app2unit
         runtimeDeps
         ;
-    default = shell;
+    default = vast-shell;
 }
