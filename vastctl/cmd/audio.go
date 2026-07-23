@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -22,12 +19,7 @@ var audioProfileListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List available audio profiles",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("audio", "profileList")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("audio", "profileList")
 	},
 }
 
@@ -36,8 +28,7 @@ var audioProfileSetCmd = &cobra.Command{
 	Short: "Set the active audio profile",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("audio", "profileSet", args[0])
-		return err
+		return ipcCallVoid("audio", "profileSet", args[0])
 	},
 }
 
@@ -50,12 +41,7 @@ var audioDeviceListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List available audio devices",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("audio", "deviceList")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("audio", "deviceList")
 	},
 }
 
@@ -64,8 +50,7 @@ var audioDeviceSetCmd = &cobra.Command{
 	Short: "Set the default audio device",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("audio", "deviceSet", args[0])
-		return err
+		return ipcCallVoid("audio", "deviceSet", args[0])
 	},
 }
 

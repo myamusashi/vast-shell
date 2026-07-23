@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -16,12 +15,7 @@ var captureScreenCmd = &cobra.Command{
 	Short: "Screenshot the active screen",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		action := "copy"
-		if len(args) > 0 {
-			action = args[0]
-		}
-		_, err := ipc.Call("capture", "screen", action)
-		return err
+		return ipcCallVoid("capture", "screen", actionOrDefault(args, "copy"))
 	},
 }
 
@@ -30,12 +24,7 @@ var captureRegionCmd = &cobra.Command{
 	Short: "Screenshot a selected region",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		action := "copy"
-		if len(args) > 0 {
-			action = args[0]
-		}
-		_, err := ipc.Call("capture", "region", action)
-		return err
+		return ipcCallVoid("capture", "region", actionOrDefault(args, "copy"))
 	},
 }
 
@@ -44,12 +33,7 @@ var captureWindowCmd = &cobra.Command{
 	Short: "Screenshot a selected window",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		action := "copy"
-		if len(args) > 0 {
-			action = args[0]
-		}
-		_, err := ipc.Call("capture", "window", action)
-		return err
+		return ipcCallVoid("capture", "window", actionOrDefault(args, "copy"))
 	},
 }
 

@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +14,7 @@ var recordStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Start recording the active screen",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("recorder", "start")
-		return err
+		return ipcCallVoid("recorder", "start")
 	},
 }
 
@@ -26,8 +22,7 @@ var recordStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the active recording",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("recorder", "stop")
-		return err
+		return ipcCallVoid("recorder", "stop")
 	},
 }
 
@@ -35,8 +30,7 @@ var recordToggleCmd = &cobra.Command{
 	Use:   "toggle",
 	Short: "Toggle recording on/off",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("recorder", "toggle")
-		return err
+		return ipcCallVoid("recorder", "toggle")
 	},
 }
 
@@ -44,12 +38,7 @@ var recordStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check if recording is active",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("recorder", "status")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("recorder", "status")
 	},
 }
 

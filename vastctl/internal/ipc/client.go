@@ -12,11 +12,9 @@ import (
 
 var ensureOnce sync.Once
 
-// ensureShellDaemon launches the shell in the background if it's not already
-// running. Uses pgrep to check for an existing quickshell process.
 func ensureShellDaemon() {
 	ensureOnce.Do(func() {
-		if out, err := exec.Command("pgrep", "-f", "quickshell").Output(); err == nil && len(out) > 0 {
+		if ShellRunning() {
 			return
 		}
 		bin, args := ShellBinArgs()
@@ -26,6 +24,12 @@ func ensureShellDaemon() {
 		_ = cmd.Start()
 		time.Sleep(500 * time.Millisecond)
 	})
+}
+
+// ShellRunning reports whether a quickshell process is currently active.
+func ShellRunning() bool {
+	out, err := exec.Command("pgrep", "-f", "quickshell").Output()
+	return err == nil && len(out) > 0
 }
 
 // ShellBinArgs returns the binary and arguments to launch the shell.
@@ -39,15 +43,9 @@ func ShellBinArgs() (string, []string) {
 	return "quickshell", nil
 }
 
-// ShellIPCArgs builds the command and args needed to invoke an IPC call.
-func ShellIPCArgs() (string, []string) {
-	if _, err := exec.LookPath("shell"); err == nil {
-		return "shell", []string{"ipc", "call"}
-	}
-	if dir := os.Getenv("VAST_SHELL_DIRECTORY"); dir != "" {
-		return "quickshell", []string{"-p", dir + "/Qml", "ipc", "call"}
-	}
-	return "quickshell", []string{"ipc", "call"}
+func shellIPCArgs() (string, []string) {
+	bin, args := ShellBinArgs()
+	return bin, append(args, "ipc", "call")
 }
 
 // Call invokes `shell ipc call <target> <method> [args...]` and returns
@@ -56,7 +54,7 @@ func ShellIPCArgs() (string, []string) {
 func Call(target string, method string, args ...string) (string, error) {
 	ensureShellDaemon()
 
-	bin, callArgs := ShellIPCArgs()
+	bin, callArgs := shellIPCArgs()
 	callArgs = append(callArgs, target, method)
 	callArgs = append(callArgs, args...)
 

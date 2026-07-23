@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -17,8 +14,7 @@ var lockLockCmd = &cobra.Command{
 	Use:   "lock",
 	Short: "Lock the screen",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("lock", "lock")
-		return err
+		return ipcCallVoid("lock", "lock")
 	},
 }
 
@@ -26,8 +22,7 @@ var lockUnlockCmd = &cobra.Command{
 	Use:   "unlock",
 	Short: "Unlock the screen",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("lock", "unlock")
-		return err
+		return ipcCallVoid("lock", "unlock")
 	},
 }
 
@@ -35,12 +30,7 @@ var lockStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check if the screen is locked",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("lock", "isLocked")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("lock", "isLocked")
 	},
 }
 

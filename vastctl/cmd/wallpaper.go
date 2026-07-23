@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -17,12 +14,7 @@ var wallpaperGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get the current wallpaper path",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("img", "get")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("img", "get")
 	},
 }
 
@@ -31,8 +23,7 @@ var wallpaperSetCmd = &cobra.Command{
 	Short: "Set the wallpaper to the given image path",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("img", "set", args[0])
-		return err
+		return ipcCallVoid("img", "set", args[0])
 	},
 }
 

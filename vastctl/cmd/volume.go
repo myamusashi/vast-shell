@@ -1,10 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"strconv"
-
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 	"github.com/spf13/cobra"
 )
 
@@ -23,12 +19,7 @@ var volumeSystemGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get system volume and mute state",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("volume", "systemGet")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("volume", "systemGet")
 	},
 }
 
@@ -37,12 +28,10 @@ var volumeSystemSetCmd = &cobra.Command{
 	Short: "Set system volume (0-100)",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		v, err := strconv.Atoi(args[0])
-		if err != nil || v < 0 || v > 100 {
-			return fmt.Errorf("invalid percent: %s (must be 0-100)", args[0])
+		if _, err := validatePercent(args[0]); err != nil {
+			return err
 		}
-		_, err = ipc.Call("volume", "systemSet", args[0])
-		return err
+		return ipcCallVoid("volume", "systemSet", args[0])
 	},
 }
 
@@ -50,8 +39,7 @@ var volumeSystemMuteCmd = &cobra.Command{
 	Use:   "mute",
 	Short: "Mute system audio",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("volume", "systemMute")
-		return err
+		return ipcCallVoid("volume", "systemMute")
 	},
 }
 
@@ -59,8 +47,7 @@ var volumeSystemUnmuteCmd = &cobra.Command{
 	Use:   "unmute",
 	Short: "Unmute system audio",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("volume", "systemUnmute")
-		return err
+		return ipcCallVoid("volume", "systemUnmute")
 	},
 }
 
@@ -68,8 +55,7 @@ var volumeSystemToggleCmd = &cobra.Command{
 	Use:   "toggle-mute",
 	Short: "Toggle system mute",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("volume", "systemToggleMute")
-		return err
+		return ipcCallVoid("volume", "systemToggleMute")
 	},
 }
 
@@ -82,12 +68,7 @@ var volumeAppListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all audio streams with their volumes",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		output, err := ipc.Call("volume", "appList")
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-		return nil
+		return ipcCallPrint("volume", "appList")
 	},
 }
 
@@ -96,12 +77,10 @@ var volumeAppSetCmd = &cobra.Command{
 	Short: "Set volume for an app by PipeWire node ID",
 	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		pct, err := strconv.Atoi(args[1])
-		if err != nil || pct < 0 || pct > 100 {
-			return fmt.Errorf("invalid percent: %s (must be 0-100)", args[1])
+		if _, err := validatePercent(args[1]); err != nil {
+			return err
 		}
-		_, err = ipc.Call("volume", "appSet", args[0], args[1])
-		return err
+		return ipcCallVoid("volume", "appSet", args[0], args[1])
 	},
 }
 
@@ -110,8 +89,7 @@ var volumeAppMuteCmd = &cobra.Command{
 	Short: "Mute an app by PipeWire node ID",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("volume", "appMute", args[0])
-		return err
+		return ipcCallVoid("volume", "appMute", args[0])
 	},
 }
 
@@ -120,8 +98,7 @@ var volumeAppUnmuteCmd = &cobra.Command{
 	Short: "Unmute an app by PipeWire node ID",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("volume", "appUnmute", args[0])
-		return err
+		return ipcCallVoid("volume", "appUnmute", args[0])
 	},
 }
 
@@ -130,8 +107,7 @@ var volumeAppToggleCmd = &cobra.Command{
 	Short: "Toggle app mute by PipeWire node ID",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		_, err := ipc.Call("volume", "appToggleMute", args[0])
-		return err
+		return ipcCallVoid("volume", "appToggleMute", args[0])
 	},
 }
 

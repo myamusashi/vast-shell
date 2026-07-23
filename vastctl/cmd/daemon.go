@@ -20,7 +20,7 @@ var daemonStartCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Launch vast-shell in the background",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if out, err := exec.Command("pgrep", "-f", "quickshell").Output(); err == nil && len(out) > 0 {
+		if ipc.ShellRunning() {
 			cmd.Println("vast-shell is already running")
 			return nil
 		}
@@ -32,17 +32,13 @@ var daemonStopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the vast-shell daemon",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		out, err := exec.Command("pgrep", "-f", "quickshell").Output()
-		if err != nil || len(out) == 0 {
+		pids := shellPIDs()
+		if len(pids) == 0 {
 			cmd.Println("vast-shell is not running")
 			return nil
 		}
-		killed := 0
-		for pid := range strings.FieldsSeq(string(out)) {
-			_ = exec.Command("kill", pid).Run()
-			killed++
-		}
-		cmd.Printf("vast-shell stopped (%d process%s)\n", killed, plural(killed))
+		killAll(pids)
+		cmd.Printf("vast-shell stopped (%d process%s)\n", len(pids), plural(len(pids)))
 		return nil
 	},
 }
@@ -51,11 +47,8 @@ var daemonRestartCmd = &cobra.Command{
 	Use:   "restart",
 	Short: "Restart the vast-shell daemon",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		out, err := exec.Command("pgrep", "-f", "quickshell").Output()
-		if err == nil && len(out) > 0 {
-			for pid := range strings.FieldsSeq(string(out)) {
-				_ = exec.Command("kill", pid).Run()
-			}
+		if pids := shellPIDs(); len(pids) > 0 {
+			killAll(pids)
 		}
 		return startDaemon(cmd)
 	},
@@ -65,12 +58,11 @@ var daemonStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check if vast-shell is running",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		out, err := exec.Command("pgrep", "-f", "quickshell").Output()
-		if err != nil || len(out) == 0 {
+		pids := shellPIDs()
+		if len(pids) == 0 {
 			cmd.Println("vast-shell is not running")
 			return nil
 		}
-		pids := strings.Fields(string(out))
 		cmd.Printf("vast-shell is running (pid%s %s)\n", plural(len(pids)), strings.Join(pids, ", "))
 		return nil
 	},
@@ -91,6 +83,20 @@ func startDaemon(cmd *cobra.Command) error {
 	}
 	cmd.Printf("vast-shell started (pid %d)\n", proc.Process.Pid)
 	return nil
+}
+
+func shellPIDs() []string {
+	out, err := exec.Command("pgrep", "-f", "quickshell").Output()
+	if err != nil || len(out) == 0 {
+		return nil
+	}
+	return strings.Fields(string(out))
+}
+
+func killAll(pids []string) {
+	for _, pid := range pids {
+		_ = exec.Command("kill", pid).Run()
+	}
 }
 
 func plural(n int) string {
