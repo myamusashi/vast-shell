@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var prettier bool
+var rawJSON bool
 
 var rootCmd = &cobra.Command{
 	Use:   "vastctl",
@@ -23,5 +23,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVar(&prettier, "prettier", false, "Pretty-print list output as a tree")
+	rootCmd.PersistentFlags().BoolVar(&rawJSON, "json", false, "Output raw JSON instead of tree format")
 }

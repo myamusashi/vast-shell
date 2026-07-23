@@ -13,7 +13,7 @@ func ipcCallPrint(target, method string, args ...string) error {
 	if err != nil {
 		return err
 	}
-	if prettier {
+	if !rawJSON {
 		if tree, treeErr := pretty.Tree(output); treeErr == nil {
 			output = tree
 		}

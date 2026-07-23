@@ -32,29 +32,27 @@ var shortcutsListCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		if prettier {
+		if rawJSON {
 			b, err := json.Marshal(shortcuts)
 			if err != nil {
 				return err
 			}
-			tree, err := pretty.Tree(string(b))
-			if err != nil {
-				return err
-			}
-			fmt.Println(tree)
+			fmt.Println(string(b))
 			return nil
 		}
 		if len(shortcuts) == 0 {
-			fmt.Println("No quickshell shortcuts found.")
+			fmt.Println("(empty)")
 			return nil
 		}
-		for _, s := range shortcuts {
-			if s.Description != "" {
-				fmt.Printf("%s\t%s\n", s.Name, s.Description)
-			} else {
-				fmt.Println(s.Name)
-			}
+		b, err := json.Marshal(shortcuts)
+		if err != nil {
+			return err
 		}
+		tree, err := pretty.Tree(string(b))
+		if err != nil {
+			return err
+		}
+		fmt.Println(tree)
 		return nil
 	},
 }
