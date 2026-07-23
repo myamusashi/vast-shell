@@ -212,5 +212,5 @@ in {
         app2unit
         runtimeDeps
         ;
-    default = shell;
+    default = vastctl;
 }

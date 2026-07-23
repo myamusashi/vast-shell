@@ -7,66 +7,49 @@ import (
 	"strings"
 )
 
+// Dispatch fires a vast-shell global shortcut via Hyprland's Lua dispatcher.
+// Example: hyprctl dispatch 'hl.dsp.global(wallpaperSwitcher)'
 func Dispatch(shortcut string) error {
-	cmd := exec.Command("hyprctl", "dispatch", "submap", "vast")
+	arg := fmt.Sprintf("hl.dsp.global(quickshell:%s)", shortcut)
+	cmd := exec.Command("hyprctl", "dispatch", arg)
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("hyprctl dispatch submap vast: %w", err)
+		return fmt.Errorf("hyprctl dispatch %s: %w", arg, err)
 	}
-	_ = cmd
-
-	cmd2 := exec.Command("hyprctl", "dispatch", "exec", fmt.Sprintf("vast-dispatch %s", shortcut))
-	if err := cmd2.Run(); err != nil {
-		return fmt.Errorf("hyprctl dispatch exec: %w", err)
-	}
-	_ = cmd2
-
 	return nil
 }
 
+// Shortcut represents a registered Hyprland global shortcut.
 type Shortcut struct {
-	Name          string `json:"name"`
-	Description   string `json:"description"`
-	Keys          string `json:"keys"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
+// ListShortcuts returns all quickshell global shortcut binds from the
+// live Hyprland bind table, sourced via `hyprctl binds -j`.
 func ListShortcuts() ([]Shortcut, error) {
-	// Probes hyprctl binds for the live bind table
-	output, err := exec.Command("hyprctl", "binds", "-j").Output()
+	output, err := exec.Command("hyprctl", "globalshortcuts", "-j").Output()
 	if err != nil {
-		return nil, fmt.Errorf("hyprctl binds: %w", err)
+		return nil, fmt.Errorf("hyprctl globalshortcuts: %w", err)
 	}
 
 	var raw []struct {
-		Submap      string `json:"submap"`
+		Name        string `json:"name"`
 		Description string `json:"description"`
-		Dispatcher  string `json:"dispatcher"`
-		Arg         string `json:"arg"`
-		Key         string `json:"key"`
-		Mods        int    `json:"modmask"`
-		Locked      bool   `json:"locked"`
 	}
 
 	if err := json.Unmarshal(output, &raw); err != nil {
-		return nil, fmt.Errorf("hyprctl binds json: %w", err)
+		return nil, fmt.Errorf("hyprctl globalshortcuts json: %w", err)
 	}
 
 	var shortcuts []Shortcut
-	for _, b := range raw {
-		if b.Submap != "vast" {
+	for _, s := range raw {
+		if !strings.HasPrefix(s.Name, "quickshell:") {
 			continue
 		}
-		if b.Dispatcher != "exec" {
-			continue
-		}
-		name := strings.TrimPrefix(b.Arg, "vast-dispatch ")
-		key := b.Key
-		if key == "" {
-			key = "none"
-		}
+		name := strings.TrimPrefix(s.Name, "quickshell:")
 		shortcuts = append(shortcuts, Shortcut{
 			Name:        name,
-			Description: b.Description,
-			Keys:        key,
+			Description: s.Description,
 		})
 	}
 	return shortcuts, nil

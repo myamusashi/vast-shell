@@ -1,0 +1,25 @@
+version: 2
+
+run:
+  timeout: 5m                     # Prevents timeouts on larger codebases
+  issues-exit-code: 1             # Fails the build if lint errors are caught
+
+linters:
+  disable-all: true
+  enable:
+    - govet               # Standard compiler checks (shadowed variables, copy locks)
+    - errcheck            # Ensures every returned error type is checked
+    - staticcheck         # Finds code bugs and incorrect type assertions
+    - asasalint           # Checks for correct type passing in variadic functions
+    - interfacebloat      # Warns if interface types have too many methods
+    - copyloopvar         # Catches scoping bugs in loop variables
+    - modernize           # Enforces modern, valid standard type use
+
+formatters:
+  enable:
+    - goimports           # Safely handles and validates your code formatting style
+    - gci                 # control how import blocks are grouped and ordered
+
+issues:
+  max-issues-per-linter: 0        # Show all linting errors without hiding duplicates
+  max-same-issues: 0

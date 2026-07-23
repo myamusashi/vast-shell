@@ -1,7 +1,7 @@
 package ipc
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -64,7 +64,7 @@ func Call(target string, method string, args ...string) (string, error) {
 	output, err := cmd.Output()
 	if err != nil {
 		var exitErr *exec.ExitError
-		if errorsAs(err, &exitErr) {
+		if errors.As(err, &exitErr) {
 			stderr := strings.TrimSpace(string(exitErr.Stderr))
 			if stderr != "" {
 				return "", fmt.Errorf("%s ipc call %s %s: %s", bin, target, method, stderr)
@@ -73,39 +73,4 @@ func Call(target string, method string, args ...string) (string, error) {
 		return "", fmt.Errorf("%s ipc call %s %s: %w", bin, target, method, err)
 	}
 	return strings.TrimSpace(string(output)), nil
-}
-
-// errorsAs is a local helper to avoid importing errors for a single use case.
-func errorsAs(err error, target interface{}) bool {
-	type as interface{ As(interface{}) bool }
-	if a, ok := err.(as); ok {
-		return a.As(target)
-	}
-	return false
-}
-
-// CallJSON calls the IPC target and unmarshals the output as JSON into v.
-func CallJSON(target string, method string, args []string, v interface{}) error {
-	ensureShellDaemon()
-
-	bin, callArgs := ShellIPCArgs()
-	callArgs = append(callArgs, target, method)
-	callArgs = append(callArgs, args...)
-
-	cmd := exec.Command(bin, callArgs...)
-	output, err := cmd.Output()
-	if err != nil {
-		var exitErr *exec.ExitError
-		if errorsAs(err, &exitErr) {
-			stderr := strings.TrimSpace(string(exitErr.Stderr))
-			if stderr != "" {
-				return fmt.Errorf("%s ipc call %s %s: %s", bin, target, method, stderr)
-			}
-		}
-		return fmt.Errorf("%s ipc call %s %s: %w", bin, target, method, err)
-	}
-	if err := json.Unmarshal(output, v); err != nil {
-		return fmt.Errorf("json unmarshal: %w", err)
-	}
-	return nil
 }

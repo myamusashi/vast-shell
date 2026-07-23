@@ -37,13 +37,12 @@ var daemonStopCmd = &cobra.Command{
 			cmd.Println("vast-shell is not running")
 			return nil
 		}
-		pids := strings.Fields(string(out))
 		killed := 0
-		for _, pid := range pids {
+		for pid := range strings.FieldsSeq(string(out)) {
 			_ = exec.Command("kill", pid).Run()
 			killed++
 		}
-		cmd.Printf("vast-shell stopped (%d process%s)\n", killed, map[bool]string{true: "es", false: ""}[killed > 1])
+		cmd.Printf("vast-shell stopped (%d process%s)\n", killed, plural(killed))
 		return nil
 	},
 }
@@ -54,7 +53,7 @@ var daemonRestartCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		out, err := exec.Command("pgrep", "-f", "quickshell").Output()
 		if err == nil && len(out) > 0 {
-			for _, pid := range strings.Fields(string(out)) {
+			for pid := range strings.FieldsSeq(string(out)) {
 				_ = exec.Command("kill", pid).Run()
 			}
 		}
@@ -66,14 +65,13 @@ var daemonStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check if vast-shell is running",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if out, err := exec.Command("pgrep", "-f", "quickshell").Output(); err == nil && len(out) > 0 {
-			pids := strings.Fields(strings.TrimSpace(string(out)))
-			cmd.Printf("vast-shell is running (pid%s %s)\n",
-				map[bool]string{true: "s", false: ""}[len(pids) > 1],
-				strings.Join(pids, ", "))
-		} else {
+		out, err := exec.Command("pgrep", "-f", "quickshell").Output()
+		if err != nil || len(out) == 0 {
 			cmd.Println("vast-shell is not running")
+			return nil
 		}
+		pids := strings.Fields(string(out))
+		cmd.Printf("vast-shell is running (pid%s %s)\n", plural(len(pids)), strings.Join(pids, ", "))
 		return nil
 	},
 }
@@ -93,6 +91,13 @@ func startDaemon(cmd *cobra.Command) error {
 	}
 	cmd.Printf("vast-shell started (pid %d)\n", proc.Process.Pid)
 	return nil
+}
+
+func plural(n int) string {
+	if n > 1 {
+		return "es"
+	}
+	return ""
 }
 
 func init() {

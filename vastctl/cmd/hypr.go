@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"text/tabwriter"
 
 	"github.com/myamusashi/vast-shell/vastctl/internal/hypr"
 	"github.com/spf13/cobra"
@@ -12,7 +10,7 @@ import (
 var hyprCmd = &cobra.Command{
 	Use:   "hypr",
 	Short: "Hyprland integration commands",
-	Long:  "Dispatch vast shortcuts and list available keybinds from the Hyprland 'vast' submap.",
+	Long:  "Dispatch quickshell global shortcuts and list registered shortcuts from Hyprland.",
 }
 
 var dispatchCmd = &cobra.Command{
@@ -26,29 +24,30 @@ var dispatchCmd = &cobra.Command{
 
 var shortcutsListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "List all shortcuts in the vast submap",
+	Short: "List all quickshell global shortcuts",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		shortcuts, err := hypr.ListShortcuts()
 		if err != nil {
 			return err
 		}
 		if len(shortcuts) == 0 {
-			fmt.Println("No vast shortcuts found.")
+			fmt.Println("No quickshell shortcuts found.")
 			return nil
 		}
-		w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
-		fmt.Fprintln(w, "NAME\tKEYS\tDESCRIPTION")
 		for _, s := range shortcuts {
-			fmt.Fprintf(w, "%s\t%s\t%s\n", s.Name, s.Keys, s.Description)
+			if s.Description != "" {
+				fmt.Printf("%s\t%s\n", s.Name, s.Description)
+			} else {
+				fmt.Println(s.Name)
+			}
 		}
-		w.Flush()
 		return nil
 	},
 }
 
 var shortcutsCmd = &cobra.Command{
 	Use:   "shortcuts",
-	Short: "List vast shortcut keybinds",
+	Short: "List quickshell global shortcuts",
 }
 
 func init() {

@@ -16,6 +16,8 @@ pkgs.mkShell {
 
     packages = with pkgs; [
         go
+        gopls
+        golangci-lint
         nil
         pkg-config
         qt6.qttools
