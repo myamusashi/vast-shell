@@ -340,7 +340,7 @@ Singleton {
                     mediaClass: d.mediaClass,
                     state: d.state,
                     isMonitor: d.isMonitor,
-                    monitorOf: d.monitorOf,
+                    monitorOf: d.monitorOf
                 });
             }
             return JSON.stringify(result);
@@ -359,7 +359,7 @@ Singleton {
                 deviceId: AudioProfilesWatcher.deviceId,
                 deviceName: AudioProfilesWatcher.deviceName,
                 activeIndex: AudioProfilesWatcher.activeIndex,
-                profiles: [],
+                profiles: []
             };
             for (let i = 0; i < count; i++) {
                 const p = model.get(i);
@@ -368,7 +368,7 @@ Singleton {
                     name: p.name,
                     description: p.description,
                     available: p.available,
-                    readable: p.readable,
+                    readable: p.readable
                 });
             }
             return JSON.stringify(result);
@@ -385,19 +385,19 @@ Singleton {
         target: "mpris"
 
         function togglePlaying(): void {
-            Players.active?.togglePlaying()
+            Players.active?.togglePlaying();
         }
         function next(): void {
-            Players.active?.next()
+            Players.active?.next();
         }
         function previous(): void {
-            Players.active?.previous()
+            Players.active?.previous();
         }
         function stop(): void {
-            Players.active?.stop()
-		}
-		function status(): bool {
-            return Players.active?.isPlaying
+            Players.active?.stop();
+        }
+        function status(): bool {
+            return Players.active?.isPlaying;
         }
         function list(): string {
             const result = [];
@@ -407,10 +407,10 @@ Singleton {
                 result.push({
                     identity: p.identity,
                     trackTitle: p.trackTitle,
-					trackArtist: p.trackArtist,
-					playbackStatus: p.playbackStatus,
-					volume: p.volume,
-					status: p.isPlaying,
+                    trackArtist: p.trackArtist,
+                    playbackStatus: p.playbackStatus,
+                    volume: p.volume,
+                    status: p.isPlaying
                 });
             }
             return JSON.stringify(result);
@@ -421,13 +421,13 @@ Singleton {
         target: "idle"
 
         function on(): void {
-            Configs.idle.enabled = true
+            Configs.idle.enabled = true;
         }
         function off(): void {
-            Configs.idle.enabled = false
+            Configs.idle.enabled = false;
         }
         function status(): bool {
-            return Configs.idle.enabled
+            return Configs.idle.enabled;
         }
     }
 
@@ -438,7 +438,7 @@ Singleton {
             const sink = Pipewire.defaultAudioSink;
             return JSON.stringify({
                 volume: sink.audio.volume,
-                muted: sink.audio.muted,
+                muted: sink.audio.muted
             });
         }
         function systemSet(percent: int): void {
@@ -463,7 +463,7 @@ Singleton {
                     appName: s.properties["application.name"] ?? s.description ?? s.name,
                     mediaName: s.properties["media.name"] ?? "",
                     volume: s.audio.volume,
-                    muted: s.audio.muted,
+                    muted: s.audio.muted
                 });
             }
             return JSON.stringify(result);
