@@ -5,7 +5,7 @@ import qs.Services
 
 import M3Shapes
 
-Item {
+MaterialShape {
     id: root
 
     property bool status: false
@@ -51,6 +51,22 @@ Item {
     implicitHeight: 30
     visible: status
 
+    anchors.centerIn: parent
+    color: Colours.m3Colors.m3Primary
+
+    fromShape: shapeGetters[shapeIndex]
+    toShape: shapeGetters[shapeIndex]
+    morphProgress: 1
+
+    scale: status ? 1 : 0
+    Behavior on scale {
+        SpringAnimation {
+            spring: 5
+            damping: 0.3
+            epsilon: 0.1
+        }
+    }
+
     ElapsedTimer {
         id: timer
     }
@@ -62,14 +78,14 @@ Item {
 
             if (t >= root.springDuration) {
                 root.springSettled = true;
-                shapeCanvas.morphProgress = 1;
-                shapeCanvas.rotation = root.rotationTarget;
-                shapeCanvas.scale = 1;
+                root.morphProgress = 1;
+                root.rotation = root.rotationTarget;
+                root.scale = 1;
             } else {
                 const [pos, vel] = root.spring(t);
-                shapeCanvas.morphProgress = Math.min(1, pos);
-                shapeCanvas.rotation = root.rotationStart + pos * (root.rotationTarget - root.rotationStart);
-                shapeCanvas.scale = 1 + vel * 0.14 / root.springMaxVelocity;
+                root.morphProgress = Math.min(1, pos);
+                root.rotation = root.rotationStart + pos * (root.rotationTarget - root.rotationStart);
+                root.scale = 1 + vel * 0.14 / root.springMaxVelocity;
             }
         }
     }
@@ -84,38 +100,15 @@ Item {
         onTriggered: {
             const nextIndex = (root.shapeIndex + 1) % root.shapeGetters.length;
 
-            shapeCanvas.fromShape = root.shapeGetters[root.shapeIndex];
-            shapeCanvas.toShape = root.shapeGetters[nextIndex];
-            shapeCanvas.morphProgress = 0;
+            root.fromShape = root.shapeGetters[root.shapeIndex];
+            root.toShape = root.shapeGetters[nextIndex];
+            root.morphProgress = 0;
 
             root.shapeIndex = nextIndex;
-            root.rotationStart = shapeCanvas.rotation;
-            root.rotationTarget = shapeCanvas.rotation + root.rotationStep;
+            root.rotationStart = root.rotation;
+            root.rotationTarget = root.rotation + root.rotationStep;
             root.springSettled = false;
             timer.restart();
-        }
-    }
-
-    MaterialShape {
-        id: shapeCanvas
-
-        anchors.centerIn: parent
-        implicitWidth: parent.width
-        implicitHeight: parent.height
-        color: Colours.m3Colors.m3Primary
-
-        fromShape: root.shapeGetters[root.shapeIndex]
-        toShape: root.shapeGetters[root.shapeIndex]
-        morphProgress: 1
-
-        scale: root.status ? 1 : 0
-
-        Behavior on scale {
-            SpringAnimation {
-                spring: 5
-                damping: 0.3
-                epsilon: 0.1
-            }
         }
     }
 }
