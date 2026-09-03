@@ -4,7 +4,7 @@
 
 Prioritize: correctness, no regressions, performance, API stability, readability. Flag: algorithmic regressions in hot paths, silent config-behavior breakage, and violations of the style/code/QML/Go/Qt guidelines below. You don't need to smoke test runtime.
 
-## C++ style
+## Qt and C++ style
 
 - clang-format per `.clang-format`; single-line `if`/`else` without braces (not `do`/`while`).
 - Minimize function bodies in headers.
@@ -12,9 +12,11 @@ Prioritize: correctness, no regressions, performance, API stability, readability
 - Headers: relative includes (`"../a/b.hpp"`), not `"src/a/b.hpp"` — except protocol headers.
 - Qt header include: always include the source file ("qcontainerfwd.h", "qstring.h", "qmap.h", etc) and don't use the class file
 
-## C++ code practices
+## Qt and C++ code practices
 
-- SRP over complex classes/functions; watch for feature envy, LSP violations; use templates/inheritance to de-duplicate.
+- SRP over complex classes/functions.
+- watch for feature envy, LSP violations.
+- use templates/inheritance to de-duplicate.
 - Never: `using namespace std;`, uninitialized primitives.
 - Avoid unless necessary: C stdlib, `malloc`/`free`, raw C-style pointers (use STL smart pointers; raw pointers OK only where misuse is impossible, e.g. destructors).
 - Avoid: `.clang-tidy` violations, manual C-style alloc/free pairs (wrap them).
@@ -28,7 +30,7 @@ Prioritize: correctness, no regressions, performance, API stability, readability
 
 ## QML style
 
-- ALWAYS format with `.qmlformat.ini`; AND ALWAYS run LINTING with `Assets/shell/qmllint_qs.sh` EVERYTIME YOU FINISHED THE CODE.
+- ALWAYS format with `.qmlformat.ini`; AND ALWAYS run LINTING with `Assets/shell/qmllint_qs.sh` EVERYTIME YOU FINISHED THE CODE. 
 - Imports: `qs.<path_from_Qml_directory_root>` unless the target is in the same directory.
 - IDs: `camelCase`, descriptive (`root`, `rect`, `mouseArea` OK as defaults).
 - Local properties: `camelCase`, descriptive, NO abbreviations AND underscores.
@@ -38,10 +40,15 @@ Prioritize: correctness, no regressions, performance, API stability, readability
 - No business logic in QML (state machines, I/O, parsing, non-trivial computation) — push to a `QML_ELEMENT` C++ type. QML stays bindings/layout/glue.
 - Prefer declarative bindings over `Qt.callLater`/imperative JS; if used for real timing reasons, comment why.
 - Signals named past-tense (`clicked`, `wallpaperChanged`), not imperative.
+- Use `Scope` (from `Quickshell`) for storing non-ui to create QML ELEMENT.
+- Use `Singleton` (from `Quickshell`) for storing non-ui library to create QML SINGLETON.
+- Use `QtObject` if you want to unified or storing related property into one property or if you want to create inline property inside qml files.
 
 ## Quickshell API lookups
 
-Some components aren't in Qt/QML docs or `.qmltypes` — check quickshell.org instead:
+You can read Quickshel library in Quickshell docs or `.qmltypes`.
+
+For Quickshell docs, check quickshell.org instead:
 
 1. Get the type's import (e.g. `Quickshell.Wayland`) and name (e.g. `ScreencopyView`).
 2. URL: `https://quickshell.org/docs/v0.3.1/types/<import path>/<TypeName>`
@@ -49,7 +56,7 @@ Some components aren't in Qt/QML docs or `.qmltypes` — check quickshell.org in
 3. Fetch before writing/reviewing code using the type — don't guess properties/signals/enums from the name.
 4. Unsure of the module? Check `https://quickshell.org/docs/v0.3.1/types/` first.
 5. 404? Type may have moved/renamed — check the listing page or `https://quickshell.org/changelog`.
-6. If you get `StatusCode: non 2xx status code (404 GET ...)` ALWAYS SCRAPE THE QUICKSHELL DOCS TYPES UNTIL YOU FIND WHAT YOU LOOKING FOR. Read number 4 again.
+6. If you get `StatusCode: non 2xx status code (404 GET ...)` ALWAYS SCRAPE THE QUICKSHELL DOCS TYPES UNTIL YOU FIND WHAT YOU LOOKING FOR. Read from number 4 again.
 
 Modules in use: Quickshell (core), .Bluetooth, .DBusMenu, .Hyprland, .I3, .Io, .Networking, .Services.Greetd, .Services.Mpris, .Services.Notifications, .Services.Pam, .Services.Pipewire, .Services.Polkit, .Services.SystemTray, .Services.UPower, .Wayland, .Widgets.
 
@@ -58,7 +65,7 @@ Modules in use: Quickshell (core), .Bluetooth, .DBusMenu, .Hyprland, .I3, .Io, .
 - Never violate `golangci-lint` — treat lint failures as build failures, not warnings.
 - Structure: one `cobra.Command` per file under `cmd/`; keep `RunE` thin — delegate real logic to an internal package (`internal/...`), don't inline business logic in the command handler.
 - Always return errors (`RunE`, not `Run`); never `panic`/`os.Exit` outside `main`. Wrap errors with context via `fmt.Errorf("...: %w", err)`.
-- Flags: define via `Flags()`/`PersistentFlags()` in `init()` or a constructor, bind to a local var or a config struct — no package-level global flag vars.
-- Prefer a single static binary: avoid CGo unless unavoidable (breaks the static-binary goal).
-- Table-driven tests for command logic; keep `main.go` minimal (build the root command, call `Execute()`, exit on error).
+- Flags: define via `Flags()`/`PersistentFlags()` in `init()` or a constructor, bind to a local var or a config struct, no package-level global flag vars.
+- Prefer a single static binary: avoid CGo unless unavoidable (breaks the static-binary).
+- Table-driven tests for command logic; keep `main.go` minimal.
 - Context propagation: pass `context.Context` through for anything IPC/network-bound (matches Quickshell IPC calls) rather than using bare goroutines with no cancellation path.
