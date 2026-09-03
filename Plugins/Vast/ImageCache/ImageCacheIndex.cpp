@@ -8,12 +8,13 @@
 #include <qiodevice.h>
 #include <qlist.h>
 #include <qstring.h>
+#include <qstringview.h>
 
 #include <mutex>
 #include <shared_mutex>
 
 namespace {
-    const auto K_FILE_URL_PREFIX = QStringLiteral("file://");
+    const QLatin1StringView K_FILE_URL_PREFIX("file://");
 }
 
 ImageCacheIndex::ImageCacheIndex() {

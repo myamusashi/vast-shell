@@ -27,9 +27,10 @@ namespace vast {
             qint64  timeMs;
             QString content;
         };
-        QList<RawLine> raw;
+        QList<RawLine>       raw;
 
-        for (const QString& line : lrc.split('\n')) {
+        const QList<QString> trimmedLyricLine = lrc.split('\n');
+        for (const QString& line : trimmedLyricLine) {
             auto m = lineRe.match(line.trimmed());
             if (!m.hasMatch())
                 continue;
@@ -37,7 +38,6 @@ namespace vast {
         }
         if (raw.isEmpty())
             return {};
-
         Result     result;
         const auto totalMs = static_cast<qint64>(totalDurationSecs * 1000.0);
 
@@ -87,8 +87,9 @@ namespace vast {
                     words.replace(j, w);
                 }
             } else {
-                QString plain = srcText;
-                plain.remove(QRegularExpression(R"(<[^>]+>)"));
+                static const QRegularExpression rx(R"(<[^>]+>)");
+                QString                         plain = srcText;
+                plain.remove(rx);
                 words = interpolateWords(plain.trimmed(), lineStart, lineEnd);
             }
 
@@ -101,11 +102,11 @@ namespace vast {
         result.synced = true;
         return result;
     }
-
     LrcParser::Result LrcParser::parsePlain(const QString& plain) {
-        Result result;
+        Result               result;
 
-        for (const QString& raw : plain.split('\n')) {
+        const QList<QString> plainList = plain.split('\n');
+        for (const QString& raw : plainList) {
             const QString text = raw.trimmed();
             if (text.isEmpty())
                 continue;
@@ -120,8 +121,9 @@ namespace vast {
             lineEntry["translation"] = transText;
             result.lines.append(lineEntry);
 
-            QVariantList words;
-            for (const QString& word : srcText.split(' ', Qt::SkipEmptyParts)) {
+            QList<QVariant>      words;
+            const QList<QString> srcTextList = srcText.split(' ', Qt::SkipEmptyParts);
+            for (const QString& word : srcTextList) {
                 QVariantMap w;
                 w["time"]     = -1;
                 w["text"]     = word;
@@ -150,7 +152,6 @@ namespace vast {
         qint64       durationGap = lineEndMs - lineStartMs;
         const qint64 maxDuration = tokens.size() * 800;
         durationGap              = std::min(durationGap, maxDuration);
-
         const auto   totalWeight = static_cast<double>(totalLen + tokens.size());
 
         QVariantList words;

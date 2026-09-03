@@ -101,13 +101,14 @@ namespace vast {
             std::ranges::stable_sort(hits, [](const QPair<double, QVariant>& a, const QPair<double, QVariant>& b) { return a.first > b.first; });
             QVariantList out;
             out.reserve(hits.size());
-            for (const auto& h : hits)
+            for (const auto& h : std::as_const(hits))
                 out.append(h.second);
             return out;
         }
 
+        static const QRegularExpression              rx("\\s+");
         const QString                                normQuery      = FuzzyMatcher::normalizeText(query).trimmed();
-        const QStringList                            normQueryWords = normQuery.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+        const QList<QString>                         normQueryWords = normQuery.split(rx, Qt::SkipEmptyParts);
 
         const std::vector<FuzzyMatcher::EncodedWord> encodedWords = FuzzyMatcher::encodeWords(normQueryWords);
 
@@ -153,9 +154,9 @@ namespace vast {
             return a.score > b.score;
         });
 
-        QVariantList out;
+        QList<QVariant> out;
         out.reserve(hits.size());
-        for (const Hit& h : hits)
+        for (const Hit& h : std::as_const(hits))
             out.append(h.variant);
         return out;
     }
@@ -170,7 +171,7 @@ namespace vast {
             static const QRegularExpression kWhitespace(R"(\s+)");
 
             const QString                   normQuery  = FuzzyMatcher::normalizeText(query).trimmed();
-            const QStringList               queryWords = normQuery.split(kWhitespace, Qt::SkipEmptyParts);
+            const QList<QString>            queryWords = normQuery.split(kWhitespace, Qt::SkipEmptyParts);
 
             // Query words encoded once for the whole candidate sweep.
             const std::vector<FuzzyMatcher::EncodedWord> encodedWords = FuzzyMatcher::encodeWords(queryWords);
@@ -233,9 +234,9 @@ namespace vast {
                 return a.score > b.score;
             });
 
-            QVariantList out;
+            QList<QVariant> out;
             out.reserve(hits.size());
-            for (const Hit& h : hits)
+            for (const Hit& h : std::as_const(hits))
                 out.append(h.variant);
 
             QMetaObject::invokeMethod(
@@ -277,5 +278,4 @@ namespace vast {
     double SearchEngine::score(const QString& query, const QString& text) {
         return FuzzyMatcher::fuzzyScore(query, text);
     }
-
 }

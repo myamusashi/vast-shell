@@ -24,7 +24,9 @@ ImageCache* ImageCache::sInstance = nullptr;
 ImageCache::ImageCache(QObject* parent) : QObject(parent) {
     Q_ASSERT_X(sInstance == nullptr, "ImageCache::ImageCache", "ImageCache constructed more than once");
     sInstance = this;
-    for (const auto& path : mIndex.allPaths())
+
+    const auto allIndexPaths = mIndex.allPaths();
+    for (const auto& path : allIndexPaths)
         mDone.insert(path);
 }
 

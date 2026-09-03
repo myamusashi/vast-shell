@@ -320,7 +320,7 @@ namespace vast {
         });
 
         mFiltered.reserve(static_cast<size_t>(hits.size()));
-        for (const Hit& h : hits)
+        for (const Hit& h : std::as_const(hits))
             mFiltered.push_back(h.index);
     }
 

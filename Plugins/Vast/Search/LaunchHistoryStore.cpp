@@ -48,7 +48,7 @@ namespace vast {
 
     void LaunchHistoryStore::saveHistory() {
         QJsonArray arr;
-        for (const HistoryEntry& entry : mHistory) {
+        for (const HistoryEntry& entry : std::as_const(mHistory)) {
             QJsonObject object;
             object["id"]        = entry.id;
             object["timestamp"] = entry.timestamp;
