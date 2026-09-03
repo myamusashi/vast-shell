@@ -1,12 +1,13 @@
 import QtQuick
+import Quickshell
 import Quickshell.Io
 
 import "captureUtils.js" as Utils
 
-Item {
+Scope {
     id: root
 
-    required property string screenshotDir
+    property string screenshotDir
 
     signal saved(string path)
     signal copied

@@ -44,6 +44,130 @@ Scope {
         ]);
     }
 
+    function screenshotWindow(action) {
+        console.log("screenshotWindow: opening window picker, action:", action);
+        root.pickForRecordCallback = null;
+        root.pendingWindowAction = action || "save+copy";
+        root.windowPickerOpen = true;
+    }
+
+    function pickWindowForRecord(callback) {
+        console.log("pickWindowForRecord: opening window picker for recording");
+        root.pickForRecordCallback = callback;
+        root.windowPickerOpen = true;
+    }
+
+    function screenshotSelection(action) {
+        if (GlobalStates.isSelectionOpen)
+            return;
+        delayTimer.running = false;
+        delayTimer.pendingFn = null;
+
+        if (Quickshell.screens.length <= 1) {
+            root.pendingAction = "region";
+            const screen = Quickshell.screens[0];
+            if (!screen) {
+                root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
+                return;
+            }
+            root.regionScale = Hyprland.monitorFor(screen)?.scale ?? 1;
+            captureLoader.targetScreen = screen;
+            captureLoader.targetWidth = screen.width;
+            captureLoader.targetHeight = screen.height;
+            delayTimer.interval = 2000;
+            delayTimer.pendingFn = () => {
+                captureLoader.active = true;
+            };
+            delayTimer.running = true;
+        } else {
+            const firstScreen = Quickshell.screens[0];
+            root.regionScale = Hyprland.monitorFor(firstScreen)?.scale ?? 1;
+            delayTimer.interval = 2000;
+            delayTimer.pendingFn = () => {
+                root.freezeAllScreens(path => {
+                    if (!path) {
+                        root.notify("Screenshot Failed", "Failed to capture screens.", "critical", "dialog-error", "Screenshot");
+                        return;
+                    }
+                    root.frozenImageUrl = path;
+                    root.selectionOpen = true;
+                });
+            };
+            delayTimer.running = true;
+        }
+    }
+
+    function screenshotOutput(target, action) {
+        delayTimer.running = false;
+        delayTimer.pendingFn = null;
+        root.pendingAction = action || "save+copy";
+        const screen = Quickshell.screens.find(s => s.name === target) ?? Quickshell.screens[0];
+        if (!screen) {
+            root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
+            return;
+        }
+        captureLoader.targetScreen = screen;
+        captureLoader.targetWidth = screen.width;
+        captureLoader.targetHeight = screen.height;
+        delayTimer.interval = 2000;
+        delayTimer.pendingFn = () => {
+            captureLoader.active = true;
+        };
+        delayTimer.running = true;
+    }
+
+    function screenshotAllOutputs(action) {
+        delayTimer.running = false;
+        delayTimer.pendingFn = null;
+        delayTimer.interval = 2000;
+        delayTimer.pendingFn = () => {
+            root.freezeAllScreens(path => {
+                if (!path) {
+                    root.notify("Screenshot Failed", "Failed to capture all outputs.", "critical", "dialog-error", "Screenshot");
+                    return;
+                }
+                const srcPath = path.startsWith("file://") ? path.slice(7) : path;
+                const outPath = Utils.screenshotPath(root.screenshotDir);
+                fileCopyProcess.destPath = outPath;
+                fileCopyProcess.command = ["cp", srcPath, outPath];
+                fileCopyProcess.running = true;
+            });
+        };
+        delayTimer.running = true;
+    }
+
+    function freezeAllScreens(callback) {
+        root.allScreenPaths = [];
+        root.captureDoneCallback = callback;
+        root.pendingCaptureCount = Quickshell.screens.length;
+        root.isMultiCapturing = true;
+        multiCaptureWatchdog.restart();
+    }
+
+    function compositeAllCaptures() {
+        multiCaptureWatchdog.stop();
+        if (root.allScreenPaths.length === 0) {
+            root.isMultiCapturing = false;
+            root.notify("Screenshot Failed", "No screens captured.", "critical", "dialog-error", "Screenshot");
+            if (root.captureDoneCallback) {
+                const cb = root.captureDoneCallback;
+                root.captureDoneCallback = null;
+                cb("");
+            }
+            return;
+        }
+        compositeLoader.active = true;
+    }
+
+    function copyToClipboard(img) {
+        saver.copyFile(img);
+    }
+
+    function getMonitors(callback) {
+        const names = Quickshell.screens.map(s => s.name);
+        callback(names);
+    }
+
     CaptureSaver {
         id: saver
 
@@ -282,7 +406,6 @@ Scope {
     property point selectionEnd: Qt.point(0, 0)
     property bool selectionDragging: false
 
-    // Hidden crop engine — loaded when selection finishes
     LazyLoader {
         id: cropEngine
 
@@ -337,9 +460,8 @@ Scope {
         }
     }
 
-    // Parallel per-screen capture — Variants per Quickshell docs.
-    // Each screen gets its own PanelWindow+ScreencopyView so all outputs
-    // freeze at the same compositor frame; no sequential captureLoader loop.
+    // Each screen gets its own PanelWindow + ScreencopyView
+    // so all outputs freeze at the same compositor frame
     property int pendingCaptureCount: 0
 
     Timer {
@@ -442,7 +564,6 @@ Scope {
         }
     }
 
-    // Per-screen selection overlay — Variants per Quickshell docs
     Variants {
         id: selectionOverlay
 
@@ -699,7 +820,7 @@ Scope {
                 }
             }
 
-            // refreshToplevels() lands over IPC — recalc once fresh geometry arrived
+            // refreshToplevels() lands over IPC, recalc once fresh geometry arrived
             Timer {
                 id: pickerRecalcTimer
 
@@ -769,9 +890,11 @@ Scope {
                     }
 
                     Rectangle {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                        }
                         height: Appearance.spacing.large
                         color: Qt.alpha(Colours.m3Colors.m3Scrim, 0.6)
                         radius: Appearance.rounding.small
@@ -816,129 +939,5 @@ Scope {
                 }
             }
         }
-    }
-
-    function screenshotWindow(action) {
-        console.log("screenshotWindow: opening window picker, action:", action);
-        root.pickForRecordCallback = null;
-        root.pendingWindowAction = action || "save+copy";
-        root.windowPickerOpen = true;
-    }
-
-    function pickWindowForRecord(callback) {
-        console.log("pickWindowForRecord: opening window picker for recording");
-        root.pickForRecordCallback = callback;
-        root.windowPickerOpen = true;
-    }
-
-    function screenshotSelection(action) {
-        if (GlobalStates.isSelectionOpen)
-            return;
-        delayTimer.running = false;
-        delayTimer.pendingFn = null;
-
-        if (Quickshell.screens.length <= 1) {
-            root.pendingAction = "region";
-            const screen = Quickshell.screens[0];
-            if (!screen) {
-                root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
-                return;
-            }
-            root.regionScale = Hyprland.monitorFor(screen)?.scale ?? 1;
-            captureLoader.targetScreen = screen;
-            captureLoader.targetWidth = screen.width;
-            captureLoader.targetHeight = screen.height;
-            delayTimer.interval = 2000;
-            delayTimer.pendingFn = () => {
-                captureLoader.active = true;
-            };
-            delayTimer.running = true;
-        } else {
-            const firstScreen = Quickshell.screens[0];
-            root.regionScale = Hyprland.monitorFor(firstScreen)?.scale ?? 1;
-            delayTimer.interval = 2000;
-            delayTimer.pendingFn = () => {
-                root.freezeAllScreens(path => {
-                    if (!path) {
-                        root.notify("Screenshot Failed", "Failed to capture screens.", "critical", "dialog-error", "Screenshot");
-                        return;
-                    }
-                    root.frozenImageUrl = path;
-                    root.selectionOpen = true;
-                });
-            };
-            delayTimer.running = true;
-        }
-    }
-
-    function screenshotOutput(target, action) {
-        delayTimer.running = false;
-        delayTimer.pendingFn = null;
-        root.pendingAction = action || "save+copy";
-        const screen = Quickshell.screens.find(s => s.name === target) ?? Quickshell.screens[0];
-        if (!screen) {
-            root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
-            return;
-        }
-        captureLoader.targetScreen = screen;
-        captureLoader.targetWidth = screen.width;
-        captureLoader.targetHeight = screen.height;
-        delayTimer.interval = 2000;
-        delayTimer.pendingFn = () => {
-            captureLoader.active = true;
-        };
-        delayTimer.running = true;
-    }
-
-    function screenshotAllOutputs(action) {
-        delayTimer.running = false;
-        delayTimer.pendingFn = null;
-        delayTimer.interval = 2000;
-        delayTimer.pendingFn = () => {
-            root.freezeAllScreens(path => {
-                if (!path) {
-                    root.notify("Screenshot Failed", "Failed to capture all outputs.", "critical", "dialog-error", "Screenshot");
-                    return;
-                }
-                const srcPath = path.startsWith("file://") ? path.slice(7) : path;
-                const outPath = Utils.screenshotPath(root.screenshotDir);
-                fileCopyProcess.destPath = outPath;
-                fileCopyProcess.command = ["cp", srcPath, outPath];
-                fileCopyProcess.running = true;
-            });
-        };
-        delayTimer.running = true;
-    }
-
-    function freezeAllScreens(callback) {
-        root.allScreenPaths = [];
-        root.captureDoneCallback = callback;
-        root.pendingCaptureCount = Quickshell.screens.length;
-        root.isMultiCapturing = true;
-        multiCaptureWatchdog.restart();
-    }
-
-    function compositeAllCaptures() {
-        multiCaptureWatchdog.stop();
-        if (root.allScreenPaths.length === 0) {
-            root.isMultiCapturing = false;
-            root.notify("Screenshot Failed", "No screens captured.", "critical", "dialog-error", "Screenshot");
-            if (root.captureDoneCallback) {
-                const cb = root.captureDoneCallback;
-                root.captureDoneCallback = null;
-                cb("");
-            }
-            return;
-        }
-        compositeLoader.active = true;
-    }
-
-    function copyToClipboard(img) {
-        saver.copyFile(img);
-    }
-
-    function getMonitors(callback) {
-        const names = Quickshell.screens.map(s => s.name);
-        callback(names);
     }
 }
