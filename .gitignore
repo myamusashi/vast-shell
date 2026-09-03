@@ -4,6 +4,7 @@ Assets/go/keystate-bin
 Assets/shaders/**/*.qsb
 build/
 build-clang/
+build-clazy/
 .qtcreator
 result/
 result
