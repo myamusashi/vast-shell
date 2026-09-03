@@ -1,8 +1,9 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 
-Item {
+Scope {
     id: root
 
     property Item scope: null

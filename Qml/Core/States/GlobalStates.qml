@@ -60,6 +60,7 @@ Singleton {
     OSDManager {
         id: osd
     }
+
     PanelManager {
         id: panel
     }

@@ -1,12 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 
-Item {
+Scope {
     id: root
-
-    implicitWidth: 0
-    implicitHeight: 0
 
     property var activeOSDs: ({})
     property var pausedOSDs: ({})

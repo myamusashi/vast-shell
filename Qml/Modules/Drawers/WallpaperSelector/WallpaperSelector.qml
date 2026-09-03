@@ -96,11 +96,11 @@ Item {
             active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWallpaperSwitcherOpen // qmllint disable
             asynchronous: true
             sourceComponent: FocusCage {
-                active: GlobalStates.isWallpaperSwitcherOpen
-                defaultFocus: content.searchField
-
                 anchors.fill: parent
                 anchors.margins: Appearance.spacing.normal
+
+                active: GlobalStates.isWallpaperSwitcherOpen
+                defaultFocus: content.searchField
 
                 Content {
                     id: content

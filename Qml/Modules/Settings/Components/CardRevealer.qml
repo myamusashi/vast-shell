@@ -1,10 +1,11 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 
 import qs.Core.Configs
 
-Item {
+Scope {
     id: root
 
     required property Flickable target
