@@ -88,9 +88,13 @@ if(NOT DEFINED INSTALL_QMLDIR)
 endif()
 message(STATUS "QML install dir: ${CMAKE_INSTALL_PREFIX}/${INSTALL_QMLDIR}")
 
-include(cmake/pch.cmake)
-include(cmake/qml-module.cmake)
+include(Plugins/cmake/pch.cmake)
+include(Plugins/cmake/qml-module.cmake)
 
-add_subdirectory(third_party/mcu)
-add_subdirectory(third_party/fzy-wrapper)
-add_subdirectory(Vast)
+add_subdirectory(Plugins/third_party/mcu)
+add_subdirectory(Plugins/third_party/fzy-wrapper)
+add_subdirectory(Plugins/Vast)
+
+# After all targets: add_dependencies() on pchsets / generated-code libs only
+# resolves for targets defined above, so this include must stay last.
+include(Plugins/cmake/clazy-lint.cmake)
