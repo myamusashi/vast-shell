@@ -29,12 +29,12 @@ in
     clangStdenv.mkDerivation {
         pname = "vast-plugin";
         version = "1.0";
-        src = ../../Plugins;
+        src = ../..;
 
         postPatch = ''
-            mkdir -p third_party/{material-color-utilities,fzy}
-            cp -r --no-preserve=mode ${material-color-utilities}/. third_party/material-color-utilities/
-            cp -r --no-preserve=mode ${fzy}/. third_party/fzy/
+            mkdir -p Plugins/third_party/{material-color-utilities,fzy}
+            cp -r --no-preserve=mode ${material-color-utilities}/. Plugins/third_party/material-color-utilities/
+            cp -r --no-preserve=mode ${fzy}/. Plugins/third_party/fzy/
         '';
 
         nativeBuildInputs = [

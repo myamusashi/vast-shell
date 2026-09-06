@@ -248,9 +248,9 @@ build_vast_plugin() {
 		return 0
 	}
 
-	local -r src="$PROJECT_ROOT/Plugins"
-	[[ -d $src ]] || {
-		warn "Plugins not found, skipping"
+	local -r src="$PROJECT_ROOT"
+	[[ -d $src/CMakeLists.txt ]] || {
+		warn "CMakeLists.txt not found, skipping"
 		return 0
 	}
 
