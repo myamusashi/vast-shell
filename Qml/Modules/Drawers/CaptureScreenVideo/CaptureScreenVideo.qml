@@ -70,39 +70,8 @@ Item {
         }
     }
 
-    // Compat alias — deprecated, use captureScreenImage
-    IpcHandler {
-        target: "capture"
-        function screen(action: string): void {
-            CaptureScreenImage.screenshotOutput(Quickshell.screens[0]?.name ?? "", action);
-        }
-        function region(action: string): void {
-            CaptureScreenImage.screenshotSelection(action);
-        }
-        function window(action: string): void {
-            CaptureScreenImage.screenshotWindow(action);
-        }
-    }
-
     IpcHandler {
         target: "captureScreenVideo"
-        function start(): void {
-            CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
-        }
-        function stop(): void {
-            CaptureScreenVideo.stopRecording();
-        }
-        function toggle(): void {
-            CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
-        }
-        function status(): bool {
-            return CaptureScreenVideo.isRecording;
-        }
-    }
-
-    // Compat alias — deprecated, use captureScreenVideo
-    IpcHandler {
-        target: "recorder"
         function start(): void {
             CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
         }

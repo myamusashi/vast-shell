@@ -31,6 +31,7 @@
         qt6.qtshadertools
         python314Packages.rembg
         clang
+        clazy
         clang-tools
         gdb
     ];

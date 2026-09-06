@@ -1,9 +1,8 @@
 import QtQuick
 import Quickshell
+import M3Shapes
 
 import qs.Services
-
-import M3Shapes
 
 MaterialShape {
     id: root
