@@ -13,7 +13,6 @@
         qt6.qtgraphs
         qt6.qt5compat
         qt6.qttranslations
-        ccache
         ddcutil
         pipewire.dev
         wayland
