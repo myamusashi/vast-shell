@@ -43,32 +43,32 @@ namespace vast {
             if (mRoots == v)
                 return;
             mRoots = std::move(v);
-            emit rootsChanged();
+            Q_EMIT rootsChanged();
         }
         void setMaxDepth(int v) {
             if (mMaxDepth == v)
                 return;
             mMaxDepth = v;
-            emit maxDepthChanged();
+            Q_EMIT maxDepthChanged();
         }
         void setShowHidden(bool v) {
             if (mShowHidden == v)
                 return;
             mShowHidden = v;
-            emit showHiddenChanged();
+            Q_EMIT showHiddenChanged();
         }
         void setNameFilters(QStringList v) {
             if (mNameFilters == v)
                 return;
             mNameFilters = std::move(v);
-            emit nameFiltersChanged();
+            Q_EMIT nameFiltersChanged();
         }
 
         // Walks all roots asynchronously; delivers exactly one walkFinished
         // per request unless superseded by a newer one.
         Q_INVOKABLE void requestWalk();
 
-      signals:
+      Q_SIGNALS:
         void walkFinished(QVariantList entries);
 
         void rootsChanged();

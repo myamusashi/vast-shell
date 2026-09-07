@@ -60,7 +60,7 @@ namespace vast {
         Q_INVOKABLE [[nodiscard]] bool clearAll();
         Q_INVOKABLE void               requestFullEntry(qint64 id);
 
-      signals:
+      Q_SIGNALS:
         void maxEntriesChanged();
         void maxMegabytesChanged();
         void enabledChanged();

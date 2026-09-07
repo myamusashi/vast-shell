@@ -167,7 +167,7 @@ namespace vast {
             return;
 
         mMaxEntries = max;
-        emit maxEntriesChanged();
+        Q_EMIT maxEntriesChanged();
         pruneIfNeeded();
     }
 
@@ -176,7 +176,7 @@ namespace vast {
             return;
 
         mMaxMegabytes = mb;
-        emit maxMegabytesChanged();
+        Q_EMIT maxMegabytesChanged();
         pruneIfNeeded();
     }
 
@@ -185,14 +185,14 @@ namespace vast {
             return;
 
         mEnabled = enabled;
-        emit enabledChanged();
+        Q_EMIT enabledChanged();
     }
 
     void ClipboardManager::setActiveWindow(const QString& window) {
         if (mActiveWindow == window)
             return;
         mActiveWindow = window;
-        emit activeWindowChanged();
+        Q_EMIT activeWindowChanged();
     }
 
     [[nodiscard]] bool ClipboardManager::copyToClipboard(qint64 id) {
@@ -436,7 +436,7 @@ namespace vast {
                                 return;
                             QVariantMap map;
                             appendFullEntry(map, std::move(entry));
-                            emit fullEntryReady(std::move(map));
+                            Q_EMIT fullEntryReady(std::move(map));
                         },
                         Qt::QueuedConnection);
                 });
@@ -445,7 +445,7 @@ namespace vast {
 
             QVariantMap map;
             appendFullEntry(map, std::move(*result));
-            emit fullEntryReady(std::move(map));
+            Q_EMIT fullEntryReady(std::move(map));
         });
     }
 

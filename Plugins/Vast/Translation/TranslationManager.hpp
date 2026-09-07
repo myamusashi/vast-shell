@@ -25,7 +25,7 @@ class TranslationManager : public QObject {
     [[nodiscard]] Q_INVOKABLE bool        loadTranslation(const QString& language, const QString& translationPath = DEFAULT_TRANSLATION_PATH);
     [[nodiscard]] Q_INVOKABLE QStringList availableLanguages() const;
 
-  signals:
+  Q_SIGNALS:
     void languageChanged();
 
   private:

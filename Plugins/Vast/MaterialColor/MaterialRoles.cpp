@@ -327,7 +327,7 @@ namespace {
 
 } // namespace
 
-MaterialScheme::MaterialScheme(Hct sourceColorHct, EMaterialVariant schemeVariant, bool dark, double contrast) :
+MaterialScheme::MaterialScheme(const Hct& sourceColorHct, EMaterialVariant schemeVariant, bool dark, double contrast) :
     sourceColor(sourceColorHct), variant(schemeVariant), isDark(dark), contrastLevel(contrast),
     spec2025(schemeVariant == EMaterialVariant::TonalSpot || schemeVariant == EMaterialVariant::Neutral || schemeVariant == EMaterialVariant::Vibrant ||
              schemeVariant == EMaterialVariant::Expressive) {

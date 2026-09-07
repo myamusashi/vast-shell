@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qlist.h>
+#include <qcontainerfwd.h>
 
 namespace vast {
 
@@ -15,3 +16,5 @@ namespace vast {
     /// owned by the caller — the caller is responsible for closing them.
     [[nodiscard]] QList<KeyboardDevice> findKeyboards();
 }
+
+Q_DECLARE_TYPEINFO(vast::KeyboardDevice, Q_PRIMITIVE_TYPE);

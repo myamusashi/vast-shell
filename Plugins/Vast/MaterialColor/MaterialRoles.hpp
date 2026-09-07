@@ -155,7 +155,7 @@ struct MaterialScheme {
     // resolves under the 2021 spec.
     bool spec2025 = false;
 
-    explicit MaterialScheme(material_color_utilities::Hct sourceColorHct, EMaterialVariant schemeVariant, bool dark, double contrast);
+    explicit MaterialScheme(const material_color_utilities::Hct& sourceColorHct, EMaterialVariant schemeVariant, bool dark, double contrast);
 
     // Variant used by the 2025 fixed roles: same palettes, light mode and
     // zero contrast (mirrors _primary_fixed_tone_2025's temporary scheme).

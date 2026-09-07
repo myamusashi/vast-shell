@@ -54,7 +54,7 @@ namespace vast {
         void handleCancel();
         void handleRelease();
 
-      signals:
+      Q_SIGNALS:
         void activeChanged();
         void busyChanged();
         void pinCodeRequested(const QString& devicePath, const QString& deviceName);

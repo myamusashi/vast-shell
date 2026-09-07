@@ -160,7 +160,7 @@ namespace vast {
         Q_INVOKABLE void                          removeProfile(const QString& name);
         [[nodiscard]] Q_INVOKABLE QStringList     profileNames() const;
 
-      signals:
+      Q_SIGNALS:
         void brightnessChanged(const QString& displayId, int percent);
         void initializationFailed(const QString& reason);
         void displayListChanged();

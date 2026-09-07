@@ -26,7 +26,7 @@ namespace vast {
     }
 
     Keylock::~Keylock() {
-        std::ranges::for_each(mOpen, [](const OpenDevice& d) {
+        std::ranges::for_each(mOpen, [](OpenDevice d) {
             delete d.notifier;
             if (d.fd >= 0)
                 ::close(d.fd);
@@ -79,7 +79,7 @@ namespace vast {
     }
 
     void Keylock::onReadReady(int fd, bool hasLED) {
-        auto it = std::ranges::find_if(mOpen, [fd](const OpenDevice& d) { return d.fd == fd; });
+        auto it = std::ranges::find_if(mOpen, [fd](OpenDevice d) { return d.fd == fd; });
         if (it == mOpen.end())
             return;
 
@@ -104,10 +104,10 @@ namespace vast {
                     const bool val = ev.value != 0;
                     if (ev.code == LED_CAPSL && mCapsLock != val) {
                         mCapsLock = val;
-                        emit capsLockChanged();
+                        Q_EMIT capsLockChanged();
                     } else if (ev.code == LED_NUML && mNumLock != val) {
                         mNumLock = val;
-                        emit numLockChanged();
+                        Q_EMIT numLockChanged();
                     }
                 } else {
                     if (ev.type != EV_KEY || ev.value != 1)
@@ -115,10 +115,10 @@ namespace vast {
 
                     if (ev.code == KEY_CAPSLOCK) {
                         mCapsLock = !mCapsLock;
-                        emit capsLockChanged();
+                        Q_EMIT capsLockChanged();
                     } else if (ev.code == KEY_NUMLOCK) {
                         mNumLock = !mNumLock;
-                        emit numLockChanged();
+                        Q_EMIT numLockChanged();
                     }
                 }
             } else if (bytes < 0) {

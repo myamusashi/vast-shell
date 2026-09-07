@@ -39,7 +39,7 @@ class AudioProfilesWatcher : public QObject {
 
     Q_INVOKABLE void setProfile(quint32 deviceId, int profileIndex);
 
-  signals:
+  Q_SIGNALS:
     void cardsChanged();
     void connectedChanged();
 

@@ -48,7 +48,7 @@ void ColorMaterial::setSource(const QUrl& source) {
     if (mSource == source)
         return;
     mSource = source;
-    sourceChanged();
+    Q_EMIT sourceChanged();
     scheduleRebuild();
 }
 
@@ -60,7 +60,7 @@ void ColorMaterial::setRescaleSize(int rescaleSize) {
     if (mRescaleSize == rescaleSize)
         return;
     mRescaleSize = rescaleSize;
-    rescaleSizeChanged();
+    Q_EMIT rescaleSizeChanged();
     scheduleRebuild();
 }
 
@@ -72,7 +72,7 @@ void ColorMaterial::setDarkMode(bool darkMode) {
     if (mDarkMode == darkMode)
         return;
     mDarkMode = darkMode;
-    darkModeChanged();
+    Q_EMIT darkModeChanged();
     scheduleRebuild();
 }
 
@@ -84,7 +84,7 @@ void ColorMaterial::setScheme(Scheme scheme) {
     if (mScheme == scheme)
         return;
     mScheme = scheme;
-    schemeChanged();
+    Q_EMIT schemeChanged();
     scheduleRebuild();
 }
 
@@ -102,7 +102,7 @@ void ColorMaterial::setContrastLevel(double contrastLevel) {
     if (safeCompare(mContrastLevel, contrastLevel))
         return;
     mContrastLevel = contrastLevel;
-    contrastLevelChanged();
+    Q_EMIT contrastLevelChanged();
     scheduleRebuild();
 }
 
@@ -114,7 +114,7 @@ void ColorMaterial::setSmart(bool smart) {
     if (mSmart == smart)
         return;
     mSmart = smart;
-    smartChanged();
+    Q_EMIT smartChanged();
     scheduleRebuild();
 }
 
@@ -187,11 +187,11 @@ void ColorMaterial::applyResult(const QVariantMap& colors, const QColor& sourceC
     mError       = error;
 
     if (colorsDirty)
-        colorsChanged();
+        Q_EMIT colorsChanged();
     if (sourceColorDirty)
-        sourceColorChanged();
+        Q_EMIT sourceColorChanged();
     if (readyDirty)
-        readyChanged();
+        Q_EMIT readyChanged();
     if (errorDirty)
-        errorChanged();
+        Q_EMIT errorChanged();
 }

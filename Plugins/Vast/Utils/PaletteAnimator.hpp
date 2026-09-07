@@ -22,12 +22,12 @@ class PaletteAnimator : public QObject {
     }
     void setDuration(int ms) {
         mAnim->setDuration(ms);
-        emit durationChanged();
+        Q_EMIT durationChanged();
     }
 
     Q_INVOKABLE void transitionTo(const QVariantMap& targetPalette);
 
-  signals:
+  Q_SIGNALS:
     void currentPaletteChanged();
     void durationChanged();
 

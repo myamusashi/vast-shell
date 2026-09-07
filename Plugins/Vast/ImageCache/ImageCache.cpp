@@ -81,7 +81,7 @@ void ImageCache::preload(const QString& path, QSize targetSize) {
             this,
             [this, path] {
                 store(path);
-                emit imageReady(path);
+                Q_EMIT imageReady(path);
             },
             Qt::QueuedConnection);
     });
@@ -111,7 +111,7 @@ std::expected<QString, ImageCacheError> ImageCache::saveProviderImage(const QStr
     const QString imageId      = qsUrl.mid(slashAfter + 1);
 
     auto*         base     = mEngine->imageProvider(providerName);
-    auto*         provider = dynamic_cast<QQuickImageProvider*>(base);
+    auto*         provider = qobject_cast<QQuickImageProvider*>(base);
     if (!provider)
         return std::unexpected(ImageCacheError::NoProvider);
     if (provider->imageType() != QQmlImageProviderBase::Image)
@@ -145,10 +145,10 @@ void ImageCache::store(const QString& path) {
 
     constexpr qsizetype kMaxCacheEntries = 200;
     if (mDone.size() > kMaxCacheEntries) {
-        auto            it       = mDone.begin();
         const qsizetype toRemove = mDone.size() - kMaxCacheEntries;
-        for (int i = 0; i < toRemove && it != mDone.end(); ++i)
-            it = mDone.erase(it);
+        qsizetype       removed  = 0;
+        for (auto it = mDone.cbegin(); it != mDone.cend() && removed < toRemove; ++it, ++removed)
+            mDone.remove(*it);
     }
 }
 

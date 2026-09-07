@@ -50,7 +50,7 @@ class AudioCard : public QObject {
         return mProfiles;
     }
 
-  signals:
+  Q_SIGNALS:
     void deviceIdChanged();
     void nameChanged();
     void descriptionChanged();

@@ -191,8 +191,9 @@ std::vector<Hct> MaterialTemperatureCache::analogous(int count, int divisions) {
     }
 
     std::vector<Hct> answers{mInput};
+    answers.reserve(static_cast<size_t>(count));
 
-    const int        increaseHueCount = static_cast<int>(std::floor((count - 1) / 2.0));
+    const int increaseHueCount = static_cast<int>(std::floor((count - 1) / 2.0));
     for (int i = 1; i <= increaseHueCount; i++) {
         int index = 0 - i;
         while (index < 0)

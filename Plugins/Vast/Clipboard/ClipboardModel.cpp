@@ -72,7 +72,7 @@ namespace vast {
         mFilterQuery.clear();
         mFiltered.clear();
         endResetModel();
-        emit countChanged();
+        Q_EMIT countChanged();
     }
 
     void ClipboardModel::prepend(const ClipboardEntry& entry) {
@@ -93,7 +93,7 @@ namespace vast {
             mEntries.insert(insertPos, entry);
             rebuildFilter();
             endResetModel();
-            emit countChanged();
+            Q_EMIT countChanged();
             return;
         }
 
@@ -119,10 +119,10 @@ namespace vast {
                 item.timestamp = entry.timestamp;
                 mEntries.insert(insertIdx, std::move(item));
                 endMoveRows();
-                emit dataChanged(index(insertIdx, 0), index(insertIdx, 0));
+                Q_EMIT dataChanged(index(insertIdx, 0), index(insertIdx, 0));
             } else {
                 mEntries[existing].timestamp = entry.timestamp;
-                emit dataChanged(index(existing, 0), index(existing, 0));
+                Q_EMIT dataChanged(index(existing, 0), index(existing, 0));
             }
             return;
         }
@@ -141,7 +141,7 @@ namespace vast {
         mEntries.insert(insertPos, entry);
         endInsertRows();
 
-        emit countChanged();
+        Q_EMIT countChanged();
     }
 
     void ClipboardModel::removeById(qint64 id) {
@@ -152,12 +152,12 @@ namespace vast {
         if (mFiltering) {
             mEntries.removeAt(idx);
             rebuildFilter();
-            emit countChanged();
+            Q_EMIT countChanged();
         } else {
             beginRemoveRows({}, idx, idx);
             mEntries.removeAt(idx);
             endRemoveRows();
-            emit countChanged();
+            Q_EMIT countChanged();
         }
     }
 
@@ -178,7 +178,7 @@ namespace vast {
             beginResetModel();
             endResetModel();
         }
-        emit countChanged();
+        Q_EMIT countChanged();
     }
 
     void ClipboardModel::setPinById(qint64 id, bool pinned) {
@@ -200,7 +200,7 @@ namespace vast {
             beginResetModel();
             endResetModel();
         }
-        emit countChanged();
+        Q_EMIT countChanged();
     }
 
     void ClipboardModel::setFilter(const QString& query) {
@@ -210,7 +210,7 @@ namespace vast {
         rebuildFilter();
 
         endResetModel();
-        emit countChanged();
+        Q_EMIT countChanged();
     }
 
     void ClipboardModel::bumpToTop(qint64 id) {
@@ -233,7 +233,7 @@ namespace vast {
             mEntries.insert(insertPos, std::move(item));
             rebuildFilter();
             endResetModel();
-            emit countChanged();
+            Q_EMIT countChanged();
             return;
         }
 
@@ -255,9 +255,9 @@ namespace vast {
             auto item = mEntries.takeAt(existing);
             mEntries.insert(dest, std::move(item));
             endMoveRows();
-            emit dataChanged(index(std::min(existing, dest), 0), index(std::max(existing, dest), 0));
+            Q_EMIT dataChanged(index(std::min(existing, dest), 0), index(std::max(existing, dest), 0));
         } else {
-            emit dataChanged(index(existing, 0), index(existing, 0));
+            Q_EMIT dataChanged(index(existing, 0), index(existing, 0));
         }
     }
 
@@ -271,7 +271,7 @@ namespace vast {
         if (!mFiltering)
             return;
 
-        static const QRegularExpression kWhiteSpace(R"(\s+)");
+        static const QRegularExpression kWhiteSpace(QStringLiteral(R"(\s+)"));
 
         const QString                   normQuery  = FuzzyMatcher::normalizeText(mFilterQuery).trimmed();
         const QStringList               queryWords = normQuery.split(kWhiteSpace, Qt::SkipEmptyParts);
@@ -300,7 +300,7 @@ namespace vast {
         hits.reserve(mEntries.size());
 
         for (int i = 0; i < mEntries.size(); ++i) {
-            const auto& e = mEntries[i];
+            const auto& e = mEntries.at(i);
 
             // Long pastes: only the leading KMatchMaxLen chars are searchable
             // (fzy cannot align beyond that anyway).

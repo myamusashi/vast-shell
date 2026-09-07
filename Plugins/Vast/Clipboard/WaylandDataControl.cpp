@@ -1,5 +1,4 @@
 #include "WaylandDataControl.hpp"
-#include "ClipboardManager.hpp"
 
 #include "ext-data-control-v1-client-protocol.h"
 
@@ -158,7 +157,7 @@ namespace vast {
         else
             ext_data_control_device_v1_destroy(device);
 
-        emit self->deviceFinished();
+        Q_EMIT self->deviceFinished();
 
         if (!self->mReconnecting) {
             self->mReconnecting = true;
@@ -204,7 +203,7 @@ namespace vast {
         .cancelled = sourceCancelled,
     };
 
-    WaylandDataControl::WaylandDataControl(ClipboardManager* parent) : QObject{parent} {}
+    WaylandDataControl::WaylandDataControl(QObject* parent) : QObject{parent} {}
 
     WaylandDataControl::~WaylandDataControl() {
         shutdown();
@@ -380,7 +379,7 @@ namespace vast {
 
             readOfferAsync(fds[0], [this, mimeType, generation](const QByteArray& content) {
                 const QString fileName = mMetaGeneration == generation ? mPendingMeta : QString{};
-                emit          selectionReceived(mimeType, content, fileName);
+                Q_EMIT          selectionReceived(mimeType, content, fileName);
             });
         };
 

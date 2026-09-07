@@ -31,7 +31,7 @@ namespace vast {
             return mNumLock;
         }
 
-      signals:
+      Q_SIGNALS:
         void capsLockChanged();
         void numLockChanged();
 

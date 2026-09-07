@@ -43,7 +43,7 @@ namespace vast {
             return mCurWordDuration;
         }
 
-      signals:
+      Q_SIGNALS:
         void currentIndexChanged();
         void currentWordDurationChanged();
 

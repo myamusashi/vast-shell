@@ -436,7 +436,7 @@ AudioProfilesWatcher::AudioProfilesWatcher(QObject* parent) : QObject(parent), m
     try {
         mPw->app   = std::make_unique<PwApp>();
         mConnected = true;
-        emit connectedChanged();
+        QTimer::singleShot(0, this, [&] { Q_EMIT connectedChanged(); });
     } catch (const std::exception& e) { qWarning("AudioProfilesWatcher: failed to connect to PipeWire: %s", e.what()); }
 
     mTimer->setSingleShot(true);
@@ -502,7 +502,7 @@ void AudioProfilesWatcher::poll() {
     }
 
     mPollIntervalMs = K_MIN_POLL_MS;
-    emit cardsChanged();
+    Q_EMIT cardsChanged();
     mTimer->start(mPollIntervalMs);
 }
 

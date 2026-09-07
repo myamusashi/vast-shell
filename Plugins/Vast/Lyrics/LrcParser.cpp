@@ -20,8 +20,8 @@ namespace vast {
     }
 
     LrcParser::Result LrcParser::parseLrc(const QString& lrc, double totalDurationSecs) {
-        static const QRegularExpression lineRe(R"(\[(\d{2}):(\d{2})\.(\d{2,3})\](.*))");
-        static const QRegularExpression wordRe(R"(<(\d{2}):(\d{2})\.(\d{2,3})>([^<]*))");
+        static const QRegularExpression lineRe(QStringLiteral(R"(\[(\d{2}):(\d{2})\.(\d{2,3})\](.*))"));
+        static const QRegularExpression wordRe(QStringLiteral(R"(<(\d{2}):(\d{2})\.(\d{2,3})>([^<]*))"));
 
         struct RawLine {
             qint64  timeMs;
@@ -53,9 +53,9 @@ namespace vast {
             const QString   transText = (caretIdx >= 0) ? content.mid(caretIdx + 1).trimmed() : QString();
 
             QVariantMap     lineEntry;
-            lineEntry["time"]        = lineStart;
-            lineEntry["text"]        = srcText;
-            lineEntry["translation"] = transText;
+            lineEntry[QStringLiteral("time")]        = lineStart;
+            lineEntry[QStringLiteral("text")]        = srcText;
+            lineEntry[QStringLiteral("translation")] = transText;
             result.lines.append(lineEntry);
 
             QVariantList words;
@@ -68,34 +68,34 @@ namespace vast {
                     if (text.isEmpty())
                         continue;
                     QVariantMap w;
-                    w["time"] = parseTimestamp(wm.captured(1), wm.captured(2), wm.captured(3));
-                    w["text"] = text;
+                    w[QStringLiteral("time")] = parseTimestamp(wm.captured(1), wm.captured(2), wm.captured(3));
+                    w[QStringLiteral("text")] = text;
                     words.append(w);
                 }
                 for (int j = 0; j < words.size(); ++j) {
                     QVariantMap  w     = words[j].toMap();
-                    qint64 const t     = w["time"].toLongLong();
+                    qint64 const t     = w[QStringLiteral("time")].toLongLong();
                     qint64       nextT = lineEnd;
                     if (j + 1 < words.size())
-                        nextT = words[j + 1].toMap()["time"].toLongLong();
+                        nextT = words[j + 1].toMap()[QStringLiteral("time")].toLongLong();
                     else {
                         qint64 const maxLastWord = 1500;
                         if (nextT - t > maxLastWord)
                             nextT = t + maxLastWord;
                     }
-                    w["duration"] = qMax<qint64>(0, nextT - t);
+                    w[QStringLiteral("duration")] = qMax<qint64>(0, nextT - t);
                     words.replace(j, w);
                 }
             } else {
-                static const QRegularExpression rx(R"(<[^>]+>)");
+                static const QRegularExpression rx(QStringLiteral(R"(<[^>]+>)"));
                 QString                         plain = srcText;
                 plain.remove(rx);
                 words = interpolateWords(plain.trimmed(), lineStart, lineEnd);
             }
 
             QVariantMap wlEntry;
-            wlEntry["time"]  = lineStart;
-            wlEntry["words"] = words;
+            wlEntry[QStringLiteral("time")]  = lineStart;
+            wlEntry[QStringLiteral("words")] = words;
             result.wordLines.append(wlEntry);
         }
 
@@ -106,6 +106,7 @@ namespace vast {
         Result               result;
 
         const QList<QString> plainList = plain.split('\n');
+        QList<QVariant>      words;
         for (const QString& raw : plainList) {
             const QString text = raw.trimmed();
             if (text.isEmpty())
@@ -116,23 +117,24 @@ namespace vast {
             const QString   transText = (caretIdx >= 0) ? text.mid(caretIdx + 1).trimmed() : QString();
 
             QVariantMap     lineEntry;
-            lineEntry["time"]        = -1;
-            lineEntry["text"]        = srcText;
-            lineEntry["translation"] = transText;
+            lineEntry[QStringLiteral("time")]        = -1;
+            lineEntry[QStringLiteral("text")]        = srcText;
+            lineEntry[QStringLiteral("translation")] = transText;
             result.lines.append(lineEntry);
 
-            QList<QVariant>      words;
+            words.clear();
             const QList<QString> srcTextList = srcText.split(' ', Qt::SkipEmptyParts);
+            words.reserve(srcTextList.size());
             for (const QString& word : srcTextList) {
                 QVariantMap w;
-                w["time"]     = -1;
-                w["text"]     = word;
-                w["duration"] = 0;
+                w[QStringLiteral("time")]     = -1;
+                w[QStringLiteral("text")]     = word;
+                w[QStringLiteral("duration")] = 0;
                 words.append(w);
             }
             QVariantMap wlEntry;
-            wlEntry["time"]  = -1;
-            wlEntry["words"] = words;
+            wlEntry[QStringLiteral("time")]  = -1;
+            wlEntry[QStringLiteral("words")] = words;
             result.wordLines.append(wlEntry);
         }
 
@@ -155,15 +157,16 @@ namespace vast {
         const auto   totalWeight = static_cast<double>(totalLen + tokens.size());
 
         QVariantList words;
-        qint64       currentMs = lineStartMs;
+        words.reserve(tokens.size());
+        qint64 currentMs = lineStartMs;
         for (const QString& t : tokens) {
             const double fraction  = static_cast<double>(t.length() + 1) / totalWeight;
             const auto   wDuration = static_cast<qint64>(static_cast<double>(durationGap) * fraction);
 
             QVariantMap  w;
-            w["time"]     = currentMs;
-            w["text"]     = t;
-            w["duration"] = wDuration;
+            w[QStringLiteral("time")]     = currentMs;
+            w[QStringLiteral("text")]     = t;
+            w[QStringLiteral("duration")] = wDuration;
             words.append(w);
             currentMs += wDuration;
         }

@@ -157,7 +157,7 @@ namespace vast {
         inserted.id           = newId;
         inserted.data.clear();
 
-        emit entryInserted(inserted);
+        Q_EMIT entryInserted(inserted);
         return newId;
     }
 
@@ -172,7 +172,7 @@ namespace vast {
         if (!q.exec())
             return std::unexpected(lastError());
 
-        emit entryRemoved(id);
+        Q_EMIT entryRemoved(id);
         return {};
     }
 
@@ -204,7 +204,7 @@ namespace vast {
         if (q.exec()) {
             removed = q.numRowsAffected() > 0 ? q.numRowsAffected() : removed;
             for (qint64 const id : ids)
-                emit entryRemoved(id);
+                Q_EMIT entryRemoved(id);
         } else {
             QSqlDatabase::database(mConnectionName, false).rollback();
             return std::unexpected(lastError());
@@ -228,7 +228,7 @@ namespace vast {
         if (!q.exec())
             return std::unexpected(lastError());
 
-        emit entryPinChanged(id, pinned);
+        Q_EMIT entryPinChanged(id, pinned);
         return {};
     }
 

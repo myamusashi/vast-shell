@@ -75,17 +75,17 @@ namespace vast {
         void setAppThreshold(double v) {
             if (!qFuzzyCompare(mAppThreshold, v)) {
                 mAppThreshold = v;
-                emit appThresholdChanged();
+                Q_EMIT appThresholdChanged();
             }
         }
         void setFileThreshold(double v) {
             if (!qFuzzyCompare(mFileThreshold, v)) {
                 mFileThreshold = v;
-                emit fileThresholdChanged();
+                Q_EMIT fileThresholdChanged();
             }
         }
 
-      signals:
+      Q_SIGNALS:
         void fileSearchStarted();
 
         void historyLimitChanged();

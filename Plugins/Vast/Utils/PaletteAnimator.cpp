@@ -10,7 +10,7 @@ PaletteAnimator::PaletteAnimator(QObject* parent) : QObject(parent), mAnim(new Q
     connect(mAnim, &QVariantAnimation::valueChanged, this, [this](const QVariant& v) {
         auto p   = v.toReal();
         mCurrent = ColorUtils::blendPalettes(mFrom, mTarget, p);
-        emit currentPaletteChanged();
+        Q_EMIT currentPaletteChanged();
     });
 }
 

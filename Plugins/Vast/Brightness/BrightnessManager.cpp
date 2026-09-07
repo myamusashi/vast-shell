@@ -140,7 +140,7 @@ namespace vast {
                 auto        handleResult = openDdcHandle(info.dref);
                 if (!handleResult) {
                     qWarning() << "[BrightnessManager] DDC open failed:" << handleResult.error().message;
-                    emit initializationFailed(
+                    Q_EMIT initializationFailed(
                         QStringLiteral("DDC open failed for %1: %2").arg(QString::fromUtf8(info.model_name), QString::fromStdString(handleResult.error().message)));
                     continue;
                 }
@@ -152,7 +152,7 @@ namespace vast {
                 // second one from mWorkers (std::map::emplace is a no-op on an
                 // existing key).
                 const QString id   = QStringLiteral("ddc-%1").arg(info.dispno);
-                const QString name = QStringLiteral("%1 %2").arg(QString::fromUtf8(info.mfg_id)).arg(QString::fromUtf8(info.model_name));
+                const QString name = QStringLiteral("%1 %2").arg(QString::fromUtf8(info.mfg_id), QString::fromUtf8(info.model_name));
 
                 // clang-format off
                 auto          meta = DisplayMeta{
@@ -201,9 +201,9 @@ namespace vast {
         }
 
         if (mWorkers.empty())
-            emit initializationFailed(QStringLiteral("no controllable displays found (no DDC/CI monitors and no sysfs backlight device)"));
+            Q_EMIT initializationFailed(QStringLiteral("no controllable displays found (no DDC/CI monitors and no sysfs backlight device)"));
 
-        emit displayListChanged();
+        Q_EMIT displayListChanged();
     }
 
     // Queues exactly one hardware write per display onto the shared worker.
@@ -232,7 +232,7 @@ namespace vast {
 
                     if (result) {
                         worker->setCurrentBrightness(percent);
-                        emit brightnessChanged(id, percent);
+                        Q_EMIT brightnessChanged(id, percent);
                     } else
                         qWarning() << "[BrightnessManager] set failed for" << id << "—" << result.error().message;
 

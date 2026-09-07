@@ -27,7 +27,7 @@ namespace vast {
         BluetoothAgentAdaptor(BluetoothAgentAdaptor&&)                 = delete;
         BluetoothAgentAdaptor& operator=(BluetoothAgentAdaptor&&)      = delete;
 
-      public slots:
+      public Q_SLOTS:
         // NOTE: names must match org.bluez.Agent1 exactly (PascalCase),
         // QDBusAbstractAdaptor exports slots under their literal C++ name,
         // it does not translate requestPinCode -> RequestPinCode.

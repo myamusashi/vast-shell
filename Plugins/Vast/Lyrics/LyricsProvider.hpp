@@ -80,7 +80,7 @@ class LyricsProvider : public QObject {
     Q_INVOKABLE void fetch(const QString& title, const QString& artist, double durationSecs);
     Q_INVOKABLE void clear();
 
-  signals:
+  Q_SIGNALS:
     void stateChanged();
     void lyricsChanged();
     void currentIndexChanged();

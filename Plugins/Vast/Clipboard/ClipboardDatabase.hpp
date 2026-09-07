@@ -44,7 +44,7 @@ namespace vast {
         [[nodiscard]] std::expected<ClipboardEntry, QString>        fetchById(qint64 id);
         [[nodiscard]] std::expected<qint64, QString>                totalSizeBytes();
 
-      signals:
+      Q_SIGNALS:
         void entryInserted(vast::ClipboardEntry entry);
         void entryRemoved(qint64 id);
         void entryPinChanged(qint64 id, bool pinned);

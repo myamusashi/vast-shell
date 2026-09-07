@@ -9,7 +9,8 @@
 #include <qqmlengine.h>
 
 TranslationManager::TranslationManager(QObject* parent) :
-    QObject(parent), mTranslator(std::make_unique<QTranslator>()), mCurrentLanguage("en_US"), M_AVAILABLE_LANGUAGES({"en_US", "id_ID"}) {}
+    QObject(parent), mTranslator(std::make_unique<QTranslator>()), mCurrentLanguage(QStringLiteral("en_US")),
+    M_AVAILABLE_LANGUAGES({QStringLiteral("en_US"), QStringLiteral("id_ID")}) {}
 
 QString TranslationManager::currentLanguage() const {
     return mCurrentLanguage;
@@ -24,7 +25,7 @@ void TranslationManager::setCurrentLanguage(const QString& language) {
 }
 
 bool TranslationManager::loadTranslation(const QString& language, const QString& translationPath) {
-    const QString filePath = translationPath + "/" + language + ".qm";
+    const QString filePath = translationPath + QStringLiteral("/") + language + QStringLiteral(".qm");
 
     qDebug() << "Loading translation:" << filePath;
 
@@ -39,7 +40,7 @@ bool TranslationManager::loadTranslation(const QString& language, const QString&
     QGuiApplication::installTranslator(mTranslator.get());
 
     mCurrentLanguage = language;
-    emit  languageChanged();
+    Q_EMIT  languageChanged();
 
     auto* engine = qmlEngine(this);
     if (engine)

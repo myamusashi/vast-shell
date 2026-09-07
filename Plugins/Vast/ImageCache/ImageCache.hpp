@@ -54,7 +54,7 @@ class ImageCache : public QObject {
 
     Q_INVOKABLE void                                      evictKey(const QString& cacheKey);
 
-  signals:
+  Q_SIGNALS:
     void imageReady(const QString& path);
 
   private:

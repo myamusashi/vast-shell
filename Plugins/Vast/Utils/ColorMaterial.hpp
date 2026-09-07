@@ -63,7 +63,7 @@ class ColorMaterial : public QObject {
     [[nodiscard]] bool        ready() const;
     [[nodiscard]] QString     error() const;
 
-  signals:
+  Q_SIGNALS:
     void sourceChanged();
     void rescaleSizeChanged();
     void darkModeChanged();

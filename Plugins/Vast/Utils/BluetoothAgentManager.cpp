@@ -28,7 +28,7 @@ namespace vast {
                 mAgentManager->asyncCall(QStringLiteral("UnregisterAgent"), QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH))));
             mSystemBus.unregisterObject(QString::fromLatin1(K_AGENT_PATH));
         }
-        for (auto it = mPending.begin(); it != mPending.end(); ++it)
+        for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it)
             mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Agent released")));
 
         mPending.clear();
@@ -91,20 +91,20 @@ namespace vast {
 
         mActive             = true;
         mActivationInFlight = false;
-        emit activeChanged();
+        Q_EMIT activeChanged();
         qInfo() << "[Vast.BluetoothAgentManager] Registered KeyboardDisplay at" << K_AGENT_PATH;
     }
 
     void BluetoothAgentManager::reRegisterIfNeeded(const QString& newOwner) {
         if (newOwner.isEmpty()) {
             // bluetoothd went away; clear pending and mark inactive
-            for (auto it = mPending.begin(); it != mPending.end(); ++it)
-                emit pairingCancelled(it.key());
+            for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it)
+                Q_EMIT pairingCancelled(it.key());
 
             mPending.clear();
-            emit busyChanged();
+            Q_EMIT busyChanged();
             mActive = false;
-            emit activeChanged();
+            Q_EMIT activeChanged();
             return;
         }
         // bluetoothd (re)appeared; re-register if not active
@@ -132,73 +132,73 @@ namespace vast {
     void BluetoothAgentManager::handleRequestPinCode(const QString& devicePath, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] RequestPinCode" << devicePath;
         mPending.insert(devicePath, msg);
-        emit busyChanged();
-        emit pinCodeRequested(devicePath, resolveDeviceName(devicePath));
+        Q_EMIT busyChanged();
+        Q_EMIT pinCodeRequested(devicePath, resolveDeviceName(devicePath));
     }
 
     void BluetoothAgentManager::handleRequestPasskey(const QString& devicePath, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] RequestPasskey" << devicePath;
         mPending.insert(devicePath, msg);
-        emit busyChanged();
-        emit passkeyRequested(devicePath, resolveDeviceName(devicePath));
+        Q_EMIT busyChanged();
+        Q_EMIT passkeyRequested(devicePath, resolveDeviceName(devicePath));
     }
 
     void BluetoothAgentManager::handleDisplayPasskey(const QString& devicePath, quint32 passkey, quint16 entered) {
         qInfo() << "[Vast.BluetoothAgentManager] DisplayPasskey" << devicePath << passkey << entered;
         // Informational only, BlueZ does not wait on a reply for DisplayPasskey.
-        emit passkeyDisplayed(devicePath, passkey, entered);
+        Q_EMIT passkeyDisplayed(devicePath, passkey, entered);
     }
 
     void BluetoothAgentManager::handleRequestConfirmation(const QString& devicePath, quint32 passkey, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] RequestConfirmation" << devicePath << passkey;
         mPending.insert(devicePath, msg);
-        emit busyChanged();
-        emit confirmationRequested(devicePath, resolveDeviceName(devicePath), passkey);
+        Q_EMIT busyChanged();
+        Q_EMIT confirmationRequested(devicePath, resolveDeviceName(devicePath), passkey);
     }
 
     void BluetoothAgentManager::handleAuthorizeService(const QString& devicePath, const QString& uuid, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] AuthorizeService" << devicePath << uuid;
         mPending.insert(devicePath, msg);
-        emit busyChanged();
-        emit authorizationRequested(devicePath, resolveDeviceName(devicePath), uuid);
+        Q_EMIT busyChanged();
+        Q_EMIT authorizationRequested(devicePath, resolveDeviceName(devicePath), uuid);
     }
 
     void BluetoothAgentManager::handleCancel() {
         qInfo() << "[Vast.BluetoothAgentManager] Cancel()";
-        for (auto it = mPending.begin(); it != mPending.end(); ++it) {
+        for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it) {
             mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Canceled")));
-            emit pairingCancelled(it.key());
+            Q_EMIT pairingCancelled(it.key());
         }
         const bool hadBusy = !mPending.isEmpty();
         mPending.clear();
         if (hadBusy)
-            emit busyChanged();
+            Q_EMIT busyChanged();
     }
 
     void BluetoothAgentManager::handleRelease() {
         qInfo() << "[Vast.BluetoothAgentManager] Release() — agent released by bluetoothd";
-        for (auto it = mPending.begin(); it != mPending.end(); ++it) {
+        for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it) {
             mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Released")));
-            emit pairingCancelled(it.key());
+            Q_EMIT pairingCancelled(it.key());
         }
         const bool hadBusy = !mPending.isEmpty();
         mPending.clear();
         if (hadBusy)
-            emit busyChanged();
+            Q_EMIT busyChanged();
         mActive             = false;
         mActivationInFlight = false;
-        emit activeChanged();
+        Q_EMIT activeChanged();
     }
 
     bool BluetoothAgentManager::takePending(const QString& devicePath, const char* callerName, QDBusMessage& reply) {
-        auto it = mPending.find(devicePath);
-        if (it == mPending.end()) {
+        auto it = mPending.constFind(devicePath);
+        if (it == mPending.constEnd()) {
             qWarning() << "[Vast.BluetoothAgentManager]" << callerName << "no pending for" << devicePath;
             return false;
         }
         reply = it.value();
-        mPending.erase(it);
-        emit busyChanged();
+        mPending.remove(devicePath);
+        Q_EMIT busyChanged();
         return true;
     }
 

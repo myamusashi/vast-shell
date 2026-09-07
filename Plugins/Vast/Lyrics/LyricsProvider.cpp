@@ -31,7 +31,7 @@ void LyricsProvider::setOffsetMs(int offset) {
     if (mScheduler->offsetMs() == offset)
         return;
     mScheduler->setOffsetMs(offset);
-    emit offsetMsChanged();
+    Q_EMIT offsetMsChanged();
 }
 
 void LyricsProvider::fetch(const QString& title, const QString& artist, double durationSecs) {
@@ -46,12 +46,12 @@ void LyricsProvider::fetch(const QString& title, const QString& artist, double d
 
     setState(State::Loading);
 
-    QUrl      url("https://lrclib.net/api/get");
+    QUrl      url(QStringLiteral("https://lrclib.net/api/get"));
     QUrlQuery q;
-    q.addQueryItem("track_name", title);
-    q.addQueryItem("artist_name", artist);
+    q.addQueryItem(QStringLiteral("track_name"), title);
+    q.addQueryItem(QStringLiteral("artist_name"), artist);
     if (durationSecs > 0)
-        q.addQueryItem("duration", QString::number(qRound(durationSecs)));
+        q.addQueryItem(QStringLiteral("duration"), QString::number(qRound(durationSecs)));
     url.setQuery(q);
 
     QNetworkRequest req(url);
@@ -68,19 +68,19 @@ void LyricsProvider::fetch(const QString& title, const QString& artist, double d
         const QByteArray data = reply->readAll();
         const auto       json = QJsonDocument::fromJson(data).object();
 
-        if (json.contains("code")) {
+        if (json.contains(QStringLiteral("code"))) {
             setState(State::NotFound);
             return;
         }
 
-        const QString lrc = json["syncedLyrics"].toString();
+        const QString lrc = json[QStringLiteral("syncedLyrics")].toString();
         if (!lrc.isEmpty()) {
             applyParseResult(vast::LrcParser::parseLrc(lrc, durationSecs));
             vast::LyricsCache::save(key, data, durationSecs);
             return;
         }
 
-        const QString plain = json["plainLyrics"].toString();
+        const QString plain = json[QStringLiteral("plainLyrics")].toString();
         if (!plain.isEmpty()) {
             applyParseResult(vast::LrcParser::parsePlain(plain));
             vast::LyricsCache::save(key, data, durationSecs);
@@ -98,14 +98,14 @@ void LyricsProvider::clear() {
     mWordSynced = false;
     mScheduler->reset(); // emits currentIndexChanged itself
     setState(State::Idle);
-    emit lyricsChanged();
+    Q_EMIT lyricsChanged();
 }
 
 void LyricsProvider::setState(State s) {
     if (mState == s)
         return;
     mState = s;
-    emit stateChanged();
+    Q_EMIT stateChanged();
 }
 
 void LyricsProvider::applyParseResult(const vast::LrcParser::Result& result) {
@@ -117,7 +117,7 @@ void LyricsProvider::applyParseResult(const vast::LrcParser::Result& result) {
     mScheduler->setWordLines(result.wordLines); // rebuilds boundaries + reschedules internally
 
     setState(State::Ready);
-    emit lyricsChanged();
+    Q_EMIT lyricsChanged();
 }
 
 bool LyricsProvider::tryLoadFromCache(const QString& cacheKey) {
@@ -126,12 +126,12 @@ bool LyricsProvider::tryLoadFromCache(const QString& cacheKey) {
         return false;
 
     const auto    json = QJsonDocument::fromJson(cached->rawJson).object();
-    const QString lrc  = json["syncedLyrics"].toString();
+    const QString lrc  = json[QStringLiteral("syncedLyrics")].toString();
     if (!lrc.isEmpty()) {
         applyParseResult(vast::LrcParser::parseLrc(lrc, cached->durationSecs));
         return true;
     }
-    const QString plain = json["plainLyrics"].toString();
+    const QString plain = json[QStringLiteral("plainLyrics")].toString();
     if (!plain.isEmpty()) {
         applyParseResult(vast::LrcParser::parsePlain(plain));
         return true;

@@ -89,7 +89,7 @@ namespace vast {
         if (mWalking == v)
             return;
         mWalking = v;
-        emit walkingChanged();
+        Q_EMIT walkingChanged();
     }
 
     void DirectoryWalker::requestWalk() {
@@ -128,7 +128,7 @@ namespace vast {
                     if (mGeneration.loadRelaxed() != generation)
                         return;
                     setWalking(false);
-                    emit walkFinished(std::move(entries));
+                    Q_EMIT walkFinished(std::move(entries));
                 },
                 Qt::QueuedConnection);
         });

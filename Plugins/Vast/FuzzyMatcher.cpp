@@ -232,7 +232,7 @@ namespace vast {
     }
 
     double FuzzyMatcher::fuzzyScore(const QString& query, const QString& text) {
-        static const QRegularExpression kWhitespace(R"(\s+)");
+        static const QRegularExpression kWhitespace(QStringLiteral(R"(\s+)"));
 
         if (query.isEmpty())
             return 0.0;

@@ -18,7 +18,7 @@ using material_color_utilities::Hct;
 
 namespace {
 
-    material_color_utilities::Argb hexToArgb(const QStringView& hex) {
+    material_color_utilities::Argb hexToArgb(QStringView hex) {
         return 0xFF000000u | static_cast<material_color_utilities::Argb>(hex.mid(1, 2).toUInt(nullptr, 16)) << 16 |
             static_cast<material_color_utilities::Argb>(hex.mid(3, 2).toUInt(nullptr, 16)) << 8 | static_cast<material_color_utilities::Argb>(hex.mid(5, 2).toUInt(nullptr, 16));
     }

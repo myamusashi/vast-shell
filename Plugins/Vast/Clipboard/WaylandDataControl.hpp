@@ -26,15 +26,12 @@ struct ext_data_control_source_v1;
 class QSocketNotifier;
 
 namespace vast {
-
-    class ClipboardManager;
-
     class WaylandDataControl : public QObject {
         Q_OBJECT
         Q_DISABLE_COPY(WaylandDataControl)
 
       public:
-        explicit WaylandDataControl(ClipboardManager* parent = nullptr);
+        explicit WaylandDataControl(QObject* parent = nullptr);
         ~WaylandDataControl() override;
         WaylandDataControl(WaylandDataControl&&)                        = delete;
         WaylandDataControl&             operator=(WaylandDataControl&&) = delete;
@@ -46,7 +43,7 @@ namespace vast {
 
         [[nodiscard]] static QByteArray htmlToPlainText(const QByteArray& html);
 
-      signals:
+      Q_SIGNALS:
         void selectionReceived(const QString& mimeType, const QByteArray& content, const QString& fileName = {});
         void deviceFinished();
 

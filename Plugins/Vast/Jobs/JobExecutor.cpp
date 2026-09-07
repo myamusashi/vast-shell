@@ -4,14 +4,14 @@
 
 namespace vast {
 
+    JobExecutor::JobExecutor(QObject* parent) : QObject(parent) {
+        mWorker.moveToThread(&mThread);
+        mThread.start();
+    }
+
     JobExecutor& JobExecutor::instance() {
         static JobExecutor executor;
         return executor;
-    }
-
-    JobExecutor::JobExecutor() {
-        mWorker.moveToThread(&mThread);
-        mThread.start();
     }
 
     JobExecutor::~JobExecutor() {

@@ -16,11 +16,11 @@ namespace vast {
 
     QList<KeyboardDevice> findKeyboards() {
         QList<KeyboardDevice> devices;
-        QDir const            inputDir("/dev/input");
+        QDir const            inputDir(QStringLiteral("/dev/input"));
         const auto            entries = inputDir.entryList({"event*"}, QDir::System);
 
         for (const QString& entry : entries) {
-            const QByteArray path = ("/dev/input/" + entry).toLocal8Bit();
+            const QByteArray path = (QStringLiteral("/dev/input/") + entry).toLocal8Bit();
             int const        fd   = ::open(path.constData(), O_RDONLY | O_NONBLOCK);
 
             if (fd < 0)

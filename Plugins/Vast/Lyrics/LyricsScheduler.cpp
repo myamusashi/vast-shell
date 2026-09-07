@@ -70,23 +70,23 @@ namespace vast {
         mCurLine         = -1;
         mCurWord         = -1;
         mCurWordDuration = 0;
-        emit currentIndexChanged();
+        Q_EMIT currentIndexChanged();
     }
 
     void LyricsScheduler::seekTo(qint64 posMs) {
         auto            it    = std::ranges::upper_bound(mBoundaries, posMs, {}, &WordBoundary::timeMs);
         const qsizetype found = (it != mBoundaries.begin()) ? std::distance(mBoundaries.begin(), std::prev(it)) : -1;
 
-        const int       newLine = (found >= 0) ? mBoundaries[found].lineIndex : -1;
-        const int       newWord = (found >= 0) ? mBoundaries[found].wordIndex : -1;
+        const int       newLine = (found >= 0) ? mBoundaries.at(found).lineIndex : -1;
+        const int       newWord = (found >= 0) ? mBoundaries.at(found).wordIndex : -1;
 
         bool            durationChanged = false;
         qint64          newDuration     = 0;
         if (newLine >= 0 && newWord >= 0 && newLine < mWordLines.size()) {
-            const auto wl    = mWordLines[newLine].toMap();
-            const auto words = wl["words"].toList();
+            const auto wl    = mWordLines.at(newLine).toMap();
+            const auto words = wl[QStringLiteral("words")].toList();
             if (newWord < words.size())
-                newDuration = words[newWord].toMap()["duration"].toLongLong();
+                newDuration = words.at(newWord).toMap()[QStringLiteral("duration")].toLongLong();
         }
 
         if (newDuration != mCurWordDuration) {
@@ -97,11 +97,11 @@ namespace vast {
         if (newLine != mCurLine || newWord != mCurWord) {
             mCurLine = newLine;
             mCurWord = newWord;
-            emit currentIndexChanged();
+            Q_EMIT currentIndexChanged();
         }
 
         if (durationChanged)
-            emit currentWordDurationChanged();
+            Q_EMIT currentWordDurationChanged();
 
         mBoundaryPos = found + 1;
     }
@@ -109,14 +109,14 @@ namespace vast {
     void LyricsScheduler::scheduleNext() {
         const qint64 nowMs = currentPositionMs();
 
-        while (mBoundaryPos < mBoundaries.size() && mBoundaries[mBoundaryPos].timeMs <= nowMs) {
+        while (mBoundaryPos < mBoundaries.size() && mBoundaries.at(mBoundaryPos).timeMs <= nowMs) {
             ++mBoundaryPos;
         }
 
         if (mBoundaryPos >= mBoundaries.size())
             return;
 
-        const qint64 delayMs = mBoundaries[mBoundaryPos].timeMs - nowMs;
+        const qint64 delayMs = mBoundaries.at(mBoundaryPos).timeMs - nowMs;
         if (delayMs > 60'000)
             return;
 
@@ -130,27 +130,27 @@ namespace vast {
         const qint64 nowMs = currentPositionMs();
 
         bool         changedIndex = false;
-        while (mBoundaryPos < mBoundaries.size() && mBoundaries[mBoundaryPos].timeMs <= nowMs) {
-            const auto& b = mBoundaries[mBoundaryPos];
-            mCurLine      = b.lineIndex;
-            mCurWord      = b.wordIndex;
-            changedIndex  = true;
+        while (mBoundaryPos < mBoundaries.size() && mBoundaries.at(mBoundaryPos).timeMs <= nowMs) {
+            const auto b = mBoundaries.at(mBoundaryPos);
+            mCurLine     = b.lineIndex;
+            mCurWord     = b.wordIndex;
+            changedIndex = true;
             ++mBoundaryPos;
         }
 
         if (changedIndex) {
-            emit   currentIndexChanged();
+            Q_EMIT   currentIndexChanged();
 
             qint64 newDuration = 0;
             if (mCurLine >= 0 && mCurWord >= 0 && mCurLine < mWordLines.size()) {
-                const auto wl    = mWordLines[mCurLine].toMap();
-                const auto words = wl["words"].toList();
+                const auto wl    = mWordLines.at(mCurLine).toMap();
+                const auto words = wl[QStringLiteral("words")].toList();
                 if (mCurWord < words.size())
-                    newDuration = words[mCurWord].toMap()["duration"].toLongLong();
+                    newDuration = words.at(mCurWord).toMap()[QStringLiteral("duration")].toLongLong();
             }
             if (newDuration != mCurWordDuration) {
                 mCurWordDuration = newDuration;
-                emit currentWordDurationChanged();
+                Q_EMIT currentWordDurationChanged();
             }
         }
 
@@ -160,11 +160,11 @@ namespace vast {
     void LyricsScheduler::rebuildBoundaries() {
         mBoundaries.clear();
         for (int li = 0; li < mWordLines.size(); ++li) {
-            const auto& wlEntry = mWordLines[li].toMap();
-            const auto  words   = wlEntry["words"].toList();
+            const auto& wlEntry = mWordLines.at(li).toMap();
+            const auto  words   = wlEntry[QStringLiteral("words")].toList();
             for (int wi = 0; wi < words.size(); ++wi) {
-                const auto   word = words[wi].toMap();
-                const qint64 t    = word["time"].toLongLong();
+                const auto   word = words.at(wi).toMap();
+                const qint64 t    = word[QStringLiteral("time")].toLongLong();
                 if (t < 0)
                     continue;
                 mBoundaries.append({.timeMs = t, .lineIndex = li, .wordIndex = wi});

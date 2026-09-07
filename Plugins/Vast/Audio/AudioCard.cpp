@@ -8,17 +8,17 @@ bool AudioCard::setDeviceInfo(quint32 deviceId, const QString& name, const QStri
     bool changed = false;
     if (mDeviceId != deviceId) {
         mDeviceId = deviceId;
-        emit deviceIdChanged();
+        Q_EMIT deviceIdChanged();
         changed = true;
     }
     if (mName != name) {
         mName = name;
-        emit nameChanged();
+        Q_EMIT nameChanged();
         changed = true;
     }
     if (mDescription != description) {
         mDescription = description;
-        emit descriptionChanged();
+        Q_EMIT descriptionChanged();
         changed = true;
     }
     return changed;
@@ -29,6 +29,6 @@ bool AudioCard::setActiveProfile(qsizetype index, const QVariantMap& profile) {
         return false;
     mActiveIndex   = index;
     mActiveProfile = profile;
-    emit activeIndexChanged();
+    Q_EMIT activeIndexChanged();
     return true;
 }

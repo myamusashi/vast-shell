@@ -106,7 +106,7 @@ namespace vast {
             return out;
         }
 
-        static const QRegularExpression              rx("\\s+");
+        static const QRegularExpression              rx(QStringLiteral("\\s+"));
         const QString                                normQuery      = FuzzyMatcher::normalizeText(query).trimmed();
         const QList<QString>                         normQueryWords = normQuery.split(rx, Qt::SkipEmptyParts);
 
@@ -165,10 +165,10 @@ namespace vast {
         const int    generation       = mFileSearchGeneration.fetchAndAddRelaxed(1) + 1;
         const double thresholdPerChar = mFileThreshold;
 
-        emit         fileSearchStarted();
+        Q_EMIT         fileSearchStarted();
 
         vast::JobExecutor::instance().post([this, generation, thresholdPerChar, files, query]() {
-            static const QRegularExpression kWhitespace(R"(\s+)");
+            static const QRegularExpression kWhitespace(QStringLiteral(R"(\s+)"));
 
             const QString                   normQuery  = FuzzyMatcher::normalizeText(query).trimmed();
             const QList<QString>            queryWords = normQuery.split(kWhitespace, Qt::SkipEmptyParts);

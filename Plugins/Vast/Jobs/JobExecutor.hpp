@@ -38,7 +38,7 @@ namespace vast {
         JobExecutor& operator=(JobExecutor&&)      = delete;
 
       private:
-        JobExecutor();
+        explicit JobExecutor(QObject* parent = nullptr);
         ~JobExecutor() override;
 
         QObject mWorker; // invocation target; lives on mThread

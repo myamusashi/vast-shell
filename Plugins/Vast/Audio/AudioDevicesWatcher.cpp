@@ -356,7 +356,7 @@ AudioDevicesWatcher::AudioDevicesWatcher(QObject* parent) : QObject(parent), mMo
     try {
         mPw->app   = std::make_unique<PwApp>();
         mConnected = true;
-        emit connectedChanged();
+        QTimer::singleShot(0, this, [&] { Q_EMIT connectedChanged(); });
     } catch (const std::exception& e) { qWarning("AudioDevicesWatcher: failed to connect to PipeWire: %s", e.what()); }
 
     mTimer->setSingleShot(true);
@@ -418,7 +418,7 @@ void AudioDevicesWatcher::poll() {
 
     mPollIntervalMs = K_MIN_POLL_MS;
     mModel->setDevices(snapshot);
-    emit devicesChanged();
+    Q_EMIT devicesChanged();
 
     mTimer->start(mPollIntervalMs);
 }

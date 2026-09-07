@@ -27,7 +27,7 @@ namespace vast {
         }
         void setHistoryLimit(int value);
 
-      signals:
+      Q_SIGNALS:
         void historyLimitChanged();
 
       private:

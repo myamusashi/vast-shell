@@ -61,7 +61,7 @@ namespace vast {
         [[nodiscard]] Q_INVOKABLE QVariantList     entries() const;
         [[nodiscard]] Q_INVOKABLE QString          typeAtRow(int row) const;
 
-      signals:
+      Q_SIGNALS:
         void countChanged();
 
       private:

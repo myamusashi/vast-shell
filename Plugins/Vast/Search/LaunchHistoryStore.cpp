@@ -17,20 +17,20 @@
 namespace vast {
 
     LaunchHistoryStore::LaunchHistoryStore(QObject* parent) : QObject(parent) {
-        mSettings = new QSettings("vast-shell", "myamusashi", this);
+        mSettings = new QSettings(QStringLiteral("vast-shell"), QStringLiteral("myamusashi"), this);
         loadHistory();
     }
 
     void LaunchHistoryStore::setHistoryLimit(int value) {
         if (mHistoryLimit != value) {
             mHistoryLimit = value;
-            emit historyLimitChanged();
+            Q_EMIT historyLimitChanged();
         }
     }
 
     void LaunchHistoryStore::loadHistory() {
         mHistory.clear();
-        const QByteArray raw = mSettings->value("launchHistory").toByteArray();
+        const QByteArray raw = mSettings->value(QStringLiteral("launchHistory")).toByteArray();
         if (raw.isEmpty())
             return;
 
@@ -38,9 +38,9 @@ namespace vast {
         for (const auto& value : arr) {
             const QJsonObject object = value.toObject();
             HistoryEntry      entry;
-            entry.id        = object["id"].toString();
-            entry.timestamp = object["timestamp"].toVariant().toLongLong();
-            entry.count     = object["count"].toInt();
+            entry.id        = object[QStringLiteral("id")].toString();
+            entry.timestamp = object[QStringLiteral("timestamp")].toVariant().toLongLong();
+            entry.count     = object[QStringLiteral("count")].toInt();
             if (!entry.id.isEmpty())
                 mHistory.append(entry);
         }
@@ -50,12 +50,12 @@ namespace vast {
         QJsonArray arr;
         for (const HistoryEntry& entry : std::as_const(mHistory)) {
             QJsonObject object;
-            object["id"]        = entry.id;
-            object["timestamp"] = entry.timestamp;
-            object["count"]     = entry.count;
+            object[QStringLiteral("id")]        = entry.id;
+            object[QStringLiteral("timestamp")] = entry.timestamp;
+            object[QStringLiteral("count")]     = entry.count;
             arr.append(object);
         }
-        mSettings->setValue("launchHistory", QJsonDocument(arr).toJson(QJsonDocument::Compact));
+        mSettings->setValue(QStringLiteral("launchHistory"), QJsonDocument(arr).toJson(QJsonDocument::Compact));
     }
 
     double LaunchHistoryStore::recencyScore(const QString& appId) const {
