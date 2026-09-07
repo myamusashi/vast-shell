@@ -18,13 +18,18 @@ Item {
     signal copyRequested(int id)
     signal pinToggled(int id, bool newState)
 
-    onEntryIdChanged: {
-        entryDetails.clear();
+    onEntryIdChanged: requestPreview()
 
-        if (entryId >= 0) {
-            entryDetails.loading = true;
-            ClipboardManager.requestFullEntry(entryId);
-        }
+    function requestPreview(): void {
+        entryDetails.clear();
+        previewTimeout.stop();
+
+        if (root.entryId < 0)
+            return;
+
+        entryDetails.loading = true;
+        previewTimeout.restart();
+        ClipboardManager.requestFullEntry(root.entryId);
     }
 
     function formatTimestamp(ms: int): string {
@@ -47,6 +52,8 @@ Item {
         function onFullEntryReady(entry) {
             if (entry.id !== root.entryId)
                 return;
+            previewTimeout.stop();
+            entryDetails.error = false;
             entryDetails.entryType = entry.type ?? "text";
             entryDetails.isImage = entry.type === "image";
             entryDetails.content = entry.content ?? "";
@@ -60,12 +67,33 @@ Item {
 
             entryDetails.loading = false;
         }
+
+        function onFullEntryFailed(id) {
+            if (id !== root.entryId)
+                return;
+            previewTimeout.stop();
+            entryDetails.loading = false;
+            entryDetails.error = true;
+        }
+    }
+
+    Timer {
+        id: previewTimeout
+
+        interval: 5000
+        onTriggered: {
+            if (entryDetails.loading) {
+                entryDetails.loading = false;
+                entryDetails.error = true;
+            }
+        }
     }
 
     QtObject {
         id: entryDetails
 
         property bool loading: false
+        property bool error: false
         property bool isImage: false
         property string previewPath: ""
         property string content: ""
@@ -90,6 +118,7 @@ Item {
 
         function clear() {
             loading = false;
+            error = false;
             isImage = false;
             previewPath = "";
             content = "";
@@ -130,11 +159,40 @@ Item {
         status: root.entryId >= 0 && entryDetails.loading
     }
 
+    Column {
+        anchors.centerIn: parent
+        spacing: Appearance.spacing.normal
+        visible: root.entryId >= 0 && !entryDetails.loading && entryDetails.error
+
+        Icon {
+            anchors.horizontalCenter: parent.horizontalCenter
+            icon: "error"
+            font.pixelSize: Appearance.fonts.size.extraLarge
+            color: Colours.m3Colors.m3Error
+        }
+
+        StyledText {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: qsTr("Couldn't load preview")
+            font.pixelSize: Appearance.fonts.size.normal
+            color: Colours.m3Colors.m3OnSurfaceVariant
+        }
+
+        ExtendedFloatingButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: qsTr("Retry")
+            icon.name: "refresh"
+            color: Colours.m3Colors.m3SecondaryContainer
+            textColor: Colours.m3Colors.m3OnSecondaryContainer
+            onClicked: root.requestPreview()
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Appearance.margin.normal
         spacing: Appearance.spacing.large
-        visible: root.entryId >= 0 && !entryDetails.loading
+        visible: root.entryId >= 0 && !entryDetails.loading && !entryDetails.error
 
         RowLayout {
             Layout.fillWidth: true
