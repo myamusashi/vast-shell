@@ -78,7 +78,7 @@ namespace vast {
         struct OfferRead {
             int                             fd{-1};
             QByteArray                      content;
-            std::array<char, 65536>         buf;
+            std::array<char, 65536>         buf{};
             QSocketNotifier*                notifier{nullptr};
             std::function<void(QByteArray)> onRead;
         };

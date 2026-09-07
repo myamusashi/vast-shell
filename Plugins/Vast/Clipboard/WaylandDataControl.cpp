@@ -379,7 +379,7 @@ namespace vast {
 
             readOfferAsync(fds[0], [this, mimeType, generation](const QByteArray& content) {
                 const QString fileName = mMetaGeneration == generation ? mPendingMeta : QString{};
-                Q_EMIT          selectionReceived(mimeType, content, fileName);
+                Q_EMIT selectionReceived(mimeType, content, fileName);
             });
         };
 
@@ -559,18 +559,17 @@ namespace vast {
     }
 
     void WaylandDataControl::pumpSourceWrite(SourceWrite* write) {
+        const std::span<const char> buf{write->content.constData(), static_cast<size_t>(write->content.size())};
         while (write->offset < write->content.size()) {
-            std::string           errorMsg = std::system_category().message(errno);
-            std::span<const char> buf{write->content.constData(), static_cast<size_t>(write->content.size())};
-            auto                  remaining = buf.subspan(static_cast<size_t>(write->offset));
-            const ssize_t         n         = ::write(write->fd, remaining.data(), remaining.size());
+            auto          remaining = buf.subspan(static_cast<size_t>(write->offset));
+            const ssize_t n         = ::write(write->fd, remaining.data(), remaining.size());
             if (n < 0) {
                 if (errno == EINTR)
                     continue;
                 if (errno == EAGAIN)
                     return;
                 if (errno != EPIPE)
-                    qWarning() << "[WaylandDataControl] write failed:" << errorMsg;
+                    qWarning() << "[WaylandDataControl] write failed:" << std::system_category().message(errno);
                 break;
             }
             write->offset += n;

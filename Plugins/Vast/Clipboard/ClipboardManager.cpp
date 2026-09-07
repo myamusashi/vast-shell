@@ -61,7 +61,7 @@ namespace vast {
         setupConnections();
         loadAllEntries();
 
-        QPointer<WaylandDataControl> wayland = mWayland.get();
+        const QPointer<WaylandDataControl> wayland = mWayland.get();
         wayland->moveToThread(vast::JobExecutor::instance().thread());
         vast::JobExecutor::instance().post([wayland]() {
             if (!wayland)
@@ -405,26 +405,33 @@ namespace vast {
 
     void ClipboardManager::requestFullEntry(qint64 id) {
         mPendingEntryId = id;
-        if (id < 0 || !mDatabase)
+        if (id < 0 || !mDatabase) {
+            Q_EMIT fullEntryFailed(id);
             return;
+        }
 
         QTimer::singleShot(0, this, [this, id]() {
-            if (!mDatabase)
+            if (!mDatabase) {
+                Q_EMIT fullEntryFailed(id);
                 return;
+            }
             auto result = mDatabase->fetchById(id);
             if (!result) {
                 qWarning() << "[ClipboardManager] fetchById failed:" << result.error();
+                Q_EMIT fullEntryFailed(id);
                 return;
             }
 
-            if (id != mPendingEntryId)
+            if (id != mPendingEntryId) {
+                Q_EMIT fullEntryFailed(id);
                 return;
+            }
 
             if (result->isImage() && !ClipboardPreviewCache::exists(result->id) && !result->data.isEmpty()) {
                 // The heavy PNG encode + disk write run on the shared worker.
-                // fullEntryReady still fires exactly once, only after the
-                // preview path exists -- same contract as the old synchronous
-                // write, minus the UI-thread stall.
+                // Exactly one of fullEntryReady/fullEntryFailed fires per
+                // request, ready only after the preview path exists, same
+                // contract as the old synchronous write minus the UI stall.
                 auto entry = std::move(*result);
                 vast::JobExecutor::instance().post([this, entry = std::move(entry)]() mutable {
                     ClipboardPreviewCache::write(entry.id, entry.data);
@@ -432,8 +439,10 @@ namespace vast {
                     QMetaObject::invokeMethod(
                         this,
                         [this, entry = std::move(entry)]() mutable {
-                            if (!mDatabase || entry.id != mPendingEntryId)
+                            if (!mDatabase || entry.id != mPendingEntryId) {
+                                Q_EMIT fullEntryFailed(entry.id);
                                 return;
+                            }
                             QVariantMap map;
                             appendFullEntry(map, std::move(entry));
                             Q_EMIT fullEntryReady(std::move(map));
@@ -449,7 +458,7 @@ namespace vast {
         });
     }
 
-    void ClipboardManager::appendFullEntry(QVariantMap& map, ClipboardEntry&& entry) {
+    void ClipboardManager::appendFullEntry(QVariantMap& map, ClipboardEntry entry) {
         map.insert(QStringLiteral("id"), entry.id);
         map.insert(QStringLiteral("type"), entry.typeString());
         map.insert(QStringLiteral("content"), QVariant::fromValue(std::move(entry.content)));

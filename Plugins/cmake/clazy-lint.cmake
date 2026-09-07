@@ -35,7 +35,6 @@ set(CLAZY_CHECK_LIST
   "qstring-varargs"
   "global-const-char-pointer"
   "old-style-connect"
-  "modernize-list-initialization"
   "qt-keywords"
   "qt-keyword-emit"
   "use-chrono-in-qtimer"

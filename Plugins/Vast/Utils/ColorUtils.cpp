@@ -82,7 +82,7 @@ QColor ColorUtils::blendColors(const QColor& src, const QColor& dst, qreal t) {
 
 QColor ColorUtils::fromString(const QString& value) {
     if (value.startsWith('#')) {
-        QString h = value.mid(1);
+        const QString h = value.mid(1);
         if (h.length() == 6 || h.length() == 8)
             return QColor::fromString(value);
     }
@@ -101,8 +101,8 @@ QVariantMap ColorUtils::blendPalettes(const QVariantMap& from, const QVariantMap
     QVariantMap out;
 
     for (auto it = to.cbegin(); it != to.cend(); ++it) {
-        QColor dst = variantToColor(it.value());
-        QColor src = from.contains(it.key()) ? variantToColor(from.value(it.key())) : dst;
+        const QColor dst = variantToColor(it.value());
+        const QColor src = from.contains(it.key()) ? variantToColor(from.value(it.key())) : dst;
         out.insert(it.key(), blendColors(src, dst, t));
     }
     return out;

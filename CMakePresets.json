@@ -45,7 +45,7 @@
     {
       "name": "clazy",
       "configurePreset": "clazy",
-      "targets": ["lint-clazy"]
+      "targets": ["lint-clazy", "lint-tidy"]
     }
   ]
 }
