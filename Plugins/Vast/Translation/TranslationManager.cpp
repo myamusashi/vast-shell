@@ -40,7 +40,7 @@ bool TranslationManager::loadTranslation(const QString& language, const QString&
     QGuiApplication::installTranslator(mTranslator.get());
 
     mCurrentLanguage = language;
-    Q_EMIT  languageChanged();
+    Q_EMIT languageChanged();
 
     auto* engine = qmlEngine(this);
     if (engine)

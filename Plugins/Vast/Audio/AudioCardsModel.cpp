@@ -67,7 +67,7 @@ bool AudioCardsModel::upsertCard(const CardEntry& entry) {
     if (changed) {
         const int         row = static_cast<int>(std::distance(mCards.begin(), it));
         const QModelIndex idx = index(row);
-        Q_EMIT              dataChanged(idx, idx);
+        Q_EMIT dataChanged(idx, idx);
     }
     return changed;
 }

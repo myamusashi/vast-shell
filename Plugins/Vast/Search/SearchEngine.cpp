@@ -165,7 +165,7 @@ namespace vast {
         const int    generation       = mFileSearchGeneration.fetchAndAddRelaxed(1) + 1;
         const double thresholdPerChar = mFileThreshold;
 
-        Q_EMIT         fileSearchStarted();
+        Q_EMIT fileSearchStarted();
 
         vast::JobExecutor::instance().post([this, generation, thresholdPerChar, files, query]() {
             static const QRegularExpression kWhitespace(QStringLiteral(R"(\s+)"));

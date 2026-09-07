@@ -139,7 +139,7 @@ namespace vast {
         }
 
         if (changedIndex) {
-            Q_EMIT   currentIndexChanged();
+            Q_EMIT currentIndexChanged();
 
             qint64 newDuration = 0;
             if (mCurLine >= 0 && mCurWord >= 0 && mCurLine < mWordLines.size()) {
