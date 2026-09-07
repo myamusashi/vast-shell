@@ -29,6 +29,7 @@ Item {
             Layout.alignment: Qt.AlignLeft
             implicitWidth: 30
             implicitHeight: 30
+            contained: false
             status: root.active
         }
 

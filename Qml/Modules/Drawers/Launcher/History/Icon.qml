@@ -85,6 +85,7 @@ Loader {
             }
 
             LoadingIndicator {
+                anchors.centerIn: parent
                 implicitWidth: 30
                 implicitHeight: 30
                 status: {

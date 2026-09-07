@@ -126,6 +126,7 @@ Item {
         anchors.centerIn: parent
         implicitWidth: 30
         implicitHeight: 30
+        contained: true
         status: root.entryId >= 0 && entryDetails.loading
     }
 

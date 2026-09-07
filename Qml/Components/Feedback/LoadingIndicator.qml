@@ -4,20 +4,26 @@ import M3Shapes
 
 import qs.Services
 
-MaterialShape {
+Item {
     id: root
 
     property bool status: false
-    property double radius: 50
-    property double padding: 50
-    property double shapePadding: 12
-    property var shapeGetters: [MaterialShape.SoftBurst, MaterialShape.Cookie9Sided, MaterialShape.Pentagon, MaterialShape.Pill, MaterialShape.Sunny, MaterialShape.Cookie4Sided, MaterialShape.Oval]
-    property int shapeIndex: 0
+    property bool contained: true
+    property color containerColor: Colours.m3Colors.m3PrimaryContainer
+    property color indicatorColor: Colours.m3Colors.m3Primary
+    property color containedIndicatorColor: Colours.m3Colors.m3OnPrimaryContainer
 
-    property real stiffness: 180
+    property real stiffness: 200
     property real dampingRatio: 0.6
-    property real visibilityThreshold: 0.075
-    property real rotationStep: 60
+    property real visibilityThreshold: 0.1
+    property real morphInterval: 650
+    property real rotationStep: 90
+    property real globalRotationDuration: 4666
+
+    readonly property real indicatorScale: 38 / 48
+
+    readonly property var shapeSequence: [MaterialShape.SoftBurst, MaterialShape.Cookie9Sided, MaterialShape.Pentagon, MaterialShape.Pill, MaterialShape.Sunny, MaterialShape.Cookie4Sided, MaterialShape.Oval]
+    property int shapeIndex: 0
 
     readonly property real springDuration: {
         const wn = Math.sqrt(stiffness);
@@ -32,7 +38,10 @@ MaterialShape {
     }
     property bool springSettled: true
     property real rotationStart: 0
-    property real rotationTarget: 0
+    property real rotationTarget: 90
+    property real morphRotation: 0
+    property real globalRotation: 0
+    property real lastFrameMs: 0
 
     function spring(t: real): var {
         const wn = Math.sqrt(stiffness);
@@ -46,16 +55,11 @@ MaterialShape {
         return [pos, vel];
     }
 
-    implicitWidth: 30
-    implicitHeight: 30
+    implicitWidth: 48
+    implicitHeight: 48
+    width: implicitWidth
+    height: implicitHeight
     visible: status
-
-    anchors.centerIn: parent
-    color: Colours.m3Colors.m3Primary
-
-    fromShape: shapeGetters[shapeIndex]
-    toShape: shapeGetters[shapeIndex]
-    morphProgress: 1
 
     scale: status ? 1 : 0
     Behavior on scale {
@@ -66,46 +70,80 @@ MaterialShape {
         }
     }
 
+    onStatusChanged: {
+        if (status)
+            lastFrameMs = 0;
+    }
+
+    MaterialShape {
+        anchors.fill: parent
+        shape: MaterialShape.Circle
+        animationDuration: 0
+        color: root.containerColor
+        visible: root.contained
+    }
+
+    MaterialShape {
+        id: indicator
+
+        anchors.centerIn: parent
+        width: root.width * root.indicatorScale
+        height: root.height * root.indicatorScale
+        color: root.contained ? root.containedIndicatorColor : root.indicatorColor
+
+        fromShape: root.shapeSequence[root.shapeIndex]
+        toShape: root.shapeSequence[root.shapeIndex]
+        morphProgress: 1
+    }
+
     ElapsedTimer {
         id: timer
     }
 
     FrameAnimation {
-        running: root.status && !root.springSettled
+        running: root.status
         onTriggered: {
-            const t = timer.elapsed();
+            const now = Date.now();
+            const delta = root.lastFrameMs > 0 ? Math.min(now - root.lastFrameMs, 50) : 16.7;
+            root.lastFrameMs = now;
+            root.globalRotation = (root.globalRotation + 360 * delta / root.globalRotationDuration) % 360;
 
-            if (t >= root.springDuration) {
-                root.springSettled = true;
-                root.morphProgress = 1;
-                root.rotation = root.rotationTarget;
-                root.scale = 1;
-            } else {
-                const [pos, vel] = root.spring(t);
-                root.morphProgress = Math.min(1, pos);
-                root.rotation = root.rotationStart + pos * (root.rotationTarget - root.rotationStart);
-                root.scale = 1 + vel * 0.14 / root.springMaxVelocity;
+            if (!root.springSettled) {
+                const t = timer.elapsed();
+
+                if (t >= root.springDuration) {
+                    root.springSettled = true;
+                    indicator.morphProgress = 1;
+                    root.morphRotation = root.rotationTarget;
+                    indicator.scale = 1;
+                } else {
+                    const [pos, vel] = root.spring(t);
+                    indicator.morphProgress = Math.min(1, pos);
+                    root.morphRotation = root.rotationStart + pos * (root.rotationTarget - root.rotationStart);
+                    indicator.scale = 1 + vel * 0.14 / root.springMaxVelocity;
+                }
             }
+            indicator.rotation = root.morphRotation + root.globalRotation;
         }
     }
 
     Timer {
         id: animTimer
 
-        interval: 1000
+        interval: root.morphInterval
         running: root.status
         repeat: root.status
         triggeredOnStart: true
         onTriggered: {
-            const nextIndex = (root.shapeIndex + 1) % root.shapeGetters.length;
+            const nextIndex = (root.shapeIndex + 1) % root.shapeSequence.length;
 
-            root.fromShape = root.shapeGetters[root.shapeIndex];
-            root.toShape = root.shapeGetters[nextIndex];
-            root.morphProgress = 0;
+            indicator.fromShape = root.shapeSequence[root.shapeIndex];
+            indicator.toShape = root.shapeSequence[nextIndex];
+            indicator.morphProgress = 0;
 
             root.shapeIndex = nextIndex;
-            root.rotationStart = root.rotation;
-            root.rotationTarget = root.rotation + root.rotationStep;
+            root.rotationStart = root.morphRotation;
+            root.rotationTarget = root.morphRotation + root.rotationStep;
             root.springSettled = false;
             timer.restart();
         }
