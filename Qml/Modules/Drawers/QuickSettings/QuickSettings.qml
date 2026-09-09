@@ -65,6 +65,8 @@ Item {
                 ConnectedButtonGroup {
                     id: tabGroup
 
+                    Layout.fillWidth: true
+                    fillWidth: true
                     currentIndex: root.saveIndex
 
                     model: [
