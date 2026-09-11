@@ -4,6 +4,7 @@
     cmake,
     qt6,
     patchelf,
+    mold,
     pipewire,
     ddcutil,
     pkg-config,
@@ -49,6 +50,7 @@ in
         buildInputs = [
             qt6.qtbase
             qt6.qtdeclarative
+            mold
             pipewire
             ddcutil
             wayland
@@ -58,6 +60,8 @@ in
             "-DCMAKE_BUILD_TYPE=Release"
             "-DCMAKE_INSTALL_PREFIX=${placeholder "out"}"
             "-DINSTALL_QMLDIR=${qt6.qtbase.qtQmlPrefix}"
+            "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold"
+            "-DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold"
         ];
 
         dontWrapQtApps = true;

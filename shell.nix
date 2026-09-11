@@ -17,6 +17,7 @@
         pipewire.dev
         wayland
         wayland-protocols
+        mold
     ];
 
     packages = with pkgs; [

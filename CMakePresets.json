@@ -22,7 +22,9 @@
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++",
         "CMAKE_C_COMPILER": "clang",
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_SHARED_LINKER_FLAGS": "-fuse-ld=mold",
+        "CMAKE_MODULE_LINKER_FLAGS": "-fuse-ld=mold"
       }
     },
     {
