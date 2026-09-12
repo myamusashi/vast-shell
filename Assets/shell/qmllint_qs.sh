@@ -2,7 +2,14 @@
 
 set -e
 
-INI="$HOME/.config/quickshell/lock/Qml/.qmlls.ini"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+INI="${QMLLS_INI:-${ROOT}/Qml/.qmlls.ini}"
+
+if [ ! -f "$INI" ]; then
+  echo "ERROR: .qmlls.ini not found at $INI. Is quickshell running with this checkout?" >&2
+  exit 1
+fi
 BUILDDIR=$(grep buildDir "$INI" | cut -d'"' -f2)
 
 if [ ! -d "$BUILDDIR/qs" ]; then
@@ -12,7 +19,7 @@ fi
 
 IMPORTS=$(grep importPaths "$INI" | cut -d'"' -f2 | tr ':' '\n')
 
-ARGS=("-I" "Qml" "-I" "$BUILDDIR")
+ARGS=("-I" "${ROOT}/Qml" "-I" "$BUILDDIR")
 for p in $IMPORTS; do
   ARGS+=("-I" "$p")
 done
