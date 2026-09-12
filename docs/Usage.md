@@ -21,6 +21,7 @@ vastctl
 ├── idle on / off / status
 ├── keylock capslock / numlock
 ├── dragAndDrop start / stop / toggle / status / shortcut
+├── toast open <description> [-H header] [-i icon] [-d duration]
 ├── hypr dispatch / shortcuts list
 ├── daemon start / stop / restart / status [-v]
 ├── log [-n lines] [--no-follow]
