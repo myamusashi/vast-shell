@@ -80,17 +80,32 @@ Item {
     Timer {
         id: previewTimeout
 
-        interval: 5000
+        property int retry: 0
+
+        interval: 1000
+        repeat: true
+
         onTriggered: {
             if (entryDetails.loading) {
-                entryDetails.loading = false;
-                entryDetails.error = true;
+                if (retry < entryDetails.previewLoadRetry) {
+                    retry++;
+                    root.requestPreview();
+                } else {
+                    stop();
+                    retry = 0;
+                    entryDetails.loading = false;
+                    entryDetails.error = true;
+                }
+            } else {
+                stop();
             }
         }
     }
 
     QtObject {
         id: entryDetails
+
+        readonly property int previewLoadRetry: 3
 
         property bool loading: false
         property bool error: false
