@@ -31,8 +31,8 @@ Scope {
             WlrLayershell.layer: Hypr.focusedWsHasFullscreen ? WlrLayer.Background : WlrLayer.Overlay
             exclusionMode: ExclusionMode.Ignore
             color: "transparent"
-            implicitWidth: 350
-            implicitHeight: 300
+            implicitWidth: 320
+            implicitHeight: 720
 
             ListView {
                 id: toastListView
@@ -42,7 +42,7 @@ Scope {
                     horizontalCenter: parent.horizontalCenter
                 }
                 implicitWidth: parent.width
-                implicitHeight: parent.height
+                implicitHeight: contentHeight
                 model: ToastService.model
                 cacheBuffer: implicitHeight
                 spacing: Appearance.spacing.small
@@ -94,16 +94,17 @@ Scope {
         required property string icon
         required property int duration
 
-        margin: Configs.generals.enableOuterBorder ? Appearance.margin.normal + Configs.generals.outerBorderSize : Appearance.margin.normal
+        margin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize + Appearance.margin.small : Appearance.margin.small
         color: GlobalStates.drawerColors
-        radius: Appearance.rounding.full
-
+        radius: Appearance.rounding.large
         RowLayout {
             id: rowLayout
 
+            spacing: Appearance.spacing.small
+
             IconImage {
-                Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                implicitSize: 48
+                Layout.alignment: Qt.AlignVCenter
+                implicitSize: 32
                 backer.cache: true
                 asynchronous: true
                 source: Quickshell.iconPath(root.icon, "image-missing")
@@ -111,21 +112,25 @@ Scope {
 
             ColumnLayout {
                 Layout.fillWidth: true
-                spacing: Appearance.spacing.small
+                spacing: 2
 
                 StyledText {
                     Layout.fillWidth: true
                     text: root.header
                     color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.large
-                    wrapMode: Text.Wrap
+                    font.pixelSize: Appearance.fonts.size.normal
+                    font.weight: Font.DemiBold
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
                 }
                 StyledText {
                     Layout.fillWidth: true
                     text: root.description
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.normal
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
                     wrapMode: Text.Wrap
+                    elide: Text.ElideRight
+                    maximumLineCount: 3
                 }
             }
         }
