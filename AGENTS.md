@@ -36,8 +36,9 @@ Prioritize: correctness, no regressions, performance, API stability, readability
 - Local properties: `camelCase`, descriptive, NO abbreviations AND underscores.
 - Order: `id` → `property` declarations → signal handlers → children. Don't interleave.
 - Avoid nested `Loader`/`Instantiator` chains where `Repeater` or a direct binding works.
+- Don't create a dynamic size for `PanelWindow`, only animated the children size.
 - Extract inline `Component {}` blocks >30 lines or reused more than once into their own file.
-- No business logic in QML (state machines, I/O, parsing, non-trivial computation) — push to a `QML_ELEMENT` C++ type. QML stays bindings/layout/glue.
+- No business logic in QML (state machines, I/O, parsing, non-trivial computation), push to a `QML_ELEMENT` C++ type. QML stays bindings/layout/glue.
 - Prefer declarative bindings over `Qt.callLater`/imperative JS; if used for real timing reasons, comment why.
 - Signals named past-tense (`clicked`, `wallpaperChanged`), not imperative.
 - Use `Scope` (from `Quickshell`) for storing non-ui to create QML ELEMENT.
