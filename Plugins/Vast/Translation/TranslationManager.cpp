@@ -7,9 +7,11 @@
 #include <qtmetamacros.h>
 #include <qqml.h>
 #include <qqmlengine.h>
+#include <qlocale.h>
+#include <qstring.h>
 
 TranslationManager::TranslationManager(QObject* parent) :
-    QObject(parent), mTranslator(std::make_unique<QTranslator>()), mCurrentLanguage(QStringLiteral("en_US")),
+    QObject(parent), mTranslator(std::make_unique<QTranslator>()), mCurrentLanguage(QStringLiteral("en_US")), mTranslationPath(QString::fromUtf8(DEFAULT_TRANSLATION_PATH)),
     M_AVAILABLE_LANGUAGES({QStringLiteral("en_US"), QStringLiteral("id_ID")}) {}
 
 QString TranslationManager::currentLanguage() const {
@@ -20,7 +22,7 @@ void TranslationManager::setCurrentLanguage(const QString& language) {
     if (mCurrentLanguage == language)
         return;
 
-    if (!loadTranslation(language))
+    if (!loadTranslation(language, mTranslationPath))
         qWarning() << "Language switch failed, staying on:" << mCurrentLanguage;
 }
 
@@ -39,7 +41,9 @@ bool TranslationManager::loadTranslation(const QString& language, const QString&
     mTranslator = std::move(candidate);
     QGuiApplication::installTranslator(mTranslator.get());
 
+    mTranslationPath = translationPath;
     mCurrentLanguage = language;
+    QLocale::setDefault(QLocale(language));
     Q_EMIT languageChanged();
 
     auto* engine = qmlEngine(this);

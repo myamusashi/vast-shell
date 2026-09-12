@@ -5,6 +5,7 @@
 #include <qtmetamacros.h>
 #include <qqmlintegration.h>
 #include <qtranslator.h>
+#include <qstring.h>
 
 #include <memory>
 
@@ -31,5 +32,6 @@ class TranslationManager : public QObject {
   private:
     std::unique_ptr<QTranslator> mTranslator;
     QString                      mCurrentLanguage;
+    QString                      mTranslationPath;
     const QStringList            M_AVAILABLE_LANGUAGES;
 };

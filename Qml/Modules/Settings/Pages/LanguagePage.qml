@@ -1,4 +1,5 @@
 import QtQuick
+import Vast.Translation
 
 import qs.Components.Button
 import qs.Core.Configs
@@ -16,20 +17,15 @@ SettingsPageBase {
             description: qsTr("Locale code used for translations.")
 
             SplitButton {
-                readonly property int selectedIndex: model.findIndex(entry => entry.display === Configs.language.language)
+                readonly property int selectedIndex: Math.max(0, model.findIndex(entry => entry.display === Configs.language.language))
 
-                model: [
-                    {
-                        display: "id_ID"
-                    },
-                    {
-                        display: "en_US"
-                    }
-                ]
+                model: TranslationManager.availableLanguages().map(language => ({
+                            display: language
+                        }))
                 textRole: "display"
                 icon.name: "language"
                 currentIndex: selectedIndex
-                text: model[selectedIndex]?.dispaly ?? Configs.language.language
+                text: model[selectedIndex]?.display ?? Configs.language.language
                 onMenuItemActivated: index => Configs.language.language = model[index].display
             }
         }

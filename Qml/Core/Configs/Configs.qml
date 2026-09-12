@@ -1,5 +1,6 @@
 pragma Singleton
 
+import QtQuick
 import Quickshell
 import Quickshell.Io
 import Vast.Translation
@@ -26,7 +27,12 @@ Singleton {
     property alias idle: adapter.idle
     property alias search: adapter.search
 
-    onLanguageChanged: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
+    Connections {
+        target: root.language
+        function onLanguageChanged() {
+            TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath);
+        }
+    }
 
     FileView {
         path: Paths.shellDir + "/configurations.json"

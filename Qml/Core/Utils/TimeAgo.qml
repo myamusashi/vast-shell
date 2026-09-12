@@ -2,11 +2,15 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Vast.Translation
 
 Singleton {
     id: root
 
     readonly property var monthNames: {
+        // Re-evaluate on hot reload; Qt.locale() follows the default QLocale set by TranslationManager.
+        TranslationManager.currentLanguage;
+
         var locale = Qt.locale();
         var names = [];
         for (var i = 0; i < 12; i++) {
