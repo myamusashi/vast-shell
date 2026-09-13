@@ -58,10 +58,20 @@ Scope {
                 target: DynamicIslandService
 
                 function onCurrentChanged(): void {
+                    if (DynamicIslandService.closing)
+                        return;
                     Qt.callLater(targetWindow.updateContentSize);
                 }
                 function onOverlayChanged(): void {
+                    if (DynamicIslandService.closing)
+                        return;
                     Qt.callLater(targetWindow.updateContentSize);
+                }
+                function onClosingChanged(): void {
+                    if (DynamicIslandService.closing) {
+                        islandBox.contentWidth = targetWindow.dotSize;
+                        islandBox.contentHeight = targetWindow.dotSize;
+                    }
                 }
             }
 
@@ -69,9 +79,13 @@ Scope {
                 target: baseLoader.item
 
                 function onImplicitWidthChanged(): void {
+                    if (DynamicIslandService.closing)
+                        return;
                     targetWindow.updateContentSize();
                 }
                 function onImplicitHeightChanged(): void {
+                    if (DynamicIslandService.closing)
+                        return;
                     targetWindow.updateContentSize();
                 }
             }
@@ -80,9 +94,13 @@ Scope {
                 target: overlayLoader.item
 
                 function onImplicitWidthChanged(): void {
+                    if (DynamicIslandService.closing)
+                        return;
                     targetWindow.updateContentSize();
                 }
                 function onImplicitHeightChanged(): void {
+                    if (DynamicIslandService.closing)
+                        return;
                     targetWindow.updateContentSize();
                 }
             }
@@ -96,8 +114,6 @@ Scope {
                     if (DynamicIslandService.slidingUp)
                         return -targetWindow.dotSize - Configs.generals.outerBorderSize;
                     else
-                        // else if (!GlobalStates.isBarOpen)
-                        //     return Configs.generals.outerBorderSize + Appearance.spacing.small;
                         return Configs.generals.outerBorderSize + Configs.bar.barHeight + Appearance.spacing.small;
                 }
 
