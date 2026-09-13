@@ -38,11 +38,11 @@ Scope {
                 id: toastListView
 
                 anchors {
+                    fill: parent
                     bottom: parent.bottom
                     horizontalCenter: parent.horizontalCenter
                 }
-                implicitWidth: parent.width
-                implicitHeight: contentHeight
+
                 model: ToastService.model
                 cacheBuffer: implicitHeight
                 spacing: Appearance.spacing.small
