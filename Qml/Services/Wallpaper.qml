@@ -14,10 +14,13 @@ Singleton {
     property Item colorSourceImage: null
     property int wallpaperType: 0
     property string pendingVideoPath: ""
+    property int thumbnailVersion: 0
     property string thumbnailJobPath: ""
     property var thumbnailAvailability: ({})
     property var thumbnailCheckQueue: []
     property var checkBatch: []
+    property var thumbnailRegenQueue: []
+    property var thumbnailFailed: ({})
     readonly property string thumbnailCheckScript: "while [ $# -ge 2 ]; do [ -s \"$1\" ] && printf '%s\\n' \"$2\"; shift 2; done"
     readonly property var visibleWallpapers: WallpaperFileModels.filteredWallpaperList.filter(path => wallpaperType === 1 ? isVideo(path) : !isVideo(path))
 
@@ -26,18 +29,18 @@ Singleton {
             command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
         });
         if (colorSource !== "" && colorSourceImage)
-            colorSourceImage.source = "file://" + colorSource;
+            colorSourceImage.source = "file://" + colorSource + (isVideo(path) ? "?v=" + thumbnailVersion : "");
     }
 
     function updateWallpaperColors(path) {
         if (path === "" || !colorSourceImage)
             return;
-        colorSourceImage.source = "file://" + thumbnailPathFor(path);
+        colorSourceImage.source = "file://" + thumbnailPathFor(path) + (isVideo(path) ? "?v=" + thumbnailVersion : "");
     }
 
     function setVideoWallpaper(path) {
         pendingVideoPath = path;
-        thumbnailJobPath = path;
+        ensureThumbnail(path, true);
     }
 
     function isVideo(path) {
@@ -55,21 +58,29 @@ Singleton {
         const updated = Object.assign({}, thumbnailAvailability);
         updated[path] = exists;
         thumbnailAvailability = updated;
-        if (path !== Paths.currentWallpaper)
-            return;
         if (!exists) {
-            if (previous === undefined)
-                ensureThumbnail(path);
+            ensureThumbnail(path);
             return;
         }
         if (path === Paths.currentWallpaper && pendingVideoPath === "")
             updateWallpaperColors(path);
     }
 
-    function ensureThumbnail(path) {
-        if (path === "" || thumbnailAvailability[path] === true || thumbnailJobPath === path)
+    function ensureThumbnail(path, force) {
+        if (path === "" || !isVideo(path) || thumbnailJobPath === path || thumbnailRegenQueue.includes(path))
             return;
-        thumbnailJobPath = path;
+        if (thumbnailAvailability[path] === true && !force)
+            return;
+        if (!force && thumbnailFailed[path] === true)
+            return;
+        thumbnailRegenQueue.push(path);
+        pumpThumbnailJobs();
+    }
+
+    function pumpThumbnailJobs() {
+        if (thumbnailJobPath !== "" || thumbnailRegenQueue.length === 0)
+            return;
+        thumbnailJobPath = thumbnailRegenQueue.shift();
     }
 
     function requestThumbnailChecks() {
@@ -102,6 +113,7 @@ Singleton {
     Connections {
         target: Paths
         function onCurrentWallpaperChanged(): void {
+            root.ensureThumbnail(Paths.currentWallpaper);
             root.updateWallpaperColors(Paths.currentWallpaper);
         }
     }
@@ -139,17 +151,28 @@ Singleton {
     Process {
         id: thumbnailExtractor
 
-        command: ["sh", "-c", `test -s ${JSON.stringify(root.thumbnailPathFor(root.thumbnailJobPath))} || ffmpeg -y -loglevel error -i ${JSON.stringify(root.thumbnailJobPath)} -frames:v 1 ${JSON.stringify(root.thumbnailPathFor(root.thumbnailJobPath))}`]
+        command: ["sh", "-c", `mkdir -p ${JSON.stringify(Paths.cacheDir + "/vast-shell")} && { test -s ${JSON.stringify(root.thumbnailPathFor(root.thumbnailJobPath))} || ffmpeg -y -loglevel error -i ${JSON.stringify(root.thumbnailJobPath)} -vf scale=320:-2 -frames:v 1 ${JSON.stringify(root.thumbnailPathFor(root.thumbnailJobPath))}; }`]
         running: root.thumbnailJobPath !== ""
         onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
             const job = root.thumbnailJobPath;
             root.thumbnailJobPath = "";
+            if (exitCode === 0) {
+                const cleared = Object.assign({}, root.thumbnailFailed);
+                delete cleared[job];
+                root.thumbnailFailed = cleared;
+                root.thumbnailVersion++;
+            } else {
+                const failed = Object.assign({}, root.thumbnailFailed);
+                failed[job] = true;
+                root.thumbnailFailed = failed;
+            }
             root.markThumbnail(job, exitCode === 0);
+            root.pumpThumbnailJobs();
             if (root.pendingVideoPath === "")
                 return;
             if (exitCode === 0) {
                 if (root.colorSourceImage)
-                    root.colorSourceImage.source = "file://" + root.thumbnailPathFor(root.pendingVideoPath);
+                    root.colorSourceImage.source = "file://" + root.thumbnailPathFor(root.pendingVideoPath) + (root.isVideo(root.pendingVideoPath) ? "?v=" + root.thumbnailVersion : "");
             } else {
                 root.pendingVideoPath = "";
             }

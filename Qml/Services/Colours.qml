@@ -24,7 +24,9 @@ Singleton {
         const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
         if (!wp)
             return "";
-        return /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(wp) ? `${Paths.cacheDir}/vast-shell/vast-wallpaper-${Qt.md5(wp)}.png` : wp;
+        if (!/\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(wp))
+            return wp;
+        return `${Paths.cacheDir}/vast-shell/vast-wallpaper-${Qt.md5(wp)}.png?v=${Wallpaper.thumbnailVersion}`;
     }
 
     readonly property var materialPaletteSource: materialColor.ready ? materialColor.colors : lastValidPalette

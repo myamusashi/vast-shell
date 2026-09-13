@@ -14,9 +14,19 @@ Singleton {
     property string lastVideoTarget: ""
     property bool videoThumbPending: false
     property int thumbnailVersion: 0
+    property string lastRegenTarget: ""
 
     function thumbnailCachePathFor(path) {
         return `${Paths.cacheDir}/vast-shell/greeter-wallpaper-${Qt.md5(path)}.png`;
+    }
+
+    function regenerateVideoThumbnail() {
+        const videoPath = greeterConfig.videoWallpaper;
+        if (!greeterConfig.useVideoWallpaper || videoPath === "" || videoThumbPending || lastRegenTarget === videoPath)
+            return;
+        lastRegenTarget = videoPath;
+        videoThumbGen.command = ["sh", "-c", `mkdir -p ${JSON.stringify(Paths.cacheDir + "/vast-shell")} && exec ffmpeg -y -loglevel error -i ${JSON.stringify(videoPath)} -vf scale=320:-2 -frames:v 1 ${JSON.stringify(thumbnailCachePathFor(videoPath))}`];
+        videoThumbPending = true;
     }
 
     function uploadStatic(path) {
@@ -58,6 +68,7 @@ Singleton {
         path: Paths.shellDir + "/greeter.json"
         watchChanges: true
         onFileChanged: reload()
+        onLoaded: root.regenerateVideoThumbnail()
         onAdapterUpdated: writeAdapter()
         onSaved: etcSync.running = true
 
@@ -71,11 +82,7 @@ Singleton {
     }
 
     Component.onCompleted: {
-        const videoPath = greeterConfig.videoWallpaper;
-        if (greeterConfig.useVideoWallpaper && videoPath !== "") {
-            videoThumbGen.command = ["ffmpeg", "-y", "-loglevel", "error", "-i", videoPath, "-frames:v", "1", thumbnailCachePathFor(videoPath)];
-            videoThumbPending = true;
-        }
+        regenerateVideoThumbnail();
     }
 
     Process {
@@ -103,8 +110,8 @@ Singleton {
             console.log("[GreeterConfig] upload video exited:", exitCode, root.lastVideoTarget);
             if (exitCode === 0) {
                 root.greeterConfig.videoWallpaper = root.lastVideoTarget;
-                videoThumbGen.command = ["ffmpeg", "-y", "-loglevel", "error", "-i", root.lastVideoTarget, "-frames:v", "1", root.thumbnailCachePathFor(root.lastVideoTarget)];
-                root.videoThumbPending = true;
+                root.lastRegenTarget = "";
+                root.regenerateVideoThumbnail();
             }
         }
     }
@@ -118,6 +125,8 @@ Singleton {
         }
         onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
             root.videoThumbPending = false;
+            if (exitCode !== 0)
+                root.lastRegenTarget = "";
             console.log("[GreeterConfig] video thumbnail:", exitCode === 0 ? "ok" : "failed", root.lastVideoTarget);
             root.thumbnailVersion++;
         }

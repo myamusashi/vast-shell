@@ -100,10 +100,14 @@ Item {
             id: videoThumbnailCache
 
             anchors.fill: parent
-            source: root.thumbnailAvailability[root.modelData] ? "file://" + root.controller.thumbnailPathFor(root.modelData) : ""
+            source: root.thumbnailAvailability[root.modelData] ? "file://" + root.controller.thumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             visible: status === Image.Ready
+            onStatusChanged: {
+                if (status === Image.Error && root.controller.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
+                    root.controller.markThumbnail(root.modelData, false);
+            }
         }
 
         Rectangle {

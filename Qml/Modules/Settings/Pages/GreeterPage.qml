@@ -100,6 +100,10 @@ SettingsPageBase {
                     asynchronous: true
                     cache: true
                     visible: status === Image.Ready
+                    onStatusChanged: {
+                        if (status === Image.Error && Configs.greeterConfig.useVideoWallpaper)
+                            Configs.regenerateVideoThumbnail();
+                    }
 
                     Rectangle {
                         anchors.fill: parent

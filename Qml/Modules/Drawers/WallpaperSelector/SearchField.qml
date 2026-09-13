@@ -34,8 +34,12 @@ StyledTextInput {
             return;
         const list = controller.visibleWallpapers ?? [];
         const selectedPath = list[carousel.currentIndex];
-        if (selectedPath !== undefined)
-            controller.setWallpaper(selectedPath, controller.thumbnailPathFor(selectedPath));
+        if (selectedPath === undefined)
+            return;
+        if (controller.isVideo(selectedPath))
+            controller.setVideoWallpaper(selectedPath);
+        else
+            controller.setWallpaper(selectedPath, selectedPath);
     }
 
     Keys.onPressed: event => {
