@@ -21,4 +21,5 @@ RowLayout {
         heightBattery: 18
     }
     Wid.Sound {}
+    Wid.Privacy {}
 }
