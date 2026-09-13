@@ -16,7 +16,28 @@ Singleton {
     readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel?.wayland?.activated ? Hyprland.activeToplevel : null // qmllint disable
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
-    readonly property int activeWsId: focusedWorkspace?.id ?? 1
+    // Hyprland removed the numeric workspace `id` from IPC in favour of the
+    // string addressable name (`lastIpcObject.address`). Quickshell 0.3.1 has
+    // no `addressable_name` property, so identity resolves via lastIpcObject
+    // with a fallback to the legacy `id` for older Hyprland builds.
+    readonly property string activeWsAddress: workspaceAddress(focusedWorkspace) || "1"
+    readonly property int activeWsId: workspaceNumber(focusedWorkspace) > 0 ? workspaceNumber(focusedWorkspace) : 1
+
+    function workspaceAddress(ws: var): string {
+        if (!ws)
+            return "";
+        const addr = ws.lastIpcObject?.address ?? ws.lastIpcObject?.addressable_name ?? null;
+        if (addr !== undefined && addr !== null && addr !== "")
+            return String(addr);
+        if (ws.id !== undefined && ws.id !== null)
+            return String(ws.id);
+        return "";
+    }
+
+    function workspaceNumber(ws: var): int {
+        const n = parseInt(workspaceAddress(ws), 10);
+        return isNaN(n) ? -1 : n;
+    }
 
     property var monitorData: ({})
 

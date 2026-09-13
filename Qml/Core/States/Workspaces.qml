@@ -10,8 +10,16 @@ Singleton {
     property list<HyprlandWorkspace> workspaces: sortWorkspaces(Hyprland.workspaces.values)
     property int maxWorkspace: findMaxId()
 
+    // Numeric value of the workspace addressable name (`lastIpcObject.address`,
+    // e.g. "1"). Non-numeric (named/special) workspaces yield -1 so they sort
+    // before numbered ones, matching the old negative-id ordering.
+    function wsNumber(ws: var): int {
+        const n = parseInt(ws?.lastIpcObject?.address ?? ws?.lastIpcObject?.addressable_name ?? ws?.id ?? "", 10);
+        return isNaN(n) ? -1 : n;
+    }
+
     function sortWorkspaces(ws) {
-        return [...ws].sort((a, b) => a?.id - b?.id);
+        return [...ws].sort((a, b) => wsNumber(a) - wsNumber(b));
     }
 
     function switchWorkspace(w: int): void {
@@ -19,11 +27,9 @@ Singleton {
     }
 
     function findMaxId(): int {
-        if (workspaces.length === 0)
-            return 1;
-
-        let num = workspaces.length;
-        let maxId = workspaces[num - 1]?.id || 1;
+        let maxId = 1;
+        for (const w of workspaces)
+            maxId = Math.max(maxId, wsNumber(w));
         return maxId;
     }
 

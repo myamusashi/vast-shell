@@ -77,7 +77,7 @@ StyledRect {
 
             // Caelestia credit
             readonly property var occupied: Hypr.workspaces.values.reduce((acc, curr) => {
-                acc[curr.id] = curr.lastIpcObject.windows > 0;
+                acc[Hypr.workspaceAddress(curr)] = curr.lastIpcObject.windows > 0;
                 return acc;
             }, {})
             property int focusedWorkspace: Hypr.activeWsId
@@ -86,7 +86,10 @@ StyledRect {
             spacing: 0
             Repeater {
                 model: {
-                    const maxOccupied = Object.keys(container.occupied).filter(id => container.occupied[id]).reduce((max, id) => Math.max(max, parseInt(id)), 0);
+                    const maxOccupied = Object.keys(container.occupied).filter(id => container.occupied[id]).reduce((max, id) => {
+                        const n = parseInt(id, 10);
+                        return isNaN(n) ? max : Math.max(max, n);
+                    }, 0);
                     const minFromFocus = container.focusedWorkspace >= Configs.bar.visibleWorkspace ? container.focusedWorkspace : Configs.bar.visibleWorkspace;
                     return Math.max(Configs.bar.visibleWorkspace, minFromFocus, maxOccupied);
                 }
@@ -181,7 +184,7 @@ StyledRect {
                     property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
                     property bool hasMaximized: !!(workspace?.toplevels?.values.some(t => t.wayland?.maximized))
 
-                    property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => w.id === index + 1) ?? null
+                    property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => Hypr.workspaceNumber(w) === index + 1) ?? null
 
                     // Use this workspace's own monitor, fall back to focusedMonitor
                     property var wsMonitor: workspace?.monitor ?? Hypr.focusedMonitor

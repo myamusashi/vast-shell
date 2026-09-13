@@ -773,7 +773,7 @@ Scope {
                 let maxX = -Infinity, maxY = -Infinity;
                 const toplevels = Hypr.toplevels;
                 for (let i = 0; i < toplevels.length; i++) {
-                    if (toplevels[i].workspace?.id !== Hypr.activeWsId)
+                    if (Hypr.workspaceAddress(toplevels[i].workspace) !== Hypr.activeWsAddress)
                         continue;
                     const ipc = toplevels[i].lastIpcObject;
                     const at = ipc?.at;
@@ -856,7 +856,7 @@ Scope {
                     y: ((ipc?.at?.[1] ?? 0) - pickerOriginY) * pickerScale
                     width: (ipc?.size?.[0] ?? 0) * pickerScale
                     height: (ipc?.size?.[1] ?? 0) * pickerScale
-                    visible: width > 0 && height > 0 && modelData.workspace?.id === Hypr.activeWsId
+                    visible: width > 0 && height > 0 && Hypr.workspaceAddress(modelData.workspace) === Hypr.activeWsAddress
                     z: modelData.focusHistoryID
                     color: pickerMouse.containsMouse ? Qt.lighter(Colours.m3Colors.m3Primary, 1.4) : Colours.m3Colors.m3Primary
                     opacity: pickerMouse.containsMouse ? 0.55 : 0.25
