@@ -9,7 +9,7 @@ import Vast.Utils
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
-import qs.Services
+import qs.Services // qmllint disable
 
 Singleton {
     id: root
