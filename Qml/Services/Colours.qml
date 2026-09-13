@@ -4,11 +4,12 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Vast.Utils
 
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
-import Vast.Utils
+import qs.Services
 
 Singleton {
     id: root

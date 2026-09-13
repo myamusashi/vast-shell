@@ -22,6 +22,7 @@ ShellRoot {
     PairingDialog {}
     Drawers {}
     DragAndDrop {}
+    DynamicIsland {}
     Settings {}
     Toast {}
 }
