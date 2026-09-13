@@ -7,14 +7,44 @@ import qs.Services
 
 Scope {
     Component {
-        id: islandContent
+        id: screenshareContent
 
-        PrivacyIslandContent {}
+        PrivacyIslandContent {
+            kind: "screenshare"
+        }
+    }
+
+    Component {
+        id: audioInContent
+
+        PrivacyIslandContent {
+            kind: "audioIn"
+        }
+    }
+
+    Component {
+        id: audioOutContent
+
+        PrivacyIslandContent {
+            kind: "audioOut"
+        }
     }
 
     Binding {
         target: PrivacyServices
-        property: "islandContent"
-        value: islandContent
+        property: "screenshareContent"
+        value: screenshareContent
+    }
+
+    Binding {
+        target: PrivacyServices
+        property: "audioInContent"
+        value: audioInContent
+    }
+
+    Binding {
+        target: PrivacyServices
+        property: "audioOutContent"
+        value: audioOutContent
     }
 }

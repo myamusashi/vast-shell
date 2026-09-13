@@ -10,80 +10,82 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-Item {
+RowLayout {
     id: root
+
+    anchors {
+        fill: parent
+        leftMargin: Appearance.margin.normal
+        rightMargin: Appearance.margin.normal
+    }
+
+    implicitWidth: childrenRect.width + Appearance.spacing.large
+    implicitHeight: childrenRect.height + Appearance.spacing.normal
 
     property real islandRadius: Appearance.rounding.full
 
-    implicitWidth: privacyRowLayout.implicitWidth + 32
-    implicitHeight: 44
+    // "screenshare" | "audioIn" | "audioOut"
+    required property string kind
 
-    RowLayout {
-        id: privacyRowLayout
+    readonly property list<string> kindAppNames: {
+        if (kind === "audioIn")
+            return PrivacyServices.audioInAppNames;
+        if (kind === "audioOut")
+            return PrivacyServices.audioOutAppNames;
+        return PrivacyServices.screenshareAppNames;
+    }
 
-        anchors.centerIn: parent
-        spacing: Appearance.spacing.small
+    readonly property string kindIcon: kind === "audioIn" ? "mic" : kind === "audioOut" ? "volume_up" : "videocam"
+    readonly property string kindLabel: kind === "audioIn" ? qsTr("Mic is on") : kind === "audioOut" ? qsTr("Speaker is on") : qsTr("Screen share is on")
 
-        MaterialShape {
-            implicitWidth: 10
-            implicitHeight: 10
-            shape: MaterialShape.Circle
-            animationDuration: 0
-            color: Colours.m3Colors.m3Error
-        }
+    MaterialShape {
+        Layout.alignment: Qt.AlignVCenter
+        implicitWidth: 10
+        implicitHeight: 10
+        shape: MaterialShape.Circle
+        animationDuration: 0
+        color: Colours.m3Colors.m3Error
+    }
 
-        Icon {
+    Icon {
+        Layout.alignment: Qt.AlignVCenter
+        type: Icon.Material
+        icon: root.kindIcon
+        color: Colours.m3Colors.m3OnSurface
+        font.pixelSize: Appearance.fonts.size.normal
+    }
+
+    StyledText {
+        Layout.alignment: Qt.AlignVCenter
+        text: root.kindLabel
+        color: Colours.m3Colors.m3OnSurface
+        font.pixelSize: Appearance.fonts.size.normal
+    }
+
+    Repeater {
+        model: root.kindAppNames
+
+        delegate: RowLayout {
+            required property string modelData
+
             Layout.alignment: Qt.AlignVCenter
-            type: Icon.Material
-            icon: "videocam"
-            visible: PrivacyServices.screenshare.length > 0
-            color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.larger
-        }
+            spacing: Appearance.spacing.small
 
-        Icon {
-            Layout.alignment: Qt.AlignVCenter
-            type: Icon.Material
-            icon: "mic"
-            visible: PrivacyServices.audioIn.length > 0
-            color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.larger
-        }
-
-        Icon {
-            Layout.alignment: Qt.AlignVCenter
-            type: Icon.Material
-            icon: "volume_up"
-            visible: PrivacyServices.audioOut.length > 0
-            color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.larger
-        }
-
-        Repeater {
-            model: PrivacyServices.activeAppNames
-
-            delegate: RowLayout {
-                required property string modelData
-
+            IconImage {
                 Layout.alignment: Qt.AlignVCenter
-                spacing: Appearance.spacing.small
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+                source: IconUtils.iconForId(parent.modelData)
+                asynchronous: true
+            }
 
-                IconImage {
-                    Layout.alignment: Qt.AlignVCenter
-                    Layout.preferredWidth: 20
-                    Layout.preferredHeight: 20
-                    source: IconUtils.iconForId(parent.modelData)
-                    asynchronous: true
-                }
-
-                StyledText {
-                    Layout.alignment: Qt.AlignVCenter
-                    Layout.maximumWidth: 160
-                    text: parent.modelData
-                    font.pixelSize: Appearance.fonts.size.normal
-                    color: Colours.m3Colors.m3OnSurface
-                    elide: Text.ElideRight
-                }
+            StyledText {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.maximumWidth: 160
+                text: parent.modelData
+                font.pixelSize: Appearance.fonts.size.normal
+                color: Colours.m3Colors.m3OnSurface
+                elide: Text.ElideRight
             }
         }
     }
