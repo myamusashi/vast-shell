@@ -35,18 +35,22 @@ Scope {
                 item: islandBox
             }
 
-            HyprlandWindow.visibleMask: Region { // qmllint disable
-                item: islandBox // qmllint disable
+            // qmllint disable
+            HyprlandWindow.visibleMask: Region {
+                item: islandBox
             }
+            // qmllint enable
 
+            // qmllint disable
             function updateContentSize(): void {
-                var item = overlayLoader.item ?? baseLoader.item; // qmllint disable
+                var item = overlayLoader.item ?? baseLoader.item;
                 if (!item)
                     return;
-                islandBox.contentWidth = Math.max(1, item.implicitWidth); // qmllint disable
-                islandBox.contentHeight = Math.max(1, item.implicitHeight); // qmllint disable
-                var radius = item["islandRadius"]; // qmllint disable
+                islandBox.contentWidth = Math.max(1, item.implicitWidth);
+                islandBox.contentHeight = Math.max(1, item.implicitHeight);
+                var radius = item["islandRadius"];
             }
+            // qmllint enable
 
             Component.onCompleted: Qt.callLater(updateContentSize)
 
@@ -86,8 +90,16 @@ Scope {
             Item {
                 id: islandHost
 
-                y: DynamicIslandService.slidingUp ? (-targetWindow.dotSize - Configs.generals.outerBorderSize) : (Configs.generals.outerBorderSize + Configs.bar.barHeight)
                 anchors.horizontalCenter: parent.horizontalCenter
+
+                y: {
+                    if (DynamicIslandService.slidingUp)
+                        return -targetWindow.dotSize - Configs.generals.outerBorderSize;
+                    else
+                        // else if (!GlobalStates.isBarOpen)
+                        //     return Configs.generals.outerBorderSize + Appearance.spacing.small;
+                        return Configs.generals.outerBorderSize + Configs.bar.barHeight + Appearance.spacing.small;
+                }
 
                 implicitWidth: islandBox.contentWidth
                 implicitHeight: islandBox.contentHeight
@@ -110,8 +122,8 @@ Scope {
                     property real contentWidth: targetWindow.dotSize
                     property real contentHeight: targetWindow.dotSize
 
-                    implicitWidth: islandBox.contentWidth
-                    implicitHeight: islandBox.contentHeight
+                    implicitWidth: contentWidth
+                    implicitHeight: contentHeight
 
                     opacity: DynamicIslandService.slidingUp ? 0 : (DynamicIslandService.hasContent ? 1 : 0)
 
