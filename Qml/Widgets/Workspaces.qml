@@ -41,13 +41,8 @@ StyledRect {
                 mouse.accepted = false;
                 return;
             }
-
-            Quickshell.execDetached({
-                "command": ["sh", "-c", "hyprctl dispatch 'hl.global(\"quickshell:overview\")'"]
-            });
         }
     }
-
     Loader {
         id: loader
 
@@ -76,10 +71,16 @@ StyledRect {
             }
 
             // Caelestia credit
-            readonly property var occupied: Hypr.workspaces.values.reduce((acc, curr) => {
-                acc[Hypr.workspaceAddress(curr)] = curr.lastIpcObject.windows > 0;
+            // Occupancy is derived from toplevel IPC payloads, NOT the workspace
+            // model: on Quickshell 0.3.1 + new Hyprland every HyprlandWorkspace
+            // aliases to id 0 and their lastIpcObjects overwrite each other,
+            // so per-workspace `windows` counts are unreliable.
+            readonly property var occupied: {
+                const acc = {};
+                for (const tl of Hypr.toplevels.values ?? Hypr.toplevels)
+                    acc[Hypr.toplevelWorkspaceAddress(tl)] = true;
                 return acc;
-            }, {})
+            }
             property int focusedWorkspace: Hypr.activeWsId
 
             clip: true
