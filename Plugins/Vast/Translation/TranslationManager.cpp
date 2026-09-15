@@ -12,7 +12,11 @@
 
 TranslationManager::TranslationManager(QObject* parent) :
     QObject(parent), mTranslator(std::make_unique<QTranslator>()), mCurrentLanguage(QStringLiteral("en_US")), mTranslationPath(QString::fromUtf8(DEFAULT_TRANSLATION_PATH)),
-    M_AVAILABLE_LANGUAGES({QStringLiteral("en_US"), QStringLiteral("id_ID")}) {}
+    // clang-format off
+    M_AVAILABLE_LANGUAGES({
+        QStringLiteral("en_US"), 
+        QStringLiteral("id_ID")
+    }) {} // clang-format on
 
 QString TranslationManager::currentLanguage() const {
     return mCurrentLanguage;
