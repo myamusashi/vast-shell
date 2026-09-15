@@ -48,12 +48,18 @@ Scope {
         console.log("screenshotWindow: opening window picker, action:", action);
         root.pickForRecordCallback = null;
         root.pendingWindowAction = action || "save+copy";
+        Hyprland.refreshToplevels();
+        Hyprland.refreshWorkspaces();
+        Hyprland.refreshMonitors();
         root.windowPickerOpen = true;
     }
 
     function pickWindowForRecord(callback) {
         console.log("pickWindowForRecord: opening window picker for recording");
         root.pickForRecordCallback = callback;
+        Hyprland.refreshToplevels();
+        Hyprland.refreshWorkspaces();
+        Hyprland.refreshMonitors();
         root.windowPickerOpen = true;
     }
 
@@ -65,6 +71,7 @@ Scope {
 
         if (Quickshell.screens.length <= 1) {
             root.pendingAction = "region";
+            captureLoader.targetToplevel = null;
             const screen = Quickshell.screens[0];
             if (!screen) {
                 root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
@@ -106,6 +113,7 @@ Scope {
             root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
             return;
         }
+        captureLoader.targetToplevel = null;
         captureLoader.targetScreen = screen;
         captureLoader.targetWidth = screen.width;
         captureLoader.targetHeight = screen.height;
@@ -202,6 +210,18 @@ Scope {
         property int targetHeight: 1
 
         activeAsync: false
+        onActiveChanged: {
+            // PanelWindow persists across activations; reset the one-shot grab
+            // guard so a second capture actually grabs instead of no-op'ing.
+            if (active && item) {
+                item.done = false;
+                item.grabRetries = 0;
+            }
+            // Never carry a window source into the next capture; each flow sets
+            // exactly the source it needs when it activates the loader.
+            if (!active)
+                targetToplevel = null;
+        }
 
         component: PanelWindow {
             id: captureWindow
@@ -721,6 +741,13 @@ Scope {
 
         component: PanelWindow {
             id: pickerWindow
+            // Window boxes use global at[] coords: pin the overlay to the
+            // focused monitor's screen or they land on the wrong output when
+            // the external monitor is active.
+            property var pickerScreen: Quickshell.screens.find(s => s.name === Hypr.focusedMonitor?.name) ?? Quickshell.screens[0]
+            screen: pickerScreen
+            property real pickerScreenX: pickerScreen?.x ?? 0
+            property real pickerScreenY: pickerScreen?.y ?? 0
 
             visible: true
             exclusionMode: ExclusionMode.Ignore
@@ -773,17 +800,23 @@ Scope {
                 let maxX = -Infinity, maxY = -Infinity;
                 const toplevels = Hypr.toplevels;
                 for (let i = 0; i < toplevels.length; i++) {
-                    if (Hypr.workspaceAddress(toplevels[i].workspace) !== Hypr.activeWsAddress)
+                    if (Hypr.toplevelWorkspaceAddress(toplevels[i]) !== Hypr.activeWsAddress)
                         continue;
                     const ipc = toplevels[i].lastIpcObject;
                     const at = ipc?.at;
                     const size = ipc?.size;
                     if (!at || !size || size[0] <= 0 || size[1] <= 0)
                         continue;
-                    minX = Math.min(minX, at[0]);
-                    minY = Math.min(minY, at[1]);
-                    maxX = Math.max(maxX, at[0] + size[0]);
-                    maxY = Math.max(maxY, at[1] + size[1]);
+                    if (!windowOverlapsPicker(at, size))
+                        continue;
+                    // at[] is global desktop coords: make it screen-local so the
+                    // boxes map 1:1 onto this overlay's output, not the primary.
+                    const lx = at[0] - pickerScreenX;
+                    const ly = at[1] - pickerScreenY;
+                    minX = Math.min(minX, lx);
+                    minY = Math.min(minY, ly);
+                    maxX = Math.max(maxX, lx + size[0]);
+                    maxY = Math.max(maxY, ly + size[1]);
                 }
                 if (minX === Infinity) {
                     pickerOriginX = 0;
@@ -800,6 +833,17 @@ Scope {
                 pickerOriginY = minY;
             }
 
+            // True when the window rect intersects this overlay's screen.
+            function windowOverlapsPicker(at, size): bool {
+                if (!at || !size || size[0] <= 0 || size[1] <= 0)
+                    return false;
+                const lx = at[0] - pickerScreenX;
+                const ly = at[1] - pickerScreenY;
+                const sw = pickerScreen?.width ?? pickerWindow.width;
+                const sh = pickerScreen?.height ?? pickerWindow.height;
+                return lx + size[0] > 0 && ly + size[1] > 0 && lx < sw && ly < sh;
+            }
+
             Timer {
                 id: pickerRefreshTimer
 
@@ -811,16 +855,9 @@ Scope {
                 }
             }
 
-            Connections {
-                target: Hyprland
-                function onRawEvent(event) {
-                    const eventName = event.name;
-                    if (["movewindow", "openwindow", "closewindow", "changefloatingmode"].includes(eventName))
-                        pickerRefreshTimer.restart();
-                }
-            }
-
-            // refreshToplevels() lands over IPC, recalc once fresh geometry arrived
+            // Geometry arrives over IPC after refreshToplevels(); recalc on a
+            // short delay as well as on toplevel changes so the picker never
+            // maps windows with stale at/size.
             Timer {
                 id: pickerRecalcTimer
 
@@ -834,6 +871,14 @@ Scope {
 
                 function onToplevelsChanged() {
                     pickerRecalcTimer.restart();
+                }
+            }
+            Connections {
+                target: Hyprland
+                function onRawEvent(event) {
+                    const eventName = event.name;
+                    if (["movewindow", "openwindow", "closewindow", "changefloatingmode"].includes(eventName))
+                        pickerRefreshTimer.restart();
                 }
             }
             Component.onCompleted: {
@@ -852,11 +897,11 @@ Scope {
 
                     readonly property var ipc: modelData.lastIpcObject
 
-                    x: ((ipc?.at?.[0] ?? 0) - pickerOriginX) * pickerScale
-                    y: ((ipc?.at?.[1] ?? 0) - pickerOriginY) * pickerScale
+                    x: (((ipc?.at?.[0] ?? 0) - pickerScreenX) - pickerOriginX) * pickerScale
+                    y: (((ipc?.at?.[1] ?? 0) - pickerScreenY) - pickerOriginY) * pickerScale
                     width: (ipc?.size?.[0] ?? 0) * pickerScale
                     height: (ipc?.size?.[1] ?? 0) * pickerScale
-                    visible: width > 0 && height > 0 && Hypr.workspaceAddress(modelData.workspace) === Hypr.activeWsAddress
+                    visible: width > 0 && height > 0 && windowOverlapsPicker(ipc?.at, ipc?.size) && Hypr.toplevelWorkspaceAddress(modelData) === Hypr.activeWsAddress
                     z: modelData.focusHistoryID
                     color: pickerMouse.containsMouse ? Qt.lighter(Colours.m3Colors.m3Primary, 1.4) : Colours.m3Colors.m3Primary
                     opacity: pickerMouse.containsMouse ? 0.55 : 0.25
@@ -924,9 +969,15 @@ Scope {
                             }
                             const ipc = modelData.lastIpcObject;
                             const size = ipc?.size ?? [0, 0];
+                            const at = ipc?.at ?? [0, 0];
+                            // Capture on the window's own output: the focused
+                            // workspace monitor is wrong when the window lives
+                            // on the other screen.
+                            const cx = at[0] + size[0] / 2;
+                            const cy = at[1] + size[1] / 2;
                             const workspace = Hypr.focusedWorkspace;
                             const monitor = workspace?.monitor;
-                            const screen = monitor ? (Quickshell.screens.find(s => s.name === monitor.name) ?? Quickshell.screens[0]) : Quickshell.screens[0];
+                            const screen = Quickshell.screens.find(s => cx >= s.x && cx < s.x + s.width && cy >= s.y && cy < s.y + s.height) ?? (monitor ? (Quickshell.screens.find(s => s.name === monitor.name) ?? Quickshell.screens[0]) : Quickshell.screens[0]);
                             root.pendingAction = root.pendingWindowAction;
                             captureLoader.targetScreen = screen;
                             captureLoader.targetToplevel = modelData.wayland;
