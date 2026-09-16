@@ -30,7 +30,6 @@ Singleton {
     property alias isClipboardOpen: panel.isClipboardOpen
     property alias isSettingsOpen: panel.isSettingsOpen // qmllint disable
     property alias isCalendarOpen: panel.isCalendarOpen
-    property alias isScreenCapturePanelOpen: panel.isScreenCapturePanelOpen // qmllint disable
     property alias isLauncherOpen: panel.isLauncherOpen
     property alias isSessionOpen: panel.isSessionOpen // qmllint disable
     property alias isMediaPlayerOpen: panel.isMediaPlayerOpen
@@ -54,6 +53,7 @@ Singleton {
     readonly property bool hasInlineReply: inlineReplyOwner !== null
 
     property string previewWallpaper: ""
+    property string launcherQuery: ""
 
     property string scriptPath: `${Paths.projectRoot}/Assets/shell/screen-capture.sh`
 
@@ -141,6 +141,11 @@ Singleton {
             function open(): void {
                 root.openPanel(panelController.panelName);
             }
+            function openWith(query: string): void {
+                if (panelController.panelName === "launcher")
+                    root.launcherQuery = query;
+                root.openPanel(panelController.panelName);
+            }
             function close(): void {
                 root.closePanel(panelController.panelName);
             }
@@ -170,10 +175,6 @@ Singleton {
             {
                 panel: "launcher",
                 shortcut: "launcher"
-            },
-            {
-                panel: "screenCapture",
-                shortcut: "screenCapture"
             },
             {
                 panel: "quickSettings",

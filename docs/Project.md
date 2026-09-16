@@ -73,7 +73,7 @@ vast-shell/
 │   │   │   ├── Clipboard/     # ClipboardItemDelegate, ClipboardPreview
 │   │   │   ├── DragAndDrop/   # ConfirmDeviceContent, DeviceListContent, DoneContent,
 │   │   │   │                  # DraggingContent, FilesDroppedContent, ProgressContent
-│   │   │   ├── Launcher/      # App, CaptureItem, Screencapture, History
+│   │   │   ├── Launcher/      # App (apps + commands + screenshot pages)
 │   │   │   ├── Notifications/ # Content, NotifIcon, Wrapper
 │   │   │   ├── OSD/           # CapsLockWidget, NumLockWidget
 │   │   │   ├── QuickSettings/ # PerformancePages, VolumeSettings, WiFi, Network, Battery

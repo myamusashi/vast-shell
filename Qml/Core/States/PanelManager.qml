@@ -8,7 +8,6 @@ Scope {
 
     readonly property var panelProps: ({
             "calendar": "isCalendarOpen",
-            "screenCapture": "isScreenCapturePanelOpen",
             "launcher": "isLauncherOpen",
             "session": "isSessionOpen",
             "mediaPlayer": "isMediaPlayerOpen",
@@ -24,7 +23,6 @@ Scope {
     property bool isClipboardOpen: false
     property bool isSettingsOpen: false
     property bool isCalendarOpen: false
-    property bool isScreenCapturePanelOpen: false
     property bool isLauncherOpen: false
     property bool isSessionOpen: false
     property bool isMediaPlayerOpen: false

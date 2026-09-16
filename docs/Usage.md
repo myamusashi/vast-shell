@@ -77,7 +77,7 @@ Dispatch a panel or action directly from Hyprland:
 hyprctl dispatch global quickshell:<target>
 ```
 
-Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `screencaptureLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`, `clipboard`, `kdeConnect`, `dragAndDrop`
+Available targets: `wallpaperSwitcher`, `layershell`, `appLauncher`, `overview`, `QuickSettings`, `session`, `weather`, `dashboard`, `settings`, `clipboard`, `kdeConnect`, `dragAndDrop`
 
 ## IPC
 
@@ -98,7 +98,7 @@ shell ipc call <target> <function>
 
 | Target | Functions |
 |---|---|
-| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `screenCapture`, `clipboard`, `recordingPanel` | `toggle()`, `open()`, `close()` |
+| `bar`, `weather`, `quickSettings`, `launcher`, `session`, `dashboard`, `settings`, `overview`, `wallpaperSwitcher`, `clipboard`, `recordingPanel` | `toggle()`, `open()`, `close()` — `launcher` also has `openWith(path: string)` (e.g. `"Screenshot"`, `"Screenshot action"`, `"Screenshot history"`) |
 | `toast` | `open(header: string, description: string, icon: string, duration: int)` |
 | `img` | `get(): string`, `set(path: string)` |
 | `lock` | `lock()`, `unlock()`, `isLocked(): bool` |

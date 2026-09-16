@@ -2,15 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
-import Vast.Search
 
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
-import qs.Core.Utils
 import qs.Services
 
 Item {
@@ -23,19 +20,21 @@ Item {
     }
 
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
-    property int currentIndex: 0
 
     implicitWidth: parent.width * 0.3
     implicitHeight: GlobalStates.isLauncherOpen ? parent.height * 0.5 : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
 
-    function launch(entry: DesktopEntry): void {
-        const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];
-
-        Quickshell.execDetached({
-            command: cmd,
-            workingDirectory: entry.workingDirectory
-        });
+    onIsLauncherOpenChanged: {
+        if (isLauncherOpen) {
+            LauncherServices.launcherPage = "";
+            LauncherServices.lastEscapeAt = 0;
+            LauncherServices.query = "";
+            const deepLink = GlobalStates.launcherQuery;
+            GlobalStates.launcherQuery = "";
+            if (deepLink !== "")
+                LauncherServices.openPath(deepLink);
+            ScreenCaptureHistory.reloadFiles();
+        }
     }
 
     Behavior on implicitHeight {
@@ -68,9 +67,35 @@ Item {
                 defaultFocus: search
 
                 ColumnLayout {
+                    id: contentLayout
+
                     anchors.fill: parent
                     anchors.margins: Appearance.margin.large
                     spacing: Appearance.spacing.normal
+
+                    Component.onCompleted: {
+                        search.text = LauncherServices.query;
+                    }
+
+                    Connections {
+                        target: GlobalStates
+
+                        function onLauncherQueryChanged() {
+                            if (GlobalStates.launcherQuery !== "") {
+                                LauncherServices.openPath(GlobalStates.launcherQuery);
+                                GlobalStates.launcherQuery = "";
+                            }
+                        }
+                    }
+
+                    Connections {
+                        target: LauncherServices
+
+                        function onQueryChanged() {
+                            if (LauncherServices.query !== search.text)
+                                search.text = LauncherServices.query;
+                        }
+                    }
 
                     Timer {
                         id: searchDebounce
@@ -88,22 +113,20 @@ Item {
 
                         implicitWidth: parent.width
                         implicitHeight: 60
-                        placeHolderText: qsTr("Search")
+                        placeHolderText: LauncherServices.placeHolderText
                         toggleButtonVisible: false
-                        onTextChanged: searchDebounce.restart()
-                        onAccepted: launchCurrentApp()
-
-                        function launchCurrentApp(): void {
-                            if (listView.count === 0)
-                                return;
-                            root.launch(listView.searchResults[listView.currentIndex]);
-                            GlobalStates.isLauncherOpen = false;
+                        onTextChanged: {
+                            LauncherServices.query = text;
+                            searchDebounce.restart();
                         }
-
+                        onAccepted: {
+                            if (listView.currentIndex >= 0 && listView.currentIndex < LauncherServices.filteredItems.length)
+                                LauncherServices.activateRow(LauncherServices.filteredItems[listView.currentIndex]);
+                        }
                         Keys.onPressed: function (event) {
                             switch (event.key) {
                             case Qt.Key_Escape:
-                                GlobalStates.isLauncherOpen = false;
+                                handleEscape();
                                 event.accepted = true;
                                 break;
                             case Qt.Key_Tab:
@@ -111,17 +134,36 @@ Item {
                                 event.accepted = true;
                                 break;
                             case Qt.Key_Down:
-                                if (listView.count > 0) {
+                                if (listView.count > 0)
                                     listView.currentIndex = Math.min(listView.currentIndex + 1, listView.count - 1);
-                                    event.accepted = true;
-                                }
+                                event.accepted = true;
                                 break;
                             case Qt.Key_Up:
-                                if (listView.count > 0) {
+                                if (listView.count > 0)
                                     listView.currentIndex = Math.max(listView.currentIndex - 1, 0);
+                                event.accepted = true;
+                                break;
+                            case Qt.Key_Backspace:
+                                if (LauncherServices.isSubPage && search.text === LauncherServices.currentCrumb) {
+                                    LauncherServices.goBack();
                                     event.accepted = true;
                                 }
                                 break;
+                            }
+                        }
+
+                        function handleEscape(): void {
+                            if (LauncherServices.isSubPage) {
+                                LauncherServices.goBack();
+                                return;
+                            }
+
+                            const now = Date.now();
+                            if (now - LauncherServices.lastEscapeAt < 600) {
+                                LauncherServices.lastEscapeAt = 0;
+                                GlobalStates.isLauncherOpen = false;
+                            } else {
+                                LauncherServices.lastEscapeAt = now;
                             }
                         }
                     }
@@ -129,13 +171,14 @@ Item {
                     ListView {
                         id: listView
 
-                        property var searchResults: SearchEngine.searchApps(DesktopEntries.applications.values, search.text)
-
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         model: ScriptModel {
-                            values: listView.searchResults
+                            values: LauncherServices.filteredItems
                         }
+                        section.property: "section"
+                        section.criteria: ViewSection.FullString
+                        section.delegate: sectionHeader
                         clip: true
                         spacing: Appearance.spacing.normal
                         cacheBuffer: implicitHeight
@@ -200,98 +243,71 @@ Item {
                             }
                         }
 
-                        delegate: ItemDelegate {
-                            id: delegateItem
-
-                            required property DesktopEntry modelData
-                            required property int index
-
+                        delegate: LauncherRow {
                             implicitWidth: listView.width
-                            implicitHeight: 50
-                            contentItem: RowLayout {
-                                spacing: Appearance.spacing.normal
 
-                                StyledRect {
-                                    Layout.alignment: Qt.AlignVCenter
-                                    Layout.leftMargin: Appearance.margin.normal
-                                    implicitWidth: 40
-                                    implicitHeight: 40
-                                    clip: true
+                            onRowClicked: row => LauncherServices.activateRow(row)
+                            onRowHovered: rowIndex => listView.currentIndex = rowIndex
+                        }
 
-                                    Behavior on border.width {
-                                        NAnim {}
+                        Component {
+                            id: sectionHeader
+
+                            Item {
+                                id: sectionHeaderRoot
+
+                                required property string section
+
+                                width: listView.width
+                                height: sectionHeaderRoot.section !== "" ? sectionRow.implicitHeight + Appearance.spacing.small : 0
+                                visible: sectionHeaderRoot.section !== ""
+
+                                RowLayout {
+                                    id: sectionRow
+
+                                    anchors {
+                                        left: parent.left
+                                        right: parent.right
+                                        verticalCenter: parent.verticalCenter
+                                        leftMargin: Appearance.margin.normal
                                     }
-                                    Behavior on border.color {
-                                        CAnim {}
-                                    }
-
-                                    IconImage {
-                                        anchors.centerIn: parent
-                                        implicitSize: parent.height
-                                        backer.cache: true
-                                        source: Quickshell.iconPath(delegateItem.modelData.icon, "image-missing")
-                                        asynchronous: true
-                                    }
-                                }
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    Layout.rightMargin: Appearance.margin.normal
-                                    spacing: 2
-
-                                    HighlightText {
-                                        Layout.fillWidth: true
-                                        searchText: search.text
-                                        fullText: delegateItem.modelData.name || ""
-                                        font.pixelSize: Appearance.fonts.size.large
-                                        elide: Text.ElideRight
-                                        font.weight: Font.DemiBold
-                                        color: Colours.m3Colors.m3OnSurface
-                                    }
-
+                                    spacing: Appearance.spacing.small
                                     StyledText {
-                                        Layout.fillWidth: true
-                                        text: delegateItem.modelData.comment
+                                        text: sectionHeaderRoot.section
                                         font.pixelSize: Appearance.fonts.size.small
-                                        elide: Text.ElideRight
-                                        color: Colours.m3Colors.m3OnSurfaceVariant
+                                        font.weight: Font.DemiBold
+                                        color: Colours.m3Colors.m3Primary
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillWidth: true
+                                        Layout.preferredHeight: 1
+                                        Layout.alignment: Qt.AlignVCenter
+                                        Layout.rightMargin: Appearance.margin.normal
+                                        color: Colours.m3Colors.m3OutlineVariant
+                                        opacity: 0.5
                                     }
                                 }
                             }
-
-                            background: Item {}
-
-                            MArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                hoverEnabled: true
-                                onClicked: {
-                                    root.launch(delegateItem.modelData);
-                                    GlobalStates.isLauncherOpen = false;
-                                }
-                            }
-                            Keys.onPressed: function (event) {
-                                switch (event.key) {
-                                case Qt.Key_Return:
-                                case Qt.Key_Enter:
-                                    root.launch(delegateItem.modelData);
-                                    GlobalStates.isLauncherOpen = false;
-                                    event.accepted = true;
-                                    break;
-                                case Qt.Key_Escape:
-                                    GlobalStates.isLauncherOpen = false;
-                                    event.accepted = true;
-                                    break;
-                                }
-                            }
                         }
-                        StyledText {
-                            anchors.centerIn: parent
-                            visible: listView.count === 0 && search.text !== ""
-                            text: qsTr("No applications found")
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            font.pixelSize: Appearance.fonts.size.large
-                        }
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
+                        visible: listView.count === 0 && (LauncherServices.isSubPage || search.text !== "")
+                        text: LauncherServices.emptyText
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.large
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        horizontalAlignment: Text.AlignHCenter
+                        visible: search.text === "" && !LauncherServices.isSubPage
+                        text: qsTr("Apps and sections · pick Screenshot for captures")
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.small
                     }
                 }
             }

@@ -43,8 +43,6 @@ Variants {
                 return true;
             if (GlobalStates.isWallpaperSwitcherOpen)
                 return true;
-            if (GlobalStates.isScreenCapturePanelOpen)
-                return true;
             if (GlobalStates.isClipboardOpen)
                 return true;
             if (GlobalStates.hasInlineReply)
@@ -192,8 +190,8 @@ Variants {
             }
         }
 
-        App {
-            id: appDrawer
+        Launcher {
+            id: launcher
         }
 
         Bar {
@@ -218,8 +216,6 @@ Variants {
         }
 
         WallpaperSelector {}
-
-        Screencapture {}
 
         CaptureScreenVideo {}
 
