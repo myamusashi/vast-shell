@@ -53,16 +53,7 @@ SettingsPageBase {
             Layout.fillWidth: true
             placeHolderText: qsTr("Search wallpapers\u2026")
             toggleButtonVisible: false
-            onTextChanged: {
-                WallpaperFileModels.searchQuery = text;
-                searchDebounceTimer.restart();
-            }
-        }
-
-        Timer {
-            id: searchDebounceTimer
-            interval: 300
-            onTriggered: WallpaperFileModels.debouncedSearchQuery = searchField.text
+            onTextChanged: WallpaperFileModels.searchQuery = text
         }
 
         PathView {

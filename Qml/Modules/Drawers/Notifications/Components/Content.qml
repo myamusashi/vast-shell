@@ -70,13 +70,13 @@ Column {
 
             color: Colours.m3Colors.m3OnSurfaceVariant
             Layout.preferredWidth: implicitWidth
-            Component.onCompleted: text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
+            Component.onCompleted: text = FormatTimeUtils.timeAgoWithIfElse(root.modelData.time)
 
             Timer {
                 interval: 60000
                 running: root.visible
                 repeat: true
-                onTriggered: timeText.text = TimeAgo.timeAgoWithIfElse(root.modelData.time)
+                onTriggered: timeText.text = FormatTimeUtils.timeAgoWithIfElse(root.modelData.time)
             }
         }
 

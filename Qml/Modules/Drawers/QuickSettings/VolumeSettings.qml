@@ -7,13 +7,13 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
 import Vast.Audio
-import Vast.Utils
 
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Widgets
 import qs.Services
 import qs.Components.Base
+import qs.Components.Effects
 
 ScrollView {
     id: root
@@ -80,42 +80,10 @@ ScrollView {
                     StyledRect {
                         id: sinkIndicator
                         property color target: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : "transparent"
-                        property color colorFrom
-                        property color colorTo
-                        property bool colorBlending: false
-                        property real colorBlendProgress: 1.0
-                        onColorBlendProgressChanged: {
-                            if (!colorBlending)
-                                return;
-                            if (colorBlendProgress >= 1) {
-                                color = colorTo;
-                                colorBlending = false;
-                            } else if (colorBlendProgress > 0) {
-                                color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                            }
-                        }
-                        onTargetChanged: {
-                            colorBlendAnim.stop();
-                            colorFrom = color;
-                            colorTo = target;
-                            colorBlending = true;
-                            colorBlendProgress = 0.0;
-                            colorBlendAnim.start();
-                        }
 
-                        implicitWidth: 15
-                        implicitHeight: 15
-                        radius: Appearance.rounding.full
-                        border.width: 2
-                        border.color: Colours.m3Colors.m3Primary
-
-                        NAnim {
-                            id: colorBlendAnim
-                            target: sinkIndicator
-                            property: "colorBlendProgress"
-                            from: 0.0
-                            to: 1.0
-                            duration: Appearance.animations.durations.small
+                        BlendColor {
+                            host: sinkIndicator
+                            target: sinkIndicator.target
                         }
                     }
 

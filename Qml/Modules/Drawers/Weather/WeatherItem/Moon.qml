@@ -14,39 +14,7 @@ import qs.Components.Base
 MaterialShape {
     id: canvas
 
-    property real moonriseProgress: calculateMoonProgress()
-
-    color: Colours.m3Colors.m3SurfaceContainer
-    shape: MaterialShape.Square
-
-    function calculateMoonProgress() {
-        var now = new Date();
-        var currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        var moonriseParts = Weather.moonRise.split(":");
-        var moonriseMinutes = parseInt(moonriseParts[0]) * 60 + parseInt(moonriseParts[1]);
-
-        var moonsetParts = Weather.moonSet.split(":");
-        var moonsetMinutes = parseInt(moonsetParts[0]) * 60 + parseInt(moonsetParts[1]);
-
-        if (currentMinutes < moonriseMinutes) {
-            return 0;
-        } else if (currentMinutes > moonsetMinutes) {
-            return 1;
-        } else {
-            var dayLength = moonsetMinutes - moonriseMinutes;
-            var elapsed = currentMinutes - moonriseMinutes;
-            return elapsed / dayLength;
-        }
-    }
-
-    Timer {
-        interval: 60000
-        running: true
-        repeat: true
-        onTriggered: canvas.moonriseProgress = canvas.calculateMoonProgress()
-    }
-
+    property real moonriseProgress: CelestialProgress.progressBetween(Weather.moonRise, Weather.moonSet)
     ClippingWrapperRectangle {
         anchors.fill: parent
         color: "transparent"
@@ -122,7 +90,7 @@ MaterialShape {
                         }
 
                         StyledText {
-                            text: TimeAgo.convertTo12Hour(Weather.moonRise)
+                            text: FormatTimeUtils.convertTo12Hour(Weather.moonRise)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
                         }
@@ -147,7 +115,7 @@ MaterialShape {
                                 leftMargin: 4
                                 verticalCenter: moonsetIcon.verticalCenter
                             }
-                            text: TimeAgo.convertTo12Hour(Weather.moonSet)
+                            text: FormatTimeUtils.convertTo12Hour(Weather.moonSet)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
                         }

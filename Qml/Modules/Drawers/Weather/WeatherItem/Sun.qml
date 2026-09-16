@@ -14,39 +14,7 @@ import qs.Components.Base
 MaterialShape {
     id: canvas
 
-    property real sunriseProgress: calculateSunProgress()
-
-    color: Colours.m3Colors.m3SurfaceContainerHighest
-    shape: MaterialShape.Square
-    animationDuration: 0
-
-    function calculateSunProgress(): double {
-        var now = new Date();
-        var currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        var sunriseParts = Weather.sunRise.split(":");
-        var sunriseMinutes = parseInt(sunriseParts[0]) * 60 + parseInt(sunriseParts[1]);
-
-        var sunsetParts = Weather.sunSet.split(":");
-        var sunsetMinutes = parseInt(sunsetParts[0]) * 60 + parseInt(sunsetParts[1]);
-
-        if (currentMinutes < sunriseMinutes) {
-            return 0;
-        } else if (currentMinutes > sunsetMinutes) {
-            return 1;
-        } else {
-            var dayLength = sunsetMinutes - sunriseMinutes;
-            var elapsed = currentMinutes - sunriseMinutes;
-            return elapsed / dayLength;
-        }
-    }
-
-    Timer {
-        interval: 60000
-        running: true
-        repeat: true
-        onTriggered: canvas.sunriseProgress = canvas.calculateSunProgress()
-    }
+    property real sunriseProgress: CelestialProgress.progressBetween(Weather.sunRise, Weather.sunSet)
 
     ClippingWrapperRectangle {
         anchors.fill: parent
@@ -134,7 +102,7 @@ MaterialShape {
                         }
 
                         StyledText {
-                            text: TimeAgo.convertTo12Hour(Weather.sunRise)
+                            text: FormatTimeUtils.convertTo12Hour(Weather.sunRise)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
                         }
@@ -152,7 +120,7 @@ MaterialShape {
                         }
 
                         StyledText {
-                            text: TimeAgo.convertTo12Hour(Weather.sunSet)
+                            text: FormatTimeUtils.convertTo12Hour(Weather.sunSet)
                             font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
                         }

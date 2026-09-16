@@ -58,7 +58,7 @@ ColumnLayout {
 
         StyledText {
             anchors.centerIn: volumeIcon
-            text: (Pipewire.defaultAudioSink.audio.volume * 100).toFixed(0)
+            text: VolumeUtils.toPercent(Pipewire.defaultAudioSink.audio.volume)
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.DemiBold
@@ -99,7 +99,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: root.sliderHeight
         orientation: Qt.Vertical
-        popupValueFormat: volumeValue => Math.round(volumeValue * 100)
+        popupValueFormat: VolumeUtils.toPercent
         value: Pipewire.defaultAudioSink.audio.volume
         onMoved: Pipewire.defaultAudioSink.audio.volume = value
         onValueChanged: {

@@ -56,7 +56,7 @@ vast-shell/
 │   │   ├── States/            # GlobalStates (IPC handlers, OSD, panels),
 │   │   │                      # Workspaces
 │   │   └── Utils/             # DistroAscii, Dots, HighlightText, Icon, Log,
-│   │                          # MArea, Paths, ScreenSelection, Time, TimeAgo, WeatherIcon
+│   │                          # MArea, Paths, ScreenSelection, Time, FormatTimeUtils, WeatherIcon
 │   │
 │   ├── Services/              # Audio, Battery, Brightness, CalendarMajorEvents,
 │   │                          # Colours, DepthWallpaperController, Fontlist, Hotspot,

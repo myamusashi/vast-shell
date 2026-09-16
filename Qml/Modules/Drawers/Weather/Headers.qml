@@ -238,7 +238,7 @@ ColumnLayout {
                 }
 
                 StyledText {
-                    text: TimeAgo.formatTimestampRelative(parseInt(Weather.lastUpdateWeather))
+                    text: FormatTimeUtils.formatTimestampRelative(parseInt(Weather.lastUpdateWeather))
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold

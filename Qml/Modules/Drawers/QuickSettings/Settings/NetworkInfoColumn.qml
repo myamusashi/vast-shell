@@ -135,20 +135,7 @@ ColumnLayout {
                 Icon {
                     type: Icon.Material
                     anchors.centerIn: parent
-                    icon: {
-                        if (!wifiCard.isConnected)
-                            return "wifi_off";
-                        const s = wifiCard.connectedNetwork.signalStrength;
-                        if (s >= 0.8)
-                            return "network_wifi";
-                        if (s >= 0.5)
-                            return "network_wifi_3_bar";
-                        if (s >= 0.3)
-                            return "network_wifi_2_bar";
-                        if (s >= 0.15)
-                            return "network_wifi_1_bar";
-                        return "signal_wifi_0_bar";
-                    }
+                    icon: !wifiCard.isConnected ? "wifi_off" : WifiUtils.iconFor(wifiCard.connectedNetwork.signalStrength, false)
                     color: wifiCard.isConnected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge
                 }

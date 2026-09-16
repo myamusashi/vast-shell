@@ -18,7 +18,6 @@ StyledTextInput {
 
     onTextChanged: {
         WallpaperFileModels.searchQuery = text;
-        searchDebounceTimer.restart();
         if (carousel && carousel.count > 0)
             carousel.currentIndex = 0;
     }
@@ -62,10 +61,4 @@ StyledTextInput {
         }
     }
 
-    Timer {
-        id: searchDebounceTimer
-
-        interval: 300
-        onTriggered: WallpaperFileModels.debouncedSearchQuery = root.text
-    }
 }

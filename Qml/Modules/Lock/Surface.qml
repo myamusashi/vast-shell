@@ -9,7 +9,6 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
-import Vast.Utils
 
 WlSessionLockSurface {
     id: root
@@ -27,22 +26,6 @@ WlSessionLockSurface {
 
     color: "transparent"
     property bool zoomedIn: false
-
-    property color colorFrom
-    property color colorTo
-    property bool colorBlending: false
-    property real colorBlendProgress: 1.0
-
-    onColorBlendProgressChanged: {
-        if (!colorBlending)
-            return;
-        if (colorBlendProgress >= 1) {
-            bottomItem.lockIcon.color = colorTo;
-            colorBlending = false;
-        } else if (colorBlendProgress > 0) {
-            bottomItem.lockIcon.color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-        }
-    }
 
     onInputBufferChanged: {
         var diff = inputBuffer.length - maskedBuffer.length;
@@ -62,15 +45,6 @@ WlSessionLockSurface {
         }
     }
 
-    NAnim {
-        id: colorBlendAnim
-        target: root
-        property: "colorBlendProgress"
-        from: 0.0
-        to: 1.0
-        duration: Appearance.animations.durations.small
-        easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-    }
 
     Connections {
         target: root.lock
@@ -339,13 +313,6 @@ WlSessionLockSurface {
         NAnim {
             target: bottomItem.lockIcon
             property: "rotation"
-            to: 6
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-        }
-        NAnim {
-            target: bottomItem.lockIcon
-            property: "rotation"
             to: -6
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -359,12 +326,7 @@ WlSessionLockSurface {
         }
         ScriptAction {
             script: {
-                colorBlendAnim.stop();
-                colorFrom = bottomItem.lockIcon.color;
-                colorTo = Colours.m3Colors.m3Green;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim.start();
+                bottomItem.lockIcon.blendTo(Colours.m3Colors.m3Green);
                 bottomItem.iconName = "lock_open_right";
             }
         }

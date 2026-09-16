@@ -6,11 +6,11 @@ import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Effects
 import qs.Components.Menu
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import Vast.Utils
 
 StyledRect {
     id: root
@@ -91,40 +91,15 @@ StyledRect {
                 StyledRect {
                     id: bgTrayIcon
                     property color target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
-                    property color colorFrom
-                    property color colorTo
-                    property bool colorBlending: false
-                    property real colorBlendProgress: 1.0
-                    onColorBlendProgressChanged: {
-                        if (!colorBlending)
-                            return;
-                        if (colorBlendProgress >= 1) {
-                            color = colorTo;
-                            colorBlending = false;
-                        } else if (colorBlendProgress > 0) {
-                            color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                        }
-                    }
-                    onTargetChanged: {
-                        colorBlendAnim.stop();
-                        colorFrom = color;
-                        colorTo = target;
-                        colorBlending = true;
-                        colorBlendProgress = 0.0;
-                        colorBlendAnim.start();
+
+                    BlendColor {
+                        host: bgTrayIcon
+                        target: bgTrayIcon.target
                     }
 
                     width: 25
                     height: 25
                     radius: Appearance.rounding.normal
-
-                    NAnim {
-                        id: colorBlendAnim
-                        target: bgTrayIcon
-                        property: "colorBlendProgress"
-                        from: 0.0
-                        to: 1.0
-                    }
                 }
 
                 IconImage {

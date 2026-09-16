@@ -8,7 +8,6 @@ Singleton {
     id: root
 
     readonly property var monthNames: {
-        // Re-evaluate on hot reload; Qt.locale() follows the default QLocale set by TranslationManager.
         TranslationManager.currentLanguage;
 
         var locale = Qt.locale();
@@ -149,5 +148,76 @@ Singleton {
             result = result.replace(key, value);
 
         return result;
+    }
+
+    function formatDuration(seconds) {
+        if (seconds === null || seconds === undefined || isNaN(seconds) || seconds <= 0)
+            return "0:00";
+        const total = Math.floor(seconds);
+        const h = Math.floor(total / 3600);
+        const m = Math.floor((total % 3600) / 60);
+        const s = total % 60;
+        const ss = String(s).padStart(2, "0");
+        if (h > 0)
+            return h + ":" + String(m).padStart(2, "0") + ":" + ss;
+        return m + ":" + ss;
+    }
+
+    function formatBattery(seconds) {
+        if (!(seconds > 0))
+            return qsTr("N/A");
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60)
+            return minutes + qsTr(" min");
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return remainingMinutes > 0 ? hours + qsTr(" h ") + remainingMinutes + qsTr(" min") : hours + qsTr(" h");
+    }
+
+    function formatClipboard(ms) {
+        if (!(ms > 0))
+            return "";
+        const date = new Date(ms);
+        if (isNaN(date.getTime()))
+            return "";
+        return date.toLocaleString(Qt.locale(), "MMM d, hh:mm ap");
+    }
+
+    function formatLauncher(timestamp) {
+        const date = new Date(timestamp * 1000);
+        if (isNaN(date.getTime()))
+            return "";
+        return date.toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+        });
+    }
+
+    function formatSize(bytes) {
+        if (!(bytes >= 0))
+            return "";
+        if (bytes < 1024)
+            return bytes + " " + qsTr("B");
+        if (bytes < 1048576)
+            return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
+        if (bytes < 1073741824)
+            return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
+        return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
+    }
+
+    function formatCompactAge(diffMs) {
+        const minutes = Math.floor(diffMs / 60000);
+        if (minutes < 1)
+            return qsTr("now");
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        if (days > 0)
+            return `${days}d`;
+        if (hours > 0)
+            return `${hours}h`;
+        return `${minutes}m`;
     }
 }

@@ -7,7 +7,7 @@ import Quickshell.Services.Pipewire
 
 import qs.Core.Configs
 import qs.Core.States
-
+import qs.Core.Utils
 Singleton {
     property alias linkTracker: linkTracker
 
@@ -46,11 +46,11 @@ Singleton {
         }
 
         function systemSet(percent: int): void {
-            Pipewire.defaultAudioSink.audio.volume = Math.max(0.0, Math.min(1.0, percent / 100));
+            Pipewire.defaultAudioSink.audio.volume = VolumeUtils.fromPercent(percent);
         }
 
         function systemChange(delta: int): void {
-            Pipewire.defaultAudioSink.audio.volume = Math.max(0.0, Math.min(1.0, Pipewire.defaultAudioSink.audio.volume + delta / 100));
+            Pipewire.defaultAudioSink.audio.volume = VolumeUtils.clamp(Pipewire.defaultAudioSink.audio.volume + delta / 100);
         }
 
         function systemMute(): void {
@@ -83,13 +83,13 @@ Singleton {
         function appSet(id: int, percent: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
-                stream.audio.volume = Math.max(0.0, Math.min(1.0, percent / 100));
+                stream.audio.volume = VolumeUtils.fromPercent(percent);
         }
 
         function appChange(id: int, delta: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
-                stream.audio.volume = Math.max(0.0, Math.min(1.0, stream.audio.volume + delta / 100));
+                stream.audio.volume = VolumeUtils.clamp(stream.audio.volume + delta / 100);
         }
 
         function appMute(id: int): void {

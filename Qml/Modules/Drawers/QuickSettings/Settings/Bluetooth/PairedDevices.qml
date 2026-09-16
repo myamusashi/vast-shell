@@ -6,10 +6,10 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import Vast.Utils
 
 ColumnLayout {
     spacing: Appearance.spacing.small * 0.5
@@ -34,38 +34,10 @@ ColumnLayout {
             required property var modelData
 
             property color target: modelData.connected ? Colours.m3Colors.m3Primary : tap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
 
-            onTargetChanged: {
-                colorBlendAnim.stop();
-                colorFrom = color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim.start();
-            }
-
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            NAnim {
-                id: colorBlendAnim
-                target: pairedDelegate
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-                duration: Appearance.animations.durations.small
+            BlendColor {
+                host: pairedDelegate
+                target: pairedDelegate.target
             }
 
             Layout.fillWidth: true

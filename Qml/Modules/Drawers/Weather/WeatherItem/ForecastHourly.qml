@@ -64,14 +64,7 @@ StyledRect {
 
                 Repeater {
                     model: ScriptModel {
-                        values: (function () {
-                                const currentHour = new Date().getHours();
-                                return Weather.hourlyForecast.filter(function (forecast) {
-                                    const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
-                                    const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                                    return forecastHour >= currentHour;
-                                });
-                            })()
+                        values: Weather.hourlyFromNow(Weather.hourlyForecast)
                     }
                     delegate: StyledRect {
                         id: delegate
@@ -82,12 +75,7 @@ StyledRect {
                         implicitHeight: 130
                         radius: Appearance.rounding.normal
 
-                        readonly property bool isCurrentHour: {
-                            const currentHour = new Date().getHours();
-                            const timeStr = (modelData.time || "").split(" ")[1] || modelData.time || "";
-                            const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                            return currentHour === forecastHour;
-                        }
+                        readonly property bool isCurrentHour: Weather.isCurrentForecastHour(modelData)
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -137,7 +125,7 @@ StyledRect {
 
                             StyledText {
                                 Layout.alignment: Qt.AlignHCenter
-                                text: TimeAgo.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
+                                text: FormatTimeUtils.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
                                 color: Colours.m3Colors.m3OnSurface
                                 font.weight: Font.Bold
                                 font.pixelSize: Appearance.fonts.size.small

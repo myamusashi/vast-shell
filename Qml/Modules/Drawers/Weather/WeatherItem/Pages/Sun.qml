@@ -5,44 +5,16 @@ import QtQuick.Shapes
 import Quickshell.Widgets
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
-
 import "Markdown"
 
 Pages {
     id: root
 
-    property real sunriseProgress: calculateSunProgress()
+    property real sunriseProgress: CelestialProgress.progressBetween(Weather.sunRise, Weather.sunSet)
     content: Sun {}
-
-    function calculateSunProgress() {
-        var now = new Date();
-        var currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        var sunriseParts = Weather.sunRise.split(":");
-        var sunriseMinutes = parseInt(sunriseParts[0]) * 60 + parseInt(sunriseParts[1]);
-
-        var sunsetParts = Weather.sunSet.split(":");
-        var sunsetMinutes = parseInt(sunsetParts[0]) * 60 + parseInt(sunsetParts[1]);
-
-        if (currentMinutes < sunriseMinutes) {
-            return 0;
-        } else if (currentMinutes > sunsetMinutes) {
-            return 1;
-        } else {
-            var dayLength = sunsetMinutes - sunriseMinutes;
-            var elapsed = currentMinutes - sunriseMinutes;
-            return elapsed / dayLength;
-        }
-    }
-
-    Timer {
-        interval: 60000
-        running: true
-        repeat: true
-        onTriggered: root.sunriseProgress = root.calculateSunProgress()
-    }
 
     component Sun: Column {
         anchors {

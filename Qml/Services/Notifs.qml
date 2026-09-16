@@ -319,22 +319,7 @@ Singleton {
             }
         }
 
-        readonly property string timeStr: {
-            const diff = Time.date.getTime() - time.getTime();
-            const minutes = Math.floor(diff / 60000);
-
-            if (minutes < 1)
-                return qsTr("now");
-
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-
-            if (days > 0)
-                return `${days}d`;
-            if (hours > 0)
-                return `${hours}h`;
-            return `${minutes}m`;
-        }
+        readonly property string timeStr: FormatTimeUtils.formatCompactAge(Time.date.getTime() - time.getTime())
         property bool popup: false
         property bool closed: false
 

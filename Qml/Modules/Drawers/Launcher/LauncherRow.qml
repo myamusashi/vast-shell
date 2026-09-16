@@ -90,7 +90,7 @@ ItemDelegate {
                 visible: text !== ""
                 text: {
                     if (root.modelData.kind === "shotFile")
-                        return LauncherServices.formatTimestamp(root.modelData.file.created);
+                        return FormatTimeUtils.formatLauncher(root.modelData.file.created);
                     return root.modelData.comment ?? "";
                 }
                 font.pixelSize: Appearance.fonts.size.small

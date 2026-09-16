@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Io
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
 
@@ -13,9 +12,7 @@ import qs.Core.Utils
 import qs.Components.Base
 import qs.Components.Button
 import qs.Services
-import Vast.ImageCache
 import Vast.Lyrics
-import Vast.Utils
 
 StyledRect {
     id: mediaPlayerRect
@@ -26,24 +23,7 @@ StyledRect {
     color: GlobalStates.drawerColors
     radius: Appearance.rounding.normal
 
-    property url url: ""
-    property string cachedArtPath: ""
-    readonly property var fallbackTrackArtColors: ({
-            primary: Colours.m3Colors.m3Primary,
-            onPrimary: Colours.m3Colors.m3OnPrimary,
-            primaryContainer: Colours.m3Colors.m3PrimaryContainer,
-            onPrimaryContainer: Colours.m3Colors.m3OnPrimaryContainer,
-            secondary: Colours.m3Colors.m3Secondary,
-            onSecondary: Colours.m3Colors.m3OnSecondary,
-            tertiary: Colours.m3Colors.m3Tertiary,
-            onTertiary: Colours.m3Colors.m3OnTertiary,
-            surface: Colours.m3Colors.m3SurfaceContainerHighest,
-            surfaceVariant: Colours.m3Colors.m3SurfaceVariant,
-            onSurface: Colours.m3Colors.m3OnSurface,
-            onSurfaceVariant: Colours.m3Colors.m3OnSurfaceVariant,
-            outline: Colours.m3Colors.m3Outline
-        })
-    property var trackArtColors: fallbackTrackArtColors
+    property var trackArtColors: TrackArt.colors
 
     readonly property color dynPrimary: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.primary : Colours.m3Colors.m3Primary
     readonly property color dynOnSurface: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
@@ -53,83 +33,6 @@ StyledRect {
     readonly property color dynTertiary: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.tertiary : Colours.m3Colors.m3Tertiary
     readonly property color dynSurface: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.surface : Colours.m3Colors.m3Surface
     readonly property color dynSurfaceVariant: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.surfaceVariant : Colours.m3Colors.m3SurfaceVariant
-
-    Process {
-        id: artDownloader
-        property string targetPath: ""
-
-        function download(url) {
-            if (!url || url === "")
-                return;
-            const hash = Qt.md5(url);
-            targetPath = `/tmp/qs_art_${hash}.jpg`;
-            exec(["curl", "-sLz", targetPath, "-o", targetPath, url]);
-        }
-
-        onExited: function (exitCode, exitStatus) { // qmllint disable
-            if (exitStatus !== 0)
-                return;
-            if (exitCode === 0 && targetPath === `/tmp/qs_art_${Qt.md5(Players.active?.trackArtUrl ?? "")}.jpg`)
-                mediaPlayerRect.cachedArtPath = targetPath;
-        }
-    }
-
-    ColorMaterial {
-        id: trackArtMaterial
-
-        source: mediaPlayerRect.cachedArtPath
-        darkMode: Configs.colors.isDarkMode
-        scheme: Colours.schemeEnum(Configs.colors.scheme)
-        onColorsChanged: {
-            if (ready)
-                mediaPlayerRect.trackArtColors = colors;
-        }
-    }
-
-    Connections {
-        target: Players
-
-        function onIndexChanged() {
-            mediaPlayerRect.refreshTrackArt();
-        }
-    }
-
-    onCachedArtPathChanged: {
-        trackArtColors = fallbackTrackArtColors;
-    }
-
-    Connections {
-        target: Players.active
-
-        function onTrackChanged() {
-            mediaPlayerRect.refreshTrackArt();
-        }
-
-        function onPostTrackChanged() {
-            mediaPlayerRect.refreshTrackArt();
-        }
-
-        function onTrackArtUrlChanged() {
-            mediaPlayerRect.refreshTrackArt();
-        }
-    }
-
-    function refreshTrackArt() {
-        const url = String(Players.active?.trackArtUrl ?? "");
-        mediaPlayerRect.cachedArtPath = "";
-        if (url.startsWith("http"))
-            artDownloader.download(url);
-        else
-            mediaPlayerRect.cachedArtPath = url;
-
-        const localPath = url.replace("file://", "");
-        if (localPath && !url.startsWith("http"))
-            ImageCache.copyAndPreload(localPath, Qt.size(300, 300));
-    }
-
-    Component.onCompleted: {
-        mediaPlayerRect.refreshTrackArt();
-    }
 
     Elevation {
         anchors.fill: parent

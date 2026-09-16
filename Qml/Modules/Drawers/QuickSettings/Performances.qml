@@ -37,24 +37,10 @@ Item {
 
             readonly property int totalApps: DesktopEntries.applications.values.filter(e => !e.runInTerminal).length
             readonly property int totalTerminalApps: DesktopEntries.applications.values.filter(e => e.runInTerminal).length
-            readonly property string batteryRemaining: formatBatteryTime(UPower.displayDevice.timeToEmpty ?? 0)
+            readonly property string batteryRemaining: FormatTimeUtils.formatBattery(UPower.displayDevice.timeToEmpty ?? 0)
 
             width: parent.width
             spacing: Appearance.spacing.small
-
-            function formatBatteryTime(seconds) {
-                if (seconds <= 0)
-                    return qsTr("N/A");
-
-                const minutes = Math.floor(seconds / 60);
-                const hours = Math.floor(minutes / 60);
-                const remainingMinutes = minutes % 60;
-
-                if (minutes < 60)
-                    return minutes + qsTr(" min");
-
-                return remainingMinutes > 0 ? hours + qsTr(" h ") + remainingMinutes + qsTr(" min") : hours + qsTr(" h");
-            }
 
             Item {
                 Layout.fillWidth: true
@@ -503,13 +489,7 @@ Item {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            var cardCenter = osInfoPopup.mapToItem(wrapper, osInfoPopup.width / 2, osInfoPopup.height / 2);
-
-                            osInfoPopup.zoomOriginX = cardCenter.x;
-                            osInfoPopup.zoomOriginY = cardCenter.y;
-                            osInfoPopup.isVisible = true;
-                        }
+                        onClicked: osInfoPopup.openFrom(wrapper)
                     }
                 }
             }

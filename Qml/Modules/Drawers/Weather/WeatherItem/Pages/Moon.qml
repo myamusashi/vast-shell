@@ -17,59 +17,6 @@ Pages {
 
     content: Moon {}
 
-    property real moonRiseProgress: calculateMoonProgress()
-
-    function calculateMoonProgress() {
-        var now = new Date();
-        var currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        var moonriseParts = Weather.moonRise.split(":");
-        var moonriseMinutes = parseInt(moonriseParts[0]) * 60 + parseInt(moonriseParts[1]);
-
-        var moonsetParts = Weather.moonSet.split(":");
-        var moonsetMinutes = parseInt(moonsetParts[0]) * 60 + parseInt(moonsetParts[1]);
-
-        if (currentMinutes < moonriseMinutes) {
-            return 0;
-        } else if (currentMinutes > moonsetMinutes) {
-            return 1;
-        } else {
-            var dayLength = moonsetMinutes - moonriseMinutes;
-            var elapsed = currentMinutes - moonriseMinutes;
-            return elapsed / dayLength;
-        }
-    }
-
-    function getMoonPhaseText(phase) {
-        switch (phase) {
-        case "New Moon":
-            return qsTr("New Moon");
-        case "Waxing Crescent":
-            return qsTr("Waxing Crescent");
-        case "First Quarter":
-            return qsTr("First Quarter");
-        case "Waxing Gibbous":
-            return qsTr("Waxing Gibbous");
-        case "Full Moon":
-            return qsTr("Full Moon");
-        case "Waning Gibbous":
-            return qsTr("Waning Gibbous");
-        case "Last Quarter":
-            return qsTr("Last Quarter");
-        case "Waning Crescent":
-            return qsTr("Waning Crescent");
-        default:
-            return phase || qsTr("Unknown");
-        }
-    }
-
-    Timer {
-        interval: 60000
-        running: true
-        repeat: true
-        onTriggered: root.moonRiseProgress = root.calculateMoonProgress()
-    }
-
     component Moon: ScrollView {
         anchors.fill: parent
         anchors.topMargin: 20
@@ -101,7 +48,7 @@ Pages {
                         Layout.alignment: Qt.AlignLeft
 
                         StyledText {
-                            text: root.getMoonPhaseText(Weather.moonPhase)
+                            text: Weather.moonPhaseText(Weather.moonPhase)
                             color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.extraLarge
                         }

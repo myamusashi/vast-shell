@@ -13,49 +13,9 @@ MaterialShape {
     id: canvas
 
     property int aqi: Weather.usAQI
-    property var aqiCategories: [
-        {
-            max: 50,
-            label: qsTr("Good"),
-            color: Colours.m3Colors.m3Green
-        },
-        {
-            max: 100,
-            label: qsTr("Fair"),
-            color: Colours.m3Colors.m3Yellow
-        },
-        {
-            max: 150,
-            label: qsTr("Moderate"),
-            color: Colours.m3Colors.m3Orange
-        },
-        {
-            max: 200,
-            label: qsTr("Poor"),
-            color: Colours.m3Colors.m3Red
-        },
-        {
-            max: 300,
-            label: qsTr("Very Poor"),
-            color: Colours.m3Colors.m3Purple
-        },
-        {
-            max: 500,
-            label: qsTr("Hazardous"),
-            color: Colours.m3Colors.m3Maroon
-        }
-    ]
-
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
 
-    function getAQICategory(value) {
-        for (var i = 0; i < aqiCategories.length; i++)
-            if (value <= aqiCategories[i].max)
-                return aqiCategories[i];
-
-        return aqiCategories[aqiCategories.length - 1];
-    }
 
     ColumnLayout {
         anchors {
@@ -173,7 +133,7 @@ MaterialShape {
 
         StyledText {
             Layout.alignment: Qt.AlignRight
-            text: canvas.getAQICategory(canvas.aqi).label
+            text: AqiScale.categoryFor(canvas.aqi).label
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.Medium
             color: Colours.m3Colors.m3OnSurface

@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 import qs.Components.Button
@@ -48,21 +49,6 @@ Pages {
 
         property string description: currentScale.description
 
-        function sliderFraction(value, bounds, max) {
-            const segmentCount = bounds.length + 1;
-            const segmentWidth = 1 / segmentCount;
-
-            let lowerBound = 0;
-            for (let i = 0; i < bounds.length; i++) {
-                const upperBound = bounds[i];
-                if (value <= upperBound)
-                    return (i + (value - lowerBound) / (upperBound - lowerBound)) * segmentWidth;
-
-                lowerBound = upperBound;
-            }
-
-            return Math.min(1, (segmentCount - 1 + (value - lowerBound) / (max - lowerBound)) * segmentWidth);
-        }
 
         Header {
             icon: "waves"
@@ -154,7 +140,7 @@ Pages {
                         border.color: Colours.m3Colors.m3OnSurface
                         x: {
                             const scale = column.currentScale;
-                            const position = column.sliderFraction(scale.value, scale.bounds, scale.max);
+                            const position = AqiScale.fraction(scale.value, scale.bounds, scale.max);
 
                             return Math.min(Math.max(0, position * parent.width - width / 2), parent.width - width);
                         }

@@ -32,20 +32,6 @@ Item {
         ClipboardManager.requestFullEntry(root.entryId);
     }
 
-    function formatTimestamp(ms: int): string {
-        if (ms <= 0)
-            return "";
-        return new Date(ms).toLocaleString(Qt.locale(), "MMM d, hh:mm ap");
-    }
-
-    function formatSize(bytes: int): string {
-        if (bytes < 1024)
-            return bytes + " B";
-        if (bytes < 1048576)
-            return (bytes / 1024).toFixed(1) + " KB";
-        return (bytes / 1048576).toFixed(1) + " MB";
-    }
-
     Connections {
         target: ClipboardManager
 
@@ -60,7 +46,7 @@ Item {
             entryDetails.sourceApp = entry.sourceApp ?? "";
             entryDetails.pinned = entry.pinned ?? false;
             entryDetails.sizeBytes = entry.sizeBytes ?? 0;
-            entryDetails.timestamp = root.formatTimestamp(entry.timestamp ?? 0);
+            entryDetails.timestamp = FormatTimeUtils.formatClipboard(entry.timestamp ?? 0);
             entryDetails.fileName = entry.fileName ?? "";
 
             entryDetails.previewPath = entry.previewPath ?? "";
@@ -279,7 +265,7 @@ Item {
                     }
 
                     StyledText {
-                        text: root.formatSize(entryDetails.sizeBytes)
+                        text: FormatTimeUtils.formatSize(entryDetails.sizeBytes)
                         font.pixelSize: Appearance.fonts.size.small
                         color: Colours.m3Colors.m3OnSurfaceVariant
                     }
@@ -367,7 +353,7 @@ Item {
                 StyledText {
                     Layout.fillWidth: true
                     visible: entryDetails.truncated
-                    text: qsTr("Preview truncated (%1 of %2 shown) — copy to get the full content").arg(root.formatSize(entryDetails.maxPreviewChars)).arg(root.formatSize(entryDetails.content.length))
+                    text: qsTr("Preview truncated (%1 of %2 shown) — copy to get the full content").arg(FormatTimeUtils.formatSize(entryDetails.maxPreviewChars)).arg(FormatTimeUtils.formatSize(entryDetails.content.length))
                     font.pixelSize: Appearance.fonts.size.small
                     color: Colours.m3Colors.m3OnSurfaceVariant
                 }

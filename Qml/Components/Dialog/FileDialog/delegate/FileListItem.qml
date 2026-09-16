@@ -72,16 +72,6 @@ Rectangle {
         return dot >= 0 ? name.substring(dot + 1).toUpperCase() + " " + qsTr("file") : qsTr("File");
     }
 
-    function formatSize(bytes) {
-        if (bytes < 1024)
-            return bytes + " " + qsTr("B");
-        if (bytes < 1048576)
-            return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
-        if (bytes < 1073741824)
-            return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
-        return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
-    }
-
     property color target: root.isSelected ? Qt.alpha(Colours.m3Colors.m3Primary, 0.3) : "transparent"
     onTargetChanged: {
         rowColorAnim.stop();
@@ -249,7 +239,7 @@ Rectangle {
                 sizeColorAnim.start();
             }
 
-            text: root.isFolder ? "" : root.formatSize(root.fileSize)
+            text: root.isFolder ? "" : FormatTimeUtils.formatSize(root.fileSize)
             font.pixelSize: Appearance.fonts.size.small
             Layout.preferredWidth: 76
             horizontalAlignment: Text.AlignRight

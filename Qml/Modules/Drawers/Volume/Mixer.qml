@@ -56,7 +56,7 @@ Column {
 
         StyledText {
             anchors.centerIn: appIcon
-            text: (root.audioNode.audio.volume * 100).toFixed(0)
+            text: VolumeUtils.toPercent(root.audioNode.audio.volume)
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.DemiBold
@@ -89,7 +89,7 @@ Column {
         implicitWidth: root.itemSize
         implicitHeight: root.sliderHeight
         orientation: Qt.Vertical
-        popupValueFormat: volumeValue => Math.round(volumeValue * 100)
+        popupValueFormat: VolumeUtils.toPercent
         value: root.audioNode.audio.volume
         onMoved: root.audioNode.audio.volume = value
         onValueChanged: {

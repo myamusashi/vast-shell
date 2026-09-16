@@ -11,10 +11,10 @@ import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog
 import qs.Core.Configs
-import qs.Core.States
 import qs.Core.Utils
+import qs.Core.States
 import qs.Services
-import Vast.Utils
+import qs.Components.Effects
 
 import "../Components"
 
@@ -26,26 +26,6 @@ Item {
 
     WifiPskDialog {
         id: wifiPskDialog
-    }
-
-    readonly property var activeWifiDevice: {
-        for (const device of Networking.devices) {
-            if (device.type === DeviceType.Wifi)
-                return device;
-        }
-        return null;
-    }
-
-    function wifiIcon(strength) {
-        if (strength >= 0.8)
-            return "network_wifi";
-        if (strength >= 0.5)
-            return "network_wifi_3_bar";
-        if (strength >= 0.3)
-            return "network_wifi_2_bar";
-        if (strength >= 0.15)
-            return "network_wifi_1_bar";
-        return "signal_wifi_0_bar";
     }
 
     CardRevealer {
@@ -248,13 +228,7 @@ Item {
                                     values: {
                                         if (deviceDelegate.modelData.type !== DeviceType.Wifi) // qmllint disable
                                             return [];
-                                        return [...deviceDelegate.modelData.networks.values].sort((a, b) => {
-                                            if (a.connected !== b.connected)
-                                                return b.connected - a.connected;
-                                            if (a.known !== b.known)
-                                                return b.known - a.known;
-                                            return b.signalStrength - a.signalStrength;
-                                        });
+                                        return WifiUtils.sorted([...deviceDelegate.modelData.networks.values]);
                                     }
                                 }
 
@@ -262,27 +236,10 @@ Item {
                                     id: networkDelegate
 
                                     property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-                                    property color colorFrom
-                                    property color colorTo
-                                    property bool colorBlending: false
-                                    property real colorBlendProgress: 1.0
-                                    onColorBlendProgressChanged: {
-                                        if (!colorBlending)
-                                            return;
-                                        if (colorBlendProgress >= 1) {
-                                            color = colorTo;
-                                            colorBlending = false;
-                                        } else if (colorBlendProgress > 0) {
-                                            color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                                        }
-                                    }
-                                    onTargetChanged: {
-                                        colorBlendAnim.stop();
-                                        colorFrom = color;
-                                        colorTo = target;
-                                        colorBlending = true;
-                                        colorBlendProgress = 0.0;
-                                        colorBlendAnim.start();
+
+                                    BlendColor {
+                                        host: networkDelegate
+                                        target: networkDelegate.target
                                     }
 
                                     required property var modelData
@@ -291,15 +248,6 @@ Item {
                                     radius: Appearance.rounding.large
                                     margin: Appearance.margin.small
 
-                                    NAnim {
-                                        id: colorBlendAnim
-                                        target: networkDelegate
-                                        property: "colorBlendProgress"
-                                        from: 0.0
-                                        to: 1.0
-                                        duration: Appearance.animations.durations.small
-                                    }
-
                                     TapHandler {
                                         id: networkTap
 
@@ -307,20 +255,13 @@ Item {
                                     }
 
                                     function tryConnect() {
-                                        const net = networkDelegate.modelData;
-                                        if (!net || net.connected)
-                                            return;
-                                        if (net.known || net.security === WifiSecurityType.Open)
-                                            net.connect();
-                                        else
-                                            wifiPskDialog.show(net);
+                                        WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
                                     }
 
                                     Connections {
                                         target: networkDelegate.modelData
                                         function onConnectionFailed(reason) {
-                                            if (reason === ConnectionFailReason.NoSecrets)
-                                                wifiPskDialog.show(networkDelegate.modelData);
+                                            WifiUtils.handleConnectionFailed(networkDelegate.modelData, reason, net => wifiPskDialog.show(net));
                                         }
                                     }
 
@@ -346,18 +287,7 @@ Item {
 
                                             Icon {
                                                 anchors.fill: parent
-                                                icon: {
-                                                    const p = Math.round((networkDelegate.modelData?.signalStrength ?? 0) * 100);
-                                                    if (p >= 80)
-                                                        return networkDelegate.modelData && !networkDelegate.modelData.known ? "network_wifi_locked" : "network_wifi";
-                                                    if (p >= 50)
-                                                        return networkDelegate.modelData && !networkDelegate.modelData.known ? "network_wifi_3_bar_locked" : "network_wifi_3_bar";
-                                                    if (p >= 30)
-                                                        return networkDelegate.modelData && !networkDelegate.modelData.known ? "network_wifi_2_bar_locked" : "network_wifi_2_bar";
-                                                    if (p >= 15)
-                                                        return networkDelegate.modelData && !networkDelegate.modelData.known ? "network_wifi_1_bar_locked" : "network_wifi_1_bar";
-                                                    return "signal_wifi_0_bar";
-                                                }
+                                                icon: WifiUtils.iconFor(networkDelegate.modelData?.signalStrength ?? 0, networkDelegate.modelData ? !networkDelegate.modelData.known : false)
                                                 color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                                 font.pixelSize: Appearance.fonts.size.large * 1.5
                                             }

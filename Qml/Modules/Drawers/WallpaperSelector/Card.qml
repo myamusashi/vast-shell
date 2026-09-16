@@ -3,9 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Widgets
 import Vast.ImageCache
-import Vast.Utils
 
 import qs.Components.Base
+import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.Utils
 
@@ -114,42 +114,14 @@ Item {
             id: dimOverlay
 
             property color target: Qt.rgba(0, 0, 0, root.isCurrent ? 0.0 : 0.22)
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
 
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            onTargetChanged: {
-                colorBlendAnim.stop();
-                colorFrom = color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim.start();
+            BlendColor {
+                host: dimOverlay
+                target: dimOverlay.target
             }
 
             anchors.fill: parent
             radius: cardRect.radius
-
-            NAnim {
-                id: colorBlendAnim
-
-                target: dimOverlay
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-            }
         }
 
         MArea {

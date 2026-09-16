@@ -290,11 +290,11 @@ Item {
         clear();
     }
 
-    Timer {
+    DebouncedValue {
         id: searchDebounce
-
+        value: searchField.text.trim()
         interval: 200
-        onTriggered: root.runSearch()
+        onDebouncedValueChanged: root.runSearch()
     }
 
     RowLayout {
@@ -317,7 +317,6 @@ Item {
             toggleButtonVisible: false
             autoFocus: false
 
-            onTextChanged: searchDebounce.restart()
             onAccepted: {
                 if (root.selectedIndex >= 0 && root.selectedIndex < root.results.length)
                     root.activate(root.results[root.selectedIndex]);

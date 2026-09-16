@@ -6,10 +6,10 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import Vast.Utils
 
 ColumnLayout {
     visible: BluetoothServices.adapterEnabled
@@ -56,38 +56,10 @@ ColumnLayout {
             required property var modelData
 
             property color target: modelData.pairing ? Colours.m3Colors.m3Primary : tap2.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
 
-            onTargetChanged: {
-                colorBlendAnim2.stop();
-                colorFrom = color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim2.start();
-            }
-
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            NAnim {
-                id: colorBlendAnim2
-                target: availDelegate
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-                duration: Appearance.animations.durations.small
+            BlendColor {
+                host: availDelegate
+                target: availDelegate.target
             }
 
             Layout.fillWidth: true

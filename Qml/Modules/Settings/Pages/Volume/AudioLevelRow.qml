@@ -8,7 +8,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
-import Vast.Utils
+import qs.Components.Effects
 
 ColumnLayout {
     id: root
@@ -51,43 +51,16 @@ ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
 
             property color target: root.isCurrent ? Colours.m3Colors.m3Primary : "transparent"
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
 
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-            onTargetChanged: {
-                colorBlendAnim.stop();
-                colorFrom = color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim.start();
+            BlendColor {
+                host: defaultIndicator
+                target: defaultIndicator.target
             }
 
             radius: width / 2
             border.width: 2
             border.color: Colours.m3Colors.m3Primary
             color: "transparent"
-
-            NAnim {
-                id: colorBlendAnim
-                target: defaultIndicator
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-                duration: Appearance.animations.durations.small
-            }
 
             TapHandler {
                 onTapped: root.defaultRequested()

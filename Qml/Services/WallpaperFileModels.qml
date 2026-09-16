@@ -13,13 +13,18 @@ Singleton {
 
     property string currentWallpaper: Paths.currentWallpaper
     property string searchQuery: ""
-    property string debouncedSearchQuery: ""
+
+    DebouncedValue {
+        id: searchDebounce
+        value: root.searchQuery
+        interval: 300
+    }
     property var wallpaperList: []
     readonly property var filteredWallpaperList: {
-        if (debouncedSearchQuery === "")
+        if (searchDebounce.debouncedValue === "")
             return wallpaperList;
 
-        const query = debouncedSearchQuery.trim();
+        const query = searchDebounce.debouncedValue.trim();
         if (query === "")
             return wallpaperList;
 

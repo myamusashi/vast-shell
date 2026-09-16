@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Networking
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Core.States
 
 ListView {
@@ -44,13 +45,7 @@ ListView {
                 values: {
                     if (deviceDelegate.modelData.type !== DeviceType.Wifi) // qmllint disable
                         return [];
-                    return [...deviceDelegate.modelData.networks.values].sort((a, b) => {
-                        if (a.connected !== b.connected)
-                            return b.connected - a.connected;
-                        if (a.known !== b.known)
-                            return b.known - a.known;
-                        return b.signalStrength - a.signalStrength;
-                    });
+                    return WifiUtils.sorted([...deviceDelegate.modelData.networks.values]);
                 }
             }
 

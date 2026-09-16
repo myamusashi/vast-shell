@@ -148,16 +148,6 @@ LazyLoader {
             root.currentFolder = temp;
         }
 
-        function formatSize(bytes) {
-            if (bytes < 1024)
-                return bytes + " " + qsTr("B");
-            if (bytes < 1048576)
-                return (bytes / 1024).toFixed(1) + " " + qsTr("KiB");
-            if (bytes < 1073741824)
-                return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
-            return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
-        }
-
         FolderListModel {
             id: folderModel
 
@@ -357,13 +347,7 @@ LazyLoader {
                             }
 
                             StyledText {
-                                text: {
-                                    if (previewPanel.fileSize < 1024)
-                                        return previewPanel.fileSize + " B";
-                                    if (previewPanel.fileSize < 1048576)
-                                        return (previewPanel.fileSize / 1024).toFixed(1) + " KiB";
-                                    return (previewPanel.fileSize / 1048576).toFixed(1) + " MiB";
-                                }
+                                text: FormatTimeUtils.formatSize(previewPanel.fileSize)
                                 font.pixelSize: Appearance.fonts.size.small
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                             }

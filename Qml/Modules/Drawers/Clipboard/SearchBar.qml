@@ -10,6 +10,7 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+import qs.Components.Effects
 
 Item {
     id: root
@@ -44,42 +45,14 @@ Item {
             id: searchIcon
 
             property color target: searchField.isFocused ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
 
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            onTargetChanged: {
-                colorBlendAnim.stop();
-                colorFrom = color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim.start();
+            BlendColor {
+                host: searchIcon
+                target: searchIcon.target
             }
 
             icon: "search"
             font.pixelSize: Appearance.fonts.size.larger
-
-            NAnim {
-                id: colorBlendAnim
-
-                target: searchIcon
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-            }
         }
 
         StyledTextInput {

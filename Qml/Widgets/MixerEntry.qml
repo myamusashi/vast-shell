@@ -72,7 +72,7 @@ ColumnLayout {
 
             Layout.fillWidth: true
             Layout.preferredHeight: 44
-            popupValueFormat: volumeValue => Math.round(volumeValue * 100)
+            popupValueFormat: VolumeUtils.toPercent
             value: root.audioNode.audio.volume
             onMoved: root.audioNode.audio.volume = value
         }

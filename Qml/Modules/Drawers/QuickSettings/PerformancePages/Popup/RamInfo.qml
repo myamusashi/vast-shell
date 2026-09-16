@@ -1,10 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
-import Vast.Utils
 
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
+import qs.Components.Effects
 
 PopupWidget {
     icon: "memory"
@@ -103,27 +103,10 @@ PopupWidget {
         Rectangle {
             id: usedBar
             property color target: Colours.m3Colors.m3Green
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-            onTargetChanged: {
-                colorBlendAnim.stop();
-                colorFrom = color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                colorBlendAnim.start();
+
+            BlendColor {
+                host: usedBar
+                target: usedBar.target
             }
 
             anchors {
@@ -140,14 +123,7 @@ PopupWidget {
                     damping: 0.5
                 }
             }
-
-            NAnim {
-                id: colorBlendAnim
-                target: usedBar
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-            }
         }
+
     }
 }

@@ -56,11 +56,6 @@ StyledRect {
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         layerRadius: card.isTopLeft ? card.topLeftRadius : card.isTopRight ? card.topRightRadius : card.isBottomRight ? card.bottomRightRadius : card.isBottomLeft ? card.bottomLeftRadius : card.radius
-        onClicked: {
-            var cardCenter = card.mapToItem(card.zoomTarget, card.width / 2, card.height / 2);
-            card.zoomId.zoomOriginX = cardCenter.x;
-            card.zoomId.zoomOriginY = cardCenter.y;
-            card.zoomId.isVisible = true;
-        }
+        onClicked: card.zoomId.openFrom(card)
     }
 }

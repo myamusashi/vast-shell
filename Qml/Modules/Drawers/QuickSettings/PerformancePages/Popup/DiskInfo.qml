@@ -2,11 +2,11 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Vast.Utils
 
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
+import qs.Components.Effects
 
 PopupWidget {
     id: diskInfo
@@ -250,38 +250,11 @@ PopupWidget {
 
         StyledRect {
             id: systemAppsBar
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
-
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            NumberAnimation {
-                id: systemAppsColorAnim
-                target: systemAppsBar
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-            }
-
             property color target: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
-            onTargetChanged: {
-                systemAppsColorAnim.stop();
-                colorFrom = systemAppsBar.color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                systemAppsColorAnim.start();
+
+            BlendColor {
+                host: systemAppsBar
+                target: systemAppsBar.target
             }
 
             anchors {
@@ -303,38 +276,11 @@ PopupWidget {
 
         StyledRect {
             id: appsBar
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
-
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            NumberAnimation {
-                id: appsColorAnim
-                target: appsBar
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-            }
-
             property color target: Colours.m3Colors.m3Green
-            onTargetChanged: {
-                appsColorAnim.stop();
-                colorFrom = appsBar.color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                appsColorAnim.start();
+
+            BlendColor {
+                host: appsBar
+                target: appsBar.target
             }
 
             anchors {
@@ -374,38 +320,11 @@ PopupWidget {
 
         StyledRect {
             id: usedBar
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
-
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            NumberAnimation {
-                id: usedBarColorAnim
-                target: usedBar
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-            }
-
             property color target: Colours.m3Colors.m3Green
-            onTargetChanged: {
-                usedBarColorAnim.stop();
-                colorFrom = usedBar.color;
-                colorTo = target;
-                colorBlending = true;
-                colorBlendProgress = 0.0;
-                usedBarColorAnim.start();
+
+            BlendColor {
+                host: usedBar
+                target: usedBar.target
             }
 
             anchors {

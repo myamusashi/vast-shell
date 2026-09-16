@@ -365,7 +365,7 @@ Singleton {
         return weatherIcons[codeStr] || WeatherIcon.windy;
     }
 
-    function formatTime(timeStr) {
+    function formatHourOfDay(timeStr) {
         if (!timeStr)
             return "";
         try {
@@ -373,6 +373,46 @@ Singleton {
             return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         } catch (e) {
             return timeStr;
+        }
+    }
+
+    function forecastHour(entry) {
+        const time = String(entry?.time || "").split(" ")[1] || entry?.time || "";
+        return Number(String(time).split(":")[0]);
+    }
+
+    function hourlyFromNow(forecast) {
+        const currentHour = Math.floor(CelestialProgress.nowMinutes / 60);
+        return (forecast || []).filter(function (entry) {
+            const hour = forecastHour(entry);
+            return isFinite(hour) && hour >= currentHour;
+        });
+    }
+
+    function isCurrentForecastHour(entry) {
+        return forecastHour(entry) === Math.floor(CelestialProgress.nowMinutes / 60);
+    }
+
+    function moonPhaseText(phase) {
+        switch (phase) {
+        case "New Moon":
+            return qsTr("New Moon");
+        case "Waxing Crescent":
+            return qsTr("Waxing Crescent");
+        case "First Quarter":
+            return qsTr("First Quarter");
+        case "Waxing Gibbous":
+            return qsTr("Waxing Gibbous");
+        case "Full Moon":
+            return qsTr("Full Moon");
+        case "Waning Gibbous":
+            return qsTr("Waning Gibbous");
+        case "Last Quarter":
+            return qsTr("Last Quarter");
+        case "Waning Crescent":
+            return qsTr("Waning Crescent");
+        default:
+            return phase || qsTr("Unknown");
         }
     }
 
@@ -801,7 +841,7 @@ Singleton {
             for (var i = 0; i < (hourly.time || []).length && i < 24; i++) {
                 var hIsDay = hourly.is_day?.[i] === 1;
                 newHourly.push({
-                    time: formatTime(hourly.time[i]),
+                    time: formatHourOfDay(hourly.time[i]),
                     fullTime: hourly.time[i],
                     temperature: Math.round(hourly.temperature_2m?.[i] || 0),
                     humidity: hourly.relative_humidity_2m?.[i] || 0,
@@ -834,8 +874,8 @@ Singleton {
                     weatherCode: daily.weather_code?.[j] || 0,
                     weatherIcon: getWeatherIconFromCode(daily.weather_code?.[j], true),
                     rainProbability: daily.precipitation_probability_max?.[j] || 0,
-                    sunrise: formatTime(daily.sunrise?.[j] || ""),
-                    sunset: formatTime(daily.sunset?.[j] || ""),
+                    sunrise: formatHourOfDay(daily.sunrise?.[j] || ""),
+                    sunset: formatHourOfDay(daily.sunset?.[j] || ""),
                     precipitation: daily.precipitation_sum?.[j] || 0.0,
                     rain: daily.rain_sum?.[j] || 0.0,
                     showers: daily.showers_sum?.[j] || 0.0
@@ -891,7 +931,7 @@ Singleton {
                 var heu = hourly.european_aqi?.[i] || 0;
                 var hus = hourly.us_aqi?.[i] || 0;
                 newAQIHourly.push({
-                    time: formatTime(hourly.time[i]),
+                    time: formatHourOfDay(hourly.time[i]),
                     fullTime: hourly.time[i],
                     europeanAQI: heu,
                     europeanAQICategory: getEuropeanAQIInfo(heu).category,

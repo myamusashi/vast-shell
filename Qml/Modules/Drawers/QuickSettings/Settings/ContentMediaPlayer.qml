@@ -22,9 +22,6 @@ RowLayout {
     id: root
 
     property var trackArtColors: ({})
-    property var formatTime: function (seconds) {
-        return "0:00";
-    }
 
     function cleanDesktopEntry(entry: string): string {
         if (!entry || entry === "No Player")
@@ -139,7 +136,7 @@ RowLayout {
                     }
 
                     StyledText {
-                        text: Players.active == null ? "0:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}` // qmllint disable
+                        text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.active?.position)} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
                         color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.DemiBold
@@ -325,7 +322,7 @@ RowLayout {
                 }
 
                 StyledText {
-                    text: Players.active == null ? "0:00" : `${root.formatTime(Players.active?.position)} / ${root.formatTime(Players.active?.length)}` // qmllint disable
+                    text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.active?.position)} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
                     color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.small
                     font.weight: Font.DemiBold

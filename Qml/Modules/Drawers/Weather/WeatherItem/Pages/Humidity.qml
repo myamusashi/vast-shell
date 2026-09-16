@@ -74,14 +74,7 @@ Pages {
 
                         Repeater {
                             model: ScriptModel {
-                                values: (function () {
-                                        const currentHour = new Date().getHours();
-                                        return Weather.hourlyForecast.filter(function (forecast) {
-                                            const timeStr = (forecast.time || "").split(" ")[1] || forecast.time || "";
-                                            const forecastHour = parseInt(timeStr.split(":")[0] || "0");
-                                            return forecastHour >= currentHour;
-                                        });
-                                    })()
+                                values: Weather.hourlyFromNow(Weather.hourlyForecast)
                             }
 
                             delegate: ColumnLayout {
@@ -95,7 +88,7 @@ Pages {
                                 }
 
                                 StyledText {
-                                    text: TimeAgo.convertTo12HourCompact(parent.modelData.time)
+                                    text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
                                     color: Colours.m3Colors.m3OnBackground
                                     font.pixelSize: Appearance.fonts.size.normal
                                 }

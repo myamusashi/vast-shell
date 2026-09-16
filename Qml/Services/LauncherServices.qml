@@ -235,15 +235,4 @@ Singleton {
             command: [app, file.path]
         });
     }
-
-    function formatTimestamp(timestamp: var): string {
-        const date = new Date(timestamp * 1000);
-        return date.toLocaleString("en-US", {
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true
-        });
-    }
 }

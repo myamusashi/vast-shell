@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
-import Vast.Utils
 
 import qs.Components.Base
+import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -56,37 +56,21 @@ WrapperRectangle {
         Icon {
             id: lockIcon
 
-            property color colorFrom
-            property color colorTo
-            property bool colorBlending: false
-            property real colorBlendProgress: 1.0
-
-            onColorBlendProgressChanged: {
-                if (!colorBlending)
-                    return;
-                if (colorBlendProgress >= 1) {
-                    color = colorTo;
-                    colorBlending = false;
-                } else if (colorBlendProgress > 0) {
-                    color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
-                }
-            }
-
-            NAnim {
-                id: colorBlendAnim
-                target: lockIcon
-                property: "colorBlendProgress"
-                from: 0.0
-                to: 1.0
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            }
-
             Layout.alignment: Qt.AlignCenter
             icon: "lock"
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large * 1.5
             transformOrigin: Item.Bottom
+
+            BlendColor {
+                id: tintAnim
+
+                host: lockIcon
+            }
+
+            function blendTo(target) {
+                tintAnim.blendTo(target);
+            }
 
             SequentialAnimation {
                 id: shakeAnim
@@ -142,14 +126,7 @@ WrapperRectangle {
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 ScriptAction {
-                    script: {
-                        colorBlendAnim.stop();
-                        lockIcon.colorFrom = lockIcon.color;
-                        lockIcon.colorTo = Colours.m3Colors.m3Red;
-                        lockIcon.colorBlending = true;
-                        lockIcon.colorBlendProgress = 0.0;
-                        colorBlendAnim.start();
-                    }
+                    script: lockIcon.blendTo(Colours.m3Colors.m3Red)
                 }
             }
         }
