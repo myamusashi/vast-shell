@@ -24,10 +24,14 @@ Singleton {
     property Component islandContent: null
     property int islandRequestId: -1
 
-    property int currentState: DragAndDropServices.State.Idle
-    property var droppedFiles: []
-    property var selectedDevice: null
-    property bool transferSuccess: false
+    property alias currentState: transferController.currentState
+    property alias droppedFiles: transferController.droppedFiles
+    property alias selectedDevice: transferController.selectedDevice
+    property alias transferSuccess: transferController.transferSuccess
+
+    TransferController {
+        id: transferController
+    }
 
     readonly property real dotSize: 24
     readonly property bool isDragging: currentState === DragAndDropServices.State.Dragging
@@ -51,70 +55,35 @@ Singleton {
     }
 
     function acceptDroppedFiles(files) {
-        if (!files || files.length === 0)
-            return;
-        if (currentState !== DragAndDropServices.State.Idle && currentState !== DragAndDropServices.State.FilesDropped)
-            return;
-        droppedFiles = droppedFiles.concat(files);
-        currentState = DragAndDropServices.State.FilesDropped;
+        transferController.acceptDroppedFiles(files);
     }
 
     function startTransfer() {
-        currentState = DragAndDropServices.State.Transferring;
-        for (var i = 0; i < droppedFiles.length; i++)
-            KDEConnect.shareFile(selectedDevice.id, droppedFiles[i]);
-        transferTimer.start();
+        transferController.startTransfer();
     }
 
     function cancelTransfer() {
-        transferTimer.stop();
-        transferSuccess = false;
-        currentState = DragAndDropServices.State.Completed;
-        resetTimer.start();
+        transferController.cancelTransfer();
     }
 
     function dismiss() {
-        transferTimer.stop();
-        resetTimer.stop();
         const wasActive = GlobalStates.isDragAndDropActive;
-        droppedFiles = [];
-        selectedDevice = null;
-        transferSuccess = false;
-        currentState = DragAndDropServices.State.Idle;
+        transferController.dismiss();
         root.closeIsland();
         if (wasActive)
             GlobalStates.setDragAndDropActive(false);
     }
 
     function goBack() {
-        if (currentState === DragAndDropServices.State.SelectingDevice || currentState === DragAndDropServices.State.ConfirmDevice)
-            currentState = DragAndDropServices.State.FilesDropped;
+        transferController.goBack();
     }
 
     function goToDeviceSelection() {
-        currentState = DragAndDropServices.State.SelectingDevice;
+        transferController.goToDeviceSelection();
     }
 
     function goToConfirmation() {
-        currentState = DragAndDropServices.State.ConfirmDevice;
-    }
-
-    Timer {
-        id: transferTimer
-
-        interval: Math.min(root.droppedFiles.length * 2000, 15000)
-        onTriggered: {
-            root.transferSuccess = true;
-            root.currentState = DragAndDropServices.State.Completed;
-            resetTimer.start();
-        }
-    }
-
-    Timer {
-        id: resetTimer
-
-        interval: 3000
-        onTriggered: root.dismiss()
+        transferController.goToConfirmation();
     }
 
     Connections {
@@ -126,17 +95,13 @@ Singleton {
             root.acceptDroppedFiles(GlobalStates.pendingShareFiles);
             GlobalStates.pendingShareFiles = [];
         }
+
         function onIsDragAndDropActiveChanged() {
             if (GlobalStates.isDragAndDropActive) {
                 root.openIsland();
                 return;
             }
-            transferTimer.stop();
-            resetTimer.stop();
-            root.droppedFiles = [];
-            root.selectedDevice = null;
-            root.transferSuccess = false;
-            root.currentState = DragAndDropServices.State.Idle;
+            transferController.dismiss();
             root.closeIsland();
         }
     }

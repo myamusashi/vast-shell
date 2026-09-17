@@ -7,8 +7,6 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Pipewire
 
-import qs.Core.Configs
-
 Singleton {
     id: root
 
@@ -39,93 +37,10 @@ Singleton {
         return cards.card(0);
     }
 
-    property bool restartPending: false
-    property bool wasAudioConnected: false
-    property bool restoringAudioState: false
+    AudioRestore {
 
-    Component.onCompleted: {
-        if (audioConnected && !restoringAudioState) {
-            wasAudioConnected = true;
-            restoreTimer.start();
-        }
-    }
-
-    onAudioConnectedChanged: {
-        if (audioConnected && !wasAudioConnected && !restoringAudioState) {
-            wasAudioConnected = true;
-            restoreTimer.start();
-        }
-        if (!audioConnected) {
-            wasAudioConnected = false;
-            if (restoringAudioState) {
-                restoreTimer.stop();
-                profileRestoreDelay.stop();
-                restoringAudioState = false;
-            }
-        }
-    }
-
-    Timer {
-        id: restoreTimer
-        interval: 1000
-        repeat: false
-        onTriggered: root.restoreAudioState()
-    }
-
-    Timer {
-        id: profileRestoreDelay
-        interval: 1500
-        repeat: false
-        onTriggered: {
-            root.restoreProfiles();
-            root.restoringAudioState = false;
-        }
-    }
-
-    function restoreAudioState() {
-        if (restoringAudioState)
-            return;
-        restoringAudioState = true;
-        const savedSink = Configs.audio.defaultSinkName;
-        if (savedSink && cards) {
-            for (let i = 0; i < cards.count(); i++) {
-                const c = cards.card(i);
-                if (c && c.name === savedSink) {
-                    AudioDevicesWatcher.setDefaultSink(c.name);
-                    break;
-                }
-            }
-        }
-        profileRestoreDelay.start();
-    }
-
-    function restoreProfiles() {
-        const profiles = Configs.audio.sinkProfiles;
-        if (!profiles || typeof profiles !== "object" || !cards)
-            return;
-        const total = cards.count();
-        if (total <= 0)
-            return;
-
-        for (let i = 0; i < total; i++) {
-            const card = cards.card(i);
-            if (!card || !card.name)
-                continue;
-            const savedIndex = profiles[card.name];
-            if (savedIndex === undefined || savedIndex < 0)
-                continue;
-            const deviceId = card.deviceId;
-            if (!deviceId)
-                continue;
-            const model = card.profiles;
-            for (let j = 0; j < model.count(); j++) {
-                const p = model.get(j);
-                if (p.index === savedIndex && p.available === "yes") {
-                    AudioProfilesWatcher.setProfile(deviceId, p.index);
-                    break;
-                }
-            }
-        }
+        cards: root.cards
+        audioConnected: root.audioConnected
     }
 
     function getIcon(node) {
