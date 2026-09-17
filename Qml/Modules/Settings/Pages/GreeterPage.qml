@@ -95,7 +95,7 @@ SettingsPageBase {
 
                 Image {
                     anchors.fill: parent
-                    source: Configs.greeterConfig.useVideoWallpaper ? "file://" + Paths.cacheDir + "/vast-shell/greeter-wallpaper-" + Qt.md5(Configs.greeterConfig.videoWallpaper) + ".png?v=" + Configs.thumbnailVersion : "file://" + Configs.greeterConfig.staticWallpaper + "?v=" + Configs.thumbnailVersion
+                    source: GreeterWallpaper.colorSource(Configs.greeterConfig.useVideoWallpaper, Configs.greeterConfig.videoWallpaper, Configs.greeterConfig.staticWallpaper) + "?v=" + Configs.thumbnailVersion
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                     cache: true

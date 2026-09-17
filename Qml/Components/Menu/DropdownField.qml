@@ -28,14 +28,7 @@ Item {
     implicitWidth: 280
     implicitHeight: 48
 
-    readonly property string displayText: {
-        if (currentIndex < 0 || !model)
-            return placeholderText;
-        const item = model.get ? model.get(currentIndex) : model[currentIndex];
-        if (!item)
-            return placeholderText;
-        return item[textRole] ?? placeholderText;
-    }
+    readonly property string displayText: ModelAdapter.displayText(model, currentIndex, textRole, placeholderText)
 
     onCurrentValueChanged: syncIndex()
     onModelChanged: syncIndex()
@@ -45,22 +38,9 @@ Item {
     function syncIndex() {
         if (valueRole === "" || currentValue === null || currentValue === undefined)
             return;
-        const model = model;
-        if (!model)
-            return;
-        // C++ list models expose count()/get(i) as methods, JS models use length/indexing
-        const count = typeof model.count === "function" ? model.count() : (model.count ?? model.length ?? 0);
-        const getItem = typeof model.get === "function" ? i => model.get(i) : i => model[i];
-        for (let i = 0; i < count; i++) {
-            const item = getItem(i);
-            if (!item)
-                continue;
-            const v = item[valueRole];
-            if (v === currentValue) {
-                currentIndex = i;
-                return;
-            }
-        }
+        const index = ModelAdapter.indexOfValue(model, valueRole, currentValue);
+        if (index >= 0)
+            currentIndex = index;
     }
 
     StyledRect {

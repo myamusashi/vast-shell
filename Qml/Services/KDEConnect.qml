@@ -12,8 +12,6 @@ Singleton {
 
     property var allDevices: []
     property var availableDevices: []
-    property int pollInterval: 15000
-    property bool polling: true
     property string myDeviceId: ""
 
     readonly property bool hasAvailableDevices: availableDevices.length > 0
@@ -26,28 +24,19 @@ Singleton {
     function shareFile(deviceId, path) {
         if (!deviceId || !path)
             return;
-        const p = shareFileProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--share", path]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--share", path], "shareFile");
     }
 
     function shareText(deviceId, text) {
         if (!deviceId || !text)
             return;
-        const p = shareTextProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--share-text", text]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--share-text", text], "shareText");
     }
 
     function sendClipboard(deviceId) {
         if (!deviceId)
             return;
-        const p = clipboardProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--send-clipboard"]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--send-clipboard"], "sendClipboard");
     }
 
     function ping(deviceId, message) {
@@ -58,64 +47,43 @@ Singleton {
             args.push("--ping-msg", message);
         else
             args.push("--ping");
-        const p = pingProcess.createObject(root, {
-            command: args
-        });
-        p.running = true;
+        runKdeConnect(args, "ping");
     }
 
     function ring(deviceId) {
         if (!deviceId)
             return;
-        const p = ringProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--ring"]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--ring"], "ring");
     }
 
     function lockDevice(deviceId) {
         if (!deviceId)
             return;
-        const p = lockProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--lock"]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--lock"], "lock");
     }
 
     function unlockDevice(deviceId) {
         if (!deviceId)
             return;
-        const p = unlockProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--unlock"]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--unlock"], "unlock");
     }
 
     function pair(deviceId) {
         if (!deviceId)
             return;
-        const p = pairProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--pair"]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--pair"], "pair");
     }
 
     function unpair(deviceId) {
         if (!deviceId)
             return;
-        const p = unpairProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--unpair"]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--unpair"], "unpair");
     }
 
     function sendSms(deviceId, message, destination) {
         if (!deviceId || !message || !destination)
             return;
-        const p = smsProcess.createObject(root, {
-            command: ["kdeconnect-cli", "-d", deviceId, "--send-sms", message, "--destination", destination]
-        });
-        p.running = true;
+        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--send-sms", message, "--destination", destination], "sendSms");
     }
 
     function deviceById(id) {
@@ -212,141 +180,30 @@ Singleton {
         }
     }
 
-    Component {
-        id: shareFileProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdShareFileProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] shareFile failed:", stdShareFileProcess.text);
-                destroy();
-            }
-        }
+    function runKdeConnect(args, warnTag) {
+        const process = kdeConnectProcess.createObject(root, {
+            command: args,
+            warnTag: warnTag
+        });
+        process.running = true;
     }
 
     Component {
-        id: shareTextProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdShareTextProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] shareText failed:", stdShareTextProcess.text);
-                destroy();
-            }
-        }
-    }
+        id: kdeConnectProcess
 
-    Component {
-        id: clipboardProcess
         Process {
-            stderr: StdioCollector {
-                id: stdClipboardProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] sendClipboard failed:", stdClipboardProcess.text);
-                destroy();
-            }
-        }
-    }
+            id: process
 
-    Component {
-        id: pingProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdPingProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] ping failed:", stdPingProcess.text);
-                destroy();
-            }
-        }
-    }
+            property string warnTag: ""
+            property string stderrText: ""
 
-    Component {
-        id: ringProcess
-        Process {
             stderr: StdioCollector {
-                id: stdRingProcess
+                onStreamFinished: process.stderrText = text
             }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] ring failed:", stdRingProcess.text);
-                destroy();
-            }
-        }
-    }
 
-    Component {
-        id: lockProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdLockProcess
-            }
             onExited: code => { // qmllint disable
                 if (code !== 0)
-                    console.warn("[KDEConnect] lock failed:", stdLockProcess.text);
-                destroy();
-            }
-        }
-    }
-
-    Component {
-        id: unlockProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdUnlockProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] unlock failed:", stdUnlockProcess.text);
-                destroy();
-            }
-        }
-    }
-
-    Component {
-        id: pairProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdPairProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] pair failed:", stdPairProcess.text);
-                destroy();
-            }
-        }
-    }
-
-    Component {
-        id: unpairProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdUnpairProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] unpair failed:", stdUnpairProcess.text);
-                destroy();
-            }
-        }
-    }
-
-    Component {
-        id: smsProcess
-        Process {
-            stderr: StdioCollector {
-                id: stdSmsProcess
-            }
-            onExited: code => { // qmllint disable
-                if (code !== 0)
-                    console.warn("[KDEConnect] sendSms failed:", stdSmsProcess.text);
+                    console.warn("[KDEConnect] " + process.warnTag + " failed:", process.stderrText);
                 destroy();
             }
         }

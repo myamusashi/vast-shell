@@ -4,8 +4,6 @@ import QtQuick
 import QtQuick.Controls
 import Quickshell
 
-import qs.Core.Configs
-import qs.Components.Base
 import qs.Components.Menu
 
 Popup {
@@ -56,54 +54,16 @@ Popup {
     onOpened: resolvePlacement()
 
     function resolvePlacement() {
-        if (!anchorItem || !anchorItem.QsWindow.window)
-            return;
-        if (resolveGuard)
+        if (!anchorItem || !anchorItem.QsWindow.window || resolveGuard)
             return;
         resolveGuard = true;
 
         // qmllint disable missing-property
         const win = anchorItem.QsWindow.window;
-        const availAbove = availableSpaceAbove();
-        const availBelow = availableSpaceBelow();
-
-        const desired = menuSurface.contentImplicitHeight;
-        const maxCap = 336;
-
-        const rowH = 48;
-        const minH = Math.min(maxCap, Math.max(80, minVisibleRows * rowH));
-
-        let openUp = false;
-        let resolvedMax = maxCap;
-
-        if (preferredDirection === "up") {
-            openUp = true;
-            resolvedMax = Math.min(maxCap, Math.max(minH, availAbove - gap));
-        } else if (preferredDirection === "down") {
-            openUp = false;
-            resolvedMax = Math.min(maxCap, Math.max(minH, availBelow - gap));
-        } else {
-            const fitsBelow = desired <= (availBelow - gap);
-            const fitsAbove = desired <= (availAbove - gap);
-            if (fitsBelow)
-                openUp = false;
-            else if (fitsAbove)
-                openUp = true;
-            else if (availAbove > availBelow)
-                openUp = true;
-            else
-                openUp = false;
-
-            const avail = openUp ? availAbove : availBelow;
-            resolvedMax = Math.min(maxCap, Math.max(minH, avail - gap));
-        }
-
-        if (win.height > 0)
-            resolvedMax = Math.min(resolvedMax, win.height - 24);
+        const placement = PopupPlacement.resolve(preferredDirection, availableSpaceAbove(), availableSpaceBelow(), menuSurface.contentImplicitHeight, 336, minVisibleRows, 48, gap, win.height);
+        openUpward = placement.openUpward;
+        resolvedMaxHeight = placement.maxHeight;
         // qmllint enable missing-property
-
-        openUpward = openUp;
-        resolvedMaxHeight = resolvedMax;
 
         resolveGuard = false;
     }
@@ -187,39 +147,11 @@ Popup {
         }
     }
 
-    enter: Transition {
-        ParallelAnimation {
-            NAnim {
-                property: "opacity"
-                from: 0.0
-                to: 1.0
-                easing.bezierCurve: Appearance.animations.curves.emphasized
-            }
-            NAnim {
-                property: "scale"
-                from: 0.8
-                to: 1.0
-                easing.bezierCurve: Appearance.animations.curves.emphasized
-            }
-        }
+    enter: MenuTransitions {
+        opening: true
     }
 
-    exit: Transition {
-        ParallelAnimation {
-            NAnim {
-                property: "opacity"
-                from: 1.0
-                to: 0.0
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-            NAnim {
-                property: "scale"
-                from: 1.0
-                to: 0.8
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-        }
+    exit: MenuTransitions {
+        opening: false
     }
 }

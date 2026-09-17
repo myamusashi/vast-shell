@@ -204,7 +204,7 @@ WlSessionLockSurface {
     Image {
         id: fgLayer
 
-        readonly property bool currentWallpaperIsVideo: /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(Paths.currentWallpaper)
+        readonly property bool currentWallpaperIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
 
         anchors.fill: parent
         source: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" ? "file://" + Configs.wallpaper.depthFgPath : ""

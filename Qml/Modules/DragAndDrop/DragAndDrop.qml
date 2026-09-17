@@ -2,7 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-
+import qs.Components.Feedback
 import qs.Core.States
 import qs.Services
 
@@ -13,10 +13,10 @@ Scope {
         DragAndDropIslandContent {}
     }
 
-    Binding {
-        target: DragAndDropServices
-        property: "islandContent"
-        value: islandContent
+    IslandHost {
+        service: DragAndDropServices
+        propertyName: "islandContent"
+        content: islandContent
     }
 
     Connections {

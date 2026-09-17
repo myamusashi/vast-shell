@@ -33,7 +33,7 @@ Item {
             GlobalStates.previewWallpaper = "";
             return;
         }
-        Wallpaper.wallpaperType = Wallpaper.isVideo(Paths.currentWallpaper) ? 1 : 0;
+        Wallpaper.wallpaperType = MediaKind.isVideo(Paths.currentWallpaper) ? 1 : 0;
     }
 
     Image {
@@ -46,7 +46,7 @@ Item {
                 if (status === Image.Ready) {
                     const videoPath = Wallpaper.pendingVideoPath;
                     Wallpaper.pendingVideoPath = "";
-                    Wallpaper.setWallpaper(videoPath, Wallpaper.thumbnailPathFor(videoPath));
+                    Wallpaper.setWallpaper(videoPath, MediaKind.thumbnailPathFor(videoPath));
                 } else if (status === Image.Error)
                     Wallpaper.pendingVideoPath = "";
             }
@@ -75,9 +75,9 @@ Item {
         target: "img"
 
         function set(path: string): void {
-            if (!Wallpaper.isVideo(path))
+            if (!MediaKind.isVideo(path))
                 ImageCache.preload(path, Qt.size(Screen.width, Screen.height));
-            Wallpaper.setWallpaper(path, Wallpaper.isVideo(path) ? "" : path);
+            Wallpaper.setWallpaper(path, MediaKind.isVideo(path) ? "" : path);
         }
 
         function get(): string {

@@ -61,9 +61,6 @@ Item {
         return toplevels.some(toplevel => toplevel.wayland?.activated && (toplevel.wayland?.fullscreen || !toplevel.lastIpcObject?.floating) && !GlobalStates.isLockscreenOpen);
     }
 
-    function isVideo(url) {
-        return /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(url.toString());
-    }
 
     function updateVideoPlayback() {
         if (pauseVideo) {
@@ -117,7 +114,7 @@ Item {
     }
 
     function load(url) {
-        if (isVideo(url)) {
+        if (MediaKind.isVideo(url)) {
             if (isVideoWallpaper)
                 startVideoTransition(url);
             else {
@@ -320,7 +317,7 @@ Item {
             const url = pendingUrl;
             hasPendingUrl = false;
             pendingUrl = "";
-            if (isVideo(url))
+            if (MediaKind.isVideo(url))
                 startVideoTransition(url);
             else
                 startImageTransition(url);
@@ -358,7 +355,7 @@ Item {
         transitionEffect.resolution = Qt.vector2d(w, h);
         transitionEffect.invResolution = Qt.vector2d(1.0 / w, 1.0 / h);
 
-        if (root.isVideo(root.effectiveSource)) {
+        if (MediaKind.isVideo(root.effectiveSource)) {
             videoPlayerA.source = Qt.resolvedUrl(root.effectiveSource);
             playVideo(videoPlayerA);
             isVideoWallpaper = true;

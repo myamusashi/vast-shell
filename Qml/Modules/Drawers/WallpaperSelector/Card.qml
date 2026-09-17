@@ -26,7 +26,7 @@ Item {
     onIsCurrentChanged: {
         if (!isCurrent)
             return;
-        if (controller.isVideo(modelData))
+        if (MediaKind.isVideo(modelData))
             controller.ensureThumbnail(modelData);
         else
             ImageCache.preload(modelData, Qt.size(Screen.width, Screen.height));
@@ -83,7 +83,7 @@ Item {
 
         Image {
             anchors.fill: parent
-            source: root.controller.isVideo(root.modelData) ? "" : "file://" + root.modelData
+            source: MediaKind.isVideo(root.modelData) ? "" : "file://" + root.modelData
             sourceSize: Qt.size(200, 200)
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
@@ -100,12 +100,12 @@ Item {
             id: videoThumbnailCache
 
             anchors.fill: parent
-            source: root.thumbnailAvailability[root.modelData] ? "file://" + root.controller.thumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
+            source: root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.thumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             visible: status === Image.Ready
             onStatusChanged: {
-                if (status === Image.Error && root.controller.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
+                if (status === Image.Error && MediaKind.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
                     root.controller.markThumbnail(root.modelData, false);
             }
         }

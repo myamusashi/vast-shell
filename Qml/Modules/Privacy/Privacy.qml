@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 
+import qs.Components.Feedback
 import qs.Services
 
 Scope {
@@ -30,21 +31,21 @@ Scope {
         }
     }
 
-    Binding {
-        target: PrivacyServices
-        property: "screenshareContent"
-        value: screenshareContent
+    IslandHost {
+        service: PrivacyServices
+        propertyName: "screenshareContent"
+        content: screenshareContent
     }
 
-    Binding {
-        target: PrivacyServices
-        property: "audioInContent"
-        value: audioInContent
+    IslandHost {
+        service: PrivacyServices
+        propertyName: "audioInContent"
+        content: audioInContent
     }
 
-    Binding {
-        target: PrivacyServices
-        property: "audioOutContent"
-        value: audioOutContent
+    IslandHost {
+        service: PrivacyServices
+        propertyName: "audioOutContent"
+        content: audioOutContent
     }
 }

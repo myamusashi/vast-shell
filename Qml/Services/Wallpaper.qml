@@ -15,40 +15,30 @@ Singleton {
     property int wallpaperType: 0
     property string pendingVideoPath: ""
     property int thumbnailVersion: 0
-    property string thumbnailJobPath: ""
     property var thumbnailAvailability: ({})
     property var thumbnailCheckQueue: []
     property var checkBatch: []
-    property var thumbnailRegenQueue: []
     property var thumbnailFailed: ({})
     readonly property string thumbnailCheckScript: "while [ $# -ge 2 ]; do [ -s \"$1\" ] && printf '%s\\n' \"$2\"; shift 2; done"
-    readonly property var visibleWallpapers: WallpaperFileModels.filteredWallpaperList.filter(path => wallpaperType === 1 ? isVideo(path) : !isVideo(path))
+    readonly property var visibleWallpapers: WallpaperFileModels.filteredWallpaperList.filter(path => wallpaperType === 1 ? MediaKind.isVideo(path) : !MediaKind.isVideo(path))
 
     function setWallpaper(path, colorSource) {
         Quickshell.execDetached({
             command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
         });
         if (colorSource !== "" && colorSourceImage)
-            colorSourceImage.source = "file://" + colorSource + (isVideo(path) ? "?v=" + thumbnailVersion : "");
+            colorSourceImage.source = "file://" + colorSource + (MediaKind.isVideo(path) ? "?v=" + thumbnailVersion : "");
     }
 
     function updateWallpaperColors(path) {
         if (path === "" || !colorSourceImage)
             return;
-        colorSourceImage.source = "file://" + thumbnailPathFor(path) + (isVideo(path) ? "?v=" + thumbnailVersion : "");
+        colorSourceImage.source = "file://" + MediaKind.thumbnailPathFor(path) + (MediaKind.isVideo(path) ? "?v=" + thumbnailVersion : "");
     }
 
     function setVideoWallpaper(path) {
         pendingVideoPath = path;
         ensureThumbnail(path, true);
-    }
-
-    function isVideo(path) {
-        return /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(path);
-    }
-
-    function thumbnailPathFor(path) {
-        return isVideo(path) ? `${Paths.cacheDir}/vast-shell/vast-wallpaper-${Qt.md5(path)}.png` : path;
     }
 
     function markThumbnail(path, exists) {
@@ -67,14 +57,39 @@ Singleton {
     }
 
     function ensureThumbnail(path, force) {
-        if (path === "" || !isVideo(path) || thumbnailJobPath === path || thumbnailRegenQueue.includes(path))
+        if (path === "" || !MediaKind.isVideo(path))
             return;
         if (thumbnailAvailability[path] === true && !force)
             return;
         if (!force && thumbnailFailed[path] === true)
             return;
-        thumbnailRegenQueue.push(path);
-        pumpThumbnailJobs();
+
+        if (force) {
+            const pendingFailures = Object.assign({}, thumbnailFailed);
+            delete pendingFailures[path];
+            thumbnailFailed = pendingFailures;
+        }
+
+        ThumbnailQueue.generate(path, MediaKind.thumbnailPathFor(path), (videoPath, thumbnailPath) => {
+            const success = thumbnailPath !== "";
+            if (success) {
+                const cleared = Object.assign({}, root.thumbnailFailed);
+                delete cleared[videoPath];
+                root.thumbnailFailed = cleared;
+                root.thumbnailVersion++;
+            } else {
+                const failed = Object.assign({}, root.thumbnailFailed);
+                failed[videoPath] = true;
+                root.thumbnailFailed = failed;
+            }
+            root.markThumbnail(videoPath, success);
+            if (root.pendingVideoPath !== videoPath)
+                return;
+            if (success && root.colorSourceImage)
+                root.colorSourceImage.source = "file://" + thumbnailPath + "?v=" + root.thumbnailVersion;
+            else if (!success)
+                root.pendingVideoPath = "";
+        });
     }
 
     function pumpThumbnailJobs() {
@@ -85,7 +100,7 @@ Singleton {
 
     function requestThumbnailChecks() {
         for (const path of WallpaperFileModels.filteredWallpaperList) {
-            if (!isVideo(path) || thumbnailAvailability[path] !== undefined || thumbnailCheckQueue.includes(path))
+            if (!MediaKind.isVideo(path) || thumbnailAvailability[path] !== undefined || thumbnailCheckQueue.includes(path))
                 continue;
             thumbnailCheckQueue.push(path);
         }
@@ -98,7 +113,7 @@ Singleton {
         checkBatch = thumbnailCheckQueue.splice(0, thumbnailCheckQueue.length);
         const args = ["sh", "-c", thumbnailCheckScript, "sh"];
         for (const path of checkBatch)
-            args.push(thumbnailPathFor(path), path);
+            args.push(MediaKind.thumbnailPathFor(path), path);
         thumbnailChecker.command = args;
         thumbnailChecker.running = true;
     }
@@ -145,37 +160,6 @@ Singleton {
                     root.markThumbnail(path, false);
             root.checkBatch = [];
             root.drainThumbnailChecks();
-        }
-    }
-
-    Process {
-        id: thumbnailExtractor
-
-        command: ["sh", "-c", `mkdir -p ${JSON.stringify(Paths.cacheDir + "/vast-shell")} && { test -s ${JSON.stringify(root.thumbnailPathFor(root.thumbnailJobPath))} || ffmpeg -y -loglevel error -i ${JSON.stringify(root.thumbnailJobPath)} -vf scale=320:-2 -frames:v 1 ${JSON.stringify(root.thumbnailPathFor(root.thumbnailJobPath))}; }`]
-        running: root.thumbnailJobPath !== ""
-        onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
-            const job = root.thumbnailJobPath;
-            root.thumbnailJobPath = "";
-            if (exitCode === 0) {
-                const cleared = Object.assign({}, root.thumbnailFailed);
-                delete cleared[job];
-                root.thumbnailFailed = cleared;
-                root.thumbnailVersion++;
-            } else {
-                const failed = Object.assign({}, root.thumbnailFailed);
-                failed[job] = true;
-                root.thumbnailFailed = failed;
-            }
-            root.markThumbnail(job, exitCode === 0);
-            root.pumpThumbnailJobs();
-            if (root.pendingVideoPath === "")
-                return;
-            if (exitCode === 0) {
-                if (root.colorSourceImage)
-                    root.colorSourceImage.source = "file://" + root.thumbnailPathFor(root.pendingVideoPath) + (root.isVideo(root.pendingVideoPath) ? "?v=" + root.thumbnailVersion : "");
-            } else {
-                root.pendingVideoPath = "";
-            }
         }
     }
 }

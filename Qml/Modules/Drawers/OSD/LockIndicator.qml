@@ -1,5 +1,3 @@
-pragma ComponentBehavior: Bound
-
 import QtQuick
 
 import qs.Components.Base
@@ -11,8 +9,13 @@ import qs.Services
 Item {
     id: root
 
+    required property bool indicator
+    required property string osdVisible
+    required property string label
+    required property string icon
+
     width: parent.width
-    height: GlobalStates.isOSDVisible("numlock") ? 50 : 0
+    height: GlobalStates.isOSDVisible(osdVisible) ? 50 : 0
     visible: height > 0
     clip: true
 
@@ -34,16 +37,15 @@ Item {
             opacity: root.height / 50
 
             StyledText {
-                text: qsTr("Num Lock")
+                text: root.label
                 font.weight: Font.Medium
                 color: Colours.m3Colors.m3OnBackground
                 font.pixelSize: Appearance.fonts.size.large * 1.5
             }
 
             Icon {
-                type: Icon.Material
-                icon: KeylockState.numLock ? "lock" : "lock_open_right"
-                color: KeylockState.numLock ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
+                icon: root.icon
+                color: root.indicator ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
                 font.pixelSize: Appearance.fonts.size.large * 1.5
             }
         }

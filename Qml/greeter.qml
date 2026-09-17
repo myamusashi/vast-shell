@@ -8,7 +8,6 @@ import QtQuick
 import QtQuick.Layouts
 import QtMultimedia
 import Quickshell
-import Quickshell.Io
 import Quickshell.Services.Greetd
 import Quickshell.Wayland
 
@@ -21,28 +20,6 @@ import "Greeter" as GREET
 
 ShellRoot {
     id: root
-
-    property bool cfgUseVideo: false
-    property string cfgStatic: "/etc/vast-shell/wallpaper.png"
-    property string cfgVideo: "/etc/vast-shell/wallpaper.mp4"
-
-    FileView {
-        id: greeterConfigFile
-
-        path: "/etc/vast-shell/greeter.json"
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: {
-            try {
-                const json = JSON.parse(text());
-                root.cfgUseVideo = json.useVideoWallpaper === true;
-                if (json.staticWallpaper)
-                    root.cfgStatic = json.staticWallpaper;
-                if (json.videoWallpaper)
-                    root.cfgVideo = json.videoWallpaper;
-            } catch (error) {}
-        }
-    }
 
     WlSessionLock {
         id: lock
@@ -143,21 +120,21 @@ ShellRoot {
                         if (status === Image.Error)
                             source = Paths.projectRoot + "/Assets/images/wallpaper.png";
                     }
-                    source: root.cfgStatic
+                    source: GREET.Configs.greeterConfig.staticWallpaper
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                     cache: true
-                    visible: !root.cfgUseVideo
+                    visible: !GREET.Configs.greeterConfig.useVideoWallpaper
                 }
 
                 MediaPlayer {
                     id: splashVideoPlayer
 
-                    source: "file://" + root.cfgVideo
+                    source: "file://" + GREET.Configs.greeterConfig.videoWallpaper
                     loops: MediaPlayer.Infinite
                     videoOutput: splashVideoOutput
                     onMediaStatusChanged: {
-                        if (root.cfgUseVideo && mediaStatus === MediaPlayer.LoadedMedia)
+                        if (GREET.Configs.greeterConfig.useVideoWallpaper && mediaStatus === MediaPlayer.LoadedMedia)
                             play();
                     }
                 }
@@ -167,7 +144,7 @@ ShellRoot {
 
                     anchors.fill: parent
                     fillMode: VideoOutput.PreserveAspectCrop
-                    visible: root.cfgUseVideo
+                    visible: GREET.Configs.greeterConfig.useVideoWallpaper
                 }
 
                 ColumnLayout {

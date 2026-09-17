@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pam
 
+import qs.Components.Base
 import qs.Core.Utils
 
 Scope {
@@ -13,18 +14,17 @@ Scope {
 
     required property WlSessionLock lock
 
-    property string currentText: ""
-    property bool showFailure: false
+    property alias currentText: authFlow.currentText
+    property alias showFailure: authFlow.showFailure
+    property alias unlockInProgress: authFlow.inProgress
     property bool isUnlock: false
-    property bool unlockInProgress: false
 
-    onCurrentTextChanged: showFailure = false
+    AuthFlow {
+        id: authFlow
+    }
 
     function tryUnlock() {
-        if (currentText === "")
-            return;
-        unlockInProgress = true;
-        pam.start();
+        authFlow.submitSecret();
     }
 
     PamContext {
@@ -42,12 +42,10 @@ Scope {
             if (result === PamResult.Success) {
                 root.isUnlock = true;
                 root.lock.unlock();
+                authFlow.inProgress = false;
             } else {
-                root.currentText = "";
-                root.showFailure = true;
+                authFlow.fail();
             }
-
-            root.unlockInProgress = false;
         }
     }
 }

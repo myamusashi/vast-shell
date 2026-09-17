@@ -18,7 +18,7 @@ Singleton {
 
     readonly property string cacheDir: Paths.home + "/.cache/vast-shell/depthwp"
     readonly property string scriptPath: Paths.projectRoot + "/Assets/shell/extract-fg.sh"
-    readonly property bool currentWallpaperIsVideo: /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(Paths.currentWallpaper)
+    readonly property bool currentWallpaperIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
 
     function onToggle(enabled) {
         if (enabled) {

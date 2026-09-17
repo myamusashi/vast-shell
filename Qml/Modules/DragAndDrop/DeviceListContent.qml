@@ -6,6 +6,7 @@ import QtQuick.Controls
 import qs.Components.Button
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 Item {
@@ -16,21 +17,17 @@ Item {
 
     readonly property int deviceCount: KDEConnect.availableDevices.length
     readonly property real rowHeight: 36
-    readonly property real maxContentHeight: deviceCount * rowHeight + (deviceCount > 1 ? deviceCount - 1 : 0) * 4
-    readonly property real visibleHeight: Math.min(200, maxContentHeight)
+    readonly property real maxContentHeight: FileListMetrics.clampHeight(deviceCount, rowHeight, 4, 200)
+    readonly property real visibleHeight: maxContentHeight
 
     implicitWidth: active ? computeActiveWidth() : 180
     implicitHeight: Math.max(44, visibleHeight + 40)
 
     function computeActiveWidth() {
-        if (deviceCount === 0)
-            return 250;
-        var maximum = 0;
-        for (var i = 0; i < deviceCount; i++) {
-            deviceMetrics.text = KDEConnect.availableDevices[i].name;
-            maximum = Math.max(maximum, deviceMetrics.width);
-        }
-        return Math.max(180, maximum + 104);
+        return FileListMetrics.computeActiveWidth(KDEConnect.availableDevices, device => {
+            deviceMetrics.text = device.name;
+            return deviceMetrics.width;
+        }, 180, 104, 250);
     }
 
     TextMetrics {
@@ -80,17 +77,12 @@ Item {
             Repeater {
                 model: KDEConnect.availableDevices
 
-                delegate: ExtendedFloatingButton {
+                delegate: KdeDeviceRow {
                     required property var modelData
 
-                    implicitWidth: deviceFlickable.width
-                    height: root.rowHeight
-                    icon.name: "smartphone"
-                    icon.color: Colours.m3Colors.m3Primary
-                    text: modelData.name
-                    textColor: Colours.m3Colors.m3OnSurface
-                    color: "transparent"
-                    onClicked: {
+                    device: modelData
+                    actionText: qsTr("Select")
+                    onActionTriggered: {
                         root.island.selectedDevice = modelData;
                         root.island.goToConfirmation();
                     }

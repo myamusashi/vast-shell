@@ -3,14 +3,12 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 
-import Quickshell.Widgets
 import Quickshell.Bluetooth
 
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Feedback
 import qs.Core.Configs
-import qs.Core.Utils
 import qs.Services
 
 import "../Components"
@@ -163,98 +161,15 @@ SettingsPageBase {
 
                 model: BluetoothServices.pairedDevices
 
-                delegate: WrapperRectangle {
-                    id: pairedDelegate
-
+                delegate: BluetoothDeviceDelegate {
                     required property var modelData
 
-                    Layout.fillWidth: true
-                    radius: Appearance.rounding.large
-                    margin: Appearance.margin.small
-                    color: modelData.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
-                    border.width: modelData.connected ? 1 : 0
-                    border.color: Colours.m3Colors.m3OutlineVariant
-
-                    RowLayout {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                            margins: Appearance.margin.small
-                        }
-                        spacing: Appearance.spacing.small
-
-                        Rectangle {
-                            Layout.preferredWidth: 36
-                            Layout.preferredHeight: 36
-                            radius: Appearance.rounding.small
-                            color: pairedDelegate.modelData.connected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
-
-                            Icon {
-                                anchors.centerIn: parent
-                                icon: pairedDelegate.modelData.connected ? "bluetooth_connected" : "bluetooth"
-                                color: pairedDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.large
-                            }
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: BluetoothServices.displayName(pairedDelegate.modelData)
-                                elide: Text.ElideRight
-                                color: pairedDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                font.weight: Font.Medium
-                            }
-
-                            StyledText {
-                                text: BluetoothServices.stateString(pairedDelegate.modelData)
-                                color: pairedDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                            }
-
-                            StyledText {
-                                visible: pairedDelegate.modelData.address !== ""
-                                text: pairedDelegate.modelData.address + (pairedDelegate.modelData.batteryAvailable ? ` · ${Math.round(pairedDelegate.modelData.battery * 100)}%` : "") + (pairedDelegate.modelData.blocked ? " · " + qsTr("blocked") : "")
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.small
-                                elide: Text.ElideRight
-                                Layout.fillWidth: true
-                            }
-                        }
-
-                        FloatingButton {
-                            implicitWidth: 32
-                            implicitHeight: 32
-                            backgroundRadius: Appearance.rounding.normal
-                            icon.name: pairedDelegate.modelData.connected ? "link_off" : "link"
-                            color: "transparent"
-                            onClicked: pairedDelegate.modelData.connected ? pairedDelegate.modelData.disconnect() : pairedDelegate.modelData.connect()
-                        }
-
-                        FloatingButton {
-                            implicitWidth: 32
-                            implicitHeight: 32
-                            backgroundRadius: Appearance.rounding.normal
-                            icon.name: "block"
-                            icon.color: pairedDelegate.modelData.blocked ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
-                            color: "transparent"
-                            onClicked: pairedDelegate.modelData.blocked = !pairedDelegate.modelData.blocked
-                        }
-
-                        FloatingButton {
-                            implicitWidth: 32
-                            implicitHeight: 32
-                            backgroundRadius: Appearance.rounding.normal
-                            icon.name: "delete"
-                            color: "transparent"
-                            onClicked: pairedDelegate.modelData.forget()
-                        }
-                    }
+                    device: modelData
+                    showBlockAction: true
+                    showForgetAction: true
+                    onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
+                    onBlockToggled: modelData.blocked = !modelData.blocked
+                    onForgetAction: modelData.forget()
                 }
             }
         }
@@ -319,83 +234,13 @@ SettingsPageBase {
 
                 model: BluetoothServices.availableDevices
 
-                delegate: WrapperRectangle {
-                    id: availDelegate
-
+                delegate: BluetoothDeviceDelegate {
                     required property var modelData
 
-                    Layout.fillWidth: true
-                    radius: Appearance.rounding.large
-                    margin: Appearance.margin.small
-                    color: availDelegate.modelData.pairing ? Colours.m3Colors.m3PrimaryContainer : "transparent"
-                    border.width: availDelegate.modelData.pairing ? 1 : 0
-                    border.color: Colours.m3Colors.m3OutlineVariant
-
-                    RowLayout {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            verticalCenter: parent.verticalCenter
-                            margins: Appearance.margin.small
-                        }
-                        spacing: Appearance.spacing.small
-
-                        Rectangle {
-                            Layout.preferredWidth: 36
-                            Layout.preferredHeight: 36
-                            radius: Appearance.rounding.small
-                            color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
-
-                            Icon {
-                                anchors.centerIn: parent
-                                icon: availDelegate.modelData.pairing ? "bluetooth_searching" : "bluetooth"
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.large
-                            }
-                        }
-
-                        ColumnLayout {
-                            Layout.fillWidth: true
-                            spacing: 2
-
-                            StyledText {
-                                Layout.fillWidth: true
-                                text: BluetoothServices.displayName(availDelegate.modelData)
-                                elide: Text.ElideRight
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                font.weight: Font.Medium
-                            }
-
-                            StyledText {
-                                text: BluetoothServices.addressLine(availDelegate.modelData)
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.small
-                                elide: Text.ElideRight
-                                Layout.fillWidth: true
-                            }
-                        }
-
-                        FloatingButton {
-                            implicitWidth: 32
-                            implicitHeight: 32
-                            backgroundRadius: Appearance.rounding.normal
-                            icon.name: "bluetooth"
-                            color: "transparent"
-                            enabled: !availDelegate.modelData.pairing
-                            onClicked: availDelegate.modelData.pair()
-                        }
-
-                        FloatingButton {
-                            visible: availDelegate.modelData.pairing
-                            implicitWidth: 32
-                            implicitHeight: 32
-                            backgroundRadius: Appearance.rounding.normal
-                            icon.name: "close"
-                            color: "transparent"
-                            onClicked: availDelegate.modelData.cancelPair()
-                        }
-                    }
+                    device: modelData
+                    showPairActions: true
+                    onPrimaryAction: modelData.pair()
+                    onSecondaryAction: modelData.cancelPair()
                 }
             }
         }

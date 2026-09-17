@@ -66,8 +66,30 @@ Item {
                 }
                 spacing: Appearance.spacing.normal
 
-                CapsLockWidget {}
-                NumLockWidget {}
+                Repeater {
+                    model: [
+                        {
+                            osdVisible: "capslock",
+                            lock: KeylockState.capsLock,
+                            label: qsTr("Caps lock"),
+                            icon: KeylockState.capsLock ? "lock" : "lock_open_right"
+                        },
+                        {
+                            osdVisible: "numlock",
+                            lock: KeylockState.numLock,
+                            label: qsTr("Num Lock"),
+                            icon: KeylockState.numLock ? "lock" : "lock_open_right"
+                        }
+                    ]
+                    delegate: LockIndicator {
+                        required property var modelData
+
+                        osdVisible: modelData.osdVisible
+                        indicator: modelData.lock
+                        label: modelData.label
+                        icon: modelData.icon
+                    }
+                }
             }
         }
     }

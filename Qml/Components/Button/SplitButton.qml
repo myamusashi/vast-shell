@@ -30,11 +30,7 @@ Item {
 
     property IconComponent icon: IconComponent {}
 
-    readonly property bool hasMenu: {
-        if (model === null || model === undefined)
-            return false;
-        return model.length !== undefined ? model.length > 0 : true;
-    }
+    readonly property bool hasMenu: ModelAdapter.countOf(model) > 0
 
     property bool menuOpen: false
     readonly property int innerRadius: 8
@@ -43,8 +39,7 @@ Item {
     property bool fillWidth: false
     property bool leadingFillsWidth: false
 
-    readonly property int segmentCount: model?.count ?? model?.length ?? 0
-    readonly property real distributedSegmentWidth: segmentCount > 0 ? (width - (segmentCount - 1) * 2) / segmentCount : width
+    readonly property int segmentCount: ModelAdapter.countOf(model)
 
     readonly property int segmentHeight: 40
 

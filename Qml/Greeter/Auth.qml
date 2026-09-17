@@ -5,15 +5,16 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Greetd
 
+import qs.Components.Base
 import qs.Core.Utils
 
 Scope {
     id: root
 
-    property string currentText: ""
-    property bool showFailure: false
+    property alias currentText: authFlow.currentText
+    property alias showFailure: authFlow.showFailure
+    property alias unlockInProgress: authFlow.inProgress
     property bool isUnlock: false
-    property bool unlockInProgress: false
 
     property string currentUser: ""
     property string statusMessage: ""
@@ -40,15 +41,15 @@ Scope {
     }
 
     function tryUnlock() {
-        if (currentText === "" || currentUser === "")
+        if (currentUser === "")
             return;
         if (Greetd.state !== GreetdState.Inactive)
             return;
 
-        showFailure = false;
-        messageIsError = false;
         statusMessage = qsTr("Authenticating…");
-        unlockInProgress = true;
+        messageIsError = false;
+        if (!authFlow.submitSecret())
+            return;
         Greetd.createSession(currentUser);
     }
 
@@ -71,8 +72,7 @@ Scope {
             return;
 
         currentUser = username;
-        currentText = "";
-        showFailure = false;
+        authFlow.clear();
         messageIsError = false;
         statusMessage = "";
     }
@@ -116,19 +116,17 @@ Scope {
             if (responseRequired) {
                 if (root.currentText.length > 0) {
                     Greetd.respond(root.currentText);
-                    root.currentText = "";
+                    authFlow.clear();
                 } else {
-                    root.unlockInProgress = false;
+                    authFlow.inProgress = false;
                 }
             }
         }
 
         function onAuthFailure(message) {
-            root.showFailure = true;
+            authFlow.fail();
             root.messageIsError = true;
             root.statusMessage = message;
-            root.currentText = "";
-            root.unlockInProgress = false;
         }
 
         function onReadyToLaunch() {
@@ -138,11 +136,14 @@ Scope {
 
         function onError(error) {
             root.launching = false;
-            root.showFailure = true;
+            authFlow.fail();
             root.messageIsError = true;
             root.statusMessage = error;
-            root.unlockInProgress = false;
         }
+    }
+
+    AuthFlow {
+        id: authFlow
     }
 
     Process {

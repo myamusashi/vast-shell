@@ -18,6 +18,8 @@ LazyLoader {
     required property Component body
 
     property bool needKeyboardFocus: true
+    property string acceptedText: qsTr("Yes")
+    property string rejectedText: qsTr("No")
 
     property int cardPaddingWidth: 60
     property int cardPaddingHeight: 40
@@ -119,8 +121,7 @@ LazyLoader {
                         backgroundRadius: Appearance.rounding.normal
                         icon.name: "cancel"
                         icon.color: Colours.m3Colors.m3Primary
-                        text: qsTr("No")
-                        textColor: Colours.m3Colors.m3Primary
+                        text: root.rejectedText
                         color: "transparent"
                         onClicked: root.rejected()
                     }
@@ -130,7 +131,7 @@ LazyLoader {
                         implicitHeight: 40
                         icon.name: "check"
                         icon.color: Colours.m3Colors.m3Primary
-                        text: qsTr("Yes")
+                        text: root.acceptedText
                         textColor: Colours.m3Colors.m3Primary
                         color: "transparent"
                         onClicked: root.accepted()

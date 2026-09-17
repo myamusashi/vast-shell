@@ -35,7 +35,7 @@ StyledTextInput {
         const selectedPath = list[carousel.currentIndex];
         if (selectedPath === undefined)
             return;
-        if (controller.isVideo(selectedPath))
+        if (MediaKind.isVideo(selectedPath))
             controller.setVideoWallpaper(selectedPath);
         else
             controller.setWallpaper(selectedPath, selectedPath);

@@ -6,6 +6,8 @@ import Quickshell.Io
 import Vast.Audio
 
 import qs.Core.Configs
+import qs.Services
+
 import "../captureUtils.js" as Utils
 
 Singleton {
@@ -35,17 +37,11 @@ Singleton {
     property bool includeAudio: false
     property bool showCursor: true
 
-    property var thumbnailQueue: []
-    property var currentThumbnailJob: null
-    property bool thumbnailJobBusy: false
-
     property var deviceCache: []
     property var defaultSink: sinks()[0] ?? null
     property var defaultSource: sources()[0] ?? null
 
     signal devicesChanged
-
-    signal thumbnailReady(string videoPath, string thumbnailPath)
 
     readonly property string pidFile: "/tmp/wl-screenrec.pid"
     readonly property string videoStateFile: "/tmp/wl-screenrec.video"
@@ -200,7 +196,7 @@ Singleton {
                     root.recordingPid = pid;
                     root.isRecording = true;
                     root.currentOutputFile = video;
-                    root.sendNotification("Recording Restored", "Adopted active recording from previous session.", "normal", "", "screenrecord");
+                    CaptureNotify.sendNotification("Recording Restored", "Adopted active recording from previous session.", "normal", "", "screenrecord");
                 } else {
                     root.cleanupFiles();
                 }
@@ -214,75 +210,6 @@ Singleton {
         onTriggered: {
             if (root.isRecording && root.recordingPid > 0)
                 recordingProcess.signal(9);
-        }
-    }
-
-    Process {
-        id: ffprobeProcess
-        property string videoPath
-        property string outputDir
-        property var callback: null
-
-        command: ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", videoPath]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const trimmed = text.trim();
-                const duration = parseFloat(trimmed);
-                const ts = isNaN(duration) ? 0 : duration / 2.0;
-
-                const h = Math.floor(ts / 3600);
-                const m = Math.floor((ts % 3600) / 60);
-                const s = Math.floor(ts % 60);
-                const formatted = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
-
-                const fileName = ffprobeProcess.videoPath.split("/").pop();
-                const dot = fileName.lastIndexOf(".");
-                if (dot <= 0) {
-                    root.finishThumbnailJob(ffprobeProcess.videoPath, "", ffprobeProcess.callback);
-                    return;
-                }
-
-                ffmpegProcess.seek = formatted;
-                ffmpegProcess.videoPath = ffprobeProcess.videoPath;
-                ffmpegProcess.outputDir = ffprobeProcess.outputDir;
-                ffmpegProcess.thumb = ffprobeProcess.outputDir + "/" + fileName.substring(0, dot) + ".png";
-                ffmpegProcess.callback = ffprobeProcess.callback;
-                ffmpegProcess.running = true;
-            }
-        }
-    }
-
-    Process {
-        id: ffmpegProcess
-
-        property string seek
-        property string videoPath
-        property string thumb
-        property string outputDir
-        property var callback: null
-
-        command: ["sh", "-c", "mkdir -p \"$1\" && exec ffmpeg -ss \"$2\" -i \"$3\" -vframes 1 -q:v 2 -vf scale=256:-1 \"$4\" -y -v error", "sh", outputDir, seek, videoPath, thumb]
-
-        // qmllint disable
-        onExited: (exitCode, exitStatus) => {
-            // qmllint enable
-            root.finishThumbnailJob(ffmpegProcess.videoPath, exitCode === 0 ? ffmpegProcess.thumb : "", ffmpegProcess.callback);
-        }
-    }
-
-    Process {
-        id: actionProcess
-        property string filePath: ""
-        property string dirPath: ""
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const action = text.trim();
-                const target = action === "folder" ? actionProcess.dirPath : actionProcess.filePath;
-                if ((action === "open" || action === "folder" || action === "default") && target)
-                    Quickshell.execDetached({
-                        command: ["xdg-open", target]
-                    });
-            }
         }
     }
 
@@ -350,7 +277,7 @@ Singleton {
 
     function startRecording(geometry, output) {
         if (isRecording) {
-            sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
+            CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
             return;
         }
 
@@ -380,7 +307,7 @@ Singleton {
 
     function startRecordingToplevel(appId) {
         if (isRecording) {
-            sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
+            CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
             return;
         }
 
@@ -426,7 +353,7 @@ Singleton {
 
     function stopRecording() {
         if (!isRecording || recordingPid <= 0) {
-            sendNotification("Recording Failed", "No active recording found.", "critical", "dialog-error", "Screen Record");
+            CaptureNotify.sendNotification("Recording Failed", "No active recording found.", "critical", "dialog-error", "Screen Record");
             return;
         }
 
@@ -440,91 +367,27 @@ Singleton {
     function saveHistory() {
         if (isRecording && recordingPid > 0) {
             recordingProcess.signal(10);
-            sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
+            CaptureNotify.sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
         }
     }
 
     function createThumbnail(videoPath, outputDir) {
-        generate(videoPath, outputDir, null);
-    }
-
-    function generate(videoPath, outputDir, callback) {
-        const active = currentThumbnailJob;
-        if (active && active.videoPath === videoPath && active.outputDir === outputDir)
-            return;
-        for (const job of thumbnailQueue)
-            if (job.videoPath === videoPath && job.outputDir === outputDir)
-                return;
-        thumbnailQueue.push({
-            videoPath: videoPath,
-            outputDir: outputDir,
-            callback: callback
-        });
-        startNextThumbnailJob();
-    }
-
-    function startNextThumbnailJob() {
-        if (thumbnailJobBusy || thumbnailQueue.length === 0)
-            return;
-        const job = thumbnailQueue.shift();
-        currentThumbnailJob = job;
-        thumbnailJobBusy = true;
-        ffprobeProcess.videoPath = job.videoPath;
-        ffprobeProcess.outputDir = job.outputDir;
-        ffprobeProcess.callback = job.callback;
-        ffprobeProcess.running = true;
-    }
-
-    function finishThumbnailJob(videoPath, thumbnailPath, callback) {
-        thumbnailReady(videoPath, thumbnailPath);
-        if (callback)
-            callback(videoPath, thumbnailPath);
-        currentThumbnailJob = null;
-        thumbnailJobBusy = false;
-        startNextThumbnailJob();
+        ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, outputDir), null);
     }
 
     function onRecordingStopped(videoPath) {
-        generate(videoPath, thumbnailDir, (vp, tp) => {
+        ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, thumbnailDir), (vp, tp) => {
             if (tp)
-                sendNotification("Recording Stopped", "Video saved to " + vp, "normal", tp, "screenrecord");
+                CaptureNotify.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", tp, "screenrecord");
             else
-                sendNotification("Recording Stopped", "Video saved to " + vp, "normal", "video-x-generic", "screenrecord");
+                CaptureNotify.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", "video-x-generic", "screenrecord");
             gotoLink(vp, tp, false);
         });
     }
 
-    function sendNotification(summary, body, urgency, icon, app, actions) {
-        const args = ["notify-send", "-a", app || "screengrab"];
-        if (urgency && urgency !== "normal")
-            args.push("-u", urgency);
-        if (icon)
-            args.push("-i", icon);
-
-        const hasActions = actions && actions.length > 0;
-        if (hasActions) {
-            args.push("--wait");
-            for (let i = 0; i < actions.length; i++)
-                args.push("--action=" + actions[i].id + "=" + actions[i].label);
-        }
-        args.push(summary, body);
-
-        if (!hasActions) {
-            Quickshell.execDetached({
-                command: args
-            });
-            return;
-        }
-
-        actionProcess.filePath = body;
-        actionProcess.dirPath = body.substring(0, Math.max(body.lastIndexOf("/"), 0)) || "/";
-        actionProcess.command = args;
-        actionProcess.running = true;
-    }
-
     function gotoLink(file, thumb, showNotification) {
         if (showNotification)
-            sendNotification("Capture Saved", file, "normal", thumb ?? "", "screengrab", [
+            CaptureNotify.sendNotification("Capture Saved", file, "normal", thumb ?? "", "screengrab", [
                 {
                     "id": "default",
                     "label": qsTr("Open")

@@ -73,7 +73,7 @@ PathView {
 
         onSelectRequested: idx => root.currentIndex = idx
         onActivateRequested: path => {
-            if (root.controller.isVideo(path))
+            if (MediaKind.isVideo(path))
                 root.controller.setVideoWallpaper(path);
             else
                 root.controller.setWallpaper(path, path);

@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Core.Configs
-import qs.Core.Utils
 import qs.Components.Base
 import qs.Components.Dialog.FileDialog
 import qs.Services
@@ -84,70 +83,14 @@ SettingsPageBase {
             Repeater {
                 model: KDEConnect.allDevices
 
-                delegate: RowLayout {
-                    id: deviceDelegate
-
+                delegate: KdeDeviceRow {
                     required property var modelData
 
-                    Layout.fillWidth: true
-                    spacing: Appearance.spacing.normal
-
-                    Icon {
-                        icon: "smartphone"
-                        font.pixelSize: Appearance.fonts.size.normal
-                        color: Colours.m3Colors.m3Primary
-                    }
-
-                    ColumnLayout {
-                        spacing: 2
-
-                        StyledText {
-                            text: deviceDelegate.modelData.name
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                            color: Colours.m3Colors.m3OnSurface
-                        }
-
-                        StyledText {
-                            text: deviceDelegate.modelData.id
-                            font.pixelSize: Appearance.fonts.size.small
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            elide: Text.ElideMiddle
-                            Layout.maximumWidth: 250
-                        }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    Rectangle {
-                        implicitWidth: transferLabel.implicitWidth + 24
-                        implicitHeight: 32
-                        radius: Appearance.rounding.small
-                        color: transferMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.12) : "transparent"
-
-                        StyledText {
-                            id: transferLabel
-
-                            anchors.centerIn: parent
-                            text: qsTr("Transfer")
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                            color: Colours.m3Colors.m3Primary
-                        }
-
-                        MArea {
-                            id: transferMouseArea
-
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                page.deviceIdToTransfer = deviceDelegate.modelData.id;
-                                transferFileDialog.openFileDialog();
-                            }
-                        }
+                    device: modelData
+                    actionText: qsTr("Transfer")
+                    onActionTriggered: {
+                        page.deviceIdToTransfer = modelData.id;
+                        transferFileDialog.openFileDialog();
                     }
                 }
             }
@@ -173,68 +116,12 @@ SettingsPageBase {
             Repeater {
                 model: KDEConnect.availableDevices
 
-                delegate: RowLayout {
-                    id: availableDelegate
-
+                delegate: KdeDeviceRow {
                     required property var modelData
 
-                    Layout.fillWidth: true
-                    spacing: Appearance.spacing.normal
-
-                    Icon {
-                        icon: "smartphone"
-                        font.pixelSize: Appearance.fonts.size.normal
-                        color: Colours.m3Colors.m3Primary
-                    }
-
-                    ColumnLayout {
-                        spacing: 2
-
-                        StyledText {
-                            text: availableDelegate.modelData.name
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                            color: Colours.m3Colors.m3OnSurface
-                        }
-
-                        StyledText {
-                            text: availableDelegate.modelData.id
-                            font.pixelSize: Appearance.fonts.size.small
-                            color: Colours.m3Colors.m3OnSurfaceVariant
-                            elide: Text.ElideMiddle
-                            Layout.maximumWidth: 250
-                        }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    Rectangle {
-                        implicitWidth: pairLabel.implicitWidth + 24
-                        implicitHeight: 32
-                        radius: Appearance.rounding.small
-                        color: pairMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.12) : "transparent"
-
-                        StyledText {
-                            id: pairLabel
-
-                            anchors.centerIn: parent
-                            text: qsTr("Pair")
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.weight: Font.DemiBold
-                            color: Colours.m3Colors.m3Primary
-                        }
-
-                        MArea {
-                            id: pairMouseArea
-
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: KDEConnect.pair(availableDelegate.modelData.id)
-                        }
-                    }
+                    device: modelData
+                    actionText: qsTr("Pair")
+                    onActionTriggered: KDEConnect.pair(modelData.id)
                 }
             }
         }

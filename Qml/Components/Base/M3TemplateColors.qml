@@ -1,0 +1,67 @@
+pragma ComponentBehavior: Bound
+
+import QtQuick
+import Quickshell
+
+Scope {
+    id: root
+
+    property var source: ({})
+
+    readonly property color m3Background: source?.background ?? "transparent"
+    readonly property color m3Surface: source?.surface ?? "transparent"
+    readonly property color m3SurfaceDim: source?.surfaceDim ?? "transparent"
+    readonly property color m3SurfaceBright: source?.surfaceBright ?? "transparent"
+    readonly property color m3SurfaceContainerLowest: source?.surfaceContainerLowest ?? "transparent"
+    readonly property color m3SurfaceContainerLow: source?.surfaceContainerLow ?? "transparent"
+    readonly property color m3SurfaceContainer: source?.surfaceContainer ?? "transparent"
+    readonly property color m3SurfaceContainerHigh: source?.surfaceContainerHigh ?? "transparent"
+    readonly property color m3SurfaceContainerHighest: source?.surfaceContainerHighest ?? "transparent"
+    readonly property color m3OnSurface: source?.onSurface ?? "transparent"
+    readonly property color m3OnSurfaceVariant: source?.onSurfaceVariant ?? "transparent"
+    readonly property color m3OnBackground: source?.onBackground ?? "transparent"
+    readonly property color m3Primary: source?.primary ?? "transparent"
+    readonly property color m3OnPrimary: source?.onPrimary ?? "transparent"
+    readonly property color m3PrimaryContainer: source?.primaryContainer ?? "transparent"
+    readonly property color m3OnPrimaryContainer: source?.onPrimaryContainer ?? "transparent"
+    readonly property color m3PrimaryFixed: source?.primaryFixed ?? "transparent"
+    readonly property color m3PrimaryFixedDim: source?.primaryFixedDim ?? "transparent"
+    readonly property color m3OnPrimaryFixed: source?.onPrimaryFixed ?? "transparent"
+    readonly property color m3OnPrimaryFixedVariant: source?.onPrimaryFixedVariant ?? "transparent"
+    readonly property color m3Secondary: source?.secondary ?? "transparent"
+    readonly property color m3OnSecondary: source?.onSecondary ?? "transparent"
+    readonly property color m3SecondaryContainer: source?.secondaryContainer ?? "transparent"
+    readonly property color m3OnSecondaryContainer: source?.onSecondaryContainer ?? "transparent"
+    readonly property color m3SecondaryFixed: source?.secondaryFixed ?? "transparent"
+    readonly property color m3SecondaryFixedDim: source?.secondaryFixedDim ?? "transparent"
+    readonly property color m3OnSecondaryFixed: source?.onSecondaryFixed ?? "transparent"
+    readonly property color m3OnSecondaryFixedVariant: source?.onSecondaryFixedVariant ?? "transparent"
+    readonly property color m3Tertiary: source?.tertiary ?? "transparent"
+    readonly property color m3OnTertiary: source?.onTertiary ?? "transparent"
+    readonly property color m3TertiaryContainer: source?.tertiaryContainer ?? "transparent"
+    readonly property color m3OnTertiaryContainer: source?.onTertiaryContainer ?? "transparent"
+    readonly property color m3TertiaryFixed: source?.tertiaryFixed ?? "transparent"
+    readonly property color m3TertiaryFixedDim: source?.tertiaryFixedDim ?? "transparent"
+    readonly property color m3OnTertiaryFixed: source?.onTertiaryFixed ?? "transparent"
+    readonly property color m3OnTertiaryFixedVariant: source?.onTertiaryFixedVariant ?? "transparent"
+    readonly property color m3Error: source?.error ?? "transparent"
+    readonly property color m3ErrorContainer: source?.errorContainer ?? "transparent"
+    readonly property color m3OnError: source?.onError ?? "transparent"
+    readonly property color m3OnErrorContainer: source?.onErrorContainer ?? "transparent"
+    readonly property color m3InverseSurface: source?.inverseSurface ?? "transparent"
+    readonly property color m3InverseOnSurface: source?.inverseOnSurface ?? "transparent"
+    readonly property color m3InversePrimary: source?.inversePrimary ?? "transparent"
+    readonly property color m3Outline: source?.outline ?? "transparent"
+    readonly property color m3OutlineVariant: source?.outlineVariant ?? "transparent"
+    readonly property color m3Scrim: source?.scrim ?? "transparent"
+    readonly property color m3Shadow: source?.shadow ?? "transparent"
+    readonly property color m3SurfaceTint: source?.surfaceTint ?? "transparent"
+    readonly property color m3SurfaceVariant: source?.surfaceVariant ?? "transparent"
+    readonly property color m3Red: m3Error
+    readonly property color m3Green: source?.green ?? "transparent"
+    readonly property color m3Blue: source?.blue ?? "transparent"
+    readonly property color m3Yellow: source?.yellow ?? "transparent"
+    readonly property color m3Orange: source?.orange ?? "transparent"
+    readonly property color m3Purple: source?.purple ?? "transparent"
+    readonly property color m3Maroon: source?.maroon ?? "transparent"
+}

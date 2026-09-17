@@ -214,23 +214,11 @@ Item {
             }
         }
 
-        DialogBox {
+        ConfirmDialog {
             id: boxConfirmation
 
-            header: StyledText {
-                text: qsTr("Session")
-                color: Colours.m3Colors.m3OnSurface
-                elide: Text.ElideMiddle
-                font.pixelSize: Appearance.fonts.size.extraLarge
-                font.bold: true
-            }
-            body: StyledText {
-                text: qsTr("Do you want to %1?").arg(root.pendingActionName.toLowerCase())
-                font.pixelSize: Appearance.fonts.size.large
-                color: Colours.m3Colors.m3OnSurface
-                wrapMode: Text.Wrap
-                width: parent.width
-            }
+            title: qsTr("Session")
+            bodyText: qsTr("Do you want to %1?").arg(root.pendingActionName.toLowerCase())
             active: root.showConfirmDialog
 
             onAccepted: {

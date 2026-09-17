@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 
 import qs.Core.Utils
+import qs.Services
 
 Singleton {
     id: root
@@ -12,21 +13,23 @@ Singleton {
     property alias greeterConfig: greeterConfigJson
     property string lastStaticTarget: ""
     property string lastVideoTarget: ""
-    property bool videoThumbPending: false
     property int thumbnailVersion: 0
     property string lastRegenTarget: ""
 
     function thumbnailCachePathFor(path) {
-        return `${Paths.cacheDir}/vast-shell/greeter-wallpaper-${Qt.md5(path)}.png`;
+        return GreeterWallpaper.thumbnailFor(path);
     }
 
     function regenerateVideoThumbnail() {
         const videoPath = greeterConfig.videoWallpaper;
-        if (!greeterConfig.useVideoWallpaper || videoPath === "" || videoThumbPending || lastRegenTarget === videoPath)
+        if (!greeterConfig.useVideoWallpaper || videoPath === "" || lastRegenTarget === videoPath)
             return;
         lastRegenTarget = videoPath;
-        videoThumbGen.command = ["sh", "-c", `mkdir -p ${JSON.stringify(Paths.cacheDir + "/vast-shell")} && exec ffmpeg -y -loglevel error -i ${JSON.stringify(videoPath)} -vf scale=320:-2 -frames:v 1 ${JSON.stringify(thumbnailCachePathFor(videoPath))}`];
-        videoThumbPending = true;
+        ThumbnailQueue.generate(videoPath, thumbnailCachePathFor(videoPath), (path, thumbnailPath) => {
+            if (thumbnailPath === "")
+                root.lastRegenTarget = "";
+            root.thumbnailVersion++;
+        });
     }
 
     function uploadStatic(path) {
@@ -113,22 +116,6 @@ Singleton {
                 root.lastRegenTarget = "";
                 root.regenerateVideoThumbnail();
             }
-        }
-    }
-
-    Process {
-        id: videoThumbGen
-
-        running: root.videoThumbPending
-        stderr: SplitParser {
-            onRead: data => console.log("[GreeterConfig] video thumb stderr:", data)
-        }
-        onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
-            root.videoThumbPending = false;
-            if (exitCode !== 0)
-                root.lastRegenTarget = "";
-            console.log("[GreeterConfig] video thumbnail:", exitCode === 0 ? "ok" : "failed", root.lastVideoTarget);
-            root.thumbnailVersion++;
         }
     }
 

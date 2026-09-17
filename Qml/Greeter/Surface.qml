@@ -29,11 +29,6 @@ WlSessionLockSurface {
     property string configStaticPath: ""
     property string configVideoPath: ""
     readonly property string assetWallpaper: Paths.projectRoot + "/Assets/images/wallpaper.png"
-    property string greeterThumbnailJob: ""
-    readonly property string thumbnailDir: `${Paths.cacheDir}/vast-shell`
-    function greeterThumbnailPath() {
-        return `${thumbnailDir}/greeter-wallpaper-${Qt.md5(greeterThumbnailJob)}.png`;
-    }
     property url effectiveWallpaper: useVideoWallpaper ? "file://" + wallpaperPath : wallpaperPath
     property bool effectiveIsVideo: useVideoWallpaper
     property url colorSource: ""
@@ -44,12 +39,10 @@ WlSessionLockSurface {
         onFileChanged: reload()
         onLoaded: {
             try {
-                const json = JSON.parse(text());
-                root.configUseVideo = json.useVideoWallpaper === true;
-                if (json.staticWallpaper)
-                    root.configStaticPath = json.staticWallpaper;
-                if (json.videoWallpaper)
-                    root.configVideoPath = json.videoWallpaper;
+                const config = GreeterWallpaper.loadConfig(text());
+                root.configUseVideo = config.useVideoWallpaper;
+                root.configStaticPath = config.staticWallpaper;
+                root.configVideoPath = config.videoWallpaper;
                 root.configLoaded = true;
             } catch (error) {}
         }
@@ -173,28 +166,15 @@ WlSessionLockSurface {
                     root.effectiveWallpaper = "file://" + root.wallpaperPath;
                     root.effectiveIsVideo = true;
                     play();
-                    root.greeterThumbnailJob = root.wallpaperPath;
+                    ThumbnailQueue.generate(root.wallpaperPath, GreeterWallpaper.thumbnailFor(root.wallpaperPath), (path, thumbnailPath) => {
+                        if (thumbnailPath !== "")
+                            root.colorSource = "file://" + thumbnailPath;
+                    });
                 } else if (mediaStatus === MediaPlayer.InvalidMedia) {
                     root.effectiveWallpaper = root.assetWallpaper;
                     root.effectiveIsVideo = false;
                     root.colorSource = root.assetWallpaper;
                 }
-            }
-        }
-
-        Process {
-            id: greeterThumbnailExtractor
-
-            command: ["sh", "-c", `mkdir -p ${JSON.stringify(root.thumbnailDir)} && { test -s ${JSON.stringify(root.greeterThumbnailPath())} || ffmpeg -y -loglevel error -i ${JSON.stringify(root.greeterThumbnailJob)} -frames:v 1 ${JSON.stringify(root.greeterThumbnailPath())}; }`]
-            running: root.greeterThumbnailJob !== ""
-            onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
-                const thumbnailPath = root.greeterThumbnailPath();
-                const jobPath = root.greeterThumbnailJob;
-                root.greeterThumbnailJob = "";
-                if (exitCode === 0)
-                    root.colorSource = "file://" + thumbnailPath;
-                else
-                    console.warn("[Greeter] thumbnail extraction failed:", exitCode, jobPath);
             }
         }
 

@@ -3,8 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 
-import qs.Core.Configs
-import qs.Components.Base
 import qs.Components.Menu
 
 Popup {
@@ -34,39 +32,11 @@ Popup {
         implicitWidth: 220
     }
 
-    enter: Transition {
-        ParallelAnimation {
-            NAnim {
-                property: "opacity"
-                from: 0.0
-                to: 1.0
-                easing.bezierCurve: Appearance.animations.curves.emphasized
-            }
-            NAnim {
-                property: "scale"
-                from: 0.8
-                to: 1.0
-                easing.bezierCurve: Appearance.animations.curves.emphasized
-            }
-        }
+    enter: MenuTransitions {
+        opening: true
     }
 
-    exit: Transition {
-        ParallelAnimation {
-            NAnim {
-                property: "opacity"
-                from: 1.0
-                to: 0.0
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-            NAnim {
-                property: "scale"
-                from: 1.0
-                to: 0.8
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
-            }
-        }
+    exit: MenuTransitions {
+        opening: false
     }
 }

@@ -16,20 +16,13 @@ Item {
     required property bool active
 
     readonly property int fileCount: island.droppedFiles.length
-    readonly property real maxContentHeight: fileCount * 18 + (fileCount > 1 ? fileCount - 1 : 0) * 4
-    readonly property real visibleHeight: Math.min(120, maxContentHeight)
+    readonly property real maxContentHeight: FileListMetrics.clampHeight(fileCount, 18, 4, 120)
+    readonly property real visibleHeight: maxContentHeight
 
-    implicitWidth: Math.max(240, fileNameMaxWidth + 80)
+    implicitWidth: FileListMetrics.clampWidth(fileNameMaxWidth + 80, 240, Number.POSITIVE_INFINITY)
     implicitHeight: visibleHeight + 80
 
-    readonly property real fileNameMaxWidth: {
-        if (fileCount === 0)
-            return 0;
-        var maximum = 0;
-        for (var i = 0; i < fileCount; i++)
-            maximum = Math.max(maximum, String(island.droppedFiles[i]).split("/").pop().length);
-        return Math.min(280, maximum * 8 + 40);
-    }
+    readonly property real fileNameMaxWidth: FileListMetrics.computeMaxWidth(island.droppedFiles, file => String(file).split("/").pop().length * 8, 280, 40)
 
     ColumnLayout {
         anchors.centerIn: parent

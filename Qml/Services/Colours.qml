@@ -5,7 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Vast.Utils
-
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -15,19 +15,23 @@ Singleton {
     id: root
 
     readonly property M3GeneratedTemplateComponent m3GeneratedColors: M3GeneratedTemplateComponent {}
-    readonly property MaterialTemplateComponent materialColors: MaterialTemplateComponent {}
-    readonly property StaticColorTemplateComponent staticColors: StaticColorTemplateComponent {}
+    readonly property M3TemplateColors materialColors: M3TemplateColors {
+        source: root.animatedMaterialColors
+    }
+    readonly property M3TemplateColors staticColors: M3TemplateColors {
+        source: root.staticTemplateColors
+    }
     readonly property var materialTemplateColors: animatedMaterialColors
     readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
-    readonly property M3TemplateColors m3Colors: Configs.colors.useMaterialColor ? materialColors : Configs.colors.useStaticColors ? staticColors : m3GeneratedColors
+    readonly property var m3Colors: Configs.colors.useMaterialColor ? materialColors : Configs.colors.useStaticColors ? staticColors : m3GeneratedColors
 
     readonly property string wallpaperSource: {
         const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
         if (!wp)
             return "";
-        if (!/\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(wp))
+        if (!MediaKind.isVideo(wp))
             return wp;
-        return `${Paths.cacheDir}/vast-shell/vast-wallpaper-${Qt.md5(wp)}.png?v=${Wallpaper.thumbnailVersion}`;
+        return `${MediaKind.thumbnailPathFor(wp)}?v=${Wallpaper.thumbnailVersion}`;
     }
 
     readonly property var materialPaletteSource: materialColor.ready ? materialColor.colors : lastValidPalette
@@ -109,143 +113,7 @@ Singleton {
         duration: Appearance.animations.durations.expressiveDefaultSpatial
     }
 
-    component StaticColorTemplateComponent: M3TemplateColors {
-        readonly property color m3Background: root.staticTemplateColors.background
-        readonly property color m3Surface: root.staticTemplateColors.surface
-        readonly property color m3SurfaceDim: root.staticTemplateColors.surfaceDim
-        readonly property color m3SurfaceBright: root.staticTemplateColors.surfaceBright
-        readonly property color m3SurfaceContainerLowest: root.staticTemplateColors.surfaceContainerLowest
-        readonly property color m3SurfaceContainerLow: root.staticTemplateColors.surfaceContainerLow
-        readonly property color m3SurfaceContainer: root.staticTemplateColors.surfaceContainer
-        readonly property color m3SurfaceContainerHigh: root.staticTemplateColors.surfaceContainerHigh
-        readonly property color m3SurfaceContainerHighest: root.staticTemplateColors.surfaceContainerHighest
-
-        readonly property color m3OnSurface: root.staticTemplateColors.onSurface
-        readonly property color m3OnSurfaceVariant: root.staticTemplateColors.onSurfaceVariant
-        readonly property color m3OnBackground: root.staticTemplateColors.onBackground
-
-        readonly property color m3Primary: root.staticTemplateColors.primary
-        readonly property color m3OnPrimary: root.staticTemplateColors.onPrimary
-        readonly property color m3PrimaryContainer: root.staticTemplateColors.primaryContainer
-        readonly property color m3OnPrimaryContainer: root.staticTemplateColors.onPrimaryContainer
-        readonly property color m3PrimaryFixed: root.staticTemplateColors.primaryFixed
-        readonly property color m3PrimaryFixedDim: root.staticTemplateColors.primaryFixedDim
-        readonly property color m3OnPrimaryFixed: root.staticTemplateColors.onPrimaryFixed
-        readonly property color m3OnPrimaryFixedVariant: root.staticTemplateColors.onPrimaryFixedVariant
-
-        readonly property color m3Secondary: root.staticTemplateColors.secondary
-        readonly property color m3OnSecondary: root.staticTemplateColors.onSecondary
-        readonly property color m3SecondaryContainer: root.staticTemplateColors.secondaryContainer
-        readonly property color m3OnSecondaryContainer: root.staticTemplateColors.onSecondaryContainer
-        readonly property color m3SecondaryFixed: root.staticTemplateColors.secondaryFixed
-        readonly property color m3SecondaryFixedDim: root.staticTemplateColors.secondaryFixedDim
-        readonly property color m3OnSecondaryFixed: root.staticTemplateColors.onSecondaryFixed
-        readonly property color m3OnSecondaryFixedVariant: root.staticTemplateColors.onSecondaryFixedVariant
-
-        readonly property color m3Tertiary: root.staticTemplateColors.tertiary
-        readonly property color m3OnTertiary: root.staticTemplateColors.onTertiary
-        readonly property color m3TertiaryContainer: root.staticTemplateColors.tertiaryContainer
-        readonly property color m3OnTertiaryContainer: root.staticTemplateColors.onTertiaryContainer
-        readonly property color m3TertiaryFixed: root.staticTemplateColors.tertiaryFixed
-        readonly property color m3TertiaryFixedDim: root.staticTemplateColors.tertiaryFixedDim
-        readonly property color m3OnTertiaryFixed: root.staticTemplateColors.onTertiaryFixed
-        readonly property color m3OnTertiaryFixedVariant: root.staticTemplateColors.onTertiaryFixedVariant
-
-        readonly property color m3Error: root.staticTemplateColors.error
-        readonly property color m3ErrorContainer: root.staticTemplateColors.errorContainer
-        readonly property color m3OnError: root.staticTemplateColors.onError
-        readonly property color m3OnErrorContainer: root.staticTemplateColors.onErrorContainer
-
-        readonly property color m3InverseSurface: root.staticTemplateColors.inverseSurface
-        readonly property color m3InverseOnSurface: root.staticTemplateColors.inverseOnSurface
-        readonly property color m3InversePrimary: root.staticTemplateColors.inversePrimary
-
-        readonly property color m3Outline: root.staticTemplateColors.outline
-        readonly property color m3OutlineVariant: root.staticTemplateColors.outlineVariant
-
-        readonly property color m3Scrim: root.staticTemplateColors.scrim
-        readonly property color m3Shadow: root.staticTemplateColors.shadow
-        readonly property color m3SurfaceTint: root.staticTemplateColors.surfaceTint
-        readonly property color m3SurfaceVariant: root.staticTemplateColors.surfaceVariant
-
-        readonly property color m3Red: m3Error
-        readonly property color m3Green: ColorUtils.hctToRgb(145, 50, 70)
-        readonly property color m3Blue: ColorUtils.hctToRgb(220, 50, 70)
-        readonly property color m3Yellow: ColorUtils.hctToRgb(90, 60, 70)
-        readonly property color m3Orange: ColorUtils.hctToRgb(30, 50, 70)
-        readonly property color m3Purple: ColorUtils.hctToRgb(285, 50, 70)
-        readonly property color m3Maroon: ColorUtils.hctToRgb(10, 30, 30)
-    }
-
-    component MaterialTemplateComponent: M3TemplateColors {
-        readonly property color m3Background: root.materialTemplateColors.background
-        readonly property color m3Surface: root.materialTemplateColors.surface
-        readonly property color m3SurfaceDim: root.materialTemplateColors.surfaceDim
-        readonly property color m3SurfaceBright: root.materialTemplateColors.surfaceBright
-        readonly property color m3SurfaceContainerLowest: root.materialTemplateColors.surfaceContainerLowest
-        readonly property color m3SurfaceContainerLow: root.materialTemplateColors.surfaceContainerLow
-        readonly property color m3SurfaceContainer: root.materialTemplateColors.surfaceContainer
-        readonly property color m3SurfaceContainerHigh: root.materialTemplateColors.surfaceContainerHigh
-        readonly property color m3SurfaceContainerHighest: root.materialTemplateColors.surfaceContainerHighest
-
-        readonly property color m3OnSurface: root.materialTemplateColors.onSurface
-        readonly property color m3OnSurfaceVariant: root.materialTemplateColors.onSurfaceVariant
-        readonly property color m3OnBackground: root.materialTemplateColors.onBackground
-
-        readonly property color m3Primary: root.materialTemplateColors.primary
-        readonly property color m3OnPrimary: root.materialTemplateColors.onPrimary
-        readonly property color m3PrimaryContainer: root.materialTemplateColors.primaryContainer
-        readonly property color m3OnPrimaryContainer: root.materialTemplateColors.onPrimaryContainer
-        readonly property color m3PrimaryFixed: root.materialTemplateColors.primaryFixed
-        readonly property color m3PrimaryFixedDim: root.materialTemplateColors.primaryFixedDim
-        readonly property color m3OnPrimaryFixed: root.materialTemplateColors.onPrimaryFixed
-        readonly property color m3OnPrimaryFixedVariant: root.materialTemplateColors.onPrimaryFixedVariant
-
-        readonly property color m3Secondary: root.materialTemplateColors.secondary
-        readonly property color m3OnSecondary: root.materialTemplateColors.onSecondary
-        readonly property color m3SecondaryContainer: root.materialTemplateColors.secondaryContainer
-        readonly property color m3OnSecondaryContainer: root.materialTemplateColors.onSecondaryContainer
-        readonly property color m3SecondaryFixed: root.materialTemplateColors.secondaryFixed
-        readonly property color m3SecondaryFixedDim: root.materialTemplateColors.secondaryFixedDim
-        readonly property color m3OnSecondaryFixed: root.materialTemplateColors.onSecondaryFixed
-        readonly property color m3OnSecondaryFixedVariant: root.materialTemplateColors.onSecondaryFixedVariant
-
-        readonly property color m3Tertiary: root.materialTemplateColors.tertiary
-        readonly property color m3OnTertiary: root.materialTemplateColors.onTertiary
-        readonly property color m3TertiaryContainer: root.materialTemplateColors.tertiaryContainer
-        readonly property color m3OnTertiaryContainer: root.materialTemplateColors.onTertiaryContainer
-        readonly property color m3TertiaryFixed: root.materialTemplateColors.tertiaryFixed
-        readonly property color m3TertiaryFixedDim: root.materialTemplateColors.tertiaryFixedDim
-        readonly property color m3OnTertiaryFixed: root.materialTemplateColors.onTertiaryFixed
-        readonly property color m3OnTertiaryFixedVariant: root.materialTemplateColors.onTertiaryFixedVariant
-
-        readonly property color m3Error: root.materialTemplateColors.error
-        readonly property color m3ErrorContainer: root.materialTemplateColors.errorContainer
-        readonly property color m3OnError: root.materialTemplateColors.onError
-        readonly property color m3OnErrorContainer: root.materialTemplateColors.onErrorContainer
-
-        readonly property color m3InverseSurface: root.materialTemplateColors.inverseSurface
-        readonly property color m3InverseOnSurface: root.materialTemplateColors.inverseOnSurface
-        readonly property color m3InversePrimary: root.materialTemplateColors.inversePrimary
-
-        readonly property color m3Outline: root.materialTemplateColors.outline
-        readonly property color m3OutlineVariant: root.materialTemplateColors.outlineVariant
-
-        readonly property color m3Scrim: root.materialTemplateColors.scrim
-        readonly property color m3Shadow: root.materialTemplateColors.shadow
-        readonly property color m3SurfaceTint: root.materialTemplateColors.surfaceTint
-        readonly property color m3SurfaceVariant: root.materialTemplateColors.surfaceVariant
-
-        readonly property color m3Red: m3Error
-        readonly property color m3Green: ColorUtils.hctToRgb(145, 50, 70)
-        readonly property color m3Blue: ColorUtils.hctToRgb(220, 50, 70)
-        readonly property color m3Yellow: ColorUtils.hctToRgb(90, 60, 70)
-        readonly property color m3Orange: ColorUtils.hctToRgb(30, 50, 70)
-        readonly property color m3Purple: ColorUtils.hctToRgb(285, 50, 70)
-        readonly property color m3Maroon: ColorUtils.hctToRgb(10, 30, 30)
-    }
-
-    component M3GeneratedTemplateComponent: M3TemplateColors {
+    component M3GeneratedTemplateComponent: QtObject {
         readonly property color m3SourceColor: {
             const sourceColor = root.materialTemplateColors.sourceColor;
             return sourceColor ? sourceColor : "#6750A4";
@@ -327,64 +195,5 @@ Singleton {
         readonly property color m3Orange: ColorUtils.hctToRgb(30, 50, Configs.colors.isDarkMode ? 70 : 40)
         readonly property color m3Purple: ColorUtils.hctToRgb(285, 50, Configs.colors.isDarkMode ? 70 : 40)
         readonly property color m3Maroon: ColorUtils.hctToRgb(10, 40, Configs.colors.isDarkMode ? 45 : 30)
-    }
-
-    component M3TemplateColors: QtObject {
-        readonly property color m3Background: "transparent"
-        readonly property color m3Surface: "transparent"
-        readonly property color m3SurfaceDim: "transparent"
-        readonly property color m3SurfaceBright: "transparent"
-        readonly property color m3SurfaceContainerLowest: "transparent"
-        readonly property color m3SurfaceContainerLow: "transparent"
-        readonly property color m3SurfaceContainer: "transparent"
-        readonly property color m3SurfaceContainerHigh: "transparent"
-        readonly property color m3SurfaceContainerHighest: "transparent"
-        readonly property color m3OnSurface: "transparent"
-        readonly property color m3OnSurfaceVariant: "transparent"
-        readonly property color m3OnBackground: "transparent"
-        readonly property color m3Primary: "transparent"
-        readonly property color m3OnPrimary: "transparent"
-        readonly property color m3PrimaryContainer: "transparent"
-        readonly property color m3OnPrimaryContainer: "transparent"
-        readonly property color m3PrimaryFixed: "transparent"
-        readonly property color m3PrimaryFixedDim: "transparent"
-        readonly property color m3OnPrimaryFixed: "transparent"
-        readonly property color m3OnPrimaryFixedVariant: "transparent"
-        readonly property color m3Secondary: "transparent"
-        readonly property color m3OnSecondary: "transparent"
-        readonly property color m3SecondaryContainer: "transparent"
-        readonly property color m3OnSecondaryContainer: "transparent"
-        readonly property color m3SecondaryFixed: "transparent"
-        readonly property color m3SecondaryFixedDim: "transparent"
-        readonly property color m3OnSecondaryFixed: "transparent"
-        readonly property color m3OnSecondaryFixedVariant: "transparent"
-        readonly property color m3Tertiary: "transparent"
-        readonly property color m3OnTertiary: "transparent"
-        readonly property color m3TertiaryContainer: "transparent"
-        readonly property color m3OnTertiaryContainer: "transparent"
-        readonly property color m3TertiaryFixed: "transparent"
-        readonly property color m3TertiaryFixedDim: "transparent"
-        readonly property color m3OnTertiaryFixed: "transparent"
-        readonly property color m3OnTertiaryFixedVariant: "transparent"
-        readonly property color m3Error: "transparent"
-        readonly property color m3ErrorContainer: "transparent"
-        readonly property color m3OnError: "transparent"
-        readonly property color m3OnErrorContainer: "transparent"
-        readonly property color m3InverseSurface: "transparent"
-        readonly property color m3InverseOnSurface: "transparent"
-        readonly property color m3InversePrimary: "transparent"
-        readonly property color m3Outline: "transparent"
-        readonly property color m3OutlineVariant: "transparent"
-        readonly property color m3Scrim: "transparent"
-        readonly property color m3Shadow: "transparent"
-        readonly property color m3SurfaceTint: "transparent"
-        readonly property color m3SurfaceVariant: "transparent"
-        readonly property color m3Red: "transparent"
-        readonly property color m3Green: "transparent"
-        readonly property color m3Blue: "transparent"
-        readonly property color m3Yellow: "transparent"
-        readonly property color m3Orange: "transparent"
-        readonly property color m3Purple: "transparent"
-        readonly property color m3Maroon: "transparent"
     }
 }
