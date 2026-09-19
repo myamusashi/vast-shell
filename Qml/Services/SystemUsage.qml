@@ -7,6 +7,7 @@ import Quickshell.Io
 import Quickshell.Networking
 
 import qs.Core.States
+import qs.Services
 
 Singleton {
     id: root
