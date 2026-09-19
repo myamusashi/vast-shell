@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Networking
 
@@ -15,11 +16,17 @@ ListView {
     required property var pskDialog
 
     Layout.fillWidth: true
-    implicitHeight: contentHeight
-    interactive: false
+    Layout.preferredHeight: Math.min(contentHeight, 320)
+    implicitHeight: Math.min(contentHeight, 320)
+    interactive: contentHeight > height
+    boundsBehavior: Flickable.StopAtBounds
     model: Networking.devices
     spacing: Appearance.spacing.small
     clip: true
+
+    ScrollBar.vertical: ScrollBar {
+        policy: ScrollBar.AsNeeded
+    }
 
     delegate: ColumnLayout {
         id: deviceDelegate
@@ -32,20 +39,25 @@ ListView {
             target: GlobalStates
 
             function onIsWifiScannerOpenChanged() {
-                deviceDelegate.modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
+                if (deviceDelegate.modelData)
+                    deviceDelegate.modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
             }
         }
 
         Component.onCompleted: {
-            modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
+            if (modelData)
+                modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
         }
 
         Repeater {
             model: ScriptModel {
                 values: {
-                    if (deviceDelegate.modelData.type !== DeviceType.Wifi) // qmllint disable
+                    const device = deviceDelegate.modelData;
+                    if (!device || device.type !== DeviceType.Wifi) // qmllint disable
                         return [];
-                    return WifiUtils.sorted([...deviceDelegate.modelData.networks.values]);
+                    if (!device.networks)
+                        return [];
+                    return WifiUtils.sorted([...device.networks.values]);
                 }
             }
 

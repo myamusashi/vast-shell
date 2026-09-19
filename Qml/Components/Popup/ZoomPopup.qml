@@ -22,6 +22,7 @@ WrapperRectangle {
     property int contentMargin: Appearance.margin.small
     property bool clipContent: false
     property bool deferContent: true
+    property bool enableScroll: true
 
     signal opened
     signal closed
@@ -40,7 +41,7 @@ WrapperRectangle {
         color: Colours.m3Colors.m3Outline
     }
     implicitWidth: parent.width * 0.8
-    implicitHeight: Math.min(contentColumn.implicitHeight + Appearance.margin.small * 2, parent.height * 0.8)
+    implicitHeight: Math.min((header.visible ? header.implicitHeight + bodyColumn.spacing : 0) + (root.enableScroll ? scrollLoader.implicitHeight : staticLoader.implicitHeight) + root.contentMargin * 2, parent.height * 0.8)
     margin: Appearance.margin.small
     radius: Appearance.rounding.small
     color: Colours.m3Colors.m3SurfaceContainer
@@ -94,39 +95,62 @@ WrapperRectangle {
     Timer {
         id: hideTimer
 
-        // keep the popup visible only while the fade-out animation plays;
-        // once invisible it leaves the hit-test path entirely (a visible item
-        // at opacity 0 still swallows wheel/touch on the page below)
         interval: Appearance.animations.durations.expressiveDefaultSpatial + 50
         onTriggered: root.closing = false
     }
 
-    ScrollView {
-        id: scrollView
+    ColumnLayout {
+        id: bodyColumn
 
-        ScrollBar.horizontal.interactive: contentColumn.implicitHeight > scrollView.implicitHeight
-        ScrollBar.vertical.interactive: contentColumn.implicitWidth > scrollView.implicitWidth
-        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+        anchors {
+            fill: parent
+            margins: root.contentMargin
+        }
+        spacing: Appearance.spacing.small
 
-        ColumnLayout {
-            id: contentColumn
+        Header {
+            id: header
 
-            width: scrollView.availableWidth
-            spacing: 0
+            Layout.fillWidth: true
+            visible: header.text !== "" || header.icon !== ""
+            text: ""
+            icon: ""
+        }
 
-            Header {
-                id: header
+        Item {
+            id: bodyHost
 
-                Layout.fillWidth: true
-                text: ""
-                icon: ""
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            ScrollView {
+                id: scrollView
+
+                anchors.fill: parent
+                visible: root.enableScroll
+                clip: true
+                contentWidth: availableWidth
+
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+                Loader {
+                    id: scrollLoader
+
+                    width: scrollView.availableWidth
+                    active: (root.deferContent ? root.isVisible : true) && root.enableScroll
+                    asynchronous: true
+                    clip: root.clipContent
+                    sourceComponent: root.content
+                }
             }
 
             Loader {
-                Layout.fillWidth: true
-                Layout.margins: root.contentMargin
-                active: root.deferContent ? root.isVisible : true
+                id: staticLoader
+
+                anchors.fill: parent
+                visible: !root.enableScroll
+                active: (root.deferContent ? root.isVisible : true) && !root.enableScroll
                 asynchronous: true
                 clip: root.clipContent
                 sourceComponent: root.content

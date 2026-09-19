@@ -13,6 +13,7 @@ ZoomPopup {
 
     contentMargin: Appearance.margin.normal
     clipContent: true
+    enableScroll: false
     content: ColumnLayout {
         width: root.width
         spacing: Appearance.spacing.small

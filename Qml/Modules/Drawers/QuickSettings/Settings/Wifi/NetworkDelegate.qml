@@ -26,6 +26,8 @@ WrapperRectangle {
     }
 
     Layout.fillWidth: true
+    Layout.alignment: Qt.AlignVCenter
+    color: "transparent"
     radius: Appearance.rounding.large
     margin: Appearance.margin.small
 
@@ -48,12 +50,6 @@ WrapperRectangle {
     }
 
     RowLayout {
-        anchors {
-            left: parent.left
-            right: parent.right
-            verticalCenter: parent.verticalCenter
-            margins: Appearance.margin.small
-        }
         spacing: Appearance.spacing.small
 
         Item {

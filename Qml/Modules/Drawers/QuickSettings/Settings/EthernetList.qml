@@ -18,6 +18,7 @@ ZoomPopup {
     readonly property var wiredNetwork: wiredDevice?.network ?? null // qmllint disable
 
     contentMargin: Appearance.margin.normal
+    enableScroll: false
     content: ColumnLayout {
         width: root.width
         spacing: Appearance.spacing.small

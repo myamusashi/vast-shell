@@ -235,18 +235,19 @@ Item {
                                 delegate: WrapperRectangle {
                                     id: networkDelegate
 
-                                    property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-
-                                    BlendColor {
-                                        host: networkDelegate
-                                        target: networkDelegate.target
-                                    }
-
                                     required property var modelData
 
+                                    property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+
                                     Layout.fillWidth: true
+                                    Layout.alignment: Qt.AlignVCenter
+                                    color: "transparent"
                                     radius: Appearance.rounding.large
                                     margin: Appearance.margin.small
+
+                                    function tryConnect() {
+                                        WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
+                                    }
 
                                     TapHandler {
                                         id: networkTap
@@ -254,8 +255,9 @@ Item {
                                         onTapped: networkDelegate.tryConnect()
                                     }
 
-                                    function tryConnect() {
-                                        WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
+                                    BlendColor {
+                                        host: networkDelegate
+                                        target: networkDelegate.target
                                     }
 
                                     Connections {
@@ -266,12 +268,6 @@ Item {
                                     }
 
                                     RowLayout {
-                                        anchors {
-                                            left: parent.left
-                                            right: parent.right
-                                            verticalCenter: parent.verticalCenter
-                                            margins: Appearance.margin.small
-                                        }
                                         spacing: Appearance.spacing.small
 
                                         Item {

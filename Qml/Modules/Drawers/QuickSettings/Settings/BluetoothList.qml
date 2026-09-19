@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import "Bluetooth" as BT
 
 import qs.Core.Configs
@@ -12,6 +13,7 @@ ZoomPopup {
 
     contentMargin: Appearance.margin.normal
     clipContent: true
+    enableScroll: false
     content: ColumnLayout {
         width: root.width
         spacing: Appearance.spacing.small
@@ -22,10 +24,35 @@ ZoomPopup {
             isVisible: root.isVisible
         }
 
-        BT.PairedDevices {}
+        ScrollView {
+            id: deviceScroll
 
-        BT.AvailableDevices {}
+            Layout.fillWidth: true
+            Layout.preferredHeight: Math.min(deviceColumn.implicitHeight, 320)
+            clip: true
+            contentWidth: availableWidth
 
-        BT.BlockedDevices {}
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+
+            ColumnLayout {
+                id: deviceColumn
+
+                width: deviceScroll.availableWidth
+                spacing: Appearance.spacing.small
+
+                BT.PairedDevices {
+                    Layout.fillWidth: true
+                }
+
+                BT.AvailableDevices {
+                    Layout.fillWidth: true
+                }
+
+                BT.BlockedDevices {
+                    Layout.fillWidth: true
+                }
+            }
+        }
     }
 }
