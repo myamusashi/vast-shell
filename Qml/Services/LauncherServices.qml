@@ -113,7 +113,7 @@ Singleton {
         const def = pageDef(launcherPage);
         if (def && def.placeHolder !== undefined)
             return def.placeHolder;
-        return qsTr("Search apps and screenshots");
+        return qsTr("Search");
     }
 
     onQueryChanged: {

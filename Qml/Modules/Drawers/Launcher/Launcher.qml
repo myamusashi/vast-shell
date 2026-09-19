@@ -300,15 +300,6 @@ Item {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.large
                     }
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignHCenter
-                        visible: search.text === "" && !LauncherServices.isSubPage
-                        text: qsTr("Apps and sections · pick Screenshot for captures")
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.small
-                    }
                 }
             }
         }

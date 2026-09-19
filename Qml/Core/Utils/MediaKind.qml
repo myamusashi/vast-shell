@@ -4,6 +4,8 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
+import qs.Core.Utils // qmllint disable
+
 Singleton {
     function isVideo(path) {
         return /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(String(path ?? ""));

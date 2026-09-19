@@ -6,6 +6,7 @@ import QtQuick.Controls
 import qs.Components.Button
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 Item {

@@ -16,7 +16,6 @@ MaterialShape {
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
 
-
     ColumnLayout {
         anchors {
             fill: parent
@@ -105,23 +104,7 @@ MaterialShape {
                 border.width: 2
                 border.color: Colours.m3Colors.m3OnSurface
                 x: {
-                    var position = 0;
-                    var value = canvas.aqi;
-
-                    if (value <= 50) {
-                        position = (value / 50) * 0.2; // 0-20% of gradient
-                    } else if (value <= 100) {
-                        position = 0.2 + ((value - 50) / 50) * 0.2; // 20-40%
-                    } else if (value <= 150) {
-                        position = 0.4 + ((value - 100) / 50) * 0.2; // 40-60%
-                    } else if (value <= 200) {
-                        position = 0.6 + ((value - 150) / 50) * 0.2; // 60-80%
-                    } else if (value <= 300) {
-                        position = 0.8 + ((value - 200) / 100) * 0.2; // 80-100%
-                    } else {
-                        position = Math.min(1.0, 0.8 + ((value - 300) / 200) * 0.2);
-                    }
-
+                    const position = AqiScale.fraction(canvas.aqi, AqiScale.usaBounds, 500);
                     return Math.min(Math.max(0, position * parent.width - width / 2), parent.width - width);
                 }
                 y: parent.height / 2 - height / 2
