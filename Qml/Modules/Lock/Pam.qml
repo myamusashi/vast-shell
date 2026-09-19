@@ -6,8 +6,8 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Pam
 
-import qs.Components.Base
 import qs.Core.Utils
+import qs.Services
 
 Scope {
     id: root
@@ -24,7 +24,12 @@ Scope {
     }
 
     function tryUnlock() {
-        authFlow.submitSecret();
+        if (!authFlow.submitSecret())
+            return;
+        if (pam.active)
+            return;
+        if (!pam.start())
+            authFlow.inProgress = false;
     }
 
     PamContext {

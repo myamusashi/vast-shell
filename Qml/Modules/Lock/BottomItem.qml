@@ -24,7 +24,7 @@ Item {
 
     property alias contentLayout: bar.contentLayout
     property alias lockIcon: bar.lockIcon
-    property string iconName: bar.lockIcon.icon
+    property alias iconName: bar.lockIcon.icon
 
     implicitHeight: 0
 

@@ -23,19 +23,61 @@ WlSessionLockSurface {
     property string maskedBuffer: ""
     property bool isAllSelected: false
     readonly property list<string> maskChars: ["║", "║▌█", "║▌", "▌│", "█║", "𝄂▌║", "▌│", "█║", "𝄂▌║"]
+    property var maskEntries: []
+
+    readonly property color maskColor: {
+        if (root.showErrorMessage)
+            return Colours.m3Colors.m3Error;
+        if (root.pam?.isUnlock ?? false)
+            return Colours.m3Colors.m3Green;
+        if (root.pam?.unlockInProgress ?? false)
+            return Colours.m3Colors.m3OnSurface;
+        if (root.inputBuffer.length > 0)
+            return Colours.m3Colors.m3Primary;
+        return Colours.m3Colors.m3OnSurface;
+    }
+
+    function randomMaskEntry() {
+        return root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+    }
+
+    function pushMaskEntry(entry) {
+        root.maskEntries.push(entry);
+        root.maskedBuffer += entry;
+    }
+
+    function popMaskEntry() {
+        if (root.maskEntries.length === 0)
+            return;
+        const entry = root.maskEntries.pop();
+        root.maskedBuffer = root.maskedBuffer.substring(0, root.maskedBuffer.length - entry.length);
+    }
+
+    function jitterMaskEntry() {
+        if (root.maskEntries.length === 0)
+            return;
+        const idx = Math.floor(Math.random() * root.maskEntries.length);
+        const oldEntry = root.maskEntries[idx];
+        const newEntry = root.randomMaskEntry();
+        let unitOffset = 0;
+        for (let i = 0; i < idx; i++)
+            unitOffset += root.maskEntries[i].length;
+        root.maskEntries[idx] = newEntry;
+        root.maskedBuffer = root.maskedBuffer.substring(0, unitOffset) + newEntry + root.maskedBuffer.substring(unitOffset + oldEntry.length);
+    }
 
     color: "transparent"
     property bool zoomedIn: false
 
     onInputBufferChanged: {
-        var diff = inputBuffer.length - maskedBuffer.length;
+        var diff = inputBuffer.length - maskEntries.length;
         var grew = diff > 0;
         while (diff > 0) {
-            maskedBuffer += maskChars[Math.floor(Math.random() * maskChars.length)];
+            root.pushMaskEntry(root.randomMaskEntry());
             diff--;
         }
         while (diff < 0) {
-            maskedBuffer = maskedBuffer.substring(0, maskedBuffer.length - 1);
+            root.popMaskEntry();
             diff++;
         }
         isAllSelected = false;
@@ -44,7 +86,6 @@ WlSessionLockSurface {
             zoomInAnimation.start();
         }
     }
-
 
     Connections {
         target: root.lock
@@ -63,6 +104,7 @@ WlSessionLockSurface {
             if (root.pam.showFailure) {
                 root.showErrorMessage = true;
                 root.inputBuffer = "";
+                root.maskEntries = [];
                 root.maskedBuffer = "";
                 root.zoomedIn = false;
                 zoomOutAnimation.start();
@@ -116,9 +158,9 @@ WlSessionLockSurface {
         Keys.onPressed: event => {
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                 if (root.inputBuffer.length > 0) {
-                    if (root.zoomedIn) {
+                    if (root.zoomedIn)
                         zoomOutAnimation.start();
-                    }
+
                     root.pam.currentText = root.inputBuffer;
                     root.pam.tryUnlock();
                 }
@@ -147,14 +189,14 @@ WlSessionLockSurface {
             }
 
             if (event.key === Qt.Key_Escape) {
-                if (root.zoomedIn) {
+                if (root.zoomedIn)
                     zoomOutAnimation.start();
-                }
-                if (root.isAllSelected) {
+
+                if (root.isAllSelected)
                     root.isAllSelected = false;
-                } else {
+                else
                     root.inputBuffer = "";
-                }
+
                 root.zoomedIn = false;
                 event.accepted = true;
                 return;
@@ -180,7 +222,7 @@ WlSessionLockSurface {
             }
 
             text: root.maskedBuffer.length > 0 ? root.maskedBuffer : (root.showErrorMessage ? "" : "·")
-            color: root.showErrorMessage ? Colours.m3Colors.m3Error : root.isAllSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+            color: root.maskColor
             font.pixelSize: Appearance.fonts.size.extraLarge * 10
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
@@ -326,7 +368,7 @@ WlSessionLockSurface {
         }
         ScriptAction {
             script: {
-                bottomItem.lockIcon.blendTo(Colours.m3Colors.m3Green);
+                bottomItem.lockIcon.color = Colours.m3Colors.m3Green;
                 bottomItem.iconName = "lock_open_right";
             }
         }
@@ -391,6 +433,9 @@ WlSessionLockSurface {
                 GlobalStates.isLockscreenOpen = false;
                 root.pam.isUnlock = false;
                 root.pam.currentText = "";
+                root.inputBuffer = "";
+                root.maskEntries = [];
+                root.maskedBuffer = "";
                 root.zoomedIn = false;
             }
         }
@@ -442,12 +487,7 @@ WlSessionLockSurface {
         interval: 2500
         repeat: true
         running: root.inputBuffer.length > 0
-        onTriggered: {
-            const idx = Math.floor(Math.random() * root.inputBuffer.length);
-            const arr = root.maskedBuffer.split('');
-            arr[idx] = root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
-            root.maskedBuffer = arr.join('');
-        }
+        onTriggered: root.jitterMaskEntry()
     }
 
     SequentialAnimation {

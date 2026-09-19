@@ -126,7 +126,7 @@ WrapperRectangle {
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 ScriptAction {
-                    script: lockIcon.blendTo(Colours.m3Colors.m3Red)
+                    script: lockIcon.color(Colours.m3Colors.m3Red)
                 }
             }
         }
