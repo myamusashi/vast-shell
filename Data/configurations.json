@@ -28,7 +28,6 @@
 		"toDarkColor": "$HOME/.config/vast-shell/dark-colors.json",
 		"toWhiteColor": "$HOME/.config/vast-shell/light-colors.json",
 		"staticColorsPath": "$HOME/.config/vast-shell/colors.json",
-		"useMaterialColor": false,
 		"useStaticColors": false
 	},
 	"generals": {

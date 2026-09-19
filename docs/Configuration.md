@@ -51,7 +51,6 @@ pip install materialyoucolor pillow
     "toDarkColor":  "$HOME/.config/vast-shell/dark-colors.json",
     "toWhiteColor": "$HOME/.config/vast-shell/light-colors.json",
     "staticColorsPath": "$HOME/.config/vast-shell/colors.json",
-    "useMaterialColor": false,
     "useStaticColors": false
   },
   "generals": {
@@ -138,13 +137,12 @@ pip install materialyoucolor pillow
 | Key | Default | Description |
 |---|---|---|
 | `isDarkMode` | `true` | Prefer dark mode. |
-| `useMaterialColor` | `false` | Generate colors dynamically from the current wallpaper. |
 | `scheme` | `"tonal-spot"` | Material scheme for color generation (`vibrant`, `tonal-spot`, `expressive`, `monochrome`, `rainbow`, `fruit-salad`, `neutral`, `fidelity`, `content`). |
 | `useStaticColors` | `false` | Use a fixed color scheme from `colors.json`. |
 | `staticColorsPath` | `$HOME/.config/vast-shell/colors.json` | Path to your static color scheme file. |
 
-> [!NOTE]
-> If both `useMaterialColor` and `useStaticColors` are `true`, Material colors take priority.
+> Material colors are enabled by default. When `useStaticColors` is `true`, the static color scheme overrides the generated Material palette.
+
 
 ### Generals
 

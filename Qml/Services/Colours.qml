@@ -23,7 +23,7 @@ Singleton {
     }
     readonly property var materialTemplateColors: animatedMaterialColors
     readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
-    readonly property var m3Colors: Configs.colors.useMaterialColor ? materialColors : Configs.colors.useStaticColors ? staticColors : m3GeneratedColors
+    readonly property var m3Colors: Configs.colors.useStaticColors ? staticColors : materialColors
 
     readonly property string wallpaperSource: {
         const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
@@ -189,11 +189,10 @@ Singleton {
         readonly property color m3SurfaceVariant: ColorUtils.createTonalColor(m3NeutralVariantSource, Configs.colors.isDarkMode ? 30 : 90)
 
         readonly property color m3Red: m3Error
-        readonly property color m3Green: ColorUtils.hctToRgb(145, 50, Configs.colors.isDarkMode ? 70 : 40)
-        readonly property color m3Blue: ColorUtils.hctToRgb(220, 50, Configs.colors.isDarkMode ? 70 : 40)
-        readonly property color m3Yellow: ColorUtils.hctToRgb(90, 60, Configs.colors.isDarkMode ? 70 : 40)
-        readonly property color m3Orange: ColorUtils.hctToRgb(30, 50, Configs.colors.isDarkMode ? 70 : 40)
-        readonly property color m3Purple: ColorUtils.hctToRgb(285, 50, Configs.colors.isDarkMode ? 70 : 40)
-        readonly property color m3Maroon: ColorUtils.hctToRgb(10, 40, Configs.colors.isDarkMode ? 45 : 30)
+        readonly property color m3Green: "#4CAF50"
+        readonly property color m3Blue: "#2196F3"
+        readonly property color m3Yellow: "#FFEB3B"
+        readonly property color m3Orange: "#FF9800"
+        readonly property color m3Maroon: "#B71C1C"
     }
 }

@@ -71,19 +71,10 @@ Item {
 
                     SettingRow {
                         label: qsTr("Use Static Colors:")
-                        description: qsTr("Load colors from a custom JSON file instead of the generated palette.")
+                        description: qsTr("Load colors from a custom JSON file and override the generated palette.")
                         StyledSwitch {
                             checked: Configs.colors.useStaticColors
                             onCheckedChanged: Configs.colors.useStaticColors = checked
-                        }
-                    }
-
-                    SettingRow {
-                        label: qsTr("Use Material Colors:")
-                        description: qsTr("Generate colors from the Material You dynamic color system.")
-                        StyledSwitch {
-                            checked: Configs.colors.useMaterialColor
-                            onCheckedChanged: Configs.colors.useMaterialColor = checked
                         }
                     }
                 }

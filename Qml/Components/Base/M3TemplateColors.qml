@@ -58,10 +58,9 @@ Scope {
     readonly property color m3SurfaceTint: source?.surfaceTint ?? "transparent"
     readonly property color m3SurfaceVariant: source?.surfaceVariant ?? "transparent"
     readonly property color m3Red: m3Error
-    readonly property color m3Green: source?.green ?? "transparent"
-    readonly property color m3Blue: source?.blue ?? "transparent"
-    readonly property color m3Yellow: source?.yellow ?? "transparent"
-    readonly property color m3Orange: source?.orange ?? "transparent"
-    readonly property color m3Purple: source?.purple ?? "transparent"
-    readonly property color m3Maroon: source?.maroon ?? "transparent"
+    readonly property color m3Green: "#4CAF50"
+    readonly property color m3Blue: "#2196F3"
+    readonly property color m3Yellow: "#FFEB3B"
+    readonly property color m3Orange: "#FF9800"
+    readonly property color m3Maroon: "#800020"
 }
