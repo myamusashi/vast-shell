@@ -15,6 +15,9 @@ MaterialShape {
     id: canvas
 
     property real moonriseProgress: CelestialProgress.progressBetween(Weather.moonRise, Weather.moonSet)
+    color: Colours.m3Colors.m3SurfaceContainer
+    shape: MaterialShape.Square
+
     ClippingWrapperRectangle {
         anchors.fill: parent
         color: "transparent"

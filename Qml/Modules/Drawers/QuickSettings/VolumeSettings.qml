@@ -79,7 +79,14 @@ ScrollView {
 
                     StyledRect {
                         id: sinkIndicator
+
                         property color target: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : "transparent"
+
+                        border.width: 1
+                        border.color: Colours.m3Colors.m3Primary
+
+                        implicitWidth: 15
+                        implicitHeight: 15
 
                         BlendColor {
                             host: sinkIndicator

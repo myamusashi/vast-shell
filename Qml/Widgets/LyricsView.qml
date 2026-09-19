@@ -5,10 +5,9 @@ import QtQuick.Layouts
 import Vast.Lyrics
 import Vast.Utils
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
-import "../Components/Base"
-import qs.Components.Base
 
 Item {
     id: root

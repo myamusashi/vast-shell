@@ -49,7 +49,6 @@ Pages {
 
         property string description: currentScale.description
 
-
         Header {
             icon: "waves"
             title: qsTr("Air quality")
@@ -208,7 +207,6 @@ Pages {
 
                     currentIndex: column.selectedTab
                     model: [qsTr("United States AQI"), qsTr("European AQI")]
-
                     onClicked: index => column.selectedTab = index
                 }
             }

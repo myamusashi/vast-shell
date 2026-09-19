@@ -3,14 +3,13 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Vast.Clipboard
-import Vast.Utils
 
+import qs.Components.Effects
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Services
-import qs.Components.Base
-import qs.Components.Effects
 
 Item {
     id: root

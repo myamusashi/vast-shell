@@ -8,6 +8,7 @@ import Quickshell.Services.Pipewire
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
+
 Singleton {
     property alias linkTracker: linkTracker
 

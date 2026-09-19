@@ -4,11 +4,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-
-import "../Components/Base"
 
 ColumnLayout {
     id: root

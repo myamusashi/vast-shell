@@ -124,6 +124,5 @@ PopupWidget {
                 }
             }
         }
-
     }
 }

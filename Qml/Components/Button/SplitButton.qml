@@ -40,6 +40,7 @@ Item {
     property bool leadingFillsWidth: false
 
     readonly property int segmentCount: ModelAdapter.countOf(model)
+    readonly property real distributedSegmentWidth: segmentCount > 0 ? (width - (segmentCount - 1) * 2) / segmentCount : width
 
     readonly property int segmentHeight: 40
 

@@ -90,8 +90,9 @@ Pages {
                             }
 
                             delegate: ColumnLayout {
-                                spacing: Appearance.spacing.normal
                                 required property var modelData
+
+                                spacing: Appearance.spacing.normal
 
                                 UVIndexSlider {
                                     implicitWidth: 30

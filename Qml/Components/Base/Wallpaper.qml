@@ -61,7 +61,6 @@ Item {
         return toplevels.some(toplevel => toplevel.wayland?.activated && (toplevel.wayland?.fullscreen || !toplevel.lastIpcObject?.floating) && !GlobalStates.isLockscreenOpen);
     }
 
-
     function updateVideoPlayback() {
         if (pauseVideo) {
             videoPlayerA.pause();

@@ -70,14 +70,22 @@ Singleton {
 
     Connections {
         target: Players
-        function onIndexChanged() { root.refresh(); }
+        function onIndexChanged() {
+            root.refresh();
+        }
     }
 
     Connections {
         target: Players.active
-        function onTrackChanged() { root.refresh(); }
-        function onPostTrackChanged() { root.refresh(); }
-        function onTrackArtUrlChanged() { root.refresh(); }
+        function onTrackChanged() {
+            root.refresh();
+        }
+        function onPostTrackChanged() {
+            root.refresh();
+        }
+        function onTrackArtUrlChanged() {
+            root.refresh();
+        }
     }
 
     onCachedPathChanged: root.colors = root.fallbackColors

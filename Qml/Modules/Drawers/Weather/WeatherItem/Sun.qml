@@ -14,6 +14,8 @@ import qs.Components.Base
 MaterialShape {
     id: canvas
 
+    color: Colours.m3Colors.m3SurfaceContainer
+    shape: MaterialShape.Square
     property real sunriseProgress: CelestialProgress.progressBetween(Weather.sunRise, Weather.sunSet)
 
     ClippingWrapperRectangle {

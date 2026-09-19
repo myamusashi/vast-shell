@@ -4,11 +4,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
-
-import "../Components/Base"
 
 StyledRect {
     id: root
