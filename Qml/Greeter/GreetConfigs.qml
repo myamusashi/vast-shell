@@ -10,7 +10,7 @@ import qs.Services
 Singleton {
     id: root
 
-    property alias greeterConfig: greeterConfigJson
+    property alias greeterConfig: adapter
     property string lastStaticTarget: ""
     property string lastVideoTarget: ""
     property int thumbnailVersion: 0
@@ -76,7 +76,7 @@ Singleton {
         onSaved: etcSync.running = true
 
         JsonAdapter { // qmllint disable
-            id: greeterConfigJson
+            id: adapter
 
             property bool useVideoWallpaper: false
             property string staticWallpaper: "/etc/vast-shell/wallpaper.png"

@@ -16,7 +16,7 @@ import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import "Greeter" as GREET
+import qs.Greeter
 
 ShellRoot {
     id: root
@@ -25,17 +25,17 @@ ShellRoot {
         id: lock
         locked: false
 
-        GREET.Surface {
+        Surface {
             lock: lock
-            auth: authenticator
+            auth: authenticator // qmllint disable
         }
     }
 
-    GREET.Auth {
+    Auth {
         id: authenticator
     }
 
-    QtObject {
+    Scope {
         id: rootFlow
 
         property bool introducing: true
@@ -120,21 +120,21 @@ ShellRoot {
                         if (status === Image.Error)
                             source = Paths.projectRoot + "/Assets/images/wallpaper.png";
                     }
-                    source: GREET.Configs.greeterConfig.staticWallpaper
+                    source: GreetConfigs.greeterConfig.staticWallpaper
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                     cache: true
-                    visible: !GREET.Configs.greeterConfig.useVideoWallpaper
+                    visible: !GreetConfigs.greeterConfig.useVideoWallpaper
                 }
 
                 MediaPlayer {
                     id: splashVideoPlayer
 
-                    source: "file://" + GREET.Configs.greeterConfig.videoWallpaper
+                    source: "file://" + GreetConfigs.greeterConfig.videoWallpaper
                     loops: MediaPlayer.Infinite
                     videoOutput: splashVideoOutput
                     onMediaStatusChanged: {
-                        if (GREET.Configs.greeterConfig.useVideoWallpaper && mediaStatus === MediaPlayer.LoadedMedia)
+                        if (GreetConfigs.greeterConfig.useVideoWallpaper && mediaStatus === MediaPlayer.LoadedMedia)
                             play();
                     }
                 }
@@ -144,7 +144,7 @@ ShellRoot {
 
                     anchors.fill: parent
                     fillMode: VideoOutput.PreserveAspectCrop
-                    visible: GREET.Configs.greeterConfig.useVideoWallpaper
+                    visible: GreetConfigs.greeterConfig.useVideoWallpaper
                 }
 
                 ColumnLayout {

@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Greetd
 
-import qs.Components.Base
+import qs.Services
 import qs.Core.Utils
 
 Scope {
