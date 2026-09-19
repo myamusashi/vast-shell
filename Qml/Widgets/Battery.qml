@@ -1,10 +1,9 @@
 import QtQuick
 import Quickshell.Services.UPower
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
-
-import "../Components/Base"
 
 Item {
     id: root
@@ -14,17 +13,10 @@ Item {
 
     readonly property bool batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
     readonly property real batPercentage: UPower.displayDevice.percentage
-    readonly property real batFill: batteryBody.width * (batPercentage / 100.0)
-
-    property real chargeFillIndex: 0
+    readonly property real batFill: batteryBody.width * batPercentage
 
     implicitWidth: widthBattery
     implicitHeight: heightBattery
-
-    onBatChargingChanged: {
-        if (batCharging)
-            chargeFillIndex = batPercentage * 100;
-    }
 
     Rectangle {
         id: batteryBody
@@ -45,7 +37,7 @@ Item {
             color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
         }
 
-        StyledRect {
+        Rectangle {
             id: batteryFill
 
             anchors {
@@ -56,7 +48,8 @@ Item {
                 bottom: parent.bottom
                 bottomMargin: 2
             }
-            implicitWidth: root.batCharging ? (parent.width - 4) * (root.chargeFillIndex / 100.0) : (parent.width - 4) * root.batPercentage
+            width: Math.max(0, (batteryBody.width - 4) * root.batPercentage)
+            radius: Appearance.rounding.small * 0.5
             color: {
                 if (root.batCharging)
                     return Colours.m3Colors.m3Green;
@@ -66,13 +59,36 @@ Item {
                     return Colours.m3Colors.m3Yellow;
                 return Colours.m3Colors.m3OnSurface;
             }
-            radius: parent.radius - 2
+        }
 
-            Behavior on implicitWidth {
-                enabled: !root.batCharging
-                SpringAnimation {
-                    spring: 2
-                    damping: 0.5
+        Rectangle {
+            id: chargeShimmer
+
+            visible: root.batCharging
+            anchors {
+                left: parent.left
+                leftMargin: 2
+                top: parent.top
+                topMargin: 2
+                bottom: parent.bottom
+                bottomMargin: 2
+            }
+            width: Math.max(0, (batteryBody.width - 4) * root.batPercentage)
+            color: "white"
+            radius: Appearance.rounding.small * 0.5
+
+            SequentialAnimation on opacity {
+                running: root.batCharging
+                loops: Animation.Infinite
+                NumberAnimation {
+                    from: 0
+                    to: 0.35
+                    duration: 700
+                }
+                NumberAnimation {
+                    from: 0.35
+                    to: 0
+                    duration: 700
                 }
             }
         }
@@ -80,6 +96,7 @@ Item {
         StyledText {
             anchors.centerIn: parent
             text: Math.round(root.batPercentage * 100)
+            z: 1
             font {
                 pixelSize: batteryBody.height * 0.65
                 weight: Font.Bold
@@ -101,67 +118,5 @@ Item {
         color: root.batPercentage <= 0.2 && !root.batCharging ? Colours.m3Colors.m3Error : Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
         topRightRadius: 1
         bottomRightRadius: 1
-    }
-
-    SequentialAnimation {
-        running: root.batCharging
-        loops: Animation.Infinite
-
-        PauseAnimation {
-            duration: Appearance.animations.durations.normal
-        }
-
-        NAnim {
-            target: root
-            property: "chargeFillIndex"
-            from: root.batPercentage * 100
-            to: Math.min(root.batPercentage * 100 + 20, 100)
-            easing.type: Easing.Linear
-        }
-        NAnim {
-            target: root
-            property: "chargeFillIndex"
-            from: Math.min(root.batPercentage * 100 + 20, 100)
-            to: Math.min(root.batPercentage * 100 + 40, 100)
-            easing.type: Easing.Linear
-        }
-        NAnim {
-            target: root
-            property: "chargeFillIndex"
-            from: Math.min(root.batPercentage * 100 + 40, 100)
-            to: Math.min(root.batPercentage * 100 + 60, 100)
-            easing.type: Easing.Linear
-        }
-        NAnim {
-            target: root
-            property: "chargeFillIndex"
-            from: Math.min(root.batPercentage * 100 + 60, 100)
-            to: Math.min(root.batPercentage * 100 + 80, 100)
-            easing.type: Easing.Linear
-        }
-        NAnim {
-            target: root
-            property: "chargeFillIndex"
-            from: Math.min(root.batPercentage * 100 + 80, 100)
-            to: 100
-            easing.type: Easing.Linear
-        }
-
-        PauseAnimation {
-            duration: Appearance.animations.durations.extraLarge
-        }
-
-        NAnim {
-            target: root
-            property: "chargeFillIndex"
-            from: 100
-            to: root.batPercentage * 100
-            duration: Appearance.animations.durations.large
-            easing.type: Easing.Linear
-        }
-
-        onStopped: {
-            root.chargeFillIndex = root.batPercentage * 100;
-        }
     }
 }
