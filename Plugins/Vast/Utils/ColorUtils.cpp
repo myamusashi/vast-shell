@@ -39,17 +39,17 @@ ColorUtils::OKLab ColorUtils::srgbToOklab(qreal r, qreal g, qreal b) {
 }
 
 QColor ColorUtils::oklabToSrgb(const OKLab& lab, qreal alpha) {
-    auto lValue = lab.l + 0.3963377774 * lab.a + 0.2158037573 * lab.b;
-    auto mValue = lab.l - 0.1055613458 * lab.a - 0.0638541728 * lab.b;
-    auto sValue = lab.l - 0.0894841775 * lab.a - 1.2914855480 * lab.b;
+    double lValue = lab.l + 0.3963377774 * lab.a + 0.2158037573 * lab.b;
+    double mValue = lab.l - 0.1055613458 * lab.a - 0.0638541728 * lab.b;
+    double sValue = lab.l - 0.0894841775 * lab.a - 1.2914855480 * lab.b;
 
-    auto l = lValue * lValue * lValue;
-    auto m = mValue * mValue * mValue;
-    auto s = sValue * sValue * sValue;
+    double l = lValue * lValue * lValue;
+    double m = mValue * mValue * mValue;
+    double s = sValue * sValue * sValue;
 
-    auto r = +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
-    auto g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
-    auto b = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
+    double r = +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
+    double g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
+    double b = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
 
     // clang-format off
     return QColor::fromRgbF(
@@ -173,9 +173,9 @@ ColorUtils::Hct ColorUtils::rgbToHctInternal(const QColor& color) {
     g = toLinear(g);
     b = toLinear(b);
 
-    auto x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
-    auto y = r * 0.2126729 + g * 0.7151522 + b * 0.0721750;
-    auto z = r * 0.0193339 + g * 0.1191920 + b * 0.9503041;
+    double x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
+    double y = r * 0.2126729 + g * 0.7151522 + b * 0.0721750;
+    double z = r * 0.0193339 + g * 0.1191920 + b * 0.9503041;
 
     x /= 0.95047;
     z /= 1.08883;
@@ -186,9 +186,9 @@ ColorUtils::Hct ColorUtils::rgbToHctInternal(const QColor& color) {
     const auto fy = toLabF(y);
     const auto fz = toLabF(z);
 
-    const auto l    = (116.0 * fy) - 16.0;
-    const auto a    = 500.0 * (fx - fy);
-    const auto bLab = 200.0 * (fy - fz);
+    const double l    = (116.0 * fy) - 16.0;
+    const double a    = 500.0 * (fx - fy);
+    const double bLab = 200.0 * (fy - fz);
 
     const auto chroma = std::sqrt(a * a + bLab * bLab);
     auto       hue    = std::atan2(bLab, a) * 180.0 / std::numbers::pi;
@@ -205,9 +205,9 @@ QColor ColorUtils::hctToRgbInternal(qreal hue, qreal chroma, qreal tone) {
     const auto     bLab   = chroma * std::sin(hueRad);
     const auto     l      = tone;
 
-    const auto     fy = (l + 16.0) / 116.0;
-    const auto     fx = a / 500.0 + fy;
-    const auto     fz = fy - bLab / 200.0;
+    const double     fy = (l + 16.0) / 116.0;
+    const double     fx = a / 500.0 + fy;
+    const double     fz = fy - bLab / 200.0;
 
     auto           fromLabF = [](qreal f) -> qreal { return f > 0.206897 ? std::pow(f, 3) : (f - 16.0 / 116.0) / 7.787; };
 
@@ -218,9 +218,9 @@ QColor ColorUtils::hctToRgbInternal(qreal hue, qreal chroma, qreal tone) {
     x *= 0.95047;
     z *= 1.08883;
 
-    auto r = x * 3.2404542 + y * -1.5371385 + z * -0.4985314;
-    auto g = x * -0.9692660 + y * 1.8760108 + z * 0.0415560;
-    auto b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
+    double r = x * 3.2404542 + y * -1.5371385 + z * -0.4985314;
+    double g = x * -0.9692660 + y * 1.8760108 + z * 0.0415560;
+    double b = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
 
     r = fromLinear(r);
     g = fromLinear(g);
