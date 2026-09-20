@@ -106,6 +106,24 @@ Singleton {
         }
     }
 
+    Connections {
+        target: transferController
+
+        function onCurrentStateChanged(): void {
+            if (transferController.currentState === TransferController.State.Completed)
+                dismissTimer.start();
+        }
+    }
+
+    // this is just a workaround to delay after transfer process, 
+    // we need to make it more intuitive when transfer process is done
+    Timer {
+        id: dismissTimer
+        interval: 3000
+        repeat: false
+        onTriggered: root.dismiss()
+    }
+
     GlobalShortcut { // qmllint disable
         name: "dragAndDrop"
         onPressed: GlobalStates.setDragAndDropActive(!GlobalStates.isDragAndDropActive)
