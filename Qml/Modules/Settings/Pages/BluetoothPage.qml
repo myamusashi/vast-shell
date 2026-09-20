@@ -44,6 +44,32 @@ SettingsPageBase {
             }
         }
 
+        SettingRow {
+            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
+            label: qsTr("Discoverable:")
+            description: qsTr("Allow nearby devices to discover this machine.")
+
+            StyledSwitch {
+                Layout.preferredWidth: 52
+                Layout.preferredHeight: 32
+                checked: BluetoothServices.discoverable
+                onToggled: BluetoothServices.setDiscoverable(checked)
+            }
+        }
+
+        SettingRow {
+            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
+            label: qsTr("Pairable:")
+            description: qsTr("Allow nearby devices to request pairing.")
+
+            StyledSwitch {
+                Layout.preferredWidth: 52
+                Layout.preferredHeight: 32
+                checked: BluetoothServices.pairable
+                onToggled: BluetoothServices.setPairable(checked)
+            }
+        }
+
         StyledText {
             visible: BluetoothServices.adapterBlocked
             text: qsTr("Adapter is blocked by rfkill. Unblock it with: rfkill unblock bluetooth")
@@ -106,37 +132,6 @@ SettingsPageBase {
                     Layout.maximumWidth: 320
                 }
             }
-
-            SettingRow {
-                visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
-                label: qsTr("Discoverable:")
-                description: qsTr("Allow nearby devices to discover this machine.")
-
-                StyledSwitch {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 32
-                    checked: BluetoothServices.discoverable
-                    onToggled: BluetoothServices.setDiscoverable(checked)
-                }
-            }
-
-            SettingRow {
-                visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
-                label: qsTr("Pairable:")
-                description: qsTr("Allow nearby devices to request pairing.")
-
-                StyledSwitch {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 32
-                    checked: BluetoothServices.pairable
-                    onToggled: BluetoothServices.setPairable(checked)
-                }
-            }
-        }
-
-        Progress {
-            Layout.fillWidth: true
-            condition: BluetoothServices.isDiscovering
         }
     }
 
@@ -179,6 +174,11 @@ SettingsPageBase {
         title: ""
         visible: BluetoothServices.adapterEnabled
 
+        Progress {
+            Layout.fillWidth: true
+            condition: BluetoothServices.isDiscovering
+        }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small
@@ -196,8 +196,7 @@ SettingsPageBase {
                 implicitHeight: 32
                 backgroundRadius: Appearance.rounding.small
                 enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
-                spinning: BluetoothServices.isDiscovering
-                icon.name: "refresh"
+                icon.name: "bluetooth_searching"
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 color: "transparent"
                 onClicked: {
