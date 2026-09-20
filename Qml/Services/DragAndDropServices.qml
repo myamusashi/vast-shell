@@ -115,7 +115,7 @@ Singleton {
         }
     }
 
-    // this is just a workaround to delay after transfer process, 
+    // this is just a workaround to delay after transfer process,
     // we need to make it more intuitive when transfer process is done
     Timer {
         id: dismissTimer
