@@ -72,17 +72,20 @@ Item {
 
         Column {
             width: parent.width
-            spacing: Appearance.spacing.small
 
             Repeater {
                 model: KDEConnect.availableDevices
 
-                delegate: KdeDeviceRow {
+                ExtendedFloatingButton {
                     required property var modelData
 
-                    device: modelData
-                    actionText: qsTr("Select")
-                    onActionTriggered: {
+                    implicitHeight: 24
+                    text: modelData.name
+                    icon.name: "smartphone"
+                    icon.color: Colours.m3Colors.m3Primary
+                    textColor: Colours.m3Colors.m3Primary
+                    color: "transparent"
+                    onClicked: {
                         root.island.selectedDevice = modelData;
                         root.island.goToConfirmation();
                     }
