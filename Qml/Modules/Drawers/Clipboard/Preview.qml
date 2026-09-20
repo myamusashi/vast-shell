@@ -68,7 +68,7 @@ Item {
 
         property int retry: 0
 
-        interval: 1000
+        interval: 150
         repeat: true
 
         onTriggered: {
