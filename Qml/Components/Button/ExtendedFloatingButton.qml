@@ -120,19 +120,14 @@ Item {
         }
     }
 
-    StyledRect {
-        id: stateOverlay
+    StateLayer {
+        layerEnabled: root.enabled
+        layerPressed: root.pressed
+        layerHovered: root.hovered
 
         anchors.fill: parent
         radius: background.radius
         color: root.textColor
-        opacity: (root.enabled ? (root.pressed ? 0.12 : root.hovered ? 0.08 : 0.0) : 0.0)
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
     }
 
     Rectangle {

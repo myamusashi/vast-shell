@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import AnotherRipple
 import QtQuick
+import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -105,7 +106,7 @@ Item {
         level: root.hovered && !root.pressed ? 4 : 3
     }
 
-    StyledRect {
+    ClippingRectangle {
         id: background
 
         anchors.fill: parent
@@ -121,25 +122,25 @@ Item {
 
         SimpleRipple {
             anchors.fill: parent
-            xClipRadius: background.radius
-            yClipRadius: background.radius
             color: Colours.m3Colors.m3OnSurfaceVariant
+        }
+
+        ParticleRipple {
+            anchors.fill: parent
+            color: Colours.m3Colors.m3OutlineVariant
+            opacity: 0.5
+            particleCount: 2
         }
     }
 
-    StyledRect {
-        id: stateOverlay
+    StateLayer {
+        layerEnabled: root.enabled
+        layerPressed: root.pressed
+        layerHovered: root.hovered
 
         anchors.fill: parent
         radius: background.radius
         color: root.icon.color
-        opacity: (root.enabled ? (root.pressed ? 0.10 : root.hovered ? 0.08 : 0.0) : 0.0)
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
     }
 
     Rectangle {

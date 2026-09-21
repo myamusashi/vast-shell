@@ -153,8 +153,10 @@ Item {
             }
         }
 
-        StyledRect {
-            id: stateOverlay
+        StateLayer {
+            layerEnabled: segment.enabled
+            layerPressed: segment.pressed
+            layerHovered: segment.hovered
 
             anchors.fill: parent
             topLeftRadius: segmentBackground.topLeftRadius
@@ -162,7 +164,6 @@ Item {
             topRightRadius: segmentBackground.topRightRadius
             bottomRightRadius: segmentBackground.bottomRightRadius
             color: segment.contentColor
-            opacity: segment.hovered || segment.pressed ? (segment.pressed ? 0.12 : 0.08) : 0
         }
 
         Rectangle {
