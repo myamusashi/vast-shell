@@ -31,7 +31,8 @@ WlSessionLockSurface {
     readonly property string assetWallpaper: Paths.projectRoot + "/Assets/images/wallpaper.png"
     property url effectiveWallpaper: useVideoWallpaper ? "file://" + wallpaperPath : wallpaperPath
     property bool effectiveIsVideo: useVideoWallpaper
-    property url colorSource: ""
+    property int thumbnailVersion: 0
+    readonly property url colorSource: effectiveIsVideo ? GreeterWallpaper.colorSource(true, wallpaperPath) + `?v=${thumbnailVersion}` : effectiveWallpaper
 
     FileView {
         path: "/etc/vast-shell/greeter.json"
@@ -44,6 +45,7 @@ WlSessionLockSurface {
                 root.configStaticPath = config.staticWallpaper;
                 root.configVideoPath = config.videoWallpaper;
                 root.configLoaded = true;
+                root.resetEffectiveWallpaper();
             } catch (error) {}
         }
     }
@@ -70,8 +72,6 @@ WlSessionLockSurface {
     color: "transparent"
 
     Component.onCompleted: {
-        if (!effectiveIsVideo)
-            colorSource = effectiveWallpaper;
         playEntrance();
     }
 
@@ -83,6 +83,31 @@ WlSessionLockSurface {
 
     function playExit() {
         exitSequence.start();
+    }
+    function resetEffectiveWallpaper() {
+        if (!root.useVideoWallpaper) {
+            root.effectiveIsVideo = false;
+            root.effectiveWallpaper = "file://" + root.wallpaperPath;
+            return;
+        }
+        root.effectiveWallpaper = "file://" + root.wallpaperPath;
+        root.effectiveIsVideo = true;
+        root.refreshVideoColorSource();
+    }
+
+    function refreshVideoColorSource() {
+        if (!root.useVideoWallpaper)
+            return;
+        ThumbnailQueue.generate(root.wallpaperPath, GreeterWallpaper.thumbnailFor(root.wallpaperPath), (path, thumbnailPath) => {
+            if (path !== root.wallpaperPath)
+                return;
+            if (thumbnailPath !== "")
+                root.thumbnailVersion++;
+            else {
+                root.effectiveWallpaper = root.assetWallpaper;
+                root.effectiveIsVideo = false;
+            }
+        });
     }
 
     Connections {
@@ -141,15 +166,11 @@ WlSessionLockSurface {
             source: root.useVideoWallpaper ? "" : "file://" + root.wallpaperPath
             visible: false
             onStatusChanged: {
-                if (status === Image.Ready) {
+                if (status === Image.Ready)
                     root.effectiveWallpaper = "file://" + root.wallpaperPath;
-                    root.effectiveIsVideo = false;
-                    root.colorSource = "file://" + root.wallpaperPath;
-                } else if (status === Image.Error) {
+                else if (status === Image.Error)
                     root.effectiveWallpaper = root.assetWallpaper;
-                    root.effectiveIsVideo = false;
-                    root.colorSource = root.assetWallpaper;
-                }
+                root.effectiveIsVideo = false;
             }
         }
 
@@ -166,14 +187,9 @@ WlSessionLockSurface {
                     root.effectiveWallpaper = "file://" + root.wallpaperPath;
                     root.effectiveIsVideo = true;
                     play();
-                    ThumbnailQueue.generate(root.wallpaperPath, GreeterWallpaper.thumbnailFor(root.wallpaperPath), (path, thumbnailPath) => {
-                        if (thumbnailPath !== "")
-                            root.colorSource = "file://" + thumbnailPath;
-                    });
                 } else if (mediaStatus === MediaPlayer.InvalidMedia) {
                     root.effectiveWallpaper = root.assetWallpaper;
                     root.effectiveIsVideo = false;
-                    root.colorSource = root.assetWallpaper;
                 }
             }
         }
