@@ -31,7 +31,7 @@ SettingsPageBase {
             SplitButton {
                 id: wallpaperButton
 
-                readonly property int selectedIndex: Configs.greeterConfig.useVideoWallpaper ? 0 : 1
+                readonly property int selectedIndex: GreetConfigs.greeterConfig.useVideoWallpaper ? 0 : 1
 
                 model: [
                     {
@@ -77,9 +77,9 @@ SettingsPageBase {
                 nameFilters: page.videoUploadMode ? ["*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi"] : ["*.png", "*.jpg", "*.jpeg", "*.webp"]
                 onFileSelected: path => {
                     if (page.videoUploadMode)
-                        Configs.uploadVideo(path);
+                        GreetConfigs.uploadVideo(path);
                     else
-                        Configs.uploadStatic(path);
+                        GreetConfigs.uploadStatic(path);
                 }
             }
         }
@@ -95,14 +95,14 @@ SettingsPageBase {
 
                 Image {
                     anchors.fill: parent
-                    source: GreeterWallpaper.colorSource(Configs.greeterConfig.useVideoWallpaper, Configs.greeterConfig.videoWallpaper, Configs.greeterConfig.staticWallpaper) + "?v=" + Configs.thumbnailVersion
+                    source: GreeterWallpaper.colorSource(GreetConfigs.greeterConfig.useVideoWallpaper, GreetConfigs.greeterConfig.videoWallpaper, GreetConfigs.greeterConfig.staticWallpaper) + "?v=" + GreetConfigs.thumbnailVersion
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                     cache: true
                     visible: status === Image.Ready
                     onStatusChanged: {
-                        if (status === Image.Error && Configs.greeterConfig.useVideoWallpaper)
-                            Configs.regenerateVideoThumbnail();
+                        if (status === Image.Error && GreetConfigs.greeterConfig.useVideoWallpaper)
+                            GreetConfigs.regenerateVideoThumbnail();
                     }
 
                     Rectangle {
