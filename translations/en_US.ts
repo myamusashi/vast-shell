@@ -4,81 +4,51 @@
 <context>
     <name>AQI</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="19"/>
-        <source>Good</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="24"/>
-        <source>Fair</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="29"/>
-        <source>Moderate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="34"/>
-        <source>Poor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="39"/>
-        <source>Very Poor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="44"/>
-        <source>Hazardous</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="83"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="42"/>
         <source>AQI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="69"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="54"/>
         <source>Air quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="87"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="72"/>
         <source>Current conditions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="171"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="156"/>
         <source>United States AQI:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="175"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="160"/>
         <source>European AQi:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="224"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="209"/>
         <source>United States AQI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="224"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="209"/>
         <source>European AQI</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>App</name>
+    <name>AdapterControls</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/App.qml" line="91"/>
-        <source>Search</source>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AdapterControls.qml" line="27"/>
+        <source>Bluetooth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/App.qml" line="291"/>
-        <source>No applications found</source>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AdapterControls.qml" line="50"/>
+        <source>Discoverable</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -95,92 +65,152 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="64"/>
         <source>Dark Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="69"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="65"/>
+        <source>Use a dark color palette for the entire shell.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="73"/>
         <source>Use Static Colors:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="77"/>
-        <source>Use Material Colors:</source>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="74"/>
+        <source>Load colors from a custom JSON file and override the generated palette.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="85"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="83"/>
         <source>Static Colors Path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="91"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="84"/>
+        <source>File path to the custom colors JSON when static colors are enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="115"/>
         <source>Material Scheme:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="110"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="116"/>
+        <source>Material You color scheme variant for palette generation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="135"/>
         <source>Typography System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="113"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="141"/>
         <source>Sans Serif Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="142"/>
+        <source>Primary font for UI text and labels.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="151"/>
         <source>Monospace Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="131"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="152"/>
+        <source>Font for code and monospaced text.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="161"/>
         <source>Material Icon Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="140"/>
-        <source>Font Size Scale:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="156"/>
-        <source>Shapes &amp; Layout</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="159"/>
-        <source>UI Corner Roundness (Normal):</source>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="162"/>
+        <source>Icon font used for Material Symbols throughout the shell.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="171"/>
-        <source>Element Spacing (Normal):</source>
+        <source>Font Size Scale:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="183"/>
-        <source>Padding (Normal):</source>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="172"/>
+        <source>Global multiplier for all font sizes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="189"/>
+        <source>Shapes &amp; Layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="195"/>
-        <source>Margin (Normal):</source>
+        <source>UI Corner Roundness (Normal):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="196"/>
+        <source>Corner radius.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="208"/>
+        <source>Element Spacing (Normal):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="209"/>
+        <source>Default spacing between UI elements.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="221"/>
+        <source>Padding (Normal):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="222"/>
+        <source>Inner padding.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="234"/>
+        <source>Margin (Normal):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="235"/>
+        <source>Outer margin.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="249"/>
         <source>Motion &amp; Animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="211"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="252"/>
         <source>Animation Durations Scale:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="302"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="253"/>
+        <source>Multiplier for all animation durations. Higher is slower.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="344"/>
         <source>Search font...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -204,6 +234,39 @@
     </message>
 </context>
 <context>
+    <name>AqiScale</name>
+    <message>
+        <location filename="../Qml/Core/Utils/AqiScale.qml" line="14"/>
+        <source>Good</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/AqiScale.qml" line="18"/>
+        <source>Fair</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/AqiScale.qml" line="22"/>
+        <source>Moderate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/AqiScale.qml" line="26"/>
+        <source>Poor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/AqiScale.qml" line="30"/>
+        <source>Very Poor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/AqiScale.qml" line="34"/>
+        <source>Hazardous</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AudioProfiles</name>
     <message>
         <location filename="../Qml/Widgets/AudioProfiles.qml" line="46"/>
@@ -214,13 +277,31 @@
 <context>
     <name>Auth</name>
     <message>
-        <location filename="../Qml/Greeter/Auth.qml" line="50"/>
+        <location filename="../Qml/Greeter/Auth.qml" line="49"/>
         <source>Authenticating…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Greeter/Auth.qml" line="135"/>
+        <location filename="../Qml/Greeter/Auth.qml" line="133"/>
         <source>Session Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AvailableDevices</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="21"/>
+        <source>Available devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="61"/>
+        <source>Searching for devices…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="69"/>
+        <source>No new devices — turn on scanning</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -242,28 +323,53 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="26"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="18"/>
+        <source>Keep the top bar visible.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="27"/>
         <source>Compact Navigation Bar:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="35"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="28"/>
+        <source>Use a condensed layout.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="37"/>
         <source>Bar Height:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="49"/>
-        <source>Workspace Display</source>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="38"/>
+        <source>Height of the top bar in pixels.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="52"/>
+        <source>Workspace Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="55"/>
         <source>Workspace Indicator Style:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="56"/>
+        <source>Visual style for workspace indicators on the bar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="79"/>
         <source>Number of Visible Workspaces:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="80"/>
+        <source>How many workspace indicators are shown on the bar.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -331,9 +437,191 @@
     </message>
 </context>
 <context>
+    <name>BlockedDevices</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/BlockedDevices.qml" line="18"/>
+        <source>Blocked devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BluetoothDeviceFormatter</name>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="19"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="27"/>
+        <source>Pairing…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="33"/>
+        <source>No Bluetooth adapter found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="35"/>
+        <source>Adapter blocked (rfkill)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="37"/>
+        <source>Enabling…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="39"/>
+        <source>Disabling…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="41"/>
+        <source>Bluetooth is off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="42"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="53"/>
+        <source>Scanning…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="42"/>
+        <source>Tap a device to connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="47"/>
+        <source>No adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="49"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="51"/>
+        <source>%1 connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="54"/>
+        <source>On — not connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BluetoothPage</name>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="19"/>
+        <source>Bluetooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="22"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="102"/>
+        <source>Adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="26"/>
+        <source>No Bluetooth adapter found. Ensure Bluetooth hardware is present and BlueZ is running.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="35"/>
+        <source>Enable Bluetooth:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="36"/>
+        <source>Turn the Bluetooth adapter on or off.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="49"/>
+        <source>Discoverable:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="50"/>
+        <source>Allow nearby devices to discover this machine.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="62"/>
+        <source>Pairable:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="63"/>
+        <source>Allow nearby devices to request pairing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="75"/>
+        <source>Adapter is blocked by rfkill. Unblock it with: rfkill unblock bluetooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="84"/>
+        <source>Enabling…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="91"/>
+        <source>Disabling…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="103"/>
+        <source>Local Bluetooth adapter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="124"/>
+        <source>Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="125"/>
+        <source>Bluetooth device address.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="139"/>
+        <source>Paired devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="148"/>
+        <source>No paired devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="188"/>
+        <source>Available devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="215"/>
+        <source>No devices found — turn on scanning to discover nearby devices.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="225"/>
+        <source>Searching for devices…</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Body</name>
     <message>
-        <location filename="../Qml/Modules/Polkit/Body.qml" line="55"/>
+        <location filename="../Qml/Modules/Polkit/Body.qml" line="50"/>
+        <source>Enter password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Polkit/Body.qml" line="71"/>
         <source>Authentication failed. Please try again.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -407,10 +695,113 @@
     </message>
 </context>
 <context>
-    <name>CapsLockWidget</name>
+    <name>CaptureScreenVideo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/OSD/CapsLockWidget.qml" line="35"/>
-        <source>Caps Lock</source>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/CaptureScreenVideo.qml" line="123"/>
+        <source>Screen Recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/CaptureScreenVideo.qml" line="181"/>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/CaptureScreenVideo/CaptureScreenVideo.qml" line="393"/>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CaptureScreenVideoPage</name>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="12"/>
+        <source>Screen Recorder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="15"/>
+        <source>Recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="21"/>
+        <source>Frame Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="22"/>
+        <source>Target frames per second for screen recordings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="53"/>
+        <source>Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="54"/>
+        <source>Bitrate limit for recordings. Higher values give sharper video but larger files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="89"/>
+        <source>Video Codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="90"/>
+        <source>Encoder for the video stream.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="133"/>
+        <source>Audio Codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="134"/>
+        <source>Encoder for the audio stream.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="173"/>
+        <source>Power Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="174"/>
+        <source>Power profile for recording. Low saves battery, Normal favors quality.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="181"/>
+        <source>Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="185"/>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="189"/>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="206"/>
+        <source>Show Cursor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="207"/>
+        <source>Include the mouse cursor in the recording.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="218"/>
+        <source>Replay Buffer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -427,38 +818,68 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="16"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="19"/>
         <source>Enable Clipboard:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="25"/>
-        <source>Enable Image Previews:</source>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="20"/>
+        <source>Turn on clipboard manager.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="29"/>
+        <source>Enable Previews:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="30"/>
+        <source>Show thumbnail previews in the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="39"/>
         <source>Enable Vim Keybinds:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="43"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="40"/>
+        <source>Use Vim-style navigation inside the clipboard manager.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="49"/>
         <source>Keep Clipboard Open After Copy:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="53"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="50"/>
+        <source>Keep the clipboard window open after copying an entry.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="61"/>
         <source>Preview Dimensions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="57"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="65"/>
         <source>Preview Width:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="70"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="66"/>
+        <source>Width of the clipboard preview in pixels.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="79"/>
         <source>Preview Height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="80"/>
+        <source>Height of the clipboard preview in pixels.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -589,18 +1010,18 @@
 <context>
     <name>Configs</name>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="38"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="45"/>
         <source>Failed to read config files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="38"/>
         <location filename="../Qml/Core/Configs/Configs.qml" line="45"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="52"/>
         <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="45"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="52"/>
         <source>Failed to save config: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -616,58 +1037,66 @@
 <context>
     <name>ConfirmDeviceContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="40"/>
+        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="33"/>
         <source>Send to %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="94"/>
+        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="87"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="120"/>
+        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="113"/>
         <source>Send</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConfirmDialog</name>
+    <message>
+        <location filename="../Qml/Components/Dialog/ConfirmDialog.qml" line="13"/>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Components/Dialog/ConfirmDialog.qml" line="14"/>
+        <source>No</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Content</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="98"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="118"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="119"/>
         <source>entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="98"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="118"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="119"/>
         <source>entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
         <source>Copied %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="119"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="120"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="119"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="120"/>
         <source>Deleted %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/History/Content.qml" line="102"/>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="151"/>
+        <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="168"/>
         <source>Reply…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -753,52 +1182,62 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="42"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="34"/>
+        <source>Enable depth effect (Apple like).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="43"/>
         <source>Auto-process on wallpaper change:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="51"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="44"/>
+        <source>Automatically regenerate the depth map whenever the wallpaper changes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="53"/>
         <source>Re-generate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="63"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="65"/>
         <source>Generating depth map…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="67"/>
         <source>Depth wallpaper ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="101"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="103"/>
         <source>Source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="141"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="143"/>
         <source>Loading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="158"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="160"/>
         <source>Processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="160"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="162"/>
         <source>Foreground</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="162"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="164"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="164"/>
+        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="166"/>
         <source>Not generated</source>
         <translation type="unfinished"></translation>
     </message>
@@ -955,12 +1394,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DeviceListContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="46"/>
+        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="43"/>
         <source>No devices available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="111"/>
+        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="106"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
@@ -968,12 +1407,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DialogBox</name>
     <message>
-        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="122"/>
+        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="22"/>
         <source>No</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="133"/>
+        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="21"/>
         <source>Yes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1145,42 +1584,42 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>EthernetList</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="80"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="28"/>
         <source>Ethernet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="88"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="36"/>
         <source>No wired device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="96"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="44"/>
         <source>Interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="102"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="50"/>
         <source>Link speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="108"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="56"/>
         <source>Hardware address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="117"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="65"/>
         <source>Autoconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="145"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="93"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="154"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="102"/>
         <source>Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1188,32 +1627,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="153"/>
-        <source>B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="155"/>
-        <source>KiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="157"/>
-        <source>MiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="158"/>
-        <source>GiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="259"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="249"/>
         <source>Search files…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="325"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="315"/>
         <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1233,26 +1652,6 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <message>
         <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="72"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="77"/>
-        <source>B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="79"/>
-        <source>KiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="81"/>
-        <source>MiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="82"/>
-        <source>GiB</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1287,12 +1686,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>FilesDroppedContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="41"/>
+        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="35"/>
         <source>%1 file(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="102"/>
+        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="96"/>
         <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1354,6 +1753,109 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
+    <name>FormatTimeUtils</name>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="30"/>
+        <source>just now</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="32"/>
+        <source>%1 seconds ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="34"/>
+        <source>1 minute ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="34"/>
+        <source>%1 minutes ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="36"/>
+        <source>1 hour ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="36"/>
+        <source>%1 hours ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="38"/>
+        <source>1 day ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="38"/>
+        <source>%1 days ago</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="56"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="79"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="118"/>
+        <source>PM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="56"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="79"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="118"/>
+        <source>AM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="168"/>
+        <source>N/A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="171"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="174"/>
+        <source> min</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="174"/>
+        <source> h </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="174"/>
+        <source> h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="203"/>
+        <source>B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="205"/>
+        <source>KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="207"/>
+        <source>MiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="208"/>
+        <source>GiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="214"/>
+        <source>now</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GeneralConfig</name>
     <message>
         <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="21"/>
@@ -1404,75 +1906,130 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="59"/>
         <source>Enable Transparent Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="43"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="69"/>
         <source>Transparency Alpha:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="94"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="122"/>
         <source>How much radius blur for album cover:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="106"/>
-        <source>How far the charging indicator spreads on the screen edge:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="118"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="45"/>
         <source>Enable Outer Border:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="127"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="35"/>
         <source>Show Holidays in Calendar:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="137"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="26"/>
+        <source>Automatically switch the active drawers to the monitor where cursor in.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="36"/>
+        <source>Display public holidays inside the calendar widget (NOTE: not every country).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="46"/>
+        <source>Draw an outer border around shell.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="60"/>
+        <source>Enable translucent shell.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="70"/>
+        <source>Lower is more transparent.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="134"/>
+        <source>Charging indicator spreads on the screen edge:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="135"/>
+        <source>Thickness of the glowing edge indicator when charging detected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="149"/>
         <source>Default Applications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="140"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="155"/>
         <source>Terminal:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="146"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="156"/>
+        <source>Default terminal emulator for opening shell commands.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="162"/>
         <source>File Explorer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="152"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="163"/>
+        <source>Default file manager for opening folders.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="169"/>
         <source>Image Viewer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="158"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="170"/>
+        <source>Default app for viewing images.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="176"/>
         <source>Video Viewer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="164"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="177"/>
+        <source>Default app for playing videos.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="183"/>
         <source>Audio Settings:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="184"/>
+        <source>Default app for audio and sound configuration.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>GlobalStates</name>
     <message>
-        <location filename="../Qml/Core/States/GlobalStates.qml" line="91"/>
+        <location filename="../Qml/Core/States/GlobalStates.qml" line="95"/>
         <source>Drag and drop is active. Drop files onto the island to share them.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/States/GlobalStates.qml" line="91"/>
+        <location filename="../Qml/Core/States/GlobalStates.qml" line="95"/>
         <source>Drag and Drop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1495,27 +2052,42 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="52"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="29"/>
+        <source>Choose between video or static image for the login manager.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="53"/>
         <source>Upload wallpaper:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="55"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="54"/>
+        <source>Select and upload a new greeter wallpaper file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="57"/>
         <source>Upload static</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="64"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="66"/>
         <source>Upload video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="86"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="88"/>
         <source>Preview:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="116"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="89"/>
+        <source>Live preview of the current greeter wallpaper.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="123"/>
         <source>Preview not available yet</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1530,6 +2102,21 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <message>
         <location filename="../Qml/Modules/Polkit/Header.qml" line="45"/>
         <source>&lt;no message&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/Header.qml" line="15"/>
+        <source>Bluetooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="15"/>
+        <source>Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="23"/>
+        <source>Tap/click a network to connect</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1682,19 +2269,6 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
-    <name>History</name>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/History/History.qml" line="23"/>
-        <source>Recent screenshot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/History/History.qml" line="56"/>
-        <source>Recent screen record</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>Hotspot</name>
     <message>
         <location filename="../Qml/Services/Hotspot.qml" line="38"/>
@@ -1768,37 +2342,42 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="65"/>
+        <source>Enable automatic actions after periods of inactivity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="75"/>
         <source>Timeouts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="111"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="112"/>
         <source>Timeout (seconds):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="148"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="149"/>
         <source>Command on Timeout:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="178"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="179"/>
         <source>Command on Resume:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="208"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="209"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="214"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="215"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="226"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="227"/>
         <source>Add Timeout</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1817,150 +2396,187 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
-    <name>InputField</name>
-    <message>
-        <location filename="../Qml/Modules/Polkit/InputField.qml" line="11"/>
-        <source>Enter password</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>InternetPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="71"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="51"/>
         <source>Network &amp; Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="92"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="72"/>
         <source>Hotspot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="107"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="87"/>
         <source>Enable hotspot &amp; sharing internet:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="118"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="88"/>
+        <source>Toggle Wi-Fi hotspot and internet sharing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="102"/>
         <source>User hotspot:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="103"/>
+        <source>SSID broadcast name for the hotspot.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="107"/>
         <source>Default: MyHotspot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="132"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="117"/>
         <source>Password hotspot:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="136"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="118"/>
+        <source>Password required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="122"/>
         <source>Default: password123</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="146"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="132"/>
         <source>Hotspot interface:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="150"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="133"/>
+        <source>Network interface used for hotspot sharing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="137"/>
         <source>Default: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="150"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="137"/>
         <source>none detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="159"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="146"/>
         <source>Bandwidth:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="183"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="147"/>
+        <source>Wi-Fi band for the hotspot.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="172"/>
         <source>Apply &amp;&amp; Restart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="200"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="189"/>
         <source>Wi-Fi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="203"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="192"/>
         <source>Enable Wi-Fi:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="193"/>
+        <source>Turn Wi-Fi scanning and connections.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>KDEConnectPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="16"/>
         <source>KDE Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="22"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="21"/>
         <source>Device Discovery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="24"/>
         <source>Enable Polling:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="36"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="25"/>
+        <source>Periodically poll for KDE Connect devices on the network.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="34"/>
         <source>Poll Interval (s):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="59"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="35"/>
+        <source>How often to scan for devices, in seconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="51"/>
         <source>Local Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="62"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="54"/>
         <source>Device ID:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="64"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="55"/>
+        <source>Unique identifier of this device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="58"/>
         <source>Not detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="68"/>
         <source>Paired Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="83"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="77"/>
         <source>No devices paired</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="139"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="90"/>
         <source>Transfer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="163"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="101"/>
         <source>Available Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="172"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="110"/>
         <source>No devices available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="228"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="123"/>
         <source>Pair</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1982,6 +2598,93 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <source>Current Language:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LanguagePage.qml" line="17"/>
+        <source>Locale code used for translations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LauncherServices</name>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="59"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="79"/>
+        <source>In this page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="65"/>
+        <source>Apps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="73"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="74"/>
+        <source>Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="78"/>
+        <source>Actions and history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="83"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="84"/>
+        <source>Screenshot action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="88"/>
+        <source>Capture monitors, windows or selections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="89"/>
+        <source>No matching actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="90"/>
+        <source>Filter actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="94"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="95"/>
+        <source>Screenshot history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="99"/>
+        <source>Browse recent captures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="100"/>
+        <source>No captures yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="101"/>
+        <source>Filter history</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="109"/>
+        <source>No applications found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="116"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/LauncherServices.qml" line="156"/>
+        <source>Sections</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MediaPlayerPage</name>
@@ -2001,81 +2704,51 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="28"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="18"/>
+        <source>Fetch and display synchronized lyrics when available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="29"/>
         <source>Enable dynamic colors from cover art:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="39"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="30"/>
+        <source>Tint the player with colors extracted from the album cover.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="41"/>
         <source>Slider type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="42"/>
+        <source>Visual style for the playback progress slider.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Moon</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Moon.qml" line="74"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Moon.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="33"/>
         <source>Moon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="46"/>
-        <source>New Moon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="48"/>
-        <source>Waxing Crescent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="50"/>
-        <source>First Quarter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="52"/>
-        <source>Waxing Gibbous</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="54"/>
-        <source>Full Moon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="56"/>
-        <source>Waning Gibbous</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="58"/>
-        <source>Last Quarter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="60"/>
-        <source>Waning Crescent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="62"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="122"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="69"/>
         <source>Illumination: %1%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="141"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="88"/>
         <source>Moonrise: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="160"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="107"/>
         <source>Moonset: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2146,28 +2819,33 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>NetworkInfoColumn</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="71"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="75"/>
         <source>Ethernet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="90"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="90"/>
         <source>Not Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="158"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="149"/>
         <source>Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="164"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="155"/>
         <source>WiFi Disconnected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="214"/>
+        <source>Bluetooth</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2189,8 +2867,18 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="29"/>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="17"/>
+        <source>Maximum number of stored notifications to keep.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="30"/>
         <source>Maximum Notification Age (Days):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="31"/>
+        <source>Auto-remove notifications older than this many days.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2255,16 +2943,16 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <source>Notification cache doesn&apos;t exist, creating it</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../Qml/Services/Notifs.qml" line="327"/>
-        <source>now</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
-    <name>NumLockWidget</name>
+    <name>OSD</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/OSD/NumLockWidget.qml" line="37"/>
+        <location filename="../Qml/Modules/Drawers/OSD/OSD.qml" line="74"/>
+        <source>Caps lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/OSD/OSD.qml" line="80"/>
         <source>Num Lock</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2308,22 +2996,22 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PageAudio</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageAudio.qml" line="47"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="47"/>
         <source>Audio Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageAudio.qml" line="90"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="90"/>
         <source>Microphones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageAudio.qml" line="125"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="125"/>
         <source>Desktop Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageAudio.qml" line="161"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="161"/>
         <source>No Audio</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2331,7 +3019,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PageHistory</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageHistory.qml" line="49"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageHistory.qml" line="48"/>
         <source>Recordings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2339,58 +3027,58 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PageMain</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="21"/>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="25"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="21"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="25"/>
         <source>No Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="29"/>
         <source>Choose an audio source...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="88"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="88"/>
         <source>Source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="100"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="100"/>
         <source>Full Screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="104"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="104"/>
         <source>Region</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="108"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="108"/>
         <source>Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="168"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="168"/>
         <source>Monitor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="279"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="279"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="324"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="324"/>
         <source>Recordings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="400"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="400"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageMain.qml" line="400"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="400"/>
         <source>Start Recording</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2398,209 +3086,287 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PageSettings</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="45"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="86"/>
         <source>Frame Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="106"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="106"/>
         <source>Bitrate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="130"/>
         <source>Video Codec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="162"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="162"/>
         <source>Audio Codec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="190"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="190"/>
         <source>Power Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="193"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="193"/>
         <source>Auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="197"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="197"/>
         <source>Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="201"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="201"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="210"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="210"/>
         <source>Toggles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="213"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="213"/>
         <source>Show Cursor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/PageSettings.qml" line="217"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="217"/>
         <source>Replay Buffer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PairedDevices</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/PairedDevices.qml" line="15"/>
+        <source>Paired devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/PairedDevices.qml" line="39"/>
+        <source>No paired devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PairingDialog</name>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="34"/>
+        <source>Unknown device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="79"/>
+        <source>Bluetooth Pairing Request</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="90"/>
+        <source>Confirm the passkey matches your device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="92"/>
+        <source>Enter a passkey / PIN to pair</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="94"/>
+        <source>Allow this device to connect?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="95"/>
+        <source>Pairing requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="123"/>
+        <source>Your phone shows passkey %1 (%2 digits entered)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="125"/>
+        <source>Passkey %1 — does this match %2?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="127"/>
+        <source>Allow %1 to connect? %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="129"/>
+        <source>Enter 6-digit passkey for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="131"/>
+        <source>Enter PIN for %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="132"/>
+        <source>Passkey: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="140"/>
+        <source>Enter PIN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="140"/>
+        <source>Enter 6-digit passkey</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PanelScreenshot</name>
+    <message>
+        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="38"/>
+        <source>Open Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="42"/>
+        <source>Show in Folder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Performances</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="47"/>
-        <source>N/A</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="54"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="56"/>
-        <source> min</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="56"/>
-        <source> h </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="56"/>
-        <source> h</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="74"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="60"/>
         <source>CPU status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="114"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="100"/>
         <source>CPU: %1°C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="120"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="106"/>
         <source>GPU: %1°C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="139"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="125"/>
         <source>Battery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="175"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="161"/>
         <source>Charging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="175"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="161"/>
         <source>Discharging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="182"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="168"/>
         <source>Rem. </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="194"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="180"/>
         <source>Network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="216"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="202"/>
         <source>Ethernet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="216"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="202"/>
         <source>Wi-Fi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="225"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="211"/>
         <source>Download ↓</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="229"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="215"/>
         <source>Upload ↑</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="268"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="268"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="254"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="254"/>
         <source>Link speed: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="280"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="266"/>
         <source>Apps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="298"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="284"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="308"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="294"/>
         <source> GUI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="314"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="300"/>
         <source> CLI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="324"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="310"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="351"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="337"/>
         <source>%1x%2 @ %3Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="361"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="347"/>
         <source>RAM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="382"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="420"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="368"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="406"/>
         <source> GB used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="389"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="427"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="375"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="413"/>
         <source> GB total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="399"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="385"/>
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="455"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="441"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2702,45 +3468,141 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Preview</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="119"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="149"/>
         <source>Select an entry to preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="164"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="177"/>
+        <source>Couldn&apos;t load preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="184"/>
+        <source>Retry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="224"/>
         <source>Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="164"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="224"/>
         <source>Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="226"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="286"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="296"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="356"/>
         <source>Preview truncated (%1 of %2 shown) — copy to get the full content</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="356"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="416"/>
         <source>Loading…</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PrivacyIslandContent</name>
+    <message>
+        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <source>Mic is on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <source>Speaker is on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <source>Screen share is on</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PrivacyNodesPage</name>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="17"/>
+        <source>Pipewire Privacy Nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="58"/>
+        <source>Privacy nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="61"/>
+        <source>Enable privacy indicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="62"/>
+        <source>Show a privacy list or names through Dynamic Island</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="73"/>
+        <source>Privacy indicator in Dynamic Island</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="74"/>
+        <source>Detect privacy indicator state through Dynamic Island</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="85"/>
+        <source>Show icon for privacy indicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="86"/>
+        <source>Show an icon for privacy indicator in widgets or Dynamic Island</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="98"/>
+        <source>Privacy nodes block title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="123"/>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="132"/>
+        <source>Value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="145"/>
+        <source>Remove title blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="156"/>
+        <source>Add title blocked</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ProgressContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="36"/>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="37"/>
         <source>Sending...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="47"/>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="48"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2748,17 +3610,17 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>QuickSettings</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="73"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="75"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="77"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="79"/>
         <source>Volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="81"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="83"/>
         <source>Performance</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2789,18 +3651,18 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>ScreenCapture</name>
     <message>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="18"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="19"/>
         <source>All monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="24"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="25"/>
         <source>Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="30"/>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="54"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="31"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="55"/>
         <source>Selection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2819,126 +3681,14 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
-    <name>ScreenRecorder</name>
-    <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/ScreenRecorder.qml" line="122"/>
-        <source>Screen Recorder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/ScreenRecorder/ScreenRecorder.qml" line="180"/>
-        <source>Recording</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/ScreenRecorder/ScreenRecorder.qml" line="577"/>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ScreenRecorderPage</name>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="11"/>
-        <source>Screen Recorder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="14"/>
-        <source>Recording</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="17"/>
-        <source>Frame Rate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="48"/>
-        <source>Bitrate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="83"/>
-        <source>Video Codec</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="126"/>
-        <source>Audio Codec</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="165"/>
-        <source>Power Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="172"/>
-        <source>Auto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="176"/>
-        <source>Low</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="180"/>
-        <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="196"/>
-        <source>Show Cursor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ScreenRecorderPage.qml" line="207"/>
-        <source>Replay Buffer</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Screencapture</name>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/Screencapture.qml" line="124"/>
-        <source>Capture</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/Screencapture.qml" line="128"/>
-        <source>History</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Launcher/Screencapture.qml" line="202"/>
-        <source>No captures yet</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Screenshotter</name>
-    <message>
-        <location filename="../Qml/Services/ScreenRecorder/Screenshotter.qml" line="39"/>
-        <source>Open Image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/ScreenRecorder/Screenshotter.qml" line="43"/>
-        <source>Show in Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SearchBar</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="91"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="63"/>
         <source>Search clipboard…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="105"/>
         <source>VISUAL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2946,7 +3696,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>SearchField</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/WallpaperSelector/SearchField.qml" line="16"/>
+        <location filename="../Qml/Modules/Drawers/WallpaperSelector/SearchField.qml" line="17"/>
         <source>Search wallpapers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2979,12 +3729,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="221"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="220"/>
         <source>Session</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="228"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="221"/>
         <source>Do you want to %1?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3045,7 +3795,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Settings.qml" line="109"/>
-        <source>Screen Recorder</source>
+        <source>Capture Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3054,32 +3804,42 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="118"/>
-        <source>Connectivity</source>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="117"/>
+        <source>Privacy Nodes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Settings.qml" line="122"/>
-        <source>Network &amp; Internet</source>
+        <source>Connectivity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Settings.qml" line="126"/>
+        <source>Network &amp; Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="130"/>
+        <source>Bluetooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="134"/>
         <source>KDE Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="131"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="139"/>
         <source>Session</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="135"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="143"/>
         <source>Greeter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="139"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="147"/>
         <source>Idle</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3087,7 +3847,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>SettingsSearchField</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Components/SettingsSearchField.qml" line="298"/>
+        <location filename="../Qml/Modules/Settings/Components/SettingsSearchField.qml" line="316"/>
         <source>Search settings…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3108,76 +3868,19 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Sun</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="57"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Sun.qml" line="81"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Sun.qml" line="51"/>
         <source>Sun</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="106"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="78"/>
         <source>Sunrise</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="126"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="98"/>
         <source>Sunset</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TimeAgo</name>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="27"/>
-        <source>just now</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="29"/>
-        <source>%1 seconds ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="31"/>
-        <source>1 minute ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="31"/>
-        <source>%1 minutes ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="33"/>
-        <source>1 hour ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="33"/>
-        <source>%1 hours ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="35"/>
-        <source>1 day ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="35"/>
-        <source>%1 days ago</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="53"/>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="76"/>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="115"/>
-        <source>PM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="53"/>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="76"/>
-        <location filename="../Qml/Core/Utils/TimeAgo.qml" line="115"/>
-        <source>AM</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3228,18 +3931,18 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>UserCard</name>
     <message>
-        <location filename="../Qml/Greeter/UserCard.qml" line="114"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="113"/>
         <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Greeter/UserCard.qml" line="128"/>
-        <location filename="../Qml/Greeter/UserCard.qml" line="128"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="127"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="127"/>
         <source>Session</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Greeter/UserCard.qml" line="141"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="140"/>
         <source>Sign in</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3304,58 +4007,88 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="31"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="28"/>
+        <source>Browse and set a new wallpaper image or video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="32"/>
         <source>Browse…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="46"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="47"/>
         <source>Wallpaper Picker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="53"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="54"/>
         <source>Search wallpapers…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="161"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="153"/>
         <source>Image Sourcing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="165"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="160"/>
         <source>Enable Wallpaper:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="173"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="161"/>
+        <source>Show wallpaper.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="169"/>
         <source>Wallpaper Live Preview:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="182"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="178"/>
         <source>Wallpaper Directory Path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="212"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="179"/>
+        <source>Folder scanned for available wallpapers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="209"/>
         <source>Loaded Wallpaper Count:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="228"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="210"/>
+        <source>Number of wallpapers kept in the picker carousel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="226"/>
         <source>Transitions &amp; Performance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="232"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="230"/>
         <source>Transition Animation Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="288"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="231"/>
+        <source>Animation used when switching wallpapers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="287"/>
         <source>Transition Low Performance Priority:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="288"/>
+        <source>Reduce transition quality to improve performance on low-end hardware.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3363,185 +4096,238 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <source>Transition Duration (ms):</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="298"/>
+        <source>Duration of the wallpaper switch animation in milliseconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Weather</name>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="487"/>
-        <source>A muggy and warm day — take care in the sun.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="489"/>
-        <source>A humid day with sticky conditions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="491"/>
-        <source>A hot day ahead — stay hydrated and seek shade.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="493"/>
-        <source>A cold day — dress warmly before heading out.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="495"/>
-        <source>A pleasant day with comfortable conditions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="497"/>
-        <source>Today&apos;s weather looks moderate.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="503"/>
-        <source>Air quality is poor right now — consider limiting time outside.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="508"/>
-        <source>Air quality is moderate — sensitive groups should take precautions.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="514"/>
-        <source>UV index is very high (%1) — avoid direct sun exposure.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="519"/>
-        <source>Strong UV levels at %1 — use sun protection.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="525"/>
-        <source>Heavy rain expected — bring an umbrella.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="530"/>
-        <source>Light rain possible — keep an umbrella handy.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="536"/>
-        <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="541"/>
-        <source>Breezy day with winds around %1 km/h.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="547"/>
-        <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="552"/>
-        <source>Temperature ranging from %1° to %2° today.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="558"/>
-        <source>Very sticky conditions with %1% humidity.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="563"/>
-        <source>Poor visibility at %1 km — drive carefully.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="568"/>
-        <source>Perfect weather for outdoor activities.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="574"/>
-        <source>Current temperature is %1° with feels like %2°.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Weather.qml" line="596"/>
-        <location filename="../Qml/Services/Weather.qml" line="679"/>
+        <location filename="../Qml/Services/Weather.qml" line="450"/>
+        <location filename="../Qml/Services/Weather.qml" line="533"/>
         <source>Invalid coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="596"/>
-        <location filename="../Qml/Services/Weather.qml" line="625"/>
-        <location filename="../Qml/Services/Weather.qml" line="627"/>
-        <location filename="../Qml/Services/Weather.qml" line="631"/>
-        <location filename="../Qml/Services/Weather.qml" line="638"/>
-        <location filename="../Qml/Services/Weather.qml" line="679"/>
-        <location filename="../Qml/Services/Weather.qml" line="685"/>
-        <location filename="../Qml/Services/Weather.qml" line="718"/>
-        <location filename="../Qml/Services/Weather.qml" line="722"/>
-        <location filename="../Qml/Services/Weather.qml" line="730"/>
-        <location filename="../Qml/Services/Weather.qml" line="989"/>
+        <location filename="../Qml/Services/Weather.qml" line="450"/>
+        <location filename="../Qml/Services/Weather.qml" line="479"/>
+        <location filename="../Qml/Services/Weather.qml" line="481"/>
+        <location filename="../Qml/Services/Weather.qml" line="485"/>
+        <location filename="../Qml/Services/Weather.qml" line="492"/>
+        <location filename="../Qml/Services/Weather.qml" line="533"/>
+        <location filename="../Qml/Services/Weather.qml" line="539"/>
+        <location filename="../Qml/Services/Weather.qml" line="572"/>
+        <location filename="../Qml/Services/Weather.qml" line="576"/>
+        <location filename="../Qml/Services/Weather.qml" line="584"/>
+        <location filename="../Qml/Services/Weather.qml" line="843"/>
         <source>Weather</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="625"/>
+        <location filename="../Qml/Services/Weather.qml" line="479"/>
         <source>%1 updated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="627"/>
+        <location filename="../Qml/Services/Weather.qml" line="481"/>
         <source>%1 failed: bad data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="631"/>
+        <location filename="../Qml/Services/Weather.qml" line="485"/>
         <source>%1 failed (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="638"/>
+        <location filename="../Qml/Services/Weather.qml" line="492"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="644"/>
-        <location filename="../Qml/Services/Weather.qml" line="737"/>
+        <location filename="../Qml/Services/Weather.qml" line="498"/>
+        <location filename="../Qml/Services/Weather.qml" line="591"/>
         <source>network error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="645"/>
-        <location filename="../Qml/Services/Weather.qml" line="738"/>
+        <location filename="../Qml/Services/Weather.qml" line="499"/>
+        <location filename="../Qml/Services/Weather.qml" line="592"/>
         <source>timed out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="685"/>
+        <location filename="../Qml/Services/Weather.qml" line="539"/>
         <source>No astronomy API key configured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="718"/>
+        <location filename="../Qml/Services/Weather.qml" line="572"/>
         <source>Astronomy failed: bad data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="722"/>
+        <location filename="../Qml/Services/Weather.qml" line="576"/>
         <source>Astronomy failed (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="730"/>
+        <location filename="../Qml/Services/Weather.qml" line="584"/>
         <source>Astronomy %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="989"/>
+        <location filename="../Qml/Services/Weather.qml" line="843"/>
         <source>No cached weather data found, fetching fresh data</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WeatherFormatter</name>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="52"/>
+        <source>New Moon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="54"/>
+        <source>Waxing Crescent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="56"/>
+        <source>First Quarter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="58"/>
+        <source>Waxing Gibbous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="60"/>
+        <source>Full Moon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="62"/>
+        <source>Waning Gibbous</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="64"/>
+        <source>Last Quarter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="66"/>
+        <source>Waning Crescent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="68"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="191"/>
+        <source>A muggy and warm day — take care in the sun.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="193"/>
+        <source>A humid day with sticky conditions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="195"/>
+        <source>A hot day ahead — stay hydrated and seek shade.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="197"/>
+        <source>A cold day — dress warmly before heading out.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="199"/>
+        <source>A pleasant day with comfortable conditions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="201"/>
+        <source>Today&apos;s weather looks moderate.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="207"/>
+        <source>Air quality is poor right now — consider limiting time outside.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="212"/>
+        <source>Air quality is moderate — sensitive groups should take precautions.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="218"/>
+        <source>UV index is very high (%1) — avoid direct sun exposure.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="223"/>
+        <source>Strong UV levels at %1 — use sun protection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="229"/>
+        <source>Heavy rain expected — bring an umbrella.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="234"/>
+        <source>Light rain possible — keep an umbrella handy.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="240"/>
+        <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="245"/>
+        <source>Breezy day with winds around %1 km/h.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="251"/>
+        <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="256"/>
+        <source>Temperature ranging from %1° to %2° today.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="262"/>
+        <source>Very sticky conditions with %1% humidity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="267"/>
+        <source>Poor visibility at %1 km — drive carefully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="272"/>
+        <source>Perfect weather for outdoor activities.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="278"/>
+        <source>Current temperature is %1° with feels like %2°.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3563,61 +4349,68 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="29"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="18"/>
+        <source>Latitude of your location for weather and astronomy data.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="30"/>
         <source>Longitude:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="42"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="31"/>
+        <source>Longitude of your location for weather and astronomy data.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="44"/>
         <source>Astronomy API</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="45"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="47"/>
         <source>WeatherAPI.com Key:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="51"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="48"/>
+        <source>API key from WeatherAPI.com for astronomy and forecast data.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="54"/>
         <source>Enter your WeatherAPI.com API key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="61"/>
         <source>Sync &amp; Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="64"/>
         <source>Enable Quick Summary Widget:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="73"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="65"/>
+        <source>Show a compact weather summary in quick settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="74"/>
         <source>Weather Reload Time (s):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="86"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="75"/>
+        <source>Interval for refreshing weather data, in seconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="81"/>
         <source>(%1 min)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>WifiList</name>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="86"/>
-        <source>Internet</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="94"/>
-        <source>Tap/click a network to connect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/WifiList.qml" line="109"/>
-        <source>Wi-Fi</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3655,6 +4448,14 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
+    <name>WifiToggle</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/WifiToggle.qml" line="29"/>
+        <source>Wi-Fi</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Wind</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="31"/>
@@ -3671,7 +4472,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>greeter</name>
     <message>
-        <location filename="../Qml/greeter.qml" line="185"/>
+        <location filename="../Qml/greeter.qml" line="162"/>
         <source>Session Start</source>
         <translation type="unfinished"></translation>
     </message>
