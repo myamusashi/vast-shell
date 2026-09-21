@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.Pipewire
 
+import qs.Core.Configs
 import qs.Services
 
 Singleton {
@@ -33,13 +34,16 @@ Singleton {
     readonly property list<PwNode> privacyNodes: root.screenshare.concat(root.audioIn, root.audioOut)
     readonly property bool privacyActive: root.privacyNodes.length > 0
 
-    readonly property list<string> activeAppNames: root.uniqueNames(root.privacyNodes)
-    readonly property list<string> screenshareAppNames: root.uniqueNames(root.screenshare)
-    readonly property list<string> audioInAppNames: root.uniqueNames(root.audioIn)
-    readonly property list<string> audioOutAppNames: root.uniqueNames(root.audioOut)
+    readonly property list<string> activeAppNames: root.uniqueNames(root.privacyNodes, Configs.privacy.blockPrivacyListNodesName)
+    readonly property list<string> screenshareAppNames: root.uniqueNames(root.screenshare, Configs.privacy.blockPrivacyListNodesName)
+    readonly property list<string> audioInAppNames: root.uniqueNames(root.audioIn, Configs.privacy.blockPrivacyListNodesName)
+    readonly property list<string> audioOutAppNames: root.uniqueNames(root.audioOut, Configs.privacy.blockPrivacyListNodesName)
 
-    function uniqueNames(nodes) {
-        return [...new Set(nodes.map(pw => pw.name))].filter(name => name.trim() !== "");
+    function uniqueNames(nodes, blocked) {
+        const map = blocked ?? {};
+        const blockedNames = Object.values(map);
+        const names = nodes.map(pw => pw.name);
+        return [...new Set(names)].filter(name => name.trim() !== "" && !blockedNames.includes(name));
     }
 
     // "kind" is one of kindOrder ("screenshare" / "audioIn" / "audioOut"),

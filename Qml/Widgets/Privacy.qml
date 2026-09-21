@@ -15,20 +15,22 @@ RowLayout {
 
     spacing: Appearance.spacing.small
 
+    visible: PrivacyServices.activeAppNames.length > 0 || Configs.privacy.enablePrivacyIndicator
+
     MaterialShape {
         implicitWidth: 10
         implicitHeight: 10
         shape: MaterialShape.Circle
         animationDuration: 0
         color: Colours.m3Colors.m3Error
-        visible: PrivacyServices.privacyActive
+        visible: PrivacyServices.activeAppNames.length > 0
     }
 
     Icon {
         Layout.alignment: Qt.AlignVCenter
         type: Icon.Material
         icon: "videocam"
-        visible: PrivacyServices.screenshare.length > 0
+        visible: PrivacyServices.screenshareAppNames.length > 0
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.larger
     }
@@ -37,7 +39,7 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         type: Icon.Material
         icon: "mic"
-        visible: PrivacyServices.audioIn.length > 0
+        visible: PrivacyServices.audioInAppNames.length > 0
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.larger
     }
@@ -46,7 +48,7 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
         type: Icon.Material
         icon: "volume_up"
-        visible: PrivacyServices.audioOut.length > 0
+        visible: PrivacyServices.audioOutAppNames.length > 0
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.larger
     }
@@ -70,6 +72,9 @@ RowLayout {
 
             height: parent.height
             spacing: marquee.gap
+
+            property real scrollOffset: 0
+            x: scrollOffset
 
             Row {
                 id: content
@@ -98,7 +103,7 @@ RowLayout {
                 }
             }
 
-            SequentialAnimation on x {
+            SequentialAnimation {
                 id: scrollAnim
 
                 running: marquee.overflowing && marquee.visible
@@ -109,6 +114,8 @@ RowLayout {
                 }
 
                 NumberAnimation {
+                    target: scroller
+                    property: "scrollOffset"
                     from: 0
                     to: -(content.implicitWidth + marquee.gap)
                     duration: (content.implicitWidth + marquee.gap) / 40 * 1000
@@ -121,8 +128,10 @@ RowLayout {
             target: PrivacyServices
 
             function onActiveAppNamesChanged() {
-                scrollAnim.restart();
-                scroller.x = 0;
+                scrollAnim.stop();
+                scroller.scrollOffset = 0;
+                if (marquee.overflowing && marquee.visible)
+                    scrollAnim.start();
             }
         }
     }
@@ -141,6 +150,7 @@ RowLayout {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.preferredWidth: 20
                 Layout.preferredHeight: 20
+                visible: Configs.privacy.enablePrivacyIcon
                 source: IconUtils.iconForId(entry.modelData)
                 asynchronous: true
             }

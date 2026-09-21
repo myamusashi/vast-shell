@@ -21,5 +21,7 @@ RowLayout {
         heightBattery: 18
     }
     Wid.Sound {}
-    Wid.Privacy {}
+    Wid.Privacy {
+        visible: Configs.privacy.enablePrivacyIndicator
+    }
 }

@@ -26,6 +26,7 @@ Singleton {
     property alias audio: adapter.audio
     property alias idle: adapter.idle
     property alias search: adapter.search
+    property alias privacy: adapter.privacy
 
     Connections {
         target: root.language
@@ -69,6 +70,7 @@ Singleton {
             property AudioConfig audio: AudioConfig {}
             property IdleConfig idle: IdleConfig {}
             property SearchConfig search: SearchConfig {}
+            property PrivacyIndicatorConfig privacy: PrivacyIndicatorConfig {}
         }
     }
 }
