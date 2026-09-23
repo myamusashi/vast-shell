@@ -8,6 +8,7 @@ import qs.Core.Configs
 import qs.Services
 
 ColumnLayout {
+    Layout.alignment: Qt.AlignCenter
     spacing: Appearance.spacing.small
 
     StyledText {
