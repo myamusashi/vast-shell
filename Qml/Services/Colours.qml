@@ -108,6 +108,22 @@ Singleton {
         scheme: root.schemeEnum(Configs.colors.scheme)
     }
 
+    ColorPreview {
+        id: colorPreview
+    }
+
+    IpcHandler {
+        target: "color"
+
+        function generate(imagePath: string, mode: string, scheme: string): string {
+            return colorPreview.generate(imagePath, mode, scheme);
+        }
+
+        function generateFromColor(colorHex: string, mode: string, scheme: string): string {
+            return colorPreview.generateFromColor(colorHex, mode, scheme);
+        }
+    }
+
     PaletteAnimator {
         id: paletteAnimator
         duration: Appearance.animations.durations.expressiveDefaultSpatial

@@ -9,11 +9,19 @@ import (
 	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 )
 
+var colorSchemes = []string{"tonal-spot", "neutral", "vibrant", "expressive", "fruit-salad", "monochrome", "rainbow", "fidelity", "content"}
+
 var percentValues = []string{"0%", "25%", "50%", "75%", "100%", "+10%", "-10%"}
 
 func emptyOnErr(err error) bool { return err != nil }
 
 func init() {
+	carapace.Gen(colorCmd).FlagCompletion(carapace.ActionMap{
+		"mode":   carapace.ActionValues("dark", "light"),
+		"scheme": carapace.ActionValues(colorSchemes...),
+	})
+	carapace.Gen(colorGenerateCmd).PositionalCompletion(carapace.ActionFiles(".png", ".jpg", ".jpeg", ".webp"))
+
 	carapace.Gen(captureScreenCmd).PositionalCompletion(
 		carapace.ActionValues("copy", "save", "save+copy"),
 	)
