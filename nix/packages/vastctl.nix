@@ -8,7 +8,7 @@ buildGoModule {
     src = ../../vastctl;
 
     proxyVendor = true;
-    vendorHash = "sha256-QlOOmsYB4qK3Bgf+PB+QXs65XnwKz2ds3GJuvwCSc+k=";
+    vendorHash = "sha256-sYEmh0u63bWGQU33JBfl7p5gX3LIBBv4BN9j/9bCHQk=";
 
     ldflags = ["-s" "-w"];
 
