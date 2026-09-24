@@ -8,6 +8,8 @@ vast_module(vast-utils
         BluetoothAgentManager.cpp
         ColorMaterial.hpp
         ColorMaterial.cpp
+        ColorPreview.hpp
+        ColorPreview.cpp
         ColorUtils.cpp
         ColorUtils.hpp
         PaletteAnimator.cpp

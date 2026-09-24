@@ -25,3 +25,4 @@ inline QVariantMap colorsToVariantMap(const QMap<QString, QString>& colors) {
 }
 
 SMaterialPaletteResult buildPalette(const QString& imagePath, const QString& mode, const QString& scheme, bool smart, int bitmapSize = 128, double contrastLevel = 0.0);
+SMaterialPaletteResult buildPaletteFromColor(const QString& colorHex, const QString& mode, const QString& scheme, bool smart = false, double contrastLevel = 0.0);

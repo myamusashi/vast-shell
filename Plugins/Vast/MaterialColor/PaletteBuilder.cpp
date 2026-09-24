@@ -55,43 +55,61 @@ namespace {
         }
     }
 
+    Argb parseColorHex(const QString& value) {
+        QString hex = value.trimmed();
+        if (hex.startsWith('#'))
+            hex.remove(0, 1);
+        if (hex.size() != 6)
+            return 0;
+        bool       ok  = false;
+        const uint rgb = hex.toUInt(&ok, 16);
+        if (!ok)
+            return 0;
+        return 0xFF000000u | rgb;
+    }
+
+    SMaterialPaletteResult buildFromArgb(Argb argb, const QString& mode, const QString& scheme, bool smart, double contrastLevel) {
+        SMaterialPaletteResult result;
+        const bool             darkmode = mode == QLatin1String("dark");
+        result.sourceColor              = argb;
+        result.sourceHct                = Hct(argb);
+        QString effectiveScheme         = scheme;
+        if (smart && result.sourceHct.get_chroma() < 20)
+            effectiveScheme = QStringLiteral("neutral");
+        const MaterialScheme materialScheme(result.sourceHct, variantFromScheme(effectiveScheme), darkmode, contrastLevel);
+        for (int i = 0; i < static_cast<int>(MaterialRole::Count); i++) {
+            const auto role                       = static_cast<MaterialRole>(i);
+            result.colors[materialRoleName(role)] = argbToHex(materialScheme.resolveHct(role).ToInt());
+        }
+        addSuccessColors(result.colors, darkmode);
+        result.colors[QStringLiteral("sourceColor")] = argbToHex(argb);
+        fixSurfaceExtremes(result.colors);
+        QString validationError;
+        if (!validatePalette(result.colors, validationError)) {
+            result.error = std::move(validationError);
+            return result;
+        }
+        return result;
+    }
+
 } // namespace
 
 SMaterialPaletteResult buildPalette(const QString& imagePath, const QString& mode, const QString& scheme, bool smart, int bitmapSize, double contrastLevel) {
-    SMaterialPaletteResult result;
-
-    const bool             darkmode = mode == QLatin1String("dark");
-
-    const Argb             argb = quantizeImage(imagePath, bitmapSize);
+    const Argb argb = quantizeImage(imagePath, bitmapSize);
     if (argb == 0) {
+        SMaterialPaletteResult result;
         result.error = QStringLiteral("failed to decode image: %1").arg(imagePath);
         return result;
     }
+    return buildFromArgb(argb, mode, scheme, smart, contrastLevel);
+}
 
-    result.sourceColor = argb;
-    result.sourceHct   = Hct(argb);
-
-    QString effectiveScheme = scheme;
-    if (smart && result.sourceHct.get_chroma() < 20)
-        effectiveScheme = QStringLiteral("neutral");
-
-    const MaterialScheme materialScheme(result.sourceHct, variantFromScheme(effectiveScheme), darkmode, contrastLevel);
-
-    for (int i = 0; i < static_cast<int>(MaterialRole::Count); i++) {
-        const auto role                       = static_cast<MaterialRole>(i);
-        result.colors[materialRoleName(role)] = argbToHex(materialScheme.resolveHct(role).ToInt());
-    }
-
-    addSuccessColors(result.colors, darkmode);
-    result.colors[QStringLiteral("sourceColor")] = argbToHex(argb);
-
-    fixSurfaceExtremes(result.colors);
-
-    QString validationError;
-    if (!validatePalette(result.colors, validationError)) {
-        result.error = std::move(validationError);
+SMaterialPaletteResult buildPaletteFromColor(const QString& colorHex, const QString& mode, const QString& scheme, bool smart, double contrastLevel) {
+    const Argb argb = parseColorHex(colorHex);
+    if (argb == 0) {
+        SMaterialPaletteResult result;
+        result.error = QStringLiteral("invalid color, expected #RRGGBB: %1").arg(colorHex);
         return result;
     }
-
-    return result;
+    return buildFromArgb(argb, mode, scheme, smart, contrastLevel);
 }
