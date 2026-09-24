@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/carapace-sh/carapace"
 	"github.com/spf13/cobra"
 )
 
@@ -27,4 +28,5 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVar(&rawJSON, "json", false, "Output raw JSON instead of tree format")
+	carapace.Gen(rootCmd)
 }
