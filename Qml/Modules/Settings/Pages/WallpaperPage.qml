@@ -16,10 +16,6 @@ import "../Components"
 SettingsPageBase {
     pageTitle: qsTr("Wallpaper Engine")
 
-    DepthWallpaperSection {
-        Layout.fillWidth: true
-    }
-
     SettingsCard {
         title: qsTr("Pick Wallpaper File")
         Layout.fillWidth: true

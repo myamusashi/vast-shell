@@ -67,12 +67,6 @@ Item {
         {
             page: 3,
             pageLabel: "Wallpaper",
-            card: "Depth Wallpaper",
-            terms: ["Enable Depth Wallpaper", "Auto-process On Wallpaper Change"]
-        },
-        {
-            page: 3,
-            pageLabel: "Wallpaper",
             card: "Pick Wallpaper File",
             terms: ["Select A Wallpaper Image File"]
         },
@@ -249,6 +243,12 @@ Item {
             pageLabel: "Idle",
             card: "Timeouts",
             terms: []
+        },
+        {
+            page: 17,
+            pageLabel: "Lockscreen",
+            card: "Depth Wallpaper",
+            terms: ["Enable Depth Wallpaper", "Auto-process On Wallpaper Change"]
         }
     ]
 

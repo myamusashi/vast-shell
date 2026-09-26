@@ -8,7 +8,7 @@ import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Feedback
 
-import "../Components"
+import "../../Components"
 
 Item {
     id: root

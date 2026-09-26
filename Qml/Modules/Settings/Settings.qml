@@ -145,6 +145,10 @@ LazyLoader {
                                     {
                                         icon: "hourglass",
                                         label: qsTr("Idle")
+                                    },
+                                    {
+                                        icon: "lock",
+                                        label: qsTr("Lockscreen")
                                     }
                                 ]
                             }
@@ -346,6 +350,13 @@ LazyLoader {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             sourceComponent: IdlePage {}
+                        }
+                        Loader {
+                            visible: settingsLoader.currentPage === 17
+                            active: settingsLoader.currentPage === 17
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            sourceComponent: LockscreenPage {}
                         }
                     }
                 }
