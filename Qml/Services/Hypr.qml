@@ -16,19 +16,8 @@ Singleton {
     readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel?.wayland?.activated ? Hyprland.activeToplevel : null // qmllint disable
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
-    // TODO: replace this workaround once quickshell exposes an `address` property.
-    //
-    // Hyprland removed the numeric workspace `id` from IPC in favour of the
-    // string addressable name (`lastIpcObject.address`). Quickshell 0.3.1 has
-    // no `addressable_name` property, so identity resolves via lastIpcObject
-    // with a fallback to the legacy `id` for older Hyprland builds.
-    // Active workspace address resolved from the focused monitor's IPC payload
-    // (`activeWorkspace.address`). The HyprlandWorkspace object itself is
-    // unreliable on Quickshell 0.3.1 + new Hyprland: refreshWorkspaces() matches
-    // by the removed `id` key, so all workspaces alias to id 0 and their
-    // lastIpcObject gets overwritten by whichever entry was parsed last.
     readonly property string activeWsAddress: {
-        const monAddr = focusedMonitor?.lastIpcObject.activeWorkspace?.address ?? "";
+        const monAddr = focusedMonitor?.activeWorkspace?.address ?? focusedMonitor?.lastIpcObject.activeWorkspace?.address ?? "";
         if (monAddr !== undefined && monAddr !== null && monAddr !== "")
             return String(monAddr);
         return workspaceAddress(focusedWorkspace) || "1";
@@ -41,7 +30,7 @@ Singleton {
     function workspaceAddress(ws: var): string {
         if (!ws)
             return "";
-        const addr = ws.lastIpcObject?.address;
+        const addr = ws.address ?? ws.lastIpcObject?.address ?? null;
         if (addr !== undefined && addr !== null && addr !== "")
             return String(addr);
         if (ws.id !== undefined && ws.id !== null)
@@ -55,18 +44,12 @@ Singleton {
     }
 
     // Address of the workspace a toplevel lives on. The resolved workspace
-    // object is kept current by Hyprland events (movewindowv2, ...), so its
-    // name wins while present; the toplevel's own IPC payload covers the
-    // gaps (e.g. object deleted by the aliased workspace refresh).
+    // object carries `address` directly; the toplevel's own IPC payload covers
+    // objects not yet refreshed, with legacy `id` fallbacks for old builds.
     function toplevelWorkspaceAddress(tl: var): string {
         if (!tl)
             return "";
-        const wname = tl.workspace?.name ?? "";
-        if (wname !== "") {
-            const n = parseInt(wname, 10);
-            if (!isNaN(n))
-                return String(n);
-        }
+        const objAddr = tl.workspace?.address ?? "";
         const ipcWs = tl.lastIpcObject?.workspace;
         if (ipcWs) {
             const addr = ipcWs.address ?? ipcWs.addressable_name ?? null;
@@ -75,8 +58,13 @@ Singleton {
             if (ipcWs.id !== undefined && ipcWs.id !== null && ipcWs.id !== -1)
                 return String(ipcWs.id);
         }
-        if (wname !== "")
+        const wname = tl.workspace?.name ?? "";
+        if (wname !== "") {
+            const n = parseInt(wname, 10);
+            if (!isNaN(n))
+                return String(n);
             return wname;
+        }
         return workspaceAddress(tl.workspace);
     }
 
