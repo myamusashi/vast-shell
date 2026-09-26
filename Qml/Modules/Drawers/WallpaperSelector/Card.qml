@@ -100,7 +100,7 @@ Item {
             id: videoThumbnailCache
 
             anchors.fill: parent
-            source: root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.thumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
+            source: root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             visible: status === Image.Ready

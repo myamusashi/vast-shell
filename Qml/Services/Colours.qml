@@ -25,14 +25,21 @@ Singleton {
     readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
     readonly property var m3Colors: Configs.colors.useStaticColors ? staticColors : materialColors
 
-    readonly property string wallpaperSource: {
+    readonly property string staticWallpaperSource: {
         const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
-        if (!wp)
+        if (!wp || MediaKind.isVideo(wp))
             return "";
-        if (!MediaKind.isVideo(wp))
-            return wp;
-        return `${MediaKind.thumbnailPathFor(wp)}?v=${Wallpaper.thumbnailVersion}`;
+        return wp;
     }
+
+    readonly property string videoWallpaperThumbnail: {
+        const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
+        if (!MediaKind.isVideo(wp))
+            return "";
+        return `${MediaKind.videoThumbnailPathFor(wp)}?v=${Wallpaper.thumbnailVersion}`;
+    }
+
+    readonly property string wallpaperSource: staticWallpaperSource !== "" ? staticWallpaperSource : videoWallpaperThumbnail
 
     readonly property var materialPaletteSource: materialColor.ready ? materialColor.colors : lastValidPalette
     property var lastValidPalette: ({})

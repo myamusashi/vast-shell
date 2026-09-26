@@ -33,7 +33,10 @@ Singleton {
     function updateWallpaperColors(path) {
         if (path === "" || !colorSourceImage)
             return;
-        colorSourceImage.source = "file://" + MediaKind.thumbnailPathFor(path) + (MediaKind.isVideo(path) ? "?v=" + thumbnailVersion : "");
+        if (MediaKind.isVideo(path))
+            colorSourceImage.source = "file://" + MediaKind.videoThumbnailPathFor(path) + "?v=" + thumbnailVersion;
+        else
+            colorSourceImage.source = "file://" + MediaKind.staticPathFor(path);
     }
 
     function setVideoWallpaper(path) {
@@ -70,7 +73,7 @@ Singleton {
             thumbnailFailed = pendingFailures;
         }
 
-        ThumbnailQueue.generate(path, MediaKind.thumbnailPathFor(path), (videoPath, thumbnailPath) => {
+        ThumbnailQueue.generate(path, MediaKind.videoThumbnailPathFor(path), (videoPath, thumbnailPath) => {
             const success = thumbnailPath !== "";
             if (success) {
                 const cleared = Object.assign({}, root.thumbnailFailed);
@@ -113,7 +116,7 @@ Singleton {
         checkBatch = thumbnailCheckQueue.splice(0, thumbnailCheckQueue.length);
         const args = ["sh", "-c", thumbnailCheckScript, "sh"];
         for (const path of checkBatch)
-            args.push(MediaKind.thumbnailPathFor(path), path);
+            args.push(MediaKind.videoThumbnailPathFor(path), path);
         thumbnailChecker.command = args;
         thumbnailChecker.running = true;
     }

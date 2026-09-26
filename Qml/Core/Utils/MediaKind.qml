@@ -19,10 +19,14 @@ Singleton {
         return "unknown";
     }
 
-    function thumbnailPathFor(path, cacheDirectory) {
+    function staticPathFor(path) {
+        return String(path ?? "");
+    }
+
+    function videoThumbnailPathFor(path, cacheDirectory) {
         const source = String(path ?? "");
         if (!isVideo(source))
-            return source;
+            return "";
         const directory = cacheDirectory || `${Paths.cacheDir}/vast-shell`;
         return `${directory}/vast-wallpaper-${Qt.md5(source)}.png`;
     }
