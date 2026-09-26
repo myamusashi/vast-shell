@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell.Services.Pipewire
 
 import qs.Components.Base
+import qs.Components.Volume
 import qs.Core.Configs
 
 Item {
@@ -41,7 +42,7 @@ Item {
             id: repeater
 
             model: root.linkTracker.linkGroups
-            delegate: Mixer {
+            delegate: VerticalVolumeControl {
                 required property PwLinkGroup modelData
 
                 width: root.controller.itemSize
@@ -49,11 +50,12 @@ Item {
                 audioNode: modelData.source
                 sliderHeight: root.controller.sliderHeight
                 itemSize: root.controller.itemSize
+                showAppIcon: true
             }
         }
     }
 
-    MasterControl {
+    VerticalVolumeControl {
         id: mainVolumeControl
 
         anchors {
@@ -62,7 +64,11 @@ Item {
             verticalCenter: parent.verticalCenter
         }
 
+        audioNode: Pipewire.defaultAudioSink
         sliderHeight: root.controller.sliderHeight
-        controller: root.controller
+        itemSize: 50
+        enableMuteToggle: true
+        showFooter: true
+        footerController: root.controller
     }
 }

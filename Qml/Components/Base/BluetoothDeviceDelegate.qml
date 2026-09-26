@@ -4,8 +4,9 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
 
-import qs.Components.Base
+import qs.Components.Effects
 import qs.Components.Button
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -27,7 +28,14 @@ WrapperRectangle {
     Layout.alignment: Qt.AlignVCenter
     radius: Appearance.rounding.large
     margin: Appearance.margin.small
-    color: root.device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+    color: "transparent"
+
+    property color target: root.device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+
+    BlendColor {
+        host: root
+        target: root.target
+    }
     border.width: root.device?.connected ? 1 : 0
     border.color: Colours.m3Colors.m3OutlineVariant
 

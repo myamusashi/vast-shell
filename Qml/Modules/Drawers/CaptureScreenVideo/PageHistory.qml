@@ -85,12 +85,6 @@ StyledRect {
                 required property var modelData
                 required property int index
 
-                readonly property string fileExt: {
-                    const fn = modelData.path.split("/").pop();
-                    const dot = fn.lastIndexOf(".");
-                    return dot > 0 ? fn.substring(dot + 1).toLowerCase() : "";
-                }
-
                 width: listView.width
                 height: 56
                 color: listView.currentIndex === index ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15) : (delegateMouse.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")

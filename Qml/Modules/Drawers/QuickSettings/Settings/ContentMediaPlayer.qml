@@ -21,7 +21,7 @@ import qs.Widgets
 RowLayout {
     id: root
 
-    property var trackArtColors: ({})
+    property var trackArtColors: TrackArt.colors
 
     function cleanDesktopEntry(entry: string): string {
         if (!entry || entry === "No Player")
@@ -94,7 +94,7 @@ RowLayout {
                     Image {
                         id: trackArt
 
-                        source: Players.active.trackArtUrl
+                        source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
                         sourceSize: Qt.size(60, 60)
                         fillMode: Image.PreserveAspectCrop
                         cache: false

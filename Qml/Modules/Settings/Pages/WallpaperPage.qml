@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 import qs.Components.Button
@@ -99,7 +100,7 @@ SettingsPageBase {
                     Image {
                         anchors.fill: parent
                         anchors.bottomMargin: fileNameText.implicitHeight + 4
-                        source: (width > 0 && height > 0 && !/\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(delegateRoot.modelData)) ? delegateRoot.modelData : ""
+                        source: (width > 0 && height > 0 && !MediaKind.isVideo(delegateRoot.modelData)) ? delegateRoot.modelData : ""
                         sourceSize: Qt.size(150, 150)
                         fillMode: Image.PreserveAspectCrop
                         asynchronous: true

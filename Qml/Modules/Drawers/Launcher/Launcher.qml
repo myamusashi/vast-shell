@@ -98,7 +98,7 @@ Item {
                     }
 
                     Timer {
-                        id: searchDebounce
+                        id: selectionReset
 
                         interval: 80
                         repeat: false
@@ -117,7 +117,7 @@ Item {
                         toggleButtonVisible: false
                         onTextChanged: {
                             LauncherServices.query = text;
-                            searchDebounce.restart();
+                            selectionReset.restart();
                         }
                         onAccepted: {
                             if (listView.currentIndex >= 0 && listView.currentIndex < LauncherServices.filteredItems.length)

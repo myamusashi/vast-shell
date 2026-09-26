@@ -2,10 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
-import M3Shapes
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -81,9 +79,11 @@ Pages {
                                 spacing: Appearance.spacing.normal
                                 required property var modelData
 
-                                HumiditySlider {
+                                HourlyValueSlider {
                                     implicitWidth: 30
                                     implicitHeight: 150
+                                    from: 0
+                                    to: 100
                                     value: parent.modelData.humidity
                                 }
 
@@ -128,65 +128,5 @@ Pages {
         }
     }
 
-    component HumiditySlider: Slider {
-        id: slider
-
-        property color trackColor: Colours.m3Colors.m3Primary
-        property color trackColorInactive: Colours.m3Colors.m3Surface
-        property color handleColor: Colours.m3Colors.m3OnPrimary
-        property color handleTextColor: Colours.m3Colors.m3Primary
-        property real trackWidth: implicitWidth
-
-        hoverEnabled: false
-        orientation: Qt.Vertical
-        from: 0
-        to: 100
-        enabled: false
-
-        background: Item {
-            anchors.fill: parent
-
-            // inactive
-            Rectangle {
-                x: slider.leftPadding + (slider.availableWidth - width) / 2
-                y: slider.topPadding
-                implicitWidth: slider.trackWidth / 2
-                implicitHeight: slider.availableHeight
-                radius: slider.trackWidth / 2
-                color: slider.trackColorInactive
-            }
-
-            // active
-            Rectangle {
-                anchors.bottom: parent.bottom
-                x: slider.leftPadding + (slider.availableWidth - width) / 2
-                implicitWidth: slider.trackWidth * 1.2
-                implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small
-                radius: slider.trackWidth / 2
-                color: slider.trackColor
-
-                MaterialShape {
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                        topMargin: Appearance.margin.small
-                    }
-                    implicitWidth: 35
-                    implicitHeight: 35
-                    color: slider.handleColor
-                    shape: MaterialShape.Cookie9Sided
-
-                    StyledText {
-                        anchors.centerIn: parent
-                        text: Math.round(slider.value)
-                        color: slider.handleTextColor
-                        font.pixelSize: Appearance.fonts.size.medium
-                        font.bold: true
-                    }
-                }
-            }
-        }
-
-        handle: Item {}
-    }
+    // Replaced by shared HourlyValueSlider.qml.
 }

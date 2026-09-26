@@ -72,8 +72,8 @@ StyledRect {
 
                 Image {
                     anchors.fill: parent
-                    visible: Players.active?.trackArtUrl !== "" && Players.active?.trackArtUrl !== undefined
-                    source: Players.active ? Players.active.trackArtUrl : ""
+                    visible: TrackArt.cachedPath !== ""
+                    source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                 }
@@ -196,7 +196,7 @@ StyledRect {
         Image {
             id: popupCoverArt
             anchors.fill: parent
-            source: Players.active ? Players.active.trackArtUrl : ""
+            source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
             fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: true
@@ -233,7 +233,7 @@ StyledRect {
 
                     Image {
                         anchors.fill: parent
-                        source: Players.active ? Players.active.trackArtUrl : ""
+                        source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
                         fillMode: Image.PreserveAspectCrop
                         asynchronous: true
                         cache: true

@@ -2,10 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
-import M3Shapes
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -96,13 +94,14 @@ Pages {
                                 required property int index
                                 spacing: Appearance.spacing.normal
 
-                                PressureSlider {
+                                HourlyValueSlider {
                                     Layout.alignment: Qt.AlignHCenter
                                     implicitWidth: 30
                                     implicitHeight: 150
+                                    from: 0
+                                    to: 1500
                                     value: hourlyDelegate.modelData.pressure
-                                    currentPressure: hourlyDelegate.modelData.pressure
-                                    currentIndex: hourlyDelegate.index
+                                    handleIcon: Weather.pressureTrendIcon(hourlyDelegate.modelData.pressure, hourlyDelegate.index)
                                 }
 
                                 ColumnLayout {
@@ -158,94 +157,5 @@ Pages {
         }
     }
 
-    component PressureSlider: Slider {
-        id: slider
-
-        property string icon: "arrow_downward"
-        property color trackColor: Colours.m3Colors.m3Primary
-        property color trackColorInactive: Colours.m3Colors.m3Surface
-        property color handleColor: Colours.m3Colors.m3OnPrimary
-        property color handleTextColor: Colours.m3Colors.m3Primary
-        property real trackWidth: implicitWidth
-        property real currentPressure: 0
-        property int currentIndex: 0
-
-        function getPressureIcon(): string {
-            if (currentIndex === 0) {
-                const diff = currentPressure - Weather.pressure;
-
-                if (Math.abs(diff) < 1.0) {
-                    return "arrow_forward";  // Stable (diff < 1 hPa)
-                } else if (diff > 0) {
-                    return "arrow_upward";
-                } else {
-                    return "arrow_downward";
-                }
-            } else {
-                const previousPressure = Weather.hourlyForecast[currentIndex - 1].pressure;
-                const diff = currentPressure - previousPressure;
-
-                if (Math.abs(diff) < 1.0) {
-                    return "arrow_forward";
-                } else if (diff > 0) {
-                    return "arrow_upward";
-                } else {
-                    return "arrow_downward";
-                }
-            }
-        }
-
-        hoverEnabled: false
-        orientation: Qt.Vertical
-        from: 00
-        to: 1500
-        enabled: false
-
-        background: Item {
-            anchors.fill: parent
-
-            // inactive
-            Rectangle {
-                x: slider.leftPadding + (slider.availableWidth - width) / 2
-                y: slider.topPadding
-                implicitWidth: slider.trackWidth / 2
-                implicitHeight: slider.availableHeight
-                radius: slider.trackWidth / 2
-                color: slider.trackColorInactive
-            }
-
-            // active
-            Rectangle {
-                anchors.bottom: parent.bottom
-                x: slider.leftPadding + (slider.availableWidth - width) / 2
-                implicitWidth: slider.trackWidth * 1.2
-                implicitHeight: slider.availableHeight * slider.position + Appearance.spacing.small
-                radius: slider.trackWidth / 2
-                color: slider.trackColor
-
-                MaterialShape {
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                        topMargin: Appearance.margin.small
-                    }
-                    implicitWidth: 35
-                    implicitHeight: 35
-                    color: slider.handleColor
-                    shape: MaterialShape.Cookie9Sided
-
-                    Icon {
-                        type: Icon.Material
-                        anchors.centerIn: parent
-                        icon: slider.getPressureIcon()
-                        color: slider.handleTextColor
-                        font.pixelSize: Appearance.fonts.size.large
-                        font.bold: true
-                    }
-                }
-            }
-        }
-
-        handle: Item {}
-    }
+    // Replaced by shared HourlyValueSlider.qml.
 }

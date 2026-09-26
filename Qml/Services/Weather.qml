@@ -406,6 +406,18 @@ Singleton {
         return WeatherFormatter.usAQIInfo(aqi);
     }
 
+    function uvCategoryLabel(index) {
+        return WeatherFormatter.uvCategoryLabel(index);
+    }
+
+    function uvCategoryIndex(index) {
+        return WeatherFormatter.uvCategoryIndex(index);
+    }
+
+    function pressureTrendIcon(currentPressure, index) {
+        return WeatherFormatter.pressureTrendIcon(currentPressure, hourlyForecast.map(entry => entry.pressure), index);
+    }
+
     function getDominantPollutant(pm25, pm10) {
         return WeatherFormatter.dominantPollutant(pm25, pm10);
     }
@@ -665,6 +677,7 @@ Singleton {
                     precipitation: hourly.precipitation?.[i] || 0.0,
                     probability: hourly.precipitation_probability?.[i] || 0,
                     pressure: hourly.surface_pressure?.[i] || 0.0,
+                    uvIndex: hourly.uv_index?.[i] ?? 0.0,
                     windSpeed: hourly.wind_speed_10m?.[i] || 0.0,
                     windDirectionDegrees: hourly.wind_direction_10m?.[i] || 0,
                     windDirectionText: getWindDirectionText(hourly.wind_direction_10m?.[i] || 0)

@@ -168,12 +168,12 @@ LazyLoader {
             id: walker
         }
 
-        Timer {
+        DebouncedValue {
             id: searchDebounce
 
             interval: 200
-            repeat: false
-            onTriggered: window.runFileSearch()
+            value: root.searchVisible ? searchField.text : ""
+            onDebouncedValueChanged: window.runFileSearch()
         }
 
         Connections {
@@ -250,7 +250,6 @@ LazyLoader {
                         toggleButtonVisible: false
                         autoFocus: false
 
-                        onTextChanged: searchDebounce.restart()
                         onKeyPressed: event => {
                             if (event.key === Qt.Key_Escape) {
                                 event.accepted = true;

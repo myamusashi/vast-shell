@@ -142,6 +142,48 @@ Singleton {
         return WD.getAQIInfo(aqi, WD.usAQI);
     }
 
+    function uvCategoryInfo(index) {
+        if (index <= 2)
+            return {
+                index: 0,
+                label: qsTr("Low")
+            };
+        if (index <= 5)
+            return {
+                index: 1,
+                label: qsTr("Moderate")
+            };
+        if (index <= 7)
+            return {
+                index: 2,
+                label: qsTr("High")
+            };
+        if (index <= 10)
+            return {
+                index: 3,
+                label: qsTr("Very High")
+            };
+        return {
+            index: 4,
+            label: qsTr("Extreme")
+        };
+    }
+
+    function uvCategoryLabel(index) {
+        return uvCategoryInfo(index).label;
+    }
+
+    function uvCategoryIndex(index) {
+        return uvCategoryInfo(index).index;
+    }
+    function pressureTrendIcon(currentPressure, pressures, index) {
+        const previous = index === 0 ? null : pressures?.[index - 1];
+        const diff = previous === null || previous === undefined ? 0 : currentPressure - previous;
+        if (Math.abs(diff) < 1.0)
+            return "arrow_forward";
+        return diff > 0 ? "arrow_upward" : "arrow_downward";
+    }
+
     function dominantPollutant(pm25, pm10) {
         const pm25Ratio = pm25 / 15.0;
         const pm10Ratio = pm10 / 45.0;

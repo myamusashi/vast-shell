@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell
 import Quickshell.Services.UPower
 
 import qs.Core.Configs
@@ -198,9 +197,7 @@ Elevation {
 
             if (warn) {
                 lowFlash.restart();
-                Quickshell.execDetached({
-                    command: ["notify-send", "-a", "vast-shell", "-i", warn.icon, warn.title, warn.message, "-u", warn.level === percentage ? warn.urgency : "normal"]
-                });
+                CaptureNotify.sendNotification(warn.title, warn.message, warn.level === percentage ? warn.urgency : "normal", warn.icon, "vast-shell", []);
             }
         }
     }

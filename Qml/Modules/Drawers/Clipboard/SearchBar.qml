@@ -63,20 +63,16 @@ Item {
             placeHolderText: qsTr("Search clipboard…")
             toggleButtonVisible: false
 
-            Timer {
+            DebouncedValue {
                 id: searchDebounce
 
                 interval: 150
-                repeat: false
-                onTriggered: ClipboardManager.model.setFilter(searchField.text)
-            }
-
-            onTextChanged: {
-                if (text.length === 0) {
-                    searchDebounce.stop();
-                    ClipboardManager.model.setFilter("");
-                } else {
-                    searchDebounce.restart();
+                value: searchField.text
+                onDebouncedValueChanged: {
+                    if (searchField.text.length === 0)
+                        ClipboardManager.model.setFilter("");
+                    else
+                        ClipboardManager.model.setFilter(searchField.text);
                 }
             }
 

@@ -33,14 +33,14 @@ Pages {
                 description: DetailText.usAQI,
                 value: Weather.usAQI,
                 category: Weather.usAQICategory,
-                bounds: [50, 100, 150, 200, 300],
+                bounds: AqiScale.usaBounds,
                 max: 500
             },
             {
                 description: DetailText.euroAQI,
                 value: Weather.europeanAQI,
                 category: Weather.europeanAQICategory,
-                bounds: [25, 50, 75, 100, 150],
+                bounds: AqiScale.europeBounds,
                 max: 250
             }
         ]

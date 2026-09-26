@@ -29,7 +29,7 @@ WlSessionLockSurface {
     property string configStaticPath: ""
     property string configVideoPath: ""
     readonly property string assetWallpaper: Paths.projectRoot + "/Assets/images/wallpaper.png"
-    property url effectiveWallpaper: useVideoWallpaper ? "file://" + wallpaperPath : wallpaperPath
+    property url effectiveWallpaper: GreeterWallpaper.effectiveWallpaper(useVideoWallpaper, wallpaperPath, wallpaperPath)
     property bool effectiveIsVideo: useVideoWallpaper
     property int thumbnailVersion: 0
     readonly property url colorSource: effectiveIsVideo ? GreeterWallpaper.colorSource(true, wallpaperPath) + `?v=${thumbnailVersion}` : effectiveWallpaper
@@ -87,10 +87,10 @@ WlSessionLockSurface {
     function resetEffectiveWallpaper() {
         if (!root.useVideoWallpaper) {
             root.effectiveIsVideo = false;
-            root.effectiveWallpaper = "file://" + root.wallpaperPath;
+            root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
             return;
         }
-        root.effectiveWallpaper = "file://" + root.wallpaperPath;
+        root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
         root.effectiveIsVideo = true;
         root.refreshVideoColorSource();
     }
@@ -163,11 +163,11 @@ WlSessionLockSurface {
         Image {
             id: staticProbe
 
-            source: root.useVideoWallpaper ? "" : "file://" + root.wallpaperPath
+            source: GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath)
             visible: false
             onStatusChanged: {
                 if (status === Image.Ready)
-                    root.effectiveWallpaper = "file://" + root.wallpaperPath;
+                    root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
                 else if (status === Image.Error)
                     root.effectiveWallpaper = root.assetWallpaper;
                 root.effectiveIsVideo = false;
@@ -177,14 +177,14 @@ WlSessionLockSurface {
         MediaPlayer {
             id: videoPlayer
 
-            source: root.useVideoWallpaper ? "file://" + root.wallpaperPath : ""
+            source: root.useVideoWallpaper ? GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath) : ""
             loops: MediaPlayer.Infinite
             videoOutput: videoOutput
             onMediaStatusChanged: {
                 if (!root.useVideoWallpaper)
                     return;
                 if (mediaStatus === MediaPlayer.LoadedMedia) {
-                    root.effectiveWallpaper = "file://" + root.wallpaperPath;
+                    root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath);
                     root.effectiveIsVideo = true;
                     play();
                 } else if (mediaStatus === MediaPlayer.InvalidMedia) {

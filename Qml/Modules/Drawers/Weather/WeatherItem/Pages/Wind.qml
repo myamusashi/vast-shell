@@ -2,10 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
-import M3Shapes
 
 import qs.Core.Configs
 import qs.Core.Utils
@@ -95,11 +93,13 @@ Pages {
 
                                 spacing: Appearance.spacing.small
 
-                                WindSlider {
+                                HourlyValueSlider {
                                     implicitWidth: 30
                                     implicitHeight: 150
+                                    from: 0
+                                    to: 15
                                     value: parent.modelData.windSpeed
-                                    windShapeRotation: parent.modelData.windDirectionDegrees
+                                    handleRotation: parent.modelData.windDirectionDegrees
                                 }
 
                                 StyledText {
@@ -153,62 +153,5 @@ Pages {
         }
     }
 
-    component WindSlider: Slider {
-        id: slider
-
-        property alias windShapeRotation: shape.rotation
-        property color trackColor: Colours.m3Colors.m3Primary
-        property color trackColorInactive: Colours.m3Colors.m3Surface
-        property color handleColor: Colours.m3Colors.m3OnPrimary
-        property color handleTextColor: Colours.m3Colors.m3Primary
-        property real trackWidth: implicitWidth
-
-        hoverEnabled: false
-        orientation: Qt.Vertical
-        from: 0
-        to: 15
-        enabled: false
-
-        background: Item {
-            anchors.fill: parent
-
-            // inactive
-            Rectangle {
-                x: slider.leftPadding + (slider.availableWidth - width) / 2
-                y: slider.topPadding
-                implicitWidth: slider.trackWidth / 2
-                implicitHeight: slider.availableHeight
-                radius: slider.trackWidth / 2
-                color: slider.trackColorInactive
-            }
-
-            // active
-            Rectangle {
-                anchors.bottom: parent.bottom
-                x: slider.leftPadding + (slider.availableWidth - width) / 2
-                implicitWidth: slider.trackWidth * 1.2
-                implicitHeight: slider.availableHeight * slider.position + shape.height
-                radius: slider.trackWidth / 2
-                color: slider.trackColor
-                WrapperItem {
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                        topMargin: Appearance.margin.small
-                    }
-                    implicitWidth: 35
-                    implicitHeight: 35
-
-                    MaterialShape {
-                        id: shape
-
-                        color: Colours.m3Colors.m3OnPrimary
-                        shape: MaterialShape.Triangle
-                    }
-                }
-            }
-        }
-
-        handle: Item {}
-    }
+    // Wind uses shared HourlyValueSlider.qml with handleRotation; triangle decoration removed with the local slider.
 }

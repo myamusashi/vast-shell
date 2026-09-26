@@ -28,7 +28,7 @@ ClippingWrapperRectangle {
                 id: trackArt
 
                 anchors.fill: parent
-                source: Players.active.trackArtUrl
+                source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
                 fillMode: Image.PreserveAspectCrop
                 cache: false
                 asynchronous: true

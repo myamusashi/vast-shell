@@ -107,7 +107,7 @@ ColumnLayout {
                 id: percentText
 
                 Layout.fillWidth: true
-                text: Math.round(root.vol * 100) + "% · " + root.dbText(root.vol)
+                text: VolumeUtils.toPercent(root.vol) + "% · " + root.dbText(root.vol)
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small
             }
@@ -123,7 +123,7 @@ ColumnLayout {
         to: 1.5
         stepSize: 0.01
         value: root.vol
-        popupValueFormat: v => Math.round(v * 100) + "%"
+        popupValueFormat: v => VolumeUtils.toPercent(v) + "%"
         onMoved: root.node.audio.volume = value
     }
 

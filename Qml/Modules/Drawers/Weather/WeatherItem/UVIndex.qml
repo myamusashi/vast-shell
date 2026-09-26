@@ -13,28 +13,7 @@ MaterialShape {
     id: canvas
 
     property int uvIndex: Weather.uvIndex
-    property var uvColors: [Colours.m3Colors.m3Green  // Low (0-2) - Green
-        , Colours.m3Colors.m3Yellow  // Moderate (3-5) - Yellow
-        , Colours.m3Colors.m3Orange  // High (6-7) - Orange
-        , Colours.m3Colors.m3Red  // Very High (8-10) - Red
-        , Colours.m3Colors.m3Purple   // Extreme (11+) - Purple
-    ]
-    property var uvLabels: [qsTr("Low"), qsTr("Moderate"), qsTr("High"), qsTr("Very High"), qsTr("Extreme")]
-
-    color: Colours.m3Colors.m3SurfaceContainer
-    shape: MaterialShape.Cookie12Sided
-
-    function getUVCategory(index) {
-        if (index <= 2)
-            return 0;
-        if (index <= 5)
-            return 1;
-        if (index <= 7)
-            return 2;
-        if (index <= 10)
-            return 3;
-        return 4;
-    }
+    property var uvColors: [Colours.m3Colors.m3Green, Colours.m3Colors.m3Yellow, Colours.m3Colors.m3Orange, Colours.m3Colors.m3Red, Colours.m3Colors.m3Purple]
 
     RowLayout {
         anchors {
@@ -76,7 +55,7 @@ MaterialShape {
 
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: canvas.uvLabels[canvas.getUVCategory(canvas.uvIndex)]
+            text: Weather.uvCategoryLabel(canvas.uvIndex)
             font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurface
         }
@@ -94,7 +73,7 @@ MaterialShape {
                 required property int index
                 property real angle: 150 - (index * 30)
                 property real distance: Math.min(parent.width, parent.height) * 0.38
-                property int currentCategory: canvas.getUVCategory(canvas.uvIndex)
+                property int currentCategory: Weather.uvCategoryIndex(canvas.uvIndex)
 
                 width: 18
                 height: 18
