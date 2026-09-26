@@ -157,6 +157,21 @@ pip install materialyoucolor pillow
 | `apps` | — | Default applications for terminal, audio, file manager, etc. |
 | `battery.warnLevels` | — | Battery thresholds with custom notification titles and messages. |
 
+### Audio
+
+| Key | Default | Description |
+|---|---|---|
+| `showPeakLevels` | `true` | Live input and output level meters in the volume page. |
+| `defaultSinkName` | — | Name of the sink to restore as default on startup. |
+| `sinkProfiles` | — | Stored per-sink volume/mute profiles. |
+
+> [!NOTE]
+> Quickshell has this error: 
+```txt
+ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is missing channels present in capture stream. Node channels: QList(qs::service::pipewire::PwAudioChannel::Mono) Stream channels: QList(qs::service::pipewire::PwAudioChannel::FrontLeft, qs::service::pipewire::PwAudioChannel::FrontRight)
+```
+> We can just wait until the issue is fixes
+
 ### Media Player
 
 | Key | Default | Description |

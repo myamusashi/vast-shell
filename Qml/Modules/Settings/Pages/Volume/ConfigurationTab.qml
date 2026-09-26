@@ -18,6 +18,22 @@ ColumnLayout {
     readonly property var cards: AudioProfilesWatcher.cards
     readonly property int count: cards ? cards.count() : 0
 
+    SettingsCard {
+        title: qsTr("Level Meters")
+
+        SettingRow {
+            label: qsTr("Show Audio Level Meters:")
+            description: qsTr("Track live input and output levels. Turn this off if PipeWire reports missing channels for your devices.")
+
+            StyledSwitch {
+                Layout.preferredWidth: 52
+                Layout.preferredHeight: 32
+                checked: Configs.audio.showPeakLevels
+                onToggled: Configs.audio.showPeakLevels = checked
+            }
+        }
+    }
+
     StyledText {
         visible: root.count === 0
         text: qsTr("No audio cards detected.")

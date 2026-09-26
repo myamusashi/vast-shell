@@ -35,7 +35,9 @@ ColumnLayout {
 
     PwNodePeakMonitor {
         id: peakMonitor
+
         node: root.node
+        enabled: Configs.audio.showPeakLevels
     }
 
     RowLayout {
@@ -128,6 +130,7 @@ ColumnLayout {
     }
 
     Rectangle {
+        visible: Configs.audio.showPeakLevels
         Layout.fillWidth: true
         Layout.preferredHeight: 4
         radius: height / 2
