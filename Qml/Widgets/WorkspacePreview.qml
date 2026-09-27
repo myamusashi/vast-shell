@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
+import Quickshell.Hyprland
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -73,7 +74,7 @@ LazyLoader {
     component PreviewCell: StyledRect {
         id: cell
 
-        required property var toplevel
+        required property HyprlandToplevel toplevel
         required property int index
 
         implicitWidth: root.cellSize
@@ -93,7 +94,7 @@ LazyLoader {
             width: implicitWidth
             height: implicitHeight
             visible: hasContent
-            captureSource: cell.toplevel?.wayland ?? null
+            captureSource: cell?.toplevel?.wayland ?? null
             live: false
             opacity: 0.5
         }
@@ -130,7 +131,7 @@ LazyLoader {
             IconImage {
                 Layout.alignment: Qt.AlignCenter
                 implicitSize: Appearance.fonts.size.large * 1.5
-                source: parent.iconForToplevel(cell.toplevel)
+                source: parent.iconForToplevel(cell?.toplevel)
                 visible: source !== ""
                 asynchronous: true
                 backer.cache: true
@@ -141,7 +142,7 @@ LazyLoader {
                 Layout.preferredWidth: cell.width
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: cell.toplevel?.title ?? ""
+                text: cell?.toplevel?.title
                 font.pixelSize: Appearance.fonts.size.small
                 wrapMode: Text.Wrap
                 color: Colours.m3Colors.m3OnSurface
