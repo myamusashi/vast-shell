@@ -2,42 +2,74 @@
 
 [Back to README](../README.md)
 
-Vast-shell is configured by editing JSON files in the `Data/` directory or in your user config directory (`~/.config/vast-shell/`).
+Vast-shell keeps all of its settings in a single JSON file: `configurations.json`.
+
+## Where the file lives
+
+The path is resolved once at startup by `Qml/Core/Utils/Paths.qml`:
+
+| Path | Value |
+|---|---|
+| `HOME` | `$HOME` |
+| `configDir` | `$XDG_CONFIG_DIR` if set, otherwise `$HOME/.config` |
+| `shellDir` | `<configDir>/vast-shell` |
+| **config file** | **`<shellDir>/configurations.json`** |
+
+Normally that resolves to `~/.config/vast-shell/configurations.json`.
+
+> [!WARNING]
+> `Paths.qml` reads **`XDG_CONFIG_DIR`**, not the XDG-standard `XDG_CONFIG_HOME`. If you set `XDG_CONFIG_HOME` and not `XDG_CONFIG_DIR`, the shell still uses `~/.config`.
+
+If the file does not exist, the shell does not error — every key falls back to the default declared in its `*Config.qml`. So a fresh install needs no config file at all.
+
+The file is watched: edits made from the Settings UI are written back, and edits made on disk are picked up live.
 
 ## Setup
 
+To start from the shipped defaults instead:
+
 ```bash
 mkdir -p ~/.config/vast-shell
-cp -r /path/to/vast-shell/Data/{colors.json,configurations.json} ~/.config/vast-shell/
+cp /path/to/vast-shell/Data/configurations.json ~/.config/vast-shell/
 ```
 
-For Material color generation:
+You generally do **not** need to copy the color files — the Material palette is generated at runtime in C++ (see [Material Colors](#material-colors)). Copy `Data/colors.json` only if you want to pin a static palette.
 
-```bash
-pip install materialyoucolor pillow
-```
+> [!NOTE]
+> `Data/configurations.json` is a *convenience snapshot*, not the source of truth. It is missing several sections (`clipboard`, `audio`, `idle`, `search`, `privacy`, `kdeConnect`, `captureScreenVideo`) and it contains two dead keys (`colors.toDarkColor`, `colors.toWhiteColor`) that nothing reads. The tables below document the **code defaults**, which are what actually apply for any key you leave out.
 
-## configurations.json
+---
+
+## Structure
 
 <details>
-<summary>View full structure</summary>
+<summary>Full structure (code defaults)</summary>
 
 ```json
 {
   "appearance": {
-    "animations": { "durations": { "scale": 1 } },
+    "animations": {
+      "curves": {},
+      "durations": { "scale": 1 }
+    },
     "fonts": {
       "family": {
         "material": "Material Symbols Rounded",
-        "mono": "Hack",
-        "sans": "Google Sans Flex"
+        "mono": "monospace",
+        "nerd": "",
+        "sans": "sans-serif"
       },
-      "size": { "scale": 1 }
+      "size": { "scale": 1.0 }
     },
     "margin":  { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
     "padding": { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
     "rounding": { "small": 12, "normal": 17, "large": 25, "full": 1000 },
     "spacing":  { "small": 7, "smaller": 10, "normal": 12, "larger": 15, "large": 20 }
+  },
+  "audio": {
+    "defaultSinkName": "",
+    "sinkProfiles": {},
+    "showPeakLevels": true
   },
   "bar": {
     "alwaysOpenBar": true,
@@ -46,15 +78,41 @@ pip install materialyoucolor pillow
     "visibleWorkspace": 5,
     "workspacesIndicator": "dot"
   },
+  "captureScreenVideo": {
+    "maxFps": 60,
+    "bitrate": "5 MB",
+    "videoCodec": "",
+    "audioCodec": "",
+    "lowPower": "auto",
+    "showCursor": true,
+    "historyMode": false
+  },
+  "clipboard": {
+    "enabled": false,
+    "enablePreview": false,
+    "enableVimKeybinds": false,
+    "keepOpenAfterCopy": false,
+    "listEntries": 15,
+    "maxEntries": 300,
+    "width": 300,
+    "height": 400,
+    "preview": { "sourceWidth": 300, "sourceHeight": 300 }
+  },
   "colors": {
     "isDarkMode": true,
-    "toDarkColor":  "$HOME/.config/vast-shell/dark-colors.json",
-    "toWhiteColor": "$HOME/.config/vast-shell/light-colors.json",
-    "staticColorsPath": "$HOME/.config/vast-shell/colors.json",
-    "useStaticColors": false
+    "useStaticColors": false,
+    "staticColorsPath": "~/.config/vast-shell/colors.json",
+    "scheme": "tonal-spot"
   },
   "generals": {
     "alpha": 1.0,
+    "transparent": false,
+    "enableOuterBorder": false,
+    "outerBorderSize": 10,
+    "coverBlurRadius": 16,
+    "chargingGlowSpread": 10,
+    "followFocusMonitor": true,
+    "showHolidays": true,
     "apps": {
       "audio": "pavucontrol-qt",
       "fileExplorer": "pcmanfm-qt",
@@ -66,50 +124,70 @@ pip install materialyoucolor pillow
     "battery": {
       "criticalLevel": 3,
       "warnLevels": [
-        { "icon": "battery-020", "level": 20, "message": "Kamu mungkin mau colok chargernya",           "title": "Baterai lemah" },
-        { "icon": "battery-010", "level": 10, "message": "Kamu mungkin ingin colok charger kamu <b>sekarang</b>", "title": "Kamu bisa lihat pesan sebelumnya kan?" },
-        { "icon": "battery-000", "level": 5,  "message": "MASUKAN CHARGER NYA SEKARANG!!",              "title": "Level baterai kritis" }
+        { "level": 20, "title": "Low battery",         "message": "You might want to plug in a charger",            "icon": "battery-020" },
+        { "level": 10, "title": "Did you see the previous message?", "message": "You should probably plug in a charger <b>now</b>", "icon": "battery-010" },
+        { "level": 5,  "title": "Critical battery level", "message": "PLUG THE CHARGER RIGHT NOW!!",                  "icon": "battery-000" }
       ]
-    },
-    "chargingGlowSpread": 10,
-    "coverBlurRadius": 16,
-    "enableOuterBorder": false,
-    "followFocusMonitor": true,
-    "outerBorderSize": 10,
-    "transparent": false
+    }
   },
-  "language": { "language": "" },
+  "idle": {
+    "enabled": true,
+    "timeouts": [
+      { "timeoutMonitor": 60, "on-timeout": "", "on-resume": "" }
+    ]
+  },
+  "kdeConnect": {
+    "pollingEnabled": true,
+    "pollInterval": 15000
+  },
+  "language": { "language": "id_ID" },
   "mediaPlayer": {
     "dynamicColorsCover": true,
     "showLyrics": false,
-    "sliderType": "WaveForm"
+    "sliderType": "Wavy"
   },
   "notification": {
     "maximumNotification": 100,
     "maximumNotificationAge": 604800000
   },
+  "privacy": {
+    "enablePrivacyIndicator": false,
+    "enablePrivacyIcon": true,
+    "enablePrivacyIndicatorOnDynamicIsland": true,
+    "blockPrivacyListNodesName": {}
+  },
+  "search": {
+    "maxDepth": 3,
+    "fileDirs": []
+  },
   "wallpaper": {
     "enabledWallpaper": true,
+    "wallpaperDir": "~/Pictures/wallpapers",
     "transition": "random",
     "transitionDuration": 300,
     "transitionLowPerfMode": false,
     "visibleWallpaper": 3,
-    "wallpaperDir": "$HOME/Pictures/wallpapers"
+    "depthWallpaperEnabled": true,
+    "livePreview": true,
+    "autoProcessedDepthWallpaper": false,
+    "depthWallpaperSource": "",
+    "depthFgPath": ""
   },
   "weather": {
     "enableQuickSummary": false,
     "latitude": "-6.4028",
     "longitude": "106.7744",
-    "reloadTime": 1800000
-  },
-  "kdeConnect": {
-    "pollingEnabled": true,
-    "pollInterval": 15000
+    "astronomyApiKey": "",
+    "reloadTime": 180
   }
 }
 ```
 
+`appearance.animations.curves`, `appearance.animations.durations.*` (except `scale`), `appearance.fonts.size.*` (except `scale`), `clipboard.preview.sourceSize*` are **derived** `readonly` properties — set them through the other keys, not directly.
+
 </details>
+
+---
 
 ## Reference
 
@@ -117,10 +195,18 @@ pip install materialyoucolor pillow
 
 | Key | Default | Description |
 |---|---|---|
-| `animations.durations.scale` | `1` | Global scale for all animation durations. |
-| `fonts.family` | — | Font families for `material`, `mono`, and `sans` text. |
-| `fonts.size.scale` | `1.0` | Global font size scale. |
-| `margin` / `padding` / `rounding` / `spacing` | `small`…`large` | Layout sizing in pixels. |
+| `animations.durations.scale` | `1` | Global multiplier for all derived animation durations (200–1000 ms). |
+| `animations.durations.*` | derived | `small` 200, `normal` 300, `expressiveFastSpatial` 350, `emphasizedDecel` 400, `emphasized` 500, `expressiveDefaultSpatial` 500, `large` 600, `expressiveEffects` 200, `emphasizedAccel` 200, `extraLarge` 1000 — each × `scale`. |
+| `animations.curves.*` | derived | Material 3 easing curves: `standard`, `standardAccel`, `standardDecel`, `emphasized`, `emphasizedAccel`, `emphasizedDecel`, `expressiveDefaultSpatial`, `expressiveFastSpatial`, `expressiveEffects`. |
+| `fonts.family.material` | `"Material Symbols Rounded"` | Icon font. |
+| `fonts.family.mono` | `"monospace"` | Monospace face. |
+| `fonts.family.nerd` | `""` | Nerd Font face; empty falls back to the system sans. |
+| `fonts.family.sans` | `"sans-serif"` | UI face. |
+| `fonts.size.scale` | `1.0` | Global font size multiplier (derived sizes 12/13/14/16/18/30 × `scale`). |
+| `margin` | 5/7/10/12/15 | `small`…`large` outer spacing in px. |
+| `padding` | 5/7/10/12/15 | `small`…`large` inner spacing in px. |
+| `rounding` | 12/17/25/1000 | `small`/`normal`/`large`/`full` corner radius in px. |
+| `spacing` | 7/10/12/15/20 | `small`…`large` gaps in px. |
 
 ### Bar
 
@@ -130,46 +216,54 @@ pip install materialyoucolor pillow
 | `barHeight` | `40` | Bar height in pixels. |
 | `compact` | `false` | Enable compact bar mode. |
 | `visibleWorkspace` | `5` | Number of workspaces shown. |
-| `workspacesIndicator` | `"dot"` | Workspace indicator style (`dot` or `interactive`). |
+| `workspacesIndicator` | `"dot"` | `dot` (flat indicator) or `interactive` (pill shape with toplevel icon and hover preview). |
 
 ### Colors
 
 | Key | Default | Description |
 |---|---|---|
-| `isDarkMode` | `true` | Prefer dark mode. |
-| `scheme` | `"tonal-spot"` | Material scheme for color generation (`vibrant`, `tonal-spot`, `expressive`, `monochrome`, `rainbow`, `fruit-salad`, `neutral`, `fidelity`, `content`). |
-| `useStaticColors` | `false` | Use a fixed color scheme from `colors.json`. |
-| `staticColorsPath` | `$HOME/.config/vast-shell/colors.json` | Path to your static color scheme file. |
+| `isDarkMode` | `true` | Generate the dark palette instead of the light one. |
+| `scheme` | `"tonal-spot"` | Material scheme: `vibrant`, `tonal-spot`, `expressive`, `monochrome`, `rainbow`, `fruit-salad`, `neutral`, `fidelity`, `content`. |
+| `useStaticColors` | `false` | Use a fixed palette instead of the generated one. |
+| `staticColorsPath` | `<shellDir>/colors.json` | Path to the static palette file. |
 
-> Material colors are enabled by default. When `useStaticColors` is `true`, the static color scheme overrides the generated Material palette.
-
+> [!NOTE]
+> `colors.toDarkColor` and `colors.toWhiteColor` still appear in `Data/configurations.json` but are **dead keys** — no code reads them. Generated palettes are never written to disk. Safe to delete.
 
 ### Generals
 
 | Key | Default | Description |
 |---|---|---|
-| `alpha` | `1.0` | Global transparency level. |
-| `transparent` | `false` | Enable transparency for shell elements. |
+| `alpha` | `1.0` | Global transparency level for shell surfaces. |
+| `transparent` | `false` | Enable transparency. |
 | `enableOuterBorder` | `false` | Draw a border around the shell layout. |
 | `outerBorderSize` | `10` | Outer border thickness in pixels. |
 | `coverBlurRadius` | `16` | Blur radius applied to media cover art. |
 | `chargingGlowSpread` | `10` | Glow spread radius when the device is charging. |
-| `apps` | — | Default applications for terminal, audio, file manager, etc. |
-| `battery.warnLevels` | — | Battery thresholds with custom notification titles and messages. |
+| `followFocusMonitor` | `true` | Track the focused monitor for the bar and drawers. |
+| `showHolidays` | `true` | Show public holidays in the calendar drawer. |
+| `apps.terminal` | `"foot"` | Default terminal. |
+| `apps.fileExplorer` | `"pcmanfm-qt"` | Default file manager. |
+| `apps.imageViewer` | `"lximage-qt"` | Default image viewer. |
+| `apps.videoViewer` | `"mpv"` | Default video player. |
+| `apps.playback` | `"mpv"` | Default media player. |
+| `apps.audio` | `"pavucontrol-qt"` | Default mixer. |
+| `battery.criticalLevel` | `3` | Battery percentage that triggers the critical notification. |
+| `battery.warnLevels` | see above | Threshold list; each entry has `level`, `title`, `message` (rich text) and `icon`. |
 
 ### Audio
 
 | Key | Default | Description |
 |---|---|---|
+| `defaultSinkName` | `""` | Sink restored as default on startup. |
+| `sinkProfiles` | `{}` | Per-sink volume/mute profiles. |
 | `showPeakLevels` | `true` | Live input and output level meters in the volume page. |
-| `defaultSinkName` | — | Name of the sink to restore as default on startup. |
-| `sinkProfiles` | — | Stored per-sink volume/mute profiles. |
 
 > [!NOTE]
 > Quickshell has this error: 
-```txt
-ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is missing channels present in capture stream. Node channels: QList(qs::service::pipewire::PwAudioChannel::Mono) Stream channels: QList(qs::service::pipewire::PwAudioChannel::FrontLeft, qs::service::pipewire::PwAudioChannel::FrontRight)
-```
+>```txt
+>ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is missing channels present in capture stream. Node channels: QList(qs::service::pipewire::PwAudioChannel::Mono) Stream channels: QList(qs::service::pipewire::PwAudioChannel::FrontLeft, qs::service::pipewire::PwAudioChannel::FrontRight)
+>```
 > We can just wait until the issue is fixes
 
 ### Media Player
@@ -178,71 +272,143 @@ ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is m
 |---|---|---|
 | `showLyrics` | `false` | Auto-fetch and display synced lyrics. |
 | `dynamicColorsCover` | `true` | Adapt UI colors from the current track's cover art. |
-| `sliderType` | `"WaveForm"` | Progress bar style (`WaveForm` or `Wavy`). |
+| `sliderType` | `"Wavy"` | Progress bar style (`Wavy` or `WaveForm`). |
+
+### Notification
+
+| Key | Default | Description |
+|---|---|---|
+| `maximumNotification` | `100` | Maximum number of retained notifications. |
+| `maximumNotificationAge` | `604800000` | Maximum notification age in milliseconds (7 days). |
+
+### Clipboard
+
+| Key | Default | Description |
+|---|---|---|
+| `enabled` | `false` | Enable the clipboard manager daemon. |
+| `enablePreview` | `false` | Show an image/text preview pane. |
+| `enableVimKeybinds` | `false` | Enable Vim-style navigation and visual-mode selection. |
+| `keepOpenAfterCopy` | `false` | Keep the drawer open after copying an entry. |
+| `listEntries` | `15` | Entries rendered per page. |
+| `maxEntries` | `300` | Maximum retained entries. |
+| `width` / `height` | `300` / `400` | Drawer size in pixels. |
+| `preview.sourceWidth` / `sourceHeight` | `300` / `300` | Source resolution used for the cached preview thumbnail. |
+
+### Capture Screen Video
+
+| Key | Default | Description |
+|---|---|---|
+| `maxFps` | `60` | Target frame rate (UI offers 30/60/120). |
+| `bitrate` | `"5 MB"` | Output bitrate (UI offers 1/5/10/20 MB). |
+| `videoCodec` | `""` | `""` (encoder default), `avc`, `hevc`, `vp8`, `vp9`, `av1`. |
+| `audioCodec` | `""` | `""` (encoder default), `aac`, `mp3`, `flac`, `opus`. |
+| `lowPower` | `"auto"` | `auto`, `on`, `off` — trades quality for battery. |
+| `showCursor` | `true` | Draw the pointer into the recording. |
+| `historyMode` | `false` | Write captures straight to the history buffer. |
 
 ### Wallpaper
 
 | Key | Default | Description |
 |---|---|---|
-| `transition` | `"random"` | Transition effect (`fade`, `circle`, `wipe`, `random`, etc.). |
-| `transitionDuration` | `300` | Transition duration in milliseconds. |
-| `transitionLowPerfMode` | `false` | Reduce transition quality for lower-end hardware. |
-| `wallpaperDir` | `$HOME/Pictures/wallpapers` | Directory to source wallpapers from. |
-| `visibleWallpaper` | `3` | Number of wallpapers shown in the picker. |
+| `enabledWallpaper` | `true` | Draw the wallpaper. |
+| `wallpaperDir` | `~/Pictures/wallpapers` | Directory to source wallpapers from. |
+| `transition` | `"random"` | `none`, `random`, `fade`, `wipedown`, `circle`, `dissolve`, `splitH`, `slideup`, `pixelate`, `diagonal`, `box`, `roll`, `hexTile`. `random` picks a fresh one per change. |
+| `transitionDuration` | `300` | Transition duration in ms (slider 100–2000). |
+| `transitionLowPerfMode` | `false` | Swap transitions for instant cuts. |
+| `visibleWallpaper` | `3` | Wallpapers shown in the picker. |
+| `depthWallpaperEnabled` | `true` | Enable the depth/parallax lock-screen effect (see below). |
+| `livePreview` | `true` | Generate a palette from the wallpaper as soon as it loads. |
+| `autoProcessedDepthWallpaper` | `false` | Process depth wallpapers without asking. |
+| `depthWallpaperSource` | `""` | Wallpaper path the depth effect was built from. |
+| `depthFgPath` | `""` | Cached extracted foreground for that wallpaper. |
+
+> [!WARNING]
+> `WallpaperConfig.qml` currently hardcodes `wallpaperDir` to the maintainer's home directory (`/home/myamusashi/Pictures/wallpapers`). Set it explicitly if you use a config file of your own.
 
 ### Weather
 
 | Key | Default | Description |
 |---|---|---|
-| `latitude` / `longitude` | — | Your location coordinates for weather data. |
-| `reloadTime` | `1800000` | Weather refresh interval in milliseconds (30 min). |
+| `latitude` / `longitude` | `"-6.4028"` / `"106.7744"` | Your location. |
+| `reloadTime` | `180` | Refresh interval, in **seconds** (`Weather.qml` multiplies by 1000). |
 | `enableQuickSummary` | `false` | Show a compact weather summary in the bar. |
+| `astronomyApiKey` | `""` | Key for the sunrise/sunset and moon-phase provider. |
+
+> [!WARNING]
+> `reloadTime` has a units bug: `Weather.qml` reads it as **seconds**, while `WeatherPage.qml` writes it as **milliseconds**. Setting it from the Settings page therefore inflates the interval by 1000×. Prefer editing the JSON directly with a value in seconds.
 
 ### KDE Connect
 
 | Key | Default | Description |
 |---|---|---|
 | `pollingEnabled` | `true` | Enable periodic device discovery. |
-| `pollInterval` | `15000` | Poll interval in milliseconds (15 s). |
+| `pollInterval` | `15000` | Poll interval in milliseconds. |
 
-### Depth Wallpaper
+### Idle
 
-> [!NOTE]
-> Depth wallpaper extracts the foreground subject from your wallpaper and layers it separately over a blurred background, creating a **parallax depth effect** on the lock screen.
+| Key | Default | Description |
+|---|---|---|
+| `enabled` | `true` | Run the idle monitors. |
+| `timeouts[].timeoutMonitor` | `60` | Idle seconds before the action fires. |
+| `timeouts[]."on-timeout"` | `""` | Shell command run on timeout. |
+| `timeouts[]."on-resume"` | `""` | Shell command run when activity resumes. |
 
-**How it works:**
+```json
+"timeouts": [
+  { "timeoutMonitor": 900, "on-timeout": "hyprctl dispatch dpms off", "on-resume": "hyprctl dispatch dpms on" }
+]
+```
 
-1. When enabled, the first wallpaper change triggers foreground extraction via `rembg`
-2. `rembg` processes the image using the **BiRefNet-portrait** model to separate the foreground subject from the background
-3. The extracted foreground is cached by content hash so subsequent uses of the same wallpaper are instant
-4. On the lock screen, the wallpaper blurs and the foreground layer sits on top with independent scaling
+### Search
 
-**Model details:**
+| Key | Default | Description |
+|---|---|---|
+| `maxDepth` | `3` | How deep to walk directory trees in the file dialog. |
+| `fileDirs` | `[]` | Pinned search roots; empty falls back to the dialog's current directory. |
 
-| Property | Value |
-|---|---|
-| Model | `birefnet-portrait` (BiRefNet for portraits/foregrounds) |
-| Download size | ~176 MB (downloaded once on first use) |
-| RAM usage during inference | ~800 MB – 1.5 GB |
-| Processing time (GPU) | ~2 – 8 seconds |
-| Processing time (CPU) | ~10 – 40 seconds |
+### Privacy
 
-> [!TIP]
-> - Processing runs **asynchronously** in the background — you can continue using the shell normally
-> - The extracted foreground is cached in `~/.cache/vast-shell/depthwp/foregrounds/`
-> - To reprocess a wallpaper, delete its cached foreground from that directory and trigger a wallpaper change
-> - GPU acceleration requires `onnxruntime` with CUDA support — `pip install onnxruntime-gpu`
+| Key | Default | Description |
+|---|---|---|
+| `enablePrivacyIndicator` | `false` | Show the privacy indicator at all. |
+| `enablePrivacyIcon` | `true` | Show the privacy icon in the bar. |
+| `enablePrivacyIndicatorOnDynamicIsland` | `true` | Also surface privacy state on the dynamic island. |
+| `blockPrivacyListNodesName` | `{}` | Per-app blocked node names. |
+
+### Language
+
+| Key | Default | Description |
+|---|---|---|
+| `language` | `"id_ID"` | Locale for the Qt translation catalogue. See [Translations](Translations.md). |
 
 ---
 
 ## Material Colors
 
-Material You colors are generated from the current wallpaper by the Python script `Assets/shell/generate_colors_material.py` (wrapped as the `generate-colors-material` command). It writes two JSON files:
+> [!IMPORTANT]
+> Material You colors are generated **in C++**, not by a Python script. There is nothing to install and nothing to invoke.
 
-- `dark-colors.json` — dark color scheme
-- `light-colors.json` — light color scheme
+The palette is derived from the current wallpaper in-process:
 
-Both are read at runtime by `Qml/Services/Colours.qml` via the configured `toDarkColor` / `toWhiteColor` paths.
+```
+wallpaper image
+  → Vast.Utils ColorMaterial      debounced, off-thread via Vast.Jobs
+  → ImageQuantizer                Celebi/Score quantizer at 128px
+  → MaterialRoles                 ~60 roles, M3 2021 + 2025 spec delegates
+  → PaletteBuilder                role → #RRGGBB, plus PaletteValidation
+  → PaletteAnimator               OKLab blend over 300 ms (no flicker)
+  → M3TemplateColors              → Colours.m3Colors
+```
+
+- `Colors.staticColorsPath` is the **only** file the theme reads, and only when `useStaticColors` is `true`.
+- `Assets/shell/generate_colors_material.py` is a **legacy** Python implementation kept as the reference for the C++ port. It is not invoked by the shell, and nothing writes `dark-colors.json` / `light-colors.json` at runtime.
+
+Generate a palette for any image without touching the running theme:
+
+```sh
+vastctl color generate ~/Pictures/wallpapers/foo.png --mode dark --scheme tonal-spot
+vastctl color from "#ce8fd6" --mode light --scheme vibrant
+```
 
 <details>
 <summary>Example generated color scheme (dark)</summary>
@@ -298,10 +464,47 @@ Both are read at runtime by `Qml/Services/Colours.qml` via the configured `toDar
     "surfaceVariant": "#4d444c",
     "tertiary": "#f5b8af",
     "tertiaryContainer": "#673b35",
-    "tertiaryFixed": "#ffdad5",
-    "tertiaryFixedDim": "#f5b8af"
+    "onTertiary": "#4c2520",
+    "onTertiaryContainer": "#ffdad5",
+    "onTertiaryFixed": "#33110d",
+    "onTertiaryFixedVariant": "#673b35",
+    "success": "#7ddb8f",
+    "onSuccess": "#00391a",
+    "successContainer": "#005227",
+    "onSuccessContainer": "#99f8b2"
   }
 }
 ```
 
 </details>
+
+---
+
+## Depth Wallpaper
+
+> [!NOTE]
+> Depth wallpaper extracts the foreground subject from your wallpaper and layers it separately over a blurred background, creating a **parallax depth effect** on the lock screen.
+
+**How it works:**
+
+1. When `depthWallpaperEnabled` is on, the first wallpaper change triggers foreground extraction
+2. `Assets/shell/extract-fg.sh` runs `remove-bg.py` with the **BiRefNet-portrait** model to separate the foreground subject from the background
+3. The extracted foreground is cached by content hash (`depthFgPath`) so subsequent uses of the same wallpaper are instant
+4. On the lock screen, the wallpaper blurs and the foreground layer sits on top with independent scaling
+
+**Model details:**
+
+| Property | Value |
+|---|---|
+| Model | `birefnet-portrait` (BiRefNet for portraits/foregrounds) |
+| Download size | ~176 MB (downloaded once on first use) |
+| RAM usage during inference | ~800 MB – 1.5 GB |
+| Processing time (GPU) | ~2 – 8 seconds |
+| Processing time (CPU) | ~10 – 40 seconds |
+
+> [!TIP]
+> - Processing runs **asynchronously** in the background — you can continue using the shell normally
+> - The extracted foreground is cached in `~/.cache/vast-shell/depthwp/foregrounds/`
+> - To reprocess a wallpaper, delete its cached foreground from that directory and trigger a wallpaper change
+> - Depth wallpaper needs a **static** image; it does not apply to video wallpapers
+> - GPU acceleration requires `onnxruntime` with CUDA support — `pip install onnxruntime-gpu`

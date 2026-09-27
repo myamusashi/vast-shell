@@ -36,11 +36,28 @@ environment.systemPackages = [
 
     # Optional: disable font installation if you manage fonts separately
     installFonts = false;
+
+    # Optional: also install a greetd greeter (see below)
+    greetd.enable = true;
   };
 }
 ```
 
-The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, and automatically installs required fonts (`material-symbols`, `weather-icons`).
+The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, exports `VAST_SHELL_DIRECTORY`, and automatically installs the required fonts (`material-symbols`, `weather-icons`).
+
+**Options** (`programs.quickshell-shell`):
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `enable` | bool | `false` | Enable the quickshell shell. |
+| `package` | package | `self.packages.${system}.default` | The shell package to use. |
+| `installFonts` | bool | `true` | Install the required fonts. |
+| `extraPackages` | list of package | `[]` | Extra packages put on quickshell's `PATH`. |
+| `greetd.enable` | bool | `false` | Install and start a greetd greeter running `Qml/greeter.qml`. |
+| `greetd.user` | string | `"greeter"` | The user the greeter session runs as. |
+| `greetd.restart` | bool | `true` | Restart the greeter when it exits. Turn off while testing. |
+| `greetd.compositorPackage` | package | `pkgs.mango` | Greeter compositor. **Must implement `ext-session-lock-v1`** — `cage` does not, so the greeter would run but never display. |
+| `greetd.extraConfig` | lines | `""` | Extra lines appended to the greeter compositor config. |
 
 ---
 
@@ -71,18 +88,40 @@ shell
 | `qt6-base`, `qt6-declarative`, `qt6-multimedia` | Qt6 build-time libraries |
 | `wayland` | Provides `libwayland-client` + `wayland-scanner` for the clipboard manager's native `ext_data_control_v1` binding |
 
-**Runtime**
+**Runtime** (what `archInstall.sh` actually installs via `pacman -S`):
+
+```
+base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
+qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia
+qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go
+wayland wayland-protocols findutils grep sed gawk util-linux libnotify iw
+polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal spirv-tools
+vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
+```
+
+**AUR** (installed with `yay`): `ttf-weather-icons`, `ttf-material-symbols-variable-git`, `app2unit`, `python-rembg`
+
+> [!NOTE]
+> The script also builds these from source rather than installing them:
+> - `quickshell` 0.3.1 — via `packaging/arch/quickshell/PKGBUILD`
+> - `wl-screenrec` (pinned git rev)
+> - `m3shapes` and `AnotherRipple` (pinned git revs, installed into the Qt module path)
+> - `vastctl` (Go, → `/usr/local/bin`)
+> - the C++ plugins (CMake → `/usr/lib/qt6/qml`)
+> - shaders via `qsb`, translations via `lrelease`
 
 | Category | Packages |
 |---|---|
-| Shell | `hyprland`, `foot`, `polkit`,`packaging/arch/quickshell` |
-| Qt6 | `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-5compat`, `qt6-graphs` |
+| Qt6 | `qt6-base`, `qt6-declarative`, `qt6-wayland`, `qt6-svg`, `qt6-graphs`, `qt6-multimedia`, `qt6-5compat`, `qt6-shadertools`, `qt6-tools` |
+| Shell | `hyprland`, `foot`, `polkit`, `xdg-desktop-portal` |
 | Media | `ffmpeg`, `wl-clipboard`, `wl-screenrec`, `libvdpau-va-gl` |
 | Network / Notifications | `iw`, `libnotify` |
-| Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons`, `google-sans-flex` (optional), `Hack` (optional) |
+| Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons` |
 | Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
 | AI / Depth Wallpaper | `python-rembg` (AUR) |
-| Other | `app2unit` |
+| Other | `app2unit` (AUR), `ddcutil`, `i2c-tools` |
+
+After install, `shell` is available on `PATH` and your config lives in `~/.config/vast-shell/` (seeded from `Data/`). See [Configuration](Configuration.md).
 
 > [!IMPORTANT]
 > **Brightness control (ddcutil):** Controlling external monitor brightness requires non-root access to I2C devices. `archInstall.sh` handles this automatically. For manual setup, load the `i2c-dev` module, apply the appropriate udev rules (see `setup_i2c` in `archInstall.sh`), and add your user to the `i2c` and `video` groups.
@@ -103,14 +142,18 @@ shell
 
 The following packages must always be built from source, regardless of distro:
 
-| Package | Source |
-|---|---|
-| `quickshell` | https://github.com/quickshell/quickshell |
-| `materialyoucolor` | https://github.com/T-Dynamos/materialyoucolor-python |
-| `app2unit` | https://github.com/valpackett/app2unit |
-| `wl-screenrec` | https://github.com/russelltg/wl-screenrec |
-| Material Symbols font | https://github.com/google/material-design-icons |
-| Weather Icons font | https://github.com/erikflowers/weather-icons |
+| Package | Source | Note |
+|---|---|---|
+| `quickshell` | https://github.com/quickshell/quickshell | 0.3.1; a PKGBUILD is provided in `packaging/arch/quickshell/` |
+| `app2unit` | https://github.com/valpackett/app2unit | |
+| `wl-screenrec` | https://github.com/russelltg/wl-screenrec | |
+| `m3shapes` | https://github.com/soramanew/m3shapes | Material shape library, built into the Qt module path |
+| `AnotherRipple` | https://github.com/myamusashi/Another-Ripple | |
+| Material Symbols font | https://github.com/google/material-design-icons | |
+| Weather Icons font | https://github.com/erikflowers/weather-icons | |
+
+> [!NOTE]
+> You no longer need Python packages for theming. Material colors are generated by the bundled C++ engine, and `materialyoucolor` / `generate-colors-material` are legacy — see [Configuration → Material Colors](Configuration.md#material-colors).
 
 <details>
 <summary>Fedora</summary>
@@ -213,7 +256,13 @@ WARN quickshell.bluetooth.device: Failed to pair ... "Authentication Failed"
 
 ...which surfaces as `No agent available for request type 2` inside `bluetoothd` ([bluez#63], [bleak#1434], [bdteo.com](https://bdteo.com/bluez-pairing-python-agent-workaround-authentication-failed/)). This affects phone ↔ laptop (Android 16 `DisplayYesNo`) in both directions — also when `NoInputNoOutput` downgrades Secure Connections to `0x05 Insufficient Authentication` ([bluez#650]).
 
-**Root cause is not the shell** — the shell exposes the device model, but cannot register `org.bluez.Agent1` (Quickshell's `Quickshell.Io` only provides `Process`/`Socket`). The agent must be provided by the **OS/distro**.
+**The shell now provides its own agent.** `Vast.Utils.BluetoothAgentManager` registers `org.bluez.Agent1` over the system bus at `/io/quickshell/BluetoothAgent` with the `KeyboardDisplay` capability, and `Vast.Utils.BluetoothAgentManager.{providePinCode, providePasskey, confirmPairing, authorizeService}` answer the requests from `Qml/Modules/BluetoothAgent/PairingDialog.qml`. It activates as soon as the pairing dialog opens and unregisters when it closes.
+
+Only one agent can hold the slot at a time. If `blueman` or another agent is `default-agent`, BlueZ will not route requests to the shell. To fall back to the desktop's agent, unregister the shell's:
+
+```bash
+busctl call org.bluez /org/bluez org.bluez.AgentManager1 UnregisterAgent ao /io/quickshell/BluetoothAgent
+```
 
 > **Always:** after a failed attempt clean stale bonding before retry:
 > ```bash
@@ -280,7 +329,7 @@ hardware.bluetooth.package = inputs.nixpkgs-bt.legacyPackages.${pkgs.system}.blu
 
 Then `nix flake update && sudo nixos-rebuild switch`.
 
-**In-shell hacky alternative** (no system rebuild): spawn an agent from the shell via `Quickshell.Io.Process` (as `Hotspot.qml` does for `nmcli`), `Process { command: ["python3","-c", agentCode]; running: BluetoothServices.adapterEnabled }` registering `NoInputNoOutput`/`DisplayYesNo` with `simple-agent.py` logic — but this is a workaround; prefer `services.blueman`.
+**Note:** on NixOS the `blueman` applet is no longer required — the shell's built-in agent handles the pairing dialog itself. Keep `services.blueman.enable = true` only if you want the desktop's agent as a fallback for other clients.
 
 </details>
 
@@ -328,7 +377,7 @@ sudo emerge -av net-wireless/bluez net-wireless/blueman
 sudo rc-update add bluetooth default && sudo rc-service bluetooth start
 ```
 
-Then ensure the agent is running (`blueman-applet` or `bluetoothctl agent DisplayYesNo`) and `ClassicBondedOnly = false` in `/etc/bluetooth/main.conf`.
+Then either let the shell's own agent handle pairing (it registers automatically when the pairing dialog opens), or ensure a desktop agent is running (`blueman-applet` or `bluetoothctl agent DisplayYesNo`). Note that `bluetoothctl agent` unregisters on exit, so it only survives while that process is alive. Also set `ClassicBondedOnly = false` in `/etc/bluetooth/main.conf`.
 
 **Upstream docs**
 

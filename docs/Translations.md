@@ -9,7 +9,10 @@ Vast-shell uses Qt's built-in translation system. Translation files live in `tra
 
 | Locale | Language |
 |---|---|
+| `en_US` | English (source/identity locale) |
 | `id_ID` | Indonesian |
+>
+> `en_US` is also the fallback: `TranslationManager` initialises to it, and a locale with no `.qm` on disk falls back to untranslated source strings.
 
 > [!NOTE]
 > `lupdate` and `lrelease` are provided by `qt6-tools` (Arch), `qt6-tools-dev-tools` (Debian/Ubuntu), or `qt6.qttools` (NixOS).
@@ -39,7 +42,7 @@ linguist translations/your_locale.ts
 
 ```bash
 # 1. Generate the .ts file
-lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+lupdate $(find Qml -name "*.qml") -ts translations/your_locale.ts
 
 # 2. Translate in Qt Linguist (or edit the XML by hand)
 linguist translations/your_locale.ts
@@ -54,7 +57,7 @@ Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE
 
 ```bash
 # Sync new strings without overwriting existing translations
-lupdate $(find . -name "*.qml" -not -path "./build/*") -ts translations/your_locale.ts
+lupdate $(find Qml -name "*.qml") -ts translations/your_locale.ts
 
 # Open in Linguist, finish unfinished entries, then recompile
 lrelease translations/your_locale.ts
