@@ -14,21 +14,15 @@ jobs:
       image: archlinux:base-devel
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-          submodules: recursive
-
-    - name: initiliaze git repository
-      run: |
-        git init
-        git config user.email "git@example.com"
-        git config user.name "git"
-
     - name: Prepare environment
       run: |
         pacman -Syu --noconfirm
         pacman -S --noconfirm git sudo
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+          submodules: recursive
 
     - name: Run archInstall.sh (Dry Run / Dependency Check)
       env:

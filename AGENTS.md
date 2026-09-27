@@ -2,7 +2,7 @@
 
 ## Review focus
 
-Prioritize: correctness, no regressions, performance, API stability, readability. Flag: algorithmic regressions in hot paths, silent config-behavior breakage, and violations of the style/code/QML/Go/Qt guidelines below. You don't need to smoke test runtime.
+Prioritize: correctness, no regressions, performance, API stability, readability. Flag: algorithmic regressions in hot paths, silent config-behavior breakage, and violations of the style/code/QML/Go/Qt guidelines below. You DON'T NEED to SMOKE TEST.
 
 ## Qt and C++ style
 
