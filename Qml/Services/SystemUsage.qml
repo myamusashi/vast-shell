@@ -70,6 +70,8 @@ Singleton {
     // OS info
     property string osName: ""
     property string osPrettyName: ""
+    property string osId: ""
+    property string osIdLike: ""
     property string kernelName: ""
     property string archDesign: ""
 
@@ -619,10 +621,11 @@ Singleton {
 
     Process {
         id: osInfoProc
-
         command: ["sh", "-c", `
             echo "OS_PRETTY:$(grep '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
             echo "OS_NAME:$(grep '^NAME=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
+            echo "OS_ID:$(grep '^ID=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
+            echo "OS_ID_LIKE:$(grep '^ID_LIKE=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
             echo "KERNEL:$(uname -r)"
             echo "ARCH:$(uname -m)"
         `]
@@ -634,6 +637,10 @@ Singleton {
                         root.osPrettyName = line.substring(10);
                     else if (line.startsWith("OS_NAME:"))
                         root.osName = line.substring(8);
+                    else if (line.startsWith("OS_ID:"))
+                        root.osId = line.substring(6);
+                    else if (line.startsWith("OS_ID_LIKE:"))
+                        root.osIdLike = line.substring(11);
                     else if (line.startsWith("KERNEL:"))
                         root.kernelName = line.substring(7);
                     else if (line.startsWith("ARCH:"))

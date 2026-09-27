@@ -435,14 +435,10 @@ Item {
                         spacing: Appearance.spacing.normal
 
                         StyledText {
-                            text: {
-                                const osName = SystemUsage.osName.toLowerCase();
-                                const match = DistroAscii.listDistro.find(distro => osName.includes(distro.toLowerCase()));
-                                return match ? DistroAscii[match] : qsTr("Unknown");
-                            }
+                            text: Distro.ascii(SystemUsage.osId, SystemUsage.osIdLike)
                             color: Colours.m3Colors.m3Green
                             font.pixelSize: Appearance.fonts.size.small * 0.5
-                            font.family: SystemUsage.osName.toLowerCase() === "nixos" ? Appearance.fonts.family.mono : Appearance.fonts.family.sans
+                            font.family: Distro.match(SystemUsage.osId, SystemUsage.osIdLike)?.name === "nixos" ? Fonts.mono : Fonts.sans
                             textFormat: Text.PlainText
                             lineHeight: 1.0
                             wrapMode: Text.NoWrap
