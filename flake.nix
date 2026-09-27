@@ -12,7 +12,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
         m3Shapes = {
-            url = "github:myamusashi/m3shapes";
+            url = "github:soramanew/m3shapes";
             inputs.nixpkgs.follows = "nixpkgs";
         };
         quickshell = {
