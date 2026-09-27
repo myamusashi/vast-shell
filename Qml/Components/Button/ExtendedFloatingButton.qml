@@ -46,6 +46,13 @@ Item {
         }
     }
 
+    Keys.onEnterPressed: event => {
+        if (enabled) {
+            clicked();
+            event.accepted = true;
+        }
+    }
+
     Keys.onSpacePressed: event => {
         if (enabled) {
             clicked();
@@ -81,6 +88,10 @@ Item {
             when: root.enabled && root.keyboardFocused
             PropertyChanges {
                 target: focusRing
+                opacity: 1
+            }
+            PropertyChanges {
+                target: focusHighlight
                 opacity: 1
             }
         },
@@ -138,6 +149,21 @@ Item {
         color: "transparent"
         border.color: Colours.m3Colors.m3Primary
         border.width: 2
+        opacity: 0
+
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+    }
+
+    Rectangle {
+        id: focusHighlight
+
+        anchors.fill: parent
+        radius: background.radius
+        color: Qt.alpha(Colours.m3Colors.m3Primary, 0.18)
         opacity: 0
 
         Behavior on opacity {

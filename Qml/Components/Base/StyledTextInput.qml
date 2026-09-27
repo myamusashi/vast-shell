@@ -76,10 +76,11 @@ Item {
                 dotsModel.remove(dotsModel.count - 1);
         }
 
-        Keys.onReturnPressed: {
+        Keys.onReturnPressed: event => {
             if (root.pam && text.length > 0)
                 root.pam.tryUnlock();
             root.accepted();
+            event.accepted = true;
         }
 
         Keys.onEscapePressed: event => {

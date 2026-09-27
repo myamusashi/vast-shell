@@ -142,6 +142,28 @@ LazyLoader {
                 navigateTo(folderModel.parentFolder.toString().replace("file://", ""));
         }
 
+        function acceptSelection() {
+            if (root.selectFolder) {
+                if (fileListView.currentIsFolder)
+                    root.fileSelected(fileListView.currentFilePath);
+                else if (bottomBar.fileName.length > 0) {
+                    var p = root.currentFolder.toString().replace("file://", "") + "/" + bottomBar.fileName;
+                    root.fileSelected(p);
+                } else {
+                    root.fileSelected(root.currentFolder.toString().replace("file://", ""));
+                }
+            } else {
+                if (fileListView.currentIsFolder)
+                    window.navigateTo(fileListView.currentFilePath);
+                else if (fileListView.hasSelection && fileListView.currentFilePath !== "")
+                    root.fileSelected(fileListView.currentFilePath);
+                else if (bottomBar.fileName.length > 0) {
+                    var p = root.currentFolder.toString().replace("file://", "") + "/" + bottomBar.fileName;
+                    root.fileSelected(p);
+                }
+            }
+        }
+
         function refresh() {
             var temp = root.currentFolder;
             root.currentFolder = "file:///";
@@ -194,6 +216,8 @@ LazyLoader {
 
             Keys.onTabPressed: tabNav.next()
             Keys.onBacktabPressed: tabNav.previous()
+            Keys.onReturnPressed: window.acceptSelection()
+            Keys.onEnterPressed: window.acceptSelection()
 
             TopAppBar {
                 id: topAppBar
@@ -369,27 +393,7 @@ LazyLoader {
                 selectFolder: root.selectFolder
                 hasSelection: fileListView.hasSelection || fileName.length > 0
                 onCancelClicked: root.activeAsync = false
-                onOpenClicked: {
-                    if (root.selectFolder) {
-                        if (fileListView.currentIsFolder)
-                            root.fileSelected(fileListView.currentFilePath);
-                        else if (fileName.length > 0) {
-                            var p = root.currentFolder.toString().replace("file://", "") + "/" + fileName;
-                            root.fileSelected(p);
-                        } else {
-                            root.fileSelected(root.currentFolder.toString().replace("file://", ""));
-                        }
-                    } else {
-                        if (fileListView.currentIsFolder)
-                            window.navigateTo(fileListView.currentFilePath);
-                        else if (fileListView.hasSelection && fileListView.currentFilePath !== "")
-                            root.fileSelected(fileListView.currentFilePath);
-                        else if (fileName.length > 0) {
-                            var p = root.currentFolder.toString().replace("file://", "") + "/" + fileName;
-                            root.fileSelected(p);
-                        }
-                    }
-                }
+                onOpenClicked: window.acceptSelection()
             }
         }
     }

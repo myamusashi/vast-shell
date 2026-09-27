@@ -46,6 +46,7 @@ LazyLoader {
             id: tabNav
 
             scope: column
+            defaultItem: acceptButton
 
             Component.onCompleted: {
                 Qt.callLater(() => tabNav.firstFocus());
@@ -127,6 +128,8 @@ LazyLoader {
                     }
 
                     ExtendedFloatingButton {
+                        id: acceptButton
+
                         implicitWidth: 80
                         implicitHeight: 40
                         icon.name: "check"

@@ -11,10 +11,10 @@ Scope {
 
     function focusables() {
         const list = [];
-        root.collect(root.scope, list);
+        collect(scope, list);
         list.sort((a, b) => {
-            const ap = a.mapToScene(0, 0);
-            const bp = b.mapToScene(0, 0);
+            const ap = a.mapToItem(scope, 0, 0);
+            const bp = b.mapToItem(scope, 0, 0);
             if (ap.y !== bp.y)
                 return ap.y - bp.y;
             return ap.x - bp.x;
@@ -22,23 +22,32 @@ Scope {
         return list;
     }
 
-    // qmllint disable
     function collect(item, out) {
-        if (item === null || item === undefined)
+        walk(item, out, []);
+    }
+
+    function walk(item, out, seen) {
+        if (item === null || item === undefined || seen.indexOf(item) !== -1)
             return;
-        if (typeof item.keyboardFocusable === "boolean" && item.keyboardFocusable === true && item.enabled !== false)
+        seen.push(item);
+
+        if (typeof item.keyboardFocusable === "boolean" && item.keyboardFocusable === true && item.enabled !== false && item.visible !== false)
             out.push(item);
 
-        try {
-            if (item.contentItem !== undefined && item.contentItem !== null && item.contentItem !== item)
-                root.collect(item.contentItem, out);
+        if (item.contentItem !== undefined && item.contentItem !== null && item.contentItem !== item) {
+            walk(item.contentItem, out, seen);
+            return;
+        }
 
-            const data = item.data;
-            if (Array.isArray(data)) {
-                for (const child of data)
-                    root.collect(child, out);
-            }
-        } catch (err) {}
+        walkList(item.children, out, seen);
+        walkList(item.data, out, seen);
+    }
+
+    function walkList(list, out, seen) {
+        if (list === null || list === undefined)
+            return;
+        for (let i = 0; i < list.length; ++i)
+            walk(list[i], out, seen);
     }
 
     function isFocused(item) {
@@ -49,27 +58,26 @@ Scope {
         const winItem = item.window ? item.window.activeFocusItem : null;
         return winItem !== null && item.isAncestorOf(winItem);
     }
-    // qmllint enable
 
     function move(delta) {
-        const list = root.focusables();
+        const list = focusables();
         if (list.length === 0)
             return;
 
-        let index = list.findIndex(i => root.isFocused(i));
+        let index = list.findIndex(i => isFocused(i));
         if (index < 0)
             index = delta > 0 ? -1 : 0;
 
         const target = ((index + delta) % list.length + list.length) % list.length;
-        root.activate(list[target]);
+        activate(list[target]);
     }
 
     function next() {
-        root.move(1);
+        move(1);
     }
 
     function previous() {
-        root.move(-1);
+        move(-1);
     }
 
     function activate(item) {
@@ -79,13 +87,18 @@ Scope {
             item.forceActiveFocus();
     }
 
+    // Always moves focus: defaultItem when it is part of the scope,
+    // otherwise the first focusable. Re-runnable on purpose, so a caller
+    // can pull focus back after a popup or another item took it. Making
+    // this conditional on nothing being focused would silently turn
+    // every later call into a no-op.
     function firstFocus() {
-        const list = root.focusables();
+        const list = focusables();
         if (list.length === 0)
             return;
-        if (root.defaultItem !== null && root.defaultItem !== undefined && list.indexOf(root.defaultItem) >= 0)
-            root.activate(root.defaultItem);
+        if (defaultItem !== null && defaultItem !== undefined && list.indexOf(defaultItem) >= 0)
+            activate(defaultItem);
         else
-            root.activate(list[0]);
+            activate(list[0]);
     }
 }
