@@ -10,12 +10,12 @@ namespace vast {
     }
 
     QString BluetoothAgentAdaptor::RequestPinCode(const QDBusObjectPath& device) {
-        if (!calledFromDBus()) {
+        if (!mManager->calledFromDBus()) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] RequestPinCode not from D-Bus, ignoring" << device.path();
             return {};
         }
-        setDelayedReply(true);
-        const auto msg = message();
+        mManager->setDelayedReply(true);
+        const auto msg = mManager->message();
         if (msg.type() == QDBusMessage::InvalidMessage) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] RequestPinCode message invalid";
             return {};
@@ -25,12 +25,12 @@ namespace vast {
     }
 
     quint32 BluetoothAgentAdaptor::RequestPasskey(const QDBusObjectPath& device) {
-        if (!calledFromDBus()) {
+        if (!mManager->calledFromDBus()) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] RequestPasskey not from D-Bus, ignoring" << device.path();
             return 0;
         }
-        setDelayedReply(true);
-        const auto msg = message();
+        mManager->setDelayedReply(true);
+        const auto msg = mManager->message();
         if (msg.type() == QDBusMessage::InvalidMessage) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] RequestPasskey message invalid";
             return 0;
@@ -44,12 +44,12 @@ namespace vast {
     }
 
     void BluetoothAgentAdaptor::RequestConfirmation(const QDBusObjectPath& device, quint32 passkey) {
-        if (!calledFromDBus()) {
+        if (!mManager->calledFromDBus()) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] RequestConfirmation not from D-Bus, ignoring" << device.path();
             return;
         }
-        setDelayedReply(true);
-        const auto msg = message();
+        mManager->setDelayedReply(true);
+        const auto msg = mManager->message();
         if (msg.type() == QDBusMessage::InvalidMessage) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] RequestConfirmation message invalid";
             return;
@@ -58,12 +58,12 @@ namespace vast {
     }
 
     void BluetoothAgentAdaptor::AuthorizeService(const QDBusObjectPath& device, const QString& uuid) {
-        if (!calledFromDBus()) {
+        if (!mManager->calledFromDBus()) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] AuthorizeService not from D-Bus, ignoring" << device.path();
             return;
         }
-        setDelayedReply(true);
-        const auto msg = message();
+        mManager->setDelayedReply(true);
+        const auto msg = mManager->message();
         if (msg.type() == QDBusMessage::InvalidMessage) {
             qWarning() << "[Vast.BluetoothAgentAdaptor] AuthorizeService message invalid";
             return;

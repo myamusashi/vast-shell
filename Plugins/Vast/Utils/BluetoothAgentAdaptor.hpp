@@ -1,20 +1,15 @@
+// BluetoothAgentAdaptor.hpp
 #pragma once
 
 #include <qdbusabstractadaptor.h>
-#include <qdbuscontext.h>
 #include <QDBusObjectPath>
 #include <qobject.h>
 #include <qstring.h>
 
 namespace vast {
-
     class BluetoothAgentManager;
 
-    // QDBusContext is on the adaptor, not the manager: D-Bus dispatches
-    // incoming Agent1 calls to this object's slots directly, so the
-    // per-call context (calledFromDBus/message/setDelayedReply) only
-    // populates correctly here.
-    class BluetoothAgentAdaptor : public QDBusAbstractAdaptor, public QDBusContext {
+    class BluetoothAgentAdaptor : public QDBusAbstractAdaptor {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", "org.bluez.Agent1")
 

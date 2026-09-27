@@ -2,6 +2,7 @@
 
 #include <qdbusconnection.h>
 #include <qdbusmessage.h>
+#include <qdbuscontext.h>
 #include <qdbusservicewatcher.h>
 #include <qhash.h>
 #include <qobject.h>
@@ -15,7 +16,7 @@ namespace vast {
 
     class BluetoothAgentAdaptor;
 
-    class BluetoothAgentManager : public QObject {
+    class BluetoothAgentManager : public QObject, public QDBusContext {
         Q_OBJECT
         QML_ELEMENT
         QML_SINGLETON
