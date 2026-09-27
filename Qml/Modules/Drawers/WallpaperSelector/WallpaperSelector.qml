@@ -41,16 +41,6 @@ Item {
 
         asynchronous: true
         visible: false
-        onStatusChanged: {
-            if (Wallpaper.pendingVideoPath !== "") {
-                if (status === Image.Ready) {
-                    const videoPath = Wallpaper.pendingVideoPath;
-                    Wallpaper.pendingVideoPath = "";
-                    Wallpaper.setWallpaper(videoPath, MediaKind.videoThumbnailPathFor(videoPath));
-                } else if (status === Image.Error)
-                    Wallpaper.pendingVideoPath = "";
-            }
-        }
 
         Component.onCompleted: {
             Wallpaper.colorSourceImage = colorSourceImage;

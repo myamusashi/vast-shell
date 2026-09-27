@@ -40,6 +40,13 @@ Singleton {
     }
 
     function setVideoWallpaper(path) {
+        if (path === "")
+            return;
+        if (thumbnailAvailability[path] === true) {
+            pendingVideoPath = "";
+            setWallpaper(path, MediaKind.videoThumbnailPathFor(path));
+            return;
+        }
         pendingVideoPath = path;
         ensureThumbnail(path, true);
     }
@@ -55,24 +62,35 @@ Singleton {
             ensureThumbnail(path);
             return;
         }
-        if (path === Paths.currentWallpaper && pendingVideoPath === "")
+        if (pendingVideoPath === path) {
+            pendingVideoPath = "";
+            setWallpaper(path, MediaKind.videoThumbnailPathFor(path));
+            return;
+        }
+        if (path === Paths.currentWallpaper)
             updateWallpaperColors(path);
     }
 
     function ensureThumbnail(path, force) {
         if (path === "" || !MediaKind.isVideo(path))
             return;
-        if (thumbnailAvailability[path] === true && !force)
-            return;
-        if (!force && thumbnailFailed[path] === true)
-            return;
-
+        if (thumbnailAvailability[path] === true)
+            return; // cached on disk, never regenerated
         if (force) {
-            const pendingFailures = Object.assign({}, thumbnailFailed);
-            delete pendingFailures[path];
-            thumbnailFailed = pendingFailures;
+            const cleared = Object.assign({}, thumbnailFailed);
+            delete cleared[path];
+            thumbnailFailed = cleared;
+        } else if (thumbnailFailed[path] === true)
+            return;
+        if (thumbnailAvailability[path] === false) {
+            generateThumbnail(path);
+            return;
         }
+        requestThumbnailCheck(path); // unknown, stat the cache before spawning ffmpeg
+        drainThumbnailChecks();
+    }
 
+    function generateThumbnail(path) {
         ThumbnailQueue.generate(path, MediaKind.videoThumbnailPathFor(path), (videoPath, thumbnailPath) => {
             const success = thumbnailPath !== "";
             if (success) {
@@ -84,28 +102,24 @@ Singleton {
                 const failed = Object.assign({}, root.thumbnailFailed);
                 failed[videoPath] = true;
                 root.thumbnailFailed = failed;
+                if (root.pendingVideoPath === videoPath)
+                    root.pendingVideoPath = "";
             }
             root.markThumbnail(videoPath, success);
-            if (root.pendingVideoPath !== videoPath)
-                return;
-            if (success && root.colorSourceImage)
-                root.colorSourceImage.source = "file://" + thumbnailPath + "?v=" + root.thumbnailVersion;
-            else if (!success)
-                root.pendingVideoPath = "";
         });
     }
 
-    function pumpThumbnailJobs() {
-        if (thumbnailJobPath !== "" || thumbnailRegenQueue.length === 0)
+    function requestThumbnailCheck(path) {
+        if (thumbnailCheckQueue.includes(path))
             return;
-        thumbnailJobPath = thumbnailRegenQueue.shift();
+        thumbnailCheckQueue.push(path);
     }
 
     function requestThumbnailChecks() {
         for (const path of WallpaperFileModels.filteredWallpaperList) {
-            if (!MediaKind.isVideo(path) || thumbnailAvailability[path] !== undefined || thumbnailCheckQueue.includes(path))
+            if (!MediaKind.isVideo(path) || thumbnailAvailability[path] !== undefined)
                 continue;
-            thumbnailCheckQueue.push(path);
+            requestThumbnailCheck(path);
         }
         drainThumbnailChecks();
     }
