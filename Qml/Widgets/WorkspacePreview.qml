@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -94,6 +95,7 @@ LazyLoader {
             visible: hasContent
             captureSource: cell.toplevel?.wayland ?? null
             live: false
+            opacity: 0.5
         }
 
         StyledRect {
@@ -112,6 +114,37 @@ LazyLoader {
                 anchors.fill: parent
                 level: 2
                 radius: parent.radius
+            }
+        }
+
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 2
+
+            function iconForToplevel(toplevel: var): string {
+                const windowClass = toplevel?.lastIpcObject?.class;
+                const entry = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;
+                return entry?.icon ? Quickshell.iconPath(entry.icon, "image-missing") : "";
+            }
+
+            IconImage {
+                Layout.alignment: Qt.AlignCenter
+                implicitSize: Appearance.fonts.size.large * 1.5
+                source: parent.iconForToplevel(cell.toplevel)
+                visible: source !== ""
+                asynchronous: true
+                backer.cache: true
+            }
+
+            StyledText {
+                Layout.alignment: Qt.AlignCenter
+                Layout.preferredWidth: cell.width
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text: cell.toplevel?.title ?? ""
+                font.pixelSize: Appearance.fonts.size.small
+                wrapMode: Text.Wrap
+                color: Colours.m3Colors.m3OnSurface
             }
         }
     }
