@@ -158,7 +158,7 @@ let
 
       makeWrapper ${vastctl}/bin/vastctl \
         $out/bin/vastctl \
-          --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+          --set-default VAST_SHELL_DIRECTORY "$out/share/quickshell" \
           --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
           --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
           --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \

@@ -43,7 +43,7 @@ var daemonStopCmd = &cobra.Command{
 			return nil
 		}
 		killAll(pids)
-		cmd.Printf("vast-shell stopped (%d process%s)\n", len(pids), plural(len(pids)))
+		cmd.Printf("vast-shell stopped (%d process%s)\n", len(pids), processPlural(len(pids)))
 		return nil
 	},
 }
@@ -63,12 +63,19 @@ var daemonStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check if vast-shell is running",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		pids := shellPIDs()
-		if len(pids) == 0 {
+		if dir := ipc.ShellDirectory(); dir != "" {
+			cmd.Printf("config: %s\n", dir)
+		}
+		if !ipc.ShellRunning() {
 			cmd.Println("vast-shell is not running")
 			return nil
 		}
-		cmd.Printf("vast-shell is running (pid%s %s)\n", plural(len(pids)), strings.Join(pids, ", "))
+		pids := shellPIDs()
+		if len(pids) == 0 {
+			cmd.Println("vast-shell is running")
+			return nil
+		}
+		cmd.Printf("vast-shell is running (pids %s)\n", strings.Join(pids, ", "))
 		return nil
 	},
 }
@@ -84,10 +91,10 @@ func startDaemon(cmd *cobra.Command) error {
 		if err := proc.Run(); err != nil {
 			return err
 		}
+		ipc.SetShellRunning(false) // the foreground shell exited
 		return nil
 	}
-	// Background starts have no terminal; forward output to /tmp so
-	// logs survive after the launching shell exits.
+	proc.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
 	logFile := ipc.LogFile()
 	if logFile != nil {
 		defer func() { _ = logFile.Close() }()
@@ -106,6 +113,7 @@ func startDaemon(cmd *cobra.Command) error {
 	if err := proc.Start(); err != nil {
 		return err
 	}
+	ipc.SetShellRunning(true)
 	cmd.Printf("vast-shell started (pid %d)\n", proc.Process.Pid)
 	if logFile != nil {
 		cmd.Printf("logs: %s\n", ipc.LogFilePath)
@@ -125,9 +133,10 @@ func killAll(pids []string) {
 	for _, pid := range pids {
 		_ = exec.Command("kill", pid).Run()
 	}
+	ipc.SetShellRunning(false)
 }
 
-func plural(n int) string {
+func processPlural(n int) string {
 	if n > 1 {
 		return "es"
 	}
