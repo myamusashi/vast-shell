@@ -233,8 +233,9 @@ namespace vast {
                     if (result) {
                         worker->setCurrentBrightness(percent);
                         Q_EMIT brightnessChanged(id, percent);
-                    } else
+                    } else {
                         qWarning() << "[BrightnessManager] set failed for" << id << "—" << result.error().message;
+                    }
 
                     // A newer value may have arrived while the hardware write
                     // was in flight; drain it instead of leaving the display stale.

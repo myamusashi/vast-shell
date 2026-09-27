@@ -4,6 +4,7 @@
 #include <cctype>
 #include <functional>
 #include <qnumeric.h>
+#include <ranges>
 #include <string>
 #include <array>
 #include <cmath>
@@ -92,12 +93,16 @@ namespace {
 
     // DynamicScheme.get_piecewise_hue().
     double getPiecewiseHue(const Hct& sourceColor, std::span<const double> hueBreakpoints, std::span<const double> hues) {
-        const size_t segmentCount = std::min(hueBreakpoints.size() - 1, hues.size());
-        for (size_t i = 0; i < segmentCount; i++) {
-            if (sourceColor.get_hue() >= hueBreakpoints[i] && sourceColor.get_hue() < hueBreakpoints[i + 1])
+        const double hue = sourceColor.get_hue();
+        size_t       i   = 0;
+        for (auto [lo, hi] : hueBreakpoints | std::views::adjacent<2>) {
+            if (i >= hues.size())
+                break;
+            if (hue >= lo && hue < hi)
                 return SanitizeDegreesDouble(hues[i]);
+            ++i;
         }
-        return sourceColor.get_hue();
+        return hue;
     }
 
     // DynamicScheme.get_rotated_hue().

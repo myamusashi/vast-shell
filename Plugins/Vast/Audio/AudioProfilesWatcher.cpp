@@ -41,67 +41,67 @@ extern "C" {
 #include <spa/pod/builder.h>
 }
 
-struct PwThreadLoopDeleter {
-    void operator()(pw_thread_loop* p) const {
-        pw_thread_loop_destroy(p);
-    }
-};
-struct PwContextDeleter {
-    void operator()(pw_context* p) const {
-        pw_context_destroy(p);
-    }
-};
-struct PwCoreDeleter {
-    void operator()(pw_core* p) const {
-        pw_core_disconnect(p);
-    }
-};
-struct PwRegistryDeleter {
-    void operator()(pw_registry* p) const {
-        pw_proxy_destroy(reinterpret_cast<pw_proxy*>(p));
-    }
-};
-
-using UniquePwThreadLoop = std::unique_ptr<pw_thread_loop, PwThreadLoopDeleter>;
-using UniquePwContext    = std::unique_ptr<pw_context, PwContextDeleter>;
-using UniquePwCore       = std::unique_ptr<pw_core, PwCoreDeleter>;
-using UniquePwRegistry   = std::unique_ptr<pw_registry, PwRegistryDeleter>;
-
-constexpr int K_MAX_PROFILES = 64;
-constexpr int K_MAX_STR      = 256;
-
-struct ApProfileEntryT {
-    int32_t                     index;
-    std::array<char, K_MAX_STR> name{};
-    std::array<char, K_MAX_STR> description{};
-    std::array<char, 32>        available{};
-};
-
-struct ApDeviceNodeT {
-    pw_proxy*                                   proxy = nullptr;
-    spa_hook                                    deviceListener{};
-    spa_hook                                    proxyListener{};
-
-    uint32_t                                    pwId = 0;
-    std::array<char, K_MAX_STR>                 name{};
-    std::array<char, K_MAX_STR>                 description{};
-
-    std::array<ApProfileEntryT, K_MAX_PROFILES> profiles{};
-    int                                         profileCount = 0;
-
-    std::array<ApProfileEntryT, K_MAX_PROFILES> staging{};
-    int                                         stagingCount = 0;
-    int                                         enumSeq      = 0;
-
-    int32_t                                     activeIndex = -1;
-    std::array<char, K_MAX_STR>                 activeName{};
-    std::array<char, K_MAX_STR>                 activeDescription{};
-    std::array<char, 32>                        activeAvailable{};
-
-    int                                         dirty = 0;
-};
-
 namespace {
+
+    struct PwThreadLoopDeleter {
+        void operator()(pw_thread_loop* p) const {
+            pw_thread_loop_destroy(p);
+        }
+    };
+    struct PwContextDeleter {
+        void operator()(pw_context* p) const {
+            pw_context_destroy(p);
+        }
+    };
+    struct PwCoreDeleter {
+        void operator()(pw_core* p) const {
+            pw_core_disconnect(p);
+        }
+    };
+    struct PwRegistryDeleter {
+        void operator()(pw_registry* p) const {
+            pw_proxy_destroy(reinterpret_cast<pw_proxy*>(p));
+        }
+    };
+
+    using UniquePwThreadLoop = std::unique_ptr<pw_thread_loop, PwThreadLoopDeleter>;
+    using UniquePwContext    = std::unique_ptr<pw_context, PwContextDeleter>;
+    using UniquePwCore       = std::unique_ptr<pw_core, PwCoreDeleter>;
+    using UniquePwRegistry   = std::unique_ptr<pw_registry, PwRegistryDeleter>;
+
+    constexpr int K_MAX_PROFILES = 64;
+    constexpr int K_MAX_STR      = 256;
+
+    struct ApProfileEntryT {
+        int32_t                     index;
+        std::array<char, K_MAX_STR> name{};
+        std::array<char, K_MAX_STR> description{};
+        std::array<char, 32>        available{};
+    };
+
+    struct ApDeviceNodeT {
+        pw_proxy*                                   proxy = nullptr;
+        spa_hook                                    deviceListener{};
+        spa_hook                                    proxyListener{};
+
+        uint32_t                                    pwId = 0;
+        std::array<char, K_MAX_STR>                 name{};
+        std::array<char, K_MAX_STR>                 description{};
+
+        std::array<ApProfileEntryT, K_MAX_PROFILES> profiles{};
+        int                                         profileCount = 0;
+
+        std::array<ApProfileEntryT, K_MAX_PROFILES> staging{};
+        int                                         stagingCount = 0;
+        int                                         enumSeq      = 0;
+
+        int32_t                                     activeIndex = -1;
+        std::array<char, K_MAX_STR>                 activeName{};
+        std::array<char, K_MAX_STR>                 activeDescription{};
+        std::array<char, 32>                        activeAvailable{};
+
+        int                                         dirty = 0;
+    };
 
     void        apRegistryEventGlobal(void* data, uint32_t id, uint32_t permissions, const char* type, uint32_t version, const spa_dict* props);
     void        apRegistryEventGlobalRemove(void* data, uint32_t id);
@@ -119,7 +119,7 @@ namespace {
     template <std::size_t N>
     void apSafeCopy(std::array<char, N>& dst, const char* src) {
         if (!src) {
-            dst[0] = '\0';
+            dst.at(0) = '\0';
             return;
         }
         std::snprintf(dst.data(), N, "%s", src);
@@ -160,7 +160,7 @@ namespace {
             QStringList words = part.split(QLatin1Char('-'));
             for (QString& w : words)
                 if (!w.isEmpty())
-                    w[0] = w[0].toUpper();
+                    w.replace(0, 1, w.at(0).toUpper());
             out << words.join(QLatin1Char(' '));
         }
         return out.join(QStringLiteral(" + "));
@@ -304,7 +304,7 @@ namespace {
                 }
             }
 
-            auto& e = d->staging[static_cast<size_t>(d->stagingCount++)];
+            auto& e = d->staging.at(static_cast<size_t>(d->stagingCount++));
             e.index = pidx;
             apSafeCopy(e.name, name ? name : "");
             apSafeCopy(e.description, desc ? desc : "");

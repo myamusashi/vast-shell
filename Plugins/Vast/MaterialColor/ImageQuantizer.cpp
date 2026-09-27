@@ -8,7 +8,6 @@
 #include <QtGui/qrgb.h>
 #include <QtGlobal>
 #include <algorithm>
-#include <ranges>
 #include <span>
 #include <cmath>
 #include <cstddef>
@@ -90,24 +89,21 @@ namespace {
             kk.assign(static_cast<size_t>(xmax), 0.0);
             double ww = 0.0;
             for (int x = 0; x < xmax; x++) {
-                const double w             = bicubicFilter((x + xmin - center + 0.5) * invScale);
-                kk[static_cast<size_t>(x)] = w;
+                const double w                = bicubicFilter((x + xmin - center + 0.5) * invScale);
+                kk.at(static_cast<size_t>(x)) = w;
                 ww += w;
             }
-            if (std::fpclassify(ww) != FP_ZERO) {
-                for (int x = 0; x < xmax; x++)
-                    kk[static_cast<size_t>(x)] /= ww;
-            }
 
-            // normalize_coeffs_8bpc(): quantize to fixed point.
+            if (std::fpclassify(ww) != FP_ZERO)
+                for (double& v : kk)
+                    v /= ww;
+
             std::vector<int32_t> ints(static_cast<size_t>(xmax));
-            for (int x = 0; x < xmax; x++) {
-                const double w               = kk[static_cast<size_t>(x)];
-                ints[static_cast<size_t>(x)] = static_cast<int32_t>(w < 0 ? -0.5 + w * (1 << K_PRECISION_BITS) : 0.5 + w * (1 << K_PRECISION_BITS));
-            }
+            for (auto [x, w] : kk | std::views::enumerate)
+                ints.at(static_cast<size_t>(x)) = static_cast<int32_t>(w < 0 ? -0.5 + w * (1 << K_PRECISION_BITS) : 0.5 + w * (1 << K_PRECISION_BITS));
 
-            result.mins[static_cast<size_t>(xx)]    = xmin;
-            result.weights[static_cast<size_t>(xx)] = ints;
+            result.mins.at(static_cast<size_t>(xx))    = xmin;
+            result.weights.at(static_cast<size_t>(xx)) = ints;
         }
         return result;
     }
@@ -124,6 +120,13 @@ namespace {
         return (tmp + (tmp >> 8)) >> 8;
     }
 
+    template <typename T>
+    T& at(std::span<T> s, size_t i) {
+        if (i >= s.size())
+            throw std::out_of_range("span index out of range");
+        return s[i];
+    }
+
     // Separable bicubic resample, fixed-point port of Pillow's
     // _ImagingResample{Horizontal,Vertical}_8bpc. When processAlpha is set the
     // alpha band is resampled alongside RGB (needed for premultiplied input).
@@ -138,21 +141,21 @@ namespace {
                 const auto srcLine = std::span<const QRgb>(reinterpret_cast<const QRgb*>(in.constScanLine(y)), static_cast<size_t>(in.width()));
                 auto       dstLine = std::span<QRgb>(reinterpret_cast<QRgb*>(mid.scanLine(y)), static_cast<size_t>(newWidth));
                 for (int x = 0; x < newWidth; x++) {
-                    const std::vector<int32_t>& taps = wx.weights[static_cast<size_t>(x)];
-                    const int                   xmin = wx.mins[static_cast<size_t>(x)];
+                    const std::vector<int32_t>& taps = wx.weights.at(static_cast<size_t>(x));
+                    const int                   xmin = wx.mins.at(static_cast<size_t>(x));
                     int32_t                     r    = K_ROUNDING_BIAS;
                     int32_t                     g    = K_ROUNDING_BIAS;
                     int32_t                     b    = K_ROUNDING_BIAS;
                     int32_t                     a    = K_ROUNDING_BIAS;
                     for (size_t i = 0; i < taps.size(); i++) {
-                        const QRgb px = srcLine[static_cast<size_t>(xmin) + i];
-                        r += static_cast<int32_t>(qRed(px)) * taps[i];
-                        g += static_cast<int32_t>(qGreen(px)) * taps[i];
-                        b += static_cast<int32_t>(qBlue(px)) * taps[i];
+                        const QRgb px = at(srcLine, static_cast<size_t>(xmin) + i);
+                        r += static_cast<int32_t>(qRed(px)) * taps.at(i);
+                        g += static_cast<int32_t>(qGreen(px)) * taps.at(i);
+                        b += static_cast<int32_t>(qBlue(px)) * taps.at(i);
                         if (PROCESS_ALPHA)
-                            a += static_cast<int32_t>(qAlpha(px)) * taps[i];
+                            a += static_cast<int32_t>(qAlpha(px)) * taps.at(i);
                     }
-                    dstLine[static_cast<size_t>(x)] = qRgba(clip8(r), clip8(g), clip8(b), PROCESS_ALPHA ? clip8(a) : 255);
+                    at(dstLine, static_cast<size_t>(x)) = qRgba(clip8(r), clip8(g), clip8(b), PROCESS_ALPHA ? clip8(a) : 255);
                 }
             }
         }
@@ -163,23 +166,24 @@ namespace {
             const SResizeWeights wy = makeWeights(in.height(), newHeight);
             for (int y = 0; y < newHeight; y++) {
                 auto                        dstLine = std::span<QRgb>(reinterpret_cast<QRgb*>(out.scanLine(y)), static_cast<size_t>(newWidth));
-                const std::vector<int32_t>& taps    = wy.weights[static_cast<size_t>(y)];
-                const int                   ymin    = wy.mins[static_cast<size_t>(y)];
+                const std::vector<int32_t>& taps    = wy.weights.at(static_cast<size_t>(y));
+                const int                   ymin    = wy.mins.at(static_cast<size_t>(y));
                 for (int x = 0; x < newWidth; x++) {
                     int32_t r = K_ROUNDING_BIAS;
                     int32_t g = K_ROUNDING_BIAS;
                     int32_t b = K_ROUNDING_BIAS;
                     int32_t a = K_ROUNDING_BIAS;
                     for (size_t i = 0; i < taps.size(); i++) {
-                        const QRgb px = std::span<const QRgb>(reinterpret_cast<const QRgb*>(mid.constScanLine(ymin + static_cast<int>(i))),
-                                                              static_cast<size_t>(newWidth))[static_cast<size_t>(x)];
-                        r += static_cast<int32_t>(qRed(px)) * taps[i];
-                        g += static_cast<int32_t>(qGreen(px)) * taps[i];
-                        b += static_cast<int32_t>(qBlue(px)) * taps[i];
+                        const auto    midLine = std::span<const QRgb>(reinterpret_cast<const QRgb*>(mid.constScanLine(ymin + static_cast<int>(i))), static_cast<size_t>(newWidth));
+                        const int32_t w       = taps.at(i);
+                        const QRgb    px      = at(midLine, static_cast<size_t>(x));
+                        r += static_cast<int32_t>(qRed(px)) * w;
+                        g += static_cast<int32_t>(qGreen(px)) * w;
+                        b += static_cast<int32_t>(qBlue(px)) * w;
                         if (PROCESS_ALPHA)
-                            a += static_cast<int32_t>(qAlpha(px)) * taps[i];
+                            a += static_cast<int32_t>(qAlpha(px)) * w;
                     }
-                    dstLine[static_cast<size_t>(x)] = qRgba(clip8(r), clip8(g), clip8(b), PROCESS_ALPHA ? clip8(a) : 255);
+                    at(dstLine, static_cast<size_t>(x)) = qRgba(clip8(r), clip8(g), clip8(b), PROCESS_ALPHA ? clip8(a) : 255);
                 }
             }
         }
@@ -215,23 +219,21 @@ Argb quantizeImage(const QString& imagePath, int bitmapSize) {
             // RGBA -> RGBa: MULDIV255(color, alpha).
             for (int y = 0; y < image.height(); y++) {
                 auto line = std::span<QRgb>(reinterpret_cast<QRgb*>(image.scanLine(y)), static_cast<size_t>(image.width()));
-                for (const int x : std::views::iota(0, image.width())) {
-                    const QRgb px = line[static_cast<size_t>(x)];
-                    const int  a  = qAlpha(px);
+                for (QRgb& px : line) {
+                    const int a = qAlpha(px);
                     if (a != 255)
-                        line[static_cast<size_t>(x)] = qRgba(mulDiv255(qRed(px), a), mulDiv255(qGreen(px), a), mulDiv255(qBlue(px), a), a);
+                        px = qRgba(mulDiv255(qRed(px), a), mulDiv255(qGreen(px), a), mulDiv255(qBlue(px), a), a);
                 }
             }
             image = resizeBicubic(image, newWidth, newHeight, true);
             // RGBa -> RGBA: CLIP8(255 * color / alpha).
             for (int y = 0; y < newHeight; y++) {
                 auto line = std::span<QRgb>(reinterpret_cast<QRgb*>(image.scanLine(y)), static_cast<size_t>(newWidth));
-                for (const int x : std::views::iota(0, newWidth)) {
-                    const QRgb px = line[static_cast<size_t>(x)];
-                    const int  a  = qAlpha(px);
+                for (QRgb& px : line) {
+                    const int a = qAlpha(px);
                     if (a != 255 && a != 0) {
-                        const auto un                = [a](const int C) { return static_cast<int>(std::clamp((255 * C) / a, 0, 255)); };
-                        line[static_cast<size_t>(x)] = qRgba(un(qRed(px)), un(qGreen(px)), un(qBlue(px)), a);
+                        const auto un = [a](const int C) { return static_cast<int>(std::clamp((255 * C) / a, 0, 255)); };
+                        px            = qRgba(un(qRed(px)), un(qGreen(px)), un(qBlue(px)), a);
                     }
                 }
             }
@@ -244,8 +246,8 @@ Argb quantizeImage(const QString& imagePath, int bitmapSize) {
     pixels.reserve(static_cast<size_t>(image.width()) * static_cast<size_t>(image.height()));
     for (int y = 0; y < image.height(); y++) {
         const auto line = std::span<const QRgb>(reinterpret_cast<const QRgb*>(image.constScanLine(y)), static_cast<size_t>(image.width()));
-        for (const int x : std::views::iota(0, image.width()))
-            pixels.push_back(0xFF000000u | static_cast<Argb>(line[static_cast<size_t>(x)] & 0xFFFFFF));
+        for (const QRgb px : line)
+            pixels.push_back(0xFF000000u | static_cast<Argb>(px & 0xFFFFFF));
     }
 
     const QuantizerResult quantized = QuantizeCelebi(pixels, 128);
@@ -256,5 +258,5 @@ Argb quantizeImage(const QString& imagePath, int bitmapSize) {
     if (ranked.empty())
         return 0;
 
-    return ranked[0];
+    return ranked.front();
 }

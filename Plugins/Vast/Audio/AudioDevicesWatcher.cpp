@@ -98,7 +98,7 @@ namespace {
     template <std::size_t N>
     void adSafeCopy(std::array<char, N>& dst, const char* src) {
         if (!src) {
-            dst[0] = '\0';
+            dst.at(0) = '\0';
             return;
         }
         std::snprintf(dst.data(), N, "%s", src);

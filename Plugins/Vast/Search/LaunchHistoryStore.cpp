@@ -38,9 +38,9 @@ namespace vast {
         for (const auto& value : arr) {
             const QJsonObject object = value.toObject();
             HistoryEntry      entry;
-            entry.id        = object[QStringLiteral("id")].toString();
-            entry.timestamp = object[QStringLiteral("timestamp")].toVariant().toLongLong();
-            entry.count     = object[QStringLiteral("count")].toInt();
+            entry.id        = object.value(QStringLiteral("id")).toString();
+            entry.timestamp = object.value(QStringLiteral("timestamp")).toVariant().toLongLong();
+            entry.count     = object.value(QStringLiteral("count")).toInt();
             if (!entry.id.isEmpty())
                 mHistory.append(entry);
         }
@@ -50,9 +50,9 @@ namespace vast {
         QJsonArray arr;
         for (const HistoryEntry& entry : std::as_const(mHistory)) {
             QJsonObject object;
-            object[QStringLiteral("id")]        = entry.id;
-            object[QStringLiteral("timestamp")] = entry.timestamp;
-            object[QStringLiteral("count")]     = entry.count;
+            object.insert(QStringLiteral("id"), entry.id);
+            object.insert(QStringLiteral("timestamp"), entry.timestamp);
+            object.insert(QStringLiteral("count"), entry.count);
             arr.append(object);
         }
         mSettings->setValue(QStringLiteral("launchHistory"), QJsonDocument(arr).toJson(QJsonDocument::Compact));
@@ -78,8 +78,9 @@ namespace vast {
         if (it != mHistory.end()) {
             it->timestamp = now;
             it->count++;
-        } else
+        } else {
             mHistory.append({.id = appId, .timestamp = now, .count = 1});
+        }
 
         if (mHistory.size() > mHistoryLimit) {
             std::ranges::sort(mHistory, [](const HistoryEntry& a, const HistoryEntry& b) { return a.timestamp > b.timestamp; });

@@ -73,14 +73,14 @@ void LyricsProvider::fetch(const QString& title, const QString& artist, double d
             return;
         }
 
-        const QString lrc = json[QStringLiteral("syncedLyrics")].toString();
+        const QString lrc = json.value(QStringLiteral("syncedLyrics")).toString();
         if (!lrc.isEmpty()) {
             applyParseResult(vast::LrcParser::parseLrc(lrc, durationSecs));
             vast::LyricsCache::save(key, data, durationSecs);
             return;
         }
 
-        const QString plain = json[QStringLiteral("plainLyrics")].toString();
+        const QString plain = json.value(QStringLiteral("plainLyrics")).toString();
         if (!plain.isEmpty()) {
             applyParseResult(vast::LrcParser::parsePlain(plain));
             vast::LyricsCache::save(key, data, durationSecs);
@@ -126,12 +126,12 @@ bool LyricsProvider::tryLoadFromCache(const QString& cacheKey) {
         return false;
 
     const auto    json = QJsonDocument::fromJson(cached->rawJson).object();
-    const QString lrc  = json[QStringLiteral("syncedLyrics")].toString();
+    const QString lrc  = json.value(QStringLiteral("syncedLyrics")).toString();
     if (!lrc.isEmpty()) {
         applyParseResult(vast::LrcParser::parseLrc(lrc, cached->durationSecs));
         return true;
     }
-    const QString plain = json[QStringLiteral("plainLyrics")].toString();
+    const QString plain = json.value(QStringLiteral("plainLyrics")).toString();
     if (!plain.isEmpty()) {
         applyParseResult(vast::LrcParser::parsePlain(plain));
         return true;

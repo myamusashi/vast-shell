@@ -42,9 +42,9 @@ namespace vast {
         const auto totalMs = static_cast<qint64>(totalDurationSecs * 1000.0);
 
         for (int i = 0; i < raw.size(); ++i) {
-            const qint64  lineStart = raw[i].timeMs;
-            const QString content   = raw[i].content;
-            const qint64  lineEnd   = (i + 1 < raw.size()) ? raw[i + 1].timeMs : qMax(lineStart + 5000, totalMs);
+            const qint64  lineStart = raw.at(i).timeMs;
+            const QString content   = raw.at(i).content;
+            const qint64  lineEnd   = (i + 1 < raw.size()) ? raw.at(i + 1).timeMs : qMax(lineStart + 5000, totalMs);
             if (content.isEmpty())
                 continue;
 
@@ -53,9 +53,9 @@ namespace vast {
             const QString   transText = (caretIdx >= 0) ? content.mid(caretIdx + 1).trimmed() : QString();
 
             QVariantMap     lineEntry;
-            lineEntry[QStringLiteral("time")]        = lineStart;
-            lineEntry[QStringLiteral("text")]        = srcText;
-            lineEntry[QStringLiteral("translation")] = transText;
+            lineEntry.insert(QStringLiteral("time"), lineStart);
+            lineEntry.insert(QStringLiteral("text"), srcText);
+            lineEntry.insert(QStringLiteral("translation"), transText);
             result.lines.append(lineEntry);
 
             QVariantList words;
@@ -68,22 +68,22 @@ namespace vast {
                     if (text.isEmpty())
                         continue;
                     QVariantMap w;
-                    w[QStringLiteral("time")] = parseTimestamp(wm.captured(1), wm.captured(2), wm.captured(3));
-                    w[QStringLiteral("text")] = text;
+                    w.insert(QStringLiteral("time"), parseTimestamp(wm.captured(1), wm.captured(2), wm.captured(3)));
+                    w.insert(QStringLiteral("text"), text);
                     words.append(w);
                 }
                 for (int j = 0; j < words.size(); ++j) {
-                    QVariantMap  w     = words[j].toMap();
-                    qint64 const t     = w[QStringLiteral("time")].toLongLong();
+                    QVariantMap  w     = words.at(j).toMap();
+                    qint64 const t     = w.value(QStringLiteral("time")).toLongLong();
                     qint64       nextT = lineEnd;
-                    if (j + 1 < words.size())
-                        nextT = words[j + 1].toMap()[QStringLiteral("time")].toLongLong();
-                    else {
+                    if (j + 1 < words.size()) {
+                        nextT = words.at(j + 1).toMap().value(QStringLiteral("time")).toLongLong();
+                    } else {
                         qint64 const maxLastWord = 1500;
                         if (nextT - t > maxLastWord)
                             nextT = t + maxLastWord;
                     }
-                    w[QStringLiteral("duration")] = qMax<qint64>(0, nextT - t);
+                    w.insert(QStringLiteral("duration"), qMax<qint64>(0, nextT - t));
                     words.replace(j, w);
                 }
             } else {
@@ -94,8 +94,8 @@ namespace vast {
             }
 
             QVariantMap wlEntry;
-            wlEntry[QStringLiteral("time")]  = lineStart;
-            wlEntry[QStringLiteral("words")] = words;
+            wlEntry.insert(QStringLiteral("time"), lineStart);
+            wlEntry.insert(QStringLiteral("words"), words);
             result.wordLines.append(wlEntry);
         }
 
@@ -117,9 +117,9 @@ namespace vast {
             const QString   transText = (caretIdx >= 0) ? text.mid(caretIdx + 1).trimmed() : QString();
 
             QVariantMap     lineEntry;
-            lineEntry[QStringLiteral("time")]        = -1;
-            lineEntry[QStringLiteral("text")]        = srcText;
-            lineEntry[QStringLiteral("translation")] = transText;
+            lineEntry.insert(QStringLiteral("time"), -1);
+            lineEntry.insert(QStringLiteral("text"), srcText);
+            lineEntry.insert(QStringLiteral("translation"), transText);
             result.lines.append(lineEntry);
 
             words.clear();
@@ -127,14 +127,14 @@ namespace vast {
             words.reserve(srcTextList.size());
             for (const QString& word : srcTextList) {
                 QVariantMap w;
-                w[QStringLiteral("time")]     = -1;
-                w[QStringLiteral("text")]     = word;
-                w[QStringLiteral("duration")] = 0;
+                w.insert(QStringLiteral("time"), -1);
+                w.insert(QStringLiteral("text"), word);
+                w.insert(QStringLiteral("duration"), 0);
                 words.append(w);
             }
             QVariantMap wlEntry;
-            wlEntry[QStringLiteral("time")]  = -1;
-            wlEntry[QStringLiteral("words")] = words;
+            wlEntry.insert(QStringLiteral("time"), -1);
+            wlEntry.insert(QStringLiteral("words"), words);
             result.wordLines.append(wlEntry);
         }
 
@@ -164,9 +164,9 @@ namespace vast {
             const auto   wDuration = static_cast<qint64>(static_cast<double>(durationGap) * fraction);
 
             QVariantMap  w;
-            w[QStringLiteral("time")]     = currentMs;
-            w[QStringLiteral("text")]     = t;
-            w[QStringLiteral("duration")] = wDuration;
+            w.insert(QStringLiteral("time"), currentMs);
+            w.insert(QStringLiteral("text"), t);
+            w.insert(QStringLiteral("duration"), wDuration);
             words.append(w);
             currentMs += wDuration;
         }

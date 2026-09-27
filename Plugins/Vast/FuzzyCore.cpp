@@ -26,13 +26,13 @@ namespace vast::fzy {
             int              charIndex = 0;
             qsizetype        byte      = 0;
             while (byte < utf8.size()) {
-                boundaryIndex[static_cast<size_t>(byte)] = charIndex;
+                boundaryIndex.at(static_cast<size_t>(byte)) = charIndex;
                 do {
                     ++byte;
                 } while (byte < utf8.size() && isUtf8Continuation(utf8.at(byte)));
                 ++charIndex;
             }
-            boundaryIndex[static_cast<size_t>(utf8.size())] = charIndex;
+            boundaryIndex.at(static_cast<size_t>(utf8.size())) = charIndex;
             return boundaryIndex;
         }
 
@@ -97,7 +97,7 @@ namespace vast::fzy {
             const std::vector<int> haystackMap = byteToCharMap(haystackUtf8);
             for (qsizetype i = 0; i < needleBytes; ++i) {
                 if (!isUtf8Continuation(needleUtf8.at(i)))
-                    result.positions.push_back(haystackMap[static_cast<std::size_t>(bytePositions[static_cast<size_t>(i)])]);
+                    result.positions.push_back(haystackMap.at(static_cast<std::size_t>(bytePositions.at(static_cast<size_t>(i)))));
             }
 
             return result;

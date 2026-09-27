@@ -83,9 +83,9 @@ bool fixSurfaceExtremes(QMap<QString, QString>& colors) {
             continue;
 
         if (it->compare(QStringLiteral("#000000"), Qt::CaseInsensitive) == 0)
-            colors[role] = argbToHex(Hct(neutral.get_hue(), neutral.get_chroma() * 0.25, 5.0));
+            colors.insert(role, argbToHex(Hct(neutral.get_hue(), neutral.get_chroma() * 0.25, 5.0)));
         else if (it->compare(QStringLiteral("#FFFFFF"), Qt::CaseInsensitive) == 0)
-            colors[role] = argbToHex(Hct(neutral.get_hue(), neutral.get_chroma() * 0.25, 99.0));
+            colors.insert(role, argbToHex(Hct(neutral.get_hue(), neutral.get_chroma() * 0.25, 99.0)));
     }
     return true;
 }

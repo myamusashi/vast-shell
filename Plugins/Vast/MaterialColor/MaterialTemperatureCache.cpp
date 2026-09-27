@@ -111,7 +111,7 @@ const Hct& MaterialTemperatureCache::complement() {
     const double rangeTemp   = warmestTemp - coldestTemp;
 
     if (std::fpclassify(rangeTemp) == FP_ZERO) {
-        mComplementCache = huesByIndex[static_cast<size_t>(roundHalfToEven(mInput.get_hue()))];
+        mComplementCache = huesByIndex.at(static_cast<size_t>(roundHalfToEven(mInput.get_hue())));
         return *mComplementCache;
     }
 
@@ -120,14 +120,14 @@ const Hct& MaterialTemperatureCache::complement() {
     const double     endHue                     = startHueIsColdestToWarmest ? coldestHue : warmestHue;
     constexpr double directionOfRotation        = 1.0;
     double           smallestError              = 1000.0;
-    const Hct*       answer                     = &huesByIndex[static_cast<size_t>(roundHalfToEven(mInput.get_hue()))];
+    const Hct*       answer                     = &huesByIndex.at(static_cast<size_t>(roundHalfToEven(mInput.get_hue())));
 
     const double     complementRelativeTemp = 1.0 - inputRelativeTemperature();
     for (int hueAddend = 0; hueAddend <= 360; hueAddend++) {
         const double hue = SanitizeDegreesDouble(startHue + directionOfRotation * hueAddend);
         if (!isBetween(hue, startHue, endHue))
             continue;
-        const Hct&   possibleAnswer = huesByIndex[static_cast<size_t>(roundHalfToEven(hue))];
+        const Hct&   possibleAnswer = huesByIndex.at(static_cast<size_t>(roundHalfToEven(hue)));
         const double relativeTemp   = (temps.at(possibleAnswer) - coldestTemp) / rangeTemp;
         const double error          = std::abs(complementRelativeTemp - relativeTemp);
         if (error < smallestError) {
@@ -143,14 +143,14 @@ const Hct& MaterialTemperatureCache::complement() {
 std::vector<Hct> MaterialTemperatureCache::analogous(int count, int divisions) {
     const auto&      huesByIndex = hctsByHue();
     const int        startHue    = roundHalfToEven(mInput.get_hue());
-    const Hct        startHct    = huesByIndex[static_cast<size_t>(startHue)];
+    const Hct        startHct    = huesByIndex.at(static_cast<size_t>(startHue));
     double           lastTemp    = relativeTemperature(startHct);
     std::vector<Hct> allColors{startHct};
 
     double           absoluteTotalTempDelta = 0.0;
     for (int i = 0; i < 360; i++) {
         const double hue       = sanitizeDegreesInt(startHue + i);
-        const Hct&   hct       = huesByIndex[static_cast<size_t>(hue)];
+        const Hct&   hct       = huesByIndex.at(static_cast<size_t>(hue));
         const double temp      = relativeTemperature(hct);
         const double tempDelta = std::abs(temp - lastTemp);
         lastTemp               = temp;
@@ -164,7 +164,7 @@ std::vector<Hct> MaterialTemperatureCache::analogous(int count, int divisions) {
 
     while (std::cmp_less(allColors.size(), divisions)) {
         const double hue       = sanitizeDegreesInt(startHue + hueAddend);
-        const Hct&   hct       = huesByIndex[static_cast<size_t>(hue)];
+        const Hct&   hct       = huesByIndex.at(static_cast<size_t>(hue));
         const double temp      = relativeTemperature(hct);
         const double tempDelta = std::abs(temp - lastTemp);
         totalTempDelta += tempDelta;
@@ -200,7 +200,7 @@ std::vector<Hct> MaterialTemperatureCache::analogous(int count, int divisions) {
             index += static_cast<int>(allColors.size());
         if (std::cmp_greater_equal(index, allColors.size()))
             index %= static_cast<int>(allColors.size());
-        answers.insert(answers.begin(), allColors[static_cast<size_t>(index)]);
+        answers.insert(answers.begin(), allColors.at(static_cast<size_t>(index)));
     }
 
     const int decreaseHueCount = count - increaseHueCount - 1;
@@ -210,7 +210,7 @@ std::vector<Hct> MaterialTemperatureCache::analogous(int count, int divisions) {
             index += static_cast<int>(allColors.size());
         if (std::cmp_greater_equal(index, allColors.size()))
             index %= static_cast<int>(allColors.size());
-        answers.push_back(allColors[static_cast<size_t>(index)]);
+        answers.push_back(allColors.at(static_cast<size_t>(index)));
     }
 
     return answers;

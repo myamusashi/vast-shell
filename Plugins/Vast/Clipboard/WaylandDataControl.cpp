@@ -71,7 +71,7 @@ namespace vast {
         ext_data_control_offer_v1_destroy(offer);
     }
 
-    namespace constants {
+    namespace {
         constexpr const char* K_MIME_IMAGE_PNG  = "image/png";
         constexpr const char* K_MIME_HTML       = "text/html";
         constexpr const char* K_MIME_URI_LIST   = "text/uri-list";
@@ -81,13 +81,26 @@ namespace vast {
         constexpr const char* K_MIME_X11_STRING = "UTF8_STRING";
         constexpr const char* K_PASSWORD_HINT   = "x-kde-passwordManagerHint";
 
-        inline const QString  K_MIME_TEXT_UTF8_Q  = QStringLiteral("text/plain;charset=utf-8");
-        inline const QString  K_MIME_TEXT_Q       = QStringLiteral("text/plain");
-        inline const QString  K_MIME_X11_STRING_Q = QStringLiteral("UTF8_STRING");
-        inline const QString  K_MIME_URI_LIST_Q   = QStringLiteral("text/uri-list");
-        inline const QString  K_MIME_SUGGESTED_Q  = QStringLiteral("application/x-kde-suggestedfilename");
+        // Namespace-scope QStrings would run their QStringLiteral initializers
+        // during static init, where an allocation failure cannot be caught
+        // (bugprone-throwing-static-initialization). Accessors build them on
+        // demand instead, and QStringLiteral itself never allocates.
+        QString mimeTextUtf8() {
+            return QStringLiteral("text/plain;charset=utf-8");
+        }
+        QString mimeText() {
+            return QStringLiteral("text/plain");
+        }
+        QString mimeX11String() {
+            return QStringLiteral("UTF8_STRING");
+        }
+        QString mimeUriList() {
+            return QStringLiteral("text/uri-list");
+        }
+        QString mimeSuggested() {
+            return QStringLiteral("application/x-kde-suggestedfilename");
+        }
     }
-    using namespace constants;
 
     void registryGlobal(void* data, wl_registry* registry, uint32_t name, const char* interface, uint32_t version) {
         auto* self = static_cast<WaylandDataControl*>(data);
@@ -373,11 +386,11 @@ namespace vast {
                 return;
             }
 
-            ext_data_control_offer_v1_receive(offer, mimeType.toUtf8().constData(), fds[1]);
-            ::close(fds[1]);
+            ext_data_control_offer_v1_receive(offer, mimeType.toUtf8().constData(), fds.at(1));
+            ::close(fds.at(1));
             wl_display_flush(mDisplay.get());
 
-            readOfferAsync(fds[0], [this, mimeType, generation](const QByteArray& content) {
+            readOfferAsync(fds.at(0), [this, mimeType, generation](const QByteArray& content) {
                 const QString fileName = mMetaGeneration == generation ? mPendingMeta : QString{};
                 Q_EMIT selectionReceived(mimeType, content, fileName);
             });
@@ -396,11 +409,11 @@ namespace vast {
             return;
         }
 
-        ext_data_control_offer_v1_receive(offer, metaMime.toUtf8().constData(), fds[1]);
-        ::close(fds[1]);
+        ext_data_control_offer_v1_receive(offer, metaMime.toUtf8().constData(), fds.at(1));
+        ::close(fds.at(1));
         wl_display_flush(mDisplay.get());
 
-        readOfferAsync(fds[0], [this, generation, metaMime, startPrimaryRead](const QByteArray& meta) {
+        readOfferAsync(fds.at(0), [this, generation, metaMime, startPrimaryRead](const QByteArray& meta) {
             mPendingMeta    = extractFileName(metaMime, meta);
             mMetaGeneration = generation;
             startPrimaryRead();
@@ -605,42 +618,42 @@ namespace vast {
         payload.insert(mimeType, content);
 
         if (mimeType == QLatin1StringView{K_MIME_TEXT_UTF8} || mimeType == QLatin1StringView{K_MIME_TEXT}) {
-            payload.insert(K_MIME_TEXT_UTF8_Q, content);
-            payload.insert(K_MIME_TEXT_Q, content);
-            payload.insert(K_MIME_X11_STRING_Q, content);
+            payload.insert(mimeTextUtf8(), content);
+            payload.insert(mimeText(), content);
+            payload.insert(mimeX11String(), content);
         }
 
         if (mimeType == QLatin1StringView{K_MIME_HTML}) {
             QByteArray plain = htmlToPlainText(content);
             if (plain.isEmpty())
                 plain = content;
-            payload.insert(K_MIME_TEXT_UTF8_Q, plain);
-            payload.insert(K_MIME_TEXT_Q, plain);
-            payload.insert(K_MIME_X11_STRING_Q, plain);
+            payload.insert(mimeTextUtf8(), plain);
+            payload.insert(mimeText(), plain);
+            payload.insert(mimeX11String(), plain);
         }
 
         if (mimeType == QLatin1StringView{K_MIME_URI_LIST}) {
-            const QString path = extractFileName(K_MIME_URI_LIST_Q, content);
+            const QString path = extractFileName(mimeUriList(), content);
             if (!path.isEmpty()) {
                 const QByteArray pathBytes = path.toUtf8();
-                payload.insert(K_MIME_TEXT_UTF8_Q, pathBytes);
-                payload.insert(K_MIME_TEXT_Q, pathBytes);
-                payload.insert(K_MIME_X11_STRING_Q, pathBytes);
+                payload.insert(mimeTextUtf8(), pathBytes);
+                payload.insert(mimeText(), pathBytes);
+                payload.insert(mimeX11String(), pathBytes);
             }
         }
 
         if (mimeType == QLatin1StringView{K_MIME_IMAGE_PNG} && !fileName.isEmpty()) {
             if (QFileInfo::exists(fileName)) {
-                payload.insert(K_MIME_URI_LIST_Q, QUrl::fromLocalFile(fileName).toString(QUrl::FullyEncoded).toUtf8());
+                payload.insert(mimeUriList(), QUrl::fromLocalFile(fileName).toString(QUrl::FullyEncoded).toUtf8());
             } else {
-                payload.insert(K_MIME_SUGGESTED_Q, QFileInfo(fileName).fileName().toUtf8());
+                payload.insert(mimeSuggested(), QFileInfo(fileName).fileName().toUtf8());
             }
         }
 
         for (auto it = payload.cbegin(); it != payload.cend(); ++it)
             ext_data_control_source_v1_offer(source, it.key().toUtf8().constData());
 
-        mPendingSources[source] = std::move(payload);
+        mPendingSources.insert(source, std::move(payload));
 
         ext_data_control_source_v1_add_listener(source, &SOURCE_LISTENER, this);
         ext_data_control_device_v1_set_selection(mDevice.get(), source);

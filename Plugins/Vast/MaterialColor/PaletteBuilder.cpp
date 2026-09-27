@@ -43,15 +43,15 @@ namespace {
 
     void addSuccessColors(QMap<QString, QString>& colors, bool darkmode) {
         if (darkmode) {
-            colors[QStringLiteral("success")]            = QStringLiteral("#B5CCBA");
-            colors[QStringLiteral("onSuccess")]          = QStringLiteral("#213528");
-            colors[QStringLiteral("successContainer")]   = QStringLiteral("#374B3E");
-            colors[QStringLiteral("onSuccessContainer")] = QStringLiteral("#D1E9D6");
+            colors.insert(QStringLiteral("success"), QStringLiteral("#B5CCBA"));
+            colors.insert(QStringLiteral("onSuccess"), QStringLiteral("#213528"));
+            colors.insert(QStringLiteral("successContainer"), QStringLiteral("#374B3E"));
+            colors.insert(QStringLiteral("onSuccessContainer"), QStringLiteral("#D1E9D6"));
         } else {
-            colors[QStringLiteral("success")]            = QStringLiteral("#4F6354");
-            colors[QStringLiteral("onSuccess")]          = QStringLiteral("#FFFFFF");
-            colors[QStringLiteral("successContainer")]   = QStringLiteral("#D1E8D5");
-            colors[QStringLiteral("onSuccessContainer")] = QStringLiteral("#0C1F13");
+            colors.insert(QStringLiteral("success"), QStringLiteral("#4F6354"));
+            colors.insert(QStringLiteral("onSuccess"), QStringLiteral("#FFFFFF"));
+            colors.insert(QStringLiteral("successContainer"), QStringLiteral("#D1E8D5"));
+            colors.insert(QStringLiteral("onSuccessContainer"), QStringLiteral("#0C1F13"));
         }
     }
 
@@ -78,11 +78,11 @@ namespace {
             effectiveScheme = QStringLiteral("neutral");
         const MaterialScheme materialScheme(result.sourceHct, variantFromScheme(effectiveScheme), darkmode, contrastLevel);
         for (int i = 0; i < static_cast<int>(MaterialRole::Count); i++) {
-            const auto role                       = static_cast<MaterialRole>(i);
-            result.colors[materialRoleName(role)] = argbToHex(materialScheme.resolveHct(role).ToInt());
+            const auto role = static_cast<MaterialRole>(i);
+            result.colors.insert(materialRoleName(role), argbToHex(materialScheme.resolveHct(role).ToInt()));
         }
         addSuccessColors(result.colors, darkmode);
-        result.colors[QStringLiteral("sourceColor")] = argbToHex(argb);
+        result.colors.insert(QStringLiteral("sourceColor"), argbToHex(argb));
         fixSurfaceExtremes(result.colors);
         QString validationError;
         if (!validatePalette(result.colors, validationError)) {

@@ -198,7 +198,7 @@ namespace vast {
         QSqlQuery q{db};
         q.prepare(QStringLiteral("DELETE FROM clipboard_entries WHERE %1").arg(where));
         for (int i = 0; i < ids.size(); ++i)
-            q.bindValue(placeholders[i], ids[i]);
+            q.bindValue(placeholders.at(i), ids.at(i));
 
         qint64 removed = 0;
         if (q.exec()) {

@@ -33,8 +33,8 @@ namespace vast {
             }
 
             const std::string_view devName(name.data());
-            const bool             isMouse = devName.find("Mouse") != std::string_view::npos || devName.find("mouse") != std::string_view::npos ||
-                devName.find("Touchpad") != std::string_view::npos || devName.find("touchpad") != std::string_view::npos || devName.find("TrackPoint") != std::string_view::npos;
+            const bool             isMouse =
+                devName.contains("Mouse") || devName.contains("mouse") || devName.contains("Touchpad") || devName.contains("touchpad") || devName.contains("TrackPoint");
 
             if (isMouse) {
                 ::close(fd);
@@ -68,13 +68,13 @@ namespace vast {
                 continue;
             }
 
-            const bool hasCapsKey = keyBits[KEY_CAPSLOCK / 8] & (1 << (KEY_CAPSLOCK % 8));
+            const bool hasCapsKey = keyBits.at(KEY_CAPSLOCK / 8) & (1 << (KEY_CAPSLOCK % 8));
             if (!hasCapsKey) {
                 ::close(fd);
                 continue;
             }
 
-            const bool hasAlpha = keyBits[KEY_A / 8] & (1 << (KEY_A % 8));
+            const bool hasAlpha = keyBits.at(KEY_A / 8) & (1 << (KEY_A % 8));
             if (!hasAlpha) {
                 ::close(fd);
                 continue;

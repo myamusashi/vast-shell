@@ -46,7 +46,7 @@ namespace vast {
         for (const auto& dev : devices) {
             auto* notifier = new QSocketNotifier(dev.fd, QSocketNotifier::Read);
             connect(notifier, &QSocketNotifier::activated, this, [this, fd = dev.fd, hasLED = dev.hasLED] { onReadReady(fd, hasLED); });
-            mOpen.push_back({dev.fd, notifier});
+            mOpen.push_back(OpenDevice{.fd = dev.fd, .notifier = notifier});
             readInitialState(dev.fd, dev.hasLED);
         }
     }
@@ -57,8 +57,8 @@ namespace vast {
             if (::ioctl(fd, EVIOCGLED(ledBits.size()), ledBits.data()) < 0)
                 return;
 
-            mCapsLock = ledBits[LED_CAPSL / 8] & (1 << (LED_CAPSL % 8));
-            mNumLock  = ledBits[LED_NUML / 8] & (1 << (LED_NUML % 8));
+            mCapsLock = ledBits.at(LED_CAPSL / 8) & (1 << (LED_CAPSL % 8));
+            mNumLock  = ledBits.at(LED_NUML / 8) & (1 << (LED_NUML % 8));
         } else {
             int const ttyFd = ::open("/dev/tty", O_RDONLY);
             if (ttyFd >= 0) {

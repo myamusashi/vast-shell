@@ -29,20 +29,20 @@ namespace vast {
             return std::nullopt;
 
         const auto envelope = QJsonDocument::fromJson(f.readAll()).object();
-        const auto rawB64   = envelope[QStringLiteral("raw")].toString().toUtf8();
+        const auto rawB64   = envelope.value(QStringLiteral("raw")).toString().toUtf8();
         if (rawB64.isEmpty())
             return std::nullopt;
 
         return CachedLyrics{
             .rawJson      = QByteArray::fromBase64(rawB64),
-            .durationSecs = envelope[QStringLiteral("duration")].toDouble(),
+            .durationSecs = envelope.value(QStringLiteral("duration")).toDouble(),
         };
     }
 
     void LyricsCache::save(const QString& cacheKey, const QByteArray& rawJson, double durationSecs) {
         QJsonObject envelope;
-        envelope[QStringLiteral("raw")]      = QString::fromUtf8(rawJson.toBase64());
-        envelope[QStringLiteral("duration")] = durationSecs;
+        envelope.insert(QStringLiteral("raw"), QString::fromUtf8(rawJson.toBase64()));
+        envelope.insert(QStringLiteral("duration"), durationSecs);
 
         QFile f(path(cacheKey));
         if (f.open(QIODevice::WriteOnly))

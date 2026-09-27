@@ -73,9 +73,9 @@ namespace vast {
         [[nodiscard]] const ClipboardEntry& visibleAt(int row) const;
         [[nodiscard]] int                   visibleCount() const;
 
-        QList<ClipboardEntry>               mEntries;
-        std::vector<int>                    mFiltered;
-        QString                             mFilterQuery;
-        bool                                mFiltering{false};
+        QList<ClipboardEntry> mEntries;
+        std::vector<int>      mFiltered;
+        QString               mFilterQuery;
+        bool                  mFiltering{false};
     };
 }

@@ -121,7 +121,7 @@ namespace vast {
                 endMoveRows();
                 Q_EMIT dataChanged(index(insertIdx, 0), index(insertIdx, 0));
             } else {
-                mEntries[existing].timestamp = entry.timestamp;
+                std::next(mEntries.begin(), existing)->timestamp = entry.timestamp;
                 Q_EMIT dataChanged(index(existing, 0), index(existing, 0));
             }
             return;
@@ -186,7 +186,7 @@ namespace vast {
         if (idx < 0)
             return;
 
-        mEntries[idx].pinned = pinned;
+        std::next(mEntries.begin(), idx)->pinned = pinned;
 
         std::ranges::stable_sort(mEntries, [](const ClipboardEntry& a, const ClipboardEntry& b) {
             if (a.pinned != b.pinned)
@@ -218,7 +218,7 @@ namespace vast {
         if (existing < 0)
             return;
 
-        mEntries[existing].timestamp = QDateTime::currentMSecsSinceEpoch();
+        std::next(mEntries.begin(), existing)->timestamp = QDateTime::currentMSecsSinceEpoch();
 
         if (mFiltering) {
             beginResetModel();
@@ -240,7 +240,7 @@ namespace vast {
         const auto insertPos = std::ranges::find_if(mEntries, [&](const ClipboardEntry& e) {
             if (e.id == id)
                 return false;
-            const auto& item = mEntries[existing];
+            const auto& item = mEntries.at(existing);
             if (item.pinned && !e.pinned)
                 return true;
             if (!item.pinned && e.pinned)
@@ -335,15 +335,15 @@ namespace vast {
         out.reserve(mEntries.size());
         for (const auto& e : mEntries) {
             QVariantMap map;
-            map[QStringLiteral("entryId")]   = e.id;
-            map[QStringLiteral("type")]      = e.typeString();
-            map[QStringLiteral("preview")]   = makePreview(e);
-            map[QStringLiteral("timestamp")] = e.timestamp;
-            map[QStringLiteral("pinned")]    = e.pinned;
-            map[QStringLiteral("sourceApp")] = e.sourceApp;
-            map[QStringLiteral("mimeType")]  = e.mimeType;
-            map[QStringLiteral("sizeBytes")] = e.sizeBytes;
-            map[QStringLiteral("fileName")]  = QFileInfo(e.fileName).fileName();
+            map.insert(QStringLiteral("entryId"), e.id);
+            map.insert(QStringLiteral("type"), e.typeString());
+            map.insert(QStringLiteral("preview"), makePreview(e));
+            map.insert(QStringLiteral("timestamp"), e.timestamp);
+            map.insert(QStringLiteral("pinned"), e.pinned);
+            map.insert(QStringLiteral("sourceApp"), e.sourceApp);
+            map.insert(QStringLiteral("mimeType"), e.mimeType);
+            map.insert(QStringLiteral("sizeBytes"), e.sizeBytes);
+            map.insert(QStringLiteral("fileName"), QFileInfo(e.fileName).fileName());
             out.append(map);
         }
         return out;
@@ -356,7 +356,7 @@ namespace vast {
     }
 
     const ClipboardEntry& ClipboardModel::visibleAt(int row) const {
-        return mFiltering ? mEntries[mFiltered[static_cast<size_t>(row)]] : mEntries[row];
+        return mFiltering ? mEntries.at(mFiltered.at(static_cast<size_t>(row))) : mEntries.at(row);
     }
 
     int ClipboardModel::visibleCount() const {

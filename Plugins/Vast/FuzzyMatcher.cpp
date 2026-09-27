@@ -91,11 +91,11 @@ namespace vast {
         qsizetype last = 0;
 
         for (size_t i = 0; i < result.positions.size();) {
-            const int runStart = result.positions[i];
+            const int runStart = result.positions.at(i);
             int       runEnd   = runStart;
             ++i;
-            while (i < result.positions.size() && result.positions[i] == runEnd + 1) {
-                runEnd = result.positions[i];
+            while (i < result.positions.size() && result.positions.at(i) == runEnd + 1) {
+                runEnd = result.positions.at(i);
                 ++i;
             }
 
@@ -134,16 +134,16 @@ namespace vast {
         std::vector<size_t> prev(uShortLength + 1);
         std::vector<size_t> curr(uShortLength + 1);
         for (size_t i = 0; i <= uShortLength; ++i)
-            prev[i] = i;
+            prev.at(i) = i;
 
         for (size_t i = 1; i <= uLongerLength; ++i) {
-            curr[0]       = i;
-            size_t rowMin = curr[0];
+            curr.at(0)    = i;
+            size_t rowMin = curr.at(0);
 
             for (size_t j = 1; j <= uShortLength; ++j) {
-                const size_t cost = (longer[static_cast<qsizetype>(i - 1)] == shorter[static_cast<qsizetype>(j - 1)]) ? 0 : 1;
-                curr[j]           = std::min({prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost});
-                rowMin            = std::min(rowMin, curr[j]);
+                const size_t cost = (longer.at(static_cast<qsizetype>(i - 1)) == shorter.at(static_cast<qsizetype>(j - 1))) ? 0 : 1;
+                curr.at(j)        = std::min({prev.at(j) + 1, curr.at(j - 1) + 1, prev.at(j - 1) + cost});
+                rowMin            = std::min(rowMin, curr.at(j));
             }
 
             if (rowMin > uShortLength)
@@ -151,7 +151,7 @@ namespace vast {
 
             std::swap(prev, curr);
         }
-        return static_cast<qsizetype>(curr[uShortLength]);
+        return static_cast<qsizetype>(curr.at(uShortLength));
     }
 
     double FuzzyMatcher::distanceScore(const QString& a, const QString& b) {

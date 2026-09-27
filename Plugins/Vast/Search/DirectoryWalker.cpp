@@ -61,14 +61,14 @@ namespace vast {
                 const QString normRel = FuzzyMatcher::normalizeText(rel);
 
                 QVariantMap   entry;
-                entry[QStringLiteral("fileName")]         = fileName;
-                entry[QStringLiteral("filePath")]         = info.absoluteFilePath();
-                entry[QStringLiteral("relativePath")]     = rel;
-                entry[QStringLiteral("relativePathNorm")] = normRel;
-                entry[QStringLiteral("relativePathUtf8")] = normRel.toUtf8();
-                entry[QStringLiteral("fileSize")]         = isDir ? 0 : info.size();
-                entry[QStringLiteral("fileModified")]     = info.lastModified();
-                entry[QStringLiteral("fileIsDir")]        = isDir;
+                entry.insert(QStringLiteral("fileName"), fileName);
+                entry.insert(QStringLiteral("filePath"), info.absoluteFilePath());
+                entry.insert(QStringLiteral("relativePath"), rel);
+                entry.insert(QStringLiteral("relativePathNorm"), normRel);
+                entry.insert(QStringLiteral("relativePathUtf8"), normRel.toUtf8());
+                entry.insert(QStringLiteral("fileSize"), isDir ? 0 : info.size());
+                entry.insert(QStringLiteral("fileModified"), info.lastModified());
+                entry.insert(QStringLiteral("fileIsDir"), isDir);
                 out.append(entry);
                 --budget;
 

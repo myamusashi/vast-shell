@@ -84,9 +84,9 @@ namespace vast {
         qint64          newDuration     = 0;
         if (newLine >= 0 && newWord >= 0 && newLine < mWordLines.size()) {
             const auto wl    = mWordLines.at(newLine).toMap();
-            const auto words = wl[QStringLiteral("words")].toList();
+            const auto words = wl.value(QStringLiteral("words")).toList();
             if (newWord < words.size())
-                newDuration = words.at(newWord).toMap()[QStringLiteral("duration")].toLongLong();
+                newDuration = words.at(newWord).toMap().value(QStringLiteral("duration")).toLongLong();
         }
 
         if (newDuration != mCurWordDuration) {
@@ -144,9 +144,9 @@ namespace vast {
             qint64 newDuration = 0;
             if (mCurLine >= 0 && mCurWord >= 0 && mCurLine < mWordLines.size()) {
                 const auto wl    = mWordLines.at(mCurLine).toMap();
-                const auto words = wl[QStringLiteral("words")].toList();
+                const auto words = wl.value(QStringLiteral("words")).toList();
                 if (mCurWord < words.size())
-                    newDuration = words.at(mCurWord).toMap()[QStringLiteral("duration")].toLongLong();
+                    newDuration = words.at(mCurWord).toMap().value(QStringLiteral("duration")).toLongLong();
             }
             if (newDuration != mCurWordDuration) {
                 mCurWordDuration = newDuration;
@@ -161,10 +161,10 @@ namespace vast {
         mBoundaries.clear();
         for (int li = 0; li < mWordLines.size(); ++li) {
             const auto& wlEntry = mWordLines.at(li).toMap();
-            const auto  words   = wlEntry[QStringLiteral("words")].toList();
+            const auto  words   = wlEntry.value(QStringLiteral("words")).toList();
             for (int wi = 0; wi < words.size(); ++wi) {
                 const auto   word = words.at(wi).toMap();
-                const qint64 t    = word[QStringLiteral("time")].toLongLong();
+                const qint64 t    = word.value(QStringLiteral("time")).toLongLong();
                 if (t < 0)
                     continue;
                 mBoundaries.append({.timeMs = t, .lineIndex = li, .wordIndex = wi});
