@@ -55,7 +55,7 @@ vast-shell/
 │   │   │                      # Notification, CaptureScreenVideo, Wallpaper, Weather
 │   │   ├── States/            # GlobalStates (IPC handlers, OSD, panels),
 │   │   │                      # Workspaces
-│   │   └── Utils/             # DistroAscii, Dots, HighlightText, Icon, Log,
+│   │   └── Utils/             # Distro, Dots, Fonts, HighlightText, Icon, Log,
 │   │                          # MArea, Paths, ScreenSelection, Time, FormatTimeUtils, WeatherIcon
 │   │
 │   ├── Services/              # Audio, Battery, Brightness, CalendarMajorEvents,
