@@ -28,7 +28,7 @@ LazyLoader {
 
     readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
 
-    readonly property var orderedToplevels: {
+    readonly property list<HyprlandToplevel> orderedToplevels: {
         const list = [...(root.toplevels ?? [])];
         return list.sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells);
     }
@@ -76,6 +76,8 @@ LazyLoader {
 
         required property HyprlandToplevel toplevel
         required property int index
+        property Toplevel waylandHandle: toplevel?.wayland // qmllint disable
+        property var toplevelData: toplevel.lastIpcObject
 
         implicitWidth: root.cellSize
         implicitHeight: root.cellSize
@@ -93,8 +95,7 @@ LazyLoader {
             constraintSize: Qt.size(cell.width - Appearance.margin.small * 2, cell.height - Appearance.margin.small * 2)
             width: implicitWidth
             height: implicitHeight
-            visible: hasContent
-            captureSource: cell?.toplevel?.wayland ?? null
+            captureSource: cell.waylandHandle
             live: false
             opacity: 0.5
         }
@@ -123,7 +124,7 @@ LazyLoader {
             spacing: 2
 
             function iconForToplevel(toplevel: var): string {
-                const windowClass = toplevel?.lastIpcObject?.class;
+                const windowClass = toplevel?.class;
                 const entry = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;
                 return entry?.icon ? Quickshell.iconPath(entry.icon, "image-missing") : "";
             }
@@ -131,9 +132,9 @@ LazyLoader {
             IconImage {
                 Layout.alignment: Qt.AlignCenter
                 implicitSize: Appearance.fonts.size.large * 1.5
-                source: parent.iconForToplevel(cell?.toplevel)
+                source: parent.iconForToplevel(cell?.toplevelData)
                 visible: source !== ""
-                asynchronous: true
+                asynchronous: false
                 backer.cache: true
             }
 
@@ -142,7 +143,7 @@ LazyLoader {
                 Layout.preferredWidth: cell.width
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: cell?.toplevel?.title
+                text: cell?.toplevelData?.title
                 font.pixelSize: Appearance.fonts.size.small
                 wrapMode: Text.Wrap
                 color: Colours.m3Colors.m3OnSurface
@@ -258,7 +259,7 @@ LazyLoader {
                     model: root.shownCount
 
                     delegate: PreviewCell {
-                        toplevel: root.orderedToplevels[index]
+                        toplevel: root?.orderedToplevels[index]
                     }
                 }
             }

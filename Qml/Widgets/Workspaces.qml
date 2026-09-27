@@ -240,7 +240,7 @@ StyledRect {
                             implicitSize: Appearance.fonts.size.small
                             source: container.iconForToplevel(delegateRoot.toplevel)
                             visible: source !== ""
-                            asynchronous: true
+                            asynchronous: false
                             backer.cache: true
                         }
                     }
