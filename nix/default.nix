@@ -1,231 +1,229 @@
 {
-  lib,
-  makeWrapper,
-  stdenv,
-  gnugrep,
-  findutils,
-  gnused,
-  gawk,
-  weather-icons,
-  libnotify,
-  iw,
-  quickshell,
-  wl-screenrec-fork,
-  another-ripple,
-  m3Shapes,
-  util-linux,
-  wl-clipboard,
-  ffmpeg,
-  foot,
-  python314,
-  kdePackages,
-  polkit,
-  patchelf,
-  hyprland,
-  qt6,
-  callPackage,
-  cmake,
-  libvdpau-va-gl,
-}:
-let
-  app2unit = callPackage ./packages/app2unit.nix { };
-  material-symbols = callPackage ./packages/material-symbols.nix { };
-  vastPlugin = callPackage ./plugins/vastPlugin.nix { };
-  vastctl = callPackage ./packages/vastctl.nix { };
-  remove-bg = callPackage ./packages/remove-bg.nix { };
-  m3Shapes-pkgs = m3Shapes.packages.${stdenv.hostPlatform.system}.default;
-  another-ripple-pkg = another-ripple.packages.${stdenv.hostPlatform.system}.default;
+    lib,
+    makeWrapper,
+    stdenv,
+    gnugrep,
+    findutils,
+    gnused,
+    gawk,
+    weather-icons,
+    libnotify,
+    iw,
+    quickshell,
+    wl-screenrec-fork,
+    another-ripple,
+    m3Shapes,
+    util-linux,
+    wl-clipboard,
+    ffmpeg,
+    foot,
+    python314,
+    kdePackages,
+    polkit,
+    patchelf,
+    hyprland,
+    qt6,
+    callPackage,
+    cmake,
+    libvdpau-va-gl,
+}: let
+    app2unit = callPackage ./packages/app2unit.nix {};
+    material-symbols = callPackage ./packages/material-symbols.nix {};
+    vastPlugin = callPackage ./plugins/vastPlugin.nix {};
+    vastctl = callPackage ./packages/vastctl.nix {};
+    remove-bg = callPackage ./packages/remove-bg.nix {};
+    m3Shapes-pkgs = m3Shapes.packages.${stdenv.hostPlatform.system}.default;
+    another-ripple-pkg = another-ripple.packages.${stdenv.hostPlatform.system}.default;
 
-  runtimeDeps = [
-    findutils
-    gnugrep
-    gawk
-    gnused
-    util-linux
-    remove-bg
-    iw
-    libnotify
-    polkit
-    weather-icons
-    material-symbols
-    wl-clipboard
-    wl-screenrec-fork
-    ffmpeg
-    foot
-    hyprland
-    kdePackages.qtmultimedia
-    qt6.qt5compat
-    qt6.qtbase
-    qt6.qtgraphs
-  ];
-
-  vast-shell = stdenv.mkDerivation {
-    pname = "vast-shell";
-    version = "0.1.0";
-    src = ../.;
-
-    nativeBuildInputs = [
-      makeWrapper
-      patchelf
-      cmake
-      qt6.qttools
-      qt6.wrapQtAppsHook
+    runtimeDeps = [
+        findutils
+        gnugrep
+        gawk
+        gnused
+        util-linux
+        remove-bg
+        iw
+        libnotify
+        polkit
+        weather-icons
+        material-symbols
+        wl-clipboard
+        wl-screenrec-fork
+        ffmpeg
+        foot
+        hyprland
+        kdePackages.qtmultimedia
+        qt6.qt5compat
+        qt6.qtbase
+        qt6.qtgraphs
     ];
 
-    buildInputs = [
-      qt6.qtbase
-      qt6.qtdeclarative
-      qt6.qtmultimedia
-      qt6.qtgraphs
-      qt6.qt5compat
-      kdePackages.qtmultimedia
-    ];
+    vast-shell = stdenv.mkDerivation {
+        pname = "vast-shell";
+        version = "0.1.0";
+        src = ../.;
 
-    postPatch = ''
-      substituteInPlace Qml/shell.qml \
-        --replace-fail 'ShellRoot {' 'ShellRoot { settings.watchFiles: false'
-    '';
+        nativeBuildInputs = [
+            makeWrapper
+            patchelf
+            cmake
+            qt6.qttools
+            qt6.wrapQtAppsHook
+        ];
 
-    dontUseCmakeConfigure = true;
-    dontWrapQtApps = true;
+        buildInputs = [
+            qt6.qtbase
+            qt6.qtdeclarative
+            qt6.qtmultimedia
+            qt6.qtgraphs
+            qt6.qt5compat
+            kdePackages.qtmultimedia
+        ];
 
-    buildPhase = ''
-      runHook preBuild
+        postPatch = ''
+            substituteInPlace Qml/shell.qml \
+              --replace-fail 'ShellRoot {' 'ShellRoot { settings.watchFiles: false'
+        '';
 
-      echo "Compile Translations..."
-      if [ -d "translations" ]; then
-          ${qt6.qttools}/bin/lrelease translations/*.ts
-      fi
+        dontUseCmakeConfigure = true;
+        dontWrapQtApps = true;
 
-      echo "Cleaning old shaders..."
-      find Assets/shaders -name "*.qsb" -delete
+        buildPhase = ''
+            runHook preBuild
 
-      echo "Compile shaders..."
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/ImageTransition.vert.qsb \
-             Assets/shaders/ImageTransition.vert
+            echo "Compile Translations..."
+            if [ -d "translations" ]; then
+                ${qt6.qttools}/bin/lrelease translations/*.ts
+            fi
 
-      for name in fade wipeDown hexTile circleExpand dissolve splitHorizontal slideUp pixelate diagonalWipe boxExpand roll; do
-          echo "Compiling ''${name}.frag..."
-          ${qt6.qtshadertools}/bin/qsb \
-              --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-              -o Assets/shaders/transitions/''${name}.frag.qsb \
-                 Assets/shaders/transitions/''${name}.frag
-      done
+            echo "Cleaning old shaders..."
+            find Assets/shaders -name "*.qsb" -delete
 
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/borderProgress.vert.qsb \
-             Assets/shaders/borderProgress.vert
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/borderProgress.frag.qsb \
-             Assets/shaders/borderProgress.frag
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/wavy.vert.qsb \
-             Assets/shaders/wavy.vert
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/wavy.frag.qsb \
-             Assets/shaders/wavy.frag
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/waveForm.vert.qsb \
-             Assets/shaders/waveForm.vert
-      ${qt6.qtshadertools}/bin/qsb \
-          --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-          -o Assets/shaders/waveForm.frag.qsb \
-             Assets/shaders/waveForm.frag
+            echo "Compile shaders..."
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/ImageTransition.vert.qsb \
+                   Assets/shaders/ImageTransition.vert
 
-      runHook postBuild
-    '';
+            for name in fade wipeDown hexTile circleExpand dissolve splitHorizontal slideUp pixelate diagonalWipe boxExpand roll; do
+                echo "Compiling ''${name}.frag..."
+                ${qt6.qtshadertools}/bin/qsb \
+                    --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                    -o Assets/shaders/transitions/''${name}.frag.qsb \
+                       Assets/shaders/transitions/''${name}.frag
+            done
 
-    installPhase = ''
-      runHook preInstall
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/borderProgress.vert.qsb \
+                   Assets/shaders/borderProgress.vert
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/borderProgress.frag.qsb \
+                   Assets/shaders/borderProgress.frag
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/wavy.vert.qsb \
+                   Assets/shaders/wavy.vert
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/wavy.frag.qsb \
+                   Assets/shaders/wavy.frag
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/waveForm.vert.qsb \
+                   Assets/shaders/waveForm.vert
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/waveForm.frag.qsb \
+                   Assets/shaders/waveForm.frag
 
-      mkdir -p $out/share/quickshell
-      shopt -s extglob
-      cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
+            runHook postBuild
+        '';
 
-      install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
+        installPhase = ''
+            runHook preInstall
 
-      cp -r ${vastctl}/share/bash-completion $out/share/ 2>/dev/null || true
-      cp -r ${vastctl}/share/fish $out/share/ 2>/dev/null || true
-      cp -r ${vastctl}/share/zsh $out/share/ 2>/dev/null || true
-      cp -r ${vastctl}/share/nushell $out/share/ 2>/dev/null || true
+            mkdir -p $out/share/quickshell
+            shopt -s extglob
+            cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
 
-      makeWrapper ${vastctl}/bin/vastctl \
-        $out/bin/vastctl \
-          --set-default VAST_SHELL_DIRECTORY "$out/share/quickshell" \
-          --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
-          --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
-          --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [ app2unit ])} \
-          --suffix PATH : /run/current-system/sw/bin \
+            install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
 
-      makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
-        $out/bin/qs \
-          --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
-          --set QT_MEDIA_BACKEND ffmpeg \
-          --set VDPAU_DRIVER va_gl \
-          --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
-          --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
-          --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
-          --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${kdePackages.qtmultimedia}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix PATH : ${lib.makeBinPath runtimeDeps} \
-          --suffix PATH : /run/current-system/sw/bin \
+            cp -r ${vastctl}/share/bash-completion $out/share/ 2>/dev/null || true
+            cp -r ${vastctl}/share/fish $out/share/ 2>/dev/null || true
+            cp -r ${vastctl}/share/zsh $out/share/ 2>/dev/null || true
+            cp -r ${vastctl}/share/nushell $out/share/ 2>/dev/null || true
 
-      makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
-        $out/bin/quickshell \
-          --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
-          --set QT_MEDIA_BACKEND ffmpeg \
-          --set VDPAU_DRIVER va_gl \
-          --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
-          --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
-          --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
-          --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${kdePackages.qtmultimedia}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
-          --prefix PATH : ${lib.makeBinPath runtimeDeps} \
-          --suffix PATH : /run/current-system/sw/bin \
+            makeWrapper ${vastctl}/bin/vastctl \
+              $out/bin/vastctl \
+                --set-default VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
+                --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
+                --suffix PATH : /run/current-system/sw/bin \
 
-      mkdir -p $out/share/fonts/truetype
-      cp -r ${material-symbols}/share/fonts/truetype/* $out/share/fonts/truetype/
+            makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
+              $out/bin/qs \
+                --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+                --set QT_MEDIA_BACKEND ffmpeg \
+                --set VDPAU_DRIVER va_gl \
+                --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
+                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
+                --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${kdePackages.qtmultimedia}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix PATH : ${lib.makeBinPath runtimeDeps} \
+                --suffix PATH : /run/current-system/sw/bin \
 
-      mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
-      if [ -d "${m3Shapes-pkgs}/${qt6.qtbase.qtQmlPrefix}" ]; then
-        cp -r ${m3Shapes-pkgs}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
-      fi
-      if [ -d "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" ]; then
-        cp -r ${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
-      fi
-      if [ -d "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" ]; then
-        cp -r ${vastPlugin}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
-      fi
+            makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
+              $out/bin/quickshell \
+                --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+                --set QT_MEDIA_BACKEND ffmpeg \
+                --set VDPAU_DRIVER va_gl \
+                --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
+                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
+                --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${kdePackages.qtmultimedia}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
+                --prefix PATH : ${lib.makeBinPath runtimeDeps} \
+                --suffix PATH : /run/current-system/sw/bin \
 
-      runHook postInstall
-    '';
-  };
-in
-{
-  inherit
-    vastctl
-    vastPlugin
-    material-symbols
-    app2unit
-    remove-bg
-    runtimeDeps
-    ;
-  default = vast-shell;
+            mkdir -p $out/share/fonts/truetype
+            cp -r ${material-symbols}/share/fonts/truetype/* $out/share/fonts/truetype/
+
+            mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
+            if [ -d "${m3Shapes-pkgs}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${m3Shapes-pkgs}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+            if [ -d "${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${another-ripple-pkg}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+            if [ -d "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" ]; then
+              cp -r ${vastPlugin}/${qt6.qtbase.qtQmlPrefix}/* $out/${qt6.qtbase.qtQmlPrefix}
+            fi
+
+            runHook postInstall
+        '';
+    };
+in {
+    inherit
+        vastctl
+        vastPlugin
+        material-symbols
+        app2unit
+        remove-bg
+        runtimeDeps
+        ;
+    default = vast-shell;
 }
