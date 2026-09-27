@@ -25,6 +25,33 @@ ColumnLayout {
     property alias searchField: searchBar.searchField
     property alias entryList: entryGrid.entryList
 
+    readonly property Item defaultFocusItem: Configs.clipboard.enableVimKeybinds ? root : searchBar.searchField
+
+    function focusDefault(): void {
+        if (defaultFocusItem)
+            defaultFocusItem.forceActiveFocus();
+    }
+
+    function restoreFocus(): void {
+        focusRestore.attempts = 0;
+        focusRestore.restart();
+    }
+
+    Timer {
+        id: focusRestore
+
+        property int attempts: 0
+
+        interval: 30
+        repeat: true
+
+        onTriggered: {
+            root.focusDefault();
+            if (root.defaultFocusItem.activeFocus || ++focusRestore.attempts >= 10)
+                focusRestore.running = false;
+        }
+    }
+
     spacing: 0
 
     function handleKey(event: var): void {
@@ -112,18 +139,10 @@ ColumnLayout {
             break;
         case Qt.Key_D:
             if (vim) {
-                if (uiState.visualActive) {
-                    const ids = entryGrid.entryList.visualSelectedIds();
-                    const removed = ClipboardManager.removeMany(ids);
-                    if (removed > 0) {
-                        const n = removed === 1 ? qsTr("entry") : qsTr("entries");
-                        ToastService.show(qsTr("Deleted %1 %2").arg(removed).arg(n), qsTr("Clipboard"), "edit-delete");
-                    }
-                    uiState.visualActive = false;
-                    entryGrid.entryList.currentIndex = Math.min(entryGrid.entryList.currentIndex, entryGrid.entryList.count - 1);
-                } else if (currentId >= 0 && item && !item.pinned) { // qmllint disable
-                    ClipboardManager.remove(currentId);
-                }
+                if (uiState.visualActive)
+                    uiState.requestDelete(entryGrid.entryList.visualSelectedIds());
+                else if (currentId >= 0 && item && !item.pinned) // qmllint disable
+                    uiState.requestDelete([currentId]);
                 event.accepted = true;
             }
             break;
@@ -167,7 +186,7 @@ ColumnLayout {
         case Qt.Key_Delete:
             if (!vim) {
                 if (currentId >= 0 && item && !item.pinned) // qmllint disable
-                    ClipboardManager.remove(currentId);
+                    uiState.requestDelete([currentId]);
                 event.accepted = true;
             }
             break;
@@ -177,6 +196,27 @@ ColumnLayout {
             break;
         default:
             break;
+        }
+    }
+
+    Connections {
+        target: root.uiState
+
+        function onDeleteConfirmed(ids: var): void {
+            const removed = ClipboardManager.removeMany(ids);
+            if (removed > 0) {
+                const n = removed === 1 ? qsTr("entry") : qsTr("entries");
+                ToastService.show(qsTr("Deleted %1 %2").arg(removed).arg(n), qsTr("Clipboard"), "edit-delete");
+            }
+
+            root.uiState.visualActive = false;
+            entryGrid.entryList.currentIndex = Math.min(entryGrid.entryList.currentIndex, entryGrid.entryList.count - 1);
+        }
+
+        function onIsDeletePendingChanged() {
+            if (root.uiState.isDeletePending || !GlobalStates.isClipboardOpen)
+                return;
+            root.restoreFocus();
         }
     }
 

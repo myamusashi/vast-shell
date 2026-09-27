@@ -56,14 +56,40 @@ Singleton {
         property bool previewFocused: false
         property bool visualActive: false
         property int visualAnchor: 0
+
+        property var pendingDeleteIds: []
+        readonly property bool isDeletePending: pendingDeleteIds.length > 0
+
+        signal deleteConfirmed(var ids)
+
+        function requestDelete(ids: var): void {
+            if (ids.length === 0)
+                return;
+            pendingDeleteIds = ids;
+        }
+
+        function cancelDelete(): void {
+            pendingDeleteIds = [];
+        }
+
+        function confirmDelete(): void {
+            const ids = pendingDeleteIds;
+            pendingDeleteIds = [];
+            if (ids.length > 0)
+                deleteConfirmed(ids);
+        }
     }
 
     Connections {
         target: GlobalStates
 
         function onIsClipboardOpenChanged() {
-            if (!GlobalStates.isClipboardOpen)
-                uiState.visualActive = false;
+            if (GlobalStates.isClipboardOpen)
+                return;
+
+            uiState.visualActive = false;
+            ClipboardManager.model.setFilter("");
+            uiState.cancelDelete();
         }
     }
 

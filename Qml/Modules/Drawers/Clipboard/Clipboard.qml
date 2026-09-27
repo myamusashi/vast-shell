@@ -7,6 +7,7 @@ import qs.Core.Configs
 import qs.Core.States
 import qs.Services
 import qs.Components.Base
+import qs.Components.Dialog
 
 WrapperRectangle {
     id: root
@@ -34,7 +35,7 @@ WrapperRectangle {
         asynchronous: true
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen
-            defaultFocus: Configs.clipboard.enableVimKeybinds ? content : content.searchField
+            defaultFocus: content.defaultFocusItem
             anchors.fill: parent
 
             Content {
@@ -44,5 +45,23 @@ WrapperRectangle {
                 uiState: ClipboardServices.uiState
             }
         }
+    }
+
+    ConfirmDialog {
+        id: deleteConfirmation
+
+        title: qsTr("Clipboard")
+        bodyText: {
+            const count = ClipboardServices.uiState.pendingDeleteIds.length;
+            if (count <= 1)
+                return qsTr("Delete this entry? This cannot be undone.");
+            return qsTr("Delete %1 entries? This cannot be undone.").arg(count);
+        }
+        confirmText: qsTr("Delete")
+        cancelText: qsTr("Cancel")
+        active: ClipboardServices.uiState.isDeletePending
+
+        onAccepted: ClipboardServices.uiState.confirmDelete()
+        onRejected: ClipboardServices.uiState.cancelDelete()
     }
 }
