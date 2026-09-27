@@ -96,17 +96,16 @@ StyledRect {
             }
 
             // Caelestia credit
-            // Occupancy is derived from toplevel IPC payloads, NOT the workspace model
             readonly property var occupied: {
                 const acc = {};
-                for (const ws of Object.keys(root.toplevelsByWorkspace))
-                    acc[ws] = true;
+                for (const [ws, tls] of Object.entries(root.toplevelsByWorkspace))
+                    acc[ws] = tls.find(tl => tl.activated) ?? tls[0];
                 return acc;
             }
             property int focusedWorkspace: Hypr.activeWsId
 
-            readonly property string focusedToplevelIcon: {
-                const windowClass = Hypr.activeToplevel?.lastIpcObject.class;
+            function iconForToplevel(toplevel: var): string {
+                const windowClass = toplevel?.lastIpcObject?.class;
                 const entry = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;
                 return entry?.icon ? Quickshell.iconPath(entry.icon, "image-missing") : "";
             }
@@ -131,8 +130,9 @@ StyledRect {
 
                     required property int index
                     property int workspaceId: index + 1
+                    property var toplevel: container.occupied[workspaceId] ?? null
                     property bool isActive: container.focusedWorkspace === workspaceId
-                    property bool isOccupied: container.occupied[workspaceId] === true
+                    property bool isOccupied: delegateRoot.toplevel !== null
                     property bool isEmpty: !isOccupied && !isActive
 
                     implicitHeight: parent.height
@@ -238,18 +238,10 @@ StyledRect {
                         IconImage {
                             anchors.centerIn: parent
                             implicitSize: Appearance.fonts.size.small
-                            source: container.focusedToplevelIcon
+                            source: container.iconForToplevel(delegateRoot.toplevel)
                             visible: source !== ""
-                            opacity: delegateRoot.isActive ? 1.0 : 0.0
                             asynchronous: true
                             backer.cache: true
-
-                            Behavior on opacity {
-                                NAnim {
-                                    duration: container.transitionDuration
-                                    easing.bezierCurve: container.transitionCurve
-                                }
-                            }
                         }
                     }
                 }
