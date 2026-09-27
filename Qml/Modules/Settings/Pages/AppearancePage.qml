@@ -158,6 +158,16 @@ Item {
                     }
 
                     SettingRow {
+                        label: qsTr("Nerd Font:")
+                        description: qsTr("Nerd font used for icon or font text.")
+                        FontPicker {
+                            Layout.preferredWidth: 250
+                            searchField: Appearance.fonts.family.nerd
+                            onConfigChanged: value => Appearance.fonts.family.nerd = value
+                        }
+                    }
+
+                    SettingRow {
                         label: qsTr("Material Icon Font:")
                         description: qsTr("Icon font used for Material Symbols throughout the shell.")
                         FontPicker {
@@ -329,6 +339,11 @@ Item {
         property var filteredModel: {
             const query = searchText.toLowerCase();
             const result = [];
+            if (!query)
+                result.push({
+                    name: "",
+                    index: -1
+                });
             for (let i = 0; i < Fontlist.fontListModel.count; i++) {
                 const item = Fontlist.fontListModel.get(i);
                 if (!query || item.name.toLowerCase().includes(query))
@@ -418,7 +433,7 @@ Item {
                     }
 
                     contentItem: StyledText {
-                        text: fontDelegate.modelData.name
+                        text: fontDelegate.modelData.name || qsTr("System default")
                         font.family: fontDelegate.itemActive || fontDelegate.highlighted ? fontDelegate.modelData.name : ""
                         font.pixelSize: Appearance.fonts.size.normal
                         color: Colours.m3Colors.m3OnSurface

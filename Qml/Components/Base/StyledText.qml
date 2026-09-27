@@ -1,12 +1,12 @@
 import QtQuick
 
-import qs.Core.Configs
+import qs.Core.Utils
 
 Text {
     id: root
 
     font {
-        family: Appearance.fonts.family.sans
+        family: Fonts.sans
         hintingPreference: Font.PreferFullHinting
         letterSpacing: 0
     }

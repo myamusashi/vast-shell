@@ -199,7 +199,7 @@ Item {
                                 return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
                             }
                             color: Colours.m3Colors.m3OnSurface
-                            font.family: Appearance.fonts.family.mono
+                            font.family: Fonts.mono
                             font.bold: true
                             font.pixelSize: Appearance.fonts.size.normal
                         }

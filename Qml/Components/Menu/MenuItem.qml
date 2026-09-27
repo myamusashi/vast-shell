@@ -53,7 +53,7 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             text: root.label
             color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
-            font.family: Appearance.fonts.family.sans
+            font.family: Fonts.sans
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: Font.Medium
             font.letterSpacing: 0.15
@@ -75,7 +75,7 @@ Item {
             visible: root.trailingText !== ""
             text: root.trailingText
             color: Colours.m3Colors.m3OnSurfaceVariant
-            font.family: Appearance.fonts.family.sans
+            font.family: Fonts.sans
             font.pixelSize: Appearance.fonts.size.normal
             verticalAlignment: Text.AlignVCenter
             Layout.alignment: Qt.AlignVCenter

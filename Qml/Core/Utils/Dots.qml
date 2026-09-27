@@ -4,6 +4,7 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.Utils
 
 RowLayout {
     id: root
@@ -41,7 +42,7 @@ RowLayout {
         StyledText {
             id: text
 
-            font.family: Appearance.fonts.family.mono
+            font.family: Fonts.mono
             font.pixelSize: Appearance.fonts.size.small
         }
     }

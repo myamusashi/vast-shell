@@ -342,7 +342,7 @@ Item {
                     wrapMode: TextEdit.Wrap
 
                     font.pixelSize: Appearance.fonts.size.medium
-                    font.family: entryDetails.isHtml ? Appearance.fonts.family.sans : Appearance.fonts.family.mono
+                    font.family: entryDetails.isHtml ? Fonts.sans : Fonts.mono
                     color: Colours.m3Colors.m3OnSurface
 
                     selectionColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.35)

@@ -1,17 +1,17 @@
 import QtQuick
 
-import qs.Core.Configs
+import qs.Core.Utils
 
 Text {
     id: root
 
     enum IconType {
         Material,
+        Nerd,
         Weather
     }
 
     property alias icon: root.text
-    readonly property var fontFamilies: [Appearance.fonts.family.material, "Weather Icons"]
     property int type: Icon.Material
 
     antialiasing: true
@@ -21,7 +21,7 @@ Text {
     verticalAlignment: Text.AlignVCenter
 
     font {
-        family: root.type === Icon.Weather ? "Weather Icons" : Appearance.fonts.family.material
+        family: root.type === Icon.Nerd ? Fonts.nerd : root.type === Icon.Weather ? "Weather Icons" : Fonts.material
         hintingPreference: Font.PreferFullHinting
         variableAxes: ({
                 "opsz": 24,

@@ -13,8 +13,9 @@ JsonObject {
 
     component FontFamily: JsonObject {
         property string material: "Material Symbols Rounded"
-        property string mono: "Hack"
-        property string sans: "Google Sans Flex"
+        property string mono: "monospace"
+        property string nerd: ""
+        property string sans: "sans-serif"
     }
 
     component FontSize: JsonObject {

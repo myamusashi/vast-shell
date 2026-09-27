@@ -70,7 +70,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: root.modelData.text
             color: Colours.m3Colors.m3OnSurface
-            font.family: Appearance.fonts.family.sans
+            font.family: Fonts.sans
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: Font.Medium
             elide: Text.ElideRight
