@@ -211,9 +211,9 @@ QColor ColorUtils::hctToRgbInternal(qreal hue, qreal chroma, qreal tone) {
 
     auto           fromLabF = [](qreal f) -> qreal { return f > 0.206897 ? std::pow(f, 3) : (f - 16.0 / 116.0) / 7.787; };
 
-    qreal           x = fromLabF(fx);
-    qreal           y = fromLabF(fy);
-    qreal           z = fromLabF(fz);
+    qreal          x = fromLabF(fx);
+    const qreal    y = fromLabF(fy);
+    qreal          z = fromLabF(fz);
 
     x *= 0.95047;
     z *= 1.08883;
