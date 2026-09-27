@@ -236,12 +236,15 @@ Assets/shell/qmllint_qs.sh
 `qmllint_qs.sh` needs a `qs` QML module tree to resolve `qs.*` imports. With a shell running it reads the gitignored `Qml/.qmlls.ini` that quickshell writes at startup. Headless, generate the same tree yourself and point the import paths at the flake's module list:
 
 ```sh
+SYSTEM=$(nix eval --impure --raw --expr builtins.currentSystem)
 QS_ROOT=$(Assets/shell/gen-qs-modules.sh Qml "$(mktemp -d)")
-export QMLLINT_IMPORT_PATHS="${QS_ROOT}:$(nix eval --raw .#qmllintImportPaths.$(nix eval --impure --raw --expr builtins.currentSystem))"
-nix build --no-link .#vastPlugin
-nix-store --realise $(tr ':' ' ' <<< "$QMLLINT_IMPORT_PATHS")
+export QMLLINT_IMPORT_PATHS="${QS_ROOT}:$(nix eval --raw ".#qmllintImportPaths.${SYSTEM}")"
+nix build --no-link ".#qmllintModules.${SYSTEM}"   # fetches the module roots
 Assets/shell/qmllint_qs.sh
 ```
+
+> [!NOTE]
+> `nix-store --realise` does **not** work here. `nix eval` on a string only yields paths and never registers the derivations, so realising them by hand reports *no substituter that can build it* even though every root is in the Cachix pushed by `ci-cachix.yml`. `nix build .#qmllintModules` instantiates the derivations and lets Nix substitute them.
 
 > [!NOTE]
 > `gen-qs-modules.sh` reproduces quickshell's own vfs mirror — a `module qs.<path>` qmldir per directory, `singleton` emitted for `pragma Singleton` files, sources symlinked in. Its output matches quickshell's byte for byte.

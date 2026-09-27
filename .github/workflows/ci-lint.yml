@@ -56,30 +56,33 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
 
-    - name: qmllint
+    - name: Lint shell.qml and its imports
       run: |
-        SYSTEM=$(nix eval --impure --raw --expr builtins.currentSystem)
-        QS_ROOT=$(Assets/shell/gen-qs-modules.sh Qml "${RUNNER_TEMP}/qs-modules")
-        IMPORTS=$(nix eval --raw ".#qmllintImportPaths.${SYSTEM}")
-        export QMLLINT_IMPORT_PATHS="${QS_ROOT}:${IMPORTS}"
+        entry=shell.qml
+        echo "::group::${entry} closure"
+        Assets/shell/qml-entry-files.sh "${entry}" | tee /tmp/entry-files.txt | head -5
+        echo "... $(wc -l < /tmp/entry-files.txt) files"
+        echo "::endgroup::"
+        .github/scripts/qmllint-entry.sh "${entry}" /tmp/entry-files.txt
 
-        echo "module roots: $(tr ':' '\n' <<< "${QMLLINT_IMPORT_PATHS}" | wc -l)"
+    - name: Lint greeter.qml and its imports
+      run: |
+        entry=greeter.qml
+        echo "::group::${entry} closure"
+        Assets/shell/qml-entry-files.sh "${entry}" | tee /tmp/entry-files.txt | head -5
+        echo "... $(wc -l < /tmp/entry-files.txt) files"
+        echo "::endgroup::"
+        .github/scripts/qmllint-entry.sh "${entry}" /tmp/entry-files.txt
 
-        nix build --no-link --print-out-paths .#vastPlugin >/dev/null
-        nix-store --realise $(tr ':' ' ' <<< "${IMPORTS}") >/dev/null
-
-        missing=0
-        while IFS= read -r path; do
-          if [ ! -d "${path}" ]; then
-            echo "::error::module root missing: ${path}"
-            missing=1
-          fi
-        done < <(tr ':' '\n' <<< "${QMLLINT_IMPORT_PATHS}")
-        [ "${missing}" -eq 0 ]
-
-        nix shell --impure --expr '
-          let
-            flake = builtins.getFlake (toString ./.);
-            pkgs = import flake.inputs.nixpkgs { system = builtins.currentSystem; };
-          in [ pkgs.qt6.qttools ]
-        ' -c Assets/shell/qmllint_qs.sh
+    - name: Verify coverage
+      run: |
+        all=$(find Qml -name '*.qml' | sed 's|^Qml/||' | sort)
+        covered=$(cat <(Assets/shell/qml-entry-files.sh shell.qml) \
+                      <(Assets/shell/qml-entry-files.sh greeter.qml) | sort -u)
+        missing=$(comm -23 <(echo "${all}") <(echo "${covered}"))
+        if [ -n "${missing}" ]; then
+          echo "::error::these files are unreachable from both entry points and are not linted:"
+          echo "${missing}"
+          exit 1
+        fi
+        echo "all $(echo "${all}" | wc -l) QML files are covered by an entry point"

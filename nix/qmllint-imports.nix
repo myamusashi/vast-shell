@@ -1,10 +1,3 @@
-# Quickshell normally hands these to tooling through the .qmlls.ini it writes
-# into its per-shell vfs build dir at runtime. That file only exists while a
-# shell is running, so CI evaluates this expression instead and the workflow
-# feeds the result to qmllint via -I flags.
-#
-# The paths mirror the QML2_IMPORT_PATH the `qs` wrapper sets in
-# nix/default.nix. Keep the two in sync.
 {
     pkgs,
     quickshell,
@@ -13,15 +6,28 @@
     anotherRipple,
 }: let
     prefix = pkgs.qt6.qtbase.qtQmlPrefix;
-in
-    builtins.concatStringsSep ":" [
-        "${quickshell}/${prefix}"
-        "${vastPlugin}/${prefix}"
-        "${m3Shapes}/${prefix}"
-        "${anotherRipple}/${prefix}"
-        "${pkgs.kdePackages.qtmultimedia}/${prefix}"
-        "${pkgs.qt6.qt5compat}/${prefix}"
-        "${pkgs.qt6.qtgraphs}/${prefix}"
-        "${pkgs.qt6.qtdeclarative}/${prefix}"
-        "${pkgs.qt6.qtwayland}/${prefix}"
-    ]
+
+    packages = [
+        quickshell
+        vastPlugin
+        m3Shapes
+        anotherRipple
+        pkgs.kdePackages.qtmultimedia
+        pkgs.qt6.qt5compat
+        pkgs.qt6.qtgraphs
+        pkgs.qt6.qtdeclarative
+        pkgs.qt6.qtwayland
+    ];
+
+    roots = map (pkg: "${pkg}/${prefix}") packages;
+in {
+    inherit roots;
+    searchPath = builtins.concatStringsSep ":" roots;
+
+    derivation = pkgs.runCommand "vast-shell-qmllint-modules" {
+        nativeBuildInputs = packages;
+    } ''
+        mkdir -p "$out"
+        echo "fetched ${toString (builtins.length roots)} qmllint module roots"
+    '';
+}

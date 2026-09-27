@@ -1,15 +1,4 @@
 #!/usr/bin/env bash
-#
-# CI has no running shell and therefore no .qmlls.ini. Set
-# QMLLINT_IMPORT_PATHS to a colon-separated list of module roots to bypass
-# .qmlls.ini entirely; the list must include a `qs` root, which
-# Assets/shell/gen-qs-modules.sh produces:
-#
-#   QS_ROOT=$(Assets/shell/gen-qs-modules.sh Qml "$(mktemp -d)")
-#   export QMLLINT_IMPORT_PATHS="${QS_ROOT}:$(nix eval --raw .#qmllintImportPaths.x86_64-linux)"
-#   Assets/shell/qmllint_qs.sh
-#
-# With no file arguments the whole Qml/ tree is linted.
 
 set -e
 
@@ -43,7 +32,8 @@ else
 fi
 
 if [ "$#" -eq 0 ]; then
-    mapfile -t -O "$#" all_qml < <(find "${ROOT}/Qml" -name '*.qml' | sort)
+    cd "${ROOT}" || exit 1
+    mapfile -t all_qml < <(find Qml -name '*.qml' | sort)
     set -- "${all_qml[@]}"
 fi
 

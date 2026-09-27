@@ -50,19 +50,38 @@
             inherit self;
         };
 
-        qmllintImportPaths = forAllSystems (system: let
+        # qmllint module search paths plus a buildable stand-in for them, so
+        # CI can fetch the module roots without knowing anything about which
+        # packages they come from. See nix/qmllint-imports.nix.
+        qmllintModules = forAllSystems (system: let
             pkgs = pkgsFor system;
             vastShell = pkgs.callPackage ./nix/default.nix {
                 inherit quickshell wl-screenrec-fork another-ripple m3Shapes;
             };
-        in
-            import ./nix/qmllint-imports.nix {
+            qmlImports = import ./nix/qmllint-imports.nix {
                 inherit pkgs;
                 quickshell = quickshell.packages.${system}.default;
                 vastPlugin = vastShell.vastPlugin;
                 m3Shapes = m3Shapes.packages.${system}.default;
                 anotherRipple = another-ripple.packages.${system}.default;
-            });
+            };
+        in
+            qmlImports.derivation);
+
+        qmllintImportPaths = forAllSystems (system: let
+            pkgs = pkgsFor system;
+            vastShell = pkgs.callPackage ./nix/default.nix {
+                inherit quickshell wl-screenrec-fork another-ripple m3Shapes;
+            };
+            qmlImports = import ./nix/qmllint-imports.nix {
+                inherit pkgs;
+                quickshell = quickshell.packages.${system}.default;
+                vastPlugin = vastShell.vastPlugin;
+                m3Shapes = m3Shapes.packages.${system}.default;
+                anotherRipple = another-ripple.packages.${system}.default;
+            };
+        in
+            qmlImports.searchPath);
 
         devShells = forAllSystems (system: let
             pkgs = pkgsFor system;
