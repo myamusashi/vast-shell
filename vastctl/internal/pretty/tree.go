@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"unicode/utf8"
 )
 
 // Tree renders JSON input as a directory-tree style listing.
@@ -61,7 +62,12 @@ func treeObject(raw string) (string, error) {
 		sb.WriteString(conn)
 		sb.WriteString(k)
 		sb.WriteString(": ")
-		sb.WriteString(val)
+		// A pretty-printed value spans lines; the ones after the first
+		// have to be pushed to the value's own column or they fall
+		// back to column zero and land left of the field. The column
+		// is counted in runes, not bytes: the connector glyphs are
+		// three bytes each in UTF-8, so len() would overshoot by six.
+		sb.WriteString(alignMultiline(val, utf8.RuneCountInString(conn)+utf8.RuneCountInString(k)+2))
 		sb.WriteByte('\n')
 	}
 	return sb.String(), nil
@@ -104,18 +110,43 @@ func printItem(sb *strings.Builder, prefix string, item map[string]json.RawMessa
 		sb.WriteString(fieldConn)
 		sb.WriteString(k)
 		sb.WriteString(": ")
-		sb.WriteString(val)
+		sb.WriteString(alignMultiline(val,
+			utf8.RuneCountInString(prefix)+utf8.RuneCountInString(subIndent)+
+				utf8.RuneCountInString(fieldConn)+utf8.RuneCountInString(k)+2))
 		sb.WriteByte('\n')
 	}
 }
 
+// alignMultiline indents every line of a value after the first by col
+// spaces. A single-line value is returned untouched, which is the
+// overwhelmingly common case and must stay allocation-free.
+func alignMultiline(val string, col int) string {
+	if !strings.Contains(val, "\n") {
+		return val
+	}
+	lines := strings.Split(val, "\n")
+	pad := strings.Repeat(" ", col)
+	for i := 1; i < len(lines); i++ {
+		lines[i] = pad + lines[i]
+	}
+	return strings.Join(lines, "\n")
+}
+
 func firstLabel(item map[string]json.RawMessage) string {
 	for _, k := range []string{"name", "identity", "readable", "description"} {
-		if v, ok := item[k]; ok {
-			s := formatValue(v)
-			if s != "" && s != `""` {
-				return s
-			}
+		raw, ok := item[k]
+		if !ok {
+			continue
+		}
+		// A blank label must not shadow a later key. formatValue renders
+		// "" as the placeholder <empty>, so the emptiness has to be
+		// decided on the raw value — the formatted one never comes back
+		// empty, which made this check below dead code.
+		if s, isString := unquoteJSON(raw); isString && s == "" {
+			continue
+		}
+		if s := formatValue(raw); s != "" && s != `""` {
+			return s
 		}
 	}
 	return ""

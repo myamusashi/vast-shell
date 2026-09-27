@@ -13,7 +13,10 @@ import (
 	"time"
 )
 
-const LogFilePath = "/tmp/vast-shell.log"
+// LogFilePath is where the daemon's stdout and stderr are captured.
+// It is a var rather than a const only so tests can point the daemon
+// log at a scratch file; nothing in production reassigns it.
+var LogFilePath = "/tmp/vast-shell.log"
 
 const bootTimeout = 45 * time.Second
 const bootPoll = 250 * time.Millisecond

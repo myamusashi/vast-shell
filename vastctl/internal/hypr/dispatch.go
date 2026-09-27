@@ -1,6 +1,7 @@
 package hypr
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os/exec"
@@ -27,8 +28,18 @@ type Shortcut struct {
 // ListShortcuts returns all quickshell global shortcut binds from the
 // live Hyprland bind table, sourced via `hyprctl globalshortcuts -j`.
 func ListShortcuts() ([]Shortcut, error) {
-	output, err := exec.Command("hyprctl", "globalshortcuts", "-j").Output()
-	if err != nil {
+	// stdout and stderr are both captured by hand. Output() takes
+	// stdout only, and hyprctl reports "no instance" and friends on
+	// stderr, so a failure there would degrade to a bare "exit status
+	// 1" that names neither the command nor the reason.
+	var stdout, stderr bytes.Buffer
+	cmd := exec.Command("hyprctl", "globalshortcuts", "-j")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		if detail := strings.TrimSpace(stderr.String()); detail != "" {
+			return nil, fmt.Errorf("hyprctl globalshortcuts: %s", detail)
+		}
 		return nil, fmt.Errorf("hyprctl globalshortcuts: %w", err)
 	}
 
@@ -37,10 +48,9 @@ func ListShortcuts() ([]Shortcut, error) {
 		Description string `json:"description"`
 	}
 
-	if err := json.Unmarshal(output, &raw); err != nil {
+	if err := json.Unmarshal(stdout.Bytes(), &raw); err != nil {
 		return nil, fmt.Errorf("hyprctl globalshortcuts json: %w", err)
 	}
-
 	var shortcuts []Shortcut
 	for _, s := range raw {
 		if !strings.HasPrefix(s.Name, "quickshell:") {

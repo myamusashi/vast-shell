@@ -71,11 +71,11 @@ func percentSetCmd(use, short, long string, run func(cmd *cobra.Command, pct per
 		Long:               long,
 		DisableFlagParsing: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			args, handled, err := rawPositional(cmd, args)
+			positional, handled, err := rawPositional(cmd, args, 1)
 			if err != nil || handled {
 				return err
 			}
-			pct, err := parsePercent(args[0])
+			pct, err := parsePercent(positional[0])
 			if err != nil {
 				return err
 			}
@@ -86,8 +86,8 @@ func percentSetCmd(use, short, long string, run func(cmd *cobra.Command, pct per
 
 // rawPositional strips help and global flags from the raw args of a
 // DisableFlagParsing command and validates the positional count.
-func rawPositional(cmd *cobra.Command, args []string) ([]string, bool, error) {
-	positional := make([]string, 0, 1)
+func rawPositional(cmd *cobra.Command, args []string, want int) ([]string, bool, error) {
+	positional := make([]string, 0, want)
 	for _, arg := range args {
 		switch arg {
 		case "-h", "--help":
@@ -98,10 +98,17 @@ func rawPositional(cmd *cobra.Command, args []string) ([]string, bool, error) {
 			positional = append(positional, arg)
 		}
 	}
-	if len(positional) != 1 {
-		return nil, false, fmt.Errorf("accepts 1 arg, received %d", len(positional))
+	if len(positional) != want {
+		return nil, false, fmt.Errorf("accepts %d %s, received %d", want, plural(want), len(positional))
 	}
 	return positional, false, nil
+}
+
+func plural(n int) string {
+	if n == 1 {
+		return "arg"
+	}
+	return "args"
 }
 
 func actionOrDefault(args []string, defaultAction string) string {

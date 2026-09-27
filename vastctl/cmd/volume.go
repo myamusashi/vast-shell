@@ -77,16 +77,27 @@ var volumeAppListCmd = &cobra.Command{
 var volumeAppSetCmd = &cobra.Command{
 	Use:   "set <node-id> [+|-]<percent>[%]",
 	Short: "Set volume for an app by PipeWire node ID, or adjust it relatively",
-	Args:  cobra.ExactArgs(2),
+	Long:  "Set an app's volume to an absolute value (e.g. 50%), or adjust it relatively with +10% / -10%.",
+	// Flag parsing is off for the same reason percentSetCmd turns it
+	// off: with it on, pflag reads the leading '-' of "-10%" as a flag
+	// and the percent never reaches parsePercent. The usage string and
+	// the carapace completion both advertise the relative form, so it
+	// has to actually be accepted.
+	DisableFlagParsing: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		pct, err := parsePercent(args[1])
+		positional, handled, err := rawPositional(cmd, args, 2)
+		if err != nil || handled {
+			return err
+		}
+		nodeID := positional[0]
+		pct, err := parsePercent(positional[1])
 		if err != nil {
 			return err
 		}
 		if pct.relative {
-			return ipcCallVoid("volume", "appChange", args[0], strconv.Itoa(pct.value))
+			return ipcCallVoid("volume", "appChange", nodeID, strconv.Itoa(pct.value))
 		}
-		return ipcCallVoid("volume", "appSet", args[0], strconv.Itoa(pct.value))
+		return ipcCallVoid("volume", "appSet", nodeID, strconv.Itoa(pct.value))
 	},
 }
 
