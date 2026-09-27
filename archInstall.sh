@@ -17,12 +17,17 @@ readonly PROJECT_ROOT
 
 readonly INSTALL_DIR="/usr/local/share/quickshell"
 readonly BIN_DIR="/usr/local/bin"
-readonly FONT_DIR="/usr/local/share/fonts"
+readonly LIBEXEC_DIR="/usr/local/libexec"
+# pacman and the AUR font packages install into the system font directory.
+readonly FONT_DIR="/usr/share/fonts"
+readonly VDPAU_DIR="/usr/lib/vdpau"
 readonly QML_DIR="/usr/lib/qt6/qml"
 readonly BUILD_DIR="/tmp/quickshell-build"
 
-readonly M3SHAPES_REV="6875533e1b459cd096e2250f54ceaad5290afc49"
-readonly ANOTHER_RIPPLE_REV="5037fd56226577c3f3d1da7db64bf5e72a476998"
+# Revisions mirror the locked inputs in flake.lock.
+readonly M3SHAPES_REPO="https://github.com/soramanew/m3shapes.git"
+readonly M3SHAPES_REV="8a6fe8961749887d677700b6508e0c9249968b7e"
+readonly ANOTHER_RIPPLE_REV="d8b2a3b95d0515bc52e2143b786a87931841c840"
 readonly WL_SCREENREC_REV="23500cce9ed2aba6c9cbb40187bcda2f99d4f835"
 
 check_root() {
@@ -36,12 +41,12 @@ check_distro() {
 install_system_packages() {
 	local -a missing=()
 	local -r pkg_list=(
-		base-devel git cmake ninja clang extra-cmake-modules patchelf pkgconf
+		base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
 		rust pipewire ddcutil i2c-tools go wayland wayland-protocols
 		findutils grep sed gawk util-linux libnotify
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
-		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2
+		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 	)
 
 	log "Checking system dependencies..."
@@ -97,7 +102,7 @@ install_aur_packages() {
 	local -r aur_user="${SUDO_USER:-}"
 	local -a missing=()
 	local -r pkg_list=(
-		ttf-weather-icons app2unit ttf-material-symbols-variable-git
+		ttf-weather-icons app2unit ttf-material-symbols-variable-git python-rembg
 	)
 
 	log "Checking AUR packages..."
@@ -260,7 +265,10 @@ build_vast_plugin() {
 
 	CC=clang CXX=clang++ cmake -S "$src" -B "$build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX="$install_base"
+		-DCMAKE_INSTALL_PREFIX="$install_base" \
+		-DINSTALL_QMLDIR="lib/qt6/qml" \
+		-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold \
+		-DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold
 	ninja -C "$build"
 	ninja -C "$build" install
 
@@ -295,21 +303,33 @@ build_m3shapes() {
 	local -r src="$BUILD_DIR/m3shapes"
 	local -r install_base="$BUILD_DIR/m3shapes-install"
 
-	clone_or_checkout "https://github.com/soramanew/m3shapes.git" "$src" "$M3SHAPES_REV"
+	clone_or_checkout "$M3SHAPES_REPO" "$src" "$M3SHAPES_REV"
 
 	CC=clang CXX=clang++ cmake -S "$src" -B "$src/build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX="$install_base"
+		-DCMAKE_INSTALL_PREFIX="$install_base" \
+		-DINSTALL_QMLDIR="lib/qt6/qml"
 	ninja -C "$src/build"
 	ninja -C "$src/build" install
 
 	copy_qml_module "$install_base" "$QML_DIR/M3Shapes" \
-		M3Shapes usr/lib/qt6/qml/M3Shapes ||
+		M3Shapes usr/lib/qt6/qml/M3Shapes lib/qt6/qml/M3Shapes ||
 		warn "m3shapes install tree not found under $install_base"
 
+	local -r qt_core_lib
+	qt_core_lib=$(qt_module_libdirs Qt6Core)
+
+	# The backing library lands in the library dir, not in the QML module dir.
+	local backing_lib
+	backing_lib=$(find "$install_base" -name 'libm3shapes.so*' -print -quit 2>/dev/null || true)
+	if [[ -n $backing_lib ]]; then
+		log "Installing $(basename "$backing_lib") to $qt_core_lib..."
+		install -Dm755 "$backing_lib" "$qt_core_lib/$(basename "$backing_lib")"
+	else
+		warn "m3shapes backing library not found under $install_base"
+	fi
+
 	if [[ -f $plugin ]]; then
-		local qt_core_lib
-		qt_core_lib=$(qt_module_libdirs Qt6Core)
 		patchelf --set-rpath "$QML_DIR/M3Shapes:$qt_core_lib" "$plugin" || warn "patchelf failed on $plugin"
 	fi
 }
@@ -447,8 +467,9 @@ install_quickshell_config() {
 
 	[[ -d $PROJECT_ROOT/Assets ]] && cp -r "$PROJECT_ROOT/Assets" "$INSTALL_DIR/"
 
-	log "Installing generate-colors-material to $BIN_DIR..."
+	log "Installing helper scripts to $BIN_DIR..."
 	install -Dm755 "$PROJECT_ROOT/Assets/shell/generate_colors_material.py" "$BIN_DIR/generate-colors-material"
+	install -Dm755 "$PROJECT_ROOT/Assets/shell/remove-bg.py" "$BIN_DIR/remove-bg.py"
 
 	chmod -R 755 "$INSTALL_DIR"
 	chown -R root:root "$INSTALL_DIR"
@@ -488,16 +509,20 @@ setup_user_config() {
 
 create_wrapper() {
 	log "Creating wrapper script..."
-	cat >"$BIN_DIR/shell" <<'EOF'
+	cat >"$BIN_DIR/shell" <<EOF
 #!/bin/bash
-export QUICKSHELL_CONFIG_DIR="/usr/local/share/quickshell"
-export QT_QPA_FONTDIR="/usr/local/share/fonts"
-export QML2_IMPORT_PATH="/usr/lib/qt6/qml${QML2_IMPORT_PATH:+:$QML2_IMPORT_PATH}"
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin${HOME:+:$HOME/.local/bin}${PATH:+:$PATH}"
-export PATH="$PATH:/opt/bin:/usr/games:/usr/local/games"
-export PATH="$PATH:/var/lib/flatpak/exports/bin${HOME:+:$HOME/.local/share/flatpak/exports/bin}"
-[[ -d /snap/bin ]] && export PATH="$PATH:/snap/bin"
-exec quickshell -p "$QUICKSHELL_CONFIG_DIR/Qml" "$@"
+export VAST_SHELL_DIRECTORY="$INSTALL_DIR"
+export QUICKSHELL_CONFIG_DIR="\$VAST_SHELL_DIRECTORY"
+export QT_QPA_FONTDIR="$FONT_DIR"
+export QT_MEDIA_BACKEND="ffmpeg"
+export VDPAU_DRIVER="va_gl"
+export VDPAU_DRIVER_PATH="$VDPAU_DIR"
+export QML2_IMPORT_PATH="$QML_DIR\${QML2_IMPORT_PATH:+:\$QML2_IMPORT_PATH}"
+export PATH="$BIN_DIR:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin\${HOME:+:\$HOME/.local/bin}\${PATH:+:\$PATH}"
+export PATH="\$PATH:/opt/bin:/usr/games:/usr/local/games"
+export PATH="\$PATH:/var/lib/flatpak/exports/bin\${HOME:+:\$HOME/.local/share/flatpak/exports/bin}"
+[[ -d /snap/bin ]] && export PATH="\$PATH:/snap/bin"
+exec quickshell -p "\$QUICKSHELL_CONFIG_DIR/Qml" "\$@"
 EOF
 	chmod +x "$BIN_DIR/shell"
 }
@@ -527,7 +552,8 @@ build_wl_screenrec() {
 }
 
 build_vastctl() {
-	local -r binary="$BIN_DIR/vastctl"
+	local -r binary="$LIBEXEC_DIR/vastctl"
+	local -r wrapper="$BIN_DIR/vastctl"
 	[[ -f $binary ]] && {
 		log "vastctl already installed"
 		return 0
@@ -559,12 +585,22 @@ build_vastctl() {
 		"$binary" completion "$shell_name" >"$out_path" || warn "Failed to generate $shell_name completion"
 	done
 
+	log "Creating vastctl wrapper..."
+	cat >"$wrapper" <<EOF
+#!/bin/bash
+export VAST_SHELL_DIRECTORY="$INSTALL_DIR"
+export QT_QPA_FONTDIR="$FONT_DIR"
+export QML2_IMPORT_PATH="$QML_DIR\${QML2_IMPORT_PATH:+:\$QML2_IMPORT_PATH}"
+exec "$binary" "\$@"
+EOF
+	chmod +x "$wrapper"
+
 	log "vastctl installed to $BIN_DIR"
 }
 
 cleanup_build_deps() {
 	local -r build_deps=(
-		base-devel cmake ninja clang extra-cmake-modules patchelf pkgconf
+		base-devel cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 		qt6-shadertools qt6-tools rust git
 		spirv-tools vulkan-headers cli11
 	)
@@ -587,7 +623,7 @@ main() {
 	trap 'rm -rf "$BUILD_DIR"' EXIT
 
 	log "Creating directories..."
-	mkdir -p "$INSTALL_DIR" "$BIN_DIR" "$FONT_DIR/truetype" "$QML_DIR" "$BUILD_DIR"
+	mkdir -p "$INSTALL_DIR" "$BIN_DIR" "$LIBEXEC_DIR" "$QML_DIR" "$BUILD_DIR"
 
 	install_system_packages
 	update_submodules

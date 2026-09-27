@@ -75,13 +75,13 @@ shell
 
 | Category | Packages |
 |---|---|
-| Shell | `quickshell-git`, `hyprland`, `foot`, `polkit` |
-| Qt6 | `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-5compat`, `qt6-graphs`, `kf6-qtmultimedia` |
-| Media | `ffmpeg`, `wl-clipboard`, `wl-screenrec` |
+| Shell | `hyprland`, `foot`, `polkit`,`packaging/arch/quickshell` |
+| Qt6 | `qt6-base`, `qt6-declarative`, `qt6-multimedia`, `qt6-5compat`, `qt6-graphs` |
+| Media | `ffmpeg`, `wl-clipboard`, `wl-screenrec`, `libvdpau-va-gl` |
 | Network / Notifications | `iw`, `libnotify` |
 | Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons`, `google-sans-flex` (optional), `Hack` (optional) |
 | Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
-| AI / Depth Wallpaper | `python-rembg` |
+| AI / Depth Wallpaper | `python-rembg` (AUR) |
 | Other | `app2unit` |
 
 > [!IMPORTANT]
