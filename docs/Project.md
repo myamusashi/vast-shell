@@ -165,8 +165,9 @@ vast-shell/
 │   ├── shaders/               # borderProgress, waveForm, wavy, ImageTransition
 │   │   └── transitions/       # boxExpand, circleExpand, diagonalWipe, dissolve, fade,
 │   │                          # hexTile, pixelate, roll, slideUp, splitHorizontal, wipeDown
-│   ├── shell/                 # desktop-session.sh, extract-fg.sh, last-session.sh,
-│   │                          # pkexec.sh, qmllint_qs.sh, remove-bg.py,
+│   ├── shell/                 # check-format.sh, gen-qs-modules.sh, desktop-session.sh,
+│   │                          # extract-fg.sh, last-session.sh, pkexec.sh, qmllint_qs.sh,
+│   │                          # qmlformat-ignore.txt, remove-bg.py,
 │   │                          # generate_colors_material.py (legacy, unused — see below)
 │   └── weather_icon/          # Moon phase SVGs
 │
@@ -206,6 +207,44 @@ wallpaper path
 
 > [!NOTE]
 > `Data/dark-colors.json` and `Data/light-colors.json` are legacy outputs of that script. Nothing reads them at runtime — see [Configuration → Colors](Configuration.md#colors).
+
+---
+
+## CI
+
+| Workflow | Job | What it runs |
+|---|---|---|
+| `ci-lint.yml` | `clazy` | `cmake --preset clazy` then `cmake --build --preset clazy`, i.e. the `lint-clazy` and `lint-tidy` targets (clazy-standalone + clang-tidy over `Plugins/Vast`, `third_party/` excluded). Runs in an Arch container. |
+| `ci-lint.yml` | `qmllint` | `Assets/shell/qmllint_qs.sh` over all of `Qml/`. |
+| `ci-format.yml` | `format` | `Assets/shell/check-format.sh` — `clang-format` over `Plugins/Vast`, `qmlformat` over `Qml`. |
+| `ci-archinstall.yml` | `arch-install` | `archInstall.sh` end to end. |
+| `ci-nix-build.yml` | `nix-build` | `nix build .` |
+| `ci-cachix.yml` | `cachix-push` | builds and pushes the binary cache. |
+| `ci-flake-update.yml` | `flake-update` | weekly `nix flake update`. |
+
+### Running the same checks locally
+
+```sh
+# format
+nix develop -c Assets/shell/check-format.sh
+
+# lint
+cmake --preset clazy && cmake --build --preset clazy
+Assets/shell/qmllint_qs.sh
+```
+
+`qmllint_qs.sh` needs a `qs` QML module tree to resolve `qs.*` imports. With a shell running it reads the gitignored `Qml/.qmlls.ini` that quickshell writes at startup. Headless, generate the same tree yourself and point the import paths at the flake's module list:
+
+```sh
+QS_ROOT=$(Assets/shell/gen-qs-modules.sh Qml "$(mktemp -d)")
+export QMLLINT_IMPORT_PATHS="${QS_ROOT}:$(nix eval --raw .#qmllintImportPaths.$(nix eval --impure --raw --expr builtins.currentSystem))"
+nix build --no-link .#vastPlugin
+nix-store --realise $(tr ':' ' ' <<< "$QMLLINT_IMPORT_PATHS")
+Assets/shell/qmllint_qs.sh
+```
+
+> [!NOTE]
+> `gen-qs-modules.sh` reproduces quickshell's own vfs mirror — a `module qs.<path>` qmldir per directory, `singleton` emitted for `pragma Singleton` files, sources symlinked in. Its output matches quickshell's byte for byte.
 
 ---
 

@@ -50,6 +50,20 @@
             inherit self;
         };
 
+        qmllintImportPaths = forAllSystems (system: let
+            pkgs = pkgsFor system;
+            vastShell = pkgs.callPackage ./nix/default.nix {
+                inherit quickshell wl-screenrec-fork another-ripple m3Shapes;
+            };
+        in
+            import ./nix/qmllint-imports.nix {
+                inherit pkgs;
+                quickshell = quickshell.packages.${system}.default;
+                vastPlugin = vastShell.vastPlugin;
+                m3Shapes = m3Shapes.packages.${system}.default;
+                anotherRipple = another-ripple.packages.${system}.default;
+            });
+
         devShells = forAllSystems (system: let
             pkgs = pkgsFor system;
         in {

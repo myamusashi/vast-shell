@@ -1,20 +1,4 @@
 #!/usr/bin/env bash
-#
-# Generate the `qs` QML module tree that quickshell normally materialises at
-# runtime inside its per-shell vfs build dir.
-#
-# At runtime quickshell mirrors the shell's Qml/ directory into
-# $XDG_RUNTIME_DIR/quickshell/vfs/<id>/qs/ as a proper QML module tree: a
-# `module qs.<dotted.path>` qmldir per directory, with the sources symlinked
-# in. .qmlls.ini points qmllint at that directory, which is how the developer
-# wrapper Assets/shell/qmllint_qs.sh resolves `qs.*` imports.
-#
-# That directory only exists while a shell instance is running, so CI has to
-# build it. This script does the same mirroring without a compositor, which is
-# all qmllint needs (it reads the qmldir files and the sources).
-#
-# Usage: gen-qs-modules.sh <qml-root-dir> <output-dir>
-#   Writes <output-dir>/qs/... and prints <output-dir> on stdout.
 
 set -euo pipefail
 
@@ -45,14 +29,25 @@ while IFS= read -r dir; do
     # (singletons, versions) that cannot be inferred from the file names.
     if [ -f "${dir}/qmldir" ]; then
         ln -sf "${dir}/qmldir" "${target}/qmldir"
+    elif [ -z "${rel}" ]; then
+        printf 'module qs\n' >"${target}/qmldir"
     else
         {
             printf 'module %s\n' "${module}"
-            # Implicit form qmllint resolves: `Type 1.0 Type.qml`.
+            # `pragma Singleton` has to surface in the qmldir, otherwise qmllint
+            # resolves the type but loses every member declared on it.
             find "${dir}" -maxdepth 1 -type f \( -name '*.qml' -o -name '*.js' \) -printf '%f\n' |
                 sort |
                 while IFS= read -r file; do
-                    printf '%s 1.0 %s\n' "${file%.*}" "${file}"
+                    if ! grep -qE '^[[:space:]]*pragma[[:space:]]+Singleton[[:space:]]*$' "${dir}/${file}"; then
+                        # Plain .js helpers are imported by path, not as types.
+                        case "${file}" in
+                            *.js) continue ;;
+                        esac
+                        printf '%s 1.0 %s\n' "${file%.*}" "${file}"
+                        continue
+                    fi
+                    printf 'singleton %s 1.0 %s\n' "${file%.*}" "${file}"
                 done
         } >"${target}/qmldir"
     fi

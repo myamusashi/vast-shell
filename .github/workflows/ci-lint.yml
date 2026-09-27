@@ -1,0 +1,85 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  clazy:
+    name: clazy + clang-tidy
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: archlinux:base-devel
+
+    steps:
+    - name: Prepare environment
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm --needed \
+          git cmake ninja clang clazy extra-cmake-modules patchelf pkgconf \
+          qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs \
+          qt6-multimedia qt6-5compat qt6-shadertools qt6-tools \
+          pipewire ddcutil wayland wayland-protocols
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Report tool versions
+      run: |
+        clang --version | head -1
+        clazy-standalone --version | grep -i version | head -1
+        clang-tidy --version | grep -i "version" | head -1
+
+    - name: Configure
+      run: cmake --preset clazy
+
+    - name: Lint
+      run: cmake --build --preset clazy
+
+  qmllint:
+    name: qmllint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v31
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+
+    - name: qmllint
+      run: |
+        SYSTEM=$(nix eval --impure --raw --expr builtins.currentSystem)
+        QS_ROOT=$(Assets/shell/gen-qs-modules.sh Qml "${RUNNER_TEMP}/qs-modules")
+        IMPORTS=$(nix eval --raw ".#qmllintImportPaths.${SYSTEM}")
+        export QMLLINT_IMPORT_PATHS="${QS_ROOT}:${IMPORTS}"
+
+        echo "module roots: $(tr ':' '\n' <<< "${QMLLINT_IMPORT_PATHS}" | wc -l)"
+
+        nix build --no-link --print-out-paths .#vastPlugin >/dev/null
+        nix-store --realise $(tr ':' ' ' <<< "${IMPORTS}") >/dev/null
+
+        missing=0
+        while IFS= read -r path; do
+          if [ ! -d "${path}" ]; then
+            echo "::error::module root missing: ${path}"
+            missing=1
+          fi
+        done < <(tr ':' '\n' <<< "${QMLLINT_IMPORT_PATHS}")
+        [ "${missing}" -eq 0 ]
+
+        nix shell --impure --expr '
+          let
+            flake = builtins.getFlake (toString ./.);
+            pkgs = import flake.inputs.nixpkgs { system = builtins.currentSystem; };
+          in [ pkgs.qt6.qttools ]
+        ' -c Assets/shell/qmllint_qs.sh
