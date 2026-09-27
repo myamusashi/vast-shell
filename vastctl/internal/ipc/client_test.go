@@ -184,6 +184,11 @@ func TestShellRunningMemo(t *testing.T) {
 // for a full binary startup each time. The shim stands in for quickshell
 // and appends a byte per spawn, so the count is observed, not assumed.
 func TestShellRunningProbesOnce(t *testing.T) {
+	// The memo has to start cold, not merely be reset on the way out:
+	// another test in this package records a running state, and under
+	// -shuffle it may do so before this one. A memo left true would
+	// answer from the cache and the shim would never be spawned at all.
+	resetShellRunning()
 	t.Cleanup(resetShellRunning)
 
 	root := t.TempDir()
