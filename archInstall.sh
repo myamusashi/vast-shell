@@ -43,7 +43,7 @@ install_system_packages() {
 	local -r pkg_list=(
 		base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		rust pipewire ddcutil i2c-tools go wayland wayland-protocols
+		rust pipewire ddcutil i2c-tools go python wayland wayland-protocols
 		findutils grep sed gawk util-linux libnotify
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
@@ -102,7 +102,7 @@ install_aur_packages() {
 	local -r aur_user="${SUDO_USER:-}"
 	local -a missing=()
 	local -r pkg_list=(
-		ttf-weather-icons app2unit ttf-material-symbols-variable-git python-rembg
+		ttf-weather-icons app2unit ttf-material-symbols-variable-git
 	)
 
 	log "Checking AUR packages..."
@@ -467,9 +467,8 @@ install_quickshell_config() {
 
 	[[ -d $PROJECT_ROOT/Assets ]] && cp -r "$PROJECT_ROOT/Assets" "$INSTALL_DIR/"
 
-	log "Installing helper scripts to $BIN_DIR..."
+	log "Installing generate-colors-material to $BIN_DIR..."
 	install -Dm755 "$PROJECT_ROOT/Assets/shell/generate_colors_material.py" "$BIN_DIR/generate-colors-material"
-	install -Dm755 "$PROJECT_ROOT/Assets/shell/remove-bg.py" "$BIN_DIR/remove-bg.py"
 
 	chmod -R 755 "$INSTALL_DIR"
 	chown -R root:root "$INSTALL_DIR"
@@ -486,6 +485,39 @@ install_quickshell_config() {
 export VAST_SHELL_DIRECTORY="/usr/local/share/quickshell"
 EOF
 	chmod 644 /etc/profile.d/vast-shell.sh
+}
+
+install_remove_bg() {
+	local -r script="$INSTALL_DIR/Assets/shell/remove-bg.py"
+	local -r venv="$LIBEXEC_DIR/remove-bg-venv"
+
+	[[ -f $script ]] || {
+		warn "remove-bg.py not found at $script — skipping background removal setup"
+		return 0
+	}
+
+	if [[ -x $venv/bin/python ]] && "$venv/bin/python" -c 'import rembg' &>/dev/null; then
+		log "rembg already installed in $venv"
+	else
+		log "Creating rembg virtualenv..."
+		python -m venv "$venv" || {
+			rm -rf "$venv"
+			warn "Failed to create the rembg virtualenv — depth wallpaper extraction unavailable"
+			return 0
+		}
+		if ! "$venv/bin/pip" install --disable-pip-version-check rembg; then
+			rm -rf "$venv"
+			warn "Failed to install rembg — depth wallpaper extraction unavailable"
+			return 0
+		fi
+	fi
+
+	log "Installing remove-bg.py wrapper to $BIN_DIR..."
+	cat >"$BIN_DIR/remove-bg.py" <<EOF
+#!/bin/bash
+exec "$venv/bin/python" "$script" "\$@"
+EOF
+	chmod +x "$BIN_DIR/remove-bg.py"
 }
 
 setup_user_config() {
@@ -643,6 +675,7 @@ main() {
 	cleanup_build_deps
 
 	install_quickshell_config
+	install_remove_bg
 	setup_user_config
 	create_wrapper
 

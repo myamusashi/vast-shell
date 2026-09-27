@@ -93,13 +93,19 @@ shell
 ```
 base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia
-qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go
+qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go python
 wayland wayland-protocols findutils grep sed gawk util-linux libnotify iw
 polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal spirv-tools
 vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 ```
 
-**AUR** (installed with `yay`): `ttf-weather-icons`, `ttf-material-symbols-variable-git`, `app2unit`, `python-rembg`
+**AUR** (installed with `yay`): `ttf-weather-icons`, `ttf-material-symbols-variable-git`, `app2unit`
+
+**pip** (installed into `/usr/local/libexec/remove-bg-venv` by the script): `rembg`, exposed as
+`/usr/local/bin/remove-bg.py`. This is the Arch equivalent of the Nix `remove-bg` package, which
+resolves to `python314Packages.rembg`. The AUR `python-rembg` package is not used: it pulls the
+`gradio`/`transformers` chain, whose `check()` currently fails on `huggingface-hub` 2.x. A failure
+here is non-fatal — the depth-wallpaper feature is skipped with a warning.
 
 > [!NOTE]
 > The script also builds these from source rather than installing them:
@@ -118,7 +124,7 @@ vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 | Network / Notifications | `iw`, `libnotify` |
 | Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons` |
 | Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
-| AI / Depth Wallpaper | `python-rembg` (AUR) |
+| AI / Depth Wallpaper | `python`, `rembg` |
 | Other | `app2unit` (AUR), `ddcutil`, `i2c-tools` |
 
 After install, `shell` is available on `PATH` and your config lives in `~/.config/vast-shell/` (seeded from `Data/`). See [Configuration](Configuration.md).
