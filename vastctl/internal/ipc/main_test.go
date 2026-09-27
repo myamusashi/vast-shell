@@ -2,7 +2,9 @@ package ipc
 
 import (
 	"errors"
+	"flag"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -24,8 +26,19 @@ if [ -n "$SHIM_LOG" ]; then
   { printf -- '---\n'; for a in "$@"; do printf -- '%s\n' "$a"; done; } > "$SHIM_LOG/$$"
 fi
 case "$*" in
-  *" ipc show"*) exit 0 ;;
+  *" ipc show"*)
+    # SHIM_READY names a file that means "the shell is up". While it is
+    # absent the probe reports a dead shell, and launching the shell
+    # creates it — which is what the auto-start path has to see before
+    # its wait loop gives up.
+    if [ -n "$SHIM_READY" ] && [ ! -f "$SHIM_READY" ]; then
+      printf 'Could not open config file\n'
+      exit 255
+    fi
+    exit 0
+    ;;
 esac
+if [ -n "$SHIM_READY" ]; then : > "$SHIM_READY"; fi
 if [ -n "$SHIM_ERR" ]; then printf -- '%s' "$SHIM_ERR" >&2; fi
 if [ -n "$SHIM_OUT" ]; then printf -- '%s' "$SHIM_OUT"; fi
 exit "${SHIM_CODE:-0}"
@@ -68,6 +81,33 @@ func TestMain(m *testing.M) {
 
 	os.RemoveAll(dir)
 	os.Exit(code)
+}
+
+// scenarioEnv names the scenario a re-executed child should run. When
+// it is unset the process is the ordinary test binary.
+const scenarioEnv = "VASTCTL_IPC_TEST_SCENARIO"
+
+// runInChild re-executes this test binary as a child running only the
+// named scenario, and returns its combined output.
+//
+// ensureShellDaemon is a sync.Once for the life of the process, so once
+// any other test in this package has made a call the auto-start path is
+// spent and can no longer be observed. A child is the only way to give
+// it a clean slate.
+//
+// -test.gocoverdir is forwarded so the child's counters merge into the
+// parent's report. Without it the auto-start path reads as barely
+// covered and waitForShell as untested when both are exercised here.
+func runInChild(t *testing.T, scenario string) (string, error) {
+	t.Helper()
+	args := []string{"-test.run=^" + t.Name() + "$", "-test.v"}
+	if f := flag.Lookup("test.gocoverdir"); f != nil && f.Value.String() != "" {
+		args = append(args, "-test.gocoverdir="+f.Value.String())
+	}
+	cmd := exec.Command(os.Args[0], args...)
+	cmd.Env = append(os.Environ(), scenarioEnv+"="+scenario)
+	out, err := cmd.CombinedOutput()
+	return string(out), err
 }
 
 // shimInvocations returns the argument list of every invocation

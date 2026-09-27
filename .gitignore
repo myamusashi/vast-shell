@@ -15,3 +15,8 @@ plugins/*/build
 *.tmp
 .cache
 *pycache*
+
+# vastctl: `go build` drops the binary next to the module, and the test
+# CI run writes a coverage profile there.
+/vastctl/vastctl
+/vastctl/coverage.out

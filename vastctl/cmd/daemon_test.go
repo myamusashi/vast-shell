@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"path/filepath"
 	"slices"
 	"strings"
@@ -166,6 +167,56 @@ func TestDaemonStartForeground(t *testing.T) {
 	}
 	if ipc.ShellRunning() {
 		t.Fatal("the memo still says the shell is running after it exited")
+	}
+}
+
+// TestDaemonStartFailure pins that a shell that cannot be launched is
+// an error, and that the memo is not left claiming it is up. Swallowing
+// the failure would tell a user the desktop is starting when nothing
+// was started, and every later command would then fail with "no
+// running instances" and no obvious cause.
+func TestDaemonStartFailure(t *testing.T) {
+	orig := ipc.LogFilePath
+	ipc.LogFilePath = filepath.Join(t.TempDir(), "vast-shell.log")
+	t.Cleanup(func() { ipc.LogFilePath = orig })
+
+	wantShellRunning(t, false)
+	// PATH holds only a directory with a non-executable quickshell, so
+	// the launch fails the way a missing permission would.
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "quickshell"), []byte("not executable\n"), 0o644); err != nil {
+		t.Fatalf("write quickshell: %v", err)
+	}
+	t.Setenv("PATH", dir)
+	t.Setenv("VAST_SHELL_DIRECTORY", "")
+
+	res, err := runCLI(t, "daemon", "start")
+
+	if err == nil {
+		t.Fatalf("a shell that cannot be launched must be reported, got %q", res.output())
+	}
+	if ipc.ShellRunning() {
+		t.Fatal("the memo claims the shell is running after a failed start")
+	}
+}
+
+// TestDaemonStartForegroundFailure pins the same for the systemd path.
+// A unit that fails to exec must not exit zero, or systemd believes a
+// healthy shell is being managed.
+func TestDaemonStartForegroundFailure(t *testing.T) {
+	wantShellRunning(t, false)
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "quickshell"), []byte("not executable\n"), 0o644); err != nil {
+		t.Fatalf("write quickshell: %v", err)
+	}
+	t.Setenv("PATH", dir)
+	t.Setenv("VAST_SHELL_DIRECTORY", "")
+
+	if _, err := runCLI(t, "daemon", "-f", "start"); err == nil {
+		t.Fatal("a shell that cannot be launched must be reported")
+	}
+	if ipc.ShellRunning() {
+		t.Fatal("the memo claims the shell is running after a failed start")
 	}
 }
 

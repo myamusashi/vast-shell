@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"flag"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -28,7 +29,17 @@ const helperEnv = "VASTCTL_TEST_SCENARIO"
 // named scenario, and returns its combined output.
 func runInHelper(t *testing.T, scenario string) (string, error) {
 	t.Helper()
-	cmd := exec.Command(os.Args[0], "-test.run=^"+t.Name()+"$", "-test.v")
+	args := []string{"-test.run=^" + t.Name() + "$", "-test.v"}
+	// `go test -cover` hands the test binary a -test.gocoverdir and
+	// collects whatever lands there. Without forwarding it, everything
+	// the child runs is invisible to the report: the auto-start path
+	// looks 13% covered and waitForShell looks untested when both are
+	// in fact exercised. The child is the same instrumented binary, so
+	// its counters merge into the same directory.
+	if f := flag.Lookup("test.gocoverdir"); f != nil && f.Value.String() != "" {
+		args = append(args, "-test.gocoverdir="+f.Value.String())
+	}
+	cmd := exec.Command(os.Args[0], args...)
 	cmd.Env = append(os.Environ(), helperEnv+"="+scenario)
 	out, err := cmd.CombinedOutput()
 	return string(out), err
