@@ -63,11 +63,15 @@ vastctl completion nushell | sudo tee /usr/share/nushell/completions/vastctl.nu
 Quickshell routes `ipc call` to the instance launched from the same config path, so vastctl targets whatever `VAST_SHELL_DIRECTORY` points at (falling back to the installed `shell` wrapper). To control a shell running from this repository:
 
 ```sh
-quickshell -p "$PWD/Qml" &   # run the dev instance
+VAST_SHELL_DIRECTORY="$PWD" vastctl daemon status   # prints the config path vastctl resolved
 VAST_SHELL_DIRECTORY="$PWD" vastctl idle status
 ```
 
-The repo's `.envrc` exports `VAST_SHELL_DIRECTORY="$PWD"`, so with direnv enabled every vastctl invocation inside the repo automatically targets the dev instance.
+`VAST_SHELL_DIRECTORY` names the checkout root, but the config path handed to quickshell is the directory that actually holds `shell.qml` — `$PWD/Qml` here. `vastctl daemon status` prints the resolved path, which is the quickest way to confirm which instance a command will reach.
+
+The repo's `.envrc` exports `VAST_SHELL_DIRECTORY="$PWD"`, so with direnv enabled every vastctl invocation inside the repo automatically targets the dev instance. An explicit `VAST_SHELL_DIRECTORY=... vastctl ...` overrides the value baked into the installed wrapper.
+
+If no instance is live for that config path, the first vastctl call starts one and waits for it to register its IPC endpoint before dispatching, so a cold checkout needs no separate `quickshell -p ... &` step. That first call blocks for as long as the shell takes to boot; later calls are immediate.
 
 ## Hyprland Global Shortcuts
 
