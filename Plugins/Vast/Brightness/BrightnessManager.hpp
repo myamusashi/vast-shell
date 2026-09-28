@@ -160,6 +160,25 @@ namespace vast {
         Q_INVOKABLE void                          removeProfile(const QString& name);
         [[nodiscard]] Q_INVOKABLE QStringList     profileNames() const;
 
+        // The one definition of the percent range: the .cpp scales sysfs and DDC
+        // values against these, and clampPercent is defined here rather than
+        // out of line because a constexpr member is implicitly inline, so an
+        // out-of-line definition would leave every other TU with an undefined
+        // inline reference.
+        static constexpr int K_MIN_PERCENT = 0;
+        static constexpr int K_MAX_PERCENT = 100;
+
+        // Public so they can be exercised without a DDC monitor:
+        // readBacklightBrightness/writeBacklightBrightness take a
+        // caller-supplied root purely so a temp directory works, while
+        // production passes /sys/class/backlight/<name>.
+        [[nodiscard]] static constexpr int clampPercent(int v) noexcept {
+            return v < K_MIN_PERCENT ? K_MIN_PERCENT : (v > K_MAX_PERCENT ? K_MAX_PERCENT : v);
+        }
+
+        [[nodiscard]] static std::expected<int, BrightnessError>  readBacklightBrightness(const std::filesystem::path& root) noexcept;
+        [[nodiscard]] static std::expected<void, BrightnessError> writeBacklightBrightness(const std::filesystem::path& root, int percent) noexcept;
+
       Q_SIGNALS:
         void brightnessChanged(const QString& displayId, int percent);
         void initializationFailed(const QString& reason);
@@ -170,13 +189,7 @@ namespace vast {
         [[nodiscard]] static std::expected<DdcHandle, BrightnessError> openDdcHandle(DDCA_Display_Ref ref) noexcept;
         [[nodiscard]] static std::expected<int, BrightnessError>       readDdcBrightness(const DdcHandle& handle) noexcept;
         [[nodiscard]] static std::expected<void, BrightnessError>      writeDdcBrightness(const DdcHandle& handle, int percent) noexcept;
-
-        [[nodiscard]] static std::expected<int, BrightnessError>       readBacklightBrightness(const std::filesystem::path& root) noexcept;
-        [[nodiscard]] static std::expected<void, BrightnessError>      writeBacklightBrightness(const std::filesystem::path& root, int percent) noexcept;
-
         void                                                           dispatchWrite(const QString& id, const std::shared_ptr<DisplayWorker>& worker);
-
-        [[nodiscard]] static constexpr int                             clampPercent(int v) noexcept;
 
         WorkerMap                                                      mWorkers;
         BrightnessProfileStore                                         mProfileStore;

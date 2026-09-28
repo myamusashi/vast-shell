@@ -27,13 +27,7 @@ namespace vast {
 
     namespace {
         constexpr uint8_t K_VCP_BRIGHTNESS = 0x10;
-        constexpr int     K_MIN_PERCENT    = 0;
-        constexpr int     K_MAX_PERCENT    = 100;
-    }
-
-    constexpr int BrightnessManager::clampPercent(int v) noexcept {
-        return std::clamp(v, K_MIN_PERCENT, K_MAX_PERCENT);
-    }
+    } // namespace
 
     BrightnessManager::BrightnessManager(QObject* parent) : QObject(parent) {}
 
