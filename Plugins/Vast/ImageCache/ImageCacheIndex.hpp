@@ -8,7 +8,9 @@
 
 class ImageCacheIndex {
   public:
-    ImageCacheIndex();
+    // An empty directory falls back to the production directory(); tests pass
+    // a temp directory so they never read or write the real notification index.
+    explicit ImageCacheIndex(const QString& directory = QString());
 
     [[nodiscard]] QString        lookup(const QString& cacheKey) const;
     void                         insert(const QString& cacheKey, const QString& fileUrl);
@@ -20,10 +22,11 @@ class ImageCacheIndex {
     [[nodiscard]] static QString directory();
 
   private:
-    void                         load();
-    void                         save() const;
-    [[nodiscard]] static QString path();
+    void                      load();
+    void                      save() const;
+    [[nodiscard]] QString     path() const;
 
-    mutable std::shared_mutex    mRwMutex;
-    QHash<QString, QString>      mKeyToPath;
+    mutable std::shared_mutex mRwMutex;
+    QHash<QString, QString>   mKeyToPath;
+    QString                   mDirectory;
 };

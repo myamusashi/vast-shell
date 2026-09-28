@@ -17,7 +17,9 @@ namespace {
     const QLatin1StringView K_FILE_URL_PREFIX("file://");
 }
 
-ImageCacheIndex::ImageCacheIndex() {
+ImageCacheIndex::ImageCacheIndex(const QString& directory) {
+    // Qualified: the parameter shadows the static directory() otherwise.
+    mDirectory = directory.isEmpty() ? ImageCacheIndex::directory() : directory;
     load();
 }
 
@@ -25,8 +27,8 @@ QString ImageCacheIndex::directory() {
     return QStringLiteral("/tmp/vast-shell/notif-images");
 }
 
-QString ImageCacheIndex::path() {
-    return QStringLiteral("%1/.index.json").arg(directory());
+QString ImageCacheIndex::path() const {
+    return QStringLiteral("%1/.index.json").arg(mDirectory);
 }
 
 QString ImageCacheIndex::toFileUrl(const QString& path) {
@@ -77,9 +79,15 @@ void ImageCacheIndex::load() {
     std::unique_lock const lock(mRwMutex);
     const auto             object = document.object();
     for (auto it = object.begin(); it != object.end(); ++it) {
-        const QString filePath = it.value().toString();
-        if (QFile::exists(filePath))
-            mKeyToPath.insert(it.key(), filePath);
+        const QString stored = it.value().toString();
+        // Values are stored as file:// URLs (ImageCache::saveProviderImage
+        // inserts toFileUrl(path)), but QFile::exists needs a bare path -- the
+        // prefixed form always misses, which silently emptied the whole index
+        // on every restart. Strip for the check and keep the stored form, so
+        // lookup() returns what the caller put in and evictKey still sees the
+        // URL it expects.
+        if (QFile::exists(fromFileUrl(stored)))
+            mKeyToPath.insert(it.key(), stored);
     }
 }
 
@@ -92,7 +100,7 @@ void ImageCacheIndex::save() const {
     }
 
     QFile file(path());
-    QDir{}.mkpath(directory());
+    QDir{}.mkpath(mDirectory);
     if (file.open(QIODevice::WriteOnly))
         file.write(QJsonDocument(object).toJson(QJsonDocument::Compact));
 }
