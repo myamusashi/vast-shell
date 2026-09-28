@@ -1,5 +1,6 @@
 #include "AudioProfilesWatcher.hpp"
 #include "AudioProfilesModel.hpp"
+#include "AudioProfileFormat.hpp"
 
 #include <cstdint>
 #include <array>
@@ -138,32 +139,6 @@ namespace {
 
     spa_pod* apBuildProfilePod(spa_pod_builder* b, int32_t index) {
         return static_cast<spa_pod*>(spa_pod_builder_add_object(b, SPA_TYPE_OBJECT_ParamProfile, SPA_PARAM_Profile, SPA_PARAM_PROFILE_index, SPA_POD_Int(index)));
-    }
-
-    QString apFormatProfileName(const QString& name) {
-        if (name == u"off")
-            return QStringLiteral("Off");
-        if (name == u"pro-audio")
-            return QStringLiteral("Pro Audio");
-
-        const QStringList parts = name.split(QLatin1Char('+'));
-        QStringList       out;
-        out.reserve(parts.size());
-
-        for (QString part : parts) {
-            part = part.trimmed();
-            if (part.startsWith(QLatin1String("output:")))
-                part.remove(0, 7);
-            else if (part.startsWith(QLatin1String("input:")))
-                part.remove(0, 6);
-
-            QStringList words = part.split(QLatin1Char('-'));
-            for (QString& w : words)
-                if (!w.isEmpty())
-                    w.replace(0, 1, w.at(0).toUpper());
-            out << words.join(QLatin1Char(' '));
-        }
-        return out.join(QStringLiteral(" + "));
     }
 
     class PwApp {
@@ -470,7 +445,7 @@ void AudioProfilesWatcher::poll() {
             {QStringLiteral("name"), actName},
             {QStringLiteral("description"), QString::fromUtf8(d->activeDescription.data())},
             {QStringLiteral("available"), QString::fromUtf8(d->activeAvailable.data())},
-            {QStringLiteral("readable"), apFormatProfileName(actName)},
+            {QStringLiteral("readable"), formatProfileName(actName)},
         };
 
         entry.profiles.reserve(d->profileCount);
@@ -481,7 +456,7 @@ void AudioProfilesWatcher::poll() {
                 .name        = nm,
                 .description = QString::fromUtf8(e.description.data()),
                 .available   = QString::fromUtf8(e.available.data()),
-                .readable    = apFormatProfileName(nm),
+                .readable    = formatProfileName(nm),
             });
         }
         mCards->upsertCard(entry);

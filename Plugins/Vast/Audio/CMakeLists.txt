@@ -15,6 +15,7 @@ vast_module(vast-audio
         AudioProfilesModel.cpp
         AudioProfilesWatcher.hpp
         AudioProfilesWatcher.cpp
+        AudioProfileFormat.hpp
         AudioDevicesModel.hpp
         AudioDevicesModel.cpp
         AudioDevicesWatcher.hpp
