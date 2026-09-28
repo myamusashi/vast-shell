@@ -6,6 +6,8 @@
 #include <qtmetamacros.h>
 #include <vector>
 
+#include "KeyEventDecoder.hpp"
+
 namespace vast {
 
     class Keylock : public QObject {
@@ -25,10 +27,10 @@ namespace vast {
         Keylock&           operator=(Keylock&&) = delete;
 
         [[nodiscard]] bool capsLock() const {
-            return mCapsLock;
+            return mDecoder.capsLock();
         }
         [[nodiscard]] bool numLock() const {
-            return mNumLock;
+            return mDecoder.numLock();
         }
 
       Q_SIGNALS:
@@ -46,9 +48,6 @@ namespace vast {
         void                    onReadReady(int fd, bool hasLED);
 
         std::vector<OpenDevice> mOpen;
-        bool                    mCapsLock     = false;
-        bool                    mNumLock      = false;
-        bool                    mLastCapsLock = false;
-        bool                    mLastNumLock  = false;
+        KeyEventDecoder         mDecoder;
     };
 } // namespace vast

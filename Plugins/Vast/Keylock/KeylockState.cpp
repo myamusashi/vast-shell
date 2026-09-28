@@ -1,4 +1,5 @@
 #include "KeylockState.hpp"
+#include "KeyEventDecoder.hpp"
 #include "KeyboardDeviceScanner.hpp"
 
 #include <linux/input-event-codes.h>
@@ -57,15 +58,13 @@ namespace vast {
             if (::ioctl(fd, EVIOCGLED(ledBits.size()), ledBits.data()) < 0)
                 return;
 
-            mCapsLock = ledBits.at(LED_CAPSL / 8) & (1 << (LED_CAPSL % 8));
-            mNumLock  = ledBits.at(LED_NUML / 8) & (1 << (LED_NUML % 8));
+            mDecoder.setState(ledBits.at(LED_CAPSL / 8) & (1 << (LED_CAPSL % 8)), ledBits.at(LED_NUML / 8) & (1 << (LED_NUML % 8)));
         } else {
             int const ttyFd = ::open("/dev/tty", O_RDONLY);
             if (ttyFd >= 0) {
                 unsigned char flags = 0;
                 if (::ioctl(ttyFd, KDGKBLED, &flags) == 0) {
-                    mCapsLock = flags & LED_CAP;
-                    mNumLock  = flags & LED_NUM;
+                    mDecoder.setState(flags & LED_CAP, flags & LED_NUM);
                 }
                 ::close(ttyFd);
             } else {
@@ -97,29 +96,10 @@ namespace vast {
             if (std::cmp_equal(bytes, sizeof(ev))) {
                 ++processed;
 
-                if (hasLED) {
-                    if (ev.type != EV_LED)
-                        continue; // read next event
-
-                    const bool val = ev.value != 0;
-                    if (ev.code == LED_CAPSL && mCapsLock != val) {
-                        mCapsLock = val;
-                        Q_EMIT capsLockChanged();
-                    } else if (ev.code == LED_NUML && mNumLock != val) {
-                        mNumLock = val;
-                        Q_EMIT numLockChanged();
-                    }
-                } else {
-                    if (ev.type != EV_KEY || ev.value != 1)
-                        continue; // read next event
-
-                    if (ev.code == KEY_CAPSLOCK) {
-                        mCapsLock = !mCapsLock;
-                        Q_EMIT capsLockChanged();
-                    } else if (ev.code == KEY_NUMLOCK) {
-                        mNumLock = !mNumLock;
-                        Q_EMIT numLockChanged();
-                    }
+                switch (mDecoder.applyEvent(ev, hasLED)) {
+                    case KeyEventDecoder::Change::CapsLock: Q_EMIT capsLockChanged(); break;
+                    case KeyEventDecoder::Change::NumLock: Q_EMIT numLockChanged(); break;
+                    case KeyEventDecoder::Change::None: break;
                 }
             } else if (bytes < 0) {
                 if (errno != EAGAIN && errno != EWOULDBLOCK)
