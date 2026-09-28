@@ -29,8 +29,15 @@ LazyLoader {
     readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
 
     readonly property list<HyprlandToplevel> orderedToplevels: {
-        const list = [...(root.toplevels ?? [])];
-        return list.sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells);
+        const live = [...(root.toplevels ?? [])];
+        if (root.latchedOrder.length === 0)
+            return live.sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells);
+
+        const byAddress = {};
+        for (const toplevel of live)
+            byAddress[toplevel.address] = toplevel;
+
+        return root.latchedOrder.map(address => byAddress[address]).filter(toplevel => toplevel !== undefined);
     }
 
     readonly property int shownCount: root.orderedToplevels.length
@@ -51,6 +58,9 @@ LazyLoader {
     // up for the whole fade and is only unmapped once the board has faded out.
     property bool mapped: false
 
+    // Cell order as it stood when the board opened; empty while it is closed.
+    property var latchedOrder: []
+
     readonly property bool showing: root.shownCount > 0 && (root.dotHovered || root.pointerInside || root.grace)
 
     // Cell under a board-relative point, or -1 outside the grid.
@@ -67,6 +77,12 @@ LazyLoader {
         if (index < 0)
             return;
         root.orderedToplevels[index]?.wayland?.activate();
+    }
+
+    // Snapshot the display order at open time, so it outlives the activation
+    // the click is about to cause.
+    function latchOrder(list: var): var {
+        return [...(list ?? [])].sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells).map(toplevel => toplevel.address);
     }
 
     loading: true
@@ -183,7 +199,10 @@ LazyLoader {
             id: hideTimer
 
             interval: Appearance.animations.durations.small
-            onTriggered: root.mapped = false
+            onTriggered: {
+                root.mapped = false;
+                root.latchedOrder = [];
+            }
         }
 
         Connections {
@@ -202,6 +221,14 @@ LazyLoader {
             function onShowingChanged(): void {
                 if (root.showing) {
                     hideTimer.stop();
+                    root.hoveredIndex = -1;
+                    // Latch before mapping so the surface never paints an
+                    // unfrozen frame. An empty latch is refused: it would
+                    // resolve to zero cells, drop `showing` back to false and
+                    // bounce through the hide timer on every pass.
+                    const latched = root.latchOrder(root.toplevels);
+                    if (latched.length > 0)
+                        root.latchedOrder = latched;
                     root.mapped = true;
                 } else {
                     hideTimer.restart();
