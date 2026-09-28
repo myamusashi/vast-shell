@@ -36,6 +36,7 @@ namespace vast {
      * running at shutdown keeps its state alive and closes DDC handles from
      * the worker thread. Completion callbacks are queued with `this` as
      * context, so once the manager is gone they are dropped, never dereferenced.
+     * A queued write may still be dropped at exit: JobExecutor does not drain.
      */
 
     std::expected<DdcHandle, BrightnessError> BrightnessManager::openDdcHandle(DDCA_Display_Ref ref) noexcept {

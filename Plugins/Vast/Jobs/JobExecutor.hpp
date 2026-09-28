@@ -20,6 +20,9 @@ namespace vast {
     /// should therefore only touch captured locals or state owned by objects
     /// that outlive them (shared_ptr members), never raw `this` members of a
     /// possibly-shorter-lived object.
+
+    /// - A job still queued at exit is dropped; ~JobExecutor quits without draining.
+    /// - A job that throws terminates the process, so jobs must not throw.
     class JobExecutor final : public QObject {
         Q_OBJECT
 
