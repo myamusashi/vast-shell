@@ -9,15 +9,19 @@ jobs:
   cachix-push:
     name: Build and Push to Cachix
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Install Nix
-      uses: cachix/install-nix-action@v31
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
+      uses: DeterminateSystems/nix-installer-action@v14
+
+    - name: Set up Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@v8
 
     - name: Setup Magic Nix Cache
       uses: cachix/cachix-action@v16
