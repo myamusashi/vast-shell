@@ -315,7 +315,7 @@ namespace vast {
 
         std::ranges::stable_sort(hits, [](const Hit& a, const Hit& b) {
             if (a.pinned != b.pinned)
-                return b.pinned;
+                return a.pinned;
             return a.score > b.score;
         });
 
