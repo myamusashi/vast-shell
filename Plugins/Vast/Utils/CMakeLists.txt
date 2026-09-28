@@ -14,8 +14,10 @@ vast_module(vast-utils
         ColorUtils.hpp
         PaletteAnimator.cpp
         PaletteAnimator.hpp
-        Utils.hpp
-        Utils.cpp
+        Read.hpp
+        Read.cpp
+        Write.hpp
+        Write.cpp
     LIBRARIES
         Qt::DBus
         material-color-utilities

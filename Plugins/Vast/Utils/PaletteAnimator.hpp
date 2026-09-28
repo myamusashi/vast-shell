@@ -1,6 +1,7 @@
 #pragma once
 #include <qobject.h>
 #include <qvariantmap.h>
+#include <qabstractanimation.h>
 #include <qvariantanimation.h>
 #include <qqmlintegration.h>
 
@@ -23,6 +24,11 @@ class PaletteAnimator : public QObject {
     void setDuration(int ms) {
         mAnim->setDuration(ms);
         Q_EMIT durationChanged();
+    }
+
+    /// Exposed so tests can drive the blend via QAbstractAnimation::setCurrentTime().
+    [[nodiscard]] QAbstractAnimation* animation() const noexcept {
+        return mAnim;
     }
 
     Q_INVOKABLE void transitionTo(const QVariantMap& targetPalette);
