@@ -20,8 +20,9 @@ namespace vast {
     }
 
     qint64 LyricsScheduler::currentPositionMs() const {
+        // The offset applies while paused too, so both paths resolve alike.
         if (!mPlaying)
-            return mAnchorMs;
+            return mAnchorMs + mOffsetMs;
         const qint64 wallNow       = QDateTime::currentMSecsSinceEpoch();
         const auto   elapsed       = static_cast<double>(wallNow - mAnchorWall);
         const auto   scaledElapsed = static_cast<qint64>(std::llround(elapsed * mRate));
