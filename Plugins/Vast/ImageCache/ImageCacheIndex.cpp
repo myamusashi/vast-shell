@@ -80,12 +80,8 @@ void ImageCacheIndex::load() {
     const auto             object = document.object();
     for (auto it = object.begin(); it != object.end(); ++it) {
         const QString stored = it.value().toString();
-        // Values are stored as file:// URLs (ImageCache::saveProviderImage
-        // inserts toFileUrl(path)), but QFile::exists needs a bare path -- the
-        // prefixed form always misses, which silently emptied the whole index
-        // on every restart. Strip for the check and keep the stored form, so
-        // lookup() returns what the caller put in and evictKey still sees the
-        // URL it expects.
+        // Values are stored as file:// URLs but QFile::exists needs a bare path.
+        // Keep the stored form so lookup() and evictKey() see what was inserted.
         if (QFile::exists(fromFileUrl(stored)))
             mKeyToPath.insert(it.key(), stored);
     }

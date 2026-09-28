@@ -8,8 +8,7 @@
 
 class ImageCacheIndex {
   public:
-    // An empty directory falls back to the production directory(); tests pass
-    // a temp directory so they never read or write the real notification index.
+    // An empty directory falls back to directory().
     explicit ImageCacheIndex(const QString& directory = QString());
 
     [[nodiscard]] QString        lookup(const QString& cacheKey) const;
