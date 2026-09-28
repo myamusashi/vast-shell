@@ -264,7 +264,7 @@ namespace {
         if (info->change_mask & PW_DEVICE_CHANGE_MASK_PARAMS) {
             d->enumSeq      = pw_device_enum_params(reinterpret_cast<pw_device*>(d->proxy), 0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, nullptr);
             d->stagingCount = 0;
-            pw_device_enum_params(reinterpret_cast<pw_device*>(d->proxy), 0, SPA_PARAM_Profile, 0, UINT32_MAX, nullptr);
+            pw_device_enum_params(reinterpret_cast<pw_device*>(d->proxy), 0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, nullptr);
         }
     }
 
@@ -280,8 +280,8 @@ namespace {
                     std::copy_n(d->staging.begin(), static_cast<size_t>(d->stagingCount), d->profiles.begin());
                     d->profileCount = d->stagingCount;
                     d->stagingCount = 0;
-                    d->dirty        = 1;
                 }
+                d->dirty = 1;
                 return;
             }
 
@@ -414,7 +414,7 @@ namespace {
     };
 
     ApDeviceNodeT* apDrainDirty(std::span<ApDeviceNodeT* const> devices) {
-        auto it = std::ranges::find_if(devices, [](const ApDeviceNodeT* d) { return d->dirty && d->profileCount > 0; });
+        auto it = std::ranges::find_if(devices, [](const ApDeviceNodeT* d) { return d->dirty != 0; });
         if (it == devices.end())
             return nullptr;
         (*it)->dirty = 0;
