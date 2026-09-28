@@ -8,7 +8,7 @@
 
 namespace vast {
 
-    BluetoothAgentManager::BluetoothAgentManager(QObject* parent) : QObject(parent), mSystemBus(QDBusConnection::systemBus()), mAdaptor(new BluetoothAgentAdaptor(this)) {
+    BluetoothAgentManager::BluetoothAgentManager(QObject* parent, QDBusConnection bus) : QObject(parent), mSystemBus(std::move(bus)), mAdaptor(new BluetoothAgentAdaptor(this)) {
 
         mAgentManager = new QDBusInterface(QStringLiteral("org.bluez"), QStringLiteral("/org/bluez"), QStringLiteral("org.bluez.AgentManager1"), mSystemBus, this);
 

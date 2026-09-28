@@ -24,7 +24,8 @@ namespace vast {
         Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
 
       public:
-        explicit BluetoothAgentManager(QObject* parent = nullptr);
+        /// \p bus is injectable so tests can supply a private bus.
+        explicit BluetoothAgentManager(QObject* parent = nullptr, QDBusConnection bus = QDBusConnection::systemBus());
         ~BluetoothAgentManager() override;
 
         BluetoothAgentManager(const BluetoothAgentManager&)            = delete;
