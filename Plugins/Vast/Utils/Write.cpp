@@ -1,23 +1,10 @@
-#include "Utils.hpp"
-
-#include <qbytearray.h>
-#include <qdebug.h>
+#include "Write.hpp"
 #include <qfile.h>
-#include <qlogging.h>
+#include <qdebug.h>
 #include <qobject.h>
-#include <qstring.h>
+#include <qstringview.h>
 
-QString Utils::read(const QString& path) {
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "[Vast.Utils] Failed to open file for reading:" << path << file.errorString();
-        return {};
-    }
-
-    return QString::fromUtf8(file.readAll());
-}
-
-bool Utils::write(const QString& path, const QString& contents) {
+bool Write::writeFile(const QString& path, const QString& contents) {
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly)) {
         qWarning() << "[Vast.Utils] Failed to open file for writing:" << path << file.errorString();
