@@ -255,23 +255,6 @@ cmake --build --preset test
 QT_QPA_PLATFORM=offscreen ctest --test-dir build/test --output-on-failure --no-tests=error
 ```
 
-The suites are headless. Eleven binaries link `Qt6::Gui` and use `QTEST_MAIN`, so they
-construct a `QGuiApplication` and abort without a platform plugin. The `Clipboard` suite
-and `tst_translation` set `QT_QPA_PLATFORM=offscreen` on their own ctest targets;
-`ci-test.yml` exports it for the whole run to cover `MaterialColor` and
-`tst_search`, which do not set it. `tst_fuzzy` uses `QTEST_MAIN` but links `Qt6::Core`
-alone, so it gets a `QCoreApplication` and needs no display. The remaining 17 binaries
-are `QTEST_GUILESS_MAIN`.
-
-`--no-tests=error` matters: ctest exits 0 when it finds no tests, which is the failure mode
-where every suite silently stops being built.
-
-`tst_translation` uses `QTEST_MAIN` because `loadTranslation` calls
-`QGuiApplication::installTranslator`; its CMake target sets the offscreen platform
-itself. Nothing in CI opens a display or reads `/dev/input`: `tst_keylock` does not
-construct a `Keylock`, and `tst_brightnessmanager` asserts only the invariant that holds
-with or without a backlight device.
-
 `dbus-daemon` must be on `PATH`: `tst_bluetoothagent` spawns its own private bus rather
 than touching the system bus, which is what keeps it from registering an agent on a
 developer's real bluetoothd. It is a `shell.nix` input, so the devShell CI enters already

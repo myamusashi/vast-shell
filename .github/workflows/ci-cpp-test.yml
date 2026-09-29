@@ -1,0 +1,58 @@
+name: C++ Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  cpp-test:
+    name: vast-shell ctest
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: cpp-test-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@v14
+
+    - name: Set up Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@v8
+      with:
+        use-flakehub: false
+
+    - name: Enter the flake devShell
+      uses: nicknovitski/nix-develop@v1
+
+    - name: Report tool versions
+      run: |
+        clang --version | head -1
+        cmake --version | head -1
+        ninja --version
+        echo "libpipewire-0.3 $(pkg-config --modversion libpipewire-0.3)"
+        echo "ddcutil       $(pkg-config --modversion ddcutil)"
+        echo "wayland-client $(pkg-config --modversion wayland-client)"
+
+    - name: Configure
+      run: cmake --preset test -DVAST_TEST_VERBOSE=ON
+
+    - name: Build
+      run: cmake --build --preset test
+
+    - name: Test
+      run: QT_QPA_PLATFORM=offscreen ctest --test-dir build/test --output-on-failure --no-tests=error
+
+    - name: List built test binaries
+      if: failure()
+      run: ls -1 build/test/Plugins/Vast/Tests/*/ 2>/dev/null || true
