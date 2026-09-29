@@ -32,20 +32,15 @@ while IFS= read -r path; do
 done < <(tr ':' '\n' <<<"${QMLLINT_IMPORT_PATHS}")
 [ "${missing}" -eq 0 ]
 
+# qmllint comes from the devShell, so the import roots this script sets up are
+# the only thing it has to supply.
 status=0
-nix shell --impure --expr '
-  let
-    flake = builtins.getFlake (toString ./.);
-    pkgs = import flake.inputs.nixpkgs { system = builtins.currentSystem; };
-  in [ pkgs.qt6.qtdeclarative ]
-' -c bash -c "
-  # qml-entry-files.sh prints Qml/-relative paths; qmllint needs them relative
-  # to the repo root, because that is how it resolves a file's qs.* module
-  # against the import roots.
-  mapfile -t files < '${FILE_LIST}'
-  set -- \"\${files[@]/#/Qml/}\"
-  Assets/shell/qmllint_qs.sh \"\$@\"
-" || status=$?
+# qml-entry-files.sh prints Qml/-relative paths; qmllint needs them relative to
+# the repo root, because that is how it resolves a file's qs.* module against
+# the import roots.
+mapfile -t files < "${FILE_LIST}"
+set -- "${files[@]/#/Qml/}"
+Assets/shell/qmllint_qs.sh "$@" || status=$?
 
 if [ "${status}" -ne 0 ]; then
     echo "::error::qmllint failed for ${ENTRY} (${count} files)"

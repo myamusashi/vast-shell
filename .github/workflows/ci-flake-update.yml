@@ -1,4 +1,4 @@
-name: Flake Update
+name: flake update
 
 on:
   schedule:
@@ -12,20 +12,15 @@ on:
 
 jobs:
   flake-update:
-    name: Update Flake Inputs
+    name: nix flake update
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v14
-
-      - name: Set up Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
 
       - name: Update flake inputs
         run: |

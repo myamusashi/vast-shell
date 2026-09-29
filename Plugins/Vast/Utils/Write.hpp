@@ -9,5 +9,5 @@ class Write : public QObject {
     QML_SINGLETON
 
   public:
-    [[nodiscard]] static Q_INVOKABLE bool    writeFile(const QString& path, const QString& contents);
+    [[nodiscard]] static Q_INVOKABLE bool writeFile(const QString& path, const QString& contents);
 };

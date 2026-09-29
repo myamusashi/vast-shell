@@ -32,7 +32,7 @@ namespace vast {
         mPending.clear();
     }
 
-    QDBusMessage BluetoothAgentManager::agentManagerCall(const QString& method, const QList<QVariant>& args) const {
+    QDBusMessage BluetoothAgentManager::agentManagerCall(const QString& method, const QList<QVariant>& args) {
         auto msg = QDBusMessage::createMethodCall(QString::fromLatin1(K_BLUES_SERVICE), QString::fromLatin1(K_BLUES_PATH), QString::fromLatin1(K_BLUES_IFACE), method);
         for (const QVariant& a : args)
             msg << a;

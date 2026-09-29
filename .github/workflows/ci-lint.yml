@@ -1,4 +1,4 @@
-name: Lint
+name: lint
 
 on:
   push:
@@ -11,34 +11,26 @@ jobs:
     name: clazy + clang-tidy
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    container:
-      image: archlinux:base-devel
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: clazy-${{ github.ref }}
+      cancel-in-progress: true
 
     steps:
-    - name: Prepare environment
-      run: |
-        pacman -Syu --noconfirm
-        pacman -S --noconfirm --needed \
-          git cmake ninja clang clazy extra-cmake-modules patchelf pkgconf \
-          qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs \
-          qt6-multimedia qt6-5compat qt6-shadertools qt6-tools \
-          pipewire ddcutil wayland wayland-protocols
-
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Report tool versions
-      run: |
-        clang --version | head -1
-        clazy-standalone --version | grep -i version | head -1
-        clang-tidy --version | grep -i "version" | head -1
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Configure
       run: cmake --preset clazy
 
-    - name: Lint
+    - name: Run linting
       run: cmake --build --preset clazy
 
   qmllint:
@@ -49,16 +41,13 @@ jobs:
       id-token: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Lint shell.qml and its imports
       run: |

@@ -1,4 +1,4 @@
-name: Format
+name: format
 
 on:
   push:
@@ -8,39 +8,20 @@ on:
 
 jobs:
   format:
-    name: clang-format + qmlformat
+    name: format check
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Check formatting
       run: |
-        nix shell --impure --expr '
-          let
-            flake = builtins.getFlake (toString ./.);
-            pkgs = import flake.inputs.nixpkgs { system = builtins.currentSystem; };
-          in [
-            (pkgs.llvmPackages.clang-tools.overrideAttrs (_: { dontWrap = true; }))
-            pkgs.qt6.qtdeclarative
-          ]
-        ' -c bash -c '
-          set -e
-          CLANG_FORMAT="$(dirname "$(command -v clang-format)")/clang-format-unwrapped"
-          QMLFORMAT="$(command -v qmlformat)"
-          export CLANG_FORMAT QMLFORMAT
-
-          "${CLANG_FORMAT}" --version
-          "${QMLFORMAT}" --version
-          Assets/shell/check-format.sh
-        '
+        clang-format --version
+        qmlformat --version
+        Assets/shell/check-format.sh

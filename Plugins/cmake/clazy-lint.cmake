@@ -9,6 +9,8 @@ file(GLOB_RECURSE VAST_LINT_SOURCES
   "${CMAKE_SOURCE_DIR}/Plugins/Vast/*.cpp"
 )
 
+list(FILTER VAST_LINT_SOURCES EXCLUDE REGEX "/Plugins/Vast/Tests/")
+
 set(CLAZY_CHECK_LIST
   "level1"
   "detaching-member"

@@ -21,3 +21,7 @@ add_subdirectory(MaterialColor)
 add_subdirectory(Search)
 add_subdirectory(Translation)
 add_subdirectory(Utils)
+
+if(VAST_BUILD_TESTS)
+    add_subdirectory(Tests)
+endif()

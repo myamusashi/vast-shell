@@ -9,4 +9,5 @@
 - [Configuration](docs/Configuration.md)
 - [Translations](docs/Translations.md)
 - [Project](docs/Project.md)
+- [Testing](docs/Testing.md)
 - [Showcase](docs/Showcase.md)
