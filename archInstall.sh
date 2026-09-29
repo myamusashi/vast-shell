@@ -316,8 +316,7 @@ build_m3shapes() {
 		M3Shapes usr/lib/qt6/qml/M3Shapes lib/qt6/qml/M3Shapes ||
 		warn "m3shapes install tree not found under $install_base"
 
-	local -r qt_core_lib
-	qt_core_lib=$(qt_module_libdirs Qt6Core)
+	local -r qt_core_lib="$(qt_module_libdirs Qt6Core)"
 
 	# The backing library lands in the library dir, not in the QML module dir.
 	local backing_lib
