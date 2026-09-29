@@ -3,7 +3,9 @@
 #include <qdbusmessage.h>
 #include <qdbuspendingreply.h>
 #include <qobject.h>
+#include <qfile.h>
 #include <qprocess.h>
+#include <qtemporarydir.h>
 #include <qsignalspy.h>
 #include <qstring.h>
 #include <qtest.h>
@@ -33,6 +35,28 @@ namespace {
     constexpr int               kTimeoutMs = 5000;
     constexpr int               kShortMs   = 1000; // a reply the code sends inline arrives in tens of ms
 
+    // Permissive on purpose: the suite only talks to its own FakeBlueZ over a
+    // socket nobody else can reach, so the point is to start, not to sandbox.
+    // A plain literal, not R"xml()": moc 6.11 parses no classes out of a file
+    // containing a raw string, and this file's classes come from moc.
+    const char* const kBusConfigTemplate = "<busconfig>\n"
+                                           "  <type>session</type>\n"
+                                           "  <listen>%1</listen>\n"
+                                           "  <keep_umask/>\n"
+                                           "  <policy context=\"default\">\n"
+                                           "    <allow user=\"*\"/>\n"
+                                           "    <allow own=\"*\"/>\n"
+                                           "    <allow send_type=\"method_call\"/>\n"
+                                           "    <allow send_type=\"method_return\"/>\n"
+                                           "    <allow send_type=\"error\"/>\n"
+                                           "    <allow send_type=\"signal\"/>\n"
+                                           "    <allow receive_type=\"method_call\"/>\n"
+                                           "    <allow receive_type=\"method_return\"/>\n"
+                                           "    <allow receive_type=\"error\"/>\n"
+                                           "    <allow receive_type=\"signal\"/>\n"
+                                           "  </policy>\n"
+                                           "</busconfig>\n";
+
     // Which step of the private-bus setup failed, and why. Every branch in
     // initTestCase used to return silently, so a missing binary, a daemon that
     // would not start, an unread address and a refused service registration
@@ -41,7 +65,7 @@ namespace {
         if (daemon.state() == QProcess::NotRunning && daemon.error() != QProcess::UnknownError)
             return QStringLiteral("could not run dbus-daemon: %1").arg(daemon.errorString());
         if (address.isEmpty())
-            return QStringLiteral("dbus-daemon ran but printed no address, stderr: %1").arg(QString::fromUtf8(daemon.readAllStandardError()).trimmed());
+            return QStringLiteral("dbus-daemon printed no address, exit %1, stderr: %2").arg(daemon.exitStatus()).arg(QString::fromUtf8(daemon.readAllStandardError()).trimmed());
         return QStringLiteral("dbus-daemon ran but connect or registerService failed on %1").arg(address);
     }
 
@@ -172,6 +196,7 @@ class TestBluetoothAgent : public QObject {
     std::optional<QDBusConnection>               bus;
     std::optional<QDBusConnection>               caller_;
     QProcess                                     daemon;
+    std::unique_ptr<QTemporaryDir>               busDir;
     FakeBlueZ                                    bluez;
     QString                                      address;
     bool                                         haveBus{false};
@@ -184,7 +209,27 @@ void TestBluetoothAgent::initTestCase() {
     // before the first systemBus() call.
     qputenv("DBUS_SYSTEM_BUS_ADDRESS", "unix:path=/nonexistent-system-bus");
 
-    daemon.start(QStringLiteral("dbus-daemon"), {QStringLiteral("--session"), QStringLiteral("--print-address"), QStringLiteral("--nofork")});
+    // A self-written config, not --session. --session reads the installed
+    // session.conf, which a bare Nix environment need not have: dbus-daemon
+    // then exits immediately and silently, leaving nothing to report. An
+    // explicit config and socket make the bus depend on nothing but the binary.
+    busDir = std::make_unique<QTemporaryDir>();
+    if (!busDir->isValid())
+        return;
+
+    const QString socketPath = busDir->filePath(QStringLiteral("bus"));
+    const QString configPath = busDir->filePath(QStringLiteral("session.conf"));
+    {
+        QFile config(configPath);
+        if (!config.open(QIODeviceBase::WriteOnly | QIODeviceBase::Text))
+            return;
+        // dbus-daemon rejects a config with no <listen>, so the socket path
+        // goes in the file rather than only on the command line.
+        config.write(QString::fromLatin1(kBusConfigTemplate).arg(QStringLiteral("unix:path=%1").arg(socketPath)).toLatin1());
+        config.close();
+    }
+
+    daemon.start(QStringLiteral("dbus-daemon"), {QStringLiteral("--config-file=%1").arg(configPath), QStringLiteral("--print-address"), QStringLiteral("--nofork")});
     if (!daemon.waitForStarted(kTimeoutMs))
         return;
 

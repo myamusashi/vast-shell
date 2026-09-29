@@ -272,6 +272,12 @@ The CI job checks `command -v dbus-daemon` in its own step, before the build, an
 spawn failure, an unread address, or a refused service registration -- because a bare
 "dbus-daemon unavailable" cannot tell those apart.
 
+The daemon is started with a **self-written** `session.conf` and an explicit socket,
+not `--session`. `--session` reads whichever `session.conf` the distribution installed,
+and in a bare Nix environment there may be none, in which case `dbus-daemon` exits
+immediately and silently. Writing the config into a `QTemporaryDir` makes the bus
+depend on nothing but the binary.
+
 ## Linters
 
 `ci-lint.yml` runs two jobs:
