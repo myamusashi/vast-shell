@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: build vast-shell
+    name: build
     runs-on: ubuntu-latest
     permissions:
       contents: read

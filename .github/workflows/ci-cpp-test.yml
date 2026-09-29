@@ -1,4 +1,4 @@
-name: C++ Test
+name: C++
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   cpp-test:
-    name: vast-shell ctest
+    name: ctest
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
