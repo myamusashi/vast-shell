@@ -1,16 +1,15 @@
 #include "BluetoothAgentManager.hpp"
 #include "BluetoothAgentAdaptor.hpp"
 
-#include <qdbusinterface.h>
 #include <QDBusPendingCallWatcher>
 #include <qdbuspendingreply.h>
 #include <qloggingcategory.h>
 
+#include <utility>
+
 namespace vast {
 
     BluetoothAgentManager::BluetoothAgentManager(QObject* parent, QDBusConnection bus) : QObject(parent), mSystemBus(std::move(bus)), mAdaptor(new BluetoothAgentAdaptor(this)) {
-
-        mAgentManager = new QDBusInterface(QStringLiteral("org.bluez"), QStringLiteral("/org/bluez"), QStringLiteral("org.bluez.AgentManager1"), mSystemBus, this);
 
         mWatcher = new QDBusServiceWatcher(QStringLiteral("org.bluez"), mSystemBus, QDBusServiceWatcher::WatchForOwnerChange, this);
         connect(mWatcher, &QDBusServiceWatcher::serviceOwnerChanged, this, [this](const QString& service, const QString& oldOwner, const QString& newOwner) {
@@ -24,14 +23,23 @@ namespace vast {
 
     BluetoothAgentManager::~BluetoothAgentManager() {
         if (mActive && mSystemBus.isConnected()) {
-            if (mAgentManager && mAgentManager->isValid())
-                mAgentManager->asyncCall(QStringLiteral("UnregisterAgent"), QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH))));
+            mSystemBus.asyncCall(agentManagerCall(QStringLiteral("UnregisterAgent"), {QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH)))}));
             mSystemBus.unregisterObject(QString::fromLatin1(K_AGENT_PATH));
         }
         for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it)
             mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Agent released")));
 
         mPending.clear();
+    }
+
+    QDBusMessage BluetoothAgentManager::agentManagerCall(const QString& method, const QList<QVariant>& args) const {
+        auto msg = QDBusMessage::createMethodCall(QString::fromLatin1(K_BLUES_SERVICE), QString::fromLatin1(K_BLUES_PATH), QString::fromLatin1(K_BLUES_IFACE), method);
+        for (const QVariant& a : args)
+            msg << a;
+        // Off: the owner watcher covers a late bluetoothd, and the shell must
+        // not start a Bluetooth stack the user disabled.
+        msg.setAutoStartService(false);
+        return msg;
     }
 
     void BluetoothAgentManager::ensureRegistered() {
@@ -55,15 +63,11 @@ namespace vast {
             }
         }
 
-        if (!mAgentManager->isValid()) {
-            qWarning() << "[Vast.BluetoothAgentManager] AgentManager1 not available (is bluetoothd running?)";
-            mSystemBus.unregisterObject(QString::fromLatin1(K_AGENT_PATH));
-            mActivationInFlight = false;
-            return;
-        }
-
+        // No pre-flight check: QDBusInterface::isValid() blocks in the
+        // constructor and reads stale inside the owner-changed handler.
         auto* watcher = new QDBusPendingCallWatcher(
-            mAgentManager->asyncCall(QStringLiteral("RegisterAgent"), QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH))), QString::fromLatin1(K_CAPABILITY)),
+            mSystemBus.asyncCall(
+                agentManagerCall(QStringLiteral("RegisterAgent"), {QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH))), QString::fromLatin1(K_CAPABILITY)})),
             this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, &BluetoothAgentManager::onRegisterAgentFinished);
     }
@@ -71,7 +75,8 @@ namespace vast {
     void BluetoothAgentManager::onRegisterAgentFinished(QDBusPendingCallWatcher* watcher) {
         watcher->deleteLater();
         const auto& reply = *watcher;
-        if (reply.isError()) {
+        // After a NoReply the call may have landed, so AlreadyExists is success.
+        if (reply.isError() && reply.error().name() != QLatin1String("org.bluez.Error.AlreadyExists")) {
             qWarning() << "[Vast.BluetoothAgentManager] RegisterAgent failed:" << reply.error().message();
             mSystemBus.unregisterObject(QString::fromLatin1(K_AGENT_PATH));
             mActivationInFlight = false;
@@ -79,15 +84,21 @@ namespace vast {
         }
 
         auto* next = new QDBusPendingCallWatcher(
-            mAgentManager->asyncCall(QStringLiteral("RequestDefaultAgent"), QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH)))), this);
+            mSystemBus.asyncCall(agentManagerCall(QStringLiteral("RequestDefaultAgent"), {QVariant::fromValue(QDBusObjectPath(QString::fromLatin1(K_AGENT_PATH)))})), this);
         connect(next, &QDBusPendingCallWatcher::finished, this, &BluetoothAgentManager::onRequestDefaultAgentFinished);
     }
 
     void BluetoothAgentManager::onRequestDefaultAgentFinished(QDBusPendingCallWatcher* watcher) {
         watcher->deleteLater();
         const auto& reply = *watcher;
-        if (reply.isError())
+        if (reply.isError()) {
+            // A non-default agent is never asked to handle a pairing.
             qWarning() << "[Vast.BluetoothAgentManager] RequestDefaultAgent failed:" << reply.error().message();
+            mSystemBus.unregisterObject(QString::fromLatin1(K_AGENT_PATH));
+            mActivationInFlight = false;
+            Q_EMIT activeChanged();
+            return;
+        }
 
         mActive             = true;
         mActivationInFlight = false;
@@ -97,12 +108,17 @@ namespace vast {
 
     void BluetoothAgentManager::reRegisterIfNeeded(const QString& newOwner) {
         if (newOwner.isEmpty()) {
-            // bluetoothd went away; clear pending and mark inactive
-            for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it)
+            // bluetoothd went away. The reply is defensive: bluetoothd is both
+            // the name owner and the only caller, so nobody is waiting.
+            // Detached before iterating, as in handleCancel.
+            auto pending = std::exchange(mPending, {});
+            for (auto it = pending.cbegin(); it != pending.cend(); ++it) {
+                mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("bluetoothd went away")));
                 Q_EMIT pairingCancelled(it.key());
+            }
 
-            mPending.clear();
-            Q_EMIT busyChanged();
+            if (!pending.isEmpty())
+                Q_EMIT busyChanged();
             mActive = false;
             Q_EMIT activeChanged();
             return;
@@ -112,11 +128,9 @@ namespace vast {
             ensureRegistered();
     }
 
-    [[nodiscard]] QString BluetoothAgentManager::resolveDeviceName(const QString& devicePath) const { // NOLINT(readability-convert-member-functions-to-static)
-        // Best-effort fallback only: derives a MAC-address-shaped label from the D-Bus
-        // object path (e.g. .../dev_xx_xx_xx_xx_xx_xx -> xx_xx_xx_xx_xx_xx). This is not
-        // the device's real name, QML should prefer Quickshell's Bluetooth device list
-        // (matched by dbusPath) and only fall back to this when that lookup misses.
+    [[nodiscard]] QString BluetoothAgentManager::resolveDeviceName(const QString& devicePath) {
+        // Best-effort only: derives a MAC-shaped label from the object path.
+        // Not the device's real name -- QML should prefer the device list.
         if (devicePath.isEmpty())
             return {};
         QString tail = devicePath.section(QLatin1Char('/'), -1);
@@ -125,20 +139,29 @@ namespace vast {
         return tail;
     }
 
-    QString BluetoothAgentManager::deviceNameForPath(const QString& devicePath) const {
+    QString BluetoothAgentManager::deviceNameForPath(const QString& devicePath) {
         return resolveDeviceName(devicePath);
+    }
+
+    void BluetoothAgentManager::storePending(const QString& devicePath, const QDBusMessage& msg) {
+        // mPending is keyed by device path, so a second request for the same
+        // device would orphan the first caller.
+        const auto it = mPending.constFind(devicePath);
+        if (it != mPending.constEnd())
+            mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Superseded by a newer request")));
+        mPending.insert(devicePath, msg);
     }
 
     void BluetoothAgentManager::handleRequestPinCode(const QString& devicePath, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] RequestPinCode" << devicePath;
-        mPending.insert(devicePath, msg);
+        storePending(devicePath, msg);
         Q_EMIT busyChanged();
         Q_EMIT pinCodeRequested(devicePath, resolveDeviceName(devicePath));
     }
 
     void BluetoothAgentManager::handleRequestPasskey(const QString& devicePath, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] RequestPasskey" << devicePath;
-        mPending.insert(devicePath, msg);
+        storePending(devicePath, msg);
         Q_EMIT busyChanged();
         Q_EMIT passkeyRequested(devicePath, resolveDeviceName(devicePath));
     }
@@ -151,39 +174,40 @@ namespace vast {
 
     void BluetoothAgentManager::handleRequestConfirmation(const QString& devicePath, quint32 passkey, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] RequestConfirmation" << devicePath << passkey;
-        mPending.insert(devicePath, msg);
+        storePending(devicePath, msg);
         Q_EMIT busyChanged();
         Q_EMIT confirmationRequested(devicePath, resolveDeviceName(devicePath), passkey);
     }
 
     void BluetoothAgentManager::handleAuthorizeService(const QString& devicePath, const QString& uuid, const QDBusMessage& msg) {
         qInfo() << "[Vast.BluetoothAgentManager] AuthorizeService" << devicePath << uuid;
-        mPending.insert(devicePath, msg);
+        storePending(devicePath, msg);
         Q_EMIT busyChanged();
         Q_EMIT authorizationRequested(devicePath, resolveDeviceName(devicePath), uuid);
     }
 
     void BluetoothAgentManager::handleCancel() {
         qInfo() << "[Vast.BluetoothAgentManager] Cancel()";
-        for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it) {
+        // Detached before iterating: a pairingCancelled handler may reply and
+        // erase from mPending, invalidating a live iterator.
+        auto pending = std::exchange(mPending, {});
+        for (auto it = pending.cbegin(); it != pending.cend(); ++it) {
             mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Canceled")));
             Q_EMIT pairingCancelled(it.key());
         }
-        const bool hadBusy = !mPending.isEmpty();
-        mPending.clear();
-        if (hadBusy)
+        if (!pending.isEmpty())
             Q_EMIT busyChanged();
     }
 
     void BluetoothAgentManager::handleRelease() {
         qInfo() << "[Vast.BluetoothAgentManager] Release() — agent released by bluetoothd";
-        for (auto it = mPending.constBegin(); it != mPending.constEnd(); ++it) {
+        // Detached before iterating, as in handleCancel.
+        auto pending = std::exchange(mPending, {});
+        for (auto it = pending.cbegin(); it != pending.cend(); ++it) {
             mSystemBus.send(it.value().createErrorReply(QStringLiteral("org.bluez.Error.Rejected"), QStringLiteral("Released")));
             Q_EMIT pairingCancelled(it.key());
         }
-        const bool hadBusy = !mPending.isEmpty();
-        mPending.clear();
-        if (hadBusy)
+        if (!pending.isEmpty())
             Q_EMIT busyChanged();
         mActive             = false;
         mActivationInFlight = false;

@@ -2,6 +2,8 @@
 
 #include <qdbusconnection.h>
 #include <qdbusmessage.h>
+#include <qlist.h>
+#include <qvariant.h>
 #include <qdbuscontext.h>
 #include <qdbusservicewatcher.h>
 #include <qhash.h>
@@ -9,7 +11,6 @@
 #include <qqmlintegration.h>
 #include <qstring.h>
 
-class QDBusInterface;
 class QDBusPendingCallWatcher;
 
 namespace vast {
@@ -40,12 +41,12 @@ namespace vast {
             return !mPending.isEmpty();
         }
 
-        Q_INVOKABLE void                  providePinCode(const QString& devicePath, const QString& pin);
-        Q_INVOKABLE void                  providePasskey(const QString& devicePath, quint32 passkey);
-        Q_INVOKABLE void                  confirmPairing(const QString& devicePath, bool accept);
-        Q_INVOKABLE void                  authorizeService(const QString& devicePath, bool accept);
+        Q_INVOKABLE void                         providePinCode(const QString& devicePath, const QString& pin);
+        Q_INVOKABLE void                         providePasskey(const QString& devicePath, quint32 passkey);
+        Q_INVOKABLE void                         confirmPairing(const QString& devicePath, bool accept);
+        Q_INVOKABLE void                         authorizeService(const QString& devicePath, bool accept);
 
-        Q_INVOKABLE [[nodiscard]] QString deviceNameForPath(const QString& devicePath) const;
+        Q_INVOKABLE [[nodiscard]] static QString deviceNameForPath(const QString& devicePath);
 
         // Called by adaptor
         void handleRequestPinCode(const QString& devicePath, const QDBusMessage& msg);
@@ -67,24 +68,28 @@ namespace vast {
         void pairingCancelled(const QString& devicePath);
 
       private:
-        void                  ensureRegistered();
-        void                  onRegisterAgentFinished(QDBusPendingCallWatcher* watcher);
-        void                  onRequestDefaultAgentFinished(QDBusPendingCallWatcher* watcher);
-        void                  reRegisterIfNeeded(const QString& newOwner);
+        [[nodiscard]] QDBusMessage   agentManagerCall(const QString& method, const QList<QVariant>& args) const;
+        void                         ensureRegistered();
+        void                         onRegisterAgentFinished(QDBusPendingCallWatcher* watcher);
+        void                         onRequestDefaultAgentFinished(QDBusPendingCallWatcher* watcher);
+        void                         reRegisterIfNeeded(const QString& newOwner);
 
-        [[nodiscard]] QString resolveDeviceName(const QString& devicePath) const;
+        [[nodiscard]] static QString resolveDeviceName(const QString& devicePath);
 
-        // Shared find/erase/busyChanged tail for the four completion entry points
-        // (providePinCode/providePasskey/confirmPairing/authorizeService). On a hit,
-        // removes the pending message from mPending, emits busyChanged(), and returns
-        // it via reply. On a miss, warns using callerName and returns false.
+        // Shared tail for the four completion entry points. On a hit, removes
+        // the pending message and returns it via reply; on a miss, warns and
+        // returns false.
         bool                         takePending(const QString& devicePath, const char* callerName, QDBusMessage& reply);
 
-        static constexpr const char* K_AGENT_PATH = "/io/quickshell/BluetoothAgent";
-        static constexpr const char* K_CAPABILITY = "KeyboardDisplay";
+        void                         storePending(const QString& devicePath, const QDBusMessage& msg);
+
+        static constexpr const char* K_AGENT_PATH    = "/io/quickshell/BluetoothAgent";
+        static constexpr const char* K_CAPABILITY    = "KeyboardDisplay";
+        static constexpr const char* K_BLUES_SERVICE = "org.bluez";
+        static constexpr const char* K_BLUES_PATH    = "/org/bluez";
+        static constexpr const char* K_BLUES_IFACE   = "org.bluez.AgentManager1";
 
         QDBusConnection              mSystemBus;
-        QDBusInterface*              mAgentManager{nullptr};
         QDBusServiceWatcher*         mWatcher{nullptr};
         BluetoothAgentAdaptor*       mAdaptor{nullptr};
 
