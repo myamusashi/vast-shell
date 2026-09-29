@@ -33,6 +33,18 @@ namespace {
     constexpr int               kTimeoutMs = 5000;
     constexpr int               kShortMs   = 1000; // a reply the code sends inline arrives in tens of ms
 
+    // Which step of the private-bus setup failed, and why. Every branch in
+    // initTestCase used to return silently, so a missing binary, a daemon that
+    // would not start, an unread address and a refused service registration
+    // all reported the same "dbus-daemon is unavailable".
+    [[nodiscard]] QString describeBusFailure(QProcess& daemon, const QString& address) {
+        if (daemon.state() == QProcess::NotRunning && daemon.error() != QProcess::UnknownError)
+            return QStringLiteral("could not run dbus-daemon: %1").arg(daemon.errorString());
+        if (address.isEmpty())
+            return QStringLiteral("dbus-daemon ran but printed no address, stderr: %1").arg(QString::fromUtf8(daemon.readAllStandardError()).trimmed());
+        return QStringLiteral("dbus-daemon ran but connect or registerService failed on %1").arg(address);
+    }
+
     // Counters are public members: moc rejects data members in Q_SLOTS.
     class FakeBlueZ : public QObject, public QDBusContext {
         Q_OBJECT
@@ -99,7 +111,7 @@ namespace {
             break;                                                                                                                                                                 \
         if (!qEnvironmentVariableIsSet("CI"))                                                                                                                                      \
             QSKIP("no private bus");                                                                                                                                               \
-        QFAIL("CI: dbus-daemon is required but unavailable; the bus-backed tests would silently skip");                                                                            \
+        QFAIL(qPrintable(describeBusFailure(daemon, address)));                                                                                                                    \
     } while (false)
 
 } // namespace

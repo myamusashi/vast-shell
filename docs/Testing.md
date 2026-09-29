@@ -267,6 +267,11 @@ developer's real bluetoothd. It is a `shell.nix` input, so the devShell CI enter
 has it. If the daemon is missing the suite **fails** under `CI` and skips locally, so a
 broken nix input cannot read as a green run with no coverage.
 
+The CI job checks `command -v dbus-daemon` in its own step, before the build, and dumps
+`PATH` on failure. `initTestCase` reports which step of the bus setup went wrong --
+spawn failure, an unread address, or a refused service registration -- because a bare
+"dbus-daemon unavailable" cannot tell those apart.
+
 ## Linters
 
 `ci-lint.yml` runs two jobs:
