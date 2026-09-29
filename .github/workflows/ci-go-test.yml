@@ -1,4 +1,4 @@
-name: Go Test
+name: Go
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   go-test:
-    name: vastctl go test
+    name: go test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     concurrency:

@@ -1,4 +1,4 @@
-name: Format
+name: format
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   format:
-    name: clang-format + qmlformat
+    name: format check
     runs-on: ubuntu-latest
     permissions:
       contents: read

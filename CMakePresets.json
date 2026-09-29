@@ -37,6 +37,16 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "VAST_NO_PCH": "ON"
       }
+    },
+    {
+      "name": "test",
+      "displayName": "Unit tests",
+      "inherits": "default",
+      "binaryDir": "${sourceDir}/build/test",
+      "cacheVariables": {
+        "VAST_BUILD_TESTS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
     }
   ],
   "buildPresets": [
@@ -47,7 +57,44 @@
     {
       "name": "clazy",
       "configurePreset": "clazy",
-      "targets": ["lint-clazy", "lint-tidy"]
+      "targets": [
+        "lint-clazy",
+        "lint-tidy"
+      ]
+    },
+    {
+      "name": "test",
+      "configurePreset": "test",
+      "targets": [
+        "tst_palette",
+        "tst_colormaterial",
+        "tst_spec_parity",
+        "tst_quantizer_parity",
+        "tst_fuzzy",
+        "tst_search",
+        "tst_clipboarddatabase",
+        "tst_clipboardmodel",
+        "tst_clipboardhelpers",
+        "tst_clipboardmanager",
+        "tst_audioprofiles",
+        "tst_audiocards",
+        "tst_audiodevices",
+        "tst_brightnessstore",
+        "tst_brightnessdisplay",
+        "tst_brightnessmanager",
+        "tst_imagecacheindex",
+        "tst_imagecache",
+        "tst_lrcparser",
+        "tst_lyricscache",
+        "tst_lyricsscheduler",
+        "tst_keylock",
+        "tst_colorutils",
+        "tst_utilsfile",
+        "tst_paletteanimator",
+        "tst_translation",
+        "tst_jobexecutor",
+        "tst_bluetoothagent"
+      ]
     }
   ]
 }

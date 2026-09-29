@@ -9,6 +9,8 @@ file(GLOB_RECURSE VAST_TIDY_SOURCES
   "${CMAKE_SOURCE_DIR}/Plugins/Vast/*.cpp"
 )
 
+list(FILTER VAST_TIDY_SOURCES EXCLUDE REGEX "/Plugins/Vast/Tests/")
+
 # The source list must reach the shell without CMake's `;` list separator
 # collapsing: write it newline-separated and let the shell split on newlines.
 file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/tidy-sources.txt" CONTENT "$<JOIN:${VAST_TIDY_SOURCES},\n>\n")

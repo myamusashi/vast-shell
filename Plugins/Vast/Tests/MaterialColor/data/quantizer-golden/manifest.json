@@ -1,0 +1,52 @@
+{
+  "nord": {
+    "file": "nord.jpg",
+    "source": "nord",
+    "originalSize": [
+      1920,
+      1080
+    ],
+    "width": 512,
+    "sourceColor": "#6080AA"
+  },
+  "pulp-fiction": {
+    "file": "pulp-fiction.jpg",
+    "source": "pulp-fiction",
+    "originalSize": [
+      1920,
+      1080
+    ],
+    "width": 512,
+    "sourceColor": "#4285F4"
+  },
+  "redsamurai": {
+    "file": "redsamurai.jpg",
+    "source": "redsamurai",
+    "originalSize": [
+      1920,
+      1080
+    ],
+    "width": 512,
+    "sourceColor": "#FF1F0E"
+  },
+  "sunset-cat": {
+    "file": "sunset-cat.jpg",
+    "source": "sunset-cat",
+    "originalSize": [
+      1920,
+      1080
+    ],
+    "width": 512,
+    "sourceColor": "#9B4757"
+  },
+  "wallhaven-p966oj_2560x1440": {
+    "file": "wallhaven-p966oj_2560x1440.jpg",
+    "source": "wallhaven-p966oj_2560x1440",
+    "originalSize": [
+      1920,
+      1080
+    ],
+    "width": 512,
+    "sourceColor": "#4285F4"
+  }
+}

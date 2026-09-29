@@ -154,9 +154,12 @@ vast-shell/
 │       ├── Search/            # Vast.Search      — SearchEngine, FileSearchModel,
 │       │                      #                   DirectoryWalker, LaunchHistoryStore
 │       ├── Translation/       # Vast.Translation — TranslationManager
-│       └── Utils/             # Vast.Utils       — ColorMaterial, ColorPreview, ColorUtils,
-│                              #                   PaletteAnimator, BluetoothAgentManager,
-│                              #                   BluetoothAgentAdaptor
+│       ├── Utils/             # Vast.Utils       — ColorMaterial, ColorPreview, ColorUtils,
+│       │                      #                   PaletteAnimator, BluetoothAgentManager,
+│       │                      #                   BluetoothAgentAdaptor
+│       └── Tests/             # opt-in Qt Test suite — tst_palette, tst_colormaterial,
+│                              #                   tst_spec_parity, tst_quantizer_parity,
+│                              #                   tst_fuzzy, tst_search (see docs/Testing.md)
 │
 ├── Assets/
 │   ├── images/                # image_not_found.svg, kuru.gif, wallpaper.png,
@@ -231,6 +234,10 @@ nix develop -c Assets/shell/check-format.sh
 # lint
 cmake --preset clazy && cmake --build --preset clazy
 Assets/shell/qmllint_qs.sh
+
+# unit tests (opt-in, see docs/Testing.md)
+cmake --preset test && cmake --build --preset test
+ctest --test-dir build/test --output-on-failure
 ```
 
 `qmllint_qs.sh` needs a `qs` QML module tree to resolve `qs.*` imports. With a shell running it reads the gitignored `Qml/.qmlls.ini` that quickshell writes at startup. Headless, generate the same tree yourself and point the import paths at the flake's module list:

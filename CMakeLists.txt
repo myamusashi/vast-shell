@@ -8,9 +8,10 @@ project(VastPlugins VERSION 1.0 LANGUAGES CXX C)
 # but clang tooling that parses compile_commands.json directly
 # (clazy-standalone, clangd, clang-tidy) then fails on any header resolved
 # through a stripped dir, e.g. qbytearray.h -> <QtCore/qrefcount.h> or even
-# <utility>. Fix: drop Nix store dirs from the implicit lists so real target
+# <utility>. 
+# Fix: drop Nix store dirs from the implicit lists so real target
 # includes stay explicit, and re-inject the toolchain defaults (C++ stdlib,
-# C library, compiler resource dir) as explicit -isystem flags — those are
+# C library, compiler resource dir) as explicit -isystem flags, those are
 # never target includes, so nothing else can bring them back. Dependency
 # include dirs (Qt, glib, ...) come back via normal target usage
 # requirements and are intentionally not duplicated here. Must run before any
@@ -51,6 +52,12 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
 find_package(Qt6 6.3 REQUIRED COMPONENTS Core DBus Gui Qml Quick Network Sql)
+
+option(VAST_BUILD_TESTS "Build the C++ unit tests" OFF)
+if(VAST_BUILD_TESTS)
+    enable_testing()
+endif()
+
 find_package(PkgConfig REQUIRED)
 
 add_compile_options(
