@@ -19,12 +19,11 @@ jobs:
         pacman -Syu --noconfirm
         pacman -S --noconfirm git sudo
 
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
           submodules: recursive
 
-    - name: Run archInstall.sh (Dry Run / Dependency Check)
+    - name: Run archInstall.sh
       env:
         CI: true
         SUDO_USER: builduser

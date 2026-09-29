@@ -19,30 +19,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
       with:
         use-flakehub: false
 
-    - name: Enter the flake devShell
-      uses: nicknovitski/nix-develop@v1
-
-    - name: Report tool versions
-      run: |
-        clang --version | head -1
-        cmake --version | head -1
-        ninja --version
-        echo "libpipewire-0.3 $(pkg-config --modversion libpipewire-0.3)"
-        echo "ddcutil       $(pkg-config --modversion ddcutil)"
-        echo "wayland-client $(pkg-config --modversion wayland-client)"
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Check tst_bluetoothagent can reach a bus
       run: |
@@ -81,24 +67,16 @@ jobs:
         working-directory: vastctl
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
       with:
         use-flakehub: false
 
-    - name: Enter the flake devShell
-      uses: nicknovitski/nix-develop@v1
-
-    - name: Report tool version
-      run: go version
+    - uses: nicknovitski/nix-develop@v1
 
     - name: gofmt
       run: |

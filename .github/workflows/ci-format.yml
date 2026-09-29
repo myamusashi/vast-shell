@@ -15,17 +15,10 @@ jobs:
       id-token: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
-
-    - name: Enter the flake devShell
-      uses: nicknovitski/nix-develop@v1
+    - uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Check formatting
       run: |

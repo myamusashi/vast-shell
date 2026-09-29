@@ -19,25 +19,13 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
-
-    - name: Enter the flake devShell
-      uses: nicknovitski/nix-develop@v1
-
-    - name: Report tool versions
-      run: |
-        clang --version | head -1
-        clazy-standalone --version | grep -i version | head -1
-        clang-tidy --version | grep -i "version" | head -1
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Configure
       run: cmake --preset clazy
@@ -53,19 +41,13 @@ jobs:
       id-token: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Nix
-      uses: DeterminateSystems/nix-installer-action@v14
-
-    - name: Set up Nix cache
-      uses: DeterminateSystems/magic-nix-cache-action@v8
-
-    - name: Enter the flake devShell
-      uses: nicknovitski/nix-develop@v1
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: nicknovitski/nix-develop@v1
 
     - name: Lint shell.qml and its imports
       run: |
