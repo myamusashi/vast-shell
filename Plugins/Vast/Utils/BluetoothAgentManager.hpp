@@ -68,13 +68,13 @@ namespace vast {
         void pairingCancelled(const QString& devicePath);
 
       private:
-        [[nodiscard]] QDBusMessage   agentManagerCall(const QString& method, const QList<QVariant>& args) const;
-        void                         ensureRegistered();
-        void                         onRegisterAgentFinished(QDBusPendingCallWatcher* watcher);
-        void                         onRequestDefaultAgentFinished(QDBusPendingCallWatcher* watcher);
-        void                         reRegisterIfNeeded(const QString& newOwner);
+        [[nodiscard]] static QDBusMessage agentManagerCall(const QString& method, const QList<QVariant>& args);
+        void                              ensureRegistered();
+        void                              onRegisterAgentFinished(QDBusPendingCallWatcher* watcher);
+        void                              onRequestDefaultAgentFinished(QDBusPendingCallWatcher* watcher);
+        void                              reRegisterIfNeeded(const QString& newOwner);
 
-        [[nodiscard]] static QString resolveDeviceName(const QString& devicePath);
+        [[nodiscard]] static QString      resolveDeviceName(const QString& devicePath);
 
         // Shared tail for the four completion entry points. On a hit, removes
         // the pending message and returns it via reply; on a miss, warns and

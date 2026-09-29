@@ -233,10 +233,19 @@ registration. `tst_search` links `vast-core` as well as `vast-search`.
 `material-color-utilities` and `fzy` submodules are checked out with `--recursive`; the
 plugin does not configure without them.
 
-The job installs Nix with `DeterminateSystems/nix-installer-action` and caches the store
-with `magic-nix-cache-action`, matching `ci-flake-update.yml`. It then enters the flake
-devShell via `nicknovitski/nix-develop`, so CI builds with the same clang, Qt, pipewire,
-ddcutil and mold as a local build — there is no second package list to maintain.
+Every workflow enters the flake devShell via `nicknovitski/nix-develop` after
+`DeterminateSystems/nix-installer-action` and `magic-nix-cache-action`, so CI builds with
+the same clang, Qt, pipewire, ddcutil and mold as a local build. `ci-format`, `ci-go-test`
+and both `ci-lint` jobs each used to spell out their own tool list -- an inline
+`nix shell --expr` for clang-format and qmlformat, `actions/setup-go` for go, and a
+`pacman -S` line inside an `archlinux:base-devel` container for clazy. Those were three
+more places to update when `shell.nix` changed, and the clazy one had drifted away from
+the devShell's package versions.
+
+Two workflows deliberately do not enter the devShell: `ci-flake-update` runs
+`nix flake update`, and `ci-nix` runs `nix build .` -- both operate on the flake itself,
+so a devShell would be circular. `ci-archinstall` runs `archInstall.sh` under pacman in
+a container and is the one workflow that is not nix at all.
 
 ```sh
 cmake --preset test -DVAST_TEST_VERBOSE=ON

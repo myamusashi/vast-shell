@@ -10,7 +10,10 @@ jobs:
   go-test:
     name: go test
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
     concurrency:
       group: go-test-${{ github.ref }}
       cancel-in-progress: true
@@ -24,11 +27,14 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: vastctl/go.mod
-        cache-dependency-path: vastctl/go.sum
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@v14
+
+    - name: Set up Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@v8
+
+    - name: Enter the flake devShell
+      uses: nicknovitski/nix-develop@v1
 
     - name: Report tool version
       run: go version
