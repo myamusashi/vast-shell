@@ -42,7 +42,7 @@ jobs:
     - name: Configure
       run: cmake --preset clazy
 
-    - name: Lint
+    - name: Run linting
       run: cmake --build --preset clazy
 
   qmllint:

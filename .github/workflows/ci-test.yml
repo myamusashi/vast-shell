@@ -46,10 +46,6 @@ jobs:
 
     - name: Check tst_bluetoothagent can reach a bus
       run: |
-        # tst_bluetoothagent spawns its own dbus-daemon. The devShell provides
-        # one, but the test is the only thing that notices if PATH plumbing
-        # loses it, so check here and fail fast with the PATH in the log
-        # rather than after a full 29s ctest run.
         if ! command -v dbus-daemon; then
           echo "::error::dbus-daemon is not on PATH. Add dbus to shell.nix packages."
           echo "$PATH" | tr ':' '\n'

@@ -29,8 +29,6 @@ jobs:
 
     - name: Check formatting
       run: |
-        # clang-format and qmlformat come from the devShell, so there is no
-        # second package list here to keep in step with shell.nix.
         clang-format --version
         qmlformat --version
         Assets/shell/check-format.sh
