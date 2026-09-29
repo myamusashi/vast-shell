@@ -229,14 +229,16 @@ registration. `tst_search` links `vast-core` as well as `vast-search`.
 
 ## CI
 
-`ci-cpp-test.yml` is the only workflow that compiles the plugin C++ and runs ctest. The
-`material-color-utilities` and `fzy` submodules are checked out with `--recursive`; the
-plugin does not configure without them.
+`ci-test.yml` holds both test jobs. `cpp-test` compiles the plugin C++ and runs ctest;
+`go-test` runs gofmt, vet, build and the Go suite in `vastctl`. They are separate jobs, not
+separate workflows, so a Go failure does not hide a ctest failure and both still run in
+parallel. The `material-color-utilities` and `fzy` submodules are checked out with
+`--recursive`; the plugin does not configure without them.
 
 Every workflow enters the flake devShell via `nicknovitski/nix-develop` after
 `DeterminateSystems/nix-installer-action` and `magic-nix-cache-action`, so CI builds with
-the same clang, Qt, pipewire, ddcutil and mold as a local build. `ci-format`, `ci-go-test`
-and both `ci-lint` jobs each used to spell out their own tool list -- an inline
+the same clang, Qt, pipewire, ddcutil and mold as a local build. `ci-format`, `ci-test`'s
+go job and both `ci-lint` jobs each used to spell out their own tool list -- an inline
 `nix shell --expr` for clang-format and qmlformat, `actions/setup-go` for go, and a
 `pacman -S` line inside an `archlinux:base-devel` container for clazy. Those were three
 more places to update when `shell.nix` changed, and the clazy one had drifted away from
@@ -256,7 +258,7 @@ QT_QPA_PLATFORM=offscreen ctest --test-dir build/test --output-on-failure --no-t
 The suites are headless. Eleven binaries link `Qt6::Gui` and use `QTEST_MAIN`, so they
 construct a `QGuiApplication` and abort without a platform plugin. The `Clipboard` suite
 and `tst_translation` set `QT_QPA_PLATFORM=offscreen` on their own ctest targets;
-`ci-cpp-test.yml` exports it for the whole run to cover `MaterialColor` and
+`ci-test.yml` exports it for the whole run to cover `MaterialColor` and
 `tst_search`, which do not set it. `tst_fuzzy` uses `QTEST_MAIN` but links `Qt6::Core`
 alone, so it gets a `QCoreApplication` and needs no display. The remaining 17 binaries
 are `QTEST_GUILESS_MAIN`.

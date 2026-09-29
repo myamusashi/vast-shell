@@ -1,4 +1,4 @@
-name: C++
+name: test
 
 on:
   push:
@@ -69,3 +69,57 @@ jobs:
     - name: List built test binaries
       if: failure()
       run: ls -1 build/test/Plugins/Vast/Tests/*/ 2>/dev/null || true
+
+  go-test:
+    name: go test
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
+    concurrency:
+      group: go-test-${{ github.ref }}
+      cancel-in-progress: true
+    defaults:
+      run:
+        working-directory: vastctl
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@v14
+
+    - name: Set up Nix cache
+      uses: DeterminateSystems/magic-nix-cache-action@v8
+      with:
+        use-flakehub: false
+
+    - name: Enter the flake devShell
+      uses: nicknovitski/nix-develop@v1
+
+    - name: Report tool version
+      run: go version
+
+    - name: gofmt
+      run: |
+        unformatted="$(gofmt -l .)"
+        if [ -n "$unformatted" ]; then
+          echo "::error::gofmt needed on: $unformatted"
+          exit 1
+        fi
+
+    - name: go vet
+      run: go vet ./...
+
+    - name: go build
+      run: go build ./...
+
+    - name: go test
+      run: go test -race -covermode=atomic -coverprofile=coverage.out ./...
+
+    - name: Report coverage
+      run: go tool cover -func=coverage.out | tail -n 1
