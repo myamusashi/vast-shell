@@ -88,7 +88,7 @@ in {
         ];
 
         systemd.user.services.quickshell-shell = {
-            enable = lib.optionals cfg.systemd;
+            enable = cfg.systemd;
             description = "Shell widget using quickshell";
             after = ["graphical-session.target"];
             partOf = ["graphical-session.target"];
