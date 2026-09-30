@@ -54,6 +54,7 @@ bool AudioCardsModel::upsertCard(const CardEntry& entry) {
         auto* card = new AudioCard(this);
         mCards.append(card);
         endInsertRows();
+        Q_EMIT countChanged();
         card->setDeviceInfo(entry.deviceId, entry.name, entry.description);
         card->setActiveProfile(entry.activeIndex, entry.activeProfile);
         card->profiles()->setProfiles(entry.profiles);
@@ -74,6 +75,7 @@ bool AudioCardsModel::upsertCard(const CardEntry& entry) {
 
 bool AudioCardsModel::removeCard(quint32 deviceId) {
     auto it = std::ranges::find_if(mCards, [deviceId](const AudioCard* card) { return card->deviceId() == deviceId; });
+
     if (it == mCards.end())
         return false;
 
@@ -82,6 +84,7 @@ bool AudioCardsModel::removeCard(quint32 deviceId) {
     AudioCard* card = *it;
     mCards.erase(it);
     endRemoveRows();
+    Q_EMIT countChanged();
     card->deleteLater();
     return true;
 }

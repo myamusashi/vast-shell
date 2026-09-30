@@ -23,7 +23,7 @@ Singleton {
     readonly property var defaultSinkCard: {
         if (!cards)
             return null;
-        const all = cards.count();
+        const all = cards.count;
         if (all <= 0)
             return null;
         const sink = Pipewire.defaultAudioSink;
@@ -75,7 +75,7 @@ Singleton {
         function deviceList(): string {
             const m = AudioDevicesWatcher.devices;
             const r = [];
-            for (let i = 0; i < m.count(); i++) {
+            for (let i = 0; i < m.count; i++) {
                 const d = m.get(i);
                 r.push({
                     id: d.id,
@@ -103,7 +103,7 @@ Singleton {
                 });
 
             const m = card.profiles;
-            const count = m.count();
+            const count = m.count;
             const r = {
                 deviceId: card.deviceId,
                 deviceName: card.name,

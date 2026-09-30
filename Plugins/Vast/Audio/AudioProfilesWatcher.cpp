@@ -74,7 +74,7 @@ namespace {
     constexpr int K_MAX_STR      = 256;
 
     struct ApProfileEntryT {
-        int32_t                     index;
+        int32_t                     index = -1;
         std::array<char, K_MAX_STR> name{};
         std::array<char, K_MAX_STR> description{};
         std::array<char, 32>        available{};
@@ -95,13 +95,19 @@ namespace {
         std::array<ApProfileEntryT, K_MAX_PROFILES> staging{};
         int                                         stagingCount = 0;
         int                                         enumSeq      = 0;
+        int                                         profileSeq   = 0;
 
         int32_t                                     activeIndex = -1;
         std::array<char, K_MAX_STR>                 activeName{};
         std::array<char, K_MAX_STR>                 activeDescription{};
         std::array<char, 32>                        activeAvailable{};
 
-        int                                         dirty = 0;
+        // Bumped by every accepted param event. PipeWire answers an async
+        // enumeration with one event per entry and never sends a terminator,
+        // so completion cannot be detected from the event stream: poll() uses
+        // this counter to learn that there is something to publish.
+        uint32_t revision     = 0;
+        uint32_t seenRevision = 0;
     };
 
     void        apRegistryEventGlobal(void* data, uint32_t id, uint32_t permissions, const char* type, uint32_t version, const spa_dict* props);
@@ -139,6 +145,47 @@ namespace {
 
     spa_pod* apBuildProfilePod(spa_pod_builder* b, int32_t index) {
         return static_cast<spa_pod*>(spa_pod_builder_add_object(b, SPA_TYPE_OBJECT_ParamProfile, SPA_PARAM_Profile, SPA_PARAM_PROFILE_index, SPA_POD_Int(index)));
+    }
+
+    // Starts both enumerations the watcher needs: every profile the card
+    // offers, and the one it currently runs. Both are async and both return a
+    // fresh sequence number, so each keeps its own guard — a single shared
+    // seq would drop whichever enumeration finished second.
+    void apRequestProfiles(ApDeviceNodeT* d) {
+        auto* device = reinterpret_cast<pw_device*>(d->proxy);
+
+        // Stale entries from the previous enumeration are dropped; the seq
+        // guards below already reject their events.
+        d->stagingCount = 0;
+        d->enumSeq      = pw_device_enum_params(device, 0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, nullptr);
+        d->profileSeq   = pw_device_enum_params(device, 0, SPA_PARAM_Profile, 0, UINT32_MAX, nullptr);
+    }
+
+    // Both enumerations answer with the same SPA_TYPE_OBJECT_ParamProfile, so
+    // the offered list and the active entry are decoded in one place.
+    ApProfileEntryT apParseProfilePod(const spa_pod* param) {
+        ApProfileEntryT entry;
+        int32_t         pidx  = -1;
+        const char*     name  = nullptr;
+        const char*     desc  = nullptr;
+        const char*     avail = "unknown";
+
+        spa_pod_prop*   prop = nullptr;
+        SPA_POD_OBJECT_FOREACH(reinterpret_cast<const spa_pod_object*>(param), prop) {
+            switch (prop->key) {
+                case SPA_PARAM_PROFILE_index: spa_pod_get_int(&prop->value, &pidx); break;
+                case SPA_PARAM_PROFILE_name: spa_pod_get_string(&prop->value, &name); break;
+                case SPA_PARAM_PROFILE_description: spa_pod_get_string(&prop->value, &desc); break;
+                case SPA_PARAM_PROFILE_available: avail = apParseAvailability(&prop->value); break;
+                default: break;
+            }
+        }
+
+        entry.index = pidx;
+        apSafeCopy(entry.name, name ? name : "");
+        apSafeCopy(entry.description, desc ? desc : "");
+        apSafeCopy(entry.available, avail);
+        return entry;
     }
 
     class PwApp {
@@ -237,85 +284,34 @@ namespace {
         }
 
         if (info->change_mask & PW_DEVICE_CHANGE_MASK_PARAMS) {
-            d->enumSeq      = pw_device_enum_params(reinterpret_cast<pw_device*>(d->proxy), 0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, nullptr);
-            d->stagingCount = 0;
-            pw_device_enum_params(reinterpret_cast<pw_device*>(d->proxy), 0, SPA_PARAM_EnumProfile, 0, UINT32_MAX, nullptr);
+            apRequestProfiles(d);
         }
     }
 
     void apDeviceEventParam(void* data, int seq, uint32_t id, uint32_t /*index*/, uint32_t /*next*/, const spa_pod* param) {
         auto* d = static_cast<ApDeviceNodeT*>(data);
 
+        // Both enumerations answer with profile objects; anything else is an
+        // error result and carries nothing worth publishing.
+        if (!param || !spa_pod_is_object(param))
+            return;
+
         if (id == SPA_PARAM_EnumProfile) {
-            if (seq != d->enumSeq)
+            if (seq != d->enumSeq || d->stagingCount >= K_MAX_PROFILES)
                 return;
 
-            if (!param || !spa_pod_is_object(param)) {
-                if (d->stagingCount > 0) {
-                    std::copy_n(d->staging.begin(), static_cast<size_t>(d->stagingCount), d->profiles.begin());
-                    d->profileCount = d->stagingCount;
-                    d->stagingCount = 0;
-                }
-                d->dirty = 1;
-                return;
-            }
-
-            if (d->stagingCount >= K_MAX_PROFILES)
-                return;
-
-            int32_t       pidx  = -1;
-            const char*   name  = nullptr;
-            const char*   desc  = nullptr;
-            const char*   avail = "unknown";
-
-            spa_pod_prop* prop = nullptr;
-            SPA_POD_OBJECT_FOREACH(reinterpret_cast<const spa_pod_object*>(param), prop) {
-                switch (prop->key) {
-                    case SPA_PARAM_PROFILE_index: spa_pod_get_int(&prop->value, &pidx); break;
-                    case SPA_PARAM_PROFILE_name: spa_pod_get_string(&prop->value, &name); break;
-                    case SPA_PARAM_PROFILE_description: spa_pod_get_string(&prop->value, &desc); break;
-                    case SPA_PARAM_PROFILE_available: avail = apParseAvailability(&prop->value); break;
-                    default: break;
-                }
-            }
-
-            auto& e = d->staging.at(static_cast<size_t>(d->stagingCount++));
-            e.index = pidx;
-            apSafeCopy(e.name, name ? name : "");
-            apSafeCopy(e.description, desc ? desc : "");
-            apSafeCopy(e.available, avail);
-
+            d->staging.at(static_cast<size_t>(d->stagingCount++)) = apParseProfilePod(param);
+            ++d->revision;
         } else if (id == SPA_PARAM_Profile) {
-            if (!param || !spa_pod_is_object(param))
+            if (seq != d->profileSeq)
                 return;
 
-            if (d->stagingCount > 0) {
-                std::copy_n(d->staging.begin(), static_cast<size_t>(d->stagingCount), d->profiles.begin());
-                d->profileCount = d->stagingCount;
-                d->stagingCount = 0;
-            }
-
-            int32_t       pidx  = -1;
-            const char*   name  = nullptr;
-            const char*   desc  = nullptr;
-            const char*   avail = "unknown";
-
-            spa_pod_prop* prop = nullptr;
-            SPA_POD_OBJECT_FOREACH(reinterpret_cast<const spa_pod_object*>(param), prop) {
-                switch (prop->key) {
-                    case SPA_PARAM_PROFILE_index: spa_pod_get_int(&prop->value, &pidx); break;
-                    case SPA_PARAM_PROFILE_name: spa_pod_get_string(&prop->value, &name); break;
-                    case SPA_PARAM_PROFILE_description: spa_pod_get_string(&prop->value, &desc); break;
-                    case SPA_PARAM_PROFILE_available: avail = apParseAvailability(&prop->value); break;
-                    default: break;
-                }
-            }
-
-            d->activeIndex = pidx;
-            apSafeCopy(d->activeName, name ? name : "");
-            apSafeCopy(d->activeDescription, desc ? desc : "");
-            apSafeCopy(d->activeAvailable, avail);
-            d->dirty = 1;
+            const ApProfileEntryT active = apParseProfilePod(param);
+            d->activeIndex               = active.index;
+            apSafeCopy(d->activeName, active.name.data());
+            apSafeCopy(d->activeDescription, active.description.data());
+            apSafeCopy(d->activeAvailable, active.available.data());
+            ++d->revision;
         }
     }
 
@@ -352,6 +348,15 @@ namespace {
         pw_proxy_add_object_listener(d->proxy, &d->deviceListener, &PwApp::S_DEVICE_EVENTS, d);
         pw_proxy_add_listener(d->proxy, &d->proxyListener, &PwApp::S_PROXY_EVENTS, d);
         app->mDevices.push_back(d);
+
+        // Ask now rather than waiting for the bound info event: that event
+        // only re-requests because the daemon currently reports every field
+        // changed on bind, which is not part of the contract.
+        apRequestProfiles(d);
+
+        // Publish the card even if neither enumeration ever answers, so a
+        // detected device is never silently missing from the model.
+        ++d->revision;
     }
 
     void apRegistryEventGlobalRemove(void* data, uint32_t id) {
@@ -388,11 +393,14 @@ namespace {
         .bound_props = nullptr,
     };
 
-    ApDeviceNodeT* apDrainDirty(std::span<ApDeviceNodeT* const> devices) {
-        auto it = std::ranges::find_if(devices, [](const ApDeviceNodeT* d) { return d->dirty != 0; });
+    // Returns the first device whose PipeWire state moved on since the last
+    // poll and marks it consumed, so the caller's loop drains every pending
+    // device exactly once.
+    ApDeviceNodeT* apTakeStale(std::span<ApDeviceNodeT* const> devices) {
+        auto it = std::ranges::find_if(devices, [](const ApDeviceNodeT* d) { return d->revision != d->seenRevision; });
         if (it == devices.end())
             return nullptr;
-        (*it)->dirty = 0;
+        (*it)->seenRevision = (*it)->revision;
         return *it;
     }
 
@@ -432,7 +440,16 @@ void AudioProfilesWatcher::poll() {
     bool   changed = false;
 
     pw_thread_loop_lock(app->loop());
-    while (ApDeviceNodeT* d = apDrainDirty(app->mDevices)) {
+    while (ApDeviceNodeT* d = apTakeStale(app->mDevices)) {
+        // Staged entries are published here rather than when the event
+        // stream ends: PipeWire sends one event per profile and no
+        // terminator, so there is no event to commit them on.
+        if (d->stagingCount > 0) {
+            std::copy_n(d->staging.begin(), static_cast<size_t>(d->stagingCount), d->profiles.begin());
+            d->profileCount = d->stagingCount;
+            d->stagingCount = 0;
+        }
+
         const QString actName = QString::fromUtf8(d->activeName.data());
 
         CardEntry     entry;

@@ -32,6 +32,10 @@ class AudioDevicesModel : public QAbstractListModel {
     QML_ELEMENT
     QML_UNCREATABLE("Access via AudioDevicesWatcher.devices")
 
+    // A notify property, not an invokable: a QML binding that calls count()
+    // registers no dependency and is never re-evaluated when the model fills.
+    Q_PROPERTY(qsizetype count READ count NOTIFY countChanged)
+
   public:
     enum Roles : uint16_t {
         IdRole = Qt::UserRole + 1,
@@ -53,9 +57,13 @@ class AudioDevicesModel : public QAbstractListModel {
     void                                  setDevices(std::span<const DeviceEntry> devices);
 
     [[nodiscard]] Q_INVOKABLE QVariantMap get(int row) const;
-    [[nodiscard]] Q_INVOKABLE qsizetype   count() const {
+
+    [[nodiscard]] qsizetype               count() const {
         return mDevices.size();
     }
+
+  Q_SIGNALS:
+    void countChanged();
 
   private:
     QList<DeviceEntry> mDevices;

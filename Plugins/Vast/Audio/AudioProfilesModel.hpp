@@ -30,6 +30,10 @@ class AudioProfilesModel : public QAbstractListModel {
     QML_ELEMENT
     QML_UNCREATABLE("Access via AudioProfilesWatcher.profiles")
 
+    // A notify property, not an invokable: a QML binding that calls count()
+    // registers no dependency and is never re-evaluated when the model fills.
+    Q_PROPERTY(qsizetype count READ count NOTIFY countChanged)
+
   public:
     enum Roles : uint16_t {
         IndexRole = Qt::UserRole + 1,
@@ -49,9 +53,13 @@ class AudioProfilesModel : public QAbstractListModel {
     bool                                  setProfiles(std::span<const ProfileEntry> profiles);
 
     [[nodiscard]] Q_INVOKABLE QVariantMap get(int row) const;
-    [[nodiscard]] Q_INVOKABLE qsizetype   count() const {
+
+    [[nodiscard]] qsizetype               count() const {
         return mProfiles.size();
     }
+
+  Q_SIGNALS:
+    void countChanged();
 
   private:
     QList<ProfileEntry> mProfiles;

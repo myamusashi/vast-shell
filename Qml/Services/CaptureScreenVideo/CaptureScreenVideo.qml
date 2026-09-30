@@ -17,7 +17,7 @@ Singleton {
     readonly property string thumbnailDir: Quickshell.env("HOME") + "/.cache/thumbnails/normal"
 
     readonly property bool connectedAudioDevice: AudioDevicesWatcher.connected
-    readonly property int audioDevicesCount: AudioDevicesWatcher.devices.count()
+    readonly property int audioDevicesCount: AudioDevicesWatcher.devices.count
 
     property bool isRecording: false
     property string currentOutputFile: ""
@@ -237,7 +237,7 @@ Singleton {
     function rebuild() {
         const m = AudioDevicesWatcher.devices;
         const arr = [];
-        for (let i = 0; i < m.count(); i++)
+        for (let i = 0; i < m.count; i++)
             arr.push(m.get(i));
         deviceCache = arr;
         devicesChanged();

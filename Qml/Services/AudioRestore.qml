@@ -43,7 +43,7 @@ Scope {
         restoring = true;
         const savedSink = Configs.audio.defaultSinkName;
         if (savedSink && cards) {
-            for (let i = 0; i < cards.count(); i++) {
+            for (let i = 0; i < cards.count; i++) {
                 const card = cards.card(i);
                 if (card && card.name === savedSink) {
                     AudioDevicesWatcher.setDefaultSink(card.name);
@@ -58,7 +58,7 @@ Scope {
         const profiles = Configs.audio.sinkProfiles;
         if (!profiles || typeof profiles !== "object" || !cards)
             return;
-        const total = cards.count();
+        const total = cards.count;
         if (total <= 0)
             return;
 
@@ -73,7 +73,7 @@ Scope {
             if (!deviceId)
                 continue;
             const model = card.profiles;
-            for (let j = 0; j < model.count(); j++) {
+            for (let j = 0; j < model.count; j++) {
                 const profile = model.get(j);
                 if (profile.index === savedIndex && profile.available === "yes") {
                     AudioProfilesWatcher.setProfile(deviceId, profile.index);

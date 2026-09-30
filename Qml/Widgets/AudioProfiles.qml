@@ -19,7 +19,7 @@ SplitButton {
         return profileModel ? profileModel.get(i) : null;
     }
 
-    readonly property int profileCount: profileModel ? profileModel.count() : 0
+    readonly property int profileCount: profileModel ? profileModel.count : 0
 
     readonly property int selectedIndex: {
         if (!resolvedCard)

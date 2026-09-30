@@ -50,9 +50,14 @@ QHash<int, QByteArray> AudioDevicesModel::roleNames() const {
 }
 
 void AudioDevicesModel::setDevices(std::span<const DeviceEntry> devices) {
+    const qsizetype previousCount = mDevices.size();
+
     beginResetModel();
     mDevices.assign(devices.begin(), devices.end());
     endResetModel();
+
+    if (mDevices.size() != previousCount)
+        Q_EMIT countChanged();
 }
 
 QVariantMap AudioDevicesModel::get(int row) const {

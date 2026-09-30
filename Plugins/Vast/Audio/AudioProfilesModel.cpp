@@ -47,9 +47,14 @@ bool AudioProfilesModel::setProfiles(std::span<const ProfileEntry> profiles) {
     if (std::ranges::equal(mProfiles, profiles))
         return false;
 
+    const qsizetype previousCount = mProfiles.size();
+
     beginResetModel();
     mProfiles.assign(profiles.begin(), profiles.end());
     endResetModel();
+
+    if (mProfiles.size() != previousCount)
+        Q_EMIT countChanged();
     return true;
 }
 

@@ -16,7 +16,7 @@ ColumnLayout {
     spacing: Appearance.spacing.larger
 
     readonly property var cards: AudioProfilesWatcher.cards
-    readonly property int count: cards ? cards.count() : 0
+    readonly property int count: cards ? cards.count : 0
 
     SettingsCard {
         title: qsTr("Level Meters")

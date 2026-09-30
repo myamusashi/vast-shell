@@ -29,6 +29,10 @@ class AudioCardsModel : public QAbstractListModel {
     QML_ELEMENT
     QML_UNCREATABLE("Access via AudioProfilesWatcher.cards")
 
+    // A notify property, not an invokable: a QML binding that calls count()
+    // registers no dependency and is never re-evaluated when the model fills.
+    Q_PROPERTY(qsizetype count READ count NOTIFY countChanged)
+
   public:
     enum Roles : uint16_t {
         DeviceIdRole = Qt::UserRole + 1,
@@ -51,9 +55,13 @@ class AudioCardsModel : public QAbstractListModel {
     bool                                 upsertCard(const CardEntry& entry);
 
     [[nodiscard]] Q_INVOKABLE AudioCard* card(int row) const;
-    [[nodiscard]] Q_INVOKABLE qsizetype  count() const {
+
+    [[nodiscard]] qsizetype              count() const {
         return mCards.size();
     }
+
+  Q_SIGNALS:
+    void countChanged();
 
   private:
     QList<AudioCard*> mCards;

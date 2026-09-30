@@ -80,6 +80,8 @@ class TestAudioCards : public QObject {
     void dataRejectsOutOfRangeIndexAndUnknownRole();
     void rowCountRejectsValidParent();
     void removedCardIsDeferredNotFreedImmediately();
+    void countIsANotifyPropertySoQmlBindingsTrackIt();
+    void countChangesOnlyFireOnInsertAndRemove();
 
     void watchersConstructAndExposeNonNullModels();
 };
@@ -336,6 +338,38 @@ void TestAudioCards::removedCardIsDeferredNotFreedImmediately() {
 
     QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
     QVERIFY(alive.isNull());
+}
+
+void TestAudioCards::countIsANotifyPropertySoQmlBindingsTrackIt() {
+    AudioCardsModel          model;
+    const QMetaObject* const meta = model.metaObject();
+
+    const int                index = meta->indexOfProperty("count");
+    QVERIFY2(index >= 0,
+             "count must be a Q_PROPERTY; a Q_INVOKABLE records no QML binding dependency, "
+             "so a binding that reads it never re-evaluates when the model fills asynchronously");
+    const int notifyIndex = meta->indexOfSignal("countChanged()");
+    QVERIFY(notifyIndex >= 0);
+    QVERIFY(meta->property(index).hasNotifySignal());
+    QCOMPARE(meta->property(index).notifySignal(), meta->method(notifyIndex));
+}
+
+void TestAudioCards::countChangesOnlyFireOnInsertAndRemove() {
+    AudioCardsModel model;
+    QVERIFY(model.upsertCard(twoProfileCard(1, "one")));
+
+    QSignalSpy countSpy(&model, &AudioCardsModel::countChanged);
+
+    // Republishing the same device rewrites the row in place; the row count
+    // does not move, so a count binding must not be woken.
+    QVERIFY(model.upsertCard(twoProfileCard(1, "one_renamed")));
+    QCOMPARE(countSpy.count(), 0);
+
+    QVERIFY(model.upsertCard(twoProfileCard(2, "two")));
+    QCOMPARE(countSpy.count(), 1);
+
+    QVERIFY(model.removeCard(1));
+    QCOMPARE(countSpy.count(), 2);
 }
 
 void TestAudioCards::watchersConstructAndExposeNonNullModels() {

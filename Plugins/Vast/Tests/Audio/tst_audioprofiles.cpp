@@ -47,6 +47,8 @@ class TestAudioProfiles : public QObject {
     void setProfilesPreservesOrder();
     void countMatchesRowCount();
     void setProfilesWithEmptySpanClearsModel();
+    void countIsANotifyPropertySoQmlBindingsTrackIt();
+    void setProfilesNotifiesCountOnlyWhenTheCountMoves();
 
     void formatProfileNameMapsSpecialNames();
     void formatProfileNameStripsDirectionPrefixes();
@@ -197,6 +199,40 @@ void TestAudioProfiles::setProfilesWithEmptySpanClearsModel() {
     QVERIFY(model.setProfiles(empty));
     QCOMPARE(model.rowCount({}), 0);
     QVERIFY(model.get(0).isEmpty());
+}
+
+void TestAudioProfiles::countIsANotifyPropertySoQmlBindingsTrackIt() {
+    AudioProfilesModel       model;
+    const QMetaObject* const meta = model.metaObject();
+
+    const int                index = meta->indexOfProperty("count");
+    QVERIFY2(index >= 0,
+             "count must be a Q_PROPERTY; a Q_INVOKABLE records no QML binding dependency, "
+             "so a binding that reads it never re-evaluates when the model fills asynchronously");
+    const int notifyIndex = meta->indexOfSignal("countChanged()");
+    QVERIFY(notifyIndex >= 0);
+    QVERIFY(meta->property(index).hasNotifySignal());
+    QCOMPARE(meta->property(index).notifySignal(), meta->method(notifyIndex));
+}
+
+void TestAudioProfiles::setProfilesNotifiesCountOnlyWhenTheCountMoves() {
+    AudioProfilesModel model;
+    model.setProfiles(threeProfiles());
+
+    QSignalSpy countSpy(&model, &AudioProfilesModel::countChanged);
+
+    auto       renamed = threeProfiles();
+    renamed[1].name    = QStringLiteral("output:surround-71");
+    QVERIFY(model.setProfiles(renamed));
+    QCOMPARE(countSpy.count(), 0);
+
+    const QList<ProfileEntry> single{renamed.first()};
+    QVERIFY(model.setProfiles(single));
+    QCOMPARE(countSpy.count(), 1);
+
+    const QList<ProfileEntry> empty;
+    QVERIFY(model.setProfiles(empty));
+    QCOMPARE(countSpy.count(), 2);
 }
 
 void TestAudioProfiles::formatProfileNameMapsSpecialNames() {

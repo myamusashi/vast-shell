@@ -49,6 +49,8 @@ class TestAudioDevices : public QObject {
     void setDevicesAlwaysResetsEvenWhenIdentical();
     void duplicateIdsAreNotDeduped();
     void monitorEntryCarriesMonitorOfLink();
+    void countIsANotifyPropertySoQmlBindingsTrackIt();
+    void setDevicesNotifiesCountOnlyWhenTheCountMoves();
 };
 
 void TestAudioDevices::roleNamesMatchQmlContract() {
@@ -215,6 +217,38 @@ void TestAudioDevices::monitorEntryCarriesMonitorOfLink() {
     const QVariantMap map = model.get(1);
     QCOMPARE(map.value(QStringLiteral("isMonitor")).toBool(), true);
     QCOMPARE(map.value(QStringLiteral("monitorOf")).toString(), QStringLiteral("alsa_output.pci-0000_00_1f.3.analog-stereo"));
+}
+
+void TestAudioDevices::countIsANotifyPropertySoQmlBindingsTrackIt() {
+    AudioDevicesModel        model;
+    const QMetaObject* const meta = model.metaObject();
+
+    const int                index = meta->indexOfProperty("count");
+    QVERIFY2(index >= 0,
+             "count must be a Q_PROPERTY; a Q_INVOKABLE records no QML binding dependency, "
+             "so a binding that reads it never re-evaluates when the model fills asynchronously");
+    const int notifyIndex = meta->indexOfSignal("countChanged()");
+    QVERIFY(notifyIndex >= 0);
+    QVERIFY(meta->property(index).hasNotifySignal());
+    QCOMPARE(meta->property(index).notifySignal(), meta->method(notifyIndex));
+}
+
+void TestAudioDevices::setDevicesNotifiesCountOnlyWhenTheCountMoves() {
+    AudioDevicesModel model;
+    model.setDevices(sinkAndMonitor());
+
+    QSignalSpy countSpy(&model, &AudioDevicesModel::countChanged);
+
+    model.setDevices(sinkAndMonitor());
+    QCOMPARE(countSpy.count(), 0);
+
+    const QList<DeviceEntry> single{sinkAndMonitor().first()};
+    model.setDevices(single);
+    QCOMPARE(countSpy.count(), 1);
+
+    const QList<DeviceEntry> empty;
+    model.setDevices(empty);
+    QCOMPARE(countSpy.count(), 2);
 }
 
 QTEST_GUILESS_MAIN(TestAudioDevices)
