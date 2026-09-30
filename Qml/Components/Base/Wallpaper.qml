@@ -114,13 +114,7 @@ Item {
 
     function load(url) {
         if (MediaKind.isVideo(url)) {
-            if (isVideoWallpaper)
-                startVideoTransition(url);
-            else {
-                videoPlayerA.source = Qt.resolvedUrl(url);
-                playVideo(videoPlayerA);
-                isVideoWallpaper = true;
-            }
+            startVideoTransition(url);
             return;
         }
 
@@ -259,6 +253,11 @@ Item {
         progressAnimation.restart();
     }
 
+    function releaseTransitionSources() {
+        transitionEffect.source1 = null;
+        transitionEffect.source2 = null;
+    }
+
     function commitTransition() {
         if (!transitionBusy)
             return;
@@ -273,6 +272,7 @@ Item {
             transitionBusy = false;
             transitionEffect.progress = 0.0;
             incomingPlayer = null;
+            releaseTransitionSources();
             loadPendingUrl();
             return;
         }
@@ -296,6 +296,7 @@ Item {
         activeImageSlot = newSlot;
         oldImg.source = "";
         transitionEffect.progress = 0.0;
+        releaseTransitionSources();
         incomingImage = null;
 
         ImageCache.evict(oldPath);
@@ -389,6 +390,7 @@ Item {
         z: 1
         fillMode: VideoOutput.PreserveAspectCrop
         visible: videoPlayerA.source !== ""
+        layer.enabled: false
     }
 
     MediaPlayer {
@@ -417,6 +419,7 @@ Item {
         z: 1
         fillMode: VideoOutput.PreserveAspectCrop
         visible: videoPlayerB.source !== ""
+        layer.enabled: false
     }
 
     Image {
@@ -426,8 +429,8 @@ Item {
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         cache: true
-        layer.enabled: true
-        visible: !root.transitionBusy && root.activeImageSlot === 0
+        layer.enabled: false
+        visible: (!root.transitionBusy && root.activeImageSlot === 0) || transitionEffect.source1 === imageA || transitionEffect.source2 === imageA
         onStatusChanged: root.handleImageStatus(imageA)
     }
 
@@ -438,8 +441,8 @@ Item {
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         cache: true
-        layer.enabled: true
-        visible: !root.transitionBusy && root.activeImageSlot === 1
+        layer.enabled: false
+        visible: (!root.transitionBusy && root.activeImageSlot === 1) || transitionEffect.source1 === imageB || transitionEffect.source2 === imageB
         onStatusChanged: root.handleImageStatus(imageB)
     }
 
