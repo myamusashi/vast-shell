@@ -45,8 +45,9 @@ vastctl brightness set -5%
 | Command | Flag | Default | Description |
 |---|---|---|---|
 | (global) | `--json` | `false` | Print raw JSON instead of the rendered tree. |
-| `daemon start` | `-v`, `--verbose` | `false` | Stream quickshell logs to the terminal. |
-| `daemon start` | `-f`, `--foreground` | `false` | Run quickshell in the foreground instead of detaching. |
+| `daemon start` | `-v`, `--verbose` | `false` | Stream quickshell output to the terminal. |
+| `daemon` | `-f`, `--foreground` | `false` | Run the supervisor in the foreground. |
+| `daemon` | `--config` | `$VAST_SHELL_DIRECTORY` | Config directory to run. Honoured only when starting a daemon, never by IPC commands. |
 | `log` | `-n`, `--lines` | `20` | Number of trailing lines to print. |
 | `log` | `--no-follow` | `false` | Print the tail once and exit instead of following. |
 | `toast open` | `-H`, `--header` | `vast-shell` | Toast header. |
@@ -57,21 +58,69 @@ vastctl brightness set -5%
 | `color` | `--out` | *(stdout)* | Write the JSON result to a file. |
 | `color` | `--raw` | `false` | Skip the tree renderer (implied by `--out`). |
 
-### Daemon auto-start
+### The running daemon is the source of truth
 
-On the first IPC call, `vastctl` automatically launches quickshell in the background if it's not running. Explicit control is available:
+IPC commands only ever connect. They never start a shell, and they never
+work out which shell to talk to from your working directory, your
+environment or the installed location. A supervisor holds an exclusive
+lock and publishes the running shell's identity under
+`$XDG_RUNTIME_DIR/vast/`; every `vastctl` command routes to that
+identity, whatever directory it is called from.
 
 ```sh
-vastctl daemon start               # background, logs to /tmp/vast-shell.log
-vastctl daemon start --verbose     # show quickshell logs live
-vastctl log                        # watch the daemon log (tail -f style)
-vastctl log --no-follow -n 50      # print the last 50 lines and exit
-vastctl daemon status
+vastctl daemon start          # take the lock, launch the shell
+vastctl daemon start -v       # also stream quickshell's output to the terminal
+vastctl daemon status         # namespace, state file, pid, instance id, config path, uptime
 vastctl daemon restart
-vastctl daemon stop
+vastctl daemon stop           # signals the recorded supervisor
+vastctl log                   # watch the daemon log (tail -f style)
+vastctl log --no-follow -n 50 # print the last 50 lines and exit
 ```
 
-`vastctl` waits up to 45 seconds (polling every 250 ms) for the shell to register its IPC endpoint before dispatching the first call, so a cold checkout needs no separate `quickshell -p ... &` step. Later calls are immediate.
+With no daemon running, an IPC command fails and says how to start one
+instead of quietly launching a second shell, two shells on one session
+contend for the same IPC targets, and the desktop you get is whichever
+process won the race.
+
+`VAST_SHELL_DIRECTORY` and `--config` decide what `vastctl daemon`
+**starts**. They are deliberately ignored by IPC commands, so a stray
+environment variable cannot redirect a call to a shell that isn't
+running.
+
+### Running two shells on purpose
+
+`VAST_INSTANCE` selects an isolated runtime namespace, giving a daemon
+its own lock and state file under `$XDG_RUNTIME_DIR/<name>/`:
+
+```sh
+VAST_INSTANCE=dev VAST_SHELL_DIRECTORY="$PWD" vastctl daemon start
+VAST_INSTANCE=dev vastctl daemon status
+VAST_INSTANCE=dev vastctl wallpaper get
+```
+
+That is the supported way to run a development checkout beside the
+installed shell. Each namespace addresses its own daemon, and the two
+never fight over the same IPC name.
+
+### Service manager
+
+`vastctl daemon run` is the supervisor: it takes the lock, launches the
+shell and stays in the foreground so the service manager tracks it. The
+NixOS module uses it as the unit's `ExecStart`, and signal forwarding
+means stopping the unit stops the shell cleanly.
+
+### Development
+
+`VAST_SHELL_DIRECTORY` names the checkout root, but the config path handed
+to quickshell is the directory that actually holds `shell.qml` — `$PWD/Qml`
+here. `vastctl daemon status` prints the resolved path, which is the
+quickest way to confirm which instance a command will reach.
+
+The repo's `.envrc` exports `VAST_SHELL_DIRECTORY="$PWD"`, so with direnv
+enabled, `vastctl daemon start` inside the repo starts the development
+checkout. The NixOS module's installed `vastctl` uses `--set-default` for
+that variable, so an explicit `VAST_SHELL_DIRECTORY=... vastctl ...`
+overrides the baked-in value rather than being clobbered by it.
 
 ### Shell completions
 
@@ -96,7 +145,8 @@ VAST_SHELL_DIRECTORY="$PWD" vastctl idle status
 `VAST_SHELL_DIRECTORY` names the checkout root, but the config path handed to quickshell is the directory that actually holds `shell.qml` — `$PWD/Qml` here. `vastctl daemon status` prints the resolved path, which is the quickest way to confirm which instance a command will reach.
 
 > [!NOTE]
-> `VAST_SHELL_DIRECTORY` selects the *shell instance*, not the config file. Configuration always comes from `~/.config/vast-shell/configurations.json` — see [Configuration](Configuration.md).
+> `VAST_SHELL_DIRECTORY` selects the *shell instance*, not the config file. Configuration always comes from `~/.config/vast-shell/configurations.json`,
+> see [Configuration](Configuration.md).
 
 The repo's `.envrc` exports `VAST_SHELL_DIRECTORY="$PWD"`, so with direnv enabled every vastctl invocation inside the repo automatically targets the dev instance. An explicit `VAST_SHELL_DIRECTORY=... vastctl ...` overrides the value baked into the installed wrapper.
 
@@ -104,8 +154,14 @@ The repo's `.envrc` exports `VAST_SHELL_DIRECTORY="$PWD"`, so with direnv enable
 
 Dispatch a panel or action directly from Hyprland:
 
+Old hyprland command:
 ```sh
 hyprctl dispatch global quickshell:<target>
+```
+
+Lua command:
+```sh
+hyprctl dispatch 'hl.dsp.global("quickshell:<target>")'
 ```
 
 Available targets (10, all registered as `GlobalShortcut` in the shell):

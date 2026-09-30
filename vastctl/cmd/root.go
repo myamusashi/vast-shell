@@ -17,6 +17,10 @@ var rootCmd = &cobra.Command{
 	CompletionOptions: cobra.CompletionOptions{
 		DisableDefaultCmd: true,
 	},
+	// A command that ran and failed: no daemon, unknown target, should
+	// report the reason, and not reprint the usage block the user just read.
+	// Usage stays for the flag and argument errors it is actually for.
+	SilenceUsage: true,
 }
 
 func Execute() {

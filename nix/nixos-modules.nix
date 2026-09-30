@@ -16,6 +16,12 @@ in {
     options.programs.quickshell-shell = {
         enable = lib.mkEnableOption "quickshell shell";
 
+        systemd = lib.mkOption {
+            type = lib.types.bool;
+            default = false;
+            description = "Start vast-shell with systemd-services";
+        };
+
         package = lib.mkOption {
             type = lib.types.package;
             default = self.packages.${pkgs.system}.default;
@@ -74,9 +80,7 @@ in {
     config = lib.mkIf cfg.enable {
         environment.variables.VAST_SHELL_DIRECTORY = "${cfg.package}/share/quickshell";
 
-        environment.systemPackages =
-            [cfg.package]
-            ++ cfg.extraPackages;
+        environment.systemPackages = [cfg.package] ++ cfg.extraPackages;
 
         fonts.packages = lib.optionals cfg.installFonts [
             material-symbols
@@ -84,6 +88,7 @@ in {
         ];
 
         systemd.user.services.quickshell-shell = {
+            enable = lib.optionals cfg.systemd;
             description = "Shell widget using quickshell";
             after = ["graphical-session.target"];
             partOf = ["graphical-session.target"];
@@ -91,7 +96,7 @@ in {
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "${cfg.package}/bin/vastctl daemon start --foreground";
+                ExecStart = "${cfg.package}/bin/vastctl daemon run";
                 Restart = "on-failure";
                 RestartSec = "5s";
                 Environment = [

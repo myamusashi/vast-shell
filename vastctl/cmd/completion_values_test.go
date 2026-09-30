@@ -31,7 +31,7 @@ func completions(t *testing.T, line string, args ...string) []string {
 		return nil
 	}
 	var out []string
-	for _, v := range strings.Split(values, "\n") {
+	for v := range strings.SplitSeq(values, "\n") {
 		if v != "" {
 			out = append(out, v)
 		}

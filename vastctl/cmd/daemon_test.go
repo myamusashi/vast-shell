@@ -2,349 +2,402 @@ package cmd
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
-	"slices"
+	"strconv"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
 
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
+	"github.com/myamusashi/vast-shell/vastctl/internal/daemon"
 )
 
-// recordPgrep points the pgrep shim at a fresh invocation log
-// directory and returns it.
-func recordPgrep(t *testing.T) string {
+// daemonRuntime points the namespace at a fresh runtime directory and
+// publishes the state a live supervisor would have written. The recorded
+// pid is this test process, so it is alive without a fixture to clean up.
+func daemonRuntime(t *testing.T, instanceID string) {
 	t.Helper()
-	return shimLogDir(t, "SHIM_PGREP_LOG")
+	t.Setenv("XDG_RUNTIME_DIR", t.TempDir())
+	t.Setenv("VAST_INSTANCE", "")
+	t.Setenv("VAST_SHELL_DIRECTORY", "")
+	if instanceID == "" {
+		return
+	}
+	err := daemon.WriteState(daemon.State{
+		PID:           os.Getpid(),
+		SupervisorPID: os.Getpid(),
+		ConfigPath:    "/cfg/Qml",
+		InstanceID:    instanceID,
+		Namespace:     "vast",
+		StartedAt:     time.Now().Format(time.RFC3339),
+	})
+	if err != nil {
+		t.Fatalf("publish daemon state: %v", err)
+	}
 }
 
-// recordKill points the kill shim at a fresh invocation log directory
-// and returns it.
-func recordKill(t *testing.T) string {
+// quickshellCalls returns every recorded quickshell invocation, oldest
+// first. The log directory has to be pointed at before the invocation
+// under test runs, because the shim records on the way in.
+func quickshellCalls(t *testing.T, log string) [][]string {
+	return shimInvocations(t, log)
+}
+
+// bystander starts a process standing in for an unrelated shell, reaped
+// on cleanup so a signalled process does not linger as a zombie.
+func bystander(t *testing.T) *os.Process {
 	t.Helper()
-	return shimLogDir(t, "SHIM_KILL_LOG")
+	cmd, _ := reaped(t)
+	return cmd.Process
+}
+
+// reaped starts a process and reaps it, returning a channel closed once
+// it exits. Signalling leaves a zombie until it is waited for, and a
+// zombie still answers a liveness probe, so a test checking whether its
+// target died has to be the one to reap it.
+func reaped(t *testing.T) (*exec.Cmd, <-chan struct{}) {
+	t.Helper()
+	cmd := exec.Command("sleep", "60")
+	if err := cmd.Start(); err != nil {
+		t.Fatalf("start a process: %v", err)
+	}
+	exited := make(chan struct{})
+	go func() {
+		_ = cmd.Wait()
+		close(exited)
+	}()
+	t.Cleanup(func() {
+		_ = cmd.Process.Kill()
+		<-exited
+	})
+	return cmd, exited
+}
+
+func exitedWithin(exited <-chan struct{}, d time.Duration) bool {
+	select {
+	case <-exited:
+		return true
+	case <-time.After(d):
+		return false
+	}
+}
+
+func alive(proc *os.Process) bool {
+	return proc.Signal(syscall.Signal(0)) == nil
 }
 
 // TestDaemonStatusNotRunning pins the answer for a shell that is down.
-// The command must say so rather than printing a bare config line, or
-// a user reading `vastctl daemon status` cannot tell whether it worked.
+// The command must say so plainly, or a user reading
+// `vastctl daemon status` cannot tell whether it worked.
 func TestDaemonStatusNotRunning(t *testing.T) {
-	wantShellRunning(t, false)
-	recordPgrep(t)
+	daemonRuntime(t, "")
 
 	res, err := runCLI(t, "daemon", "status")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if want := "vast-shell is not running\n"; res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
+	if !strings.Contains(res.output(), "vast-shell is not running") {
+		t.Fatalf("output = %q, want it to report the shell is not running", res.output())
 	}
 }
 
-// TestDaemonStatusRunning pins that the pids are reported. They are
-// what a user needs in order to investigate, and a status line without
-// them makes the next step a guess.
-func TestDaemonStatusRunning(t *testing.T) {
-	wantShellRunning(t, true)
-	recordPgrep(t)
-	t.Setenv("SHIM_PGREP", "111 222\n")
+// TestDaemonStatusReportsIdentity pins the fields a client resolves its
+// IPC target from. The instance id and config path settle "which shell
+// am I talking to", which is the question a development run exists to
+// answer.
+func TestDaemonStatusReportsIdentity(t *testing.T) {
+	daemonRuntime(t, "abc123")
 
 	res, err := runCLI(t, "daemon", "status")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if want := "vast-shell is running (pids 111, 222)\n"; res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
+	out := res.output()
+	for _, want := range []string{
+		"vast-shell is running",
+		"instance:   abc123",
+		"config:     /cfg/Qml",
+		"pid:        " + strconv.Itoa(os.Getpid()),
+	} {
+		if !strings.Contains(out, want) {
+			t.Errorf("output = %q, want it to contain %q", out, want)
+		}
 	}
 }
 
-// TestDaemonStatusWithoutPids pins the disagreement case. The probe
-// says running while pgrep finds nothing, and the command must report
-// running without inventing a pid list.
-func TestDaemonStatusWithoutPids(t *testing.T) {
-	wantShellRunning(t, true)
-	recordPgrep(t)
+// TestDaemonStatusNamesTheNamespace pins that the state location is
+// printed. Two namespaces can hold two daemons on purpose, and a user
+// needs to see which runtime they are looking at.
+func TestDaemonStatusNamesTheNamespace(t *testing.T) {
+	daemonRuntime(t, "")
+	t.Setenv("VAST_INSTANCE", "dev")
 
 	res, err := runCLI(t, "daemon", "status")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if want := "vast-shell is running\n"; res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
+	out := res.output()
+	if !strings.Contains(out, "namespace: dev") {
+		t.Errorf("output = %q, want it to name the dev namespace", out)
+	}
+	if !strings.Contains(out, "dev"+string(os.PathSeparator)+"state.json") {
+		t.Errorf("output = %q, want the dev state path", out)
 	}
 }
 
-// TestDaemonStatusNamesTheConfig pins that the config path is printed
-// when there is one. Running the wrong checkout is the usual reason a
-// user's edits do not appear, and the path is what settles it.
-func TestDaemonStatusNamesTheConfig(t *testing.T) {
+// TestDaemonStatusIgnoresStaleState pins the ghost case. A state file
+// whose process is gone must read as "not running"; reporting a daemon
+// that is not there sends the user looking for a shell that never
+// answers.
+func TestDaemonStatusIgnoresStaleState(t *testing.T) {
+	daemonRuntime(t, "")
+	dead := exec.Command("true")
+	if err := dead.Run(); err != nil {
+		t.Fatalf("run a short-lived process: %v", err)
+	}
+	err := daemon.WriteState(daemon.State{
+		PID:        dead.Process.Pid,
+		InstanceID: "abc123",
+		Namespace:  "vast",
+	})
+	if err != nil {
+		t.Fatalf("publish daemon state: %v", err)
+	}
+
+	res, err := runCLI(t, "daemon", "status")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(res.output(), "vast-shell is not running") {
+		t.Fatalf("output = %q, want a stale state to read as not running", res.output())
+	}
+}
+
+// TestDaemonStartWhenAlreadyRunning pins the guard. A second start would
+// leave two shells fighting over the same IPC name, and the user gets a
+// desktop whose bars and notifications belong to whichever process won
+// the race.
+func TestDaemonStartWhenAlreadyRunning(t *testing.T) {
+	daemonRuntime(t, "abc123")
+
+	for _, args := range [][]string{
+		{"daemon", "start"},
+		{"daemon", "start", "--foreground"},
+	} {
+		t.Run(strings.Join(args, " "), func(t *testing.T) {
+			res, err := runCLI(t, args...)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if !strings.Contains(res.output(), "already running") {
+				t.Fatalf("output = %q, want it to report the shell is already running", res.output())
+			}
+		})
+	}
+}
+
+// TestDaemonRunLaunchesTheConfiguredCheckout pins that --config reaches
+// the launcher, and that the shell is started with the directory that
+// actually holds shell.qml. It is the only way to point a new daemon at
+// a checkout, and it must be honoured here even though IPC commands
+// ignore it.
+func TestDaemonRunLaunchesTheConfiguredCheckout(t *testing.T) {
+	daemonRuntime(t, "")
 	root := t.TempDir()
-	writeShellQml(t, filepath.Join(root, "shell.qml"))
-	t.Setenv("VAST_SHELL_DIRECTORY", root)
-	wantShellRunning(t, false)
-	recordPgrep(t)
-
-	res, err := runCLI(t, "daemon", "status")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	// canonical() resolves the symlinked temp dir, so compare against
-	// the resolved root rather than the t.TempDir() spelling.
+	writeShellQml(t, filepath.Join(root, "Qml", "shell.qml"))
 	resolved, err := filepath.EvalSymlinks(root)
 	if err != nil {
 		t.Fatalf("EvalSymlinks: %v", err)
 	}
-	want := "config: " + resolved + "\nvast-shell is not running\n"
-	if res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
+	// The shim records as it starts, so the log has to be pointed at
+	// before the launch.
+	log := recordShell(t)
+
+	// The quickshell shim exits at once without publishing an instance,
+	// so the supervisor reports a failed start rather than booting a
+	// real shell.
+	if _, err := runCLI(t, "daemon", "run", "--config", root); err == nil {
+		t.Fatal("daemon run reported success, want the failed start to be reported")
+	}
+
+	calls := quickshellCalls(t, log)
+	if len(calls) == 0 {
+		t.Fatal("quickshell was never launched")
+	}
+	want := "-p " + filepath.Join(resolved, "Qml")
+	if got := strings.Join(calls[0], " "); got != want {
+		t.Fatalf("quickshell launched with %q, want %q", got, want)
 	}
 }
 
-// TestDaemonStartWhenAlreadyRunning pins the guard. A second start
-// would leave two shells fighting over the same IPC name, and the
-// user gets a desktop whose bars and notifications belong to whichever
-// process won the race.
-func TestDaemonStartWhenAlreadyRunning(t *testing.T) {
-	wantShellRunning(t, true)
-	recordPgrep(t)
+// TestDaemonRunFailsWithoutPublishingState pins that a shell which never
+// becomes addressable is a failed start, and that it leaves no state
+// behind. A published state naming a shell that cannot answer IPC would
+// send every later command to a daemon that is not there.
+func TestDaemonRunFailsWithoutPublishingState(t *testing.T) {
+	daemonRuntime(t, "")
 
-	res, err := runCLI(t, "daemon", "start")
+	if _, err := runCLI(t, "daemon", "run"); err == nil {
+		t.Fatal("daemon run reported success, want the failed start to be reported")
+	}
+	state, err := daemon.ReadState()
 	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
+		t.Fatalf("ReadState: %v", err)
 	}
-	if want := "vast-shell is already running\n"; res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
-	}
-}
-
-// TestDaemonStart pins that a start launches the shell and reports the
-// pid. The pid is what makes the "nothing appeared" case debuggable.
-func TestDaemonStart(t *testing.T) {
-	// The daemon log is redirected for the duration so the test does
-	// not append to the real /tmp log.
-	orig := ipc.LogFilePath
-	ipc.LogFilePath = filepath.Join(t.TempDir(), "vast-shell.log")
-	t.Cleanup(func() { ipc.LogFilePath = orig })
-
-	wantShellRunning(t, false)
-	shellLog := recordShell(t)
-	t.Setenv("SHIM_OUT", "")
-
-	res, err := runCLI(t, "daemon", "start")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if !strings.HasPrefix(res.output(), "vast-shell started (pid ") {
-		t.Fatalf("output = %q, want a start line with a pid", res.output())
-	}
-	if !strings.Contains(res.output(), "logs: "+ipc.LogFilePath) {
-		t.Fatalf("output = %q, want it to name the log file", res.output())
-	}
-	if !ipc.ShellRunning() {
-		t.Fatal("the memo still says the shell is down after a start")
-	}
-	// The launch must not be an IPC call: `daemon start` is what makes
-	// the IPC target answerable in the first place.
-	if calls := shimInvocations(t, shellLog); len(calls) > 1 {
-		t.Fatalf("start invoked quickshell %d times, want once: %q", len(calls), calls)
-	}
-}
-
-// TestDaemonStartForeground pins the systemd path. The flags are
-// declared on daemon, not on start, so `daemon -f start` has to
-// resolve; the process is then run in the foreground, and the memo
-// must end up saying the shell exited rather than still running.
-func TestDaemonStartForeground(t *testing.T) {
-	wantShellRunning(t, false)
-	t.Setenv("SHIM_OUT", "quickshell said hello\n")
-
-	res, err := runCLI(t, "daemon", "-f", "start")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if !strings.Contains(res.output(), "quickshell said hello") {
-		t.Fatalf("output = %q, want the shell's own output forwarded", res.output())
-	}
-	if ipc.ShellRunning() {
-		t.Fatal("the memo still says the shell is running after it exited")
-	}
-}
-
-// TestDaemonStartFailure pins that a shell that cannot be launched is
-// an error, and that the memo is not left claiming it is up. Swallowing
-// the failure would tell a user the desktop is starting when nothing
-// was started, and every later command would then fail with "no
-// running instances" and no obvious cause.
-func TestDaemonStartFailure(t *testing.T) {
-	orig := ipc.LogFilePath
-	ipc.LogFilePath = filepath.Join(t.TempDir(), "vast-shell.log")
-	t.Cleanup(func() { ipc.LogFilePath = orig })
-
-	wantShellRunning(t, false)
-	// PATH holds only a directory with a non-executable quickshell, so
-	// the launch fails the way a missing permission would.
-	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "quickshell"), []byte("not executable\n"), 0o644); err != nil {
-		t.Fatalf("write quickshell: %v", err)
-	}
-	t.Setenv("PATH", dir)
-	t.Setenv("VAST_SHELL_DIRECTORY", "")
-
-	res, err := runCLI(t, "daemon", "start")
-
-	if err == nil {
-		t.Fatalf("a shell that cannot be launched must be reported, got %q", res.output())
-	}
-	if ipc.ShellRunning() {
-		t.Fatal("the memo claims the shell is running after a failed start")
-	}
-}
-
-// TestDaemonStartForegroundFailure pins the same for the systemd path.
-// A unit that fails to exec must not exit zero, or systemd believes a
-// healthy shell is being managed.
-func TestDaemonStartForegroundFailure(t *testing.T) {
-	wantShellRunning(t, false)
-	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "quickshell"), []byte("not executable\n"), 0o644); err != nil {
-		t.Fatalf("write quickshell: %v", err)
-	}
-	t.Setenv("PATH", dir)
-	t.Setenv("VAST_SHELL_DIRECTORY", "")
-
-	if _, err := runCLI(t, "daemon", "-f", "start"); err == nil {
-		t.Fatal("a shell that cannot be launched must be reported")
-	}
-	if ipc.ShellRunning() {
-		t.Fatal("the memo claims the shell is running after a failed start")
-	}
-}
-
-// TestDaemonStartVerbose pins that --verbose tees the shell's output
-// to the terminal instead of only into the log. Without this the
-// flag's whole purpose — watching the shell's own output during a
-// development run — is lost.
-func TestDaemonStartVerbose(t *testing.T) {
-	orig := ipc.LogFilePath
-	ipc.LogFilePath = filepath.Join(t.TempDir(), "vast-shell.log")
-	t.Cleanup(func() { ipc.LogFilePath = orig })
-
-	wantShellRunning(t, false)
-	recordShell(t)
-	t.Setenv("SHIM_OUT", "verbose line\n")
-
-	// --verbose still detaches, so the child writes after the command
-	// has returned and the buffer runCLI collects is already closed.
-	// The output is waited for on a separate writer rather than
-	// assumed to be there.
-	verbose := newSignalWriter()
-	if _, err := runCLITo(t, verbose, "daemon", "start", "--verbose"); err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	verbose.await(t, "verbose line", 5*time.Second)
-}
-
-// TestDaemonStop pins that every matching process is killed and
-// counted. Stopping one of two leaves a second shell serving the IPC
-// name, and the user sees a desktop that will not go away.
-func TestDaemonStop(t *testing.T) {
-	wantShellRunning(t, true)
-	pgrep := recordPgrep(t)
-	killLog := recordKill(t)
-	t.Setenv("SHIM_PGREP", "111 222\n")
-
-	res, err := runCLI(t, "daemon", "stop")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if want := "vast-shell stopped (2 processes)\n"; res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
-	}
-	if got := shimInvocations(t, killLog); len(got) != 2 {
-		t.Fatalf("kill was called %d times, want twice: %q", len(got), got)
-	} else {
-		for i, want := range []string{"111", "222"} {
-			if !slices.Equal(got[i], []string{want}) {
-				t.Errorf("kill %d = %q, want [%q]", i, got[i], want)
-			}
-		}
-	}
-	if got := shimInvocations(t, pgrep); len(got) == 0 {
-		t.Fatal("stop never asked pgrep which processes to kill")
-	}
-	if ipc.ShellRunning() {
-		t.Fatal("the memo still says the shell is running after a stop")
+	if state != nil {
+		t.Fatalf("state = %+v, want none published for a shell that never registered", state)
 	}
 }
 
 // TestDaemonStopWhenNotRunning pins that stopping a down shell is a
-// no-op, not an error. A service that runs `vastctl daemon stop` on
-// every shutdown must not fail loudly on the ones where it never
-// started.
+// no-op, not an error. A shutdown hook that runs `vastctl daemon stop`
+// on every exit must not fail loudly on the ones where it never started.
 func TestDaemonStopWhenNotRunning(t *testing.T) {
-	wantShellRunning(t, false)
-	recordPgrep(t)
-	killLog := recordKill(t)
+	daemonRuntime(t, "")
 
 	res, err := runCLI(t, "daemon", "stop")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if want := "vast-shell is not running\n"; res.output() != want {
-		t.Fatalf("output = %q, want %q", res.output(), want)
-	}
-	if calls := shimInvocations(t, killLog); len(calls) != 0 {
-		t.Fatalf("kill was called with %q despite nothing running", calls)
+	if !strings.Contains(res.output(), "vast-shell is not running") {
+		t.Fatalf("output = %q, want a no-op report", res.output())
 	}
 }
 
-// TestDaemonRestart pins the ordering: the old processes are killed
-// before the new one is launched. Launching first would have two
-// shells briefly serve the same IPC name.
-func TestDaemonRestart(t *testing.T) {
-	orig := ipc.LogFilePath
-	ipc.LogFilePath = filepath.Join(t.TempDir(), "vast-shell.log")
-	t.Cleanup(func() { ipc.LogFilePath = orig })
+// TestDaemonStopTargetsOnlyTheRecordedSupervisor pins that stop addresses
+// the daemon it published rather than sweeping every quickshell on the
+// machine. A blanket kill would take down the unrelated dev instance a
+// user deliberately runs beside the installed one.
+func TestDaemonStopTargetsOnlyTheRecordedSupervisor(t *testing.T) {
+	daemonRuntime(t, "")
+	unrelated := bystander(t)
+	supervisor, supervisorExited := reaped(t)
 
-	wantShellRunning(t, true)
-	recordPgrep(t)
-	killLog := recordKill(t)
-	recordShell(t)
-	t.Setenv("SHIM_PGREP", "111\n")
-	t.Setenv("SHIM_OUT", "")
+	err := daemon.WriteState(daemon.State{
+		PID:           unrelated.Pid,
+		SupervisorPID: supervisor.Process.Pid,
+		ConfigPath:    "/cfg/Qml",
+		InstanceID:    "abc123",
+		Namespace:     "vast",
+	})
+	if err != nil {
+		t.Fatalf("publish daemon state: %v", err)
+	}
 
-	res, err := runCLI(t, "daemon", "restart")
+	res, err := runCLI(t, "daemon", "stop")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if got := shimInvocations(t, killLog); len(got) != 1 {
-		t.Fatalf("kill was called %d times, want once: %q", len(got), got)
+	if !strings.Contains(res.output(), "vast-shell stopped") {
+		t.Fatalf("output = %q, want a stop report", res.output())
 	}
-	if !strings.Contains(res.output(), "vast-shell started (pid ") {
-		t.Fatalf("output = %q, want a start line", res.output())
+
+	if !exitedWithin(supervisorExited, 2*time.Second) {
+		t.Error("the recorded supervisor survived, want it signalled")
 	}
-	if !ipc.ShellRunning() {
-		t.Fatal("the memo still says the shell is down after a restart")
+	if !alive(unrelated) {
+		t.Error("an unrelated quickshell was signalled, want only the recorded supervisor targeted")
 	}
 }
 
-// TestProcessPlural pins the count wording. "1 processs" in a status
-// line is the kind of small wrongness that makes a tool feel
-// unfinished, and the word is the only thing the function decides.
-func TestProcessPlural(t *testing.T) {
-	for _, tc := range []struct {
-		n    int
-		want string
-	}{
-		{0, ""},
-		{1, ""},
-		{2, "es"},
-		{3, "es"},
-		{10, "es"},
+// TestDaemonHelpHidesRun pins that `daemon run` stays an implementation
+// detail. It is the exec target a service manager uses, and advertising
+// it invites a user to run it in a terminal and wonder why the shell
+// now owns their session.
+func TestDaemonHelpHidesRun(t *testing.T) {
+	daemonRuntime(t, "")
+
+	res, err := runCLI(t, "daemon", "--help")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if strings.Contains(res.output(), "\n  run ") {
+		t.Fatalf("help = %q, want `daemon run` hidden from the command list", res.output())
+	}
+}
+
+// TestIPCCommandsRefuseWithoutADaemon is the regression this design
+// exists for. A call with no daemon must refuse, and say how to start
+// one, rather than launching a shell of its own.
+func TestIPCCommandsRefuseWithoutADaemon(t *testing.T) {
+	daemonRuntime(t, "")
+
+	for _, args := range [][]string{
+		{"wallpaper", "get"},
+		{"volume", "system", "get"},
+		{"idle", "status"},
 	} {
-		if got := processPlural(tc.n); got != tc.want {
-			t.Errorf("processPlural(%d) = %q, want %q", tc.n, got, tc.want)
+		t.Run(strings.Join(args, " "), func(t *testing.T) {
+			log := recordShell(t)
+			_, err := runCLI(t, args...)
+			if err == nil {
+				t.Fatalf("%v succeeded with no daemon running", args)
+			}
+			// The remedy is the whole point of refusing, and it reaches
+			// the user as the command's error, not its output.
+			if !strings.Contains(err.Error(), "vastctl daemon start") {
+				t.Errorf("error = %q, want it to say how to start the daemon", err)
+			}
+			if calls := quickshellCalls(t, log); len(calls) != 0 {
+				t.Errorf("quickshell was invoked %d times, want 0: a client must not reach the shell without a daemon", len(calls))
+			}
+		})
+	}
+}
+
+// TestIPCCommandsReachTheDaemonFromAnyDirectory pins the routing. A
+// client invoked from an unrelated directory, with a
+// VAST_SHELL_DIRECTORY pointing at a different checkout, must still be
+// answered by the daemon that is running.
+func TestIPCCommandsReachTheDaemonFromAnyDirectory(t *testing.T) {
+	daemonRuntime(t, "abc123")
+	t.Setenv("VAST_SHELL_DIRECTORY", "/home/me/some-other-checkout")
+	t.Chdir(t.TempDir())
+	t.Setenv("SHIM_OUT", "/home/me/wall.png")
+	log := recordShell(t)
+
+	res, err := runCLI(t, "wallpaper", "get")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(res.output(), "/home/me/wall.png") {
+		t.Fatalf("output = %q, want the running daemon's answer", res.output())
+	}
+
+	calls := quickshellCalls(t, log)
+	if len(calls) == 0 {
+		t.Fatal("quickshell was never invoked")
+	}
+	got := strings.Join(calls[len(calls)-1], " ")
+	if !strings.Contains(got, "--id abc123") {
+		t.Errorf("quickshell received %q, want the call addressed by instance id", got)
+	}
+	if strings.Contains(got, "some-other-checkout") {
+		t.Errorf("quickshell received %q, want no config path taken from the caller's environment", got)
+	}
+}
+
+// TestIPCCommandsDoNotLaunchASecondShell is the guard against the
+// duplicate-shell bug. A call must never spawn a shell, and must never
+// probe for one: either would leave two shells contending for the same
+// IPC targets.
+func TestIPCCommandsDoNotLaunchASecondShell(t *testing.T) {
+	daemonRuntime(t, "abc123")
+	t.Setenv("SHIM_OUT", "/home/me/wall.png")
+	log := recordShell(t)
+
+	if _, err := runCLI(t, "wallpaper", "get"); err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	for _, call := range quickshellCalls(t, log) {
+		joined := strings.Join(call, " ")
+		if strings.Contains(joined, "ipc show") {
+			t.Errorf("quickshell was probed for readiness: %q", call)
+		}
+		if len(call) > 0 && call[0] == "-p" {
+			t.Errorf("quickshell was launched with a config path: %q", call)
 		}
 	}
 }

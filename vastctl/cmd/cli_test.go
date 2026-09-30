@@ -10,27 +10,24 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
-	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
+	"github.com/myamusashi/vast-shell/vastctl/internal/daemon"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )
 
 // The shims below stand in for every binary vastctl executes:
-// quickshell for the IPC calls, pgrep and kill for the daemon
-// lifecycle, hyprctl for the Hyprland bridge. They are installed by
-// TestMain rather than per test because ipc.Call reaches quickshell
-// through ensureShellDaemon, which will start a real quickshell — the
-// developer's actual desktop — if nothing answers its probe. Leaving a
-// real pgrep and kill on PATH would be worse: `daemon stop` would
-// happily kill the shell the tests are running inside.
+// quickshell for the IPC calls, kill for the daemon lifecycle, hyprctl
+// for the Hyprland bridge. They are installed by TestMain rather than
+// per test so no test in this package can reach a real quickshell on the
+// developer's desktop. Leaving a real kill on PATH would be worse:
+// `daemon stop` would happily signal the shell the tests run inside.
 //
 // A test needing a different binary prepends its own shim directory to
 // PATH; the TestMain one stays behind it. Each shim records its
-// invocation as one file per run, named after its own pid: a shared log
-// file does not work, because `daemon start` runs the child and the
-// readiness probe at once and two concurrent appends interleave inside
-// the shell's printf builtin before either write reaches the file.
+// invocation as one file per run, named after its own pid, so a shared
+// log file cannot interleave concurrent runs.
 const quickshellShim = `#!/bin/sh
 if [ -n "$SHIM_LOG" ]; then
   { printf -- '---\n'; for a in "$@"; do printf -- '%s\n' "$a"; done; } > "$SHIM_LOG/$$"
@@ -41,14 +38,6 @@ esac
 if [ -n "$SHIM_ERR" ]; then printf -- '%s' "$SHIM_ERR" >&2; fi
 if [ -n "$SHIM_OUT" ]; then printf -- '%s' "$SHIM_OUT"; fi
 exit "${SHIM_CODE:-0}"
-`
-
-const pgrepShim = `#!/bin/sh
-if [ -n "$SHIM_PGREP_LOG" ]; then
-  { printf -- '---\n'; for a in "$@"; do printf -- '%s\n' "$a"; done; } > "$SHIM_PGREP_LOG/$$"
-fi
-if [ -n "$SHIM_PGREP" ]; then printf -- '%s' "$SHIM_PGREP"; exit 0; fi
-exit 1
 `
 
 const killShim = `#!/bin/sh
@@ -74,7 +63,6 @@ func TestMain(m *testing.M) {
 	}
 	for name, body := range map[string]string{
 		"quickshell": quickshellShim,
-		"pgrep":      pgrepShim,
 		"kill":       killShim,
 		"hyprctl":    hyprctlShim,
 	} {
@@ -83,27 +71,56 @@ func TestMain(m *testing.M) {
 		}
 	}
 	shimDir = dir
-	os.Setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
+	setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
 	// An inherited VAST_SHELL_DIRECTORY would make every call carry the
 	// developer's real -p argument, and an inherited SHIM_* variable
 	// would let a value leak from one test into the next.
-	os.Setenv("VAST_SHELL_DIRECTORY", "")
+	setenv("VAST_SHELL_DIRECTORY", "")
 	for _, k := range []string{
 		"SHIM_LOG", "SHIM_OUT", "SHIM_ERR", "SHIM_CODE",
-		"SHIM_PGREP", "SHIM_PGREP_LOG",
 		"SHIM_KILL_LOG",
 		"SHIM_HYPR_LOG", "SHIM_HYPR_OUT", "SHIM_HYPR_ERR", "SHIM_HYPR_CODE",
 	} {
-		os.Unsetenv(k)
+		if err := os.Unsetenv(k); err != nil {
+			panic(err)
+		}
 	}
-	// Whatever the first test leaves behind, later tests must not
-	// inherit a stale answer for "is the shell running".
-	ipc.SetShellRunning(true)
+	// The runtime directory is redirected so nothing here can signal the
+	// developer's real daemon, and a live daemon is published for the
+	// command tests: a client only ever connects, so without one every
+	// call would refuse. Tests about the lifecycle redirect the runtime
+	// at their own temp dir.
+	setenv("XDG_RUNTIME_DIR", dir)
+	setenv("VAST_INSTANCE", "")
+
+	// Every command test is about the command surface rather than the
+	// daemon lifecycle, so a live daemon is published for all of them: a
+	// client only ever connects, and without one every call refuses.
+	// Tests that are about the lifecycle redirect the runtime at their
+	// own temp dir, so nothing here can reach the developer's daemon.
+	if err := daemon.WriteState(daemon.State{
+		PID:           os.Getpid(),
+		SupervisorPID: os.Getpid(),
+		ConfigPath:    "/cfg/Qml",
+		InstanceID:    "abc123",
+		Namespace:     "vast",
+		StartedAt:     time.Now().Format(time.RFC3339),
+	}); err != nil {
+		panic(err)
+	}
 
 	code := m.Run()
 
-	os.RemoveAll(dir)
+	_ = os.RemoveAll(dir)
 	os.Exit(code)
+}
+
+// setenv applies an environment change that cannot sensibly fail here,
+// turning a silent no-op into a visible panic.
+func setenv(key, value string) {
+	if err := os.Setenv(key, value); err != nil {
+		panic(err)
+	}
 }
 
 var shimDir string
@@ -160,29 +177,6 @@ func runCLI(t *testing.T, args ...string) (result, error) {
 	// A nil args would make cobra fall back to the test binary's own
 	// os.Args, so `vastctl` with no subcommand must be spelled as an
 	// explicit empty list.
-	if args == nil {
-		args = []string{}
-	}
-	rootCmd.SetArgs(args)
-
-	var err error
-	stdout := captureStdout(t, func() { err = rootCmd.Execute() })
-	return result{stdout: stdout, cmdOut: cmdOut.String()}, err
-}
-
-// runCLITo is runCLI with the command's writer tee'd into extra. A
-// command that detaches its child writes to this stream after the
-// invocation has returned, so the buffer runCLI collects is already
-// complete and the detached write has to be observed elsewhere.
-func runCLITo(t *testing.T, extra io.Writer, args ...string) (result, error) {
-	t.Helper()
-	resetFlags(t)
-
-	cmdOut := new(syncBuffer)
-	rootCmd.SetOut(io.MultiWriter(cmdOut, extra))
-	rootCmd.SetErr(io.Discard)
-	rootCmd.SilenceUsage = true
-	rootCmd.SilenceErrors = true
 	if args == nil {
 		args = []string{}
 	}
@@ -270,16 +264,22 @@ func shimLogDir(t *testing.T, env string) string {
 	return dir
 }
 
-// ipcCall returns the `ipc call` payload of the most recent quickshell
+// ipcCall returns the `call` payload of the most recent quickshell
 // invocation: the target, the method and the arguments, without the
-// `ipc call` verb. That payload IS the contract each command has with
-// the shell, so the tests assert on it rather than on the rendering.
+// routing and the verb. That payload IS the contract each command has
+// with the shell, so the tests assert on it rather than on the
+// rendering.
+//
+// The verb is reached as `ipc call` or as `ipc --id <instance> call`;
+// the payload is everything after it either way, so the routing in front
+// is deliberately not matched on.
 func ipcCall(t *testing.T, log string) []string {
 	t.Helper()
 	calls := shimInvocations(t, log)
-	for i := len(calls) - 1; i >= 0; i-- {
-		if j := slices.Index(calls[i], "call"); j >= 0 && j > 0 && calls[i][j-1] == "ipc" {
-			return calls[i][j+1:]
+	for _, call := range slices.Backward(calls) {
+		j := slices.Index(call, "call")
+		if j > 0 && slices.Contains(call[:j], "ipc") {
+			return call[j+1:]
 		}
 	}
 	t.Fatalf("no `ipc call` was recorded in %s", log)
@@ -381,17 +381,6 @@ func shimInvocations(t *testing.T, dir string) [][]string {
 		calls = append(calls, r.args)
 	}
 	return calls
-}
-
-// wantShellRunning pins the process-wide "is the shell up" memo for the
-// duration of a test. daemon start and stop are the only commands that
-// change it, and the change leaks into every later test unless it is
-// put back.
-func wantShellRunning(t *testing.T, running bool) {
-	t.Helper()
-	before := ipc.ShellRunning()
-	t.Cleanup(func() { ipc.SetShellRunning(before) })
-	ipc.SetShellRunning(running)
 }
 
 // writeShellQml creates a shell.qml entry point at path, creating the

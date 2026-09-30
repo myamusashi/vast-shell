@@ -6,21 +6,17 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strings"
-	"sync"
-	"syscall"
-	"time"
+
+	"github.com/myamusashi/vast-shell/vastctl/internal/daemon"
 )
 
-// LogFilePath is where the daemon's stdout and stderr are captured.
-// It is a var rather than a const only so tests can point the daemon
-// log at a scratch file; nothing in production reassigns it.
+// LogFilePath is where background shell output is forwarded. It is a var
+// so tests can redirect the log without touching the real file.
 var LogFilePath = "/tmp/vast-shell.log"
 
-const bootTimeout = 45 * time.Second
-const bootPoll = 250 * time.Millisecond
-
+// LogFile opens the background log file for appending, creating it if
+// needed. Returns nil if the file cannot be opened.
 func LogFile() *os.File {
 	f, err := os.OpenFile(LogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600)
 	if err != nil {
@@ -29,132 +25,37 @@ func LogFile() *os.File {
 	return f
 }
 
-var (
-	runningMu     sync.Mutex
-	runningCached bool
-	runningValue  bool
-)
-
-var ensureOnce sync.Once
-
-func ensureShellDaemon() {
-	ensureOnce.Do(func() {
-		if ShellRunning() {
-			return
-		}
-
-		if dir := shellDirectory(); dir != "" && shellBooting(dir) {
-			waitForShell(nil)
-			return
-		}
-		bin, args := ShellBinArgs()
-		cmd := exec.Command(bin, args...)
-		cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
-		if logFile := LogFile(); logFile != nil {
-			defer func() { _ = logFile.Close() }()
-			_, _ = fmt.Fprintf(logFile, "\n--- %s ---\n", time.Now().Format(time.RFC3339))
-			cmd.Stdout = logFile
-			cmd.Stderr = logFile
-		}
-		if err := cmd.Start(); err != nil {
-			return
-		}
-		exited := make(chan struct{})
-		go func() {
-			_ = cmd.Wait()
-			close(exited)
-		}()
-		waitForShell(exited)
-	})
-}
-
-func waitForShell(exited <-chan struct{}) {
-	dir := shellDirectory()
-	if dir == "" {
-		return
-	}
-	deadline := time.Now().Add(bootTimeout)
-	for {
-		select {
-		case <-exited:
-			return
-		default:
-		}
-		if probe(dir) == nil {
-			SetShellRunning(true)
-			return
-		}
-		if !time.Now().Before(deadline) {
-			return
-		}
-		time.Sleep(bootPoll)
-	}
-}
-
-func shellBooting(dir string) bool {
-	out, err := exec.Command("pgrep", "-f", "quickshell.*"+regexp.QuoteMeta(dir)).Output()
-	return err == nil && len(out) > 0
-}
-
-func probe(dir string) error {
-	args := []string{"-p", dir, "ipc", "show"}
-	out, err := exec.Command("quickshell", args...).Output()
-	if err == nil {
-		return nil
-	}
-	return ipcError("quickshell", args, out, err)
-}
-
-// ShellRunning reports whether a shell instance is live for the resolved
-// config path. The check shells out to quickshell, so the answer is
-// memoized for the life of the process: vastctl is short-lived and is not
-// expected to watch the shell come up or go down underneath it. Callers
-// that change the state in this process record it through
-// SetShellRunning rather than re-probing.
-func ShellRunning() bool {
-	runningMu.Lock()
-	defer runningMu.Unlock()
-	if runningCached {
-		return runningValue
-	}
-	runningValue = probeShell()
-	runningCached = true
-	return runningValue
-}
-
-// SetShellRunning records a known running state and invalidates the memo.
-// Start and stop paths must call it, otherwise a later ShellRunning
-// answers from the probe taken before the transition.
-func SetShellRunning(running bool) {
-	runningMu.Lock()
-	defer runningMu.Unlock()
-	runningValue = running
-	runningCached = true
-}
-
-func probeShell() bool {
-	if dir := shellDirectory(); dir != "" {
-		return probe(dir) == nil
-	}
-	out, err := exec.Command("pgrep", "-f", "quickshell").Output()
-	return err == nil && len(out) > 0
-}
-
-// resetShellRunning drops the memo so a test observes a cold process.
-// Production code never needs it: a real state change goes through
-// SetShellRunning, which is the honest answer rather than a guess.
-func resetShellRunning() {
-	runningMu.Lock()
-	defer runningMu.Unlock()
-	runningCached = false
-}
-
+// ShellDirectory returns the config directory of the checkout named by
+// VAST_SHELL_DIRECTORY, or "" when unset. It resolves the checkout for
+// *starting* a daemon; IPC calls deliberately ignore it so a stray
+// environment cannot redirect a client to a shell that is not running.
 func ShellDirectory() string {
-	return shellDirectory()
+	return ConfigDir(os.Getenv("VAST_SHELL_DIRECTORY"))
 }
 
+// ConfigDir resolves a vast-shell root to the directory that holds
+// shell.qml, or "" for an empty root. A user names a checkout by its
+// root, so the entry point has to be located rather than assumed: it may
+// sit directly in the root or in a Qml/ subdirectory, and quickshell
+// resolves a config selector to a shell.qml sitting directly in the
+// chosen directory. Pointing -p at the wrong one yields "Could not open
+// config file".
+func ConfigDir(root string) string {
+	if root == "" {
+		return ""
+	}
+	root = canonical(ExpandEnv(root))
+	if isFile(filepath.Join(root, "shell.qml")) {
+		return root
+	}
+	return filepath.Join(root, "Qml")
+}
+
+// ShellBinArgs returns the binary and arguments that select the config
+// named by VAST_SHELL_DIRECTORY, falling back to the installed "shell"
+// wrapper.
 func ShellBinArgs() (string, []string) {
-	if dir := shellDirectory(); dir != "" {
+	if dir := ShellDirectory(); dir != "" {
 		return "quickshell", []string{"-p", dir}
 	}
 	if _, err := exec.LookPath("shell"); err == nil {
@@ -163,18 +64,9 @@ func ShellBinArgs() (string, []string) {
 	return "quickshell", nil
 }
 
-func shellDirectory() string {
-	root := ExpandEnv(os.Getenv("VAST_SHELL_DIRECTORY"))
-	if root == "" {
-		return ""
-	}
-	root = canonical(root)
-	if isFile(filepath.Join(root, "shell.qml")) {
-		return root
-	}
-	return filepath.Join(root, "Qml")
-}
-
+// canonical resolves dir to an absolute path with symlinks expanded.
+// quickshell matches IPC instances by literal config path, so the path
+// handed to it has to be spelled exactly the way the shell is launched.
 func canonical(dir string) string {
 	abs, err := filepath.Abs(dir)
 	if err != nil {
@@ -244,34 +136,33 @@ func ExpandEnv(s string) string {
 	return b.String()
 }
 
-func shellIPCArgs() (string, []string) {
-	bin, args := ShellBinArgs()
-	return bin, append(args, "ipc", "call")
-}
-
-// Call invokes `shell ipc call <target> <method> [args...]` and returns
-// the stdout output trimmed. Call only works for IPC targets that print
-// results to stdout; void functions return empty string.
+// Call invokes `quickshell ipc --id <instance> call <target> <method>
+// [args...]` against the running daemon and returns stdout trimmed.
+//
+// It only ever connects. The target comes from the state file the daemon
+// supervisor publishes, so the call reaches whichever shell is actually
+// running regardless of the caller's working directory, environment, or
+// config path. Starting a daemon from here is what turns a path
+// mismatch into a second shell, so Call refuses instead.
 func Call(target string, method string, args ...string) (string, error) {
-	ensureShellDaemon()
-
-	bin, callArgs := shellIPCArgs()
-	callArgs = append(callArgs, target, method)
-	callArgs = append(callArgs, args...)
-
-	output, err := exec.Command(bin, callArgs...).Output()
+	state, err := daemon.Running()
 	if err != nil {
-		return "", ipcError(bin, callArgs, output, err)
+		return "", err
+	}
+	callArgs := append([]string{"ipc", "--id", state.InstanceID, "call", target, method}, args...)
+	output, err := exec.Command("quickshell", callArgs...).Output()
+	if err != nil {
+		return "", ipcError("quickshell", callArgs, output, err)
 	}
 	return strings.TrimSpace(string(output)), nil
 }
 
 // ipcError turns a failed quickshell invocation into an error carrying
 // whatever diagnostics the binary produced. quickshell reports IPC
-// routing failures — "No running instances for ..." — on stdout rather
-// than stderr, so both streams have to be folded into the message. If
-// stdout is dropped, every routing failure collapses to a bare
-// "exit status 255" that names neither the target nor the cause.
+// failures — a closed socket, an unknown instance — on stdout as often
+// as on stderr, so both streams are folded into the message. Dropping
+// stdout reduces every routing failure to a bare exit status that names
+// neither the target nor the reason.
 func ipcError(bin string, args []string, stdout []byte, err error) error {
 	invocation := strings.Join(append([]string{bin}, args...), " ")
 	details := make([]string, 0, 2)
