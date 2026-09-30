@@ -232,7 +232,9 @@ Variants {
             anchors.topMargin: topBar.height
         }
 
-        Weathers {}
+        Weathers {
+            anchors.topMargin: topBar.height
+        }
 
         Volume {
             id: volume

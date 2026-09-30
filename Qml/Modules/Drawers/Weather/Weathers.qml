@@ -19,14 +19,15 @@ Item {
 
     anchors {
         right: parent.right
-        verticalCenter: parent.verticalCenter
+        top: parent.top
+        bottom: parent.bottom
+        rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
         bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
-        topMargin: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
     }
 
     readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
 
-    implicitHeight: parent.height
+    implicitHeight: parent.height - anchors.topMargin - anchors.bottomMargin
     implicitWidth: GlobalStates.isWeatherPanelOpen ? parent.width * 0.25 : 0
     visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
 
