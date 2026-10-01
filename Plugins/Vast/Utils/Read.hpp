@@ -11,4 +11,6 @@ class Read : public QObject {
 
   public:
     [[nodiscard]] static Q_INVOKABLE QString readFile(const QString& path);
+    [[nodiscard]] static Q_INVOKABLE bool    fileExists(const QString& path);
+    [[nodiscard]] static Q_INVOKABLE bool    isReadableFile(const QString& path);
 };

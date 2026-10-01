@@ -21,6 +21,11 @@ class TestUtilsFile : public QObject {
     void writingIntoAMissingDirectoryFails();
     void writingIsIdempotentForIdenticalContents();
 
+    void fileExistsRejectsMissingAndEmptyPaths();
+    void fileExistsAcceptsARegularFile();
+    void isReadableFileAcceptsARegularFile();
+    void isReadableFileRejectsADirectory();
+
   private:
     [[nodiscard]] QString path(const char* name) const {
         return mDir->path() + QLatin1Char('/') + QLatin1String(name);
@@ -32,11 +37,9 @@ class TestUtilsFile : public QObject {
 void TestUtilsFile::initTestCase() {
     mDir = std::make_unique<QTemporaryDir>();
     QVERIFY(mDir->isValid());
-    // Every path lives under mDir.
 }
 
 void TestUtilsFile::readingAMissingFileReturnsANullString() {
-    // A null string, not merely empty: Read.cpp:11 returns the default QString.
     const QString text = Read::readFile(path("does-not-exist.txt"));
 
     QVERIFY(text.isNull());
@@ -48,7 +51,6 @@ void TestUtilsFile::writeThenReadRoundTrips() {
 }
 
 void TestUtilsFile::roundTripsNonAsciiExactly() {
-    // toUtf8/fromUtf8 must round trip accents, CJK and a non-BMP emoji.
     const QString original = QString::fromUtf8("héllo 日本語 \xF0\x9D\x8E\xB5");
 
     QVERIFY(Write::writeFile(path("utf8.txt"), original));
@@ -61,7 +63,6 @@ void TestUtilsFile::roundTripsNonAsciiExactly() {
 void TestUtilsFile::writingAnEmptyStringSucceedsAndReadsBackEmpty() {
     QVERIFY(Write::writeFile(path("empty.txt"), QString()));
 
-    // An empty byte array yields a null string, the same value a failed open returns.
     const QString text = Read::readFile(path("empty.txt"));
     QVERIFY(text.isEmpty());
     QVERIFY(text.isNull());
@@ -90,5 +91,26 @@ void TestUtilsFile::writingIsIdempotentForIdenticalContents() {
     QCOMPARE(Read::readFile(path("idem.txt")), value);
 }
 
+void TestUtilsFile::fileExistsRejectsMissingAndEmptyPaths() {
+    QVERIFY(!Read::fileExists(path("does-not-exist.txt")));
+    QVERIFY(!Read::fileExists(QString()));
+}
+
+void TestUtilsFile::fileExistsAcceptsARegularFile() {
+    QVERIFY(Write::writeFile(path("present.txt"), QStringLiteral("x")));
+
+    QVERIFY(Read::fileExists(path("present.txt")));
+}
+
+void TestUtilsFile::isReadableFileAcceptsARegularFile() {
+    QVERIFY(Write::writeFile(path("readable.txt"), QStringLiteral("x")));
+
+    QVERIFY(Read::isReadableFile(path("readable.txt")));
+}
+
+void TestUtilsFile::isReadableFileRejectsADirectory() {
+    QVERIFY(Read::fileExists(mDir->path()));
+    QVERIFY(!Read::isReadableFile(mDir->path()));
+}
 QTEST_GUILESS_MAIN(TestUtilsFile)
 #include "tst_utilsfile.moc"
