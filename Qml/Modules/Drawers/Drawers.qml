@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
+import qs.Modules.Drawers
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services

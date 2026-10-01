@@ -10,12 +10,11 @@
 namespace vast {
 
     namespace {
-        constexpr auto kService = "org.kde.kdeconnect";
-        constexpr auto kPath    = "/modules/kdeconnect/devices/%1/share";
-        constexpr auto kIface   = "org.kde.kdeconnect.device.share";
-        constexpr auto kMember  = "shareUrls";
-
-        constexpr int  kCallTimeoutMs = 15000;
+        constexpr auto SERVICE         = "org.kde.kdeconnect";
+        constexpr auto PATH            = "/modules/kdeconnect/devices/%1/share";
+        constexpr auto IFACE           = "org.kde.kdeconnect.device.share";
+        constexpr auto MEMBER          = "shareUrls";
+        constexpr int  CALL_TIMEOUT_MS = 15000;
     } // namespace
 
     KdeConnectShare::KdeConnectShare(QObject* parent, QDBusConnection bus) : QObject(parent), mBus(std::move(bus)) {}
@@ -26,7 +25,7 @@ namespace vast {
         if (deviceId.isEmpty() || localPath.isEmpty())
             return {};
 
-        QDBusMessage message = QDBusMessage::createMethodCall(QLatin1String(kService), QLatin1String(kPath).arg(deviceId), QLatin1String(kIface), QLatin1String(kMember));
+        QDBusMessage message = QDBusMessage::createMethodCall(QLatin1String(SERVICE), QLatin1String(PATH).arg(deviceId), QLatin1String(IFACE), QLatin1String(MEMBER));
         message.setArguments({QStringList{QUrl::fromLocalFile(localPath).toString(QUrl::FullyEncoded)}});
         return message;
     }
@@ -40,7 +39,7 @@ namespace vast {
             return;
         }
 
-        auto* watcher = new QDBusPendingCallWatcher(mBus.asyncCall(message, kCallTimeoutMs), this);
+        auto* watcher = new QDBusPendingCallWatcher(mBus.asyncCall(message, CALL_TIMEOUT_MS), this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher, deviceId]() {
             const QDBusMessage reply = watcher->reply();
             watcher->deleteLater();
@@ -56,5 +55,3 @@ namespace vast {
     }
 
 } // namespace vast
-
-#include "moc_KdeConnectShare.cpp"
