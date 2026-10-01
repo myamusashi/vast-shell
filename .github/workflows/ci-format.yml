@@ -18,6 +18,8 @@ jobs:
     - uses: actions/checkout@v4
     - uses: DeterminateSystems/nix-installer-action@v14
     - uses: DeterminateSystems/magic-nix-cache-action@v8
+      with:
+        use-flakehub: false
     - uses: nicknovitski/nix-develop@v1
 
     - name: Check formatting
