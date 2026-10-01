@@ -44,10 +44,10 @@ void main() {
 
     float activeA = 0.0;
     if (progress > 0.0) {
-        float ph    = t * PI2 * freq + wavePhase;
+        float ph    = t * PI2 * waveFrequency + wavePhase;
         float waveR = radius + amp * sin(ph);
 
-        float slope = amp * freq * cos(ph) / max(r, 1.0);
+        float slope = amp * waveFrequency * cos(ph) / max(r, 1.0);
         float dWave = abs(r - waveR) * inversesqrt(1.0 + slope * slope);
 
         float d = FAR;
@@ -55,7 +55,7 @@ void main() {
 
         if (progress < 1.0) {
             float aStart = wavePhase;
-            float aEnd   = progress * PI2 * freq + wavePhase;
+            float aEnd   = progress * PI2 * waveFrequency + wavePhase;
             vec2 capStart = circlePoint(radius + amp * sin(aStart), 0.0);
             vec2 capEnd   = circlePoint(radius + amp * sin(aEnd), progress);
             d = min(d, min(length(p - capStart), length(p - capEnd)));
