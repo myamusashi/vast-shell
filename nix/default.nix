@@ -131,6 +131,14 @@
                    Assets/shaders/wavy.frag
             ${qt6.qtshadertools}/bin/qsb \
                 --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/circleWave.vert.qsb \
+                   Assets/shaders/circleWave.vert
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                -o Assets/shaders/circleWave.frag.qsb \
+                   Assets/shaders/circleWave.frag
+            ${qt6.qtshadertools}/bin/qsb \
+                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
                 -o Assets/shaders/waveForm.vert.qsb \
                    Assets/shaders/waveForm.vert
             ${qt6.qtshadertools}/bin/qsb \

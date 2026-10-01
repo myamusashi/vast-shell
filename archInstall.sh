@@ -392,8 +392,8 @@ compile_shaders() {
 		warn "Transitions directory not found: $transition_dir — skipping"
 	fi
 
-	log "Compiling border progress, wavy, and wave form shaders..."
-	local -ra shader_pairs=(borderProgress wavy waveForm)
+	log "Compiling border progress, wavy, wave form and circleWave shaders..."
+	local -ra shader_pairs=(borderProgress wavy waveForm circleWave)
 	for name in "${shader_pairs[@]}"; do
 		compile_shader_stage "$qsb" "$shader_dir/${name}.vert" "$shader_dir/${name}.vert.qsb" || true
 		compile_shader_stage "$qsb" "$shader_dir/${name}.frag" "$shader_dir/${name}.frag.qsb" || true
