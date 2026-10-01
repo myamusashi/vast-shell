@@ -131,87 +131,102 @@
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="161"/>
-        <source>Material Icon Font:</source>
+        <source>Nerd Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="162"/>
-        <source>Icon font used for Material Symbols throughout the shell.</source>
+        <source>Nerd font used for icon or font text.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="171"/>
-        <source>Font Size Scale:</source>
+        <source>Material Icon Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="172"/>
+        <source>Icon font used for Material Symbols throughout the shell.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="181"/>
+        <source>Font Size Scale:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="182"/>
         <source>Global multiplier for all font sizes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="189"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="199"/>
         <source>Shapes &amp; Layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="195"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="205"/>
         <source>UI Corner Roundness (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="196"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="206"/>
         <source>Corner radius.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="208"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="218"/>
         <source>Element Spacing (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="209"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="219"/>
         <source>Default spacing between UI elements.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="221"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="231"/>
         <source>Padding (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="222"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="232"/>
         <source>Inner padding.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="234"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="244"/>
         <source>Margin (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="235"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="245"/>
         <source>Outer margin.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="249"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="259"/>
         <source>Motion &amp; Animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="252"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="262"/>
         <source>Animation Durations Scale:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="253"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="263"/>
         <source>Multiplier for all animation durations. Higher is slower.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="344"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="359"/>
         <source>Search font...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="436"/>
+        <source>System default</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -806,6 +821,34 @@
     </message>
 </context>
 <context>
+    <name>Clipboard</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="53"/>
+        <source>Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="57"/>
+        <source>Delete this entry? This cannot be undone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="58"/>
+        <source>Delete %1 entries? This cannot be undone.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="60"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="61"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ClipboardPage</name>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="10"/>
@@ -886,12 +929,12 @@
 <context>
     <name>ClipboardServices</name>
     <message>
-        <location filename="../Qml/Services/ClipboardServices.qml" line="76"/>
+        <location filename="../Qml/Services/ClipboardServices.qml" line="102"/>
         <source>Clipboard database not found, created it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ClipboardServices.qml" line="76"/>
+        <location filename="../Qml/Services/ClipboardServices.qml" line="102"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1029,7 +1072,22 @@
 <context>
     <name>ConfigurationTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="23"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="22"/>
+        <source>Level Meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="25"/>
+        <source>Show Audio Level Meters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="26"/>
+        <source>Track live input and output levels. Turn this off if PipeWire reports missing channels for your devices.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="39"/>
         <source>No audio cards detected.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1068,30 +1126,30 @@
 <context>
     <name>Content</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="119"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="126"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="208"/>
         <source>entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="119"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="126"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="208"/>
         <source>entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="127"/>
         <source>Copied %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="120"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="127"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="209"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="120"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="209"/>
         <source>Deleted %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1172,73 +1230,58 @@
 <context>
     <name>DepthWallpaperSection</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="30"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="29"/>
         <source>Depth Wallpaper</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="33"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="32"/>
+        <source>Video wallpaper active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="33"/>
+        <source>Depth wallpaper is static-image only. Switch to a static wallpaper to enable it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="38"/>
         <source>Enable Depth Wallpaper</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="39"/>
         <source>Enable depth effect (Apple like).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="43"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="49"/>
         <source>Auto-process on wallpaper change:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="44"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="50"/>
         <source>Automatically regenerate the depth map whenever the wallpaper changes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="53"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="59"/>
         <source>Re-generate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="71"/>
         <source>Generating depth map…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="67"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="73"/>
         <source>Depth wallpaper ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="103"/>
-        <source>Source</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="143"/>
-        <source>Loading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="160"/>
-        <source>Processing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="162"/>
-        <source>Foreground</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="164"/>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/DepthWallpaperSection.qml" line="166"/>
-        <source>Not generated</source>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="86"/>
+        <source>Unavailable while a video wallpaper is active.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1394,12 +1437,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DeviceListContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="43"/>
+        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="48"/>
         <source>No devices available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="106"/>
+        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="114"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1535,15 +1578,73 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
+    <name>Distro</name>
+    <message>
+        <location filename="../Qml/Core/Utils/Distro.qml" line="198"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DoneContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="29"/>
-        <source>Sent to %1</source>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="28"/>
+        <source>Handed to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="29"/>
-        <source>Transfer cancelled</source>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="30"/>
+        <source>Handed %1 of %2 to %3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="32"/>
+        <source>Stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="34"/>
+        <source>Transfer ended at %1%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="36"/>
+        <source>Couldn&apos;t send to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="45"/>
+        <source>%1 not sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="47"/>
+        <source>nothing was sent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="49"/>
+        <source>the device stopped responding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="53"/>
+        <source>%1 is unreachable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="55"/>
+        <source>some files are no longer available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="57"/>
+        <source>some files could not be read</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="59"/>
+        <source>transfer failed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1627,12 +1728,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="249"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="273"/>
         <source>Search files…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="315"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="338"/>
         <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2110,12 +2211,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="15"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="16"/>
         <source>Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="23"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="24"/>
         <source>Tap/click a network to connect</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2123,147 +2224,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Headers</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="24"/>
-        <source>Clear sky</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="26"/>
-        <source>Mainly clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="28"/>
-        <source>Partly cloudy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="30"/>
-        <source>Overcast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="32"/>
-        <source>Fog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="34"/>
-        <source>Depositing rime fog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="36"/>
-        <source>Light drizzle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="38"/>
-        <source>Moderate drizzle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="40"/>
-        <source>Dense drizzle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="42"/>
-        <source>Light freezing drizzle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="44"/>
-        <source>Dense freezing drizzle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="46"/>
-        <source>Slight rain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="48"/>
-        <source>Moderate rain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="50"/>
-        <source>Heavy rain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="52"/>
-        <source>Light freezing rain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="54"/>
-        <source>Heavy freezing rain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="56"/>
-        <source>Slight snow fall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="58"/>
-        <source>Moderate snow fall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="60"/>
-        <source>Heavy snow fall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="62"/>
-        <source>Snow grains</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="64"/>
-        <source>Slight rain showers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="66"/>
-        <source>Moderate rain showers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="68"/>
-        <source>Violent rain showers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="70"/>
-        <source>Slight snow showers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="72"/>
-        <source>Heavy snow showers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="74"/>
-        <source>Thunderstorm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="76"/>
-        <source>Thunderstorm with slight hail</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="78"/>
-        <source>Thunderstorm with heavy hail</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="220"/>
+        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="158"/>
         <source>Feels like %1°</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2309,7 +2270,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>Humidity</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="50"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="31"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="29"/>
         <source>Humidity</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2319,7 +2280,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="48"/>
         <source>Today&apos;s average</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2683,6 +2644,54 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <message>
         <location filename="../Qml/Services/LauncherServices.qml" line="156"/>
         <source>Sections</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LockscreenPage</name>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="17"/>
+        <source>Lockscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="22"/>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="26"/>
+        <source>Depth wallpaper supports static images only. A video wallpaper is active, so the depth effect is paused.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="57"/>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="96"/>
+        <source>Loading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="113"/>
+        <source>Processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="115"/>
+        <source>Foreground</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="117"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="119"/>
+        <source>Not generated</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3365,11 +3374,6 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="441"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>PlacesSidebar</name>
@@ -3435,13 +3439,13 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Precipitation</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="32"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="30"/>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="33"/>
         <source>Precipitation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="51"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="49"/>
         <source>Today&apos;s amount</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3454,13 +3458,13 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Pressure</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="31"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="29"/>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="42"/>
         <source>Pressure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="48"/>
         <source>Current conditions</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3597,13 +3601,25 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>ProgressContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="37"/>
-        <source>Sending...</source>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="21"/>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="39"/>
+        <source>%1% of %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="48"/>
-        <source>Cancel</source>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="22"/>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="32"/>
+        <source>Sending %1 of %2…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="22"/>
+        <source>Transferring…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="88"/>
+        <source>Stop sending</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3688,7 +3704,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="105"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="101"/>
         <source>VISUAL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3843,6 +3859,11 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <source>Idle</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="151"/>
+        <source>Lockscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsSearchField</name>
@@ -3855,12 +3876,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="172"/>
+        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="173"/>
         <source>Password invalid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="172"/>
+        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="173"/>
         <source>Enter password</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3887,43 +3908,17 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>UVIndex</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="31"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="29"/>
         <source>UV Index</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="48"/>
         <source>Today&apos;s average</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="67"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="22"/>
-        <source>Moderate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="22"/>
-        <source>Low</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="22"/>
-        <source>High</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="22"/>
-        <source>Very High</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="22"/>
-        <source>Extreme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="59"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="38"/>
         <source>UV index</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3992,112 +3987,112 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>WallpaperPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="16"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="17"/>
         <source>Wallpaper Engine</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="23"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="20"/>
         <source>Pick Wallpaper File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="27"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="24"/>
         <source>Select a wallpaper image file:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="28"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="25"/>
         <source>Browse and set a new wallpaper image or video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="32"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="29"/>
         <source>Browse…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="47"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="44"/>
         <source>Wallpaper Picker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="54"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="51"/>
         <source>Search wallpapers…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="153"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="150"/>
         <source>Image Sourcing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="160"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="157"/>
         <source>Enable Wallpaper:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="161"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="158"/>
         <source>Show wallpaper.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="169"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="166"/>
         <source>Wallpaper Live Preview:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="178"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="175"/>
         <source>Wallpaper Directory Path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="179"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="176"/>
         <source>Folder scanned for available wallpapers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="209"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="206"/>
         <source>Loaded Wallpaper Count:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="210"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="207"/>
         <source>Number of wallpapers kept in the picker carousel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="226"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="223"/>
         <source>Transitions &amp; Performance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="230"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="227"/>
         <source>Transition Animation Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="231"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="228"/>
         <source>Animation used when switching wallpapers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="287"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="284"/>
         <source>Transition Low Performance Priority:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="288"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="285"/>
         <source>Reduce transition quality to improve performance on low-end hardware.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="297"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="294"/>
         <source>Transition Duration (ms):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="298"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="295"/>
         <source>Duration of the wallpaper switch animation in milliseconds.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4105,80 +4100,80 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Weather</name>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="450"/>
-        <location filename="../Qml/Services/Weather.qml" line="533"/>
+        <location filename="../Qml/Services/Weather.qml" line="462"/>
+        <location filename="../Qml/Services/Weather.qml" line="545"/>
         <source>Invalid coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="450"/>
-        <location filename="../Qml/Services/Weather.qml" line="479"/>
-        <location filename="../Qml/Services/Weather.qml" line="481"/>
-        <location filename="../Qml/Services/Weather.qml" line="485"/>
-        <location filename="../Qml/Services/Weather.qml" line="492"/>
-        <location filename="../Qml/Services/Weather.qml" line="533"/>
-        <location filename="../Qml/Services/Weather.qml" line="539"/>
-        <location filename="../Qml/Services/Weather.qml" line="572"/>
-        <location filename="../Qml/Services/Weather.qml" line="576"/>
+        <location filename="../Qml/Services/Weather.qml" line="462"/>
+        <location filename="../Qml/Services/Weather.qml" line="491"/>
+        <location filename="../Qml/Services/Weather.qml" line="493"/>
+        <location filename="../Qml/Services/Weather.qml" line="497"/>
+        <location filename="../Qml/Services/Weather.qml" line="504"/>
+        <location filename="../Qml/Services/Weather.qml" line="545"/>
+        <location filename="../Qml/Services/Weather.qml" line="551"/>
         <location filename="../Qml/Services/Weather.qml" line="584"/>
-        <location filename="../Qml/Services/Weather.qml" line="843"/>
+        <location filename="../Qml/Services/Weather.qml" line="588"/>
+        <location filename="../Qml/Services/Weather.qml" line="596"/>
+        <location filename="../Qml/Services/Weather.qml" line="856"/>
         <source>Weather</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="479"/>
+        <location filename="../Qml/Services/Weather.qml" line="491"/>
         <source>%1 updated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="481"/>
+        <location filename="../Qml/Services/Weather.qml" line="493"/>
         <source>%1 failed: bad data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="485"/>
+        <location filename="../Qml/Services/Weather.qml" line="497"/>
         <source>%1 failed (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="492"/>
+        <location filename="../Qml/Services/Weather.qml" line="504"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="498"/>
-        <location filename="../Qml/Services/Weather.qml" line="591"/>
+        <location filename="../Qml/Services/Weather.qml" line="510"/>
+        <location filename="../Qml/Services/Weather.qml" line="603"/>
         <source>network error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="499"/>
-        <location filename="../Qml/Services/Weather.qml" line="592"/>
+        <location filename="../Qml/Services/Weather.qml" line="511"/>
+        <location filename="../Qml/Services/Weather.qml" line="604"/>
         <source>timed out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="539"/>
+        <location filename="../Qml/Services/Weather.qml" line="551"/>
         <source>No astronomy API key configured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="572"/>
+        <location filename="../Qml/Services/Weather.qml" line="584"/>
         <source>Astronomy failed: bad data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="576"/>
+        <location filename="../Qml/Services/Weather.qml" line="588"/>
         <source>Astronomy failed (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="584"/>
+        <location filename="../Qml/Services/Weather.qml" line="596"/>
         <source>Astronomy %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="843"/>
+        <location filename="../Qml/Services/Weather.qml" line="856"/>
         <source>No cached weather data found, fetching fresh data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4231,102 +4226,127 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="191"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="149"/>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="154"/>
+        <source>Moderate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="159"/>
+        <source>High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="164"/>
+        <source>Very High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="168"/>
+        <source>Extreme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="233"/>
         <source>A muggy and warm day — take care in the sun.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="193"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="235"/>
         <source>A humid day with sticky conditions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="195"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="237"/>
         <source>A hot day ahead — stay hydrated and seek shade.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="197"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="239"/>
         <source>A cold day — dress warmly before heading out.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="199"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="241"/>
         <source>A pleasant day with comfortable conditions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="201"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="243"/>
         <source>Today&apos;s weather looks moderate.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="207"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="249"/>
         <source>Air quality is poor right now — consider limiting time outside.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="212"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="254"/>
         <source>Air quality is moderate — sensitive groups should take precautions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="218"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="260"/>
         <source>UV index is very high (%1) — avoid direct sun exposure.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="223"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="265"/>
         <source>Strong UV levels at %1 — use sun protection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="229"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="271"/>
         <source>Heavy rain expected — bring an umbrella.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="234"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="276"/>
         <source>Light rain possible — keep an umbrella handy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="240"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="282"/>
         <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="245"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="287"/>
         <source>Breezy day with winds around %1 km/h.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="251"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="293"/>
         <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="256"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="298"/>
         <source>Temperature ranging from %1° to %2° today.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="262"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="304"/>
         <source>Very sticky conditions with %1% humidity.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="267"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="309"/>
         <source>Poor visibility at %1 km — drive carefully.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="272"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="314"/>
         <source>Perfect weather for outdoor activities.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="278"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="320"/>
         <source>Current temperature is %1° with feels like %2°.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4458,13 +4478,13 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Wind</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="31"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="29"/>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Wind.qml" line="73"/>
         <source>Wind</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="48"/>
         <source>Today&apos;s average</source>
         <translation type="unfinished"></translation>
     </message>
