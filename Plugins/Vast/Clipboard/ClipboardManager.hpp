@@ -71,7 +71,7 @@ namespace vast {
       private:
         void                                setupConnections();
         void                                loadAllEntries();
-        virtual void                        appendFullEntry(QVariantMap& map, ClipboardEntry entry);
+        void                                appendFullEntry(QVariantMap& map, ClipboardEntry entry);
         void                                pruneIfNeeded();
         void                                onSelectionReceived(const QString& mimeType, const QByteArray& content, const QString& fileName);
         [[nodiscard]] bool                  queueClipboardContent(const QString& mimeType, const QByteArray& content, const QString& fileName);
