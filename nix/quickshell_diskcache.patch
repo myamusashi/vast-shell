@@ -1,0 +1,741 @@
+From e26a7c0781e043c1958d86307babdf49ba510d2f Mon Sep 17 00:00:00 2001
+From: bbedward <bbedward@gmail.com>
+Date: Mon, 21 Sep 2026 20:05:24 -0400
+Subject: [PATCH] core: add DiskCache pragma to enable the qml disk cache
+
+---
+ changelog/next.md        |   1 +
+ src/core/generation.cpp  |  31 +++--
+ src/core/generation.hpp  |   9 +-
+ src/core/qsintercept.cpp |  43 +++++++
+ src/core/qsintercept.hpp |  11 +-
+ src/core/rootwrapper.cpp |  36 ++++--
+ src/core/rootwrapper.hpp |   3 +-
+ src/core/toolsupport.cpp | 267 +++++++++++++++++++++++++--------------
+ src/core/toolsupport.hpp |  18 ++-
+ src/launch/launch.cpp    |   4 +-
+ 10 files changed, 305 insertions(+), 118 deletions(-)
+
+diff --git a/changelog/next.md b/changelog/next.md
+index 58762d757..9255188bd 100644
+--- a/changelog/next.md
++++ b/changelog/next.md
+@@ -1,6 +1,7 @@
+ ## Other Changes
+ 
+ - Added support for Hyprland's new workspace address format.
++- Added `DiskCache` pragma which loads the config from a mirror in the runtime dir to enable the qml disk cache, visible in `Component.url` and `Qt.resolvedUrl` results.
+ 
+ ## Bug Fixes
+ 
+diff --git a/src/core/generation.cpp b/src/core/generation.cpp
+index 9f2c8604b..935f07cae 100644
+--- a/src/core/generation.cpp
++++ b/src/core/generation.cpp
+@@ -34,10 +34,11 @@ QS_LOGGING_CATEGORY(logScene, "scene");
+ 
+ static QHash<const QQmlEngine*, EngineGeneration*> g_generations; // NOLINT
+ 
+-EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner)
++EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner, QString vfsPath)
+     : rootPath(rootPath)
+     , scanner(std::move(scanner))
+-    , urlInterceptor(this->rootPath)
++    , vfsPath(std::move(vfsPath))
++    , urlInterceptor(this->rootPath, this->vfsPath)
+     , interceptNetFactory(this->rootPath, this->scanner.fileIntercepts)
+     , engine(new QQmlEngine()) {
+ 	g_generations.insert(this->engine, this);
+@@ -46,7 +47,12 @@ EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner)
+ 	QObject::connect(this->engine, &QQmlEngine::warnings, this, &EngineGeneration::onEngineWarnings);
+ 
+ 	this->engine->addUrlInterceptor(&this->urlInterceptor);
+-	this->engine->addImportPath("qs:@/");
++
++	if (this->vfsPath.isEmpty()) {
++		this->engine->addImportPath("qs:@/");
++	} else {
++		this->engine->addImportPath(this->vfsPath);
++	}
+ 
+ 	this->engine->setNetworkAccessManagerFactory(&this->interceptNetFactory);
+ 	this->incubationController.initLoop();
+@@ -59,7 +65,7 @@ EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner)
+ 	QsEnginePlugin::runConstructGeneration(*this);
+ }
+ 
+-EngineGeneration::EngineGeneration(): EngineGeneration(QDir(), QmlScanner()) {}
++EngineGeneration::EngineGeneration(): EngineGeneration(QDir(), QmlScanner(), QString()) {}
+ 
+ EngineGeneration::~EngineGeneration() {
+ 	for (auto* extension: this->extensions.values()) {
+@@ -256,11 +262,9 @@ void EngineGeneration::onDirectoryChanged() {
+ 	}
+ }
+ 
+-void EngineGeneration::onEngineWarnings(const QList<QQmlError>& warnings) {
++void EngineGeneration::onEngineWarnings(const QList<QQmlError>& warnings) const {
+ 	for (const auto& error: warnings) {
+-		const auto& url = error.url();
+-		auto rel = url.scheme() == "qs" && url.path().startsWith("@/qs/") ? "@" % url.path().sliced(5)
+-		                                                                  : url.toString();
++		auto rel = this->relativeUrl(error.url());
+ 
+ 		QString objectName;
+ 		auto desc = error.description();
+@@ -274,6 +278,17 @@ void EngineGeneration::onEngineWarnings(const QList<QQmlError>& warnings) {
+ 	}
+ }
+ 
++QString EngineGeneration::relativeUrl(const QUrl& url) const {
++	if (url.scheme() == "qs" && url.path().startsWith("@/qs/")) return '@' % url.path().sliced(5);
++
++	if (!this->vfsPath.isEmpty() && url.isLocalFile()) {
++		const QString prefix = this->vfsPath % "/qs/";
++		if (url.path().startsWith(prefix)) return '@' % url.path().sliced(prefix.length());
++	}
++
++	return url.toString();
++}
++
+ void EngineGeneration::registerExtension(const void* key, EngineGenerationExt* extension) {
+ 	if (this->extensions.contains(key)) {
+ 		delete this->extensions.value(key);
+diff --git a/src/core/generation.hpp b/src/core/generation.hpp
+index 4543408e6..3ccdb698a 100644
+--- a/src/core/generation.hpp
++++ b/src/core/generation.hpp
+@@ -10,7 +10,9 @@
+ #include <qqmlerror.h>
+ #include <qqmlincubator.h>
+ #include <qquickwindow.h>
++#include <qstring.h>
+ #include <qtclasshelpermacros.h>
++#include <qurl.h>
+ 
+ #include "incubator.hpp"
+ #include "qsintercept.hpp"
+@@ -32,7 +34,7 @@ class EngineGeneration: public QObject {
+ 
+ public:
+ 	explicit EngineGeneration();
+-	explicit EngineGeneration(const QDir& rootPath, QmlScanner scanner);
++	explicit EngineGeneration(const QDir& rootPath, QmlScanner scanner, QString vfsPath);
+ 	~EngineGeneration() override;
+ 	Q_DISABLE_COPY_MOVE(EngineGeneration);
+ 
+@@ -47,6 +49,8 @@ class EngineGeneration: public QObject {
+ 	void registerExtension(const void* key, EngineGenerationExt* extension);
+ 	EngineGenerationExt* findExtension(const void* key);
+ 
++	[[nodiscard]] QString relativeUrl(const QUrl& url) const;
++
+ 	static EngineGeneration* findEngineGeneration(const QQmlEngine* engine);
+ 	static EngineGeneration* findObjectGeneration(const QObject* object);
+ 
+@@ -57,6 +61,7 @@ class EngineGeneration: public QObject {
+ 	RootWrapper* wrapper = nullptr;
+ 	QDir rootPath;
+ 	QmlScanner scanner;
++	QString vfsPath;
+ 	QsUrlInterceptor urlInterceptor;
+ 	QsInterceptNetworkAccessManagerFactory interceptNetFactory;
+ 	QQmlEngine* engine = nullptr;
+@@ -85,7 +90,7 @@ private slots:
+ 	void onFileChanged(const QString& name);
+ 	void onDirectoryChanged();
+ 	void onTrackedWindowDestroyed(QObject* object);
+-	static void onEngineWarnings(const QList<QQmlError>& warnings);
++	void onEngineWarnings(const QList<QQmlError>& warnings) const;
+ 
+ private:
+ 	void postReload();
+diff --git a/src/core/qsintercept.cpp b/src/core/qsintercept.cpp
+index 6687681b1..484c16323 100644
+--- a/src/core/qsintercept.cpp
++++ b/src/core/qsintercept.cpp
+@@ -48,6 +48,17 @@ QUrl QsUrlInterceptor::intercept(
+ 			return QUrl("qrc:/qs-blackhole");
+ 		}
+ 
++		// types are keyed by intercepted url, a second url for a document doubles its singletons
++		if (!this->vfsPath.isEmpty()
++		    && (type != QQmlAbstractUrlInterceptor::DataType::UrlString || path.endsWith(".qml")))
++		{
++			auto newUrl = url;
++			newUrl.setScheme("file");
++			newUrl.setPath(this->toVfsPath(path));
++			qCDebug(logQsIntercept) << "Rewrote intercept" << url << "to" << newUrl;
++			return newUrl;
++		}
++
+ 		// Some types such as Image take into account where they are loading from, and force
+ 		// asynchronous loading over a network. qs: is considered to be over a network.
+ 		// In those cases we want to return a file:// url so asynchronous loading is not forced.
+@@ -66,9 +77,41 @@ QUrl QsUrlInterceptor::intercept(
+ 		}
+ 	}
+ 
++	// documents from real paths (Quickshell.shellDir) go to the mirror for the same reason,
++	// everything else resolved against a mirror document goes back to the real path
++	if (!this->vfsPath.isEmpty() && url.scheme() == "file") {
++		auto isDocument =
++		    type == QQmlAbstractUrlInterceptor::DataType::QmlFile
++		    || type == QQmlAbstractUrlInterceptor::DataType::JavaScriptFile
++		    || type == QQmlAbstractUrlInterceptor::DataType::QmldirFile
++		    || (type == QQmlAbstractUrlInterceptor::DataType::UrlString && url.path().endsWith(".qml"));
++
++		auto path = url.path();
++		auto newPath = isDocument ? this->toVfsPath(path) : this->toConfigPath(path);
++
++		if (newPath != path) {
++			auto newUrl = url;
++			newUrl.setPath(newPath);
++			qCDebug(logQsIntercept) << "Canonicalized intercept" << url << "to" << newUrl;
++			return newUrl;
++		}
++	}
++
+ 	return url;
+ }
+ 
++QString QsUrlInterceptor::toVfsPath(const QString& path) const {
++	const auto& rootPath = this->configRoot.path();
++	if (!path.startsWith(rootPath % '/')) return path;
++	return this->vfsPath % "/qs" % path.sliced(rootPath.length());
++}
++
++QString QsUrlInterceptor::toConfigPath(const QString& path) const {
++	const QString mirrorPath = this->vfsPath % "/qs";
++	if (!path.startsWith(mirrorPath % '/')) return path;
++	return this->configRoot.path() % path.sliced(mirrorPath.length());
++}
++
+ QsInterceptDataReply::QsInterceptDataReply(const QString& data, QObject* parent)
+     : QNetworkReply(parent)
+     , content(data.toUtf8()) {
+diff --git a/src/core/qsintercept.hpp b/src/core/qsintercept.hpp
+index c3d8b5526..c91f96ec5 100644
+--- a/src/core/qsintercept.hpp
++++ b/src/core/qsintercept.hpp
+@@ -1,5 +1,7 @@
+ #pragma once
+ 
++#include <utility>
++
+ #include <qdir.h>
+ #include <qhash.h>
+ #include <qloggingcategory.h>
+@@ -8,6 +10,7 @@
+ #include <qnetworkrequest.h>
+ #include <qqmlabstracturlinterceptor.h>
+ #include <qqmlnetworkaccessmanagerfactory.h>
++#include <qstring.h>
+ #include <qurl.h>
+ 
+ #include "logcat.hpp"
+@@ -16,12 +19,18 @@ QS_DECLARE_LOGGING_CATEGORY(logQsIntercept);
+ 
+ class QsUrlInterceptor: public QQmlAbstractUrlInterceptor {
+ public:
+-	explicit QsUrlInterceptor(const QDir& configRoot): configRoot(configRoot) {}
++	explicit QsUrlInterceptor(const QDir& configRoot, QString vfsPath)
++	    : configRoot(configRoot)
++	    , vfsPath(std::move(vfsPath)) {}
+ 
+ 	QUrl intercept(const QUrl& originalUrl, QQmlAbstractUrlInterceptor::DataType type) override;
+ 
+ private:
++	[[nodiscard]] QString toVfsPath(const QString& path) const;
++	[[nodiscard]] QString toConfigPath(const QString& path) const;
++
+ 	QDir configRoot;
++	QString vfsPath;
+ };
+ 
+ class QsInterceptDataReply: public QNetworkReply {
+diff --git a/src/core/rootwrapper.cpp b/src/core/rootwrapper.cpp
+index 1e75819d6..b92fc157c 100644
+--- a/src/core/rootwrapper.cpp
++++ b/src/core/rootwrapper.cpp
+@@ -21,10 +21,11 @@
+ #include "scan.hpp"
+ #include "toolsupport.hpp"
+ 
+-RootWrapper::RootWrapper(QString rootPath, QString shellId)
++RootWrapper::RootWrapper(QString rootPath, QString shellId, bool diskCache)
+     : QObject(nullptr)
+     , rootPath(std::move(rootPath))
+     , shellId(std::move(shellId))
++    , diskCache(diskCache)
+     , originalWorkingDirectory(QDir::current().absolutePath()) {
+ 	QObject::connect(
+ 	    QuickshellSettings::instance(),
+@@ -60,9 +61,14 @@ void RootWrapper::reloadGraph(bool hard) {
+ 	auto scanner = QmlScanner(rootPath);
+ 	scanner.scanQmlRoot(this->rootPath);
+ 
+-	qs::core::QmlToolingSupport::updateTooling(rootPath, scanner);
++	auto tooling = qs::core::QmlToolingSupport::updateTooling(rootPath, this->diskCache);
+ 	this->configDirWatcher.addPath(rootPath.path());
+ 
++	QString mirrorPath;
++	if (tooling || this->diskCache) {
++		mirrorPath = qs::core::QmlToolingSupport::updateMirror(rootPath, scanner, this->diskCache);
++	}
++
+ 	// todo: move into EngineGeneration
+ 	if (this->generation != nullptr) {
+ 		qInfo() << "Reloading configuration...";
+@@ -95,12 +101,23 @@ void RootWrapper::reloadGraph(bool hard) {
+ 		return;
+ 	}
+ 
+-	auto* generation = new EngineGeneration(rootPath, std::move(scanner));
++	// the qml disk cache only accepts file urls, so DiskCache loads from the vfs mirror
++	auto vfsPath = this->diskCache ? mirrorPath : QString();
++	if (this->diskCache && vfsPath.isEmpty()) {
++		qWarning() << "Could not create config mirror, QML disk cache disabled";
++	}
++
++	auto* generation = new EngineGeneration(rootPath, std::move(scanner), vfsPath);
+ 	generation->wrapper = this;
+ 
+ 	QUrl url;
+-	url.setScheme("qs");
+-	url.setPath("@/qs/" % rootFile.fileName());
++	if (vfsPath.isEmpty()) {
++		url.setScheme("qs");
++		url.setPath("@/qs/" % rootFile.fileName());
++	} else {
++		url = QUrl::fromLocalFile(vfsPath % "/qs/" % rootFile.fileName());
++	}
++
+ 	auto component = QQmlComponent(generation->engine, url);
+ 
+ 	if (!component.isReady()) {
+@@ -109,9 +126,7 @@ void RootWrapper::reloadGraph(bool hard) {
+ 
+ 		auto errors = component.errors();
+ 		for (auto& error: errors) {
+-			const auto& url = error.url();
+-			auto rel = url.scheme() == "qs" && url.path().startsWith("@/qs/") ? "@" % url.path().sliced(5)
+-			                                                                  : url.toString();
++			auto rel = generation->relativeUrl(error.url());
+ 			auto msg = "  caused by " % rel % '[' % QString::number(error.line()) % ':'
+ 			         % QString::number(error.column()) % "]: " % error.description();
+ 			errorString += '\n' % msg;
+@@ -211,5 +226,8 @@ void RootWrapper::onWatchedFilesChanged() { this->reloadGraph(false); }
+ void RootWrapper::updateTooling() {
+ 	if (!this->generation) return;
+ 	auto configDir = QFileInfo(this->rootPath).dir();
+-	qs::core::QmlToolingSupport::updateTooling(configDir, this->generation->scanner);
++	auto tooling = qs::core::QmlToolingSupport::updateTooling(configDir, this->diskCache);
++	if (!tooling && !this->diskCache) return;
++
++	qs::core::QmlToolingSupport::updateMirror(configDir, this->generation->scanner, this->diskCache);
+ }
+diff --git a/src/core/rootwrapper.hpp b/src/core/rootwrapper.hpp
+index 1425d1773..2588fcf87 100644
+--- a/src/core/rootwrapper.hpp
++++ b/src/core/rootwrapper.hpp
+@@ -13,7 +13,7 @@ class RootWrapper: public QObject {
+ 	Q_OBJECT;
+ 
+ public:
+-	explicit RootWrapper(QString rootPath, QString shellId);
++	explicit RootWrapper(QString rootPath, QString shellId, bool diskCache);
+ 	~RootWrapper() override;
+ 	Q_DISABLE_COPY_MOVE(RootWrapper);
+ 
+@@ -28,6 +28,7 @@ private slots:
+ private:
+ 	QString rootPath;
+ 	QString shellId;
++	bool diskCache;
+ 	EngineGeneration* generation = nullptr;
+ 	QString originalWorkingDirectory;
+ 	QFileSystemWatcher configDirWatcher;
+diff --git a/src/core/toolsupport.cpp b/src/core/toolsupport.cpp
+index 585656e3d..308d3d2f4 100644
+--- a/src/core/toolsupport.cpp
++++ b/src/core/toolsupport.cpp
+@@ -1,16 +1,26 @@
+ #include "toolsupport.hpp"
++#include <algorithm>
+ #include <cerrno>
+ 
+ #include <fcntl.h>
++#include <qbytearray.h>
+ #include <qcontainerfwd.h>
++#include <qcryptographichash.h>
++#include <qdatetime.h>
+ #include <qdebug.h>
+ #include <qdir.h>
++#include <qendian.h>
++#include <qfile.h>
++#include <qfiledevice.h>
+ #include <qfileinfo.h>
+ #include <qlist.h>
+ #include <qlogging.h>
+ #include <qloggingcategory.h>
+ #include <qqmlengine.h>
++#include <qsavefile.h>
++#include <qset.h>
+ #include <qtenvironmentvariables.h>
++#include <qtypes.h>
+ 
+ #include "logcat.hpp"
+ #include "paths.hpp"
+@@ -22,7 +32,7 @@ namespace {
+ QS_LOGGING_CATEGORY(logTooling, "quickshell.tooling", QtWarningMsg);
+ }
+ 
+-bool QmlToolingSupport::updateTooling(const QDir& configRoot, QmlScanner& scanner) {
++bool QmlToolingSupport::updateTooling(const QDir& configRoot, bool keepMirror) {
+ 	auto* vfs = QsPaths::instance()->shellVfsDir();
+ 
+ 	if (!vfs) {
+@@ -34,15 +44,174 @@ bool QmlToolingSupport::updateTooling(const QDir& configRoot, QmlScanner& scanne
+ 		return false;
+ 	}
+ 
+-	if (!QmlToolingSupport::updateQmllsConfig(configRoot, false)) {
+-		QDir(vfs->filePath("qs")).removeRecursively();
++	if (QmlToolingSupport::updateQmllsConfig(configRoot, false)) return true;
++	if (!keepMirror) QmlToolingSupport::removeMirrorEntry(vfs->filePath("qs"));
++	return false;
++}
++
++QString QmlToolingSupport::updateMirror(
++    const QDir& configRoot,
++    const QmlScanner& scanner,
++    bool copyDocuments
++) {
++	auto* vfs = QsPaths::instance()->shellVfsDir();
++	if (!vfs) return QString();
++
++	// QQmlTypeLoader::addImportPath canonicalizes, so urls built from this must match
++	auto vfsPath = vfs->canonicalPath();
++	if (vfsPath.isEmpty()) return QString();
++
++	auto target = QDir(vfsPath % "/qs");
++	if (!QmlToolingSupport::mirrorDir(scanner, configRoot, target, copyDocuments)) return QString();
++
++	return vfsPath;
++}
++
++bool QmlToolingSupport::mirrorDir(
++    const QmlScanner& scanner,
++    const QDir& source,
++    const QDir& target,
++    bool copyDocuments
++) {
++	auto targetInfo = QFileInfo(target.path());
++	if (targetInfo.isSymLink() || (targetInfo.exists() && !targetInfo.isDir())) {
++		QmlToolingSupport::removeMirrorEntry(target.path());
++	}
++
++	if (!target.mkpath(".")) {
++		qCCritical(logTooling) << "Could not create mirror dir at" << target.path();
+ 		return false;
+ 	}
+ 
+-	QmlToolingSupport::updateToolingFs(scanner, configRoot, vfs->filePath("qs"));
++	const QString prefix = source.path() % '/';
++	QSet<QString> names;
++
++	for (auto [path, text]: scanner.fileIntercepts.asKeyValueRange()) {
++		if (!path.startsWith(prefix)) continue;
++
++		auto name = path.sliced(prefix.length());
++		if (name.contains('/')) continue;
++
++		names.insert(name);
++		if (!QmlToolingSupport::writeMirrorFile(target.filePath(name), text.toUtf8())) return false;
++	}
++
++	auto filters = QDir::AllEntries | QDir::Hidden | QDir::System | QDir::NoDotAndDotDot;
++
++	for (const auto& name: source.entryList(filters)) {
++		if (names.contains(name)) continue;
++		names.insert(name);
++
++		auto path = source.filePath(name);
++		auto entryTarget = target.filePath(name);
++
++		if (!QmlToolingSupport::mirrorEntry(scanner, path, entryTarget, copyDocuments)) return false;
++	}
++
++	for (const auto& name: target.entryList(filters)) {
++		if (!names.contains(name)) QmlToolingSupport::removeMirrorEntry(target.filePath(name));
++	}
++
+ 	return true;
+ }
+ 
++bool QmlToolingSupport::mirrorEntry(
++    const QmlScanner& scanner,
++    const QString& path,
++    const QString& target,
++    bool copyDocuments
++) {
++	auto info = QFileInfo(path);
++	auto name = info.fileName();
++
++	// hidden entries can't be modules
++	if (name.startsWith('.')) return QmlToolingSupport::linkMirrorEntry(path, target);
++
++	if (info.isDir()) {
++		// symlinked dirs can loop, so only the ones the scanner produced files under are entered
++		auto prefix = path % '/';
++		auto scanned = std::any_of(
++		    scanner.fileIntercepts.keyBegin(),
++		    scanner.fileIntercepts.keyEnd(),
++		    [&](const QString& key) { return key.startsWith(prefix); }
++		);
++
++		if (info.isSymLink() && !scanned) return QmlToolingSupport::linkMirrorEntry(path, target);
++		return QmlToolingSupport::mirrorDir(scanner, QDir(path), QDir(target), copyDocuments);
++	}
++
++	auto isDocument = name.endsWith(".qml") || name.endsWith(".js") || name.endsWith(".mjs");
++	if (!copyDocuments || !isDocument) return QmlToolingSupport::linkMirrorEntry(path, target);
++
++	auto file = QFile(path);
++
++	if (!file.open(QFile::ReadOnly)) {
++		qCCritical(logTooling) << "Could not read" << path;
++		return false;
++	}
++
++	return QmlToolingSupport::writeMirrorFile(target, file.readAll());
++}
++
++bool QmlToolingSupport::writeMirrorFile(const QString& path, const QByteArray& data) {
++	auto info = QFileInfo(path);
++	if (info.isSymLink() || (info.exists() && !info.isFile())) {
++		QmlToolingSupport::removeMirrorEntry(path);
++	}
++
++	auto current = QFile(path);
++	if (current.open(QFile::ReadOnly) && current.readAll() == data) return true;
++	current.close();
++
++	auto save = QSaveFile(path);
++
++	if (!save.open(QFile::WriteOnly) || save.write(data) != data.length() || !save.commit()) {
++		qCCritical(logTooling) << "Failed to write mirror file" << path;
++		return false;
++	}
++
++	// The disk cache compares source mtimes (QV4::CompiledData::Unit::verifyHeader), which
++	// are all 1 in the nix store, so the mtime comes from the content. 2000..2030, never 0.
++	auto hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
++	auto secs = 946684800 + qFromBigEndian<quint32>(hash.constData()) % 946684800;
++	auto file = QFile(path);
++
++	if (!file.open(QFile::ReadWrite)
++	    || !file.setFileTime(QDateTime::fromSecsSinceEpoch(secs), QFile::FileModificationTime))
++	{
++		qCCritical(logTooling) << "Failed to set mirror file time on" << path;
++		return false;
++	}
++
++	qCDebug(logTooling) << "Wrote mirror file" << path;
++	return true;
++}
++
++bool QmlToolingSupport::linkMirrorEntry(const QString& path, const QString& target) {
++	auto info = QFileInfo(target);
++	if (info.isSymLink() && info.symLinkTarget() == path) return true;
++
++	QmlToolingSupport::removeMirrorEntry(target);
++
++	if (!QFile::link(path, target)) {
++		qCCritical(logTooling) << "Could not create symlink to" << path << "at" << target;
++		return false;
++	}
++
++	qCDebug(logTooling) << "Created symlink to" << path << "at" << target;
++	return true;
++}
++
++void QmlToolingSupport::removeMirrorEntry(const QString& path) {
++	auto info = QFileInfo(path);
++	if (!info.exists() && !info.isSymLink()) return;
++
++	// isDir follows symlinks, and everything behind one is the real config
++	auto ok =
++	    info.isDir() && !info.isSymLink() ? QDir(path).removeRecursively() : QFile::remove(path);
++	if (!ok) qCWarning(logTooling) << "Failed to remove old file at" << path;
++}
++
+ bool QmlToolingSupport::lockTooling() {
+ 	if (QmlToolingSupport::toolingLock) return true;
+ 
+@@ -152,94 +321,4 @@ bool QmlToolingSupport::updateQmllsConfig(const QDir& configRoot, bool create) {
+ 	return true;
+ }
+ 
+-void QmlToolingSupport::updateToolingFs(
+-    QmlScanner& scanner,
+-    const QDir& scanDir,
+-    const QDir& linkDir
+-) {
+-	QList<QString> files;
+-	QSet<QString> subdirs;
+-
+-	auto scanPath = scanDir.path();
+-
+-	linkDir.mkpath(".");
+-
+-	for (auto& path: scanner.scannedFiles) {
+-		if (path.length() < scanPath.length() + 1 || !path.startsWith(scanPath)) continue;
+-		auto name = path.sliced(scanPath.length() + 1);
+-
+-		if (name.contains('/')) {
+-			auto dirname = name.first(name.indexOf('/'));
+-			subdirs.insert(dirname);
+-			continue;
+-		}
+-
+-		auto fileInfo = QFileInfo(path);
+-		if (!fileInfo.isFile()) continue;
+-
+-		if (scanner.fileIntercepts.contains(path)) continue;
+-
+-		auto spath = linkDir.filePath(name);
+-		auto sFileInfo = QFileInfo(spath);
+-
+-		if (!sFileInfo.isSymLink() || sFileInfo.symLinkTarget() != path) {
+-			QFile::remove(spath);
+-
+-			if (QFile::link(path, spath)) {
+-				qCDebug(logTooling) << "Created symlink to" << path << "at" << spath;
+-				files.append(spath);
+-			} else {
+-				qCCritical(logTooling) << "Could not create symlink to" << path << "at" << spath;
+-			}
+-		} else {
+-			files.append(spath);
+-		}
+-	}
+-
+-	for (auto [path, text]: scanner.fileIntercepts.asKeyValueRange()) {
+-		if (path.length() < scanPath.length() + 1 || !path.startsWith(scanPath)) continue;
+-		auto name = path.sliced(scanPath.length() + 1);
+-
+-		if (name.contains('/')) {
+-			auto dirname = name.first(name.indexOf('/'));
+-			subdirs.insert(dirname);
+-			continue;
+-		}
+-
+-		auto spath = linkDir.filePath(name);
+-		QFile::remove(spath);
+-
+-		auto file = QFile(spath);
+-		if (!file.open(QFile::ReadWrite | QFile::Text | QFile::NewOnly)) {
+-			qCCritical(logTooling) << "Failed to open injected file" << spath;
+-			continue;
+-		}
+-
+-		if (file.readAll() == text) {
+-			files.append(spath);
+-			continue;
+-		}
+-
+-		if (file.resize(0) && file.write(text.toUtf8())) {
+-			files.append(spath);
+-			qCDebug(logTooling) << "Wrote injected file" << spath;
+-		} else {
+-			qCCritical(logTooling) << "Failed to write injected file" << spath;
+-		}
+-	}
+-
+-	for (auto& name: linkDir.entryList(QDir::Files | QDir::System)) { // System = broken symlinks
+-		auto path = linkDir.filePath(name);
+-
+-		if (!files.contains(path)) {
+-			if (QFile::remove(path)) qCDebug(logTooling) << "Removed old file at" << path;
+-			else qCWarning(logTooling) << "Failed to remove old file at" << path;
+-		}
+-	}
+-
+-	for (const auto& subdir: subdirs) {
+-		QmlToolingSupport::updateToolingFs(scanner, scanDir.filePath(subdir), linkDir.filePath(subdir));
+-	}
+-}
+-
+ } // namespace qs::core
+diff --git a/src/core/toolsupport.hpp b/src/core/toolsupport.hpp
+index 9fb79216d..5749a1322 100644
+--- a/src/core/toolsupport.hpp
++++ b/src/core/toolsupport.hpp
+@@ -1,6 +1,8 @@
+ #pragma once
+ 
++#include <qbytearray.h>
+ #include <qdir.h>
++#include <qstring.h>
+ 
+ #include "scan.hpp"
+ 
+@@ -8,13 +10,25 @@ namespace qs::core {
+ 
+ class QmlToolingSupport {
+ public:
+-	static bool updateTooling(const QDir& configRoot, QmlScanner& scanner);
++	static bool updateTooling(const QDir& configRoot, bool keepMirror);
++	static QString
++	updateMirror(const QDir& configRoot, const QmlScanner& scanner, bool copyDocuments);
+ 
+ private:
+ 	static QString getQmllsConfig();
+ 	static bool lockTooling();
+ 	static bool updateQmllsConfig(const QDir& configRoot, bool create);
+-	static void updateToolingFs(QmlScanner& scanner, const QDir& scanDir, const QDir& linkDir);
++	static bool
++	mirrorDir(const QmlScanner& scanner, const QDir& source, const QDir& target, bool copyDocuments);
++	static bool mirrorEntry(
++	    const QmlScanner& scanner,
++	    const QString& path,
++	    const QString& target,
++	    bool copyDocuments
++	);
++	static bool writeMirrorFile(const QString& path, const QByteArray& data);
++	static bool linkMirrorEntry(const QString& path, const QString& target);
++	static void removeMirrorEntry(const QString& path);
+ 	static inline bool toolingEnabled = false;
+ 	static inline QFile* toolingLock = nullptr;
+ };
+diff --git a/src/launch/launch.cpp b/src/launch/launch.cpp
+index 1edd60c3f..e9a640b0e 100644
+--- a/src/launch/launch.cpp
++++ b/src/launch/launch.cpp
+@@ -80,6 +80,7 @@ int launch(const LaunchArgs& args, char** argv) {
+ 		QHash<QString, QString> defaultEnv;
+ 		QString appId = qEnvironmentVariable("QS_APP_ID");
+ 		bool dropExpensiveFonts = false;
++		bool diskCache = false;
+ 		QString dataDir;
+ 		QString stateDir;
+ 		QString cacheDir;
+@@ -113,6 +114,7 @@ int launch(const LaunchArgs& args, char** argv) {
+ 			else if (pragma == "IgnoreSystemSettings") pragmas.desktopSettingsAware = false;
+ 			else if (pragma == "RespectSystemStyle") pragmas.useSystemStyle = true;
+ 			else if (pragma == "DropExpensiveFonts") pragmas.dropExpensiveFonts = true;
++			else if (pragma == "DiskCache") pragmas.diskCache = true;
+ 			else if (pragma.startsWith("IconTheme ")) pragmas.iconTheme = pragma.sliced(10);
+ 			else if (pragma.startsWith("AppId ")) {
+ 				pragmas.appId = pragma.sliced(6).trimmed();
+@@ -317,7 +319,7 @@ int launch(const LaunchArgs& args, char** argv) {
+ 	qs::ipc::IpcServer::start();
+ 	QsPaths::instance()->createLock();
+ 
+-	auto root = RootWrapper(args.configPath, shellId);
++	auto root = RootWrapper(args.configPath, shellId, pragmas.diskCache);
+ 	QGuiApplication::setQuitOnLastWindowClosed(false);
+ 
+ 	exitDaemon(0);

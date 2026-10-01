@@ -16,7 +16,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
         quickshell = {
-            url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+            url = "github:quickshell-mirror/quickshell";
             inputs.nixpkgs.follows = "nixpkgs";
         };
     };
@@ -41,9 +41,11 @@
     in {
         packages = forAllSystems (system: let
             pkgs = pkgsFor system;
+            quickshellDerivation = quickshell.packages.${system}.default;
         in
             pkgs.callPackage ./nix/default.nix {
-                inherit quickshell wl-screenrec-fork another-ripple m3Shapes;
+                quickshell = quickshellDerivation;
+                inherit wl-screenrec-fork another-ripple m3Shapes;
             });
 
         nixosModules.default = import ./nix/nixos-modules.nix {

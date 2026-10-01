@@ -27,6 +27,13 @@
     cmake,
     libvdpau-va-gl,
 }: let
+    quickshellPkgs = quickshell.passthru.unwrapped.overrideAttrs (prevUnwrapped: {
+        patches =
+            (prevUnwrapped.patches or [])
+            ++ [
+                ./quickshell_diskcache.patch
+            ];
+    });
     app2unit = callPackage ./packages/app2unit.nix {};
     material-symbols = callPackage ./packages/material-symbols.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
@@ -175,7 +182,7 @@
                 --prefix PATH : ${lib.makeBinPath (runtimeDeps ++ [app2unit])} \
                 --suffix PATH : /run/current-system/sw/bin \
 
-            makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
+            makeWrapper ${quickshellPkgs}/bin/quickshell \
               $out/bin/qs \
                 --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
                 --set QT_MEDIA_BACKEND ffmpeg \
@@ -191,7 +198,7 @@
                 --prefix PATH : ${lib.makeBinPath runtimeDeps} \
                 --suffix PATH : /run/current-system/sw/bin \
 
-            makeWrapper ${quickshell.packages.${stdenv.hostPlatform.system}.default}/bin/quickshell \
+            makeWrapper ${quickshellPkgs}/bin/quickshell \
               $out/bin/quickshell \
                 --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
                 --set QT_MEDIA_BACKEND ffmpeg \
