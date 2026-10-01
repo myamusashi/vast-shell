@@ -1,12 +1,13 @@
 import QtQuick
+import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Hyprland
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
-import qs.Components.Base
 
 import "Calendar"
 import "Clipboard"
@@ -55,11 +56,11 @@ Variants {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.namespace: "shell:drawers"
         WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        HyprlandWindow.visibleMask: childRegions.instances // qmllint disable
+        HyprlandWindow.visibleMask: childRegions.instance // qmllint disable
         mask: Region {
             regions: childRegions.instances
-            item: cornersArea
-            intersection: Intersection.Subtract
+            item: border
+            intersection: Intersection.Combine
         }
 
         Variants {
@@ -132,61 +133,104 @@ Variants {
             }
         }
 
-        Rectangle {
-            id: rect
+        Shape {
+            id: border
 
             anchors.fill: parent
-            color: "transparent"
 
-            Rectangle {
-                id: leftBar
+            property color color: GlobalStates.drawerColors
+            property real borderTop: exclusiveTop.zone
+            property real borderBottom: exclusiveBottom.zone
+            property real borderLeft: exclusiveLeft.zone
+            property real borderRight: exclusiveRight.zone
+            property real innerRadius: 20
 
-                anchors.left: parent.left
-                implicitWidth: exclusiveLeft.zone
-                implicitHeight: QsWindow.window?.height ?? 0 // qmllint disable
-                color: GlobalStates.drawerColors
+            readonly property real holeW: width - borderLeft - borderRight
+            readonly property real holeH: height - borderTop - borderBottom
+            readonly property real r: Math.max(0, Math.min(innerRadius, holeW / 2, holeH / 2))
+            z: -1
 
-                ElevatedCharging {}
+            Behavior on borderTop {
+                NAnim {}
             }
 
-            Rectangle {
-                id: topBar
+            preferredRendererType: Shape.CurveRenderer
 
-                anchors.top: parent.top
-                implicitWidth: QsWindow.window?.width ?? 0 // qmllint disable
-                implicitHeight: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) ? exclusiveTop.zone : 0
-                color: GlobalStates.drawerColors
+            ShapePath {
+                fillColor: border.color
+                strokeColor: "transparent"
+                strokeWidth: -1
+                fillRule: ShapePath.OddEvenFill
 
-                Behavior on implicitHeight {
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                    }
+                // Outer rectangle
+                startX: 0
+                startY: 0
+                PathLine {
+                    x: border.width
+                    y: 0
+                }
+                PathLine {
+                    x: border.width
+                    y: border.height
+                }
+                PathLine {
+                    x: 0
+                    y: border.height
+                }
+                PathLine {
+                    x: 0
+                    y: 0
                 }
 
-                ElevatedCharging {}
-            }
-
-            Rectangle {
-                id: rightBar
-
-                anchors.right: parent.right
-                implicitWidth: exclusiveRight.zone
-                implicitHeight: QsWindow.window?.height ?? 0 // qmllint disable
-                color: GlobalStates.drawerColors
-
-                ElevatedCharging {}
-            }
-
-            Rectangle {
-                id: bottomBar
-
-                anchors.bottom: parent.bottom
-                implicitWidth: QsWindow.window?.width ?? 0 // qmllint disable
-                implicitHeight: exclusiveBottom.zone
-                color: GlobalStates.drawerColors
-
-                ElevatedCharging {}
+                // Inner rounded rectangle
+                PathMove {
+                    x: border.borderLeft + border.r
+                    y: border.borderTop
+                }
+                PathLine {
+                    x: border.width - border.borderRight - border.r
+                    y: border.borderTop
+                }
+                PathArc {
+                    x: border.width - border.borderRight
+                    y: border.borderTop + border.r
+                    radiusX: border.r
+                    radiusY: border.r
+                    direction: PathArc.Clockwise
+                }
+                PathLine {
+                    x: border.width - border.borderRight
+                    y: border.height - border.borderBottom - border.r
+                }
+                PathArc {
+                    x: border.width - border.borderRight - border.r
+                    y: border.height - border.borderBottom
+                    radiusX: border.r
+                    radiusY: border.r
+                    direction: PathArc.Clockwise
+                }
+                PathLine {
+                    x: border.borderLeft + border.r
+                    y: border.height - border.borderBottom
+                }
+                PathArc {
+                    x: border.borderLeft
+                    y: border.height - border.borderBottom - border.r
+                    radiusX: border.r
+                    radiusY: border.r
+                    direction: PathArc.Clockwise
+                }
+                PathLine {
+                    x: border.borderLeft
+                    y: border.borderTop + border.r
+                }
+                PathArc {
+                    x: border.borderLeft + border.r
+                    y: border.borderTop
+                    radiusX: border.r
+                    radiusY: border.r
+                    direction: PathArc.Clockwise
+                }
             }
         }
 
@@ -204,7 +248,7 @@ Variants {
 
         Calendar {
             id: calendar
-            anchors.topMargin: topBar.height
+            anchors.topMargin: border.borderTop
         }
 
         QuickSettings {
@@ -229,36 +273,16 @@ Variants {
 
         Notifications {
             id: notif
-            anchors.topMargin: topBar.height
+            anchors.topMargin: border.borderTop
         }
 
         Weathers {
-            anchors.topMargin: topBar.height
+            anchors.topMargin: border.borderTop
         }
 
         Volume {
             id: volume
             anchors.rightMargin: session.width + Configs.generals.outerBorderSize
-        }
-
-        Rectangle {
-            id: cornersArea
-
-            implicitWidth: QsWindow.window?.width - (leftBar.implicitWidth + rightBar.implicitWidth) // qmllint disable
-            implicitHeight: QsWindow.window?.height - (topBar.implicitHeight + bottomBar.implicitHeight) // qmllint disable
-            color: "transparent"
-            x: leftBar.implicitWidth
-            y: topBar.implicitHeight
-            z: -2
-
-            Repeater {
-                model: [0, 1, 2, 3]
-                Cornery {
-                    required property int modelData
-                    corner: modelData
-                    color: GlobalStates.drawerColors
-                }
-            }
         }
     }
 
