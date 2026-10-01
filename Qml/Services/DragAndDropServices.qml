@@ -21,13 +21,37 @@ Singleton {
         Completed
     }
 
+    enum Outcome {
+        Sent,
+        Partial,
+        Cancelled,
+        Interrupted,
+        Failed
+    }
+
+    enum Failure {
+        None,
+        Unreachable,
+        Missing,
+        Unreadable
+    }
+
     property Component islandContent: null
     property int islandRequestId: -1
 
     property alias currentState: transferController.currentState
     property alias droppedFiles: transferController.droppedFiles
     property alias selectedDevice: transferController.selectedDevice
-    property alias transferSuccess: transferController.transferSuccess
+
+    readonly property int totalCount: transferController.totalCount
+    readonly property int sentCount: transferController.sentCount
+    readonly property int failedCount: transferController.failedCount
+    readonly property int notSentCount: transferController.notSentCount
+    readonly property int outcome: transferController.outcome
+    readonly property int failure: transferController.failure
+    readonly property bool stopped: transferController.stopped
+    readonly property int maxPercent: transferController.maxPercent
+    readonly property bool watchingTransfer: transferController.watchingTransfer
 
     TransferController {
         id: transferController
@@ -62,8 +86,8 @@ Singleton {
         transferController.startTransfer();
     }
 
-    function cancelTransfer() {
-        transferController.cancelTransfer();
+    function stopSending() {
+        transferController.stopSending();
     }
 
     function dismiss() {
@@ -115,8 +139,6 @@ Singleton {
         }
     }
 
-    // this is just a workaround to delay after transfer process,
-    // we need to make it more intuitive when transfer process is done
     Timer {
         id: dismissTimer
         interval: 3000

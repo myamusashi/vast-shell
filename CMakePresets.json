@@ -93,7 +93,8 @@
         "tst_paletteanimator",
         "tst_translation",
         "tst_jobexecutor",
-        "tst_bluetoothagent"
+        "tst_bluetoothagent",
+        "tst_kdeconnectshare"
       ]
     }
   ]

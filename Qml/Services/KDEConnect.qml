@@ -5,6 +5,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import Vast.Utils
+
 import qs.Core.Configs
 
 Singleton {
@@ -24,7 +26,7 @@ Singleton {
     function shareFile(deviceId, path) {
         if (!deviceId || !path)
             return;
-        runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--share", path], "shareFile");
+        KdeConnectShare.share(deviceId, path);
     }
 
     function shareText(deviceId, text) {

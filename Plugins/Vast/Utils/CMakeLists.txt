@@ -14,6 +14,8 @@ vast_module(vast-utils
         ColorUtils.hpp
         PaletteAnimator.cpp
         PaletteAnimator.hpp
+        KdeConnectShare.hpp
+        KdeConnectShare.cpp
         Read.hpp
         Read.cpp
         Write.hpp
