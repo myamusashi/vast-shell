@@ -68,22 +68,7 @@ StyledRect {
                 id: delegateTray
 
                 required property SystemTrayItem modelData
-                property string iconSource: {
-                    let icon = modelData && modelData.icon;
-                    if (typeof icon === 'string' || icon instanceof String) {
-                        if (icon.includes("?path=")) {
-                            const split = icon.split("?path=");
-                            if (split.length !== 2)
-                                return icon;
-                            const name = split[0];
-                            const path = split[1];
-                            const fileName = name.substring(name.lastIndexOf("/") + 1);
-                            return "file://" + path + "/" + fileName;
-                        }
-                        return icon;
-                    }
-                    return "";
-                }
+                property string iconSource: IconUtils.iconSource(modelData ? modelData.icon : "")
 
                 width: 25
                 height: 25
@@ -106,7 +91,7 @@ StyledRect {
                     anchors.centerIn: parent
                     width: Appearance.fonts.size.large * 1.2
                     height: Appearance.fonts.size.large * 1.2
-                    source: parent.iconSource
+                    source: delegateTray.iconSource
                     asynchronous: true
                     backer.cache: true
                     smooth: true

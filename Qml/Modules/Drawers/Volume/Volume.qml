@@ -11,7 +11,7 @@ import qs.Services
 Drawer {
     id: root
 
-    required property Drawer session      // the drawer this one sits beside
+    required property Drawer session
 
     readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
 

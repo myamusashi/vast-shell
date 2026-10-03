@@ -43,6 +43,7 @@ ColumnLayout {
         Icon {
             id: volumeIcon
 
+            visible: !root.showAppIcon
             anchors.centerIn: parent
             type: Icon.Material
             icon: Audio.getIcon(root.audioNode)
@@ -67,8 +68,9 @@ ColumnLayout {
         }
 
         IconImage {
-            anchors.centerIn: parent
             visible: root.showAppIcon
+            anchors.centerIn: parent
+            asynchronous: true
             implicitWidth: 30
             implicitHeight: 30
             opacity: root.showVolumeInternal ? 0 : 1

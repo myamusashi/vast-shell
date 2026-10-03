@@ -11,18 +11,34 @@ Item {
     id: root
 
     anchors.fill: parent
+
     required property ShellScreen window
     required property color color
     required property bool isFocusedMonitor
+
     property bool isBarOpen: false
     property real barHeight: 40
     property bool enableOuterBorder: false
     property real outerBorderSize: 0
 
     readonly property real borderSize: enableOuterBorder ? outerBorderSize : 0
+    readonly property real effectiveInnerRadius: Math.max(0, Math.min(innerRadius, holeWidth / 2, holeHeight / 2))
+    readonly property real holeLeft: leftThickness
+    readonly property real holeTop: topThickness
+    readonly property real holeRight: width - rightThickness
+    readonly property real holeBottom: height - bottomThickness
+    readonly property real holeWidth: Math.max(0, width - leftThickness - rightThickness)
+    readonly property real holeHeight: Math.max(0, height - topThickness - bottomThickness)
 
-    readonly property real holeWidth: Math.max(0, shape.width - leftThickness - rightThickness)
-    readonly property real holeHeight: Math.max(0, shape.height - topThickness - bottomThickness)
+    property real topThickness: exclusiveTop.zone
+    property real bottomThickness: exclusiveBottom.zone
+    property real leftThickness: exclusiveLeft.zone
+    property real rightThickness: exclusiveRight.zone
+    property real innerRadius: 24
+
+    Behavior on topThickness {
+        NAnim {}
+    }
 
     Scope {
         Exclusion {
@@ -72,22 +88,6 @@ Item {
             exclusiveZone: root.borderSize
         }
     }
-
-    property real topThickness: exclusiveTop.zone
-    property real bottomThickness: exclusiveBottom.zone
-    property real leftThickness: exclusiveLeft.zone
-    property real rightThickness: exclusiveRight.zone
-    property real innerRadius: 24
-
-    Behavior on topThickness {
-        NAnim {}
-    }
-
-    readonly property real effectiveInnerRadius: Math.max(0, Math.min(innerRadius, holeWidth / 2, holeHeight / 2))
-    readonly property real holeLeft: leftThickness
-    readonly property real holeTop: topThickness
-    readonly property real holeRight: shape.width - rightThickness
-    readonly property real holeBottom: shape.height - bottomThickness
 
     Shape {
         id: shape
