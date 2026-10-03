@@ -10,6 +10,7 @@ Popup {
     id: root
 
     property Item anchorItem: null
+    property real maxWidth: 280
     property alias model: itemRepeater.model
     property int currentIndex: -1
     property var textRole: "text"
@@ -18,11 +19,8 @@ Popup {
     property var isItemActive: (modelData, itemIndex) => itemIndex === currentIndex
     property bool showScrollBar: false
 
-    /// Flip policy. "auto" picks up/down from available window space.
-    /// Use "down" or "up" to force a direction.
     property string preferredDirection: "auto"
 
-    /// Minimum visible rows when we have to cap height to stay on-screen.
     property int minVisibleRows: 3
 
     signal activated(int index)
@@ -39,7 +37,7 @@ Popup {
     property real resolvedMaxHeight: 336
     property bool resolveGuard: false
 
-    width: anchorItem ? Math.max(menuSurface.minWidth, Math.min(menuSurface.maxWidth, anchorItem.width)) : menuSurface.implicitWidth
+    width: anchorItem ? Math.max(menuSurface.minWidth, Math.min(maxWidth, anchorItem.width)) : menuSurface.implicitWidth
     y: openUpward ? -height - gap : (anchorItem ? anchorItem.height + gap : 0)
     height: Math.min(resolvedMaxHeight, menuSurface.contentImplicitHeight)
 
@@ -122,6 +120,7 @@ Popup {
         anchors.fill: parent
         showScrollBar: root.showScrollBar
         maxHeight: root.resolvedMaxHeight
+        maxWidth: root.maxWidth
 
         Repeater {
             id: itemRepeater

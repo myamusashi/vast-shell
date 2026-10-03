@@ -27,6 +27,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
+        anchors.rightMargin: root.horizontalInset
         visible: root.selected
         radius: Appearance.rounding.small
         color: Colours.m3Colors.m3SecondaryContainer
@@ -36,20 +37,20 @@ Item {
         anchors.fill: parent
         anchors.leftMargin: root.horizontalInset
         anchors.rightMargin: root.horizontalInset
-        spacing: Appearance.spacing.normal
 
         Icon {
+            Layout.preferredWidth: 24
+            Layout.preferredHeight: 24
+            Layout.alignment: Qt.AlignVCenter
             visible: root.leadingIcon !== ""
             icon: root.leadingIcon
             color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.large
-            Layout.preferredWidth: 24
-            Layout.preferredHeight: 24
-            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
             Layout.fillWidth: true
+            Layout.minimumWidth: 0
             Layout.alignment: Qt.AlignVCenter
             text: root.label
             color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
@@ -62,31 +63,34 @@ Item {
         }
 
         Icon {
+            Layout.minimumWidth: 20
+            Layout.maximumWidth: 20
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 20
+            Layout.alignment: Qt.AlignVCenter
             visible: root.selected
             icon: "check"
             color: Colours.m3Colors.m3OnSecondaryContainer
             font.pixelSize: Appearance.fonts.size.large
-            Layout.preferredWidth: 20
-            Layout.preferredHeight: 20
-            Layout.alignment: Qt.AlignVCenter
         }
 
         Text {
+            Layout.alignment: Qt.AlignVCenter
+            verticalAlignment: Text.AlignVCenter
             visible: root.trailingText !== ""
             text: root.trailingText
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.family: Fonts.sans
             font.pixelSize: Appearance.fonts.size.normal
-            verticalAlignment: Text.AlignVCenter
-            Layout.alignment: Qt.AlignVCenter
         }
 
         StyledRect {
-            visible: !root.enabled && root.disabledLabel !== ""
-            radius: Appearance.rounding.normal
             Layout.preferredHeight: 24
             Layout.preferredWidth: badgeText.implicitWidth + 10
+            Layout.minimumWidth: badgeText.implicitWidth + 10
             Layout.alignment: Qt.AlignVCenter
+            visible: !root.enabled && root.disabledLabel !== ""
+            radius: Appearance.rounding.normal
 
             StyledText {
                 id: badgeText

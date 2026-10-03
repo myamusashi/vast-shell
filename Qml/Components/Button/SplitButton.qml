@@ -92,7 +92,8 @@ Item {
     DropdownMenu {
         id: menu
 
-        anchorItem: root
+        anchorItem: mainSegment
+        maxWidth: mainSegment.width
         closePolicy: Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
         model: root.model
         onAboutToShow: root.menuOpen = true
