@@ -1,28 +1,26 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Io
-import Quickshell.Widgets
-import Vast.ImageCache
 
+import qs.Components.Base.DrawerComponents
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
-Item {
+Drawer {
     id: root
 
-    anchors {
-        bottom: parent.bottom
-        horizontalCenter: parent.horizontalCenter
-        bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
-    }
-
-    implicitWidth: parent.width * 0.6
-    implicitHeight: GlobalStates.isWallpaperSwitcherOpen ? parent.height * 0.3 : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
+    edge: Qt.BottomEdge
+    open: GlobalStates.isWallpaperSwitcherOpen
+    depth: parent.height * 0.3
+    length: parent.width * 0.6
+    cornerRadius: Appearance.rounding.normal
+    filletRadius: 40
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
     Component.onCompleted: Wallpaper.requestThumbnailChecks()
 
@@ -47,57 +45,22 @@ Item {
         }
     }
 
-    Behavior on implicitHeight {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    CornerPair {
-        location1: Qt.BottomRightCorner
-        location2: Qt.BottomLeftCorner
-        extensionSide: Qt.Horizontal
-        active: GlobalStates.isWallpaperSwitcherOpen
-    }
-
-    IpcHandler {
-        target: "img"
-
-        function set(path: string): void {
-            if (!MediaKind.isVideo(path))
-                ImageCache.preload(path, Qt.size(Screen.width, Screen.height));
-            Wallpaper.setWallpaper(path, MediaKind.isVideo(path) ? "" : path);
-        }
-
-        function get(): string {
-            return Paths.currentWallpaper;
-        }
-    }
-
-    WrapperRectangle {
+    Loader {
         anchors.fill: parent
-        color: GlobalStates.drawerColors
-        radius: 0
-        topLeftRadius: Appearance.rounding.normal
-        topRightRadius: Appearance.rounding.normal
+        active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isWallpaperSwitcherOpen // qmllint disable
+        asynchronous: true
+        sourceComponent: FocusCage {
+            anchors.fill: parent
+            anchors.margins: Appearance.spacing.normal
 
-        Loader {
-            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isWallpaperSwitcherOpen // qmllint disable
-            asynchronous: true
-            sourceComponent: FocusCage {
+            active: GlobalStates.isWallpaperSwitcherOpen
+            defaultFocus: content.searchField
+
+            Content {
+                id: content
+
                 anchors.fill: parent
-                anchors.margins: Appearance.spacing.normal
-
-                active: GlobalStates.isWallpaperSwitcherOpen
-                defaultFocus: content.searchField
-
-                Content {
-                    id: content
-
-                    anchors.fill: parent
-                    controller: Wallpaper
-                }
+                controller: Wallpaper
             }
         }
     }

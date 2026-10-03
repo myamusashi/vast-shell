@@ -398,4 +398,20 @@ Singleton {
                 command: ["xdg-open", file]
             });
     }
+
+    IpcHandler {
+        target: "captureScreenVideo"
+        function start(): void {
+            CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
+        }
+        function stop(): void {
+            CaptureScreenVideo.stopRecording();
+        }
+        function toggle(): void {
+            CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
+        }
+        function status(): bool {
+            return CaptureScreenVideo.isRecording;
+        }
+    }
 }

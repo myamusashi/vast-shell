@@ -1,57 +1,32 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Widgets
 
-import qs.Components.Base
+import qs.Components.Base.DrawerComponents
 import qs.Core.Configs
 import qs.Core.States
-import qs.Services
+import qs.Core.Utils
 
-Item {
+Drawer {
     id: container
 
-    anchors {
-        top: parent.top
-        right: parent.right
-        rightMargin: Configs.generals.outerBorderSize
-    }
+    edge: Qt.TopEdge
+    alignment: Qt.AlignRight
+    open: GlobalStates.isCalendarOpen
+    depth: 300
+    length: parent.width * 0.2
+    cornerRadius: Appearance.rounding.normal
+    filletRadius: 40
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-    readonly property bool isCalendarShow: GlobalStates.isCalendarOpen
-    property real cellWidth: (width - Appearance.margin.normal * 2) / 7
+    Loader {
+        id: contentLoader
 
-    implicitWidth: parent.width * 0.2
-    implicitHeight: isCalendarShow ? 300 : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
-
-    Behavior on implicitHeight {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    CornerPair {
-        location1: Qt.TopLeftCorner
-        location2: Qt.BottomRightCorner
-        extensionSide1: Qt.Horizontal
-        extensionSide2: Qt.Vertical
-        active: GlobalStates.isCalendarOpen
-    }
-
-    WrapperRectangle {
         anchors.fill: parent
-        margin: Appearance.margin.normal
-        color: GlobalStates.drawerColors
-        radius: 0
-        bottomLeftRadius: Appearance.rounding.large
-
-        Loader {
-            id: contentLoader
-
-            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && container.isCalendarShow // qmllint disable
-            asynchronous: true
-            sourceComponent: Content {}
-        }
+        active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && container.isCalendarShow // qmllint disable
+        asynchronous: true
+        sourceComponent: Content {}
     }
 }

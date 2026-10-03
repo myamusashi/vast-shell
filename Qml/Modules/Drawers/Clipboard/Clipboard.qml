@@ -5,6 +5,7 @@ import Quickshell.Widgets
 
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 import qs.Components.Dialog
@@ -18,9 +19,9 @@ WrapperRectangle {
 
     implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
     implicitHeight: GlobalStates.isClipboardOpen ? Configs.clipboard.height : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
+    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
     radius: Appearance.rounding.normal
-    color: Colours.m3Colors.m3SurfaceContainerLow
+    color: GlobalStates.drawerColors
     clip: true
 
     Behavior on implicitHeight {
@@ -31,7 +32,7 @@ WrapperRectangle {
     }
 
     Loader {
-        active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isClipboardOpen // qmllint disable
+        active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
         asynchronous: true
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen

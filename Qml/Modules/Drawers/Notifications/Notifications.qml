@@ -2,71 +2,48 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Widgets
 
+import qs.Components.Base.DrawerComponents
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
-import qs.Components.Base
 
 import "Components"
 
-Item {
+Drawer {
     id: root
 
-    anchors {
-        right: parent.right
-        top: parent.top
-    }
+    edge: Qt.TopEdge
+    alignment: Qt.AlignRight
+    open: Notifs.popups.length > 0
+    depth: open ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
+    length: Math.min(Math.round(parent.width * 0.22), 360)
+    cornerRadius: Appearance.rounding.normal
+    filletRadius: 40
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-    property bool hasNotifications: Notifs.popups.length > 0
+    ListView {
+        id: notifListView
 
-    implicitWidth: Math.min(Math.round(parent.width * 0.22), 360)
-    implicitHeight: hasNotifications ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
-
-    Behavior on implicitHeight {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    CornerPair {
-        location1: Qt.TopLeftCorner
-        location2: Qt.BottomRightCorner
-        extensionSide1: Qt.Horizontal
-        extensionSide2: Qt.Vertical
-        active: root.hasNotifications
-    }
-
-    WrapperRectangle {
         anchors.fill: parent
-        margin: Appearance.margin.normal
-        color: GlobalStates.drawerColors
-        radius: 0
-        bottomLeftRadius: Appearance.rounding.normal
+        spacing: Appearance.spacing.normal
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
 
-        ListView {
-            id: notifListView
+        model: ScriptModel {
+            values: [...Notifs.popups]
+        }
 
-            spacing: Appearance.spacing.normal
-            boundsBehavior: Flickable.StopAtBounds
-            clip: true
+        cacheBuffer: implicitHeight
 
-            model: ScriptModel {
-                values: [...Notifs.popups]
-            }
+        delegate: Wrapper {
+            required property var modelData
+            required property int index
 
-            cacheBuffer: implicitHeight
-
-            delegate: Wrapper {
-                required property var modelData
-                required property int index
-
-                isPopup: true
-                notif: modelData
-            }
+            isPopup: true
+            notif: modelData
         }
     }
 }

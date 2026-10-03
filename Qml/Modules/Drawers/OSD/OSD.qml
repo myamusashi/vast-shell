@@ -5,6 +5,7 @@ import QtQuick
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 
 Item {
@@ -17,7 +18,7 @@ Item {
 
     implicitWidth: parent.width * 0.15
     implicitHeight: calculateHeight()
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
+    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
 
     function calculateHeight() {
         var totalHeight = 0;
@@ -56,7 +57,7 @@ Item {
 
         Loader {
             anchors.fill: parent
-            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) // qmllint disable
+            active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) // qmllint disable
             asynchronous: true
 
             sourceComponent: Column {

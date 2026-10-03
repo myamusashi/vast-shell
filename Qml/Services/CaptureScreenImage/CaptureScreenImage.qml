@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 
 import qs.Services
 
@@ -59,5 +60,19 @@ Singleton {
     }
     function copyToClipboard(img) {
         internal.copyToClipboard(img);
+    }
+
+    IpcHandler {
+        target: "captureScreenImage"
+
+        function screen(action: string): void {
+            root.screenshotOutput(Quickshell.screens[0]?.name ?? "", action);
+        }
+        function region(action: string): void {
+            root.screenshotSelection(action);
+        }
+        function window(action: string): void {
+            root.screenshotWindow(action);
+        }
     }
 }

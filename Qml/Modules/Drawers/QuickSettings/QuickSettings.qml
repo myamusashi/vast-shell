@@ -4,120 +4,96 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
 
+import qs.Components.Base.DrawerComponents
+import qs.Components.Button
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
-import qs.Components.Base
-import qs.Components.Button
 import "Settings"
 
-Item {
+Drawer {
     id: root
-
-    anchors {
-        left: parent.left
-        verticalCenter: parent.verticalCenter
-        leftMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize - 0.05 : 0 // no gap
-    }
 
     property int saveIndex: 0
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
 
-    implicitWidth: GlobalStates.isQuickSettingsOpen ? parent.width * 0.3 : 0
-    implicitHeight: parent.height * 0.8
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
+    edge: Qt.LeftEdge
+    open: GlobalStates.isQuickSettingsOpen
+    depth: parent.width * 0.3
+    length: parent.height * 0.8
+    cornerRadius: Appearance.rounding.normal
+    filletRadius: 40
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-    Behavior on implicitWidth {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    CornerPair {
-        location1: Qt.TopLeftCorner
-        location2: Qt.BottomLeftCorner
-        extensionSide: Qt.Vertical
-        active: GlobalStates.isQuickSettingsOpen
-    }
-
-    WrapperRectangle {
-        id: rect
-
+    ColumnLayout {
         anchors.fill: parent
-        margin: Appearance.margin.large
-        topMargin: 40
-        clip: true
-        color: GlobalStates.drawerColors
-        radius: 0
-        topRightRadius: Appearance.rounding.normal
-        bottomRightRadius: Appearance.rounding.normal
+        anchors.margins: Appearance.margin.normal
+        WrapperRectangle {
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+            implicitWidth: Math.min(parent.width, tabGroup.implicitWidth + 32)
+            implicitHeight: 56
+            color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.5)
+            margin: Appearance.margin.normal
+            radius: Appearance.rounding.full
 
-        ColumnLayout {
-            WrapperRectangle {
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-                implicitWidth: Math.min(parent.width, tabGroup.implicitWidth + 32)
-                implicitHeight: 56
-                color: Colours.overlayColor(GlobalStates.drawerColors, Colours.m3Colors.m3SurfaceContainer, 0.5)
-                margin: Appearance.margin.normal
-                radius: Appearance.rounding.full
+            ConnectedButtonGroup {
+                id: tabGroup
 
-                ConnectedButtonGroup {
-                    id: tabGroup
+                Layout.fillWidth: true
+                fillWidth: true
+                currentIndex: root.saveIndex
 
-                    Layout.fillWidth: true
-                    fillWidth: true
-                    currentIndex: root.saveIndex
+                model: [
+                    {
+                        icon: "settings",
+                        label: qsTr("Settings")
+                    },
+                    {
+                        icon: "speaker",
+                        label: qsTr("Volume")
+                    },
+                    {
+                        icon: "speed",
+                        label: qsTr("Performance")
+                    }
+                ]
 
-                    model: [
-                        {
-                            icon: "settings",
-                            label: qsTr("Settings")
-                        },
-                        {
-                            icon: "speaker",
-                            label: qsTr("Volume")
-                        },
-                        {
-                            icon: "speed",
-                            label: qsTr("Performance")
-                        }
-                    ]
+                onClicked: index => root.saveIndex = index
+            }
+        }
 
-                    onClicked: index => root.saveIndex = index
+        Item {
+            id: pageContainer
+
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            property int previousIndex: 0
+
+            SettingsPage {
+                pageIndex: 0
+                currentIndex: root.saveIndex
+                content: Component {
+                    Settings {}
                 }
             }
 
-            Item {
-                id: pageContainer
-
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                property int previousIndex: 0
-
-                SettingsPage {
-                    pageIndex: 0
-                    currentIndex: root.saveIndex
-                    content: Component {
-                        Settings {}
-                    }
+            SettingsPage {
+                pageIndex: 1
+                currentIndex: root.saveIndex
+                content: Component {
+                    VolumeSettings {}
                 }
+            }
 
-                SettingsPage {
-                    pageIndex: 1
-                    currentIndex: root.saveIndex
-                    content: Component {
-                        VolumeSettings {}
-                    }
-                }
-
-                SettingsPage {
-                    pageIndex: 2
-                    currentIndex: root.saveIndex
-                    content: Component {
-                        Performances {}
-                    }
+            SettingsPage {
+                pageIndex: 2
+                currentIndex: root.saveIndex
+                content: Component {
+                    Performances {}
                 }
             }
         }

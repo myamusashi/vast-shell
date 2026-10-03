@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Widgets
 
+import qs.Components.Base.DrawerComponents
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
@@ -14,132 +15,116 @@ import qs.Services
 import "WeatherItem/Pages" as WeatherPages
 import "WeatherItem" as WeatherItems
 
-Item {
+Drawer {
     id: root
 
-    anchors {
-        right: parent.right
-        top: parent.top
-        bottom: parent.bottom
-        rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
-        bottomMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
-    }
+    edge: Qt.RightEdge
+    open: GlobalStates.isWeatherPanelOpen
+    depth: parent.width * 0.25
+    length: parent.height - anchors.topMargin - anchors.bottomMargin
+    cornerRadius: 0
+    filletRadius: 0
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
     readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
 
-    implicitHeight: parent.height - anchors.topMargin - anchors.bottomMargin
-    implicitWidth: GlobalStates.isWeatherPanelOpen ? parent.width * 0.25 : 0
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
-
-    Behavior on implicitWidth {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    CornerPair {
-        location1: Qt.TopLeftCorner
-        location2: Qt.BottomLeftCorner
-        extensionSide: Qt.Horizontal
-        active: GlobalStates.isWeatherPanelOpen
-    }
-
-    WrapperRectangle {
-        id: rect
+    Flickable {
+        id: flickable
 
         anchors.fill: parent
-        radius: 0
+        contentWidth: width
+        contentHeight: contentColumn.implicitHeight + 40
         clip: true
-        color: GlobalStates.drawerColors
+        boundsBehavior: Flickable.StopAtBounds
 
-        Flickable {
-            id: flickable
+        ScrollBar.vertical: ScrollBar {
+            id: scrollBar
 
-            contentWidth: width
-            contentHeight: contentColumn.implicitHeight + 40
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
+            anchors {
+                right: flickable.right
+                top: flickable.top
+                bottom: flickable.bottom
+            }
 
-            ScrollBar.vertical: ScrollBar {
-                id: scrollBar
+            policy: ScrollBar.AsNeeded
+            width: 6
+            contentItem: StyledRect {
+                implicitWidth: 6
+                radius: Appearance.rounding.small
+                color: Colours.m3Colors.m3Primary
+                opacity: scrollBar.pressed ? 0.8 : 0.5
+            }
+            background: StyledRect {
+                implicitWidth: 6
+                radius: Appearance.rounding.small
+                color: Colours.m3Colors.m3OutlineVariant
+                opacity: 0.3
+            }
+        }
+        ColumnLayout {
+            id: contentColumn
 
-                anchors {
-                    right: flickable.right
-                    top: flickable.top
-                    bottom: flickable.bottom
-                }
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                margins: 20
+            }
 
-                policy: ScrollBar.AsNeeded
-                width: 6
-                contentItem: StyledRect {
-                    implicitWidth: 6
-                    radius: Appearance.rounding.small
-                    color: Colours.m3Colors.m3Primary
-                    opacity: scrollBar.pressed ? 0.8 : 0.5
-                }
-                background: StyledRect {
-                    implicitWidth: 6
-                    radius: Appearance.rounding.small
-                    color: Colours.m3Colors.m3OutlineVariant
-                    opacity: 0.3
+            visible: GlobalStates.isWeatherPanelOpen
+            spacing: Appearance.spacing.normal
+
+            Headers {}
+
+            Loader {
+                id: summaryLoader
+
+                Layout.fillWidth: true
+                active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
+                asynchronous: true
+                sourceComponent: WrapperRectangle {
+                    implicitHeight: summaryText.implicitHeight + 20
+                    color: Colours.m3Colors.m3SurfaceContainer
+                    radius: Appearance.rounding.normal
+                    margin: Appearance.margin.normal
+
+                    StyledText {
+                        id: summaryText
+
+                        text: Weather.getQuickSummary()
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.small
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignLeft
+                    }
                 }
             }
-            ColumnLayout {
-                id: contentColumn
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
-                    margins: 20
-                }
+            Loader {
+                Layout.fillWidth: true
+                active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
+                asynchronous: true
+                sourceComponent: ColumnLayout {
+                    spacing: Appearance.spacing.large
 
-                visible: GlobalStates.isWeatherPanelOpen
-                spacing: Appearance.spacing.normal
+                    WeatherItems.ForecastHourly {
+                        Layout.fillWidth: true
+                    }
 
-                Headers {}
-
-                Loader {
-                    id: summaryLoader
-
-                    Layout.fillWidth: true
-                    active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
-                    asynchronous: true
-                    sourceComponent: WrapperRectangle {
-                        implicitHeight: summaryText.implicitHeight + 20
-                        color: Colours.m3Colors.m3SurfaceContainer
-                        radius: Appearance.rounding.normal
-                        margin: Appearance.margin.normal
-
-                        StyledText {
-                            id: summaryText
-
-                            text: Weather.getQuickSummary()
-                            color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.small
-                            wrapMode: Text.WordWrap
-                            horizontalAlignment: Text.AlignLeft
-                        }
+                    WeatherItems.ForecastDaily {
+                        Layout.fillWidth: true
                     }
                 }
+            }
 
-                Loader {
-                    Layout.fillWidth: true
-                    active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
-                    asynchronous: true
-                    sourceComponent: ColumnLayout {
-                        spacing: Appearance.spacing.large
-
-                        WeatherItems.ForecastHourly {
-                            Layout.fillWidth: true
-                        }
-
-                        WeatherItems.ForecastDaily {
-                            Layout.fillWidth: true
-                        }
-                    }
-                }
+            GridLayout {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
+                columns: 2
+                columnSpacing: Appearance.spacing.large
+                rowSpacing: Appearance.spacing.large
 
                 GridLayout {
                     Layout.fillWidth: true
@@ -148,60 +133,52 @@ Item {
                     columnSpacing: Appearance.spacing.large
                     rowSpacing: Appearance.spacing.large
 
-                    GridLayout {
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignCenter
-                        columns: 2
-                        columnSpacing: Appearance.spacing.large
-                        rowSpacing: Appearance.spacing.large
+                    Card {
+                        zoomPage: humidityPages
+                        content: WeatherItems.Humidity {}
+                    }
+                    Card {
+                        zoomPage: sunPages
+                        content: WeatherItems.Sun {}
+                    }
+                    Card {
+                        zoomPage: pressurePages
+                        content: WeatherItems.Pressure {}
+                    }
+                    Card {
+                        zoomPage: visibilityPages
+                        content: WeatherItems.Visibility {}
+                    }
+                    Card {
+                        zoomPage: windPages
+                        content: WeatherItems.Wind {}
+                    }
+                    Card {
+                        zoomPage: uvIndexPages
+                        content: WeatherItems.UVIndex {}
+                    }
+                    Card {
+                        zoomPage: aqiPages
+                        content: WeatherItems.AQI {}
+                    }
+                    Card {
+                        zoomPage: precipitationPages
+                        content: WeatherItems.Precipitation {}
+                    }
+                    Card {
+                        zoomPage: moonPages
+                        content: WeatherItems.Moon {}
+                    }
 
-                        Card {
-                            zoomPage: humidityPages
-                            content: WeatherItems.Humidity {}
-                        }
-                        Card {
-                            zoomPage: sunPages
-                            content: WeatherItems.Sun {}
-                        }
-                        Card {
-                            zoomPage: pressurePages
-                            content: WeatherItems.Pressure {}
-                        }
-                        Card {
-                            zoomPage: visibilityPages
-                            content: WeatherItems.Visibility {}
-                        }
-                        Card {
-                            zoomPage: windPages
-                            content: WeatherItems.Wind {}
-                        }
-                        Card {
-                            zoomPage: uvIndexPages
-                            content: WeatherItems.UVIndex {}
-                        }
-                        Card {
-                            zoomPage: aqiPages
-                            content: WeatherItems.AQI {}
-                        }
-                        Card {
-                            zoomPage: precipitationPages
-                            content: WeatherItems.Precipitation {}
-                        }
-                        Card {
-                            zoomPage: moonPages
-                            content: WeatherItems.Moon {}
-                        }
-
-                        WeatherItems.Cloudiness {
-                            implicitWidth: 150
-                            implicitHeight: 150
-                        }
+                    WeatherItems.Cloudiness {
+                        implicitWidth: 150
+                        implicitHeight: 150
                     }
                 }
-                Item {
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 20
-                }
+            }
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredHeight: 20
             }
         }
     }

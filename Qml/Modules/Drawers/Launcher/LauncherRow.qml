@@ -11,8 +11,6 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-// One launcher row: app icon, screenshot thumbnail, or material icon
-// plus highlighted title and an optional comment line.
 ItemDelegate {
     id: root
 

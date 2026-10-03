@@ -1,63 +1,45 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Widgets
 
-import qs.Components.Base
+import qs.Components.Base.DrawerComponents
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 
-Item {
-    anchors {
-        right: parent.right
-        verticalCenter: parent.verticalCenter
-        rightMargin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
-    }
+Drawer {
+    id: root
 
-    implicitWidth: GlobalStates.isOSDVisible("volume") ? wrapper.implicitWidth : 0
-    implicitHeight: 280
-    visible: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
+    required property Drawer session      // the drawer this one sits beside
 
-    Behavior on implicitWidth {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
+    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
 
-    CornerPair {
-        location1: Qt.TopRightCorner
-        location2: Qt.BottomRightCorner
-        extensionSide: Qt.Vertical
-        active: GlobalStates.isOSDVisible("volume")
-    }
+    edge: Qt.RightEdge
+    open: shown
+    edgeOffset: session.width
+    depth: 60 + (Volume.openPerAppVolume && loader.item ? loader.item.perAppWidth + Volume.itemSpacing : 0) // qmllint disable
+    length: 280
+    cornerRadius: Appearance.rounding.normal
+    filletRadius: 40
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-    WrapperRectangle {
-        id: wrapper
+    Loader {
+        id: loader
 
         anchors.fill: parent
-        implicitWidth: 60 + (Volume.openPerAppVolume && loader.item ? loader.item.perAppWidth + Volume.itemSpacing : 0) // qmllint disable
-        color: GlobalStates.drawerColors
-        clip: true
-        radius: 0
-        topLeftRadius: Appearance.rounding.normal
-        bottomLeftRadius: topLeftRadius
+        active: root.shown
+        asynchronous: true
+        onActiveChanged: {
+            if (!active)
+                Volume.openPerAppVolume = false;
+        }
 
-        Loader {
-            id: loader
-
-            active: (!Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
-            asynchronous: true
-            onActiveChanged: {
-                if (!active)
-                    Volume.openPerAppVolume = false;
-            }
-
-            sourceComponent: Content {
-                controller: Volume
-                linkTracker: Volume.linkTracker
-            }
+        sourceComponent: Content {
+            controller: Volume
+            linkTracker: Volume.linkTracker
         }
     }
 }

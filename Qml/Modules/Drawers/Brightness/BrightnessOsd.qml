@@ -20,7 +20,7 @@ Item {
     readonly property int pillWidth: 260
     readonly property int pillHeight: 104
     readonly property bool shouldShow: Brightness.available && GlobalStates.isOSDVisible("brightness")
-    readonly property bool onFocusedMonitor: !Configs.generals.followFocusMonitor || window.modelData.name === Hypr.focusedMonitor.name // qmllint disable
+    readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
 
     property bool primed: false
 

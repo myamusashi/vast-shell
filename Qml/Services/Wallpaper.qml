@@ -179,4 +179,18 @@ Singleton {
             root.drainThumbnailChecks();
         }
     }
+
+    IpcHandler {
+        target: "img"
+
+        function set(path: string): void {
+            if (!MediaKind.isVideo(path))
+                ImageCache.preload(path, Qt.size(Screen.width, Screen.height));
+            Wallpaper.setWallpaper(path, MediaKind.isVideo(path) ? "" : path);
+        }
+
+        function get(): string {
+            return Paths.currentWallpaper;
+        }
+    }
 }
