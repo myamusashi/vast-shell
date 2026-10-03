@@ -45,7 +45,7 @@ vast-shell/
 │   │   │                      # FloatingButton, SplitButton
 │   │   ├── Menu/              # ContextMenu, DropdownField, DropdownMenu, MenuDivider,
 │   │   │                      # MenuItem, MenuSurface, MenuTransitions, PopupPlacement,
-│   │   │                      # TrayMenu, TrayMenuItem
+│   │   │                      # TrayMenu, TrayMenuItem, TrayMenuStack
 │   │   ├── Dialog/            # ConfirmDialog, DialogBox, WifiPskDialog
 │   │   │   └── FileDialog/    # FileDialog + components/{BottomActionBar, FileListView,
 │   │   │                      # PlacesSidebar, TopAppBar} + delegate/{FileListItem, PlaceItem}

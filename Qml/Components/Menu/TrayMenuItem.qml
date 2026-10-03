@@ -13,9 +13,9 @@ Item {
     id: root
 
     required property QsMenuEntry modelData
+    property bool active: false
 
-    signal hovered
-    signal activated
+    signal clicked
 
     readonly property bool isSeparator: modelData?.isSeparator ?? false
     readonly property bool isEnabled: modelData?.enabled ?? false
@@ -24,12 +24,14 @@ Item {
     opacity: isSeparator || isEnabled ? 1 : 0.4
 
     StyledRect {
+        anchors {
+            left: parent.left
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+            leftMargin: Appearance.margin.large
+            rightMargin: Appearance.margin.large
+        }
         visible: root.isSeparator
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: Appearance.margin.large
-        anchors.rightMargin: Appearance.margin.large
-        anchors.verticalCenter: parent.verticalCenter
         height: 1
         radius: 0
         color: Colours.m3Colors.m3OutlineVariant
@@ -38,18 +40,20 @@ Item {
     Row {
         id: contentRow
 
+        anchors {
+            fill: parent
+            leftMargin: Appearance.margin.larger
+            rightMargin: Appearance.margin.larger
+        }
         visible: !root.isSeparator
-        anchors.fill: parent
-        anchors.leftMargin: Appearance.margin.larger
-        anchors.rightMargin: Appearance.margin.larger
         spacing: Appearance.spacing.normal
 
         IconImage {
             id: leadingIcon
 
+            anchors.verticalCenter: parent.verticalCenter
             width: 20
             height: 20
-            anchors.verticalCenter: parent.verticalCenter
             visible: root.modelData.icon !== ""
             source: root.modelData.icon
             asynchronous: true
@@ -80,9 +84,9 @@ Item {
         Icon {
             id: checkIcon
 
+            anchors.verticalCenter: parent.verticalCenter
             width: 20
             height: 20
-            anchors.verticalCenter: parent.verticalCenter
             visible: root.modelData.buttonType === QsMenuButtonType.CheckBox
             icon: root.modelData.checkState === Qt.Checked ? "check_box" : "check_box_outline_blank"
             color: root.modelData.checkState === Qt.Checked ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
@@ -92,9 +96,9 @@ Item {
         Icon {
             id: radioIcon
 
+            anchors.verticalCenter: parent.verticalCenter
             width: 20
             height: 20
-            anchors.verticalCenter: parent.verticalCenter
             visible: root.modelData.buttonType === QsMenuButtonType.RadioButton
             icon: root.modelData.checkState === Qt.Checked ? "radio_button_checked" : "radio_button_unchecked"
             color: root.modelData.checkState === Qt.Checked ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
@@ -104,9 +108,9 @@ Item {
         Icon {
             id: chevronIcon
 
+            anchors.verticalCenter: parent.verticalCenter
             width: 20
             height: 20
-            anchors.verticalCenter: parent.verticalCenter
             visible: root.modelData.hasChildren
             icon: "chevron_right"
             color: Colours.m3Colors.m3OnSurfaceVariant
@@ -117,14 +121,9 @@ Item {
     MArea {
         anchors.fill: parent
         layerRadius: Appearance.rounding.small
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         enabled: !root.isSeparator && root.isEnabled
 
-        onEntered: root.hovered()
-        onClicked: {
-            root.modelData.triggered(); // qmllint disable
-            root.activated();
-        }
+        onClicked: root.clicked()
     }
 }
