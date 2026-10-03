@@ -7,6 +7,9 @@ Item {
 
     anchors.fill: parent
 
+    required property color color
+    required property bool isFocusedMonitor
+
     property alias window: frame.window
     property alias topThickness: frame.topThickness
     property alias bottomThickness: frame.bottomThickness
@@ -14,8 +17,6 @@ Item {
     property alias rightThickness: frame.rightThickness
     property alias innerRadius: frame.innerRadius
 
-    required property color color
-    required property bool isFocusedMonitor
     property bool isBarOpen: false
     property real barHeight: 40
     property bool enableOuterBorder: false
@@ -36,8 +37,10 @@ Item {
 
     BorderFrame {
         id: frame
+
         anchors.fill: parent
         color: root.color
+        window: root.window
         isFocusedMonitor: root.isFocusedMonitor
         isBarOpen: root.isBarOpen
         barHeight: root.barHeight

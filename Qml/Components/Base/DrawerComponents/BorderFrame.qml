@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Shapes
 import Quickshell
@@ -170,6 +172,7 @@ Item {
 
     component Exclusion: PanelWindow { // qmllint disable
         property string name
+        screen: root.window
         implicitWidth: 0
         implicitHeight: 0
         WlrLayershell.namespace: `quickshell:${name}ExclusionZone`
