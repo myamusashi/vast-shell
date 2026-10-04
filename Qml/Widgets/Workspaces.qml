@@ -16,7 +16,7 @@ StyledRect {
 
     required property ShellScreen monitor
 
-    implicitWidth: (Configs.bar.workspacesIndicator === "dot" ? loader.item?.implicitWidth : loaderInteractiveWp.item?.implicitWidth) ?? 0 // qmllint disable
+    implicitWidth: loader.item?.implicitWidth ?? 0 // qmllint disable
     implicitHeight: 30
 
     property real containerWidth: 60
