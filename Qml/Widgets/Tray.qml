@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
@@ -78,6 +79,18 @@ StyledRect {
                     backer.cache: true
                     smooth: true
                     mipmap: true
+
+                    layer.enabled: true
+                    layer.effect: MultiEffect {
+                        autoPaddingEnabled: false
+                        colorization: 1.0
+                        colorizationColor: {
+                            if (trayItemArea.containsMouse)
+                                return Colours.m3Colors.m3OnPrimary;
+
+                            return Colours.m3Colors.m3Primary;
+                        }
+                    }
                 }
 
                 MArea {
@@ -195,7 +208,7 @@ StyledRect {
                     readonly property real maxX: panelRoot.width - menuSurface.width - root.shadowPadding
                     readonly property real maxY: panelRoot.height - menuSurface.height - root.shadowPadding
 
-                    x: Math.max(root.shadowPadding, Math.min(root.menuX - root.shadowPadding, maxX))
+                    x: Math.max(root.shadowPadding, Math.min(root.menuX - root.shadowPadding - menuSurface.bodyInsetX, maxX))
                     y: Math.min(root.barBottom - root.shadowPadding, maxY)
                     width: menuSurface.width + root.shadowPadding * 2
                     height: menuSurface.height + root.shadowPadding * 2

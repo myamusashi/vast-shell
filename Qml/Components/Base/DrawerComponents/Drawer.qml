@@ -41,7 +41,6 @@ Item {
     Scope {
         id: metrics
 
-        // Whole pixels so edges never land between device pixels
         readonly property real snappedDepth: Math.round(root.animatedDepth)
         readonly property real snappedLength: Math.round(root.length)
         readonly property real activeFilletRadius: Math.min(root.filletRadius, snappedDepth / 2)
@@ -57,6 +56,8 @@ Item {
 
     width: isHorizontalEdge ? metrics.alongEdgeExtent : metrics.acrossEdgeExtent
     height: isHorizontalEdge ? metrics.acrossEdgeExtent : metrics.alongEdgeExtent
+
+    readonly property real bodyInsetX: contentItem.x
     visible: metrics.snappedDepth > 0
 
     x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset))

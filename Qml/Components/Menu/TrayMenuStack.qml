@@ -3,14 +3,13 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 
-import qs.Components.Base
+import qs.Components.Base.DrawerComponents
 import qs.Core.Configs
 import qs.Core.States
 
-Item {
+Drawer {
     id: root
 
-    property bool open: false
     property real maxHeight: 480
     property real menuWidth: 280
     property var pages: []
@@ -22,23 +21,15 @@ Item {
     readonly property var currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < root.pages.length ? root.pages[stackLayout.currentIndex] : null
     readonly property real contentHeight: root.currentPage ? root.currentPage.contentHeight : 0
 
-    implicitWidth: menuWidth
-    implicitHeight: Math.min(contentHeight, maxHeight)
-    opacity: open ? 1 : 0
-
-    Behavior on implicitHeight {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveFastSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveFastSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
+    edge: Qt.TopEdge
+    alignment: Qt.AlignRight
+    length: menuWidth
+    depth: Math.min(contentHeight, maxHeight)
+    cornerRadius: Appearance.rounding.normal
+    filletRadius: 40
+    color: GlobalStates.drawerColors
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
     function openMenu(handle: var): void {
         const page = root.pageAt(0);
@@ -93,14 +84,6 @@ Item {
         if (!page)
             return;
         root.pages = root.pages.concat(page);
-    }
-
-    Rectangle {
-        id: surfaceBg
-
-        anchors.fill: parent
-        radius: 0
-        color: GlobalStates.drawerColors
     }
 
     Item {
