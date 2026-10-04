@@ -271,47 +271,56 @@ LazyLoader {
                 animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
                 animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-                GridLayout {
-                    anchors {
-                        top: parent.top
-                        left: parent.left
-                        right: parent.right
-                        margins: root.cardPadding
-                    }
-                    columns: root.columns
-                    columnSpacing: root.cellGap
-                    rowSpacing: root.cellGap
-
-                    Repeater {
-                        model: root.shownCount
-
-                        delegate: PreviewCell {
-                            toplevel: root?.orderedToplevels[index]
-                        }
-                    }
-                }
-
-                // Above every cell, so the hover grab can never be taken away.
-                MouseArea {
+                Loader {
                     anchors.fill: parent
-                    hoverEnabled: true
-                    acceptedButtons: Qt.LeftButton
-                    cursorShape: Qt.PointingHandCursor
+                    active: root.mapped
+                    asynchronous: true
+                    sourceComponent: Item {
+                        anchors.fill: parent
 
-                    onContainsMouseChanged: {
-                        if (containsMouse) {
-                            root.pointerInside = true;
-                            root.grace = false;
-                            closeTimer.stop();
-                        } else {
-                            root.hoveredIndex = -1;
-                            root.grace = true;
-                            closeTimer.restart();
+                        GridLayout {
+                            anchors {
+                                top: parent.top
+                                left: parent.left
+                                right: parent.right
+                                margins: root.cardPadding
+                            }
+                            columns: root.columns
+                            columnSpacing: root.cellGap
+                            rowSpacing: root.cellGap
+
+                            Repeater {
+                                model: root.shownCount
+
+                                delegate: PreviewCell {
+                                    toplevel: root?.orderedToplevels[index]
+                                }
+                            }
+                        }
+
+                        // Above every cell, so the hover grab can never be taken away.
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            acceptedButtons: Qt.LeftButton
+                            cursorShape: Qt.PointingHandCursor
+
+                            onContainsMouseChanged: {
+                                if (containsMouse) {
+                                    root.pointerInside = true;
+                                    root.grace = false;
+                                    closeTimer.stop();
+                                } else {
+                                    root.hoveredIndex = -1;
+                                    root.grace = true;
+                                    closeTimer.restart();
+                                }
+                            }
+
+                            onPositionChanged: mouse => root.hoveredIndex = root.cellAt(mouse.x, mouse.y)
+                            onClicked: mouse => root.activateCell(root.cellAt(mouse.x, mouse.y))
                         }
                     }
-
-                    onPositionChanged: mouse => root.hoveredIndex = root.cellAt(mouse.x, mouse.y)
-                    onClicked: mouse => root.activateCell(root.cellAt(mouse.x, mouse.y))
                 }
             }
         }
