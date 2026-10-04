@@ -13,9 +13,9 @@ Drawer {
     property real maxHeight: 480
     property real menuWidth: 280
 
-    property var openMenu: (menu) => Qt.callLater(() => {
-        loader.item?.openMenu(menu) // qmllint disable
-    })
+    property var openMenu: menu => Qt.callLater(() => {
+            loader.item?.openMenu(menu); // qmllint disable
+        })
 
     signal entered
     signal entryActivated(var entry)
