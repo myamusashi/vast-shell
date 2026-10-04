@@ -181,7 +181,7 @@ StyledRect {
                 right: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
             }
             WlrLayershell.namespace: "shell:drawers"
-            WlrLayershell.layer: WlrLayer.Top
+            WlrLayershell.layer: menuSurface.open ? WlrLayer.Top : WlrLayer.Bottom
             HyprlandWindow.visibleMask: mask // qmllint disable
 
             mask: Region {

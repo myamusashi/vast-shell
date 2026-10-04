@@ -34,7 +34,7 @@ RowLayout {
             anchors.centerIn: parent
             icon: "chevron_left"
             font.pixelSize: Appearance.fonts.size.large * 2
-            color: Colours.m3Colors.m3OnPrimaryContainer
+            color: Colours.m3Colors.m3Primary
         }
 
         MArea {

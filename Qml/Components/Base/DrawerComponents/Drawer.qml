@@ -83,7 +83,6 @@ Item {
         color: root.color
     }
 
-    // Body area only (excludes the fillet tips)
     Item {
         id: contentItem
         x: root.isHorizontalEdge ? metrics.startPadding : (root.edge === Qt.LeftEdge ? 0 : metrics.freeSidePadding)

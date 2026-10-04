@@ -12,119 +12,134 @@ Drawer {
 
     property real maxHeight: 480
     property real menuWidth: 280
-    property var pages: []
+
+    property var openMenu: (menu) => Qt.callLater(() => {
+        loader.item?.openMenu(menu) // qmllint disable
+    })
 
     signal entered
     signal entryActivated(var entry)
     signal exited
 
-    readonly property var currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < root.pages.length ? root.pages[stackLayout.currentIndex] : null
-    readonly property real contentHeight: root.currentPage ? root.currentPage.contentHeight : 0
-
     edge: Qt.TopEdge
     alignment: Qt.AlignRight
     length: menuWidth
-    depth: Math.min(contentHeight, maxHeight)
+    depth: Math.min(loader.item?.contentHeight, maxHeight) // qmllint disable
     cornerRadius: Appearance.rounding.normal
     filletRadius: 40
     color: GlobalStates.drawerColors
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-    function openMenu(handle: var): void {
-        const page = root.pageAt(0);
-        if (!page) {
-            root.createPage(handle, "");
-            return;
-        }
-        for (let index = 0; index < root.pages.length; index++)
-            root.pages[index].handle = index === 0 ? handle : null;
-        page.title = "";
-        page.highlightedEntry = null;
-        stackLayout.currentIndex = 0;
-    }
-
-    function pushSubmenu(entry: var): void {
-        if (!entry || !entry.hasChildren)
-            return;
-        const parentPage = root.pageAt(stackLayout.currentIndex);
-        if (parentPage && parentPage.handle === entry) {
-            root.popSubmenu();
-            return;
-        }
-        const level = stackLayout.currentIndex + 1;
-        const page = root.pageAt(level);
-        if (page) {
-            page.handle = entry;
-            page.title = entry.text ?? "";
-        } else {
-            root.createPage(entry, entry.text ?? "");
-        }
-        if (parentPage)
-            parentPage.highlightedEntry = entry;
-        stackLayout.currentIndex = level;
-    }
-
-    function popSubmenu(): void {
-        if (stackLayout.currentIndex <= 0)
-            return;
-        stackLayout.currentIndex -= 1;
-    }
-
-    function pageAt(level: int): var {
-        return level >= 0 && level < root.pages.length ? root.pages[level] : null;
-    }
-
-    function createPage(handle: var, pageTitle: string): void {
-        const page = pageComponent.createObject(stackLayout, {
-            handle: handle,
-            level: root.pages.length,
-            title: pageTitle
-        });
-        if (!page)
-            return;
-        root.pages = root.pages.concat(page);
-    }
-
-    Item {
-        id: stackHost
+    Loader {
+        id: loader
 
         anchors.fill: parent
-        clip: true
+        active: root.open
+        sourceComponent: Item {
+            id: itemLoader
 
-        StackLayout {
-            id: stackLayout
+            anchors.fill: parent
 
-            width: stackHost.width
-            height: stackHost.height
-        }
-    }
+            property var pages: []
 
-    HoverHandler {
-        id: hoverHandler
+            readonly property var currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < pages.length ? pages[stackLayout.currentIndex] : null
+            readonly property real contentHeight: currentPage ? currentPage.contentHeight : 0
 
-        onHoveredChanged: {
-            if (hovered)
-                root.entered();
-            else
-                root.exited();
-        }
-    }
+            function openMenu(handle: var): void {
+                const page = pageAt(0);
+                if (!page) {
+                    createPage(handle, "");
+                    return;
+                }
+                for (let index = 0; index < pages.length; index++)
+                    pages[index].handle = index === 0 ? handle : null;
+                page.title = "";
+                page.highlightedEntry = null;
+                stackLayout.currentIndex = 0;
+            }
 
-    Component {
-        id: pageComponent
+            function pushSubmenu(entry: var): void {
+                if (!entry || !entry.hasChildren)
+                    return;
+                const parentPage = pageAt(stackLayout.currentIndex);
+                if (parentPage && parentPage.handle === entry) {
+                    popSubmenu();
+                    return;
+                }
+                const level = stackLayout.currentIndex + 1;
+                const page = pageAt(level);
+                if (page) {
+                    page.handle = entry;
+                    page.title = entry.text ?? "";
+                } else {
+                    createPage(entry, entry.text ?? "");
+                }
+                if (parentPage)
+                    parentPage.highlightedEntry = entry;
+                stackLayout.currentIndex = level;
+            }
 
-        TrayMenu {
-            Layout.fillHeight: true
-            Layout.maximumHeight: root.maxHeight
+            function popSubmenu(): void {
+                if (stackLayout.currentIndex <= 0)
+                    return;
+                stackLayout.currentIndex -= 1;
+            }
 
-            currentIndex: stackLayout.currentIndex
+            function pageAt(level: int): var {
+                return level >= 0 && level < pages.length ? pages[level] : null;
+            }
 
-            onBackRequested: root.popSubmenu()
-            onEntryActivated: entry => root.entryActivated(entry)
-            onSubmenuRequested: entry => root.pushSubmenu(entry)
-            onEntered: root.entered()
-            onExited: root.exited()
+            function createPage(handle: var, pageTitle: string): void {
+                const page = pageComponent.createObject(stackLayout, {
+                    handle: handle,
+                    level: pages.length,
+                    title: pageTitle
+                });
+                if (!page)
+                    return;
+                pages = pages.concat(page);
+            }
+
+            Item {
+                id: stackHost
+
+                anchors.fill: parent
+                clip: true
+
+                StackLayout {
+                    id: stackLayout
+
+                    width: stackHost.width
+                    height: stackHost.height
+                }
+            }
+
+            HoverHandler {
+                onHoveredChanged: {
+                    if (hovered)
+                        root.entered();
+                    else
+                        root.exited();
+                }
+            }
+
+            Component {
+                id: pageComponent
+
+                TrayMenu {
+                    Layout.fillHeight: true
+                    Layout.maximumHeight: root.maxHeight
+
+                    currentIndex: stackLayout.currentIndex
+
+                    onBackRequested: itemLoader.popSubmenu()
+                    onEntryActivated: entry => root.entryActivated(entry)
+                    onSubmenuRequested: entry => itemLoader.pushSubmenu(entry)
+                    onEntered: root.entered()
+                    onExited: root.exited()
+                }
+            }
         }
     }
 }
