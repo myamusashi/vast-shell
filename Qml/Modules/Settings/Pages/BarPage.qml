@@ -52,30 +52,6 @@ SettingsPageBase {
         title: qsTr("Workspace Display")
 
         SettingRow {
-            label: qsTr("Workspace Indicator Style:")
-            description: qsTr("Visual style for workspace indicators on the bar.")
-
-            SplitButton {
-                readonly property int selectedIndex: model.findIndex(entry => entry.display === Configs.bar.workspacesIndicator)
-
-                model: [
-                    {
-                        display: "dot"
-                    },
-                    {
-                        display: "interactive"
-                    }
-                ]
-                textRole: "display"
-                currentIndex: selectedIndex
-                text: model[selectedIndex]?.display ?? Configs.bar.workspacesIndicator
-                icon.name: "workspaces"
-
-                onMenuItemActivated: index => Configs.bar.workspacesIndicator = model[index].display
-            }
-        }
-
-        SettingRow {
             label: qsTr("Number of Visible Workspaces:")
             description: qsTr("How many workspace indicators are shown on the bar.")
 

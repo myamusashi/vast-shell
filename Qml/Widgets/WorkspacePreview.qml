@@ -5,8 +5,8 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
-import Quickshell.Hyprland
 
+import qs.Components.Base.DrawerComponents
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
@@ -24,11 +24,10 @@ LazyLoader {
     readonly property real cellSize: 150
     readonly property real cellGap: Appearance.margin.small
     readonly property real cardPadding: Appearance.padding.small
-    readonly property real shadowPadding: 12
 
     readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
 
-    readonly property list<HyprlandToplevel> orderedToplevels: {
+    readonly property list<var> orderedToplevels: {
         const live = [...(root.toplevels ?? [])];
         if (root.latchedOrder.length === 0)
             return live.sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells);
@@ -85,15 +84,23 @@ LazyLoader {
         return [...(list ?? [])].sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells).map(toplevel => toplevel.address);
     }
 
+    // Freeze the hovered workspace's window list, so the board keeps showing it
+    // after the pointer has left the dot.
+    function latch(): void {
+        const latched = root.latchOrder(root.toplevels);
+        if (latched.length > 0 && latched.join() !== root.latchedOrder.join())
+            root.latchedOrder = latched;
+    }
+
     loading: true
 
     component PreviewCell: StyledRect {
         id: cell
 
-        required property HyprlandToplevel toplevel
+        required property var toplevel
         required property int index
-        property Toplevel waylandHandle: toplevel?.wayland // qmllint disable
-        property var toplevelData: toplevel.lastIpcObject
+        property Toplevel waylandHandle: toplevel?.wayland ?? null // qmllint disable
+        property var toplevelData: toplevel?.lastIpcObject
 
         implicitWidth: root.cellSize
         implicitHeight: root.cellSize
@@ -103,9 +110,6 @@ LazyLoader {
         border.color: Colours.m3Colors.m3OutlineVariant
         clip: true
 
-        // constraintSize derives the implicit size from the captured surface
-        // inside these bounds, so the snapshot keeps its own aspect ratio
-        // instead of being stretched to the square cell.
         ScreencopyView {
             anchors.centerIn: parent
             constraintSize: Qt.size(cell.width - Appearance.margin.small * 2, cell.height - Appearance.margin.small * 2)
@@ -159,7 +163,7 @@ LazyLoader {
                 Layout.preferredWidth: cell.width
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: cell?.toplevelData?.title
+                text: cell?.toplevelData?.title ?? ""
                 font.pixelSize: Appearance.fonts.size.small
                 wrapMode: Text.Wrap
                 color: Colours.m3Colors.m3OnSurface
@@ -179,7 +183,6 @@ LazyLoader {
         exclusionMode: ExclusionMode.Ignore
         aboveWindows: true
         WlrLayershell.layer: WlrLayer.Overlay
-        visible: root.mapped
 
         mask: Region {
             item: boardHost
@@ -218,17 +221,14 @@ LazyLoader {
                 }
             }
 
+            function onToplevelsChanged(): void {
+                root.latch();
+            }
+
             function onShowingChanged(): void {
                 if (root.showing) {
                     hideTimer.stop();
                     root.hoveredIndex = -1;
-                    // Latch before mapping so the surface never paints an
-                    // unfrozen frame. An empty latch is refused: it would
-                    // resolve to zero cells, drop `showing` back to false and
-                    // bounce through the hide timer on every pass.
-                    const latched = root.latchOrder(root.toplevels);
-                    if (latched.length > 0)
-                        root.latchedOrder = latched;
                     root.mapped = true;
                 } else {
                     hideTimer.restart();
@@ -241,10 +241,10 @@ LazyLoader {
 
             // The bar window is anchored to the screen's top-left, so scene
             // coordinates on the dot are screen coordinates here.
-            x: root.dotX
+            x: root.dotX - board.bodyInsetX
             y: root.barBottom
-            width: root.boardWidth + root.shadowPadding * 2
-            height: root.boardHeight + root.shadowPadding * 2
+            width: board.width
+            height: board.height
 
             Behavior on x {
                 NAnim {
@@ -253,65 +253,66 @@ LazyLoader {
                 }
             }
 
-            StyledRect {
+            Drawer {
                 id: board
 
-                anchors {
-                    fill: parent
-                    margins: root.shadowPadding
-                }
-                radius: Appearance.rounding.small
+                edge: Qt.TopEdge
+                // Flush to neither side: both top corners flare into the bar, both bottom
+                // corners stay rounded, so the board never ends in a square corner
+                alignment: Qt.AlignHCenter
+                // Latched to `mapped`, not `showing`: the board empties for a tick while the next
+                // workspace's toplevels arrive, and collapsing on that blink made it vanish between dots
+                open: root.mapped
+                length: root.boardWidth
+                depth: root.boardHeight
+                cornerRadius: Appearance.rounding.normal
+                filletRadius: 40
                 color: GlobalStates.drawerColors
-                clip: true
-                opacity: root.showing ? 1.0 : 0.0
+                animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+                animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
 
-                Behavior on opacity {
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                GridLayout {
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        right: parent.right
+                        margins: root.cardPadding
                     }
-                }
-            }
+                    columns: root.columns
+                    columnSpacing: root.cellGap
+                    rowSpacing: root.cellGap
 
-            GridLayout {
-                anchors {
-                    fill: board
-                    margins: root.cardPadding
-                }
-                columns: root.columns
-                columnSpacing: root.cellGap
-                rowSpacing: root.cellGap
+                    Repeater {
+                        model: root.shownCount
 
-                Repeater {
-                    model: root.shownCount
-
-                    delegate: PreviewCell {
-                        toplevel: root?.orderedToplevels[index]
-                    }
-                }
-            }
-
-            // Above every cell, so the hover grab can never be taken away.
-            MouseArea {
-                anchors.fill: board
-                hoverEnabled: true
-                acceptedButtons: Qt.LeftButton
-                cursorShape: Qt.PointingHandCursor
-
-                onContainsMouseChanged: {
-                    if (containsMouse) {
-                        root.pointerInside = true;
-                        root.grace = false;
-                        closeTimer.stop();
-                    } else {
-                        root.hoveredIndex = -1;
-                        root.grace = true;
-                        closeTimer.restart();
+                        delegate: PreviewCell {
+                            toplevel: root?.orderedToplevels[index]
+                        }
                     }
                 }
 
-                onPositionChanged: mouse => root.hoveredIndex = root.cellAt(mouse.x, mouse.y)
-                onClicked: mouse => root.activateCell(root.cellAt(mouse.x, mouse.y))
+                // Above every cell, so the hover grab can never be taken away.
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton
+                    cursorShape: Qt.PointingHandCursor
+
+                    onContainsMouseChanged: {
+                        if (containsMouse) {
+                            root.pointerInside = true;
+                            root.grace = false;
+                            closeTimer.stop();
+                        } else {
+                            root.hoveredIndex = -1;
+                            root.grace = true;
+                            closeTimer.restart();
+                        }
+                    }
+
+                    onPositionChanged: mouse => root.hoveredIndex = root.cellAt(mouse.x, mouse.y)
+                    onClicked: mouse => root.activateCell(root.cellAt(mouse.x, mouse.y))
+                }
             }
         }
     }

@@ -2,8 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Wayland
-import Quickshell.Hyprland
 import Quickshell.Widgets
 import M3Shapes
 
@@ -39,7 +37,7 @@ StyledRect {
     // Live hover target, 0 when the pointer is not on a dot.
     property int previewWorkspace: 0
     // Latched to the last hovered dot so the board keeps its content and its
-    // size while it fades out after the pointer has left the dot.
+    // size while its surface stays up after the pointer has left the dot.
     property int shownWorkspace: 0
     // Screen x of the hovered dot's left edge. The bar window is anchored to
     // the screen's top-left, so the dot's scene position is its screen position.
@@ -47,35 +45,12 @@ StyledRect {
 
     readonly property var previewToplevels: root.toplevelsByWorkspace[root.shownWorkspace] ?? []
 
-    MArea {
-        id: workspaceMBarArea
-
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        propagateComposedEvents: true
-        onClicked: mouse => {
-            let loaderPos = mapToItem(loaderInteractiveWp, mouse.x, mouse.y);
-            if (loaderInteractiveWp.contains(Qt.point(loaderPos.x, loaderPos.y))) {
-                mouse.accepted = false;
-                return;
-            }
-        }
-    }
     Loader {
         id: loader
 
         anchors.fill: parent
-        active: Configs.bar.workspacesIndicator === "dot"
+        active: true
         sourceComponent: dotWorkspaceIndicator
-    }
-
-    Loader {
-        id: loaderInteractiveWp
-
-        anchors.fill: parent
-        active: Configs.bar.workspacesIndicator !== "dot"
-        sourceComponent: interactiveWorkspaceIndicator
     }
 
     WorkspacePreview {
@@ -242,190 +217,6 @@ StyledRect {
                             visible: source !== ""
                             asynchronous: false
                             backer.cache: true
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Component {
-        id: interactiveWorkspaceIndicator
-
-        Row {
-            id: workspaceRow
-
-            anchors.centerIn: parent
-            spacing: Appearance.spacing.small
-
-            Repeater {
-                model: Workspaces.maxWorkspace + 1
-
-                delegate: StyledRect {
-                    id: workspaceContainer
-
-                    width: root.containerWidth
-                    height: root.containerHeight
-                    color: workspace?.focused ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnPrimary
-                    radius: 0
-                    clip: true
-
-                    required property int index
-
-                    property bool hasFullscreen: !!(workspace?.toplevels?.values.some(t => t.wayland?.fullscreen))
-                    property bool hasMaximized: !!(workspace?.toplevels?.values.some(t => t.wayland?.maximized))
-
-                    property HyprlandWorkspace workspace: Hyprland.workspaces.values.find(w => Hypr.workspaceNumber(w) === index + 1) ?? null
-
-                    // Use this workspace's own monitor, fall back to focusedMonitor
-                    property var wsMonitor: workspace?.monitor ?? Hypr.focusedMonitor
-                    property list<int> wsReserved: wsMonitor.lastIpcObject.reserved ?? [0, 0, 0, 0]
-
-                    // Monitor logical origin (physical px ÷ scale = logical px, matches Hyprland's at[] coords)
-                    property real monitorLogicalX: wsMonitor.x / wsMonitor.scale
-                    property real monitorLogicalY: wsMonitor.y / wsMonitor.scale
-                    property real monitorLogicalW: wsMonitor.width / wsMonitor.scale
-                    property real monitorLogicalH: wsMonitor.height / wsMonitor.scale
-
-                    // Usable area after reserved struts
-                    property real usableW: monitorLogicalW - (wsReserved[0] + wsReserved[2])
-                    property real usableH: monitorLogicalH - (wsReserved[1] + wsReserved[3])
-
-                    // Scale to fit the container box
-                    property real scaleFactor: Math.min(root.containerWidth / usableW, root.containerHeight / usableH)
-
-                    DropArea {
-                        anchors.fill: parent
-
-                        onEntered: drag => drag.source.isCaught = true
-                        onExited: drag.source.isCaught = false
-
-                        onDropped: drag => {
-                            const toplevel = drag.source;
-
-                            if (toplevel.modelData.workspace !== workspaceContainer.workspace) { // qmllint disable
-                                const address = toplevel.modelData.address; // qmllint disable
-                                Hypr.dispatch("hl.movetoworkspacesilent(" + (workspaceContainer.index + 1) + ", \"address:0x" + address + "\")");
-                                Hypr.dispatch("hl.movewindowpixel(\"exact " + toplevel.initX + " " + toplevel.initY + "\", \"address:0x" + address + "\")"); // qmllint disable
-                            }
-                        }
-                    }
-
-                    MArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if (workspaceContainer.workspace !== Hyprland.focusedWorkspace)
-                                Workspaces.switchWorkspace(parent.index + 1);
-                        }
-                    }
-
-                    Repeater {
-                        model: workspaceContainer.workspace?.toplevels
-
-                        delegate: ScreencopyView {
-                            id: toplevel
-
-                            required property HyprlandToplevel modelData
-                            property Toplevel waylandHandle: modelData?.wayland // qmllint disable
-                            property var toplevelData: modelData.lastIpcObject
-                            property int initX: toplevelData.at[0] ?? 0
-                            property int initY: toplevelData.at[1] ?? 0
-                            property StyledRect originalParent: workspaceContainer
-                            property StyledRect visualParent: root
-                            property bool isCaught: false
-
-                            // Helpers that centralise the coordinate math
-                            // Window at[] coords are in logical global space,
-                            // subtract the monitor's logical origin + reserved to get
-                            // coords relative to the usable area of this workspace tile.
-                            property real localX: {
-                                const atX = toplevelData?.at[0] ?? 0;
-                                const originX = workspaceContainer.monitorLogicalX;
-                                const reserved = waylandHandle?.fullscreen ? 0 : workspaceContainer.wsReserved[0];
-                                return atX - originX - reserved;
-                            }
-                            property real localY: {
-                                const atY = toplevelData?.at[1] ?? 0;
-                                const originY = workspaceContainer.monitorLogicalY;
-                                const reserved = waylandHandle?.fullscreen ? 0 : workspaceContainer.wsReserved[1];
-                                return atY - originY - reserved;
-                            }
-
-                            // Centering offset so the usable area is centred in the container
-                            property real centerOffsetX: (root.containerWidth - workspaceContainer.usableW * workspaceContainer.scaleFactor) / 2
-                            property real centerOffsetY: (root.containerHeight - workspaceContainer.usableH * workspaceContainer.scaleFactor) / 2
-
-                            captureSource: waylandHandle
-                            live: false
-
-                            width: sourceSize.width * workspaceContainer.scaleFactor / workspaceContainer.wsMonitor.scale
-                            height: sourceSize.height * workspaceContainer.scaleFactor / workspaceContainer.wsMonitor.scale
-                            scale: (Drag.active && !toplevelData?.floating) ? 0.98 : 1
-
-                            x: localX * workspaceContainer.scaleFactor + centerOffsetX
-                            y: localY * workspaceContainer.scaleFactor + centerOffsetY
-                            z: (waylandHandle?.fullscreen || waylandHandle?.maximized) ? 2 : toplevelData?.floating ? 1 : 0
-
-                            Rectangle {
-                                anchors.fill: parent
-                                color: toplevel.modelData.activated ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnPrimary
-                                border.color: toplevel.modelData.activated ? Colours.m3Colors.m3Outline : Colours.m3Colors.m3OutlineVariant
-                                border.width: 1
-                            }
-
-                            Drag.active: mouseArea.drag.active
-                            Drag.hotSpot.x: width / 2
-                            Drag.hotSpot.y: height / 2
-                            Drag.onActiveChanged: {
-                                if (Drag.active) {
-                                    parent = visualParent;
-                                } else {
-                                    const mapped = mapToItem(originalParent, 0, 0);
-                                    parent = originalParent;
-
-                                    if (toplevelData?.floating || !isCaught) {
-                                        x = mapped.x;
-                                        y = mapped.y;
-                                    } else {
-                                        x = localX * workspaceContainer.scaleFactor + centerOffsetX;
-                                        y = localY * workspaceContainer.scaleFactor + centerOffsetY;
-                                    }
-                                }
-                            }
-
-                            MArea {
-                                id: mouseArea
-
-                                anchors.fill: parent
-
-                                property bool dragged: false
-
-                                drag.target: (toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized) ? undefined : toplevel
-                                cursorShape: dragged ? Qt.DragMoveCursor : Qt.ArrowCursor
-                                acceptedButtons: Qt.LeftButton | Qt.RightButton
-                                onPressed: dragged = false
-                                onPositionChanged: {
-                                    if (drag.active)
-                                        dragged = true;
-                                }
-                                onClicked: mouse => {
-                                    if (!dragged) {
-                                        if (mouse.button === Qt.LeftButton)
-                                            toplevel.waylandHandle.activate();
-                                        else if (mouse.button === Qt.RightButton)
-                                            toplevel.waylandHandle.close();
-                                    }
-                                }
-                                onReleased: {
-                                    if (dragged && !(toplevel.waylandHandle?.fullscreen || toplevel.waylandHandle?.maximized)) {
-                                        const mapped = toplevel.mapToItem(toplevel.originalParent, 0, 0);
-                                        const nx = Math.round((mapped.x - toplevel.centerOffsetX) / workspaceContainer.scaleFactor + workspaceContainer.wsReserved[0] + workspaceContainer.monitorLogicalX);
-                                        const ny = Math.round((mapped.y - toplevel.centerOffsetY) / workspaceContainer.scaleFactor + workspaceContainer.wsReserved[1] + workspaceContainer.monitorLogicalY);
-                                        Hypr.dispatch("hl.movewindowpixel(\"exact " + nx + " " + ny + "\", \"address:0x" + toplevel.modelData.address + "\")");
-                                        toplevel.Drag.drop();
-                                    }
-                                }
-                            }
                         }
                     }
                 }
