@@ -12,6 +12,8 @@ Checks: >
   cppcoreguidelines-*,
   -cppcoreguidelines-owning-memory,
   -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
+  -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access,
   -cppcoreguidelines-pro-bounds-constant-array-index,
   -cppcoreguidelines-avoid-const-or-ref-data-members,
   -cppcoreguidelines-non-private-member-variables-in-classes,
@@ -49,6 +51,7 @@ Checks: >
   -readability-implicit-bool-conversion,
   -readability-avoid-nested-conditional-operator,
   -readability-math-missing-parentheses,
+  -readability-inconsistent-ifelse-braces,
 CheckOptions:
   performance-for-range-copy.WarnOnAllAutoCopies: true
   performance-inefficient-string-concatenation.StrictMode: true
