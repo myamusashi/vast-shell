@@ -22,9 +22,32 @@ Singleton {
     readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
     readonly property bool focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen
+    property var lastFocusedToplevel: ({})
     property var monitorData: ({})
     readonly property var monitors: Hyprland.monitors
     readonly property var toplevels: Hyprland.toplevels
+    readonly property var toplevelsByWorkspace: {
+        const acc = {};
+        for (const tl of root.toplevels.values ?? root.toplevels) {
+            const ws = toplevelWorkspaceAddress(tl);
+            if (acc[ws] === undefined)
+                acc[ws] = [];
+            acc[ws].push(tl);
+        }
+
+        for (const ws of Object.keys(acc)) {
+            const last = root.lastFocusedToplevel[ws];
+            if (last === undefined)
+                continue;
+
+            const list = acc[ws];
+            const index = list.findIndex(tl => tl.address === last);
+            if (index > 0)
+                list.unshift(...list.splice(index, 1));
+        }
+
+        return acc;
+    }
     readonly property var workspaces: Hyprland.workspaces
 
     signal configReloaded
@@ -35,10 +58,19 @@ Singleton {
     function monitorFor(screen: ShellScreen): HyprlandMonitor {
         return Hyprland.monitorFor(screen);
     }
+    function rememberFocus(): void {
+        const tl = Hyprland.activeToplevel;
+        if (!tl?.activated)
+            return;
 
-    // Address of the workspace a toplevel lives on. The resolved workspace
-    // object carries `address` directly; the toplevel's own IPC payload covers
-    // objects not yet refreshed, with legacy `id` fallbacks for old builds.
+        const ws = toplevelWorkspaceAddress(tl);
+        if (ws === "" || ws === undefined || root.lastFocusedToplevel[ws] === tl.address)
+            return;
+
+        const map = Object.assign({}, root.lastFocusedToplevel);
+        map[ws] = tl.address;
+        root.lastFocusedToplevel = map;
+    }
     function toplevelWorkspaceAddress(tl: var): string {
         if (!tl)
             return "";
@@ -92,9 +124,17 @@ Singleton {
                 Hyprland.refreshWorkspaces();
             else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
                 Hyprland.refreshToplevels();
+            root.rememberFocus();
         }
 
         target: Hyprland
+    }
+    Connections {
+        function onActivatedChanged(): void {
+            root.rememberFocus();
+        }
+
+        target: Hyprland.activeToplevel
     }
     Instantiator {
         model: root.monitors

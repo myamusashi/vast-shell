@@ -16,6 +16,13 @@ Singleton {
             maxId = Math.max(maxId, wsNumber(w));
         return maxId;
     }
+
+    function focusToplevel(w: int, address: string): void {
+        if (address !== undefined && address !== null && address !== "")
+            Hyprland.dispatch(`hl.dsp.focus({window = ${address}})`);
+        else
+            switchWorkspace(w);
+    }
     function sortWorkspaces(ws) {
         return [...ws].sort((a, b) => wsNumber(a) - wsNumber(b));
     }
@@ -23,9 +30,6 @@ Singleton {
         Hyprland.dispatch(`hl.dsp.focus({workspace = ${w}})`);
     }
 
-    // Numeric value of the workspace address (e.g. "1"). Non-numeric
-    // (named/special) workspaces yield -1 so they sort before numbered ones,
-    // matching the old negative-id ordering.
     function wsNumber(ws: var): int {
         const n = parseInt(ws?.address ?? ws?.lastIpcObject?.address ?? ws?.id ?? "", 10);
         return isNaN(n) ? -1 : n;

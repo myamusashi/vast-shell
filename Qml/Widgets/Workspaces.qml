@@ -29,16 +29,7 @@ StyledRect {
     property int shownWorkspace: 0
 
     // Caelestia credit
-    readonly property var toplevelsByWorkspace: {
-        const acc = {};
-        for (const tl of Hypr.toplevels.values ?? Hypr.toplevels) {
-            const ws = Hypr.toplevelWorkspaceAddress(tl);
-            if (!acc[ws])
-                acc[ws] = [];
-            acc[ws].push(tl);
-        }
-        return acc;
-    }
+    readonly property var toplevelsByWorkspace: Hypr.toplevelsByWorkspace
 
     implicitHeight: 30
     implicitWidth: loader.item?.implicitWidth ?? 0 // qmllint disable
@@ -67,7 +58,7 @@ StyledRect {
             readonly property var occupied: {
                 const acc = {};
                 for (const [ws, tls] of Object.entries(root.toplevelsByWorkspace))
-                    acc[ws] = tls.find(tl => tl.activated) ?? tls[0];
+                    acc[ws] = tls[0] ?? null;
                 return acc;
             }
             readonly property list<real> transitionCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -122,7 +113,7 @@ StyledRect {
                         layerRadius: 5
                         visible: !delegateRoot.isActive
 
-                        onClicked: Workspaces.switchWorkspace(delegateRoot.workspaceId)
+                        onClicked: Workspaces.focusToplevel(delegateRoot.workspaceId, delegateRoot.toplevel?.address ?? "")
                     }
                     HoverHandler {
                         onHoveredChanged: {

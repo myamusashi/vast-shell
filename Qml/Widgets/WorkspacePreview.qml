@@ -38,10 +38,12 @@ LazyLoader {
     // Whether the window is mapped. Split from `showing` so the surface stays
     // up for the whole fade and is only unmapped once the board has faded out.
     property bool mapped: false
+    // `toplevels` arrives already ordered with that workspace's last focused
+    // window first.
     readonly property list<var> orderedToplevels: {
-        const live = [...(root.toplevels ?? [])];
+        const live = [...(root.toplevels ?? [])].slice(0, root.cells);
         if (root.latchedOrder.length === 0)
-            return live.sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells);
+            return live;
 
         const byAddress = {};
         for (const toplevel of live)
@@ -83,7 +85,7 @@ LazyLoader {
     // Snapshot the display order at open time, so it outlives the activation
     // the click is about to cause.
     function latchOrder(list: var): var {
-        return [...(list ?? [])].sort((a, b) => Number(b.activated) - Number(a.activated)).slice(0, root.cells).map(toplevel => toplevel.address);
+        return [...(list ?? [])].slice(0, root.cells).map(toplevel => toplevel.address);
     }
 
     loading: true
