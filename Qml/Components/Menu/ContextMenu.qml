@@ -9,14 +9,7 @@ Popup {
     id: root
 
     default property alias items: menuSurface.content
-
     property bool showScrollBar: false
-
-    padding: 0
-    background: null
-    focus: true
-    closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
-    transformOrigin: Popup.Center
 
     function openAt(x: real, y: real) {
         x = x;
@@ -24,19 +17,24 @@ Popup {
         open();
     }
 
-    MenuSurface {
-        id: menuSurface
-
-        anchors.fill: parent
-        showScrollBar: root.showScrollBar
-        implicitWidth: 220
-    }
+    background: null
+    closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
+    focus: true
+    padding: 0
+    transformOrigin: Popup.Center
 
     enter: MenuTransitions {
         opening: true
     }
-
     exit: MenuTransitions {
         opening: false
+    }
+
+    MenuSurface {
+        id: menuSurface
+
+        anchors.fill: parent
+        implicitWidth: 220
+        showScrollBar: root.showScrollBar
     }
 }

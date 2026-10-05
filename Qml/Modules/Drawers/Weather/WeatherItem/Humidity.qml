@@ -14,9 +14,9 @@ import qs.Components.Base
 MaterialShape {
     id: shape
 
+    animationDuration: 0
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
-    animationDuration: 0
 
     ClippingWrapperRectangle {
         anchors.fill: shape
@@ -27,73 +27,66 @@ MaterialShape {
             fillPercentage: Weather.humidity
         }
     }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: Appearance.spacing.normal
         z: 2
 
         RowLayout {
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop | Qt.AlignCenter
+            Layout.fillWidth: true
             Layout.topMargin: 5
             spacing: 0
 
             Icon {
-                type: Icon.Material
-                icon: "water_drop"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large * 1.5
+                icon: "water_drop"
+                type: Icon.Material
             }
-
             StyledText {
-                text: qsTr("Humidity")
                 color: Colours.m3Colors.m3OnSurface
-                font.weight: Font.Bold
                 font.pixelSize: Appearance.fonts.size.normal
+                font.weight: Font.Bold
+                text: qsTr("Humidity")
             }
         }
-
         StyledText {
             Layout.alignment: Qt.AlignCenter
-            text: Weather.humidity + "%"
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.extraLarge * 1.5
             font.weight: Font.Bold
+            text: Weather.humidity + "%"
         }
-
         RowLayout {
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignBottom | Qt.AlignCenter
             Layout.bottomMargin: 30
-            spacing: Appearance.spacing.small
-
+            Layout.fillWidth: true
             implicitHeight: 30
             implicitWidth: 30
+            spacing: Appearance.spacing.small
 
             MaterialShape {
-                implicitWidth: 30
-                implicitHeight: 30
-                color: Colours.m3Colors.m3Primary
-                shape: MaterialShape.Circle
                 animationDuration: 0
+                color: Colours.m3Colors.m3Primary
+                implicitHeight: 30
+                implicitWidth: 30
+                shape: MaterialShape.Circle
 
                 StyledText {
                     anchors.centerIn: parent
-                    text: Weather.dewPoint.toFixed(0) + "°"
+                    color: Colours.m3Colors.m3Surface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
-                    color: Colours.m3Colors.m3Surface
+                    text: Weather.dewPoint.toFixed(0) + "°"
                 }
             }
-
             StyledText {
-                text: qsTr("Dew point")
-                font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.normal
+                text: qsTr("Dew point")
             }
         }
-
         Item {
             Layout.fillHeight: true
         }
@@ -102,32 +95,30 @@ MaterialShape {
     component Wave: Shape {
         id: waveShape
 
-        anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
         property alias fillPercentage: waveGeo.fillPercentage
         property color waveColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
 
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
+
         ShapePath {
-            strokeColor: "transparent"
             fillColor: waveShape.waveColor
+            strokeColor: "transparent"
 
             PathSvg {
                 path: waveGeo.buildPath()
             }
         }
-
         QtObject {
             id: waveGeo
 
-            readonly property real widthPx: waveShape.parent.width
-            readonly property real heightPx: waveShape.parent.height
-
-            property real fillPercentage: 0
-            property real fillHeight: heightPx * (fillPercentage / 100)
-            property real waveY: heightPx - fillHeight
             property real amplitude: 3
+            property real fillHeight: heightPx * (fillPercentage / 100)
+            property real fillPercentage: 0
+            readonly property real heightPx: waveShape.parent.height
+            property real waveY: heightPx - fillHeight
             property real wavelength: widthPx / 5
+            readonly property real widthPx: waveShape.parent.width
 
             function buildPath() {
                 if (fillHeight <= 0)

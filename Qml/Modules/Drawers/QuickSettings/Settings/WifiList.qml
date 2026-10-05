@@ -11,19 +11,19 @@ import qs.Components.Popup
 ZoomPopup {
     id: root
 
-    contentMargin: Appearance.margin.normal
     clipContent: true
+    contentMargin: Appearance.margin.normal
     enableScroll: false
+
     content: ColumnLayout {
-        width: root.width
         spacing: Appearance.spacing.small
+        width: root.width
 
-        WF.Header {}
-
+        WF.Header {
+        }
         WF.WifiToggle {
             isVisible: root.isVisible
         }
-
         WF.NetworkList {
             pskDialog: wifiPskDialog
         }

@@ -15,54 +15,49 @@ Rectangle {
 
     signal placeSelected(string path)
 
-    color: Colours.m3Colors.m3Surface
-
+    function clearSelection() {
+        placesList.currentIndex = -1;
+    }
     function xdgPath(type) {
         const locs = StandardPaths.standardLocations(type);
         return locs.length > 0 ? locs[0].toString().replace("file://", "") : null;
     }
 
-    function clearSelection() {
-        placesList.currentIndex = -1;
-    }
+    color: Colours.m3Colors.m3Surface
 
     Rectangle {
         anchors.right: parent.right
-        implicitWidth: 1
-        implicitHeight: parent.height
         color: Colours.m3Colors.m3OutlineVariant
+        implicitHeight: parent.height
+        implicitWidth: 1
         opacity: 0.4
     }
-
     ColumnLayout {
-        anchors {
-            fill: parent
-            topMargin: Appearance.margin.normal
-            leftMargin: Appearance.margin.small
-            rightMargin: Appearance.margin.small
-        }
         spacing: Appearance.spacing.small
 
-        StyledText {
-            text: qsTr("Places")
-            font.pixelSize: Appearance.fonts.size.small
-            font.letterSpacing: 0.8
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            leftPadding: Appearance.margin.normal
-            bottomPadding: Appearance.spacing.small
-            Layout.fillWidth: true
+        anchors {
+            fill: parent
+            leftMargin: Appearance.margin.small
+            rightMargin: Appearance.margin.small
+            topMargin: Appearance.margin.normal
         }
-
+        StyledText {
+            Layout.fillWidth: true
+            bottomPadding: Appearance.spacing.small
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            font.letterSpacing: 0.8
+            font.pixelSize: Appearance.fonts.size.small
+            leftPadding: Appearance.margin.normal
+            text: qsTr("Places")
+        }
         ListView {
             id: placesList
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             clip: true
-            spacing: Appearance.spacing.small
             currentIndex: -1
             highlightFollowsCurrentItem: false
-
             model: [
                 {
                     label: qsTr("Home"),
@@ -105,14 +100,16 @@ Rectangle {
                     path: "file:///"
                 },
             ]
-            delegate: PlaceItem {
-                required property var model
-                required property int index
+            spacing: Appearance.spacing.small
 
-                implicitWidth: placesList.width
-                label: model.label
+            delegate: PlaceItem {
+                required property int index
+                required property var model
+
                 icon: model.icon
+                implicitWidth: placesList.width
                 isSelected: ListView.isCurrentItem
+                label: model.label
 
                 onClicked: {
                     placesList.currentIndex = index;

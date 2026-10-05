@@ -11,6 +11,39 @@ import qs.Services.CaptureScreenVideo
 Singleton {
     id: root
 
+    property var recordOptions: ScriptModel {
+        values: {
+            let options = [
+                {
+                    "id": "record-selection",
+                    "name": qsTr("Selection"),
+                    "icon": "select",
+                    "action": () => {
+                        if (CaptureScreenVideo.isRecording)
+                            CaptureScreenVideo.stopRecording();
+                        else
+                            select.open();
+                    }
+                }
+            ];
+
+            Quickshell.screens.forEach(screen => {
+                options.push({
+                    "id": `record-output-${screen.name}`,
+                    "name": screen.name,
+                    "icon": "monitor",
+                    "action": () => {
+                        if (CaptureScreenVideo.isRecording)
+                            CaptureScreenVideo.stopRecording();
+                        else
+                            CaptureScreenVideo.startRecording("", screen.name);
+                    }
+                });
+            });
+
+            return options;
+        }
+    }
     property var screenshotOptions: ScriptModel {
         values: {
             let options = [
@@ -47,49 +80,10 @@ Singleton {
         }
     }
 
-    property var recordOptions: ScriptModel {
-        values: {
-            let options = [
-                {
-                    "id": "record-selection",
-                    "name": qsTr("Selection"),
-                    "icon": "select",
-                    "action": () => {
-                        if (CaptureScreenVideo.isRecording)
-                            CaptureScreenVideo.stopRecording();
-                        else
-                            select.open();
-                    }
-                }
-            ];
-
-            Quickshell.screens.forEach(screen => {
-                options.push({
-                    "id": `record-output-${screen.name}`,
-                    "name": screen.name,
-                    "icon": "monitor",
-                    "action": () => {
-                        if (CaptureScreenVideo.isRecording)
-                            CaptureScreenVideo.stopRecording();
-                        else
-                            CaptureScreenVideo.startRecording("", screen.name);
-                    }
-                });
-            });
-
-            return options;
-        }
-    }
-
     function openRegionSelector(): void {
         if (!CaptureScreenVideo.isRecording)
             select.open();
     }
-
-    function startRecording(output: string): void {
-        CaptureScreenVideo.startRecording("", output);
-    }
-
     function recordWindow(): void {
         if (CaptureScreenVideo.isRecording) {
             CaptureScreenVideo.stopRecording();
@@ -101,7 +95,9 @@ Singleton {
                 CaptureScreenVideo.recordToplevel(appId);
         });
     }
-
+    function startRecording(output: string): void {
+        CaptureScreenVideo.startRecording("", output);
+    }
     function stopRecording(): void {
         CaptureScreenVideo.stopRecording();
     }
@@ -109,7 +105,7 @@ Singleton {
     ScreenSelection {
         id: select
 
-        onGeometrySelected: geo => CaptureScreenVideo.recordSelection(geo)
         onCancelled: {}
+        onGeometrySelected: geo => CaptureScreenVideo.recordSelection(geo)
     }
 }

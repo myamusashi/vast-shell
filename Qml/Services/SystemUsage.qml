@@ -12,78 +12,6 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property real diskProp: diskUsed / 1048576
-    readonly property real diskPercent: diskTotal > 0 ? (diskUsed / diskTotal) * 100 : 0
-    readonly property real memProp: memUsed / 1048576
-    readonly property var speedThresholds: [
-        {
-            limit: 0.01,
-            format: () => "0.00 MB/s"
-        },
-        {
-            limit: 1,
-            format: s => (s * 1024).toFixed(2) + " KB/s"
-        },
-        {
-            limit: Infinity,
-            format: s => s.toFixed(2) + " MB/s"
-        }
-    ]
-    readonly property string uptimeFormatted: {
-        const s = Math.floor(uptimeSeconds);
-        const d = Math.floor(s / 86400);
-        const h = Math.floor((s % 86400) / 3600);
-        const m = Math.floor((s % 3600) / 60);
-        return d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m` : `${m}m`;
-    }
-
-    property string gpuName: ""
-    property string cpuName: ""
-
-    property bool vulkanAvailable: false
-    property bool openglAvailable: false
-    property string vaApiDriver: ""
-    property string openglVersion: ""
-    property string vulkanVersion: ""
-    property string openglRenderer: ""
-    property string openglVendor: ""
-
-    // use formatUsage() at call sites
-    property real storageAppsData: 0
-    property real storageSystem: 0
-    property real storageFree: 0
-
-    // Filesystem info: list of {name, type, mountpoint, usedKB, freeKB, totalKB}
-    property var filesystemNames: []
-    property var cpuCores: []
-
-    // Temperatures (°C)
-    property real cpuTemp: 0
-    property real gpuTemp: 0
-    property real batteryTemp: 0
-
-    // Battery informations
-    property string batteryTechnologies: ""
-
-    property real uptimeSeconds: 0
-
-    // OS info
-    property string osName: ""
-    property string osPrettyName: ""
-    property string osId: ""
-    property string osIdLike: ""
-    property string kernelName: ""
-    property string archDesign: ""
-
-    // mem & disk info
-    property int memTotal: 0
-    property int memUsed: 0
-    property int diskUsed: 0
-    property int diskTotal: 0
-
-    // ethernet and wifi devices
-    readonly property var ethernetDevice: Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null
-
     readonly property var allEthernetDevices: {
         const devices = [];
         for (const d of Networking.devices.values) {
@@ -99,41 +27,103 @@ Singleton {
         }
         return devices;
     }
+    property string archDesign: ""
+
+    // Battery informations
+    property string batteryTechnologies: ""
+    property real batteryTemp: 0
+    property var cpuCores: []
+    property string cpuName: ""
+    property int cpuPerc: 0
+
+    // Temperatures (°C)
+    property real cpuTemp: 0
+    readonly property real diskPercent: diskTotal > 0 ? (diskUsed / diskTotal) * 100 : 0
+    readonly property real diskProp: diskUsed / 1048576
+    property int diskTotal: 0
+    property int diskUsed: 0
+
+    // ethernet and wifi devices
+    readonly property var ethernetDevice: Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null
+
+    // Filesystem info: list of {name, type, mountpoint, usedKB, freeKB, totalKB}
+    property var filesystemNames: []
+    property string gpuName: ""
+    property real gpuTemp: 0
+    property bool initialized: false
+    property string kernelName: ""
+    property int lastCpuIdle: 0
+    property int lastCpuTotal: 0
+    property var lastPerCoreCpuData: null
+    property double lastUpdateTime: 0
+    readonly property real memProp: memUsed / 1048576
+
+    // mem & disk info
+    property int memTotal: 0
+    property int memUsed: 0
+    property bool openglAvailable: false
+    property string openglRenderer: ""
+    property string openglVendor: ""
+    property string openglVersion: ""
+    property string osId: ""
+    property string osIdLike: ""
+
+    // OS info
+    property string osName: ""
+    property string osPrettyName: ""
+    property var previousData: null
+    readonly property var speedThresholds: [
+        {
+            limit: 0.01,
+            format: () => "0.00 MB/s"
+        },
+        {
+            limit: 1,
+            format: s => (s * 1024).toFixed(2) + " KB/s"
+        },
+        {
+            limit: Infinity,
+            format: s => s.toFixed(2) + " MB/s"
+        }
+    ]
+    property string statusVPNInterface: ""
+    readonly property string statusWiredInterface: ethernetDevice?.connected === true ? "connected" : "disconnected"
+
+    // use formatUsage() at call sites
+    property real storageAppsData: 0
+    property real storageFree: 0
+    property real storageSystem: 0
+    property double totalWiredDownloadUsage: 0
+    property double totalWiredUploadUsage: 0
+    property double totalWirelessDownloadUsage: 0
+    property double totalWirelessUploadUsage: 0
+    readonly property string uptimeFormatted: {
+        const s = Math.floor(uptimeSeconds);
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        return d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m` : `${m}m`;
+    }
+    property real uptimeSeconds: 0
+    property string vaApiDriver: ""
+    property bool vulkanAvailable: false
+    property string vulkanVersion: ""
+    property double wiredDownloadSpeed: 0
 
     // network interfaces name and status
     readonly property string wiredInterface: ethernetDevice?.name ?? ""
-    property string wirelessInterface: ""
-    readonly property string statusWiredInterface: ethernetDevice?.connected === true ? "connected" : "disconnected"
-    property string statusVPNInterface: ""
-
-    // wireless usage for download and upload
-    property double wirelessUploadSpeed: 0
-    property double wirelessDownloadSpeed: 0
-    property double totalWirelessDownloadUsage: 0
-    property double totalWirelessUploadUsage: 0
-
-    // wired usage for download and upload
-    property double wiredUploadSpeed: 0
-    property double wiredDownloadSpeed: 0
-    property double totalWiredDownloadUsage: 0
-    property double totalWiredUploadUsage: 0
 
     // wired & wireless link speed
     readonly property int wiredLinkSpeed: ethernetDevice?.linkSpeed ?? 0
+
+    // wired usage for download and upload
+    property double wiredUploadSpeed: 0
+    property double wirelessDownloadSpeed: 0
+    property string wirelessInterface: ""
     property int wirelessLinkSpeed: 0
 
-    property int cpuPerc: 0
-
-    property bool initialized: false
-    property double lastUpdateTime: 0
-    property int lastCpuTotal: 0
-    property int lastCpuIdle: 0
-    property var previousData: null
-    property var lastPerCoreCpuData: null
-
-    function parseNetworkData(data) {
-        return SystemInfoFormatter.parseNetworkData(data, wirelessInterface, wiredInterface);
-    }
+    // wireless usage for download and upload
+    property double wirelessUploadSpeed: 0
 
     function calculateNetworkStats(data) {
         const currentTime = Date.now();
@@ -173,35 +163,48 @@ Singleton {
         previousData = currentData;
         lastUpdateTime = currentTime;
     }
-
-    function formatSpeed(speedMBps) {
-        return SystemInfoFormatter.formatSpeed(speedMBps, speedThresholds);
-    }
-
-    function formatUsage(usageMB) {
-        return SystemInfoFormatter.formatUsage(usageMB);
-    }
-
     function formatKB(kb) {
         return SystemInfoFormatter.formatKB(kb);
     }
-
+    function formatSpeed(speedMBps) {
+        return SystemInfoFormatter.formatSpeed(speedMBps, speedThresholds);
+    }
+    function formatUsage(usageMB) {
+        return SystemInfoFormatter.formatUsage(usageMB);
+    }
+    function parseNetworkData(data) {
+        return SystemInfoFormatter.parseNetworkData(data, wirelessInterface, wiredInterface);
+    }
     function parsePerCoreCpu(data) {
         return SystemInfoFormatter.parsePerCoreCpu(data);
+    }
+
+    Component.onCompleted: {
+        gpuNameProc.running = true;
+        cpuNameProc.running = true;
+        osInfoProc.running = true;
+        vulkanInfoProc.running = true;
+        openglInfoProc.running = true;
+        vaApiInfoProc.running = true;
+    }
+    Component.onDestruction: {
+        previousData = null;
+        lastPerCoreCpuData = null;
     }
 
     FileView {
         id: netDevFileView
 
         path: "/proc/net/dev"
+
         onLoaded: root.calculateNetworkStats(text())
     }
-
     Process {
         id: batteryTechProc
 
         command: ["sh", "-c", "cat /sys/class/power_supply/BAT*/technology"]
         running: true
+
         stdout: StdioCollector {
             onStreamFinished: root.batteryTechnologies = text.trim().split('\n')[0] || "Unknown"
         }
@@ -217,6 +220,7 @@ Singleton {
             /^(wg0|CloudflareWARP):/ { print "VPN_DEV:" $1 }
             '`]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 for (const line of text.trim().split('\n')) {
@@ -228,7 +232,6 @@ Singleton {
             }
         }
     }
-
     Process {
         id: linkSpeedProc
 
@@ -241,6 +244,7 @@ Singleton {
             fi
         `]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 for (const line of text.trim().split("\n")) {
@@ -250,7 +254,6 @@ Singleton {
             }
         }
     }
-
     Process {
         id: vulkanInfoProc
 
@@ -265,6 +268,7 @@ Singleton {
             fi
         `]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 for (const line of text.trim().split('\n')) {
@@ -278,7 +282,6 @@ Singleton {
             }
         }
     }
-
     Process {
         id: openglInfoProc
 
@@ -296,6 +299,7 @@ Singleton {
             fi
         `]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 for (const line of text.trim().split('\n')) {
@@ -313,7 +317,6 @@ Singleton {
             }
         }
     }
-
     Process {
         id: vaApiInfoProc
 
@@ -327,6 +330,7 @@ Singleton {
             fi
         `]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 for (const line of text.trim().split('\n')) {
@@ -336,11 +340,11 @@ Singleton {
             }
         }
     }
-
     FileView {
         id: meminfoFileView
 
         path: "/proc/meminfo"
+
         onLoaded: {
             const data = text();
             const memMatch = data.match(/MemTotal:\s+(\d+)[\s\S]*?MemAvailable:\s+(\d+)/);
@@ -350,11 +354,11 @@ Singleton {
             }
         }
     }
-
     Process {
         id: diskDfProc
 
         command: ["sh", "-c", "df -T 2>/dev/null"]
+
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = text.trim().split("\n");
@@ -413,11 +417,11 @@ Singleton {
             }
         }
     }
-
     FileView {
         id: cpuStatFileView
 
         path: "/proc/stat"
+
         onLoaded: {
             const data = text();
             const match = data.match(/^cpu\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/m);
@@ -495,23 +499,23 @@ Singleton {
             }
         }
     }
-
     FileView {
         id: uptimeFileView
 
         path: "/proc/uptime"
+
         onLoaded: {
             const parts = text().trim().split(/\s+/);
             if (parts.length >= 1)
                 root.uptimeSeconds = parseFloat(parts[0]) || 0;
         }
     }
-
     Process {
         id: cpuFreqProc
 
         command: ["sh", "-c", "for c in /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq; do cat \"$c\" 2>/dev/null; done"]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = text.trim().split("\n");
@@ -539,7 +543,6 @@ Singleton {
             }
         }
     }
-
     Process {
         id: temperatureProc
 
@@ -568,6 +571,7 @@ Singleton {
             done
         `]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 let foundGpuTemp = false;
@@ -598,29 +602,29 @@ Singleton {
             }
         }
     }
-
     Process {
         id: cpuNameProc
 
         command: ["sh", "-c", "lscpu | grep 'Model name' | cut -f 2 -d ':' | awk '{$1=$1}1'"]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: root.cpuName = text.trim()
         }
     }
-
     Process {
         id: gpuNameProc
 
         command: ["sh", "-c", "lspci 2>/dev/null | grep -i 'vga\\|3d\\|display' | head -1 | sed 's/.*: //'"]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: root.gpuName = text.trim()
         }
     }
-
     Process {
         id: osInfoProc
+
         command: ["sh", "-c", `
             echo "OS_PRETTY:$(grep '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
             echo "OS_NAME:$(grep '^NAME=' /etc/os-release 2>/dev/null | cut -d= -f2- | tr -d '"')"
@@ -630,6 +634,7 @@ Singleton {
             echo "ARCH:$(uname -m)"
         `]
         running: false
+
         stdout: StdioCollector {
             onStreamFinished: {
                 for (const line of text.trim().split("\n")) {
@@ -649,15 +654,15 @@ Singleton {
             }
         }
     }
-
     Timer {
         id: mainTimer
 
         readonly property bool shouldRun: GlobalStates.isQuickSettingsOpen
         property int updateCycle: 0
-        running: shouldRun
+
         interval: 2000
         repeat: shouldRun
+        running: shouldRun
         triggeredOnStart: true
 
         onTriggered: {
@@ -683,19 +688,5 @@ Singleton {
             }
             updateCycle = (updateCycle + 1) % 4;
         }
-    }
-
-    Component.onCompleted: {
-        gpuNameProc.running = true;
-        cpuNameProc.running = true;
-        osInfoProc.running = true;
-        vulkanInfoProc.running = true;
-        openglInfoProc.running = true;
-        vaApiInfoProc.running = true;
-    }
-
-    Component.onDestruction: {
-        previousData = null;
-        lastPerCoreCpuData = null;
     }
 }

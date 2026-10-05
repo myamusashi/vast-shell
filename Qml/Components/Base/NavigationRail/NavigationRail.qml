@@ -11,16 +11,17 @@ import qs.Services
 Item {
     id: root
 
-    property var model: []
-    property int currentIndex: 0
-    property bool expanded: false
-
     property string actionButtonIcon: ""
     property string actionButtonLabel: ""
-    signal actionButtonTriggered
-
+    property real animatedRailWidth: expanded ? expandedWidth : compactWidth
     property color backgroundColor: Colours.m3Colors.m3SurfaceContainerLow
+    readonly property real compactWidth: 80
+    property int currentIndex: 0
+    property bool expanded: false
+    readonly property real expandedWidth: 220
+    property var model: []
 
+    signal actionButtonTriggered
     signal activated(int index)
 
     function sectionBaseIndex(sectionIndex) {
@@ -30,19 +31,14 @@ Item {
         return sum;
     }
 
-    readonly property real compactWidth: 80
-    readonly property real expandedWidth: 220
-
-    property real animatedRailWidth: expanded ? expandedWidth : compactWidth
-
-    implicitWidth: animatedRailWidth
     implicitHeight: parent ? parent.height : 480
+    implicitWidth: animatedRailWidth
 
     Behavior on animatedRailWidth {
         SpringAnimation {
-            spring: 3
             damping: 0.3
             mass: 1
+            spring: 3
         }
     }
 
@@ -51,28 +47,26 @@ Item {
         color: root.backgroundColor
         radius: 0
     }
-
     Column {
         id: railColumn
 
+        anchors.bottomMargin: Appearance.margin.normal
         anchors.fill: parent
         anchors.topMargin: Appearance.margin.normal
-        anchors.bottomMargin: Appearance.margin.normal
         spacing: Appearance.spacing.small
 
         Item {
+            height: Appearance.spacing.large - Appearance.spacing.small * 2
             visible: actionButtonItem.visible
             width: 1
-            height: Appearance.spacing.large - Appearance.spacing.small * 2
         }
-
         WrapperItem {
             id: actionButtonItem
 
-            visible: root.actionButtonIcon !== ""
-            implicitHeight: 56
             anchors.left: parent.left
             anchors.leftMargin: Appearance.margin.normal
+            implicitHeight: 56
+            visible: root.actionButtonIcon !== ""
 
             states: [
                 State {
@@ -81,8 +75,8 @@ Item {
 
                     // qmllint disable Quick.property-changes-parsed
                     PropertyChanges {
-                        target: actionButtonItem
                         implicitWidth: 56
+                        target: actionButtonItem
                     }
                 },
                 State {
@@ -90,15 +84,14 @@ Item {
                     when: root.expanded
 
                     PropertyChanges {
-                        target: actionButtonItem
                         implicitWidth: railColumn.width - Appearance.margin.normal * 2
+                        target: actionButtonItem
                     }
                 }
                 // qmllint enable Quick.property-changes-parsed
 
 
             ]
-
             transitions: Transition {
                 ParallelAnimation {
                     NAnim {
@@ -110,12 +103,13 @@ Item {
             MArea {
                 layerRadius: Appearance.rounding.large
                 layerRect.opacity: 0.0
+
                 onClicked: root.actionButtonTriggered()
 
                 StyledRect {
                     anchors.fill: parent
-                    radius: Appearance.rounding.large
                     color: Colours.m3Colors.m3PrimaryContainer
+                    radius: Appearance.rounding.large
 
                     Icon {
                         id: actionButtonLeadingIcon
@@ -123,62 +117,60 @@ Item {
                         anchors.left: parent.left
                         anchors.leftMargin: Appearance.margin.normal
                         anchors.verticalCenter: parent.verticalCenter
-                        icon: root.actionButtonIcon
-                        font.pixelSize: Appearance.fonts.size.larger
                         color: Colours.m3Colors.m3OnPrimaryContainer
+                        font.pixelSize: Appearance.fonts.size.larger
+                        icon: root.actionButtonIcon
                     }
-
                     StyledText {
                         anchors.left: actionButtonLeadingIcon.right
                         anchors.leftMargin: Appearance.spacing.normal
                         anchors.right: parent.right
                         anchors.rightMargin: Appearance.margin.normal
                         anchors.verticalCenter: parent.verticalCenter
-                        text: root.actionButtonLabel
-                        font.pixelSize: Appearance.fonts.size.normal
-                        font.weight: Font.Medium
                         color: Colours.m3Colors.m3OnPrimaryContainer
                         elide: Text.ElideRight
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: Font.Medium
                         opacity: root.expanded ? 1 : 0
+                        text: root.actionButtonLabel
 
                         Behavior on opacity {
-                            NAnim {}
+                            NAnim {
+                            }
                         }
                     }
                 }
             }
         }
-
         Item {
-            width: 1
             height: Appearance.spacing.large + Appearance.spacing.normal - Appearance.spacing.small * 2
+            width: 1
         }
-
         Flickable {
             id: destinationsFlick
 
-            width: railColumn.width
-            height: railColumn.height - y
-            contentWidth: width
-            contentHeight: destinationsColumn.height
-            clip: true
             boundsBehavior: Flickable.StopAtBounds
             boundsMovement: Flickable.StopAtBounds
+            clip: true
+            contentHeight: destinationsColumn.height
+            contentWidth: width
             flickableDirection: Flickable.VerticalFlick
+            height: railColumn.height - y
+            width: railColumn.width
 
             WheelHandler {
                 target: destinationsFlick
+
                 onWheel: event => {
                     const maxY = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
                     destinationsFlick.contentY = Math.max(0, Math.min(maxY, destinationsFlick.contentY - event.angleDelta.y));
                 }
             }
-
             Column {
                 id: destinationsColumn
 
-                width: destinationsFlick.width
                 spacing: railColumn.spacing
+                width: destinationsFlick.width
 
                 Repeater {
                     model: root.model
@@ -186,23 +178,23 @@ Item {
                     delegate: Column {
                         id: sectionColumn
 
+                        readonly property int baseIndex: root.sectionBaseIndex(index)
                         required property int index
                         required property var modelData
-
-                        readonly property int baseIndex: root.sectionBaseIndex(index)
                         readonly property int topGap: index === 0 ? Appearance.spacing.small : Appearance.spacing.large
 
-                        width: destinationsColumn.width
                         spacing: 0
+                        width: destinationsColumn.width
 
                         Item {
                             id: sectionHeader
 
-                            width: parent.width
                             height: root.expanded ? sectionColumn.topGap + headerLabel.implicitHeight + Appearance.spacing.small : 0
+                            width: parent.width
 
                             Behavior on height {
-                                NAnim {}
+                                NAnim {
+                                }
                             }
 
                             StyledText {
@@ -213,19 +205,19 @@ Item {
                                 anchors.right: parent.right
                                 anchors.rightMargin: Appearance.margin.normal
                                 anchors.verticalCenter: parent.verticalCenter
-                                text: sectionColumn.modelData.label ?? ""
-                                font.pixelSize: Appearance.fonts.size.large
-                                font.weight: Font.Medium
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 elide: Text.ElideRight
+                                font.pixelSize: Appearance.fonts.size.large
+                                font.weight: Font.Medium
                                 opacity: root.expanded ? 1 : 0
+                                text: sectionColumn.modelData.label ?? ""
 
                                 Behavior on opacity {
-                                    NAnim {}
+                                    NAnim {
+                                    }
                                 }
                             }
                         }
-
                         Repeater {
                             model: sectionColumn.modelData.items ?? []
 
@@ -233,16 +225,15 @@ Item {
                                 required property int index
                                 required property var modelData
 
-                                x: (destinationsColumn.width - width) / 2
-                                width: destinationsColumn.width - (root.expanded ? Appearance.margin.normal : Appearance.margin.smaller) * 2
+                                badgeDot: modelData.badgeDot ?? false
+                                badgeText: modelData.badgeText ?? ""
+                                expanded: root.expanded
                                 height: implicitHeight
-
                                 icon: modelData.icon ?? ""
                                 label: modelData.label ?? ""
-                                badgeText: modelData.badgeText ?? ""
-                                badgeDot: modelData.badgeDot ?? false
                                 selected: sectionColumn.baseIndex + index === root.currentIndex
-                                expanded: root.expanded
+                                width: destinationsColumn.width - (root.expanded ? Appearance.margin.normal : Appearance.margin.smaller) * 2
+                                x: (destinationsColumn.width - width) / 2
 
                                 onTriggered: {
                                     root.currentIndex = sectionColumn.baseIndex + index;

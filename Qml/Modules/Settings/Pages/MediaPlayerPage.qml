@@ -14,36 +14,38 @@ SettingsPageBase {
         title: qsTr("Player Preferences")
 
         SettingRow {
-            label: qsTr("Enable lyrics in media player:")
             description: qsTr("Fetch and display synchronized lyrics when available.")
+            label: qsTr("Enable lyrics in media player:")
 
             StyledSwitch {
-                Layout.preferredWidth: 52
                 Layout.preferredHeight: 32
+                Layout.preferredWidth: 52
                 checked: Configs.mediaPlayer.showLyrics
+
                 onToggled: Configs.mediaPlayer.showLyrics = checked
             }
         }
-
         SettingRow {
-            label: qsTr("Enable dynamic colors from cover art:")
             description: qsTr("Tint the player with colors extracted from the album cover.")
+            label: qsTr("Enable dynamic colors from cover art:")
 
             StyledSwitch {
-                Layout.preferredWidth: 52
                 Layout.preferredHeight: 32
+                Layout.preferredWidth: 52
                 checked: Configs.mediaPlayer.dynamicColorsCover
+
                 onToggled: Configs.mediaPlayer.dynamicColorsCover = checked
             }
         }
-
         SettingRow {
-            label: qsTr("Slider type:")
             description: qsTr("Visual style for the playback progress slider.")
+            label: qsTr("Slider type:")
 
             SplitButton {
                 readonly property int selectedIndex: model.findIndex(entry => entry.display === Configs.mediaPlayer.sliderType)
 
+                currentIndex: selectedIndex
+                icon.name: "sliders"
                 model: [
                     {
                         display: "Wavy"
@@ -52,10 +54,8 @@ SettingsPageBase {
                         display: "WaveForm"
                     }
                 ]
-                textRole: "display"
-                currentIndex: selectedIndex
                 text: model[selectedIndex]?.display ?? Configs.mediaPlayer.sliderType
-                icon.name: "sliders"
+                textRole: "display"
 
                 onMenuItemActivated: index => Configs.mediaPlayer.sliderType = model[index].display
             }

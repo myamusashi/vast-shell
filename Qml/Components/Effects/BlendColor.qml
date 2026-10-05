@@ -10,14 +10,20 @@ import qs.Components.Base
 Scope {
     id: root
 
-    required property Item host
-    property int duration: Appearance.animations.durations.small
-    property color target: "transparent"
-
+    property NAnim blendAnim: NAnim {
+        duration: root.duration
+        from: 0.0
+        property: "colorBlendProgress"
+        target: root
+        to: 1.0
+    }
+    property real colorBlendProgress: 1.0
+    property bool colorBlending: false
     property color colorFrom: "transparent"
     property color colorTo: "transparent"
-    property bool colorBlending: false
-    property real colorBlendProgress: 1.0
+    property int duration: Appearance.animations.durations.small
+    required property Item host
+    property color target: "transparent"
 
     function blendTo(next) {
         if (next === host["color"] && !colorBlending) // qmllint disable missing-property
@@ -30,8 +36,6 @@ Scope {
         blendAnim.start();
     }
 
-    onTargetChanged: root.blendTo(target)
-
     onColorBlendProgressChanged: {
         if (!colorBlending)
             return;
@@ -42,12 +46,5 @@ Scope {
             host["color"] = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress); // qmllint disable missing-property
         }
     }
-
-    property NAnim blendAnim: NAnim {
-        target: root
-        property: "colorBlendProgress"
-        from: 0.0
-        to: 1.0
-        duration: root.duration
-    }
+    onTargetChanged: root.blendTo(target)
 }

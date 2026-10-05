@@ -15,13 +15,14 @@ StyledRect {
 
     readonly property PwNode audioNode: Pipewire.defaultAudioSink
 
-    implicitWidth: container.width
-    implicitHeight: parent.height
     color: "transparent"
+    implicitHeight: parent.height
+    implicitWidth: container.width
     radius: Appearance.rounding.small
 
     Behavior on implicitWidth {
-        NAnim {}
+        NAnim {
+        }
     }
 
     Dots {
@@ -30,30 +31,29 @@ StyledRect {
         spacing: Appearance.spacing.small
 
         Icon {
-            type: Icon.Material
-            color: Colours.m3Colors.m3OnBackground
-            icon: Audio.getIcon(root.audioNode)
             Layout.alignment: Qt.AlignVCenter
+            color: Colours.m3Colors.m3OnBackground
             font.pixelSize: Appearance.fonts.size.large * 1.5
+            icon: Audio.getIcon(root.audioNode)
+            type: Icon.Material
         }
-
         StyledText {
-            color: Colours.m3Colors.m3OnBackground
-            text: (root.audioNode.audio.volume * 100).toFixed(0) + "%"
             Layout.alignment: Qt.AlignVCenter
+            color: Colours.m3Colors.m3OnBackground
             font.pixelSize: Appearance.fonts.size.medium
+            text: (root.audioNode.audio.volume * 100).toFixed(0) + "%"
         }
     }
-
     MArea {
-        anchors.fill: parent
         acceptedButtons: Qt.MiddleButton | Qt.LeftButton
-        onWheel: mouseEvent => Audio.wheelAction(mouseEvent, root.audioNode)
+        anchors.fill: parent
+
         onClicked: mouseEvent => {
             if (mouseEvent.button === Qt.MiddleButton)
                 Audio.toggleMute(root.audioNode);
             else if (mouseEvent.button === Qt.LeftButton)
                 GlobalStates.toggleOSD("volume");
         }
+        onWheel: mouseEvent => Audio.wheelAction(mouseEvent, root.audioNode)
     }
 }

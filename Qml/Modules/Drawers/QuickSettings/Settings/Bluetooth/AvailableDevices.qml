@@ -9,8 +9,8 @@ import qs.Core.Configs
 import qs.Services
 
 ColumnLayout {
-    visible: BluetoothServices.adapterEnabled
     spacing: Appearance.spacing.small * 0.5
+    visible: BluetoothServices.adapterEnabled
 
     RowLayout {
         Layout.fillWidth: true
@@ -18,21 +18,21 @@ ColumnLayout {
 
         StyledText {
             Layout.fillWidth: true
-            text: qsTr("Available devices")
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: Font.DemiBold
+            text: qsTr("Available devices")
         }
-
         FloatingButton {
-            implicitWidth: 28
-            implicitHeight: 28
             backgroundRadius: Appearance.rounding.small
-            enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
-            spinning: BluetoothServices.isDiscovering
-            icon.name: "refresh"
-            icon.color: Colours.m3Colors.m3OnSurfaceVariant
             color: "transparent"
+            enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+            icon.color: Colours.m3Colors.m3OnSurfaceVariant
+            icon.name: "refresh"
+            implicitHeight: 28
+            implicitWidth: 28
+            spinning: BluetoothServices.isDiscovering
+
             onClicked: {
                 if (BluetoothServices.isDiscovering)
                     BluetoothServices.setDiscovering(false);
@@ -41,7 +41,6 @@ ColumnLayout {
             }
         }
     }
-
     Repeater {
         id: availableRepeater
 
@@ -52,23 +51,23 @@ ColumnLayout {
 
             device: modelData
             showPairActions: true
+
             onPrimaryAction: modelData.pair()
             onSecondaryAction: modelData.cancelPair()
         }
     }
     StyledText {
-        visible: availableRepeater.count === 0 && BluetoothServices.isDiscovering
+        Layout.alignment: Qt.AlignHCenter
+        color: Colours.m3Colors.m3OnSurfaceVariant
+        font.pixelSize: Appearance.fonts.size.normal
         text: qsTr("Searching for devices…")
-        color: Colours.m3Colors.m3OnSurfaceVariant
-        font.pixelSize: Appearance.fonts.size.normal
-        Layout.alignment: Qt.AlignHCenter
+        visible: availableRepeater.count === 0 && BluetoothServices.isDiscovering
     }
-
     StyledText {
-        visible: availableRepeater.count === 0 && !BluetoothServices.isDiscovering && BluetoothServices.hasPaired
-        text: qsTr("No new devices — turn on scanning")
+        Layout.alignment: Qt.AlignHCenter
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.normal
-        Layout.alignment: Qt.AlignHCenter
+        text: qsTr("No new devices — turn on scanning")
+        visible: availableRepeater.count === 0 && !BluetoothServices.isDiscovering && BluetoothServices.hasPaired
     }
 }

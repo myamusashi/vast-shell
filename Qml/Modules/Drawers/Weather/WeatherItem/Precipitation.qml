@@ -18,65 +18,59 @@ MaterialShape {
             fill: parent
             margins: 20
         }
-
         RowLayout {
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
             Icon {
-                type: Icon.Material
-                icon: "rainy"
-                font.pixelSize: Appearance.fonts.size.large * 1.5
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large * 1.5
+                icon: "rainy"
+                type: Icon.Material
             }
-
             StyledText {
-                text: qsTr("Precipitation")
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
-                color: Colours.m3Colors.m3OnSurface
+                text: qsTr("Precipitation")
             }
         }
-
         RowLayout {
             Layout.alignment: Qt.AlignCenter
             spacing: 0
 
             StyledText {
-                text: Weather.precipitationDaily
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
                 font.weight: Font.DemiBold
-                color: Colours.m3Colors.m3OnSurface
+                text: Weather.precipitationDaily
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignBottom
                 Layout.bottomMargin: 5
-                text: "mm"
+                color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
-                color: Colours.m3Colors.m3OnSurfaceVariant
+                text: "mm"
             }
         }
-
         RowLayout {
             Layout.alignment: Qt.AlignCenter
             spacing: Appearance.spacing.normal
 
             StyledText {
                 Layout.maximumWidth: 70
-                text: qsTr("Total rain for the day")
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
-                color: Colours.m3Colors.m3OnSurface
-                wrapMode: Text.WordWrap
                 maximumLineCount: 2
+                text: qsTr("Total rain for the day")
+                wrapMode: Text.WordWrap
             }
-
             Icon {
-                type: Icon.Material
-                icon: "rainy"
-                font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.normal
+                icon: "rainy"
+                type: Icon.Material
             }
         }
     }

@@ -9,6 +9,7 @@ import qs.Components.Effects
 PopupWidget {
     icon: "memory"
     text: qsTr("Memory")
+
     content: ColumnLayout {
         spacing: Appearance.spacing.normal
 
@@ -17,24 +18,21 @@ PopupWidget {
             spacing: Appearance.spacing.small
 
             StyledText {
-                text: qsTr("RAM Size")
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
+                text: qsTr("RAM Size")
             }
-
             Item {
                 Layout.fillWidth: true
             }
-
             StyledText {
-                text: (SystemUsage.memTotal / 1048576).toFixed(2) + " GB"
                 color: Colours.m3Colors.m3Green
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
+                text: (SystemUsage.memTotal / 1048576).toFixed(2) + " GB"
             }
         }
-
         Repeater {
             model: [
                 {
@@ -56,72 +54,68 @@ PopupWidget {
                 spacing: Appearance.spacing.small * 0.5
 
                 StyledText {
-                    text: row.modelData.text
+                    Layout.minimumWidth: 60
                     color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.7)
                     font.pixelSize: Appearance.fonts.size.normal
-                    Layout.minimumWidth: 60
+                    text: row.modelData.text
                 }
-
                 Item {
                     Layout.fillWidth: true
                 }
-
                 StyledText {
-                    text: row.modelData.value
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     horizontalAlignment: Text.AlignRight
+                    text: row.modelData.value
                 }
             }
         }
-
         SliderValues {
             Layout.fillWidth: true
             Layout.topMargin: Appearance.spacing.small
-            usedValue: SystemUsage.memUsed / 1048576
             totalValue: SystemUsage.memTotal / 1048576
+            usedValue: SystemUsage.memUsed / 1048576
         }
     }
 
     component SliderValues: Item {
         id: root
 
-        readonly property real usedPercent: totalValue > 0 ? (usedValue / totalValue) : 0
         readonly property real freePercent: 1 - usedPercent
-
-        property real usedValue: 0
         property real totalValue: 100
+        readonly property real usedPercent: totalValue > 0 ? (usedValue / totalValue) : 0
+        property real usedValue: 0
 
         implicitHeight: 12
 
         Rectangle {
             anchors.fill: parent
-            radius: height / 2
             color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
+            radius: height / 2
         }
-
         Rectangle {
             id: usedBar
+
             property color target: Colours.m3Colors.m3Green
 
-            BlendColor {
-                host: usedBar
-                target: usedBar.target
-            }
-
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
 
             Behavior on implicitWidth {
                 SpringAnimation {
-                    spring: 2
                     damping: 0.5
+                    spring: 2
                 }
+            }
+
+            BlendColor {
+                host: usedBar
+                target: usedBar.target
+            }
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                top: parent.top
             }
         }
     }

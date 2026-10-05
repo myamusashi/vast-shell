@@ -13,22 +13,6 @@ StyledTextInput {
     required property var carousel
     required property var controller
 
-    implicitHeight: 40
-    placeHolderText: qsTr("Search wallpapers")
-    toggleButtonVisible: false
-
-    onTextChanged: {
-        WallpaperFileModels.searchQuery = text;
-        if (carousel && carousel.count > 0)
-            carousel.currentIndex = 0;
-    }
-
-    Component.onCompleted: text = WallpaperFileModels.searchQuery
-
-    Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
-
-    onAccepted: selectCurrentWallpaper()
-
     function selectCurrentWallpaper(): void {
         if (!carousel || carousel.count === 0 || !controller)
             return;
@@ -42,6 +26,12 @@ StyledTextInput {
             controller.setWallpaper(selectedPath, selectedPath);
     }
 
+    implicitHeight: 40
+    placeHolderText: qsTr("Search wallpapers")
+    toggleButtonVisible: false
+
+    Component.onCompleted: text = WallpaperFileModels.searchQuery
+    Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Down) {
             carousel.moveCurrentIndex(1);
@@ -60,5 +50,11 @@ StyledTextInput {
             Qt.callLater(() => carousel.selectCurrentWallpaper());
             event.accepted = true;
         }
+    }
+    onAccepted: selectCurrentWallpaper()
+    onTextChanged: {
+        WallpaperFileModels.searchQuery = text;
+        if (carousel && carousel.count > 0)
+            carousel.currentIndex = 0;
     }
 }

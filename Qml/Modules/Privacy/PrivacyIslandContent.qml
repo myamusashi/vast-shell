@@ -13,20 +13,10 @@ import qs.Services
 RowLayout {
     id: root
 
-    anchors {
-        fill: parent
-        leftMargin: Appearance.margin.normal
-        rightMargin: Appearance.margin.normal
-    }
-
-    implicitWidth: childrenRect.width + Appearance.spacing.large
-    implicitHeight: childrenRect.height + Appearance.spacing.normal
-
     property real islandRadius: Appearance.rounding.full
 
     // "screenshare" | "audioIn" | "audioOut"
     required property string kind
-
     readonly property list<string> kindAppNames: {
         if (kind === "audioIn")
             return PrivacyServices.audioInAppNames;
@@ -34,34 +24,38 @@ RowLayout {
             return PrivacyServices.audioOutAppNames;
         return PrivacyServices.screenshareAppNames;
     }
-
     readonly property string kindIcon: kind === "audioIn" ? "mic" : kind === "audioOut" ? "volume_up" : "videocam"
     readonly property string kindLabel: kind === "audioIn" ? qsTr("Mic is on") : kind === "audioOut" ? qsTr("Speaker is on") : qsTr("Screen share is on")
 
+    implicitHeight: childrenRect.height + Appearance.spacing.normal
+    implicitWidth: childrenRect.width + Appearance.spacing.large
+
+    anchors {
+        fill: parent
+        leftMargin: Appearance.margin.normal
+        rightMargin: Appearance.margin.normal
+    }
     MaterialShape {
         Layout.alignment: Qt.AlignVCenter
-        implicitWidth: 10
-        implicitHeight: 10
-        shape: MaterialShape.Circle
         animationDuration: 0
         color: Colours.m3Colors.m3Error
+        implicitHeight: 10
+        implicitWidth: 10
+        shape: MaterialShape.Circle
     }
-
     Icon {
         Layout.alignment: Qt.AlignVCenter
-        type: Icon.Material
-        icon: root.kindIcon
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
+        icon: root.kindIcon
+        type: Icon.Material
     }
-
     StyledText {
         Layout.alignment: Qt.AlignVCenter
-        text: root.kindLabel
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
+        text: root.kindLabel
     }
-
     Repeater {
         model: root.kindAppNames
 
@@ -73,20 +67,19 @@ RowLayout {
 
             IconImage {
                 Layout.alignment: Qt.AlignVCenter
-                Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
-                visible: Configs.privacy.enablePrivacyIcon
-                source: IconUtils.iconForId(parent.modelData)
+                Layout.preferredWidth: 32
                 asynchronous: true
+                source: IconUtils.iconForId(parent.modelData)
+                visible: Configs.privacy.enablePrivacyIcon
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.maximumWidth: 160
-                text: parent.modelData
-                font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.normal
+                text: parent.modelData
             }
         }
     }

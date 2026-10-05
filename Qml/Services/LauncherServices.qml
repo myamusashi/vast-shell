@@ -9,32 +9,14 @@ import qs.Core.States
 import qs.Services
 
 Singleton {
-    property string launcherPage: ""
-    property string query: ""
-    property real lastEscapeAt: 0
-
-    readonly property bool isSubPage: launcherPage !== ""
-    readonly property string currentCrumb: crumbOf(launcherPage)
-
-    // Remainder after the current crumb; the whole query on the root page.
-    readonly property string pageFilter: {
-        const crumb = crumbOf(launcherPage);
-        if (crumb !== "" && (query === crumb || query.startsWith(crumb + " ")))
-            return query.slice(crumb.length).trim().toLowerCase();
-        return query.trim().toLowerCase();
-    }
-
-    readonly property string rowSearchText: {
-        const crumb = crumbOf(launcherPage);
-        if (crumb !== "" && (query === crumb || query.startsWith(crumb + " ")))
-            return query.slice(crumb.length).trim();
-        return query.trim();
-    }
-
     readonly property var appResults: SearchEngine.searchApps(DesktopEntries.applications.values, query)
-    property var filteredShotActions: launcherPage === "shotActions" ? [...ScreenCapture.screenshotOptions.values].filter(option => pageFilter === "" || option.name.toLowerCase().includes(pageFilter)) : []
-    property var filteredShotHistory: launcherPage === "shotHistory" ? [...ScreenCaptureHistory.screenshotFiles].filter(file => pageFilter === "" || (file.name ?? "").toLowerCase().includes(pageFilter)) : []
-
+    readonly property string currentCrumb: crumbOf(launcherPage)
+    readonly property string emptyText: {
+        const def = pageDef(launcherPage);
+        if (def && def.emptyText !== undefined)
+            return def.emptyText;
+        return qsTr("No applications found");
+    }
     readonly property var filteredItems: {
         const def = pageDef(launcherPage);
 
@@ -66,7 +48,11 @@ Singleton {
                     "entry": entry
                 })).concat(childRows(""));
     }
-
+    property var filteredShotActions: launcherPage === "shotActions" ? [...ScreenCapture.screenshotOptions.values].filter(option => pageFilter === "" || option.name.toLowerCase().includes(pageFilter)) : []
+    property var filteredShotHistory: launcherPage === "shotHistory" ? [...ScreenCaptureHistory.screenshotFiles].filter(file => pageFilter === "" || (file.name ?? "").toLowerCase().includes(pageFilter)) : []
+    readonly property bool isSubPage: launcherPage !== ""
+    property real lastEscapeAt: 0
+    property string launcherPage: ""
     readonly property var pageDefs: [
         {
             id: "screenshot",
@@ -102,89 +88,25 @@ Singleton {
         }
     ]
 
-    readonly property string emptyText: {
-        const def = pageDef(launcherPage);
-        if (def && def.emptyText !== undefined)
-            return def.emptyText;
-        return qsTr("No applications found");
+    // Remainder after the current crumb; the whole query on the root page.
+    readonly property string pageFilter: {
+        const crumb = crumbOf(launcherPage);
+        if (crumb !== "" && (query === crumb || query.startsWith(crumb + " ")))
+            return query.slice(crumb.length).trim().toLowerCase();
+        return query.trim().toLowerCase();
     }
-
     readonly property string placeHolderText: {
         const def = pageDef(launcherPage);
         if (def && def.placeHolder !== undefined)
             return def.placeHolder;
         return qsTr("Search");
     }
-
-    onQueryChanged: {
-        while (isSubPage) {
-            const crumb = crumbOf(launcherPage);
-            if (query === crumb || query.startsWith(crumb + " "))
-                break;
-            launcherPage = parentOf(launcherPage);
-        }
-    }
-
-    function pageDef(pageId: string): var {
-        for (let i = 0; i < pageDefs.length; i++) {
-            if (pageDefs[i].id === pageId)
-                return pageDefs[i];
-        }
-        return undefined;
-    }
-
-    function parentOf(pageId: string): string {
-        const def = pageDef(pageId);
-        return def ? def.parent : "";
-    }
-
-    function childPages(parentId: string): var {
-        return pageDefs.filter(def => def.parent === parentId);
-    }
-
-    function crumbOf(pageId: string): string {
-        const def = pageDef(pageId);
-        return def ? def.crumb : "";
-    }
-
-    function childRows(parentId: string): var {
-        return childPages(parentId).filter(child => pageFilter === "" || child.title.toLowerCase().includes(pageFilter)).map(child => ({
-                    "kind": "page",
-                    "name": child.title,
-                    "comment": child.comment,
-                    "icon": child.icon,
-                    "section": child.section ?? qsTr("Sections"),
-                    "page": child.id
-                }));
-    }
-
-    function enterPage(pageId: string): void {
-        launcherPage = pageId;
-        query = crumbOf(pageId);
-    }
-
-    function goBack(): void {
-        launcherPage = parentOf(launcherPage);
-        query = crumbOf(launcherPage);
-    }
-
-    function openPath(text: string): void {
-        launcherPage = "";
-        lastEscapeAt = 0;
-        query = text;
-        let advanced = true;
-        while (advanced) {
-            advanced = false;
-            const children = childPages(launcherPage);
-            for (let i = 0; i < children.length; i++) {
-                const crumb = children[i].crumb;
-                if (text === crumb || text.startsWith(crumb + " ")) {
-                    launcherPage = children[i].id;
-                    advanced = true;
-                    break;
-                }
-            }
-        }
+    property string query: ""
+    readonly property string rowSearchText: {
+        const crumb = crumbOf(launcherPage);
+        if (crumb !== "" && (query === crumb || query.startsWith(crumb + " ")))
+            return query.slice(crumb.length).trim();
+        return query.trim();
     }
 
     function activateRow(row: var): void {
@@ -206,15 +128,6 @@ Singleton {
         }
     }
 
-    function launch(entry: DesktopEntry): void {
-        const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];
-
-        Quickshell.execDetached({
-            command: cmd,
-            workingDirectory: entry.workingDirectory
-        });
-    }
-
     // Screenshot file helpers shared by the unified list rows.
     function captureFileKind(name: string): string {
         const dot = name.lastIndexOf(".");
@@ -225,7 +138,39 @@ Singleton {
             return "image";
         return "other";
     }
+    function childPages(parentId: string): var {
+        return pageDefs.filter(def => def.parent === parentId);
+    }
+    function childRows(parentId: string): var {
+        return childPages(parentId).filter(child => pageFilter === "" || child.title.toLowerCase().includes(pageFilter)).map(child => ({
+                    "kind": "page",
+                    "name": child.title,
+                    "comment": child.comment,
+                    "icon": child.icon,
+                    "section": child.section ?? qsTr("Sections"),
+                    "page": child.id
+                }));
+    }
+    function crumbOf(pageId: string): string {
+        const def = pageDef(pageId);
+        return def ? def.crumb : "";
+    }
+    function enterPage(pageId: string): void {
+        launcherPage = pageId;
+        query = crumbOf(pageId);
+    }
+    function goBack(): void {
+        launcherPage = parentOf(launcherPage);
+        query = crumbOf(launcherPage);
+    }
+    function launch(entry: DesktopEntry): void {
+        const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];
 
+        Quickshell.execDetached({
+            command: cmd,
+            workingDirectory: entry.workingDirectory
+        });
+    }
     function openCaptureFile(file: var): void {
         const kind = captureFileKind(file.name ?? "");
         const app = kind === "video" ? Configs.generals.apps.videoViewer : kind === "image" ? Configs.generals.apps.imageViewer : "";
@@ -234,5 +179,43 @@ Singleton {
         Quickshell.execDetached({
             command: [app, file.path]
         });
+    }
+    function openPath(text: string): void {
+        launcherPage = "";
+        lastEscapeAt = 0;
+        query = text;
+        let advanced = true;
+        while (advanced) {
+            advanced = false;
+            const children = childPages(launcherPage);
+            for (let i = 0; i < children.length; i++) {
+                const crumb = children[i].crumb;
+                if (text === crumb || text.startsWith(crumb + " ")) {
+                    launcherPage = children[i].id;
+                    advanced = true;
+                    break;
+                }
+            }
+        }
+    }
+    function pageDef(pageId: string): var {
+        for (let i = 0; i < pageDefs.length; i++) {
+            if (pageDefs[i].id === pageId)
+                return pageDefs[i];
+        }
+        return undefined;
+    }
+    function parentOf(pageId: string): string {
+        const def = pageDef(pageId);
+        return def ? def.parent : "";
+    }
+
+    onQueryChanged: {
+        while (isSubPage) {
+            const crumb = crumbOf(launcherPage);
+            if (query === crumb || query.startsWith(crumb + " "))
+                break;
+            launcherPage = parentOf(launcherPage);
+        }
     }
 }

@@ -8,29 +8,11 @@ import Quickshell.Services.Mpris
 Singleton {
     id: root
 
-    readonly property list<MprisPlayer> players: Mpris.players.values
     readonly property MprisPlayer active: players[index] ?? null
-
     property int index: 0
+    readonly property list<MprisPlayer> players: Mpris.players.values
 
     IpcHandler {
-        target: "mpris"
-
-        function togglePlaying(): void {
-            Players.active?.togglePlaying();
-        }
-        function next(): void {
-            Players.active?.next();
-        }
-        function previous(): void {
-            Players.active?.previous();
-        }
-        function stop(): void {
-            Players.active?.stop();
-        }
-        function status(): bool {
-            return Players.active?.isPlaying;
-        }
         function list(): string {
             const playerSummaries = [];
             const players = Players.players;
@@ -47,5 +29,22 @@ Singleton {
             }
             return JSON.stringify(playerSummaries);
         }
+        function next(): void {
+            Players.active?.next();
+        }
+        function previous(): void {
+            Players.active?.previous();
+        }
+        function status(): bool {
+            return Players.active?.isPlaying;
+        }
+        function stop(): void {
+            Players.active?.stop();
+        }
+        function togglePlaying(): void {
+            Players.active?.togglePlaying();
+        }
+
+        target: "mpris"
     }
 }

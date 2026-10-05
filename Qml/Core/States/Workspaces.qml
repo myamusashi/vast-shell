@@ -7,8 +7,21 @@ import Quickshell.Hyprland
 Singleton {
     id: hyprland
 
-    property list<HyprlandWorkspace> workspaces: sortWorkspaces(Hyprland.workspaces.values)
     property int maxWorkspace: findMaxId()
+    property list<HyprlandWorkspace> workspaces: sortWorkspaces(Hyprland.workspaces.values)
+
+    function findMaxId(): int {
+        let maxId = 1;
+        for (const w of workspaces)
+            maxId = Math.max(maxId, wsNumber(w));
+        return maxId;
+    }
+    function sortWorkspaces(ws) {
+        return [...ws].sort((a, b) => wsNumber(a) - wsNumber(b));
+    }
+    function switchWorkspace(w: int): void {
+        Hyprland.dispatch(`hl.dsp.focus({workspace = ${w}})`);
+    }
 
     // Numeric value of the workspace address (e.g. "1"). Non-numeric
     // (named/special) workspaces yield -1 so they sort before numbered ones,
@@ -18,24 +31,7 @@ Singleton {
         return isNaN(n) ? -1 : n;
     }
 
-    function sortWorkspaces(ws) {
-        return [...ws].sort((a, b) => wsNumber(a) - wsNumber(b));
-    }
-
-    function switchWorkspace(w: int): void {
-        Hyprland.dispatch(`hl.dsp.focus({workspace = ${w}})`);
-    }
-
-    function findMaxId(): int {
-        let maxId = 1;
-        for (const w of workspaces)
-            maxId = Math.max(maxId, wsNumber(w));
-        return maxId;
-    }
-
     Connections {
-        target: Hyprland
-
         function onRawEvent(event) {
             let eventName = event.name;
 
@@ -54,5 +50,7 @@ Singleton {
                 break;
             }
         }
+
+        target: Hyprland
     }
 }

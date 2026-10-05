@@ -11,13 +11,13 @@ import "./Volume"
 SettingsPageBase {
     id: root
 
-    pageTitle: qsTr("Volume")
-
     property int currentTab: 0
 
+    pageTitle: qsTr("Volume")
+
     ColumnLayout {
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.fillWidth: true
         Layout.margins: Appearance.margin.large
         spacing: Appearance.spacing.large
 
@@ -28,14 +28,13 @@ SettingsPageBase {
             Item {
                 Layout.fillWidth: true
             }
-
             ConnectedButtonGroup {
                 id: tabBar
 
                 Layout.alignment: Qt.AlignHCenter
-                fillWidth: true
                 Layout.fillWidth: true
-
+                currentIndex: root.currentTab
+                fillWidth: true
                 model: [
                     {
                         icon: "graphic_eq",
@@ -54,45 +53,48 @@ SettingsPageBase {
                         label: qsTr("Configuration")
                     }
                 ]
-                currentIndex: root.currentTab
+
                 onClicked: idx => root.currentTab = idx
             }
-
             Item {
                 Layout.fillWidth: true
             }
         }
-
         Loader {
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             active: root.currentTab === 0
             visible: root.currentTab === 0
-            sourceComponent: PlaybackTab {}
-        }
 
+            sourceComponent: PlaybackTab {
+            }
+        }
         Loader {
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             active: root.currentTab === 1
             visible: root.currentTab === 1
-            sourceComponent: OutputDevicesTab {}
-        }
 
+            sourceComponent: OutputDevicesTab {
+            }
+        }
         Loader {
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             active: root.currentTab === 2
             visible: root.currentTab === 2
-            sourceComponent: InputDevicesTab {}
-        }
 
+            sourceComponent: InputDevicesTab {
+            }
+        }
         Loader {
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             active: root.currentTab === 3
             visible: root.currentTab === 3
-            sourceComponent: ConfigurationTab {}
+
+            sourceComponent: ConfigurationTab {
+            }
         }
     }
 }

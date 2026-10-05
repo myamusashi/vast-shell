@@ -8,14 +8,7 @@ import Quickshell.Hyprland
 Singleton {
     id: root
 
-    readonly property var toplevels: Hyprland.toplevels
-    readonly property var workspaces: Hyprland.workspaces
-    readonly property var monitors: Hyprland.monitors
-    readonly property bool focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen
-
     readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel?.wayland?.activated ? Hyprland.activeToplevel : null // qmllint disable
-    readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
-    readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
     readonly property string activeWsAddress: {
         const monAddr = focusedMonitor?.activeWorkspace?.address ?? focusedMonitor?.lastIpcObject.activeWorkspace?.address ?? "";
         if (monAddr !== undefined && monAddr !== null && monAddr !== "")
@@ -26,21 +19,21 @@ Singleton {
         const n = parseInt(activeWsAddress, 10);
         return isNaN(n) || n <= 0 ? 1 : n;
     }
+    readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
+    readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
+    readonly property bool focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen
+    property var monitorData: ({})
+    readonly property var monitors: Hyprland.monitors
+    readonly property var toplevels: Hyprland.toplevels
+    readonly property var workspaces: Hyprland.workspaces
 
-    function workspaceAddress(ws: var): string {
-        if (!ws)
-            return "";
-        const addr = ws.address ?? ws.lastIpcObject?.address ?? null;
-        if (addr !== undefined && addr !== null && addr !== "")
-            return String(addr);
-        if (ws.id !== undefined && ws.id !== null)
-            return String(ws.id);
-        return "";
+    signal configReloaded
+
+    function dispatch(request: string): void {
+        Hyprland.dispatch(request);
     }
-
-    function workspaceNumber(ws: var): int {
-        const n = parseInt(workspaceAddress(ws), 10);
-        return isNaN(n) ? -1 : n;
+    function monitorFor(screen: ShellScreen): HyprlandMonitor {
+        return Hyprland.monitorFor(screen);
     }
 
     // Address of the workspace a toplevel lives on. The resolved workspace
@@ -67,22 +60,22 @@ Singleton {
         }
         return workspaceAddress(tl.workspace);
     }
-
-    property var monitorData: ({})
-
-    function dispatch(request: string): void {
-        Hyprland.dispatch(request);
+    function workspaceAddress(ws: var): string {
+        if (!ws)
+            return "";
+        const addr = ws.address ?? ws.lastIpcObject?.address ?? null;
+        if (addr !== undefined && addr !== null && addr !== "")
+            return String(addr);
+        if (ws.id !== undefined && ws.id !== null)
+            return String(ws.id);
+        return "";
     }
-
-    function monitorFor(screen: ShellScreen): HyprlandMonitor {
-        return Hyprland.monitorFor(screen);
+    function workspaceNumber(ws: var): int {
+        const n = parseInt(workspaceAddress(ws), 10);
+        return isNaN(n) ? -1 : n;
     }
-
-    signal configReloaded
 
     Connections {
-        target: Hyprland
-
         function onRawEvent(event: HyprlandEvent): void {
             const n = event.name;
             if (n.endsWith("v2"))
@@ -100,10 +93,12 @@ Singleton {
             else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
                 Hyprland.refreshToplevels();
         }
-    }
 
+        target: Hyprland
+    }
     Instantiator {
         model: root.monitors
+
         delegate: QtObject {
             required property HyprlandMonitor modelData
 

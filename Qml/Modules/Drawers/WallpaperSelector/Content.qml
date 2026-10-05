@@ -11,9 +11,8 @@ import qs.Services
 ColumnLayout {
     id: root
 
-    required property var controller
-
     property alias carousel: wallpaperCarousel
+    required property var controller
     property alias searchField: searchField
 
     spacing: Appearance.spacing.normal
@@ -25,7 +24,6 @@ ColumnLayout {
         carousel: wallpaperCarousel
         controller: root.controller
     }
-
     ConnectedButtonGroup {
         Layout.alignment: Qt.AlignHCenter
         currentIndex: root.controller?.wallpaperType ?? 0
@@ -36,21 +34,19 @@ ColumnLayout {
             Qt.callLater(() => wallpaperCarousel.selectCurrentWallpaper());
         }
     }
-
     Carousel {
         id: wallpaperCarousel
 
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.fillWidth: true
         controller: root.controller
-        visibleWallpapers: root.controller?.visibleWallpapers ?? []
         thumbnailAvailability: root.controller?.thumbnailAvailability ?? ({})
+        visibleWallpapers: root.controller?.visibleWallpapers ?? []
     }
-
     StyledText {
         Layout.alignment: Qt.AlignHCenter
-        text: wallpaperCarousel.count > 0 ? (wallpaperCarousel.currentIndex + 1) + " / " + wallpaperCarousel.count : "0 / 0"
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.small
+        text: wallpaperCarousel.count > 0 ? (wallpaperCarousel.currentIndex + 1) + " / " + wallpaperCarousel.count : "0 / 0"
     }
 }

@@ -10,7 +10,6 @@ Singleton {
     function isVideo(path) {
         return /\.(mp4|mkv|webm|mov|avi|m4v)$/i.test(String(path ?? ""));
     }
-
     function kindOf(path) {
         if (isVideo(path))
             return "video";
@@ -18,11 +17,9 @@ Singleton {
             return "image";
         return "unknown";
     }
-
     function staticPathFor(path) {
         return String(path ?? "");
     }
-
     function videoThumbnailPathFor(path, cacheDirectory) {
         const source = String(path ?? "");
         if (!isVideo(source))

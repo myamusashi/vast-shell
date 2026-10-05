@@ -11,49 +11,20 @@ import qs.Services
 ColumnLayout {
     id: root
 
-    focus: true
-    Keys.onPressed: event => handleKey(event)
-
-    required property var uiState
-
     readonly property int currentId: {
         if (!entryGrid || !entryGrid.entryList || entryGrid.entryList.currentIndex < 0 || !entryGrid.entryList.currentItem)
             return -1;
         return entryGrid.entryList.currentItem.entryId; // qmllint disable
     }
-
-    property alias searchField: searchBar.searchField
-    property alias entryList: entryGrid.entryList
-
     readonly property Item defaultFocusItem: Configs.clipboard.enableVimKeybinds ? root : searchBar.searchField
+    property alias entryList: entryGrid.entryList
+    property alias searchField: searchBar.searchField
+    required property var uiState
 
     function focusDefault(): void {
         if (defaultFocusItem)
             defaultFocusItem.forceActiveFocus();
     }
-
-    function restoreFocus(): void {
-        focusRestore.attempts = 0;
-        focusRestore.restart();
-    }
-
-    Timer {
-        id: focusRestore
-
-        property int attempts: 0
-
-        interval: 30
-        repeat: true
-
-        onTriggered: {
-            root.focusDefault();
-            if (root.defaultFocusItem.activeFocus || ++focusRestore.attempts >= 10)
-                focusRestore.running = false;
-        }
-    }
-
-    spacing: 0
-
     function handleKey(event: var): void {
         if (!entryGrid || !entryGrid.entryList)
             return;
@@ -198,10 +169,31 @@ ColumnLayout {
             break;
         }
     }
+    function restoreFocus(): void {
+        focusRestore.attempts = 0;
+        focusRestore.restart();
+    }
 
+    focus: true
+    spacing: 0
+
+    Keys.onPressed: event => handleKey(event)
+
+    Timer {
+        id: focusRestore
+
+        property int attempts: 0
+
+        interval: 30
+        repeat: true
+
+        onTriggered: {
+            root.focusDefault();
+            if (root.defaultFocusItem.activeFocus || ++focusRestore.attempts >= 10)
+                focusRestore.running = false;
+        }
+    }
     Connections {
-        target: root.uiState
-
         function onDeleteConfirmed(ids: var): void {
             const removed = ClipboardManager.removeMany(ids);
             if (removed > 0) {
@@ -212,43 +204,42 @@ ColumnLayout {
             root.uiState.visualActive = false;
             entryGrid.entryList.currentIndex = Math.min(entryGrid.entryList.currentIndex, entryGrid.entryList.count - 1);
         }
-
         function onIsDeletePendingChanged() {
             if (root.uiState.isDeletePending || !GlobalStates.isClipboardOpen)
                 return;
             root.restoreFocus();
         }
-    }
 
+        target: root.uiState
+    }
     SearchBar {
         id: searchBar
 
         Layout.fillWidth: true
+        currentId: root.currentId
         entryList: entryGrid.entryList
         uiState: root.uiState
-        currentId: root.currentId
+
         onKeyPressed: event => root.handleKey(event)
     }
-
     RowLayout {
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.fillWidth: true
         spacing: Appearance.spacing.small
 
         EntryGrid {
             id: entryGrid
 
-            Layout.preferredWidth: root.uiState.listWidth
             Layout.fillHeight: true
-            uiState: root.uiState
+            Layout.preferredWidth: root.uiState.listWidth
             searchText: searchBar.searchField.text
+            uiState: root.uiState
         }
-
         Loader {
             id: previewLoader
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             active: Configs.clipboard.enablePreview
             visible: active
 
@@ -257,15 +248,15 @@ ColumnLayout {
                 spacing: Appearance.spacing.small
 
                 Rectangle {
-                    Layout.preferredWidth: 1
                     Layout.fillHeight: true
+                    Layout.preferredWidth: 1
                     color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
                 }
-
                 Preview {
-                    Layout.preferredWidth: root.uiState.previewWidth
                     Layout.fillHeight: true
+                    Layout.preferredWidth: root.uiState.previewWidth
                     entryId: root.currentId
+
                     onCopyRequested: id => ClipboardManager.copyToClipboard(id)
                     onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
                 }

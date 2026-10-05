@@ -14,11 +14,10 @@ import qs.Services
 Item {
     id: root
 
-    required property var entryList
-    required property var uiState
     required property int currentId
-
+    required property var entryList
     property alias searchField: searchField
+    required property var uiState
 
     signal keyPressed(var event)
 
@@ -28,16 +27,15 @@ Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 1
         color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
+        height: 1
     }
-
     RowLayout {
+        anchors.bottomMargin: Appearance.margin.smaller
         anchors.fill: parent
         anchors.leftMargin: Appearance.margin.large
         anchors.rightMargin: Appearance.margin.large
         anchors.topMargin: Appearance.margin.smaller
-        anchors.bottomMargin: Appearance.margin.smaller
         spacing: Appearance.spacing.smaller
 
         Icon {
@@ -45,15 +43,14 @@ Item {
 
             property color target: searchField.isFocused ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
 
+            font.pixelSize: Appearance.fonts.size.larger
+            icon: "search"
+
             BlendColor {
                 host: searchIcon
                 target: searchIcon.target
             }
-
-            icon: "search"
-            font.pixelSize: Appearance.fonts.size.larger
         }
-
         StyledTextInput {
             id: searchField
 
@@ -62,19 +59,6 @@ Item {
             autoFocus: !Configs.clipboard.enableVimKeybinds
             placeHolderText: qsTr("Search clipboard…")
             toggleButtonVisible: false
-
-            DebouncedValue {
-                id: searchDebounce
-
-                interval: 150
-                value: searchField.text
-                onDebouncedValueChanged: {
-                    if (searchField.text.length === 0)
-                        ClipboardManager.model.setFilter("");
-                    else
-                        ClipboardManager.model.setFilter(searchField.text);
-                }
-            }
 
             onAccepted: {
                 if (Configs.clipboard.enableVimKeybinds && !searchField.isFocused) {
@@ -86,22 +70,33 @@ Item {
                         GlobalStates.isClipboardOpen = false;
                 }
             }
-
             onKeyPressed: event => root.keyPressed(event)
-        }
 
+            DebouncedValue {
+                id: searchDebounce
+
+                interval: 150
+                value: searchField.text
+
+                onDebouncedValueChanged: {
+                    if (searchField.text.length === 0)
+                        ClipboardManager.model.setFilter("");
+                    else
+                        ClipboardManager.model.setFilter(searchField.text);
+                }
+            }
+        }
         StyledText {
-            text: (root.entryList.currentPage + 1) + " / " + root.entryList.totalPages
-            font.pixelSize: Appearance.fonts.size.small
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.small
+            text: (root.entryList.currentPage + 1) + " / " + root.entryList.totalPages
             visible: root.entryList.totalPages > 0 && searchField.text.length === 0 && !root.uiState.visualActive
         }
-
         StyledText {
-            text: qsTr("VISUAL") + " " + root.entryList.visualSelectableCount
-            font.pixelSize: Appearance.fonts.size.small
-            font.bold: true
             color: Colours.m3Colors.m3Primary
+            font.bold: true
+            font.pixelSize: Appearance.fonts.size.small
+            text: qsTr("VISUAL") + " " + root.entryList.visualSelectableCount
             visible: root.uiState.visualActive
         }
     }

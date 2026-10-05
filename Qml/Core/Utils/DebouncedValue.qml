@@ -4,17 +4,18 @@ import QtQuick
 Scope {
     id: root
 
-    property string value: ""
     property string debouncedValue: ""
     property int interval: 200
+    property string value: ""
 
     onValueChanged: timer.restart()
 
     Timer {
         id: timer
 
-        repeat: false
         interval: root.interval
+        repeat: false
+
         onTriggered: root.debouncedValue = root.value
     }
 }

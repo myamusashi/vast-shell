@@ -18,114 +18,30 @@ import qs.Services
 StyledRect {
     id: root
 
-    property alias widgetHeight: root.implicitHeight
-    readonly property real horizontalPadding: Appearance.spacing.normal
-    readonly property real shadowPadding: 12
-    readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
-
     property var activeIconItem: null
     property var activeMenu: null
-    property real menuX: 0
-    property bool menuShowing: false
+    readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
+    readonly property real horizontalPadding: Appearance.spacing.normal
     property bool menuMapped: false
+    property bool menuShowing: false
+    property real menuX: 0
+    readonly property real shadowPadding: 12
+    property alias widgetHeight: root.implicitHeight
 
-    implicitWidth: visible ? systemTrayRow.width + horizontalPadding * 1.2 : 0
-    implicitHeight: 35
-    radius: Appearance.rounding.small
-    color: "transparent"
-    visible: SystemTray.items.values.length > 0
-
-    Behavior on implicitWidth {
-        NAnim {}
+    function closeMenu(): void {
+        closeTimer.stop();
+        hideTimer.stop();
+        if (!root.menuMapped)
+            return;
+        root.menuShowing = false;
+        hideTimer.restart();
     }
-
-    Row {
-        id: systemTrayRow
-
-        anchors.centerIn: parent
-        spacing: Appearance.spacing.small
-
-        Repeater {
-            model: SystemTray.items.values
-            delegate: Item {
-                id: delegateTray
-
-                required property SystemTrayItem modelData
-                property string iconSource: IconUtils.iconSource(modelData ? modelData.icon : "")
-
-                width: 25
-                height: 25
-
-                StyledRect {
-                    id: bgTrayIcon
-                    property color target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
-
-                    BlendColor {
-                        host: bgTrayIcon
-                        target: bgTrayIcon.target
-                    }
-
-                    width: 25
-                    height: 25
-                    radius: Appearance.rounding.normal
-                }
-
-                IconImage {
-                    anchors.centerIn: parent
-                    width: Appearance.fonts.size.large * 1.2
-                    height: Appearance.fonts.size.large * 1.2
-                    source: delegateTray.iconSource
-                    asynchronous: true
-                    backer.cache: true
-                    smooth: true
-                    mipmap: true
-
-                    layer.enabled: true
-                    layer.effect: MultiEffect {
-                        autoPaddingEnabled: false
-                        colorization: 1.0
-                        colorizationColor: {
-                            if (trayItemArea.containsMouse)
-                                return Colours.m3Colors.m3OnPrimary;
-
-                            return Colours.m3Colors.m3Primary;
-                        }
-                    }
-                }
-
-                MArea {
-                    id: trayItemArea
-
-                    anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onEntered: root.openMenuFor(delegateTray.modelData, delegateTray)
-                    onExited: root.scheduleClose()
-                    onClicked: mouse => {
-                        if (!delegateTray.modelData || mouse.button !== Qt.LeftButton)
-                            return;
-                        if (delegateTray.modelData.hasMenu && delegateTray.modelData.onlyMenu)
-                            return;
-                        delegateTray.modelData.activate();
-                    }
-                }
-            }
-        }
+    function finishClose(): void {
+        closeTimer.stop();
+        root.menuMapped = false;
+        root.activeIconItem = null;
+        root.activeMenu = null;
     }
-
-    Timer {
-        id: closeTimer
-        interval: Appearance.animations.durations.normal
-        onTriggered: root.closeMenu()
-    }
-
-    Timer {
-        id: hideTimer
-        interval: Appearance.animations.durations.expressiveDefaultSpatial
-        onTriggered: root.finishClose()
-    }
-
     function openMenuFor(item, iconItem): void {
         closeTimer.stop();
         hideTimer.stop();
@@ -141,62 +57,145 @@ StyledRect {
         root.menuShowing = true;
         root.menuMapped = true;
     }
-
     function scheduleClose(): void {
         if (!root.menuMapped)
             return;
         closeTimer.restart();
     }
 
-    function closeMenu(): void {
-        closeTimer.stop();
-        hideTimer.stop();
-        if (!root.menuMapped)
-            return;
-        root.menuShowing = false;
-        hideTimer.restart();
+    color: "transparent"
+    implicitHeight: 35
+    implicitWidth: visible ? systemTrayRow.width + horizontalPadding * 1.2 : 0
+    radius: Appearance.rounding.small
+    visible: SystemTray.items.values.length > 0
+
+    Behavior on implicitWidth {
+        NAnim {
+        }
     }
 
-    function finishClose(): void {
-        closeTimer.stop();
-        root.menuMapped = false;
-        root.activeIconItem = null;
-        root.activeMenu = null;
-    }
+    Row {
+        id: systemTrayRow
 
+        anchors.centerIn: parent
+        spacing: Appearance.spacing.small
+
+        Repeater {
+            model: SystemTray.items.values
+
+            delegate: Item {
+                id: delegateTray
+
+                property string iconSource: IconUtils.iconSource(modelData ? modelData.icon : "")
+                required property SystemTrayItem modelData
+
+                height: 25
+                width: 25
+
+                StyledRect {
+                    id: bgTrayIcon
+
+                    property color target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
+
+                    height: 25
+                    radius: Appearance.rounding.normal
+                    width: 25
+
+                    BlendColor {
+                        host: bgTrayIcon
+                        target: bgTrayIcon.target
+                    }
+                }
+                IconImage {
+                    anchors.centerIn: parent
+                    asynchronous: true
+                    backer.cache: true
+                    height: Appearance.fonts.size.large * 1.2
+                    layer.enabled: true
+                    mipmap: true
+                    smooth: true
+                    source: delegateTray.iconSource
+                    width: Appearance.fonts.size.large * 1.2
+
+                    layer.effect: MultiEffect {
+                        autoPaddingEnabled: false
+                        colorization: 1.0
+                        colorizationColor: {
+                            if (trayItemArea.containsMouse)
+                                return Colours.m3Colors.m3OnPrimary;
+
+                            return Colours.m3Colors.m3Primary;
+                        }
+                    }
+                }
+                MArea {
+                    id: trayItemArea
+
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
+
+                    onClicked: mouse => {
+                        if (!delegateTray.modelData || mouse.button !== Qt.LeftButton)
+                            return;
+                        if (delegateTray.modelData.hasMenu && delegateTray.modelData.onlyMenu)
+                            return;
+                        delegateTray.modelData.activate();
+                    }
+                    onEntered: root.openMenuFor(delegateTray.modelData, delegateTray)
+                    onExited: root.scheduleClose()
+                }
+            }
+        }
+    }
+    Timer {
+        id: closeTimer
+
+        interval: Appearance.animations.durations.normal
+
+        onTriggered: root.closeMenu()
+    }
+    Timer {
+        id: hideTimer
+
+        interval: Appearance.animations.durations.expressiveDefaultSpatial
+
+        onTriggered: root.finishClose()
+    }
     LazyLoader {
         loading: true
-        component: PanelWindow {
-            anchors {
-                top: true
-                left: true
-                right: true
-                bottom: true
-            }
 
+        component: PanelWindow {
+            HyprlandWindow.visibleMask: mask // qmllint disable
+
+            WlrLayershell.layer: menuSurface.open ? WlrLayer.Top : WlrLayer.Bottom
+            WlrLayershell.namespace: "shell:drawers"
+            aboveWindows: false
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
-            aboveWindows: false
-            margins { // qmllint disable
-                right: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
-            }
-            WlrLayershell.namespace: "shell:drawers"
-            WlrLayershell.layer: menuSurface.open ? WlrLayer.Top : WlrLayer.Bottom
-            HyprlandWindow.visibleMask: mask // qmllint disable
 
             mask: Region {
                 item: menuSurface
             }
 
+            anchors {
+                bottom: true
+                left: true
+                right: true
+                top: true
+            }
+            margins { // qmllint disable
+                right: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
+            }
             Connections {
-                target: root
-
                 function onActiveMenuChanged(): void {
                     if (root.activeMenu !== null)
                         menuSurface.openMenu(root.activeMenu);
                 }
-            }
 
+                target: root
+            }
             Item {
                 id: panelRoot
 
@@ -208,10 +207,10 @@ StyledRect {
                     readonly property real maxX: panelRoot.width - menuSurface.width - root.shadowPadding
                     readonly property real maxY: panelRoot.height - menuSurface.height - root.shadowPadding
 
+                    height: menuSurface.height + root.shadowPadding * 2
+                    width: menuSurface.width + root.shadowPadding * 2
                     x: Math.max(root.shadowPadding, Math.min(root.menuX - root.shadowPadding - menuSurface.bodyInsetX, maxX))
                     y: Math.min(root.barBottom - root.shadowPadding, maxY)
-                    width: menuSurface.width + root.shadowPadding * 2
-                    height: menuSurface.height + root.shadowPadding * 2
 
                     Behavior on x {
                         enabled: root.menuMapped
@@ -225,16 +224,16 @@ StyledRect {
                     TrayMenuStack {
                         id: menuSurface
 
+                        open: root.menuShowing
                         x: root.shadowPadding
                         y: root.shadowPadding
-                        open: root.menuShowing
 
                         onEntered: {
                             closeTimer.stop();
                             hideTimer.stop();
                         }
-                        onExited: root.scheduleClose()
                         onEntryActivated: root.closeMenu()
+                        onExited: root.scheduleClose()
                     }
                 }
             }

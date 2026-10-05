@@ -13,37 +13,35 @@ import "Components"
 Drawer {
     id: root
 
-    edge: Qt.TopEdge
     alignment: Qt.AlignRight
-    open: Notifs.popups.length > 0
-    depth: open ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
-    length: Math.min(Math.round(parent.width * 0.22), 360)
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: open ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
+    edge: Qt.TopEdge
+    filletRadius: 40
+    length: Math.min(Math.round(parent.width * 0.22), 360)
+    open: Notifs.popups.length > 0
 
     ListView {
         id: notifListView
 
         anchors.fill: parent
-        spacing: Appearance.spacing.normal
         boundsBehavior: Flickable.StopAtBounds
-        clip: true
-
-        model: ScriptModel {
-            values: [...Notifs.popups]
-        }
-
         cacheBuffer: implicitHeight
+        clip: true
+        spacing: Appearance.spacing.normal
 
         delegate: Wrapper {
-            required property var modelData
             required property int index
+            required property var modelData
 
             isPopup: true
             notif: modelData
+        }
+        model: ScriptModel {
+            values: [...Notifs.popups]
         }
     }
 }

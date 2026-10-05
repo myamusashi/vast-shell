@@ -10,17 +10,21 @@ RowLayout {
     layoutDirection: Qt.RightToLeft
     spacing: Appearance.spacing.normal
 
-    Wid.Clock {}
+    Wid.Clock {
+    }
     Wid.NotificationDots {
         implicitHeight: parent.height
     }
-    Wid.Tray {}
-    Wid.KdeConnect {}
-    Wid.Battery {
-        widthBattery: 36
-        heightBattery: 18
+    Wid.Tray {
     }
-    Wid.Sound {}
+    Wid.KdeConnect {
+    }
+    Wid.Battery {
+        heightBattery: 18
+        widthBattery: 36
+    }
+    Wid.Sound {
+    }
     Wid.Privacy {
         visible: Configs.privacy.enablePrivacyIndicator
     }

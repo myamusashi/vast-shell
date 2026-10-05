@@ -13,30 +13,31 @@ SettingsPageBase {
         title: qsTr("Notification Limits")
 
         SettingRow {
-            label: qsTr("Maximum Notifications:")
             description: qsTr("Maximum number of stored notifications to keep.")
+            label: qsTr("Maximum Notifications:")
 
             StyledSlide {
-                from: 10
-                to: 500
-                stepSize: 10
-                value: Configs.notification.maximumNotification
-                onMoved: Configs.notification.maximumNotification = value
                 Layout.preferredWidth: 200
+                from: 10
+                stepSize: 10
+                to: 500
+                value: Configs.notification.maximumNotification
+
+                onMoved: Configs.notification.maximumNotification = value
             }
         }
-
         SettingRow {
-            label: qsTr("Maximum Notification Age (Days):")
             description: qsTr("Auto-remove notifications older than this many days.")
+            label: qsTr("Maximum Notification Age (Days):")
 
             StyledSlide {
-                from: 1
-                to: 30
-                stepSize: 1
-                value: Configs.notification.maximumNotificationAge / 86400000
-                onMoved: Configs.notification.maximumNotificationAge = value * 86400000
                 Layout.preferredWidth: 200
+                from: 1
+                stepSize: 1
+                to: 30
+                value: Configs.notification.maximumNotificationAge / 86400000
+
+                onMoved: Configs.notification.maximumNotificationAge = value * 86400000
             }
         }
     }

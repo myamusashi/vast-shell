@@ -7,12 +7,26 @@ Scope {
     id: root
 
     property string currentText: ""
-    property bool showFailure: false
     property bool inProgress: false
+    property bool showFailure: false
 
-    signal submitted(string secret)
     signal cancelled
+    signal submitted(string secret)
 
+    function cancel() {
+        clear();
+        inProgress = false;
+        cancelled();
+    }
+    function clear() {
+        currentText = "";
+        showFailure = false;
+    }
+    function fail() {
+        clear();
+        showFailure = true;
+        inProgress = false;
+    }
     function submitSecret() {
         if (currentText === "")
             return false;
@@ -20,22 +34,5 @@ Scope {
         inProgress = true;
         submitted(currentText);
         return true;
-    }
-
-    function clear() {
-        currentText = "";
-        showFailure = false;
-    }
-
-    function fail() {
-        clear();
-        showFailure = true;
-        inProgress = false;
-    }
-
-    function cancel() {
-        clear();
-        inProgress = false;
-        cancelled();
     }
 }

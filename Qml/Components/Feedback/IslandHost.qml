@@ -6,13 +6,13 @@ import Quickshell
 Scope {
     id: root
 
-    required property var service
-    required property string propertyName
     required property Component content
+    required property string propertyName
+    required property var service
 
     Binding {
-        target: root.service
         property: root.propertyName
+        target: root.service
         value: root.content
     }
 }

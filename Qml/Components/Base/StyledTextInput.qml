@@ -13,76 +13,55 @@ import "TextInputComponents" as TI
 Item {
     id: root
 
-    property alias toggleButtonVisible: toggleButton.visible
-    property alias text: passwordInput.text
-    readonly property alias isFocused: passwordInput.activeFocus
-
-    readonly property bool hasSelection: passwordInput.selectionStart !== passwordInput.selectionEnd
-    readonly property bool selectedAll: passwordInput.selectionStart === 0 && passwordInput.selectionEnd === passwordInput.text.length && passwordInput.text.length > 0
-    readonly property int selectionStart: passwordInput.selectionStart
-    readonly property int selectionEnd: passwordInput.selectionEnd
-
-    readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
-    readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false
-    readonly property bool showFailure: root.pam ? root.pam.showFailure : false
-
-    readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
-    readonly property int dotStep: 24
-    readonly property bool hasText: passwordInput.text.length > 0
-
-    property bool keyboardFocusable: true
     property bool autoFocus: true
-
-    property string placeHolderText: ""
+    readonly property int dotStep: 24
+    readonly property bool hasSelection: passwordInput.selectionStart !== passwordInput.selectionEnd
+    readonly property bool hasText: passwordInput.text.length > 0
+    readonly property alias isFocused: passwordInput.activeFocus
+    readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
+    property bool keyboardFocusable: true
     property var pam: null
     property bool passwordMode: false
-
-    function requestKeyboardFocus() {
-        passwordInput.forceActiveFocus();
-    }
-
-    function forceActiveFocus() {
-        passwordInput.forceActiveFocus();
-    }
+    property string placeHolderText: ""
+    readonly property bool selectedAll: passwordInput.selectionStart === 0 && passwordInput.selectionEnd === passwordInput.text.length && passwordInput.text.length > 0
+    readonly property int selectionEnd: passwordInput.selectionEnd
+    readonly property int selectionStart: passwordInput.selectionStart
+    readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
+    readonly property bool showFailure: root.pam ? root.pam.showFailure : false
+    property alias text: passwordInput.text
+    property alias toggleButtonVisible: toggleButton.visible
+    readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false
 
     signal accepted
     signal editingFinished
     signal keyPressed(var event)
 
-    implicitWidth: 240
+    function forceActiveFocus() {
+        passwordInput.forceActiveFocus();
+    }
+    function requestKeyboardFocus() {
+        passwordInput.forceActiveFocus();
+    }
+
     implicitHeight: 44
+    implicitWidth: 240
 
     TextInput {
         id: passwordInput
 
-        width: 0
-        height: 0
-
-        echoMode: TextInput.Password
-        passwordMaskDelay: 0
-        inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
-        enabled: !root.unlockInProgress
-        text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
         clip: true
+        echoMode: TextInput.Password
+        enabled: !root.unlockInProgress
+        height: 0
+        inputMethodHints: Qt.ImhSensitiveData | Qt.ImhNoPredictiveText
+        passwordMaskDelay: 0
+        text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
+        width: 0
 
-        onTextChanged: {
-            if (root.pam)
-                root.pam.currentText = text;
-
-            const len = text.length;
-            while (dotsModel.count < len)
-                dotsModel.append({});
-            while (dotsModel.count > len)
-                dotsModel.remove(dotsModel.count - 1);
+        Component.onCompleted: {
+            if (root.autoFocus)
+                forceActiveFocus();
         }
-
-        Keys.onReturnPressed: event => {
-            if (root.pam && text.length > 0)
-                root.pam.tryUnlock();
-            root.accepted();
-            event.accepted = true;
-        }
-
         Keys.onEscapePressed: event => {
             root.keyPressed(event);
             if (event.accepted)
@@ -94,7 +73,6 @@ Item {
                 event.accepted = true;
             }
         }
-
         Keys.onPressed: event => {
             // Let consumers (e.g. the clipboard vim keybinds) intercept and
             // accept the key before it becomes text input.
@@ -107,139 +85,142 @@ Item {
                 event.accepted = true;
             }
         }
+        Keys.onReturnPressed: event => {
+            if (root.pam && text.length > 0)
+                root.pam.tryUnlock();
+            root.accepted();
+            event.accepted = true;
+        }
+        onTextChanged: {
+            if (root.pam)
+                root.pam.currentText = text;
 
-        Component.onCompleted: {
-            if (root.autoFocus)
-                forceActiveFocus();
+            const len = text.length;
+            while (dotsModel.count < len)
+                dotsModel.append({});
+            while (dotsModel.count > len)
+                dotsModel.remove(dotsModel.count - 1);
         }
     }
-
     Connections {
-        target: root.pam
-        enabled: root.pam !== null
-
         function onCurrentTextChanged() {
             if (passwordInput.text !== root.pam.currentText)
                 passwordInput.text = root.pam.currentText;
         }
-    }
 
+        enabled: root.pam !== null
+        target: root.pam
+    }
     ListModel {
         id: dotsModel
     }
-
     Rectangle {
         id: background
 
         anchors.fill: parent
-        radius: height / 2
         color: Colours.m3Colors.m3SurfaceVariant
         opacity: 0.4
+        radius: height / 2
     }
-
     Rectangle {
         anchors.fill: parent
-        radius: height / 2
         color: "transparent"
-        border {
-            color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Primary
-            width: root.isFocused ? 2 : 0
-        }
         opacity: root.isFocused ? 1 : 0
+        radius: height / 2
+
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
             }
         }
-    }
 
+        border {
+            color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Primary
+            width: root.isFocused ? 2 : 0
+        }
+    }
     Loader {
+        active: !root.hasText
+        sourceComponent: placeHolderComponent
 
         anchors {
-            verticalCenter: parent.verticalCenter
             left: parent.left
             leftMargin: Appearance.margin.large
             right: parent.right
             rightMargin: Appearance.margin.large
+            verticalCenter: parent.verticalCenter
         }
-        active: !root.hasText
-        sourceComponent: placeHolderComponent
     }
-
     Component {
         id: placeHolderComponent
 
         StyledText {
-            text: root.placeHolderText !== "" ? root.placeHolderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
             color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.large
+            text: root.placeHolderText !== "" ? root.placeHolderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
         }
     }
-
     Loader {
         id: passwordModeLoader
 
-        anchors.fill: parent
         active: root.passwordMode
+        anchors.fill: parent
         sourceComponent: passwordModeComponent
     }
-
     Component {
         id: passwordModeComponent
 
         TI.PasswordInput {
+            dotsModel: dotsModel
+            hasSelection: root.hasSelection
             isFocused: root.isFocused
             isUnlocked: root.isUnlocked
-            unlockInProgress: root.unlockInProgress
-            hasSelection: root.hasSelection
             passwordInput: passwordInput
-            toggleButton: toggleButton
-            selectionStart: root.selectionStart
             selectionEnd: root.selectionEnd
-            dotsModel: dotsModel
+            selectionStart: root.selectionStart
+            toggleButton: toggleButton
+            unlockInProgress: root.unlockInProgress
         }
     }
-
     Loader {
         id: visibleModeLoader
 
-        anchors.fill: parent
         active: !root.passwordMode && root.hasText
+        anchors.fill: parent
         sourceComponent: visibleModeComponent
     }
-
     Component {
         id: visibleModeComponent
 
         TI.VisibleInput {
-            isFocused: root.isFocused
-            unlockInProgress: root.unlockInProgress
             hasSelection: root.hasSelection
+            isFocused: root.isFocused
             passwordInput: passwordInput
-            toggleButton: toggleButton
-            selectionStart: root.selectionStart
             selectionEnd: root.selectionEnd
+            selectionStart: root.selectionStart
+            toggleButton: toggleButton
+            unlockInProgress: root.unlockInProgress
         }
     }
-
     Item {
         id: toggleButton
+
+        implicitHeight: 32
+        implicitWidth: 32
+        z: 1
 
         anchors {
             right: parent.right
             rightMargin: Appearance.margin.normal
             verticalCenter: parent.verticalCenter
         }
-        implicitWidth: 32
-        implicitHeight: 32
-        z: 1
-
         Icon {
-            icon: "visibility_off"
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.large * 1.5
+            icon: "visibility_off"
             opacity: root.passwordMode ? 1.0 : 0.0
             scale: root.passwordMode ? 1.0 : 0.5
+
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -253,13 +234,13 @@ Item {
                 }
             }
         }
-
         Icon {
-            icon: "visibility"
             color: Colours.m3Colors.m3Secondary
             font.pixelSize: Appearance.fonts.size.large * 1.5
+            icon: "visibility"
             opacity: root.passwordMode ? 0.0 : 1.0
             scale: root.passwordMode ? 0.5 : 1.0
+
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -273,11 +254,11 @@ Item {
                 }
             }
         }
-
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             z: 1
+
             onClicked: {
                 if (root.toggleButtonVisible) {
                     root.passwordMode = !root.passwordMode;
@@ -286,11 +267,11 @@ Item {
             }
         }
     }
-
     MArea {
         layerRadius: background.radius
-        z: 0
         propagateComposedEvents: true
+        z: 0
+
         onClicked: passwordInput.forceActiveFocus()
     }
 }

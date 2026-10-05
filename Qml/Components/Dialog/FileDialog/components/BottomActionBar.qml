@@ -15,57 +15,53 @@ Rectangle {
 
     property alias fileName: fileNameField.text
     property bool hasSelection: false
-    property bool selectFolder: false
     property real labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabelLoader.item.text)) + 10 // qmllint disable
     property var nameFilters: ["*"]
+    property bool selectFolder: false
 
     signal cancelClicked
     signal openClicked
 
-    implicitHeight: bottomCol.implicitHeight + (Appearance.margin.normal * 2)
-    color: Colours.m3Colors.m3SurfaceContainer
-
     function setFileName(name) {
         fileNameField.text = name;
     }
+
+    color: Colours.m3Colors.m3SurfaceContainer
+    implicitHeight: bottomCol.implicitHeight + (Appearance.margin.normal * 2)
 
     FontMetrics {
         id: fileNameMetrics
 
         font: fileNameLabel.font
     }
-
     FontMetrics {
         id: filterMetrics
 
         font: filterLabelLoader.item.font // qmllint disable
     }
-
     Elevation {
         anchors.fill: parent
-        z: -1
         level: 1
+        z: -1
     }
-
     Rectangle {
         anchors.top: parent.top
-        implicitWidth: parent.width
-        implicitHeight: 1
         color: Colours.m3Colors.m3OutlineVariant
+        implicitHeight: 1
+        implicitWidth: parent.width
         opacity: 0.4
     }
-
     ColumnLayout {
         id: bottomCol
 
-        anchors {
-            left: parent.left
-            right: parent.right
-            top: parent.top
-            margins: Appearance.margin.normal
-        }
         spacing: Appearance.spacing.normal
 
+        anchors {
+            left: parent.left
+            margins: Appearance.margin.normal
+            right: parent.right
+            top: parent.top
+        }
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
@@ -73,40 +69,38 @@ Rectangle {
             StyledText {
                 id: fileNameLabel
 
-                text: root.selectFolder ? qsTr("Folder") : qsTr("File name")
-                font.pixelSize: Appearance.fonts.size.normal
-                color: Colours.m3Colors.m3OnSurfaceVariant
                 Layout.preferredWidth: root.labelWidth
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.normal
+                text: root.selectFolder ? qsTr("Folder") : qsTr("File name")
             }
-
             WrapperRectangle {
+                Layout.fillWidth: true
+                color: "transparent"
+                implicitHeight: fieldMetrics.height + 20
+                margin: Appearance.margin.normal
+
                 FontMetrics {
                     id: fieldMetrics
 
                     font: fileNameField.font
                 }
-                Layout.fillWidth: true
-                implicitHeight: fieldMetrics.height + 20
-                margin: Appearance.margin.normal
-                color: "transparent"
-
                 Item {
                     StyledText {
                         id: fileNameField
 
-                        font.pixelSize: Appearance.fonts.size.normal
                         color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.normal
                     }
                     Rectangle {
                         anchors.bottom: parent.bottom
                         color: Colours.m3Colors.m3Primary
-                        implicitWidth: parent.width
                         implicitHeight: 1
+                        implicitWidth: parent.width
                     }
                 }
             }
         }
-
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
@@ -116,47 +110,47 @@ Rectangle {
 
                 Layout.preferredWidth: root.labelWidth
                 active: !root.selectFolder
+
                 sourceComponent: StyledText {
-                    text: qsTr("Filter")
-                    font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: qsTr("Filter")
                 }
             }
-
             Loader {
-                Layout.preferredWidth: 250
                 Layout.fillHeight: true
+                Layout.preferredWidth: 250
                 active: !root.selectFolder
+
                 sourceComponent: WrapperRectangle {
-                    margin: Appearance.margin.normal
                     color: "transparent"
+                    margin: Appearance.margin.normal
                     radius: Appearance.rounding.small
+
                     border {
                         color: Colours.m3Colors.m3OutlineVariant
                         width: 2
                     }
-
                     StyledText {
-                        text: root.nameFilters.join(", ")
-                        font.pixelSize: Appearance.fonts.size.normal
                         color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: root.nameFilters.join(", ")
                     }
                 }
             }
-
             Item {
                 Layout.fillWidth: true
             }
-
             ExtendedFloatingButton {
-                text: qsTr("Cancel")
                 color: "transparent"
+                text: qsTr("Cancel")
+
                 onClicked: root.cancelClicked()
             }
-
             ExtendedFloatingButton {
-                text: root.selectFolder ? qsTr("Select") : qsTr("Open")
                 enabled: root.selectFolder ? true : root.hasSelection
+                text: root.selectFolder ? qsTr("Select") : qsTr("Open")
+
                 onClicked: root.openClicked()
             }
         }

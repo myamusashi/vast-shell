@@ -10,127 +10,29 @@ import qs.Services
 Switch {
     id: root
 
-    property alias isUseIcon: iconLoader.active
-    property string onIcon: "check"
-    property string offIcon: "close"
-
     property string currentIcon: offIcon
     property color currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-
-    // qmllint disable
-    states: [
-        State {
-            name: "unchecked"
-            when: !root.checked && !root.down
-            PropertyChanges {
-                target: track
-                color: Colours.m3Colors.m3SurfaceContainerHighest
-                border.color: Colours.m3Colors.m3Outline
-            }
-            PropertyChanges {
-                target: handle
-                x: handle.margin
-                width: 16
-                height: 16
-                color: Colours.m3Colors.m3Outline
-            }
-            PropertyChanges {
-                target: root
-                currentIcon: offIcon
-                currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-            }
-        },
-        State {
-            name: "checked"
-            when: root.checked && !root.down
-            PropertyChanges {
-                target: track
-                color: Colours.m3Colors.m3Primary
-                border.color: "transparent"
-            }
-            PropertyChanges {
-                target: handle
-                x: track.width - 28 - handle.margin
-                width: 28
-                height: 24
-                color: Colours.m3Colors.m3OnPrimary
-            }
-            PropertyChanges {
-                target: root
-                currentIcon: onIcon
-                currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
-            }
-        },
-        State {
-            name: "pressedUnchecked"
-            when: root.down && !root.checked
-            PropertyChanges {
-                target: track
-                color: Colours.m3Colors.m3SurfaceContainerHighest
-                border.color: Colours.m3Colors.m3Outline
-            }
-            PropertyChanges {
-                target: handle
-                x: handle.margin
-                width: 28
-                height: 28
-                color: Colours.m3Colors.m3Outline
-            }
-            PropertyChanges {
-                target: root
-                currentIcon: offIcon
-                currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-            }
-        },
-        State {
-            name: "pressedChecked"
-            when: root.down && root.checked
-            PropertyChanges {
-                target: track
-                color: Colours.m3Colors.m3Primary
-                border.color: "transparent"
-            }
-            PropertyChanges {
-                target: handle
-                x: track.width - 28 - handle.margin
-                width: 28
-                height: 28
-                color: Colours.m3Colors.m3OnPrimary
-            }
-            PropertyChanges {
-                target: root
-                currentIcon: onIcon
-                currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
-            }
-        }
-    ]
-    // qmllint enable
-
-    transitions: Transition {
-        NAnim {
-            properties: "x,width,height"
-            easing.bezierCurve: Appearance.animations.curves.emphasized
-            duration: Appearance.animations.durations.small
-        }
-    }
+    property alias isUseIcon: iconLoader.active
+    property string offIcon: "close"
+    property string onIcon: "check"
 
     indicator: StyledRect {
         id: track
 
-        implicitWidth: 52
+        border.width: 2
         implicitHeight: 32
+        implicitWidth: 52
+        radius: Appearance.rounding.full
         x: root.leftPadding
         y: parent.height / 2 - height / 2
-        radius: Appearance.rounding.full
-        border.width: 2
 
         StyledRect {
             id: handle
 
             readonly property int margin: 4
 
-            y: (parent.height - height) / 2
             radius: Appearance.rounding.full
+            y: (parent.height - height) / 2
 
             Loader {
                 id: iconLoader
@@ -138,12 +40,114 @@ Switch {
                 active: true
                 anchors.centerIn: parent
                 asynchronous: true
+
                 sourceComponent: Icon {
-                    icon: root.currentIcon
                     color: root.currentIconColor
                     font.pixelSize: Appearance.fonts.size.medium
+                    icon: root.currentIcon
                 }
             }
+        }
+    }
+
+    // qmllint disable
+    states: [
+        State {
+            name: "unchecked"
+            when: !root.checked && !root.down
+
+            PropertyChanges {
+                border.color: Colours.m3Colors.m3Outline
+                color: Colours.m3Colors.m3SurfaceContainerHighest
+                target: track
+            }
+            PropertyChanges {
+                color: Colours.m3Colors.m3Outline
+                height: 16
+                target: handle
+                width: 16
+                x: handle.margin
+            }
+            PropertyChanges {
+                currentIcon: offIcon
+                currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
+                target: root
+            }
+        },
+        State {
+            name: "checked"
+            when: root.checked && !root.down
+
+            PropertyChanges {
+                border.color: "transparent"
+                color: Colours.m3Colors.m3Primary
+                target: track
+            }
+            PropertyChanges {
+                color: Colours.m3Colors.m3OnPrimary
+                height: 24
+                target: handle
+                width: 28
+                x: track.width - 28 - handle.margin
+            }
+            PropertyChanges {
+                currentIcon: onIcon
+                currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
+                target: root
+            }
+        },
+        State {
+            name: "pressedUnchecked"
+            when: root.down && !root.checked
+
+            PropertyChanges {
+                border.color: Colours.m3Colors.m3Outline
+                color: Colours.m3Colors.m3SurfaceContainerHighest
+                target: track
+            }
+            PropertyChanges {
+                color: Colours.m3Colors.m3Outline
+                height: 28
+                target: handle
+                width: 28
+                x: handle.margin
+            }
+            PropertyChanges {
+                currentIcon: offIcon
+                currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
+                target: root
+            }
+        },
+        State {
+            name: "pressedChecked"
+            when: root.down && root.checked
+
+            PropertyChanges {
+                border.color: "transparent"
+                color: Colours.m3Colors.m3Primary
+                target: track
+            }
+            PropertyChanges {
+                color: Colours.m3Colors.m3OnPrimary
+                height: 28
+                target: handle
+                width: 28
+                x: track.width - 28 - handle.margin
+            }
+            PropertyChanges {
+                currentIcon: onIcon
+                currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
+                target: root
+            }
+        }
+    ]
+    // qmllint enable
+
+    transitions: Transition {
+        NAnim {
+            duration: Appearance.animations.durations.small
+            easing.bezierCurve: Appearance.animations.curves.emphasized
+            properties: "x,width,height"
         }
     }
 }

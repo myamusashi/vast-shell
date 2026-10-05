@@ -17,98 +17,91 @@ WrapperRectangle {
 
     required property var network
     required property var pskDialog
-
     property color target: network.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-
-    BlendColor {
-        host: root
-        target: root.target
-    }
-
-    Layout.fillWidth: true
-    Layout.alignment: Qt.AlignVCenter
-    color: "transparent"
-    radius: Appearance.rounding.large
-    margin: Appearance.margin.small
-
-    TapHandler {
-        id: networkTap
-
-        onTapped: root.tryConnect()
-    }
 
     function tryConnect() {
         WifiUtils.tryConnect(root.network, net => root.pskDialog.show(net));
     }
 
-    Connections {
-        target: root.network
+    Layout.alignment: Qt.AlignVCenter
+    Layout.fillWidth: true
+    color: "transparent"
+    margin: Appearance.margin.small
+    radius: Appearance.rounding.large
 
+    BlendColor {
+        host: root
+        target: root.target
+    }
+    TapHandler {
+        id: networkTap
+
+        onTapped: root.tryConnect()
+    }
+    Connections {
         function onConnectionFailed(reason) {
             WifiUtils.handleConnectionFailed(root.network, reason, net => root.pskDialog.show(net));
         }
-    }
 
+        target: root.network
+    }
     RowLayout {
         spacing: Appearance.spacing.small
 
         Item {
-            implicitWidth: 28
             implicitHeight: 28
+            implicitWidth: 28
 
             Icon {
                 anchors.fill: parent
+                color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large * 1.5
                 icon: "signal_wifi_0_bar"
-                color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.large * 1.5
             }
-
             Icon {
                 anchors.fill: parent
-                icon: WifiUtils.iconFor(root.network?.signalStrength ?? 0, root.network ? !root.network.known : false)
                 color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large * 1.5
+                icon: WifiUtils.iconFor(root.network?.signalStrength ?? 0, root.network ? !root.network.known : false)
             }
         }
-
         ColumnLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small * 0.5
 
             StyledText {
                 Layout.fillWidth: true
-                text: root.network?.name ?? ""
-                elide: Text.ElideRight
                 color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.normal
+                text: root.network?.name ?? ""
             }
-
             StyledText {
-                text: ConnectionState.toString(root.network.state)
                 color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small
+                text: ConnectionState.toString(root.network.state)
             }
         }
-
         FloatingButton {
-            implicitWidth: 28
-            implicitHeight: 28
             backgroundRadius: Appearance.rounding.normal
-            icon.name: root.network?.connected ? "link_off" : "wifi_add"
-            icon.color: root.network?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
-            icon.size: Appearance.fonts.size.large * 1.5
             color: "transparent"
+            icon.color: root.network?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+            icon.name: root.network?.connected ? "link_off" : "wifi_add"
+            icon.size: Appearance.fonts.size.large * 1.5
+            implicitHeight: 28
+            implicitWidth: 28
+
             onClicked: root.network?.connected ? root.network.disconnect() : root.tryConnect()
         }
-
         FloatingButton {
-            implicitWidth: 28
-            implicitHeight: 28
             backgroundRadius: Appearance.rounding.normal
-            icon.name: "delete"
-            icon.color: root.network?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
-            icon.size: Appearance.fonts.size.large * 1.5
             color: "transparent"
+            icon.color: root.network?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+            icon.name: "delete"
+            icon.size: Appearance.fonts.size.large * 1.5
+            implicitHeight: 28
+            implicitWidth: 28
+
             onClicked: root.network?.forget()
         }
     }

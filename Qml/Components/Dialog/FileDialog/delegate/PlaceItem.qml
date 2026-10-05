@@ -14,46 +14,49 @@ StyledRect {
     id: root
 
     required property string icon
-    required property string label
     required property bool isSelected
+    property bool keyboardFocusable: true
+    required property string label
 
     signal clicked
-
-    property bool keyboardFocusable: true
 
     function requestKeyboardFocus() {
         root.forceActiveFocus();
     }
 
+    clip: true
+    color: isSelected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
+    implicitHeight: 48
+    radius: Appearance.rounding.small
+
     Keys.onReturnPressed: event => {
         root.clicked();
         event.accepted = true;
     }
-
     Keys.onSpacePressed: event => {
         root.clicked();
         event.accepted = true;
     }
 
-    implicitHeight: 48
-    radius: Appearance.rounding.small
-    clip: true
-    color: isSelected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
-
     RowLayout {
+        spacing: Appearance.spacing.normal
+
         anchors {
             fill: parent
             leftMargin: Appearance.margin.normal
             rightMargin: Appearance.margin.small
         }
-        spacing: Appearance.spacing.normal
-
         Icon {
             id: iconItem
+
+            property real iconColorBlendProgress: 1.0
+            property bool iconColorBlending: false
             property color iconColorFrom
             property color iconColorTo
-            property bool iconColorBlending: false
-            property real iconColorBlendProgress: 1.0
+            property color target: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+
+            font.pixelSize: Appearance.fonts.size.large
+            icon: root.icon
 
             onIconColorBlendProgressChanged: {
                 if (!iconColorBlending)
@@ -65,17 +68,6 @@ StyledRect {
                     color = ColorUtils.blendColors(iconColorFrom, iconColorTo, iconColorBlendProgress);
                 }
             }
-
-            NAnim {
-                id: iconColorAnim
-                target: iconItem
-                property: "iconColorBlendProgress"
-                from: 0.0
-                to: 1.0
-                duration: Appearance.animations.durations.small
-            }
-
-            property color target: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
             onTargetChanged: {
                 iconColorAnim.stop();
                 iconColorFrom = iconItem.color;
@@ -85,16 +77,30 @@ StyledRect {
                 iconColorAnim.start();
             }
 
-            icon: root.icon
-            font.pixelSize: Appearance.fonts.size.large
-        }
+            NAnim {
+                id: iconColorAnim
 
+                duration: Appearance.animations.durations.small
+                from: 0.0
+                property: "iconColorBlendProgress"
+                target: iconItem
+                to: 1.0
+            }
+        }
         StyledText {
             id: label
+
+            property real labelColorBlendProgress: 1.0
+            property bool labelColorBlending: false
             property color labelColorFrom
             property color labelColorTo
-            property bool labelColorBlending: false
-            property real labelColorBlendProgress: 1.0
+            property color target: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+
+            Layout.fillWidth: true
+            elide: Text.ElideRight
+            font.bold: root.isSelected
+            font.pixelSize: Appearance.fonts.size.normal
+            text: root.label
 
             onLabelColorBlendProgressChanged: {
                 if (!labelColorBlending)
@@ -106,17 +112,6 @@ StyledRect {
                     color = ColorUtils.blendColors(labelColorFrom, labelColorTo, labelColorBlendProgress);
                 }
             }
-
-            NAnim {
-                id: labelColorAnim
-                target: label
-                property: "labelColorBlendProgress"
-                from: 0.0
-                to: 1.0
-                duration: Appearance.animations.durations.small
-            }
-
-            property color target: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
             onTargetChanged: {
                 labelColorAnim.stop();
                 labelColorFrom = label.color;
@@ -126,26 +121,29 @@ StyledRect {
                 labelColorAnim.start();
             }
 
-            text: root.label
-            font.pixelSize: Appearance.fonts.size.normal
-            font.bold: root.isSelected
-            Layout.fillWidth: true
-            elide: Text.ElideRight
+            NAnim {
+                id: labelColorAnim
+
+                duration: Appearance.animations.durations.small
+                from: 0.0
+                property: "labelColorBlendProgress"
+                target: label
+                to: 1.0
+            }
         }
     }
-
     MArea {
         anchors.fill: parent
         hoverEnabled: true
+
         onClicked: root.clicked()
     }
-
     Rectangle {
         anchors.fill: parent
-        radius: root.radius
-        color: "transparent"
         border.color: Colours.m3Colors.m3Primary
         border.width: 2
+        color: "transparent"
+        radius: root.radius
         visible: root.activeFocus
     }
 }

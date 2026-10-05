@@ -12,28 +12,19 @@ import qs.Services
 Item {
     id: root
 
-    property alias model: dropdownMenu.model
-    property string textRole: "display"
-    property string valueRole: ""
     property int currentIndex: -1
     property var currentValue: null
-    property string placeholderText: qsTr("Select…")
-    property var isItemEnabled: model => true
     property var disabledLabel: model => qsTr("N/A")
+    readonly property string displayText: ModelAdapter.displayText(model, currentIndex, textRole, placeholderText)
     property var isItemActive: (model, itemIndex) => itemIndex === currentIndex
+    property var isItemEnabled: model => true
+    property alias model: dropdownMenu.model
+    property string placeholderText: qsTr("Select…")
     property bool showScrollBar: false
+    property string textRole: "display"
+    property string valueRole: ""
 
     signal activated(int index)
-
-    implicitWidth: 280
-    implicitHeight: 48
-
-    readonly property string displayText: ModelAdapter.displayText(model, currentIndex, textRole, placeholderText)
-
-    onCurrentValueChanged: syncIndex()
-    onModelChanged: syncIndex()
-    onValueRoleChanged: syncIndex()
-    Component.onCompleted: syncIndex()
 
     function syncIndex() {
         if (valueRole === "" || currentValue === null || currentValue === undefined)
@@ -43,19 +34,25 @@ Item {
             currentIndex = index;
     }
 
+    implicitHeight: 48
+    implicitWidth: 280
+
+    Component.onCompleted: syncIndex()
+    onCurrentValueChanged: syncIndex()
+    onModelChanged: syncIndex()
+    onValueRoleChanged: syncIndex()
+
     StyledRect {
         id: fieldSurface
 
         anchors.fill: parent
-        radius: Appearance.rounding.normal
-        color: Colours.m3Colors.m3Surface
         border.color: Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
         border.width: 1
+        color: Colours.m3Colors.m3Surface
+        radius: Appearance.rounding.normal
     }
-
     MArea {
         layerRadius: Appearance.rounding.large
-        onWheel: wheel => wheel.accepted = false
 
         onClicked: {
             if (dropdownMenu.opened)
@@ -63,6 +60,7 @@ Item {
             else
                 dropdownMenu.open();
         }
+        onWheel: wheel => wheel.accepted = false
 
         RowLayout {
             anchors.fill: parent
@@ -71,48 +69,46 @@ Item {
             spacing: Appearance.spacing.small
 
             StyledText {
-                Layout.fillWidth: true
                 Layout.alignment: Qt.AlignVCenter
-                text: root.displayText
-                font.pixelSize: Appearance.fonts.size.normal
-                font.weight: Font.Medium
+                Layout.fillWidth: true
                 color: root.currentIndex < 0 ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.normal
+                font.weight: Font.Medium
+                text: root.displayText
             }
-
             Item {
                 Layout.alignment: Qt.AlignCenter
-                Layout.preferredWidth: 24
                 Layout.preferredHeight: 24
+                Layout.preferredWidth: 24
+                rotation: dropdownMenu.opened ? 180 : 0
                 transformOrigin: Item.Center
 
-                rotation: dropdownMenu.opened ? 180 : 0
-
                 Behavior on rotation {
-                    NAnim {}
+                    NAnim {
+                    }
                 }
 
                 Icon {
                     anchors.centerIn: parent
-                    icon: "keyboard_arrow_down"
-                    font.pixelSize: Appearance.fonts.size.extraLarge
                     color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.extraLarge
                     horizontalAlignment: Text.AlignHCenter
+                    icon: "keyboard_arrow_down"
                 }
             }
         }
     }
-
     DropdownMenu {
         id: dropdownMenu
 
         anchorItem: root
-        textRole: root.textRole
         currentIndex: root.currentIndex
-        isItemEnabled: root.isItemEnabled
         disabledLabel: root.disabledLabel
         isItemActive: root.isItemActive
+        isItemEnabled: root.isItemEnabled
         showScrollBar: root.showScrollBar
+        textRole: root.textRole
 
         onActivated: index => {
             root.currentIndex = index;

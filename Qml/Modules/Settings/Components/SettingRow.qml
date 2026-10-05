@@ -10,40 +10,38 @@ import qs.Services
 RowLayout {
     id: root
 
-    property alias label: label.text
-    property alias description: description.text
     default property alias content: controlContainer.data
+    property alias description: description.text
+    property alias label: label.text
 
     Layout.fillWidth: true
     spacing: Appearance.spacing.normal
 
     ColumnLayout {
-        Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
+        Layout.fillWidth: true
         spacing: 2
 
         StyledText {
             id: label
 
-            wrapMode: Text.Wrap
-            horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
-            font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.large
+            horizontalAlignment: Text.AlignLeft
+            wrapMode: Text.Wrap
         }
-
         StyledText {
             id: description
 
-            wrapMode: Text.Wrap
-            horizontalAlignment: Text.AlignLeft
             Layout.fillWidth: true
-            font.pixelSize: Appearance.fonts.size.small
             color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.5)
+            font.pixelSize: Appearance.fonts.size.small
+            horizontalAlignment: Text.AlignLeft
             visible: text !== ""
+            wrapMode: Text.Wrap
         }
     }
-
     RowLayout {
         id: controlContainer
 

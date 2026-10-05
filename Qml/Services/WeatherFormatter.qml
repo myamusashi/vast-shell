@@ -9,99 +9,6 @@ import qs.Core.Utils
 import "Weather/weatherData.js" as WD
 
 Singleton {
-    function iconFor(code, isDayTime, dayIcons, nightIcons) {
-        if (code === null || code === undefined)
-            return WeatherIcon.windy;
-        const codeStr = code.toString();
-        if (!isDayTime && nightIcons[codeStr])
-            return nightIcons[codeStr];
-        return dayIcons[codeStr] || WeatherIcon.windy;
-    }
-
-    function formatHourOfDay(timeStr) {
-        if (!timeStr)
-            return "";
-        try {
-            const date = new Date(timeStr);
-            return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
-        } catch (e) {
-            return timeStr;
-        }
-    }
-
-    function forecastHour(entry) {
-        const time = String(entry?.time || "").split(" ")[1] || entry?.time || "";
-        return Number(String(time).split(":")[0]);
-    }
-
-    function hourlyFromNow(forecast, currentMinutes) {
-        const currentHour = Math.floor(currentMinutes / 60);
-        return (forecast || []).filter(function (entry) {
-            const hour = forecastHour(entry);
-            return isFinite(hour) && hour >= currentHour;
-        });
-    }
-
-    function isCurrentForecastHour(entry, currentMinutes) {
-        return forecastHour(entry) === Math.floor(currentMinutes / 60);
-    }
-
-    function moonPhaseText(phase) {
-        switch (phase) {
-        case "New Moon":
-            return qsTr("New Moon");
-        case "Waxing Crescent":
-            return qsTr("Waxing Crescent");
-        case "First Quarter":
-            return qsTr("First Quarter");
-        case "Waxing Gibbous":
-            return qsTr("Waxing Gibbous");
-        case "Full Moon":
-            return qsTr("Full Moon");
-        case "Waning Gibbous":
-            return qsTr("Waning Gibbous");
-        case "Last Quarter":
-            return qsTr("Last Quarter");
-        case "Waning Crescent":
-            return qsTr("Waning Crescent");
-        default:
-            return phase || qsTr("Unknown");
-        }
-    }
-
-    function formatDate(dateStr) {
-        if (!dateStr)
-            return "";
-        try {
-            return new Date(dateStr).toLocaleDateString("en-US", {
-                weekday: "long",
-                month: "short",
-                day: "numeric"
-            });
-        } catch (e) {
-            return dateStr;
-        }
-    }
-
-    function parseAstronomyTime(timeStr) {
-        if (!timeStr)
-            return "";
-        try {
-            const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-            if (!match)
-                return timeStr;
-            let hours = parseInt(match[1]);
-            const period = match[3].toUpperCase();
-            if (period === "PM" && hours !== 12)
-                hours += 12;
-            else if (period === "AM" && hours === 12)
-                hours = 0;
-            return `${String(hours).padStart(2, "0")}:${match[2]}`;
-        } catch (e) {
-            return timeStr;
-        }
-    }
-
     function calculateDayLength(sunRise, sunSet) {
         if (!sunRise || !sunSet)
             return {
@@ -125,65 +32,6 @@ Singleton {
             };
         }
     }
-
-    function weatherStatus(code) {
-        return WD.statusTexts[code] || "Unknown";
-    }
-
-    function windDirectionText(degrees) {
-        return WD.getWindDirection(degrees);
-    }
-
-    function europeanAQIInfo(aqi) {
-        return WD.getAQIInfo(aqi, WD.europeanAQI);
-    }
-
-    function usAQIInfo(aqi) {
-        return WD.getAQIInfo(aqi, WD.usAQI);
-    }
-
-    function uvCategoryInfo(index) {
-        if (index <= 2)
-            return {
-                index: 0,
-                label: qsTr("Low")
-            };
-        if (index <= 5)
-            return {
-                index: 1,
-                label: qsTr("Moderate")
-            };
-        if (index <= 7)
-            return {
-                index: 2,
-                label: qsTr("High")
-            };
-        if (index <= 10)
-            return {
-                index: 3,
-                label: qsTr("Very High")
-            };
-        return {
-            index: 4,
-            label: qsTr("Extreme")
-        };
-    }
-
-    function uvCategoryLabel(index) {
-        return uvCategoryInfo(index).label;
-    }
-
-    function uvCategoryIndex(index) {
-        return uvCategoryInfo(index).index;
-    }
-    function pressureTrendIcon(currentPressure, pressures, index) {
-        const previous = index === 0 ? null : pressures?.[index - 1];
-        const diff = previous === null || previous === undefined ? 0 : currentPressure - previous;
-        if (Math.abs(diff) < 1.0)
-            return "arrow_forward";
-        return diff > 0 ? "arrow_upward" : "arrow_downward";
-    }
-
     function dominantPollutant(pm25, pm10) {
         const pm25Ratio = pm25 / 15.0;
         const pm10Ratio = pm10 / 45.0;
@@ -195,7 +43,36 @@ Singleton {
             return "PM2.5";
         return "PM10";
     }
-
+    function europeanAQIInfo(aqi) {
+        return WD.getAQIInfo(aqi, WD.europeanAQI);
+    }
+    function forecastHour(entry) {
+        const time = String(entry?.time || "").split(" ")[1] || entry?.time || "";
+        return Number(String(time).split(":")[0]);
+    }
+    function formatDate(dateStr) {
+        if (!dateStr)
+            return "";
+        try {
+            return new Date(dateStr).toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "short",
+                day: "numeric"
+            });
+        } catch (e) {
+            return dateStr;
+        }
+    }
+    function formatHourOfDay(timeStr) {
+        if (!timeStr)
+            return "";
+        try {
+            const date = new Date(timeStr);
+            return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+        } catch (e) {
+            return timeStr;
+        }
+    }
     function healthRecommendation(euAQI, usAQI, pm25, pm10) {
         let maxAQI = euAQI;
         if (usAQI > 150)
@@ -212,7 +89,71 @@ Singleton {
             return "Avoid prolonged outdoor exertion. Everyone should reduce outdoor activities. Keep outdoor activities short and less strenuous.";
         return "Avoid all outdoor physical activities. Stay indoors, keep windows closed, and use air purifiers if available. Sensitive groups should remain indoors.";
     }
-
+    function hourlyFromNow(forecast, currentMinutes) {
+        const currentHour = Math.floor(currentMinutes / 60);
+        return (forecast || []).filter(function (entry) {
+            const hour = forecastHour(entry);
+            return isFinite(hour) && hour >= currentHour;
+        });
+    }
+    function iconFor(code, isDayTime, dayIcons, nightIcons) {
+        if (code === null || code === undefined)
+            return WeatherIcon.windy;
+        const codeStr = code.toString();
+        if (!isDayTime && nightIcons[codeStr])
+            return nightIcons[codeStr];
+        return dayIcons[codeStr] || WeatherIcon.windy;
+    }
+    function isCurrentForecastHour(entry, currentMinutes) {
+        return forecastHour(entry) === Math.floor(currentMinutes / 60);
+    }
+    function moonPhaseText(phase) {
+        switch (phase) {
+        case "New Moon":
+            return qsTr("New Moon");
+        case "Waxing Crescent":
+            return qsTr("Waxing Crescent");
+        case "First Quarter":
+            return qsTr("First Quarter");
+        case "Waxing Gibbous":
+            return qsTr("Waxing Gibbous");
+        case "Full Moon":
+            return qsTr("Full Moon");
+        case "Waning Gibbous":
+            return qsTr("Waning Gibbous");
+        case "Last Quarter":
+            return qsTr("Last Quarter");
+        case "Waning Crescent":
+            return qsTr("Waning Crescent");
+        default:
+            return phase || qsTr("Unknown");
+        }
+    }
+    function parseAstronomyTime(timeStr) {
+        if (!timeStr)
+            return "";
+        try {
+            const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+            if (!match)
+                return timeStr;
+            let hours = parseInt(match[1]);
+            const period = match[3].toUpperCase();
+            if (period === "PM" && hours !== 12)
+                hours += 12;
+            else if (period === "AM" && hours === 12)
+                hours = 0;
+            return `${String(hours).padStart(2, "0")}:${match[2]}`;
+        } catch (e) {
+            return timeStr;
+        }
+    }
+    function pressureTrendIcon(currentPressure, pressures, index) {
+        const previous = index === 0 ? null : pressures?.[index - 1];
+        const diff = previous === null || previous === undefined ? 0 : currentPressure - previous;
+        if (Math.abs(diff) < 1.0)
+            return "arrow_forward";
+        return diff > 0 ? "arrow_upward" : "arrow_downward";
+    }
     function quickSummary(data) {
         if (!data.weatherLoaded)
             return "";
@@ -321,5 +262,46 @@ Singleton {
 
         const finalParts = parts.slice(0, 4);
         return finalParts.length === 0 ? "" : finalParts[0] + "\n\n• " + finalParts.slice(1).join("\n\n• ");
+    }
+    function usAQIInfo(aqi) {
+        return WD.getAQIInfo(aqi, WD.usAQI);
+    }
+    function uvCategoryIndex(index) {
+        return uvCategoryInfo(index).index;
+    }
+    function uvCategoryInfo(index) {
+        if (index <= 2)
+            return {
+                index: 0,
+                label: qsTr("Low")
+            };
+        if (index <= 5)
+            return {
+                index: 1,
+                label: qsTr("Moderate")
+            };
+        if (index <= 7)
+            return {
+                index: 2,
+                label: qsTr("High")
+            };
+        if (index <= 10)
+            return {
+                index: 3,
+                label: qsTr("Very High")
+            };
+        return {
+            index: 4,
+            label: qsTr("Extreme")
+        };
+    }
+    function uvCategoryLabel(index) {
+        return uvCategoryInfo(index).label;
+    }
+    function weatherStatus(code) {
+        return WD.statusTexts[code] || "Unknown";
+    }
+    function windDirectionText(degrees) {
+        return WD.getWindDirection(degrees);
     }
 }

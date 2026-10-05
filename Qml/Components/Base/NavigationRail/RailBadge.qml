@@ -7,28 +7,28 @@ import qs.Services
 Item {
     id: root
 
-    property string text: ""
     property bool dot: false
-
     readonly property bool hasBadge: text !== "" || dot
+    property string text: ""
 
-    visible: hasBadge
-    implicitWidth: text !== "" ? Math.max(16, badgeText.implicitWidth + 8) : 8
     implicitHeight: text !== "" ? 16 : 8
+    implicitWidth: text !== "" ? Math.max(16, badgeText.implicitWidth + 8) : 8
+    visible: hasBadge
 
     StyledRect {
         anchors.fill: parent
-        radius: Appearance.rounding.full
         color: Colours.m3Colors.m3Error
+        radius: Appearance.rounding.full
 
         StyledText {
             id: badgeText
+
             anchors.centerIn: parent
-            visible: root.text !== ""
-            text: root.text
+            color: Colours.m3Colors.m3OnError
             font.pixelSize: Appearance.fonts.size.small
             font.weight: Font.Medium
-            color: Colours.m3Colors.m3OnError
+            text: root.text
+            visible: root.text !== ""
         }
     }
 }

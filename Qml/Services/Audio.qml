@@ -10,12 +10,12 @@ import Quickshell.Services.Pipewire
 Singleton {
     id: root
 
-    // Mirrors the AudioCardsModel backing object; values are AudioCard* instances.
-    readonly property var cards: AudioProfilesWatcher.cards
-
     // Exposed so consumers (and our own signal handler) can observe a single
     // boolean even though the source of truth now lives on AudioProfilesWatcher.
     readonly property bool audioConnected: AudioProfilesWatcher.connected
+
+    // Mirrors the AudioCardsModel backing object; values are AudioCard* instances.
+    readonly property var cards: AudioProfilesWatcher.cards
 
     // Pick the AudioCard that backs Pipewire's current default sink. Falls back
     // to the first card so the Quick Settings drawer still has a profile to show
@@ -37,16 +37,9 @@ Singleton {
         return cards.card(0);
     }
 
-    AudioRestore {
-
-        cards: root.cards
-        audioConnected: root.audioConnected
-    }
-
     function getIcon(node) {
         return node.isSink ? getSinkIcon(node) : getSourceIcon(node);
     }
-
     function getSinkIcon(node) {
         if (node.audio.muted)
             return "volume_off";
@@ -56,22 +49,22 @@ Singleton {
             return "volume_down";
         return "volume_mute";
     }
-
     function getSourceIcon(node) {
         return node.audio.muted ? "mic_off" : "mic";
     }
-
     function toggleMute(node) {
         node.audio.muted = !node.audio.muted;
     }
-
     function wheelAction(event, node) {
         const delta = event.angleDelta.y < 0 ? -0.01 : 0.01;
         node.audio.volume = Math.max(0.0, Math.min(1.3, node.audio.volume + delta));
     }
 
+    AudioRestore {
+        audioConnected: root.audioConnected
+        cards: root.cards
+    }
     IpcHandler {
-        target: "audio"
         function deviceList(): string {
             const m = AudioDevicesWatcher.devices;
             const r = [];
@@ -133,5 +126,7 @@ Singleton {
 
             AudioProfilesWatcher.setProfile(card.deviceId, match.index);
         }
+
+        target: "audio"
     }
 }

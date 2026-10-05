@@ -4,33 +4,17 @@ import Quickshell.Io
 JsonObject {
     id: root
 
-    property AnimationsComponent animations: AnimationsComponent {}
-    property FontsComponent fonts: FontsComponent {}
-    property MarginComponent margin: MarginComponent {}
-    property PaddingComponent padding: PaddingComponent {}
-    property RoundingComponent rounding: RoundingComponent {}
-    property SpacingComponent spacing: SpacingComponent {}
-
-    component FontFamily: JsonObject {
-        property string material: "Material Symbols Rounded"
-        property string mono: "monospace"
-        property string nerd: ""
-        property string sans: "sans-serif"
+    property AnimationsComponent animations: AnimationsComponent {
     }
-
-    component FontSize: JsonObject {
-        property real scale: 1.0
-        readonly property real small: 12 * scale
-        readonly property real medium: 13 * scale
-        readonly property real normal: 14 * scale
-        readonly property real large: 16 * scale
-        readonly property real larger: 18 * scale
-        readonly property real extraLarge: 30 * scale
+    property FontsComponent fonts: FontsComponent {
     }
-
-    component FontsComponent: JsonObject {
-        property FontFamily family: FontFamily {}
-        property FontSize size: FontSize {}
+    property MarginComponent margin: MarginComponent {
+    }
+    property PaddingComponent padding: PaddingComponent {
+    }
+    property RoundingComponent rounding: RoundingComponent {
+    }
+    property SpacingComponent spacing: SpacingComponent {
     }
 
     component AnimationCurvesComponent: JsonObject {
@@ -44,9 +28,7 @@ JsonObject {
         readonly property list<real> standardAccel: [0.3, 0, 1, 1, 1, 1]
         readonly property list<real> standardDecel: [0, 0, 0, 1, 1, 1]
     }
-
     component AnimationDurationsComponent: JsonObject {
-        property int scale: 1
         readonly property int emphasized: 500 * scale
         readonly property int emphasizedAccel: 200 * scale
         readonly property int emphasizedDecel: 400 * scale
@@ -56,42 +38,61 @@ JsonObject {
         readonly property int extraLarge: 1000 * scale
         readonly property int large: 600 * scale
         readonly property int normal: 300 * scale
+        property int scale: 1
         readonly property int small: 200 * scale
     }
-
     component AnimationsComponent: JsonObject {
-        property AnimationCurvesComponent curves: AnimationCurvesComponent {}
-        property AnimationDurationsComponent durations: AnimationDurationsComponent {}
+        property AnimationCurvesComponent curves: AnimationCurvesComponent {
+        }
+        property AnimationDurationsComponent durations: AnimationDurationsComponent {
+        }
     }
-
+    component FontFamily: JsonObject {
+        property string material: "Material Symbols Rounded"
+        property string mono: "monospace"
+        property string nerd: ""
+        property string sans: "sans-serif"
+    }
+    component FontSize: JsonObject {
+        readonly property real extraLarge: 30 * scale
+        readonly property real large: 16 * scale
+        readonly property real larger: 18 * scale
+        readonly property real medium: 13 * scale
+        readonly property real normal: 14 * scale
+        property real scale: 1.0
+        readonly property real small: 12 * scale
+    }
+    component FontsComponent: JsonObject {
+        property FontFamily family: FontFamily {
+        }
+        property FontSize size: FontSize {
+        }
+    }
+    component MarginComponent: JsonObject {
+        property int large: 15
+        property int larger: 12
+        property int normal: 10
+        property int small: 5
+        property int smaller: 7
+    }
+    component PaddingComponent: JsonObject {
+        property int large: 15
+        property int larger: 12
+        property int normal: 10
+        property int small: 5
+        property int smaller: 7
+    }
     component RoundingComponent: JsonObject {
-        property int small: 12
-        property int normal: 17
-        property int large: 25
         property int full: 1000
+        property int large: 25
+        property int normal: 17
+        property int small: 12
     }
-
     component SpacingComponent: JsonObject {
+        property int large: 20
+        property int larger: 15
+        property int normal: 12
         property int small: 7
         property int smaller: 10
-        property int normal: 12
-        property int larger: 15
-        property int large: 20
-    }
-
-    component PaddingComponent: JsonObject {
-        property int small: 5
-        property int smaller: 7
-        property int normal: 10
-        property int larger: 12
-        property int large: 15
-    }
-
-    component MarginComponent: JsonObject {
-        property int small: 5
-        property int smaller: 7
-        property int normal: 10
-        property int larger: 12
-        property int large: 15
     }
 }

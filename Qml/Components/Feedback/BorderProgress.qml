@@ -8,41 +8,40 @@ import "../Base"
 Item {
     id: root
 
-    anchors.fill: parent
-
-    property alias source: borderEffect.source
+    property alias animation: progressAnimation
+    property alias animationDuration: progressAnimation.duration
+    property alias borderColor: borderEffect.borderColor
+    property alias borderWidth: borderEffect.borderWidth
     property alias progress: borderEffect.progress
     property alias radius: borderEffect.radius
-    property alias borderWidth: borderEffect.borderWidth
-    property alias borderColor: borderEffect.borderColor
-    property alias animationDuration: progressAnimation.duration
-    property alias animation: progressAnimation
+    property alias source: borderEffect.source
+
+    anchors.fill: parent
 
     ShaderEffect {
         id: borderEffect
 
-        anchors.fill: parent
-
-        property var source: ({})
+        property color borderColor: Colours.m3Colors.m3Primary
+        property real borderWidth: 2.0
         property real progress: 1.0
         property real radius: source.radius
-        property real borderWidth: 2.0
         property vector2d resolution: Qt.vector2d(source.width, source.height)
-        property color borderColor: Colours.m3Colors.m3Primary
+        property var source: ({})
 
-        z: 999
-        vertexShader: Paths.projectRoot + "/Assets/shaders/borderProgress.vert.qsb"
+        anchors.fill: parent
         fragmentShader: Paths.projectRoot + "/Assets/shaders/borderProgress.frag.qsb"
+        vertexShader: Paths.projectRoot + "/Assets/shaders/borderProgress.vert.qsb"
+        z: 999
     }
-
     NAnim {
         id: progressAnimation
 
-        target: borderEffect
-        property: "progress"
-        from: 1.0
-        to: 0.0
         duration: 500
+        from: 1.0
+        property: "progress"
+        target: borderEffect
+        to: 0.0
+
         onFinished: borderEffect.destroy()
     }
 }

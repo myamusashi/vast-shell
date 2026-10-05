@@ -10,41 +10,31 @@ import qs.Core.Utils
 Singleton {
     id: root
 
+    property int cachedYear: 0
     property var holidaysByDate: ({})
     property bool loaded: false
     property bool loading: false
-    property int cachedYear: 0
 
     signal dataChanged
 
-    function isoDate(date: var): string {
-        if (typeof date === "string")
-            return date;
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, "0");
-        const d = String(date.getDate()).padStart(2, "0");
-        return y + "-" + m + "-" + d;
+    function applyData(json: var, year: int): void {
+        const map = {};
+        for (const y in json) {
+            const entries = json[y];
+            if (!Array.isArray(entries))
+                continue;
+            for (const entry of entries) {
+                if (!map[entry.date])
+                    map[entry.date] = [];
+                map[entry.date].push(entry);
+            }
+        }
+        holidaysByDate = map;
+        loaded = true;
+        cachedYear = year;
+        loading = false;
+        dataChanged();
     }
-
-    function getHolidaysForDate(date: var): var {
-        if (!loaded)
-            return [];
-        return holidaysByDate[isoDate(date)] || [];
-    }
-
-    function hasHoliday(date: var): bool {
-        return getHolidaysForDate(date).length > 0;
-    }
-
-    function nameForDate(date: var): string {
-        const entries = getHolidaysForDate(date);
-        if (entries.length === 0)
-            return "";
-        return entries.map(function (e) {
-            return e.name;
-        }).join(", ");
-    }
-
     function ensureYear(year: int): void {
         if (loaded && cachedYear === year)
             return;
@@ -98,26 +88,30 @@ Singleton {
         req.open("GET", "https://tanggalmerah.upset.dev/api/holidays?year=" + year);
         req.send();
     }
-
-    function applyData(json: var, year: int): void {
-        const map = {};
-        for (const y in json) {
-            const entries = json[y];
-            if (!Array.isArray(entries))
-                continue;
-            for (const entry of entries) {
-                if (!map[entry.date])
-                    map[entry.date] = [];
-                map[entry.date].push(entry);
-            }
-        }
-        holidaysByDate = map;
-        loaded = true;
-        cachedYear = year;
-        loading = false;
-        dataChanged();
+    function getHolidaysForDate(date: var): var {
+        if (!loaded)
+            return [];
+        return holidaysByDate[isoDate(date)] || [];
     }
-
+    function hasHoliday(date: var): bool {
+        return getHolidaysForDate(date).length > 0;
+    }
+    function isoDate(date: var): string {
+        if (typeof date === "string")
+            return date;
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + d;
+    }
+    function nameForDate(date: var): string {
+        const entries = getHolidaysForDate(date);
+        if (entries.length === 0)
+            return "";
+        return entries.map(function (e) {
+            return e.name;
+        }).join(", ");
+    }
     function writeCache(json: var): void {
         fileView.setText(JSON.stringify(json, null, 0));
     }
@@ -126,6 +120,12 @@ Singleton {
         id: fileView
 
         path: Paths.cacheDir + "/holidays/holidays.json"
+
+        onLoadFailed: function (err) {
+            try {
+                setText("{}");
+            } catch (e) {}
+        }
         onLoaded: {
             try {
                 const raw = text();
@@ -134,11 +134,6 @@ Singleton {
                     const now = new Date();
                     applyData(json, now.getFullYear());
                 }
-            } catch (e) {}
-        }
-        onLoadFailed: function (err) {
-            try {
-                setText("{}");
             } catch (e) {}
         }
     }

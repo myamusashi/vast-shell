@@ -18,161 +18,178 @@ import "WeatherItem" as WeatherItems
 Drawer {
     id: root
 
-    edge: Qt.RightEdge
-    open: GlobalStates.isWeatherPanelOpen
-    depth: parent.width * 0.25
-    length: parent.height - anchors.topMargin - anchors.bottomMargin
-    cornerRadius: 0
-    filletRadius: 0
-    color: GlobalStates.drawerColors
+    readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
+
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
-
-    readonly property bool anyPageOpen: humidityPages.isOpen || sunPages.isOpen || pressurePages.isOpen || visibilityPages.isOpen || windPages.isOpen || uvIndexPages.isOpen || aqiPages.isOpen || precipitationPages.isOpen || moonPages.isOpen
+    color: GlobalStates.drawerColors
+    cornerRadius: 0
+    depth: parent.width * 0.25
+    edge: Qt.RightEdge
+    filletRadius: 0
+    length: parent.height - anchors.topMargin - anchors.bottomMargin
+    open: GlobalStates.isWeatherPanelOpen
 
     Flickable {
         id: flickable
 
         anchors.fill: parent
-        contentWidth: width
-        contentHeight: contentColumn.implicitHeight + 40
-        clip: true
         boundsBehavior: Flickable.StopAtBounds
+        clip: true
+        contentHeight: contentColumn.implicitHeight + 40
+        contentWidth: width
 
         ScrollBar.vertical: ScrollBar {
             id: scrollBar
 
-            anchors {
-                right: flickable.right
-                top: flickable.top
-                bottom: flickable.bottom
-            }
-
             policy: ScrollBar.AsNeeded
             width: 6
-            contentItem: StyledRect {
-                implicitWidth: 6
-                radius: Appearance.rounding.small
-                color: Colours.m3Colors.m3Primary
-                opacity: scrollBar.pressed ? 0.8 : 0.5
-            }
+
             background: StyledRect {
-                implicitWidth: 6
-                radius: Appearance.rounding.small
                 color: Colours.m3Colors.m3OutlineVariant
+                implicitWidth: 6
                 opacity: 0.3
+                radius: Appearance.rounding.small
+            }
+            contentItem: StyledRect {
+                color: Colours.m3Colors.m3Primary
+                implicitWidth: 6
+                opacity: scrollBar.pressed ? 0.8 : 0.5
+                radius: Appearance.rounding.small
+            }
+
+            anchors {
+                bottom: flickable.bottom
+                right: flickable.right
+                top: flickable.top
             }
         }
+
         ColumnLayout {
             id: contentColumn
 
+            spacing: Appearance.spacing.normal
+            visible: GlobalStates.isWeatherPanelOpen
+
             anchors {
                 left: parent.left
+                margins: 20
                 right: parent.right
                 top: parent.top
-                margins: 20
             }
-
-            visible: GlobalStates.isWeatherPanelOpen
-            spacing: Appearance.spacing.normal
-
-            Headers {}
-
+            Headers {
+            }
             Loader {
                 id: summaryLoader
 
                 Layout.fillWidth: true
                 active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
                 asynchronous: true
+
                 sourceComponent: WrapperRectangle {
-                    implicitHeight: summaryText.implicitHeight + 20
                     color: Colours.m3Colors.m3SurfaceContainer
-                    radius: Appearance.rounding.normal
+                    implicitHeight: summaryText.implicitHeight + 20
                     margin: Appearance.margin.normal
+                    radius: Appearance.rounding.normal
 
                     StyledText {
                         id: summaryText
 
-                        text: Weather.getQuickSummary()
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.small
-                        wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignLeft
+                        text: Weather.getQuickSummary()
+                        wrapMode: Text.WordWrap
                     }
                 }
             }
-
             Loader {
                 Layout.fillWidth: true
                 active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
                 asynchronous: true
+
                 sourceComponent: ColumnLayout {
                     spacing: Appearance.spacing.large
 
                     WeatherItems.ForecastHourly {
                         Layout.fillWidth: true
                     }
-
                     WeatherItems.ForecastDaily {
                         Layout.fillWidth: true
                     }
                 }
             }
-
             GridLayout {
-                Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
-                columns: 2
+                Layout.fillWidth: true
                 columnSpacing: Appearance.spacing.large
+                columns: 2
                 rowSpacing: Appearance.spacing.large
 
                 GridLayout {
-                    Layout.fillWidth: true
                     Layout.alignment: Qt.AlignCenter
-                    columns: 2
+                    Layout.fillWidth: true
                     columnSpacing: Appearance.spacing.large
+                    columns: 2
                     rowSpacing: Appearance.spacing.large
 
                     Card {
                         zoomPage: humidityPages
-                        content: WeatherItems.Humidity {}
+
+                        content: WeatherItems.Humidity {
+                        }
                     }
                     Card {
                         zoomPage: sunPages
-                        content: WeatherItems.Sun {}
+
+                        content: WeatherItems.Sun {
+                        }
                     }
                     Card {
                         zoomPage: pressurePages
-                        content: WeatherItems.Pressure {}
+
+                        content: WeatherItems.Pressure {
+                        }
                     }
                     Card {
                         zoomPage: visibilityPages
-                        content: WeatherItems.Visibility {}
+
+                        content: WeatherItems.Visibility {
+                        }
                     }
                     Card {
                         zoomPage: windPages
-                        content: WeatherItems.Wind {}
+
+                        content: WeatherItems.Wind {
+                        }
                     }
                     Card {
                         zoomPage: uvIndexPages
-                        content: WeatherItems.UVIndex {}
+
+                        content: WeatherItems.UVIndex {
+                        }
                     }
                     Card {
                         zoomPage: aqiPages
-                        content: WeatherItems.AQI {}
+
+                        content: WeatherItems.AQI {
+                        }
                     }
                     Card {
                         zoomPage: precipitationPages
-                        content: WeatherItems.Precipitation {}
+
+                        content: WeatherItems.Precipitation {
+                        }
                     }
                     Card {
                         zoomPage: moonPages
-                        content: WeatherItems.Moon {}
-                    }
 
+                        content: WeatherItems.Moon {
+                        }
+                    }
                     WeatherItems.Cloudiness {
-                        implicitWidth: 150
                         implicitHeight: 150
+                        implicitWidth: 150
                     }
                 }
             }
@@ -182,50 +199,40 @@ Drawer {
             }
         }
     }
-
     MouseArea {
         anchors.fill: parent
-        visible: root.anyPageOpen
         enabled: root.anyPageOpen
         hoverEnabled: true
+        visible: root.anyPageOpen
 
         onClicked: {}
         onPressed: {}
         onReleased: {}
     }
-
     WeatherPages.Humidity {
         id: humidityPages
     }
-
     WeatherPages.Sun {
         id: sunPages
     }
-
     WeatherPages.Pressure {
         id: pressurePages
     }
-
     WeatherPages.Visibility {
         id: visibilityPages
     }
-
     WeatherPages.Wind {
         id: windPages
     }
-
     WeatherPages.AQI {
         id: aqiPages
     }
-
     WeatherPages.Precipitation {
         id: precipitationPages
     }
-
     WeatherPages.Moon {
         id: moonPages
     }
-
     WeatherPages.UVIndex {
         id: uvIndexPages
     }
@@ -236,19 +243,19 @@ Drawer {
         default property alias content: contentLoader.sourceComponent
         required property var zoomPage
 
-        implicitWidth: 150
         implicitHeight: 150
+        implicitWidth: 150
 
         Loader {
             id: contentLoader
 
             anchors.fill: parent
         }
-
         MArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             enabled: !root.anyPageOpen
+
             onClicked: {
                 cardRoot.zoomPage.zoomOriginX = cardRoot.mapToItem(root, 0, 0).x + cardRoot.width / 2;
                 cardRoot.zoomPage.zoomOriginY = cardRoot.mapToItem(root, 0, 0).y + cardRoot.height / 2;

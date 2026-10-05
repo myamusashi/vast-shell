@@ -10,23 +10,25 @@ import qs.Core.Utils
 Drawer {
     id: container
 
-    edge: Qt.TopEdge
     alignment: Qt.AlignRight
-    open: GlobalStates.isCalendarOpen
-    depth: 300
-    length: parent.width * 0.2
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: 300
+    edge: Qt.TopEdge
+    filletRadius: 40
+    length: parent.width * 0.2
+    open: GlobalStates.isCalendarOpen
 
     Loader {
         id: contentLoader
 
-        anchors.fill: parent
         active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && container.isCalendarShow // qmllint disable
+        anchors.fill: parent
         asynchronous: true
-        sourceComponent: Content {}
+
+        sourceComponent: Content {
+        }
     }
 }

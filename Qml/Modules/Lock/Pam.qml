@@ -12,16 +12,11 @@ import qs.Services
 Scope {
     id: root
 
-    required property WlSessionLock lock
-
     property alias currentText: authFlow.currentText
+    property bool isUnlock: false
+    required property WlSessionLock lock
     property alias showFailure: authFlow.showFailure
     property alias unlockInProgress: authFlow.inProgress
-    property bool isUnlock: false
-
-    AuthFlow {
-        id: authFlow
-    }
 
     function tryUnlock() {
         if (!authFlow.submitSecret())
@@ -32,16 +27,14 @@ Scope {
             authFlow.inProgress = false;
     }
 
+    AuthFlow {
+        id: authFlow
+    }
     PamContext {
         id: pam
 
         config: "password.conf"
         configDirectory: `file://${Paths.projectRoot}/Assets/pam.d`
-
-        onPamMessage: {
-            if (this.responseRequired)
-                this.respond(root.currentText);
-        }
 
         onCompleted: result => {
             if (result === PamResult.Success) {
@@ -51,6 +44,10 @@ Scope {
             } else {
                 authFlow.fail();
             }
+        }
+        onPamMessage: {
+            if (this.responseRequired)
+                this.respond(root.currentText);
         }
     }
 }

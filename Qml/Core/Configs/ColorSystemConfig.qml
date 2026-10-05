@@ -4,7 +4,7 @@ import qs.Core.Utils
 
 JsonObject {
     property bool isDarkMode: true
-    property bool useStaticColors: false
-    property string staticColorsPath: Paths.shellDir + "/colors.json"
     property string scheme: "tonal-spot"
+    property string staticColorsPath: Paths.shellDir + "/colors.json"
+    property bool useStaticColors: false
 }

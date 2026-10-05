@@ -14,96 +14,92 @@ import qs.Services
 ItemDelegate {
     id: root
 
-    required property var modelData
+    readonly property bool hasImage: (modelData.image ?? "") !== ""
     required property int index
+    readonly property bool isApp: modelData.kind === "app"
+    required property var modelData
 
     signal rowClicked(var row)
     signal rowHovered(int rowIndex)
 
-    readonly property bool isApp: modelData.kind === "app"
-    readonly property bool hasImage: (modelData.image ?? "") !== ""
-
-    implicitWidth: 300
     implicitHeight: 50
+    implicitWidth: 300
 
+    background: Item {
+    }
     contentItem: RowLayout {
         spacing: Appearance.spacing.normal
 
         StyledRect {
             Layout.alignment: Qt.AlignVCenter
             Layout.leftMargin: Appearance.margin.normal
-            implicitWidth: 40
-            implicitHeight: 40
             clip: true
+            implicitHeight: 40
+            implicitWidth: 40
 
             IconImage {
                 anchors.centerIn: parent
-                implicitSize: parent.height
-                backer.cache: true
-                visible: root.isApp
-                source: root.isApp ? Quickshell.iconPath(root.modelData.entry.icon, "image-missing") : ""
                 asynchronous: true
+                backer.cache: true
+                implicitSize: parent.height
+                source: root.isApp ? Quickshell.iconPath(root.modelData.entry.icon, "image-missing") : ""
+                visible: root.isApp
             }
-
             Image {
                 anchors.centerIn: parent
-                width: parent.height
+                asynchronous: true
+                cache: true
+                fillMode: Image.PreserveAspectCrop
                 height: parent.height
+                source: root.modelData.image ?? ""
                 sourceSize: Qt.size(96, 96)
                 visible: !root.isApp && root.hasImage
-                source: root.modelData.image ?? ""
-                fillMode: Image.PreserveAspectCrop
-                cache: true
-                asynchronous: true
+                width: parent.height
             }
-
             Icon {
                 anchors.centerIn: parent
-                visible: !root.isApp && !root.hasImage
-                type: Icon.Material
-                icon: root.modelData.icon ?? ""
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.extraLarge
+                icon: root.modelData.icon ?? ""
+                type: Icon.Material
+                visible: !root.isApp && !root.hasImage
             }
         }
-
         ColumnLayout {
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
             Layout.rightMargin: Appearance.margin.normal
             spacing: 2
 
             HighlightText {
                 Layout.fillWidth: true
-                searchText: LauncherServices.rowSearchText
-                fullText: root.modelData.name || ""
-                font.pixelSize: Appearance.fonts.size.large
-                elide: Text.ElideRight
-                font.weight: Font.DemiBold
                 color: Colours.m3Colors.m3OnSurface
+                elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.large
+                font.weight: Font.DemiBold
+                fullText: root.modelData.name || ""
+                searchText: LauncherServices.rowSearchText
             }
-
             StyledText {
                 Layout.fillWidth: true
-                visible: text !== ""
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.small
                 text: {
                     if (root.modelData.kind === "shotFile")
                         return FormatTimeUtils.formatLauncher(root.modelData.file.created);
                     return root.modelData.comment ?? "";
                 }
-                font.pixelSize: Appearance.fonts.size.small
-                elide: Text.ElideRight
-                color: Colours.m3Colors.m3OnSurfaceVariant
+                visible: text !== ""
             }
         }
     }
 
-    background: Item {}
-
     MArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onEntered: root.rowHovered(root.index)
+
         onClicked: root.rowClicked(root.modelData)
+        onEntered: root.rowHovered(root.index)
     }
 }

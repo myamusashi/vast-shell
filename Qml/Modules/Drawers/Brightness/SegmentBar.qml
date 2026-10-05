@@ -7,18 +7,13 @@ import qs.Services
 Rectangle {
     id: root
 
-    signal interactStarted
-    signal interactEnded
-
-    color: "black"
-
-    implicitWidth: 220
-    implicitHeight: 15
-
     readonly property real ratio: Brightness.value / (Brightness.maxValue || 1)
     property int segmentCount: 20
-    property real segmentSpacing: 0.5
     property real segmentMargins: 0.5
+    property real segmentSpacing: 0.5
+
+    signal interactEnded
+    signal interactStarted
 
     function commitFromX(x: real): void {
         const usable = width - segmentMargins * 2;
@@ -26,25 +21,28 @@ Rectangle {
         Brightness.setBrightness(Math.round(((clamped - segmentMargins) / usable) * Brightness.maxValue));
     }
 
+    color: "black"
+    implicitHeight: 15
+    implicitWidth: 220
+
     MouseArea {
         id: interactionArea
 
         anchors.fill: parent
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        hoverEnabled: true
 
+        onCanceled: root.interactEnded()
+        onPositionChanged: mouse => {
+            if (interactionArea.pressed)
+                root.commitFromX(mouse.x);
+        }
         onPressed: mouse => {
             root.interactStarted();
             root.commitFromX(mouse.x);
         }
         onReleased: root.interactEnded()
-        onPositionChanged: mouse => {
-            if (interactionArea.pressed)
-                root.commitFromX(mouse.x);
-        }
-        onCanceled: root.interactEnded()
     }
-
     Item {
         id: pill
 
@@ -63,23 +61,22 @@ Rectangle {
 
                     required property int index
 
-                    width: (pill.width - root.segmentMargins * 2 - (root.segmentCount - 1) * root.segmentSpacing) / root.segmentCount
                     height: parent.height
+                    width: (pill.width - root.segmentMargins * 2 - (root.segmentCount - 1) * root.segmentSpacing) / root.segmentCount
 
                     Rectangle {
                         id: segment
 
-                        readonly property int litSegments: Math.round(root.ratio * root.segmentCount)
                         readonly property bool isLit: segmentCell.index < litSegments
+                        readonly property int litSegments: Math.round(root.ratio * root.segmentCount)
 
                         anchors.centerIn: parent
-                        width: segmentCell.width
-                        height: segmentCell.height
-                        radius: 0
-
-                        color: isLit ? "white" : "transparent"
                         border.color: "black"
                         border.width: 0.5
+                        color: isLit ? "white" : "transparent"
+                        height: segmentCell.height
+                        radius: 0
+                        width: segmentCell.width
                     }
                 }
             }

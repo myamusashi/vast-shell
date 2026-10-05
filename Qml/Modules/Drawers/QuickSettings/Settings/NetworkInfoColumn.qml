@@ -16,54 +16,118 @@ ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
 
-        EthernetCard {}
-        WiFiCard {}
+        EthernetCard {
+        }
+        WiFiCard {
+        }
+    }
+    BluetoothCard {
     }
 
-    BluetoothCard {}
+    component BluetoothCard: StyledRect {
+        id: bluetoothCardComopnent
 
-    component EthernetCard: StyledRect {
-        id: ethernetCard
+        readonly property string cardIconName: BluetoothServices.cardIconName
+        readonly property string cardSubtitle: BluetoothServices.cardSubtitle
+        readonly property bool hasConnected: BluetoothServices.hasConnected
+        readonly property bool isPowered: BluetoothServices.isPowered
 
         Layout.fillWidth: true
-        implicitHeight: 70
         color: Colours.m3Colors.m3SurfaceContainer
+        implicitHeight: 70
         radius: Appearance.rounding.normal
-
-        readonly property WiredDevice wiredDevice: Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null
-        readonly property bool isConnected: (wiredDevice?.state ?? ConnectionState.Disconnected) === ConnectionState.Connected
 
         MArea {
             anchors.fill: parent
+            cursorShape: content && content.bluetooth.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
+            enabled: content && !content.bluetooth.isVisible // qmllint disable
             hoverEnabled: true
-            cursorShape: content && content.ethernet.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
-            enabled: content && !content.ethernet.isVisible // qmllint disable
+
             onClicked: {
                 if (content) // qmllint disable
-                    content.ethernet.isVisible = !content.ethernet.isVisible; // qmllint disable
+                    content.bluetooth.isVisible = !content.bluetooth.isVisible; // qmllint disable
             }
         }
-
         RowLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
             spacing: Appearance.spacing.normal
 
             Rectangle {
+                Layout.preferredHeight: 50
                 Layout.preferredWidth: 50
+                color: bluetoothCardComopnent.hasConnected ? Colours.m3Colors.m3Primary : bluetoothCardComopnent.isPowered ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+                radius: Appearance.rounding.small
+
+                Icon {
+                    anchors.centerIn: parent
+                    color: bluetoothCardComopnent.hasConnected ? Colours.m3Colors.m3OnPrimary : bluetoothCardComopnent.isPowered ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    font.pixelSize: Appearance.fonts.size.extraLarge
+                    icon: bluetoothCardComopnent.cardIconName
+                    type: Icon.Material
+                }
+            }
+            Column {
+                Layout.fillWidth: true
+                spacing: 2
+
+                StyledText {
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.large
+                    text: qsTr("Bluetooth")
+                }
+                StyledText {
+                    color: Colours.m3Colors.m3OnSurface
+                    elide: Text.ElideRight
+                    font.pixelSize: Appearance.fonts.size.normal
+                    font.weight: Font.Medium
+                    text: bluetoothCardComopnent.cardSubtitle
+                    width: parent.width
+                }
+            }
+        }
+    }
+    component EthernetCard: StyledRect {
+        id: ethernetCard
+
+        readonly property bool isConnected: (wiredDevice?.state ?? ConnectionState.Disconnected) === ConnectionState.Connected
+        readonly property WiredDevice wiredDevice: Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null
+
+        Layout.fillWidth: true
+        color: Colours.m3Colors.m3SurfaceContainer
+        implicitHeight: 70
+        radius: Appearance.rounding.normal
+
+        MArea {
+            anchors.fill: parent
+            cursorShape: content && content.ethernet.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
+            enabled: content && !content.ethernet.isVisible // qmllint disable
+            hoverEnabled: true
+
+            onClicked: {
+                if (content) // qmllint disable
+                    content.ethernet.isVisible = !content.ethernet.isVisible; // qmllint disable
+            }
+        }
+        RowLayout {
+            anchors.fill: parent
+            anchors.margins: Appearance.margin.normal
+            spacing: Appearance.spacing.normal
+
+            Rectangle {
                 Layout.fillHeight: true
+                Layout.preferredWidth: 50
                 color: ethernetCard.isConnected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
-                    type: Icon.Material
                     anchors.centerIn: parent
-                    icon: "settings_ethernet"
                     color: ethernetCard.isConnected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge * 0.8
+                    icon: "settings_ethernet"
+                    type: Icon.Material
                 }
             }
-
             Column {
                 Layout.fillWidth: true
                 spacing: 2
@@ -72,157 +136,86 @@ ColumnLayout {
                     spacing: Appearance.spacing.small
 
                     StyledText {
-                        text: qsTr("Ethernet")
+                        color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
                         font.weight: Font.Medium
-                        color: Colours.m3Colors.m3OnSurface
+                        text: qsTr("Ethernet")
                     }
-
                     StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.small
                         text: `(${SystemUsage.statusVPNInterface})`
                         visible: SystemUsage.statusVPNInterface !== ""
-                        font.pixelSize: Appearance.fonts.size.small
-                        color: Colours.m3Colors.m3OnSurface
                     }
                 }
-
                 StyledText {
-                    text: ethernetCard.isConnected ? qsTr("Connected") : qsTr("Not Connected")
-                    font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: ethernetCard.isConnected ? qsTr("Connected") : qsTr("Not Connected")
                 }
             }
         }
     }
-
     component WiFiCard: StyledRect {
         id: wifiCard
 
-        Layout.fillWidth: true
-        implicitHeight: 70
-        color: Colours.m3Colors.m3SurfaceContainer
-        radius: Appearance.rounding.normal
+        readonly property var connectedNetwork: wifiDevice?.networks.values.find(n => n.connected) ?? null
+        readonly property bool isConnected: Networking.wifiEnabled && (connectedNetwork?.connected ?? false)
 
         // Pure declarative bindings — no manual update functions needed
         readonly property WifiDevice wifiDevice: Networking.devices.values.find(d => d.type === DeviceType.Wifi) ?? null
 
-        readonly property var connectedNetwork: wifiDevice?.networks.values.find(n => n.connected) ?? null
-
-        readonly property bool isConnected: Networking.wifiEnabled && (connectedNetwork?.connected ?? false)
+        Layout.fillWidth: true
+        color: Colours.m3Colors.m3SurfaceContainer
+        implicitHeight: 70
+        radius: Appearance.rounding.normal
 
         MArea {
             anchors.fill: parent
-            hoverEnabled: true
             cursorShape: content && content.wifi.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
             enabled: content && !content.wifi.isVisible // qmllint disable
+            hoverEnabled: true
+
             onClicked: {
                 if (content) // qmllint disable
                     content.wifi.isVisible = !content.wifi.isVisible; // qmllint disable
             }
         }
-
         RowLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
             spacing: Appearance.spacing.normal
 
             Rectangle {
-                Layout.preferredWidth: 50
                 Layout.preferredHeight: 50
+                Layout.preferredWidth: 50
                 color: wifiCard.isConnected ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
                 radius: Appearance.rounding.small
 
                 Icon {
-                    type: Icon.Material
                     anchors.centerIn: parent
-                    icon: !wifiCard.isConnected ? "wifi_off" : WifiUtils.iconFor(wifiCard.connectedNetwork.signalStrength, false)
                     color: wifiCard.isConnected ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     font.pixelSize: Appearance.fonts.size.extraLarge
-                }
-            }
-
-            Column {
-                Layout.fillWidth: true
-                spacing: 2
-
-                StyledText {
-                    text: qsTr("Internet")
-                    font.pixelSize: Appearance.fonts.size.large
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                }
-
-                StyledText {
-                    text: wifiCard.isConnected ? wifiCard.connectedNetwork.name : qsTr("WiFi Disconnected")
-                    font.pixelSize: Appearance.fonts.size.normal
-                    font.weight: Font.Medium
-                    width: parent.width
-                    elide: Text.ElideRight
-                    color: Colours.m3Colors.m3OnSurface
-                }
-            }
-        }
-    }
-    component BluetoothCard: StyledRect {
-        id: bluetoothCardComopnent
-
-        Layout.fillWidth: true
-        implicitHeight: 70
-        color: Colours.m3Colors.m3SurfaceContainer
-        radius: Appearance.rounding.normal
-
-        readonly property string cardIconName: BluetoothServices.cardIconName
-        readonly property string cardSubtitle: BluetoothServices.cardSubtitle
-        readonly property bool hasConnected: BluetoothServices.hasConnected
-        readonly property bool isPowered: BluetoothServices.isPowered
-
-        MArea {
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: content && content.bluetooth.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
-            enabled: content && !content.bluetooth.isVisible // qmllint disable
-            onClicked: {
-                if (content) // qmllint disable
-                    content.bluetooth.isVisible = !content.bluetooth.isVisible; // qmllint disable
-            }
-        }
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: Appearance.margin.normal
-            spacing: Appearance.spacing.normal
-
-            Rectangle {
-                Layout.preferredWidth: 50
-                Layout.preferredHeight: 50
-                color: bluetoothCardComopnent.hasConnected ? Colours.m3Colors.m3Primary : bluetoothCardComopnent.isPowered ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
-                radius: Appearance.rounding.small
-
-                Icon {
+                    icon: !wifiCard.isConnected ? "wifi_off" : WifiUtils.iconFor(wifiCard.connectedNetwork.signalStrength, false)
                     type: Icon.Material
-                    anchors.centerIn: parent
-                    icon: bluetoothCardComopnent.cardIconName
-                    color: bluetoothCardComopnent.hasConnected ? Colours.m3Colors.m3OnPrimary : bluetoothCardComopnent.isPowered ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
-                    font.pixelSize: Appearance.fonts.size.extraLarge
                 }
             }
-
             Column {
                 Layout.fillWidth: true
                 spacing: 2
 
                 StyledText {
-                    text: qsTr("Bluetooth")
-                    font.pixelSize: Appearance.fonts.size.large
                     color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.large
+                    text: qsTr("Internet")
                 }
-
                 StyledText {
-                    text: bluetoothCardComopnent.cardSubtitle
+                    color: Colours.m3Colors.m3OnSurface
+                    elide: Text.ElideRight
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.Medium
+                    text: wifiCard.isConnected ? wifiCard.connectedNetwork.name : qsTr("WiFi Disconnected")
                     width: parent.width
-                    elide: Text.ElideRight
-                    color: Colours.m3Colors.m3OnSurface
                 }
             }
         }

@@ -6,6 +6,17 @@ import Quickshell
 Scope {
     id: root
 
+    property bool isCalendarOpen: false
+    property bool isClipboardOpen: false
+    property bool isLauncherOpen: false
+    property bool isMediaPlayerOpen: false
+    property bool isNotificationCenterOpen: false
+    property bool isQuickSettingsOpen: false
+    property bool isRecordingPanelOpen: false
+    property bool isSessionOpen: false
+    property bool isSettingsOpen: false
+    property bool isWallpaperSwitcherOpen: false
+    property bool isWeatherPanelOpen: false
     readonly property var panelProps: ({
             "calendar": "isCalendarOpen",
             "launcher": "isLauncherOpen",
@@ -20,18 +31,12 @@ Scope {
             "recordingPanel": "isRecordingPanelOpen"
         })
 
-    property bool isClipboardOpen: false
-    property bool isSettingsOpen: false
-    property bool isCalendarOpen: false
-    property bool isLauncherOpen: false
-    property bool isSessionOpen: false
-    property bool isMediaPlayerOpen: false
-    property bool isNotificationCenterOpen: false
-    property bool isQuickSettingsOpen: false
-    property bool isWallpaperSwitcherOpen: false
-    property bool isWeatherPanelOpen: false
-    property bool isRecordingPanelOpen: false
-
+    function closePanel(name) {
+        setPanel(name, false);
+    }
+    function openPanel(name) {
+        setPanel(name, true);
+    }
     function setPanel(name, value) {
         const prop = panelProps[name];
         if (prop)
@@ -39,17 +44,9 @@ Scope {
         else
             console.warn("Unknown panel:", name);
     }
-
     function togglePanel(name) {
         const prop = panelProps[name];
         if (prop)
             setPanel(name, !root[prop]);
-    }
-
-    function openPanel(name) {
-        setPanel(name, true);
-    }
-    function closePanel(name) {
-        setPanel(name, false);
     }
 }

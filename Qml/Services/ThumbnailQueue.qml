@@ -8,18 +8,19 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property var queue: []
-    property var currentJob: null
     readonly property bool busy: currentJob !== null
+    property var currentJob: null
+    property var queue: []
 
     signal thumbnailReady(string videoPath, string thumbnailPath)
 
-    function pathFor(videoPath, outputDirectory) {
-        const fileName = String(videoPath).split("/").pop();
-        const dot = fileName.lastIndexOf(".");
-        return `${outputDirectory}/${dot > 0 ? fileName.substring(0, dot) : fileName}.png`;
+    function finish(videoPath, thumbnailPath, callback) {
+        thumbnailReady(videoPath, thumbnailPath);
+        if (callback)
+            callback(videoPath, thumbnailPath);
+        currentJob = null;
+        startNext();
     }
-
     function generate(videoPath, thumbnailPath, callback) {
         if (!videoPath || !thumbnailPath)
             return;
@@ -32,7 +33,11 @@ Singleton {
         });
         startNext();
     }
-
+    function pathFor(videoPath, outputDirectory) {
+        const fileName = String(videoPath).split("/").pop();
+        const dot = fileName.lastIndexOf(".");
+        return `${outputDirectory}/${dot > 0 ? fileName.substring(0, dot) : fileName}.png`;
+    }
     function startNext() {
         if (currentJob || queue.length === 0)
             return;
@@ -43,22 +48,15 @@ Singleton {
         probeProcess.running = true;
     }
 
-    function finish(videoPath, thumbnailPath, callback) {
-        thumbnailReady(videoPath, thumbnailPath);
-        if (callback)
-            callback(videoPath, thumbnailPath);
-        currentJob = null;
-        startNext();
-    }
-
     Process {
         id: probeProcess
 
-        property string videoPath: ""
-        property string thumbnailPath: ""
         property var callback: null
+        property string thumbnailPath: ""
+        property string videoPath: ""
 
         command: ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", videoPath]
+
         stdout: StdioCollector {
             onStreamFinished: {
                 const duration = parseFloat(text.trim());
@@ -82,17 +80,17 @@ Singleton {
                 root.finish(probeProcess.videoPath, "", probeProcess.callback);
         }
     }
-
     Process {
         id: extractProcess
 
-        property string seek: ""
-        property string videoPath: ""
-        property string thumbnailPath: ""
-        property string outputDirectory: ""
         property var callback: null
+        property string outputDirectory: ""
+        property string seek: ""
+        property string thumbnailPath: ""
+        property string videoPath: ""
 
         command: ["sh", "-c", "mkdir -p \"$1\" && exec ffmpeg -ss \"$2\" -i \"$3\" -vframes 1 -q:v 2 -vf scale=256:-1 \"$4\" -y -v error", "sh", outputDirectory, seek, videoPath, thumbnailPath]
+
         onExited: function (exitCode) { // qmllint disable signal-handler-parameters
             root.finish(extractProcess.videoPath, exitCode === 0 ? extractProcess.thumbnailPath : "", extractProcess.callback);
         }

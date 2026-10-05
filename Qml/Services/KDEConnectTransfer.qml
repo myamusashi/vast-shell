@@ -8,7 +8,7 @@ import Quickshell.Hyprland
 Singleton {
     id: root
 
-    readonly property var toplevels: Hyprland.toplevels.values ?? Hyprland.toplevels
+    readonly property bool active: match !== null
     readonly property var match: {
         for (const toplevel of root.toplevels) {
             const found = /^(.*) \((\d+)% of ([^)]+)\) — KDE Connect Daemon$/.exec(toplevel.title ?? "");
@@ -20,8 +20,7 @@ Singleton {
         }
         return null;
     }
-
-    readonly property bool active: match !== null
     readonly property int percent: match ? match.percent : 0
     readonly property string sizeText: match ? match.sizeText : ""
+    readonly property var toplevels: Hyprland.toplevels.values ?? Hyprland.toplevels
 }

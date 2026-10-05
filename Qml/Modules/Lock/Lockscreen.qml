@@ -22,27 +22,23 @@ Scope {
             pam: pam
         }
     }
-
     Pam {
         id: pam
 
         lock: lock
     }
-
     IpcHandler {
-        target: "lock"
-
+        function isLocked(): bool {
+            return lock.locked;
+        }
         function lock(): void {
             lock.locked = true;
             GlobalStates.isLockscreenOpen = true;
         }
-
         function unlock(): void {
             lock.unlock();
         }
 
-        function isLocked(): bool {
-            return lock.locked;
-        }
+        target: "lock"
     }
 }

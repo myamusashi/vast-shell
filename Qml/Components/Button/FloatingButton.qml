@@ -12,24 +12,63 @@ import qs.Services
 Item {
     id: root
 
-    property string size: "medium"
-
-    readonly property int actionButtonSize: size === "small" ? 32 : size === "regular" ? 40 : size === "large" ? 96 : 56
-    readonly property int actionButtonRadius: size === "small" ? 12 : size === "regular" ? 12 : size === "large" ? 28 : 16
     readonly property int actionButtonIconSize: size === "small" ? 16 : size === "large" ? 36 : 24
-
+    readonly property int actionButtonRadius: size === "small" ? 12 : size === "regular" ? 12 : size === "large" ? 28 : 16
+    readonly property int actionButtonSize: size === "small" ? 32 : size === "regular" ? 40 : size === "large" ? 96 : 56
     readonly property color backgroundColor: enabled || color.a === 0 ? color : Qt.alpha(color, 0.12)
-
     property alias backgroundRadius: background.radius
-    property bool pressed
-    property bool hovered
     property color color: Colours.m3Colors.m3PrimaryContainer
-    property IconComponent icon: IconComponent {}
-
+    property bool hovered: hoverHandler.hovered
+    property IconComponent icon: IconComponent {
+    }
     readonly property bool keyboardFocused: activeFocus
-
+    property bool pressed: tapHandler.pressed
+    property string size: "medium"
     property bool spinning: false
 
+    signal clicked
+
+    implicitHeight: actionButtonSize
+    implicitWidth: actionButtonSize
+
+    // qmllint disable
+    states: [
+        State {
+            name: "disabled"
+            when: !root.enabled
+
+            PropertyChanges {
+                opacity: 0.38
+                target: root
+            }
+        },
+        State {
+            name: "focused"
+            when: root.enabled && root.keyboardFocused
+
+            PropertyChanges {
+                opacity: 1
+                target: focusRing
+            }
+        },
+        State {
+            name: "normal"
+            when: root.enabled && !root.hovered && !root.pressed && !root.keyboardFocused
+        }
+    ]
+
+    Keys.onReturnPressed: event => {
+        if (enabled) {
+            clicked();
+            event.accepted = true;
+        }
+    }
+    Keys.onSpacePressed: event => {
+        if (enabled) {
+            clicked();
+            event.accepted = true;
+        }
+    }
     onSpinningChanged: {
         if (!spinning) {
             const r = ((iconItem.rotation % 360) + 360) % 360;
@@ -46,72 +85,29 @@ Item {
     NumberAnimation {
         id: resetAnim
 
-        target: iconItem
-        property: "rotation"
         duration: Appearance.animations.durations.normal
         easing.type: Easing.OutCubic
+        property: "rotation"
+        target: iconItem
+
         onFinished: {
             if (iconItem.rotation >= 359.9)
                 iconItem.rotation = 0;
         }
     }
-
-    signal clicked
-
-    Keys.onReturnPressed: event => {
-        if (enabled) {
-            clicked();
-            event.accepted = true;
-        }
-    }
-
-    Keys.onSpacePressed: event => {
-        if (enabled) {
-            clicked();
-            event.accepted = true;
-        }
-    }
-
-    implicitWidth: actionButtonSize
-    implicitHeight: actionButtonSize
-
-    // qmllint disable
-    states: [
-        State {
-            name: "disabled"
-            when: !root.enabled
-            PropertyChanges {
-                target: root
-                opacity: 0.38
-            }
-        },
-        State {
-            name: "focused"
-            when: root.enabled && root.keyboardFocused
-            PropertyChanges {
-                target: focusRing
-                opacity: 1
-            }
-        },
-        State {
-            name: "normal"
-            when: root.enabled && !root.hovered && !root.pressed && !root.keyboardFocused
-        }
-    ]
     // qmllint enable
 
     Elevation {
-        visible: root.backgroundColor.a > 0 && root.enabled
-        radius: background.radius
         level: root.hovered && !root.pressed ? 4 : 3
+        radius: background.radius
+        visible: root.backgroundColor.a > 0 && root.enabled
     }
-
     ClippingRectangle {
         id: background
 
         anchors.fill: parent
-        radius: root.enabled && root.pressed ? height * 0.5 : root.actionButtonRadius
         color: root.backgroundColor
+        radius: root.enabled && root.pressed ? height * 0.5 : root.actionButtonRadius
 
         Behavior on radius {
             NAnim {
@@ -124,7 +120,6 @@ Item {
             anchors.fill: parent
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
-
         ParticleRipple {
             anchors.fill: parent
             color: Colours.m3Colors.m3OutlineVariant
@@ -132,26 +127,23 @@ Item {
             particleCount: 2
         }
     }
-
     StateLayer {
-        layerEnabled: root.enabled
-        layerPressed: root.pressed
-        layerHovered: root.hovered
-
         anchors.fill: parent
-        radius: background.radius
         color: root.icon.color
+        layerEnabled: root.enabled
+        layerHovered: root.hovered
+        layerPressed: root.pressed
+        radius: background.radius
     }
-
     Rectangle {
         id: focusRing
 
         anchors.fill: parent
-        radius: background.radius
-        color: "transparent"
         border.color: Colours.m3Colors.m3Primary
         border.width: 2
+        color: "transparent"
         opacity: 0
+        radius: background.radius
 
         Behavior on opacity {
             NAnim {
@@ -159,41 +151,35 @@ Item {
             }
         }
     }
-
     Icon {
         id: iconItem
 
         anchors.centerIn: parent
-        icon: root.icon.name
         color: root.icon.color
         font.pixelSize: root.icon.size
+        icon: root.icon.name
 
         RotationAnimator on rotation {
-            running: root.spinning
-            loops: Animation.Infinite
             duration: Appearance.animations.durations.extraLarge
             easing.type: Easing.Linear
             from: 0
+            loops: Animation.Infinite
+            running: root.spinning
             to: 360
         }
     }
-
     HoverHandler {
         id: hoverHandler
 
         cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
-
-    hovered: hoverHandler.hovered
-
     TapHandler {
         id: tapHandler
 
         enabled: root.enabled
+
         onTapped: root.clicked()
     }
-
-    pressed: tapHandler.pressed
 
     component IconComponent: QtObject {
         property color color: Colours.m3Colors.m3OnPrimaryContainer

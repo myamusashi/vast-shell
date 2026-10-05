@@ -18,12 +18,14 @@ SettingsPageBase {
             columns: 2
 
             SettingRow {
-                label: qsTr("Frame Rate")
                 description: qsTr("Target frames per second for screen recordings.")
+                label: qsTr("Frame Rate")
+
                 SplitButton {
                     readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.maxFps)
 
-                    textRole: "display"
+                    currentIndex: selectedIndex
+                    icon.name: "autofps_select"
                     model: [
                         {
                             display: "30 FPS",
@@ -38,9 +40,8 @@ SettingsPageBase {
                             value: 120
                         }
                     ]
-                    currentIndex: selectedIndex
                     text: model[selectedIndex]?.display ?? ""
-                    icon.name: "autofps_select"
+                    textRole: "display"
 
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.maxFps = model[index].value;
@@ -48,14 +49,15 @@ SettingsPageBase {
                     }
                 }
             }
-
             SettingRow {
-                label: qsTr("Bitrate")
                 description: qsTr("Bitrate limit for recordings. Higher values give sharper video but larger files.")
+                label: qsTr("Bitrate")
+
                 SplitButton {
                     readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.bitrate)
 
-                    textRole: "display"
+                    currentIndex: selectedIndex
+                    icon.name: "shutter_speed"
                     model: [
                         {
                             display: "1 MB",
@@ -74,9 +76,8 @@ SettingsPageBase {
                             value: "20 MB"
                         }
                     ]
-                    currentIndex: selectedIndex
                     text: model[selectedIndex]?.display ?? ""
-                    icon.name: "shutter_speed"
+                    textRole: "display"
 
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.bitrate = model[index].value;
@@ -84,14 +85,15 @@ SettingsPageBase {
                     }
                 }
             }
-
             SettingRow {
-                label: qsTr("Video Codec")
                 description: qsTr("Encoder for the video stream.")
+                label: qsTr("Video Codec")
+
                 SplitButton {
                     readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.videoCodec)
 
-                    textRole: "display"
+                    currentIndex: selectedIndex
+                    icon.name: "hd"
                     model: [
                         {
                             display: "Auto",
@@ -118,9 +120,8 @@ SettingsPageBase {
                             value: "av1"
                         }
                     ]
-                    currentIndex: selectedIndex
                     text: model[selectedIndex]?.display ?? ""
-                    icon.name: "hd"
+                    textRole: "display"
 
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.videoCodec = model[index].value;
@@ -128,14 +129,15 @@ SettingsPageBase {
                     }
                 }
             }
-
             SettingRow {
-                label: qsTr("Audio Codec")
                 description: qsTr("Encoder for the audio stream.")
+                label: qsTr("Audio Codec")
+
                 SplitButton {
                     readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.audioCodec)
 
-                    textRole: "display"
+                    currentIndex: selectedIndex
+                    icon.name: "hd"
                     model: [
                         {
                             display: "Auto",
@@ -158,9 +160,8 @@ SettingsPageBase {
                             value: "opus"
                         }
                     ]
-                    currentIndex: selectedIndex
                     text: model[selectedIndex]?.display ?? ""
-                    icon.name: "hd"
+                    textRole: "display"
 
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.audioCodec = model[index].value;
@@ -168,14 +169,15 @@ SettingsPageBase {
                     }
                 }
             }
-
             SettingRow {
-                label: qsTr("Power Mode")
                 description: qsTr("Power profile for recording. Low saves battery, Normal favors quality.")
+                label: qsTr("Power Mode")
+
                 SplitButton {
                     readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.lowPower)
 
-                    textRole: "display"
+                    currentIndex: selectedIndex
+                    icon.name: "power"
                     model: [
                         {
                             display: qsTr("Auto"),
@@ -190,9 +192,8 @@ SettingsPageBase {
                             value: "off"
                         }
                     ]
-                    currentIndex: selectedIndex
                     text: model[selectedIndex]?.display ?? ""
-                    icon.name: "power"
+                    textRole: "display"
 
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.lowPower = model[index].value;
@@ -201,23 +202,25 @@ SettingsPageBase {
                 }
             }
         }
-
         SettingRow {
-            label: qsTr("Show Cursor")
             description: qsTr("Include the mouse cursor in the recording.")
+            label: qsTr("Show Cursor")
+
             StyledSwitch {
                 checked: Configs.captureScreenVideo.showCursor
+
                 onCheckedChanged: {
                     Configs.captureScreenVideo.showCursor = checked;
                     CaptureScreenVideo.showCursor = checked;
                 }
             }
         }
-
         SettingRow {
             label: qsTr("Replay Buffer")
+
             StyledSwitch {
                 checked: Configs.captureScreenVideo.historyMode
+
                 onCheckedChanged: {
                     Configs.captureScreenVideo.historyMode = checked;
                     CaptureScreenVideo.historyMode = checked;

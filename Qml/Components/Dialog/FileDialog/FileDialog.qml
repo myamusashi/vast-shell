@@ -17,16 +17,15 @@ import "components"
 LazyLoader {
     id: root
 
-    property var nameFilters: ["*"]
-    property bool showHidden: false
+    property string currentFolder: "file:///home"
     property bool foldersOnly: false
-    property bool selectFolder: false
     property var history: []
     property int historyIndex: -1
-    property string currentFolder: "file:///home"
-
+    property var nameFilters: ["*"]
     property bool searchVisible: false
     property var searchedEntries: []
+    property bool selectFolder: false
+    property bool showHidden: false
     property string walkedCacheKey: ""
 
     signal fileSelected(string path)
@@ -39,36 +38,55 @@ LazyLoader {
     }
 
     activeAsync: false
+
     component: FloatingWindow {
         id: window
 
-        title: "File Dialog"
-        implicitWidth: 800
-        implicitHeight: 560
-        minimumSize: Qt.size(600, 420)
-        color: Colours.m3Colors.m3Surface
-        onClosed: root.activeAsync = false
-
         readonly property bool searchMode: root.searchVisible && searchField.text.length > 0
 
-        onSearchModeChanged: fileListView.clearSelection()
-
-        TabNavigator {
-            id: tabNav
-
-            scope: mainLayout
-            defaultItem: topAppBar.pathField
-
-            Component.onCompleted: {
-                Qt.callLater(() => firstFocus());
+        function acceptSelection() {
+            if (root.selectFolder) {
+                if (fileListView.currentIsFolder)
+                    root.fileSelected(fileListView.currentFilePath);
+                else if (bottomBar.fileName.length > 0) {
+                    var p = root.currentFolder.toString().replace("file://", "") + "/" + bottomBar.fileName;
+                    root.fileSelected(p);
+                } else {
+                    root.fileSelected(root.currentFolder.toString().replace("file://", ""));
+                }
+            } else {
+                if (fileListView.currentIsFolder)
+                    window.navigateTo(fileListView.currentFilePath);
+                else if (fileListView.hasSelection && fileListView.currentFilePath !== "")
+                    root.fileSelected(fileListView.currentFilePath);
+                else if (bottomBar.fileName.length > 0) {
+                    var p = root.currentFolder.toString().replace("file://", "") + "/" + bottomBar.fileName;
+                    root.fileSelected(p);
+                }
             }
         }
-
-        Component.onCompleted: {
-            var home = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
-            navigateTo(home);
+        function clearSearch() {
+            searchField.text = "";
+            SearchEngine.clearFileResults();
         }
-
+        function goBack() {
+            if (root.historyIndex > 0) {
+                root.historyIndex--;
+                root.currentFolder = root.history[root.historyIndex];
+                fileListView.clearSelection();
+            }
+        }
+        function goForward() {
+            if (root.historyIndex < root.history.length - 1) {
+                root.historyIndex++;
+                root.currentFolder = root.history[root.historyIndex];
+                fileListView.clearSelection();
+            }
+        }
+        function goUp() {
+            if (folderModel.parentFolder)
+                navigateTo(folderModel.parentFolder.toString().replace("file://", ""));
+        }
         function navigateTo(path: string): url {
             const url = path.startsWith("file://") ? path : "file://" + path;
 
@@ -83,20 +101,11 @@ LazyLoader {
             root.currentFolder = url;
             fileListView.clearSelection();
         }
-
-        function toggleSearch() {
-            root.searchVisible = !root.searchVisible;
-            if (root.searchVisible)
-                searchField.forceActiveFocus();
-            else
-                clearSearch();
+        function refresh() {
+            var temp = root.currentFolder;
+            root.currentFolder = "file:///";
+            root.currentFolder = temp;
         }
-
-        function clearSearch() {
-            searchField.text = "";
-            SearchEngine.clearFileResults();
-        }
-
         function runFileSearch() {
             const query = searchField.text;
             if (!root.searchVisible || query.length === 0) {
@@ -120,104 +129,82 @@ LazyLoader {
 
             SearchEngine.searchFilesAsync(root.searchedEntries, query);
         }
+        function toggleSearch() {
+            root.searchVisible = !root.searchVisible;
+            if (root.searchVisible)
+                searchField.forceActiveFocus();
+            else
+                clearSearch();
+        }
 
-        function goBack() {
-            if (root.historyIndex > 0) {
-                root.historyIndex--;
-                root.currentFolder = root.history[root.historyIndex];
-                fileListView.clearSelection();
+        color: Colours.m3Colors.m3Surface
+        implicitHeight: 560
+        implicitWidth: 800
+        minimumSize: Qt.size(600, 420)
+        title: "File Dialog"
+
+        Component.onCompleted: {
+            var home = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
+            navigateTo(home);
+        }
+        onClosed: root.activeAsync = false
+        onSearchModeChanged: fileListView.clearSelection()
+
+        TabNavigator {
+            id: tabNav
+
+            defaultItem: topAppBar.pathField
+            scope: mainLayout
+
+            Component.onCompleted: {
+                Qt.callLater(() => firstFocus());
             }
         }
-
-        function goForward() {
-            if (root.historyIndex < root.history.length - 1) {
-                root.historyIndex++;
-                root.currentFolder = root.history[root.historyIndex];
-                fileListView.clearSelection();
-            }
-        }
-
-        function goUp() {
-            if (folderModel.parentFolder)
-                navigateTo(folderModel.parentFolder.toString().replace("file://", ""));
-        }
-
-        function acceptSelection() {
-            if (root.selectFolder) {
-                if (fileListView.currentIsFolder)
-                    root.fileSelected(fileListView.currentFilePath);
-                else if (bottomBar.fileName.length > 0) {
-                    var p = root.currentFolder.toString().replace("file://", "") + "/" + bottomBar.fileName;
-                    root.fileSelected(p);
-                } else {
-                    root.fileSelected(root.currentFolder.toString().replace("file://", ""));
-                }
-            } else {
-                if (fileListView.currentIsFolder)
-                    window.navigateTo(fileListView.currentFilePath);
-                else if (fileListView.hasSelection && fileListView.currentFilePath !== "")
-                    root.fileSelected(fileListView.currentFilePath);
-                else if (bottomBar.fileName.length > 0) {
-                    var p = root.currentFolder.toString().replace("file://", "") + "/" + bottomBar.fileName;
-                    root.fileSelected(p);
-                }
-            }
-        }
-
-        function refresh() {
-            var temp = root.currentFolder;
-            root.currentFolder = "file:///";
-            root.currentFolder = temp;
-        }
-
         FolderListModel {
             id: folderModel
 
             folder: root.currentFolder
-            showHidden: fileListView.folderHidden
+            nameFilters: root.nameFilters
             showDirsFirst: true
             showDotAndDotDot: false
             showFiles: !root.foldersOnly
-            nameFilters: root.nameFilters
+            showHidden: fileListView.folderHidden
 
             onStatusChanged: {
                 if (status === FolderListModel.Ready)
                     topAppBar.isLoading = false;
             }
         }
-
         DirectoryWalker {
             id: walker
         }
-
         DebouncedValue {
             id: searchDebounce
 
             interval: 200
             value: root.searchVisible ? searchField.text : ""
+
             onDebouncedValueChanged: window.runFileSearch()
         }
-
         Connections {
-            target: walker
-
             function onWalkFinished(entries) {
                 root.searchedEntries = entries;
                 if (root.searchVisible && searchField.text.length > 0)
                     window.runFileSearch();
             }
-        }
 
+            target: walker
+        }
         ColumnLayout {
             id: mainLayout
 
             anchors.fill: parent
             spacing: Appearance.spacing.small
 
-            Keys.onTabPressed: tabNav.next()
             Keys.onBacktabPressed: tabNav.previous()
-            Keys.onReturnPressed: window.acceptSelection()
             Keys.onEnterPressed: window.acceptSelection()
+            Keys.onReturnPressed: window.acceptSelection()
+            Keys.onTabPressed: tabNav.next()
 
             TopAppBar {
                 id: topAppBar
@@ -230,7 +217,7 @@ LazyLoader {
 
                 onBackClicked: window.goBack()
                 onForwardClicked: window.goForward()
-                onUpClicked: window.goUp()
+                onPathEntered: path => window.navigateTo(path)
                 onRefreshClicked: {
                     isLoading = true;
                     window.refresh();
@@ -238,21 +225,21 @@ LazyLoader {
                     if (searchField.text.length > 0)
                         window.runFileSearch();
                 }
-                onPathEntered: path => window.navigateTo(path)
                 onSearchToggled: window.toggleSearch()
+                onUpClicked: window.goUp()
             }
-
             Rectangle {
                 id: searchBar
 
                 Layout.fillWidth: true
-                implicitHeight: root.searchVisible ? 52 : 0
-                visible: root.searchVisible
                 clip: true
                 color: Colours.m3Colors.m3SurfaceContainer
+                implicitHeight: root.searchVisible ? 52 : 0
+                visible: root.searchVisible
 
                 Behavior on implicitHeight {
-                    NAnim {}
+                    NAnim {
+                    }
                 }
 
                 RowLayout {
@@ -261,18 +248,17 @@ LazyLoader {
                     anchors.rightMargin: Appearance.margin.normal
 
                     Icon {
-                        icon: "search"
-                        font.pixelSize: Appearance.fonts.size.medium
                         color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.medium
+                        icon: "search"
                     }
-
                     StyledTextInput {
                         id: searchField
 
                         Layout.fillWidth: true
+                        autoFocus: false
                         placeHolderText: qsTr("Search files…")
                         toggleButtonVisible: false
-                        autoFocus: false
 
                         onKeyPressed: event => {
                             if (event.key === Qt.Key_Escape) {
@@ -283,30 +269,30 @@ LazyLoader {
                     }
                 }
             }
-
             RowLayout {
-                Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 spacing: 0
 
                 PlacesSidebar {
                     id: placesSidebar
 
-                    Layout.preferredWidth: 200
                     Layout.fillHeight: true
+                    Layout.preferredWidth: 200
+
                     onPlaceSelected: path => window.navigateTo(path)
                 }
-
                 FileListView {
                     id: fileListView
 
-                    Layout.fillWidth: true
                     Layout.fillHeight: true
-                    model: window.searchMode ? SearchEngine.fileResults : folderModel
+                    Layout.fillWidth: true
                     folderHidden: root.showHidden
+                    model: window.searchMode ? SearchEngine.fileResults : folderModel
                     selectFolder: root.selectFolder
-                    onFolderDoubleClicked: path => window.navigateTo(path)
+
                     onFileDoubleClicked: path => root.fileSelected(path)
+                    onFolderDoubleClicked: path => window.navigateTo(path)
                     onSelectionChanged: (fileName, filePath, fileSize, fileModified, isImage) => {
                         bottomBar.setFileName(fileName);
                         previewPanel.imageFileSelected = isImage;
@@ -316,16 +302,17 @@ LazyLoader {
                         previewPanel.fileName = fileName;
                     }
                 }
-
                 Rectangle {
                     id: previewPanel
-                    property bool imageFileSelected: false
-                    property string selectedFilePath: ""
-                    property int fileSize: 0
+
                     property var fileModified
                     property string fileName: ""
-                    Layout.preferredWidth: 200
+                    property int fileSize: 0
+                    property bool imageFileSelected: false
+                    property string selectedFilePath: ""
+
                     Layout.fillHeight: true
+                    Layout.preferredWidth: 200
                     color: Colours.m3Colors.m3SurfaceContainerHigh
                     visible: fileListView.hasSelection && !fileListView.currentIsFolder && imageFileSelected
 
@@ -335,63 +322,59 @@ LazyLoader {
                         spacing: Appearance.spacing.normal
 
                         StyledText {
-                            text: qsTr("Preview")
-                            font.pixelSize: Appearance.fonts.size.normal
-                            font.bold: true
-                            color: Colours.m3Colors.m3OnSurface
                             Layout.alignment: Qt.AlignHCenter
+                            color: Colours.m3Colors.m3OnSurface
+                            font.bold: true
+                            font.pixelSize: Appearance.fonts.size.normal
+                            text: qsTr("Preview")
                         }
-
                         Item {
-                            Layout.fillWidth: true
                             Layout.fillHeight: true
+                            Layout.fillWidth: true
 
                             Image {
                                 anchors.centerIn: parent
-                                width: Math.min(parent.width, implicitWidth)
+                                asynchronous: true
+                                fillMode: Image.PreserveAspectFit
                                 height: Math.min(parent.height, implicitHeight)
                                 source: previewPanel.visible ? "file://" + previewPanel.selectedFilePath : ""
                                 sourceSize: Qt.size(400, 400)
-                                fillMode: Image.PreserveAspectFit
-                                asynchronous: true
+                                width: Math.min(parent.width, implicitWidth)
                             }
                         }
-
                         ColumnLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.small
 
                             StyledText {
-                                text: previewPanel.fileName
-                                font.pixelSize: Appearance.fonts.size.small
+                                Layout.fillWidth: true
                                 color: Colours.m3Colors.m3OnSurface
                                 elide: Text.ElideRight
-                                Layout.fillWidth: true
+                                font.pixelSize: Appearance.fonts.size.small
+                                text: previewPanel.fileName
                             }
-
                             StyledText {
+                                color: Colours.m3Colors.m3OnSurfaceVariant
+                                font.pixelSize: Appearance.fonts.size.small
                                 text: FormatTimeUtils.formatSize(previewPanel.fileSize)
-                                font.pixelSize: Appearance.fonts.size.small
-                                color: Colours.m3Colors.m3OnSurfaceVariant
                             }
-
                             StyledText {
-                                text: Qt.formatDateTime(previewPanel.fileModified, "yyyy-MM-dd hh:mm")
-                                font.pixelSize: Appearance.fonts.size.small
                                 color: Colours.m3Colors.m3OnSurfaceVariant
+                                font.pixelSize: Appearance.fonts.size.small
+                                text: Qt.formatDateTime(previewPanel.fileModified, "yyyy-MM-dd hh:mm")
                             }
                         }
                     }
                 }
             }
-
             BottomActionBar {
                 id: bottomBar
 
                 Layout.fillWidth: true
+                hasSelection: fileListView.hasSelection || fileName.length > 0
                 nameFilters: root.nameFilters
                 selectFolder: root.selectFolder
-                hasSelection: fileListView.hasSelection || fileName.length > 0
+
                 onCancelClicked: root.activeAsync = false
                 onOpenClicked: window.acceptSelection()
             }

@@ -7,29 +7,28 @@ import qs.Core.States
 import qs.Services
 
 Scope {
+    Component.onCompleted: {
+        if (GlobalStates.isDragAndDropActive)
+            DragAndDropServices.openIsland();
+    }
+
     Component {
         id: islandContent
 
-        DragAndDropIslandContent {}
+        DragAndDropIslandContent {
+        }
     }
-
     IslandHost {
-        service: DragAndDropServices
-        propertyName: "islandContent"
         content: islandContent
+        propertyName: "islandContent"
+        service: DragAndDropServices
     }
-
     Connections {
-        target: DragAndDropServices
-
         function onIslandContentChanged(): void {
             if (GlobalStates.isDragAndDropActive)
                 DragAndDropServices.openIsland();
         }
-    }
 
-    Component.onCompleted: {
-        if (GlobalStates.isDragAndDropActive)
-            DragAndDropServices.openIsland();
+        target: DragAndDropServices
     }
 }

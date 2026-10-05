@@ -12,9 +12,9 @@ import qs.Services
 RowLayout {
     id: root
 
-    required property var device
-    property string actionText: ""
     property bool actionEnabled: true
+    property string actionText: ""
+    required property var device
 
     signal actionTriggered
 
@@ -22,41 +22,38 @@ RowLayout {
     spacing: Appearance.spacing.normal
 
     Icon {
-        icon: "smartphone"
-        font.pixelSize: Appearance.fonts.size.normal
         color: Colours.m3Colors.m3Primary
+        font.pixelSize: Appearance.fonts.size.normal
+        icon: "smartphone"
     }
-
     ColumnLayout {
         spacing: 2
 
         StyledText {
-            text: root.device?.name ?? ""
+            color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: Font.DemiBold
-            color: Colours.m3Colors.m3OnSurface
+            text: root.device?.name ?? ""
         }
-
         StyledText {
-            text: root.device?.id ?? ""
-            font.pixelSize: Appearance.fonts.size.small
+            Layout.maximumWidth: 250
             color: Colours.m3Colors.m3OnSurfaceVariant
             elide: Text.ElideMiddle
-            Layout.maximumWidth: 250
+            font.pixelSize: Appearance.fonts.size.small
+            text: root.device?.id ?? ""
         }
     }
-
     Item {
         Layout.fillWidth: true
     }
-
     ExtendedFloatingButton {
-        visible: root.actionText !== ""
+        color: "transparent"
         enabled: root.actionEnabled
         implicitHeight: 32
         text: root.actionText
         textColor: Colours.m3Colors.m3Primary
-        color: "transparent"
+        visible: root.actionText !== ""
+
         onClicked: root.actionTriggered()
     }
 }

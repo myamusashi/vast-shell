@@ -12,86 +12,81 @@ import qs.Components.Base
 import "../Components"
 
 SettingsPageBase {
-    pageTitle: qsTr("General Settings")
-
     function cleanExec(exec) {
         return exec.replace(/%[uUfFdDnNickvm]/g, "").replace(/--\S+/g, "").replace(/--/g, "").trim();
     }
+
+    pageTitle: qsTr("General Settings")
 
     SettingsCard {
         title: qsTr("Window & Focus")
 
         SettingRow {
-            label: qsTr("Follow Focus Monitor:")
             description: qsTr("Automatically switch the active drawers to the monitor where cursor in.")
+            label: qsTr("Follow Focus Monitor:")
 
             StyledSwitch {
                 checked: Configs.generals.followFocusMonitor
+
                 onCheckedChanged: Configs.generals.followFocusMonitor = checked
             }
         }
-
         SettingRow {
-            label: qsTr("Show Holidays in Calendar:")
             description: qsTr("Display public holidays inside the calendar widget (NOTE: not every country).")
+            label: qsTr("Show Holidays in Calendar:")
 
             StyledSwitch {
                 checked: Configs.generals.showHolidays
+
                 onCheckedChanged: Configs.generals.showHolidays = checked
             }
         }
-
         SettingRow {
-            label: qsTr("Enable Outer Border:")
             description: qsTr("Draw an outer border around shell.")
+            label: qsTr("Enable Outer Border:")
 
             StyledSwitch {
                 checked: Configs.generals.enableOuterBorder
+
                 onCheckedChanged: Configs.generals.enableOuterBorder = checked
             }
         }
-
         GridLayout {
             columns: 2
 
             // transparency sections
             SettingRow {
-                label: qsTr("Enable Transparent Mode:")
                 description: qsTr("Enable translucent shell.")
+                label: qsTr("Enable Transparent Mode:")
 
                 StyledSwitch {
                     checked: Configs.generals.transparent
+
                     onCheckedChanged: Configs.generals.transparent = checked
                 }
             }
-
             SettingRow {
-                label: qsTr("Transparency Alpha:")
                 description: qsTr("Lower is more transparent.")
+                label: qsTr("Transparency Alpha:")
 
                 StyledSlide {
-                    from: 0.1
-                    to: 1.0
-                    stepSize: 0.1
-                    popupDecimals: 1
-                    value: Configs.generals.alpha
-                    onMoved: Configs.generals.alpha = value
                     Layout.preferredWidth: 200
-                    filledRectColor: {
-                        if (!enabled)
-                            Colours.m3Colors.m3OnSurface;
-                        else
-                            Colours.m3Colors.m3Primary;
-                    }
                     emptyRectColor: {
                         if (!enabled)
                             Colours.m3Colors.m3OnSurface;
                         else
                             Colours.m3Colors.m3SurfaceContainerHighest;
                     }
-                    handleColor: {
+                    emptyRectOpacity: {
                         if (!enabled)
-                            Colours.m3Colors.m3InverseOnSurface;
+                            return 0.12;
+                        else
+                            return 1.0;
+                    }
+                    enabled: Configs.generals.transparent
+                    filledRectColor: {
+                        if (!enabled)
+                            Colours.m3Colors.m3OnSurface;
                         else
                             Colours.m3Colors.m3Primary;
                     }
@@ -101,11 +96,12 @@ SettingsPageBase {
                         else
                             return 1.0;
                     }
-                    emptyRectOpacity: {
+                    from: 0.1
+                    handleColor: {
                         if (!enabled)
-                            return 0.12;
+                            Colours.m3Colors.m3InverseOnSurface;
                         else
-                            return 1.0;
+                            Colours.m3Colors.m3Primary;
                     }
                     handleOpacity: {
                         if (!enabled)
@@ -113,7 +109,12 @@ SettingsPageBase {
                         else
                             return 1.0;
                     }
-                    enabled: Configs.generals.transparent
+                    popupDecimals: 1
+                    stepSize: 0.1
+                    to: 1.0
+                    value: Configs.generals.alpha
+
+                    onMoved: Configs.generals.alpha = value
                 }
             }
             // transparency sections end
@@ -122,29 +123,29 @@ SettingsPageBase {
                 label: qsTr("How much radius blur for album cover:")
 
                 StyledSlide {
+                    Layout.preferredWidth: 200
                     from: 1
                     to: 64
                     value: Configs.generals.coverBlurRadius
+
                     onMoved: Configs.generals.coverBlurRadius = value
-                    Layout.preferredWidth: 200
                 }
             }
-
             SettingRow {
-                label: qsTr("Charging indicator spreads on the screen edge:")
                 description: qsTr("Thickness of the glowing edge indicator when charging detected.")
+                label: qsTr("Charging indicator spreads on the screen edge:")
 
                 StyledSlide {
+                    Layout.preferredWidth: 200
                     from: 1
                     to: 64
                     value: Configs.generals.chargingGlowSpread
+
                     onMoved: Configs.generals.chargingGlowSpread = value
-                    Layout.preferredWidth: 200
                 }
             }
         }
     }
-
     SettingsCard {
         title: qsTr("Default Applications")
 
@@ -152,38 +153,43 @@ SettingsPageBase {
             columns: 2
 
             AppSettingRow {
-                label: qsTr("Terminal:")
-                description: qsTr("Default terminal emulator for opening shell commands.")
                 categories: ["TerminalEmulator"]
                 configValue: Configs.generals.apps.terminal
+                description: qsTr("Default terminal emulator for opening shell commands.")
+                label: qsTr("Terminal:")
+
                 onConfigChanged: value => Configs.generals.apps.terminal = value
             }
             AppSettingRow {
-                label: qsTr("File Explorer:")
-                description: qsTr("Default file manager for opening folders.")
                 categories: ["FileManager"]
                 configValue: Configs.generals.apps.fileExplorer
+                description: qsTr("Default file manager for opening folders.")
+                label: qsTr("File Explorer:")
+
                 onConfigChanged: value => Configs.generals.apps.fileExplorer = value
             }
             AppSettingRow {
-                label: qsTr("Image Viewer:")
-                description: qsTr("Default app for viewing images.")
                 categories: ["Viewer"]
                 configValue: Configs.generals.apps.imageViewer
+                description: qsTr("Default app for viewing images.")
+                label: qsTr("Image Viewer:")
+
                 onConfigChanged: value => Configs.generals.apps.imageViewer = value
             }
             AppSettingRow {
-                label: qsTr("Video Viewer:")
-                description: qsTr("Default app for playing videos.")
                 categories: ["Video"]
                 configValue: Configs.generals.apps.videoViewer
+                description: qsTr("Default app for playing videos.")
+                label: qsTr("Video Viewer:")
+
                 onConfigChanged: value => Configs.generals.apps.videoViewer = value
             }
             AppSettingRow {
-                label: qsTr("Audio Settings:")
-                description: qsTr("Default app for audio and sound configuration.")
                 categories: ["AudioVideo", "Settings"]
                 configValue: Configs.generals.apps.audio
+                description: qsTr("Default app for audio and sound configuration.")
+                label: qsTr("Audio Settings:")
+
                 onConfigChanged: value => Configs.generals.apps.audio = value
             }
         }
@@ -194,6 +200,7 @@ SettingsPageBase {
 
         property var categories: []
         property string configValue
+
         signal configChanged(string value)
 
         onConfigValueChanged: appCombo.currentIndex = appModel.values.findIndex(item => item.display === configValue)
@@ -201,20 +208,7 @@ SettingsPageBase {
         SplitButton {
             id: appCombo
 
-            model: ScriptModel {
-                id: appModel
-
-                values: {
-                    const apps = [...DesktopEntries.applications.values];
-                    const filtered = apps.filter(e => appSettingRow.categories.every(c => e.categories.includes(c)));
-                    const mapped = filtered.map(e => ({
-                                e,
-                                display: e.execString.replace(/%[uUfFdDnNickvm]/g, "").replace(/--\S+/g, "").replace(/--/g, "").trim()
-                            }));
-                    return [...new Map(mapped.map(e => [e.display, e])).values()];
-                }
-            }
-            textRole: "display"
+            currentIndex: appModel.values.findIndex(item => item.display === appSettingRow.configValue)
             icon.name: appSettingRow.categories.reduce((acc, item) => {
                 switch (item) {
                 case "TerminalEmulator":
@@ -231,8 +225,22 @@ SettingsPageBase {
                     return acc;
                 }
             }, "apps")
-            currentIndex: appModel.values.findIndex(item => item.display === appSettingRow.configValue)
             text: appModel.values[currentIndex]?.display ?? appSettingRow.configValue
+            textRole: "display"
+
+            model: ScriptModel {
+                id: appModel
+
+                values: {
+                    const apps = [...DesktopEntries.applications.values];
+                    const filtered = apps.filter(e => appSettingRow.categories.every(c => e.categories.includes(c)));
+                    const mapped = filtered.map(e => ({
+                                e,
+                                display: e.execString.replace(/%[uUfFdDnNickvm]/g, "").replace(/--\S+/g, "").replace(/--/g, "").trim()
+                            }));
+                    return [...new Map(mapped.map(e => [e.display, e])).values()];
+                }
+            }
 
             onMenuItemActivated: index => appSettingRow.configChanged(appModel.values[index].display)
         }

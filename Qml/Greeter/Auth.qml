@@ -11,47 +11,23 @@ import qs.Core.Utils
 Scope {
     id: root
 
+    readonly property bool available: Greetd.available
     property alias currentText: authFlow.currentText
-    property alias showFailure: authFlow.showFailure
-    property alias unlockInProgress: authFlow.inProgress
-    property bool isUnlock: false
-
     property string currentUser: ""
-    property string statusMessage: ""
-    property bool messageIsError: false
     property bool echoResponse: false
-    property int selectedSessionIndex: -1
-    property var users: []
-    property ListModel sessions: ListModel {}
+    property bool isUnlock: false
     property string lastSessionCommand: ""
     property bool launching: false
+    property bool messageIsError: false
+    property int selectedSessionIndex: -1
+    property ListModel sessions: ListModel {
+    }
+    property alias showFailure: authFlow.showFailure
+    property string statusMessage: ""
+    property alias unlockInProgress: authFlow.inProgress
+    property var users: []
 
     signal launchReady
-
-    readonly property bool available: Greetd.available
-
-    onLastSessionCommandChanged: selectSession(sessionIndexForCommand(lastSessionCommand))
-
-    onCurrentTextChanged: {
-        if (showFailure || messageIsError) {
-            showFailure = false;
-            messageIsError = false;
-            statusMessage = "";
-        }
-    }
-
-    function tryUnlock() {
-        if (currentUser === "")
-            return;
-        if (Greetd.state !== GreetdState.Inactive)
-            return;
-
-        statusMessage = qsTr("Authenticating…");
-        messageIsError = false;
-        if (!authFlow.submitSecret())
-            return;
-        Greetd.createSession(currentUser);
-    }
 
     function launch() {
         if (launching || Greetd.state !== GreetdState.ReadyToLaunch)
@@ -66,26 +42,6 @@ Scope {
             saveLastSession(session.command);
         Greetd.launch(rawCommand.split(" ").filter(part => part.length > 0));
     }
-
-    function switchUser(username) {
-        if (currentUser === username || unlockInProgress)
-            return;
-
-        currentUser = username;
-        authFlow.clear();
-        messageIsError = false;
-        statusMessage = "";
-    }
-
-    function selectSession(index) {
-        if (index < 0 || index >= sessions.count)
-            return;
-        selectedSessionIndex = index;
-        const session = sessions.get(index);
-        if (session && session.command)
-            saveLastSession(session.command);
-    }
-
     function saveLastSession(command) {
         if (lastSessionCommand === command)
             return;
@@ -94,7 +50,14 @@ Scope {
             command: [Paths.projectRoot + "/Assets/shell/last-session.sh", command]
         });
     }
-
+    function selectSession(index) {
+        if (index < 0 || index >= sessions.count)
+            return;
+        selectedSessionIndex = index;
+        const session = sessions.get(index);
+        if (session && session.command)
+            saveLastSession(session.command);
+    }
     function sessionIndexForCommand(command) {
         if (command === "")
             return -1;
@@ -104,10 +67,43 @@ Scope {
 
         return -1;
     }
+    function switchUser(username) {
+        if (currentUser === username || unlockInProgress)
+            return;
+
+        currentUser = username;
+        authFlow.clear();
+        messageIsError = false;
+        statusMessage = "";
+    }
+    function tryUnlock() {
+        if (currentUser === "")
+            return;
+        if (Greetd.state !== GreetdState.Inactive)
+            return;
+
+        statusMessage = qsTr("Authenticating…");
+        messageIsError = false;
+        if (!authFlow.submitSecret())
+            return;
+        Greetd.createSession(currentUser);
+    }
+
+    onCurrentTextChanged: {
+        if (showFailure || messageIsError) {
+            showFailure = false;
+            messageIsError = false;
+            statusMessage = "";
+        }
+    }
+    onLastSessionCommandChanged: selectSession(sessionIndexForCommand(lastSessionCommand))
 
     Connections {
-        target: Greetd
-
+        function onAuthFailure(message) {
+            authFlow.fail();
+            root.messageIsError = true;
+            root.statusMessage = message;
+        }
         function onAuthMessage(message, error, responseRequired, echoResponse) {
             root.statusMessage = message;
             root.messageIsError = error;
@@ -122,30 +118,22 @@ Scope {
                 }
             }
         }
-
-        function onAuthFailure(message) {
-            authFlow.fail();
-            root.messageIsError = true;
-            root.statusMessage = message;
-        }
-
-        function onReadyToLaunch() {
-            root.statusMessage = qsTr("Session Start");
-            root.launchReady();
-        }
-
         function onError(error) {
             root.launching = false;
             authFlow.fail();
             root.messageIsError = true;
             root.statusMessage = error;
         }
-    }
+        function onReadyToLaunch() {
+            root.statusMessage = qsTr("Session Start");
+            root.launchReady();
+        }
 
+        target: Greetd
+    }
     AuthFlow {
         id: authFlow
     }
-
     Process {
         id: usersProcess
 
@@ -161,7 +149,6 @@ Scope {
             }
         }
     }
-
     Process {
         id: sessionsProcess
 
@@ -184,7 +171,6 @@ Scope {
             }
         }
     }
-
     Process {
         id: lastSessionProcess
 

@@ -23,28 +23,24 @@ ShellRoot {
 
     WlSessionLock {
         id: lock
+
         locked: false
 
         Surface {
-            lock: lock
             auth: authenticator // qmllint disable
+            lock: lock
         }
     }
-
     Auth {
         id: authenticator
     }
-
     Scope {
         id: rootFlow
 
         property bool introducing: true
         property bool launching: false
     }
-
     Connections {
-        target: authenticator
-
         function onLaunchReady() {
             if (rootFlow.launching)
                 return;
@@ -52,17 +48,17 @@ ShellRoot {
             rootFlow.introducing = false;
             sessionTimer.restart();
         }
+
+        target: authenticator
     }
-
     Connections {
-        target: Greetd
-
         function onError() {
             sessionTimer.stop();
             rootFlow.launching = false;
         }
-    }
 
+        target: Greetd
+    }
     Timer {
         id: introduceTimer
 
@@ -74,7 +70,6 @@ ShellRoot {
             lock.locked = true;
         }
     }
-
     Timer {
         id: sessionTimer
 
@@ -82,27 +77,18 @@ ShellRoot {
 
         onTriggered: authenticator.launch()
     }
-
     Variants {
         model: Quickshell.screens
 
         delegate: PanelWindow {
             id: splashPanel
 
-            anchors {
-                top: true
-                left: true
-                right: true
-                bottom: true
-            }
-
             required property ShellScreen modelData
-
             readonly property bool splashVisible: rootFlow.introducing || (rootFlow.launching && !lock.locked)
 
-            screen: modelData
             color: "transparent"
             contentItem.opacity: splashVisible ? 1 : 0
+            screen: modelData
 
             Behavior on contentItem.opacity {
                 NAnim {
@@ -111,34 +97,40 @@ ShellRoot {
                 }
             }
 
+            anchors {
+                bottom: true
+                left: true
+                right: true
+                top: true
+            }
             Item {
                 anchors.fill: parent
 
                 Image {
                     anchors.fill: parent
+                    asynchronous: true
+                    cache: true
+                    fillMode: Image.PreserveAspectCrop
+                    source: GreetConfigs.greeterConfig.staticWallpaper
+                    visible: !GreetConfigs.greeterConfig.useVideoWallpaper
+
                     onStatusChanged: {
                         if (status === Image.Error)
                             source = Paths.projectRoot + "/Assets/images/wallpaper.png";
                     }
-                    source: GreetConfigs.greeterConfig.staticWallpaper
-                    fillMode: Image.PreserveAspectCrop
-                    asynchronous: true
-                    cache: true
-                    visible: !GreetConfigs.greeterConfig.useVideoWallpaper
                 }
-
                 MediaPlayer {
                     id: splashVideoPlayer
 
-                    source: "file://" + GreetConfigs.greeterConfig.videoWallpaper
                     loops: MediaPlayer.Infinite
+                    source: "file://" + GreetConfigs.greeterConfig.videoWallpaper
                     videoOutput: splashVideoOutput
+
                     onMediaStatusChanged: {
                         if (GreetConfigs.greeterConfig.useVideoWallpaper && mediaStatus === MediaPlayer.LoadedMedia)
                             play();
                     }
                 }
-
                 VideoOutput {
                     id: splashVideoOutput
 
@@ -146,22 +138,20 @@ ShellRoot {
                     fillMode: VideoOutput.PreserveAspectCrop
                     visible: GreetConfigs.greeterConfig.useVideoWallpaper
                 }
-
                 ColumnLayout {
                     anchors.centerIn: parent
                     anchors.margins: Appearance.margin.large
                     spacing: Appearance.spacing.normal
 
                     LoadingIndicator {
-                        implicitWidth: 64
                         implicitHeight: 64
+                        implicitWidth: 64
                         status: splashPanel.splashVisible
                     }
-
                     StyledText {
-                        text: splashPanel.splashVisible && rootFlow.launching ? qsTr("Session Start") : "Loading..."
-                        font.pixelSize: Appearance.fonts.size.extraLarge
                         color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.extraLarge
+                        text: splashPanel.splashVisible && rootFlow.launching ? qsTr("Session Start") : "Loading..."
                     }
                 }
             }

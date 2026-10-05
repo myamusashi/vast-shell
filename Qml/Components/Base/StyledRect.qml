@@ -5,8 +5,8 @@ import qs.Core.Configs
 Rectangle {
     id: root
 
-    implicitWidth: 0
-    implicitHeight: 0
     color: "transparent"
+    implicitHeight: 0
+    implicitWidth: 0
     radius: Appearance.rounding.normal
 }

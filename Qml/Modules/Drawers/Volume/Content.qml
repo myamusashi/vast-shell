@@ -12,7 +12,6 @@ Item {
 
     required property var controller
     required property PwNodeLinkTracker linkTracker
-
     readonly property real perAppWidth: repeater.count * controller.itemSize + Math.max(0, repeater.count - 1) * controller.itemSpacing
 
     anchors.fill: parent
@@ -20,16 +19,10 @@ Item {
     Row {
         id: perAppContainer
 
-        anchors {
-            left: parent.left
-            leftMargin: 10
-            verticalCenter: parent.verticalCenter
-        }
-
-        width: root.controller.openPerAppVolume ? root.perAppWidth : 0
+        clip: true
         height: mainVolumeControl.height
         spacing: root.controller.itemSpacing
-        clip: true
+        width: root.controller.openPerAppVolume ? root.perAppWidth : 0
 
         Behavior on width {
             NAnim {
@@ -38,37 +31,42 @@ Item {
             }
         }
 
+        anchors {
+            left: parent.left
+            leftMargin: 10
+            verticalCenter: parent.verticalCenter
+        }
         Repeater {
             id: repeater
 
             model: root.linkTracker.linkGroups
+
             delegate: VerticalVolumeControl {
                 required property PwLinkGroup modelData
 
-                width: root.controller.itemSize
-                height: perAppContainer.height
                 audioNode: modelData.source
-                sliderHeight: root.controller.sliderHeight
+                height: perAppContainer.height
                 itemSize: root.controller.itemSize
                 showAppIcon: true
+                sliderHeight: root.controller.sliderHeight
+                width: root.controller.itemSize
             }
         }
     }
-
     VerticalVolumeControl {
         id: mainVolumeControl
+
+        audioNode: Pipewire.defaultAudioSink
+        enableMuteToggle: true
+        footerController: root.controller
+        itemSize: 50
+        showFooter: true
+        sliderHeight: root.controller.sliderHeight
 
         anchors {
             right: parent.right
             rightMargin: 5
             verticalCenter: parent.verticalCenter
         }
-
-        audioNode: Pipewire.defaultAudioSink
-        sliderHeight: root.controller.sliderHeight
-        itemSize: 50
-        enableMuteToggle: true
-        showFooter: true
-        footerController: root.controller
     }
 }

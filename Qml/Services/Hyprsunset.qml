@@ -9,14 +9,13 @@ Singleton {
 
     property bool isNightModeOn: false
 
-    function up(): void {
-        isNightModeOn = true;
-        hyprsunset.running = true;
-    }
-
     function down(): void {
         isNightModeOn = false;
         killHyprsunset.running = true;
+    }
+    function up(): void {
+        isNightModeOn = true;
+        hyprsunset.running = true;
     }
 
     Process {
@@ -24,7 +23,6 @@ Singleton {
 
         command: ["sh", "-c", "hyprsunset -t 3000"]
     }
-
     Process {
         id: killHyprsunset
 

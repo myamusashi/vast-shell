@@ -7,11 +7,11 @@ import qs.Services
 Text {
     id: root
 
-    property string searchText: ""
     property string fullText: ""
+    property string searchText: ""
 
-    font.family: Fonts.sans
     color: Colours.m3Colors.m3OnSurface
-    textFormat: searchText.length > 0 ? Text.RichText : Text.PlainText
+    font.family: Fonts.sans
     text: searchText.length > 0 ? SearchEngine.highlightedHtml(fullText, searchText, Colours.m3Colors.m3Primary.toString()) : fullText
+    textFormat: searchText.length > 0 ? Text.RichText : Text.PlainText
 }

@@ -11,11 +11,15 @@ import "../Components"
 Item {
     id: root
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-
     default property alias content: contentLayout.data
     property string pageTitle
+
+    function revealCard(cardTitle: string): bool {
+        return cardRevealer.reveal(cardTitle);
+    }
+
+    Layout.fillHeight: true
+    Layout.fillWidth: true
 
     CardRevealer {
         id: cardRevealer
@@ -23,38 +27,34 @@ Item {
         container: contentLayout
         target: pageFlickable
     }
-
-    function revealCard(cardTitle: string): bool {
-        return cardRevealer.reveal(cardTitle);
-    }
-
     ColumnLayout {
+        spacing: Appearance.spacing.large
+
         anchors {
             fill: parent
             margins: Appearance.margin.large
         }
-        spacing: Appearance.spacing.large
-
         StyledText {
-            text: root.pageTitle
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            font.bold: true
-            color: Colours.m3Colors.m3OnSurface
             Layout.bottomMargin: Appearance.margin.normal
+            color: Colours.m3Colors.m3OnSurface
+            font.bold: true
+            font.pixelSize: Appearance.fonts.size.extraLarge
+            text: root.pageTitle
         }
-
         Flickable {
             id: pageFlickable
-            Layout.fillWidth: true
+
             Layout.fillHeight: true
+            Layout.fillWidth: true
             clip: true
             contentHeight: contentLayout.implicitHeight
             interactive: contentHeight > height
 
             ColumnLayout {
                 id: contentLayout
-                width: parent.width
+
                 spacing: Appearance.spacing.large
+                width: parent.width
             }
         }
     }

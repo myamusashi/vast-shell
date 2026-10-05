@@ -16,33 +16,32 @@ import qs.Modules.Drawers.Notifications.Components as N
 StyledRect {
     property alias loader: loader
 
-    radius: Appearance.rounding.normal
     color: Qt.alpha(Colours.m3Colors.m3SurfaceContainer, 0.4)
+    radius: Appearance.rounding.normal
 
     RowLayout {
-        anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-            topMargin: 10
-        }
-        implicitWidth: parent.width
         implicitHeight: 50
+        implicitWidth: parent.width
         spacing: Appearance.spacing.small
 
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            topMargin: 10
+        }
         Item {
             Layout.fillWidth: true
         }
-
         StyledRect {
+            color: Colours.m3Colors.m3SurfaceContainer
+            implicitHeight: 30
+            implicitWidth: clearMetrics.advanceWidth(textClear.text) + 100
+
             FontMetrics {
                 id: clearMetrics
 
                 font: textClear.font
             }
-            implicitWidth: clearMetrics.advanceWidth(textClear.text) + 100
-            implicitHeight: 30
-            color: Colours.m3Colors.m3SurfaceContainer
-
             StyledText {
                 id: textClear
 
@@ -51,51 +50,43 @@ StyledRect {
                 font.pixelSize: Appearance.fonts.size.large
                 text: qsTr("Clear all")
             }
-
             MArea {
                 anchors.fill: parent
-                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+
                 onClicked: Notifs.clearAll()
             }
         }
-
         StyledRect {
-            implicitWidth: 30
-            implicitHeight: 30
             color: Colours.m3Colors.m3SurfaceContainer
+            implicitHeight: 30
+            implicitWidth: 30
 
             Icon {
                 id: iconDnD
 
-                type: Icon.Material
                 anchors.centerIn: parent
-                icon: Notifs.dnd ? "notifications_off" : "notifications_active"
-                font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large
+                icon: Notifs.dnd ? "notifications_off" : "notifications_active"
+                type: Icon.Material
             }
-
             MArea {
                 anchors.fill: parent
-                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+
                 onClicked: Notifs.dnd = !Notifs.dnd
             }
         }
-
         Item {
             Layout.fillWidth: true
         }
     }
-
     Loader {
         id: loader
 
-        anchors {
-            fill: parent
-            topMargin: 50
-            bottomMargin: 10
-        }
         active: GlobalStates.isQuickSettingsOpen
         asynchronous: true
 
@@ -107,75 +98,66 @@ StyledRect {
             ListView {
                 id: notifListView
 
-                anchors {
-                    fill: parent
-                    rightMargin: 10
-                }
-                model: ScriptModel {
-                    values: [...Notifs.notClosed]
-                }
+                boundsBehavior: Flickable.StopAtBounds
                 cacheBuffer: 0
                 spacing: Appearance.spacing.normal
-                boundsBehavior: Flickable.StopAtBounds
+
                 delegate: WrapperItem {
                     id: root
 
                     required property var modelData
 
-                    implicitWidth: notifListView.width
-                    implicitHeight: contentLayout.height * 1.3
-                    leftMargin: 10
                     clip: true
+                    implicitHeight: contentLayout.height * 1.3
+                    implicitWidth: notifListView.width
+                    leftMargin: 10
 
                     NAnim {
                         id: swipeOutAnim
 
-                        target: root
-                        property: "x"
                         duration: Appearance.animations.durations.small
+                        property: "x"
+                        target: root
 
                         onFinished: {
                             fadeOutAnim.start();
                         }
                     }
-
                     NAnim {
                         id: fadeOutAnim
 
-                        target: root
-                        property: "opacity"
-                        from: 1.0
-                        to: 0.0
                         duration: Appearance.animations.durations.small
+                        from: 1.0
+                        property: "opacity"
+                        target: root
+                        to: 0.0
                     }
-
                     SpringAnimation {
                         id: springBackAnim
 
-                        target: root
-                        property: "x"
-                        to: 0
-                        spring: 2
                         damping: 0.3
+                        property: "x"
+                        spring: 2
+                        target: root
+                        to: 0
                     }
-
                     Timer {
                         id: closeTimer
 
                         interval: swipeOutAnim.duration + fadeOutAnim.duration
+
                         onTriggered: root.modelData.close()
                     }
-
                     WrapperRectangle {
+                        clip: true
                         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
+                        margin: Appearance.margin.normal
+                        radius: Appearance.rounding.normal
+
                         border {
                             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : "transparent"
                             width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
                         }
-                        margin: Appearance.margin.normal
-                        radius: Appearance.rounding.normal
-                        clip: true
-
                         Item {
                             MArea {
                                 id: delegateMouseNotif
@@ -185,9 +167,9 @@ StyledRect {
 
                                 drag {
                                     axis: Drag.XAxis
-                                    target: root
-                                    minimumX: -root.width
                                     maximumX: root.width
+                                    minimumX: -root.width
+                                    target: root
 
                                     onActiveChanged: {
                                         if (drag.active)
@@ -204,42 +186,53 @@ StyledRect {
                                     }
                                 }
                             }
-
                             Row {
-                                anchors {
-                                    fill: parent
-                                    topMargin: 10
-                                    leftMargin: 10
-                                    rightMargin: 10
-                                }
                                 spacing: Appearance.spacing.normal
 
+                                anchors {
+                                    fill: parent
+                                    leftMargin: 10
+                                    rightMargin: 10
+                                    topMargin: 10
+                                }
                                 N.NotifIcon {
                                     id: iconLayout
 
                                     modelData: root.modelData
                                 }
-
                                 N.Content {
                                     id: contentLayout
 
-                                    width: parent.width - iconLayout.width
                                     modelData: root.modelData
+                                    width: parent.width - iconLayout.width
                                 }
                             }
                         }
                     }
                 }
-            }
+                model: ScriptModel {
+                    values: [...Notifs.notClosed]
+                }
 
+                anchors {
+                    fill: parent
+                    rightMargin: 10
+                }
+            }
             StyledText {
                 anchors.centerIn: parent
-                text: qsTr("No notifications")
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.medium
-                visible: Notifs.notClosed.length === 0
                 opacity: 0.6
+                text: qsTr("No notifications")
+                visible: Notifs.notClosed.length === 0
             }
+        }
+
+        anchors {
+            bottomMargin: 10
+            fill: parent
+            topMargin: 50
         }
     }
 }

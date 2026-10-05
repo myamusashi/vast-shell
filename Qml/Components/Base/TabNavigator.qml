@@ -6,9 +6,33 @@ import Quickshell
 Scope {
     id: root
 
-    property Item scope: null
     property Item defaultItem: null
+    property Item scope: null
 
+    function activate(item) {
+        if (typeof item.requestKeyboardFocus === "function")
+            item.requestKeyboardFocus();
+        else
+            item.forceActiveFocus();
+    }
+    function collect(item, out) {
+        walk(item, out, []);
+    }
+
+    // Always moves focus: defaultItem when it is part of the scope,
+    // otherwise the first focusable. Re-runnable on purpose, so a caller
+    // can pull focus back after a popup or another item took it. Making
+    // this conditional on nothing being focused would silently turn
+    // every later call into a no-op.
+    function firstFocus() {
+        const list = focusables();
+        if (list.length === 0)
+            return;
+        if (defaultItem !== null && defaultItem !== undefined && list.indexOf(defaultItem) >= 0)
+            activate(defaultItem);
+        else
+            activate(list[0]);
+    }
     function focusables() {
         const list = [];
         collect(scope, list);
@@ -21,11 +45,32 @@ Scope {
         });
         return list;
     }
-
-    function collect(item, out) {
-        walk(item, out, []);
+    function isFocused(item) {
+        if (!item)
+            return false;
+        if (item.activeFocus)
+            return true;
+        const winItem = item.window ? item.window.activeFocusItem : null;
+        return winItem !== null && item.isAncestorOf(winItem);
     }
+    function move(delta) {
+        const list = focusables();
+        if (list.length === 0)
+            return;
 
+        let index = list.findIndex(i => isFocused(i));
+        if (index < 0)
+            index = delta > 0 ? -1 : 0;
+
+        const target = ((index + delta) % list.length + list.length) % list.length;
+        activate(list[target]);
+    }
+    function next() {
+        move(1);
+    }
+    function previous() {
+        move(-1);
+    }
     function walk(item, out, seen) {
         if (item === null || item === undefined || seen.indexOf(item) !== -1)
             return;
@@ -42,63 +87,10 @@ Scope {
         walkList(item.children, out, seen);
         walkList(item.data, out, seen);
     }
-
     function walkList(list, out, seen) {
         if (list === null || list === undefined)
             return;
         for (let i = 0; i < list.length; ++i)
             walk(list[i], out, seen);
-    }
-
-    function isFocused(item) {
-        if (!item)
-            return false;
-        if (item.activeFocus)
-            return true;
-        const winItem = item.window ? item.window.activeFocusItem : null;
-        return winItem !== null && item.isAncestorOf(winItem);
-    }
-
-    function move(delta) {
-        const list = focusables();
-        if (list.length === 0)
-            return;
-
-        let index = list.findIndex(i => isFocused(i));
-        if (index < 0)
-            index = delta > 0 ? -1 : 0;
-
-        const target = ((index + delta) % list.length + list.length) % list.length;
-        activate(list[target]);
-    }
-
-    function next() {
-        move(1);
-    }
-
-    function previous() {
-        move(-1);
-    }
-
-    function activate(item) {
-        if (typeof item.requestKeyboardFocus === "function")
-            item.requestKeyboardFocus();
-        else
-            item.forceActiveFocus();
-    }
-
-    // Always moves focus: defaultItem when it is part of the scope,
-    // otherwise the first focusable. Re-runnable on purpose, so a caller
-    // can pull focus back after a popup or another item took it. Making
-    // this conditional on nothing being focused would silently turn
-    // every later call into a no-op.
-    function firstFocus() {
-        const list = focusables();
-        if (list.length === 0)
-            return;
-        if (defaultItem !== null && defaultItem !== undefined && list.indexOf(defaultItem) >= 0)
-            activate(defaultItem);
-        else
-            activate(list[0]);
     }
 }

@@ -9,52 +9,47 @@ import qs.Components.Base
 Item {
     id: root
 
-    anchors {
-        left: parent.left
-        right: parent.right
-        bottom: parent.bottom
-        bottomMargin: Appearance.margin.normal
-    }
-
-    required property bool isLockscreenOpen
-    required property var pam
-
-    property string inputBuffer: ""
-    property bool showErrorMessage: false
-
     property alias contentLayout: bar.contentLayout
-    property alias lockIcon: bar.lockIcon
     property alias iconName: bar.lockIcon.icon
+    property string inputBuffer: ""
+    required property bool isLockscreenOpen
+    property alias lockIcon: bar.lockIcon
+    required property var pam
+    property bool showErrorMessage: false
 
     implicitHeight: 0
 
     Behavior on implicitHeight {
-        NAnim {}
+        NAnim {
+        }
     }
 
+    anchors {
+        bottom: parent.bottom
+        bottomMargin: Appearance.margin.normal
+        left: parent.left
+        right: parent.right
+    }
     RowLayout {
+        spacing: Appearance.spacing.normal
+
         anchors {
             left: parent.left
             right: parent.right
             verticalCenter: parent.verticalCenter
         }
-        spacing: Appearance.spacing.normal
-
         Item {
             Layout.fillWidth: true
         }
-
         Bar {
             id: bar
 
             mediaLayout: mediaPlayer.mediaLayout
             showErrorMessage: root.showErrorMessage
         }
-
         MediaPlayer {
             id: mediaPlayer
         }
-
         Item {
             Layout.fillWidth: true
         }

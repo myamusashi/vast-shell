@@ -12,20 +12,19 @@ import qs.Services
 Drawer {
     id: root
 
-    edge: Qt.BottomEdge
-    open: GlobalStates.isWallpaperSwitcherOpen
-    depth: parent.height * 0.3
-    length: parent.width * 0.6
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
-    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
-    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
-
-    Component.onCompleted: Wallpaper.requestThumbnailChecks()
-
     property bool isWallpaperSwitcherOpen: GlobalStates.isWallpaperSwitcherOpen
 
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: parent.height * 0.3
+    edge: Qt.BottomEdge
+    filletRadius: 40
+    length: parent.width * 0.6
+    open: GlobalStates.isWallpaperSwitcherOpen
+
+    Component.onCompleted: Wallpaper.requestThumbnailChecks()
     onIsWallpaperSwitcherOpenChanged: {
         if (!isWallpaperSwitcherOpen) {
             GlobalStates.previewWallpaper = "";
@@ -44,16 +43,15 @@ Drawer {
             Wallpaper.colorSourceImage = colorSourceImage;
         }
     }
-
     Loader {
-        anchors.fill: parent
         active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isWallpaperSwitcherOpen // qmllint disable
+        anchors.fill: parent
         asynchronous: true
+
         sourceComponent: FocusCage {
+            active: GlobalStates.isWallpaperSwitcherOpen
             anchors.fill: parent
             anchors.margins: Appearance.spacing.normal
-
-            active: GlobalStates.isWallpaperSwitcherOpen
             defaultFocus: content.searchField
 
             Content {

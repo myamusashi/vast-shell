@@ -12,73 +12,71 @@ import qs.Components.Base
 Slider {
     id: root
 
-    property color trackColor: Colours.m3Colors.m3Primary
-    property color trackColorInactive: Colours.m3Colors.m3Surface
     property color handleColor: Colours.m3Colors.m3OnPrimary
-    property color handleTextColor: Colours.m3Colors.m3Primary
-    property real trackWidth: implicitWidth
-    property string handleText: Math.round(root.value).toString()
     property string handleIcon: ""
     property alias handleRotation: handleShape.rotation
+    property string handleText: Math.round(root.value).toString()
+    property color handleTextColor: Colours.m3Colors.m3Primary
+    property color trackColor: Colours.m3Colors.m3Primary
+    property color trackColorInactive: Colours.m3Colors.m3Surface
+    property real trackWidth: implicitWidth
 
+    enabled: false
     hoverEnabled: false
     orientation: Qt.Vertical
-    enabled: false
 
     background: Item {
         anchors.fill: parent
 
         Rectangle {
+            color: root.trackColorInactive
+            implicitHeight: root.availableHeight
+            implicitWidth: root.trackWidth / 2
+            radius: root.trackWidth / 2
             x: root.leftPadding + (root.availableWidth - width) / 2
             y: root.topPadding
-            implicitWidth: root.trackWidth / 2
-            implicitHeight: root.availableHeight
-            radius: root.trackWidth / 2
-            color: root.trackColorInactive
         }
-
         Rectangle {
             anchors.bottom: parent.bottom
-            x: root.leftPadding + (root.availableWidth - width) / 2
-            implicitWidth: root.trackWidth * 1.2
-            implicitHeight: root.availableHeight * root.position + Appearance.spacing.small + handleShape.height
-            radius: root.trackWidth / 2
             color: root.trackColor
+            implicitHeight: root.availableHeight * root.position + Appearance.spacing.small + handleShape.height
+            implicitWidth: root.trackWidth * 1.2
+            radius: root.trackWidth / 2
+            x: root.leftPadding + (root.availableWidth - width) / 2
 
             MaterialShape {
                 id: handleShape
 
-                anchors {
-                    top: parent.top
-                    horizontalCenter: parent.horizontalCenter
-                    topMargin: Appearance.margin.small
-                }
-                implicitWidth: 35
-                implicitHeight: 35
                 color: root.handleColor
+                implicitHeight: 35
+                implicitWidth: 35
                 shape: MaterialShape.Cookie9Sided
 
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    top: parent.top
+                    topMargin: Appearance.margin.small
+                }
                 StyledText {
                     anchors.centerIn: parent
-                    visible: root.handleIcon === ""
-                    text: root.handleText
                     color: root.handleTextColor
+                    font.bold: true
                     font.pixelSize: Appearance.fonts.size.medium
-                    font.bold: true
+                    text: root.handleText
+                    visible: root.handleIcon === ""
                 }
-
                 Icon {
-                    type: Icon.Material
                     anchors.centerIn: parent
-                    visible: root.handleIcon !== ""
-                    icon: root.handleIcon
                     color: root.handleTextColor
-                    font.pixelSize: Appearance.fonts.size.large
                     font.bold: true
+                    font.pixelSize: Appearance.fonts.size.large
+                    icon: root.handleIcon
+                    type: Icon.Material
+                    visible: root.handleIcon !== ""
                 }
             }
         }
     }
-
-    handle: Item {}
+    handle: Item {
+    }
 }

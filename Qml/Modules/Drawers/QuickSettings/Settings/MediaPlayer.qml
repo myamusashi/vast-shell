@@ -13,11 +13,11 @@ ClippingWrapperRectangle {
 
     property var trackArtColors: TrackArt.colors
 
-    implicitHeight: 150
     Layout.fillWidth: true
-    visible: Players.active !== null
     color: "transparent"
+    implicitHeight: 150
     radius: Appearance.rounding.small
+    visible: Players.active !== null
 
     Item {
         anchors.fill: parent
@@ -26,10 +26,10 @@ ClippingWrapperRectangle {
             id: trackArt
 
             anchors.fill: parent
-            source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
-            fillMode: Image.PreserveAspectCrop
-            cache: false
             asynchronous: true
+            cache: false
+            fillMode: Image.PreserveAspectCrop
+            source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
             visible: !!Players.active?.trackArtUrl
 
             Rectangle {
@@ -39,16 +39,16 @@ ClippingWrapperRectangle {
                 z: 2
             }
         }
-
         Loader {
             id: contentLoader
 
-            anchors.fill: parent
             active: GlobalStates.isQuickSettingsOpen
+            anchors.fill: parent
             asynchronous: true
+
             sourceComponent: ContentMediaPlayer {
-                width: contentLoader.width
                 trackArtColors: root.trackArtColors
+                width: contentLoader.width
             }
         }
     }

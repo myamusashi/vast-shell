@@ -12,54 +12,57 @@ import qs.Services
 WrapperRectangle {
     id: bottomWrapperRect
 
-    property alias lockIcon: lockIcon
     property alias contentLayout: contentLayout
+    property alias lockIcon: lockIcon
     required property var mediaLayout
     required property bool showErrorMessage
 
     Layout.fillHeight: true
-    implicitHeight: mediaLayout.implicitHeight + Appearance.margin.small * 2
-    color: GlobalStates.drawerColors
     clip: true
-    radius: Appearance.rounding.normal
+    color: GlobalStates.drawerColors
+    implicitHeight: mediaLayout.implicitHeight + Appearance.margin.small * 2
     leftMargin: Appearance.margin.normal
+    radius: Appearance.rounding.normal
     rightMargin: Appearance.margin.normal
 
     FontMetrics {
         id: lockIconMetrics
+
         font: lockIcon.font
     }
-
     RowLayout {
         id: contentLayout
 
-        spacing: Appearance.spacing.normal
         opacity: 0
+        spacing: Appearance.spacing.normal
 
         ClippingWrapperRectangle {
-            implicitWidth: 48
-            implicitHeight: 48
-            radius: Appearance.rounding.full
             color: "transparent"
+            implicitHeight: 48
+            implicitWidth: 48
+            radius: Appearance.rounding.full
             z: -1
 
             IconImage {
                 id: avatar
 
+                asynchronous: true
+                backer.cache: true
                 source: Qt.resolvedUrl(`${Paths.home}/.face`)
                 z: 1
-                backer.cache: true
-                asynchronous: true
             }
         }
-
         Icon {
             id: lockIcon
 
+            function blendTo(target) {
+                tintAnim.blendTo(target);
+            }
+
             Layout.alignment: Qt.AlignCenter
-            icon: "lock"
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large * 1.5
+            icon: "lock"
             transformOrigin: Item.Bottom
 
             BlendColor {
@@ -67,79 +70,74 @@ WrapperRectangle {
 
                 host: lockIcon
             }
-
-            function blendTo(target) {
-                tintAnim.blendTo(target);
-            }
-
             SequentialAnimation {
                 id: shakeAnim
+
                 running: bottomWrapperRect.showErrorMessage
 
                 NAnim {
-                    target: lockIcon
+                    duration: 100
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     property: "rotation"
+                    target: lockIcon
                     to: 18
-                    duration: 100
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 NAnim {
-                    target: lockIcon
+                    duration: 100
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     property: "rotation"
+                    target: lockIcon
                     to: -18
-                    duration: 100
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 NAnim {
-                    target: lockIcon
+                    duration: 100
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     property: "rotation"
+                    target: lockIcon
                     to: 12
-                    duration: 100
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 NAnim {
-                    target: lockIcon
+                    duration: 100
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     property: "rotation"
+                    target: lockIcon
                     to: -12
-                    duration: 100
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 NAnim {
-                    target: lockIcon
+                    duration: 100
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     property: "rotation"
+                    target: lockIcon
                     to: 6
-                    duration: 100
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 NAnim {
-                    target: lockIcon
+                    duration: 100
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                     property: "rotation"
+                    target: lockIcon
                     to: -6
-                    duration: 100
-                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 }
                 NAnim {
-                    target: lockIcon
-                    property: "rotation"
-                    to: 0
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                    property: "rotation"
+                    target: lockIcon
+                    to: 0
                 }
                 ScriptAction {
                     script: lockIcon.color(Colours.m3Colors.m3Red)
                 }
             }
         }
-
         StyledText {
             id: errorLabel
 
             Layout.alignment: Qt.AlignCenter
-            text: "WRONG"
             color: Colours.m3Colors.m3Error
-            font.pixelSize: Appearance.fonts.size.medium
             font.bold: true
+            font.pixelSize: Appearance.fonts.size.medium
             opacity: bottomWrapperRect.showErrorMessage ? 1 : 0
+            text: "WRONG"
             visible: bottomWrapperRect.showErrorMessage
 
             Behavior on opacity {
@@ -148,9 +146,9 @@ WrapperRectangle {
                 }
             }
         }
-
         Clock {
             id: clockItem
+
             Layout.alignment: Qt.AlignCenter
         }
     }

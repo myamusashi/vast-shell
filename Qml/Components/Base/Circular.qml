@@ -9,24 +9,21 @@ StyledRect {
     id: root
 
     property alias circleColor: shapePath.strokeColor
-    property alias textSize: styledText.font.pixelSize
     property alias text: styledText.text
-
+    property real textPadding: 20
+    property alias textSize: styledText.font.pixelSize
     required property real value
 
-    property real textPadding: 20
-
-    implicitWidth: 100
     implicitHeight: 100
+    implicitWidth: 100
 
     TextMetrics {
         id: textMetrics
 
-        text: root.text
-        font.pixelSize: root.textSize
         font.bold: true
+        font.pixelSize: root.textSize
+        text: root.text
     }
-
     Shape {
         id: indicatorShape
 
@@ -35,10 +32,10 @@ StyledRect {
 
         // Background circle
         ShapePath {
+            capStyle: ShapePath.RoundCap
+            fillColor: "transparent"
             strokeColor: Colours.m3Colors.m3OutlineVariant
             strokeWidth: 8
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
 
             PathAngleArc {
                 centerX: indicatorShape.width / 2
@@ -54,9 +51,9 @@ StyledRect {
         ShapePath {
             id: shapePath
 
-            strokeWidth: 8
-            fillColor: "transparent"
             capStyle: ShapePath.RoundCap
+            fillColor: "transparent"
+            strokeWidth: 8
 
             PathAngleArc {
                 centerX: indicatorShape.width / 2
@@ -68,17 +65,16 @@ StyledRect {
             }
         }
     }
-
     StyledText {
         id: styledText
 
         anchors.centerIn: parent
+        color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.medium
         font.weight: Font.DemiBold
-        color: Colours.m3Colors.m3OnSurface
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        wrapMode: Text.WordWrap
         width: parent.width - root.textPadding * 2
+        wrapMode: Text.WordWrap
     }
 }

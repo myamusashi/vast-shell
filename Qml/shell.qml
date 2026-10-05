@@ -17,14 +17,24 @@ import qs.Modules.Wallpaper
 import qs.Modules.Settings
 
 ShellRoot {
-    Lockscreen {}
-    Wall {}
-    Polkit {}
-    PairingDialog {}
-    Drawers {}
-    DragAndDrop {}
-    Privacy {}
-    DynamicIsland {}
-    Settings {}
-    Toast {}
+    Lockscreen {
+    }
+    Wall {
+    }
+    Polkit {
+    }
+    PairingDialog {
+    }
+    Drawers {
+    }
+    DragAndDrop {
+    }
+    Privacy {
+    }
+    DynamicIsland {
+    }
+    Settings {
+    }
+    Toast {
+    }
 }

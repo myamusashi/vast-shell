@@ -15,10 +15,13 @@ import qs.Services.CaptureScreenVideo
 StyledRect {
     id: root
 
-    property int sourceMode: 0
-    property string selectedMonitor: Quickshell.screens[0]?.name ?? ""
-
     property string audioLabel: qsTr("No Audio")
+    property string selectedMonitor: Quickshell.screens[0]?.name ?? ""
+    property int sourceMode: 0
+
+    signal openAudio
+    signal openHistory
+    signal openSettings
 
     function updateAudioLabel() {
         if (!CaptureScreenVideo.includeAudio) {
@@ -30,34 +33,30 @@ StyledRect {
         }
     }
 
-    Connections {
-        target: CaptureScreenVideo
-
-        function onIncludeAudioChanged() {
-            root.updateAudioLabel();
-        }
-        function onAudioDeviceChanged() {
-            root.updateAudioLabel();
-        }
-    }
+    clip: true
+    color: "transparent"
+    radius: 0
 
     Component.onCompleted: root.updateAudioLabel()
 
-    signal openAudio
-    signal openSettings
-    signal openHistory
+    Connections {
+        function onAudioDeviceChanged() {
+            root.updateAudioLabel();
+        }
+        function onIncludeAudioChanged() {
+            root.updateAudioLabel();
+        }
 
-    color: "transparent"
-    radius: 0
-    clip: true
-
+        target: CaptureScreenVideo
+    }
     Flickable {
         id: flickable
+
         anchors.fill: parent
-        clip: true
         boundsBehavior: Flickable.StopAtBounds
-        contentWidth: width
+        clip: true
         contentHeight: columnLayout.implicitHeight
+        contentWidth: width
 
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
@@ -66,8 +65,8 @@ StyledRect {
         ColumnLayout {
             id: columnLayout
 
-            width: flickable.width
             spacing: Appearance.spacing.small
+            width: flickable.width
 
             StyledRect {
                 Layout.fillWidth: true
@@ -78,19 +77,18 @@ StyledRect {
                 ColumnLayout {
                     id: innerColumn
 
+                    spacing: Appearance.spacing.small
+
                     anchors {
                         fill: parent
                         margins: Appearance.margin.small
                     }
-                    spacing: Appearance.spacing.small
-
                     StyledText {
-                        text: qsTr("Source")
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.DemiBold
+                        text: qsTr("Source")
                     }
-
                     RowLayout {
                         spacing: Appearance.spacing.small
 
@@ -113,94 +111,93 @@ StyledRect {
                             delegate: StyledRect {
                                 id: mainDelegate
 
-                                required property var modelData
                                 required property int index
+                                required property var modelData
 
                                 Layout.fillWidth: true
-                                Layout.preferredHeight: 45
                                 Layout.margins: Appearance.margin.normal
-                                color: index === root.sourceMode ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (sourceButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-                                radius: Appearance.rounding.small
+                                Layout.preferredHeight: 45
                                 border.color: index === root.sourceMode ? Qt.alpha(Colours.m3Colors.m3Primary, 0.4) : "transparent"
                                 border.width: 1
+                                color: index === root.sourceMode ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (sourceButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
+                                radius: Appearance.rounding.small
 
                                 ColumnLayout {
                                     anchors.centerIn: parent
                                     spacing: Appearance.padding.small
 
                                     Icon {
-                                        type: Icon.Material
-                                        icon: mainDelegate.modelData.icon
+                                        Layout.alignment: Qt.AlignHCenter
                                         color: mainDelegate.index === root.sourceMode ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.large
-                                        Layout.alignment: Qt.AlignHCenter
+                                        icon: mainDelegate.modelData.icon
+                                        type: Icon.Material
                                     }
-
                                     StyledText {
-                                        text: mainDelegate.modelData.name
+                                        Layout.alignment: Qt.AlignHCenter
                                         color: mainDelegate.index === root.sourceMode ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.normal
                                         font.weight: mainDelegate.index === root.sourceMode ? Font.DemiBold : Font.Normal
-                                        Layout.alignment: Qt.AlignHCenter
+                                        text: mainDelegate.modelData.name
                                     }
                                 }
-
                                 MArea {
                                     id: sourceButtonMouseArea
+
                                     anchors.fill: parent
-                                    hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
+                                    hoverEnabled: true
+
                                     onClicked: root.sourceMode = mainDelegate.index
                                 }
                             }
                         }
                     }
-
                     Loader {
-                        active: root.sourceMode === 0
-                        Layout.preferredHeight: active ? implicitHeight : 0
                         Layout.fillHeight: true
+                        Layout.preferredHeight: active ? implicitHeight : 0
+                        active: root.sourceMode === 0
 
                         sourceComponent: ColumnLayout {
                             spacing: Appearance.spacing.small
 
                             StyledText {
-                                text: qsTr("Monitor:")
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.normal
+                                text: qsTr("Monitor:")
                             }
-
                             Repeater {
                                 model: Quickshell.screens
 
                                 delegate: StyledRect {
                                     id: screensDelegate
-                                    required property ShellScreen modelData
+
                                     required property int index
+                                    required property ShellScreen modelData
 
                                     Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
+                                    // qmlformat off
+                                    color: modelData.name === root.selectedMonitor ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (monitorButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
                                     implicitWidth: monitorLabel.implicitWidth + Appearance.margin.smaller
-									// qmlformat off
-									color: modelData.name === root.selectedMonitor
-										? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (monitorButtonMouseArea.containsMouse
-										? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-									// qmlformat on
+                                    // qmlformat on
                                     radius: Appearance.rounding.small
 
                                     StyledText {
                                         id: monitorLabel
+
                                         anchors.centerIn: parent
-                                        text: screensDelegate.modelData.name
                                         color: screensDelegate.modelData.name === root.selectedMonitor ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                                         font.pixelSize: Appearance.fonts.size.normal
                                         font.weight: screensDelegate.modelData.name === root.selectedMonitor ? Font.DemiBold : Font.Normal
+                                        text: screensDelegate.modelData.name
                                     }
-
                                     MArea {
                                         id: monitorButtonMouseArea
+
                                         anchors.fill: parent
-                                        hoverEnabled: true
                                         cursorShape: Qt.PointingHandCursor
+                                        hoverEnabled: true
+
                                         onClicked: root.selectedMonitor = screensDelegate.modelData.name
                                     }
                                 }
@@ -209,7 +206,6 @@ StyledRect {
                     }
                 }
             }
-
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -223,37 +219,35 @@ StyledRect {
                     spacing: Appearance.spacing.small
 
                     Icon {
-                        type: Icon.Material
-                        icon: CaptureScreenVideo.includeAudio ? "mic" : "mic_off"
                         color: CaptureScreenVideo.includeAudio ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
-                    }
-
-                    StyledText {
-                        text: root.audioLabel
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.normal
-                        Layout.fillWidth: true
-                        elide: Text.ElideRight
-                    }
-
-                    Icon {
+                        icon: CaptureScreenVideo.includeAudio ? "mic" : "mic_off"
                         type: Icon.Material
-                        icon: "chevron_right"
+                    }
+                    StyledText {
+                        Layout.fillWidth: true
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        elide: Text.ElideRight
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: root.audioLabel
+                    }
+                    Icon {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
+                        icon: "chevron_right"
+                        type: Icon.Material
                     }
                 }
-
                 MArea {
                     id: audioRowMouseArea
+
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
+
                     onClicked: root.openAudio()
                 }
             }
-
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -261,44 +255,42 @@ StyledRect {
                 radius: Appearance.rounding.small
 
                 RowLayout {
+                    spacing: Appearance.spacing.small
+
                     anchors {
                         fill: parent
                         leftMargin: Appearance.margin.smaller
                         rightMargin: Appearance.margin.smaller
                     }
-                    spacing: Appearance.spacing.small
-
                     Icon {
-                        type: Icon.Material
-                        icon: "tune"
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
+                        icon: "tune"
+                        type: Icon.Material
                     }
-
                     StyledText {
-                        text: qsTr("Settings")
+                        Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
-                        Layout.fillWidth: true
+                        text: qsTr("Settings")
                     }
-
                     Icon {
-                        type: Icon.Material
-                        icon: "chevron_right"
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
+                        icon: "chevron_right"
+                        type: Icon.Material
                     }
                 }
-
                 MArea {
                     id: settingsRowMouseArea
+
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
+
                     onClicked: root.openSettings()
                 }
             }
-
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -306,52 +298,49 @@ StyledRect {
                 radius: Appearance.rounding.small
 
                 RowLayout {
+                    spacing: Appearance.spacing.small
+
                     anchors {
                         fill: parent
                         leftMargin: Appearance.margin.smaller
                         rightMargin: Appearance.margin.smaller
                     }
-                    spacing: Appearance.spacing.small
-
                     Icon {
-                        type: Icon.Material
-                        icon: "history"
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
+                        icon: "history"
+                        type: Icon.Material
                     }
-
                     StyledText {
-                        text: qsTr("Recordings")
+                        Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
-                        Layout.fillWidth: true
+                        text: qsTr("Recordings")
                     }
-
                     Icon {
-                        type: Icon.Material
-                        icon: "chevron_right"
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
+                        icon: "chevron_right"
+                        type: Icon.Material
                     }
                 }
-
                 MArea {
                     id: historyRowMouseArea
+
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
+
                     onClicked: root.openHistory()
                 }
             }
-
             Item {
                 Layout.fillHeight: true
             }
-
             StyledRect {
+                Layout.bottomMargin: Appearance.margin.large
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.larger
-                Layout.bottomMargin: Appearance.margin.large
                 color: "transparent"
                 radius: Appearance.rounding.small
 
@@ -362,53 +351,48 @@ StyledRect {
                     Item {
                         Layout.fillWidth: true
                     }
-
                     StyledRect {
                         Layout.preferredHeight: Appearance.spacing.normal + Appearance.spacing.large
-                        implicitWidth: buttonLabel.implicitWidth + Appearance.margin.large + 15
-						// qmlformat off
-						color: CaptureScreenVideo.isRecording
-							? (recordButtonMouseArea.containsMouse
-								? Qt.alpha(Colours.m3Colors.m3Error, 0.3)
-								: Qt.alpha(Colours.m3Colors.m3Error, 0.2))
-							: (recordButtonMouseArea.containsMouse
-								? Qt.alpha(Colours.m3Colors.m3Red, 0.3)
-								: Qt.alpha(Colours.m3Colors.m3Red, 0.2))
-						// qmlformat on
-                        radius: Appearance.rounding.full
                         border.color: CaptureScreenVideo.isRecording ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Red
                         border.width: 2
+                        // qmlformat off
+                        color: CaptureScreenVideo.isRecording ? (recordButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Error, 0.3) : Qt.alpha(Colours.m3Colors.m3Error, 0.2)) : (recordButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Red, 0.3) : Qt.alpha(Colours.m3Colors.m3Red, 0.2))
+                        implicitWidth: buttonLabel.implicitWidth + Appearance.margin.large + 15
+                        // qmlformat on
+                        radius: Appearance.rounding.full
 
                         RowLayout {
                             anchors.centerIn: parent
                             spacing: Appearance.padding.small
 
                             Rectangle {
-                                implicitWidth: Appearance.margin.smaller
-                                implicitHeight: Appearance.margin.smaller
-                                radius: CaptureScreenVideo.isRecording ? Appearance.padding.small : Appearance.margin.small
                                 color: CaptureScreenVideo.isRecording ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Red
+                                implicitHeight: Appearance.margin.smaller
+                                implicitWidth: Appearance.margin.smaller
+                                radius: CaptureScreenVideo.isRecording ? Appearance.padding.small : Appearance.margin.small
+
                                 Behavior on radius {
                                     NAnim {
                                         duration: Appearance.animations.durations.small
                                     }
                                 }
                             }
-
                             StyledText {
                                 id: buttonLabel
-                                text: CaptureScreenVideo.isRecording ? qsTr("Stop") : qsTr("Start Recording")
+
                                 color: CaptureScreenVideo.isRecording ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Red
-                                font.weight: Font.DemiBold
                                 font.pixelSize: Appearance.fonts.size.normal
+                                font.weight: Font.DemiBold
+                                text: CaptureScreenVideo.isRecording ? qsTr("Stop") : qsTr("Start Recording")
                             }
                         }
-
                         MArea {
                             id: recordButtonMouseArea
+
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
+
                             onClicked: {
                                 if (CaptureScreenVideo.isRecording) {
                                     CaptureScreenVideo.stopRecording();
@@ -430,7 +414,6 @@ StyledRect {
                             }
                         }
                     }
-
                     Item {
                         Layout.fillWidth: true
                     }

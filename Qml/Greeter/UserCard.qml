@@ -12,11 +12,10 @@ Item {
 
     required property Auth auth
     required property var colors
-
     readonly property string initials: auth.currentUser.length > 0 ? auth.currentUser.charAt(0).toUpperCase() : "?"
 
-    implicitWidth: 380
     implicitHeight: contentColumn.implicitHeight + Appearance.padding.large * 2
+    implicitWidth: 380
     transformOrigin: Item.Center
 
     Behavior on opacity {
@@ -25,12 +24,16 @@ Item {
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
-
     Behavior on scale {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
+    }
+    transform: Translate {
+        id: shakeTranslate
+
+        x: 0
     }
 
     Elevation {
@@ -38,116 +41,107 @@ Item {
         level: 3
         radius: Appearance.rounding.large
     }
-
     StyledRect {
         id: cardSurface
 
         anchors.fill: parent
-        color: root.colors.surfaceContainerHigh
-        radius: Appearance.rounding.large
         border.color: Qt.alpha(root.colors.outlineVariant, 0.4)
         border.width: 1
+        color: root.colors.surfaceContainerHigh
+        radius: Appearance.rounding.large
     }
-
     ColumnLayout {
         id: contentColumn
 
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
         anchors.margins: Appearance.padding.large
         spacing: Appearance.spacing.normal
 
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+        }
         Item {
             Layout.alignment: Qt.AlignHCenter
-            implicitWidth: 96
             implicitHeight: 96
+            implicitWidth: 96
 
             StyledRect {
                 anchors.fill: parent
                 color: root.colors.primaryContainer
                 radius: Appearance.rounding.full
             }
-
             StyledText {
                 anchors.centerIn: parent
-                text: root.initials
                 color: root.colors.onPrimaryContainer
                 font.pixelSize: Appearance.fonts.size.extraLarge * 1.4
                 font.weight: Font.Medium
                 horizontalAlignment: Text.AlignHCenter
+                text: root.initials
             }
         }
-
         StyledText {
             Layout.alignment: Qt.AlignHCenter
-            text: root.auth.currentUser
             color: root.colors.onSurface
             font.pixelSize: Appearance.fonts.size.extraLarge
             font.weight: Font.Medium
+            text: root.auth.currentUser
         }
-
         StyledText {
             id: statusText
 
             Layout.alignment: Qt.AlignHCenter
             Layout.fillWidth: true
-            visible: root.auth.statusMessage !== ""
-            text: root.auth.statusMessage
             color: root.auth.messageIsError ? root.colors.error : root.colors.primary
             font.pixelSize: Appearance.fonts.size.medium
             horizontalAlignment: Text.AlignHCenter
+            text: root.auth.statusMessage
+            visible: root.auth.statusMessage !== ""
             wrapMode: Text.WordWrap
         }
-
         StyledTextInput {
             id: passwordInput
 
             Layout.fillWidth: true
             Layout.preferredHeight: 56
+            autoFocus: true
             pam: root.auth
             passwordMode: true
-            autoFocus: true
             placeHolderText: qsTr("Password")
         }
-
         SplitButton {
             id: sessionField
 
             Layout.fillWidth: true
-            fillWidth: true
-            leadingFillsWidth: true
-            visible: !root.auth.unlockInProgress
-            model: root.auth.sessions
-            textRole: "display"
-            icon.name: "window"
             currentIndex: root.auth.selectedSessionIndex
+            fillWidth: true
+            icon.name: "window"
+            leadingFillsWidth: true
+            model: root.auth.sessions
             text: root.auth.selectedSessionIndex >= 0 ? root.auth.sessions.get(root.auth.selectedSessionIndex)?.display ?? qsTr("Session") : qsTr("Session")
+            textRole: "display"
+            visible: !root.auth.unlockInProgress
 
             onMenuItemActivated: index => {
                 root.auth.selectSession(index);
                 passwordInput.forceActiveFocus();
             }
         }
-
         ExtendedFloatingButton {
             id: loginButton
 
             Layout.fillWidth: true
             Layout.preferredHeight: 48
-            text: qsTr("Sign in")
-            icon.name: "login"
-            icon.color: root.colors.onPrimary
             color: root.colors.primary
-            textColor: root.colors.onPrimary
-            rippleColor: root.colors.onPrimary
             enabled: !root.auth.unlockInProgress
+            icon.color: root.colors.onPrimary
+            icon.name: "login"
+            rippleColor: root.colors.onPrimary
+            text: qsTr("Sign in")
+            textColor: root.colors.onPrimary
 
             onClicked: root.auth.tryUnlock()
         }
-
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
             Layout.topMargin: Appearance.margin.small
@@ -158,13 +152,12 @@ Item {
                 model: root.auth.users
 
                 delegate: ExtendedFloatingButton {
+                    readonly property bool isCurrent: modelData === root.auth.currentUser
                     required property string modelData
 
-                    readonly property bool isCurrent: modelData === root.auth.currentUser
-
                     color: isCurrent ? root.colors.secondaryContainer : root.colors.surfaceContainerHighest
-                    icon.name: "account_circle"
                     icon.color: isCurrent ? root.colors.onSecondaryContainer : root.colors.onSurfaceVariant
+                    icon.name: "account_circle"
                     text: modelData.charAt(0).toUpperCase()
                     textColor: isCurrent ? root.colors.onSecondaryContainer : root.colors.onSurfaceVariant
 
@@ -176,61 +169,54 @@ Item {
             }
         }
     }
-
-    transform: Translate {
-        id: shakeTranslate
-        x: 0
-    }
-
     Connections {
-        target: root.auth
-
         function onShowFailureChanged() {
             if (root.auth.showFailure)
                 shakeAnimation.restart();
         }
-    }
 
+        target: root.auth
+    }
     SequentialAnimation {
         id: shakeAnimation
 
         loops: 1
 
         NAnim {
-            target: shakeTranslate
+            duration: 60
             property: "x"
+            target: shakeTranslate
             to: 12
-            duration: 60
         }
         NAnim {
-            target: shakeTranslate
+            duration: 60
             property: "x"
+            target: shakeTranslate
             to: -12
-            duration: 60
         }
         NAnim {
-            target: shakeTranslate
+            duration: 60
             property: "x"
+            target: shakeTranslate
             to: 8
-            duration: 60
         }
         NAnim {
-            target: shakeTranslate
+            duration: 60
             property: "x"
+            target: shakeTranslate
             to: -8
-            duration: 60
         }
         NAnim {
-            target: shakeTranslate
+            duration: 60
             property: "x"
+            target: shakeTranslate
             to: 4
-            duration: 60
         }
         NAnim {
-            target: shakeTranslate
-            property: "x"
-            to: 0
             duration: 60
+            property: "x"
+            target: shakeTranslate
+            to: 0
         }
     }
 }

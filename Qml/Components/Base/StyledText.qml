@@ -5,18 +5,12 @@ import qs.Core.Utils
 Text {
     id: root
 
-    font {
-        family: Fonts.sans
-        hintingPreference: Font.PreferFullHinting
-        letterSpacing: 0
-    }
-
-    renderType: Text.NativeRendering
     antialiasing: true
-    smooth: true
     color: "transparent"
-    verticalAlignment: Text.AlignVCenter
     elide: Text.ElideRight
+    renderType: Text.NativeRendering
+    smooth: true
+    verticalAlignment: Text.AlignVCenter
 
     Component.onCompleted: {
         font.variableAxes = {
@@ -24,5 +18,11 @@ Text {
             "opsz": 24,
             "opsz": root.font.pixelSize
         };
+    }
+
+    font {
+        family: Fonts.sans
+        hintingPreference: Font.PreferFullHinting
+        letterSpacing: 0
     }
 }

@@ -11,16 +11,9 @@ SplitButton {
     id: root
 
     property var card: Audio.defaultSinkCard
-
-    readonly property var resolvedCard: card
-    readonly property var profileModel: resolvedCard ? resolvedCard.profiles : null
-
-    function profileAt(i) {
-        return profileModel ? profileModel.get(i) : null;
-    }
-
     readonly property int profileCount: profileModel ? profileModel.count : 0
-
+    readonly property var profileModel: resolvedCard ? resolvedCard.profiles : null
+    readonly property var resolvedCard: card
     readonly property int selectedIndex: {
         if (!resolvedCard)
             return -1;
@@ -31,19 +24,22 @@ SplitButton {
         }
         return -1;
     }
-
     readonly property string selectedLabel: {
         const profile = selectedIndex >= 0 ? profileAt(selectedIndex) : null;
         return profile ? profile.readable : "";
     }
 
+    function profileAt(i) {
+        return profileModel ? profileModel.get(i) : null;
+    }
+
+    currentIndex: selectedIndex
+    disabledLabel: md => qsTr("N/A")
+    isItemEnabled: md => md.available === "yes"
     leadingFillsWidth: true
     model: profileModel
-    textRole: "readable"
-    currentIndex: selectedIndex
     text: selectedLabel
-    isItemEnabled: md => md.available === "yes"
-    disabledLabel: md => qsTr("N/A")
+    textRole: "readable"
 
     onMenuItemActivated: rowIndex => {
         const profile = profileAt(rowIndex);

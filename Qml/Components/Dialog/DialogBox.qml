@@ -14,102 +14,94 @@ import "../Base"
 LazyLoader {
     id: root
 
-    required property Component header
-    required property Component body
-
-    property bool needKeyboardFocus: true
     property string acceptedText: qsTr("Yes")
-    property string rejectedText: qsTr("No")
-
-    property int cardPaddingWidth: 60
+    required property Component body
     property int cardPaddingHeight: 40
+    property int cardPaddingWidth: 60
     property int contentMinWidth: 300
     property int contentSpacing: Appearance.spacing.large
+    required property Component header
+    property bool needKeyboardFocus: true
+    property string rejectedText: qsTr("No")
 
     signal accepted
     signal rejected
 
     activeAsync: false
+
     component: PanelWindow {
+        WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+        WlrLayershell.layer: WlrLayer.Overlay
+        color: Qt.alpha(Colours.m3Colors.m3Background, 0.3)
+
         anchors {
+            bottom: true
             left: true
             right: true
             top: true
-            bottom: true
         }
-
-        color: Qt.alpha(Colours.m3Colors.m3Background, 0.3)
-        WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-
         TabNavigator {
             id: tabNav
 
-            scope: column
             defaultItem: acceptButton
+            scope: column
 
             Component.onCompleted: {
                 Qt.callLater(() => tabNav.firstFocus());
             }
         }
-
         MArea {
             anchors.fill: parent
-            onClicked: root.rejected()
             propagateComposedEvents: false
-        }
 
+            onClicked: root.rejected()
+        }
         StyledRect {
             anchors.centerIn: parent
-            implicitWidth: column.width + root.cardPaddingWidth
-            implicitHeight: column.height + root.cardPaddingHeight
-
-            radius: Appearance.rounding.large
-            color: Colours.overlayColor(Colours.m3Colors.m3SurfaceTint, Colours.m3Colors.m3SurfaceContainerHigh, Configs.generals.alpha)
             border.color: Colours.m3Colors.m3Outline
             border.width: 2
+            color: Colours.overlayColor(Colours.m3Colors.m3SurfaceTint, Colours.m3Colors.m3SurfaceContainerHigh, Configs.generals.alpha)
+            implicitHeight: column.height + root.cardPaddingHeight
+            implicitWidth: column.width + root.cardPaddingWidth
+            radius: Appearance.rounding.large
 
             Column {
                 id: column
 
                 anchors.centerIn: parent
-                width: Math.max(root.contentMinWidth, loaderHeader.item ? loaderHeader.implicitWidth : 0, loaderBody.item ? loaderBody.implicitWidth : 0, rowButtons.implicitWidth)
                 anchors.margins: 20
                 spacing: root.contentSpacing
+                width: Math.max(root.contentMinWidth, loaderHeader.item ? loaderHeader.implicitWidth : 0, loaderBody.item ? loaderBody.implicitWidth : 0, rowButtons.implicitWidth)
 
-                Keys.onTabPressed: tabNav.next()
                 Keys.onBacktabPressed: tabNav.previous()
+                Keys.onTabPressed: tabNav.next()
 
                 Loader {
                     id: loaderHeader
 
-                    width: parent.width
                     active: true
                     asynchronous: true
                     sourceComponent: root.header
+                    width: parent.width
                 }
-
                 StyledRect {
-                    implicitWidth: parent.width
-                    implicitHeight: 2
                     color: Colours.m3Colors.m3OutlineVariant
+                    implicitHeight: 2
+                    implicitWidth: parent.width
                 }
-
                 Loader {
                     id: loaderBody
 
-                    width: parent.width
                     active: true
                     asynchronous: true
                     sourceComponent: root.body
+                    width: parent.width
                 }
-
                 StyledRect {
-                    implicitWidth: parent.width
-                    implicitHeight: 2
                     color: Colours.m3Colors.m3OutlineVariant
+                    implicitHeight: 2
+                    implicitWidth: parent.width
                 }
-
                 Row {
                     id: rowButtons
 
@@ -117,26 +109,27 @@ LazyLoader {
                     spacing: Appearance.spacing.normal
 
                     ExtendedFloatingButton {
-                        implicitWidth: 80
-                        implicitHeight: 40
                         backgroundRadius: Appearance.rounding.normal
-                        icon.name: "cancel"
-                        icon.color: Colours.m3Colors.m3Primary
-                        text: root.rejectedText
                         color: "transparent"
+                        icon.color: Colours.m3Colors.m3Primary
+                        icon.name: "cancel"
+                        implicitHeight: 40
+                        implicitWidth: 80
+                        text: root.rejectedText
+
                         onClicked: root.rejected()
                     }
-
                     ExtendedFloatingButton {
                         id: acceptButton
 
-                        implicitWidth: 80
-                        implicitHeight: 40
-                        icon.name: "check"
+                        color: "transparent"
                         icon.color: Colours.m3Colors.m3Primary
+                        icon.name: "check"
+                        implicitHeight: 40
+                        implicitWidth: 80
                         text: root.acceptedText
                         textColor: Colours.m3Colors.m3Primary
-                        color: "transparent"
+
                         onClicked: root.accepted()
                     }
                 }

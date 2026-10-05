@@ -9,33 +9,10 @@ import qs.Core.Configs
 Scope {
     id: root
 
-    required property var cards
     required property bool audioConnected
-
+    required property var cards
     property bool restoring: false
     property bool wasConnected: false
-
-    Component.onCompleted: scheduleRestoreIfNeeded()
-
-    onAudioConnectedChanged: {
-        if (audioConnected && !wasConnected && !restoring) {
-            wasConnected = true;
-            scheduleRestoreIfNeeded();
-        }
-        if (!audioConnected) {
-            wasConnected = false;
-            restoring = false;
-            restoreTimer.stop();
-            profileRestoreTimer.stop();
-        }
-    }
-
-    function scheduleRestoreIfNeeded() {
-        if (audioConnected && !restoring) {
-            wasConnected = true;
-            restoreTimer.start();
-        }
-    }
 
     function restoreAudioState() {
         if (restoring)
@@ -53,7 +30,6 @@ Scope {
         }
         profileRestoreTimer.start();
     }
-
     function restoreProfiles() {
         const profiles = Configs.audio.sinkProfiles;
         if (!profiles || typeof profiles !== "object" || !cards)
@@ -82,20 +58,41 @@ Scope {
             }
         }
     }
+    function scheduleRestoreIfNeeded() {
+        if (audioConnected && !restoring) {
+            wasConnected = true;
+            restoreTimer.start();
+        }
+    }
+
+    Component.onCompleted: scheduleRestoreIfNeeded()
+    onAudioConnectedChanged: {
+        if (audioConnected && !wasConnected && !restoring) {
+            wasConnected = true;
+            scheduleRestoreIfNeeded();
+        }
+        if (!audioConnected) {
+            wasConnected = false;
+            restoring = false;
+            restoreTimer.stop();
+            profileRestoreTimer.stop();
+        }
+    }
 
     Timer {
         id: restoreTimer
 
         interval: 1000
         repeat: false
+
         onTriggered: root.restoreAudioState()
     }
-
     Timer {
         id: profileRestoreTimer
 
         interval: 1500
         repeat: false
+
         onTriggered: {
             root.restoreProfiles();
             root.restoring = false;

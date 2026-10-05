@@ -12,57 +12,55 @@ Item {
     id: root
 
     default property alias content: itemColumn.data
+    readonly property real contentImplicitHeight: itemColumn.implicitHeight
     property int elevationLevel: 2
     property real maxHeight: 336
+    property real maxWidth: 280
+    readonly property real minWidth: 112
     property bool showScrollBar: false
 
-    readonly property real minWidth: 112
-    property real maxWidth: 280
-    readonly property real contentImplicitHeight: itemColumn.implicitHeight
-
-    implicitWidth: Math.max(minWidth, Math.min(maxWidth, itemColumn.implicitWidth))
     implicitHeight: Math.min(maxHeight, itemColumn.implicitHeight)
+    implicitWidth: Math.max(minWidth, Math.min(maxWidth, itemColumn.implicitWidth))
 
     Elevation {
         anchors.fill: surfaceBg
         level: root.elevationLevel
         radius: surfaceBg.radius
     }
-
     WrapperRectangle {
         id: surfaceBg
 
         anchors.fill: parent
-        radius: Appearance.rounding.small
-        color: Colours.m3Colors.m3SurfaceContainer
         clip: true
+        color: Colours.m3Colors.m3SurfaceContainer
+        radius: Appearance.rounding.small
 
         Flickable {
             id: itemFlickable
 
-            clip: true
-            contentWidth: width
-            contentHeight: itemColumn.implicitHeight
             boundsBehavior: Flickable.StopAtBounds
+            clip: true
+            contentHeight: itemColumn.implicitHeight
+            contentWidth: width
             interactive: contentHeight > height
             pressDelay: 0
+
+            ScrollBar.vertical: ScrollBar {
+                policy: root.showScrollBar ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                visible: root.showScrollBar
+
+                contentItem: StyledRect {
+                    color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
+                    implicitWidth: 4
+                    radius: 2
+                }
+            }
 
             Column {
                 id: itemColumn
 
-                width: parent.width
                 padding: Appearance.padding.smaller
-            }
-
-            ScrollBar.vertical: ScrollBar {
-                visible: root.showScrollBar
-                policy: root.showScrollBar ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
-
-                contentItem: StyledRect {
-                    implicitWidth: 4
-                    radius: 2
-                    color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
-                }
+                width: parent.width
             }
         }
     }

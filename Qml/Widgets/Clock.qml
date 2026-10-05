@@ -9,9 +9,9 @@ import qs.Services
 StyledRect {
     id: clock
 
-    implicitWidth: timeContainer.width
-    implicitHeight: parent.height
     color: "transparent"
+    implicitHeight: parent.height
+    implicitWidth: timeContainer.width
     radius: Appearance.rounding.small
 
     Dots {
@@ -23,7 +23,6 @@ StyledRect {
             font.pixelSize: Appearance.fonts.size.large
             icon: "schedule"
         }
-
         StyledText {
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
@@ -31,11 +30,11 @@ StyledRect {
             text: Qt.formatDateTime(Time?.date, "h:mm AP")
         }
     }
-
     MArea {
         anchors.fill: clock
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        hoverEnabled: true
+
         onClicked: GlobalStates.isCalendarOpen = !GlobalStates.isCalendarOpen
     }
 }

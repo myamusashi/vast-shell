@@ -16,23 +16,26 @@ import "../Components"
 
 SettingsPageBase {
     id: page
-    pageTitle: qsTr("Greeter")
 
     property bool videoUploadMode: false
 
+    pageTitle: qsTr("Greeter")
+
     SettingsCard {
-        title: qsTr("Greeter Wallpaper")
         Layout.fillWidth: true
+        title: qsTr("Greeter Wallpaper")
 
         SettingRow {
-            label: qsTr("Wallpaper type:")
             description: qsTr("Choose between video or static image for the login manager.")
+            label: qsTr("Wallpaper type:")
 
             SplitButton {
                 id: wallpaperButton
 
                 readonly property int selectedIndex: GreetConfigs.greeterConfig.useVideoWallpaper ? 0 : 1
 
+                currentIndex: selectedIndex
+                icon.name: "wallpaper"
                 model: [
                     {
                         display: "Video"
@@ -41,40 +44,37 @@ SettingsPageBase {
                         display: "Static"
                     }
                 ]
-
-                textRole: "display"
-                icon.name: "wallpaper"
                 text: model[selectedIndex] ? model[selectedIndex].display : ""
-                currentIndex: selectedIndex
+                textRole: "display"
             }
         }
-
         SettingRow {
-            label: qsTr("Upload wallpaper:")
             description: qsTr("Select and upload a new greeter wallpaper file.")
+            label: qsTr("Upload wallpaper:")
 
             ExtendedFloatingButton {
-                text: qsTr("Upload static")
                 icon.name: "image"
+                text: qsTr("Upload static")
+
                 onClicked: {
                     page.videoUploadMode = false;
                     wallpaperDialog.openFileDialog();
                 }
             }
-
             ExtendedFloatingButton {
-                text: qsTr("Upload video")
                 icon.name: "video_file"
+                text: qsTr("Upload video")
+
                 onClicked: {
                     page.videoUploadMode = true;
                     wallpaperDialog.openFileDialog();
                 }
             }
-
             FileDialog {
                 id: wallpaperDialog
 
                 nameFilters: page.videoUploadMode ? ["*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi"] : ["*.png", "*.jpg", "*.jpeg", "*.webp"]
+
                 onFileSelected: path => {
                     if (page.videoUploadMode)
                         GreetConfigs.uploadVideo(path);
@@ -83,23 +83,23 @@ SettingsPageBase {
                 }
             }
         }
-
         SettingRow {
-            label: qsTr("Preview:")
             description: qsTr("Live preview of the current greeter wallpaper.")
+            label: qsTr("Preview:")
 
             ClippingRectangle {
-                Layout.preferredWidth: 320
                 Layout.preferredHeight: 180
+                Layout.preferredWidth: 320
                 radius: Appearance.rounding.normal
 
                 Image {
                     anchors.fill: parent
-                    source: GreeterWallpaper.colorSource(GreetConfigs.greeterConfig.useVideoWallpaper, GreetConfigs.greeterConfig.videoWallpaper, GreetConfigs.greeterConfig.staticWallpaper) + "?v=" + GreetConfigs.thumbnailVersion
-                    fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                     cache: true
+                    fillMode: Image.PreserveAspectCrop
+                    source: GreeterWallpaper.colorSource(GreetConfigs.greeterConfig.useVideoWallpaper, GreetConfigs.greeterConfig.videoWallpaper, GreetConfigs.greeterConfig.staticWallpaper) + "?v=" + GreetConfigs.thumbnailVersion
                     visible: status === Image.Ready
+
                     onStatusChanged: {
                         if (status === Image.Error && GreetConfigs.greeterConfig.useVideoWallpaper)
                             GreetConfigs.regenerateVideoThumbnail();
@@ -112,17 +112,16 @@ SettingsPageBase {
 
                         Icon {
                             anchors.centerIn: parent
-                            icon: "image"
                             color: Colours.m3Colors.m3OnSurfaceVariant
                             font.pixelSize: Appearance.fonts.size.extraLarge
+                            icon: "image"
                         }
-
                         StyledText {
                             anchors.centerIn: parent
                             anchors.verticalCenterOffset: 28
-                            text: qsTr("Preview not available yet")
                             color: Colours.m3Colors.m3OnSurfaceVariant
                             font.pixelSize: Appearance.fonts.size.normal
+                            text: qsTr("Preview not available yet")
                         }
                     }
                 }

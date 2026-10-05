@@ -12,14 +12,6 @@ Singleton {
     id: root
 
     property string currentWallpaper: Paths.currentWallpaper
-    property string searchQuery: ""
-
-    DebouncedValue {
-        id: searchDebounce
-        value: root.searchQuery
-        interval: 300
-    }
-    property var wallpaperList: []
     readonly property var filteredWallpaperList: {
         if (searchDebounce.debouncedValue === "")
             return wallpaperList;
@@ -38,7 +30,15 @@ Singleton {
         }
         return scored.sort((a, b) => b[0] - a[0]).map(entry => entry[1]);
     }
+    property string searchQuery: ""
+    property var wallpaperList: []
 
+    DebouncedValue {
+        id: searchDebounce
+
+        interval: 300
+        value: root.searchQuery
+    }
     FolderListModel {
         id: wallpaperFolder
 

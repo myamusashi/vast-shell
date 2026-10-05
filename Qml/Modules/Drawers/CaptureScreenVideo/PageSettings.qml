@@ -15,9 +15,9 @@ StyledRect {
 
     signal goBack
 
+    clip: true
     color: "transparent"
     radius: 0
-    clip: true
 
     ColumnLayout {
         anchors.fill: parent
@@ -35,42 +35,40 @@ StyledRect {
                 spacing: Appearance.spacing.small
 
                 Icon {
-                    type: Icon.Material
-                    icon: "arrow_back"
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large
+                    icon: "arrow_back"
+                    type: Icon.Material
                 }
-
                 StyledText {
-                    text: qsTr("Settings")
                     color: Colours.m3Colors.m3OnSurface
-                    font.weight: Font.DemiBold
                     font.pixelSize: Appearance.fonts.size.normal
+                    font.weight: Font.DemiBold
+                    text: qsTr("Settings")
                 }
-
                 Item {
                     Layout.fillWidth: true
                 }
             }
-
             MArea {
                 id: backButtonMouseArea
+
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
+
                 onClicked: root.goBack()
             }
         }
-
         Flickable {
             id: flickable
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
-            clip: true
+            Layout.fillWidth: true
             boundsBehavior: Flickable.StopAtBounds
-            contentWidth: width
+            clip: true
             contentHeight: settingsColumn.implicitHeight
+            contentWidth: width
 
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
@@ -79,8 +77,8 @@ StyledRect {
             ColumnLayout {
                 id: settingsColumn
 
-                width: flickable.width
                 spacing: Appearance.spacing.normal
+                width: flickable.width
 
                 SettingSection {
                     label: qsTr("Frame Rate")
@@ -99,9 +97,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.maxFps
+
                     onSelected: value => CaptureScreenVideo.maxFps = value
                 }
-
                 SettingSection {
                     label: qsTr("Bitrate")
                     model: [
@@ -123,9 +121,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.bitrate
+
                     onSelected: value => CaptureScreenVideo.bitrate = value
                 }
-
                 SettingSection {
                     label: qsTr("Video Codec")
                     model: [
@@ -155,9 +153,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.videoCodec
+
                     onSelected: value => CaptureScreenVideo.videoCodec = value
                 }
-
                 SettingSection {
                     label: qsTr("Audio Codec")
                     model: [
@@ -183,9 +181,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.audioCodec
+
                     onSelected: value => CaptureScreenVideo.audioCodec = value
                 }
-
                 SettingSection {
                     label: qsTr("Power Mode")
                     model: [
@@ -203,10 +201,20 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.lowPower
+
                     onSelected: value => CaptureScreenVideo.lowPower = value
                 }
-
                 SettingSection {
+                    extraActive: item => {
+                        switch (item.value) {
+                        case "cursor":
+                            return CaptureScreenVideo.showCursor;
+                        case "history":
+                            return CaptureScreenVideo.historyMode;
+                        default:
+                            return false;
+                        }
+                    }
                     label: qsTr("Toggles")
                     model: [
                         {
@@ -219,16 +227,7 @@ StyledRect {
                         }
                     ]
                     selectedValue: ""
-                    extraActive: item => {
-                        switch (item.value) {
-                        case "cursor":
-                            return CaptureScreenVideo.showCursor;
-                        case "history":
-                            return CaptureScreenVideo.historyMode;
-                        default:
-                            return false;
-                        }
-                    }
+
                     onSelected: value => {
                         switch (value) {
                         case "cursor":
@@ -247,24 +246,24 @@ StyledRect {
     component SettingSection: ColumnLayout {
         id: section
 
-        spacing: Appearance.spacing.small
-
+        property var extraActive: null
         required property string label
         required property var model
         required property var selectedValue
-        property var extraActive: null
+
         signal selected(var value)
 
+        spacing: Appearance.spacing.small
+
         StyledText {
-            text: section.label
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
+            text: section.label
         }
-
         GridLayout {
             Layout.fillWidth: true
-            columns: 2
             columnSpacing: Appearance.spacing.small
+            columns: 2
             rowSpacing: Appearance.spacing.small
 
             Repeater {
@@ -273,10 +272,10 @@ StyledRect {
                 delegate: StyledRect {
                     id: optionDelegate
 
-                    required property var modelData
-
-                    readonly property var value: optionDelegate.modelData.value ?? optionDelegate.modelData
                     readonly property bool active: section.extraActive ? section.extraActive(modelData) : section.selectedValue === value // qmllint disable
+
+                    required property var modelData
+                    readonly property var value: optionDelegate.modelData.value ?? optionDelegate.modelData
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
@@ -285,17 +284,18 @@ StyledRect {
 
                     StyledText {
                         anchors.centerIn: parent
-                        text: optionDelegate.modelData.text ?? optionDelegate.modelData
                         color: optionDelegate.active ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: optionDelegate.active ? Font.DemiBold : Font.Normal
+                        text: optionDelegate.modelData.text ?? optionDelegate.modelData
                     }
-
                     MArea {
                         id: pillMouse
+
                         anchors.fill: parent
-                        hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+
                         onClicked: section.selected(optionDelegate.value)
                     }
                 }

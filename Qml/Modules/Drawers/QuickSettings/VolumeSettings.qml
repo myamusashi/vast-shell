@@ -18,24 +18,24 @@ import qs.Components.Effects
 ScrollView {
     id: root
 
-    anchors.fill: parent
-    contentWidth: availableWidth
-    clip: true
-
+    property var audioCards: ({})
+    property string audioProfileDescription: ""
+    property string audioProfileName: ""
     property int currentSinkIndex: 0
 
-    property var audioCards: ({})
-    property string audioProfileName: ""
-    property string audioProfileDescription: ""
+    anchors.fill: parent
+    clip: true
+    contentWidth: availableWidth
 
     Instantiator {
         id: audioProfiles
 
         model: AudioProfilesWatcher.cards
+
         delegate: QtObject {
             required property var card
-            required property string name
             required property string description
+            required property string name
 
             Component.onCompleted: {
                 root.audioCards = card;
@@ -44,36 +44,26 @@ ScrollView {
             }
         }
     }
-
     RowLayout {
-        anchors.fill: parent
         Layout.margins: 15
+        anchors.fill: parent
         spacing: 20
 
         ColumnLayout {
-            Layout.margins: 10
             Layout.alignment: Qt.AlignTop
+            Layout.margins: 10
 
             PwNodeLinkTracker {
                 id: linkTracker
 
                 node: Pipewire.defaultAudioSink
             }
-
             Repeater {
-                model: ScriptModel {
-                    values: Pipewire.nodes.values.filter(n => !n.isStream && n.audio && (n.type & PwNodeType.Sink)).map(n => ({
-                                nodeId: n.id,
-                                name: n.name,
-                                description: n.description
-                            }))
-                }
-
                 delegate: RowLayout {
                     id: volumeEntryDelegate
 
-                    required property var modelData
                     required property int index
+                    required property var modelData
 
                     spacing: Appearance.spacing.small
 
@@ -82,25 +72,22 @@ ScrollView {
 
                         property color target: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : "transparent"
 
-                        border.width: 1
                         border.color: Colours.m3Colors.m3Primary
-
-                        implicitWidth: 15
+                        border.width: 1
                         implicitHeight: 15
+                        implicitWidth: 15
 
                         BlendColor {
                             host: sinkIndicator
                             target: sinkIndicator.target
                         }
                     }
-
                     StyledText {
-                        text: volumeEntryDelegate.modelData.description ?? ""
                         color: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: root.currentSinkIndex === volumeEntryDelegate.index ? Font.Medium : Font.Normal
+                        text: volumeEntryDelegate.modelData.description ?? ""
                     }
-
                     TapHandler {
                         onTapped: {
                             root.currentSinkIndex = volumeEntryDelegate.index;
@@ -109,23 +96,28 @@ ScrollView {
                         }
                     }
                 }
-            }
-
-            MixerEntry {
-                useCustomProperties: true
-                audioNode: Pipewire.defaultAudioSink
-                customProperty: AudioProfiles {
-                    card: root.audioCards
-                    Layout.fillWidth: true
+                model: ScriptModel {
+                    values: Pipewire.nodes.values.filter(n => !n.isStream && n.audio && (n.type & PwNodeType.Sink)).map(n => ({
+                                nodeId: n.id,
+                                name: n.name,
+                                description: n.description
+                            }))
                 }
             }
+            MixerEntry {
+                audioNode: Pipewire.defaultAudioSink
+                useCustomProperties: true
 
+                customProperty: AudioProfiles {
+                    Layout.fillWidth: true
+                    card: root.audioCards
+                }
+            }
             Rectangle {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3Outline
                 implicitHeight: 1
             }
-
             Repeater {
                 model: linkTracker.linkGroups
 
@@ -134,21 +126,19 @@ ScrollView {
 
                     required property PwLinkGroup modelData
 
-                    Layout.fillWidth: true
                     Layout.alignment: Qt.AlignLeft
+                    Layout.fillWidth: true
 
                     PwObjectTracker {
                         objects: [groups.modelData.source]
                     }
-
                     IconImage {
-                        source: IconUtils.guessIconPath(groups.modelData.source)
-                        asynchronous: true
-                        Layout.preferredWidth: 60
-                        Layout.preferredHeight: 60
                         Layout.alignment: Qt.AlignVCenter
+                        Layout.preferredHeight: 60
+                        Layout.preferredWidth: 60
+                        asynchronous: true
+                        source: IconUtils.guessIconPath(groups.modelData.source)
                     }
-
                     MixerEntry {
                         id: mixerGroup
 

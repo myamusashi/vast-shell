@@ -9,10 +9,8 @@ import qs.Core.Configs
 Singleton {
     id: root
 
-    readonly property string nerdProbe: "f313"
-
+    property string detectedNerdFamily: "monospace"
     readonly property var genericFamilies: ["monospace", "sans-serif", "serif", "cursive", "fantasy", "system-ui"]
-
     readonly property var installedFamilies: {
         const families = [];
         const fonts = Qt.fontFamilies();
@@ -23,18 +21,15 @@ Singleton {
         }
         return families;
     }
-
-    property string detectedNerdFamily: "monospace"
-
-    readonly property string sans: resolve(Appearance.fonts.family.sans, "sans-serif")
-    readonly property string mono: resolve(Appearance.fonts.family.mono, "monospace")
     readonly property string material: resolve(Appearance.fonts.family.material, "Material Symbols Rounded")
+    readonly property string mono: resolve(Appearance.fonts.family.mono, "monospace")
     readonly property string nerd: resolve(Appearance.fonts.family.nerd, detectedNerdFamily)
+    readonly property string nerdProbe: "f313"
+    readonly property string sans: resolve(Appearance.fonts.family.sans, "sans-serif")
 
     function isAvailable(family) {
         return genericFamilies.includes(family) || installedFamilies.includes(family);
     }
-
     function resolve(configured, fallback) {
         if (!configured)
             return fallback;
@@ -45,6 +40,8 @@ Singleton {
         console.warn(`Font "${configured}" is not installed, falling back to "${fallback}"`);
         return fallback;
     }
+
+    Component.onCompleted: nerdFontProc.running = true
 
     Process {
         id: nerdFontProc
@@ -60,6 +57,4 @@ Singleton {
             }
         }
     }
-
-    Component.onCompleted: nerdFontProc.running = true
 }

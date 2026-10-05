@@ -9,36 +9,35 @@ import qs.Services
 DialogBox {
     id: root
 
-    needKeyboardFocus: true
     activeAsync: PolAgent.agent?.isActive
+    cardPaddingHeight: 24
 
     // Compact card proportions for the auth prompt.
     cardPaddingWidth: 36
-    cardPaddingHeight: 24
     contentMinWidth: 280
     contentSpacing: Appearance.spacing.normal
+    needKeyboardFocus: true
 
-    header: Header {}
     body: Body {
         id: bodyPolkit
 
         Connections {
-            target: root
-
+            function onAccepted() {
+                bodyPolkit.submit();
+            }
             function onActiveChanged() {
                 if (!root.active)
                     return;
 
                 bodyPolkit.passwordInput.forceActiveFocus();
             }
-
-            function onAccepted() {
-                bodyPolkit.submit();
-            }
-
             function onRejected() {
                 bodyPolkit.cancel();
             }
+
+            target: root
         }
+    }
+    header: Header {
     }
 }

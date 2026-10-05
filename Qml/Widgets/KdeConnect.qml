@@ -14,10 +14,10 @@ StyledRect {
 
     property bool dragHover: false
 
-    implicitWidth: kdeIcon.width + Appearance.padding.normal * 2
-    implicitHeight: parent.height
-    radius: Appearance.rounding.small
     color: dragHover ? Qt.alpha(Colours.m3Colors.m3Primary, 0.12) : "transparent"
+    implicitHeight: parent.height
+    implicitWidth: kdeIcon.width + Appearance.padding.normal * 2
+    radius: Appearance.rounding.small
 
     Behavior on color {
         CAnim {
@@ -29,28 +29,20 @@ StyledRect {
         id: kdeIcon
 
         anchors.centerIn: parent
-        implicitSize: Appearance.fonts.size.large * 1.5
-        source: Quickshell.iconPath("kdeconnect", "image-missing")
         asynchronous: true
         backer.cache: true
+        implicitSize: Appearance.fonts.size.large * 1.5
         opacity: KDEConnect.hasAvailableDevices ? 1.0 : 0.4
+        source: Quickshell.iconPath("kdeconnect", "image-missing")
 
         Behavior on opacity {
-            NAnim {}
+            NAnim {
+            }
         }
     }
-
     DropArea {
         anchors.fill: parent
 
-        onEntered: drag => {
-            root.dragHover = drag.hasUrls;
-        }
-        onPositionChanged: drag => {
-            if (root.dragHover !== drag.hasUrls)
-                root.dragHover = drag.hasUrls;
-        }
-        onExited: root.dragHover = false
         onDropped: drop => {
             root.dragHover = false;
             if (!drop.hasUrls)
@@ -59,6 +51,14 @@ StyledRect {
             for (var i = 0; i < drop.urls.length; i++)
                 incoming.push(String(drop.urls[i]).replace("file://", ""));
             GlobalStates.shareFilesViaKdeConnect(incoming);
+        }
+        onEntered: drag => {
+            root.dragHover = drag.hasUrls;
+        }
+        onExited: root.dragHover = false
+        onPositionChanged: drag => {
+            if (root.dragHover !== drag.hasUrls)
+                root.dragHover = drag.hasUrls;
         }
     }
 }

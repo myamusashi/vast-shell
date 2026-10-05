@@ -14,8 +14,7 @@ import "../../Components"
 SettingsCard {
     id: root
 
-    title: qsTr("Playback")
-
+    readonly property int count: streamNodes.length
     readonly property var streamNodes: {
         const nodes = Pipewire.nodes.values;
         const filtered = nodes.filter(n => n.isStream && n.audio && (n.type & PwNodeType.Sink));
@@ -23,19 +22,18 @@ SettingsCard {
         return filtered;
     }
 
-    readonly property int count: streamNodes.length
+    title: qsTr("Playback")
 
     ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
 
         StyledText {
-            visible: root.count === 0
-            text: qsTr("No active playback streams.")
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("No active playback streams.")
+            visible: root.count === 0
         }
-
         Repeater {
             model: root.streamNodes
 
@@ -48,13 +46,12 @@ SettingsCard {
                 spacing: Appearance.spacing.normal
 
                 IconImage {
-                    Layout.preferredWidth: 48
-                    Layout.preferredHeight: 48
                     Layout.alignment: Qt.AlignVCenter
-                    source: IconUtils.guessIconPath(streamDelegate.modelData)
+                    Layout.preferredHeight: 48
+                    Layout.preferredWidth: 48
                     asynchronous: true
+                    source: IconUtils.guessIconPath(streamDelegate.modelData)
                 }
-
                 AudioLevelRow {
                     Layout.fillWidth: true
                     node: streamDelegate.modelData

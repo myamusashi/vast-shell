@@ -11,47 +11,47 @@ import qs.Services
 Item {
     id: content
 
-    anchors.fill: parent
-
-    property alias wifi: wifi
-    property alias ethernet: ethernet
     property alias bluetooth: bluetooth
+    property alias ethernet: ethernet
     readonly property bool isConnected: SystemUsage.statusWiredInterface === "connected"
+    property alias wifi: wifi
     readonly property string wifiConnectedName: {
         const dev = Networking.devices.values.find(d => d.type === DeviceType.Wifi);
         return dev?.networks.values.find(n => n.connected)?.name ?? "";
     }
 
+    anchors.fill: parent
+
     ColumnLayout {
         anchors.fill: parent
         spacing: Appearance.spacing.normal
 
-        BrightnessControls {}
-        NetworkInfoColumn {}
-
+        BrightnessControls {
+        }
+        NetworkInfoColumn {
+        }
         RowLayout {
-            Layout.fillHeight: true
             Layout.alignment: Qt.AlignLeft
+            Layout.fillHeight: true
             spacing: Appearance.spacing.normal
 
             StyledText {
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.small
                 text: content.isConnected ? `${SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
-                color: Colours.m3Colors.m3OnSurface
             }
-
             StyledText {
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.small
                 text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${content.wifiConnectedName})` : "Not connected"
-                color: Colours.m3Colors.m3OnSurface
             }
         }
-
-        MediaPlayer {}
+        MediaPlayer {
+        }
         Notifications {
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
         }
     }
     WifiList {
@@ -60,30 +60,28 @@ Item {
         anchors.centerIn: parent
         z: 99
     }
-
     EthernetList {
         id: ethernet
 
         anchors.centerIn: parent
         z: 99
     }
-
     BluetoothList {
         id: bluetooth
 
         anchors.centerIn: parent
         z: 99
     }
-
     StyledRect {
         anchors.fill: parent
-        visible: wifi.isVisible || ethernet.isVisible || bluetooth.isVisible
         color: Qt.alpha(Colours.m3Colors.m3Surface, 0.7)
+        visible: wifi.isVisible || ethernet.isVisible || bluetooth.isVisible
         z: 98
 
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
+
             onClicked: mouse => {
                 if (mouse.x < wifi.x || mouse.x > wifi.x + wifi.width || mouse.y < wifi.y || mouse.y > wifi.y + wifi.height) {
                     wifi.isVisible = false;

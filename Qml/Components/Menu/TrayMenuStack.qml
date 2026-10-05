@@ -12,7 +12,6 @@ Drawer {
 
     property real maxHeight: 480
     property real menuWidth: 280
-
     property var openMenu: menu => Qt.callLater(() => {
             loader.item?.openMenu(menu); // qmllint disable
         })
@@ -21,31 +20,39 @@ Drawer {
     signal entryActivated(var entry)
     signal exited
 
-    edge: Qt.TopEdge
     alignment: Qt.AlignRight
-    length: menuWidth
-    depth: Math.min(loader.item?.contentHeight, maxHeight) // qmllint disable
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: Math.min(loader.item?.contentHeight, maxHeight) // qmllint disable
+    edge: Qt.TopEdge
+    filletRadius: 40
+    length: menuWidth
 
     Loader {
         id: loader
 
-        anchors.fill: parent
         active: root.open
+        anchors.fill: parent
+
         sourceComponent: Item {
             id: itemLoader
 
-            anchors.fill: parent
-
+            readonly property real contentHeight: currentPage ? currentPage.contentHeight : 0
+            readonly property var currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < pages.length ? pages[stackLayout.currentIndex] : null
             property var pages: []
 
-            readonly property var currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < pages.length ? pages[stackLayout.currentIndex] : null
-            readonly property real contentHeight: currentPage ? currentPage.contentHeight : 0
-
+            function createPage(handle: var, pageTitle: string): void {
+                const page = pageComponent.createObject(stackLayout, {
+                    handle: handle,
+                    level: pages.length,
+                    title: pageTitle
+                });
+                if (!page)
+                    return;
+                pages = pages.concat(page);
+            }
             function openMenu(handle: var): void {
                 const page = pageAt(0);
                 if (!page) {
@@ -58,7 +65,14 @@ Drawer {
                 page.highlightedEntry = null;
                 stackLayout.currentIndex = 0;
             }
-
+            function pageAt(level: int): var {
+                return level >= 0 && level < pages.length ? pages[level] : null;
+            }
+            function popSubmenu(): void {
+                if (stackLayout.currentIndex <= 0)
+                    return;
+                stackLayout.currentIndex -= 1;
+            }
             function pushSubmenu(entry: var): void {
                 if (!entry || !entry.hasChildren)
                     return;
@@ -80,26 +94,7 @@ Drawer {
                 stackLayout.currentIndex = level;
             }
 
-            function popSubmenu(): void {
-                if (stackLayout.currentIndex <= 0)
-                    return;
-                stackLayout.currentIndex -= 1;
-            }
-
-            function pageAt(level: int): var {
-                return level >= 0 && level < pages.length ? pages[level] : null;
-            }
-
-            function createPage(handle: var, pageTitle: string): void {
-                const page = pageComponent.createObject(stackLayout, {
-                    handle: handle,
-                    level: pages.length,
-                    title: pageTitle
-                });
-                if (!page)
-                    return;
-                pages = pages.concat(page);
-            }
+            anchors.fill: parent
 
             Item {
                 id: stackHost
@@ -110,11 +105,10 @@ Drawer {
                 StackLayout {
                     id: stackLayout
 
-                    width: stackHost.width
                     height: stackHost.height
+                    width: stackHost.width
                 }
             }
-
             HoverHandler {
                 onHoveredChanged: {
                     if (hovered)
@@ -123,21 +117,19 @@ Drawer {
                         root.exited();
                 }
             }
-
             Component {
                 id: pageComponent
 
                 TrayMenu {
                     Layout.fillHeight: true
                     Layout.maximumHeight: root.maxHeight
-
                     currentIndex: stackLayout.currentIndex
 
                     onBackRequested: itemLoader.popSubmenu()
-                    onEntryActivated: entry => root.entryActivated(entry)
-                    onSubmenuRequested: entry => itemLoader.pushSubmenu(entry)
                     onEntered: root.entered()
+                    onEntryActivated: entry => root.entryActivated(entry)
                     onExited: root.exited()
+                    onSubmenuRequested: entry => itemLoader.pushSubmenu(entry)
                 }
             }
         }

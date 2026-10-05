@@ -15,48 +15,48 @@ MaterialShape {
     id: canvas
 
     property real moonriseProgress: CelestialProgress.progressBetween(Weather.moonRise, Weather.moonSet)
+
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
 
     ClippingWrapperRectangle {
         anchors.fill: parent
-        color: "transparent"
         bottomLeftRadius: Appearance.rounding.large * 1.23
         bottomRightRadius: bottomLeftRadius
-        Moon {}
-    }
+        color: "transparent"
 
+        Moon {
+        }
+    }
     RowLayout {
         implicitWidth: parent.width
+
         anchors {
-            top: parent.top
             horizontalCenter: parent.horizontalCenter
+            top: parent.top
             topMargin: 5
         }
-
         Icon {
-            type: Icon.Material
-            icon: "bedtime"
+            color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large * 1.5
-            color: Colours.m3Colors.m3OnSurface
+            icon: "bedtime"
+            type: Icon.Material
         }
-
         StyledText {
-            text: qsTr("Moon")
-            font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.large
+            text: qsTr("Moon")
         }
     }
-
     WrapperItem {
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
         clip: true
         implicitHeight: contentLayout.implicitHeight
 
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
         ColumnLayout {
             id: contentLayout
 
@@ -64,17 +64,16 @@ MaterialShape {
 
             StyledRect {
                 Layout.fillWidth: true
-                implicitHeight: 1
                 color: Colours.m3Colors.m3OutlineVariant
+                implicitHeight: 1
             }
-
             StyledRect {
                 Layout.fillWidth: true
-                implicitHeight: 60
-                radius: 0
                 bottomLeftRadius: Appearance.rounding.full
                 bottomRightRadius: bottomLeftRadius
                 color: Qt.alpha(Colours.m3Colors.m3Surface, 0.5)
+                implicitHeight: 60
+                radius: 0
 
                 ColumnLayout {
                     anchors.centerIn: parent
@@ -86,41 +85,40 @@ MaterialShape {
                         spacing: Appearance.spacing.small
 
                         Icon {
-                            type: Icon.Material
-                            icon: "vertical_align_top"
+                            color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.normal
-                            color: Colours.m3Colors.m3OnSurface
+                            icon: "vertical_align_top"
+                            type: Icon.Material
                         }
-
                         StyledText {
-                            text: FormatTimeUtils.convertTo12Hour(Weather.moonRise)
-                            font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.small
+                            text: FormatTimeUtils.convertTo12Hour(Weather.moonRise)
                         }
                     }
-
                     Item {
                         Layout.alignment: Qt.AlignVCenter
-                        implicitWidth: childrenRect.width
                         implicitHeight: childrenRect.height
+                        implicitWidth: childrenRect.width
 
                         Icon {
                             id: moonsetIcon
 
-                            type: Icon.Material
-                            icon: "vertical_align_bottom"
-                            font.pixelSize: Appearance.fonts.size.normal
                             color: Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.normal
+                            icon: "vertical_align_bottom"
+                            type: Icon.Material
                         }
                         StyledText {
+                            color: Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.small
+                            text: FormatTimeUtils.convertTo12Hour(Weather.moonSet)
+
                             anchors {
                                 left: moonsetIcon.right
                                 leftMargin: 4
                                 verticalCenter: moonsetIcon.verticalCenter
                             }
-                            text: FormatTimeUtils.convertTo12Hour(Weather.moonSet)
-                            font.pixelSize: Appearance.fonts.size.small
-                            color: Colours.m3Colors.m3OnSurface
                         }
                     }
                 }
@@ -131,20 +129,19 @@ MaterialShape {
     component Moon: Shape {
         id: moonShape
 
-        anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
         property color hillColor: Colours.m3Colors.m3Primary
         property color moonColor: Colours.m3Colors.m3OnSurfaceVariant
         property real moonSize: 20
 
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
+
         // Hill
         ShapePath {
-            strokeColor: "transparent"
             fillColor: moonShape.hillColor
-
             startX: 0
             startY: moonGeo.heightPx
+            strokeColor: "transparent"
 
             PathLine {
                 x: moonGeo.hillStartX
@@ -170,9 +167,9 @@ MaterialShape {
 
         // Moon
         ShapePath {
+            fillColor: moonShape.moonColor
             strokeColor: moonShape.moonColor
             strokeWidth: 2
-            fillColor: moonShape.moonColor
 
             PathAngleArc {
                 centerX: moonGeo.moonX
@@ -183,28 +180,25 @@ MaterialShape {
                 sweepAngle: 360
             }
         }
-
         QtObject {
             id: moonGeo
 
-            readonly property real widthPx: moonShape.parent.width
             readonly property real heightPx: moonShape.parent.height
-
-            property real hillHeight: heightPx * 0.6
             property real hillBaseY: heightPx - hillHeight
-            property real hillStartX: 0
-            property real hillStartY: hillBaseY + hillHeight * 0.3
             property real hillControlPoint1X: widthPx * 0.3
             property real hillControlPoint1Y: hillBaseY - hillHeight * 0.1
             property real hillControlPoint2X: widthPx * 0.7
             property real hillControlPoint2Y: hillBaseY - hillHeight * 0.1
             property real hillEndX: widthPx
             property real hillEndY: hillBaseY + hillHeight * 0.3
-
-            property real progress: canvas.moonriseProgress
-            property real oneMinusProgress: 1 - progress
+            property real hillHeight: heightPx * 0.6
+            property real hillStartX: 0
+            property real hillStartY: hillBaseY + hillHeight * 0.3
             property real moonX: Math.pow(oneMinusProgress, 3) * hillStartX + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1X + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2X + Math.pow(progress, 3) * hillEndX
             property real moonY: Math.pow(oneMinusProgress, 3) * hillStartY + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1Y + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2Y + Math.pow(progress, 3) * hillEndY
+            property real oneMinusProgress: 1 - progress
+            property real progress: canvas.moonriseProgress
+            readonly property real widthPx: moonShape.parent.width
         }
     }
 }

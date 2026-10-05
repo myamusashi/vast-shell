@@ -10,76 +10,23 @@ Popup {
     id: root
 
     property Item anchorItem: null
-    property real maxWidth: 280
-    property alias model: itemRepeater.model
     property int currentIndex: -1
-    property var textRole: "text"
-    property var isItemEnabled: modelData => true
     property var disabledLabel: modelData => ""
+    readonly property int gap: 4
     property var isItemActive: (modelData, itemIndex) => itemIndex === currentIndex
-    property bool showScrollBar: false
-
-    property string preferredDirection: "auto"
-
+    property var isItemEnabled: modelData => true
+    property real maxWidth: 280
     property int minVisibleRows: 3
+    property alias model: itemRepeater.model
+    property bool openUpward: false
+    readonly property bool openingUpward: openUpward
+    property string preferredDirection: "auto"
+    property bool resolveGuard: false
+    property real resolvedMaxHeight: 336
+    property bool showScrollBar: false
+    property var textRole: "text"
 
     signal activated(int index)
-
-    padding: 0
-    background: null
-    focus: true
-    closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
-
-    readonly property bool openingUpward: openUpward
-    readonly property int gap: 4
-
-    property bool openUpward: false
-    property real resolvedMaxHeight: 336
-    property bool resolveGuard: false
-
-    width: anchorItem ? Math.max(menuSurface.minWidth, Math.min(maxWidth, anchorItem.width)) : menuSurface.implicitWidth
-    y: openUpward ? -height - gap : (anchorItem ? anchorItem.height + gap : 0)
-    height: Math.min(resolvedMaxHeight, menuSurface.contentImplicitHeight)
-
-    transformOrigin: openUpward ? Popup.BottomLeft : Popup.TopLeft
-
-    onAnchorItemChanged: {
-        if (anchorItem)
-            parent = anchorItem;
-    }
-
-    onAboutToShow: resolvePlacement()
-    onOpened: resolvePlacement()
-
-    function resolvePlacement() {
-        if (!anchorItem || !anchorItem.QsWindow.window || resolveGuard)
-            return;
-        resolveGuard = true;
-
-        // qmllint disable missing-property
-        const win = anchorItem.QsWindow.window;
-        const placement = PopupPlacement.resolve(preferredDirection, availableSpaceAbove(), availableSpaceBelow(), menuSurface.contentImplicitHeight, 336, minVisibleRows, 48, gap, win.height);
-        openUpward = placement.openUpward;
-        resolvedMaxHeight = placement.maxHeight;
-        // qmllint enable missing-property
-
-        resolveGuard = false;
-    }
-
-    function availableSpaceBelow(): real {
-        const win = anchorItem ? anchorItem.QsWindow.window : null;
-        if (!win)
-            return 336 + 200;
-        // qmllint disable missing-property
-        const contentItem = win.contentItem;
-        if (contentItem) {
-            const p = anchorItem.mapToItem(contentItem, 0, anchorItem.height);
-            if (isFinite(p.y))
-                return win.height - p.y - gap;
-        }
-        return win.height - (anchorItem.height + gap);
-        // qmllint enable missing-property
-    }
 
     function availableSpaceAbove(): real {
         const win = anchorItem ? anchorItem.QsWindow.window : null;
@@ -95,15 +42,63 @@ Popup {
         return win.height;
         // qmllint enable missing-property
     }
+    function availableSpaceBelow(): real {
+        const win = anchorItem ? anchorItem.QsWindow.window : null;
+        if (!win)
+            return 336 + 200;
+        // qmllint disable missing-property
+        const contentItem = win.contentItem;
+        if (contentItem) {
+            const p = anchorItem.mapToItem(contentItem, 0, anchorItem.height);
+            if (isFinite(p.y))
+                return win.height - p.y - gap;
+        }
+        return win.height - (anchorItem.height + gap);
+        // qmllint enable missing-property
+    }
+    function resolvePlacement() {
+        if (!anchorItem || !anchorItem.QsWindow.window || resolveGuard)
+            return;
+        resolveGuard = true;
+
+        // qmllint disable missing-property
+        const win = anchorItem.QsWindow.window;
+        const placement = PopupPlacement.resolve(preferredDirection, availableSpaceAbove(), availableSpaceBelow(), menuSurface.contentImplicitHeight, 336, minVisibleRows, 48, gap, win.height);
+        openUpward = placement.openUpward;
+        resolvedMaxHeight = placement.maxHeight;
+        // qmllint enable missing-property
+
+        resolveGuard = false;
+    }
+
+    background: null
+    closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
+    focus: true
+    height: Math.min(resolvedMaxHeight, menuSurface.contentImplicitHeight)
+    padding: 0
+    transformOrigin: openUpward ? Popup.BottomLeft : Popup.TopLeft
+    width: anchorItem ? Math.max(menuSurface.minWidth, Math.min(maxWidth, anchorItem.width)) : menuSurface.implicitWidth
+    y: openUpward ? -height - gap : (anchorItem ? anchorItem.height + gap : 0)
+
+    enter: MenuTransitions {
+        opening: true
+    }
+    exit: MenuTransitions {
+        opening: false
+    }
+
+    onAboutToShow: resolvePlacement()
+    onAnchorItemChanged: {
+        if (anchorItem)
+            parent = anchorItem;
+    }
+    onOpened: resolvePlacement()
 
     Connections {
-        target: root.anchorItem && root.anchorItem.QsWindow.window ? root.anchorItem.QsWindow.window : null
-        ignoreUnknownSignals: true
-
-        function onWidthChanged() {
+        function onHeightChanged() {
             root.resolvePlacement();
         }
-        function onHeightChanged() {
+        function onWidthChanged() {
             root.resolvePlacement();
         }
         function onXChanged() {
@@ -112,15 +107,17 @@ Popup {
         function onYChanged() {
             root.resolvePlacement();
         }
-    }
 
+        ignoreUnknownSignals: true
+        target: root.anchorItem && root.anchorItem.QsWindow.window ? root.anchorItem.QsWindow.window : null
+    }
     MenuSurface {
         id: menuSurface
 
         anchors.fill: parent
-        showScrollBar: root.showScrollBar
         maxHeight: root.resolvedMaxHeight
         maxWidth: root.maxWidth
+        showScrollBar: root.showScrollBar
 
         Repeater {
             id: itemRepeater
@@ -131,11 +128,12 @@ Popup {
                 required property int index
                 required property var modelData
 
+                disabledLabel: root.disabledLabel(modelData)
+                enabled: root.isItemEnabled(modelData)
                 label: typeof modelData === "string" ? modelData : modelData[root.textRole] ?? ""
                 // qmllint disable
                 selected: root.isItemActive(modelData, index)
-                disabledLabel: root.disabledLabel(modelData)
-                enabled: root.isItemEnabled(modelData)
+
                 // qmllint enable
 
                 onTriggered: {
@@ -144,13 +142,5 @@ Popup {
                 }
             }
         }
-    }
-
-    enter: MenuTransitions {
-        opening: true
-    }
-
-    exit: MenuTransitions {
-        opening: false
     }
 }

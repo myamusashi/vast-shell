@@ -15,80 +15,75 @@ MaterialShape {
 
     Cookie {
         ColumnLayout {
-            anchors {
-                top: parent.top
-                horizontalCenter: parent.horizontalCenter
-                topMargin: 20
-            }
             z: 99
 
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                top: parent.top
+                topMargin: 20
+            }
             RowLayout {
                 Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
                 Icon {
-                    type: Icon.Material
-                    icon: "visibility"
+                    color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large * 1.5
-                    color: Colours.m3Colors.m3OnSurface
+                    icon: "visibility"
+                    type: Icon.Material
                 }
-
                 StyledText {
-                    text: qsTr("Visibility")
-                    font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: qsTr("Visibility")
                 }
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
-                text: Weather.visibility.toFixed(0)
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
-                color: Colours.m3Colors.m3OnSurface
+                text: Weather.visibility.toFixed(0)
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
-                text: "Km"
-                font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large
+                text: "Km"
             }
         }
     }
 
     component Cookie: Item {
         anchors.centerIn: parent
-        implicitWidth: 135
         implicitHeight: 135
+        implicitWidth: 135
 
         MaterialShape {
             anchors.centerIn: parent
-            implicitWidth: 135
-            implicitHeight: 135
             color: Colours.m3Colors.m3Primary
+            implicitHeight: 135
+            implicitWidth: 135
             opacity: 0.5
             shape: MaterialShape.Cookie12Sided
             z: 3
         }
-
         MaterialShape {
             anchors.centerIn: parent
-            implicitWidth: 135
-            implicitHeight: 135
             color: Colours.m3Colors.m3Primary
+            implicitHeight: 135
+            implicitWidth: 135
             opacity: 0.3
-            shape: MaterialShape.Cookie12Sided
             rotation: 7
+            shape: MaterialShape.Cookie12Sided
             z: 2
         }
-
         MaterialShape {
             anchors.centerIn: parent
-            implicitWidth: 135
-            implicitHeight: 135
             color: Colours.m3Colors.m3Primary
+            implicitHeight: 135
+            implicitWidth: 135
             opacity: 0.2
-            shape: MaterialShape.Cookie12Sided
             rotation: 10
+            shape: MaterialShape.Cookie12Sided
             z: 1
         }
     }

@@ -43,7 +43,6 @@ Singleton {
         }
         return values[values.length - 1];
     }
-
     function fraction(value, bounds, max) {
         if (!isFinite(value) || !bounds || bounds.length === 0)
             return 0;

@@ -12,25 +12,23 @@ StyledRect {
     id: card
 
     default property alias content: contentLayout.data
+    property bool isBottomLeft: false
+    property bool isBottomRight: false
+    property bool isTopLeft: false
+    property bool isTopRight: false
     required property string title
     required property var zoomId
     required property Item zoomTarget
-    property bool isTopLeft: false
-    property bool isTopRight: false
-    property bool isBottomLeft: false
-    property bool isBottomRight: false
 
     Layout.fillWidth: true
     Layout.preferredHeight: 150
-    radius: Appearance.rounding.small * 0.5
-    clip: true
-
-    topLeftRadius: isTopLeft ? Appearance.rounding.normal : radius
-    topRightRadius: isTopRight ? Appearance.rounding.normal : radius
     bottomLeftRadius: isBottomLeft ? Appearance.rounding.normal : radius
     bottomRightRadius: isBottomRight ? Appearance.rounding.normal : radius
-
+    clip: true
     color: Colours.m3Colors.m3SurfaceContainer
+    radius: Appearance.rounding.small * 0.5
+    topLeftRadius: isTopLeft ? Appearance.rounding.normal : radius
+    topRightRadius: isTopRight ? Appearance.rounding.normal : radius
 
     ColumnLayout {
         anchors.fill: parent
@@ -38,11 +36,10 @@ StyledRect {
         spacing: Appearance.spacing.small
 
         StyledText {
-            text: card.title
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large
+            text: card.title
         }
-
         ColumnLayout {
             id: contentLayout
 
@@ -50,12 +47,12 @@ StyledRect {
             spacing: Appearance.spacing.small
         }
     }
-
     MArea {
         anchors.fill: parent
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        hoverEnabled: true
         layerRadius: card.isTopLeft ? card.topLeftRadius : card.isTopRight ? card.topRightRadius : card.isBottomRight ? card.bottomRightRadius : card.isBottomLeft ? card.bottomLeftRadius : card.radius
+
         onClicked: card.zoomId.openFrom(card)
     }
 }

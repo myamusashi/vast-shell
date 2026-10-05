@@ -11,180 +11,6 @@ import qs.Components.Effects
 PopupWidget {
     id: diskInfo
 
-    icon: "storage"
-    text: qsTr("Storage")
-    content: ColumnLayout {
-        RowLayout {
-            StyledText {
-                text: SystemUsage.diskProp.toFixed(0) + qsTr(" GB used")
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.large
-                font.weight: Font.DemiBold
-            }
-
-            StyledText {
-                text: (SystemUsage.diskTotal / 1048576).toFixed(0) + qsTr(" GB total")
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.large
-                font.weight: Font.DemiBold
-            }
-        }
-
-        Slider3Values {
-            Layout.fillWidth: true
-            Layout.topMargin: Appearance.spacing.small
-            freeValue: SystemUsage.storageFree / 1048576
-            systemValue: SystemUsage.storageSystem / 1048576
-            appsValue: SystemUsage.storageAppsData / 1048576
-        }
-
-        Repeater {
-            model: [
-                {
-                    color: Colours.m3Colors.m3Green,
-                    text: qsTr("Root"),
-                    value: SystemUsage.formatKB(SystemUsage.storageAppsData)
-                },
-                {
-                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.7),
-                    text: qsTr("Boot"),
-                    value: SystemUsage.formatKB(SystemUsage.storageSystem)
-                },
-                {
-                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.3),
-                    text: qsTr("Free"),
-                    value: SystemUsage.formatKB(SystemUsage.storageFree)
-                }
-            ]
-            delegate: RowLayout {
-                required property var modelData
-
-                StyledRect {
-                    color: parent.modelData.color
-                    implicitWidth: 15
-                    implicitHeight: 15
-                }
-
-                StyledText {
-                    text: parent.modelData.text
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                StyledText {
-                    text: parent.modelData.value
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.normal
-                }
-            }
-        }
-
-        StyledText {
-            text: qsTr("Internal storage")
-            color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.large
-            font.weight: Font.DemiBold
-        }
-
-        Repeater {
-            model: filesystemModel
-            delegate: ColumnLayout {
-                id: delegate
-
-                required property var modelData
-                readonly property string filesystem: modelData.filesystem
-                readonly property string filesystemType: modelData.filesystemType
-                readonly property string mountPoint: modelData.mountPoint
-                readonly property string totalMountPointData: modelData.totalMountPointData
-                readonly property string totalUsed: modelData.totalUsed
-                readonly property string freeSize: modelData.freeSize
-                readonly property real usedValue: modelData.usedValue
-                readonly property real totalValue: modelData.totalValue
-
-                RowLayout {
-                    StyledText {
-                        visible: delegate.filesystem !== ""
-                        text: delegate.filesystem + ": "
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.normal
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        visible: delegate.filesystemType !== ""
-                        text: delegate.filesystemType
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.normal
-                        font.weight: Font.DemiBold
-                    }
-
-                    Item {
-                        Layout.preferredHeight: 10
-                    }
-                }
-
-                RowLayout {
-                    StyledText {
-                        visible: delegate.mountPoint !== "" || delegate.mountPoint !== ""
-                        text: delegate.mountPoint
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.normal
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        visible: delegate.totalMountPointData !== "" || delegate.totalMountPointData !== ""
-                        text: delegate.totalMountPointData
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.normal
-                    }
-                }
-
-                RowLayout {
-                    StyledText {
-                        visible: delegate.totalUsed !== "" || delegate.totalUsed !== ""
-                        text: delegate.totalUsed
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.normal
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        visible: delegate.freeSize !== "" || delegate.freeSize !== ""
-                        text: delegate.freeSize
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.normal
-                    }
-                }
-
-                Slider2Values {
-                    Layout.fillWidth: true
-                    Layout.topMargin: Appearance.spacing.small
-                    visible: delegate.usedValue > 0 || delegate.totalValue > 0
-                    usedValue: delegate.usedValue / 1048576
-                    totalValue: delegate.totalValue / 1048576
-                }
-            }
-        }
-    }
-
-    ListModel {
-        id: filesystemModel
-    }
-
     function syncFilesystems() {
         const list = SystemUsage.filesystemNames;
 
@@ -219,127 +45,283 @@ PopupWidget {
         }
     }
 
-    Connections {
-        target: SystemUsage
+    icon: "storage"
+    text: qsTr("Storage")
 
-        function onFilesystemNamesChanged() {
-            diskInfo.syncFilesystems();
+    content: ColumnLayout {
+        RowLayout {
+            StyledText {
+                color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large
+                font.weight: Font.DemiBold
+                text: SystemUsage.diskProp.toFixed(0) + qsTr(" GB used")
+            }
+            StyledText {
+                color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large
+                font.weight: Font.DemiBold
+                text: (SystemUsage.diskTotal / 1048576).toFixed(0) + qsTr(" GB total")
+            }
+        }
+        Slider3Values {
+            Layout.fillWidth: true
+            Layout.topMargin: Appearance.spacing.small
+            appsValue: SystemUsage.storageAppsData / 1048576
+            freeValue: SystemUsage.storageFree / 1048576
+            systemValue: SystemUsage.storageSystem / 1048576
+        }
+        Repeater {
+            model: [
+                {
+                    color: Colours.m3Colors.m3Green,
+                    text: qsTr("Root"),
+                    value: SystemUsage.formatKB(SystemUsage.storageAppsData)
+                },
+                {
+                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.7),
+                    text: qsTr("Boot"),
+                    value: SystemUsage.formatKB(SystemUsage.storageSystem)
+                },
+                {
+                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.3),
+                    text: qsTr("Free"),
+                    value: SystemUsage.formatKB(SystemUsage.storageFree)
+                }
+            ]
+
+            delegate: RowLayout {
+                required property var modelData
+
+                StyledRect {
+                    color: parent.modelData.color
+                    implicitHeight: 15
+                    implicitWidth: 15
+                }
+                StyledText {
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: parent.modelData.text
+                }
+                Item {
+                    Layout.fillWidth: true
+                }
+                StyledText {
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: parent.modelData.value
+                }
+            }
+        }
+        StyledText {
+            color: Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.large
+            font.weight: Font.DemiBold
+            text: qsTr("Internal storage")
+        }
+        Repeater {
+            model: filesystemModel
+
+            delegate: ColumnLayout {
+                id: delegate
+
+                readonly property string filesystem: modelData.filesystem
+                readonly property string filesystemType: modelData.filesystemType
+                readonly property string freeSize: modelData.freeSize
+                required property var modelData
+                readonly property string mountPoint: modelData.mountPoint
+                readonly property string totalMountPointData: modelData.totalMountPointData
+                readonly property string totalUsed: modelData.totalUsed
+                readonly property real totalValue: modelData.totalValue
+                readonly property real usedValue: modelData.usedValue
+
+                RowLayout {
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: delegate.filesystem + ": "
+                        visible: delegate.filesystem !== ""
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: Font.DemiBold
+                        text: delegate.filesystemType
+                        visible: delegate.filesystemType !== ""
+                    }
+                    Item {
+                        Layout.preferredHeight: 10
+                    }
+                }
+                RowLayout {
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: delegate.mountPoint
+                        visible: delegate.mountPoint !== "" || delegate.mountPoint !== ""
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: delegate.totalMountPointData
+                        visible: delegate.totalMountPointData !== "" || delegate.totalMountPointData !== ""
+                    }
+                }
+                RowLayout {
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: delegate.totalUsed
+                        visible: delegate.totalUsed !== "" || delegate.totalUsed !== ""
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: delegate.freeSize
+                        visible: delegate.freeSize !== "" || delegate.freeSize !== ""
+                    }
+                }
+                Slider2Values {
+                    Layout.fillWidth: true
+                    Layout.topMargin: Appearance.spacing.small
+                    totalValue: delegate.totalValue / 1048576
+                    usedValue: delegate.usedValue / 1048576
+                    visible: delegate.usedValue > 0 || delegate.totalValue > 0
+                }
+            }
         }
     }
 
     Component.onCompleted: syncFilesystems()
 
-    component Slider3Values: Item {
-        id: root
-
-        readonly property real total: freeValue + systemValue + appsValue
-        readonly property real systemRatio: total > 0 ? systemValue / total : 0
-        readonly property real appsRatio: total > 0 ? appsValue / total : 0
-        readonly property real systemPlusAppsRatio: total > 0 ? (systemValue + appsValue) / total : 0
-        property real freeValue: 0
-        property real systemValue: 0
-        property real appsValue: 0
-
-        implicitHeight: 12
-
-        StyledRect {
-            anchors.fill: parent
-            radius: height / 2
-            color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
+    ListModel {
+        id: filesystemModel
+    }
+    Connections {
+        function onFilesystemNamesChanged() {
+            diskInfo.syncFilesystems();
         }
 
-        StyledRect {
-            id: systemAppsBar
-            property color target: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
-
-            BlendColor {
-                host: systemAppsBar
-                target: systemAppsBar.target
-            }
-
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
-            width: parent.width * root.systemPlusAppsRatio
-            radius: height / 2
-            z: 1
-
-            Behavior on width {
-                SpringAnimation {
-                    spring: 2
-                    damping: 0.5
-                }
-            }
-        }
-
-        StyledRect {
-            id: appsBar
-            property color target: Colours.m3Colors.m3Green
-
-            BlendColor {
-                host: appsBar
-                target: appsBar.target
-            }
-
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
-            width: parent.width * root.appsRatio
-            radius: height / 2
-            z: 2
-
-            Behavior on width {
-                SpringAnimation {
-                    spring: 2
-                    damping: 0.5
-                }
-            }
-        }
+        target: SystemUsage
     }
 
     component Slider2Values: Item {
         id: root
 
-        readonly property real usedPercent: totalValue > 0 ? (usedValue / totalValue) : 0
         readonly property real freePercent: 1 - usedPercent
-
-        property real usedValue: 0
         property real totalValue: 100
+        readonly property real usedPercent: totalValue > 0 ? (usedValue / totalValue) : 0
+        property real usedValue: 0
 
         implicitHeight: 12
 
         StyledRect {
             anchors.fill: parent
-            radius: height / 2
             color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
+            radius: height / 2
         }
-
         StyledRect {
             id: usedBar
+
             property color target: Colours.m3Colors.m3Green
 
-            BlendColor {
-                host: usedBar
-                target: usedBar.target
-            }
-
-            anchors {
-                left: parent.left
-                top: parent.top
-                bottom: parent.bottom
-            }
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
 
             Behavior on implicitWidth {
                 SpringAnimation {
-                    spring: 2
                     damping: 0.5
+                    spring: 2
                 }
+            }
+
+            BlendColor {
+                host: usedBar
+                target: usedBar.target
+            }
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                top: parent.top
+            }
+        }
+    }
+    component Slider3Values: Item {
+        id: root
+
+        readonly property real appsRatio: total > 0 ? appsValue / total : 0
+        property real appsValue: 0
+        property real freeValue: 0
+        readonly property real systemPlusAppsRatio: total > 0 ? (systemValue + appsValue) / total : 0
+        readonly property real systemRatio: total > 0 ? systemValue / total : 0
+        property real systemValue: 0
+        readonly property real total: freeValue + systemValue + appsValue
+
+        implicitHeight: 12
+
+        StyledRect {
+            anchors.fill: parent
+            color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
+            radius: height / 2
+        }
+        StyledRect {
+            id: systemAppsBar
+
+            property color target: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
+
+            radius: height / 2
+            width: parent.width * root.systemPlusAppsRatio
+            z: 1
+
+            Behavior on width {
+                SpringAnimation {
+                    damping: 0.5
+                    spring: 2
+                }
+            }
+
+            BlendColor {
+                host: systemAppsBar
+                target: systemAppsBar.target
+            }
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                top: parent.top
+            }
+        }
+        StyledRect {
+            id: appsBar
+
+            property color target: Colours.m3Colors.m3Green
+
+            radius: height / 2
+            width: parent.width * root.appsRatio
+            z: 2
+
+            Behavior on width {
+                SpringAnimation {
+                    damping: 0.5
+                    spring: 2
+                }
+            }
+
+            BlendColor {
+                host: appsBar
+                target: appsBar.target
+            }
+            anchors {
+                bottom: parent.bottom
+                left: parent.left
+                top: parent.top
             }
         }
     }

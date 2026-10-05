@@ -37,18 +37,20 @@ WrapperItem {
 
     Shape {
         preferredRendererType: Shape.CurveRenderer
+
         ShapePath {
             id: shapePath
 
-            strokeWidth: 0
             fillColor: "transparent"
             startX: root.radius
+            strokeWidth: 0
+
             PathArc {
-                relativeX: -root.radius
-                relativeY: root.radius
+                direction: PathArc.Counterclockwise
                 radiusX: root.radius
                 radiusY: radiusX
-                direction: PathArc.Counterclockwise
+                relativeX: -root.radius
+                relativeY: root.radius
             }
             PathLine {
                 relativeX: 0

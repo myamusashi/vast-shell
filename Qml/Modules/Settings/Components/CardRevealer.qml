@@ -8,10 +8,31 @@ import qs.Core.Configs
 Scope {
     id: root
 
-    required property Flickable target
     required property Item container
-
     property string pendingTitle: ""
+    required property Flickable target
+
+    function findCard(item, cardTitle) {
+        if (item.title === cardTitle)
+            return item;
+
+        for (let i = 0; i < item.children.length; i++) {
+            const found = findCard(item.children[i], cardTitle);
+            if (found)
+                return found;
+        }
+        return null;
+    }
+    function refreshPending() {
+        if (pendingTitle === "")
+            return;
+
+        const card = findCard(container, pendingTitle);
+
+        if (card && card.visible)
+            scrollToCard(card);
+        settleTimer.restart();
+    }
 
     // The page layout may still be settling right after a page switch, so
     // the scroll target is re-applied on every contentHeight change until
@@ -31,18 +52,6 @@ Scope {
         settleTimer.restart();
         return true;
     }
-
-    function refreshPending() {
-        if (pendingTitle === "")
-            return;
-
-        const card = findCard(container, pendingTitle);
-
-        if (card && card.visible)
-            scrollToCard(card);
-        settleTimer.restart();
-    }
-
     function scrollToCard(card) {
         const y = card.mapToItem(target.contentItem).y - Appearance.margin.large;
 
@@ -50,38 +59,26 @@ Scope {
         scrollAnim.restart();
     }
 
-    function findCard(item, cardTitle) {
-        if (item.title === cardTitle)
-            return item;
-
-        for (let i = 0; i < item.children.length; i++) {
-            const found = findCard(item.children[i], cardTitle);
-            if (found)
-                return found;
-        }
-        return null;
-    }
-
     Connections {
-        target: root.target
-
         function onContentHeightChanged() {
             root.refreshPending();
         }
-    }
 
+        target: root.target
+    }
     Timer {
         id: settleTimer
 
         interval: 120
+
         onTriggered: root.pendingTitle = ""
     }
     NumberAnimation {
         id: scrollAnim
 
-        target: root.target
-        property: "contentY"
         duration: 350
         easing.type: Easing.OutCubic
+        property: "contentY"
+        target: root.target
     }
 }

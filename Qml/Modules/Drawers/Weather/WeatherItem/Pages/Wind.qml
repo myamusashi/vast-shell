@@ -15,29 +15,31 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Wind {}
+    content: Wind {
+    }
+
     component Wind: Column {
+        clip: true
+        spacing: Appearance.spacing.normal
+
         anchors {
             fill: parent
             topMargin: 20
         }
-        clip: true
-        spacing: Appearance.spacing.normal
-
         Header {
             icon: "air"
             title: qsTr("Wind")
+
             onClicked: root.isOpen = false
         }
-
         WrapperRectangle {
             anchors.margins: Appearance.margin.normal
-            margin: 10
             clip: true
-            implicitWidth: parent.width
-            implicitHeight: content.implicitHeight + 20
-            radius: Appearance.rounding.normal
             color: Colours.m3Colors.m3SurfaceContainer
+            implicitHeight: content.implicitHeight + 20
+            implicitWidth: parent.width
+            margin: 10
+            radius: Appearance.rounding.normal
 
             ColumnLayout {
                 id: content
@@ -45,37 +47,34 @@ Pages {
                 spacing: Appearance.spacing.normal
 
                 StyledText {
-                    text: qsTr("Today's average")
                     color: Colours.m3Colors.m3OnBackground
                     font.pixelSize: Appearance.fonts.size.large * 1.5
+                    text: qsTr("Today's average")
                 }
-
                 RowLayout {
-                    spacing: Appearance.spacing.small
-                    Layout.fillWidth: true
                     Layout.alignment: Qt.AlignLeft
+                    Layout.fillWidth: true
+                    spacing: Appearance.spacing.small
 
                     StyledText {
-                        text: Weather.windSpeed
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.extraLarge
+                        text: Weather.windSpeed
                     }
-
                     StyledText {
-                        text: "Km/h"
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.normal
+                        text: "Km/h"
                     }
                 }
-
                 Flickable {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 220
                     Layout.topMargin: Appearance.margin.large * 2
-                    contentWidth: sliderRow.width
-                    contentHeight: sliderRow.height
-                    flickableDirection: Flickable.HorizontalFlick
                     boundsBehavior: Flickable.StopAtBounds
+                    contentHeight: sliderRow.height
+                    contentWidth: sliderRow.width
+                    flickableDirection: Flickable.HorizontalFlick
 
                     Row {
                         id: sliderRow
@@ -84,46 +83,40 @@ Pages {
                         spacing: Appearance.spacing.large
 
                         Repeater {
-                            model: ScriptModel {
-                                values: Weather.hourlyFromNow(Weather.hourlyForecast)
-                            }
-
                             delegate: ColumnLayout {
                                 required property var modelData
 
                                 spacing: Appearance.spacing.small
 
                                 HourlyValueSlider {
-                                    implicitWidth: 30
-                                    implicitHeight: 150
                                     from: 0
+                                    handleRotation: parent.modelData.windDirectionDegrees
+                                    implicitHeight: 150
+                                    implicitWidth: 30
                                     to: 15
                                     value: parent.modelData.windSpeed
-                                    handleRotation: parent.modelData.windDirectionDegrees
                                 }
-
                                 StyledText {
                                     Layout.alignment: Qt.AlignCenter
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
                                     text: parent.modelData.windSpeed
-                                    color: Colours.m3Colors.m3OnBackground
-                                    font.pixelSize: Appearance.fonts.size.normal
                                 }
-
                                 StyledText {
                                     Layout.alignment: Qt.AlignCenter
-
+                                    color: Colours.m3Colors.m3OnBackground
+                                    font.pixelSize: Appearance.fonts.size.normal
                                     text: parent.modelData.windDirectionText
-                                    color: Colours.m3Colors.m3OnBackground
-                                    font.pixelSize: Appearance.fonts.size.normal
                                 }
-
                                 StyledText {
                                     Layout.alignment: Qt.AlignCenter
-
-                                    text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
                                     color: Colours.m3Colors.m3OnBackground
                                     font.pixelSize: Appearance.fonts.size.normal
+                                    text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
                                 }
+                            }
+                            model: ScriptModel {
+                                values: Weather.hourlyFromNow(Weather.hourlyForecast)
                             }
                         }
                     }
@@ -131,24 +124,24 @@ Pages {
             }
         }
         WrapperRectangle {
+            color: Colours.m3Colors.m3Surface
+            implicitHeight: description.contentHeight + 10
+            implicitWidth: parent.width
+            margin: 20
+            radius: Appearance.rounding.normal
+
             border {
                 color: Colours.m3Colors.m3Outline
                 width: 1
             }
-            color: Colours.m3Colors.m3Surface
-            radius: Appearance.rounding.normal
-            implicitWidth: parent.width
-            implicitHeight: description.contentHeight + 10
-            margin: 20
-
             StyledText {
                 id: description
 
-                text: DetailText.wind
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.normal
+                text: DetailText.wind
                 textFormat: Text.MarkdownText
                 wrapMode: Text.Wrap
-                font.pixelSize: Appearance.fonts.size.normal
             }
         }
     }

@@ -12,20 +12,20 @@ import qs.Components.Base
 WrapperRectangle {
     id: root
 
-    property alias text: header.text
-    property alias icon: header.icon
-    required property Component content
-    property bool isVisible: false
-    property bool closing: false
-    property real zoomOriginX: parent.width / 2
-    property real zoomOriginY: parent.height / 2
-    property int contentMargin: Appearance.margin.small
     property bool clipContent: false
+    property bool closing: false
+    required property Component content
+    property int contentMargin: Appearance.margin.small
     property bool deferContent: true
     property bool enableScroll: true
+    property alias icon: header.icon
+    property bool isVisible: false
+    property alias text: header.text
+    property real zoomOriginX: parent.width / 2
+    property real zoomOriginY: parent.height / 2
 
-    signal opened
     signal closed
+    signal opened
 
     function openFrom(sourceItem) {
         if (!sourceItem || !parent)
@@ -36,24 +36,33 @@ WrapperRectangle {
         root.isVisible = true;
     }
 
-    border {
-        width: 1
-        color: Colours.m3Colors.m3Outline
-    }
-    implicitWidth: parent.width * 0.8
-    implicitHeight: Math.min((header.visible ? header.implicitHeight + bodyColumn.spacing : 0) + (root.enableScroll ? scrollLoader.implicitHeight : staticLoader.implicitHeight) + root.contentMargin * 2, parent.height * 0.8)
-    margin: Appearance.margin.small
-    radius: Appearance.rounding.small
     color: Colours.m3Colors.m3SurfaceContainer
-    visible: root.isVisible || root.closing
     enabled: root.isVisible
-    scale: isVisible ? 1.0 : 0.5
+    implicitHeight: Math.min((header.visible ? header.implicitHeight + bodyColumn.spacing : 0) + (root.enableScroll ? scrollLoader.implicitHeight : staticLoader.implicitHeight) + root.contentMargin * 2, parent.height * 0.8)
+    implicitWidth: parent.width * 0.8
+    margin: Appearance.margin.small
     opacity: isVisible ? 1.0 : 0.0
+    radius: Appearance.rounding.small
+    scale: isVisible ? 1.0 : 0.5
     transformOrigin: Item.Center
+    visible: root.isVisible || root.closing
 
+    Behavior on opacity {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+    Behavior on scale {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
     transform: Translate {
         x: root.isVisible ? 0 : root.zoomOriginX - root.width / 2
         y: root.isVisible ? 0 : root.zoomOriginY - root.height / 2
+
         Behavior on x {
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -68,20 +77,6 @@ WrapperRectangle {
         }
     }
 
-    Behavior on scale {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-
     onIsVisibleChanged: {
         if (!root.isVisible) {
             root.closing = true;
@@ -92,68 +87,69 @@ WrapperRectangle {
         }
     }
 
+    border {
+        color: Colours.m3Colors.m3Outline
+        width: 1
+    }
     Timer {
         id: hideTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial + 50
+
         onTriggered: root.closing = false
     }
-
     ColumnLayout {
         id: bodyColumn
+
+        spacing: Appearance.spacing.small
 
         anchors {
             fill: parent
             margins: root.contentMargin
         }
-        spacing: Appearance.spacing.small
-
         Header {
             id: header
 
             Layout.fillWidth: true
-            visible: header.text !== "" || header.icon !== ""
-            text: ""
             icon: ""
+            text: ""
+            visible: header.text !== "" || header.icon !== ""
         }
-
         Item {
             id: bodyHost
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.fillWidth: true
 
             ScrollView {
                 id: scrollView
 
-                anchors.fill: parent
-                visible: root.enableScroll
-                clip: true
-                contentWidth: availableWidth
-
                 ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                 ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                anchors.fill: parent
+                clip: true
+                contentWidth: availableWidth
+                visible: root.enableScroll
 
                 Loader {
                     id: scrollLoader
 
-                    width: scrollView.availableWidth
                     active: (root.deferContent ? root.isVisible : true) && root.enableScroll
                     asynchronous: true
                     clip: root.clipContent
                     sourceComponent: root.content
+                    width: scrollView.availableWidth
                 }
             }
-
             Loader {
                 id: staticLoader
 
-                anchors.fill: parent
-                visible: !root.enableScroll
                 active: (root.deferContent ? root.isVisible : true) && !root.enableScroll
+                anchors.fill: parent
                 asynchronous: true
                 clip: root.clipContent
                 sourceComponent: root.content
+                visible: !root.enableScroll
             }
         }
     }

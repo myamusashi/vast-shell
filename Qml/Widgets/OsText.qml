@@ -16,11 +16,11 @@ StyledRect {
         id: container
 
         Icon {
-            type: Icon.Nerd
             Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.extraLarge
             icon: Distro.icon(SystemUsage.osId, SystemUsage.osIdLike)
+            type: Icon.Nerd
         }
     }
 }

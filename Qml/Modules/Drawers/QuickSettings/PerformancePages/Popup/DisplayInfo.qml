@@ -10,9 +10,6 @@ import qs.Components.Base
 PopupWidget {
     id: root
 
-    icon: "computer"
-    text: qsTr("Display")
-
     readonly property var monitorModel: {
         let model = [];
         for (let name in Hypr.monitorData) {
@@ -45,6 +42,9 @@ PopupWidget {
         }
         return model;
     }
+
+    icon: "computer"
+    text: qsTr("Display")
 
     content: ColumnLayout {
         spacing: Appearance.spacing.normal
@@ -80,55 +80,53 @@ PopupWidget {
                     value: SystemUsage.openglVendor
                 }
             ])
+
             delegate: ColumnLayout {
                 id: delegate
 
-                required property var modelData
                 required property int index
+                required property var modelData
 
-                spacing: Appearance.spacing.small
                 Layout.fillWidth: true
+                spacing: Appearance.spacing.small
 
                 StyledText {
-                    visible: delegate.modelData.header !== ""
-                    text: delegate.modelData.header
+                    Layout.topMargin: delegate.modelData.header !== "" ? Appearance.spacing.small : 0
                     color: Colours.m3Colors.m3Green
                     font.pixelSize: Appearance.fonts.size.large
                     font.weight: Font.DemiBold
-                    Layout.topMargin: delegate.modelData.header !== "" ? Appearance.spacing.small : 0
+                    text: delegate.modelData.header
+                    visible: delegate.modelData.header !== ""
                 }
-
                 RowLayout {
-                    visible: delegate.modelData.text !== ""
-                    spacing: Appearance.spacing.small
                     Layout.fillWidth: true
+                    spacing: Appearance.spacing.small
+                    visible: delegate.modelData.text !== ""
 
                     StyledText {
-                        text: delegate.modelData.text
-                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.7)
-                        font.pixelSize: Appearance.fonts.size.normal
                         Layout.minimumWidth: 120
                         Layout.preferredWidth: 150
-                        horizontalAlignment: Text.AlignLeft
-                    }
-
-                    StyledText {
-                        text: delegate.modelData.value || qsTr("N/A")
-                        color: Colours.m3Colors.m3OnSurface
+                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.7)
                         font.pixelSize: Appearance.fonts.size.normal
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
+                        horizontalAlignment: Text.AlignLeft
+                        text: delegate.modelData.text
+                    }
+                    StyledText {
                         Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignRight
+                        color: Colours.m3Colors.m3OnSurface
+                        elide: Text.ElideRight
+                        font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.DemiBold
+                        horizontalAlignment: Text.AlignRight
+                        text: delegate.modelData.value || qsTr("N/A")
+                        wrapMode: Text.Wrap
                     }
                 }
-
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.topMargin: Appearance.spacing.small
-                    implicitHeight: 1
                     color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.1)
+                    implicitHeight: 1
                     visible: delegate.modelData.header === "" && delegate.index < root.monitorModel.length + 5
                 }
             }

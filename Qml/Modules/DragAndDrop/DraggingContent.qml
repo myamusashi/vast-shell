@@ -12,8 +12,8 @@ Item {
 
     required property bool active
 
-    implicitWidth: draggingRowLayout.implicitWidth + 32
     implicitHeight: 44
+    implicitWidth: draggingRowLayout.implicitWidth + 32
 
     RowLayout {
         id: draggingRowLayout
@@ -34,14 +34,15 @@ Item {
                     required property int index
                     property int stagger: index * 90
 
-                    width: 8
+                    color: Colours.m3Colors.m3Green
                     height: 8
                     radius: width / 2
-                    color: Colours.m3Colors.m3Green
+                    width: 8
 
                     SequentialAnimation on scale {
-                        running: root.active
                         loops: Animation.Infinite
+                        running: root.active
+
                         PauseAnimation {
                             duration: dot.stagger
                         }
@@ -55,11 +56,10 @@ Item {
                 }
             }
         }
-
         StyledText {
-            text: qsTr("Drop files here")
-            font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Drop files here")
         }
     }
 }

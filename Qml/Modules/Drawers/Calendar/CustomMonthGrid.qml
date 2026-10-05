@@ -5,26 +5,17 @@ import QtQuick
 Item {
     id: root
 
-    property int month: 0
-    property int year: 1970
-    property Component delegate: null
-
-    property int firstDayOfWeek: Qt.locale().firstDayOfWeek
-
-    property real cellWidth: width / 7
     property int cellHeight: 34
-
-    readonly property int rowCount: 6
+    property real cellWidth: width / 7
+    property var cells: buildCells()
     readonly property int columnCount: 7
-
-    implicitWidth: cellWidth * columnCount
-    implicitHeight: cellHeight * rowCount
-    property Component popoverDelegate: null
+    property Component delegate: null
+    property int firstDayOfWeek: Qt.locale().firstDayOfWeek
+    property int month: 0
     property var openPopoverDate: null
-
-    function closePopover() {
-        openPopoverDate = null;
-    }
+    property Component popoverDelegate: null
+    readonly property int rowCount: 6
+    property int year: 1970
 
     function buildCells() {
         const cells = [];
@@ -49,9 +40,14 @@ Item {
         }
         return cells;
     }
+    function closePopover() {
+        openPopoverDate = null;
+    }
 
-    property var cells: buildCells()
+    implicitHeight: cellHeight * rowCount
+    implicitWidth: cellWidth * columnCount
 
+    onFirstDayOfWeekChanged: cells = buildCells()
     onMonthChanged: {
         cells = buildCells();
         closePopover();
@@ -60,30 +56,30 @@ Item {
         cells = buildCells();
         closePopover();
     }
-    onFirstDayOfWeekChanged: cells = buildCells()
 
     Item {
         id: gridLayer
+
         anchors.fill: parent
         z: 0
 
         Repeater {
             id: cellRepeater
-            model: root.cells
+
             delegate: root.delegate
+            model: root.cells
         }
     }
-
     Item {
         id: popoverLayer
+
         anchors.fill: parent
         z: 10
 
         Loader {
             id: popoverLoader
-            active: root.openPopoverDate !== null && root.popoverDelegate !== null
-            sourceComponent: root.popoverDelegate
 
+            readonly property int openCol: openIndex >= 0 ? openIndex % root.columnCount : 0
             readonly property int openIndex: {
                 if (root.openPopoverDate === null)
                     return -1;
@@ -95,12 +91,13 @@ Item {
                 }
                 return -1;
             }
-            readonly property int openCol: openIndex >= 0 ? openIndex % root.columnCount : 0
             readonly property int openRow: openIndex >= 0 ? Math.floor(openIndex / root.columnCount) : 0
 
+            active: root.openPopoverDate !== null && root.popoverDelegate !== null
+            sourceComponent: root.popoverDelegate
+            width: root.cellWidth * root.columnCount
             x: openCol
             y: openRow * root.cellHeight + root.cellHeight
-            width: root.cellWidth * root.columnCount
 
             onLoaded: {
                 if (!item)

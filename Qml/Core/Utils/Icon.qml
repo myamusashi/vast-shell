@@ -16,8 +16,8 @@ Text {
 
     antialiasing: true
     color: "transparent"
-    renderType: Text.NativeRendering
     horizontalAlignment: Text.AlignHCenter
+    renderType: Text.NativeRendering
     verticalAlignment: Text.AlignVCenter
 
     font {

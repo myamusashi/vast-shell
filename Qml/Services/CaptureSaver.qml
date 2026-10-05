@@ -9,10 +9,14 @@ Scope {
 
     property string screenshotDir
 
-    signal saved(string path)
     signal copied
     signal failed(string reason)
+    signal saved(string path)
 
+    function copyFile(path) {
+        wlCopy.imgPath = path;
+        wlCopy.running = true;
+    }
     function saveResult(result, action) {
         if (!result || !result.saveToFile) {
             failed("Invalid grab result");
@@ -30,11 +34,6 @@ Scope {
 
         if (action === "copy" || action === "save+copy")
             copyFile(path);
-    }
-
-    function copyFile(path) {
-        wlCopy.imgPath = path;
-        wlCopy.running = true;
     }
 
     Process {

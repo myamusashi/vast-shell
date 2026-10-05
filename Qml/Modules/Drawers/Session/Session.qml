@@ -15,25 +15,13 @@ import qs.Services
 Drawer {
     id: root
 
-    property alias dialog: boxConfirmation
     property int currentIndex: 0
+    property alias dialog: boxConfirmation
     property bool isSessionOpen: GlobalStates.isSessionOpen
-    property bool showConfirmDialog: false
     property string pendingAction: ""
     property string pendingActionName: ""
-
+    property bool showConfirmDialog: false
     readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isSessionOpen // qmllint disable
-
-    edge: Qt.RightEdge
-    open: shown
-    depth: 80
-    length: parent.height * 0.5
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
-    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
-    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
-    clipContent: false
 
     function executeAction(action: string): void {
         const cmds = {
@@ -50,9 +38,20 @@ Drawer {
             });
     }
 
+    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    clipContent: false
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: 80
+    edge: Qt.RightEdge
+    filletRadius: 40
+    length: parent.height * 0.5
+    open: shown
+
     Loader {
-        anchors.fill: parent
         active: root.shown
+        anchors.fill: parent
         asynchronous: true
 
         sourceComponent: ColumnLayout {
@@ -94,17 +93,28 @@ Drawer {
                 delegate: StyledRect {
                     id: rectDelegate
 
-                    required property var modelData
-                    required property int index
-                    property int animationDelay: GlobalStates.isSessionOpen ? (4 - rectDelegate.index) * 50 : rectDelegate.index * 50
                     property real animProgress: 0
+                    property int animationDelay: GlobalStates.isSessionOpen ? (4 - rectDelegate.index) * 50 : rectDelegate.index * 50
+                    required property int index
                     property bool isHighlighted: mouseArea.containsMouse || (iconDelegate.focus && rectDelegate.index === root.currentIndex)
+                    required property var modelData
 
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: 60
                     Layout.preferredHeight: 70
+                    Layout.preferredWidth: 60
                     color: isHighlighted ? Qt.alpha(Colours.m3Colors.m3Secondary, 0.2) : "transparent"
                     focus: GlobalStates.isSessionOpen
+
+                    Behavior on animProgress {
+                        NAnim {
+                            duration: Appearance.animations.durations.small
+                        }
+                    }
+                    transform: Translate {
+                        x: (1 - rectDelegate.animProgress) * 120
+                    }
+
+                    Component.onCompleted: rectDelegate.animProgress = 0
                     onFocusChanged: {
                         if (focus && GlobalStates.isSessionOpen)
                             Qt.callLater(() => {
@@ -113,33 +123,17 @@ Drawer {
                                     firstIcon.children[0].forceActiveFocus();
                             });
                     }
-                    transform: Translate {
-                        x: (1 - rectDelegate.animProgress) * 120
-                    }
-                    Component.onCompleted: rectDelegate.animProgress = 0
 
                     Timer {
                         id: animTimer
 
                         interval: rectDelegate.animationDelay
                         running: true
+
                         onTriggered: rectDelegate.animProgress = GlobalStates.isSessionOpen ? 1 : 0
                     }
-
-                    Behavior on animProgress {
-                        NAnim {
-                            duration: Appearance.animations.durations.small
-                        }
-                    }
-
                     Icon {
                         id: iconDelegate
-
-                        anchors.centerIn: parent
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.large * 3
-                        icon: rectDelegate.modelData.icon
-                        scale: mouseArea.pressed ? 0.95 : 1.0
 
                         function handleAction() {
                             root.pendingAction = rectDelegate.modelData.action;
@@ -148,44 +142,50 @@ Drawer {
                             GlobalStates.isSessionOpen = false;
                         }
 
-                        Behavior on scale {
-                            NAnim {}
-                        }
+                        anchors.centerIn: parent
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.large * 3
+                        icon: rectDelegate.modelData.icon
+                        scale: mouseArea.pressed ? 0.95 : 1.0
 
-                        Connections {
-                            target: root
-                            function onCurrentIndexChanged() {
-                                if (root.currentIndex === rectDelegate.index)
-                                    iconDelegate.forceActiveFocus();
+                        Behavior on scale {
+                            NAnim {
                             }
                         }
 
+                        Keys.onDownPressed: {
+                            if (root.currentIndex < 4)
+                                root.currentIndex++;
+                        }
                         Keys.onEnterPressed: handleAction()
+                        Keys.onEscapePressed: GlobalStates.isSessionOpen = false
                         Keys.onReturnPressed: handleAction()
                         Keys.onUpPressed: {
                             if (root.currentIndex > 0)
                                 root.currentIndex--;
                         }
-                        Keys.onDownPressed: {
-                            if (root.currentIndex < 4)
-                                root.currentIndex++;
-                        }
-                        Keys.onEscapePressed: GlobalStates.isSessionOpen = false
 
+                        Connections {
+                            function onCurrentIndexChanged() {
+                                if (root.currentIndex === rectDelegate.index)
+                                    iconDelegate.forceActiveFocus();
+                            }
+
+                            target: root
+                        }
                         MArea {
                             id: mouseArea
 
                             anchors.fill: parent
-                            layerColor: "transparent"
                             cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
+                            layerColor: "transparent"
 
                             onClicked: {
                                 parent.focus = true;
                                 root.currentIndex = rectDelegate.index;
                                 parent.handleAction();
                             }
-
                             onEntered: {
                                 parent.focus = true;
                                 root.currentIndex = rectDelegate.index;
@@ -196,13 +196,12 @@ Drawer {
             }
         }
     }
-
     ConfirmDialog {
         id: boxConfirmation
 
-        title: qsTr("Session")
-        bodyText: qsTr("Do you want to %1?").arg(root.pendingActionName.toLowerCase())
         active: root.showConfirmDialog
+        bodyText: qsTr("Do you want to %1?").arg(root.pendingActionName.toLowerCase())
+        title: qsTr("Session")
 
         onAccepted: {
             if (root.pendingAction)
@@ -213,7 +212,6 @@ Drawer {
             root.pendingAction = "";
             root.pendingActionName = "";
         }
-
         onRejected: {
             root.showConfirmDialog = false;
             root.pendingAction = "";

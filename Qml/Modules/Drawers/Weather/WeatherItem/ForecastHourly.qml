@@ -10,11 +10,11 @@ import qs.Components.Base
 import M3Shapes
 
 StyledRect {
-    implicitWidth: parent.width
-    implicitHeight: content.height
     anchors.leftMargin: 10
     anchors.rightMargin: 10
     color: Colours.m3Colors.m3SurfaceContainer
+    implicitHeight: content.height
+    implicitWidth: parent.width
 
     ColumnLayout {
         id: content
@@ -24,13 +24,12 @@ StyledRect {
         visible: Weather.hourlyForecast && Weather.hourlyForecast.length > 0
 
         RowLayout {
-            spacing: Appearance.rounding.small
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             Layout.leftMargin: 15
             Layout.topMargin: 20
+            spacing: Appearance.rounding.small
+
             Icon {
-                type: Icon.Material
-                icon: "schedule"
                 color: Colours.m3Colors.m3Primary
                 font.pixelSize: Appearance.fonts.size.large
                 font.variableAxes: {
@@ -38,24 +37,24 @@ StyledRect {
                     "opsz": fontInfo.pixelSize,
                     "wght": fontInfo.weight
                 }
+                icon: "schedule"
+                type: Icon.Material
             }
             StyledText {
-                text: qsTr("Hourly forecast")
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.Bold
+                text: qsTr("Hourly forecast")
             }
         }
-
         Flickable {
             Layout.fillWidth: true
             Layout.preferredHeight: 150
-            contentWidth: hourlyRow.width
-            clip: true
-
-            contentHeight: hourlyRow.height
-            flickableDirection: Flickable.HorizontalFlick
             boundsBehavior: Flickable.StopAtBounds
+            clip: true
+            contentHeight: hourlyRow.height
+            contentWidth: hourlyRow.width
+            flickableDirection: Flickable.HorizontalFlick
 
             RowLayout {
                 id: hourlyRow
@@ -63,19 +62,15 @@ StyledRect {
                 spacing: 8
 
                 Repeater {
-                    model: ScriptModel {
-                        values: Weather.hourlyFromNow(Weather.hourlyForecast)
-                    }
                     delegate: StyledRect {
                         id: delegate
 
+                        readonly property bool isCurrentHour: Weather.isCurrentForecastHour(modelData)
                         required property var modelData
 
-                        implicitWidth: 65
                         implicitHeight: 130
+                        implicitWidth: 65
                         radius: Appearance.rounding.normal
-
-                        readonly property bool isCurrentHour: Weather.isCurrentForecastHour(modelData)
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -84,8 +79,8 @@ StyledRect {
 
                             Item {
                                 Layout.alignment: Qt.AlignHCenter
-                                Layout.preferredWidth: 40
                                 Layout.preferredHeight: 40
+                                Layout.preferredWidth: 40
 
                                 MaterialShape {
                                     anchors.fill: parent
@@ -94,43 +89,43 @@ StyledRect {
                                     shape: MaterialShape.Cookie4Sided
                                     visible: delegate.isCurrentHour
                                 }
-
                                 StyledText {
                                     anchors.centerIn: parent
-                                    text: (parseInt(delegate.modelData.temperature) || 0) + "°"
                                     color: delegate.isCurrentHour ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.normal
                                     font.weight: Font.Bold
+                                    text: (parseInt(delegate.modelData.temperature) || 0) + "°"
                                 }
                             }
-
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
                                 spacing: 2
+
                                 StyledText {
-                                    text: (parseInt(delegate.modelData.humidity) || 0) + "%"
                                     color: Colours.m3Colors.m3Primary
-                                    font.weight: Font.Bold
                                     font.pixelSize: Appearance.fonts.size.small
+                                    font.weight: Font.Bold
+                                    text: (parseInt(delegate.modelData.humidity) || 0) + "%"
                                 }
                             }
-
                             Icon {
-                                type: Icon.Weather
                                 Layout.alignment: Qt.AlignHCenter
-                                font.pixelSize: Appearance.fonts.size.large * 1.5
                                 color: Colours.m3Colors.m3Primary
+                                font.pixelSize: Appearance.fonts.size.large * 1.5
                                 icon: delegate.modelData.weatherIcon
+                                type: Icon.Weather
                             }
-
                             StyledText {
                                 Layout.alignment: Qt.AlignHCenter
-                                text: FormatTimeUtils.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
                                 color: Colours.m3Colors.m3OnSurface
-                                font.weight: Font.Bold
                                 font.pixelSize: Appearance.fonts.size.small
+                                font.weight: Font.Bold
+                                text: FormatTimeUtils.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
                             }
                         }
+                    }
+                    model: ScriptModel {
+                        values: Weather.hourlyFromNow(Weather.hourlyForecast)
                     }
                 }
             }

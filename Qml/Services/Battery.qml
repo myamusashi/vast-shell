@@ -8,12 +8,12 @@ import Quickshell.Services.UPower
 Singleton {
     id: root
 
+    property var batteries: []
     readonly property bool charging: UPower.displayDevice.state == UPowerDeviceState.Charging
     property int foundBattery: 0
-    property var batteries: []
-    property real totalDesignCapacity: 0
-    property real totalCurrentCapacity: 0
     property real overallBatteryHealth: 0
+    property real totalCurrentCapacity: 0
+    property real totalDesignCapacity: 0
 
     function formatCapacity(microWh) {
         return (microWh / 1000000).toFixed(2) + " Wh";
@@ -22,18 +22,19 @@ Singleton {
     Process {
         command: ["sh", "-c", "ls -d /sys/class/power_supply/BAT* | wc -l"]
         running: true
+
         stdout: StdioCollector {
             onStreamFinished: {
                 root.foundBattery = parseInt(text.trim());
             }
         }
     }
-
     Process {
         id: batteryHealthProc
 
         command: ["sh", "-c", "for bat in /sys/class/power_supply/BAT*; do echo $(basename $bat); cat $bat/energy_full_design; cat $bat/energy_full; done"]
         running: true
+
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = text.trim().split('\n');

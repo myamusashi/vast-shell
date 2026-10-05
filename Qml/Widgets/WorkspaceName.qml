@@ -11,15 +11,9 @@ import qs.Services
 StyledRect {
     id: root
 
-    FontMetrics {
-        id: windowNameMetrics
-
-        font: windowNameText.font
-    }
-
     Layout.fillHeight: true
-    implicitWidth: windowNameMetrics.advanceWidth(windowNameText.text)
     color: "transparent"
+    implicitWidth: windowNameMetrics.advanceWidth(windowNameText.text)
 
     Behavior on implicitWidth {
         NAnim {
@@ -28,18 +22,22 @@ StyledRect {
         }
     }
 
+    FontMetrics {
+        id: windowNameMetrics
+
+        font: windowNameText.font
+    }
     StyledText {
         id: windowNameText
 
-        anchors.centerIn: parent
-
-        readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
         property string actWinName: activeWindow?.activated ? activeWindow?.appId : "desktop"
+        readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
 
+        anchors.centerIn: parent
         color: Colours.m3Colors.m3OnBackground
         elide: Text.ElideMiddle
-        font.weight: Font.Light
         font.pixelSize: Appearance.fonts.size.large
+        font.weight: Font.Light
         horizontalAlignment: Text.AlignHCenter
         text: actWinName.toUpperCase()
     }

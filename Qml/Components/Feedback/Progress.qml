@@ -9,19 +9,18 @@ import "../Base"
 StyledRect {
     id: root
 
-    property alias trackColor: background.color
-    property alias indicatorColor: indicatorPath.fillColor
-    property alias cornerRadius: background.radius
     property alias condition: root.visible
-
+    property alias cornerRadius: background.radius
+    property alias indicatorColor: indicatorPath.fillColor
+    property alias trackColor: background.color
     property real waveAmplitude: 0
-    property real waveFrequency: 8
     property real waveAnimationPhase: 0
+    property real waveFrequency: 8
 
     Layout.fillWidth: true
+    color: "transparent"
     height: 4
     visible: false
-    color: "transparent"
 
     Rectangle {
         id: background
@@ -30,16 +29,11 @@ StyledRect {
         color: Colours.m3Colors.m3SurfaceContainerHighest
         radius: 2
     }
-
     Shape {
         id: indicatorShape
 
-        anchors.fill: parent
-
         property real barPosition: 0
         property real barWidth: parent.width * 0.35
-
-        preferredRendererType: Shape.CurveRenderer
 
         function clampedRect() {
             const startX = Math.max(0, barPosition);
@@ -49,7 +43,14 @@ StyledRect {
                 drawWidth: endX - startX
             };
         }
+        function roundedRectPath() {
+            var r = clampedRect();
+            if (r.drawWidth <= 0)
+                return "M 0 0";
 
+            var x = r.startX, w = r.drawWidth, h = height, cr = root.cornerRadius;
+            return "M " + (x + cr) + " 0" + " L " + (x + w - cr) + " 0" + " A " + cr + " " + cr + " 0 0 1 " + (x + w) + " " + cr + " L " + (x + w) + " " + (h - cr) + " A " + cr + " " + cr + " 0 0 1 " + (x + w - cr) + " " + h + " L " + (x + cr) + " " + h + " A " + cr + " " + cr + " 0 0 1 " + x + " " + (h - cr) + " L " + x + " " + cr + " A " + cr + " " + cr + " 0 0 1 " + (x + cr) + " 0 Z";
+        }
         function wavePath(r) {
             if (r.drawWidth <= 0)
                 return "M 0 0";
@@ -78,14 +79,8 @@ StyledRect {
             return parts.join(" ");
         }
 
-        function roundedRectPath() {
-            var r = clampedRect();
-            if (r.drawWidth <= 0)
-                return "M 0 0";
-
-            var x = r.startX, w = r.drawWidth, h = height, cr = root.cornerRadius;
-            return "M " + (x + cr) + " 0" + " L " + (x + w - cr) + " 0" + " A " + cr + " " + cr + " 0 0 1 " + (x + w) + " " + cr + " L " + (x + w) + " " + (h - cr) + " A " + cr + " " + cr + " 0 0 1 " + (x + w - cr) + " " + h + " L " + (x + cr) + " " + h + " A " + cr + " " + cr + " 0 0 1 " + x + " " + (h - cr) + " L " + x + " " + cr + " A " + cr + " " + cr + " 0 0 1 " + (x + cr) + " 0 Z";
-        }
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
 
         ShapePath {
             id: indicatorPath
@@ -97,7 +92,6 @@ StyledRect {
                 path: root.waveAmplitude > 0 ? indicatorShape.wavePath() : indicatorShape.roundedRectPath()
             }
         }
-
         SequentialAnimation {
             id: loadingAnimation
 
@@ -106,29 +100,29 @@ StyledRect {
 
             ParallelAnimation {
                 NAnim {
-                    target: indicatorShape
-                    property: "barWidth"
                     from: root.width * 0.0
+                    property: "barWidth"
+                    target: indicatorShape
                     to: root.width * 0.75
                 }
                 NAnim {
-                    target: indicatorShape
-                    property: "barPosition"
                     from: 0
+                    property: "barPosition"
+                    target: indicatorShape
                     to: root.width * 0.25
                 }
             }
             ParallelAnimation {
                 NAnim {
-                    target: indicatorShape
-                    property: "barWidth"
                     from: root.width * 0.75
+                    property: "barWidth"
+                    target: indicatorShape
                     to: root.width * 0.0
                 }
                 NAnim {
-                    target: indicatorShape
-                    property: "barPosition"
                     from: root.width * 0.25
+                    property: "barPosition"
+                    target: indicatorShape
                     to: root.width
                 }
             }

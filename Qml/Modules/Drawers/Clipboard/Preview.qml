@@ -18,8 +18,6 @@ Item {
     signal copyRequested(int id)
     signal pinToggled(int id, bool newState)
 
-    onEntryIdChanged: requestPreview()
-
     function requestPreview(): void {
         entryDetails.clear();
         previewTimeout.stop();
@@ -32,9 +30,16 @@ Item {
         ClipboardManager.requestFullEntry(root.entryId);
     }
 
-    Connections {
-        target: ClipboardManager
+    onEntryIdChanged: requestPreview()
 
+    Connections {
+        function onFullEntryFailed(id) {
+            if (id !== root.entryId)
+                return;
+            previewTimeout.stop();
+            entryDetails.loading = false;
+            entryDetails.error = true;
+        }
         function onFullEntryReady(entry) {
             if (entry.id !== root.entryId)
                 return;
@@ -54,15 +59,8 @@ Item {
             entryDetails.loading = false;
         }
 
-        function onFullEntryFailed(id) {
-            if (id !== root.entryId)
-                return;
-            previewTimeout.stop();
-            entryDetails.loading = false;
-            entryDetails.error = true;
-        }
+        target: ClipboardManager
     }
-
     Timer {
         id: previewTimeout
 
@@ -87,27 +85,18 @@ Item {
             }
         }
     }
-
     QtObject {
         id: entryDetails
 
-        readonly property int previewLoadRetry: 3
-
-        property bool loading: false
-        property bool error: false
-        property bool isImage: false
-        property string previewPath: ""
         property string content: ""
-        property string sourceApp: ""
-        property string timestamp: ""
-        property bool pinned: false
-        property int sizeBytes: 0
         property string entryType: "text"
+        property bool error: false
         property string fileName: ""
-
-        readonly property int maxPreviewChars: 20000
         readonly property bool isHtml: entryType === "html"
-        readonly property bool truncated: content.length > maxPreviewChars
+        property bool isImage: false
+        property bool loading: false
+        readonly property int maxPreviewChars: 20000
+        property bool pinned: false
         readonly property string previewContent: {
             if (!truncated)
                 return content;
@@ -116,6 +105,12 @@ Item {
             const cut = content.lastIndexOf(">", maxPreviewChars);
             return content.slice(0, cut > 0 ? cut + 1 : maxPreviewChars);
         }
+        readonly property int previewLoadRetry: 3
+        property string previewPath: ""
+        property int sizeBytes: 0
+        property string sourceApp: ""
+        property string timestamp: ""
+        readonly property bool truncated: content.length > maxPreviewChars
 
         function clear() {
             loading = false;
@@ -131,7 +126,6 @@ Item {
             fileName = "";
         }
     }
-
     Column {
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
@@ -139,27 +133,24 @@ Item {
 
         Icon {
             anchors.horizontalCenter: parent.horizontalCenter
-            icon: "content_paste"
-            font.pixelSize: Appearance.fonts.size.extraLarge
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.extraLarge
+            icon: "content_paste"
         }
-
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Select an entry to preview")
-            font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Select an entry to preview")
         }
     }
-
     LoadingIndicator {
         anchors.centerIn: parent
-        implicitWidth: 30
-        implicitHeight: 30
         contained: true
+        implicitHeight: 30
+        implicitWidth: 30
         status: root.entryId >= 0 && entryDetails.loading
     }
-
     Column {
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
@@ -167,28 +158,26 @@ Item {
 
         Icon {
             anchors.horizontalCenter: parent.horizontalCenter
-            icon: "error"
-            font.pixelSize: Appearance.fonts.size.extraLarge
             color: Colours.m3Colors.m3Error
+            font.pixelSize: Appearance.fonts.size.extraLarge
+            icon: "error"
         }
-
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Couldn't load preview")
-            font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Couldn't load preview")
         }
-
         ExtendedFloatingButton {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: qsTr("Retry")
-            icon.name: "refresh"
             color: Colours.m3Colors.m3SecondaryContainer
+            icon.name: "refresh"
+            text: qsTr("Retry")
             textColor: Colours.m3Colors.m3OnSecondaryContainer
+
             onClicked: root.requestPreview()
         }
     }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Appearance.margin.normal
@@ -207,107 +196,100 @@ Item {
                     spacing: Appearance.spacing.small
 
                     StyledRect {
-                        implicitWidth: 20
-                        implicitHeight: 20
-                        radius: Appearance.rounding.small
                         color: Qt.alpha(entryDetails.isImage ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainerHigh, 0.18)
+                        implicitHeight: 20
+                        implicitWidth: 20
+                        radius: Appearance.rounding.small
 
                         Icon {
                             anchors.centerIn: parent
-                            icon: entryDetails.isImage ? "image" : "assignment"
-                            font.pixelSize: Appearance.fonts.size.large
                             color: entryDetails.isImage ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.large
+                            icon: entryDetails.isImage ? "image" : "assignment"
                         }
                     }
-
                     StyledText {
-                        text: entryDetails.isImage ? qsTr("Image") : qsTr("Text")
+                        color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.Medium
-                        color: Colours.m3Colors.m3OnSurface
+                        text: entryDetails.isImage ? qsTr("Image") : qsTr("Text")
                     }
-
                     StyledText {
-                        visible: entryDetails.isImage && entryDetails.fileName.length > 0
-                        Layout.maximumWidth: 220
                         Layout.fillWidth: false
-                        text: entryDetails.fileName
+                        Layout.maximumWidth: 220
+                        color: Colours.m3Colors.m3OnSurfaceVariant
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.normal
-                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        text: entryDetails.fileName
+                        visible: entryDetails.isImage && entryDetails.fileName.length > 0
                     }
-
                     StyledRect {
-                        visible: entryDetails.sourceApp.length > 0
-                        implicitWidth: srcLabel.implicitWidth + Appearance.padding.normal
-                        implicitHeight: 18
-                        radius: Appearance.rounding.small
                         color: Qt.alpha(Colours.m3Colors.m3SecondaryContainer, 0.8)
+                        implicitHeight: 18
+                        implicitWidth: srcLabel.implicitWidth + Appearance.padding.normal
+                        radius: Appearance.rounding.small
+                        visible: entryDetails.sourceApp.length > 0
 
                         StyledText {
                             id: srcLabel
 
                             anchors.centerIn: parent
-                            text: entryDetails.sourceApp
-                            font.pixelSize: Appearance.fonts.size.small
                             color: Colours.m3Colors.m3OnSecondaryContainer
+                            font.pixelSize: Appearance.fonts.size.small
+                            text: entryDetails.sourceApp
                         }
                     }
                 }
-
                 RowLayout {
                     spacing: Appearance.spacing.smaller
 
                     StyledText {
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.small
                         text: entryDetails.timestamp
-                        font.pixelSize: Appearance.fonts.size.small
-                        color: Colours.m3Colors.m3OnSurfaceVariant
                     }
-
                     StyledText {
-                        text: FormatTimeUtils.formatSize(entryDetails.sizeBytes)
-                        font.pixelSize: Appearance.fonts.size.small
                         color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.small
+                        text: FormatTimeUtils.formatSize(entryDetails.sizeBytes)
                     }
                 }
             }
 
             // Pin button
             FloatingButton {
-                size: "small"
-                icon.name: entryDetails.pinned ? "keep" : "keep_off"
-                icon.color: entryDetails.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 color: Qt.alpha(Colours.m3Colors.m3SurfaceContainerHigh, 0.5)
+                icon.color: entryDetails.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                icon.name: entryDetails.pinned ? "keep" : "keep_off"
+                size: "small"
 
                 onClicked: root.pinToggled(root.entryId, !entryDetails.pinned)
             }
-
             ExtendedFloatingButton {
-                text: qsTr("Copy")
-                icon.name: "content_copy"
                 color: Colours.m3Colors.m3SecondaryContainer
+                icon.name: "content_copy"
+                text: qsTr("Copy")
                 textColor: Colours.m3Colors.m3OnSecondaryContainer
+
                 onClicked: root.copyRequested(root.entryId)
             }
         }
-
         Rectangle {
             Layout.fillWidth: true
-            implicitHeight: 1
             color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
+            implicitHeight: 1
         }
 
         // Text preview
         ScrollView {
             id: textScroll
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
-            visible: !entryDetails.isImage
-            clip: true
-
-            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            Layout.fillWidth: true
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            clip: true
+            visible: !entryDetails.isImage
 
             Keys.onPressed: event => {
                 if (event.key === Qt.Key_PageUp) {
@@ -329,93 +311,89 @@ Item {
             }
 
             ColumnLayout {
-                width: textScroll.width
                 spacing: Appearance.spacing.small
+                width: textScroll.width
 
                 TextEdit {
                     Layout.fillWidth: true
+                    color: Colours.m3Colors.m3OnSurface
+                    font.family: entryDetails.isHtml ? Fonts.sans : Fonts.mono
+                    font.pixelSize: Appearance.fonts.size.medium
+                    padding: Appearance.padding.small
+                    readOnly: true
+                    selectByKeyboard: true
+                    selectByMouse: true
+                    selectedTextColor: Colours.m3Colors.m3OnSurface
+                    selectionColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.35)
                     text: entryDetails.previewContent
                     textFormat: entryDetails.isHtml ? TextEdit.RichText : TextEdit.PlainText
-                    readOnly: true
-                    selectByMouse: true
-                    selectByKeyboard: true
                     wrapMode: TextEdit.Wrap
-
-                    font.pixelSize: Appearance.fonts.size.medium
-                    font.family: entryDetails.isHtml ? Fonts.sans : Fonts.mono
-                    color: Colours.m3Colors.m3OnSurface
-
-                    selectionColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.35)
-                    selectedTextColor: Colours.m3Colors.m3OnSurface
-                    padding: Appearance.padding.small
                 }
-
                 StyledText {
                     Layout.fillWidth: true
-                    visible: entryDetails.truncated
-                    text: qsTr("Preview truncated (%1 of %2 shown) — copy to get the full content").arg(FormatTimeUtils.formatSize(entryDetails.maxPreviewChars)).arg(FormatTimeUtils.formatSize(entryDetails.content.length))
-                    font.pixelSize: Appearance.fonts.size.small
                     color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
+                    text: qsTr("Preview truncated (%1 of %2 shown) — copy to get the full content").arg(FormatTimeUtils.formatSize(entryDetails.maxPreviewChars)).arg(FormatTimeUtils.formatSize(entryDetails.content.length))
+                    visible: entryDetails.truncated
                 }
             }
         }
-
         ScrollView {
             id: imageScroll
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
-            visible: entryDetails.isImage
-            clip: true
-
-            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            Layout.fillWidth: true
             ScrollBar.horizontal.policy: ScrollBar.AsNeeded
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
+            clip: true
+            visible: entryDetails.isImage
 
-            Keys.onUpPressed: contentItem.contentY -= 40 // qmllint disable
             Keys.onDownPressed: contentItem.contentY += 40 // qmllint disable
             Keys.onLeftPressed: contentItem.contentX -= 40 // qmllint disable
             Keys.onRightPressed: contentItem.contentX += 40 // qmllint disable
+
+            Keys.onUpPressed: contentItem.contentY -= 40 // qmllint disable
 
             WheelHandler {
                 id: imageZoom
 
                 property real scale: 1.0
+
                 acceptedModifiers: Qt.ControlModifier
+
                 onWheel: event => {
                     const step = event.angleDelta.y / 120;
                     scale = Math.max(0.25, Math.min(4.0, scale + step * 0.15));
                 }
             }
-
             Item {
-                width: Math.max(imageScroll.width, previewImage.paintedWidth * imageZoom.scale)
                 height: Math.max(imageScroll.height, previewImage.paintedHeight * imageZoom.scale)
+                width: Math.max(imageScroll.width, previewImage.paintedWidth * imageZoom.scale)
 
                 Image {
                     id: previewImage
 
                     anchors.centerIn: parent
-                    width: imageScroll.width * imageZoom.scale
-                    height: imageScroll.height * imageZoom.scale
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
                     asynchronous: true
-
+                    fillMode: Image.PreserveAspectFit
+                    height: imageScroll.height * imageZoom.scale
+                    opacity: status === Image.Ready ? 1.0 : 0.0
+                    smooth: true
                     source: entryDetails.previewPath.length > 0 ? ("file://" + entryDetails.previewPath) : ""
                     sourceSize: Qt.size(300, 300)
+                    width: imageScroll.width * imageZoom.scale
 
-                    opacity: status === Image.Ready ? 1.0 : 0.0
                     Behavior on opacity {
-                        NAnim {}
+                        NAnim {
+                        }
                     }
                 }
-
                 StyledText {
                     anchors.centerIn: parent
-                    visible: previewImage.status === Image.Loading
-                    text: qsTr("Loading…")
-                    font.pixelSize: Appearance.fonts.size.medium
                     color: Colours.m3Colors.m3Secondary
+                    font.pixelSize: Appearance.fonts.size.medium
+                    text: qsTr("Loading…")
+                    visible: previewImage.status === Image.Loading
                 }
             }
         }

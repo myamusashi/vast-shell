@@ -22,87 +22,87 @@ SettingsPageBase {
         title: qsTr("Adapter")
 
         StyledText {
-            visible: !BluetoothServices.adapterAvailable
-            text: qsTr("No Bluetooth adapter found. Ensure Bluetooth hardware is present and BlueZ is running.")
+            Layout.fillWidth: true
             color: Colours.m3Colors.m3Error
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("No Bluetooth adapter found. Ensure Bluetooth hardware is present and BlueZ is running.")
+            visible: !BluetoothServices.adapterAvailable
             wrapMode: Text.WordWrap
-            Layout.fillWidth: true
         }
-
         SettingRow {
-            visible: BluetoothServices.adapterAvailable
-            label: qsTr("Enable Bluetooth:")
             description: qsTr("Turn the Bluetooth adapter on or off.")
+            label: qsTr("Enable Bluetooth:")
+            visible: BluetoothServices.adapterAvailable
 
             StyledSwitch {
-                Layout.preferredWidth: 52
                 Layout.preferredHeight: 32
-                enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+                Layout.preferredWidth: 52
                 checked: BluetoothServices.adapterEnabled
+                enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+
                 onToggled: BluetoothServices.setEnabled(checked)
             }
         }
-
         SettingRow {
-            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
-            label: qsTr("Discoverable:")
             description: qsTr("Allow nearby devices to discover this machine.")
+            label: qsTr("Discoverable:")
+            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
 
             StyledSwitch {
-                Layout.preferredWidth: 52
                 Layout.preferredHeight: 32
+                Layout.preferredWidth: 52
                 checked: BluetoothServices.discoverable
+
                 onToggled: BluetoothServices.setDiscoverable(checked)
             }
         }
-
         SettingRow {
-            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
-            label: qsTr("Pairable:")
             description: qsTr("Allow nearby devices to request pairing.")
+            label: qsTr("Pairable:")
+            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
 
             StyledSwitch {
-                Layout.preferredWidth: 52
                 Layout.preferredHeight: 32
+                Layout.preferredWidth: 52
                 checked: BluetoothServices.pairable
+
                 onToggled: BluetoothServices.setPairable(checked)
             }
         }
-
         StyledText {
-            visible: BluetoothServices.adapterBlocked
-            text: qsTr("Adapter is blocked by rfkill. Unblock it with: rfkill unblock bluetooth")
+            Layout.fillWidth: true
             color: Colours.m3Colors.m3Error
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Adapter is blocked by rfkill. Unblock it with: rfkill unblock bluetooth")
+            visible: BluetoothServices.adapterBlocked
             wrapMode: Text.WordWrap
-            Layout.fillWidth: true
         }
-
         StyledText {
-            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapter && BluetoothServices.adapter.state === BluetoothAdapterState.Enabling // qmllint disable
+            color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("Enabling…")
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.normal
+            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapter && BluetoothServices.adapter.state === BluetoothAdapterState.Enabling // qmllint disable
         }
-
         StyledText {
-            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapter && BluetoothServices.adapter.state === BluetoothAdapterState.Disabling // qmllint disable
-            text: qsTr("Disabling…")
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Disabling…")
+            visible: BluetoothServices.adapterAvailable && BluetoothServices.adapter && BluetoothServices.adapter.state === BluetoothAdapterState.Disabling // qmllint disable
         }
-
         GridLayout {
-            columns: 2
             columnSpacing: Appearance.spacing.normal
+            columns: 2
 
             SettingRow {
-                visible: BluetoothServices.adapterAvailable
-                label: qsTr("Adapter")
                 description: qsTr("Local Bluetooth adapter.")
+                label: qsTr("Adapter")
+                visible: BluetoothServices.adapterAvailable
 
                 StyledText {
+                    Layout.maximumWidth: 320
+                    color: Colours.m3Colors.m3OnSurface
+                    elide: Text.ElideRight
+                    font.pixelSize: Appearance.fonts.size.normal
                     text: {
                         if (!BluetoothServices.adapter)
                             return "—";
@@ -112,29 +112,23 @@ SettingsPageBase {
                             return `${name} (${id})`;
                         return name || id || "—";
                     }
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.normal
-                    elide: Text.ElideRight
-                    Layout.maximumWidth: 320
                 }
             }
-
             SettingRow {
-                visible: BluetoothServices.adapterAvailable
-                label: qsTr("Address")
                 description: qsTr("Bluetooth device address.")
+                label: qsTr("Address")
+                visible: BluetoothServices.adapterAvailable
 
                 StyledText {
-                    text: BluetoothServices.adapter ? BluetoothServices.adapter.dbusPath : "—"
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.small
-                    elide: Text.ElideMiddle
                     Layout.maximumWidth: 320
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    elide: Text.ElideMiddle
+                    font.pixelSize: Appearance.fonts.size.small
+                    text: BluetoothServices.adapter ? BluetoothServices.adapter.dbusPath : "—"
                 }
             }
         }
     }
-
     SettingsCard {
         title: qsTr("Paired devices")
         visible: BluetoothServices.adapterEnabled
@@ -144,13 +138,12 @@ SettingsPageBase {
             spacing: Appearance.spacing.normal
 
             StyledText {
-                visible: pairedRepeater.count === 0
-                text: qsTr("No paired devices")
+                Layout.alignment: Qt.AlignHCenter
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.normal
-                Layout.alignment: Qt.AlignHCenter
+                text: qsTr("No paired devices")
+                visible: pairedRepeater.count === 0
             }
-
             Repeater {
                 id: pairedRepeater
 
@@ -162,14 +155,14 @@ SettingsPageBase {
                     device: modelData
                     showBlockAction: true
                     showForgetAction: true
-                    onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
+
                     onBlockToggled: modelData.blocked = !modelData.blocked
                     onForgetAction: modelData.forget()
+                    onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
                 }
             }
         }
     }
-
     SettingsCard {
         title: ""
         visible: BluetoothServices.adapterEnabled
@@ -178,27 +171,26 @@ SettingsPageBase {
             Layout.fillWidth: true
             condition: BluetoothServices.isDiscovering
         }
-
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small
 
             StyledText {
                 Layout.fillWidth: true
-                text: qsTr("Available devices")
                 color: Colours.m3Colors.m3Primary
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
+                text: qsTr("Available devices")
             }
-
             FloatingButton {
-                implicitWidth: 32
-                implicitHeight: 32
                 backgroundRadius: Appearance.rounding.small
-                enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
-                icon.name: "bluetooth_searching"
-                icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 color: "transparent"
+                enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+                icon.color: Colours.m3Colors.m3OnSurfaceVariant
+                icon.name: "bluetooth_searching"
+                implicitHeight: 32
+                implicitWidth: 32
+
                 onClicked: {
                     if (BluetoothServices.isDiscovering)
                         BluetoothServices.setDiscovering(false);
@@ -207,27 +199,23 @@ SettingsPageBase {
                 }
             }
         }
-
         ColumnLayout {
-
             StyledText {
-                visible: availableRepeater.count === 0 && !BluetoothServices.isDiscovering
-                text: qsTr("No devices found — turn on scanning to discover nearby devices.")
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.normal
-                wrapMode: Text.WordWrap
                 Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-            }
-
-            StyledText {
-                visible: availableRepeater.count === 0 && BluetoothServices.isDiscovering
-                text: qsTr("Searching for devices…")
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.normal
-                Layout.alignment: Qt.AlignHCenter
+                horizontalAlignment: Text.AlignHCenter
+                text: qsTr("No devices found — turn on scanning to discover nearby devices.")
+                visible: availableRepeater.count === 0 && !BluetoothServices.isDiscovering
+                wrapMode: Text.WordWrap
             }
-
+            StyledText {
+                Layout.alignment: Qt.AlignHCenter
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.normal
+                text: qsTr("Searching for devices…")
+                visible: availableRepeater.count === 0 && BluetoothServices.isDiscovering
+            }
             Repeater {
                 id: availableRepeater
 
@@ -238,6 +226,7 @@ SettingsPageBase {
 
                     device: modelData
                     showPairActions: true
+
                     onPrimaryAction: modelData.pair()
                     onSecondaryAction: modelData.cancelPair()
                 }

@@ -17,36 +17,33 @@ Rectangle {
     property bool canGoBack: false
     property bool canGoForward: false
     property bool canGoUp: false
-    property bool isLoading: false
     property string currentPath: ""
+    property bool isLoading: false
+    property alias pathField: input
 
     signal backClicked
     signal forwardClicked
-    signal upClicked
-    signal refreshClicked
     signal pathEntered(string path)
-    signal showHiddenToggled
+    signal refreshClicked
     signal searchToggled
+    signal showHiddenToggled
+    signal upClicked
 
-    property alias pathField: input
-
-    implicitHeight: 64
     color: Colours.m3Colors.m3SurfaceContainer
+    implicitHeight: 64
 
     Elevation {
         anchors.fill: parent
-        z: -1
         level: 3
+        z: -1
     }
-
     Rectangle {
         anchors.bottom: parent.bottom
-        implicitWidth: parent.width
-        implicitHeight: 1
         color: Colours.m3Colors.m3OutlineVariant
+        implicitHeight: 1
+        implicitWidth: parent.width
         opacity: 0.4
     }
-
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: Appearance.margin.normal
@@ -83,97 +80,96 @@ Rectangle {
                 required property int index
                 required property var modelData
 
-                Layout.preferredWidth: Appearance.fonts.size.large * 1.2 + Appearance.spacing.large
                 Layout.preferredHeight: Appearance.fonts.size.large * 1.2 + Appearance.spacing.large
+                Layout.preferredWidth: Appearance.fonts.size.large * 1.2 + Appearance.spacing.large
                 backgroundRadius: Appearance.rounding.full
-                icon.name: modelData.icon
-                icon.color: Colours.m3Colors.m3OnSurfaceVariant
-                icon.size: Appearance.fonts.size.large * 1.2
                 color: "transparent"
-                spinning: index === 3 && root.isLoading
                 enabled: index === 0 ? root.canGoBack : index === 1 ? root.canGoForward : index === 2 ? root.canGoUp : true
+                icon.color: Colours.m3Colors.m3OnSurfaceVariant
+                icon.name: modelData.icon
+                icon.size: Appearance.fonts.size.large * 1.2
+                spinning: index === 3 && root.isLoading
 
                 onClicked: modelData.clicked()
             }
         }
-
         Rectangle {
             id: textField
 
             Layout.fillWidth: true
+            color: Colours.m3Colors.m3SurfaceContainerHighest
             implicitHeight: 48
             radius: Appearance.rounding.small
-            color: Colours.m3Colors.m3SurfaceContainerHighest
 
             Rectangle {
                 id: activeIndicatorLine
 
-                anchors {
-                    bottom: parent.bottom
-                    horizontalCenter: parent.horizontalCenter
-                }
-                implicitWidth: parent.width - 4
-                implicitHeight: 1
                 color: Colours.m3Colors.m3OnSurfaceVariant
+                implicitHeight: 1
+                implicitWidth: parent.width - 4
 
                 states: [
                     State {
                         name: "activeFocus"
                         when: input.activeFocus
+
                         // qmllint disable
                         PropertyChanges {
-                            target: activeIndicatorLine
-                            implicitWidth: parent.width
-                            implicitHeight: 2
                             color: Colours.m3Colors.m3Primary
+                            implicitHeight: 2
+                            implicitWidth: parent.width
+                            target: activeIndicatorLine
                         }
                         // qmllint enable
                     }
                 ]
-
                 transitions: Transition {
                     ParallelAnimation {
                         NAnim {
-                            properties: "implicitWidth,implicitHeight"
                             duration: Appearance.animations.durations.small
+                            properties: "implicitWidth,implicitHeight"
                         }
                         CAnim {
-                            property: "color"
                             duration: Appearance.animations.durations.small
+                            property: "color"
                         }
                     }
                 }
-            }
 
+                anchors {
+                    bottom: parent.bottom
+                    horizontalCenter: parent.horizontalCenter
+                }
+            }
             RowLayout {
+                spacing: Appearance.spacing.small
+
                 anchors {
                     fill: parent
                     leftMargin: Appearance.margin.larger
                     rightMargin: Appearance.margin.smaller
                 }
-                spacing: Appearance.spacing.small
-
                 Icon {
-                    icon: "folder_open"
-                    font.pixelSize: Appearance.fonts.size.medium
                     color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.medium
+                    icon: "folder_open"
                 }
-
                 TextInput {
                     id: input
-
-                    Layout.fillWidth: true
-                    verticalAlignment: TextInput.AlignVCenter
-                    color: Colours.m3Colors.m3OnSurface
-                    font.pixelSize: Appearance.fonts.size.normal
-                    text: root.currentPath
-                    onAccepted: root.pathEntered(text)
 
                     property bool keyboardFocusable: true
 
                     function requestKeyboardFocus() {
                         input.forceActiveFocus();
                     }
+
+                    Layout.fillWidth: true
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: root.currentPath
+                    verticalAlignment: TextInput.AlignVCenter
+
+                    onAccepted: root.pathEntered(text)
                 }
             }
         }

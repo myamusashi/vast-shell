@@ -19,51 +19,26 @@ Singleton {
         ErrorStatus = 4
     }
 
+    property string band: ""
+    property int channel: 6
+    property string errorMessage: ""
+
+    // prefer a active device as hotspot interface
+    readonly property string hotspotInterface: wifiDevicePicker.hotspotInterface
     readonly property bool isActive: status === Hotspot.Status.Active
+    property string password: ""
+    property string ssid: ""
+    property int status: Hotspot.Status.Inactive
 
     // Prefer a connected ethernet device as upstream
     readonly property string upstreamInterface: SystemUsage.allEthernetDevices
 
-    // prefer a active device as hotspot interface
-    readonly property string hotspotInterface: wifiDevicePicker.hotspotInterface
-
-    property string ssid: ""
-    property string password: ""
-    property string band: ""
-    property int channel: 6
-    property int status: Hotspot.Status.Inactive
-    property string errorMessage: ""
-
-    Component.onCompleted: {
-        ToastService.show(qsTr("Upstream Interface: %1").arg(upstreamInterface), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
-        queryStatus.running = true;
+    function setError(msg) {
+        errorMessage = msg;
+        status = Hotspot.Status.ErrorStatus;
+        console.warn("[Hotspot] Error:", msg);
+        ToastService.show(qsTr("[Hotspot] Error: %1").arg(msg), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
     }
-
-    Instantiator {
-        id: wifiDevicePicker
-        model: Networking.devices
-
-        delegate: QtObject {
-            required property NetworkDevice modelData
-
-            // qmllint disable
-            readonly property bool isWifi: modelData.type === DeviceType.Wifi
-            // qmllint enable
-            readonly property string ifname: isWifi ? (modelData.name ?? "") : ""
-        }
-
-        readonly property string hotspotInterface: {
-            for (let i = 0; i < count; i++) {
-                const item = objectAt(i);
-                // qmllint disable
-                if (item && item.isWifi && item.ifname)
-                    return item.ifname;
-                // qmllint enable
-            }
-            return "";
-        }
-    }
-
     function start() {
         if (status === Hotspot.Status.Active || status === Hotspot.Status.Starting)
             return;
@@ -83,32 +58,55 @@ Singleton {
         createHotspot.command = ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${password}" ` + `wifi.band ${band} ` + `wifi.channel ${channel}`];
         createHotspot.running = true;
     }
-
     function stop() {
         if (status !== Hotspot.Status.Active)
             return;
         status = Hotspot.Status.Stopping;
         stopHotspot.running = true;
     }
-
     function toggle() {
         isActive ? stop() : start();
     }
 
-    function setError(msg) {
-        errorMessage = msg;
-        status = Hotspot.Status.ErrorStatus;
-        console.warn("[Hotspot] Error:", msg);
-        ToastService.show(qsTr("[Hotspot] Error: %1").arg(msg), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
+    Component.onCompleted: {
+        ToastService.show(qsTr("Upstream Interface: %1").arg(upstreamInterface), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
+        queryStatus.running = true;
     }
 
+    Instantiator {
+        id: wifiDevicePicker
+
+        readonly property string hotspotInterface: {
+            for (let i = 0; i < count; i++) {
+                const item = objectAt(i);
+                // qmllint disable
+                if (item && item.isWifi && item.ifname)
+                    return item.ifname;
+                // qmllint enable
+            }
+            return "";
+        }
+
+        model: Networking.devices
+
+        delegate: QtObject {
+            // qmllint enable
+            readonly property string ifname: isWifi ? (modelData.name ?? "") : ""
+
+            // qmllint disable
+            readonly property bool isWifi: modelData.type === DeviceType.Wifi
+            required property NetworkDevice modelData
+        }
+    }
     Process {
         id: createHotspot
 
         command: []
+
         stderr: StdioCollector {
             id: stdCreateHotspot
         }
+
         // qmllint disable
         onExited: code => {
             // qmllint enable
@@ -119,14 +117,15 @@ Singleton {
             startHotspot.running = true;
         }
     }
-
     Process {
         id: startHotspot
 
         command: ["nmcli", "con", "up", "Hotspot"]
+
         stderr: StdioCollector {
             id: stdStartHotspot
         }
+
         // qmllint disable
         onExited: code => {
             // qmllint enable
@@ -139,14 +138,15 @@ Singleton {
             ToastService.show(qsTr("[Hotspot] Active on %1 | SSID: %2").arg(root.hotspotInterface).arg(root.ssid), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         }
     }
-
     Process {
         id: stopHotspot
 
         command: ["bash", "-c", "nmcli con down Hotspot; nmcli con delete Hotspot"]
+
         stderr: StdioCollector {
             id: stdStopHotspot
         }
+
         // qmllint disable
         onExited: code => {
             // qmllint enable
@@ -159,12 +159,13 @@ Singleton {
             ToastService.show(qsTr("Hotspot stopped"), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         }
     }
-
     Process {
         id: queryStatus
 
         command: ["nmcli", "-t", "-f", "NAME,STATE", "con", "show", "--active"]
-        stderr: StdioCollector {}
+
+        stderr: StdioCollector {
+        }
         stdout: StdioCollector {
             id: stdQueryStatus
 
@@ -174,6 +175,7 @@ Singleton {
                     root.status = Hotspot.Status.Active;
             }
         }
+
         // qmllint disable
         onExited: code => {
             // qmllint enable

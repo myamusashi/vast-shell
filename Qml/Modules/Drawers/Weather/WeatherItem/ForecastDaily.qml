@@ -9,11 +9,11 @@ import qs.Services
 import qs.Components.Base
 
 StyledRect {
-    implicitWidth: parent.width
-    implicitHeight: content.height
     anchors.leftMargin: 10
     anchors.rightMargin: 10
     color: Colours.m3Colors.m3SurfaceContainer
+    implicitHeight: content.height
+    implicitWidth: parent.width
 
     ColumnLayout {
         id: content
@@ -29,28 +29,26 @@ StyledRect {
             spacing: Appearance.rounding.small
 
             Icon {
-                type: Icon.Material
-                icon: "calendar_month"
-                font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3Primary
+                font.pixelSize: Appearance.fonts.size.large
+                icon: "calendar_month"
+                type: Icon.Material
             }
-
             StyledText {
-                text: qsTr("Daily Forecast")
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.Bold
+                text: qsTr("Daily Forecast")
             }
         }
-
         Flickable {
             Layout.fillWidth: true
             Layout.preferredHeight: 220
-            clip: true
-            contentWidth: dailyRow.width
-            contentHeight: dailyRow.height
-            flickableDirection: Flickable.HorizontalFlick
             boundsBehavior: Flickable.StopAtBounds
+            clip: true
+            contentHeight: dailyRow.height
+            contentWidth: dailyRow.width
+            flickableDirection: Flickable.HorizontalFlick
 
             RowLayout {
                 id: dailyRow
@@ -58,22 +56,19 @@ StyledRect {
                 spacing: 6
 
                 Repeater {
-                    model: ScriptModel {
-                        values: [...Weather.dailyForecast]
-                    }
                     delegate: WrapperRectangle {
                         id: delegate
 
                         required property var modelData
 
-                        color: Qt.alpha(Colours.m3Colors.m3Surface, 0.3)
+                        Layout.bottomMargin: 10
                         Layout.leftMargin: 10
                         Layout.rightMargin: 10
-                        Layout.bottomMargin: 10
-                        implicitWidth: 60
-                        implicitHeight: 210
-                        extraMargin: 10
+                        color: Qt.alpha(Colours.m3Colors.m3Surface, 0.3)
                         contentInsideBorder: true
+                        extraMargin: 10
+                        implicitHeight: 210
+                        implicitWidth: 60
                         radius: Appearance.rounding.full
 
                         ColumnLayout {
@@ -85,39 +80,41 @@ StyledRect {
                                 spacing: 0
 
                                 StyledText {
-                                    text: (parseInt(delegate.modelData.maxTemp) || 0) + "°"
                                     color: Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.normal
                                     font.weight: Font.Bold
+                                    text: (parseInt(delegate.modelData.maxTemp) || 0) + "°"
                                 }
                                 StyledText {
-                                    text: (parseInt(delegate.modelData.minTemp) || 0) + "°"
                                     color: Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.normal
+                                    text: (parseInt(delegate.modelData.minTemp) || 0) + "°"
                                 }
                             }
-
                             Icon {
-                                type: Icon.Weather
                                 Layout.alignment: Qt.AlignHCenter
-                                font.pixelSize: Appearance.fonts.size.extraLarge
                                 color: Colours.m3Colors.m3Primary
+                                font.pixelSize: Appearance.fonts.size.extraLarge
                                 icon: delegate.modelData.weatherIcon
+                                type: Icon.Weather
                             }
-
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
-                                text: (parseInt(delegate.modelData.humidity) || 0) + "%"
                                 color: Colours.m3Colors.m3Primary
-                                font.weight: Font.Bold
                                 font.pixelSize: Appearance.fonts.size.small
+                                font.weight: Font.Bold
+                                text: (parseInt(delegate.modelData.humidity) || 0) + "%"
                             }
-
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
                                 Layout.fillWidth: true
                                 Layout.maximumWidth: parent.width
-
+                                color: Colours.m3Colors.m3OnSurface
+                                elide: Text.ElideRight
+                                font.pixelSize: Appearance.fonts.size.medium
+                                font.weight: Font.Bold
+                                horizontalAlignment: Text.AlignHCenter
+                                maximumLineCount: 2
                                 text: {
                                     const date = delegate.modelData.date || "";
                                     if (!date)
@@ -130,18 +127,12 @@ StyledRect {
                                     const days = [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr("Fri"), qsTr("Sat")];
                                     return days[forecastDate.getDay()];
                                 }
-
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.medium
-                                font.weight: Font.Bold
                                 wrapMode: Text.WordWrap
-                                horizontalAlignment: Text.AlignHCenter
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
                             }
-
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
+                                color: Colours.m3Colors.m3OnSurface
+                                font.pixelSize: Appearance.fonts.size.medium
                                 text: {
                                     const date = delegate.modelData.date || "";
                                     if (!date)
@@ -152,10 +143,11 @@ StyledRect {
                                     }
                                     return date;
                                 }
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.medium
                             }
                         }
+                    }
+                    model: ScriptModel {
+                        values: [...Weather.dailyForecast]
                     }
                 }
             }

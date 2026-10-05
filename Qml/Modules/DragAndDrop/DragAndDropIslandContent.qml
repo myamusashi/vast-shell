@@ -11,25 +11,34 @@ Item {
 
     property real islandRadius: DragAndDropServices.currentState > DragAndDropServices.State.Dragging ? Appearance.rounding.normal : Appearance.rounding.full
 
-    implicitWidth: {
-        if (DragAndDropServices.currentState === DragAndDropServices.State.Idle)
-            return DragAndDropServices.dotSize;
-        var child = stackLayout.children[stackLayout.currentIndex];
-        return Math.max(120, (child ? child.implicitWidth : 0) + 24);
-    }
+    anchors.fill: parent
     implicitHeight: {
         if (DragAndDropServices.currentState === DragAndDropServices.State.Idle)
             return DragAndDropServices.dotSize;
         var child = stackLayout.children[stackLayout.currentIndex];
         return Math.max(44, (child ? child.implicitHeight : 0) + 16);
     }
-    anchors.fill: parent
+    implicitWidth: {
+        if (DragAndDropServices.currentState === DragAndDropServices.State.Idle)
+            return DragAndDropServices.dotSize;
+        var child = stackLayout.children[stackLayout.currentIndex];
+        return Math.max(120, (child ? child.implicitWidth : 0) + 24);
+    }
 
     DropArea {
         id: dropArea
 
         anchors.fill: parent
 
+        onDropped: drop => {
+            if (DragAndDropServices.currentState !== DragAndDropServices.State.Dragging)
+                return;
+            var incoming = [];
+            for (var i = 0; i < drop.urls.length; i++)
+                incoming.push(String(drop.urls[i]).replace("file://", ""));
+            DragAndDropServices.droppedFiles = DragAndDropServices.droppedFiles.concat(incoming);
+            DragAndDropServices.currentState = DragAndDropServices.State.FilesDropped;
+        }
         onEntered: drag => {
             if (drag.hasUrls && (DragAndDropServices.currentState === DragAndDropServices.State.Idle || DragAndDropServices.currentState === DragAndDropServices.State.FilesDropped))
                 DragAndDropServices.currentState = DragAndDropServices.State.Dragging;
@@ -42,17 +51,7 @@ Item {
             if (!drag.hasUrls && DragAndDropServices.currentState === DragAndDropServices.State.Dragging)
                 DragAndDropServices.currentState = DragAndDropServices.droppedFiles.length > 0 ? DragAndDropServices.State.FilesDropped : DragAndDropServices.State.Idle;
         }
-        onDropped: drop => {
-            if (DragAndDropServices.currentState !== DragAndDropServices.State.Dragging)
-                return;
-            var incoming = [];
-            for (var i = 0; i < drop.urls.length; i++)
-                incoming.push(String(drop.urls[i]).replace("file://", ""));
-            DragAndDropServices.droppedFiles = DragAndDropServices.droppedFiles.concat(incoming);
-            DragAndDropServices.currentState = DragAndDropServices.State.FilesDropped;
-        }
     }
-
     StackLayout {
         id: stackLayout
 
@@ -77,40 +76,39 @@ Item {
         }
 
         Item {
-            implicitWidth: DragAndDropServices.dotSize
             implicitHeight: DragAndDropServices.dotSize
+            implicitWidth: DragAndDropServices.dotSize
 
             Rectangle {
                 anchors.centerIn: parent
-                width: 10
+                color: Colours.m3Colors.m3Green
                 height: 10
                 radius: width / 2
-                color: Colours.m3Colors.m3Green
+                width: 10
             }
         }
-
         DraggingContent {
             active: DragAndDropServices.isDragging
         }
         FilesDroppedContent {
-            island: DragAndDropServices
             active: DragAndDropServices.isFilesDropped
+            island: DragAndDropServices
         }
         DeviceListContent {
-            island: DragAndDropServices
             active: DragAndDropServices.isSelectingDevice
+            island: DragAndDropServices
         }
         ConfirmDeviceContent {
-            island: DragAndDropServices
             active: DragAndDropServices.isConfirmDevice
+            island: DragAndDropServices
         }
         ProgressContent {
-            island: DragAndDropServices
             active: DragAndDropServices.isTransferring
+            island: DragAndDropServices
         }
         DoneContent {
-            island: DragAndDropServices
             active: DragAndDropServices.isCompleted
+            island: DragAndDropServices
         }
     }
 }

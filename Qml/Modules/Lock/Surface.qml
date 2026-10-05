@@ -13,18 +13,11 @@ import qs.Components.Base
 WlSessionLockSurface {
     id: root
 
-    required property WlSessionLock lock
-    required property Pam pam
-
-    property bool isClosing: false
-    property bool showErrorMessage: false
-
     property string inputBuffer: ""
-    property string maskedBuffer: ""
     property bool isAllSelected: false
+    property bool isClosing: false
+    required property WlSessionLock lock
     readonly property list<string> maskChars: ["║", "║▌█", "║▌", "▌│", "█║", "𝄂▌║", "▌│", "█║", "𝄂▌║"]
-    property var maskEntries: []
-
     readonly property color maskColor: {
         if (root.showErrorMessage)
             return Colours.m3Colors.m3Error;
@@ -36,22 +29,11 @@ WlSessionLockSurface {
             return Colours.m3Colors.m3Primary;
         return Colours.m3Colors.m3OnSurface;
     }
-
-    function randomMaskEntry() {
-        return root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
-    }
-
-    function pushMaskEntry(entry) {
-        root.maskEntries.push(entry);
-        root.maskedBuffer += entry;
-    }
-
-    function popMaskEntry() {
-        if (root.maskEntries.length === 0)
-            return;
-        const entry = root.maskEntries.pop();
-        root.maskedBuffer = root.maskedBuffer.substring(0, root.maskedBuffer.length - entry.length);
-    }
+    property var maskEntries: []
+    property string maskedBuffer: ""
+    required property Pam pam
+    property bool showErrorMessage: false
+    property bool zoomedIn: false
 
     function jitterMaskEntry() {
         if (root.maskEntries.length === 0)
@@ -65,9 +47,21 @@ WlSessionLockSurface {
         root.maskEntries[idx] = newEntry;
         root.maskedBuffer = root.maskedBuffer.substring(0, unitOffset) + newEntry + root.maskedBuffer.substring(unitOffset + oldEntry.length);
     }
+    function popMaskEntry() {
+        if (root.maskEntries.length === 0)
+            return;
+        const entry = root.maskEntries.pop();
+        root.maskedBuffer = root.maskedBuffer.substring(0, root.maskedBuffer.length - entry.length);
+    }
+    function pushMaskEntry(entry) {
+        root.maskEntries.push(entry);
+        root.maskedBuffer += entry;
+    }
+    function randomMaskEntry() {
+        return root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
+    }
 
     color: "transparent"
-    property bool zoomedIn: false
 
     onInputBufferChanged: {
         var diff = inputBuffer.length - maskEntries.length;
@@ -88,18 +82,14 @@ WlSessionLockSurface {
     }
 
     Connections {
-        target: root.lock
-
         function onUnlock(): void {
             root.isClosing = true;
             unlockSequence.start();
         }
+
+        target: root.lock
     }
-
     Connections {
-        target: root.pam
-        enabled: root.pam !== null
-
         function onShowFailureChanged() {
             if (root.pam.showFailure) {
                 root.showErrorMessage = true;
@@ -113,48 +103,47 @@ WlSessionLockSurface {
                 root.showErrorMessage = false;
             }
         }
-    }
 
+        enabled: root.pam !== null
+        target: root.pam
+    }
     Item {
         id: wallpaper
 
+        property real blurRadius: 0
+
         anchors.fill: parent
+        layer.enabled: wallpaper.blurRadius > 0
         opacity: 0
         transformOrigin: Item.Center
-        property real blurRadius: 0
-        layer.enabled: wallpaper.blurRadius > 0
+
         layer.effect: FastBlur {
-            source: wallpaper
             radius: wallpaper.blurRadius
+            source: wallpaper
             transparentBorder: false
+        }
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+            }
         }
 
         Wallpaper {
             anchors.fill: parent
             visible: true
         }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-            }
-        }
     }
-
     StyledRect {
         id: rectSurface
 
         anchors.fill: parent
-
-        radius: 0
         color: "transparent"
+        focus: true
+        radius: 0
 
         Component.onCompleted: {
             lockSequence.start();
         }
-
-        focus: true
-
         Keys.onPressed: event => {
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                 if (root.inputBuffer.length > 0) {
@@ -216,23 +205,13 @@ WlSessionLockSurface {
         StyledText {
             id: passwordDisplay
 
-            anchors {
-                verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
-            }
-
-            text: root.maskedBuffer.length > 0 ? root.maskedBuffer : (root.showErrorMessage ? "" : "·")
             color: root.maskColor
-            font.pixelSize: Appearance.fonts.size.extraLarge * 10
             font.bold: true
+            font.pixelSize: Appearance.fonts.size.extraLarge * 10
             horizontalAlignment: Text.AlignHCenter
-            z: 3
             opacity: root.inputBuffer.length > 0 || root.showErrorMessage ? 1.0 : 0.3
-
-            transform: Translate {
-                id: passwordShake
-                x: 0
-            }
+            text: root.maskedBuffer.length > 0 ? root.maskedBuffer : (root.showErrorMessage ? "" : "·")
+            z: 3
 
             Behavior on opacity {
                 NAnim {
@@ -240,131 +219,132 @@ WlSessionLockSurface {
                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 }
             }
+            transform: Translate {
+                id: passwordShake
+
+                x: 0
+            }
+
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                verticalCenter: parent.verticalCenter
+            }
         }
     }
-
     Image {
         id: fgLayer
 
         readonly property bool currentWallpaperIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
 
         anchors.fill: parent
-        source: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" ? "file://" + Configs.wallpaper.depthFgPath : ""
-        fillMode: Image.PreserveAspectCrop
         asynchronous: true
         cache: true
+        fillMode: Image.PreserveAspectCrop
         opacity: 0
         scale: 1.0
+        source: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" ? "file://" + Configs.wallpaper.depthFgPath : ""
         visible: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" && !DepthWallpaperController.generating && GlobalStates.previewWallpaper === ""
         z: 2
     }
-
     BottomItem {
         id: bottomItem
-        z: 3
 
+        inputBuffer: root.inputBuffer
         isLockscreenOpen: GlobalStates.isLockscreenOpen
         pam: root.pam
-        inputBuffer: root.inputBuffer
         showErrorMessage: root.showErrorMessage
+        z: 3
     }
-
     SequentialAnimation {
         id: lockSequence
 
         ParallelAnimation {
             NAnim {
-                target: bottomItem
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "implicitHeight"
+                target: bottomItem
                 to: 80
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: bottomItem.contentLayout
-                property: "opacity"
                 to: 1
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: wallpaper
-                property: "opacity"
                 to: 1
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: fgLayer
-                property: "opacity"
                 to: 1
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
-
             NAnim {
-                target: passwordDisplay
-                property: "opacity"
-                to: 1
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                property: "opacity"
+                target: passwordDisplay
+                to: 1
             }
         }
-
         ScriptAction {
             script: {
                 GlobalStates.isLockscreenOpen = true;
             }
         }
     }
-
     SequentialAnimation {
         id: unlockSequence
 
         NAnim {
-            target: bottomItem.lockIcon
+            duration: 100
+            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             property: "rotation"
+            target: bottomItem.lockIcon
             to: 18
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
         NAnim {
-            target: bottomItem.lockIcon
+            duration: 100
+            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             property: "rotation"
+            target: bottomItem.lockIcon
             to: -18
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
         NAnim {
-            target: bottomItem.lockIcon
+            duration: 100
+            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             property: "rotation"
+            target: bottomItem.lockIcon
             to: 12
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
         NAnim {
-            target: bottomItem.lockIcon
+            duration: 100
+            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             property: "rotation"
+            target: bottomItem.lockIcon
             to: -12
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
         NAnim {
-            target: bottomItem.lockIcon
+            duration: 100
+            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
             property: "rotation"
+            target: bottomItem.lockIcon
             to: -6
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
         }
         NAnim {
-            target: bottomItem.lockIcon
-            property: "rotation"
-            to: 0
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+            property: "rotation"
+            target: bottomItem.lockIcon
+            to: 0
         }
         ScriptAction {
             script: {
@@ -372,61 +352,53 @@ WlSessionLockSurface {
                 bottomItem.iconName = "lock_open_right";
             }
         }
-
         PauseAnimation {
             duration: Appearance.animations.durations.emphasized
         }
-
         ParallelAnimation {
             NAnim {
-                target: bottomItem
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "implicitHeight"
+                target: bottomItem
                 to: 0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: bottomItem.contentLayout
-                property: "opacity"
                 to: 0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: wallpaper
                 property: "opacity"
+                target: wallpaper
                 to: 0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: wallpaper
                 property: "blurRadius"
+                target: wallpaper
                 to: 0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: fgLayer
-                property: "opacity"
                 to: 0
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
-
             NAnim {
-                target: passwordDisplay
-                property: "opacity"
-                to: 0
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                property: "opacity"
+                target: passwordDisplay
+                to: 0
             }
         }
-
         ScriptAction {
             script: {
                 root.lock.locked = false;
@@ -440,149 +412,138 @@ WlSessionLockSurface {
             }
         }
     }
-
     SequentialAnimation {
         id: errorShakeAnimation
 
         NAnim {
-            target: passwordShake
+            duration: 50
             property: "x"
+            target: passwordShake
             to: 12
-            duration: 50
         }
         NAnim {
-            target: passwordShake
+            duration: 50
             property: "x"
+            target: passwordShake
             to: -12
-            duration: 50
         }
         NAnim {
-            target: passwordShake
+            duration: 50
             property: "x"
+            target: passwordShake
             to: 8
-            duration: 50
         }
         NAnim {
-            target: passwordShake
+            duration: 50
             property: "x"
+            target: passwordShake
             to: -8
-            duration: 50
         }
         NAnim {
-            target: passwordShake
+            duration: 50
             property: "x"
+            target: passwordShake
             to: 4
-            duration: 50
         }
         NAnim {
-            target: passwordShake
-            property: "x"
-            to: 0
             duration: 50
+            property: "x"
+            target: passwordShake
+            to: 0
         }
     }
-
     Timer {
         id: jitterTimer
+
         interval: 2500
         repeat: true
         running: root.inputBuffer.length > 0
+
         onTriggered: root.jitterMaskEntry()
     }
-
     SequentialAnimation {
         id: zoomInAnimation
 
         ParallelAnimation {
             NAnim {
-                target: wallpaper
-                property: "scale"
-                to: 1.12
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "scale"
                 target: wallpaper
+                to: 1.12
+            }
+            NAnim {
+                duration: Appearance.animations.durations.normal
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "blurRadius"
+                target: wallpaper
                 to: 30
+            }
+            NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: fgLayer
                 property: "scale"
+                target: fgLayer
                 to: 1.12
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
-
             NAnim {
-                target: bottomItem
-                property: "opacity"
-                to: 0
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: bottomItem
-                property: "implicitHeight"
                 to: 0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.emphasizedAccel
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                property: "implicitHeight"
+                target: bottomItem
+                to: 0
             }
         }
     }
-
     CapsLockPopup {
         anchors.centerIn: parent
         z: 999
     }
-
     SequentialAnimation {
         id: zoomOutAnimation
 
         ParallelAnimation {
             NAnim {
-                target: wallpaper
-                property: "scale"
-                to: 1.0
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "scale"
                 target: wallpaper
+                to: 1.0
+            }
+            NAnim {
+                duration: Appearance.animations.durations.small
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "blurRadius"
+                target: wallpaper
                 to: 0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: fgLayer
                 property: "scale"
+                target: fgLayer
                 to: 1.0
+            }
+            NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
-                target: bottomItem
                 property: "opacity"
-                to: 1
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
                 target: bottomItem
-                property: "implicitHeight"
-                to: 80
+                to: 1
+            }
+            NAnim {
                 duration: Appearance.animations.durations.emphasizedAccel
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                property: "implicitHeight"
+                target: bottomItem
+                to: 80
             }
         }
     }

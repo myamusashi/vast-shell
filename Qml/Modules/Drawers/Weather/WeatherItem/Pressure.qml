@@ -13,9 +13,9 @@ import qs.Components.Base
 MaterialShape {
     id: canvas
 
-    property real pressure: Weather.pressure
-    property real minPressure: 0
     property real maxPressure: 2000
+    property real minPressure: 0
+    property real pressure: Weather.pressure
 
     animationDuration: 0
     color: Colours.m3Colors.m3SurfaceContainer
@@ -24,42 +24,36 @@ MaterialShape {
     Pressure {
         ColumnLayout {
             anchors {
-                top: parent.top
                 horizontalCenter: parent.horizontalCenter
+                top: parent.top
                 topMargin: 30
             }
-
             RowLayout {
                 Icon {
-                    type: Icon.Material
-                    icon: "vertical_align_center"
+                    color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large * 1.5
                     font.weight: Font.DemiBold
-                    color: Colours.m3Colors.m3OnSurface
+                    icon: "vertical_align_center"
+                    type: Icon.Material
                 }
-
                 StyledText {
-                    text: qsTr("Pressure")
-                    font.weight: Font.DemiBold
                     color: Colours.m3Colors.m3OnSurface
+                    font.weight: Font.DemiBold
+                    text: qsTr("Pressure")
                 }
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
-
-                text: Weather.pressure
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
                 font.weight: Font.Bold
-                color: Colours.m3Colors.m3OnSurface
+                text: Weather.pressure
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
-
-                text: "hPa"
-                font.pixelSize: Appearance.fonts.size.large
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.large
+                text: "hPa"
             }
         }
     }
@@ -67,19 +61,19 @@ MaterialShape {
     component Pressure: Shape {
         id: gaugeShape
 
+        property real normalizedValue: (canvas.pressure - canvas.minPressure) / (canvas.maxPressure - canvas.minPressure)
+        property real radius: Math.min(width, height) / 2 - 10
+
         anchors.fill: parent
         anchors.margins: 3
         preferredRendererType: Shape.CurveRenderer
 
-        property real normalizedValue: (canvas.pressure - canvas.minPressure) / (canvas.maxPressure - canvas.minPressure)
-        property real radius: Math.min(width, height) / 2 - 10
-
         // Background track
         ShapePath {
+            capStyle: ShapePath.RoundCap
+            fillColor: "transparent"
             strokeColor: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.2)
             strokeWidth: 9
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
 
             PathAngleArc {
                 centerX: gaugeShape.width / 2
@@ -93,10 +87,10 @@ MaterialShape {
 
         // Active progress
         ShapePath {
+            capStyle: ShapePath.RoundCap
+            fillColor: "transparent"
             strokeColor: Colours.m3Colors.m3Primary
             strokeWidth: 9
-            fillColor: "transparent"
-            capStyle: ShapePath.RoundCap
 
             PathAngleArc {
                 centerX: gaugeShape.width / 2

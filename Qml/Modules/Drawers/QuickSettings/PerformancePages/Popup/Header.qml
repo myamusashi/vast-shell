@@ -22,27 +22,24 @@ ColumnLayout {
         Icon {
             id: iconItem
 
-            icon: ""
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large * 1.5
+            icon: ""
         }
-
         StyledText {
             id: textItem
 
-            text: ""
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large * 1.2
+            text: ""
         }
-
         Item {
             Layout.fillWidth: true
         }
     }
-
     Rectangle {
         Layout.fillWidth: true
-        implicitHeight: 1
         color: Colours.m3Colors.m3Green
+        implicitHeight: 1
     }
 }

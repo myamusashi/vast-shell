@@ -16,41 +16,38 @@ ColumnLayout {
     id: root
 
     required property PwNode audioNode
-    required property real sliderHeight
-
+    property bool enableMuteToggle: false
+    property var footerController: null
     property int itemSize: 50
     property bool showAppIcon: false
-    property bool enableMuteToggle: false
     property bool showFooter: false
-    property var footerController: null
-
     property alias showVolume: root.showVolumeInternal
     property bool showVolumeInternal: false
+    required property real sliderHeight
 
-    implicitWidth: root.itemSize
     implicitHeight: 250
+    implicitWidth: root.itemSize
     spacing: Appearance.spacing.normal
 
     PwObjectTracker {
         objects: [root.audioNode]
     }
-
     Item {
         Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-        implicitWidth: 30
         implicitHeight: 30
+        implicitWidth: 30
 
         Icon {
             id: volumeIcon
 
-            visible: !root.showAppIcon
             anchors.centerIn: parent
-            type: Icon.Material
-            icon: Audio.getIcon(root.audioNode)
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.extraLarge
+            icon: Audio.getIcon(root.audioNode)
             opacity: root.showVolumeInternal ? 0 : 1
             scale: root.showVolumeInternal ? 0.5 : 1
+            type: Icon.Material
+            visible: !root.showAppIcon
 
             Behavior on opacity {
                 NAnim {
@@ -58,7 +55,6 @@ ColumnLayout {
                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 }
             }
-
             Behavior on scale {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -66,16 +62,15 @@ ColumnLayout {
                 }
             }
         }
-
         IconImage {
-            visible: root.showAppIcon
             anchors.centerIn: parent
             asynchronous: true
-            implicitWidth: 30
             implicitHeight: 30
+            implicitWidth: 30
             opacity: root.showVolumeInternal ? 0 : 1
             scale: root.showVolumeInternal ? 0.5 : 1
             source: root.showAppIcon ? IconUtils.guessIconPath(root.audioNode) : ""
+            visible: root.showAppIcon
 
             Behavior on opacity {
                 NAnim {
@@ -83,7 +78,6 @@ ColumnLayout {
                     easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 }
             }
-
             Behavior on scale {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -91,59 +85,52 @@ ColumnLayout {
                 }
             }
         }
-
         StyledText {
             anchors.centerIn: volumeIcon
-            text: VolumeUtils.toPercent(root.audioNode.audio.volume)
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.DemiBold
             opacity: root.showVolumeInternal ? 1 : 0
             scale: root.showVolumeInternal ? 1 : 0.5
+            text: VolumeUtils.toPercent(root.audioNode.audio.volume)
 
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.small
                 }
             }
-
             Behavior on scale {
                 NAnim {
                     duration: Appearance.animations.durations.small
                 }
             }
         }
-
         MArea {
             anchors.fill: parent
-            visible: root.enableMuteToggle
             cursorShape: Qt.PointingHandCursor
+            visible: root.enableMuteToggle
+
             onClicked: mouseEvent => {
                 if (mouseEvent.button === Qt.LeftButton)
                     Audio.toggleMute(root.audioNode);
             }
         }
     }
-
     Timer {
         id: volumeHideTimer
 
         interval: 500
+
         onTriggered: root.showVolumeInternal = false
     }
-
     StyledSlide {
         Layout.fillWidth: true
         Layout.preferredHeight: root.sliderHeight
         orientation: Qt.Vertical
         popupValueFormat: VolumeUtils.toPercent
         value: root.audioNode.audio.volume
+
         onMoved: root.audioNode.audio.volume = value
-        onValueChanged: {
-            root.showVolumeInternal = true;
-            if (!pressed)
-                volumeHideTimer.restart();
-        }
         onPressedChanged: {
             if (pressed) {
                 GlobalStates.pauseOSD("volume");
@@ -154,28 +141,32 @@ ColumnLayout {
                 volumeHideTimer.restart();
             }
         }
+        onValueChanged: {
+            root.showVolumeInternal = true;
+            if (!pressed)
+                volumeHideTimer.restart();
+        }
     }
-
     Item {
         Layout.alignment: Qt.AlignHCenter
-        implicitWidth: 15
         implicitHeight: 15
+        implicitWidth: 15
         visible: root.showFooter
 
         Pulse {
             anchors.centerIn: parent
             isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
         }
-
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
-            onEntered: GlobalStates.pauseOSD("volume")
-            onExited: GlobalStates.resumeOSD("volume")
+
             onClicked: {
                 if (root.footerController)
                     root.footerController.openPerAppVolume = !root.footerController.openPerAppVolume;
             }
+            onEntered: GlobalStates.pauseOSD("volume")
+            onExited: GlobalStates.resumeOSD("volume")
         }
     }
 }

@@ -9,21 +9,20 @@ import qs.Core.Utils
 RowLayout {
     id: root
 
-    anchors.centerIn: parent
-
     property alias icon: icon.icon
-    property alias text: text.text
     property alias iconSize: icon.font.pixelSize
+    property alias text: text.text
     property alias textSize: text.font.pixelSize
 
+    anchors.centerIn: parent
     height: parent.height ? parent.height : 1
 
     WrapperItem {
         id: iconContainer
 
         Layout.alignment: Qt.AlignVCenter
-        implicitWidth: icon.width
         implicitHeight: icon.height
+        implicitWidth: icon.width
 
         Icon {
             id: icon
@@ -31,13 +30,12 @@ RowLayout {
             font.pixelSize: Appearance.fonts.size.medium
         }
     }
-
     WrapperItem {
         id: textContainer
 
         Layout.alignment: Qt.AlignVCenter
-        implicitWidth: text.width
         implicitHeight: text.height
+        implicitWidth: text.width
 
         StyledText {
             id: text

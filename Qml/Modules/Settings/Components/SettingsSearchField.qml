@@ -12,15 +12,6 @@ import qs.Services
 Item {
     id: root
 
-    signal activated(int page, string card)
-
-    property var results: []
-    property int selectedIndex: -1
-    readonly property string query: searchField.text.trim()
-
-    z: 2
-    implicitHeight: searchField.implicitHeight
-
     readonly property var entries: [
         {
             page: 0,
@@ -251,7 +242,21 @@ Item {
             terms: ["Enable Depth Wallpaper", "Auto-process On Wallpaper Change"]
         }
     ]
+    readonly property string query: searchField.text.trim()
+    property var results: []
+    property int selectedIndex: -1
 
+    signal activated(int page, string card)
+
+    function activate(entry) {
+        activated(entry.page, entry.card);
+        clear();
+    }
+    function clear() {
+        searchField.text = "";
+        results = [];
+        selectedIndex = -1;
+    }
     function runSearch() {
         if (query.length === 0) {
             results = [];
@@ -279,24 +284,17 @@ Item {
         selectedIndex = results.length > 0 ? 0 : -1;
     }
 
-    function clear() {
-        searchField.text = "";
-        results = [];
-        selectedIndex = -1;
-    }
-
-    function activate(entry) {
-        activated(entry.page, entry.card);
-        clear();
-    }
+    implicitHeight: searchField.implicitHeight
+    z: 2
 
     DebouncedValue {
         id: searchDebounce
-        value: searchField.text.trim()
+
         interval: 200
+        value: searchField.text.trim()
+
         onDebouncedValueChanged: root.runSearch()
     }
-
     RowLayout {
         id: searchBox
 
@@ -304,18 +302,17 @@ Item {
         spacing: Appearance.spacing.normal
 
         Icon {
-            icon: "search"
-            font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.large
+            icon: "search"
         }
-
         StyledTextInput {
             id: searchField
 
             Layout.fillWidth: true
+            autoFocus: false
             placeHolderText: qsTr("Search settings…")
             toggleButtonVisible: false
-            autoFocus: false
 
             onAccepted: {
                 if (root.selectedIndex >= 0 && root.selectedIndex < root.results.length)
@@ -343,19 +340,18 @@ Item {
             }
         }
     }
-
     Rectangle {
         id: resultsPopup
 
-        visible: root.results.length > 0
         anchors.top: parent.bottom
         anchors.topMargin: Appearance.spacing.small
-        width: parent.width
-        implicitHeight: resultsColumn.implicitHeight + (Appearance.margin.normal * 2)
-        radius: Appearance.rounding.normal
-        color: Colours.m3Colors.m3SurfaceContainerHigh
         border.color: Colours.m3Colors.m3OutlineVariant
         border.width: 1
+        color: Colours.m3Colors.m3SurfaceContainerHigh
+        implicitHeight: resultsColumn.implicitHeight + (Appearance.margin.normal * 2)
+        radius: Appearance.rounding.normal
+        visible: root.results.length > 0
+        width: parent.width
 
         ColumnLayout {
             id: resultsColumn
@@ -370,22 +366,22 @@ Item {
                 delegate: Rectangle {
                     id: resultDelegate
 
-                    required property var modelData
                     required property int index
+                    required property var modelData
 
                     Layout.fillWidth: true
+                    color: resultDelegate.index === root.selectedIndex ? Colours.m3Colors.m3SurfaceContainerHighest : "transparent"
                     implicitHeight: resultRow.implicitHeight + (Appearance.margin.normal * 2)
                     radius: Appearance.rounding.small
-                    color: resultDelegate.index === root.selectedIndex ? Colours.m3Colors.m3SurfaceContainerHighest : "transparent"
 
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
+
                         onClicked: root.activate(resultDelegate.modelData)
                         onEntered: root.selectedIndex = resultDelegate.index
                     }
-
                     ColumnLayout {
                         id: resultRow
 
@@ -395,19 +391,18 @@ Item {
 
                         HighlightText {
                             Layout.fillWidth: true
-                            fullText: resultDelegate.modelData.card
-                            searchText: root.query
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Font.Medium
+                            fullText: resultDelegate.modelData.card
+                            searchText: root.query
                         }
-
                         StyledText {
                             Layout.fillWidth: true
-                            text: resultDelegate.modelData.pageLabel
+                            color: Colours.m3Colors.m3OnSurfaceVariant
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.small
-                            color: Colours.m3Colors.m3OnSurfaceVariant
+                            text: resultDelegate.modelData.pageLabel
                         }
                     }
                 }

@@ -11,15 +11,6 @@ import qs.Services
 Item {
     id: root
 
-    anchors {
-        verticalCenter: parent.verticalCenter
-        horizontalCenter: parent.horizontalCenter
-    }
-
-    implicitWidth: parent.width * 0.15
-    implicitHeight: calculateHeight()
-    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
-
     function calculateHeight() {
         var totalHeight = 0;
         var spacing = 10;
@@ -42,6 +33,10 @@ Item {
         return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
     }
 
+    implicitHeight: calculateHeight()
+    implicitWidth: parent.width * 0.15
+    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
+
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -49,24 +44,28 @@ Item {
         }
     }
 
+    anchors {
+        horizontalCenter: parent.horizontalCenter
+        verticalCenter: parent.verticalCenter
+    }
     StyledRect {
         anchors.fill: parent
-        radius: Appearance.rounding.large
         clip: true
         color: GlobalStates.drawerColors
+        radius: Appearance.rounding.large
 
         Loader {
-            anchors.fill: parent
             active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) // qmllint disable
+            anchors.fill: parent
             asynchronous: true
 
             sourceComponent: Column {
+                spacing: Appearance.spacing.normal
+
                 anchors {
                     fill: parent
                     margins: 15
                 }
-                spacing: Appearance.spacing.normal
-
                 Repeater {
                     model: [
                         {
@@ -82,13 +81,14 @@ Item {
                             icon: KeylockState.numLock ? "lock" : "lock_open_right"
                         }
                     ]
+
                     delegate: LockIndicator {
                         required property var modelData
 
-                        osdVisible: modelData.osdVisible
+                        icon: modelData.icon
                         indicator: modelData.lock
                         label: modelData.label
-                        icon: modelData.icon
+                        osdVisible: modelData.osdVisible
                     }
                 }
             }

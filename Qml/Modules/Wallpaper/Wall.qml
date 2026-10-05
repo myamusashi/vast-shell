@@ -14,20 +14,19 @@ Variants {
 
         required property ShellScreen modelData
 
+        WlrLayershell.layer: WlrLayer.Background
+        WlrLayershell.namespace: "shell:wallpaper"
+        color: "transparent"
+        exclusionMode: ExclusionMode.Ignore
+        screen: modelData
+        surfaceFormat.opaque: true
+
         anchors {
+            bottom: true
             left: true
             right: true
             top: true
-            bottom: true
         }
-
-        color: "transparent"
-        screen: modelData
-        exclusionMode: ExclusionMode.Ignore
-        surfaceFormat.opaque: true
-        WlrLayershell.layer: WlrLayer.Background
-        WlrLayershell.namespace: "shell:wallpaper"
-
         Wallpaper {
             anchors.fill: parent
         }

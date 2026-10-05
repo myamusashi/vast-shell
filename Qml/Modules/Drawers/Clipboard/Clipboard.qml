@@ -13,16 +13,15 @@ import qs.Components.Dialog
 WrapperRectangle {
     id: root
 
-    anchors.centerIn: parent
-
     signal closeRequested
 
-    implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
-    implicitHeight: GlobalStates.isClipboardOpen ? Configs.clipboard.height : 0
-    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
-    radius: Appearance.rounding.normal
-    color: GlobalStates.drawerColors
+    anchors.centerIn: parent
     clip: true
+    color: GlobalStates.drawerColors
+    implicitHeight: GlobalStates.isClipboardOpen ? Configs.clipboard.height : 0
+    implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
+    radius: Appearance.rounding.normal
+    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
 
     Behavior on implicitHeight {
         NAnim {
@@ -34,10 +33,11 @@ WrapperRectangle {
     Loader {
         active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
         asynchronous: true
+
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen
-            defaultFocus: content.defaultFocusItem
             anchors.fill: parent
+            defaultFocus: content.defaultFocusItem
 
             Content {
                 id: content
@@ -47,20 +47,19 @@ WrapperRectangle {
             }
         }
     }
-
     ConfirmDialog {
         id: deleteConfirmation
 
-        title: qsTr("Clipboard")
+        active: ClipboardServices.uiState.isDeletePending
         bodyText: {
             const count = ClipboardServices.uiState.pendingDeleteIds.length;
             if (count <= 1)
                 return qsTr("Delete this entry? This cannot be undone.");
             return qsTr("Delete %1 entries? This cannot be undone.").arg(count);
         }
-        confirmText: qsTr("Delete")
         cancelText: qsTr("Cancel")
-        active: ClipboardServices.uiState.isDeletePending
+        confirmText: qsTr("Delete")
+        title: qsTr("Clipboard")
 
         onAccepted: ClipboardServices.uiState.confirmDelete()
         onRejected: ClipboardServices.uiState.cancelDelete()

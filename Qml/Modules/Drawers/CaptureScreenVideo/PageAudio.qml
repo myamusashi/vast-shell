@@ -15,9 +15,9 @@ StyledRect {
 
     signal goBack
 
+    clip: true
     color: "transparent"
     radius: 0
-    clip: true
 
     ColumnLayout {
         anchors.fill: parent
@@ -30,50 +30,47 @@ StyledRect {
             radius: Appearance.rounding.small
 
             RowLayout {
+                spacing: Appearance.spacing.small
+
                 anchors {
                     fill: parent
                     leftMargin: Appearance.spacing.small
                 }
-                spacing: Appearance.spacing.small
-
                 Icon {
-                    type: Icon.Material
-                    icon: "arrow_back"
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large
+                    icon: "arrow_back"
+                    type: Icon.Material
                 }
-
                 StyledText {
-                    text: qsTr("Audio Input")
                     color: Colours.m3Colors.m3OnSurface
-                    font.weight: Font.DemiBold
                     font.pixelSize: Appearance.fonts.size.normal
+                    font.weight: Font.DemiBold
+                    text: qsTr("Audio Input")
                 }
-
                 Item {
                     Layout.fillWidth: true
                 }
             }
-
             MArea {
                 id: backButtonMouseArea
 
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
+
                 onClicked: root.goBack()
             }
         }
-
         Flickable {
             id: flickable
 
-            Layout.fillWidth: true
             Layout.fillHeight: true
-            clip: true
+            Layout.fillWidth: true
             boundsBehavior: Flickable.StopAtBounds
-            contentWidth: width
+            clip: true
             contentHeight: columnLayout.implicitHeight
+            contentWidth: width
 
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
@@ -82,28 +79,29 @@ StyledRect {
             ColumnLayout {
                 id: columnLayout
 
-                implicitWidth: parent.width
                 implicitHeight: Appearance.margin.normal + Appearance.fonts.size.normal
+                implicitWidth: parent.width
                 spacing: Appearance.padding.small
 
                 StyledText {
-                    text: qsTr("Microphones")
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
                     leftPadding: Appearance.margin.smaller
+                    text: qsTr("Microphones")
                     topPadding: Appearance.padding.small
                 }
-
                 Repeater {
                     model: CaptureScreenVideo.sources()
+
                     delegate: AudioDeviceItem {
                         required property var modelData
 
-                        audioName: modelData.name
                         audioDescription: modelData.description || modelData.name
+                        audioName: modelData.name
                         iconName: "mic"
                         isSelected: modelData.name === CaptureScreenVideo.audioDevice
+
                         onSelect: name => {
                             CaptureScreenVideo.audioDevice = name;
                             CaptureScreenVideo.audioDeviceDescription = modelData.description || modelData.name;
@@ -112,33 +110,32 @@ StyledRect {
                         }
                     }
                 }
-
                 Rectangle {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 1
                     Layout.leftMargin: Appearance.margin.smaller
+                    Layout.preferredHeight: 1
                     Layout.rightMargin: Appearance.margin.smaller
                     color: Qt.alpha(Colours.m3Colors.m3Outline, 0.15)
                 }
-
                 StyledText {
-                    text: qsTr("Desktop Audio")
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
                     leftPadding: Appearance.margin.smaller
+                    text: qsTr("Desktop Audio")
                     topPadding: Appearance.padding.small
                 }
-
                 Repeater {
                     model: CaptureScreenVideo.monitors()
+
                     delegate: AudioDeviceItem {
                         required property var modelData
 
-                        audioName: modelData.name
                         audioDescription: modelData.description || modelData.name
+                        audioName: modelData.name
                         iconName: "speaker"
                         isSelected: modelData.name === CaptureScreenVideo.audioDevice
+
                         onSelect: name => {
                             CaptureScreenVideo.audioDevice = name;
                             CaptureScreenVideo.audioDeviceDescription = modelData.description || modelData.name;
@@ -147,20 +144,19 @@ StyledRect {
                         }
                     }
                 }
-
                 Rectangle {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 1
                     Layout.leftMargin: Appearance.margin.smaller
+                    Layout.preferredHeight: 1
                     Layout.rightMargin: Appearance.margin.smaller
                     color: Qt.alpha(Colours.m3Colors.m3Outline, 0.15)
                 }
-
                 AudioDeviceItem {
-                    audioName: ""
                     audioDescription: qsTr("No Audio")
+                    audioName: ""
                     iconName: "mic_off"
                     isSelected: !CaptureScreenVideo.includeAudio
+
                     onSelect: {
                         CaptureScreenVideo.audioDevice = "";
                         CaptureScreenVideo.audioDeviceDescription = "";

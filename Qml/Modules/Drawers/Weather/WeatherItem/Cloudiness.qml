@@ -15,56 +15,50 @@ MaterialShape {
 
     MaterialShape {
         anchors.centerIn: parent
-        implicitWidth: 135
-        implicitHeight: 135
         color: Colours.m3Colors.m3Primary
+        implicitHeight: 135
+        implicitWidth: 135
         opacity: 0.6
         shape: MaterialShape.Cookie6Sided
     }
-
     RowLayout {
         anchors {
-            top: parent.top
             horizontalCenter: parent.horizontalCenter
+            top: parent.top
             topMargin: 20
         }
-
         Icon {
-            type: Icon.Material
-            icon: "cloud"
-            font.pixelSize: Appearance.fonts.size.large * 1.5
             color: Colours.m3Colors.m3OnSurface
-
+            font.pixelSize: Appearance.fonts.size.large * 1.5
             font.variableAxes: {
                 "FILL": 10,
                 "opsz": fontInfo.pixelSize,
                 "wght": fontInfo.weight
             }
+            icon: "cloud"
+            type: Icon.Material
         }
-
         StyledText {
-            text: qsTr("Cloudiness")
-            font.pixelSize: Appearance.fonts.size.normal
             color: Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Cloudiness")
         }
     }
-
     StyledText {
         anchors.centerIn: parent
-        text: Weather.cloudCover
-        font.pixelSize: Appearance.fonts.size.extraLarge
         color: Colours.m3Colors.m3OnSurface
+        font.pixelSize: Appearance.fonts.size.extraLarge
+        text: Weather.cloudCover
     }
-
     StyledText {
+        color: Colours.m3Colors.m3OnSurface
+        font.pixelSize: Appearance.fonts.size.large
+        text: "%"
+
         anchors {
             bottom: parent.bottom
-            horizontalCenter: parent.horizontalCenter
             bottomMargin: 20
+            horizontalCenter: parent.horizontalCenter
         }
-
-        text: "%"
-        font.pixelSize: Appearance.fonts.size.large
-        color: Colours.m3Colors.m3OnSurface
     }
 }

@@ -13,17 +13,16 @@ ColumnLayout {
 
     StyledText {
         Layout.alignment: Qt.AlignCenter
-        text: qsTr("Internet")
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.large * 1.5
         font.weight: Font.DemiBold
+        text: qsTr("Internet")
     }
-
     StyledText {
         Layout.alignment: Qt.AlignCenter
-        text: qsTr("Tap/click a network to connect")
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.medium
         font.weight: Font.DemiBold
+        text: qsTr("Tap/click a network to connect")
     }
 }

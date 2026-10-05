@@ -14,27 +14,29 @@ Pages {
     id: root
 
     property real sunriseProgress: CelestialProgress.progressBetween(Weather.sunRise, Weather.sunSet)
-    content: Sun {}
+
+    content: Sun {
+    }
 
     component Sun: Column {
+        clip: true
+        spacing: Appearance.spacing.normal
+
         anchors {
             fill: parent
             topMargin: 20
         }
-        clip: true
-        spacing: Appearance.spacing.normal
-
         Header {
             icon: "wb_sunny"
             title: qsTr("Sun")
+
             onClicked: root.isOpen = false
         }
-
         WrapperRectangle {
             color: Colours.m3Colors.m3SurfaceContainer
-            radius: Appearance.rounding.normal
-            implicitWidth: parent.width
             implicitHeight: parent.height * 0.3
+            implicitWidth: parent.width
+            radius: Appearance.rounding.normal
 
             SunShape {
                 sunSize: 40
@@ -43,111 +45,98 @@ Pages {
                     anchors.bottom: parent.bottom
                     clip: true
                     color: Qt.alpha(Colours.m3Colors.m3Surface, 0.4)
-                    implicitWidth: parent.width
                     implicitHeight: parent.height * 0.4
+                    implicitWidth: parent.width
                     radius: 0
 
                     StyledRect {
                         anchors.top: parent.top
-                        radius: 0
                         bottomLeftRadius: Appearance.rounding.normal
                         bottomRightRadius: bottomLeftRadius
-
-                        implicitWidth: parent.width
-                        implicitHeight: 1
                         color: Colours.m3Colors.m3OutlineVariant
+                        implicitHeight: 1
+                        implicitWidth: parent.width
+                        radius: 0
                     }
                 }
             }
         }
-
         Column {
-            width: parent.width
             height: parent.height * 0.7
             spacing: Appearance.spacing.large * 1.5
+            width: parent.width
+
             Row {
-                width: parent.width
                 height: 40
+                width: parent.width
 
                 Column {
-                    width: parent.width / 2
                     spacing: 0
+                    width: parent.width / 2
+
                     StyledText {
-                        width: parent.width
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.large
                         horizontalAlignment: Text.AlignHCenter
                         text: qsTr("Sunrise")
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.large
+                        width: parent.width
                     }
                     StyledText {
-                        width: parent.width
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
                         horizontalAlignment: Text.AlignHCenter
                         text: Weather.sunRise
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.extraLarge
+                        width: parent.width
                     }
                 }
-
                 Column {
-                    width: parent.width / 2
                     spacing: 0
+                    width: parent.width / 2
 
                     StyledText {
-                        width: parent.width
-                        horizontalAlignment: Text.AlignHCenter
-                        text: qsTr("Sunset")
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.large
+                        horizontalAlignment: Text.AlignHCenter
+                        text: qsTr("Sunset")
+                        width: parent.width
                     }
                     StyledText {
-                        width: parent.width
-                        horizontalAlignment: Text.AlignHCenter
-                        text: Weather.sunSet
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.extraLarge
+                        horizontalAlignment: Text.AlignHCenter
+                        text: Weather.sunSet
+                        width: parent.width
                     }
                 }
             }
-
             WrapperRectangle {
-                border {
-                    width: 1
-                    color: Colours.m3Colors.m3Outline
-                }
+                color: Colours.m3Colors.m3Surface
+                implicitHeight: description.contentHeight + 20
+                implicitWidth: parent.width
                 margin: 20
                 radius: Appearance.rounding.normal
-                color: Colours.m3Colors.m3Surface
-                implicitWidth: parent.width
-                implicitHeight: description.contentHeight + 20
 
+                border {
+                    color: Colours.m3Colors.m3Outline
+                    width: 1
+                }
                 StyledText {
                     id: description
 
-                    text: DetailText.sun
                     color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: DetailText.sun
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap
-                    font.pixelSize: Appearance.fonts.size.normal
                 }
             }
         }
     }
-
     component SunShape: Shape {
         id: sunShape
 
-        anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
-        property color hillColor: Colours.m3Colors.m3Primary
-        property color sunColor: Colours.m3Colors.m3Yellow
-        property real sunSize: 20
-
-        // Hill geometry
-        property real hillHeight: height * 0.6
         property real hillBaseY: height - hillHeight
-        property real hillStartX: 0
-        property real hillStartY: hillBaseY + hillHeight * 0.3
+        property color hillColor: Colours.m3Colors.m3Primary
         property real hillControlPoint1X: width * 0.3
         property real hillControlPoint1Y: hillBaseY - hillHeight * 0.1
         property real hillControlPoint2X: width * 0.7
@@ -155,19 +144,28 @@ Pages {
         property real hillEndX: width
         property real hillEndY: hillBaseY + hillHeight * 0.3
 
+        // Hill geometry
+        property real hillHeight: height * 0.6
+        property real hillStartX: 0
+        property real hillStartY: hillBaseY + hillHeight * 0.3
+        property real oneMinusProgress: 1 - progress
+
         // Sun position — cubic bezier evaluated at progress = root.sunriseProgress
         property real progress: root.sunriseProgress
-        property real oneMinusProgress: 1 - progress
+        property color sunColor: Colours.m3Colors.m3Yellow
+        property real sunSize: 20
         property real sunX: Math.pow(oneMinusProgress, 3) * hillStartX + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1X + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2X + Math.pow(progress, 3) * hillEndX
         property real sunY: Math.pow(oneMinusProgress, 3) * hillStartY + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1Y + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2Y + Math.pow(progress, 3) * hillEndY
 
+        anchors.fill: parent
+        preferredRendererType: Shape.CurveRenderer
+
         // Hill
         ShapePath {
-            strokeColor: "transparent"
             fillColor: sunShape.hillColor
-
             startX: 0
             startY: sunShape.height
+            strokeColor: "transparent"
 
             PathLine {
                 x: sunShape.hillStartX
@@ -193,9 +191,9 @@ Pages {
 
         // Sun
         ShapePath {
+            fillColor: sunShape.sunColor
             strokeColor: sunShape.sunColor
             strokeWidth: 2
-            fillColor: sunShape.sunColor
 
             PathAngleArc {
                 centerX: sunShape.sunX

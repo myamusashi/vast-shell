@@ -10,55 +10,50 @@ import "../"
 Item {
     id: root
 
+    property real barHeight: 40
+    readonly property real borderSize: enableOuterBorder ? outerBorderSize : 0
+    property real bottomThickness: exclusiveBottom.zone
+    required property color color
+    readonly property real effectiveInnerRadius: Math.max(0, Math.min(innerRadius, holeWidth / 2, holeHeight / 2))
+    property bool enableOuterBorder: false
+    readonly property real holeBottom: height - bottomThickness
+    readonly property real holeHeight: Math.max(0, height - topThickness - bottomThickness)
+    readonly property real holeLeft: leftThickness
+    readonly property real holeRight: width - rightThickness
+    readonly property real holeTop: topThickness
+    readonly property real holeWidth: Math.max(0, width - leftThickness - rightThickness)
+    property real innerRadius: 24
+    property bool isBarOpen: false
+    required property bool isFocusedMonitor
+    property real leftThickness: exclusiveLeft.zone
+    property real outerBorderSize: 0
+    property real rightThickness: exclusiveRight.zone
+    property real topThickness: exclusiveTop.zone
+    required property ShellScreen window
+
     anchors.fill: parent
 
-    required property ShellScreen window
-    required property color color
-    required property bool isFocusedMonitor
-
-    property bool isBarOpen: false
-    property real barHeight: 40
-    property bool enableOuterBorder: false
-    property real outerBorderSize: 0
-
-    readonly property real borderSize: enableOuterBorder ? outerBorderSize : 0
-    readonly property real effectiveInnerRadius: Math.max(0, Math.min(innerRadius, holeWidth / 2, holeHeight / 2))
-    readonly property real holeLeft: leftThickness
-    readonly property real holeTop: topThickness
-    readonly property real holeRight: width - rightThickness
-    readonly property real holeBottom: height - bottomThickness
-    readonly property real holeWidth: Math.max(0, width - leftThickness - rightThickness)
-    readonly property real holeHeight: Math.max(0, height - topThickness - bottomThickness)
-
-    property real topThickness: exclusiveTop.zone
-    property real bottomThickness: exclusiveBottom.zone
-    property real leftThickness: exclusiveLeft.zone
-    property real rightThickness: exclusiveRight.zone
-    property real innerRadius: 24
-
     Behavior on topThickness {
-        NAnim {}
+        NAnim {
+        }
     }
 
     Scope {
         Exclusion {
             id: exclusiveLeft
 
-            anchors.left: true
-
             property alias zone: exclusiveLeft.exclusiveZone
 
-            name: "left"
+            anchors.left: true
             exclusiveZone: root.borderSize
+            name: "left"
         }
         Exclusion {
             id: exclusiveTop
 
-            anchors.top: true
-
             property alias zone: exclusiveTop.exclusiveZone
 
-            name: "top"
+            anchors.top: true
             exclusiveZone: {
                 if (!root.isBarOpen)
                     return root.outerBorderSize;
@@ -66,59 +61,56 @@ Item {
                     return root.outerBorderSize + root.barHeight;
                 return root.borderSize;
             }
+            name: "top"
         }
         Exclusion {
             id: exclusiveRight
 
-            anchors.right: true
-
             property alias zone: exclusiveRight.exclusiveZone
 
-            name: "right"
+            anchors.right: true
             exclusiveZone: root.borderSize
+            name: "right"
         }
         Exclusion {
             id: exclusiveBottom
 
-            anchors.bottom: true
-
             property alias zone: exclusiveBottom.exclusiveZone
 
-            name: "bottom"
+            anchors.bottom: true
             exclusiveZone: root.borderSize
+            name: "bottom"
         }
     }
-
     Shape {
         id: shape
 
         preferredRendererType: Shape.CurveRenderer
 
         ShapePath {
-            strokeWidth: -1
-            strokeColor: "transparent"
             fillColor: root.color
             fillRule: ShapePath.OddEvenFill
-
             startX: 0
             startY: 0
-            PathLine {
-                x: root.width
-                y: 0
-            }
-            PathLine {
-                x: root.width
-                y: root.height
-            }
-            PathLine {
-                x: 0
-                y: root.height
-            }
-            PathLine {
-                x: 0
-                y: 0
-            }
+            strokeColor: "transparent"
+            strokeWidth: -1
 
+            PathLine {
+                x: root.width
+                y: 0
+            }
+            PathLine {
+                x: root.width
+                y: root.height
+            }
+            PathLine {
+                x: 0
+                y: root.height
+            }
+            PathLine {
+                x: 0
+                y: 0
+            }
             PathMove {
                 x: root.holeLeft + root.effectiveInnerRadius
                 y: root.holeTop
@@ -128,53 +120,54 @@ Item {
                 y: root.holeTop
             }
             PathArc {
-                x: root.holeRight
-                y: root.holeTop + root.effectiveInnerRadius
+                direction: PathArc.Clockwise
                 radiusX: root.effectiveInnerRadius
                 radiusY: root.effectiveInnerRadius
-                direction: PathArc.Clockwise
+                x: root.holeRight
+                y: root.holeTop + root.effectiveInnerRadius
             }
             PathLine {
                 x: root.holeRight
                 y: root.holeBottom - root.effectiveInnerRadius
             }
             PathArc {
+                direction: PathArc.Clockwise
+                radiusX: root.effectiveInnerRadius
+                radiusY: root.effectiveInnerRadius
                 x: root.holeRight - root.effectiveInnerRadius
                 y: root.holeBottom
-                radiusX: root.effectiveInnerRadius
-                radiusY: root.effectiveInnerRadius
-                direction: PathArc.Clockwise
             }
             PathLine {
                 x: root.holeLeft + root.effectiveInnerRadius
                 y: root.holeBottom
             }
             PathArc {
-                x: root.holeLeft
-                y: root.holeBottom - root.effectiveInnerRadius
+                direction: PathArc.Clockwise
                 radiusX: root.effectiveInnerRadius
                 radiusY: root.effectiveInnerRadius
-                direction: PathArc.Clockwise
+                x: root.holeLeft
+                y: root.holeBottom - root.effectiveInnerRadius
             }
             PathLine {
                 x: root.holeLeft
                 y: root.holeTop + root.effectiveInnerRadius
             }
             PathArc {
-                x: root.holeLeft + root.effectiveInnerRadius
-                y: root.holeTop
+                direction: PathArc.Clockwise
                 radiusX: root.effectiveInnerRadius
                 radiusY: root.effectiveInnerRadius
-                direction: PathArc.Clockwise
+                x: root.holeLeft + root.effectiveInnerRadius
+                y: root.holeTop
             }
         }
     }
 
     component Exclusion: PanelWindow { // qmllint disable
         property string name
-        screen: root.window
-        implicitWidth: 0
-        implicitHeight: 0
+
         WlrLayershell.namespace: `quickshell:${name}ExclusionZone`
+        implicitHeight: 0
+        implicitWidth: 0
+        screen: root.window
     }
 }

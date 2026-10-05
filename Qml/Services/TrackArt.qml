@@ -11,6 +11,8 @@ import qs.Services
 Singleton {
     id: root
 
+    property string cachedPath: ""
+    property var colors: fallbackColors
     readonly property var fallbackColors: ({
             primary: Colours.m3Colors.m3Primary,
             onPrimary: Colours.m3Colors.m3OnPrimary,
@@ -26,8 +28,6 @@ Singleton {
             onSurfaceVariant: Colours.m3Colors.m3OnSurfaceVariant,
             outline: Colours.m3Colors.m3Outline
         })
-    property var colors: fallbackColors
-    property string cachedPath: ""
 
     function refresh() {
         const url = String(Players.active?.trackArtUrl ?? "");
@@ -42,6 +42,9 @@ Singleton {
         }
     }
 
+    Component.onCompleted: root.refresh()
+    onCachedPathChanged: root.colors = root.fallbackColors
+
     Process {
         id: downloader
 
@@ -52,42 +55,40 @@ Singleton {
             targetPath = `/tmp/qs_art_${hash}.jpg`;
             exec(["curl", "-sLz", targetPath, "-o", targetPath, url]);
         }
+
         onExited: function (exitCode, exitStatus) { // qmllint disable
             if (exitStatus === 0 && exitCode === 0 && targetPath === `/tmp/qs_art_${Qt.md5(Players.active?.trackArtUrl ?? "")}.jpg`)
                 root.cachedPath = targetPath;
         }
     }
-
     ColorMaterial {
-        source: root.cachedPath
         darkMode: Configs.colors.isDarkMode
         scheme: Colours.schemeEnum(Configs.colors.scheme)
+        source: root.cachedPath
+
         onColorsChanged: {
             if (ready)
                 root.colors = colors;
         }
     }
-
     Connections {
-        target: Players
         function onIndexChanged() {
             root.refresh();
         }
-    }
 
+        target: Players
+    }
     Connections {
-        target: Players.active
-        function onTrackChanged() {
-            root.refresh();
-        }
         function onPostTrackChanged() {
             root.refresh();
         }
         function onTrackArtUrlChanged() {
             root.refresh();
         }
-    }
+        function onTrackChanged() {
+            root.refresh();
+        }
 
-    onCachedPathChanged: root.colors = root.fallbackColors
-    Component.onCompleted: root.refresh()
+        target: Players.active
+    }
 }

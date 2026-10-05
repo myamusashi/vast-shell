@@ -12,6 +12,6 @@ VerticalVolumeControl {
 
     audioNode: Pipewire.defaultAudioSink
     enableMuteToggle: true
-    showFooter: true
     footerController: root.controller
+    showFooter: true
 }

@@ -3,9 +3,9 @@ import QtQuick
 import Quickshell.Io
 
 JsonObject {
+    property string astronomyApiKey: ""
     property bool enableQuickSummary: false
     property string latitude: "-6.4028"
     property string longitude: "106.7744"
-    property string astronomyApiKey: ""
     property int reloadTime: 180
 }

@@ -19,47 +19,43 @@ ColumnLayout {
         Layout.fillWidth: true
         condition: BluetoothServices.isDiscovering && root.isVisible
     }
-
     RowLayout {
         Layout.fillWidth: true
 
         StyledText {
-            text: qsTr("Bluetooth")
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Bluetooth")
         }
-
         Item {
             Layout.fillWidth: true
         }
-
         StyledSwitch {
-            Layout.preferredWidth: 52
             Layout.preferredHeight: 32
-            enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+            Layout.preferredWidth: 52
             checked: BluetoothServices.adapterEnabled
+            enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+
             onToggled: BluetoothServices.setEnabled(checked)
         }
     }
-
     RowLayout {
-        visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
         Layout.fillWidth: true
+        visible: BluetoothServices.adapterAvailable && BluetoothServices.adapterEnabled
 
         StyledText {
-            text: qsTr("Discoverable")
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("Discoverable")
         }
-
         Item {
             Layout.fillWidth: true
         }
-
         StyledSwitch {
-            Layout.preferredWidth: 52
             Layout.preferredHeight: 32
+            Layout.preferredWidth: 52
             checked: BluetoothServices.discoverable
+
             onToggled: BluetoothServices.setDiscoverable(checked)
         }
     }

@@ -12,34 +12,34 @@ Drawer {
     id: root
 
     required property Drawer session
-
     readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
 
-    edge: Qt.RightEdge
-    open: shown
-    edgeOffset: session.width
-    depth: 60 + (Volume.openPerAppVolume && loader.item ? loader.item.perAppWidth + Volume.itemSpacing : 0) // qmllint disable
-    length: 280
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: 60 + (Volume.openPerAppVolume && loader.item ? loader.item.perAppWidth + Volume.itemSpacing : 0) // qmllint disable
+    edge: Qt.RightEdge
+    edgeOffset: session.width
+    filletRadius: 40
+    length: 280
+    open: shown
 
     Loader {
         id: loader
 
-        anchors.fill: parent
         active: root.shown
+        anchors.fill: parent
         asynchronous: true
-        onActiveChanged: {
-            if (!active)
-                Volume.openPerAppVolume = false;
-        }
 
         sourceComponent: Content {
             controller: Volume
             linkTracker: Volume.linkTracker
+        }
+
+        onActiveChanged: {
+            if (!active)
+                Volume.openPerAppVolume = false;
         }
     }
 }

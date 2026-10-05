@@ -15,12 +15,10 @@ MaterialShape {
 
     MaterialShape {
         anchors.centerIn: parent
-        implicitWidth: 135
-        implicitHeight: 135
         color: Colours.m3Colors.m3Primary
+        implicitHeight: 135
+        implicitWidth: 135
         opacity: 0.5
-        shape: MaterialShape.Arrow
-
         rotation: {
             const direction = Weather.windDirection.toUpperCase();
             const directions = {
@@ -43,12 +41,13 @@ MaterialShape {
             };
             return directions[direction] || 0;
         }
+        shape: MaterialShape.Arrow
 
         Behavior on rotation {
-            NAnim {}
+            NAnim {
+            }
         }
     }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 20
@@ -57,40 +56,36 @@ MaterialShape {
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
             Icon {
-                type: Icon.Material
-                icon: "explore"
-                font.pixelSize: Appearance.fonts.size.large * 1.5
                 color: Colours.m3Colors.m3OnSurface
-
+                font.pixelSize: Appearance.fonts.size.large * 1.5
                 font.variableAxes: {
                     "FILL": 10,
                     "opsz": fontInfo.pixelSize,
                     "wght": fontInfo.weight
                 }
+                icon: "explore"
+                type: Icon.Material
             }
-
             StyledText {
-                text: qsTr("Wind")
-                font.pixelSize: Appearance.fonts.size.normal
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.normal
+                text: qsTr("Wind")
             }
         }
-
         StyledText {
             Layout.alignment: Qt.AlignCenter
-            text: Weather.windDirection
+            color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.extraLarge
             font.weight: Font.Bold
-            color: Colours.m3Colors.m3OnSurface
+            text: Weather.windDirection
         }
-
         StyledText {
             Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
             Layout.bottomMargin: 20
-            text: Weather.windSpeed + " Km/h"
+            color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.DemiBold
-            color: Colours.m3Colors.m3OnSurface
+            text: Weather.windSpeed + " Km/h"
         }
     }
 }

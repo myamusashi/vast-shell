@@ -12,59 +12,55 @@ import qs.Services
 Item {
     id: root
 
-    required property var island
     required property bool active
-
     readonly property int fileCount: island.droppedFiles.length
+    readonly property real fileNameMaxWidth: active ? FileListMetrics.computeMaxWidth(island.droppedFiles, file => String(file).split("/").pop().length * 8, 300, 40) : 0
+    required property var island
     readonly property real maxContentHeight: FileListMetrics.clampHeight(fileCount, 18, 4, 200)
     readonly property real visibleHeight: maxContentHeight
 
-    readonly property real fileNameMaxWidth: active ? FileListMetrics.computeMaxWidth(island.droppedFiles, file => String(file).split("/").pop().length * 8, 300, 40) : 0
-
-    implicitWidth: FileListMetrics.clampWidth(fileNameMaxWidth + 80, 220, Number.POSITIVE_INFINITY)
     implicitHeight: visibleHeight + 56
+    implicitWidth: FileListMetrics.clampWidth(fileNameMaxWidth + 80, 220, Number.POSITIVE_INFINITY)
 
     StyledText {
-        anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-            topMargin: 8
-        }
-
-        visible: root.active
-        text: qsTr("%1 file(s)").arg(root.fileCount)
+        color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
         font.weight: Font.DemiBold
-        color: Colours.m3Colors.m3OnSurface
-    }
+        text: qsTr("%1 file(s)").arg(root.fileCount)
+        visible: root.active
 
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            topMargin: 8
+        }
+    }
     Flickable {
         id: filesFlickable
 
-        anchors {
-            top: parent.top
-            topMargin: 32
-            left: parent.left
-            right: parent.right
-            leftMargin: 8
-            rightMargin: 12
-        }
-
-        height: root.visibleHeight
-        contentWidth: width
-        contentHeight: root.maxContentHeight
-        clip: true
-        flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
+        clip: true
+        contentHeight: root.maxContentHeight
+        contentWidth: width
+        flickableDirection: Flickable.VerticalFlick
+        height: root.visibleHeight
         visible: root.active
 
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
 
+        anchors {
+            left: parent.left
+            leftMargin: 8
+            right: parent.right
+            rightMargin: 12
+            top: parent.top
+            topMargin: 32
+        }
         Column {
-            width: parent.width
             spacing: 4
+            width: parent.width
 
             Repeater {
                 model: root.island.droppedFiles
@@ -72,29 +68,29 @@ Item {
                 delegate: StyledText {
                     required property var modelData
 
-                    width: filesFlickable.width
-                    text: String(modelData).split("/").pop()
-                    font.pixelSize: Appearance.fonts.size.small
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     elide: Text.ElideMiddle
+                    font.pixelSize: Appearance.fonts.size.small
                     horizontalAlignment: Text.AlignHCenter
+                    text: String(modelData).split("/").pop()
+                    width: filesFlickable.width
                 }
             }
         }
     }
-
     ExtendedFloatingButton {
-        anchors {
-            bottom: parent.bottom
-            right: parent.right
-            margins: Appearance.margin.small
-        }
-
-        visible: root.active
-        implicitHeight: 28
         color: "transparent"
+        implicitHeight: 28
         text: qsTr("Next")
         textColor: Colours.m3Colors.m3Primary
+        visible: root.active
+
         onClicked: root.island.goToDeviceSelection()
+
+        anchors {
+            bottom: parent.bottom
+            margins: Appearance.margin.small
+            right: parent.right
+        }
     }
 }

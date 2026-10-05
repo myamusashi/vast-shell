@@ -15,8 +15,12 @@ import "../Components"
 Item {
     id: root
 
-    Layout.fillWidth: true
+    function revealCard(cardTitle: string): bool {
+        return cardRevealer.reveal(cardTitle);
+    }
+
     Layout.fillHeight: true
+    Layout.fillWidth: true
 
     CardRevealer {
         id: cardRevealer
@@ -24,36 +28,33 @@ Item {
         container: contentColumn
         target: pageFlickable
     }
-
-    function revealCard(cardTitle: string): bool {
-        return cardRevealer.reveal(cardTitle);
-    }
-
     Flickable {
         id: pageFlickable
+
         anchors.fill: parent
-        contentWidth: parent.width
-        contentHeight: contentColumn.implicitHeight + (Appearance.margin.large * 2)
         clip: true
-        ScrollBar.vertical: ScrollBar {}
+        contentHeight: contentColumn.implicitHeight + (Appearance.margin.large * 2)
+        contentWidth: parent.width
+
+        ScrollBar.vertical: ScrollBar {
+        }
 
         ColumnLayout {
             id: contentColumn
 
-            width: parent.width - (Appearance.margin.large * 2)
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             anchors.topMargin: Appearance.margin.large
             spacing: Appearance.spacing.large
+            width: parent.width - (Appearance.margin.large * 2)
 
             StyledText {
-                text: qsTr("Appearance & Theming")
-                font.pixelSize: Appearance.fonts.size.extraLarge
-                font.bold: true
-                color: Colours.m3Colors.m3OnSurface
                 Layout.bottomMargin: Appearance.margin.normal
+                color: Colours.m3Colors.m3OnSurface
+                font.bold: true
+                font.pixelSize: Appearance.fonts.size.extraLarge
+                text: qsTr("Appearance & Theming")
             }
-
             SettingsCard {
                 title: qsTr("Color System")
 
@@ -61,27 +62,29 @@ Item {
                     columns: 3
 
                     SettingRow {
-                        label: qsTr("Dark Mode:")
                         description: qsTr("Use a dark color palette for the entire shell.")
+                        label: qsTr("Dark Mode:")
+
                         StyledSwitch {
                             checked: Configs.colors.isDarkMode
+
                             onCheckedChanged: Configs.colors.isDarkMode = checked
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Use Static Colors:")
                         description: qsTr("Load colors from a custom JSON file and override the generated palette.")
+                        label: qsTr("Use Static Colors:")
+
                         StyledSwitch {
                             checked: Configs.colors.useStaticColors
+
                             onCheckedChanged: Configs.colors.useStaticColors = checked
                         }
                     }
                 }
-
                 SettingRow {
-                    label: qsTr("Static Colors Path:")
                     description: qsTr("File path to the custom colors JSON when static colors are enabled.")
+                    label: qsTr("Static Colors Path:")
 
                     StyledTextInput {
                         id: staticColorsPathField
@@ -89,48 +92,48 @@ Item {
                         implicitWidth: 350
                         text: Configs.colors.staticColorsPath
                         toggleButtonVisible: false
+
                         onEditingFinished: Configs.colors.staticColorsPath = text
 
                         MouseArea {
                             anchors.fill: parent
-                            hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
+                            hoverEnabled: true
+
                             onClicked: {
                                 staticColorsPathField.forceActiveFocus();
                                 staticColorsFileDialog.openFileDialog();
                             }
                         }
                     }
-
                     FileDialog {
                         id: staticColorsFileDialog
 
                         nameFilters: ["*.json"]
                         showHidden: true
+
                         onFileSelected: path => Configs.colors.staticColorsPath = path
                     }
                 }
-
                 SettingRow {
-                    label: qsTr("Material Scheme:")
                     description: qsTr("Material You color scheme variant for palette generation.")
+                    label: qsTr("Material Scheme:")
 
                     SplitButton {
                         readonly property int selectedIndex: model.findIndex(entry => entry.display === Configs.colors.scheme)
 
+                        currentIndex: selectedIndex
+                        icon.name: "format_color_fill"
                         model: ["vibrant", "tonal-spot", "expressive", "monochrome", "rainbow", "fruit-salad", "neutral", "fidelity", "content"].map(name => ({
                                     display: name
                                 }))
-                        textRole: "display"
-                        icon.name: "format_color_fill"
-                        currentIndex: selectedIndex
                         text: model[selectedIndex]?.display ?? Configs.colors.scheme
+                        textRole: "display"
 
                         onMenuItemActivated: index => Configs.colors.scheme = model[index].display
                     }
                 }
             }
-
             SettingsCard {
                 title: qsTr("Typography System")
 
@@ -138,63 +141,68 @@ Item {
                     columns: 2
 
                     SettingRow {
-                        label: qsTr("Sans Serif Font:")
                         description: qsTr("Primary font for UI text and labels.")
+                        label: qsTr("Sans Serif Font:")
+
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.sans
+
                             onConfigChanged: value => Appearance.fonts.family.sans = value
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Monospace Font:")
                         description: qsTr("Font for code and monospaced text.")
+                        label: qsTr("Monospace Font:")
+
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.mono
+
                             onConfigChanged: value => Appearance.fonts.family.mono = value
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Nerd Font:")
                         description: qsTr("Nerd font used for icon or font text.")
+                        label: qsTr("Nerd Font:")
+
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.nerd
+
                             onConfigChanged: value => Appearance.fonts.family.nerd = value
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Material Icon Font:")
                         description: qsTr("Icon font used for Material Symbols throughout the shell.")
+                        label: qsTr("Material Icon Font:")
+
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.material
+
                             onConfigChanged: value => Appearance.fonts.family.material = value
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Font Size Scale:")
                         description: qsTr("Global multiplier for all font sizes.")
+                        label: qsTr("Font Size Scale:")
+
                         StyledSlide {
-                            from: 0.1
-                            to: 2.0
-                            stepSize: 0.1
-                            popupDecimals: 1
-                            snapEnabled: true
-                            showValuePopup: true
-                            value: Appearance.fonts.size.scale
-                            onMoved: Appearance.fonts.size.scale = value
                             Layout.preferredWidth: 200
+                            from: 0.1
+                            popupDecimals: 1
+                            showValuePopup: true
+                            snapEnabled: true
+                            stepSize: 0.1
+                            to: 2.0
+                            value: Appearance.fonts.size.scale
+
+                            onMoved: Appearance.fonts.size.scale = value
                         }
                     }
                 }
             }
-
             SettingsCard {
                 title: qsTr("Shapes & Layout")
 
@@ -202,78 +210,83 @@ Item {
                     columns: 2
 
                     SettingRow {
-                        label: qsTr("UI Corner Roundness (Normal):")
                         description: qsTr("Corner radius.")
+                        label: qsTr("UI Corner Roundness (Normal):")
+
                         StyledSlide {
+                            Layout.preferredWidth: 200
                             from: 0
-                            to: 50
                             stepSize: 1
+                            to: 50
                             value: Appearance.rounding.normal
+
                             onMoved: Appearance.rounding.normal = value
-                            Layout.preferredWidth: 200
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Element Spacing (Normal):")
                         description: qsTr("Default spacing between UI elements.")
+                        label: qsTr("Element Spacing (Normal):")
+
                         StyledSlide {
+                            Layout.preferredWidth: 200
                             from: 0
-                            to: 50
                             stepSize: 1
+                            to: 50
                             value: Appearance.spacing.normal
+
                             onMoved: Appearance.spacing.normal = value
-                            Layout.preferredWidth: 200
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Padding (Normal):")
                         description: qsTr("Inner padding.")
+                        label: qsTr("Padding (Normal):")
+
                         StyledSlide {
-                            from: 0
-                            to: 50
-                            stepSize: 1
-                            value: Appearance.padding.normal
-                            onMoved: Appearance.padding.normal = value
                             Layout.preferredWidth: 200
+                            from: 0
+                            stepSize: 1
+                            to: 50
+                            value: Appearance.padding.normal
+
+                            onMoved: Appearance.padding.normal = value
                         }
                     }
-
                     SettingRow {
-                        label: qsTr("Margin (Normal):")
                         description: qsTr("Outer margin.")
+                        label: qsTr("Margin (Normal):")
+
                         StyledSlide {
-                            from: 0
-                            to: 50
-                            stepSize: 1
-                            value: Appearance.margin.normal
-                            onMoved: Appearance.margin.normal = value
                             Layout.preferredWidth: 200
+                            from: 0
+                            stepSize: 1
+                            to: 50
+                            value: Appearance.margin.normal
+
+                            onMoved: Appearance.margin.normal = value
                         }
                     }
                 }
             }
-
             SettingsCard {
                 title: qsTr("Motion & Animation")
 
                 SettingRow {
-                    label: qsTr("Animation Durations Scale:")
                     description: qsTr("Multiplier for all animation durations. Higher is slower.")
+                    label: qsTr("Animation Durations Scale:")
+
                     StyledSlide {
+                        Layout.preferredWidth: 200
                         from: 1
-                        to: 5
-                        stepSize: 1
                         showValuePopup: true
                         snapEnabled: true
+                        stepSize: 1
+                        to: 5
                         value: Appearance.animations.durations.scale
+
                         onMoved: Appearance.animations.durations.scale = value
-                        Layout.preferredWidth: 200
                     }
                 }
             }
-
             Item {
                 Layout.fillHeight: true
                 implicitHeight: Appearance.margin.large
@@ -284,58 +297,53 @@ Item {
     component FilePathRow: RowLayout {
         id: filePathRow
 
-        property string label
         property string configValue
+        property string label
         property var nameFilters: ["*.json"]
+
         signal configChanged(string value)
+
         Layout.fillWidth: true
 
         StyledText {
-            text: filePathRow.label
             Layout.fillWidth: true
-            font.pixelSize: Appearance.fonts.size.large
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.large
+            text: filePathRow.label
         }
-
         StyledTextInput {
             id: pathField
 
             implicitWidth: 350
-            onEditingFinished: filePathRow.configChanged(text)
             toggleButtonVisible: false
+
             Component.onCompleted: text = filePathRow.configValue
+            onEditingFinished: filePathRow.configChanged(text)
 
             MouseArea {
                 anchors.fill: parent
-                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+
                 onClicked: {
                     pathField.forceActiveFocus();
                     fileDialog.openFileDialog();
                 }
             }
         }
-
         FileDialog {
             id: fileDialog
 
             nameFilters: filePathRow.nameFilters
             showHidden: true
+
             onFileSelected: path => filePathRow.configChanged(path)
         }
     }
-
     component FontPicker: Item {
         id: fontPicker
 
-        property alias searchField: searchField.placeHolderText
         property string configValue
-        signal configChanged(string value)
-
-        implicitHeight: 48
-        implicitWidth: 250
-
-        property string searchText: ""
         property var filteredModel: {
             const query = searchText.toLowerCase();
             const result = [];
@@ -351,94 +359,92 @@ Item {
             }
             return result;
         }
+        property alias searchField: searchField.placeHolderText
+        property string searchText: ""
+
+        signal configChanged(string value)
+
+        implicitHeight: 48
+        implicitWidth: 250
 
         StyledTextInput {
             id: searchField
 
             anchors.fill: parent
             placeHolderText: qsTr("Search font...")
+            toggleButtonVisible: false
+
+            Component.onCompleted: text = fontPicker.configValue
+            onActiveFocusChanged: {
+                if (activeFocus && !popup.visible)
+                    popup.open();
+            }
             onTextChanged: {
                 fontPicker.searchText = text;
                 if (!popup.visible)
                     popup.open();
             }
-            onActiveFocusChanged: {
-                if (activeFocus && !popup.visible)
-                    popup.open();
-            }
-            toggleButtonVisible: false
-            Component.onCompleted: text = fontPicker.configValue
         }
-
         Popup {
             id: popup
 
-            y: searchField.height + 4
-            width: searchField.width
-            implicitHeight: Math.min(listView.contentHeight + 16, 280)
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+            implicitHeight: Math.min(listView.contentHeight + 16, 280)
+            width: searchField.width
+            y: searchField.height + 4
 
             background: StyledRect {
                 color: Colours.m3Colors.m3SurfaceContainerLow
                 radius: Appearance.rounding.large
+
                 Elevation {
                     anchors.fill: parent
-                    z: -1
                     level: 2
                     radius: parent.radius
+                    z: -1
                 }
             }
-
             contentItem: ListView {
                 id: listView
 
+                cacheBuffer: 0
                 clip: true
                 model: fontPicker.filteredModel
-                cacheBuffer: 0
 
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
+
                     contentItem: StyledRect {
+                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                         implicitWidth: 4
                         radius: 2
-                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                     }
                 }
-
-                header: Item {
-                    height: 8
-                }
-                footer: Item {
-                    height: 8
-                }
-
                 delegate: ItemDelegate {
                     id: fontDelegate
 
-                    required property var modelData
                     required property int index
-
                     readonly property bool itemActive: modelData.name === fontPicker.configValue
+                    required property var modelData
 
-                    width: listView.width
+                    bottomPadding: 0
                     height: 52
                     leftPadding: 16
                     rightPadding: 16
                     topPadding: 0
-                    bottomPadding: 0
+                    width: listView.width
 
                     background: StyledRect {
-                        radius: Appearance.rounding.large
                         color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
+                        radius: Appearance.rounding.large
                     }
-
                     contentItem: StyledText {
-                        text: fontDelegate.modelData.name || qsTr("System default")
+                        color: Colours.m3Colors.m3OnSurface
+                        elide: Text.ElideRight
                         font.family: fontDelegate.itemActive || fontDelegate.highlighted ? fontDelegate.modelData.name : ""
                         font.pixelSize: Appearance.fonts.size.normal
-                        color: Colours.m3Colors.m3OnSurface
+                        text: fontDelegate.modelData.name || qsTr("System default")
                         verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
                     }
 
                     onClicked: {
@@ -447,6 +453,12 @@ Item {
                         fontPicker.searchText = "";
                         popup.close();
                     }
+                }
+                footer: Item {
+                    height: 8
+                }
+                header: Item {
+                    height: 8
                 }
             }
         }

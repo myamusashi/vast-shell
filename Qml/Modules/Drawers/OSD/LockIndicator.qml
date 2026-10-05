@@ -9,15 +9,15 @@ import qs.Services
 Item {
     id: root
 
-    required property bool indicator
-    required property string osdVisible
-    required property string label
     required property string icon
+    required property bool indicator
+    required property string label
+    required property string osdVisible
 
-    width: parent.width
+    clip: true
     height: GlobalStates.isOSDVisible(osdVisible) ? 50 : 0
     visible: height > 0
-    clip: true
+    width: parent.width
 
     Behavior on height {
         NAnim {
@@ -28,25 +28,24 @@ Item {
 
     StyledRect {
         anchors.fill: parent
-        radius: height / 2
         color: "transparent"
+        radius: height / 2
 
         Row {
             anchors.centerIn: parent
-            spacing: Appearance.spacing.normal
             opacity: root.height / 50
+            spacing: Appearance.spacing.normal
 
             StyledText {
-                text: root.label
-                font.weight: Font.Medium
                 color: Colours.m3Colors.m3OnBackground
                 font.pixelSize: Appearance.fonts.size.large * 1.5
+                font.weight: Font.Medium
+                text: root.label
             }
-
             Icon {
-                icon: root.icon
                 color: root.indicator ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
                 font.pixelSize: Appearance.fonts.size.large * 1.5
+                icon: root.icon
             }
         }
     }

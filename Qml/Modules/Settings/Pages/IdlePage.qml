@@ -14,20 +14,17 @@ import "../Components"
 SettingsPageBase {
     id: root
 
-    pageTitle: qsTr("Idle")
-
-    property ListModel timeoutsModel: ListModel {}
-
-    function seedFromConfig() {
-        timeoutsModel.clear();
-        for (const e of Configs.idle.timeouts)
-            timeoutsModel.append({
-                timeoutSeconds: e.timeoutMonitor ?? 60,
-                timeoutCommand: e["on-timeout"] ?? "",
-                resumeCommand: e["on-resume"] ?? ""
-            });
+    property ListModel timeoutsModel: ListModel {
     }
 
+    function addTimeout() {
+        timeoutsModel.append({
+            timeoutSeconds: 60,
+            timeoutCommand: "notify-send 'Idle' 'Timeout reached'",
+            resumeCommand: ""
+        });
+        flushToConfig();
+    }
     function flushToConfig() {
         const arr = [];
         for (let i = 0; i < timeoutsModel.count; i++) {
@@ -40,37 +37,38 @@ SettingsPageBase {
         }
         Configs.idle.timeouts = arr;
     }
-
-    Component.onCompleted: seedFromConfig()
-
-    function addTimeout() {
-        timeoutsModel.append({
-            timeoutSeconds: 60,
-            timeoutCommand: "notify-send 'Idle' 'Timeout reached'",
-            resumeCommand: ""
-        });
-        flushToConfig();
-    }
-
     function removeTimeout(i) {
         timeoutsModel.remove(i);
         flushToConfig();
     }
+    function seedFromConfig() {
+        timeoutsModel.clear();
+        for (const e of Configs.idle.timeouts)
+            timeoutsModel.append({
+                timeoutSeconds: e.timeoutMonitor ?? 60,
+                timeoutCommand: e["on-timeout"] ?? "",
+                resumeCommand: e["on-resume"] ?? ""
+            });
+    }
+
+    pageTitle: qsTr("Idle")
+
+    Component.onCompleted: seedFromConfig()
 
     SettingsCard {
         title: qsTr("Idle Management")
 
         SettingRow {
-            label: qsTr("Enable Idle Detection:")
             description: qsTr("Enable automatic actions after periods of inactivity.")
+            label: qsTr("Enable Idle Detection:")
 
             StyledSwitch {
                 checked: Configs.idle.enabled
+
                 onCheckedChanged: Configs.idle.enabled = checked
             }
         }
     }
-
     SettingsCard {
         title: qsTr("Timeouts")
 
@@ -82,53 +80,54 @@ SettingsPageBase {
                 id: timeoutRepeater
 
                 model: root.timeoutsModel
+
                 delegate: Rectangle {
                     id: rootDelegate
 
-                    required property var modelData
                     required property int index
+                    required property var modelData
 
                     Layout.fillWidth: true
-                    implicitHeight: content.implicitHeight + Appearance.margin.large * 2
                     color: Colours.m3Colors.m3SurfaceContainerHighest
+                    implicitHeight: content.implicitHeight + Appearance.margin.large * 2
                     radius: Appearance.rounding.normal
 
                     ColumnLayout {
                         id: content
 
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            top: parent.top
-                            margins: Appearance.margin.large
-                        }
                         spacing: Appearance.spacing.normal
 
+                        anchors {
+                            left: parent.left
+                            margins: Appearance.margin.large
+                            right: parent.right
+                            top: parent.top
+                        }
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
 
                             StyledText {
-                                text: qsTr("Timeout (seconds):")
-                                font.pixelSize: Appearance.fonts.size.normal
                                 color: Colours.m3Colors.m3OnSurfaceVariant
+                                font.pixelSize: Appearance.fonts.size.normal
+                                text: qsTr("Timeout (seconds):")
                             }
-
                             TextField {
                                 id: timeoutField
 
                                 Layout.preferredWidth: 80
-                                text: rootDelegate.modelData.timeoutSeconds
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                font.bold: true
-                                padding: Appearance.margin.normal
                                 clip: true
+                                color: Colours.m3Colors.m3OnSurface
+                                font.bold: true
+                                font.pixelSize: Appearance.fonts.size.normal
                                 inputMethodHints: Qt.ImhDigitsOnly
+                                padding: Appearance.margin.normal
+                                text: rootDelegate.modelData.timeoutSeconds
+
                                 background: Rectangle {
-                                    radius: Appearance.rounding.small
                                     color: Colours.m3Colors.m3SurfaceVariant
                                     opacity: 0.4
+                                    radius: Appearance.rounding.small
                                 }
 
                                 onEditingFinished: {
@@ -140,80 +139,76 @@ SettingsPageBase {
                                 }
                             }
                         }
-
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
 
                             StyledText {
-                                text: qsTr("Command on Timeout:")
-                                font.pixelSize: Appearance.fonts.size.normal
                                 color: Colours.m3Colors.m3OnSurfaceVariant
+                                font.pixelSize: Appearance.fonts.size.normal
+                                text: qsTr("Command on Timeout:")
                             }
-
                             TextField {
                                 id: onTimeoutField
 
                                 Layout.fillWidth: true
-                                text: rootDelegate.modelData.timeoutCommand
+                                clip: true
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 padding: Appearance.margin.normal
-                                clip: true
+                                text: rootDelegate.modelData.timeoutCommand
 
                                 background: Rectangle {
-                                    radius: Appearance.rounding.small
                                     color: Colours.m3Colors.m3SurfaceVariant
                                     opacity: 0.4
+                                    radius: Appearance.rounding.small
                                 }
 
                                 onEditingFinished: root.timeoutsModel.setProperty(rootDelegate.index, "timeoutCommand", text)
                             }
                         }
-
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
 
                             StyledText {
-                                text: qsTr("Command on Resume:")
-                                font.pixelSize: Appearance.fonts.size.normal
                                 color: Colours.m3Colors.m3OnSurfaceVariant
+                                font.pixelSize: Appearance.fonts.size.normal
+                                text: qsTr("Command on Resume:")
                             }
-
                             TextField {
                                 id: onResumeField
 
                                 Layout.fillWidth: true
-                                text: rootDelegate.modelData.resumeCommand
+                                clip: true
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 padding: Appearance.margin.normal
-                                clip: true
+                                text: rootDelegate.modelData.resumeCommand
 
                                 background: Rectangle {
-                                    radius: Appearance.rounding.small
                                     color: Colours.m3Colors.m3SurfaceVariant
                                     opacity: 0.4
+                                    radius: Appearance.rounding.small
                                 }
 
                                 onEditingFinished: root.timeoutsModel.setProperty(rootDelegate.index, "resumeCommand", text)
                             }
                         }
-
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
 
                             ExtendedFloatingButton {
-                                text: qsTr("Apply")
                                 Layout.preferredHeight: 32
+                                text: qsTr("Apply")
+
                                 onClicked: root.flushToConfig()
                             }
-
                             ExtendedFloatingButton {
-                                text: qsTr("Remove")
                                 Layout.preferredHeight: 32
+                                text: qsTr("Remove")
+
                                 onClicked: root.removeTimeout(rootDelegate.index)
                             }
                         }
@@ -222,13 +217,13 @@ SettingsPageBase {
             }
         }
     }
-
     ExtendedFloatingButton {
-        text: qsTr("Add Timeout")
         Layout.fillWidth: true
         Layout.preferredHeight: 40
         outlined: true
+        text: qsTr("Add Timeout")
         textColor: Colours.m3Colors.m3OnSurface
+
         onClicked: root.addTimeout()
     }
 }

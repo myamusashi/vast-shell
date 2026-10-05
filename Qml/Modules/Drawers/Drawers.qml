@@ -29,13 +29,7 @@ Variants {
     delegate: PanelWindow {
         id: window
 
-        anchors {
-            left: true
-            top: true
-            right: true
-            bottom: true
-        }
-
+        readonly property bool barOpen: FocusedMonitor.isOnFocusedMonitor(modelData.name) && GlobalStates.isBarOpen
         required property ShellScreen modelData
         readonly property bool needFocusKeyboard: {
             if (GlobalStates.isLauncherOpen)
@@ -51,60 +45,77 @@ Variants {
             return false;
         }
 
-        screen: modelData
+        HyprlandWindow.visibleMask: window.mask // qmllint disable
+
+        WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+        WlrLayershell.namespace: "shell:drawers"
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.namespace: "shell:drawers"
-        WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        HyprlandWindow.visibleMask: window.mask // qmllint disable
+        screen: modelData
 
         mask: Region {
             regions: maskRegions.instances
         }
 
+        anchors {
+            bottom: true
+            left: true
+            right: true
+            top: true
+        }
         Variants {
             id: maskRegions
+
             model: screenBorder.collectMaskItems()
+
             delegate: Region {
                 required property Item modelData
-                item: modelData
+
                 intersection: Intersection.Combine
+                item: modelData
             }
         }
-
-        readonly property bool barOpen: FocusedMonitor.isOnFocusedMonitor(modelData.name) && GlobalStates.isBarOpen
-
         ScreenBorder {
             id: screenBorder
 
-            window: window.modelData
-            color: GlobalStates.drawerColors
-            isFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name)
-            isBarOpen: GlobalStates.isBarOpen
             barHeight: Configs.bar.barHeight
+            color: GlobalStates.drawerColors
             enableOuterBorder: Configs.generals.enableOuterBorder
+            isBarOpen: GlobalStates.isBarOpen
+            isFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name)
             outerBorderSize: Configs.generals.outerBorderSize
+            window: window.modelData
 
-            Launcher {}
-            Clipboard {}
-            Calendar {}
-            QuickSettings {}
+            Launcher {
+            }
+            Clipboard {
+            }
+            Calendar {
+            }
+            QuickSettings {
+            }
             Session {
                 id: session
             }
-            BrightnessOsd {}
-            OSD {}
+            BrightnessOsd {
+            }
+            OSD {
+            }
             Volume {
                 session: session
             }
-            CaptureScreenVideo {}
-            Notifications {}
-            WallpaperSelector {}
-            Weathers {}
+            CaptureScreenVideo {
+            }
+            Notifications {
+            }
+            WallpaperSelector {
+            }
+            Weathers {
+            }
         }
-
         Bar {
             id: bar
+
             border: screenBorder
             open: window.barOpen
         }

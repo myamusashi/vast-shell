@@ -8,6 +8,7 @@ import qs.Components.Base
 PopupWidget {
     icon: "developer_board"
     text: qsTr("Operating system")
+
     content: ColumnLayout {
         Repeater {
             model: [
@@ -24,24 +25,24 @@ PopupWidget {
                     value: SystemUsage.archDesign
                 }
             ]
+
             delegate: RowLayout {
                 required property var modelData
                 readonly property string text: modelData.text
                 readonly property string value: modelData.value
 
                 StyledText {
-                    text: parent.text + ": "
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
+                    text: parent.text + ": "
                 }
-
                 StyledText {
                     Layout.fillWidth: true
-                    text: parent.value
                     color: Colours.m3Colors.m3OnSurface
-                    wrapMode: Text.WordWrap
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
+                    text: parent.value
+                    wrapMode: Text.WordWrap
                 }
             }
         }

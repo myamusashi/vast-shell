@@ -16,14 +16,9 @@ import qs.Services
 Drawer {
     id: root
 
-    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
-
     property int currentPage: 0
     property bool isHistoryOpen: false
-    onIsHistoryOpenChanged: {
-        if (isHistoryOpen)
-            ScreenCaptureHistory.reloadFiles();
-    }
+    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
 
     function openVideoFile(path) {
         Quickshell.execDetached({
@@ -31,21 +26,27 @@ Drawer {
         });
     }
 
-    edge: Qt.BottomEdge
     alignment: Qt.AlignRight
-    open: GlobalStates.isRecordingPanelOpen
-    depth: parent.height * 0.25
-    length: 380
-    cornerRadius: Appearance.rounding.normal
-    filletRadius: 40
-    color: GlobalStates.drawerColors
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    color: GlobalStates.drawerColors
+    cornerRadius: Appearance.rounding.normal
+    depth: parent.height * 0.25
+    edge: Qt.BottomEdge
+    filletRadius: 40
+    length: 380
+    open: GlobalStates.isRecordingPanelOpen
+
+    onIsHistoryOpenChanged: {
+        if (isHistoryOpen)
+            ScreenCaptureHistory.reloadFiles();
+    }
 
     Loader {
-        anchors.fill: parent
         active: root.shown
+        anchors.fill: parent
         asynchronous: true
+
         sourceComponent: ColumnLayout {
             anchors.fill: parent
             anchors.margins: Appearance.spacing.small
@@ -60,36 +61,34 @@ Drawer {
                     spacing: Appearance.spacing.small
 
                     Icon {
-                        type: Icon.Material
-                        icon: "screen_record"
+                        Layout.alignment: Qt.AlignVCenter
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
-                        Layout.alignment: Qt.AlignVCenter
+                        icon: "screen_record"
+                        type: Icon.Material
                     }
-
                     StyledText {
-                        text: qsTr("Screen Recorder")
-                        color: Colours.m3Colors.m3OnSurface
-                        font.weight: Font.DemiBold
-                        font.pixelSize: Appearance.fonts.size.normal
                         Layout.alignment: Qt.AlignVCenter
                         Layout.fillWidth: true
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: Font.DemiBold
+                        text: qsTr("Screen Recorder")
                     }
-
                     FloatingButton {
                         Layout.alignment: Qt.AlignVCenter
-                        implicitWidth: 28
-                        implicitHeight: 28
                         backgroundRadius: Appearance.rounding.normal
-                        icon.name: "close"
-                        icon.color: Colours.m3Colors.m3OnSurface
-                        icon.size: Appearance.fonts.size.large
                         color: "transparent"
+                        icon.color: Colours.m3Colors.m3OnSurface
+                        icon.name: "close"
+                        icon.size: Appearance.fonts.size.large
+                        implicitHeight: 28
+                        implicitWidth: 28
+
                         onClicked: GlobalStates.isRecordingPanelOpen = false
                     }
                 }
             }
-
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -98,45 +97,47 @@ Drawer {
                 visible: CaptureScreenVideo.isRecording
 
                 RowLayout {
+                    spacing: Appearance.spacing.small
+
                     anchors {
                         fill: parent
                         leftMargin: Appearance.spacing.small
                         rightMargin: Appearance.spacing.small
                     }
-                    spacing: Appearance.spacing.small
-
                     Rectangle {
-                        implicitWidth: Appearance.spacing.small
-                        implicitHeight: Appearance.spacing.small
-                        radius: Appearance.padding.small
                         color: Colours.m3Colors.m3Red
+                        implicitHeight: Appearance.spacing.small
+                        implicitWidth: Appearance.spacing.small
+                        radius: Appearance.padding.small
 
                         SequentialAnimation on opacity {
-                            running: CaptureScreenVideo.isRecording
                             loops: Animation.Infinite
+                            running: CaptureScreenVideo.isRecording
+
                             PropertyAnimation {
-                                to: 0.3
                                 duration: 600
+                                to: 0.3
                             }
                             PropertyAnimation {
-                                to: 1.0
                                 duration: 600
+                                to: 1.0
                             }
                         }
                     }
-
                     StyledText {
-                        text: qsTr("Recording")
                         color: Colours.m3Colors.m3Red
-                        font.weight: Font.DemiBold
                         font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: Font.DemiBold
+                        text: qsTr("Recording")
                     }
-
                     Item {
                         Layout.fillWidth: true
                     }
-
                     StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.bold: true
+                        font.family: Fonts.mono
+                        font.pixelSize: Appearance.fonts.size.normal
                         text: {
                             const s = CaptureScreenVideo.recordingElapsedSeconds;
                             const h = Math.floor(s / 3600);
@@ -146,36 +147,28 @@ Drawer {
                                 return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
                             return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
                         }
-                        color: Colours.m3Colors.m3OnSurface
-                        font.family: Fonts.mono
-                        font.bold: true
-                        font.pixelSize: Appearance.fonts.size.normal
                     }
                 }
             }
-
             StackLayout {
-                Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 currentIndex: root.currentPage
 
                 PageMain {
                     onOpenAudio: root.currentPage = 1
-                    onOpenSettings: root.currentPage = 2
                     onOpenHistory: {
                         root.isHistoryOpen = true;
                         root.currentPage = 3;
                     }
+                    onOpenSettings: root.currentPage = 2
                 }
-
                 PageAudio {
                     onGoBack: root.currentPage = 0
                 }
-
                 PageSettings {
                     onGoBack: root.currentPage = 0
                 }
-
                 PageHistory {
                     onGoBack: root.currentPage = 0
                     onOpenFile: path => root.openVideoFile(path)

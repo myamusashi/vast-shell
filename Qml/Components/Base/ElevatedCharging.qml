@@ -10,17 +10,21 @@ import Vast.Utils
 Elevation {
     id: elevation
 
-    anchors.fill: parent
-    color: "transparent"
-    blur: 0
-    spread: 0
-    z: -1
-    level: 3
-
-    property color flashInFrom
-    property color flashInTo
     property bool flashInActive: false
     property real flashInBlend: 1.0
+    property color flashInFrom
+    property color flashInTo
+    property bool flashOutActive: false
+    property real flashOutBlend: 1.0
+    property color flashOutFrom
+    property color flashOutTo
+
+    anchors.fill: parent
+    blur: 0
+    color: "transparent"
+    level: 3
+    spread: 0
+    z: -1
 
     onFlashInBlendChanged: {
         if (!flashInActive)
@@ -32,21 +36,6 @@ Elevation {
             color = ColorUtils.blendColors(flashInFrom, flashInTo, flashInBlend);
         }
     }
-
-    NAnim {
-        id: flashInAnim
-        target: elevation
-        property: "flashInBlend"
-        from: 0.0
-        to: 1.0
-        duration: Appearance.animations.durations.large * 0.8
-    }
-
-    property color flashOutFrom
-    property color flashOutTo
-    property bool flashOutActive: false
-    property real flashOutBlend: 1.0
-
     onFlashOutBlendChanged: {
         if (!flashOutActive)
             return;
@@ -59,14 +48,23 @@ Elevation {
     }
 
     NAnim {
-        id: flashOutAnim
-        target: elevation
-        property: "flashOutBlend"
-        from: 0.0
-        to: 1.0
-        duration: Appearance.animations.durations.large
-    }
+        id: flashInAnim
 
+        duration: Appearance.animations.durations.large * 0.8
+        from: 0.0
+        property: "flashInBlend"
+        target: elevation
+        to: 1.0
+    }
+    NAnim {
+        id: flashOutAnim
+
+        duration: Appearance.animations.durations.large
+        from: 0.0
+        property: "flashOutBlend"
+        target: elevation
+        to: 1.0
+    }
     SequentialAnimation {
         id: chargeFlash
 
@@ -82,23 +80,21 @@ Elevation {
                 }
             }
             NAnim {
-                target: elevation
-                property: "blur"
-                to: Configs.generals.chargingGlowSpread
                 duration: Appearance.animations.durations.large * 0.8
+                property: "blur"
+                target: elevation
+                to: Configs.generals.chargingGlowSpread
             }
             NAnim {
-                target: elevation
-                property: "spread"
-                to: Configs.generals.chargingGlowSpread
                 duration: Appearance.animations.durations.large * 0.8
+                property: "spread"
+                target: elevation
+                to: Configs.generals.chargingGlowSpread
             }
         }
-
         PauseAnimation {
             duration: 800
         }
-
         ParallelAnimation {
             ScriptAction {
                 script: {
@@ -111,20 +107,19 @@ Elevation {
                 }
             }
             NAnim {
-                target: elevation
-                property: "blur"
-                to: 0
                 duration: Appearance.animations.durations.large
+                property: "blur"
+                target: elevation
+                to: 0
             }
             NAnim {
-                target: elevation
-                property: "spread"
-                to: 0
                 duration: Appearance.animations.durations.large
+                property: "spread"
+                target: elevation
+                to: 0
             }
         }
     }
-
     SequentialAnimation {
         id: lowFlash
 
@@ -140,23 +135,21 @@ Elevation {
                 }
             }
             NAnim {
-                target: elevation
-                property: "blur"
-                to: 20
                 duration: Appearance.animations.durations.large * 0.8
+                property: "blur"
+                target: elevation
+                to: 20
             }
             NAnim {
-                target: elevation
-                property: "spread"
-                to: 20
                 duration: Appearance.animations.durations.large * 0.8
+                property: "spread"
+                target: elevation
+                to: 20
             }
         }
-
         PauseAnimation {
             duration: 800
         }
-
         ParallelAnimation {
             ScriptAction {
                 script: {
@@ -169,27 +162,20 @@ Elevation {
                 }
             }
             NAnim {
-                target: elevation
-                property: "blur"
-                to: 0
                 duration: Appearance.animations.durations.large
+                property: "blur"
+                target: elevation
+                to: 0
             }
             NAnim {
-                target: elevation
-                property: "spread"
-                to: 0
                 duration: Appearance.animations.durations.large
+                property: "spread"
+                target: elevation
+                to: 0
             }
         }
     }
-
     Connections {
-        target: UPower.displayDevice
-
-        function onStateChanged() {
-            if (UPower.displayDevice.state === UPowerDeviceState.Charging)
-                chargeFlash.restart();
-        }
         function onPercentageChanged() {
             const percentage = Math.round(UPower.displayDevice.percentage * 100);
             const levels = Configs.generals.battery.warnLevels;
@@ -200,5 +186,11 @@ Elevation {
                 CaptureNotify.sendNotification(warn.title, warn.message, warn.level === percentage ? warn.urgency : "normal", warn.icon, "vast-shell", []);
             }
         }
+        function onStateChanged() {
+            if (UPower.displayDevice.state === UPowerDeviceState.Charging)
+                chargeFlash.restart();
+        }
+
+        target: UPower.displayDevice
     }
 }

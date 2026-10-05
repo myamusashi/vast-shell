@@ -13,20 +13,8 @@ import qs.Components.Button
 ItemDelegate {
     id: root
 
-    required property int index
     required property var entryId
-    required property string type
-    required property string preview
-    required property bool pinned
-    required property string sourceApp
-    required property var timestamp
     required property string fileName
-    required property bool isSelected
-    property bool inVisual: false
-
-    readonly property bool isImage: type === "image"
-    readonly property bool isFiles: type === "files"
-
     readonly property string formattedTime: {
         const d = new Date(timestamp);
         const now = new Date();
@@ -40,47 +28,52 @@ ItemDelegate {
             return qsTr("%1h ago").arg(Math.floor(diff / 3600000));
         return d.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
     }
+    property bool inVisual: false
+    required property int index
+    readonly property bool isFiles: type === "files"
+    readonly property bool isImage: type === "image"
+    required property bool isSelected
+    required property bool pinned
+    required property string preview
+    required property string sourceApp
+    required property var timestamp
+    required property string type
 
     signal activated
     signal pinToggled(var id, bool pinned)
     signal removeRequested(var id)
 
-    width: ListView.view?.width ?? parent?.width ?? 320
     height: 64
-    hoverEnabled: true
     highlighted: isSelected
-    onClicked: activated()
+    hoverEnabled: true
+    width: ListView.view?.width ?? parent?.width ?? 320
 
     background: Rectangle {
-        radius: Appearance.rounding.small
         color: root.inVisual && !root.isImage && !root.isFiles ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15) : "transparent"
+        radius: Appearance.rounding.small
 
         Rectangle {
+            color: Colours.m3Colors.m3Primary
+            implicitHeight: parent.height - Appearance.margin.large
+            implicitWidth: 3
+            radius: 2
+            visible: root.pinned
+
             anchors {
                 left: parent.left
                 leftMargin: 2
                 verticalCenter: parent.verticalCenter
             }
-            implicitWidth: 3
-            implicitHeight: parent.height - Appearance.margin.large
-            radius: 2
-            color: Colours.m3Colors.m3Primary
-            visible: root.pinned
         }
     }
-
     contentItem: RowLayout {
         spacing: Appearance.spacing.smaller
 
         Item {
             Layout.preferredWidth: root.pinned ? Appearance.margin.large - Appearance.margin.normal : 0
         }
-
         Rectangle {
             Layout.alignment: Qt.AlignVCenter
-            implicitWidth: 32
-            implicitHeight: 32
-            radius: Appearance.rounding.small
             color: {
                 switch (root.type) {
                 case "image":
@@ -93,22 +86,12 @@ ItemDelegate {
                     return Qt.alpha(Colours.m3Colors.m3OnSurface, 0.06);
                 }
             }
+            implicitHeight: 32
+            implicitWidth: 32
+            radius: Appearance.rounding.small
 
             Icon {
                 anchors.centerIn: parent
-                icon: {
-                    switch (root.type) {
-                    case "image":
-                        return "image";
-                    case "html":
-                        return "code";
-                    case "files":
-                        return "folder";
-                    default:
-                        return "notes";
-                    }
-                }
-                font.pixelSize: Appearance.fonts.size.large
                 color: {
                     switch (root.type) {
                     case "image":
@@ -121,72 +104,84 @@ ItemDelegate {
                         return Colours.m3Colors.m3OnSurface;
                     }
                 }
+                font.pixelSize: Appearance.fonts.size.large
+                icon: {
+                    switch (root.type) {
+                    case "image":
+                        return "image";
+                    case "html":
+                        return "code";
+                    case "files":
+                        return "folder";
+                    default:
+                        return "notes";
+                    }
+                }
             }
         }
-
         ColumnLayout {
-            Layout.fillWidth: true
             Layout.alignment: Qt.AlignVCenter
+            Layout.fillWidth: true
             spacing: 2
 
             StyledText {
                 readonly property int fileCount: root.isFiles ? root.preview.split("\n").length : 0
 
                 Layout.fillWidth: true
-                text: root.isImage ? (root.fileName || qsTr("Image")) : root.isFiles ? qsTr("Files (%1)").arg(fileCount) : root.preview || qsTr("(empty)")
                 color: Colours.m3Colors.m3OnSurface
+                elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.medium
                 maximumLineCount: 2
+                text: root.isImage ? (root.fileName || qsTr("Image")) : root.isFiles ? qsTr("Files (%1)").arg(fileCount) : root.preview || qsTr("(empty)")
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                elide: Text.ElideRight
             }
-
             RowLayout {
                 spacing: Appearance.spacing.small
                 visible: root.sourceApp !== ""
 
                 StyledText {
-                    text: root.sourceApp
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.small
-                    elide: Text.ElideRight
                     Layout.maximumWidth: 120
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    elide: Text.ElideRight
+                    font.pixelSize: Appearance.fonts.size.small
+                    text: root.sourceApp
                 }
-
                 StyledText {
-                    text: "·"
                     color: Colours.m3Colors.m3OutlineVariant
                     font.pixelSize: Appearance.fonts.size.small
+                    text: "·"
                 }
-
                 StyledText {
-                    text: root.formattedTime
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.small
+                    text: root.formattedTime
                 }
             }
         }
-
         FloatingButton {
             id: pinButton
 
-            Layout.preferredWidth: 28
-            Layout.preferredHeight: 28
             Layout.alignment: Qt.AlignVCenter
-            visible: root.hovered || root.pinned
-            opacity: pinButton.hovered ? 1.0 : 0.6
+            Layout.preferredHeight: 28
+            Layout.preferredWidth: 28
             backgroundRadius: Appearance.rounding.normal
-            icon.name: root.pinned ? "keep" : "keep_off"
-            icon.color: root.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-            icon.size: Appearance.fonts.size.large
             color: "transparent"
-            onClicked: root.pinToggled(root.entryId, !root.pinned)
+            icon.color: root.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+            icon.name: root.pinned ? "keep" : "keep_off"
+            icon.size: Appearance.fonts.size.large
+            opacity: pinButton.hovered ? 1.0 : 0.6
+            visible: root.hovered || root.pinned
 
             Behavior on opacity {
-                NAnim {}
+                NAnim {
+                }
             }
+
+            onClicked: root.pinToggled(root.entryId, !root.pinned)
         }
     }
+
+    onClicked: activated()
 
     TapHandler {
         onDoubleTapped: {

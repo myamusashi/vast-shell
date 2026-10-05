@@ -11,14 +11,13 @@ Item {
     Dots {
         id: root
 
-        property int notificationCount: Notifs.notClosed.length
         property bool isDndEnable: Notifs.dnd
+        property int notificationCount: Notifs.notClosed.length
 
-        width: 30
         height: parent.height
+        width: 30
 
         Icon {
-            type: Icon.Material
             color: {
                 if (root.notificationCount > 0 && root.notificationCount !== null && root.isDndEnable !== true)
                     Colours.m3Colors.m3Primary;
@@ -36,15 +35,17 @@ Item {
                 else
                     "notifications";
             }
+            type: Icon.Material
         }
     }
     MArea {
         id: mouseArea
 
         anchors.fill: parent
-        layerColor: "transparent"
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        hoverEnabled: true
+        layerColor: "transparent"
+
         onClicked: GlobalStates.isNotificationCenterOpen = !GlobalStates.isNotificationCenterOpen
     }
 }

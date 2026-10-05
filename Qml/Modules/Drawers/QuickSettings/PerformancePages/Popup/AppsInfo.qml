@@ -13,15 +13,14 @@ PopupWidget {
 
     content: ColumnLayout {
         PieChart {
-            implicitWidth: parent.width
-            implicitHeight: 200
-
             graphicalAppCount: DesktopEntries.applications.values.filter(app => !app.runInTerminal).length
+            implicitHeight: 200
+            implicitWidth: parent.width
             terminalAppCount: DesktopEntries.applications.values.filter(app => app.runInTerminal).length
         }
-
         RowLayout {
             Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
+
             Repeater {
                 model: [
                     {
@@ -39,14 +38,13 @@ PopupWidget {
 
                     StyledRect {
                         color: parent.modelData.color
-                        implicitWidth: 15
                         implicitHeight: 15
+                        implicitWidth: 15
                     }
-
                     StyledText {
-                        text: parent.modelData.text
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
+                        text: parent.modelData.text
                     }
                 }
             }
@@ -70,27 +68,26 @@ PopupWidget {
             holeSize: 0.5
 
             PieSlice {
-                label: pieChart.graphicalAppCount
-                value: pieChart.graphicalAppCount
+                borderColor: "transparent"
                 color: Colours.m3Colors.m3Green
-                borderColor: "transparent"
-                labelVisible: true
-                labelColor: "white"
-                labelPosition: PieSlice.LabelPosition.Outside
+                explodeDistanceFactor: 0.02
+                label: pieChart.graphicalAppCount
                 labelArmLengthFactor: 0.3
-                explodeDistanceFactor: 0.02
-            }
-
-            PieSlice {
-                label: pieChart.terminalAppCount
-                value: pieChart.terminalAppCount
-                color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
-                borderColor: "transparent"
-                labelVisible: true
                 labelColor: "white"
                 labelPosition: PieSlice.LabelPosition.Outside
-                labelArmLengthFactor: 0.15
+                labelVisible: true
+                value: pieChart.graphicalAppCount
+            }
+            PieSlice {
+                borderColor: "transparent"
+                color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
                 explodeDistanceFactor: 0.02
+                label: pieChart.terminalAppCount
+                labelArmLengthFactor: 0.15
+                labelColor: "white"
+                labelPosition: PieSlice.LabelPosition.Outside
+                labelVisible: true
+                value: pieChart.terminalAppCount
             }
         }
     }

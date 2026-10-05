@@ -11,23 +11,13 @@ import qs.Services
 Singleton {
     id: root
 
-    property string state: "idle"
+    readonly property string cacheDir: Paths.home + "/.cache/vast-shell/depthwp"
+    readonly property bool currentWallpaperIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
     property string errorMessage: ""
     property string fgPath: ""
     readonly property bool generating: generateFg.running
-
-    readonly property string cacheDir: Paths.home + "/.cache/vast-shell/depthwp"
     readonly property string scriptPath: Paths.projectRoot + "/Assets/shell/extract-fg.sh"
-    readonly property bool currentWallpaperIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
-
-    function onToggle(enabled) {
-        if (enabled) {
-            checkOrGenerate();
-        } else {
-            Configs.wallpaper.depthWallpaperEnabled = false;
-            state = "idle";
-        }
-    }
+    property string state: "idle"
 
     function checkOrGenerate() {
         if (currentWallpaperIsVideo) {
@@ -44,7 +34,17 @@ Singleton {
             generateFg.running = true;
         }
     }
-
+    function cleanPath(path) {
+        return path.replace(/^file:\/\//, "");
+    }
+    function onToggle(enabled) {
+        if (enabled) {
+            checkOrGenerate();
+        } else {
+            Configs.wallpaper.depthWallpaperEnabled = false;
+            state = "idle";
+        }
+    }
     function runRembg() {
         if (currentWallpaperIsVideo)
             return;
@@ -57,6 +57,7 @@ Singleton {
         id: generateFg
 
         property int exitedCode: 0
+
         command: ["bash", root.scriptPath, root.cleanPath(Paths.currentWallpaper), root.cacheDir]
 
         stdout: SplitParser {
@@ -72,15 +73,6 @@ Singleton {
             }
         }
 
-        onRunningChanged: {
-            if (generateFg.running) {
-                root.state = "processing";
-            } else if (root.state === "processing" && generateFg.exitedCode !== 0) {
-                root.state = "error";
-                root.errorMessage = "Foreground extraction failed";
-            }
-        }
-
         onExited: function (code) { // qmllint disable
             if (code === 0 && root.state === "done") {
                 ToastService.show(qsTr("Depth wallpaper ready"), qsTr("Depth Wallpaper"), "image", 5000);
@@ -91,25 +83,25 @@ Singleton {
             }
             exitedCode = code;
         }
+        onRunningChanged: {
+            if (generateFg.running) {
+                root.state = "processing";
+            } else if (root.state === "processing" && generateFg.exitedCode !== 0) {
+                root.state = "error";
+                root.errorMessage = "Foreground extraction failed";
+            }
+        }
     }
-
-    function cleanPath(path) {
-        return path.replace(/^file:\/\//, "");
-    }
-
     Connections {
-        target: Configs.wallpaper
-
         function onDepthWallpaperEnabledChanged() {
             if (Configs.wallpaper.depthWallpaperEnabled && root.state !== "done" && root.state !== "processing") {
                 root.checkOrGenerate();
             }
         }
+
+        target: Configs.wallpaper
     }
-
     Connections {
-        target: Paths
-
         function onCurrentWallpaperChanged() {
             if (root.currentWallpaperIsVideo) {
                 Configs.wallpaper.depthWallpaperEnabled = false;
@@ -123,5 +115,7 @@ Singleton {
                 root.runRembg();
             }
         }
+
+        target: Paths
     }
 }

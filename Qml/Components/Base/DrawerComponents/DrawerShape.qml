@@ -4,15 +4,15 @@ import QtQuick.Shapes
 Shape {
     id: root
 
-    required property string pathData
     required property color color
+    required property string pathData
 
     preferredRendererType: Shape.CurveRenderer
 
     ShapePath {
-        strokeWidth: -1
-        strokeColor: "transparent"
         fillColor: root.color
+        strokeColor: "transparent"
+        strokeWidth: -1
 
         PathSvg {
             path: root.pathData

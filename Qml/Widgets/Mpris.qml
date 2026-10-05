@@ -38,24 +38,25 @@ StyledRect {
                         clicked: () => Players.active?.next()
                     }
                 ]
+
                 delegate: FloatingButton {
                     required property var modelData
 
-                    implicitWidth: 24
-                    implicitHeight: 24
                     backgroundRadius: Appearance.rounding.normal
-                    icon.name: modelData.icon
                     icon.color: Colours.m3Colors.m3Background
+                    icon.name: modelData.icon
                     icon.size: Appearance.fonts.size.large * 1.4
+                    implicitHeight: 24
+                    implicitWidth: 24
+
                     onClicked: modelData.clicked()
                 }
             }
         }
-
         StyledText {
-            text: Players.active === null ? "null" : Players.active.trackArtist
             color: Colours.m3Colors.m3OnBackground
             font.weight: Font.DemiBold
+            text: Players.active === null ? "null" : Players.active.trackArtist
         }
     }
 }

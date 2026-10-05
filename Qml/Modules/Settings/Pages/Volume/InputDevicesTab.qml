@@ -12,8 +12,8 @@ import "../../Components"
 SettingsCard {
     id: root
 
-    title: qsTr("Input Devices")
-
+    readonly property int count: sourceNodes.length
+    readonly property var currentSource: Pipewire.defaultAudioSource
     readonly property var sourceNodes: {
         const nodes = Pipewire.nodes.values;
         const filtered = nodes.filter(n => !n.isStream && n.audio && (n.type & PwNodeType.Source));
@@ -21,20 +21,18 @@ SettingsCard {
         return filtered;
     }
 
-    readonly property var currentSource: Pipewire.defaultAudioSource
-    readonly property int count: sourceNodes.length
+    title: qsTr("Input Devices")
 
     ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
 
         StyledText {
-            visible: root.count === 0
-            text: qsTr("No input devices detected.")
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
+            text: qsTr("No input devices detected.")
+            visible: root.count === 0
         }
-
         Repeater {
             model: root.sourceNodes
 
@@ -44,9 +42,10 @@ SettingsCard {
                 required property PwNode modelData
 
                 Layout.fillWidth: true
+                isCurrent: root.currentSource && sourceDelegate.modelData.id === root.currentSource.id
                 node: sourceDelegate.modelData
                 selectable: true
-                isCurrent: root.currentSource && sourceDelegate.modelData.id === root.currentSource.id
+
                 onDefaultRequested: {
                     Pipewire.preferredDefaultAudioSource = sourceDelegate.modelData;
                 }

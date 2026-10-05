@@ -11,8 +11,8 @@ import qs.Services
 StyledRect {
     id: root
 
-    required property string audioName
     required property string audioDescription
+    required property string audioName
     required property string iconName
     property bool isSelected: false
 
@@ -24,47 +24,46 @@ StyledRect {
     radius: Appearance.rounding.small
 
     RowLayout {
+        spacing: Appearance.spacing.small
+
         anchors {
             fill: parent
             leftMargin: Appearance.margin.smaller
             rightMargin: Appearance.margin.smaller
         }
-        spacing: Appearance.spacing.small
-
         Icon {
-            type: Icon.Material
-            icon: root.iconName
             color: root.isSelected ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
+            icon: root.iconName
+            type: Icon.Material
         }
-
         StyledText {
             id: audioDescriptionText
-            text: root.audioDescription
-            color: root.isSelected ? Colours.m3Colors.m3Primary : audioDeviceMouseArea.containsMouse ? Colours.m3Colors.m3OnSurface : Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.normal
-            elide: Text.ElideRight
-        }
 
+            color: root.isSelected ? Colours.m3Colors.m3Primary : audioDeviceMouseArea.containsMouse ? Colours.m3Colors.m3OnSurface : Colours.m3Colors.m3OnSurface
+            elide: Text.ElideRight
+            font.pixelSize: Appearance.fonts.size.normal
+            text: root.audioDescription
+        }
         Icon {
-            visible: root.isSelected
-            type: Icon.Material
-            icon: "check"
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.normal
+            icon: "check"
+            type: Icon.Material
+            visible: root.isSelected
         }
-
         Item {
             Layout.fillWidth: true
         }
     }
-
     MArea {
         id: audioDeviceMouseArea
+
         cursorShape: Qt.PointingHandCursor
-        implicitWidth: audioDescriptionText.contentWidth
-        implicitHeight: parent.height
         hoverEnabled: true
+        implicitHeight: parent.height
+        implicitWidth: audioDescriptionText.contentWidth
+
         onClicked: root.select(root.audioName)
     }
 }

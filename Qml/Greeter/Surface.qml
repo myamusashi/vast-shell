@@ -19,37 +19,16 @@ import Vast.Utils
 WlSessionLockSurface {
     id: root
 
-    required property WlSessionLock lock
-    required property Auth auth
-
-    readonly property bool useVideoWallpaper: configLoaded ? configUseVideo : false
-    readonly property string wallpaperPath: useVideoWallpaper ? (configLoaded ? configVideoPath : "/etc/vast-shell/wallpaper.mp4") : (configLoaded ? configStaticPath : "/etc/vast-shell/wallpaper.png")
-    property bool configLoaded: false
-    property bool configUseVideo: false
-    property string configStaticPath: ""
-    property string configVideoPath: ""
     readonly property string assetWallpaper: Paths.projectRoot + "/Assets/images/wallpaper.png"
-    property url effectiveWallpaper: GreeterWallpaper.effectiveWallpaper(useVideoWallpaper, wallpaperPath, wallpaperPath)
-    property bool effectiveIsVideo: useVideoWallpaper
-    property int thumbnailVersion: 0
+    required property Auth auth
     readonly property url colorSource: effectiveIsVideo ? GreeterWallpaper.colorSource(true, wallpaperPath) + `?v=${thumbnailVersion}` : effectiveWallpaper
-
-    FileView {
-        path: "/etc/vast-shell/greeter.json"
-        watchChanges: true
-        onFileChanged: reload()
-        onLoaded: {
-            try {
-                const config = GreeterWallpaper.loadConfig(text());
-                root.configUseVideo = config.useVideoWallpaper;
-                root.configStaticPath = config.staticWallpaper;
-                root.configVideoPath = config.videoWallpaper;
-                root.configLoaded = true;
-                root.resetEffectiveWallpaper();
-            } catch (error) {}
-        }
-    }
-
+    property bool configLoaded: false
+    property string configStaticPath: ""
+    property bool configUseVideo: false
+    property string configVideoPath: ""
+    property var dynColors: fallbackColors
+    property bool effectiveIsVideo: useVideoWallpaper
+    property url effectiveWallpaper: GreeterWallpaper.effectiveWallpaper(useVideoWallpaper, wallpaperPath, wallpaperPath)
     readonly property var fallbackColors: ({
             scrim: Colours.m3Colors.m3Scrim,
             onBackground: Colours.m3Colors.m3OnBackground,
@@ -67,34 +46,19 @@ WlSessionLockSurface {
             secondaryContainer: Colours.m3Colors.m3SecondaryContainer,
             onSecondaryContainer: Colours.m3Colors.m3OnSecondaryContainer
         })
-    property var dynColors: fallbackColors
-
-    color: "transparent"
-
-    Component.onCompleted: {
-        playEntrance();
-    }
+    required property WlSessionLock lock
+    property int thumbnailVersion: 0
+    readonly property bool useVideoWallpaper: configLoaded ? configUseVideo : false
+    readonly property string wallpaperPath: useVideoWallpaper ? (configLoaded ? configVideoPath : "/etc/vast-shell/wallpaper.mp4") : (configLoaded ? configStaticPath : "/etc/vast-shell/wallpaper.png")
 
     function playEntrance() {
         background.opacity = 0;
         background.blurRadius = 0;
         entranceSequence.restart();
     }
-
     function playExit() {
         exitSequence.start();
     }
-    function resetEffectiveWallpaper() {
-        if (!root.useVideoWallpaper) {
-            root.effectiveIsVideo = false;
-            root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
-            return;
-        }
-        root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
-        root.effectiveIsVideo = true;
-        root.refreshVideoColorSource();
-    }
-
     function refreshVideoColorSource() {
         if (!root.useVideoWallpaper)
             return;
@@ -109,62 +73,112 @@ WlSessionLockSurface {
             }
         });
     }
+    function resetEffectiveWallpaper() {
+        if (!root.useVideoWallpaper) {
+            root.effectiveIsVideo = false;
+            root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
+            return;
+        }
+        root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
+        root.effectiveIsVideo = true;
+        root.refreshVideoColorSource();
+    }
 
+    color: "transparent"
+
+    Component.onCompleted: {
+        playEntrance();
+    }
+
+    FileView {
+        path: "/etc/vast-shell/greeter.json"
+        watchChanges: true
+
+        onFileChanged: reload()
+        onLoaded: {
+            try {
+                const config = GreeterWallpaper.loadConfig(text());
+                root.configUseVideo = config.useVideoWallpaper;
+                root.configStaticPath = config.staticWallpaper;
+                root.configVideoPath = config.videoWallpaper;
+                root.configLoaded = true;
+                root.resetEffectiveWallpaper();
+            } catch (error) {}
+        }
+    }
     Connections {
-        target: root.lock
-
         function onLockedChanged() {
             if (root.lock.locked)
                 root.playEntrance();
         }
+
+        target: root.lock
     }
-
     Connections {
-        target: root.auth
-
         function onLaunchReady() {
             root.playExit();
         }
-    }
 
+        target: root.auth
+    }
     ColorMaterial {
-        source: root.colorSource
         darkMode: Configs.colors.isDarkMode
         scheme: Colours.schemeEnum(Configs.colors.scheme)
+        source: root.colorSource
+
         onColorsChanged: {
             if (ready)
                 root.dynColors = colors;
         }
     }
-
     Item {
         id: background
 
+        property real blurRadius: 0
+
         anchors.fill: parent
+        layer.enabled: true
         opacity: 0
         scale: 1.0
         transformOrigin: Item.Center
-        property real blurRadius: 0
-        layer.enabled: true
+
+        Behavior on blurRadius {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
         layer.effect: FastBlur {
-            source: background
             radius: background.blurRadius
+            source: background
             transparentBorder: false
+        }
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
+        }
+        Behavior on scale {
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            }
         }
 
         Image {
             anchors.fill: parent
-            source: root.effectiveIsVideo ? "" : root.effectiveWallpaper
-            fillMode: Image.PreserveAspectCrop
             asynchronous: true
             cache: true
+            fillMode: Image.PreserveAspectCrop
+            source: root.effectiveIsVideo ? "" : root.effectiveWallpaper
         }
-
         Image {
             id: staticProbe
 
             source: GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath)
             visible: false
+
             onStatusChanged: {
                 if (status === Image.Ready)
                     root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
@@ -173,13 +187,13 @@ WlSessionLockSurface {
                 root.effectiveIsVideo = false;
             }
         }
-
         MediaPlayer {
             id: videoPlayer
 
-            source: root.useVideoWallpaper ? GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath) : ""
             loops: MediaPlayer.Infinite
+            source: root.useVideoWallpaper ? GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath) : ""
             videoOutput: videoOutput
+
             onMediaStatusChanged: {
                 if (!root.useVideoWallpaper)
                     return;
@@ -193,7 +207,6 @@ WlSessionLockSurface {
                 }
             }
         }
-
         VideoOutput {
             id: videoOutput
 
@@ -201,56 +214,32 @@ WlSessionLockSurface {
             fillMode: VideoOutput.PreserveAspectCrop
             visible: root.useVideoWallpaper
         }
-
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on blurRadius {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-
-        Behavior on scale {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
     }
-
     Column {
         id: clockColumn
 
-        anchors {
-            top: parent.top
-            topMargin: Appearance.margin.large * 4
-            horizontalCenter: parent.horizontalCenter
-        }
         spacing: Appearance.spacing.smaller
 
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            topMargin: Appearance.margin.large * 4
+        }
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatDateTime(Time.date, "HH:mm")
             color: root.dynColors.onBackground
             font.pixelSize: 72
             font.weight: Font.Medium
+            text: Qt.formatDateTime(Time.date, "HH:mm")
         }
-
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatDateTime(Time.date, "dddd, d MMMM")
             color: root.dynColors.onSurfaceVariant
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.Medium
+            text: Qt.formatDateTime(Time.date, "dddd, d MMMM")
         }
     }
-
     UserCard {
         id: userCard
 
@@ -259,9 +248,12 @@ WlSessionLockSurface {
         colors: root.dynColors
         opacity: 0
     }
-
     Item {
         id: powerControls
+
+        implicitHeight: powerRow.implicitHeight
+        implicitWidth: powerRow.implicitWidth
+        opacity: 0
 
         anchors {
             bottom: parent.bottom
@@ -269,31 +261,26 @@ WlSessionLockSurface {
             right: parent.right
             rightMargin: Appearance.margin.large * 2
         }
-        implicitWidth: powerRow.implicitWidth
-        implicitHeight: powerRow.implicitHeight
-        opacity: 0
-
         RowLayout {
             id: powerRow
 
             spacing: Appearance.spacing.small
 
             FloatingButton {
-                size: "regular"
-                icon.name: "restart_alt"
-                icon.color: root.dynColors.onSurface
                 color: Qt.alpha(root.dynColors.surfaceContainerHighest, 0.8)
+                icon.color: root.dynColors.onSurface
+                icon.name: "restart_alt"
+                size: "regular"
 
                 onClicked: Quickshell.execDetached({
                     command: ["systemctl", "reboot"]
                 })
             }
-
             FloatingButton {
-                size: "regular"
-                icon.name: "power_settings_new"
-                icon.color: root.dynColors.onSurface
                 color: Qt.alpha(root.dynColors.surfaceContainerHighest, 0.8)
+                icon.color: root.dynColors.onSurface
+                icon.name: "power_settings_new"
+                size: "regular"
 
                 onClicked: Quickshell.execDetached({
                     command: ["systemctl", "poweroff"]
@@ -301,88 +288,78 @@ WlSessionLockSurface {
             }
         }
     }
-
     ParallelAnimation {
         id: entranceSequence
 
         NAnim {
-            target: background
-            property: "opacity"
-            to: 1
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-
-        NAnim {
+            property: "opacity"
             target: background
+            to: 1
+        }
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             property: "blurRadius"
+            target: background
             to: 12
+        }
+        NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-
-        NAnim {
+            property: "opacity"
             target: powerControls
-            property: "opacity"
             to: 1
-            duration: Appearance.animations.durations.expressiveDefaultSpatial
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
-
         NAnim {
-            target: userCard
-            property: "opacity"
-            to: 1.0
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            property: "opacity"
+            target: userCard
+            to: 1.0
         }
     }
-
     SequentialAnimation {
         id: exitSequence
 
         ParallelAnimation {
             NAnim {
-                target: background
-                property: "opacity"
-                to: 0
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: background
+                to: 0
+            }
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "blurRadius"
-                to: 0
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
                 target: background
+                to: 0
+            }
+            NAnim {
+                duration: Appearance.animations.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "scale"
+                target: background
                 to: 1.15
+            }
+            NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-
-            NAnim {
+                property: "opacity"
                 target: powerControls
-                property: "opacity"
                 to: 0
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
-
             NAnim {
-                target: userCard
-                property: "opacity"
-                to: 0
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                property: "opacity"
+                target: userCard
+                to: 0
             }
         }
-
         ScriptAction {
             script: root.lock.locked = false
         }

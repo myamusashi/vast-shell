@@ -14,18 +14,10 @@ ColumnLayout {
     id: root
 
     property date currentDate: new Date()
-    property int currentYear: currentDate.getFullYear()
     property int currentMonth: currentDate.getMonth()
+    property int currentYear: currentDate.getFullYear()
     property var monthNames: buildMonthNames()
     property bool showYearMonthPicker: false
-
-    spacing: Appearance.spacing.normal
-
-    Component.onCompleted: Qt.callLater(() => {
-        monthNames = buildMonthNames();
-        if (Configs.generals.showHolidays)
-            HolidayModel.ensureYear(currentYear);
-    })
 
     function buildMonthNames(): var {
         const locale = Qt.locale();
@@ -34,6 +26,13 @@ ColumnLayout {
         }, (_, i) => locale.monthName(i));
     }
 
+    spacing: Appearance.spacing.normal
+
+    Component.onCompleted: Qt.callLater(() => {
+        monthNames = buildMonthNames();
+        if (Configs.generals.showHolidays)
+            HolidayModel.ensureYear(currentYear);
+    })
     onCurrentYearChanged: {
         if (Configs.generals.showHolidays)
             HolidayModel.ensureYear(currentYear);
@@ -43,27 +42,27 @@ ColumnLayout {
         id: dateTimer
 
         interval: 60000
-        running: true
         repeat: true
+        running: true
         triggeredOnStart: false
+
         onTriggered: {
             const now = new Date();
             if (now.getDate() !== root.currentDate.getDate())
                 root.currentDate = now;
         }
     }
-
     Connections {
-        target: Configs.generals
         function onShowHolidaysChanged() {
             if (Configs.generals.showHolidays)
                 HolidayModel.ensureYear(root.currentYear);
         }
-    }
 
+        target: Configs.generals
+    }
     Item {
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.fillWidth: true
 
         ColumnLayout {
             id: calendarContent
@@ -74,17 +73,10 @@ ColumnLayout {
             Header {
                 id: calendarHeader
 
-                monthNames: root.monthNames
                 currentMonth: root.currentMonth
                 currentYear: root.currentYear
-                onPrevClicked: {
-                    monthGrid.closePopover();
-                    root.currentMonth = root.currentMonth - 1;
-                    if (root.currentMonth < 0) {
-                        root.currentMonth = 11;
-                        root.currentYear = root.currentYear - 1;
-                    }
-                }
+                monthNames: root.monthNames
+
                 onNextClicked: {
                     monthGrid.closePopover();
                     root.currentMonth = root.currentMonth + 1;
@@ -93,12 +85,19 @@ ColumnLayout {
                         root.currentYear = root.currentYear + 1;
                     }
                 }
+                onPrevClicked: {
+                    monthGrid.closePopover();
+                    root.currentMonth = root.currentMonth - 1;
+                    if (root.currentMonth < 0) {
+                        root.currentMonth = 11;
+                        root.currentYear = root.currentYear - 1;
+                    }
+                }
                 onTitleClicked: {
                     monthGrid.closePopover();
                     root.showYearMonthPicker = !root.showYearMonthPicker;
                 }
             }
-
             CustomDayOfWeekRow {
                 id: dayOfWeekRow
 
@@ -110,12 +109,11 @@ ColumnLayout {
 
                     required property var modelData
 
-                    width: dayOfWeekRow.cellWidth
                     height: dayOfWeekRow.height
+                    width: dayOfWeekRow.cellWidth
 
                     StyledText {
                         anchors.centerIn: parent
-                        text: dayOfWeekItem.modelData.shortName
                         color: {
                             if (dayOfWeekItem.modelData.shortName === "Sun" || dayOfWeekItem.modelData.shortName === "Sat")
                                 return Colours.m3Colors.m3Error;
@@ -124,13 +122,13 @@ ColumnLayout {
                         font.pixelSize: Appearance.fonts.size.small * 1.2
                         font.weight: 600
                         horizontalAlignment: Text.AlignHCenter
+                        text: dayOfWeekItem.modelData.shortName
                     }
                 }
             }
-
             Item {
-                Layout.fillWidth: true
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 clip: false
 
                 CustomMonthGrid {
@@ -142,28 +140,27 @@ ColumnLayout {
                     year: root.currentYear
 
                     delegate: DayCell {
-                        currentMonth: root.currentMonth
-                        cellWidth: monthGrid.cellWidth
                         cellHeight: monthGrid.cellHeight
+                        cellWidth: monthGrid.cellWidth
+                        currentMonth: root.currentMonth
                         openPopoverDate: monthGrid.openPopoverDate
-                        onOpenPopoverRequested: date => monthGrid.openPopoverDate = date
-                        onClosePopoverRequested: monthGrid.closePopover()
-                    }
 
+                        onClosePopoverRequested: monthGrid.closePopover()
+                        onOpenPopoverRequested: date => monthGrid.openPopoverDate = date
+                    }
                     popoverDelegate: StyledRect {
                         id: popover
 
                         property var cellDate
-
                         readonly property var holidayEntries: cellDate ? HolidayModel.getHolidaysForDate(cellDate) : []
                         readonly property string holidayName: cellDate ? HolidayModel.nameForDate(cellDate) : ""
 
-                        implicitHeight: popoverLabel.implicitHeight + 12
-                        radius: Appearance.rounding.small
-                        color: Colours.m3Colors.m3SurfaceContainerHigh
-                        clip: true
                         border.color: Qt.alpha(Colours.m3Colors.m3Primary, 0.3)
                         border.width: 1
+                        clip: true
+                        color: Colours.m3Colors.m3SurfaceContainerHigh
+                        implicitHeight: popoverLabel.implicitHeight + 12
+                        radius: Appearance.rounding.small
 
                         Behavior on implicitHeight {
                             NAnim {
@@ -175,35 +172,34 @@ ColumnLayout {
                         StyledText {
                             id: popoverLabel
 
-                            anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
-                            anchors.right: parent.right
                             anchors.margins: 8
-                            text: popover.holidayName
-                            font.pixelSize: Appearance.fonts.size.medium
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
                             color: Colours.m3Colors.m3OnSurface
-                            horizontalAlignment: Text.AlignHCenter
                             elide: Text.ElideRight
+                            font.pixelSize: Appearance.fonts.size.medium
+                            horizontalAlignment: Text.AlignHCenter
                             maximumLineCount: 2
+                            text: popover.holidayName
                             wrapMode: Text.WordWrap
                         }
-
                         MArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
+
                             onClicked: monthGrid.closePopover()
                         }
                     }
                 }
             }
         }
-
         YearMonthPicker {
             anchors.fill: parent
+            currentMonth: root.currentMonth
+            currentYear: root.currentYear
             visible: root.showYearMonthPicker
             z: 10
-            currentYear: root.currentYear
-            currentMonth: root.currentMonth
 
             background: StyledRect {
                 color: GlobalStates.drawerColors

@@ -13,227 +13,81 @@ import "../captureUtils.js" as Utils
 Singleton {
     id: root
 
-    readonly property string videoDir: Quickshell.env("HOME") + "/Videos/Shell"
-    readonly property string thumbnailDir: Quickshell.env("HOME") + "/.cache/thumbnails/normal"
-
-    readonly property bool connectedAudioDevice: AudioDevicesWatcher.connected
-    readonly property int audioDevicesCount: AudioDevicesWatcher.devices.count
-
-    property bool isRecording: false
-    property string currentOutputFile: ""
-    property int recordingPid: -1
-    property int recordingElapsedSeconds: 0
-
+    property string audioCodec: ""
     property string audioDevice: ""
     property string audioDeviceDescription: ""
-    property string videoCodec: ""
-    property string audioCodec: ""
-    property string driDevice: ""
-    property string encodeResolution: ""
-    property string lowPower: "auto"
+    readonly property int audioDevicesCount: AudioDevicesWatcher.devices.count
     property string bitrate: "5 MB"
-    property int maxFps: 60
-    property bool historyMode: false
-    property bool includeAudio: false
-    property bool showCursor: true
-
-    property var deviceCache: []
+    readonly property bool connectedAudioDevice: AudioDevicesWatcher.connected
+    property string currentOutputFile: ""
     property var defaultSink: sinks()[0] ?? null
     property var defaultSource: sources()[0] ?? null
+    property var deviceCache: []
+    property string driDevice: ""
+    property string encodeResolution: ""
+    property bool historyMode: false
+    property bool includeAudio: false
+    property bool isRecording: false
+    property bool loadingFromConfig: false
+    property string lowPower: "auto"
+    property int maxFps: 60
+    readonly property string pidFile: "/tmp/wl-screenrec.pid"
+    property int recordingElapsedSeconds: 0
+    property int recordingPid: -1
+    property bool showCursor: true
+    readonly property string thumbnailDir: Quickshell.env("HOME") + "/.cache/thumbnails/normal"
+    property string videoCodec: ""
+    readonly property string videoDir: Quickshell.env("HOME") + "/Videos/Shell"
+    readonly property string videoStateFile: "/tmp/wl-screenrec.video"
 
     signal devicesChanged
 
-    readonly property string pidFile: "/tmp/wl-screenrec.pid"
-    readonly property string videoStateFile: "/tmp/wl-screenrec.video"
-
-    onAudioDeviceChanged: {}
-    onAudioDeviceDescriptionChanged: {}
-    onVideoCodecChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.videoCodec = videoCodec;
+    function all() {
+        return deviceCache;
     }
-    onAudioCodecChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.audioCodec = audioCodec;
+    function byId(id) {
+        return deviceCache.find(d => d.id === id) ?? null;
     }
-    onDriDeviceChanged: {}
-    onEncodeResolutionChanged: {}
-    onLowPowerChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.lowPower = lowPower;
+    function byName(name) {
+        return deviceCache.find(d => d.name === name) ?? null;
     }
-    onBitrateChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.bitrate = bitrate;
+    function checkActiveRecording() {
+        checkProcess.running = true;
     }
-    onMaxFpsChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.maxFps = maxFps;
+    function cleanupFiles() {
+        removePidFile.running = true;
     }
-    onHistoryModeChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.historyMode = historyMode;
+    function createThumbnail(videoPath, outputDir) {
+        ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, outputDir), null);
     }
-    onIncludeAudioChanged: {}
-    onShowCursorChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.showCursor = showCursor;
-    }
-    property bool loadingFromConfig: false
-    onIsRecordingChanged: {
-        if (isRecording) {
-            recordingElapsedSeconds = 0;
-            elapsedTimer.start();
-        } else {
-            elapsedTimer.stop();
-        }
-    }
-    onCurrentOutputFileChanged: {}
-
-    Connections {
-        target: AudioDevicesWatcher
-
-        function onDevicesChanged() {
-            root.rebuild();
-        }
-        function onConnectedChanged() {
-            root.rebuild();
-        }
-    }
-
-    Process {
-        id: recordingProcess
-
-        stdinEnabled: false
-
-        onStarted: {
-            const pid = Number(processId);
-            if (pid > 0) {
-                root.recordingPid = pid;
-                root.isRecording = true;
-                writePidFile.running = true;
-            }
-        }
-        // qmllint disable
-        onExited: (code, status) => {
-            // qmllint enable
-            root.recordingPid = -1;
-            if (root.isRecording) {
-                root.isRecording = false;
-                const vid = root.currentOutputFile;
-                root.currentOutputFile = "";
-                killTimer.running = false;
-                root.cleanupFiles();
-                root.onRecordingStopped(vid);
-            }
-        }
-    }
-
-    Process {
-        id: writePidFile
-
-        command: ["sh", "-c", "echo " + root.recordingPid + " > " + root.pidFile + "; echo '" + root.currentOutputFile.replace(/'/g, "'\\''") + "' > " + root.videoStateFile]
-        running: false
-    }
-
-    Timer {
-        id: elapsedTimer
-
-        interval: 1000
-        repeat: true
-        onTriggered: root.recordingElapsedSeconds++
-    }
-
-    Process {
-        id: removePidFile
-
-        command: ["rm", "-f", root.pidFile, root.videoStateFile]
-        running: false
-    }
-
-    Process {
-        id: checkProcess
-
-        running: false
-        command: ["sh", "-c", "cat /tmp/wl-screenrec.pid 2>/dev/null; echo '---'; cat /tmp/wl-screenrec.video 2>/dev/null"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const out = text;
-                const parts = out.split("---");
-                const pidStr = (parts[0] || "").trim();
-                const videoStr = (parts[1] || "").trim();
-                const pid = parseInt(pidStr, 10);
-
-                if (pid > 0 && videoStr) {
-                    verifyProcess.targetPid = pid;
-                    verifyProcess.targetVideo = videoStr;
-                    verifyProcess.command = ["kill", "-s", "0", String(pid)];
-                    verifyProcess.running = true;
-                } else {
-                    root.cleanupFiles();
+    function gotoLink(file, thumb, showNotification) {
+        if (showNotification)
+            CaptureNotify.sendNotification("Capture Saved", file, "normal", thumb ?? "", "screengrab", [
+                {
+                    "id": "default",
+                    "label": qsTr("Open")
                 }
-            }
-        }
+            ]);
+        else
+            Quickshell.execDetached({
+                command: ["xdg-open", file]
+            });
     }
-
-    Process {
-        id: verifyProcess
-
-        property int targetPid: -1
-        property string targetVideo: ""
-        running: false
-
-        // qmllint disable
-        onExited: (code, status) => {
-            // qmllint enable
-            const pid = verifyProcess.targetPid;
-            const video = verifyProcess.targetVideo;
-            verifyProcess.targetPid = -1;
-            verifyProcess.targetVideo = "";
-
-            if (pid > 0 && video) {
-                if (code === 0) {
-                    root.recordingPid = pid;
-                    root.isRecording = true;
-                    root.currentOutputFile = video;
-                    CaptureNotify.sendNotification("Recording Restored", "Adopted active recording from previous session.", "normal", "", "screenrecord");
-                } else {
-                    root.cleanupFiles();
-                }
-            }
-        }
+    function inputs() {
+        return deviceCache.filter(d => d.mediaClass === "source");
     }
-
-    Timer {
-        id: killTimer
-
-        onTriggered: {
-            if (root.isRecording && root.recordingPid > 0)
-                recordingProcess.signal(9);
-        }
+    function monitors() {
+        return deviceCache.filter(d => d.isMonitor);
     }
-
-    Component.onCompleted: {
-        Quickshell.execDetached({
-            command: ["mkdir", "-p", videoDir, thumbnailDir]
+    function onRecordingStopped(videoPath) {
+        ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, thumbnailDir), (vp, tp) => {
+            if (tp)
+                CaptureNotify.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", tp, "screenrecord");
+            else
+                CaptureNotify.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", "video-x-generic", "screenrecord");
+            gotoLink(vp, tp, false);
         });
-        checkActiveRecording();
-        isRecordingChanged();
-        currentOutputFileChanged();
-        loadingFromConfig = true;
-        const cfg = Configs.captureScreenVideo;
-        if (cfg) {
-            maxFps = cfg.maxFps;
-            bitrate = cfg.bitrate;
-            videoCodec = cfg.videoCodec;
-            audioCodec = cfg.audioCodec;
-            lowPower = cfg.lowPower;
-            showCursor = cfg.showCursor;
-            historyMode = cfg.historyMode;
-        }
-        loadingFromConfig = false;
     }
-
     function rebuild() {
         const m = AudioDevicesWatcher.devices;
         const arr = [];
@@ -242,39 +96,32 @@ Singleton {
         deviceCache = arr;
         devicesChanged();
     }
-
-    function all() {
-        return deviceCache;
+    function recordSelection(geometry) {
+        if (isRecording) {
+            stopRecording();
+            return;
+        }
+        startRecording(geometry, "");
     }
-
+    function recordToplevel(appId) {
+        if (isRecording) {
+            stopRecording();
+            return;
+        }
+        startRecordingToplevel(appId);
+    }
+    function saveHistory() {
+        if (isRecording && recordingPid > 0) {
+            recordingProcess.signal(10);
+            CaptureNotify.sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
+        }
+    }
     function sinks() {
         return deviceCache.filter(d => d.mediaClass === "sink" && !d.isMonitor);
     }
     function sources() {
         return deviceCache.filter(d => d.mediaClass === "source" && !d.isMonitor);
     }
-    function monitors() {
-        return deviceCache.filter(d => d.isMonitor);
-    }
-    function inputs() {
-        return deviceCache.filter(d => d.mediaClass === "source");
-    }
-
-    function byName(name) {
-        return deviceCache.find(d => d.name === name) ?? null;
-    }
-    function byId(id) {
-        return deviceCache.find(d => d.id === id) ?? null;
-    }
-
-    function checkActiveRecording() {
-        checkProcess.running = true;
-    }
-
-    function cleanupFiles() {
-        removePidFile.running = true;
-    }
-
     function startRecording(geometry, output) {
         if (isRecording) {
             CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
@@ -304,7 +151,6 @@ Singleton {
         recordingProcess.command = args;
         recordingProcess.running = true;
     }
-
     function startRecordingToplevel(appId) {
         if (isRecording) {
             CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
@@ -334,23 +180,6 @@ Singleton {
         recordingProcess.command = args;
         recordingProcess.running = true;
     }
-
-    function recordSelection(geometry) {
-        if (isRecording) {
-            stopRecording();
-            return;
-        }
-        startRecording(geometry, "");
-    }
-
-    function recordToplevel(appId) {
-        if (isRecording) {
-            stopRecording();
-            return;
-        }
-        startRecordingToplevel(appId);
-    }
-
     function stopRecording() {
         if (!isRecording || recordingPid <= 0) {
             CaptureNotify.sendNotification("Recording Failed", "No active recording found.", "critical", "dialog-error", "Screen Record");
@@ -364,45 +193,193 @@ Singleton {
         killTimer.running = true;
     }
 
-    function saveHistory() {
-        if (isRecording && recordingPid > 0) {
-            recordingProcess.signal(10);
-            CaptureNotify.sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
+    Component.onCompleted: {
+        Quickshell.execDetached({
+            command: ["mkdir", "-p", videoDir, thumbnailDir]
+        });
+        checkActiveRecording();
+        isRecordingChanged();
+        currentOutputFileChanged();
+        loadingFromConfig = true;
+        const cfg = Configs.captureScreenVideo;
+        if (cfg) {
+            maxFps = cfg.maxFps;
+            bitrate = cfg.bitrate;
+            videoCodec = cfg.videoCodec;
+            audioCodec = cfg.audioCodec;
+            lowPower = cfg.lowPower;
+            showCursor = cfg.showCursor;
+            historyMode = cfg.historyMode;
+        }
+        loadingFromConfig = false;
+    }
+    onAudioCodecChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.audioCodec = audioCodec;
+    }
+    onAudioDeviceChanged: {}
+    onAudioDeviceDescriptionChanged: {}
+    onBitrateChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.bitrate = bitrate;
+    }
+    onCurrentOutputFileChanged: {}
+    onDriDeviceChanged: {}
+    onEncodeResolutionChanged: {}
+    onHistoryModeChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.historyMode = historyMode;
+    }
+    onIncludeAudioChanged: {}
+    onIsRecordingChanged: {
+        if (isRecording) {
+            recordingElapsedSeconds = 0;
+            elapsedTimer.start();
+        } else {
+            elapsedTimer.stop();
         }
     }
-
-    function createThumbnail(videoPath, outputDir) {
-        ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, outputDir), null);
+    onLowPowerChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.lowPower = lowPower;
+    }
+    onMaxFpsChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.maxFps = maxFps;
+    }
+    onShowCursorChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.showCursor = showCursor;
+    }
+    onVideoCodecChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.videoCodec = videoCodec;
     }
 
-    function onRecordingStopped(videoPath) {
-        ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, thumbnailDir), (vp, tp) => {
-            if (tp)
-                CaptureNotify.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", tp, "screenrecord");
-            else
-                CaptureNotify.sendNotification("Recording Stopped", "Video saved to " + vp, "normal", "video-x-generic", "screenrecord");
-            gotoLink(vp, tp, false);
-        });
-    }
+    Connections {
+        function onConnectedChanged() {
+            root.rebuild();
+        }
+        function onDevicesChanged() {
+            root.rebuild();
+        }
 
-    function gotoLink(file, thumb, showNotification) {
-        if (showNotification)
-            CaptureNotify.sendNotification("Capture Saved", file, "normal", thumb ?? "", "screengrab", [
-                {
-                    "id": "default",
-                    "label": qsTr("Open")
+        target: AudioDevicesWatcher
+    }
+    Process {
+        id: recordingProcess
+
+        stdinEnabled: false
+
+        // qmllint disable
+        onExited: (code, status) => {
+            // qmllint enable
+            root.recordingPid = -1;
+            if (root.isRecording) {
+                root.isRecording = false;
+                const vid = root.currentOutputFile;
+                root.currentOutputFile = "";
+                killTimer.running = false;
+                root.cleanupFiles();
+                root.onRecordingStopped(vid);
+            }
+        }
+        onStarted: {
+            const pid = Number(processId);
+            if (pid > 0) {
+                root.recordingPid = pid;
+                root.isRecording = true;
+                writePidFile.running = true;
+            }
+        }
+    }
+    Process {
+        id: writePidFile
+
+        command: ["sh", "-c", "echo " + root.recordingPid + " > " + root.pidFile + "; echo '" + root.currentOutputFile.replace(/'/g, "'\\''") + "' > " + root.videoStateFile]
+        running: false
+    }
+    Timer {
+        id: elapsedTimer
+
+        interval: 1000
+        repeat: true
+
+        onTriggered: root.recordingElapsedSeconds++
+    }
+    Process {
+        id: removePidFile
+
+        command: ["rm", "-f", root.pidFile, root.videoStateFile]
+        running: false
+    }
+    Process {
+        id: checkProcess
+
+        command: ["sh", "-c", "cat /tmp/wl-screenrec.pid 2>/dev/null; echo '---'; cat /tmp/wl-screenrec.video 2>/dev/null"]
+        running: false
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const out = text;
+                const parts = out.split("---");
+                const pidStr = (parts[0] || "").trim();
+                const videoStr = (parts[1] || "").trim();
+                const pid = parseInt(pidStr, 10);
+
+                if (pid > 0 && videoStr) {
+                    verifyProcess.targetPid = pid;
+                    verifyProcess.targetVideo = videoStr;
+                    verifyProcess.command = ["kill", "-s", "0", String(pid)];
+                    verifyProcess.running = true;
+                } else {
+                    root.cleanupFiles();
                 }
-            ]);
-        else
-            Quickshell.execDetached({
-                command: ["xdg-open", file]
-            });
+            }
+        }
     }
+    Process {
+        id: verifyProcess
 
+        property int targetPid: -1
+        property string targetVideo: ""
+
+        running: false
+
+        // qmllint disable
+        onExited: (code, status) => {
+            // qmllint enable
+            const pid = verifyProcess.targetPid;
+            const video = verifyProcess.targetVideo;
+            verifyProcess.targetPid = -1;
+            verifyProcess.targetVideo = "";
+
+            if (pid > 0 && video) {
+                if (code === 0) {
+                    root.recordingPid = pid;
+                    root.isRecording = true;
+                    root.currentOutputFile = video;
+                    CaptureNotify.sendNotification("Recording Restored", "Adopted active recording from previous session.", "normal", "", "screenrecord");
+                } else {
+                    root.cleanupFiles();
+                }
+            }
+        }
+    }
+    Timer {
+        id: killTimer
+
+        onTriggered: {
+            if (root.isRecording && root.recordingPid > 0)
+                recordingProcess.signal(9);
+        }
+    }
     IpcHandler {
-        target: "captureScreenVideo"
         function start(): void {
             CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
+        }
+        function status(): bool {
+            return CaptureScreenVideo.isRecording;
         }
         function stop(): void {
             CaptureScreenVideo.stopRecording();
@@ -410,8 +387,7 @@ Singleton {
         function toggle(): void {
             CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
         }
-        function status(): bool {
-            return CaptureScreenVideo.isRecording;
-        }
+
+        target: "captureScreenVideo"
     }
 }

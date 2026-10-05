@@ -7,24 +7,22 @@ import qs.Services
 Item {
     id: root
 
-    property bool status: false
     property bool contained: true
-    property color containerColor: Colours.m3Colors.m3PrimaryContainer
-    property color indicatorColor: Colours.m3Colors.m3Primary
     property color containedIndicatorColor: Colours.m3Colors.m3OnPrimaryContainer
-
-    property real stiffness: 200
+    property color containerColor: Colours.m3Colors.m3PrimaryContainer
     property real dampingRatio: 0.6
-    property real visibilityThreshold: 0.1
-    property real morphInterval: 650
-    property real rotationStep: 90
+    property real globalRotation: 0
     property real globalRotationDuration: 4666
-
+    property color indicatorColor: Colours.m3Colors.m3Primary
     readonly property real indicatorScale: 38 / 48
-
-    readonly property var shapeSequence: [MaterialShape.SoftBurst, MaterialShape.Cookie9Sided, MaterialShape.Pentagon, MaterialShape.Pill, MaterialShape.Sunny, MaterialShape.Cookie4Sided, MaterialShape.Oval]
+    property real lastFrameMs: 0
+    property real morphInterval: 650
+    property real morphRotation: 0
+    property real rotationStart: 0
+    property real rotationStep: 90
+    property real rotationTarget: 90
     property int shapeIndex: 0
-
+    readonly property var shapeSequence: [MaterialShape.SoftBurst, MaterialShape.Cookie9Sided, MaterialShape.Pentagon, MaterialShape.Pill, MaterialShape.Sunny, MaterialShape.Cookie4Sided, MaterialShape.Oval]
     readonly property real springDuration: {
         const wn = Math.sqrt(stiffness);
         const r = -dampingRatio * wn;
@@ -37,11 +35,9 @@ Item {
         return wn * factor;
     }
     property bool springSettled: true
-    property real rotationStart: 0
-    property real rotationTarget: 90
-    property real morphRotation: 0
-    property real globalRotation: 0
-    property real lastFrameMs: 0
+    property bool status: false
+    property real stiffness: 200
+    property real visibilityThreshold: 0.1
 
     function spring(t: real): var {
         const wn = Math.sqrt(stiffness);
@@ -55,18 +51,18 @@ Item {
         return [pos, vel];
     }
 
-    implicitWidth: 48
-    implicitHeight: 48
-    width: implicitWidth
     height: implicitHeight
-    visible: status
-
+    implicitHeight: 48
+    implicitWidth: 48
     scale: status ? 1 : 0
+    visible: status
+    width: implicitWidth
+
     Behavior on scale {
         SpringAnimation {
-            spring: 5
             damping: 0.3
             epsilon: 0.1
+            spring: 5
         }
     }
 
@@ -77,31 +73,28 @@ Item {
 
     MaterialShape {
         anchors.fill: parent
-        shape: MaterialShape.Circle
         animationDuration: 0
         color: root.containerColor
+        shape: MaterialShape.Circle
         visible: root.contained
     }
-
     MaterialShape {
         id: indicator
 
         anchors.centerIn: parent
-        width: root.width * root.indicatorScale
-        height: root.height * root.indicatorScale
         color: root.contained ? root.containedIndicatorColor : root.indicatorColor
-
         fromShape: root.shapeSequence[root.shapeIndex]
-        toShape: root.shapeSequence[root.shapeIndex]
+        height: root.height * root.indicatorScale
         morphProgress: 1
+        toShape: root.shapeSequence[root.shapeIndex]
+        width: root.width * root.indicatorScale
     }
-
     ElapsedTimer {
         id: timer
     }
-
     FrameAnimation {
         running: root.status
+
         onTriggered: {
             const now = Date.now();
             const delta = root.lastFrameMs > 0 ? Math.min(now - root.lastFrameMs, 50) : 16.7;
@@ -126,14 +119,14 @@ Item {
             indicator.rotation = root.morphRotation + root.globalRotation;
         }
     }
-
     Timer {
         id: animTimer
 
         interval: root.morphInterval
-        running: root.status
         repeat: root.status
+        running: root.status
         triggeredOnStart: true
+
         onTriggered: {
             const nextIndex = (root.shapeIndex + 1) % root.shapeSequence.length;
 

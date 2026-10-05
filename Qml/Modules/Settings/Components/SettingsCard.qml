@@ -8,53 +8,53 @@ import qs.Services
 Rectangle {
     id: root
 
-    property alias title: titleText.text
     default property alias content: contentLayout.data
+    property alias title: titleText.text
+
+    function flash() {
+        flashSeq.restart();
+    }
 
     Layout.fillWidth: true
-    implicitHeight: layout.implicitHeight + (Appearance.margin.large * 2)
-
     color: Colours.m3Colors.m3SurfaceContainerLow
+    implicitHeight: layout.implicitHeight + (Appearance.margin.large * 2)
     radius: Appearance.rounding.large
 
     Elevation {
         anchors.fill: parent
-        z: -1
         level: 1
         radius: root.radius
+        z: -1
     }
-
     Rectangle {
         id: flashBorder
 
         anchors.fill: parent
-        radius: root.radius
-        color: "transparent"
         border.color: Colours.m3Colors.m3Primary
         border.width: 2
+        color: "transparent"
         opacity: 0
+        radius: root.radius
     }
-
     ColumnLayout {
         id: layout
 
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            margins: Appearance.margin.large
-        }
         spacing: Appearance.spacing.larger
 
+        anchors {
+            left: parent.left
+            margins: Appearance.margin.large
+            right: parent.right
+            top: parent.top
+        }
         StyledText {
             id: titleText
 
+            color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.DemiBold
-            color: Colours.m3Colors.m3Primary
             visible: text !== ""
         }
-
         ColumnLayout {
             id: contentLayout
 
@@ -62,30 +62,23 @@ Rectangle {
             spacing: Appearance.spacing.normal
         }
     }
-
-    function flash() {
-        flashSeq.restart();
-    }
-
     SequentialAnimation {
         id: flashSeq
 
         NumberAnimation {
-            target: flashBorder
-            property: "opacity"
-            to: 1
             duration: 150
+            property: "opacity"
+            target: flashBorder
+            to: 1
         }
-
         PauseAnimation {
             duration: 900
         }
-
         NumberAnimation {
-            target: flashBorder
-            property: "opacity"
-            to: 0
             duration: 450
+            property: "opacity"
+            target: flashBorder
+            to: 0
         }
     }
 }

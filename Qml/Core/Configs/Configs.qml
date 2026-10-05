@@ -12,32 +12,34 @@ Singleton {
     id: root
 
     property alias appearance: adapter.appearance
+    property alias audio: adapter.audio
     property alias bar: adapter.bar
+    property alias captureScreenVideo: adapter.captureScreenVideo
+    property alias clipboard: adapter.clipboard
     property alias colors: adapter.colors
     property alias generals: adapter.generals
-    property alias wallpaper: adapter.wallpaper
-    property alias weather: adapter.weather
+    property alias idle: adapter.idle
+    property alias kdeConnect: adapter.kdeConnect
     property alias language: adapter.language
     property alias mediaPlayer: adapter.mediaPlayer
-    property alias clipboard: adapter.clipboard
     property alias notification: adapter.notification
-    property alias kdeConnect: adapter.kdeConnect
-    property alias captureScreenVideo: adapter.captureScreenVideo
-    property alias audio: adapter.audio
-    property alias idle: adapter.idle
-    property alias search: adapter.search
     property alias privacy: adapter.privacy
+    property alias search: adapter.search
+    property alias wallpaper: adapter.wallpaper
+    property alias weather: adapter.weather
 
     Connections {
-        target: root.language
         function onLanguageChanged() {
             TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath);
         }
-    }
 
+        target: root.language
+    }
     FileView {
         path: Paths.shellDir + "/configurations.json"
         watchChanges: true
+
+        onAdapterUpdated: writeAdapter()
         onFileChanged: reload()
         onLoadFailed: err => {
             if (err !== FileViewError.FileNotFound) {
@@ -46,7 +48,6 @@ Singleton {
             }
         }
         onLoaded: TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath)
-        onAdapterUpdated: writeAdapter()
         onSaveFailed: err => {
             console.log("Failed to save config", FileViewError.toString(err));
             ToastService.show(qsTr("Failed to save config: %1").arg(FileViewError.toString(err)), qsTr("Configuration"), "configure", 3000);
@@ -55,22 +56,38 @@ Singleton {
         JsonAdapter { // qmllint disable
             id: adapter
 
-            property AppearanceConfig appearance: AppearanceConfig {}
-            property ColorSystemConfig colors: ColorSystemConfig {}
-            property ClipboardConfig clipboard: ClipboardConfig {}
-            property GeneralConfig generals: GeneralConfig {}
-            property WallpaperConfig wallpaper: WallpaperConfig {}
-            property WeatherConfig weather: WeatherConfig {}
-            property BarConfig bar: BarConfig {}
-            property NotificationConfig notification: NotificationConfig {}
-            property LocalizationConfig language: LocalizationConfig {}
-            property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {}
-            property KDEConnectConfig kdeConnect: KDEConnectConfig {}
-            property CaptureScreenVideoConfig captureScreenVideo: CaptureScreenVideoConfig {}
-            property AudioConfig audio: AudioConfig {}
-            property IdleConfig idle: IdleConfig {}
-            property SearchConfig search: SearchConfig {}
-            property PrivacyIndicatorConfig privacy: PrivacyIndicatorConfig {}
+            property AppearanceConfig appearance: AppearanceConfig {
+            }
+            property AudioConfig audio: AudioConfig {
+            }
+            property BarConfig bar: BarConfig {
+            }
+            property CaptureScreenVideoConfig captureScreenVideo: CaptureScreenVideoConfig {
+            }
+            property ClipboardConfig clipboard: ClipboardConfig {
+            }
+            property ColorSystemConfig colors: ColorSystemConfig {
+            }
+            property GeneralConfig generals: GeneralConfig {
+            }
+            property IdleConfig idle: IdleConfig {
+            }
+            property KDEConnectConfig kdeConnect: KDEConnectConfig {
+            }
+            property LocalizationConfig language: LocalizationConfig {
+            }
+            property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {
+            }
+            property NotificationConfig notification: NotificationConfig {
+            }
+            property PrivacyIndicatorConfig privacy: PrivacyIndicatorConfig {
+            }
+            property SearchConfig search: SearchConfig {
+            }
+            property WallpaperConfig wallpaper: WallpaperConfig {
+            }
+            property WeatherConfig weather: WeatherConfig {
+            }
         }
     }
 }

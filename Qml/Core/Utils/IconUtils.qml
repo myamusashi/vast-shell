@@ -10,6 +10,15 @@ Singleton {
 
     readonly property string fallbackSource: Quickshell.iconPath("image-missing")
 
+    function desktopId(node: PwNode): string {
+        const appId = node.properties["application.id"];
+        if (appId)
+            return appId;
+        const binary = node.properties["application.process.binary"];
+        if (binary)
+            return binary.split(".").pop();
+        return (node.name ?? "").split(".").pop();
+    }
     function guessIconPath(node: PwNode): string {
         if (!node)
             return root.fallbackSource;
@@ -18,7 +27,15 @@ Singleton {
             return root.iconSource(iconName);
         return root.iconForId(root.desktopId(node));
     }
-
+    function iconForId(desktopId: string): string {
+        if (!desktopId)
+            return root.fallbackSource;
+        if (["zen", "zen-twilight", "twilight"].includes(desktopId.toLowerCase())) {
+            const zenIcon = Quickshell.hasThemeIcon("zen-beta") ? "zen-beta" : "zen-twilight";
+            return root.iconSource(zenIcon);
+        }
+        return root.iconSource(DesktopEntries.heuristicLookup(desktopId)?.icon);
+    }
     function iconSource(value: string): string {
         if (!value)
             return root.fallbackSource;
@@ -39,25 +56,5 @@ Singleton {
             return `file://${value}`;
 
         return Quickshell.hasThemeIcon(value) ? Quickshell.iconPath(value) : root.fallbackSource;
-    }
-
-    function iconForId(desktopId: string): string {
-        if (!desktopId)
-            return root.fallbackSource;
-        if (["zen", "zen-twilight", "twilight"].includes(desktopId.toLowerCase())) {
-            const zenIcon = Quickshell.hasThemeIcon("zen-beta") ? "zen-beta" : "zen-twilight";
-            return root.iconSource(zenIcon);
-        }
-        return root.iconSource(DesktopEntries.heuristicLookup(desktopId)?.icon);
-    }
-
-    function desktopId(node: PwNode): string {
-        const appId = node.properties["application.id"];
-        if (appId)
-            return appId;
-        const binary = node.properties["application.process.binary"];
-        if (binary)
-            return binary.split(".").pop();
-        return (node.name ?? "").split(".").pop();
     }
 }

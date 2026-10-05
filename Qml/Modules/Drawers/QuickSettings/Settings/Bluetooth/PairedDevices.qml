@@ -12,13 +12,12 @@ ColumnLayout {
     visible: BluetoothServices.adapterEnabled
 
     StyledText {
-        text: qsTr("Paired devices")
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.normal
         font.weight: Font.DemiBold
+        text: qsTr("Paired devices")
         visible: pairedRepeater.count > 0
     }
-
     Repeater {
         id: pairedRepeater
 
@@ -29,16 +28,16 @@ ColumnLayout {
 
             device: modelData
             showForgetAction: true
-            onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
+
             onForgetAction: modelData.forget()
+            onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
         }
     }
-
     StyledText {
-        visible: pairedRepeater.count === 0
-        text: qsTr("No paired devices")
+        Layout.alignment: Qt.AlignHCenter
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.normal
-        Layout.alignment: Qt.AlignHCenter
+        text: qsTr("No paired devices")
+        visible: pairedRepeater.count === 0
     }
 }

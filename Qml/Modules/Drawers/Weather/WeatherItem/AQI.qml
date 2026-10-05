@@ -13,113 +13,111 @@ MaterialShape {
     id: canvas
 
     property int aqi: Weather.usAQI
+
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
 
     ColumnLayout {
-        anchors {
-            fill: parent
-            topMargin: 20
-            leftMargin: 20
-            rightMargin: 20
-            bottomMargin: 20
-        }
-
         spacing: Appearance.spacing.small
 
+        anchors {
+            bottomMargin: 20
+            fill: parent
+            leftMargin: 20
+            rightMargin: 20
+            topMargin: 20
+        }
         RowLayout {
             Layout.alignment: Qt.AlignLeft
 
             Icon {
-                type: Icon.Material
-                icon: "waves"
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large * 1.5
                 font.weight: Font.DemiBold
-                color: Colours.m3Colors.m3OnSurface
+                icon: "waves"
+                type: Icon.Material
             }
-
             StyledText {
-                text: qsTr("AQI")
+                color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.DemiBold
-                color: Colours.m3Colors.m3OnSurface
+                text: qsTr("AQI")
             }
         }
-
         StyledText {
             Layout.alignment: Qt.AlignRight
-            text: canvas.aqi
+            color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.extraLarge
             font.weight: Font.Bold
-            color: Colours.m3Colors.m3OnSurface
+            text: canvas.aqi
         }
-
         Item {
             Layout.fillHeight: true
         }
-
         Item {
+            Layout.bottomMargin: 8
             Layout.fillWidth: true
             Layout.preferredHeight: 3
-            Layout.bottomMargin: 8
 
             StyledRect {
-                implicitWidth: parent.width
                 implicitHeight: 5
+                implicitWidth: parent.width
                 radius: Appearance.rounding.small
+
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
+
                     GradientStop {
-                        position: 0.0
                         color: Colours.m3Colors.m3Green
+                        position: 0.0
                     }
                     GradientStop {
-                        position: 0.2
                         color: Colours.m3Colors.m3Yellow
+                        position: 0.2
                     }
                     GradientStop {
-                        position: 0.4
                         color: Colours.m3Colors.m3Orange
+                        position: 0.4
                     }
                     GradientStop {
-                        position: 0.6
                         color: Colours.m3Colors.m3Red
+                        position: 0.6
                     }
                     GradientStop {
-                        position: 0.8
                         color: Colours.m3Colors.m3Purple
+                        position: 0.8
                     }
                     GradientStop {
-                        position: 1.0
                         color: Colours.m3Colors.m3Maroon
+                        position: 1.0
                     }
                 }
             }
-
             StyledRect {
-                implicitWidth: 15
-                implicitHeight: 15
-                radius: implicitWidth / 2
-                color: Colours.m3Colors.m3Surface
-                border.width: 2
                 border.color: Colours.m3Colors.m3OnSurface
+                border.width: 2
+                color: Colours.m3Colors.m3Surface
+                implicitHeight: 15
+                implicitWidth: 15
+                radius: implicitWidth / 2
                 x: {
                     const position = AqiScale.fraction(canvas.aqi, AqiScale.usaBounds, 500);
                     return Math.min(Math.max(0, position * parent.width - width / 2), parent.width - width);
                 }
                 y: parent.height / 2 - height / 2
+
                 Behavior on x {
-                    NAnim {}
+                    NAnim {
+                    }
                 }
             }
         }
-
         StyledText {
             Layout.alignment: Qt.AlignRight
-            text: AqiScale.categoryFor(canvas.aqi).label
+            color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.Medium
-            color: Colours.m3Colors.m3OnSurface
+            text: AqiScale.categoryFor(canvas.aqi).label
         }
     }
 }

@@ -7,13 +7,6 @@ import qs.Services
 Item {
     id: root
 
-    readonly property real baseBarHeight: 1.5
-    property bool isActive: false
-    property real progress: 0.0
-
-    implicitWidth: 20
-    implicitHeight: 20
-
     readonly property list<var> barConfigs: [
         {
             minHeight: 2,
@@ -41,6 +34,9 @@ Item {
             phaseOffset: 0.00
         }
     ]
+    readonly property real baseBarHeight: 1.5
+    property bool isActive: false
+    property real progress: 0.0
 
     function barHeight(index: int): real {
         if (!isActive)
@@ -49,6 +45,20 @@ Item {
         const phase = (progress + barConfig.phaseOffset) % 1.0;
         const sinValue = Math.max(0, Math.sin(phase * Math.PI * 2));
         return barConfig.minHeight + (barConfig.maxHeight - barConfig.minHeight) * sinValue;
+    }
+
+    implicitHeight: 20
+    implicitWidth: 20
+
+    SequentialAnimation on progress {
+        loops: Animation.Infinite
+        running: root.isActive
+
+        NumberAnimation {
+            duration: 1000
+            from: 0.0
+            to: 1.0
+        }
     }
 
     Repeater {
@@ -76,15 +86,15 @@ Item {
         ]
 
         delegate: Rectangle {
-            required property var modelData
             property real currentBarHeight: root.barHeight(modelData.index)
+            required property var modelData
 
-            x: modelData.x - width / 2.1
-            y: 10 - currentBarHeight
-            width: 3
+            color: Colours.m3Colors.m3Primary
             height: currentBarHeight * 2
             radius: 3
-            color: Colours.m3Colors.m3Primary
+            width: 3
+            x: modelData.x - width / 2.1
+            y: 10 - currentBarHeight
 
             Behavior on currentBarHeight {
                 enabled: !root.isActive
@@ -94,17 +104,6 @@ Item {
                     easing.type: Easing.OutCubic
                 }
             }
-        }
-    }
-
-    SequentialAnimation on progress {
-        running: root.isActive
-        loops: Animation.Infinite
-
-        NumberAnimation {
-            from: 0.0
-            to: 1.0
-            duration: 1000
         }
     }
 }

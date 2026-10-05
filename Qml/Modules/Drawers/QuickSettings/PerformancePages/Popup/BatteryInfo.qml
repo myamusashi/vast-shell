@@ -9,6 +9,7 @@ import qs.Components.Base
 PopupWidget {
     icon: "battery_6_bar"
     text: qsTr("Battery")
+
     content: ColumnLayout {
         Repeater {
             model: [
@@ -54,22 +55,22 @@ PopupWidget {
             }).reduce(function (acc, val) {
                 return acc.concat(val);
             }, []))
+
             delegate: RowLayout {
                 required property var modelData
                 readonly property string text: modelData.text
                 readonly property string value: modelData.value
 
                 StyledText {
-                    text: parent.text + ": "
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
+                    text: parent.text + ": "
                 }
-
                 StyledText {
-                    text: parent.value
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
+                    text: parent.value
                 }
             }
         }

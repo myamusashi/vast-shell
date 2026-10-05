@@ -11,25 +11,24 @@ import qs.Components.Feedback
 ColumnLayout {
     id: root
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-    spacing: Appearance.spacing.normal
-
     function getWeatherCondition(condition) {
         return condition || "";
     }
+
+    Layout.fillHeight: true
+    Layout.fillWidth: true
+    spacing: Appearance.spacing.normal
 
     Progress {
         Layout.alignment: Qt.AlignTop
         Layout.fillWidth: true
         condition: Weather.isInitialLoading || Weather.isRefreshing
     }
-
     StyledRect {
         Layout.fillWidth: true
         Layout.preferredHeight: 40
-        radius: Appearance.rounding.full
         color: Colours.m3Colors.m3SurfaceContainer
+        radius: Appearance.rounding.full
 
         RowLayout {
             anchors.fill: parent
@@ -38,44 +37,42 @@ ColumnLayout {
             spacing: Appearance.spacing.small
 
             Icon {
-                type: Icon.Material
-                icon: "location_on"
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large
+                icon: "location_on"
+                type: Icon.Material
             }
             StyledText {
-                text: Weather.locationName + ", " + Weather.locationRegion + ", " + Weather.locationCountry
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large
+                text: Weather.locationName + ", " + Weather.locationRegion + ", " + Weather.locationCountry
             }
-
             Item {
                 Layout.fillWidth: true
             }
-
             FloatingButton {
                 Layout.alignment: Qt.AlignRight
-                implicitWidth: 32
-                implicitHeight: 32
                 backgroundRadius: Appearance.rounding.normal
-                icon.name: "refresh"
-                icon.color: Colours.m3Colors.m3OnSurface
-                icon.size: Appearance.fonts.size.large * 1.5
                 color: "transparent"
                 enabled: Weather.canRefresh
+                icon.color: Colours.m3Colors.m3OnSurface
+                icon.name: "refresh"
+                icon.size: Appearance.fonts.size.large * 1.5
+                implicitHeight: 32
+                implicitWidth: 32
+
                 onClicked: Weather.refresh()
             }
         }
     }
-
     RowLayout {
-        Layout.fillWidth: true
         Layout.fillHeight: true
+        Layout.fillWidth: true
         spacing: Appearance.spacing.normal
 
         ColumnLayout {
-            Layout.preferredWidth: 240
             Layout.fillHeight: true
+            Layout.preferredWidth: 240
             spacing: Appearance.spacing.normal
 
             RowLayout {
@@ -83,24 +80,21 @@ ColumnLayout {
                 spacing: Appearance.spacing.small
 
                 StyledText {
-                    text: Weather.temperature + "°"
                     color: Colours.m3Colors.m3Primary
                     font.pixelSize: Appearance.fonts.size.extraLarge * 1.5
                     font.weight: Font.DemiBold
+                    text: Weather.temperature + "°"
                 }
-
                 Icon {
-                    type: Icon.Weather
-                    icon: Weather.weatherIcon
-                    font.pixelSize: Appearance.fonts.size.extraLarge * 1.5
                     color: Colours.m3Colors.m3Primary
+                    font.pixelSize: Appearance.fonts.size.extraLarge * 1.5
+                    icon: Weather.weatherIcon
+                    type: Icon.Weather
                 }
             }
-
             Item {
                 Layout.fillHeight: true
             }
-
             RowLayout {
                 Layout.alignment: Qt.AlignBottom | Qt.AlignLeft
                 spacing: Appearance.spacing.normal
@@ -123,63 +117,57 @@ ColumnLayout {
                         spacing: Appearance.spacing.small
 
                         Icon {
-                            type: Icon.Material
-                            icon: parent.modelData.icon
                             color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.normal
+                            icon: parent.modelData.icon
+                            type: Icon.Material
                         }
-
                         StyledText {
-                            text: parent.modelData.text
                             color: Colours.m3Colors.m3OnSurface
                             font.pixelSize: Appearance.fonts.size.large
                             font.weight: Font.DemiBold
+                            text: parent.modelData.text
                         }
                     }
                 }
             }
         }
-
         ColumnLayout {
-            Layout.preferredWidth: 240
             Layout.fillHeight: true
+            Layout.preferredWidth: 240
             spacing: Appearance.spacing.small
 
             StyledText {
                 Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                text: root.getWeatherCondition(Weather.weatherCondition)
-                font.weight: Font.DemiBold
-                font.pixelSize: Appearance.fonts.size.medium
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.medium
+                font.weight: Font.DemiBold
+                text: root.getWeatherCondition(Weather.weatherCondition)
             }
-
             StyledText {
                 Layout.alignment: Qt.AlignTop | Qt.AlignRight
-                text: qsTr("Feels like %1°").arg(Weather.feelsLike)
-                font.pixelSize: Appearance.fonts.size.small
                 color: Colours.m3Colors.m3OnSurface
+                font.pixelSize: Appearance.fonts.size.small
+                text: qsTr("Feels like %1°").arg(Weather.feelsLike)
             }
-
             Item {
                 Layout.fillHeight: true
             }
-
             RowLayout {
                 Layout.alignment: Qt.AlignBottom | Qt.AlignRight
                 spacing: Appearance.spacing.small
 
                 Icon {
-                    type: Icon.Material
-                    icon: "update"
-                    font.pixelSize: Appearance.fonts.size.normal
                     color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    icon: "update"
+                    type: Icon.Material
                 }
-
                 StyledText {
-                    text: FormatTimeUtils.formatTimestampRelative(parseInt(Weather.lastUpdateWeather))
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
+                    text: FormatTimeUtils.formatTimestampRelative(parseInt(Weather.lastUpdateWeather))
                 }
             }
         }
