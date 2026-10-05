@@ -5,6 +5,8 @@ import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
 
+import qs.Core.Configs
+
 import "../"
 
 Item {
@@ -35,6 +37,8 @@ Item {
 
     Behavior on topThickness {
         NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
 

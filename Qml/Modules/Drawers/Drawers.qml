@@ -72,7 +72,7 @@ Variants {
                 required property Item modelData
 
                 intersection: Intersection.Combine
-                item: modelData
+                item: modelData.visible ? modelData : null
             }
         }
         ScreenBorder {
