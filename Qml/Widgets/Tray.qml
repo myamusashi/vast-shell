@@ -191,7 +191,7 @@ StyledRect {
             Connections {
                 function onActiveMenuChanged(): void {
                     if (root.activeMenu !== null)
-                        menuSurface.openMenu(root.activeMenu);
+                        Qt.callLater(() => menuSurface.openMenu(root.activeMenu)); // qmllint disable
                 }
 
                 target: root

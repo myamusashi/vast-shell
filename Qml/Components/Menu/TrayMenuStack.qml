@@ -10,7 +10,7 @@ import qs.Core.States
 Drawer {
     id: root
 
-    property real maxHeight: 480
+    property real maxHeight: 500
     property real menuWidth: 280
     property var openMenu: menu => Qt.callLater(() => {
             loader.item?.openMenu(menu); // qmllint disable
