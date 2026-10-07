@@ -2,9 +2,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import QtCore
 import Qt.labs.folderlistmodel
-import Quickshell
 import Vast.Search
 
 import qs.Core.Configs
@@ -18,19 +18,19 @@ LazyLoader {
     id: root
 
     property string currentFolder: "file:///home"
-    property bool foldersOnly: false
-    property var history: []
-    property int historyIndex: -1
-    property var nameFilters: ["*"]
-    property bool searchVisible: false
-    property var searchedEntries: []
-    property bool selectFolder: false
-    property bool showHidden: false
+    property bool   foldersOnly: false
+    property var    history: []
+    property int    historyIndex: -1
+    property var    nameFilters: ["*"]
+    property var    searchedEntries: []
+    property bool   searchVisible: false
+    property bool   selectFolder: false
+    property bool   showHidden: false
     property string walkedCacheKey: ""
 
-    signal fileSelected(string path)
+    signal          fileSelected(string path)
 
-    function openFileDialog() {
+    function        openFileDialog() {
         if (active)
             item.destroy();
         else
@@ -38,13 +38,12 @@ LazyLoader {
     }
 
     activeAsync: false
-
     component: FloatingWindow {
         id: window
 
         readonly property bool searchMode: root.searchVisible && searchField.text.length > 0
 
-        function acceptSelection() {
+        function               acceptSelection() {
             if (root.selectFolder) {
                 if (fileListView.currentIsFolder)
                     root.fileSelected(fileListView.currentFilePath);
@@ -65,29 +64,29 @@ LazyLoader {
                 }
             }
         }
-        function clearSearch() {
+        function               clearSearch() {
             searchField.text = "";
             SearchEngine.clearFileResults();
         }
-        function goBack() {
+        function               goBack() {
             if (root.historyIndex > 0) {
                 root.historyIndex--;
                 root.currentFolder = root.history[root.historyIndex];
                 fileListView.clearSelection();
             }
         }
-        function goForward() {
+        function               goForward() {
             if (root.historyIndex < root.history.length - 1) {
                 root.historyIndex++;
                 root.currentFolder = root.history[root.historyIndex];
                 fileListView.clearSelection();
             }
         }
-        function goUp() {
+        function               goUp() {
             if (folderModel.parentFolder)
                 navigateTo(folderModel.parentFolder.toString().replace("file://", ""));
         }
-        function navigateTo(path: string): url {
+        function               navigateTo(path: string): url {
             const url = path.startsWith("file://") ? path : "file://" + path;
 
             clearSearch();
@@ -97,16 +96,16 @@ LazyLoader {
                 root.history = root.history.slice(0, root.historyIndex + 1);
 
             root.history.push(url);
-            root.historyIndex = root.history.length - 1;
+            root.historyIndex  = root.history.length - 1;
             root.currentFolder = url;
             fileListView.clearSelection();
         }
-        function refresh() {
-            var temp = root.currentFolder;
+        function               refresh() {
+            var temp           = root.currentFolder;
             root.currentFolder = "file:///";
             root.currentFolder = temp;
         }
-        function runFileSearch() {
+        function               runFileSearch() {
             const query = searchField.text;
             if (!root.searchVisible || query.length === 0) {
                 SearchEngine.clearFileResults();
@@ -114,13 +113,13 @@ LazyLoader {
             }
 
             const configuredRoots = Configs.search.fileDirs;
-            const roots = configuredRoots && configuredRoots.length > 0 ? configuredRoots : [root.currentFolder.toString().replace("file://", "")];
-            const cacheKey = [roots.join("|"), fileListView.folderHidden, root.nameFilters.join("|")].join("~");
+            const roots           = configuredRoots && configuredRoots.length > 0 ? configuredRoots : [root.currentFolder.toString().replace("file://", "")];
+            const cacheKey        = [roots.join("|"), fileListView.folderHidden, root.nameFilters.join("|")].join("~");
 
-            walker.roots = roots;
-            walker.maxDepth = Configs.search.maxDepth;
-            walker.showHidden = fileListView.folderHidden;
-            walker.nameFilters = root.nameFilters;
+            walker.roots          = roots;
+            walker.maxDepth       = Configs.search.maxDepth;
+            walker.showHidden     = fileListView.folderHidden;
+            walker.nameFilters    = root.nameFilters;
 
             if (!walker.walking && (cacheKey !== root.walkedCacheKey || root.searchedEntries.length === 0)) {
                 root.walkedCacheKey = cacheKey;
@@ -129,7 +128,7 @@ LazyLoader {
 
             SearchEngine.searchFilesAsync(root.searchedEntries, query);
         }
-        function toggleSearch() {
+        function               toggleSearch() {
             root.searchVisible = !root.searchVisible;
             if (root.searchVisible)
                 searchField.forceActiveFocus();
@@ -142,7 +141,6 @@ LazyLoader {
         implicitWidth: 800
         minimumSize: Qt.size(600, 420)
         title: "File Dialog"
-
         Component.onCompleted: {
             var home = StandardPaths.standardLocations(StandardPaths.HomeLocation)[0];
             navigateTo(home);
@@ -155,11 +153,11 @@ LazyLoader {
 
             defaultItem: topAppBar.pathField
             scope: mainLayout
-
             Component.onCompleted: {
                 Qt.callLater(() => firstFocus());
             }
         }
+
         FolderListModel {
             id: folderModel
 
@@ -169,23 +167,24 @@ LazyLoader {
             showDotAndDotDot: false
             showFiles: !root.foldersOnly
             showHidden: fileListView.folderHidden
-
             onStatusChanged: {
                 if (status === FolderListModel.Ready)
                     topAppBar.isLoading = false;
             }
         }
+
         DirectoryWalker {
             id: walker
         }
+
         DebouncedValue {
             id: searchDebounce
 
             interval: 200
             value: root.searchVisible ? searchField.text : ""
-
             onDebouncedValueChanged: window.runFileSearch()
         }
+
         Connections {
             function onWalkFinished(entries) {
                 root.searchedEntries = entries;
@@ -195,12 +194,12 @@ LazyLoader {
 
             target: walker
         }
+
         ColumnLayout {
             id: mainLayout
 
             anchors.fill: parent
             spacing: Appearance.spacing.small
-
             Keys.onBacktabPressed: tabNav.previous()
             Keys.onEnterPressed: window.acceptSelection()
             Keys.onReturnPressed: window.acceptSelection()
@@ -214,7 +213,6 @@ LazyLoader {
                 canGoForward: root.historyIndex < root.history.length - 1
                 canGoUp: root.currentFolder !== "file:///"
                 currentPath: root.currentFolder.toString().replace("file://", "")
-
                 onBackClicked: window.goBack()
                 onForwardClicked: window.goForward()
                 onPathEntered: path => window.navigateTo(path)
@@ -228,6 +226,7 @@ LazyLoader {
                 onSearchToggled: window.toggleSearch()
                 onUpClicked: window.goUp()
             }
+
             Rectangle {
                 id: searchBar
 
@@ -236,10 +235,8 @@ LazyLoader {
                 color: Colours.m3Colors.m3SurfaceContainer
                 implicitHeight: root.searchVisible ? 52 : 0
                 visible: root.searchVisible
-
                 Behavior on implicitHeight {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
 
                 RowLayout {
@@ -252,6 +249,7 @@ LazyLoader {
                         font.pixelSize: Appearance.fonts.size.medium
                         icon: "search"
                     }
+
                     StyledTextInput {
                         id: searchField
 
@@ -259,7 +257,6 @@ LazyLoader {
                         autoFocus: false
                         placeHolderText: qsTr("Search files…")
                         toggleButtonVisible: false
-
                         onKeyPressed: event => {
                             if (event.key === Qt.Key_Escape) {
                                 event.accepted = true;
@@ -269,6 +266,7 @@ LazyLoader {
                     }
                 }
             }
+
             RowLayout {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -279,9 +277,9 @@ LazyLoader {
 
                     Layout.fillHeight: true
                     Layout.preferredWidth: 200
-
                     onPlaceSelected: path => window.navigateTo(path)
                 }
+
                 FileListView {
                     id: fileListView
 
@@ -290,25 +288,25 @@ LazyLoader {
                     folderHidden: root.showHidden
                     model: window.searchMode ? SearchEngine.fileResults : folderModel
                     selectFolder: root.selectFolder
-
                     onFileDoubleClicked: path => root.fileSelected(path)
                     onFolderDoubleClicked: path => window.navigateTo(path)
                     onSelectionChanged: (fileName, filePath, fileSize, fileModified, isImage) => {
                         bottomBar.setFileName(fileName);
                         previewPanel.imageFileSelected = isImage;
-                        previewPanel.selectedFilePath = filePath;
-                        previewPanel.fileSize = fileSize;
-                        previewPanel.fileModified = fileModified;
-                        previewPanel.fileName = fileName;
+                        previewPanel.selectedFilePath  = filePath;
+                        previewPanel.fileSize          = fileSize;
+                        previewPanel.fileModified      = fileModified;
+                        previewPanel.fileName          = fileName;
                     }
                 }
+
                 Rectangle {
                     id: previewPanel
 
-                    property var fileModified
+                    property var    fileModified
                     property string fileName: ""
-                    property int fileSize: 0
-                    property bool imageFileSelected: false
+                    property int    fileSize: 0
+                    property bool   imageFileSelected: false
                     property string selectedFilePath: ""
 
                     Layout.fillHeight: true
@@ -328,6 +326,7 @@ LazyLoader {
                             font.pixelSize: Appearance.fonts.size.normal
                             text: qsTr("Preview")
                         }
+
                         Item {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
@@ -342,6 +341,7 @@ LazyLoader {
                                 width: Math.min(parent.width, implicitWidth)
                             }
                         }
+
                         ColumnLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.small
@@ -353,11 +353,13 @@ LazyLoader {
                                 font.pixelSize: Appearance.fonts.size.small
                                 text: previewPanel.fileName
                             }
+
                             StyledText {
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.small
                                 text: FormatTimeUtils.formatSize(previewPanel.fileSize)
                             }
+
                             StyledText {
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.small
@@ -367,6 +369,7 @@ LazyLoader {
                     }
                 }
             }
+
             BottomActionBar {
                 id: bottomBar
 
@@ -374,7 +377,6 @@ LazyLoader {
                 hasSelection: fileListView.hasSelection || fileName.length > 0
                 nameFilters: root.nameFilters
                 selectFolder: root.selectFolder
-
                 onCancelClicked: root.activeAsync = false
                 onOpenClicked: window.acceptSelection()
             }

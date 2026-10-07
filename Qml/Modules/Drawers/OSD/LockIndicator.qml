@@ -10,7 +10,7 @@ Item {
     id: root
 
     required property string icon
-    required property bool indicator
+    required property bool   indicator
     required property string label
     required property string osdVisible
 
@@ -18,7 +18,6 @@ Item {
     height: GlobalStates.isOSDVisible(osdVisible) ? 50 : 0
     visible: height > 0
     width: parent.width
-
     Behavior on height {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -42,6 +41,7 @@ Item {
                 font.weight: Font.Medium
                 text: root.label
             }
+
             Icon {
                 color: root.indicator ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
                 font.pixelSize: Appearance.fonts.size.large * 1.5

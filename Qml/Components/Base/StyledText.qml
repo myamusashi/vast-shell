@@ -11,7 +11,6 @@ Text {
     renderType: Text.NativeRendering
     smooth: true
     verticalAlignment: Text.AlignVCenter
-
     Component.onCompleted: {
         font.variableAxes = {
             "wght": 650,

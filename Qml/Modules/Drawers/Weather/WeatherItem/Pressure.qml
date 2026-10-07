@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import QtQuick.Layouts
+import QtQuick.Shapes
 import M3Shapes
 
 import qs.Core.Configs
@@ -22,13 +22,17 @@ MaterialShape {
     shape: MaterialShape.Circle
 
     Pressure {
+
         ColumnLayout {
+
             anchors {
                 horizontalCenter: parent.horizontalCenter
                 top: parent.top
                 topMargin: 30
             }
+
             RowLayout {
+
                 Icon {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large * 1.5
@@ -36,12 +40,14 @@ MaterialShape {
                     icon: "vertical_align_center"
                     type: Icon.Material
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.weight: Font.DemiBold
                     text: qsTr("Pressure")
                 }
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 color: Colours.m3Colors.m3OnSurface
@@ -49,6 +55,7 @@ MaterialShape {
                 font.weight: Font.Bold
                 text: Weather.pressure
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 color: Colours.m3Colors.m3OnSurface
@@ -69,6 +76,7 @@ MaterialShape {
         preferredRendererType: Shape.CurveRenderer
 
         // Background track
+
         ShapePath {
             capStyle: ShapePath.RoundCap
             fillColor: "transparent"
@@ -86,6 +94,7 @@ MaterialShape {
         }
 
         // Active progress
+
         ShapePath {
             capStyle: ShapePath.RoundCap
             fillColor: "transparent"

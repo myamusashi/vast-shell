@@ -24,7 +24,7 @@ Singleton {
     readonly property string videos: Quickshell.env("XDG_VIDEOS_DIR") || `${home}/Videos`
     readonly property string wallpaperDir: Configs.wallpaper.wallpaperDir
 
-    function pathToBreadcrumb(path) {
+    function                 pathToBreadcrumb(path) {
         if (!path || typeof path !== 'string')
             return '';
 
@@ -39,7 +39,7 @@ Singleton {
         if (cleanPath.startsWith('qrc:/'))
             cleanPath = cleanPath.substring(5);
 
-        cleanPath = cleanPath.replace(/^\/+/, '');
+        cleanPath   = cleanPath.replace(/^\/+/, '');
         const parts = cleanPath.split(/[\/\\]+/).filter(part => part.length > 0);
 
         return parts.join(' > ');
@@ -50,7 +50,6 @@ Singleton {
 
         path: `${root.cacheDir}/wall/path.txt`
         watchChanges: true
-
         onFileChanged: reload()
     }
 }

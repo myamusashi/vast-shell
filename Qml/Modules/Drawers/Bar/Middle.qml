@@ -8,8 +8,7 @@ RowLayout {
     anchors.centerIn: parent
     spacing: Appearance.spacing.normal
 
-    Mpris {
-    }
-    RecordIndicator {
-    }
+    Mpris {}
+
+    RecordIndicator {}
 }

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Components.Button
 
+import qs.Components.Button
 import qs.Core.Configs
 import qs.Components.Base
 
@@ -19,20 +19,20 @@ SettingsPageBase {
 
             StyledSwitch {
                 checked: Configs.bar.alwaysOpenBar
-
                 onCheckedChanged: Configs.bar.alwaysOpenBar = checked
             }
         }
+
         SettingRow {
             description: qsTr("Use a condensed layout.")
             label: qsTr("Compact Navigation Bar:")
 
             StyledSwitch {
                 checked: Configs.bar.compact
-
                 onCheckedChanged: Configs.bar.compact = checked
             }
         }
+
         SettingRow {
             description: qsTr("Height of the top bar in pixels.")
             label: qsTr("Bar Height:")
@@ -43,11 +43,11 @@ SettingsPageBase {
                 stepSize: 1
                 to: 100
                 value: Configs.bar.barHeight
-
                 onMoved: Configs.bar.barHeight = value
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Workspace Display")
 
@@ -63,7 +63,6 @@ SettingsPageBase {
                 stepSize: 1
                 to: 15
                 value: Configs.bar.visibleWorkspace
-
                 onMoved: Configs.bar.visibleWorkspace = value
             }
         }

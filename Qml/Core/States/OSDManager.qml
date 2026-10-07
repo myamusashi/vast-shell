@@ -6,21 +6,22 @@ import Quickshell
 Scope {
     id: root
 
-    property var activeOSDs: ({})
     readonly property bool anyVisible: Object.keys(activeOSDs).some(k => activeOSDs[k] === true)
-    readonly property int displayDuration: 5000
-    property var pausedOSDs: ({})
-    readonly property var timers: ({
+    readonly property int  displayDuration: 5000
+    readonly property var  timers: ({
             "volume": volumeTimer,
             "capslock": capslockTimer,
             "numlock": numlockTimer,
             "brightness": brightnessTimer
         })
 
-    function allHidden(): bool {
+    property var           activeOSDs: ({})
+    property var           pausedOSDs: ({})
+
+    function               allHidden(): bool {
         return !anyVisible;
     }
-    function hide(name): void {
+    function               hide(name): void {
         if (!name)
             return;
         activeOSDs[name] = false;
@@ -28,22 +29,22 @@ Scope {
         activeOSDsChanged();
         timers[name]?.stop();
     }
-    function isActive(name): bool {
+    function               isActive(name): bool {
         return activeOSDs[name] || false;
     }
-    function pause(name): void {
+    function               pause(name): void {
         if (!name || !activeOSDs[name])
             return;
         pausedOSDs[name] = true;
         timers[name]?.stop();
     }
-    function resume(name): void {
+    function               resume(name): void {
         if (!name || !activeOSDs[name])
             return;
         pausedOSDs[name] = false;
         timers[name]?.restart();
     }
-    function show(name): void {
+    function               show(name): void {
         if (!name)
             return;
         activeOSDs[name] = true;
@@ -51,7 +52,7 @@ Scope {
         if (!pausedOSDs[name])
             timers[name]?.restart();
     }
-    function toggle(name): void {
+    function               toggle(name): void {
         activeOSDs[name] ? hide(name) : show(name);
     }
 
@@ -60,31 +61,30 @@ Scope {
 
         interval: root.displayDuration
         repeat: false
-
         onTriggered: root.hide("volume")
     }
+
     Timer {
         id: capslockTimer
 
         interval: root.displayDuration
         repeat: false
-
         onTriggered: root.hide("capslock")
     }
+
     Timer {
         id: numlockTimer
 
         interval: root.displayDuration
         repeat: false
-
         onTriggered: root.hide("numlock")
     }
+
     Timer {
         id: brightnessTimer
 
         interval: root.displayDuration
         repeat: false
-
         onTriggered: root.hide("brightness")
     }
 }

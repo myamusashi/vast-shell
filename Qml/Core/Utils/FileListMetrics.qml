@@ -9,7 +9,7 @@ Singleton {
 
     function clampHeight(count, rowHeight, spacing, maximum) {
         const itemCount = Math.max(0, Number(count) || 0);
-        const rows = itemCount * rowHeight + Math.max(0, itemCount - 1) * spacing;
+        const rows      = itemCount * rowHeight + Math.max(0, itemCount - 1) * spacing;
         return Math.min(maximum, rows);
     }
     function clampWidth(width, minimum, maximum) {

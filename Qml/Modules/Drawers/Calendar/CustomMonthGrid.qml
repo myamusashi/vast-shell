@@ -5,29 +5,30 @@ import QtQuick
 Item {
     id: root
 
-    property int cellHeight: 34
-    property real cellWidth: width / 7
-    property var cells: buildCells()
     readonly property int columnCount: 7
-    property Component delegate: null
-    property int firstDayOfWeek: Qt.locale().firstDayOfWeek
-    property int month: 0
-    property var openPopoverDate: null
-    property Component popoverDelegate: null
     readonly property int rowCount: 6
-    property int year: 1970
 
-    function buildCells() {
-        const cells = [];
+    property int          cellHeight: 34
+    property var          cells: buildCells()
+    property real         cellWidth: width / 7
+    property Component    delegate: null
+    property int          firstDayOfWeek: Qt.locale().firstDayOfWeek
+    property int          month: 0
+    property var          openPopoverDate: null
+    property Component    popoverDelegate: null
+    property int          year: 1970
+
+    function              buildCells() {
+        const cells        = [];
         const firstOfMonth = new Date(year, month, 1);
-        const firstDow = firstOfMonth.getDay();
+        const firstDow     = firstOfMonth.getDay();
 
-        let lead = firstDow - firstDayOfWeek;
+        let lead           = firstDow - firstDayOfWeek;
         if (lead < 0)
             lead += 7;
 
         const gridStart = new Date(year, month, 1 - lead);
-        const today = new Date();
+        const today     = new Date();
 
         for (let i = 0; i < rowCount * columnCount; i++) {
             const d = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
@@ -40,13 +41,12 @@ Item {
         }
         return cells;
     }
-    function closePopover() {
+    function              closePopover() {
         openPopoverDate = null;
     }
 
     implicitHeight: cellHeight * rowCount
     implicitWidth: cellWidth * columnCount
-
     onFirstDayOfWeekChanged: cells = buildCells()
     onMonthChanged: {
         cells = buildCells();
@@ -70,6 +70,7 @@ Item {
             model: root.cells
         }
     }
+
     Item {
         id: popoverLayer
 
@@ -98,7 +99,6 @@ Item {
             width: root.cellWidth * root.columnCount
             x: openCol
             y: openRow * root.cellHeight + root.cellHeight
-
             onLoaded: {
                 if (!item)
                     return;

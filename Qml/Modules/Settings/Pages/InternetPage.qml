@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Networking
+import Quickshell.Widgets
 
 import qs.Components.Feedback
 import qs.Components.Base
@@ -31,12 +31,14 @@ Item {
     WifiPskDialog {
         id: wifiPskDialog
     }
+
     CardRevealer {
         id: cardRevealer
 
         container: contentColumn
         target: pageFlickable
     }
+
     ColumnLayout {
         spacing: Appearance.spacing.normal
 
@@ -44,6 +46,7 @@ Item {
             fill: parent
             margins: Appearance.margin.large
         }
+
         StyledText {
             Layout.bottomMargin: Appearance.margin.normal
             color: Colours.m3Colors.m3OnSurface
@@ -51,6 +54,7 @@ Item {
             font.pixelSize: Appearance.fonts.size.extraLarge
             text: qsTr("Network & Internet")
         }
+
         Flickable {
             id: pageFlickable
 
@@ -74,11 +78,13 @@ Item {
                         Layout.fillWidth: true
                         condition: Hotspot.status === Hotspot.Status.Starting || Hotspot.status === Hotspot.Status.Stopping
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Error
                         text: Hotspot.errorMessage
                         visible: Hotspot.errorMessage !== ""
                     }
+
                     SettingRow {
                         description: qsTr("Toggle Wi-Fi hotspot and internet sharing.")
                         label: qsTr("Enable hotspot & sharing internet:")
@@ -87,10 +93,10 @@ Item {
                             Layout.alignment: Qt.AlignRight
                             checked: Hotspot.isActive
                             enabled: Hotspot.status !== Hotspot.Status.Starting && Hotspot.status !== Hotspot.Status.Stopping
-
                             onToggled: Hotspot.toggle()
                         }
                     }
+
                     GridLayout {
                         columns: 2
 
@@ -105,10 +111,10 @@ Item {
                                 placeHolderText: qsTr("Default: MyHotspot")
                                 text: Hotspot.ssid
                                 toggleButtonVisible: false
-
                                 onTextChanged: Hotspot.ssid = text
                             }
                         }
+
                         SettingRow {
                             description: qsTr("Password required.")
                             label: qsTr("Password hotspot:")
@@ -120,10 +126,10 @@ Item {
                                 placeHolderText: qsTr("Default: password123")
                                 text: Hotspot.password
                                 toggleButtonVisible: true
-
                                 onTextChanged: Hotspot.password = text
                             }
                         }
+
                         SettingRow {
                             description: qsTr("Network interface used for hotspot sharing.")
                             label: qsTr("Hotspot interface:")
@@ -137,6 +143,7 @@ Item {
                                 toggleButtonVisible: false
                             }
                         }
+
                         SettingRow {
                             description: qsTr("Wi-Fi band for the hotspot.")
                             label: qsTr("Bandwidth:")
@@ -156,17 +163,16 @@ Item {
                                 ]
                                 text: model[selectedIndex]?.display ?? "bg (2.4 GHz)"
                                 textRole: "display"
-
                                 onMenuItemActivated: index => Hotspot.band = index === 0 ? "bg" : "a"
                             }
                         }
                     }
+
                     ExtendedFloatingButton {
                         Layout.alignment: Qt.AlignRight
                         color: Colours.m3Colors.m3Primary
                         text: qsTr("Apply && Restart")
                         textColor: Colours.m3Colors.m3OnPrimary
-
                         onClicked: {
                             if (Hotspot.isActive) {
                                 Hotspot.stop();
@@ -179,6 +185,7 @@ Item {
                         }
                     }
                 }
+
                 SettingsCard {
                     title: qsTr("Wi-Fi")
 
@@ -190,16 +197,17 @@ Item {
                             Layout.preferredHeight: 32
                             Layout.preferredWidth: 52
                             checked: Networking.wifiEnabled
-
                             onToggled: Qt.callLater(() => {
                                 Networking.wifiEnabled = checked;
                             })
                         }
                     }
+
                     Progress {
                         Layout.fillWidth: true
                         condition: GlobalStates.isWifiScannerOpen
                     }
+
                     ListView {
                         id: wifiListView
 
@@ -208,7 +216,6 @@ Item {
                         interactive: false
                         model: Networking.devices
                         spacing: Appearance.spacing.small
-
                         delegate: ColumnLayout {
                             id: deviceDelegate
 
@@ -221,9 +228,10 @@ Item {
                                     id: networkDelegate
 
                                     required property var modelData
-                                    property color target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
 
-                                    function tryConnect() {
+                                    property color        target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+
+                                    function              tryConnect() {
                                         WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
                                     }
 
@@ -238,10 +246,12 @@ Item {
 
                                         onTapped: networkDelegate.tryConnect()
                                     }
+
                                     BlendColor {
                                         host: networkDelegate
                                         target: networkDelegate.target
                                     }
+
                                     Connections {
                                         function onConnectionFailed(reason) {
                                             WifiUtils.handleConnectionFailed(networkDelegate.modelData, reason, net => wifiPskDialog.show(net));
@@ -249,6 +259,7 @@ Item {
 
                                         target: networkDelegate.modelData
                                     }
+
                                     RowLayout {
                                         spacing: Appearance.spacing.small
 
@@ -262,6 +273,7 @@ Item {
                                                 font.pixelSize: Appearance.fonts.size.large * 1.5
                                                 icon: "signal_wifi_0_bar"
                                             }
+
                                             Icon {
                                                 anchors.fill: parent
                                                 color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
@@ -269,6 +281,7 @@ Item {
                                                 icon: WifiUtils.iconFor(networkDelegate.modelData?.signalStrength ?? 0, networkDelegate.modelData ? !networkDelegate.modelData.known : false)
                                             }
                                         }
+
                                         ColumnLayout {
                                             Layout.fillWidth: true
                                             spacing: Appearance.spacing.small * 0.5
@@ -280,12 +293,14 @@ Item {
                                                 font.pixelSize: Appearance.fonts.size.normal
                                                 text: networkDelegate.modelData?.name ?? ""
                                             }
+
                                             StyledText {
                                                 color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                                                 font.pixelSize: Appearance.fonts.size.small
                                                 text: ConnectionState.toString(networkDelegate.modelData.state)
                                             }
                                         }
+
                                         FloatingButton {
                                             backgroundRadius: Appearance.rounding.normal
                                             icon.color: Colours.m3Colors.m3SurfaceVariant
@@ -293,9 +308,9 @@ Item {
                                             icon.size: Appearance.fonts.size.large * 1.5
                                             implicitHeight: 28
                                             implicitWidth: 28
-
                                             onClicked: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.tryConnect()
                                         }
+
                                         FloatingButton {
                                             backgroundRadius: Appearance.rounding.normal
                                             icon.color: Colours.m3Colors.m3SurfaceVariant
@@ -303,7 +318,6 @@ Item {
                                             icon.size: Appearance.fonts.size.large * 1.5
                                             implicitHeight: 28
                                             implicitWidth: 28
-
                                             onClicked: networkDelegate.modelData?.forget()
                                         }
                                     }
@@ -319,6 +333,7 @@ Item {
                         }
                     }
                 }
+
                 Item {
                     Layout.fillHeight: true
                 }

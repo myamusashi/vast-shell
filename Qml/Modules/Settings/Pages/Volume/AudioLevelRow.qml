@@ -13,15 +13,17 @@ import qs.Components.Effects
 ColumnLayout {
     id: root
 
-    property bool isCurrent: false
     required property PwNode node
-    readonly property real peak: peakMonitor.peak
-    property bool selectable: false
-    readonly property real vol: node.audio.volume
 
-    signal defaultRequested
+    readonly property real   peak: peakMonitor.peak
+    readonly property real   vol: node.audio.volume
 
-    function dbText(v) {
+    property bool            isCurrent: false
+    property bool            selectable: false
+
+    signal                   defaultRequested
+
+    function                 dbText(v) {
         if (v <= 0.00001)
             return "-∞ dB";
         const db = 20 * Math.log10(v);
@@ -33,12 +35,14 @@ ColumnLayout {
 
         objects: [root.node]
     }
+
     PwNodePeakMonitor {
         id: peakMonitor
 
         enabled: Configs.audio.showPeakLevels
         node: root.node
     }
+
     RowLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
@@ -61,10 +65,12 @@ ColumnLayout {
                 host: defaultIndicator
                 target: defaultIndicator.target
             }
+
             TapHandler {
                 onTapped: root.defaultRequested()
             }
         }
+
         StyledRect {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: 36
@@ -77,9 +83,9 @@ ColumnLayout {
                 font.pixelSize: Appearance.fonts.size.large
                 icon: Audio.getIcon(root.node)
             }
+
             MArea {
                 cursorShape: Qt.PointingHandCursor
-
                 onClicked: mouse => {
                     if (mouse.button === Qt.LeftButton)
                         Audio.toggleMute(root.node);
@@ -87,6 +93,7 @@ ColumnLayout {
                 onWheel: mouse => Audio.wheelAction(mouse, root.node)
             }
         }
+
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 2
@@ -98,6 +105,7 @@ ColumnLayout {
                 font.pixelSize: Appearance.fonts.size.normal
                 text: root.node.description || root.node.nickname || root.node.name
             }
+
             StyledText {
                 id: percentText
 
@@ -108,6 +116,7 @@ ColumnLayout {
             }
         }
     }
+
     StyledSlide {
         id: volumeSlider
 
@@ -118,9 +127,9 @@ ColumnLayout {
         stepSize: 0.01
         to: 1.5
         value: root.vol
-
         onMoved: root.node.audio.volume = value
     }
+
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 4

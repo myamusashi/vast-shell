@@ -8,25 +8,23 @@ import Quickshell.Hyprland
 Singleton {
     id: root
 
-    readonly property HyprlandToplevel activeToplevel: Hyprland.activeToplevel?.wayland?.activated ? Hyprland.activeToplevel : null // qmllint disable
-    readonly property string activeWsAddress: {
+    readonly property HyprlandToplevel  activeToplevel: Hyprland.activeToplevel?.wayland?.activated ? Hyprland.activeToplevel : null // qmllint disable
+    readonly property string            activeWsAddress: {
         const monAddr = focusedMonitor?.activeWorkspace?.address ?? focusedMonitor?.lastIpcObject.activeWorkspace?.address ?? "";
         if (monAddr !== undefined && monAddr !== null && monAddr !== "")
             return String(monAddr);
         return workspaceAddress(focusedWorkspace) || "1";
     }
-    readonly property int activeWsId: {
+    readonly property int               activeWsId: {
         const n = parseInt(activeWsAddress, 10);
         return isNaN(n) || n <= 0 ? 1 : n;
     }
-    readonly property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
+    readonly property HyprlandMonitor   focusedMonitor: Hyprland.focusedMonitor
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
-    readonly property bool focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen
-    property var lastFocusedToplevel: ({})
-    property var monitorData: ({})
-    readonly property var monitors: Hyprland.monitors
-    readonly property var toplevels: Hyprland.toplevels
-    readonly property var toplevelsByWorkspace: {
+    readonly property bool              focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen
+    readonly property var               monitors: Hyprland.monitors
+    readonly property var               toplevels: Hyprland.toplevels
+    readonly property var               toplevelsByWorkspace: {
         const acc = {};
         for (const tl of root.toplevels.values ?? root.toplevels) {
             const ws = toplevelWorkspaceAddress(tl);
@@ -40,7 +38,7 @@ Singleton {
             if (last === undefined)
                 continue;
 
-            const list = acc[ws];
+            const list  = acc[ws];
             const index = list.findIndex(tl => tl.address === last);
             if (index > 0)
                 list.unshift(...list.splice(index, 1));
@@ -48,17 +46,20 @@ Singleton {
 
         return acc;
     }
-    readonly property var workspaces: Hyprland.workspaces
+    readonly property var               workspaces: Hyprland.workspaces
 
-    signal configReloaded
+    property var                        lastFocusedToplevel: ({})
+    property var                        monitorData: ({})
 
-    function dispatch(request: string): void {
+    signal                              configReloaded
+
+    function                            dispatch(request: string): void {
         Hyprland.dispatch(request);
     }
-    function monitorFor(screen: ShellScreen): HyprlandMonitor {
+    function                            monitorFor(screen: ShellScreen): HyprlandMonitor {
         return Hyprland.monitorFor(screen);
     }
-    function rememberFocus(): void {
+    function                            rememberFocus(): void {
         const tl = Hyprland.activeToplevel;
         if (!tl?.activated)
             return;
@@ -67,15 +68,15 @@ Singleton {
         if (ws === "" || ws === undefined || root.lastFocusedToplevel[ws] === tl.address)
             return;
 
-        const map = Object.assign({}, root.lastFocusedToplevel);
-        map[ws] = tl.address;
+        const map                = Object.assign({}, root.lastFocusedToplevel);
+        map[ws]                  = tl.address;
         root.lastFocusedToplevel = map;
     }
-    function toplevelWorkspaceAddress(tl: var): string {
+    function                            toplevelWorkspaceAddress(tl: var): string {
         if (!tl)
             return "";
         const objAddr = tl.workspace?.address ?? "";
-        const ipcWs = tl.lastIpcObject?.workspace;
+        const ipcWs   = tl.lastIpcObject?.workspace;
         if (ipcWs) {
             const addr = ipcWs.address ?? ipcWs.addressable_name ?? null;
             if (addr !== undefined && addr !== null && addr !== "")
@@ -92,7 +93,7 @@ Singleton {
         }
         return workspaceAddress(tl.workspace);
     }
-    function workspaceAddress(ws: var): string {
+    function                            workspaceAddress(ws: var): string {
         if (!ws)
             return "";
         const addr = ws.address ?? ws.lastIpcObject?.address ?? null;
@@ -102,7 +103,7 @@ Singleton {
             return String(ws.id);
         return "";
     }
-    function workspaceNumber(ws: var): int {
+    function                            workspaceNumber(ws: var): int {
         const n = parseInt(workspaceAddress(ws), 10);
         return isNaN(n) ? -1 : n;
     }
@@ -129,6 +130,7 @@ Singleton {
 
         target: Hyprland
     }
+
     Connections {
         function onActivatedChanged(): void {
             root.rememberFocus();
@@ -136,14 +138,14 @@ Singleton {
 
         target: Hyprland.activeToplevel
     }
+
     Instantiator {
         model: root.monitors
-
         delegate: QtObject {
             required property HyprlandMonitor modelData
 
             Component.onCompleted: {
-                let data = Object.assign({}, root.monitorData);
+                let data             = Object.assign({}, root.monitorData);
 
                 data[modelData.name] = {
                     availableModes: modelData.lastIpcObject.availableModes,
@@ -153,7 +155,7 @@ Singleton {
                     scale: modelData.scale,
                     colorManagementPreset: modelData.lastIpcObject.colorManagementPreset
                 };
-                root.monitorData = data;
+                root.monitorData     = data;
             }
         }
     }

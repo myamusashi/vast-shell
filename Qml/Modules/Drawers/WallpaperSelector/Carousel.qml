@@ -11,19 +11,20 @@ import qs.Services
 PathView {
     id: root
 
-    required property var controller
-    required property var thumbnailAvailability
-    readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
-    required property var visibleWallpapers
+    required property var  controller
+    required property var  thumbnailAvailability
+    required property var  visibleWallpapers
 
-    function moveCurrentIndex(step: int): void {
+    readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
+
+    function               moveCurrentIndex(step: int): void {
         if (count === 0)
             return;
         currentIndex = (currentIndex + step + count) % count;
     }
-    function selectCurrentWallpaper(): void {
-        const list = visibleWallpapers ?? [];
-        const idx = list.indexOf(Paths.currentWallpaper);
+    function               selectCurrentWallpaper(): void {
+        const list   = visibleWallpapers ?? [];
+        const idx    = list.indexOf(Paths.currentWallpaper);
         currentIndex = idx !== -1 ? idx : 0;
     }
 
@@ -32,14 +33,12 @@ PathView {
     pathItemCount: Configs.wallpaper.visibleWallpaper
     preferredHighlightBegin: 0.5
     preferredHighlightEnd: 0.5
-
     delegate: Card {
         carouselHeight: root.height
         controller: root.controller
         isCurrent: PathView.isCurrentItem
         thumbnailAvailability: root.thumbnailAvailability
         unitWidth: root.unitWidth
-
         onActivateRequested: path => {
             if (MediaKind.isVideo(path))
                 root.controller.setVideoWallpaper(path);
@@ -60,14 +59,13 @@ PathView {
             y: root.height / 2
         }
     }
-
     Component.onCompleted: {
         Qt.callLater(() => selectCurrentWallpaper());
     }
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Escape) {
             GlobalStates.isWallpaperSwitcherOpen = false;
-            event.accepted = true;
+            event.accepted                       = true;
         }
     }
     onCurrentIndexChanged: {

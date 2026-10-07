@@ -61,5 +61,6 @@ Scope {
     readonly property color m3TertiaryFixed: source?.tertiaryFixed ?? "transparent"
     readonly property color m3TertiaryFixedDim: source?.tertiaryFixedDim ?? "transparent"
     readonly property color m3Yellow: "#FFEB3B"
-    property var source: ({})
+
+    property var            source: ({})
 }

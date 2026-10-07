@@ -17,6 +17,7 @@ ColumnLayout {
         font.weight: Font.DemiBold
         text: qsTr("Bluetooth")
     }
+
     StyledText {
         Layout.alignment: Qt.AlignCenter
         Layout.fillWidth: true

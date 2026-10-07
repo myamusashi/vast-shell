@@ -11,27 +11,27 @@ Singleton {
         TranslationManager.currentLanguage;
 
         var locale = Qt.locale();
-        var names = [];
+        var names  = [];
         for (var i = 0; i < 12; i++) {
             names.push(locale.monthName(i, Locale.ShortFormat));
         }
         return names;
     }
 
-    function convertTo12Hour(time24) {
+    function              convertTo12Hour(time24) {
         if (!time24)
             return "";
 
         const timeStr = time24.includes(" ") ? time24.split(" ")[1] : time24;
 
-        const parts = timeStr.split(":");
+        const parts   = timeStr.split(":");
         if (parts.length < 2)
             return timeStr;
 
-        let hours = parseInt(parts[0]);
+        let hours     = parseInt(parts[0]);
         const minutes = parts[1];
 
-        const period = hours >= 12 ? qsTr("PM") : qsTr("AM");
+        const period  = hours >= 12 ? qsTr("PM") : qsTr("AM");
 
         if (hours === 0)
             hours = 12;
@@ -40,20 +40,20 @@ Singleton {
 
         return hours + ":" + minutes + " " + period;
     }
-    function convertTo12HourCompact(time24) {
+    function              convertTo12HourCompact(time24) {
         if (!time24)
             return "";
 
         const timeStr = time24.includes(" ") ? time24.split(" ")[1] : time24;
 
-        const parts = timeStr.split(":");
+        const parts   = timeStr.split(":");
         if (parts.length < 2)
             return timeStr;
 
-        let hours = parseInt(parts[0]);
+        let hours     = parseInt(parts[0]);
         const minutes = parts[1];
 
-        const period = hours >= 12 ? qsTr("PM") : qsTr("AM");
+        const period  = hours >= 12 ? qsTr("PM") : qsTr("AM");
 
         if (hours === 0)
             hours = 12;
@@ -62,17 +62,17 @@ Singleton {
 
         return hours + period;
     }
-    function formatBattery(seconds) {
+    function              formatBattery(seconds) {
         if (!(seconds > 0))
             return qsTr("N/A");
         const minutes = Math.floor(seconds / 60);
         if (minutes < 60)
             return minutes + qsTr(" min");
-        const hours = Math.floor(minutes / 60);
+        const hours            = Math.floor(minutes / 60);
         const remainingMinutes = minutes % 60;
         return remainingMinutes > 0 ? hours + qsTr(" h ") + remainingMinutes + qsTr(" min") : hours + qsTr(" h");
     }
-    function formatClipboard(ms) {
+    function              formatClipboard(ms) {
         if (!(ms > 0))
             return "";
         const date = new Date(ms);
@@ -80,31 +80,31 @@ Singleton {
             return "";
         return date.toLocaleString(Qt.locale(), "MMM d, hh:mm ap");
     }
-    function formatCompactAge(diffMs) {
+    function              formatCompactAge(diffMs) {
         const minutes = Math.floor(diffMs / 60000);
         if (minutes < 1)
             return qsTr("now");
         const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
+        const days  = Math.floor(hours / 24);
         if (days > 0)
             return `${days}d`;
         if (hours > 0)
             return `${hours}h`;
         return `${minutes}m`;
     }
-    function formatDuration(seconds) {
+    function              formatDuration(seconds) {
         if (seconds === null || seconds === undefined || isNaN(seconds) || seconds <= 0)
             return "0:00";
         const total = Math.floor(seconds);
-        const h = Math.floor(total / 3600);
-        const m = Math.floor((total % 3600) / 60);
-        const s = total % 60;
-        const ss = String(s).padStart(2, "0");
+        const h     = Math.floor(total / 3600);
+        const m     = Math.floor((total % 3600) / 60);
+        const s     = total % 60;
+        const ss    = String(s).padStart(2, "0");
         if (h > 0)
             return h + ":" + String(m).padStart(2, "0") + ":" + ss;
         return m + ":" + ss;
     }
-    function formatLauncher(timestamp) {
+    function              formatLauncher(timestamp) {
         const date = new Date(timestamp * 1000);
         if (isNaN(date.getTime()))
             return "";
@@ -116,7 +116,7 @@ Singleton {
             hour12: true
         });
     }
-    function formatSize(bytes) {
+    function              formatSize(bytes) {
         if (!(bytes >= 0))
             return "";
         if (bytes < 1024)
@@ -127,8 +127,8 @@ Singleton {
             return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
         return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
     }
-    function formatTimestamp(timestamp) {
-        const date = new Date(timestamp);
+    function              formatTimestamp(timestamp) {
+        const date    = new Date(timestamp);
         const options = {
             day: '2-digit',
             month: 'short',
@@ -139,8 +139,8 @@ Singleton {
         };
         return date.toLocaleString('en-GB', options);
     }
-    function formatTimestampCustom(timestamp, format) {
-        const date = new Date(timestamp);
+    function              formatTimestampCustom(timestamp, format) {
+        const date         = new Date(timestamp);
 
         const replacements = {
             'DD': String(date.getDate()).padStart(2, '0'),
@@ -152,32 +152,32 @@ Singleton {
             'ss': String(date.getSeconds()).padStart(2, '0')
         };
 
-        let result = format;
+        let result         = format;
         for (const [key, value] of Object.entries(replacements))
             result = result.replace(key, value);
 
         return result;
     }
-    function formatTimestampRelative(timestamp) {
+    function              formatTimestampRelative(timestamp) {
         const date = new Date(timestamp);
         return timeAgoWithIfElse(date);
     }
-    function formatTimestampShort(timestamp) {
-        const date = new Date(timestamp);
-        const day = String(date.getDate()).padStart(2, '0');
+    function              formatTimestampShort(timestamp) {
+        const date  = new Date(timestamp);
+        const day   = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
+        const year  = date.getFullYear();
         return `${day}/${month}/${year}`;
     }
-    function formatTimestampWithTime(timestamp) {
-        const date = new Date(timestamp);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = monthNames[date.getMonth()];
-        const year = date.getFullYear();
+    function              formatTimestampWithTime(timestamp) {
+        const date    = new Date(timestamp);
+        const day     = String(date.getDate()).padStart(2, '0');
+        const month   = monthNames[date.getMonth()];
+        const year    = date.getFullYear();
 
-        let hours = date.getHours();
+        let hours     = date.getHours();
         const minutes = String(date.getMinutes()).padStart(2, '0');
-        const period = hours >= 12 ? qsTr("PM") : qsTr("AM");
+        const period  = hours >= 12 ? qsTr("PM") : qsTr("AM");
 
         if (hours === 0)
             hours = 12;
@@ -186,12 +186,12 @@ Singleton {
 
         return `${day} ${month} ${year}, ${hours}:${minutes} ${period}`;
     }
-    function timeAgoWithIfElse(timestamp) {
-        const date = new Date(timestamp);
+    function              timeAgoWithIfElse(timestamp) {
+        const date    = new Date(timestamp);
         const seconds = Math.floor((new Date() - date) / 1000);
         const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
+        const hours   = Math.floor(minutes / 60);
+        const days    = Math.floor(hours / 24);
 
         if (seconds < 60) {
             if (seconds < 5)

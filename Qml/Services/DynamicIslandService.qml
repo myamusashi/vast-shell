@@ -8,21 +8,22 @@ import qs.Core.Configs
 Singleton {
     id: root
 
-    property int _nextId: 1
-    property bool closing: false
-    property var current: null
     readonly property bool hasContent: current !== null || overlay !== null
-    property var overlay: null
-    property var queue: []
-    readonly property int slideDuration: 300
-    property bool slidingUp: false
+    readonly property int  slideDuration: 300
 
-    function _expireBase(): void {
+    property int           _nextId: 1
+    property bool          closing: false
+    property var           current: null
+    property var           overlay: null
+    property var           queue: []
+    property bool          slidingUp: false
+
+    function               _expireBase(): void {
         if (root.current === null || root.closing)
             return;
         root.promoteOrClose();
     }
-    function _expireOverlay(): void {
+    function               _expireOverlay(): void {
         if (root.overlay === null || root.closing)
             return;
         if (root.current !== null) {
@@ -33,21 +34,21 @@ Singleton {
         root.overlay = null;
         root.promoteOrClose();
     }
-    function _finishClose(): void {
+    function               _finishClose(): void {
         contractTimer.stop();
         slideTimer.stop();
         baseTimer.stop();
         overlayTimer.stop();
-        root.current = null;
-        root.overlay = null;
-        root.closing = false;
+        root.current   = null;
+        root.overlay   = null;
+        root.closing   = false;
         root.slidingUp = false;
         // A queued request that arrived mid-close promotes immediately so
         // the shell stays alive and shows it without tearing down.
         if (root.queue.length > 0) {
-            var pending = root.queue.slice();
-            var next = pending.shift();
-            root.queue = pending;
+            var pending  = root.queue.slice();
+            var next     = pending.shift();
+            root.queue   = pending;
             root.current = next;
             if (!next.infinite) {
                 baseTimer.interval = next.durationMs;
@@ -55,15 +56,15 @@ Singleton {
             }
         }
     }
-    function beginClose(): void {
+    function               beginClose(): void {
         if (root.closing || (root.current === null && root.overlay === null))
             return;
-        root.closing = true;
+        root.closing   = true;
         root.slidingUp = false;
         contractTimer.restart();
         slideTimer.restart();
     }
-    function dismiss(id): void {
+    function               dismiss(id): void {
         if (id === undefined || id === null) {
             dismissCurrent();
             return;
@@ -90,7 +91,7 @@ Singleton {
             }
         }
     }
-    function dismissCurrent(): void {
+    function               dismissCurrent(): void {
         if (root.current === null) {
             if (root.overlay === null)
                 return;
@@ -107,11 +108,11 @@ Singleton {
         }
         promoteOrClose();
     }
-    function finishDismissedOverlay(): void {
+    function               finishDismissedOverlay(): void {
         if (root.queue.length > 0) {
-            var pending = root.queue.slice();
-            var next = pending.shift();
-            root.queue = pending;
+            var pending  = root.queue.slice();
+            var next     = pending.shift();
+            root.queue   = pending;
             root.overlay = null;
             root.current = next;
             if (!next.infinite) {
@@ -122,11 +123,11 @@ Singleton {
             root.beginClose();
         }
     }
-    function promoteOrClose(): void {
+    function               promoteOrClose(): void {
         if (root.queue.length > 0) {
-            var pending = root.queue.slice();
-            var next = pending.shift();
-            root.queue = pending;
+            var pending  = root.queue.slice();
+            var next     = pending.shift();
+            root.queue   = pending;
             root.current = next;
             if (!next.infinite) {
                 baseTimer.interval = next.durationMs;
@@ -139,7 +140,7 @@ Singleton {
 
     // Only an infinite base yields to a finite override (overlay). Every
     // other pairing queues behind the current content.
-    function show(content, duration): int {
+    function               show(content, duration): int {
         if (!content) {
             console.warn("[DynamicIsland] show called without content");
             return -1;
@@ -158,10 +159,10 @@ Singleton {
             slideTimer.stop();
             baseTimer.stop();
             overlayTimer.stop();
-            root.closing = false;
+            root.closing   = false;
             root.slidingUp = false;
-            root.current = null;
-            root.overlay = null;
+            root.current   = null;
+            root.overlay   = null;
         }
         if (root.current === null) {
             if (root.overlay === null) {
@@ -178,7 +179,7 @@ Singleton {
             return req.id;
         }
         if (root.current.infinite && !req.infinite && root.overlay === null) {
-            root.overlay = req;
+            root.overlay          = req;
             overlayTimer.interval = req.durationMs;
             overlayTimer.restart();
             return req.id;
@@ -191,28 +192,27 @@ Singleton {
         id: baseTimer
 
         repeat: false
-
         onTriggered: root._expireBase()
     }
+
     Timer {
         id: overlayTimer
 
         repeat: false
-
         onTriggered: root._expireOverlay()
     }
+
     Timer {
         id: contractTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial
-
         onTriggered: root.slidingUp = true
     }
+
     Timer {
         id: slideTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial + 300
-
         onTriggered: root._finishClose()
     }
 }

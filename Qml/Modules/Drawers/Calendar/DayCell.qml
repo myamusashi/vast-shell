@@ -11,38 +11,40 @@ import qs.Services
 Item {
     id: root
 
-    readonly property date cellDate: modelData.date
-    required property int cellHeight
+    required property int  cellHeight
     required property real cellWidth
-    required property int currentMonth
-    readonly property int dayFontWeight: isToday ? 1000 : (isCurrentMonth ? 600 : 100)
-    readonly property int dayOfWeek: cellDate.getDay()
-    readonly property int gridColumn: index % 7
-    readonly property int gridRow: Math.floor(index / 7)
-    property var holidayEntries: {
+    required property int  currentMonth
+    required property int  index
+    required property var  modelData
+    required property var  openPopoverDate
+
+    readonly property date cellDate: modelData.date
+    readonly property int  dayFontWeight: isToday ? 1000 : (isCurrentMonth ? 600 : 100)
+    readonly property int  dayOfWeek: cellDate.getDay()
+    readonly property int  gridColumn: index % 7
+    readonly property int  gridRow: Math.floor(index / 7)
+    readonly property bool isCurrentMonth: modelData.month === currentMonth
+    readonly property bool isPopoverOpen: openPopoverDate !== null && new Date(openPopoverDate).toDateString() === cellDate.toDateString()
+    readonly property bool isToday: modelData.today
+
+    property var           holidayEntries: {
         if (!Configs.generals.showHolidays)
             return [];
         return HolidayModel.getHolidaysForDate(cellDate);
     }
-    property string holidayLabel: {
+    property string        holidayLabel: {
         if (!Configs.generals.showHolidays)
             return "";
         return HolidayModel.nameForDate(cellDate);
     }
-    required property int index
-    readonly property bool isCurrentMonth: modelData.month === currentMonth
-    readonly property bool isPopoverOpen: openPopoverDate !== null && new Date(openPopoverDate).toDateString() === cellDate.toDateString()
-    readonly property bool isToday: modelData.today
-    required property var modelData
-    required property var openPopoverDate
-    property bool showHoliday: {
+    property bool          showHoliday: {
         if (!Configs.generals.showHolidays)
             return false;
         return HolidayModel.hasHoliday(cellDate);
     }
 
-    signal closePopoverRequested
-    signal openPopoverRequested(var date)
+    signal                 closePopoverRequested
+    signal                 openPopoverRequested(var date)
 
     height: cellHeight
     width: cellWidth
@@ -69,7 +71,6 @@ Item {
             cursorShape: Qt.PointingHandCursor
             hoverEnabled: true
             visible: root.isCurrentMonth
-
             onClicked: {
                 if (root.showHoliday && root.holidayLabel !== "") {
                     if (root.isPopoverOpen)
@@ -82,6 +83,7 @@ Item {
             }
         }
     }
+
     StyledRect {
         anchors.fill: parent
         anchors.margins: 1
@@ -91,6 +93,7 @@ Item {
         radius: Appearance.rounding.small - 1
         visible: root.isToday && !mouseArea.containsMouse
     }
+
     Column {
         anchors.centerIn: parent
         spacing: 3
@@ -109,6 +112,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             text: Qt.formatDate(root.cellDate, "d")
         }
+
         RowLayout {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: 3
@@ -131,6 +135,7 @@ Item {
                     radius: 2.5
                 }
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small * 0.65

@@ -8,6 +8,7 @@ import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
 import qs.Widgets
+
 import "../../Components"
 
 ColumnLayout {
@@ -29,24 +30,24 @@ ColumnLayout {
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 52
                 checked: Configs.audio.showPeakLevels
-
                 onToggled: Configs.audio.showPeakLevels = checked
             }
         }
     }
+
     StyledText {
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.normal
         text: qsTr("No audio cards detected.")
         visible: root.count === 0
     }
+
     Repeater {
         model: root.cards
-
         delegate: SettingsCard {
             id: cardDelegate
 
-            required property var card
+            required property var    card
             required property string description
             required property string name
 

@@ -9,7 +9,6 @@ import qs.Components.Effects
 PopupWidget {
     icon: "memory"
     text: qsTr("Memory")
-
     content: ColumnLayout {
         spacing: Appearance.spacing.normal
 
@@ -23,9 +22,11 @@ PopupWidget {
                 font.weight: Font.DemiBold
                 text: qsTr("RAM Size")
             }
+
             Item {
                 Layout.fillWidth: true
             }
+
             StyledText {
                 color: Colours.m3Colors.m3Green
                 font.pixelSize: Appearance.fonts.size.large
@@ -33,6 +34,7 @@ PopupWidget {
                 text: (SystemUsage.memTotal / 1048576).toFixed(2) + " GB"
             }
         }
+
         Repeater {
             model: [
                 {
@@ -44,7 +46,6 @@ PopupWidget {
                     value: ((SystemUsage.memTotal - SystemUsage.memUsed) / 1048576).toFixed(2) + " GB"
                 }
             ]
-
             delegate: RowLayout {
                 id: row
 
@@ -59,9 +60,11 @@ PopupWidget {
                     font.pixelSize: Appearance.fonts.size.normal
                     text: row.modelData.text
                 }
+
                 Item {
                     Layout.fillWidth: true
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
@@ -70,6 +73,7 @@ PopupWidget {
                 }
             }
         }
+
         SliderValues {
             Layout.fillWidth: true
             Layout.topMargin: Appearance.spacing.small
@@ -77,14 +81,14 @@ PopupWidget {
             usedValue: SystemUsage.memUsed / 1048576
         }
     }
-
     component SliderValues: Item {
         id: root
 
         readonly property real freePercent: 1 - usedPercent
-        property real totalValue: 100
         readonly property real usedPercent: totalValue > 0 ? (usedValue / totalValue) : 0
-        property real usedValue: 0
+
+        property real          totalValue: 100
+        property real          usedValue: 0
 
         implicitHeight: 12
 
@@ -93,6 +97,7 @@ PopupWidget {
             color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
             radius: height / 2
         }
+
         Rectangle {
             id: usedBar
 
@@ -100,7 +105,6 @@ PopupWidget {
 
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
-
             Behavior on implicitWidth {
                 SpringAnimation {
                     damping: 0.5
@@ -112,6 +116,7 @@ PopupWidget {
                 host: usedBar
                 target: usedBar.target
             }
+
             anchors {
                 bottom: parent.bottom
                 left: parent.left

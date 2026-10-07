@@ -11,10 +11,11 @@ import qs.Components.Base
 Item {
     id: root
 
-    property alias entryList: entryList
     required property string searchText
-    required property var uiState
-    property alias verticalFlick: verticalFlick
+    required property var    uiState
+
+    property alias           entryList: entryList
+    property alias           verticalFlick: verticalFlick
 
     implicitHeight: entryList.height
 
@@ -31,11 +32,9 @@ Item {
         contentHeight: entryList.height
         contentWidth: width
         flickableDirection: Flickable.VerticalFlick
-
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
-
         onDragStarted: scrollAnim.stop()
         onDraggingChanged: scrollAnim.stop()
         onFlickStarted: scrollAnim.stop()
@@ -59,11 +58,11 @@ Item {
             }
             readonly property int visualStart: root.uiState.visualActive ? Math.min(root.uiState.visualAnchor, currentIndex) : -1
 
-            function ensureCurrentVisible() {
-                const itemY = (currentIndex % itemsPerPage) * cellHeight;
+            function              ensureCurrentVisible() {
+                const itemY    = (currentIndex % itemsPerPage) * cellHeight;
                 const viewport = verticalFlick.height;
                 const currentY = verticalFlick.contentY;
-                let targetY = -1;
+                let targetY    = -1;
                 if (itemY < currentY)
                     targetY = itemY;
                 else if (itemY + cellHeight > currentY + viewport)
@@ -75,37 +74,37 @@ Item {
                 scrollAnim.to = targetY;
                 scrollAnim.start();
             }
-            function moveCurrentIndexByPage(delta) {
-                const page = currentPage;
+            function              moveCurrentIndexByPage(delta) {
+                const page    = currentPage;
                 const newPage = page + delta;
                 if (newPage < 0 || newPage >= totalPages)
                     return;
 
-                const row = currentIndex % itemsPerPage;
+                const row       = currentIndex % itemsPerPage;
                 const pageStart = newPage * itemsPerPage;
-                const pageEnd = Math.min(pageStart + itemsPerPage, count) - 1;
+                const pageEnd   = Math.min(pageStart + itemsPerPage, count) - 1;
 
-                currentIndex = Math.min(Math.max(pageStart + row, pageStart), pageEnd);
-                contentX = newPage * width;
+                currentIndex    = Math.min(Math.max(pageStart + row, pageStart), pageEnd);
+                contentX        = newPage * width;
             }
-            function moveCurrentIndexDown() {
+            function              moveCurrentIndexDown() {
                 if (currentIndex < count - 1)
                     currentIndex++;
             }
-            function moveCurrentIndexLeft() {
+            function              moveCurrentIndexLeft() {
                 moveCurrentIndexByPage(-1);
             }
-            function moveCurrentIndexRight() {
+            function              moveCurrentIndexRight() {
                 moveCurrentIndexByPage(1);
             }
-            function moveCurrentIndexUp() {
+            function              moveCurrentIndexUp() {
                 if (currentIndex > 0)
                     currentIndex--;
             }
-            function visualSelectedIds(): var {
-                const ids = [];
+            function              visualSelectedIds(): var {
+                const ids   = [];
                 const start = Math.min(root.uiState.visualAnchor, currentIndex);
-                const end = Math.max(root.uiState.visualAnchor, currentIndex);
+                const end   = Math.max(root.uiState.visualAnchor, currentIndex);
                 for (let i = start; i <= end; ++i)
                     ids.push(ClipboardManager.model.idAtRow(i));
                 return ids;
@@ -126,11 +125,11 @@ Item {
             model: ClipboardManager.model
             snapMode: GridView.SnapOneRow
             width: verticalFlick.width
-
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AlwaysOff
             }
             add: Transition {
+
                 NAnim {
                     from: 0
                     properties: "opacity,scale"
@@ -138,6 +137,7 @@ Item {
                 }
             }
             addDisplaced: Transition {
+
                 NAnim {
                     duration: Appearance.animations.durations.small
                     properties: "opacity,scale"
@@ -159,12 +159,12 @@ Item {
                 type: modelData.type
                 visible: index < Configs.clipboard.maxEntries
                 width: GridView.view.cellWidth // qmllint disable
-
                 onActivated: ClipboardManager.copyToClipboard(entryId)
                 onPinToggled: (id, s) => ClipboardManager.pin(id, s)
                 onRemoveRequested: id => ClipboardManager.remove(id)
             }
             displaced: Transition {
+
                 NAnim {
                     duration: Appearance.animations.durations.small
                     properties: "opacity,scale"
@@ -177,10 +177,12 @@ Item {
                 width: entryList.cellWidth
             }
             move: Transition {
+
                 NAnim {
                     duration: Appearance.animations.durations.small
                     properties: "x,y"
                 }
+
                 NAnim {
                     duration: Appearance.animations.durations.small
                     properties: "opacity,scale"
@@ -188,18 +190,19 @@ Item {
                 }
             }
             rebound: Transition {
+
                 NAnim {
                     properties: "x,y"
                 }
             }
             remove: Transition {
+
                 NAnim {
                     from: 1
                     properties: "opacity,scale"
                     to: 0
                 }
             }
-
             onContentXChanged: {
                 var maxContentX = Math.max(0, (totalPages - 1) * width);
                 if (contentX > maxContentX) {
@@ -217,6 +220,7 @@ Item {
             }
         }
     }
+
     StyledText {
         anchors.centerIn: verticalFlick
         color: Colours.m3Colors.m3OnSurfaceVariant
@@ -224,6 +228,7 @@ Item {
         text: root.searchText.length > 0 ? qsTr("No results for ") + root.searchText : qsTr("Clipboard is empty")
         visible: entryList.count === 0
     }
+
     Row {
         id: pageIndicatorRow
 
@@ -235,7 +240,6 @@ Item {
 
         Repeater {
             model: entryList.totalPages
-
             delegate: Rectangle {
                 required property int index
 
@@ -244,18 +248,16 @@ Item {
                 implicitWidth: entryList.currentPage === index ? 16 : 6
                 opacity: entryList.currentPage === index ? 1.0 : 0.5
                 radius: 3
-
                 Behavior on implicitWidth {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
                 Behavior on opacity {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
             }
         }
     }
+
     ScrollBar {
         id: horizontalScrollBar
 

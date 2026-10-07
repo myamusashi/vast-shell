@@ -17,6 +17,16 @@ Scope {
     }
 
     // Outcome and Failure are mirrored on DragAndDropServices, same order.
+    readonly property int fileIntervalMs: 400
+
+    property int          currentState: TransferController.State.Idle
+    property int          cursor: 0
+    property var          droppedFiles: []
+    property int          failedCount: 0
+    property int          failure: TransferController.Failure.None
+    property bool         handoffPending: false
+    property int          maxPercent: 0
+
     enum Outcome {
         Sent,
         Partial,
@@ -33,15 +43,6 @@ Scope {
         Transferring,
         Completed
     }
-
-    property int currentState: TransferController.State.Idle
-    property int cursor: 0
-    property var droppedFiles: []
-    property int failedCount: 0
-    property int failure: TransferController.Failure.None
-    readonly property int fileIntervalMs: 400
-    property bool handoffPending: false
-    property int maxPercent: 0
 
     // A small file finishes before its transfer window ever appears, so fall back to
     // a minimum span. Presentation only: it never changes the verdict.
@@ -60,21 +61,23 @@ Scope {
             return TransferController.Outcome.Sent;
         return TransferController.Outcome.Failed;
     }
-    property bool sawTransfer: false
-    property var selectedDevice: null
-    property int sentCount: 0
+
+    property bool         sawTransfer: false
+    property var          selectedDevice: null
+    property int          sentCount: 0
 
     // Grace period for a transfer window whose percentage has stopped climbing.
     readonly property int stallMs: 5000
-    property bool stopped: false
     readonly property int totalCount: droppedFiles.length
     readonly property int transferDwell: Math.max(minDwellMs, totalCount * fileIntervalMs)
 
+    property bool         stopped: false
+
     // watchingTransfer is live progress; sawTransfer is sticky history. The window
     // covers a whole batch, so it can open before the last file is handed off.
-    property bool watchingTransfer: false
+    property bool         watchingTransfer: false
 
-    function acceptDroppedFiles(files) {
+    function              acceptDroppedFiles(files) {
         if (!files || files.length === 0)
             return;
         if (currentState !== TransferController.State.Idle && currentState !== TransferController.State.FilesDropped)
@@ -82,48 +85,48 @@ Scope {
         droppedFiles = droppedFiles.concat(files);
         currentState = TransferController.State.FilesDropped;
     }
-    function beginObservation() {
-        root.watchingTransfer = false;
+    function              beginObservation() {
+        root.watchingTransfer     = false;
         observationTimer.interval = root.transferDwell;
         observationTimer.start();
     }
-    function completeTransfer() {
+    function              completeTransfer() {
         observationTimer.stop();
         stallTimer.stop();
         if (currentState !== TransferController.State.Transferring)
             return;
         currentState = TransferController.State.Completed;
     }
-    function dismiss() {
+    function              dismiss() {
         observationTimer.stop();
         stallTimer.stop();
         root.handoffPending = false;
-        droppedFiles = [];
-        selectedDevice = null;
-        cursor = 0;
-        sentCount = 0;
-        failedCount = 0;
-        stopped = false;
-        failure = TransferController.Failure.None;
-        watchingTransfer = false;
-        sawTransfer = false;
-        maxPercent = 0;
-        currentState = TransferController.State.Idle;
+        droppedFiles        = [];
+        selectedDevice      = null;
+        cursor              = 0;
+        sentCount           = 0;
+        failedCount         = 0;
+        stopped             = false;
+        failure             = TransferController.Failure.None;
+        watchingTransfer    = false;
+        sawTransfer         = false;
+        maxPercent          = 0;
+        currentState        = TransferController.State.Idle;
     }
-    function goBack() {
+    function              goBack() {
         if (currentState === TransferController.State.SelectingDevice || currentState === TransferController.State.ConfirmDevice)
             currentState = TransferController.State.FilesDropped;
     }
-    function goToConfirmation() {
+    function              goToConfirmation() {
         currentState = TransferController.State.ConfirmDevice;
     }
-    function goToDeviceSelection() {
+    function              goToDeviceSelection() {
         currentState = TransferController.State.SelectingDevice;
     }
 
     // One handoff in flight at a time, so every reply belongs to the file that
     // started it and Stop sending still has something to cancel.
-    function pumpNext() {
+    function              pumpNext() {
         root.handoffPending = false;
 
         if (root.stopped || root.cursor >= root.totalCount) {
@@ -148,41 +151,42 @@ Scope {
         root.handoffPending = true;
         KdeConnectShare.share(root.selectedDevice.id, path);
     }
-    function recordFailure(kind) {
+    function              recordFailure(kind) {
         root.failedCount++;
         if (root.failure === TransferController.Failure.None)
             root.failure = kind;
     }
-    function startTransfer() {
+    function              startTransfer() {
         if (currentState !== TransferController.State.ConfirmDevice)
             return;
         if (!selectedDevice || totalCount === 0)
             return;
         currentState = TransferController.State.Transferring;
-        root.cursor = 0;
+        root.cursor  = 0;
         root.pumpNext();
     }
-    function stopSending() {
+    function              stopSending() {
         if (currentState !== TransferController.State.Transferring)
             return;
         root.stopped = true;
-        root.cursor = root.totalCount;
+        root.cursor  = root.totalCount;
         if (!root.handoffPending)
             root.beginObservation();
     }
 
     Connections {
-        function onShareFailed(deviceId, errorMessage) {
-            root.recordFailure(TransferController.Failure.Unreachable);
-            root.pumpNext();
-        }
         function onShared(deviceId) {
             root.sentCount++;
+            root.pumpNext();
+        }
+        function onShareFailed(deviceId, errorMessage) {
+            root.recordFailure(TransferController.Failure.Unreachable);
             root.pumpNext();
         }
 
         target: KdeConnectShare
     }
+
     Connections {
         function onActiveChanged() {
             if (KDEConnectTransfer.active) {
@@ -192,7 +196,7 @@ Scope {
                     root.watchingTransfer = true;
                 }
                 root.sawTransfer = true;
-                root.maxPercent = Math.max(root.maxPercent, KDEConnectTransfer.percent);
+                root.maxPercent  = Math.max(root.maxPercent, KDEConnectTransfer.percent);
                 stallTimer.restart();
                 return;
             }
@@ -201,7 +205,7 @@ Scope {
                 root.completeTransfer();
         }
         function onPercentChanged() {
-            const advanced = KDEConnectTransfer.percent > root.maxPercent;
+            const advanced  = KDEConnectTransfer.percent > root.maxPercent;
             root.maxPercent = Math.max(root.maxPercent, KDEConnectTransfer.percent);
             // A re-render at the same percentage is not progress and must not restart.
             if (root.watchingTransfer && advanced)
@@ -210,19 +214,19 @@ Scope {
 
         target: KDEConnectTransfer
     }
+
     Timer {
         id: observationTimer
 
         repeat: false
-
         onTriggered: root.completeTransfer()
     }
+
     Timer {
         id: stallTimer
 
         interval: root.stallMs
         repeat: false
-
         onTriggered: root.completeTransfer()
     }
 }

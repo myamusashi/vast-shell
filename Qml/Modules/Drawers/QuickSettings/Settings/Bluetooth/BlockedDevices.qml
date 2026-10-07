@@ -20,9 +20,9 @@ ColumnLayout {
         font.weight: Font.DemiBold
         text: qsTr("Blocked devices")
     }
+
     Repeater {
         model: BluetoothServices.blockedDevices
-
         delegate: WrapperRectangle {
             id: blockedDelegate
 
@@ -42,6 +42,7 @@ ColumnLayout {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
                 }
+
                 Rectangle {
                     Layout.preferredHeight: 28
                     Layout.preferredWidth: 28
@@ -55,6 +56,7 @@ ColumnLayout {
                         icon: "block"
                     }
                 }
+
                 StyledText {
                     Layout.fillWidth: true
                     color: Colours.m3Colors.m3OnSurface
@@ -62,13 +64,13 @@ ColumnLayout {
                     font.pixelSize: Appearance.fonts.size.normal
                     text: BluetoothServices.displayName(blockedDelegate.modelData)
                 }
+
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
                     icon.name: "block"
                     implicitHeight: 28
                     implicitWidth: 28
-
                     onClicked: blockedDelegate.modelData.blocked = false
                 }
             }

@@ -19,10 +19,8 @@ StyledRect {
     implicitHeight: parent.height
     implicitWidth: container.width
     radius: Appearance.rounding.small
-
     Behavior on implicitWidth {
-        NAnim {
-        }
+        NAnim {}
     }
 
     Dots {
@@ -37,6 +35,7 @@ StyledRect {
             icon: Audio.getIcon(root.audioNode)
             type: Icon.Material
         }
+
         StyledText {
             Layout.alignment: Qt.AlignVCenter
             color: Colours.m3Colors.m3OnBackground
@@ -44,10 +43,10 @@ StyledRect {
             text: (root.audioNode.audio.volume * 100).toFixed(0) + "%"
         }
     }
+
     MArea {
         acceptedButtons: Qt.MiddleButton | Qt.LeftButton
         anchors.fill: parent
-
         onClicked: mouseEvent => {
             if (mouseEvent.button === Qt.MiddleButton)
                 Audio.toggleMute(root.audioNode);

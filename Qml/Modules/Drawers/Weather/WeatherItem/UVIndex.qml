@@ -16,11 +16,13 @@ MaterialShape {
     property int uvIndex: Weather.uvIndex
 
     RowLayout {
+
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
             topMargin: 20
         }
+
         Icon {
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large * 1.5
@@ -32,12 +34,14 @@ MaterialShape {
             icon: "sunny"
             type: Icon.Material
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("UV index")
         }
     }
+
     ColumnLayout {
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
@@ -49,6 +53,7 @@ MaterialShape {
             font.weight: Font.Bold
             text: canvas.uvIndex
         }
+
         StyledText {
             Layout.alignment: Qt.AlignHCenter
             color: Colours.m3Colors.m3OnSurface
@@ -56,6 +61,7 @@ MaterialShape {
             text: Weather.uvCategoryLabel(canvas.uvIndex)
         }
     }
+
     Item {
         anchors.fill: parent
 
@@ -65,10 +71,11 @@ MaterialShape {
             StyledRect {
                 id: indicator
 
-                property real angle: 150 - (index * 30)
-                property int currentCategory: Weather.uvCategoryIndex(canvas.uvIndex)
-                property real distance: Math.min(parent.width, parent.height) * 0.38
                 required property int index
+
+                property real         angle: 150 - (index * 30)
+                property int          currentCategory: Weather.uvCategoryIndex(canvas.uvIndex)
+                property real         distance: Math.min(parent.width, parent.height) * 0.38
 
                 color: index === currentCategory ? canvas.uvColors[index] : Qt.alpha(canvas.uvColors[index], 0.3)
                 height: 18

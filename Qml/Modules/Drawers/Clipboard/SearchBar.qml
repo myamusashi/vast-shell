@@ -16,10 +16,11 @@ Item {
 
     required property int currentId
     required property var entryList
-    property alias searchField: searchField
     required property var uiState
 
-    signal keyPressed(var event)
+    property alias        searchField: searchField
+
+    signal                keyPressed(var event)
 
     implicitHeight: 48
 
@@ -30,6 +31,7 @@ Item {
         color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
         height: 1
     }
+
     RowLayout {
         anchors.bottomMargin: Appearance.margin.smaller
         anchors.fill: parent
@@ -51,6 +53,7 @@ Item {
                 target: searchIcon.target
             }
         }
+
         StyledTextInput {
             id: searchField
 
@@ -59,7 +62,6 @@ Item {
             autoFocus: !Configs.clipboard.enableVimKeybinds
             placeHolderText: qsTr("Search clipboard…")
             toggleButtonVisible: false
-
             onAccepted: {
                 if (Configs.clipboard.enableVimKeybinds && !searchField.isFocused) {
                     return;
@@ -77,7 +79,6 @@ Item {
 
                 interval: 150
                 value: searchField.text
-
                 onDebouncedValueChanged: {
                     if (searchField.text.length === 0)
                         ClipboardManager.model.setFilter("");
@@ -86,12 +87,14 @@ Item {
                 }
             }
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.small
             text: (root.entryList.currentPage + 1) + " / " + root.entryList.totalPages
             visible: root.entryList.totalPages > 0 && searchField.text.length === 0 && !root.uiState.visualActive
         }
+
         StyledText {
             color: Colours.m3Colors.m3Primary
             font.bold: true

@@ -13,8 +13,8 @@ Item {
 
     function calculateHeight() {
         var totalHeight = 0;
-        var spacing = 10;
-        var padding = 10;
+        var spacing     = 10;
+        var padding     = 10;
 
         if (GlobalStates.isOSDVisible("capslock"))
             totalHeight += 50;
@@ -36,7 +36,6 @@ Item {
     implicitHeight: calculateHeight()
     implicitWidth: parent.width * 0.15
     visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
-
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -48,6 +47,7 @@ Item {
         horizontalCenter: parent.horizontalCenter
         verticalCenter: parent.verticalCenter
     }
+
     StyledRect {
         anchors.fill: parent
         clip: true
@@ -58,7 +58,6 @@ Item {
             active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && (GlobalStates.isOSDVisible("numlock") || GlobalStates.isOSDVisible("capslock")) // qmllint disable
             anchors.fill: parent
             asynchronous: true
-
             sourceComponent: Column {
                 spacing: Appearance.spacing.normal
 
@@ -66,6 +65,7 @@ Item {
                     fill: parent
                     margins: 15
                 }
+
                 Repeater {
                     model: [
                         {
@@ -81,7 +81,6 @@ Item {
                             icon: KeylockState.numLock ? "lock" : "lock_open_right"
                         }
                     ]
-
                     delegate: LockIndicator {
                         required property var modelData
 

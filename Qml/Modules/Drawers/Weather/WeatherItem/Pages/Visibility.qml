@@ -14,9 +14,7 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Visibility {
-    }
-
+    content: Visibility {}
     component Visibility: Column {
         clip: true
         spacing: Appearance.spacing.normal
@@ -25,12 +23,13 @@ Pages {
             fill: parent
             topMargin: 20
         }
+
         Header {
             icon: "visibility"
             title: qsTr("Visibility")
-
             onClicked: root.isOpen = false
         }
+
         ClippingRectangle {
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: parent.height * 0.1
@@ -51,6 +50,7 @@ Pages {
                     shape: MaterialShape.Cookie9Sided
                     z: 3
                 }
+
                 MaterialShape {
                     anchors.verticalCenter: parent.verticalCenter
                     color: Colours.m3Colors.m3OnPrimary
@@ -61,6 +61,7 @@ Pages {
                     x: 10
                     z: 2
                 }
+
                 MaterialShape {
                     anchors.verticalCenter: parent.verticalCenter
                     color: Colours.m3Colors.m3OnPrimary
@@ -72,6 +73,7 @@ Pages {
                     z: 1
                 }
             }
+
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: Appearance.margin.large
@@ -83,6 +85,7 @@ Pages {
                     font.weight: Font.Bold
                     text: qsTr("Current conditions")
                 }
+
                 RowLayout {
                     Layout.alignment: Qt.AlignCenter | Qt.AlignLeft
                     implicitWidth: parent.width
@@ -94,6 +97,7 @@ Pages {
                         font.weight: Font.Bold
                         text: parseInt(Weather.visibility)
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.extraLarge
@@ -101,11 +105,13 @@ Pages {
                         text: "Km"
                     }
                 }
+
                 Item {
                     implicitHeight: parent.height
                 }
             }
         }
+
         WrapperRectangle {
             color: Colours.m3Colors.m3Surface
             implicitHeight: description.contentHeight + 15
@@ -117,6 +123,7 @@ Pages {
                 color: Colours.m3Colors.m3Outline
                 width: 1
             }
+
             StyledText {
                 id: description
 

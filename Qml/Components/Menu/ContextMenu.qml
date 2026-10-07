@@ -9,9 +9,9 @@ Popup {
     id: root
 
     default property alias items: menuSurface.content
-    property bool showScrollBar: false
+    property bool          showScrollBar: false
 
-    function openAt(x: real, y: real) {
+    function               openAt(x: real, y: real) {
         x = x;
         y = y;
         open();
@@ -22,7 +22,6 @@ Popup {
     focus: true
     padding: 0
     transformOrigin: Popup.Center
-
     enter: MenuTransitions {
         opening: true
     }

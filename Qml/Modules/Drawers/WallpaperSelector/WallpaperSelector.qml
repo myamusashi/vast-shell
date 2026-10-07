@@ -23,7 +23,6 @@ Drawer {
     filletRadius: 40
     length: parent.width * 0.6
     open: GlobalStates.isWallpaperSwitcherOpen
-
     Component.onCompleted: Wallpaper.requestThumbnailChecks()
     onIsWallpaperSwitcherOpenChanged: {
         if (!isWallpaperSwitcherOpen) {
@@ -38,16 +37,15 @@ Drawer {
 
         asynchronous: true
         visible: false
-
         Component.onCompleted: {
             Wallpaper.colorSourceImage = colorSourceImage;
         }
     }
+
     Loader {
         active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isWallpaperSwitcherOpen // qmllint disable
         anchors.fill: parent
         asynchronous: true
-
         sourceComponent: FocusCage {
             active: GlobalStates.isWallpaperSwitcherOpen
             anchors.fill: parent

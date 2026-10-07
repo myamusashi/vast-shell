@@ -1,39 +1,39 @@
 pragma ComponentBehavior: Bound
 
-import AnotherRipple
 import QtQuick
 import QtQuick.Layouts
+import AnotherRipple
+import Vast.Utils
 
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
-import Vast.Utils
 
 Item {
     id: root
 
     readonly property color backgroundColor: enabled || color.a === 0 ? color : Qt.alpha(color, 0.12)
-    property alias backgroundRadius: background.radius
-    property color color: Colours.m3Colors.m3Primary
-    property bool hovered: hoverHandler.hovered
-    property IconComponent icon: IconComponent {
-    }
-    property bool keyboardFocusable: true
-    readonly property bool keyboardFocused: activeFocus
-    property bool outlined: false
-    property int paddingBottom: 10
-    property int paddingLeft: icon.name !== "" ? 16 : 24
-    property int paddingRight: 24
-    property int paddingTop: 10
-    property bool pressed: tapHandler.pressed
-    property color rippleColor: Colours.m3Colors.m3OnPrimary
-    property int spacing: 8
-    property string text: ""
-    property color textColor: Colours.m3Colors.m3OnPrimary
-    property int textSize: Appearance.fonts.size.normal
+    readonly property bool  keyboardFocused: activeFocus
 
-    signal clicked
+    property alias          backgroundRadius: background.radius
+    property color          color: Colours.m3Colors.m3Primary
+    property bool           hovered: hoverHandler.hovered
+    property IconComponent  icon: IconComponent {}
+    property bool           keyboardFocusable: true
+    property bool           outlined: false
+    property int            paddingBottom: 10
+    property int            paddingLeft: icon.name !== "" ? 16 : 24
+    property int            paddingRight: 24
+    property int            paddingTop: 10
+    property bool           pressed: tapHandler.pressed
+    property color          rippleColor: Colours.m3Colors.m3OnPrimary
+    property int            spacing: 8
+    property string         text: ""
+    property color          textColor: Colours.m3Colors.m3OnPrimary
+    property int            textSize: Appearance.fonts.size.normal
+
+    signal                  clicked
 
     implicitHeight: 40
     implicitWidth: contentRow.implicitWidth + paddingLeft + paddingRight
@@ -66,6 +66,7 @@ Item {
                 opacity: 1
                 target: focusRing
             }
+
             PropertyChanges {
                 opacity: 1
                 target: focusHighlight
@@ -89,7 +90,6 @@ Item {
             }
         }
     ]
-
     Keys.onEnterPressed: event => {
         if (enabled) {
             clicked();
@@ -126,6 +126,7 @@ Item {
             yClipRadius: background.radius
         }
     }
+
     StateLayer {
         anchors.fill: parent
         color: root.textColor
@@ -134,6 +135,7 @@ Item {
         layerPressed: root.pressed
         radius: background.radius
     }
+
     Rectangle {
         id: focusRing
 
@@ -143,13 +145,13 @@ Item {
         color: "transparent"
         opacity: 0
         radius: background.radius
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
             }
         }
     }
+
     Rectangle {
         id: focusHighlight
 
@@ -157,13 +159,13 @@ Item {
         color: Qt.alpha(Colours.m3Colors.m3Primary, 0.18)
         opacity: 0
         radius: background.radius
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
             }
         }
     }
+
     RowLayout {
         id: contentRow
 
@@ -173,8 +175,8 @@ Item {
         Icon {
             id: iconItem
 
-            property real colorBlendProgress: 1.0
-            property bool colorBlending: false
+            property bool  colorBlending: false
+            property real  colorBlendProgress: 1.0
             property color colorFrom
             property color colorTo
             property color iconTarget: root.icon.color
@@ -182,12 +184,11 @@ Item {
             font.pixelSize: root.icon.size
             icon: root.icon.name
             visible: root.icon.name !== ""
-
             onColorBlendProgressChanged: {
                 if (!colorBlending)
                     return;
                 if (colorBlendProgress >= 1) {
-                    color = colorTo;
+                    color         = colorTo;
                     colorBlending = false;
                 } else if (colorBlendProgress > 0) {
                     color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
@@ -195,9 +196,9 @@ Item {
             }
             onIconTargetChanged: {
                 iconColorBlendAnim.stop();
-                colorFrom = iconItem.color;
-                colorTo = iconTarget;
-                colorBlending = true;
+                colorFrom          = iconItem.color;
+                colorTo            = iconTarget;
+                colorBlending      = true;
                 colorBlendProgress = 0.0;
                 iconColorBlendAnim.start();
             }
@@ -212,17 +213,17 @@ Item {
                 to: 1.0
             }
         }
+
         Loader {
             id: styledTextLoader
 
             active: root.text !== ""
             asynchronous: false
-
             sourceComponent: StyledText {
                 id: styledTextItem
 
-                property real colorBlendProgress: 1.0
-                property bool colorBlending: false
+                property bool  colorBlending: false
+                property real  colorBlendProgress: 1.0
                 property color colorFrom
                 property color colorTo
                 property color textTarget: root.textColor
@@ -231,12 +232,11 @@ Item {
                 font.pixelSize: root.textSize
                 font.weight: Font.Medium
                 text: root.text
-
                 onColorBlendProgressChanged: {
                     if (!colorBlending)
                         return;
                     if (colorBlendProgress >= 1) {
-                        color = colorTo;
+                        color         = colorTo;
                         colorBlending = false;
                     } else if (colorBlendProgress > 0) {
                         color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
@@ -244,9 +244,9 @@ Item {
                 }
                 onTextTargetChanged: {
                     textColorBlendAnim.stop();
-                    colorFrom = styledTextItem.color;
-                    colorTo = textTarget;
-                    colorBlending = true;
+                    colorFrom          = styledTextItem.color;
+                    colorTo            = textTarget;
+                    colorBlending      = true;
                     colorBlendProgress = 0.0;
                     textColorBlendAnim.start();
                 }
@@ -263,22 +263,23 @@ Item {
             }
         }
     }
+
     HoverHandler {
         id: hoverHandler
 
         cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
+
     TapHandler {
         id: tapHandler
 
         enabled: root.enabled
-
         onTapped: root.clicked()
     }
 
     component IconComponent: QtObject {
-        property color color: Colours.m3Colors.m3OnSurface
+        property color  color: Colours.m3Colors.m3OnSurface
         property string name: ""
-        property int size: Appearance.fonts.size.large * 1.2
+        property int    size: Appearance.fonts.size.large * 1.2
     }
 }

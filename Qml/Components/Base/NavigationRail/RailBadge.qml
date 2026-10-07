@@ -7,9 +7,10 @@ import qs.Services
 Item {
     id: root
 
-    property bool dot: false
     readonly property bool hasBadge: text !== "" || dot
-    property string text: ""
+
+    property bool          dot: false
+    property string        text: ""
 
     implicitHeight: text !== "" ? 16 : 8
     implicitWidth: text !== "" ? Math.max(16, badgeText.implicitWidth + 8) : 8

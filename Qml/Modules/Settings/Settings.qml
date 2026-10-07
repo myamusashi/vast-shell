@@ -17,15 +17,14 @@ LazyLoader {
     id: settingsLoader
 
     readonly property int contentWidth: 640
-    property int currentPage: 0
+
+    property int          currentPage: 0
 
     activeAsync: GlobalStates.isSettingsOpen
-
     component: FloatingWindow {
         color: GlobalStates.drawerColors
         minimumSize: Qt.size(1100, 600)
         title: "settings window"
-
         onClosed: GlobalStates.isSettingsOpen = false
 
         Rectangle {
@@ -157,12 +156,12 @@ LazyLoader {
                                 ]
                             }
                         ]
-
                         onActivated: function (index) {
                             settingsLoader.currentPage = index;
                         }
                     }
                 }
+
                 Rectangle {
                     id: sidebarDivider
 
@@ -173,6 +172,7 @@ LazyLoader {
                     color: Colours.m3Colors.m3OutlineVariant
                     width: 1
                 }
+
                 Rectangle {
                     id: contentArea
 
@@ -215,182 +215,163 @@ LazyLoader {
                                 icon.color: Colours.m3Colors.m3SurfaceVariant
                                 icon.name: navRail.expanded ? "menu_open" : "menu"
                                 icon.size: Appearance.fonts.size.larger
-
                                 onClicked: navRail.expanded = !navRail.expanded
                             }
+
                             SettingsSearchField {
                                 id: settingsSearchField
 
                                 Layout.alignment: Qt.AlignVCenter
                                 Layout.fillWidth: true
-
                                 onActivated: (page, card) => {
                                     settingsLoader.currentPage = page;
                                     Qt.callLater(() => pagesColumn.revealCard(card));
                                 }
                             }
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 0
                             visible: settingsLoader.currentPage === 0
-
-                            sourceComponent: GeneralPage {
-                            }
+                            sourceComponent: GeneralPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 1
                             visible: settingsLoader.currentPage === 1
-
-                            sourceComponent: LanguagePage {
-                            }
+                            sourceComponent: LanguagePage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 2
                             visible: settingsLoader.currentPage === 2
-
-                            sourceComponent: AppearancePage {
-                            }
+                            sourceComponent: AppearancePage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 3
                             visible: settingsLoader.currentPage === 3
-
-                            sourceComponent: WallpaperPage {
-                            }
+                            sourceComponent: WallpaperPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 4
                             visible: settingsLoader.currentPage === 4
-
-                            sourceComponent: BarPage {
-                            }
+                            sourceComponent: BarPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 5
                             visible: settingsLoader.currentPage === 5
-
-                            sourceComponent: MediaPlayerPage {
-                            }
+                            sourceComponent: MediaPlayerPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 6
                             visible: settingsLoader.currentPage === 6
-
-                            sourceComponent: WeatherPage {
-                            }
+                            sourceComponent: WeatherPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 7
                             visible: settingsLoader.currentPage === 7
-
-                            sourceComponent: NotificationPage {
-                            }
+                            sourceComponent: NotificationPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 8
                             visible: settingsLoader.currentPage === 8
-
-                            sourceComponent: ClipboardPage {
-                            }
+                            sourceComponent: ClipboardPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 9
                             visible: settingsLoader.currentPage === 9
-
-                            sourceComponent: CaptureScreenVideoPage {
-                            }
+                            sourceComponent: CaptureScreenVideoPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 10
                             visible: settingsLoader.currentPage === 10
-
-                            sourceComponent: VolumePage {
-                            }
+                            sourceComponent: VolumePage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 11
                             visible: settingsLoader.currentPage === 11
-
-                            sourceComponent: PrivacyNodesPage {
-                            }
+                            sourceComponent: PrivacyNodesPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 12
                             visible: settingsLoader.currentPage === 12
-
-                            sourceComponent: InternetPage {
-                            }
+                            sourceComponent: InternetPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 13
                             visible: settingsLoader.currentPage === 13
-
-                            sourceComponent: BluetoothPage {
-                            }
+                            sourceComponent: BluetoothPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 14
                             visible: settingsLoader.currentPage === 14
-
-                            sourceComponent: KDEConnectPage {
-                            }
+                            sourceComponent: KDEConnectPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 15
                             visible: settingsLoader.currentPage === 15
-
-                            sourceComponent: GreeterPage {
-                            }
+                            sourceComponent: GreeterPage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 16
                             visible: settingsLoader.currentPage === 16
-
-                            sourceComponent: IdlePage {
-                            }
+                            sourceComponent: IdlePage {}
                         }
+
                         Loader {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 17
                             visible: settingsLoader.currentPage === 17
-
-                            sourceComponent: LockscreenPage {
-                            }
+                            sourceComponent: LockscreenPage {}
                         }
                     }
                 }

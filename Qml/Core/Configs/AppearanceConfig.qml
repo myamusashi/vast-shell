@@ -4,18 +4,12 @@ import Quickshell.Io
 JsonObject {
     id: root
 
-    property AnimationsComponent animations: AnimationsComponent {
-    }
-    property FontsComponent fonts: FontsComponent {
-    }
-    property MarginComponent margin: MarginComponent {
-    }
-    property PaddingComponent padding: PaddingComponent {
-    }
-    property RoundingComponent rounding: RoundingComponent {
-    }
-    property SpacingComponent spacing: SpacingComponent {
-    }
+    property AnimationsComponent animations: AnimationsComponent {}
+    property FontsComponent      fonts: FontsComponent {}
+    property MarginComponent     margin: MarginComponent {}
+    property PaddingComponent    padding: PaddingComponent {}
+    property RoundingComponent   rounding: RoundingComponent {}
+    property SpacingComponent    spacing: SpacingComponent {}
 
     component AnimationCurvesComponent: JsonObject {
         readonly property list<real> emphasized: [0.05, 0, 0.13, 0.06, 0.16, 0.4, 0.20833, 0.82, 0.25, 1, 1, 1]
@@ -38,14 +32,13 @@ JsonObject {
         readonly property int extraLarge: 1000 * scale
         readonly property int large: 600 * scale
         readonly property int normal: 300 * scale
-        property int scale: 1
         readonly property int small: 200 * scale
+
+        property int          scale: 1
     }
     component AnimationsComponent: JsonObject {
-        property AnimationCurvesComponent curves: AnimationCurvesComponent {
-        }
-        property AnimationDurationsComponent durations: AnimationDurationsComponent {
-        }
+        property AnimationCurvesComponent    curves: AnimationCurvesComponent {}
+        property AnimationDurationsComponent durations: AnimationDurationsComponent {}
     }
     component FontFamily: JsonObject {
         property string material: "Material Symbols Rounded"
@@ -59,14 +52,13 @@ JsonObject {
         readonly property real larger: 18 * scale
         readonly property real medium: 13 * scale
         readonly property real normal: 14 * scale
-        property real scale: 1.0
         readonly property real small: 12 * scale
+
+        property real          scale: 1.0
     }
     component FontsComponent: JsonObject {
-        property FontFamily family: FontFamily {
-        }
-        property FontSize size: FontSize {
-        }
+        property FontFamily family: FontFamily {}
+        property FontSize   size: FontSize {}
     }
     component MarginComponent: JsonObject {
         property int large: 15

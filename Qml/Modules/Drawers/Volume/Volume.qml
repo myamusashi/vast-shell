@@ -12,7 +12,8 @@ Drawer {
     id: root
 
     required property Drawer session
-    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
+
+    readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -31,12 +32,10 @@ Drawer {
         active: root.shown
         anchors.fill: parent
         asynchronous: true
-
         sourceComponent: Content {
             controller: Volume
             linkTracker: Volume.linkTracker
         }
-
         onActiveChanged: {
             if (!active)
                 Volume.openPerAppVolume = false;

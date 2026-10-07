@@ -15,9 +15,7 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Humidity {
-    }
-
+    content: Humidity {}
     component Humidity: Column {
         clip: true
         spacing: Appearance.spacing.normal
@@ -26,12 +24,13 @@ Pages {
             fill: parent
             topMargin: 20
         }
+
         Header {
             icon: "water_drop"
             title: qsTr("Humidity")
-
             onClicked: root.isOpen = false
         }
+
         WrapperRectangle {
             anchors.margins: Appearance.margin.normal
             clip: true
@@ -51,11 +50,13 @@ Pages {
                     font.pixelSize: Appearance.fonts.size.large * 1.5
                     text: qsTr("Today's average")
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3Primary
                     font.pixelSize: Appearance.fonts.size.extraLarge
                     text: Weather.humidity + "%"
                 }
+
                 Flickable {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 180
@@ -83,6 +84,7 @@ Pages {
                                     to: 100
                                     value: parent.modelData.humidity
                                 }
+
                                 StyledText {
                                     color: Colours.m3Colors.m3OnBackground
                                     font.pixelSize: Appearance.fonts.size.normal
@@ -97,6 +99,7 @@ Pages {
                 }
             }
         }
+
         StyledRect {
             color: Colours.m3Colors.m3Surface
             implicitHeight: humidityDescription.contentHeight + 20
@@ -106,6 +109,7 @@ Pages {
                 color: Colours.m3Colors.m3OutlineVariant
                 width: 1
             }
+
             StyledText {
                 id: humidityDescription
 
@@ -121,6 +125,7 @@ Pages {
                 }
             }
         }
+
         Item {
             Layout.fillHeight: true
         }

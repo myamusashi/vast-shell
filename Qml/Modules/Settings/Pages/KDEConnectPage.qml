@@ -26,10 +26,10 @@ SettingsPageBase {
 
             StyledSwitch {
                 checked: Configs.kdeConnect.pollingEnabled
-
                 onCheckedChanged: Configs.kdeConnect.pollingEnabled = checked
             }
         }
+
         SettingRow {
             description: qsTr("How often to scan for devices, in seconds.")
             label: qsTr("Poll Interval (s):")
@@ -38,7 +38,6 @@ SettingsPageBase {
                 Layout.preferredWidth: 120
                 text: (Configs.kdeConnect.pollInterval / 1000).toString()
                 toggleButtonVisible: false
-
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0)
@@ -47,6 +46,7 @@ SettingsPageBase {
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Local Device")
 
@@ -63,6 +63,7 @@ SettingsPageBase {
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Paired Devices")
 
@@ -72,22 +73,20 @@ SettingsPageBase {
             Loader {
                 Layout.alignment: Qt.AlignHCenter
                 active: KDEConnect.allDevices.length === 0
-
                 sourceComponent: StyledText {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
                     text: qsTr("No devices paired")
                 }
             }
+
             Repeater {
                 model: KDEConnect.allDevices
-
                 delegate: KdeDeviceRow {
                     required property var modelData
 
                     actionText: qsTr("Transfer")
                     device: modelData
-
                     onActionTriggered: {
                         page.deviceIdToTransfer = modelData.id;
                         transferFileDialog.openFileDialog();
@@ -96,6 +95,7 @@ SettingsPageBase {
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Available Devices")
 
@@ -105,32 +105,30 @@ SettingsPageBase {
             Loader {
                 Layout.alignment: Qt.AlignHCenter
                 active: KDEConnect.availableDevices.length === 0
-
                 sourceComponent: StyledText {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
                     text: qsTr("No devices available")
                 }
             }
+
             Repeater {
                 model: KDEConnect.availableDevices
-
                 delegate: KdeDeviceRow {
                     required property var modelData
 
                     actionText: qsTr("Pair")
                     device: modelData
-
                     onActionTriggered: KDEConnect.pair(modelData.id)
                 }
             }
         }
     }
+
     FileDialog {
         id: transferFileDialog
 
         selectFolder: false
-
         onFileSelected: path => {
             if (page.deviceIdToTransfer)
                 KDEConnect.shareFile(page.deviceIdToTransfer, path.replace("file://", ""));

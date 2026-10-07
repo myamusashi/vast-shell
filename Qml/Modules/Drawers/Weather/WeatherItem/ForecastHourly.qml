@@ -1,13 +1,12 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import M3Shapes
 
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
-
-import M3Shapes
 
 StyledRect {
     anchors.leftMargin: 10
@@ -40,6 +39,7 @@ StyledRect {
                 icon: "schedule"
                 type: Icon.Material
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
@@ -47,6 +47,7 @@ StyledRect {
                 text: qsTr("Hourly forecast")
             }
         }
+
         Flickable {
             Layout.fillWidth: true
             Layout.preferredHeight: 150
@@ -65,8 +66,9 @@ StyledRect {
                     delegate: StyledRect {
                         id: delegate
 
+                        required property var  modelData
+
                         readonly property bool isCurrentHour: Weather.isCurrentForecastHour(modelData)
-                        required property var modelData
 
                         implicitHeight: 130
                         implicitWidth: 65
@@ -89,6 +91,7 @@ StyledRect {
                                     shape: MaterialShape.Cookie4Sided
                                     visible: delegate.isCurrentHour
                                 }
+
                                 StyledText {
                                     anchors.centerIn: parent
                                     color: delegate.isCurrentHour ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
@@ -97,6 +100,7 @@ StyledRect {
                                     text: (parseInt(delegate.modelData.temperature) || 0) + "°"
                                 }
                             }
+
                             RowLayout {
                                 Layout.alignment: Qt.AlignHCenter
                                 spacing: 2
@@ -108,6 +112,7 @@ StyledRect {
                                     text: (parseInt(delegate.modelData.humidity) || 0) + "%"
                                 }
                             }
+
                             Icon {
                                 Layout.alignment: Qt.AlignHCenter
                                 color: Colours.m3Colors.m3Primary
@@ -115,6 +120,7 @@ StyledRect {
                                 icon: delegate.modelData.weatherIcon
                                 type: Icon.Weather
                             }
+
                             StyledText {
                                 Layout.alignment: Qt.AlignHCenter
                                 color: Colours.m3Colors.m3OnSurface

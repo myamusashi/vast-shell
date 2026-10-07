@@ -32,7 +32,6 @@ Drawer {
         cacheBuffer: implicitHeight
         clip: true
         spacing: Appearance.spacing.normal
-
         delegate: Wrapper {
             required property int index
             required property var modelData

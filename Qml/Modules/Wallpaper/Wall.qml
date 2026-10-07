@@ -8,7 +8,6 @@ import qs.Components.Base
 
 Variants {
     model: Quickshell.screens
-
     delegate: PanelWindow {
         id: root
 
@@ -27,6 +26,7 @@ Variants {
             right: true
             top: true
         }
+
         Wallpaper {
             anchors.fill: parent
         }

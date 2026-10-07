@@ -11,18 +11,19 @@ import qs.Services
 Singleton {
     id: root
 
-    property var checkBatch: []
-    property Item colorSourceImage: null
-    property string pendingVideoPath: ""
-    property var thumbnailAvailability: ({})
-    property var thumbnailCheckQueue: []
     readonly property string thumbnailCheckScript: "while [ $# -ge 2 ]; do [ -s \"$1\" ] && printf '%s\\n' \"$2\"; shift 2; done"
-    property var thumbnailFailed: ({})
-    property int thumbnailVersion: 0
-    readonly property var visibleWallpapers: WallpaperFileModels.filteredWallpaperList.filter(path => wallpaperType === 1 ? MediaKind.isVideo(path) : !MediaKind.isVideo(path))
-    property int wallpaperType: 0
+    readonly property var    visibleWallpapers: WallpaperFileModels.filteredWallpaperList.filter(path => wallpaperType === 1 ? MediaKind.isVideo(path) : !MediaKind.isVideo(path))
 
-    function drainThumbnailChecks() {
+    property var             checkBatch: []
+    property Item            colorSourceImage: null
+    property string          pendingVideoPath: ""
+    property var             thumbnailAvailability: ({})
+    property var             thumbnailCheckQueue: []
+    property var             thumbnailFailed: ({})
+    property int             thumbnailVersion: 0
+    property int             wallpaperType: 0
+
+    function                 drainThumbnailChecks() {
         if (thumbnailChecker.running || thumbnailCheckQueue.length === 0)
             return;
         checkBatch = thumbnailCheckQueue.splice(0, thumbnailCheckQueue.length);
@@ -32,7 +33,7 @@ Singleton {
         thumbnailChecker.command = args;
         thumbnailChecker.running = true;
     }
-    function ensureThumbnail(path, force) {
+    function                 ensureThumbnail(path, force) {
         if (path === "" || !MediaKind.isVideo(path))
             return;
         if (thumbnailAvailability[path] === true)
@@ -50,7 +51,7 @@ Singleton {
         requestThumbnailCheck(path); // unknown, stat the cache before spawning ffmpeg
         drainThumbnailChecks();
     }
-    function generateThumbnail(path) {
+    function                 generateThumbnail(path) {
         ThumbnailQueue.generate(path, MediaKind.videoThumbnailPathFor(path), (videoPath, thumbnailPath) => {
             const success = thumbnailPath !== "";
             if (success) {
@@ -59,8 +60,8 @@ Singleton {
                 root.thumbnailFailed = cleared;
                 root.thumbnailVersion++;
             } else {
-                const failed = Object.assign({}, root.thumbnailFailed);
-                failed[videoPath] = true;
+                const failed         = Object.assign({}, root.thumbnailFailed);
+                failed[videoPath]    = true;
                 root.thumbnailFailed = failed;
                 if (root.pendingVideoPath === videoPath)
                     root.pendingVideoPath = "";
@@ -68,12 +69,12 @@ Singleton {
             root.markThumbnail(videoPath, success);
         });
     }
-    function markThumbnail(path, exists) {
+    function                 markThumbnail(path, exists) {
         const previous = thumbnailAvailability[path];
         if (path === "" || previous === exists)
             return;
-        const updated = Object.assign({}, thumbnailAvailability);
-        updated[path] = exists;
+        const updated         = Object.assign({}, thumbnailAvailability);
+        updated[path]         = exists;
         thumbnailAvailability = updated;
         if (!exists) {
             ensureThumbnail(path);
@@ -87,12 +88,12 @@ Singleton {
         if (path === Paths.currentWallpaper)
             updateWallpaperColors(path);
     }
-    function requestThumbnailCheck(path) {
+    function                 requestThumbnailCheck(path) {
         if (thumbnailCheckQueue.includes(path))
             return;
         thumbnailCheckQueue.push(path);
     }
-    function requestThumbnailChecks() {
+    function                 requestThumbnailChecks() {
         for (const path of WallpaperFileModels.filteredWallpaperList) {
             if (!MediaKind.isVideo(path) || thumbnailAvailability[path] !== undefined)
                 continue;
@@ -100,7 +101,7 @@ Singleton {
         }
         drainThumbnailChecks();
     }
-    function setVideoWallpaper(path) {
+    function                 setVideoWallpaper(path) {
         if (path === "")
             return;
         if (thumbnailAvailability[path] === true) {
@@ -111,14 +112,14 @@ Singleton {
         pendingVideoPath = path;
         ensureThumbnail(path, true);
     }
-    function setWallpaper(path, colorSource) {
+    function                 setWallpaper(path, colorSource) {
         Quickshell.execDetached({
             command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
         });
         if (colorSource !== "" && colorSourceImage)
             colorSourceImage.source = "file://" + colorSource + (MediaKind.isVideo(path) ? "?v=" + thumbnailVersion : "");
     }
-    function updateWallpaperColors(path) {
+    function                 updateWallpaperColors(path) {
         if (path === "" || !colorSourceImage)
             return;
         if (MediaKind.isVideo(path))
@@ -134,6 +135,7 @@ Singleton {
 
         target: WallpaperFileModels
     }
+
     Connections {
         function onCurrentWallpaperChanged(): void {
             root.ensureThumbnail(Paths.currentWallpaper);
@@ -142,6 +144,7 @@ Singleton {
 
         target: Paths
     }
+
     Connections {
         function onSchemeChanged(): void {
             root.updateWallpaperColors(Paths.currentWallpaper);
@@ -149,19 +152,20 @@ Singleton {
 
         target: Configs.colors
     }
+
     Process {
         id: thumbnailGenerator
 
         command: ["mkdir", "-p", `${Paths.cacheDir}/vast-shell`]
         running: true
     }
+
     Process {
         id: thumbnailChecker
 
         stdout: SplitParser {
             onRead: data => root.markThumbnail(data, true)
         }
-
         onExited: { // qmllint disable signal-handler-parameters
             for (const path of root.checkBatch)
                 if (root.thumbnailAvailability[path] === undefined)
@@ -170,6 +174,7 @@ Singleton {
             root.drainThumbnailChecks();
         }
     }
+
     IpcHandler {
         function get(): string {
             return Paths.currentWallpaper;

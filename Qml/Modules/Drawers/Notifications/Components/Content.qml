@@ -13,11 +13,13 @@ import qs.Services
 Column {
     id: root
 
-    property bool isShowMoreBody: false
-    required property var modelData
+    required property var  modelData
+
     readonly property bool replyFocused: replyField.isFocused
 
-    function sendReply() {
+    property bool          isShowMoreBody: false
+
+    function               sendReply() {
         const text = replyField.text.trim();
 
         if (text === "")
@@ -26,7 +28,7 @@ Column {
         modelData.sendInlineReply(text);
         replyField.text = "";
     }
-    function syncInlineReplyFocus(): void {
+    function               syncInlineReplyFocus(): void {
         const hasReply = root.modelData?.hasInlineReply ?? false;
         if (root.replyFocused && hasReply)
             GlobalStates.inlineReplyOwner = root;
@@ -35,7 +37,6 @@ Column {
     }
 
     spacing: Appearance.spacing.small
-
     Component.onDestruction: {
         if (GlobalStates.inlineReplyOwner === root)
             GlobalStates.inlineReplyOwner = null;
@@ -55,28 +56,29 @@ Column {
             font.weight: Font.Medium
             text: root.modelData.appName
         }
+
         StyledText {
             Layout.preferredWidth: implicitWidth
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.large
             text: "•"
         }
+
         StyledText {
             id: timeText
 
             Layout.preferredWidth: implicitWidth
             color: Colours.m3Colors.m3OnSurfaceVariant
-
             Component.onCompleted: text = FormatTimeUtils.timeAgoWithIfElse(root.modelData.time)
 
             Timer {
                 interval: 60000
                 repeat: true
                 running: root.visible
-
                 onTriggered: timeText.text = FormatTimeUtils.timeAgoWithIfElse(root.modelData.time)
             }
         }
+
         FloatingButton {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: 32
@@ -86,10 +88,10 @@ Column {
             icon.color: Colours.m3Colors.m3OnSurfaceVariant
             icon.name: root.isShowMoreBody ? "expand_less" : "expand_more"
             icon.size: Appearance.fonts.size.extraLarge
-
             onClicked: root.isShowMoreBody = !root.isShowMoreBody
         }
     }
+
     StyledText {
         color: Colours.m3Colors.m3OnSurface
         elide: Text.ElideRight
@@ -100,6 +102,7 @@ Column {
         width: parent.width
         wrapMode: Text.Wrap
     }
+
     StyledText {
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.medium
@@ -109,6 +112,7 @@ Column {
         width: parent.width
         wrapMode: Text.Wrap
     }
+
     Row {
         spacing: Appearance.spacing.normal
         topPadding: 8
@@ -117,7 +121,6 @@ Column {
 
         Repeater {
             model: root.modelData?.actions
-
             delegate: StyledRect {
                 id: actionButton
 
@@ -133,9 +136,9 @@ Column {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: actionButton.modelData.invoke()
                 }
+
                 StyledText {
                     anchors.centerIn: parent
                     color: Colours.m3Colors.m3OnBackground
@@ -147,6 +150,7 @@ Column {
             }
         }
     }
+
     RowLayout {
         spacing: Appearance.spacing.normal
         visible: root.modelData.hasInlineReply
@@ -160,7 +164,6 @@ Column {
             autoFocus: false
             placeHolderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
             toggleButtonVisible: false
-
             onAccepted: root.sendReply()
             onKeyPressed: event => {
                 if (event.key === Qt.Key_Escape) {
@@ -169,6 +172,7 @@ Column {
                 }
             }
         }
+
         FloatingButton {
             id: sendButton
 
@@ -179,7 +183,6 @@ Column {
             icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.hasText ? 1 : 0.4)
             icon.name: "send"
             icon.size: Appearance.fonts.size.extraLarge
-
             onClicked: {
                 if (replyField.hasText)
                     root.sendReply();

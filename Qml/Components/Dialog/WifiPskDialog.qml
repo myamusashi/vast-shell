@@ -14,24 +14,23 @@ DialogBox {
 
     property WifiNetwork network: null
 
-    function show(target) {
+    function             show(target) {
         network = target;
     }
 
     active: network !== null
     needKeyboardFocus: true
-
     body: ColumnLayout {
         id: passwordBody
 
         property bool failed: false
 
-        function markFailed() {
+        function      markFailed() {
             passwordBody.failed = true;
-            passwordField.text = "";
+            passwordField.text  = "";
             passwordField.forceActiveFocus();
         }
-        function submit() {
+        function      submit() {
             passwordBody.failed = false;
 
             if (!root.network || passwordField.text.length === 0)
@@ -50,6 +49,7 @@ DialogBox {
             text: root.network ? qsTr("Enter the password for \"%1\"").arg(root.network.name) : qsTr("Enter the Wi-Fi password")
             wrapMode: Text.Wrap
         }
+
         StyledTextInput {
             id: passwordField
 
@@ -58,9 +58,9 @@ DialogBox {
             passwordMode: true
             placeHolderText: passwordBody.failed ? qsTr("Incorrect password") : qsTr("Wi-Fi password")
             toggleButtonVisible: true
-
             onAccepted: passwordBody.submit()
         }
+
         StyledText {
             Layout.fillWidth: true
             color: Colours.m3Colors.m3Error
@@ -69,6 +69,7 @@ DialogBox {
             visible: passwordBody.failed
             wrapMode: Text.Wrap
         }
+
         Connections {
             function onAccepted() {
                 passwordBody.submit();
@@ -79,6 +80,7 @@ DialogBox {
 
             target: root
         }
+
         Connections {
             function onConnectedChanged() {
                 if (root.network?.connected)

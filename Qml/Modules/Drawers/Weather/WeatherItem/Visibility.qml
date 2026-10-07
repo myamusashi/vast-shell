@@ -14,6 +14,7 @@ MaterialShape {
     shape: MaterialShape.Circle
 
     Cookie {
+
         ColumnLayout {
             z: 99
 
@@ -22,6 +23,7 @@ MaterialShape {
                 top: parent.top
                 topMargin: 20
             }
+
             RowLayout {
                 Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
@@ -31,18 +33,21 @@ MaterialShape {
                     icon: "visibility"
                     type: Icon.Material
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     text: qsTr("Visibility")
                 }
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.extraLarge
                 text: Weather.visibility.toFixed(0)
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 color: Colours.m3Colors.m3OnSurface
@@ -66,6 +71,7 @@ MaterialShape {
             shape: MaterialShape.Cookie12Sided
             z: 3
         }
+
         MaterialShape {
             anchors.centerIn: parent
             color: Colours.m3Colors.m3Primary
@@ -76,6 +82,7 @@ MaterialShape {
             shape: MaterialShape.Cookie12Sided
             z: 2
         }
+
         MaterialShape {
             anchors.centerIn: parent
             color: Colours.m3Colors.m3Primary

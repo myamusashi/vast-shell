@@ -6,15 +6,16 @@ import QtQuick.Layouts
 import qs.Services
 import qs.Core.Configs
 import qs.Components.Base
+
 import "../Components"
 
 Item {
     id: root
 
     default property alias content: contentLayout.data
-    property string pageTitle
+    property string        pageTitle
 
-    function revealCard(cardTitle: string): bool {
+    function               revealCard(cardTitle: string): bool {
         return cardRevealer.reveal(cardTitle);
     }
 
@@ -27,6 +28,7 @@ Item {
         container: contentLayout
         target: pageFlickable
     }
+
     ColumnLayout {
         spacing: Appearance.spacing.large
 
@@ -34,6 +36,7 @@ Item {
             fill: parent
             margins: Appearance.margin.large
         }
+
         StyledText {
             Layout.bottomMargin: Appearance.margin.normal
             color: Colours.m3Colors.m3OnSurface
@@ -41,6 +44,7 @@ Item {
             font.pixelSize: Appearance.fonts.size.extraLarge
             text: root.pageTitle
         }
+
         Flickable {
             id: pageFlickable
 

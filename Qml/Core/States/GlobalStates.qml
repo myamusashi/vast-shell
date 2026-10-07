@@ -3,9 +3,9 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Vast.Translation
 
 import qs.Core.Configs
@@ -16,58 +16,59 @@ Singleton {
     id: root
 
     readonly property string currentLanguage: TranslationManager.currentLanguage
-    readonly property color drawerColors: Configs.generals.transparent ? Qt.alpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
-    readonly property bool hasInlineReply: inlineReplyOwner !== null
-    property var inlineReplyOwner: null
-    property bool isBarOpen: Configs.bar.alwaysOpenBar
-    property alias isCalendarOpen: panel.isCalendarOpen
-    property alias isCapsLockOSDShow: root.isCapsLockOSDVisible
-    readonly property bool isCapsLockOSDVisible: osd.isActive("capslock")
-    property alias isClipboardOpen: panel.isClipboardOpen
-    property bool isDragAndDropActive: false
-    property alias isLauncherOpen: panel.isLauncherOpen
-    property bool isLockscreenOpen: false
-    property alias isMediaPlayerOpen: panel.isMediaPlayerOpen
-    property alias isNotificationCenterOpen: panel.isNotificationCenterOpen
-    property alias isNumLockOSDShow: root.isNumLockOSDVisible
-    readonly property bool isNumLockOSDVisible: osd.isActive("numlock")
-    property alias isQuickSettingsOpen: panel.isQuickSettingsOpen
-    property alias isRecordingPanelOpen: panel.isRecordingPanelOpen
-    property bool isScreenshotSelectionOpen: false
-    property bool isSelectionOpen: false
-    property alias isSessionOpen: panel.isSessionOpen // qmllint disable
-    property alias isSettingsOpen: panel.isSettingsOpen // qmllint disable
-    property alias isVolumeOSDShow: root.isVolumeOSDVisible
-    readonly property bool isVolumeOSDVisible: osd.isActive("volume")
-    property alias isWallpaperSwitcherOpen: panel.isWallpaperSwitcherOpen
-    property alias isWeatherPanelOpen: panel.isWeatherPanelOpen
-    property bool isWifiScannerOpen: true
-    property string launcherQuery: ""
-    property var pendingShareFiles: []
-    property string previewWallpaper: ""
-    property string scriptPath: `${Paths.projectRoot}/Assets/shell/screen-capture.sh`
+    readonly property color  drawerColors: Configs.generals.transparent ? Qt.alpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
+    readonly property bool   hasInlineReply: inlineReplyOwner !== null
+    readonly property bool   isCapsLockOSDVisible: osd.isActive("capslock")
+    readonly property bool   isNumLockOSDVisible: osd.isActive("numlock")
+    readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
 
-    function closePanel(name): void {
+    property var             inlineReplyOwner: null
+    property bool            isBarOpen: Configs.bar.alwaysOpenBar
+    property alias           isCalendarOpen: panel.isCalendarOpen
+    property alias           isCapsLockOSDShow: root.isCapsLockOSDVisible
+    property alias           isClipboardOpen: panel.isClipboardOpen
+    property bool            isDragAndDropActive: false
+    property alias           isLauncherOpen: panel.isLauncherOpen
+    property bool            isLockscreenOpen: false
+    property alias           isMediaPlayerOpen: panel.isMediaPlayerOpen
+    property alias           isNotificationCenterOpen: panel.isNotificationCenterOpen
+    property alias           isNumLockOSDShow: root.isNumLockOSDVisible
+    property alias           isQuickSettingsOpen: panel.isQuickSettingsOpen
+    property alias           isRecordingPanelOpen: panel.isRecordingPanelOpen
+    property bool            isScreenshotSelectionOpen: false
+    property bool            isSelectionOpen: false
+    property alias           isSessionOpen: panel.isSessionOpen // qmllint disable
+    property alias           isSettingsOpen: panel.isSettingsOpen // qmllint disable
+    property alias           isVolumeOSDShow: root.isVolumeOSDVisible
+    property alias           isWallpaperSwitcherOpen: panel.isWallpaperSwitcherOpen
+    property alias           isWeatherPanelOpen: panel.isWeatherPanelOpen
+    property bool            isWifiScannerOpen: true
+    property string          launcherQuery: ""
+    property var             pendingShareFiles: []
+    property string          previewWallpaper: ""
+    property string          scriptPath: `${Paths.projectRoot}/Assets/shell/screen-capture.sh`
+
+    function                 closePanel(name): void {
         panel.closePanel(name);
     }
-    function hideOSD(name): void {
+    function                 hideOSD(name): void {
         osd.hide(name);
         if (osd.allHidden())
             cleanupTimer.start();
     }
-    function isOSDVisible(name): bool {
+    function                 isOSDVisible(name): bool {
         return osd.isActive(name);
     }
-    function openPanel(name): void {
+    function                 openPanel(name): void {
         panel.openPanel(name);
     }
-    function pauseOSD(name): void {
+    function                 pauseOSD(name): void {
         osd.pause(name);
     }
-    function resumeOSD(name): void {
+    function                 resumeOSD(name): void {
         osd.resume(name);
     }
-    function setDragAndDropActive(value, silent): void {
+    function                 setDragAndDropActive(value, silent): void {
         if (root.isDragAndDropActive === value)
             return;
         root.isDragAndDropActive = value;
@@ -75,26 +76,26 @@ Singleton {
             return;
         ToastService.show(qsTr("Drag and drop is active. Drop files onto the island to share them."), qsTr("Drag and Drop"), "application-vnd.oasis.opendocument.text", 5000);
     }
-    function setPanel(name, value): void {
+    function                 setPanel(name, value): void {
         if (name === "bar") {
             root.isBarOpen = value;
             return;
         }
         panel.setPanel(name, value);
     }
-    function shareFilesViaKdeConnect(files): void {
+    function                 shareFilesViaKdeConnect(files): void {
         if (!files || files.length === 0)
             return;
         root.pendingShareFiles = files;
         root.setDragAndDropActive(true, true);
     }
-    function showOSD(name): void {
+    function                 showOSD(name): void {
         osd.show(name);
     }
-    function toggleOSD(name): void {
+    function                 toggleOSD(name): void {
         osd.toggle(name);
     }
-    function togglePanel(name): void {
+    function                 togglePanel(name): void {
         if (name === "bar") {
             root.setPanel(name, !root.isBarOpen);
             return;
@@ -105,17 +106,19 @@ Singleton {
     OSDManager {
         id: osd
     }
+
     PanelManager {
         id: panel
     }
+
     Timer {
         id: cleanupTimer
 
         interval: 500
         repeat: false
-
         onTriggered: gc()
     }
+
     Variants {
         model: [
             {
@@ -155,7 +158,6 @@ Singleton {
                 shortcut: "recordingPanel"
             }
         ]
-
         delegate: PanelController {
             required property var modelData
 
@@ -163,6 +165,7 @@ Singleton {
             shortcutName: modelData.shortcut
         }
     }
+
     IpcHandler {
         function off(): void {
             Configs.idle.enabled = false;
@@ -176,6 +179,7 @@ Singleton {
 
         target: "idle"
     }
+
     Connections {
         function onCapsLockChanged() {
             root.showOSD("capslock");
@@ -186,20 +190,21 @@ Singleton {
 
         target: KeylockState
     }
+
     Instantiator {
         model: Configs.idle.timeouts
-
         delegate: IdleMonitor {
-            property bool fired: false
-            required property var modelData
+            required property var    modelData
+
             readonly property string onResume: modelData["on-resume"] ?? ""
             readonly property string onTimeout: modelData["on-timeout"] ?? ""
-            readonly property int timeoutMonitor: modelData.timeoutMonitor ?? 60
+            readonly property int    timeoutMonitor: modelData.timeoutMonitor ?? 60
+
+            property bool            fired: false
 
             enabled: Configs.idle.enabled
             respectInhibitors: true
             timeout: timeoutMonitor
-
             onIsIdleChanged: {
                 if (isIdle && !fired) {
                     fired = true;
@@ -221,7 +226,9 @@ Singleton {
     component PanelController: QtObject {
         id: panelController
 
-        property IpcHandler ipc: IpcHandler {
+        required property string panelName
+
+        property IpcHandler      ipc: IpcHandler {
             function close(): void {
                 root.closePanel(panelController.panelName);
             }
@@ -239,15 +246,14 @@ Singleton {
 
             target: panelController.panelName
         }
-        required property string panelName
 
         // qmllint disable
-        property GlobalShortcut shortcut: GlobalShortcut {
-            name: panelController.shortcutName
+        required property string shortcutName
 
+        property GlobalShortcut  shortcut: GlobalShortcut {
+            name: panelController.shortcutName
             onPressed: root.togglePanel(panelController.panelName)
         }
-        required property string shortcutName
         // qmllint enable
     }
 }

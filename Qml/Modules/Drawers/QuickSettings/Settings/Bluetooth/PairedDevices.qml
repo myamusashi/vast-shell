@@ -18,21 +18,21 @@ ColumnLayout {
         text: qsTr("Paired devices")
         visible: pairedRepeater.count > 0
     }
+
     Repeater {
         id: pairedRepeater
 
         model: BluetoothServices.pairedDevices
-
         delegate: BluetoothDeviceDelegate {
             required property var modelData
 
             device: modelData
             showForgetAction: true
-
             onForgetAction: modelData.forget()
             onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
         }
     }
+
     StyledText {
         Layout.alignment: Qt.AlignHCenter
         color: Colours.m3Colors.m3OnSurfaceVariant

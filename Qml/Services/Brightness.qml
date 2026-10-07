@@ -11,59 +11,60 @@ Singleton {
     id: root
 
     readonly property bool available: primaryId !== ""
-    property var displays: []
-    readonly property int maxValue: 100
-    property string primaryId: ""
-    property int value: 0
+    readonly property int  maxValue: 100
 
-    function applyProfile(name: string) {
+    property var           displays: []
+    property string        primaryId: ""
+    property int           value: 0
+
+    function               applyProfile(name: string) {
         BrightnessManager.applyProfile(name);
     }
-    function decreaseBrightness(amount: int) {
+    function               decreaseBrightness(amount: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, Math.max(0, value - Math.round(amount)));
     }
-    function increaseBrightness(amount: int) {
+    function               increaseBrightness(amount: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, Math.min(100, value + Math.round(amount)));
     }
-    function profileNames(): var {
+    function               profileNames(): var {
         return BrightnessManager.profileNames();
     }
-    function refresh() {
+    function               refresh() {
         const list = BrightnessManager.displays();
-        displays = list;
+        displays   = list;
         if (primaryId === "") {
             const internal = list.find(d => d.isInternal);
-            primaryId = (internal ?? list[0])?.id ?? "";
+            primaryId      = (internal ?? list[0])?.id ?? "";
         }
         const primary = list.find(d => d.id === primaryId);
         if (primary)
             value = primary.brightness;
     }
-    function removeProfile(name: string) {
+    function               removeProfile(name: string) {
         BrightnessManager.removeProfile(name);
     }
-    function saveProfile(name: string, targets: var) {
+    function               saveProfile(name: string, targets: var) {
         BrightnessManager.saveProfile(name, targets);
     }
-    function setBrightness(newValue: int) {
+    function               setBrightness(newValue: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, newValue);
     }
-    function setBrightnessAll(percent: int) {
+    function               setBrightnessAll(percent: int) {
         BrightnessManager.setBrightnessAll(percent);
     }
-    function setBrightnessForDisplay(displayId: string, percent: int) {
+    function               setBrightnessForDisplay(displayId: string, percent: int) {
         BrightnessManager.setBrightness(displayId, percent);
     }
-    function setBrightnessGroup(targets: var) {
+    function               setBrightnessGroup(targets: var) {
         BrightnessManager.setBrightnessGroup(targets);
     }
-    function setBrightnessPercent(percent: int) {
+    function               setBrightnessPercent(percent: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, percent);
@@ -90,6 +91,7 @@ Singleton {
 
         target: BrightnessManager
     }
+
     IpcHandler {
         function change(delta: int): void {
             const targets = {};

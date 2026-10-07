@@ -34,6 +34,7 @@ StyledRect {
                 icon: "calendar_month"
                 type: Icon.Material
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
@@ -41,6 +42,7 @@ StyledRect {
                 text: qsTr("Daily Forecast")
             }
         }
+
         Flickable {
             Layout.fillWidth: true
             Layout.preferredHeight: 220
@@ -85,12 +87,14 @@ StyledRect {
                                     font.weight: Font.Bold
                                     text: (parseInt(delegate.modelData.maxTemp) || 0) + "°"
                                 }
+
                                 StyledText {
                                     color: Colours.m3Colors.m3OnSurface
                                     font.pixelSize: Appearance.fonts.size.normal
                                     text: (parseInt(delegate.modelData.minTemp) || 0) + "°"
                                 }
                             }
+
                             Icon {
                                 Layout.alignment: Qt.AlignHCenter
                                 color: Colours.m3Colors.m3Primary
@@ -98,6 +102,7 @@ StyledRect {
                                 icon: delegate.modelData.weatherIcon
                                 type: Icon.Weather
                             }
+
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
                                 color: Colours.m3Colors.m3Primary
@@ -105,6 +110,7 @@ StyledRect {
                                 font.weight: Font.Bold
                                 text: (parseInt(delegate.modelData.humidity) || 0) + "%"
                             }
+
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
                                 Layout.fillWidth: true
@@ -119,7 +125,7 @@ StyledRect {
                                     const date = delegate.modelData.date || "";
                                     if (!date)
                                         return "";
-                                    const today = new Date().toDateString();
+                                    const today        = new Date().toDateString();
                                     const forecastDate = new Date(date);
                                     if (forecastDate.toDateString() === today) {
                                         return qsTr("Today");
@@ -129,6 +135,7 @@ StyledRect {
                                 }
                                 wrapMode: Text.WordWrap
                             }
+
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
                                 color: Colours.m3Colors.m3OnSurface

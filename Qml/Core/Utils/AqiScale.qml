@@ -8,7 +8,7 @@ Singleton {
 
     readonly property list<int> europeBounds: [25, 50, 75, 100, 150]
     readonly property list<int> usaBounds: [50, 100, 150, 200, 300]
-    readonly property var usaCategories: [
+    readonly property var       usaCategories: [
         {
             max: 50,
             label: qsTr("Good")
@@ -35,7 +35,7 @@ Singleton {
         }
     ]
 
-    function categoryFor(value, categories) {
+    function                    categoryFor(value, categories) {
         const values = categories ?? usaCategories;
         for (const category of values) {
             if (value <= category.max)
@@ -43,12 +43,12 @@ Singleton {
         }
         return values[values.length - 1];
     }
-    function fraction(value, bounds, max) {
+    function                    fraction(value, bounds, max) {
         if (!isFinite(value) || !bounds || bounds.length === 0)
             return 0;
 
         const segments = bounds.length + 1;
-        let lower = 0;
+        let lower      = 0;
 
         for (let i = 0; i < bounds.length; i++) {
             if (value <= bounds[i]) {

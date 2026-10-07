@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 
@@ -14,19 +14,18 @@ import qs.Services
 ItemDelegate {
     id: root
 
-    readonly property bool hasImage: (modelData.image ?? "") !== ""
-    required property int index
-    readonly property bool isApp: modelData.kind === "app"
-    required property var modelData
+    required property int  index
+    required property var  modelData
 
-    signal rowClicked(var row)
-    signal rowHovered(int rowIndex)
+    readonly property bool hasImage: (modelData.image ?? "") !== ""
+    readonly property bool isApp: modelData.kind === "app"
+
+    signal                 rowClicked(var row)
+    signal                 rowHovered(int rowIndex)
 
     implicitHeight: 50
     implicitWidth: 300
-
-    background: Item {
-    }
+    background: Item {}
     contentItem: RowLayout {
         spacing: Appearance.spacing.normal
 
@@ -45,6 +44,7 @@ ItemDelegate {
                 source: root.isApp ? Quickshell.iconPath(root.modelData.entry.icon, "image-missing") : ""
                 visible: root.isApp
             }
+
             Image {
                 anchors.centerIn: parent
                 asynchronous: true
@@ -56,6 +56,7 @@ ItemDelegate {
                 visible: !root.isApp && root.hasImage
                 width: parent.height
             }
+
             Icon {
                 anchors.centerIn: parent
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -65,6 +66,7 @@ ItemDelegate {
                 visible: !root.isApp && !root.hasImage
             }
         }
+
         ColumnLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -80,6 +82,7 @@ ItemDelegate {
                 fullText: root.modelData.name || ""
                 searchText: LauncherServices.rowSearchText
             }
+
             StyledText {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -98,7 +101,6 @@ ItemDelegate {
     MArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-
         onClicked: root.rowClicked(root.modelData)
         onEntered: root.rowHovered(root.index)
     }

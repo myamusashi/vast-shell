@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Quickshell
 import Quickshell.Networking
 
@@ -23,7 +23,6 @@ ListView {
     interactive: contentHeight > height
     model: Networking.devices
     spacing: Appearance.spacing.small
-
     ScrollBar.vertical: ScrollBar {
         policy: ScrollBar.AsNeeded
     }
@@ -33,7 +32,6 @@ ListView {
         required property WifiDevice modelData
 
         width: root.width
-
         Component.onCompleted: {
             if (modelData)
                 modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
@@ -47,6 +45,7 @@ ListView {
 
             target: GlobalStates
         }
+
         Repeater {
             delegate: NetworkDelegate {
                 required property var modelData

@@ -1,9 +1,8 @@
 pragma Singleton
 
-import Qt.labs.folderlistmodel
 import QtQuick
 import Quickshell
-
+import Qt.labs.folderlistmodel
 import Vast.Search
 
 import qs.Core.Utils
@@ -11,7 +10,6 @@ import qs.Core.Utils
 Singleton {
     id: root
 
-    property string currentWallpaper: Paths.currentWallpaper
     readonly property var filteredWallpaperList: {
         if (searchDebounce.debouncedValue === "")
             return wallpaperList;
@@ -22,7 +20,7 @@ Singleton {
 
         // fzy scores grow with needle length, so the floor is per query character
         const minScore = query.length * SearchEngine.fileThreshold;
-        const scored = [];
+        const scored   = [];
         for (const path of wallpaperList) {
             const result = SearchEngine.score(query, path.split('/').pop());
             if (result >= minScore)
@@ -30,8 +28,10 @@ Singleton {
         }
         return scored.sort((a, b) => b[0] - a[0]).map(entry => entry[1]);
     }
-    property string searchQuery: ""
-    property var wallpaperList: []
+
+    property string       currentWallpaper: Paths.currentWallpaper
+    property string       searchQuery: ""
+    property var          wallpaperList: []
 
     DebouncedValue {
         id: searchDebounce
@@ -39,6 +39,7 @@ Singleton {
         interval: 300
         value: root.searchQuery
     }
+
     FolderListModel {
         id: wallpaperFolder
 
@@ -47,7 +48,6 @@ Singleton {
         showDirs: false
         showDotAndDotDot: false
         showHidden: false
-
         onCountChanged: {
             let list = [];
             for (let i = 0; i < count; i++) {

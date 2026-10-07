@@ -26,6 +26,7 @@ ColumnLayout {
             font.pixelSize: Appearance.fonts.size.large * 1.5
             icon: ""
         }
+
         StyledText {
             id: textItem
 
@@ -33,10 +34,12 @@ ColumnLayout {
             font.pixelSize: Appearance.fonts.size.large * 1.2
             text: ""
         }
+
         Item {
             Layout.fillWidth: true
         }
     }
+
     Rectangle {
         Layout.fillWidth: true
         color: Colours.m3Colors.m3Green

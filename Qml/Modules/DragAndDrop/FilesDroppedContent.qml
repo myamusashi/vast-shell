@@ -13,9 +13,10 @@ Item {
     id: root
 
     required property bool active
-    readonly property int fileCount: island.droppedFiles.length
+    required property var  island
+
+    readonly property int  fileCount: island.droppedFiles.length
     readonly property real fileNameMaxWidth: active ? FileListMetrics.computeMaxWidth(island.droppedFiles, file => String(file).split("/").pop().length * 8, 300, 40) : 0
-    required property var island
     readonly property real maxContentHeight: FileListMetrics.clampHeight(fileCount, 18, 4, 200)
     readonly property real visibleHeight: maxContentHeight
 
@@ -35,6 +36,7 @@ Item {
             topMargin: 8
         }
     }
+
     Flickable {
         id: filesFlickable
 
@@ -45,7 +47,6 @@ Item {
         flickableDirection: Flickable.VerticalFlick
         height: root.visibleHeight
         visible: root.active
-
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
@@ -58,13 +59,13 @@ Item {
             top: parent.top
             topMargin: 32
         }
+
         Column {
             spacing: 4
             width: parent.width
 
             Repeater {
                 model: root.island.droppedFiles
-
                 delegate: StyledText {
                     required property var modelData
 
@@ -78,13 +79,13 @@ Item {
             }
         }
     }
+
     ExtendedFloatingButton {
         color: "transparent"
         implicitHeight: 28
         text: qsTr("Next")
         textColor: Colours.m3Colors.m3Primary
         visible: root.active
-
         onClicked: root.island.goToDeviceSelection()
 
         anchors {

@@ -9,11 +9,10 @@ import qs.Core.Configs
 Singleton {
     id: root
 
-    property string detectedNerdFamily: "monospace"
-    readonly property var genericFamilies: ["monospace", "sans-serif", "serif", "cursive", "fantasy", "system-ui"]
-    readonly property var installedFamilies: {
+    readonly property var    genericFamilies: ["monospace", "sans-serif", "serif", "cursive", "fantasy", "system-ui"]
+    readonly property var    installedFamilies: {
         const families = [];
-        const fonts = Qt.fontFamilies();
+        const fonts    = Qt.fontFamilies();
         for (let i = 0; i < fonts.length; i++) {
             const names = fonts[i].split(",");
             for (let j = 0; j < names.length; j++)
@@ -27,10 +26,12 @@ Singleton {
     readonly property string nerdProbe: "f313"
     readonly property string sans: resolve(Appearance.fonts.family.sans, "sans-serif")
 
-    function isAvailable(family) {
+    property string          detectedNerdFamily: "monospace"
+
+    function                 isAvailable(family) {
         return genericFamilies.includes(family) || installedFamilies.includes(family);
     }
-    function resolve(configured, fallback) {
+    function                 resolve(configured, fallback) {
         if (!configured)
             return fallback;
 
@@ -48,7 +49,6 @@ Singleton {
 
         command: ["fc-match", `:charset=${root.nerdProbe}`, "-f", "%{family}\n"]
         running: false
-
         stdout: StdioCollector {
             onStreamFinished: {
                 const family = text.trim();

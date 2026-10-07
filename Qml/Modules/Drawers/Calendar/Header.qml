@@ -15,9 +15,9 @@ RowLayout {
     required property int currentYear
     required property var monthNames
 
-    signal nextClicked
-    signal prevClicked
-    signal titleClicked
+    signal                nextClicked
+    signal                prevClicked
+    signal                titleClicked
 
     Layout.fillWidth: true
     Layout.preferredHeight: 48
@@ -37,14 +37,15 @@ RowLayout {
             font.pixelSize: Appearance.fonts.size.large * 2
             icon: "chevron_left"
         }
+
         MArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             hoverEnabled: true
-
             onClicked: root.prevClicked()
         }
     }
+
     StyledText {
         id: headerLabel
 
@@ -62,10 +63,10 @@ RowLayout {
             height: headerLabel.contentHeight
             hoverEnabled: true
             width: headerLabel.contentWidth
-
             onClicked: root.titleClicked()
         }
     }
+
     StyledRect {
         id: nextButton
 
@@ -80,11 +81,11 @@ RowLayout {
             font.pixelSize: Appearance.fonts.size.large * 2
             icon: "chevron_right"
         }
+
         MArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             hoverEnabled: true
-
             onClicked: root.nextClicked()
         }
     }

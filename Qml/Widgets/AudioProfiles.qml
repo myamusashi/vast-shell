@@ -10,11 +10,10 @@ import qs.Services
 SplitButton {
     id: root
 
-    property var card: Audio.defaultSinkCard
-    readonly property int profileCount: profileModel ? profileModel.count : 0
-    readonly property var profileModel: resolvedCard ? resolvedCard.profiles : null
-    readonly property var resolvedCard: card
-    readonly property int selectedIndex: {
+    readonly property int    profileCount: profileModel ? profileModel.count : 0
+    readonly property var    profileModel: resolvedCard ? resolvedCard.profiles : null
+    readonly property var    resolvedCard: card
+    readonly property int    selectedIndex: {
         if (!resolvedCard)
             return -1;
         for (let i = 0; i < profileCount; ++i) {
@@ -29,7 +28,9 @@ SplitButton {
         return profile ? profile.readable : "";
     }
 
-    function profileAt(i) {
+    property var             card: Audio.defaultSinkCard
+
+    function                 profileAt(i) {
         return profileModel ? profileModel.get(i) : null;
     }
 
@@ -40,7 +41,6 @@ SplitButton {
     model: profileModel
     text: selectedLabel
     textRole: "readable"
-
     onMenuItemActivated: rowIndex => {
         const profile = profileAt(rowIndex);
         if (!profile || profile.available !== "yes" || !resolvedCard)
@@ -50,9 +50,9 @@ SplitButton {
 
         const deviceName = resolvedCard.name;
         if (deviceName) {
-            const profiles = Configs.audio.sinkProfiles;
-            const copied = Object.assign({}, profiles || {});
-            copied[deviceName] = profile.index;
+            const profiles             = Configs.audio.sinkProfiles;
+            const copied               = Object.assign({}, profiles || {});
+            copied[deviceName]         = profile.index;
             Configs.audio.sinkProfiles = copied;
         }
     }

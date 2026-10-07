@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Vast.Utils
+
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
@@ -14,51 +15,51 @@ import qs.Services // qmllint disable
 Singleton {
     id: root
 
-    readonly property alias animatedMaterialColors: paletteAnimator.currentPalette
-    property var lastValidPalette: ({})
-    readonly property var m3Colors: Configs.colors.useStaticColors ? staticColors : materialColors
-    readonly property M3GeneratedTemplateComponent m3GeneratedColors: M3GeneratedTemplateComponent {
-    }
+    readonly property alias            animatedMaterialColors: paletteAnimator.currentPalette
+    readonly property var              m3Colors: Configs.colors.useStaticColors ? staticColors : materialColors
+    readonly property M3GeneratedTemplateComponent m3GeneratedColors: M3GeneratedTemplateComponent {}
     readonly property M3TemplateColors materialColors: M3TemplateColors {
         source: root.animatedMaterialColors
     }
-    readonly property var materialPaletteSource: materialColor.ready ? materialColor.colors : lastValidPalette
-    readonly property var materialTemplateColors: animatedMaterialColors
+    readonly property var              materialPaletteSource: materialColor.ready ? materialColor.colors : lastValidPalette
+    readonly property var              materialTemplateColors: animatedMaterialColors
     readonly property M3TemplateColors staticColors: M3TemplateColors {
         source: root.staticTemplateColors
     }
-    readonly property var staticTemplateColors: JSON.parse(staticColorFile.text())
-    readonly property string staticWallpaperSource: {
+    readonly property var              staticTemplateColors: JSON.parse(staticColorFile.text())
+    readonly property string           staticWallpaperSource: {
         const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
         if (!wp || MediaKind.isVideo(wp))
             return "";
         return wp;
     }
-    readonly property string videoWallpaperThumbnail: {
+    readonly property string           videoWallpaperThumbnail: {
         const wp = GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper;
         if (!MediaKind.isVideo(wp))
             return "";
         return `${MediaKind.videoThumbnailPathFor(wp)}?v=${Wallpaper.thumbnailVersion}`;
     }
-    readonly property string wallpaperSource: staticWallpaperSource !== "" ? staticWallpaperSource : videoWallpaperThumbnail
+    readonly property string           wallpaperSource: staticWallpaperSource !== "" ? staticWallpaperSource : videoWallpaperThumbnail
 
-    function clamp01(x) {
+    property var                       lastValidPalette: ({})
+
+    function                           clamp01(x) {
         return Math.min(1, Math.max(0, x));
     }
-    function overlayColor(baseColor, targetColor, overlayOpacity) {
+    function                           overlayColor(baseColor, targetColor, overlayOpacity) {
         if (overlayOpacity <= 0)
             // Impossible to influence the base
             return Qt.rgba(0, 0, 0, 0);
 
         let invA = 1.0 - overlayOpacity;
 
-        let r = (targetColor.r - baseColor.r * invA) / overlayOpacity;
-        let g = (targetColor.g - baseColor.g * invA) / overlayOpacity;
-        let b = (targetColor.b - baseColor.b * invA) / overlayOpacity;
+        let r    = (targetColor.r - baseColor.r * invA) / overlayOpacity;
+        let g    = (targetColor.g - baseColor.g * invA) / overlayOpacity;
+        let b    = (targetColor.b - baseColor.b * invA) / overlayOpacity;
 
         return Qt.rgba(clamp01(r), clamp01(g), clamp01(b), 1.0);
     }
-    function schemeEnum(name) {
+    function                           schemeEnum(name) {
         switch (name) {
         case "vibrant":
             return ColorMaterial.Vibrant;
@@ -97,9 +98,9 @@ Singleton {
 
         path: Configs.colors.staticColorsPath
         watchChanges: true
-
         onFileChanged: reload()
     }
+
     ColorMaterial {
         id: materialColor
 
@@ -107,9 +108,11 @@ Singleton {
         scheme: root.schemeEnum(Configs.colors.scheme)
         source: root.wallpaperSource !== "" ? `file://${root.wallpaperSource}` : ""
     }
+
     ColorPreview {
         id: colorPreview
     }
+
     IpcHandler {
         function generate(imagePath: string, mode: string, scheme: string): string {
             return colorPreview.generate(imagePath, mode, scheme);
@@ -120,6 +123,7 @@ Singleton {
 
         target: "color"
     }
+
     PaletteAnimator {
         id: paletteAnimator
 

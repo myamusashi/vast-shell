@@ -10,23 +10,23 @@ import qs.Services
 Singleton {
     id: root
 
-    property alias greeterConfig: adapter
+    property alias  greeterConfig: adapter
     property string lastRegenTarget: ""
     property string lastStaticTarget: ""
     property string lastVideoTarget: ""
-    property int thumbnailVersion: 0
+    property int    thumbnailVersion: 0
 
-    function extensionOf(path) {
+    function        extensionOf(path) {
         if (!path || typeof path !== "string")
             return "";
-        const clean = path.startsWith("file://") ? decodeURIComponent(path.slice(7)) : path;
+        const clean    = path.startsWith("file://") ? decodeURIComponent(path.slice(7)) : path;
         const basename = clean.split("/").pop();
         if (!basename)
             return "";
         const parts = basename.split(".");
         return parts.length > 1 ? parts.pop().toLowerCase() : "";
     }
-    function regenerateVideoThumbnail() {
+    function        regenerateVideoThumbnail() {
         const videoPath = greeterConfig.videoWallpaper;
         if (!greeterConfig.useVideoWallpaper || videoPath === "" || lastRegenTarget === videoPath)
             return;
@@ -37,26 +37,26 @@ Singleton {
             root.thumbnailVersion++;
         });
     }
-    function thumbnailCachePathFor(path) {
+    function        thumbnailCachePathFor(path) {
         return GreeterWallpaper.thumbnailFor(path);
     }
-    function uploadStatic(path) {
+    function        uploadStatic(path) {
         const extension = extensionOf(path);
         if (extension === "") {
             console.warn("[GreeterConfig] upload static: invalid path", path);
             return;
         }
-        lastStaticTarget = "/etc/vast-shell/wallpaper." + extension;
+        lastStaticTarget     = "/etc/vast-shell/wallpaper." + extension;
         staticUpload.command = [Paths.projectRoot + "/Assets/shell/pkexec.sh", "sh", "-c", `mkdir -p /etc/vast-shell && cp -f ${JSON.stringify(path)} ${JSON.stringify(lastStaticTarget)}`];
         staticUpload.running = true;
     }
-    function uploadVideo(path) {
+    function        uploadVideo(path) {
         const extension = extensionOf(path);
         if (extension === "") {
             console.warn("[GreeterConfig] upload video: invalid path", path);
             return;
         }
-        lastVideoTarget = "/etc/vast-shell/wallpaper." + extension;
+        lastVideoTarget     = "/etc/vast-shell/wallpaper." + extension;
         videoUpload.command = [Paths.projectRoot + "/Assets/shell/pkexec.sh", "sh", "-c", `mkdir -p /etc/vast-shell && cp -f ${JSON.stringify(path)} ${JSON.stringify(lastVideoTarget)}`];
         videoUpload.running = true;
     }
@@ -70,7 +70,6 @@ Singleton {
 
         path: Paths.shellDir + "/greeter.json"
         watchChanges: true
-
         onAdapterUpdated: writeAdapter()
         onFileChanged: reload()
         onLoaded: root.regenerateVideoThumbnail()
@@ -80,17 +79,17 @@ Singleton {
             id: adapter
 
             property string staticWallpaper: "/etc/vast-shell/wallpaper.png"
-            property bool useVideoWallpaper: false
+            property bool   useVideoWallpaper: false
             property string videoWallpaper: "/etc/vast-shell/wallpaper.mp4"
         }
     }
+
     Process {
         id: staticUpload
 
         stderr: SplitParser {
             onRead: data => console.log("[GreeterConfig] upload static stderr:", data)
         }
-
         onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
             console.log("[GreeterConfig] upload static exited:", exitCode, root.lastStaticTarget);
             if (exitCode === 0) {
@@ -99,27 +98,27 @@ Singleton {
             }
         }
     }
+
     Process {
         id: videoUpload
 
         stderr: SplitParser {
             onRead: data => console.log("[GreeterConfig] upload video stderr:", data)
         }
-
         onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
             console.log("[GreeterConfig] upload video exited:", exitCode, root.lastVideoTarget);
             if (exitCode === 0) {
                 root.greeterConfig.videoWallpaper = root.lastVideoTarget;
-                root.lastRegenTarget = "";
+                root.lastRegenTarget              = "";
                 root.regenerateVideoThumbnail();
             }
         }
     }
+
     Process {
         id: etcSync
 
         command: [Paths.projectRoot + "/Assets/shell/pkexec.sh", "sh", "-c", "mkdir -p /etc/vast-shell && install -m 644 " + JSON.stringify(Paths.shellDir + "/greeter.json") + "/etc/vast-shell/greeter.json"]
-
         stderr: SplitParser {
             onRead: data => console.log("[GreeterConfig] pkexec stderr:", data)
         }

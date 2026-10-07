@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Quickshell.Widgets
 
 import qs.Core.Configs
@@ -12,28 +12,29 @@ import qs.Components.Base
 WrapperRectangle {
     id: root
 
-    property bool clipContent: false
-    property bool closing: false
     required property Component content
-    property int contentMargin: Appearance.margin.small
-    property bool deferContent: true
-    property bool enableScroll: true
-    property alias icon: header.icon
-    property bool isVisible: false
-    property alias text: header.text
-    property real zoomOriginX: parent.width / 2
-    property real zoomOriginY: parent.height / 2
 
-    signal closed
-    signal opened
+    property bool               clipContent: false
+    property bool               closing: false
+    property int                contentMargin: Appearance.margin.small
+    property bool               deferContent: true
+    property bool               enableScroll: true
+    property alias              icon: header.icon
+    property bool               isVisible: false
+    property alias              text: header.text
+    property real               zoomOriginX: parent.width / 2
+    property real               zoomOriginY: parent.height / 2
 
-    function openFrom(sourceItem) {
+    signal                      closed
+    signal                      opened
+
+    function                    openFrom(sourceItem) {
         if (!sourceItem || !parent)
             return;
-        const p = sourceItem.mapToItem(parent, sourceItem.width / 2, sourceItem.height / 2);
+        const p          = sourceItem.mapToItem(parent, sourceItem.width / 2, sourceItem.height / 2);
         root.zoomOriginX = p.x;
         root.zoomOriginY = p.y;
-        root.isVisible = true;
+        root.isVisible   = true;
     }
 
     color: Colours.m3Colors.m3SurfaceContainer
@@ -46,7 +47,6 @@ WrapperRectangle {
     scale: isVisible ? 1.0 : 0.5
     transformOrigin: Item.Center
     visible: root.isVisible || root.closing
-
     Behavior on opacity {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -62,7 +62,6 @@ WrapperRectangle {
     transform: Translate {
         x: root.isVisible ? 0 : root.zoomOriginX - root.width / 2
         y: root.isVisible ? 0 : root.zoomOriginY - root.height / 2
-
         Behavior on x {
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -76,7 +75,6 @@ WrapperRectangle {
             }
         }
     }
-
     onIsVisibleChanged: {
         if (!root.isVisible) {
             root.closing = true;
@@ -91,13 +89,14 @@ WrapperRectangle {
         color: Colours.m3Colors.m3Outline
         width: 1
     }
+
     Timer {
         id: hideTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial + 50
-
         onTriggered: root.closing = false
     }
+
     ColumnLayout {
         id: bodyColumn
 
@@ -107,6 +106,7 @@ WrapperRectangle {
             fill: parent
             margins: root.contentMargin
         }
+
         Header {
             id: header
 
@@ -115,6 +115,7 @@ WrapperRectangle {
             text: ""
             visible: header.text !== "" || header.icon !== ""
         }
+
         Item {
             id: bodyHost
 
@@ -141,6 +142,7 @@ WrapperRectangle {
                     width: scrollView.availableWidth
                 }
             }
+
             Loader {
                 id: staticLoader
 

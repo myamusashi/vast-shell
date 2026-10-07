@@ -11,16 +11,17 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property int currentLineIndex: LyricsProvider.currentLineIndex
+    readonly property int  currentLineIndex: LyricsProvider.currentLineIndex
     readonly property real currentWordDuration: LyricsProvider.currentWordDuration
-    readonly property int currentWordIndex: LyricsProvider.currentWordIndex
-    readonly property var lines: LyricsProvider.lines
-    property var offsets: ({})
-    readonly property int state: LyricsProvider.state
+    readonly property int  currentWordIndex: LyricsProvider.currentWordIndex
+    readonly property var  lines: LyricsProvider.lines
+    readonly property int  state: LyricsProvider.state
     readonly property bool synced: LyricsProvider.synced
-    property bool trackJustChanged: false
-    readonly property var wordLines: LyricsProvider.wordLines
+    readonly property var  wordLines: LyricsProvider.wordLines
     readonly property bool wordSynced: LyricsProvider.wordSynced
+
+    property var           offsets: ({})
+    property bool          trackJustChanged: false
 
     Component.onCompleted: {
         const p = Players.active;
@@ -56,6 +57,7 @@ Singleton {
 
         target: Players.active
     }
+
     Connections {
         function onIsQuickSettingsOpenChanged() {
             if (!GlobalStates.isQuickSettingsOpen)

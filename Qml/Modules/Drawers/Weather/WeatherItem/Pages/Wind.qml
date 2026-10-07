@@ -15,9 +15,7 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Wind {
-    }
-
+    content: Wind {}
     component Wind: Column {
         clip: true
         spacing: Appearance.spacing.normal
@@ -26,12 +24,13 @@ Pages {
             fill: parent
             topMargin: 20
         }
+
         Header {
             icon: "air"
             title: qsTr("Wind")
-
             onClicked: root.isOpen = false
         }
+
         WrapperRectangle {
             anchors.margins: Appearance.margin.normal
             clip: true
@@ -51,6 +50,7 @@ Pages {
                     font.pixelSize: Appearance.fonts.size.large * 1.5
                     text: qsTr("Today's average")
                 }
+
                 RowLayout {
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillWidth: true
@@ -61,12 +61,14 @@ Pages {
                         font.pixelSize: Appearance.fonts.size.extraLarge
                         text: Weather.windSpeed
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.normal
                         text: "Km/h"
                     }
                 }
+
                 Flickable {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 220
@@ -96,18 +98,21 @@ Pages {
                                     to: 15
                                     value: parent.modelData.windSpeed
                                 }
+
                                 StyledText {
                                     Layout.alignment: Qt.AlignCenter
                                     color: Colours.m3Colors.m3OnBackground
                                     font.pixelSize: Appearance.fonts.size.normal
                                     text: parent.modelData.windSpeed
                                 }
+
                                 StyledText {
                                     Layout.alignment: Qt.AlignCenter
                                     color: Colours.m3Colors.m3OnBackground
                                     font.pixelSize: Appearance.fonts.size.normal
                                     text: parent.modelData.windDirectionText
                                 }
+
                                 StyledText {
                                     Layout.alignment: Qt.AlignCenter
                                     color: Colours.m3Colors.m3OnBackground
@@ -123,6 +128,7 @@ Pages {
                 }
             }
         }
+
         WrapperRectangle {
             color: Colours.m3Colors.m3Surface
             implicitHeight: description.contentHeight + 10
@@ -134,6 +140,7 @@ Pages {
                 color: Colours.m3Colors.m3Outline
                 width: 1
             }
+
             StyledText {
                 id: description
 

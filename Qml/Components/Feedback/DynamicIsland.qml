@@ -12,9 +12,9 @@ import qs.Core.States
 import qs.Services
 
 Scope {
+
     LazyLoader {
         activeAsync: DynamicIslandService.hasContent || DynamicIslandService.closing
-
         component: PanelWindow {
             id: targetWindow
 
@@ -23,13 +23,13 @@ Scope {
             // qmllint enable
 
             // qmllint disable
-            function updateContentSize(): void {
+            function               updateContentSize(): void {
                 var item = overlayLoader.item ?? baseLoader.item;
                 if (!item)
                     return;
-                islandBox.contentWidth = Math.max(1, item.implicitWidth);
+                islandBox.contentWidth  = Math.max(1, item.implicitWidth);
                 islandBox.contentHeight = Math.max(1, item.implicitHeight);
-                var radius = item["islandRadius"];
+                var radius              = item["islandRadius"];
             }
 
             WlrLayershell.layer: WlrLayer.Overlay
@@ -55,10 +55,11 @@ Scope {
                 right: true
                 top: true
             }
+
             Connections {
                 function onClosingChanged(): void {
                     if (DynamicIslandService.closing) {
-                        islandBox.contentWidth = targetWindow.dotSize;
+                        islandBox.contentWidth  = targetWindow.dotSize;
                         islandBox.contentHeight = targetWindow.dotSize;
                     }
                 }
@@ -75,6 +76,7 @@ Scope {
 
                 target: DynamicIslandService
             }
+
             Connections {
                 function onImplicitHeightChanged(): void {
                     if (DynamicIslandService.closing)
@@ -89,6 +91,7 @@ Scope {
 
                 target: baseLoader.item
             }
+
             Connections {
                 function onImplicitHeightChanged(): void {
                     if (DynamicIslandService.closing)
@@ -103,6 +106,7 @@ Scope {
 
                 target: overlayLoader.item
             }
+
             Item {
                 id: islandHost
 
@@ -115,7 +119,6 @@ Scope {
                     else
                         return Configs.generals.outerBorderSize + Configs.bar.barHeight + Appearance.spacing.small;
                 }
-
                 Behavior on y {
                     NAnim {
                         duration: DynamicIslandService.slideDuration
@@ -136,10 +139,9 @@ Scope {
                     opacity: DynamicIslandService.slidingUp ? 0 : (DynamicIslandService.hasContent ? 1 : 0)
                     radius: {
                         var item = overlayLoader.item ?? baseLoader.item; // qmllint disable
-                        var r = item?.["islandRadius"]; // qmllint disable
+                        var r    = item?.["islandRadius"]; // qmllint disable
                         return r === undefined ? Appearance.rounding.normal : r;
                     }
-
                     Behavior on implicitHeight {
                         SpringAnimation {
                             damping: 0.3
@@ -170,7 +172,9 @@ Scope {
                         horizontalCenter: parent.horizontalCenter
                         top: parent.top
                     }
+
                     Item {
+
                         Loader {
                             id: baseLoader
 
@@ -179,15 +183,14 @@ Scope {
                             opacity: DynamicIslandService.overlay === null ? 1 : 0
                             sourceComponent: DynamicIslandService.current ? DynamicIslandService.current.content : null
                             visible: baseLoader.opacity > 0
-
                             Behavior on opacity {
                                 NAnim {
                                     duration: Appearance.animations.durations.small
                                 }
                             }
-
                             onItemChanged: Qt.callLater(targetWindow.updateContentSize)
                         }
+
                         Loader {
                             id: overlayLoader
 
@@ -195,7 +198,6 @@ Scope {
                             anchors.fill: parent
                             sourceComponent: DynamicIslandService.overlay ? DynamicIslandService.overlay.content : null
                             visible: DynamicIslandService.overlay !== null
-
                             onItemChanged: Qt.callLater(targetWindow.updateContentSize)
                         }
                     }

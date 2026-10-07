@@ -7,6 +7,7 @@ import Quickshell.Services.Pipewire
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
+
 import "../../Components"
 
 SettingsCard {
@@ -15,7 +16,7 @@ SettingsCard {
     readonly property int count: sourceNodes.length
     readonly property var currentSource: Pipewire.defaultAudioSource
     readonly property var sourceNodes: {
-        const nodes = Pipewire.nodes.values;
+        const nodes    = Pipewire.nodes.values;
         const filtered = nodes.filter(n => !n.isStream && n.audio && (n.type & PwNodeType.Source));
         filtered.sort((a, b) => (a.description || a.name).localeCompare(b.description || b.name));
         return filtered;
@@ -33,9 +34,9 @@ SettingsCard {
             text: qsTr("No input devices detected.")
             visible: root.count === 0
         }
+
         Repeater {
             model: root.sourceNodes
-
             delegate: AudioLevelRow {
                 id: sourceDelegate
 
@@ -45,7 +46,6 @@ SettingsCard {
                 isCurrent: root.currentSource && sourceDelegate.modelData.id === root.currentSource.id
                 node: sourceDelegate.modelData
                 selectable: true
-
                 onDefaultRequested: {
                     Pipewire.preferredDefaultAudioSource = sourceDelegate.modelData;
                 }

@@ -18,7 +18,7 @@ Singleton {
         try {
             const [rh, rm] = sunRise.split(":").map(Number);
             const [sh, sm] = sunSet.split(":").map(Number);
-            let total = (sh * 60 + sm) - (rh * 60 + rm);
+            let total      = (sh * 60 + sm) - (rh * 60 + rm);
             if (total < 0)
                 total += 24 * 60;
             return {
@@ -136,7 +136,7 @@ Singleton {
             const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
             if (!match)
                 return timeStr;
-            let hours = parseInt(match[1]);
+            let hours    = parseInt(match[1]);
             const period = match[3].toUpperCase();
             if (period === "PM" && hours !== 12)
                 hours += 12;
@@ -149,7 +149,7 @@ Singleton {
     }
     function pressureTrendIcon(currentPressure, pressures, index) {
         const previous = index === 0 ? null : pressures?.[index - 1];
-        const diff = previous === null || previous === undefined ? 0 : currentPressure - previous;
+        const diff     = previous === null || previous === undefined ? 0 : currentPressure - previous;
         if (Math.abs(diff) < 1.0)
             return "arrow_forward";
         return diff > 0 ? "arrow_upward" : "arrow_downward";
@@ -157,18 +157,18 @@ Singleton {
     function quickSummary(data) {
         if (!data.weatherLoaded)
             return "";
-        const parts = [];
-        const humidity = data.humidity;
-        const temperature = data.temperature;
-        const europeanAQI = data.europeanAQI;
-        const usAQI = data.usAQI;
-        const uvIndex = data.uvIndex;
-        const precipitation = data.precipitation;
-        const windSpeed = data.windSpeed;
+        const parts          = [];
+        const humidity       = data.humidity;
+        const temperature    = data.temperature;
+        const europeanAQI    = data.europeanAQI;
+        const usAQI          = data.usAQI;
+        const uvIndex        = data.uvIndex;
+        const precipitation  = data.precipitation;
+        const windSpeed      = data.windSpeed;
         const temperatureMax = data.temperatureMax;
         const temperatureMin = data.temperatureMin;
-        const visibility = data.visibility;
-        const feelsLike = data.feelsLike;
+        const visibility     = data.visibility;
+        const feelsLike      = data.feelsLike;
 
         if (humidity > 80 && temperature > 25)
             parts.push(qsTr("A muggy and warm day — take care in the sun."));

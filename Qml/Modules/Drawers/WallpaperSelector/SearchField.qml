@@ -13,10 +13,10 @@ StyledTextInput {
     required property var carousel
     required property var controller
 
-    function selectCurrentWallpaper(): void {
+    function              selectCurrentWallpaper(): void {
         if (!carousel || carousel.count === 0 || !controller)
             return;
-        const list = controller.visibleWallpapers ?? [];
+        const list         = controller.visibleWallpapers ?? [];
         const selectedPath = list[carousel.currentIndex];
         if (selectedPath === undefined)
             return;
@@ -29,7 +29,6 @@ StyledTextInput {
     implicitHeight: 40
     placeHolderText: qsTr("Search wallpapers")
     toggleButtonVisible: false
-
     Component.onCompleted: text = WallpaperFileModels.searchQuery
     Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
     Keys.onPressed: event => {

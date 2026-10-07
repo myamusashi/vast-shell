@@ -8,6 +8,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+
 import "Markdown"
 
 Pages {
@@ -15,9 +16,7 @@ Pages {
 
     property real sunriseProgress: CelestialProgress.progressBetween(Weather.sunRise, Weather.sunSet)
 
-    content: Sun {
-    }
-
+    content: Sun {}
     component Sun: Column {
         clip: true
         spacing: Appearance.spacing.normal
@@ -26,12 +25,13 @@ Pages {
             fill: parent
             topMargin: 20
         }
+
         Header {
             icon: "wb_sunny"
             title: qsTr("Sun")
-
             onClicked: root.isOpen = false
         }
+
         WrapperRectangle {
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: parent.height * 0.3
@@ -61,6 +61,7 @@ Pages {
                 }
             }
         }
+
         Column {
             height: parent.height * 0.7
             spacing: Appearance.spacing.large * 1.5
@@ -81,6 +82,7 @@ Pages {
                         text: qsTr("Sunrise")
                         width: parent.width
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.extraLarge
@@ -89,6 +91,7 @@ Pages {
                         width: parent.width
                     }
                 }
+
                 Column {
                     spacing: 0
                     width: parent.width / 2
@@ -100,6 +103,7 @@ Pages {
                         text: qsTr("Sunset")
                         width: parent.width
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.extraLarge
@@ -109,6 +113,7 @@ Pages {
                     }
                 }
             }
+
             WrapperRectangle {
                 color: Colours.m3Colors.m3Surface
                 implicitHeight: description.contentHeight + 20
@@ -120,6 +125,7 @@ Pages {
                     color: Colours.m3Colors.m3Outline
                     width: 1
                 }
+
                 StyledText {
                     id: description
 
@@ -135,32 +141,33 @@ Pages {
     component SunShape: Shape {
         id: sunShape
 
-        property real hillBaseY: height - hillHeight
+        property real  hillBaseY: height - hillHeight
         property color hillColor: Colours.m3Colors.m3Primary
-        property real hillControlPoint1X: width * 0.3
-        property real hillControlPoint1Y: hillBaseY - hillHeight * 0.1
-        property real hillControlPoint2X: width * 0.7
-        property real hillControlPoint2Y: hillBaseY - hillHeight * 0.1
-        property real hillEndX: width
-        property real hillEndY: hillBaseY + hillHeight * 0.3
+        property real  hillControlPoint1X: width * 0.3
+        property real  hillControlPoint1Y: hillBaseY - hillHeight * 0.1
+        property real  hillControlPoint2X: width * 0.7
+        property real  hillControlPoint2Y: hillBaseY - hillHeight * 0.1
+        property real  hillEndX: width
+        property real  hillEndY: hillBaseY + hillHeight * 0.3
 
         // Hill geometry
-        property real hillHeight: height * 0.6
-        property real hillStartX: 0
-        property real hillStartY: hillBaseY + hillHeight * 0.3
-        property real oneMinusProgress: 1 - progress
+        property real  hillHeight: height * 0.6
+        property real  hillStartX: 0
+        property real  hillStartY: hillBaseY + hillHeight * 0.3
+        property real  oneMinusProgress: 1 - progress
 
         // Sun position — cubic bezier evaluated at progress = root.sunriseProgress
-        property real progress: root.sunriseProgress
+        property real  progress: root.sunriseProgress
         property color sunColor: Colours.m3Colors.m3Yellow
-        property real sunSize: 20
-        property real sunX: Math.pow(oneMinusProgress, 3) * hillStartX + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1X + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2X + Math.pow(progress, 3) * hillEndX
-        property real sunY: Math.pow(oneMinusProgress, 3) * hillStartY + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1Y + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2Y + Math.pow(progress, 3) * hillEndY
+        property real  sunSize: 20
+        property real  sunX: Math.pow(oneMinusProgress, 3) * hillStartX + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1X + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2X + Math.pow(progress, 3) * hillEndX
+        property real  sunY: Math.pow(oneMinusProgress, 3) * hillStartY + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1Y + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2Y + Math.pow(progress, 3) * hillEndY
 
         anchors.fill: parent
         preferredRendererType: Shape.CurveRenderer
 
         // Hill
+
         ShapePath {
             fillColor: sunShape.hillColor
             startX: 0
@@ -171,6 +178,7 @@ Pages {
                 x: sunShape.hillStartX
                 y: sunShape.hillStartY
             }
+
             PathCubic {
                 control1X: sunShape.hillControlPoint1X
                 control1Y: sunShape.hillControlPoint1Y
@@ -179,10 +187,12 @@ Pages {
                 x: sunShape.hillEndX
                 y: sunShape.hillEndY
             }
+
             PathLine {
                 x: sunShape.width
                 y: sunShape.height
             }
+
             PathLine {
                 x: 0
                 y: sunShape.height
@@ -190,6 +200,7 @@ Pages {
         }
 
         // Sun
+
         ShapePath {
             fillColor: sunShape.sunColor
             strokeColor: sunShape.sunColor

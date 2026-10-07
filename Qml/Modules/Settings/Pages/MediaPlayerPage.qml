@@ -21,10 +21,10 @@ SettingsPageBase {
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 52
                 checked: Configs.mediaPlayer.showLyrics
-
                 onToggled: Configs.mediaPlayer.showLyrics = checked
             }
         }
+
         SettingRow {
             description: qsTr("Tint the player with colors extracted from the album cover.")
             label: qsTr("Enable dynamic colors from cover art:")
@@ -33,10 +33,10 @@ SettingsPageBase {
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 52
                 checked: Configs.mediaPlayer.dynamicColorsCover
-
                 onToggled: Configs.mediaPlayer.dynamicColorsCover = checked
             }
         }
+
         SettingRow {
             description: qsTr("Visual style for the playback progress slider.")
             label: qsTr("Slider type:")
@@ -56,7 +56,6 @@ SettingsPageBase {
                 ]
                 text: model[selectedIndex]?.display ?? Configs.mediaPlayer.sliderType
                 textRole: "display"
-
                 onMenuItemActivated: index => Configs.mediaPlayer.sliderType = model[index].display
             }
         }

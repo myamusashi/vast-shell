@@ -8,11 +8,12 @@ import qs.Core.Configs
 Scope {
     id: root
 
-    required property Item container
-    property string pendingTitle: ""
+    required property Item      container
     required property Flickable target
 
-    function findCard(item, cardTitle) {
+    property string             pendingTitle: ""
+
+    function                    findCard(item, cardTitle) {
         if (item.title === cardTitle)
             return item;
 
@@ -23,7 +24,7 @@ Scope {
         }
         return null;
     }
-    function refreshPending() {
+    function                    refreshPending() {
         if (pendingTitle === "")
             return;
 
@@ -37,7 +38,7 @@ Scope {
     // The page layout may still be settling right after a page switch, so
     // the scroll target is re-applied on every contentHeight change until
     // it stays quiet, keeping the card pinned below the top margin.
-    function reveal(cardTitle: string): bool {
+    function                    reveal(cardTitle: string): bool {
         const card = findCard(container, cardTitle);
 
         if (!card || !card.visible)
@@ -52,8 +53,8 @@ Scope {
         settleTimer.restart();
         return true;
     }
-    function scrollToCard(card) {
-        const y = card.mapToItem(target.contentItem).y - Appearance.margin.large;
+    function                    scrollToCard(card) {
+        const y       = card.mapToItem(target.contentItem).y - Appearance.margin.large;
 
         scrollAnim.to = Math.max(0, Math.min(y, target.contentHeight - target.height));
         scrollAnim.restart();
@@ -66,13 +67,14 @@ Scope {
 
         target: root.target
     }
+
     Timer {
         id: settleTimer
 
         interval: 120
-
         onTriggered: root.pendingTitle = ""
     }
+
     NumberAnimation {
         id: scrollAnim
 

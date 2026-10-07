@@ -2,13 +2,14 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
 import Quickshell.Services.Pipewire
+import Quickshell.Widgets
 
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+
 import "../../Components"
 
 SettingsCard {
@@ -16,7 +17,7 @@ SettingsCard {
 
     readonly property int count: streamNodes.length
     readonly property var streamNodes: {
-        const nodes = Pipewire.nodes.values;
+        const nodes    = Pipewire.nodes.values;
         const filtered = nodes.filter(n => n.isStream && n.audio && (n.type & PwNodeType.Sink));
         filtered.sort((a, b) => (a.description || a.name).localeCompare(b.description || b.name));
         return filtered;
@@ -34,9 +35,9 @@ SettingsCard {
             text: qsTr("No active playback streams.")
             visible: root.count === 0
         }
+
         Repeater {
             model: root.streamNodes
-
             delegate: RowLayout {
                 id: streamDelegate
 
@@ -52,6 +53,7 @@ SettingsCard {
                     asynchronous: true
                     source: IconUtils.guessIconPath(streamDelegate.modelData)
                 }
+
                 AudioLevelRow {
                     Layout.fillWidth: true
                     node: streamDelegate.modelData

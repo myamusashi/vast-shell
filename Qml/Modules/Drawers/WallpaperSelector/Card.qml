@@ -13,21 +13,20 @@ Item {
     id: root
 
     required property real carouselHeight
-    required property var controller
-    required property int index
+    required property var  controller
+    required property int  index
     required property bool isCurrent
-    required property var modelData
-    required property var thumbnailAvailability
+    required property var  modelData
+    required property var  thumbnailAvailability
     required property real unitWidth
 
-    signal activateRequested(var modelData)
-    signal selectRequested(int index)
+    signal                 activateRequested(var modelData)
+    signal                 selectRequested(int index)
 
     implicitHeight: carouselHeight
     implicitWidth: isCurrent ? unitWidth * 2 : unitWidth
     opacity: isCurrent ? 1.0 : 0.92
     z: isCurrent ? 100 : 1
-
     Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.normal
@@ -40,7 +39,6 @@ Item {
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
-
     onIsCurrentChanged: {
         if (!isCurrent)
             return;
@@ -58,7 +56,6 @@ Item {
         implicitHeight: parent.height
         implicitWidth: parent.width - (root.isCurrent ? Math.max(20, root.unitWidth * 0.3) : Math.max(12, root.unitWidth * 0.2))
         radius: root.isCurrent ? Appearance.rounding.large : 20
-
         Behavior on implicitHeight {
             NAnim {
                 duration: Appearance.animations.durations.normal
@@ -92,6 +89,7 @@ Item {
                 z: -1
             }
         }
+
         Image {
             id: videoThumbnailCache
 
@@ -100,12 +98,12 @@ Item {
             fillMode: Image.PreserveAspectCrop
             source: root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
             visible: status === Image.Ready
-
             onStatusChanged: {
                 if (status === Image.Error && MediaKind.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
                     root.controller.markThumbnail(root.modelData, false);
             }
         }
+
         Rectangle {
             id: dimOverlay
 
@@ -119,9 +117,9 @@ Item {
                 target: dimOverlay.target
             }
         }
+
         MArea {
             cursorShape: Qt.PointingHandCursor
-
             onClicked: {
                 if (!root.isCurrent)
                     root.selectRequested(root.index);

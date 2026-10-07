@@ -14,21 +14,21 @@ import "../Base"
 LazyLoader {
     id: root
 
-    property string acceptedText: qsTr("Yes")
     required property Component body
-    property int cardPaddingHeight: 40
-    property int cardPaddingWidth: 60
-    property int contentMinWidth: 300
-    property int contentSpacing: Appearance.spacing.large
     required property Component header
-    property bool needKeyboardFocus: true
-    property string rejectedText: qsTr("No")
 
-    signal accepted
-    signal rejected
+    property string             acceptedText: qsTr("Yes")
+    property int                cardPaddingHeight: 40
+    property int                cardPaddingWidth: 60
+    property int                contentMinWidth: 300
+    property int                contentSpacing: Appearance.spacing.large
+    property bool               needKeyboardFocus: true
+    property string             rejectedText: qsTr("No")
+
+    signal                      accepted
+    signal                      rejected
 
     activeAsync: false
-
     component: PanelWindow {
         WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.layer: WlrLayer.Overlay
@@ -40,22 +40,23 @@ LazyLoader {
             right: true
             top: true
         }
+
         TabNavigator {
             id: tabNav
 
             defaultItem: acceptButton
             scope: column
-
             Component.onCompleted: {
                 Qt.callLater(() => tabNav.firstFocus());
             }
         }
+
         MArea {
             anchors.fill: parent
             propagateComposedEvents: false
-
             onClicked: root.rejected()
         }
+
         StyledRect {
             anchors.centerIn: parent
             border.color: Colours.m3Colors.m3Outline
@@ -72,7 +73,6 @@ LazyLoader {
                 anchors.margins: 20
                 spacing: root.contentSpacing
                 width: Math.max(root.contentMinWidth, loaderHeader.item ? loaderHeader.implicitWidth : 0, loaderBody.item ? loaderBody.implicitWidth : 0, rowButtons.implicitWidth)
-
                 Keys.onBacktabPressed: tabNav.previous()
                 Keys.onTabPressed: tabNav.next()
 
@@ -84,11 +84,13 @@ LazyLoader {
                     sourceComponent: root.header
                     width: parent.width
                 }
+
                 StyledRect {
                     color: Colours.m3Colors.m3OutlineVariant
                     implicitHeight: 2
                     implicitWidth: parent.width
                 }
+
                 Loader {
                     id: loaderBody
 
@@ -97,11 +99,13 @@ LazyLoader {
                     sourceComponent: root.body
                     width: parent.width
                 }
+
                 StyledRect {
                     color: Colours.m3Colors.m3OutlineVariant
                     implicitHeight: 2
                     implicitWidth: parent.width
                 }
+
                 Row {
                     id: rowButtons
 
@@ -116,9 +120,9 @@ LazyLoader {
                         implicitHeight: 40
                         implicitWidth: 80
                         text: root.rejectedText
-
                         onClicked: root.rejected()
                     }
+
                     ExtendedFloatingButton {
                         id: acceptButton
 
@@ -129,7 +133,6 @@ LazyLoader {
                         implicitWidth: 80
                         text: root.acceptedText
                         textColor: Colours.m3Colors.m3Primary
-
                         onClicked: root.accepted()
                     }
                 }

@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.Notifications
+import Quickshell.Widgets
 
 import qs.Core.Configs
 import qs.Core.States
@@ -29,9 +29,11 @@ StyledRect {
             top: parent.top
             topMargin: 10
         }
+
         Item {
             Layout.fillWidth: true
         }
+
         StyledRect {
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: 30
@@ -42,6 +44,7 @@ StyledRect {
 
                 font: textClear.font
             }
+
             StyledText {
                 id: textClear
 
@@ -50,14 +53,15 @@ StyledRect {
                 font.pixelSize: Appearance.fonts.size.large
                 text: qsTr("Clear all")
             }
+
             MArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
-
                 onClicked: Notifs.clearAll()
             }
         }
+
         StyledRect {
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: 30
@@ -72,24 +76,25 @@ StyledRect {
                 icon: Notifs.dnd ? "notifications_off" : "notifications_active"
                 type: Icon.Material
             }
+
             MArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
-
                 onClicked: Notifs.dnd = !Notifs.dnd
             }
         }
+
         Item {
             Layout.fillWidth: true
         }
     }
+
     Loader {
         id: loader
 
         active: GlobalStates.isQuickSettingsOpen
         asynchronous: true
-
         sourceComponent: StyledRect {
             anchors.fill: parent
             clip: true
@@ -101,7 +106,6 @@ StyledRect {
                 boundsBehavior: Flickable.StopAtBounds
                 cacheBuffer: 0
                 spacing: Appearance.spacing.normal
-
                 delegate: WrapperItem {
                     id: root
 
@@ -118,11 +122,11 @@ StyledRect {
                         duration: Appearance.animations.durations.small
                         property: "x"
                         target: root
-
                         onFinished: {
                             fadeOutAnim.start();
                         }
                     }
+
                     NAnim {
                         id: fadeOutAnim
 
@@ -132,6 +136,7 @@ StyledRect {
                         target: root
                         to: 0.0
                     }
+
                     SpringAnimation {
                         id: springBackAnim
 
@@ -141,13 +146,14 @@ StyledRect {
                         target: root
                         to: 0
                     }
+
                     Timer {
                         id: closeTimer
 
                         interval: swipeOutAnim.duration + fadeOutAnim.duration
-
                         onTriggered: root.modelData.close()
                     }
+
                     WrapperRectangle {
                         clip: true
                         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
@@ -158,7 +164,9 @@ StyledRect {
                             color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : "transparent"
                             width: root.modelData.urgency === NotificationUrgency.Critical ? 1 : 0
                         }
+
                         Item {
+
                             MArea {
                                 id: delegateMouseNotif
 
@@ -170,7 +178,6 @@ StyledRect {
                                     maximumX: root.width
                                     minimumX: -root.width
                                     target: root
-
                                     onActiveChanged: {
                                         if (drag.active)
                                             return;
@@ -186,6 +193,7 @@ StyledRect {
                                     }
                                 }
                             }
+
                             Row {
                                 spacing: Appearance.spacing.normal
 
@@ -195,11 +203,13 @@ StyledRect {
                                     rightMargin: 10
                                     topMargin: 10
                                 }
+
                                 N.NotifIcon {
                                     id: iconLayout
 
                                     modelData: root.modelData
                                 }
+
                                 N.Content {
                                     id: contentLayout
 
@@ -219,6 +229,7 @@ StyledRect {
                     rightMargin: 10
                 }
             }
+
             StyledText {
                 anchors.centerIn: parent
                 color: Colours.m3Colors.m3OnSurfaceVariant

@@ -12,7 +12,7 @@ import qs.Services
 Item {
     id: root
 
-    readonly property var entries: [
+    readonly property var    entries: [
         {
             page: 0,
             pageLabel: "General",
@@ -243,30 +243,31 @@ Item {
         }
     ]
     readonly property string query: searchField.text.trim()
-    property var results: []
-    property int selectedIndex: -1
 
-    signal activated(int page, string card)
+    property var             results: []
+    property int             selectedIndex: -1
 
-    function activate(entry) {
+    signal                   activated(int page, string card)
+
+    function                 activate(entry) {
         activated(entry.page, entry.card);
         clear();
     }
-    function clear() {
+    function                 clear() {
         searchField.text = "";
-        results = [];
-        selectedIndex = -1;
+        results          = [];
+        selectedIndex    = -1;
     }
-    function runSearch() {
+    function                 runSearch() {
         if (query.length === 0) {
-            results = [];
+            results       = [];
             selectedIndex = -1;
             return;
         }
 
         // fzy scores grow with needle length, so the floor is per query character.
         const minScore = query.length * SearchEngine.appThreshold;
-        const scored = [];
+        const scored   = [];
 
         for (const entry of entries) {
             let best = 0;
@@ -280,7 +281,7 @@ Item {
         }
 
         scored.sort((a, b) => b[0] - a[0]);
-        results = scored.slice(0, 8).map(item => item[1]);
+        results       = scored.slice(0, 8).map(item => item[1]);
         selectedIndex = results.length > 0 ? 0 : -1;
     }
 
@@ -292,9 +293,9 @@ Item {
 
         interval: 200
         value: searchField.text.trim()
-
         onDebouncedValueChanged: root.runSearch()
     }
+
     RowLayout {
         id: searchBox
 
@@ -306,6 +307,7 @@ Item {
             font.pixelSize: Appearance.fonts.size.large
             icon: "search"
         }
+
         StyledTextInput {
             id: searchField
 
@@ -313,7 +315,6 @@ Item {
             autoFocus: false
             placeHolderText: qsTr("Search settings…")
             toggleButtonVisible: false
-
             onAccepted: {
                 if (root.selectedIndex >= 0 && root.selectedIndex < root.results.length)
                     root.activate(root.results[root.selectedIndex]);
@@ -340,6 +341,7 @@ Item {
             }
         }
     }
+
     Rectangle {
         id: resultsPopup
 
@@ -362,7 +364,6 @@ Item {
 
             Repeater {
                 model: root.results
-
                 delegate: Rectangle {
                     id: resultDelegate
 
@@ -378,10 +379,10 @@ Item {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
-
                         onClicked: root.activate(resultDelegate.modelData)
                         onEntered: root.selectedIndex = resultDelegate.index
                     }
+
                     ColumnLayout {
                         id: resultRow
 
@@ -397,6 +398,7 @@ Item {
                             fullText: resultDelegate.modelData.card
                             searchText: root.query
                         }
+
                         StyledText {
                             Layout.fillWidth: true
                             color: Colours.m3Colors.m3OnSurfaceVariant

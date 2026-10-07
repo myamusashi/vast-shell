@@ -15,9 +15,7 @@ import "Markdown"
 Pages {
     id: root
 
-    content: UVIndex {
-    }
-
+    content: UVIndex {}
     component UVIndex: Column {
         clip: true
         spacing: Appearance.spacing.normal
@@ -26,12 +24,13 @@ Pages {
             fill: parent
             topMargin: 20
         }
+
         Header {
             icon: "wb_sunny"
             title: qsTr("UV Index")
-
             onClicked: root.isOpen = false
         }
+
         WrapperRectangle {
             anchors.margins: Appearance.margin.normal
             clip: true
@@ -51,6 +50,7 @@ Pages {
                     font.pixelSize: Appearance.fonts.size.large * 1.5
                     text: qsTr("Today's average")
                 }
+
                 RowLayout {
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillWidth: true
@@ -61,12 +61,14 @@ Pages {
                         font.pixelSize: Appearance.fonts.size.extraLarge
                         text: Weather.uvIndex
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.normal
                         text: Weather.uvCategoryLabel(Weather.uvIndex)
                     }
                 }
+
                 Flickable {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -94,6 +96,7 @@ Pages {
                                     to: 10
                                     value: parent.modelData.uvIndex
                                 }
+
                                 StyledText {
                                     color: Colours.m3Colors.m3OnBackground
                                     font.pixelSize: Appearance.fonts.size.normal
@@ -106,11 +109,13 @@ Pages {
                         }
                     }
                 }
+
                 Item {
                     Layout.fillHeight: true
                 }
             }
         }
+
         StyledRect {
             color: Colours.m3Colors.m3Surface
             implicitHeight: uvIndexDescription.contentHeight + 20
@@ -120,6 +125,7 @@ Pages {
                 color: Colours.m3Colors.m3OutlineVariant
                 width: 1
             }
+
             StyledText {
                 id: uvIndexDescription
 
@@ -132,6 +138,7 @@ Pages {
                 wrapMode: Text.Wrap
             }
         }
+
         Item {
             Layout.fillHeight: true
         }

@@ -11,21 +11,23 @@ import qs.Services
 ColumnLayout {
     id: root
 
-    readonly property int currentId: {
+    required property var  uiState
+
+    readonly property int  currentId: {
         if (!entryGrid || !entryGrid.entryList || entryGrid.entryList.currentIndex < 0 || !entryGrid.entryList.currentItem)
             return -1;
         return entryGrid.entryList.currentItem.entryId; // qmllint disable
     }
     readonly property Item defaultFocusItem: Configs.clipboard.enableVimKeybinds ? root : searchBar.searchField
-    property alias entryList: entryGrid.entryList
-    property alias searchField: searchBar.searchField
-    required property var uiState
 
-    function focusDefault(): void {
+    property alias         entryList: entryGrid.entryList
+    property alias         searchField: searchBar.searchField
+
+    function               focusDefault(): void {
         if (defaultFocusItem)
             defaultFocusItem.forceActiveFocus();
     }
-    function handleKey(event: var): void {
+    function               handleKey(event: var): void {
         if (!entryGrid || !entryGrid.entryList)
             return;
 
@@ -40,7 +42,7 @@ ColumnLayout {
                 return;
         }
 
-        const vim = Configs.clipboard.enableVimKeybinds;
+        const vim  = Configs.clipboard.enableVimKeybinds;
         const item = entryGrid.entryList.currentItem;
 
         switch (event.key) {
@@ -53,7 +55,7 @@ ColumnLayout {
         case Qt.Key_Escape:
             if (vim && uiState.visualActive) {
                 uiState.visualActive = false;
-                event.accepted = true;
+                event.accepted       = true;
             }
             break;
         case Qt.Key_V:
@@ -91,7 +93,7 @@ ColumnLayout {
         case Qt.Key_Y:
             if (vim) {
                 if (uiState.visualActive) {
-                    const ids = entryGrid.entryList.visualSelectedIds();
+                    const ids    = entryGrid.entryList.visualSelectedIds();
                     const copied = ids.length > 0 && ClipboardManager.copySelection(ids);
                     if (copied) {
                         const n = ids.length === 1 ? qsTr("entry") : qsTr("entries");
@@ -151,7 +153,7 @@ ColumnLayout {
         case Qt.Key_T:
             if (event.modifiers & Qt.ControlModifier) {
                 Configs.clipboard.enablePreview = !Configs.clipboard.enablePreview;
-                event.accepted = true;
+                event.accepted                  = true;
             }
             break;
         case Qt.Key_Delete:
@@ -169,14 +171,13 @@ ColumnLayout {
             break;
         }
     }
-    function restoreFocus(): void {
+    function               restoreFocus(): void {
         focusRestore.attempts = 0;
         focusRestore.restart();
     }
 
     focus: true
     spacing: 0
-
     Keys.onPressed: event => handleKey(event)
 
     Timer {
@@ -186,13 +187,13 @@ ColumnLayout {
 
         interval: 30
         repeat: true
-
         onTriggered: {
             root.focusDefault();
             if (root.defaultFocusItem.activeFocus || ++focusRestore.attempts >= 10)
                 focusRestore.running = false;
         }
     }
+
     Connections {
         function onDeleteConfirmed(ids: var): void {
             const removed = ClipboardManager.removeMany(ids);
@@ -201,7 +202,7 @@ ColumnLayout {
                 ToastService.show(qsTr("Deleted %1 %2").arg(removed).arg(n), qsTr("Clipboard"), "edit-delete");
             }
 
-            root.uiState.visualActive = false;
+            root.uiState.visualActive        = false;
             entryGrid.entryList.currentIndex = Math.min(entryGrid.entryList.currentIndex, entryGrid.entryList.count - 1);
         }
         function onIsDeletePendingChanged() {
@@ -212,6 +213,7 @@ ColumnLayout {
 
         target: root.uiState
     }
+
     SearchBar {
         id: searchBar
 
@@ -219,9 +221,9 @@ ColumnLayout {
         currentId: root.currentId
         entryList: entryGrid.entryList
         uiState: root.uiState
-
         onKeyPressed: event => root.handleKey(event)
     }
+
     RowLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
@@ -235,6 +237,7 @@ ColumnLayout {
             searchText: searchBar.searchField.text
             uiState: root.uiState
         }
+
         Loader {
             id: previewLoader
 
@@ -242,7 +245,6 @@ ColumnLayout {
             Layout.fillWidth: true
             active: Configs.clipboard.enablePreview
             visible: active
-
             sourceComponent: RowLayout {
                 anchors.fill: parent
                 spacing: Appearance.spacing.small
@@ -252,11 +254,11 @@ ColumnLayout {
                     Layout.preferredWidth: 1
                     color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
                 }
+
                 Preview {
                     Layout.fillHeight: true
                     Layout.preferredWidth: root.uiState.previewWidth
                     entryId: root.currentId
-
                     onCopyRequested: id => ClipboardManager.copyToClipboard(id)
                     onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
                 }

@@ -12,10 +12,9 @@ RowLayout {
     id: root
 
     readonly property bool multiDisplay: Brightness.displays.length > 1
-    readonly property var selectedDisplay: Brightness.displays.find(d => d.id === targetId) ?? null
-    readonly property int selectedIndex: targets.findIndex(t => t.value === targetId)
-    property string targetId: ""
-    readonly property var targets: multiDisplay ? [
+    readonly property var  selectedDisplay: Brightness.displays.find(d => d.id === targetId) ?? null
+    readonly property int  selectedIndex: targets.findIndex(t => t.value === targetId)
+    readonly property var  targets: multiDisplay ? [
         {
             display: qsTr("All"),
             value: ""
@@ -24,6 +23,8 @@ RowLayout {
                     display: d.isInternal ? qsTr("Internal") : String(d.name).split(" ")[0],
                     value: d.id
                 }))] : []
+
+    property string        targetId: ""
 
     spacing: Appearance.spacing.normal
 
@@ -35,6 +36,7 @@ RowLayout {
 
         target: Brightness
     }
+
     Rectangle {
         Layout.fillWidth: true
         Layout.preferredHeight: 55
@@ -45,12 +47,15 @@ RowLayout {
             color: Colours.m3Colors.m3Outline
             width: 2
         }
+
         RowLayout {
+
             anchors {
                 fill: parent
                 leftMargin: Appearance.margin.small
                 rightMargin: Appearance.margin.small
             }
+
             StyledSlide {
                 id: brightnessSlider
 
@@ -60,7 +65,6 @@ RowLayout {
                 iconSize: Appearance.fonts.size.large * 1.5
                 to: Brightness.maxValue || 1
                 value: brightnessSlider.pressed ? brightnessSlider.value : (root.selectedDisplay?.brightness ?? Brightness.value)
-
                 onMoved: {
                     if (root.targetId === "")
                         Brightness.setBrightnessAll(brightnessSlider.value);
@@ -68,6 +72,7 @@ RowLayout {
                         Brightness.setBrightnessForDisplay(root.targetId, brightnessSlider.value);
                 }
             }
+
             SplitButton {
                 id: splitButton
 
@@ -77,16 +82,15 @@ RowLayout {
                 model: root.targets
                 text: root.targets[root.selectedIndex]?.display ?? qsTr("All")
                 textRole: "display"
-
                 onMenuItemActivated: index => root.targetId = root.targets[index].value
             }
         }
     }
+
     FloatingButton {
         color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.3)
         icon.color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
         icon.name: "bedtime"
-
         onClicked: Hyprsunset.isNightModeOn ? Hyprsunset.down() : Hyprsunset.up()
     }
 }

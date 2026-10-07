@@ -8,15 +8,16 @@ Rectangle {
     id: root
 
     readonly property real ratio: Brightness.value / (Brightness.maxValue || 1)
-    property int segmentCount: 20
-    property real segmentMargins: 0.5
-    property real segmentSpacing: 0.5
 
-    signal interactEnded
-    signal interactStarted
+    property int           segmentCount: 20
+    property real          segmentMargins: 0.5
+    property real          segmentSpacing: 0.5
 
-    function commitFromX(x: real): void {
-        const usable = width - segmentMargins * 2;
+    signal                 interactEnded
+    signal                 interactStarted
+
+    function               commitFromX(x: real): void {
+        const usable  = width - segmentMargins * 2;
         const clamped = Math.max(segmentMargins, Math.min(width - segmentMargins, x));
         Brightness.setBrightness(Math.round(((clamped - segmentMargins) / usable) * Brightness.maxValue));
     }
@@ -31,7 +32,6 @@ Rectangle {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-
         onCanceled: root.interactEnded()
         onPositionChanged: mouse => {
             if (interactionArea.pressed)
@@ -43,6 +43,7 @@ Rectangle {
         }
         onReleased: root.interactEnded()
     }
+
     Item {
         id: pill
 
@@ -55,7 +56,6 @@ Rectangle {
 
             Repeater {
                 model: root.segmentCount
-
                 delegate: Item {
                     id: segmentCell
 
@@ -68,7 +68,7 @@ Rectangle {
                         id: segment
 
                         readonly property bool isLit: segmentCell.index < litSegments
-                        readonly property int litSegments: Math.round(root.ratio * root.segmentCount)
+                        readonly property int  litSegments: Math.round(root.ratio * root.segmentCount)
 
                         anchors.centerIn: parent
                         border.color: "black"

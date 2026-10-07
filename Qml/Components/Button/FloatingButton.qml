@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import AnotherRipple
 import QtQuick
 import Quickshell.Widgets
+import AnotherRipple
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -12,21 +12,21 @@ import qs.Services
 Item {
     id: root
 
-    readonly property int actionButtonIconSize: size === "small" ? 16 : size === "large" ? 36 : 24
-    readonly property int actionButtonRadius: size === "small" ? 12 : size === "regular" ? 12 : size === "large" ? 28 : 16
-    readonly property int actionButtonSize: size === "small" ? 32 : size === "regular" ? 40 : size === "large" ? 96 : 56
+    readonly property int   actionButtonIconSize: size === "small" ? 16 : size === "large" ? 36 : 24
+    readonly property int   actionButtonRadius: size === "small" ? 12 : size === "regular" ? 12 : size === "large" ? 28 : 16
+    readonly property int   actionButtonSize: size === "small" ? 32 : size === "regular" ? 40 : size === "large" ? 96 : 56
     readonly property color backgroundColor: enabled || color.a === 0 ? color : Qt.alpha(color, 0.12)
-    property alias backgroundRadius: background.radius
-    property color color: Colours.m3Colors.m3PrimaryContainer
-    property bool hovered: hoverHandler.hovered
-    property IconComponent icon: IconComponent {
-    }
-    readonly property bool keyboardFocused: activeFocus
-    property bool pressed: tapHandler.pressed
-    property string size: "medium"
-    property bool spinning: false
+    readonly property bool  keyboardFocused: activeFocus
 
-    signal clicked
+    property alias          backgroundRadius: background.radius
+    property color          color: Colours.m3Colors.m3PrimaryContainer
+    property bool           hovered: hoverHandler.hovered
+    property IconComponent  icon: IconComponent {}
+    property bool           pressed: tapHandler.pressed
+    property string         size: "medium"
+    property bool           spinning: false
+
+    signal                  clicked
 
     implicitHeight: actionButtonSize
     implicitWidth: actionButtonSize
@@ -56,7 +56,6 @@ Item {
             when: root.enabled && !root.hovered && !root.pressed && !root.keyboardFocused
         }
     ]
-
     Keys.onReturnPressed: event => {
         if (enabled) {
             clicked();
@@ -71,11 +70,11 @@ Item {
     }
     onSpinningChanged: {
         if (!spinning) {
-            const r = ((iconItem.rotation % 360) + 360) % 360;
+            const r           = ((iconItem.rotation % 360) + 360) % 360;
             // Snap to normalized angle first so the animation starts from the visible angle.
             iconItem.rotation = r;
             // Shortest path back to 0: go forward to 360 if past halfway, then snap to 0 in onFinished.
-            resetAnim.to = r > 180 ? 360 : 0;
+            resetAnim.to      = r > 180 ? 360 : 0;
             resetAnim.restart();
         } else {
             resetAnim.stop();
@@ -89,12 +88,12 @@ Item {
         easing.type: Easing.OutCubic
         property: "rotation"
         target: iconItem
-
         onFinished: {
             if (iconItem.rotation >= 359.9)
                 iconItem.rotation = 0;
         }
     }
+
     // qmllint enable
 
     Elevation {
@@ -102,13 +101,13 @@ Item {
         radius: background.radius
         visible: root.backgroundColor.a > 0 && root.enabled
     }
+
     ClippingRectangle {
         id: background
 
         anchors.fill: parent
         color: root.backgroundColor
         radius: root.enabled && root.pressed ? height * 0.5 : root.actionButtonRadius
-
         Behavior on radius {
             NAnim {
                 duration: Appearance.animations.durations.normal
@@ -120,6 +119,7 @@ Item {
             anchors.fill: parent
             color: Colours.m3Colors.m3OnSurfaceVariant
         }
+
         ParticleRipple {
             anchors.fill: parent
             color: Colours.m3Colors.m3OutlineVariant
@@ -127,6 +127,7 @@ Item {
             particleCount: 2
         }
     }
+
     StateLayer {
         anchors.fill: parent
         color: root.icon.color
@@ -135,6 +136,7 @@ Item {
         layerPressed: root.pressed
         radius: background.radius
     }
+
     Rectangle {
         id: focusRing
 
@@ -144,13 +146,13 @@ Item {
         color: "transparent"
         opacity: 0
         radius: background.radius
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
             }
         }
     }
+
     Icon {
         id: iconItem
 
@@ -158,7 +160,6 @@ Item {
         color: root.icon.color
         font.pixelSize: root.icon.size
         icon: root.icon.name
-
         RotationAnimator on rotation {
             duration: Appearance.animations.durations.extraLarge
             easing.type: Easing.Linear
@@ -168,22 +169,23 @@ Item {
             to: 360
         }
     }
+
     HoverHandler {
         id: hoverHandler
 
         cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
+
     TapHandler {
         id: tapHandler
 
         enabled: root.enabled
-
         onTapped: root.clicked()
     }
 
     component IconComponent: QtObject {
-        property color color: Colours.m3Colors.m3OnPrimaryContainer
+        property color  color: Colours.m3Colors.m3OnPrimaryContainer
         property string name: ""
-        property int size: root.actionButtonIconSize
+        property int    size: root.actionButtonIconSize
     }
 }

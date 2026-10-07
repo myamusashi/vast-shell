@@ -5,15 +5,14 @@ import qs.Core.Utils
 Text {
     id: root
 
+    property alias icon: root.text
+    property int   type: Icon.Material
+
     enum IconType {
         Material,
         Nerd,
         Weather
     }
-
-    property alias icon: root.text
-    property int type: Icon.Material
-
     antialiasing: true
     color: "transparent"
     horizontalAlignment: Text.AlignHCenter

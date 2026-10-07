@@ -37,30 +37,34 @@ StyledRect {
                     fill: parent
                     leftMargin: Appearance.spacing.small
                 }
+
                 Icon {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large
                     icon: "arrow_back"
                     type: Icon.Material
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
                     text: qsTr("Recordings")
                 }
+
                 Item {
                     Layout.fillWidth: true
                 }
             }
+
             MArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
-
                 onClicked: root.goBack()
             }
         }
+
         ListView {
             id: listView
 
@@ -71,7 +75,6 @@ StyledRect {
             focus: true
             keyNavigationEnabled: true
             spacing: Appearance.spacing.small
-
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
             }
@@ -80,13 +83,13 @@ StyledRect {
 
                 required property int index
                 required property var modelData
-                property alias thumbLoader: thumbLoader
+
+                property alias        thumbLoader: thumbLoader
 
                 color: listView.currentIndex === index ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15) : (delegateMouse.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
                 height: 56
                 radius: Appearance.rounding.small
                 width: listView.width
-
                 Component.onCompleted: ThumbnailQueue.generate(modelData.path, ThumbnailQueue.pathFor(modelData.path, Paths.cacheDir + "/video-thumbnails"), null)
 
                 Connections {
@@ -98,6 +101,7 @@ StyledRect {
 
                     target: ThumbnailQueue
                 }
+
                 RowLayout {
                     anchors.fill: parent
                     anchors.margins: Appearance.margin.small
@@ -111,7 +115,6 @@ StyledRect {
                         Layout.alignment: Qt.AlignVCenter
                         Layout.preferredHeight: 40
                         Layout.preferredWidth: 40
-
                         sourceComponent: StyledRect {
                             color: Colours.m3Colors.m3PrimaryContainer
                             implicitHeight: 40
@@ -130,6 +133,7 @@ StyledRect {
                                 sourceSize: Qt.size(40, 40)
                                 width: 40
                             }
+
                             Icon {
                                 anchors.centerIn: parent
                                 color: Colours.m3Colors.m3OnPrimaryContainer
@@ -140,6 +144,7 @@ StyledRect {
                             }
                         }
                     }
+
                     ColumnLayout {
                         Layout.alignment: Qt.AlignVCenter
                         Layout.fillWidth: true
@@ -153,12 +158,13 @@ StyledRect {
                             font.weight: Font.Medium
                             text: delegateRoot.modelData.name
                         }
+
                         StyledText {
                             color: Colours.m3Colors.m3OnSurfaceVariant
                             font.pixelSize: Appearance.fonts.size.small
                             text: {
                                 const ts = delegateRoot.modelData.created;
-                                const d = new Date(ts * 1000);
+                                const d  = new Date(ts * 1000);
                                 return d.toLocaleString("en-US", {
                                     month: "short",
                                     day: "numeric",
@@ -168,6 +174,7 @@ StyledRect {
                             }
                         }
                     }
+
                     Icon {
                         Layout.alignment: Qt.AlignVCenter
                         color: Colours.m3Colors.m3OnSurfaceVariant
@@ -179,18 +186,17 @@ StyledRect {
                             anchors.fill: parent
                             anchors.margins: -5
                             cursorShape: Qt.PointingHandCursor
-
                             onClicked: root.openFile(delegateRoot.modelData.path)
                         }
                     }
                 }
+
                 MArea {
                     id: delegateMouse
 
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: {
                         listView.currentIndex = delegateRoot.index;
                         root.openFile(delegateRoot.modelData.path);
@@ -200,7 +206,6 @@ StyledRect {
             model: ScriptModel {
                 values: [...ScreenCaptureHistory.screenrecordFiles]
             }
-
             Keys.onDownPressed: {
                 if (listView.currentIndex < listView.count - 1)
                     listView.currentIndex++;

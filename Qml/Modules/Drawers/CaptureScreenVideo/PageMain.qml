@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Quickshell
 
 import qs.Components.Base
@@ -17,13 +17,13 @@ StyledRect {
 
     property string audioLabel: qsTr("No Audio")
     property string selectedMonitor: Quickshell.screens[0]?.name ?? ""
-    property int sourceMode: 0
+    property int    sourceMode: 0
 
-    signal openAudio
-    signal openHistory
-    signal openSettings
+    signal          openAudio
+    signal          openHistory
+    signal          openSettings
 
-    function updateAudioLabel() {
+    function        updateAudioLabel() {
         if (!CaptureScreenVideo.includeAudio) {
             audioLabel = qsTr("No Audio");
         } else if (CaptureScreenVideo.audioDeviceDescription) {
@@ -36,7 +36,6 @@ StyledRect {
     clip: true
     color: "transparent"
     radius: 0
-
     Component.onCompleted: root.updateAudioLabel()
 
     Connections {
@@ -49,6 +48,7 @@ StyledRect {
 
         target: CaptureScreenVideo
     }
+
     Flickable {
         id: flickable
 
@@ -57,7 +57,6 @@ StyledRect {
         clip: true
         contentHeight: columnLayout.implicitHeight
         contentWidth: width
-
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
@@ -83,12 +82,14 @@ StyledRect {
                         fill: parent
                         margins: Appearance.margin.small
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.DemiBold
                         text: qsTr("Source")
                     }
+
                     RowLayout {
                         spacing: Appearance.spacing.small
 
@@ -107,7 +108,6 @@ StyledRect {
                                     icon: "select_window_2"
                                 }
                             ]
-
                             delegate: StyledRect {
                                 id: mainDelegate
 
@@ -133,6 +133,7 @@ StyledRect {
                                         icon: mainDelegate.modelData.icon
                                         type: Icon.Material
                                     }
+
                                     StyledText {
                                         Layout.alignment: Qt.AlignHCenter
                                         color: mainDelegate.index === root.sourceMode ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
@@ -141,23 +142,23 @@ StyledRect {
                                         text: mainDelegate.modelData.name
                                     }
                                 }
+
                                 MArea {
                                     id: sourceButtonMouseArea
 
                                     anchors.fill: parent
                                     cursorShape: Qt.PointingHandCursor
                                     hoverEnabled: true
-
                                     onClicked: root.sourceMode = mainDelegate.index
                                 }
                             }
                         }
                     }
+
                     Loader {
                         Layout.fillHeight: true
                         Layout.preferredHeight: active ? implicitHeight : 0
                         active: root.sourceMode === 0
-
                         sourceComponent: ColumnLayout {
                             spacing: Appearance.spacing.small
 
@@ -166,13 +167,13 @@ StyledRect {
                                 font.pixelSize: Appearance.fonts.size.normal
                                 text: qsTr("Monitor:")
                             }
+
                             Repeater {
                                 model: Quickshell.screens
-
                                 delegate: StyledRect {
                                     id: screensDelegate
 
-                                    required property int index
+                                    required property int         index
                                     required property ShellScreen modelData
 
                                     Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
@@ -191,13 +192,13 @@ StyledRect {
                                         font.weight: screensDelegate.modelData.name === root.selectedMonitor ? Font.DemiBold : Font.Normal
                                         text: screensDelegate.modelData.name
                                     }
+
                                     MArea {
                                         id: monitorButtonMouseArea
 
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
                                         hoverEnabled: true
-
                                         onClicked: root.selectedMonitor = screensDelegate.modelData.name
                                     }
                                 }
@@ -206,6 +207,7 @@ StyledRect {
                     }
                 }
             }
+
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -224,6 +226,7 @@ StyledRect {
                         icon: CaptureScreenVideo.includeAudio ? "mic" : "mic_off"
                         type: Icon.Material
                     }
+
                     StyledText {
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
@@ -231,6 +234,7 @@ StyledRect {
                         font.pixelSize: Appearance.fonts.size.normal
                         text: root.audioLabel
                     }
+
                     Icon {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
@@ -238,16 +242,17 @@ StyledRect {
                         type: Icon.Material
                     }
                 }
+
                 MArea {
                     id: audioRowMouseArea
 
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: root.openAudio()
                 }
             }
+
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -262,18 +267,21 @@ StyledRect {
                         leftMargin: Appearance.margin.smaller
                         rightMargin: Appearance.margin.smaller
                     }
+
                     Icon {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
                         icon: "tune"
                         type: Icon.Material
                     }
+
                     StyledText {
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
                         text: qsTr("Settings")
                     }
+
                     Icon {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
@@ -281,16 +289,17 @@ StyledRect {
                         type: Icon.Material
                     }
                 }
+
                 MArea {
                     id: settingsRowMouseArea
 
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: root.openSettings()
                 }
             }
+
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -305,18 +314,21 @@ StyledRect {
                         leftMargin: Appearance.margin.smaller
                         rightMargin: Appearance.margin.smaller
                     }
+
                     Icon {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
                         icon: "history"
                         type: Icon.Material
                     }
+
                     StyledText {
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
                         text: qsTr("Recordings")
                     }
+
                     Icon {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
@@ -324,19 +336,21 @@ StyledRect {
                         type: Icon.Material
                     }
                 }
+
                 MArea {
                     id: historyRowMouseArea
 
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: root.openHistory()
                 }
             }
+
             Item {
                 Layout.fillHeight: true
             }
+
             StyledRect {
                 Layout.bottomMargin: Appearance.margin.large
                 Layout.fillWidth: true
@@ -351,6 +365,7 @@ StyledRect {
                     Item {
                         Layout.fillWidth: true
                     }
+
                     StyledRect {
                         Layout.preferredHeight: Appearance.spacing.normal + Appearance.spacing.large
                         border.color: CaptureScreenVideo.isRecording ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Red
@@ -370,13 +385,13 @@ StyledRect {
                                 implicitHeight: Appearance.margin.smaller
                                 implicitWidth: Appearance.margin.smaller
                                 radius: CaptureScreenVideo.isRecording ? Appearance.padding.small : Appearance.margin.small
-
                                 Behavior on radius {
                                     NAnim {
                                         duration: Appearance.animations.durations.small
                                     }
                                 }
                             }
+
                             StyledText {
                                 id: buttonLabel
 
@@ -386,13 +401,13 @@ StyledRect {
                                 text: CaptureScreenVideo.isRecording ? qsTr("Stop") : qsTr("Start Recording")
                             }
                         }
+
                         MArea {
                             id: recordButtonMouseArea
 
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
-
                             onClicked: {
                                 if (CaptureScreenVideo.isRecording) {
                                     CaptureScreenVideo.stopRecording();
@@ -414,6 +429,7 @@ StyledRect {
                             }
                         }
                     }
+
                     Item {
                         Layout.fillWidth: true
                     }

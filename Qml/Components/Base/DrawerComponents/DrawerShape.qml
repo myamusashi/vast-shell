@@ -4,7 +4,7 @@ import QtQuick.Shapes
 Shape {
     id: root
 
-    required property color color
+    required property color  color
     required property string pathData
 
     preferredRendererType: Shape.CurveRenderer

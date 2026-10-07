@@ -11,6 +11,7 @@ Transition {
     required property bool opening
 
     ParallelAnimation {
+
         NAnim {
             duration: root.opening ? Appearance.animations.durations.normal : Appearance.animations.durations.small
             easing.bezierCurve: root.opening ? Appearance.animations.curves.emphasized : Appearance.animations.curves.emphasizedAccel
@@ -18,6 +19,7 @@ Transition {
             property: "opacity"
             to: root.opening ? 1.0 : 0.0
         }
+
         NAnim {
             duration: root.opening ? Appearance.animations.durations.normal : Appearance.animations.durations.small
             easing.bezierCurve: root.opening ? Appearance.animations.curves.emphasized : Appearance.animations.curves.emphasizedAccel

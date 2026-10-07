@@ -14,10 +14,12 @@ MaterialShape {
     shape: MaterialShape.Square
 
     ColumnLayout {
+
         anchors {
             fill: parent
             margins: 20
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
@@ -27,6 +29,7 @@ MaterialShape {
                 icon: "rainy"
                 type: Icon.Material
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
@@ -34,6 +37,7 @@ MaterialShape {
                 text: qsTr("Precipitation")
             }
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignCenter
             spacing: 0
@@ -44,6 +48,7 @@ MaterialShape {
                 font.weight: Font.DemiBold
                 text: Weather.precipitationDaily
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignBottom
                 Layout.bottomMargin: 5
@@ -53,6 +58,7 @@ MaterialShape {
                 text: "mm"
             }
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignCenter
             spacing: Appearance.spacing.normal
@@ -66,6 +72,7 @@ MaterialShape {
                 text: qsTr("Total rain for the day")
                 wrapMode: Text.WordWrap
             }
+
             Icon {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal

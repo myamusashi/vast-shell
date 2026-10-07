@@ -3,28 +3,29 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import M3Shapes
 import QtQml.Models
+import Vast.Utils
 
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
-import Vast.Utils
 
 Item {
     id: root
 
-    readonly property int dotStep: 24
     required property ListModel dotsModel
-    required property bool hasSelection
-    required property bool isFocused
-    required property bool isUnlocked
+    required property bool      hasSelection
+    required property bool      isFocused
+    required property bool      isUnlocked
     required property TextInput passwordInput
-    required property int selectionEnd
-    required property int selectionStart
-    readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
-    required property Item toggleButton
-    required property bool unlockInProgress
+    required property int       selectionEnd
+    required property int       selectionStart
+    required property Item      toggleButton
+    required property bool      unlockInProgress
 
-    function scrollToCursor() {
+    readonly property int       dotStep: 24
+    readonly property var       shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
+
+    function                    scrollToCursor() {
         if (root.dotsModel.count > 0)
             dotsView.positionViewAtIndex(Math.min(root.passwordInput.cursorPosition, root.dotsModel.count - 1), ListView.Contain);
     }
@@ -40,6 +41,7 @@ Item {
             rightMargin: root.toggleButton.width + Appearance.margin.normal + Appearance.margin.large
             verticalCenter: parent.verticalCenter
         }
+
         Rectangle {
             id: passwordRectSelected
 
@@ -50,7 +52,6 @@ Item {
             opacity: 0.0
             radius: 2
             x: root.selectionStart * root.dotStep
-
             Behavior on implicitWidth {
                 NAnim {
                     duration: Appearance.animations.durations.small
@@ -85,6 +86,7 @@ Item {
             }
         }
     }
+
     ListView {
         id: dotsView
 
@@ -94,15 +96,17 @@ Item {
         model: root.dotsModel
         orientation: ListView.Horizontal
         spacing: 4
-
         add: Transition {
+
             ParallelAnimation {
+
                 NAnim {
                     duration: Appearance.animations.durations.small
                     from: 0
                     property: "opacity"
                     to: 1
                 }
+
                 SpringAnimation {
                     damping: 0.4
                     from: 0.5
@@ -116,26 +120,26 @@ Item {
         delegate: MaterialShape {
             id: shapeDelegate
 
-            property real colorBlendProgress: 1.0
-            property bool colorBlending: false
-            property color colorFrom
-            property color colorTo
             required property int index
-            property color shapeTarget: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
+
+            property bool         colorBlending: false
+            property real         colorBlendProgress: 1.0
+            property color        colorFrom
+            property color        colorTo
+            property color        shapeTarget: root.unlockInProgress ? Colours.m3Colors.m3OnSurfaceVariant : root.isUnlocked ? Colours.m3Colors.m3Green : Colours.m3Colors.m3Primary
 
             animationDuration: 350
             implicitHeight: 20
             implicitWidth: 20
             shape: MaterialShape.Circle
-
             Component.onCompleted: {
                 shape = root.shapeList[index % root.shapeList.length];
 
                 colorBlendAnim.stop();
-                color = "white";
-                colorFrom = "white";
-                colorTo = shapeTarget;
-                colorBlending = true;
+                color              = "white";
+                colorFrom          = "white";
+                colorTo            = shapeTarget;
+                colorBlending      = true;
                 colorBlendProgress = 0.0;
                 colorBlendAnim.start();
             }
@@ -143,7 +147,7 @@ Item {
                 if (!colorBlending)
                     return;
                 if (colorBlendProgress >= 1) {
-                    color = colorTo;
+                    color         = colorTo;
                     colorBlending = false;
                 } else if (colorBlendProgress > 0) {
                     color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
@@ -151,9 +155,9 @@ Item {
             }
             onShapeTargetChanged: {
                 colorBlendAnim.stop();
-                colorFrom = color;
-                colorTo = shapeTarget;
-                colorBlending = true;
+                colorFrom          = color;
+                colorTo            = shapeTarget;
+                colorBlending      = true;
                 colorBlendProgress = 0.0;
                 colorBlendAnim.start();
             }
@@ -166,6 +170,7 @@ Item {
 
                 target: root
             }
+
             NAnim {
                 id: colorBlendAnim
 
@@ -176,6 +181,7 @@ Item {
             }
         }
         displaced: Transition {
+
             SpringAnimation {
                 damping: 0.4
                 mass: 1.0
@@ -189,13 +195,16 @@ Item {
             }
         }
         remove: Transition {
+
             ParallelAnimation {
+
                 NAnim {
                     duration: Appearance.animations.durations.small
                     from: 1
                     property: "opacity"
                     to: 0
                 }
+
                 SpringAnimation {
                     damping: 0.6
                     from: 1
@@ -215,6 +224,7 @@ Item {
             verticalCenter: parent.verticalCenter
         }
     }
+
     Connections {
         function onCursorPositionChanged() {
             root.scrollToCursor();
@@ -225,6 +235,7 @@ Item {
 
         target: root.passwordInput
     }
+
     Item {
         id: caretArea
 
@@ -238,6 +249,7 @@ Item {
             rightMargin: root.toggleButton.width + Appearance.margin.normal + Appearance.margin.large
             verticalCenter: parent.verticalCenter
         }
+
         Rectangle {
             id: dotsCaret
 
@@ -248,7 +260,6 @@ Item {
             radius: 1
             visible: root.isFocused && !root.unlockInProgress && !root.hasSelection
             x: root.passwordInput.cursorPosition * root.dotStep - dotsView.contentX
-
             SequentialAnimation on opacity {
                 loops: Animation.Infinite
                 running: dotsCaret.visible
@@ -257,13 +268,16 @@ Item {
                     duration: 0
                     to: 1
                 }
+
                 PauseAnimation {
                     duration: 530
                 }
+
                 NAnim {
                     duration: 0
                     to: 0
                 }
+
                 PauseAnimation {
                     duration: 530
                 }
@@ -273,7 +287,6 @@ Item {
                     duration: 50
                 }
             }
-
             onVisibleChanged: {
                 if (visible)
                     opacity = 1;

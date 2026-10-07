@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Menu
@@ -13,41 +13,40 @@ import qs.Services
 Item {
     id: root
 
-    property color containerColor: Colours.m3Colors.m3SecondaryContainer
-    property color contentColor: Colours.m3Colors.m3OnSecondaryContainer
-    property alias currentIndex: menu.currentIndex
-    property var disabledLabel: modelData => ""
-    readonly property real distributedSegmentWidth: segmentCount > 0 ? (width - (segmentCount - 1) * 2) / segmentCount : width
-    property bool fillWidth: false
-    readonly property bool hasMenu: ModelAdapter.countOf(model) > 0
-    property IconComponent icon: IconComponent {
-    }
-    readonly property int innerRadius: 8
-    property var isItemEnabled: modelData => true
-    property bool leadingFillsWidth: false
-    readonly property bool mainHovered: mainHoverHandler.hovered
-    readonly property bool mainPressed: mainTapHandler.pressed
-    readonly property bool menuHovered: menuHoverHandler.hovered
-    property MenuIconComponent menuIcon: MenuIconComponent {
-    }
-    property bool menuOpen: false
-    readonly property bool menuPressed: menuTapHandler.pressed
-    property var model: []
-    readonly property int pressedInnerRadius: 4
-    readonly property int segmentCount: ModelAdapter.countOf(model)
-    readonly property int segmentHeight: 40
-    property string text: ""
-    property string textRole: "text"
-    property int textSize: Appearance.fonts.size.normal
+    readonly property real     distributedSegmentWidth: segmentCount > 0 ? (width - (segmentCount - 1) * 2) / segmentCount : width
+    readonly property bool     hasMenu: ModelAdapter.countOf(model) > 0
+    readonly property int      innerRadius: 8
+    readonly property bool     mainHovered: mainHoverHandler.hovered
+    readonly property bool     mainPressed: mainTapHandler.pressed
+    readonly property bool     menuHovered: menuHoverHandler.hovered
+    readonly property bool     menuPressed: menuTapHandler.pressed
+    readonly property int      pressedInnerRadius: 4
+    readonly property int      segmentCount: ModelAdapter.countOf(model)
+    readonly property int      segmentHeight: 40
 
-    signal clicked
-    signal menuItemActivated(int index)
+    property color             containerColor: Colours.m3Colors.m3SecondaryContainer
+    property color             contentColor: Colours.m3Colors.m3OnSecondaryContainer
+    property alias             currentIndex: menu.currentIndex
+    property var               disabledLabel: modelData => ""
+    property bool              fillWidth: false
+    property IconComponent     icon: IconComponent {}
+    property var               isItemEnabled: modelData => true
+    property bool              leadingFillsWidth: false
+    property MenuIconComponent menuIcon: MenuIconComponent {}
+    property bool              menuOpen: false
+    property var               model: []
+    property string            text: ""
+    property string            textRole: "text"
+    property int               textSize: Appearance.fonts.size.normal
 
-    function openMenu() {
+    signal                     clicked
+    signal                     menuItemActivated(int index)
+
+    function                   openMenu() {
         if (enabled && hasMenu)
             menu.open();
     }
-    function toggleMenu() {
+    function                   toggleMenu() {
         if (!enabled || !hasMenu)
             return;
         if (menu.visible)
@@ -64,7 +63,6 @@ Item {
         return w;
     }
     opacity: enabled ? 1 : 0.38
-
     Keys.onReturnPressed: event => {
         if (enabled) {
             clicked();
@@ -88,7 +86,6 @@ Item {
         maxWidth: mainSegment.width
         model: root.model
         textRole: root.textRole
-
         onAboutToHide: root.menuOpen = false
         onAboutToShow: root.menuOpen = true
         onActivated: index => {
@@ -96,6 +93,7 @@ Item {
             close();
         }
     }
+
     StyledRect {
         id: mainSegment
 
@@ -114,7 +112,6 @@ Item {
             return root.hasMenu ? root.implicitWidth - 2 - menuSegment.width : root.implicitWidth;
         }
         x: 0
-
         Behavior on bottomRightRadius {
             NAnim {
                 duration: Appearance.animations.durations.normal
@@ -127,7 +124,6 @@ Item {
                 easing.type: Easing.OutBack
             }
         }
-
         Keys.onReturnPressed: event => {
             if (root.enabled) {
                 root.clicked();
@@ -152,6 +148,7 @@ Item {
             topLeftRadius: parent.topLeftRadius
             topRightRadius: parent.topRightRadius
         }
+
         Rectangle {
             anchors.fill: parent
             border.color: Colours.m3Colors.m3Primary
@@ -163,6 +160,7 @@ Item {
             topLeftRadius: mainSegment.topLeftRadius
             topRightRadius: mainSegment.topRightRadius
         }
+
         RowLayout {
             id: mainRow
 
@@ -175,6 +173,7 @@ Item {
                 icon: root.icon.name
                 visible: root.icon.name !== ""
             }
+
             StyledText {
                 color: root.contentColor
                 font.pixelSize: root.textSize
@@ -183,19 +182,21 @@ Item {
                 visible: root.text !== ""
             }
         }
+
         HoverHandler {
             id: mainHoverHandler
 
             cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
         }
+
         TapHandler {
             id: mainTapHandler
 
             enabled: root.enabled
-
             onTapped: root.clicked()
         }
     }
+
     StyledRect {
         id: menuSegment
 
@@ -245,7 +246,6 @@ Item {
                 properties: "topLeftRadius,bottomLeftRadius"
             }
         }
-
         Keys.onReturnPressed: event => {
             if (root.enabled) {
                 root.toggleMenu();
@@ -270,6 +270,7 @@ Item {
             topLeftRadius: parent.topLeftRadius
             topRightRadius: parent.topRightRadius
         }
+
         Rectangle {
             anchors.fill: parent
             border.color: Colours.m3Colors.m3Primary
@@ -281,6 +282,7 @@ Item {
             topLeftRadius: menuSegment.topLeftRadius
             topRightRadius: menuSegment.topRightRadius
         }
+
         RowLayout {
             id: menuRow
 
@@ -292,25 +294,24 @@ Item {
                 font.pixelSize: root.menuIcon.size
                 icon: root.menuIcon.name
                 rotation: root.menuOpen ? 180 : 0
-
                 Behavior on rotation {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
             }
         }
+
         HoverHandler {
             id: menuHoverHandler
 
             cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
         }
+
         TapHandler {
             id: menuTapHandler
 
             property bool wasOpen: false
 
             enabled: root.enabled
-
             onPressedChanged: if (pressed)
                 wasOpen = menu.visible
             onTapped: {
@@ -323,13 +324,13 @@ Item {
     }
 
     component IconComponent: QtObject {
-        property color color: Colours.m3Colors.m3OnSecondaryContainer
+        property color  color: Colours.m3Colors.m3OnSecondaryContainer
         property string name: ""
-        property int size: Appearance.fonts.size.large * 1.2
+        property int    size: Appearance.fonts.size.large * 1.2
     }
     component MenuIconComponent: QtObject {
-        property color color: Colours.m3Colors.m3OnSecondaryContainer
+        property color  color: Colours.m3Colors.m3OnSecondaryContainer
         property string name: "keyboard_arrow_down"
-        property int size: Appearance.fonts.size.large * 1.2
+        property int    size: Appearance.fonts.size.large * 1.2
     }
 }

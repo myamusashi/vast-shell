@@ -20,7 +20,7 @@ MaterialShape {
         implicitWidth: 135
         opacity: 0.5
         rotation: {
-            const direction = Weather.windDirection.toUpperCase();
+            const direction  = Weather.windDirection.toUpperCase();
             const directions = {
                 "N": 0,
                 "NNE": 22.5,
@@ -42,12 +42,11 @@ MaterialShape {
             return directions[direction] || 0;
         }
         shape: MaterialShape.Arrow
-
         Behavior on rotation {
-            NAnim {
-            }
+            NAnim {}
         }
     }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: 20
@@ -66,12 +65,14 @@ MaterialShape {
                 icon: "explore"
                 type: Icon.Material
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 text: qsTr("Wind")
             }
         }
+
         StyledText {
             Layout.alignment: Qt.AlignCenter
             color: Colours.m3Colors.m3OnSurface
@@ -79,6 +80,7 @@ MaterialShape {
             font.weight: Font.Bold
             text: Weather.windDirection
         }
+
         StyledText {
             Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
             Layout.bottomMargin: 20

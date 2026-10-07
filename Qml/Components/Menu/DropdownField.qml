@@ -12,21 +12,22 @@ import qs.Services
 Item {
     id: root
 
-    property int currentIndex: -1
-    property var currentValue: null
-    property var disabledLabel: model => qsTr("N/A")
     readonly property string displayText: ModelAdapter.displayText(model, currentIndex, textRole, placeholderText)
-    property var isItemActive: (model, itemIndex) => itemIndex === currentIndex
-    property var isItemEnabled: model => true
-    property alias model: dropdownMenu.model
-    property string placeholderText: qsTr("Select…")
-    property bool showScrollBar: false
-    property string textRole: "display"
-    property string valueRole: ""
 
-    signal activated(int index)
+    property int             currentIndex: -1
+    property var             currentValue: null
+    property var             disabledLabel: model => qsTr("N/A")
+    property var             isItemActive: (model, itemIndex) => itemIndex === currentIndex
+    property var             isItemEnabled: model => true
+    property alias           model: dropdownMenu.model
+    property string          placeholderText: qsTr("Select…")
+    property bool            showScrollBar: false
+    property string          textRole: "display"
+    property string          valueRole: ""
 
-    function syncIndex() {
+    signal                   activated(int index)
+
+    function                 syncIndex() {
         if (valueRole === "" || currentValue === null || currentValue === undefined)
             return;
         const index = ModelAdapter.indexOfValue(model, valueRole, currentValue);
@@ -36,7 +37,6 @@ Item {
 
     implicitHeight: 48
     implicitWidth: 280
-
     Component.onCompleted: syncIndex()
     onCurrentValueChanged: syncIndex()
     onModelChanged: syncIndex()
@@ -51,9 +51,9 @@ Item {
         color: Colours.m3Colors.m3Surface
         radius: Appearance.rounding.normal
     }
+
     MArea {
         layerRadius: Appearance.rounding.large
-
         onClicked: {
             if (dropdownMenu.opened)
                 dropdownMenu.close();
@@ -77,16 +77,15 @@ Item {
                 font.weight: Font.Medium
                 text: root.displayText
             }
+
             Item {
                 Layout.alignment: Qt.AlignCenter
                 Layout.preferredHeight: 24
                 Layout.preferredWidth: 24
                 rotation: dropdownMenu.opened ? 180 : 0
                 transformOrigin: Item.Center
-
                 Behavior on rotation {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
 
                 Icon {
@@ -99,6 +98,7 @@ Item {
             }
         }
     }
+
     DropdownMenu {
         id: dropdownMenu
 
@@ -109,7 +109,6 @@ Item {
         isItemEnabled: root.isItemEnabled
         showScrollBar: root.showScrollBar
         textRole: root.textRole
-
         onActivated: index => {
             root.currentIndex = index;
             root.activated(index);

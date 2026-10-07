@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
-import QtCore
 import QtQuick
 import QtQuick.Layouts
+import QtCore
 
 import qs.Core.Configs
 import qs.Services
@@ -13,7 +13,7 @@ import "../delegate"
 Rectangle {
     id: root
 
-    signal placeSelected(string path)
+    signal   placeSelected(string path)
 
     function clearSelection() {
         placesList.currentIndex = -1;
@@ -32,6 +32,7 @@ Rectangle {
         implicitWidth: 1
         opacity: 0.4
     }
+
     ColumnLayout {
         spacing: Appearance.spacing.small
 
@@ -41,6 +42,7 @@ Rectangle {
             rightMargin: Appearance.margin.small
             topMargin: Appearance.margin.normal
         }
+
         StyledText {
             Layout.fillWidth: true
             bottomPadding: Appearance.spacing.small
@@ -50,6 +52,7 @@ Rectangle {
             leftPadding: Appearance.margin.normal
             text: qsTr("Places")
         }
+
         ListView {
             id: placesList
 
@@ -101,7 +104,6 @@ Rectangle {
                 },
             ]
             spacing: Appearance.spacing.small
-
             delegate: PlaceItem {
                 required property int index
                 required property var model
@@ -110,7 +112,6 @@ Rectangle {
                 implicitWidth: placesList.width
                 isSelected: ListView.isCurrentItem
                 label: model.label
-
                 onClicked: {
                     placesList.currentIndex = index;
                     root.placeSelected(model.path);

@@ -80,11 +80,11 @@ Singleton {
         }
     }
 
-    function openRegionSelector(): void {
+    function     openRegionSelector(): void {
         if (!CaptureScreenVideo.isRecording)
             select.open();
     }
-    function recordWindow(): void {
+    function     recordWindow(): void {
         if (CaptureScreenVideo.isRecording) {
             CaptureScreenVideo.stopRecording();
             return;
@@ -95,10 +95,10 @@ Singleton {
                 CaptureScreenVideo.recordToplevel(appId);
         });
     }
-    function startRecording(output: string): void {
+    function     startRecording(output: string): void {
         CaptureScreenVideo.startRecording("", output);
     }
-    function stopRecording(): void {
+    function     stopRecording(): void {
         CaptureScreenVideo.stopRecording();
     }
 

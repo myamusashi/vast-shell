@@ -39,13 +39,13 @@ ClippingWrapperRectangle {
                 z: 2
             }
         }
+
         Loader {
             id: contentLoader
 
             active: GlobalStates.isQuickSettingsOpen
             anchors.fill: parent
             asynchronous: true
-
             sourceComponent: ContentMediaPlayer {
                 trackArtColors: root.trackArtColors
                 width: contentLoader.width

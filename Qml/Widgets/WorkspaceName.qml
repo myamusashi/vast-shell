@@ -14,7 +14,6 @@ StyledRect {
     Layout.fillHeight: true
     color: "transparent"
     implicitWidth: windowNameMetrics.advanceWidth(windowNameText.text)
-
     Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.small
@@ -27,11 +26,13 @@ StyledRect {
 
         font: windowNameText.font
     }
+
     StyledText {
         id: windowNameText
 
-        property string actWinName: activeWindow?.activated ? activeWindow?.appId : "desktop"
         readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
+
+        property string            actWinName: activeWindow?.activated ? activeWindow?.appId : "desktop"
 
         anchors.centerIn: parent
         color: Colours.m3Colors.m3OnBackground

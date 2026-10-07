@@ -18,16 +18,16 @@ Item {
     property string currentMethod: ""
     property string currentPasskey: ""
     property string currentUuid: ""
-    property bool displayActive: false
-    property int displayEntered: 0
+    property bool   displayActive: false
+    property int    displayEntered: 0
     property string displayPasskeyValue: ""
 
-    function clearState() {
-        currentMethod = "";
+    function        clearState() {
+        currentMethod  = "";
         currentPasskey = "";
-        currentUuid = "";
+        currentUuid    = "";
     }
-    function nameForDisplay(): string {
+    function        nameForDisplay(): string {
         if (root.currentDeviceName && root.currentDeviceName.length > 0)
             return root.currentDeviceName;
         if (root.currentDevicePath.length > 0) {
@@ -48,14 +48,14 @@ Item {
         contentMinWidth: 340
         contentSpacing: Appearance.spacing.normal
         needKeyboardFocus: true
-
         body: Component {
+
             ColumnLayout {
                 id: bodyRoot
 
                 property alias pinInput: pinField
 
-                function cancel() {
+                function       cancel() {
                     if (root.currentMethod === "passkey")
                         BluetoothAgentManager.confirmPairing(root.currentDevicePath, false);
                     else if (root.currentMethod === "pin")
@@ -69,7 +69,7 @@ Item {
                     pinField.text = "";
                     root.clearState();
                 }
-                function submit() {
+                function       submit() {
                     if (root.currentMethod === "passkey") {
                         const raw = pinField.text.trim();
                         if (!/^\d{1,6}$/.test(raw))
@@ -124,6 +124,7 @@ Item {
                     }
                     wrapMode: Text.Wrap
                 }
+
                 StyledTextInput {
                     id: pinField
 
@@ -133,9 +134,9 @@ Item {
                     placeHolderText: root.currentMethod === "pin" ? qsTr("Enter PIN") : qsTr("Enter 6-digit passkey")
                     toggleButtonVisible: false
                     visible: root.currentMethod === "passkey" || root.currentMethod === "pin"
-
                     onAccepted: bodyRoot.submit()
                 }
+
                 Connections {
                     function onAccepted() {
                         if (root.currentMethod === "confirmation" || root.currentMethod === "authorization") {
@@ -156,6 +157,7 @@ Item {
 
                     target: dialog
                 }
+
                 Connections {
                     function onActiveChanged() {
                         if (!dialog.active)
@@ -169,6 +171,7 @@ Item {
             }
         }
         header: Component {
+
             RowLayout {
                 implicitWidth: parent.width
 
@@ -186,6 +189,7 @@ Item {
                         icon: "bluetooth_connected"
                     }
                 }
+
                 ColumnLayout {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
@@ -198,6 +202,7 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         text: qsTr("Bluetooth Pairing Request")
                     }
+
                     StyledText {
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
@@ -218,20 +223,21 @@ Item {
             }
         }
     }
+
     Connections {
         function onAuthorizationRequested(devicePath, deviceName, uuid) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
-            root.currentMethod = "authorization";
-            root.currentUuid = uuid;
-            root.displayActive = false;
+            root.currentMethod     = "authorization";
+            root.currentUuid       = uuid;
+            root.displayActive     = false;
         }
         function onConfirmationRequested(devicePath, deviceName, passkey) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
-            root.currentMethod = "confirmation";
-            root.currentPasskey = String(passkey).padStart(6, "0");
-            root.displayActive = false;
+            root.currentMethod     = "confirmation";
+            root.currentPasskey    = String(passkey).padStart(6, "0");
+            root.displayActive     = false;
         }
         function onPairingCancelled(devicePath) {
             if (root.currentDevicePath === devicePath) {
@@ -242,35 +248,35 @@ Item {
         }
         function onPasskeyDisplayed(devicePath, passkey, entered) {
             root.displayPasskeyValue = String(passkey).padStart(6, "0");
-            root.displayEntered = entered;
-            root.displayActive = true;
+            root.displayEntered      = entered;
+            root.displayActive       = true;
             displayTimer.restart();
         }
         function onPasskeyRequested(devicePath, deviceName) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
-            root.currentMethod = "passkey";
-            root.currentPasskey = "";
-            root.currentUuid = "";
-            root.displayActive = false;
+            root.currentMethod     = "passkey";
+            root.currentPasskey    = "";
+            root.currentUuid       = "";
+            root.displayActive     = false;
         }
         function onPinCodeRequested(devicePath, deviceName) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
-            root.currentMethod = "pin";
-            root.currentPasskey = "";
-            root.currentUuid = "";
-            root.displayActive = false;
+            root.currentMethod     = "pin";
+            root.currentPasskey    = "";
+            root.currentUuid       = "";
+            root.displayActive     = false;
         }
 
         target: BluetoothAgentManager
     }
+
     Timer {
         id: displayTimer
 
         interval: 15000
         repeat: false
-
         onTriggered: root.displayActive = false
     }
 }

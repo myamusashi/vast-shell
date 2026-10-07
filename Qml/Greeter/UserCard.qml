@@ -10,14 +10,14 @@ import qs.Core.Configs
 Item {
     id: root
 
-    required property Auth auth
-    required property var colors
+    required property Auth   auth
+    required property var    colors
+
     readonly property string initials: auth.currentUser.length > 0 ? auth.currentUser.charAt(0).toUpperCase() : "?"
 
     implicitHeight: contentColumn.implicitHeight + Appearance.padding.large * 2
     implicitWidth: 380
     transformOrigin: Item.Center
-
     Behavior on opacity {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -41,6 +41,7 @@ Item {
         level: 3
         radius: Appearance.rounding.large
     }
+
     StyledRect {
         id: cardSurface
 
@@ -50,6 +51,7 @@ Item {
         color: root.colors.surfaceContainerHigh
         radius: Appearance.rounding.large
     }
+
     ColumnLayout {
         id: contentColumn
 
@@ -61,6 +63,7 @@ Item {
             right: parent.right
             top: parent.top
         }
+
         Item {
             Layout.alignment: Qt.AlignHCenter
             implicitHeight: 96
@@ -71,6 +74,7 @@ Item {
                 color: root.colors.primaryContainer
                 radius: Appearance.rounding.full
             }
+
             StyledText {
                 anchors.centerIn: parent
                 color: root.colors.onPrimaryContainer
@@ -80,6 +84,7 @@ Item {
                 text: root.initials
             }
         }
+
         StyledText {
             Layout.alignment: Qt.AlignHCenter
             color: root.colors.onSurface
@@ -87,6 +92,7 @@ Item {
             font.weight: Font.Medium
             text: root.auth.currentUser
         }
+
         StyledText {
             id: statusText
 
@@ -99,6 +105,7 @@ Item {
             visible: root.auth.statusMessage !== ""
             wrapMode: Text.WordWrap
         }
+
         StyledTextInput {
             id: passwordInput
 
@@ -109,6 +116,7 @@ Item {
             passwordMode: true
             placeHolderText: qsTr("Password")
         }
+
         SplitButton {
             id: sessionField
 
@@ -121,12 +129,12 @@ Item {
             text: root.auth.selectedSessionIndex >= 0 ? root.auth.sessions.get(root.auth.selectedSessionIndex)?.display ?? qsTr("Session") : qsTr("Session")
             textRole: "display"
             visible: !root.auth.unlockInProgress
-
             onMenuItemActivated: index => {
                 root.auth.selectSession(index);
                 passwordInput.forceActiveFocus();
             }
         }
+
         ExtendedFloatingButton {
             id: loginButton
 
@@ -139,9 +147,9 @@ Item {
             rippleColor: root.colors.onPrimary
             text: qsTr("Sign in")
             textColor: root.colors.onPrimary
-
             onClicked: root.auth.tryUnlock()
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
             Layout.topMargin: Appearance.margin.small
@@ -150,17 +158,16 @@ Item {
 
             Repeater {
                 model: root.auth.users
-
                 delegate: ExtendedFloatingButton {
-                    readonly property bool isCurrent: modelData === root.auth.currentUser
                     required property string modelData
+
+                    readonly property bool   isCurrent: modelData === root.auth.currentUser
 
                     color: isCurrent ? root.colors.secondaryContainer : root.colors.surfaceContainerHighest
                     icon.color: isCurrent ? root.colors.onSecondaryContainer : root.colors.onSurfaceVariant
                     icon.name: "account_circle"
                     text: modelData.charAt(0).toUpperCase()
                     textColor: isCurrent ? root.colors.onSecondaryContainer : root.colors.onSurfaceVariant
-
                     onClicked: {
                         root.auth.switchUser(modelData);
                         passwordInput.forceActiveFocus();
@@ -169,6 +176,7 @@ Item {
             }
         }
     }
+
     Connections {
         function onShowFailureChanged() {
             if (root.auth.showFailure)
@@ -177,6 +185,7 @@ Item {
 
         target: root.auth
     }
+
     SequentialAnimation {
         id: shakeAnimation
 
@@ -188,30 +197,35 @@ Item {
             target: shakeTranslate
             to: 12
         }
+
         NAnim {
             duration: 60
             property: "x"
             target: shakeTranslate
             to: -12
         }
+
         NAnim {
             duration: 60
             property: "x"
             target: shakeTranslate
             to: 8
         }
+
         NAnim {
             duration: 60
             property: "x"
             target: shakeTranslate
             to: -8
         }
+
         NAnim {
             duration: 60
             property: "x"
             target: shakeTranslate
             to: 4
         }
+
         NAnim {
             duration: 60
             property: "x"

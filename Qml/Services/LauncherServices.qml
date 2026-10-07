@@ -9,7 +9,7 @@ import qs.Core.States
 import qs.Services
 
 Singleton {
-    readonly property var appResults: SearchEngine.searchApps(DesktopEntries.applications.values, query)
+    readonly property var    appResults: SearchEngine.searchApps(DesktopEntries.applications.values, query)
     readonly property string currentCrumb: crumbOf(launcherPage)
     readonly property string emptyText: {
         const def = pageDef(launcherPage);
@@ -17,7 +17,7 @@ Singleton {
             return def.emptyText;
         return qsTr("No applications found");
     }
-    readonly property var filteredItems: {
+    readonly property var    filteredItems: {
         const def = pageDef(launcherPage);
 
         if (def && def.kind === "actions")
@@ -48,12 +48,8 @@ Singleton {
                     "entry": entry
                 })).concat(childRows(""));
     }
-    property var filteredShotActions: launcherPage === "shotActions" ? [...ScreenCapture.screenshotOptions.values].filter(option => pageFilter === "" || option.name.toLowerCase().includes(pageFilter)) : []
-    property var filteredShotHistory: launcherPage === "shotHistory" ? [...ScreenCaptureHistory.screenshotFiles].filter(file => pageFilter === "" || (file.name ?? "").toLowerCase().includes(pageFilter)) : []
-    readonly property bool isSubPage: launcherPage !== ""
-    property real lastEscapeAt: 0
-    property string launcherPage: ""
-    readonly property var pageDefs: [
+    readonly property bool   isSubPage: launcherPage !== ""
+    readonly property var    pageDefs: [
         {
             id: "screenshot",
             title: qsTr("Screenshot"),
@@ -88,6 +84,11 @@ Singleton {
         }
     ]
 
+    property var             filteredShotActions: launcherPage === "shotActions" ? [...ScreenCapture.screenshotOptions.values].filter(option => pageFilter === "" || option.name.toLowerCase().includes(pageFilter)) : []
+    property var             filteredShotHistory: launcherPage === "shotHistory" ? [...ScreenCaptureHistory.screenshotFiles].filter(file => pageFilter === "" || (file.name ?? "").toLowerCase().includes(pageFilter)) : []
+    property real            lastEscapeAt: 0
+    property string          launcherPage: ""
+
     // Remainder after the current crumb; the whole query on the root page.
     readonly property string pageFilter: {
         const crumb = crumbOf(launcherPage);
@@ -101,7 +102,6 @@ Singleton {
             return def.placeHolder;
         return qsTr("Search");
     }
-    property string query: ""
     readonly property string rowSearchText: {
         const crumb = crumbOf(launcherPage);
         if (crumb !== "" && (query === crumb || query.startsWith(crumb + " ")))
@@ -109,7 +109,9 @@ Singleton {
         return query.trim();
     }
 
-    function activateRow(row: var): void {
+    property string          query: ""
+
+    function                 activateRow(row: var): void {
         switch (row.kind) {
         case "app":
             launch(row.entry);
@@ -129,7 +131,7 @@ Singleton {
     }
 
     // Screenshot file helpers shared by the unified list rows.
-    function captureFileKind(name: string): string {
+    function                 captureFileKind(name: string): string {
         const dot = name.lastIndexOf(".");
         const ext = dot === -1 ? "" : name.substring(dot + 1).toLowerCase();
         if (["mkv", "mp4", "webm", "avi", "mp3"].includes(ext))
@@ -138,10 +140,10 @@ Singleton {
             return "image";
         return "other";
     }
-    function childPages(parentId: string): var {
+    function                 childPages(parentId: string): var {
         return pageDefs.filter(def => def.parent === parentId);
     }
-    function childRows(parentId: string): var {
+    function                 childRows(parentId: string): var {
         return childPages(parentId).filter(child => pageFilter === "" || child.title.toLowerCase().includes(pageFilter)).map(child => ({
                     "kind": "page",
                     "name": child.title,
@@ -151,19 +153,19 @@ Singleton {
                     "page": child.id
                 }));
     }
-    function crumbOf(pageId: string): string {
+    function                 crumbOf(pageId: string): string {
         const def = pageDef(pageId);
         return def ? def.crumb : "";
     }
-    function enterPage(pageId: string): void {
+    function                 enterPage(pageId: string): void {
         launcherPage = pageId;
-        query = crumbOf(pageId);
+        query        = crumbOf(pageId);
     }
-    function goBack(): void {
+    function                 goBack(): void {
         launcherPage = parentOf(launcherPage);
-        query = crumbOf(launcherPage);
+        query        = crumbOf(launcherPage);
     }
-    function launch(entry: DesktopEntry): void {
+    function                 launch(entry: DesktopEntry): void {
         const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];
 
         Quickshell.execDetached({
@@ -171,41 +173,41 @@ Singleton {
             workingDirectory: entry.workingDirectory
         });
     }
-    function openCaptureFile(file: var): void {
+    function                 openCaptureFile(file: var): void {
         const kind = captureFileKind(file.name ?? "");
-        const app = kind === "video" ? Configs.generals.apps.videoViewer : kind === "image" ? Configs.generals.apps.imageViewer : "";
+        const app  = kind === "video" ? Configs.generals.apps.videoViewer : kind === "image" ? Configs.generals.apps.imageViewer : "";
         if (app === "")
             return;
         Quickshell.execDetached({
             command: [app, file.path]
         });
     }
-    function openPath(text: string): void {
+    function                 openPath(text: string): void {
         launcherPage = "";
         lastEscapeAt = 0;
-        query = text;
+        query        = text;
         let advanced = true;
         while (advanced) {
-            advanced = false;
+            advanced       = false;
             const children = childPages(launcherPage);
             for (let i = 0; i < children.length; i++) {
                 const crumb = children[i].crumb;
                 if (text === crumb || text.startsWith(crumb + " ")) {
                     launcherPage = children[i].id;
-                    advanced = true;
+                    advanced     = true;
                     break;
                 }
             }
         }
     }
-    function pageDef(pageId: string): var {
+    function                 pageDef(pageId: string): var {
         for (let i = 0; i < pageDefs.length; i++) {
             if (pageDefs[i].id === pageId)
                 return pageDefs[i];
         }
         return undefined;
     }
-    function parentOf(pageId: string): string {
+    function                 parentOf(pageId: string): string {
         const def = pageDef(pageId);
         return def ? def.parent : "";
     }

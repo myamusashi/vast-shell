@@ -4,10 +4,9 @@ import QtQuick
 import Quickshell
 
 Singleton {
-    property ListModel model: ListModel {
-    }
+    property ListModel model: ListModel {}
 
-    function show(description, header, icon, duration): void {
+    function           show(description, header, icon, duration): void {
         model.append({
             description: description,
             header: header ?? "vast-shell",

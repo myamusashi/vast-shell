@@ -12,13 +12,13 @@ Drawer {
 
     property real maxHeight: 500
     property real menuWidth: 280
-    property var openMenu: menu => Qt.callLater(() => {
+    property var  openMenu: menu => Qt.callLater(() => {
             loader.item?.openMenu(menu); // qmllint disable
         })
 
-    signal entered
-    signal entryActivated(var entry)
-    signal exited
+    signal        entered
+    signal        entryActivated(var entry)
+    signal        exited
 
     alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -35,15 +35,15 @@ Drawer {
 
         active: root.open
         anchors.fill: parent
-
         sourceComponent: Item {
             id: itemLoader
 
             readonly property real contentHeight: currentPage ? currentPage.contentHeight : 0
-            readonly property var currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < pages.length ? pages[stackLayout.currentIndex] : null
-            property var pages: []
+            readonly property var  currentPage: stackLayout.currentIndex >= 0 && stackLayout.currentIndex < pages.length ? pages[stackLayout.currentIndex] : null
 
-            function createPage(handle: var, pageTitle: string): void {
+            property var           pages: []
+
+            function               createPage(handle: var, pageTitle: string): void {
                 const page = pageComponent.createObject(stackLayout, {
                     handle: handle,
                     level: pages.length,
@@ -53,7 +53,7 @@ Drawer {
                     return;
                 pages = pages.concat(page);
             }
-            function openMenu(handle: var): void {
+            function               openMenu(handle: var): void {
                 const page = pageAt(0);
                 if (!page) {
                     createPage(handle, "");
@@ -61,19 +61,19 @@ Drawer {
                 }
                 for (let index = 0; index < pages.length; index++)
                     pages[index].handle = index === 0 ? handle : null;
-                page.title = "";
-                page.highlightedEntry = null;
+                page.title               = "";
+                page.highlightedEntry    = null;
                 stackLayout.currentIndex = 0;
             }
-            function pageAt(level: int): var {
+            function               pageAt(level: int): var {
                 return level >= 0 && level < pages.length ? pages[level] : null;
             }
-            function popSubmenu(): void {
+            function               popSubmenu(): void {
                 if (stackLayout.currentIndex <= 0)
                     return;
                 stackLayout.currentIndex -= 1;
             }
-            function pushSubmenu(entry: var): void {
+            function               pushSubmenu(entry: var): void {
                 if (!entry || !entry.hasChildren)
                     return;
                 const parentPage = pageAt(stackLayout.currentIndex);
@@ -82,10 +82,10 @@ Drawer {
                     return;
                 }
                 const level = stackLayout.currentIndex + 1;
-                const page = pageAt(level);
+                const page  = pageAt(level);
                 if (page) {
                     page.handle = entry;
-                    page.title = entry.text ?? "";
+                    page.title  = entry.text ?? "";
                 } else {
                     createPage(entry, entry.text ?? "");
                 }
@@ -109,6 +109,7 @@ Drawer {
                     width: stackHost.width
                 }
             }
+
             HoverHandler {
                 onHoveredChanged: {
                     if (hovered)
@@ -117,6 +118,7 @@ Drawer {
                         root.exited();
                 }
             }
+
             Component {
                 id: pageComponent
 
@@ -124,7 +126,6 @@ Drawer {
                     Layout.fillHeight: true
                     Layout.maximumHeight: root.maxHeight
                     currentIndex: stackLayout.currentIndex
-
                     onBackRequested: itemLoader.popSubmenu()
                     onEntered: root.entered()
                     onEntryActivated: entry => root.entryActivated(entry)

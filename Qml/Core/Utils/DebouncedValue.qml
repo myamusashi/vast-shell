@@ -1,11 +1,11 @@
-import Quickshell
 import QtQuick
+import Quickshell
 
 Scope {
     id: root
 
     property string debouncedValue: ""
-    property int interval: 200
+    property int    interval: 200
     property string value: ""
 
     onValueChanged: timer.restart()
@@ -15,7 +15,6 @@ Scope {
 
         interval: root.interval
         repeat: false
-
         onTriggered: root.debouncedValue = root.value
     }
 }

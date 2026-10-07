@@ -13,33 +13,34 @@ import "TextInputComponents" as TI
 Item {
     id: root
 
-    property bool autoFocus: true
-    readonly property int dotStep: 24
-    readonly property bool hasSelection: passwordInput.selectionStart !== passwordInput.selectionEnd
-    readonly property bool hasText: passwordInput.text.length > 0
+    readonly property int   dotStep: 24
+    readonly property bool  hasSelection: passwordInput.selectionStart !== passwordInput.selectionEnd
+    readonly property bool  hasText: passwordInput.text.length > 0
     readonly property alias isFocused: passwordInput.activeFocus
-    readonly property bool isUnlocked: root.pam ? root.pam.isUnlock : false
-    property bool keyboardFocusable: true
-    property var pam: null
-    property bool passwordMode: false
-    property string placeHolderText: ""
-    readonly property bool selectedAll: passwordInput.selectionStart === 0 && passwordInput.selectionEnd === passwordInput.text.length && passwordInput.text.length > 0
-    readonly property int selectionEnd: passwordInput.selectionEnd
-    readonly property int selectionStart: passwordInput.selectionStart
-    readonly property var shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
-    readonly property bool showFailure: root.pam ? root.pam.showFailure : false
-    property alias text: passwordInput.text
-    property alias toggleButtonVisible: toggleButton.visible
-    readonly property bool unlockInProgress: root.pam ? root.pam.unlockInProgress : false
+    readonly property bool  isUnlocked: root.pam ? root.pam.isUnlock : false
+    readonly property bool  selectedAll: passwordInput.selectionStart === 0 && passwordInput.selectionEnd === passwordInput.text.length && passwordInput.text.length > 0
+    readonly property int   selectionEnd: passwordInput.selectionEnd
+    readonly property int   selectionStart: passwordInput.selectionStart
+    readonly property var   shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
+    readonly property bool  showFailure: root.pam ? root.pam.showFailure : false
+    readonly property bool  unlockInProgress: root.pam ? root.pam.unlockInProgress : false
 
-    signal accepted
-    signal editingFinished
-    signal keyPressed(var event)
+    property bool           autoFocus: true
+    property bool           keyboardFocusable: true
+    property var            pam: null
+    property bool           passwordMode: false
+    property string         placeHolderText: ""
+    property alias          text: passwordInput.text
+    property alias          toggleButtonVisible: toggleButton.visible
 
-    function forceActiveFocus() {
+    signal                  accepted
+    signal                  editingFinished
+    signal                  keyPressed(var event)
+
+    function                forceActiveFocus() {
         passwordInput.forceActiveFocus();
     }
-    function requestKeyboardFocus() {
+    function                requestKeyboardFocus() {
         passwordInput.forceActiveFocus();
     }
 
@@ -57,7 +58,6 @@ Item {
         passwordMaskDelay: 0
         text: (root.pam && root.pam.isUnlock) ? root.pam.currentText : ""
         width: 0
-
         Component.onCompleted: {
             if (root.autoFocus)
                 forceActiveFocus();
@@ -102,6 +102,7 @@ Item {
                 dotsModel.remove(dotsModel.count - 1);
         }
     }
+
     Connections {
         function onCurrentTextChanged() {
             if (passwordInput.text !== root.pam.currentText)
@@ -111,9 +112,11 @@ Item {
         enabled: root.pam !== null
         target: root.pam
     }
+
     ListModel {
         id: dotsModel
     }
+
     Rectangle {
         id: background
 
@@ -122,12 +125,12 @@ Item {
         opacity: 0.4
         radius: height / 2
     }
+
     Rectangle {
         anchors.fill: parent
         color: "transparent"
         opacity: root.isFocused ? 1 : 0
         radius: height / 2
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
@@ -139,6 +142,7 @@ Item {
             width: root.isFocused ? 2 : 0
         }
     }
+
     Loader {
         active: !root.hasText
         sourceComponent: placeHolderComponent
@@ -151,6 +155,7 @@ Item {
             verticalCenter: parent.verticalCenter
         }
     }
+
     Component {
         id: placeHolderComponent
 
@@ -160,6 +165,7 @@ Item {
             text: root.placeHolderText !== "" ? root.placeHolderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
         }
     }
+
     Loader {
         id: passwordModeLoader
 
@@ -167,6 +173,7 @@ Item {
         anchors.fill: parent
         sourceComponent: passwordModeComponent
     }
+
     Component {
         id: passwordModeComponent
 
@@ -182,6 +189,7 @@ Item {
             unlockInProgress: root.unlockInProgress
         }
     }
+
     Loader {
         id: visibleModeLoader
 
@@ -189,6 +197,7 @@ Item {
         anchors.fill: parent
         sourceComponent: visibleModeComponent
     }
+
     Component {
         id: visibleModeComponent
 
@@ -202,6 +211,7 @@ Item {
             unlockInProgress: root.unlockInProgress
         }
     }
+
     Item {
         id: toggleButton
 
@@ -214,13 +224,13 @@ Item {
             rightMargin: Appearance.margin.normal
             verticalCenter: parent.verticalCenter
         }
+
         Icon {
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.large * 1.5
             icon: "visibility_off"
             opacity: root.passwordMode ? 1.0 : 0.0
             scale: root.passwordMode ? 1.0 : 0.5
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -234,13 +244,13 @@ Item {
                 }
             }
         }
+
         Icon {
             color: Colours.m3Colors.m3Secondary
             font.pixelSize: Appearance.fonts.size.large * 1.5
             icon: "visibility"
             opacity: root.passwordMode ? 0.0 : 1.0
             scale: root.passwordMode ? 0.5 : 1.0
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -254,11 +264,11 @@ Item {
                 }
             }
         }
+
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             z: 1
-
             onClicked: {
                 if (root.toggleButtonVisible) {
                     root.passwordMode = !root.passwordMode;
@@ -267,11 +277,11 @@ Item {
             }
         }
     }
+
     MArea {
         layerRadius: background.radius
         propagateComposedEvents: true
         z: 0
-
         onClicked: passwordInput.forceActiveFocus()
     }
 }

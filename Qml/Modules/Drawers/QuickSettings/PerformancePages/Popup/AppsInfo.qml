@@ -1,7 +1,7 @@
-import QtGraphs
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import QtGraphs
 
 import qs.Core.Configs
 import qs.Services
@@ -10,14 +10,15 @@ import qs.Components.Base
 PopupWidget {
     icon: "apps"
     text: qsTr("Installed apps")
-
     content: ColumnLayout {
+
         PieChart {
             graphicalAppCount: DesktopEntries.applications.values.filter(app => !app.runInTerminal).length
             implicitHeight: 200
             implicitWidth: parent.width
             terminalAppCount: DesktopEntries.applications.values.filter(app => app.runInTerminal).length
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
 
@@ -32,7 +33,6 @@ PopupWidget {
                         text: qsTr("Terminal User Interfaces")
                     }
                 ]
-
                 delegate: RowLayout {
                     required property var modelData
 
@@ -41,6 +41,7 @@ PopupWidget {
                         implicitHeight: 15
                         implicitWidth: 15
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
@@ -50,7 +51,6 @@ PopupWidget {
             }
         }
     }
-
     component PieChart: GraphsView {
         id: pieChart
 
@@ -78,6 +78,7 @@ PopupWidget {
                 labelVisible: true
                 value: pieChart.graphicalAppCount
             }
+
             PieSlice {
                 borderColor: "transparent"
                 color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)

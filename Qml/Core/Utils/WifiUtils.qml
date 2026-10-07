@@ -13,7 +13,7 @@ Singleton {
             showPsk(network);
     }
     function iconFor(strength, locked) {
-        const s = strength ?? 0;
+        const s  = strength ?? 0;
         var base = "";
         if (s >= 0.8)
             base = "network_wifi";

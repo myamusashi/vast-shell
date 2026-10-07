@@ -8,14 +8,15 @@ import Quickshell.Services.Mpris
 Singleton {
     id: root
 
-    readonly property MprisPlayer active: players[index] ?? null
-    property int index: 0
+    readonly property MprisPlayer       active: players[index] ?? null
     readonly property list<MprisPlayer> players: Mpris.players.values
+
+    property int                        index: 0
 
     IpcHandler {
         function list(): string {
             const playerSummaries = [];
-            const players = Players.players;
+            const players         = Players.players;
             for (let i = 0; i < players.length; i++) {
                 const player = players[i];
                 playerSummaries.push({

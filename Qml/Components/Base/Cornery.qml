@@ -8,8 +8,8 @@ WrapperItem {
     id: root
 
     property alias color: shapePath.fillColor
-    property int corner
-    property real radius: 20
+    property int   corner
+    property real  radius: 20
 
     Component.onCompleted: {
         switch (corner) {
@@ -52,10 +52,12 @@ WrapperItem {
                 relativeX: -root.radius
                 relativeY: root.radius
             }
+
             PathLine {
                 relativeX: 0
                 relativeY: -root.radius
             }
+
             PathLine {
                 relativeX: root.radius
                 relativeY: 0

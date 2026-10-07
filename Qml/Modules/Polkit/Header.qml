@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell
 import Quickshell.Widgets
 
@@ -26,6 +25,7 @@ RowLayout {
             width: 28
         }
     }
+
     ColumnLayout {
         Layout.fillHeight: true
         Layout.fillWidth: true
@@ -38,6 +38,7 @@ RowLayout {
             horizontalAlignment: Text.AlignHCenter
             text: qsTr("Authentication Is Required")
         }
+
         StyledText {
             Layout.fillWidth: true
             color: Colours.m3Colors.m3OnSurface

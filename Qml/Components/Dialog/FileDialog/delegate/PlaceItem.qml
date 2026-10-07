@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-
 import Vast.Utils
 
 import qs.Core.Configs
@@ -14,13 +13,14 @@ StyledRect {
     id: root
 
     required property string icon
-    required property bool isSelected
-    property bool keyboardFocusable: true
+    required property bool   isSelected
     required property string label
 
-    signal clicked
+    property bool            keyboardFocusable: true
 
-    function requestKeyboardFocus() {
+    signal                   clicked
+
+    function                 requestKeyboardFocus() {
         root.forceActiveFocus();
     }
 
@@ -28,7 +28,6 @@ StyledRect {
     color: isSelected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
     implicitHeight: 48
     radius: Appearance.rounding.small
-
     Keys.onReturnPressed: event => {
         root.clicked();
         event.accepted = true;
@@ -46,23 +45,23 @@ StyledRect {
             leftMargin: Appearance.margin.normal
             rightMargin: Appearance.margin.small
         }
+
         Icon {
             id: iconItem
 
-            property real iconColorBlendProgress: 1.0
-            property bool iconColorBlending: false
+            property bool  iconColorBlending: false
+            property real  iconColorBlendProgress: 1.0
             property color iconColorFrom
             property color iconColorTo
             property color target: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
 
             font.pixelSize: Appearance.fonts.size.large
             icon: root.icon
-
             onIconColorBlendProgressChanged: {
                 if (!iconColorBlending)
                     return;
                 if (iconColorBlendProgress >= 1) {
-                    color = iconColorTo;
+                    color             = iconColorTo;
                     iconColorBlending = false;
                 } else if (iconColorBlendProgress > 0) {
                     color = ColorUtils.blendColors(iconColorFrom, iconColorTo, iconColorBlendProgress);
@@ -70,9 +69,9 @@ StyledRect {
             }
             onTargetChanged: {
                 iconColorAnim.stop();
-                iconColorFrom = iconItem.color;
-                iconColorTo = target;
-                iconColorBlending = true;
+                iconColorFrom          = iconItem.color;
+                iconColorTo            = target;
+                iconColorBlending      = true;
                 iconColorBlendProgress = 0.0;
                 iconColorAnim.start();
             }
@@ -87,11 +86,12 @@ StyledRect {
                 to: 1.0
             }
         }
+
         StyledText {
             id: label
 
-            property real labelColorBlendProgress: 1.0
-            property bool labelColorBlending: false
+            property bool  labelColorBlending: false
+            property real  labelColorBlendProgress: 1.0
             property color labelColorFrom
             property color labelColorTo
             property color target: root.isSelected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
@@ -101,12 +101,11 @@ StyledRect {
             font.bold: root.isSelected
             font.pixelSize: Appearance.fonts.size.normal
             text: root.label
-
             onLabelColorBlendProgressChanged: {
                 if (!labelColorBlending)
                     return;
                 if (labelColorBlendProgress >= 1) {
-                    color = labelColorTo;
+                    color              = labelColorTo;
                     labelColorBlending = false;
                 } else if (labelColorBlendProgress > 0) {
                     color = ColorUtils.blendColors(labelColorFrom, labelColorTo, labelColorBlendProgress);
@@ -114,9 +113,9 @@ StyledRect {
             }
             onTargetChanged: {
                 labelColorAnim.stop();
-                labelColorFrom = label.color;
-                labelColorTo = target;
-                labelColorBlending = true;
+                labelColorFrom          = label.color;
+                labelColorTo            = target;
+                labelColorBlending      = true;
                 labelColorBlendProgress = 0.0;
                 labelColorAnim.start();
             }
@@ -132,12 +131,13 @@ StyledRect {
             }
         }
     }
+
     MArea {
         anchors.fill: parent
         hoverEnabled: true
-
         onClicked: root.clicked()
     }
+
     Rectangle {
         anchors.fill: parent
         border.color: Colours.m3Colors.m3Primary

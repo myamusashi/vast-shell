@@ -5,24 +5,26 @@ import QtQuick
 Item {
     id: root
 
-    property real barHeight: 40
-    readonly property list<Item> borderMaskItems: [topBorderArea, bottomBorderArea, leftBorderArea, rightBorderArea, topLeftCornerArea, topRightCornerArea, bottomLeftCornerArea, bottomRightCornerArea]
-    property alias bottomThickness: frame.bottomThickness
-    required property color color
-    default property alias content: holeItem.data
-    readonly property real cornerAreaSize: frame.effectiveInnerRadius
-    property bool enableOuterBorder: false
-    property alias innerRadius: frame.innerRadius
-    property bool isBarOpen: false
-    required property bool isFocusedMonitor
-    property alias leftThickness: frame.leftThickness
-    property real outerBorderSize: 0
-    property alias rightThickness: frame.rightThickness
-    property alias topThickness: frame.topThickness
-    property alias window: frame.window
+    required property color      color
+    required property bool       isFocusedMonitor
 
-    function collectMaskItems() {
-        const items = borderMaskItems.slice();
+    readonly property list<Item> borderMaskItems: [topBorderArea, bottomBorderArea, leftBorderArea, rightBorderArea, topLeftCornerArea, topRightCornerArea, bottomLeftCornerArea, bottomRightCornerArea]
+    readonly property real       cornerAreaSize: frame.effectiveInnerRadius
+
+    property real                barHeight: 40
+    property alias               bottomThickness: frame.bottomThickness
+    default property alias       content: holeItem.data
+    property bool                enableOuterBorder: false
+    property alias               innerRadius: frame.innerRadius
+    property bool                isBarOpen: false
+    property alias               leftThickness: frame.leftThickness
+    property real                outerBorderSize: 0
+    property alias               rightThickness: frame.rightThickness
+    property alias               topThickness: frame.topThickness
+    property alias               window: frame.window
+
+    function                     collectMaskItems() {
+        const items        = borderMaskItems.slice();
         const holeChildren = holeItem.children;
         for (let index = 0; index < holeChildren.length; index++)
             items.push(holeChildren[index]);
@@ -43,12 +45,14 @@ Item {
         outerBorderSize: root.outerBorderSize
         window: root.window
     }
+
     Item {
         id: topBorderArea
 
         height: frame.topThickness
         width: root.width
     }
+
     Item {
         id: bottomBorderArea
 
@@ -56,6 +60,7 @@ Item {
         width: root.width
         y: root.height - height
     }
+
     Item {
         id: leftBorderArea
 
@@ -63,6 +68,7 @@ Item {
         width: frame.leftThickness
         y: frame.topThickness
     }
+
     Item {
         id: rightBorderArea
 
@@ -71,6 +77,7 @@ Item {
         x: root.width - width
         y: frame.topThickness
     }
+
     Item {
         id: topLeftCornerArea
 
@@ -79,6 +86,7 @@ Item {
         x: frame.leftThickness
         y: frame.topThickness
     }
+
     Item {
         id: topRightCornerArea
 
@@ -87,6 +95,7 @@ Item {
         x: root.width - frame.rightThickness - root.cornerAreaSize
         y: frame.topThickness
     }
+
     Item {
         id: bottomLeftCornerArea
 
@@ -95,6 +104,7 @@ Item {
         x: frame.leftThickness
         y: root.height - frame.bottomThickness - root.cornerAreaSize
     }
+
     Item {
         id: bottomRightCornerArea
 
@@ -105,6 +115,7 @@ Item {
     }
 
     // Declared last so drawers draw above the frame
+
     Item {
         id: holeItem
 

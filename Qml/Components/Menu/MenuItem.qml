@@ -11,14 +11,15 @@ import qs.Services
 Item {
     id: root
 
-    property string disabledLabel: ""
     readonly property real horizontalInset: Appearance.margin.larger
-    property string label: ""
-    property string leadingIcon: ""
-    property bool selected: false
-    property string trailingText: ""
 
-    signal triggered
+    property string        disabledLabel: ""
+    property string        label: ""
+    property string        leadingIcon: ""
+    property bool          selected: false
+    property string        trailingText: ""
+
+    signal                 triggered
 
     implicitHeight: leadingIcon === "" ? 48 : 56
     implicitWidth: parent ? parent.width : 200
@@ -31,6 +32,7 @@ Item {
         radius: Appearance.rounding.small
         visible: root.selected
     }
+
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: root.horizontalInset
@@ -45,6 +47,7 @@ Item {
             icon: root.leadingIcon
             visible: root.leadingIcon !== ""
         }
+
         Text {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
@@ -58,6 +61,7 @@ Item {
             text: root.label
             verticalAlignment: Text.AlignVCenter
         }
+
         Icon {
             Layout.alignment: Qt.AlignVCenter
             Layout.maximumWidth: 20
@@ -69,6 +73,7 @@ Item {
             icon: "check"
             visible: root.selected
         }
+
         Text {
             Layout.alignment: Qt.AlignVCenter
             color: Colours.m3Colors.m3OnSurfaceVariant
@@ -78,6 +83,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             visible: root.trailingText !== ""
         }
+
         StyledRect {
             Layout.alignment: Qt.AlignVCenter
             Layout.minimumWidth: badgeText.implicitWidth + 10
@@ -97,11 +103,11 @@ Item {
             }
         }
     }
+
     MArea {
         enabled: root.enabled
         layerRadius: Appearance.rounding.small
         preventStealing: true
-
         onClicked: root.triggered()
     }
 }

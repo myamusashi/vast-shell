@@ -7,6 +7,7 @@ import Quickshell.Services.Pipewire
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
+
 import "../../Components"
 
 SettingsCard {
@@ -15,7 +16,7 @@ SettingsCard {
     readonly property int count: sinkNodes.length
     readonly property var currentSink: Pipewire.defaultAudioSink
     readonly property var sinkNodes: {
-        const nodes = Pipewire.nodes.values;
+        const nodes    = Pipewire.nodes.values;
         const filtered = nodes.filter(n => !n.isStream && n.audio && (n.type & PwNodeType.Sink));
         filtered.sort((a, b) => (a.description || a.name).localeCompare(b.description || b.name));
         return filtered;
@@ -33,9 +34,9 @@ SettingsCard {
             text: qsTr("No output devices detected.")
             visible: root.count === 0
         }
+
         Repeater {
             model: root.sinkNodes
-
             delegate: AudioLevelRow {
                 id: sinkDelegate
 
@@ -45,10 +46,9 @@ SettingsCard {
                 isCurrent: root.currentSink && sinkDelegate.modelData.id === root.currentSink.id
                 node: sinkDelegate.modelData
                 selectable: true
-
                 onDefaultRequested: {
                     Pipewire.preferredDefaultAudioSink = sinkDelegate.modelData;
-                    Configs.audio.defaultSinkName = sinkDelegate.modelData.name;
+                    Configs.audio.defaultSinkName      = sinkDelegate.modelData.name;
                 }
             }
         }

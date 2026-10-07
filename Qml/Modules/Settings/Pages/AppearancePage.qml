@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
-import qs.Components.Button
+import QtQuick.Layouts
 
+import qs.Components.Button
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
@@ -28,6 +28,7 @@ Item {
         container: contentColumn
         target: pageFlickable
     }
+
     Flickable {
         id: pageFlickable
 
@@ -35,9 +36,7 @@ Item {
         clip: true
         contentHeight: contentColumn.implicitHeight + (Appearance.margin.large * 2)
         contentWidth: parent.width
-
-        ScrollBar.vertical: ScrollBar {
-        }
+        ScrollBar.vertical: ScrollBar {}
 
         ColumnLayout {
             id: contentColumn
@@ -55,6 +54,7 @@ Item {
                 font.pixelSize: Appearance.fonts.size.extraLarge
                 text: qsTr("Appearance & Theming")
             }
+
             SettingsCard {
                 title: qsTr("Color System")
 
@@ -67,21 +67,21 @@ Item {
 
                         StyledSwitch {
                             checked: Configs.colors.isDarkMode
-
                             onCheckedChanged: Configs.colors.isDarkMode = checked
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Load colors from a custom JSON file and override the generated palette.")
                         label: qsTr("Use Static Colors:")
 
                         StyledSwitch {
                             checked: Configs.colors.useStaticColors
-
                             onCheckedChanged: Configs.colors.useStaticColors = checked
                         }
                     }
                 }
+
                 SettingRow {
                     description: qsTr("File path to the custom colors JSON when static colors are enabled.")
                     label: qsTr("Static Colors Path:")
@@ -92,29 +92,28 @@ Item {
                         implicitWidth: 350
                         text: Configs.colors.staticColorsPath
                         toggleButtonVisible: false
-
                         onEditingFinished: Configs.colors.staticColorsPath = text
 
                         MouseArea {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             hoverEnabled: true
-
                             onClicked: {
                                 staticColorsPathField.forceActiveFocus();
                                 staticColorsFileDialog.openFileDialog();
                             }
                         }
                     }
+
                     FileDialog {
                         id: staticColorsFileDialog
 
                         nameFilters: ["*.json"]
                         showHidden: true
-
                         onFileSelected: path => Configs.colors.staticColorsPath = path
                     }
                 }
+
                 SettingRow {
                     description: qsTr("Material You color scheme variant for palette generation.")
                     label: qsTr("Material Scheme:")
@@ -129,11 +128,11 @@ Item {
                                 }))
                         text: model[selectedIndex]?.display ?? Configs.colors.scheme
                         textRole: "display"
-
                         onMenuItemActivated: index => Configs.colors.scheme = model[index].display
                     }
                 }
             }
+
             SettingsCard {
                 title: qsTr("Typography System")
 
@@ -147,10 +146,10 @@ Item {
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.sans
-
                             onConfigChanged: value => Appearance.fonts.family.sans = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Font for code and monospaced text.")
                         label: qsTr("Monospace Font:")
@@ -158,10 +157,10 @@ Item {
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.mono
-
                             onConfigChanged: value => Appearance.fonts.family.mono = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Nerd font used for icon or font text.")
                         label: qsTr("Nerd Font:")
@@ -169,10 +168,10 @@ Item {
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.nerd
-
                             onConfigChanged: value => Appearance.fonts.family.nerd = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Icon font used for Material Symbols throughout the shell.")
                         label: qsTr("Material Icon Font:")
@@ -180,10 +179,10 @@ Item {
                         FontPicker {
                             Layout.preferredWidth: 250
                             searchField: Appearance.fonts.family.material
-
                             onConfigChanged: value => Appearance.fonts.family.material = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Global multiplier for all font sizes.")
                         label: qsTr("Font Size Scale:")
@@ -197,12 +196,12 @@ Item {
                             stepSize: 0.1
                             to: 2.0
                             value: Appearance.fonts.size.scale
-
                             onMoved: Appearance.fonts.size.scale = value
                         }
                     }
                 }
             }
+
             SettingsCard {
                 title: qsTr("Shapes & Layout")
 
@@ -219,10 +218,10 @@ Item {
                             stepSize: 1
                             to: 50
                             value: Appearance.rounding.normal
-
                             onMoved: Appearance.rounding.normal = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Default spacing between UI elements.")
                         label: qsTr("Element Spacing (Normal):")
@@ -233,10 +232,10 @@ Item {
                             stepSize: 1
                             to: 50
                             value: Appearance.spacing.normal
-
                             onMoved: Appearance.spacing.normal = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Inner padding.")
                         label: qsTr("Padding (Normal):")
@@ -247,10 +246,10 @@ Item {
                             stepSize: 1
                             to: 50
                             value: Appearance.padding.normal
-
                             onMoved: Appearance.padding.normal = value
                         }
                     }
+
                     SettingRow {
                         description: qsTr("Outer margin.")
                         label: qsTr("Margin (Normal):")
@@ -261,12 +260,12 @@ Item {
                             stepSize: 1
                             to: 50
                             value: Appearance.margin.normal
-
                             onMoved: Appearance.margin.normal = value
                         }
                     }
                 }
             }
+
             SettingsCard {
                 title: qsTr("Motion & Animation")
 
@@ -282,11 +281,11 @@ Item {
                         stepSize: 1
                         to: 5
                         value: Appearance.animations.durations.scale
-
                         onMoved: Appearance.animations.durations.scale = value
                     }
                 }
             }
+
             Item {
                 Layout.fillHeight: true
                 implicitHeight: Appearance.margin.large
@@ -299,9 +298,9 @@ Item {
 
         property string configValue
         property string label
-        property var nameFilters: ["*.json"]
+        property var    nameFilters: ["*.json"]
 
-        signal configChanged(string value)
+        signal          configChanged(string value)
 
         Layout.fillWidth: true
 
@@ -311,12 +310,12 @@ Item {
             font.pixelSize: Appearance.fonts.size.large
             text: filePathRow.label
         }
+
         StyledTextInput {
             id: pathField
 
             implicitWidth: 350
             toggleButtonVisible: false
-
             Component.onCompleted: text = filePathRow.configValue
             onEditingFinished: filePathRow.configChanged(text)
 
@@ -324,19 +323,18 @@ Item {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
-
                 onClicked: {
                     pathField.forceActiveFocus();
                     fileDialog.openFileDialog();
                 }
             }
         }
+
         FileDialog {
             id: fileDialog
 
             nameFilters: filePathRow.nameFilters
             showHidden: true
-
             onFileSelected: path => filePathRow.configChanged(path)
         }
     }
@@ -344,8 +342,8 @@ Item {
         id: fontPicker
 
         property string configValue
-        property var filteredModel: {
-            const query = searchText.toLowerCase();
+        property var    filteredModel: {
+            const query  = searchText.toLowerCase();
             const result = [];
             if (!query)
                 result.push({
@@ -359,10 +357,10 @@ Item {
             }
             return result;
         }
-        property alias searchField: searchField.placeHolderText
+        property alias  searchField: searchField.placeHolderText
         property string searchText: ""
 
-        signal configChanged(string value)
+        signal          configChanged(string value)
 
         implicitHeight: 48
         implicitWidth: 250
@@ -373,7 +371,6 @@ Item {
             anchors.fill: parent
             placeHolderText: qsTr("Search font...")
             toggleButtonVisible: false
-
             Component.onCompleted: text = fontPicker.configValue
             onActiveFocusChanged: {
                 if (activeFocus && !popup.visible)
@@ -385,6 +382,7 @@ Item {
                     popup.open();
             }
         }
+
         Popup {
             id: popup
 
@@ -392,7 +390,6 @@ Item {
             implicitHeight: Math.min(listView.contentHeight + 16, 280)
             width: searchField.width
             y: searchField.height + 4
-
             background: StyledRect {
                 color: Colours.m3Colors.m3SurfaceContainerLow
                 radius: Appearance.rounding.large
@@ -410,10 +407,8 @@ Item {
                 cacheBuffer: 0
                 clip: true
                 model: fontPicker.filteredModel
-
                 ScrollBar.vertical: ScrollBar {
                     policy: ScrollBar.AsNeeded
-
                     contentItem: StyledRect {
                         color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
                         implicitWidth: 4
@@ -423,9 +418,10 @@ Item {
                 delegate: ItemDelegate {
                     id: fontDelegate
 
-                    required property int index
+                    required property int  index
+                    required property var  modelData
+
                     readonly property bool itemActive: modelData.name === fontPicker.configValue
-                    required property var modelData
 
                     bottomPadding: 0
                     height: 52
@@ -433,7 +429,6 @@ Item {
                     rightPadding: 16
                     topPadding: 0
                     width: listView.width
-
                     background: StyledRect {
                         color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
                         radius: Appearance.rounding.large
@@ -446,10 +441,9 @@ Item {
                         text: fontDelegate.modelData.name || qsTr("System default")
                         verticalAlignment: Text.AlignVCenter
                     }
-
                     onClicked: {
                         fontPicker.configChanged(modelData.name);
-                        searchField.text = modelData.name;
+                        searchField.text      = modelData.name;
                         fontPicker.searchText = "";
                         popup.close();
                     }

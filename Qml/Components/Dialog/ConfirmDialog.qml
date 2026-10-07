@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
@@ -9,14 +10,15 @@ DialogBox {
     id: root
 
     required property string bodyText
-    property string cancelText: qsTr("No")
-    property string confirmText: qsTr("Yes")
     required property string title
+
+    property string          cancelText: qsTr("No")
+    property string          confirmText: qsTr("Yes")
 
     acceptedText: root.confirmText
     rejectedText: root.cancelText
-
     body: Component {
+
         StyledText {
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
@@ -25,6 +27,7 @@ DialogBox {
         }
     }
     header: Component {
+
         StyledText {
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large

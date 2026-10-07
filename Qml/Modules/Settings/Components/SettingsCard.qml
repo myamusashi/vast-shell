@@ -9,9 +9,9 @@ Rectangle {
     id: root
 
     default property alias content: contentLayout.data
-    property alias title: titleText.text
+    property alias         title: titleText.text
 
-    function flash() {
+    function               flash() {
         flashSeq.restart();
     }
 
@@ -26,6 +26,7 @@ Rectangle {
         radius: root.radius
         z: -1
     }
+
     Rectangle {
         id: flashBorder
 
@@ -36,6 +37,7 @@ Rectangle {
         opacity: 0
         radius: root.radius
     }
+
     ColumnLayout {
         id: layout
 
@@ -47,6 +49,7 @@ Rectangle {
             right: parent.right
             top: parent.top
         }
+
         StyledText {
             id: titleText
 
@@ -55,6 +58,7 @@ Rectangle {
             font.weight: Font.DemiBold
             visible: text !== ""
         }
+
         ColumnLayout {
             id: contentLayout
 
@@ -62,6 +66,7 @@ Rectangle {
             spacing: Appearance.spacing.normal
         }
     }
+
     SequentialAnimation {
         id: flashSeq
 
@@ -71,9 +76,11 @@ Rectangle {
             target: flashBorder
             to: 1
         }
+
         PauseAnimation {
             duration: 900
         }
+
         NumberAnimation {
             duration: 450
             property: "opacity"

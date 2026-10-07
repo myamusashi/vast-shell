@@ -2,50 +2,52 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
 import Quickshell.Widgets
 
 import qs.Core.States
 import qs.Core.Configs
 import qs.Components.Base
 import qs.Services
+
 import "../captureUtils.js" as Utils
 
 Scope {
     id: root
 
-    property var allScreenPaths: []
-    property var captureDoneCallback: null
-    property string frozenImageUrl: ""
-    property bool isMultiCapturing: false
-    property string pendingAction: ""
+    property var             allScreenPaths: []
+    property var             captureDoneCallback: null
+    property string          frozenImageUrl: ""
+    property bool            isMultiCapturing: false
+    property string          pendingAction: ""
 
     // Each screen gets its own PanelWindow + ScreencopyView
     // so all outputs freeze at the same compositor frame
-    property int pendingCaptureCount: 0
-    property string pendingWindowAction: ""
-    property var pickForRecordCallback: null
-    property real regionScale: 1
     required property string screenshotDir
-    property bool selectionDragging: false
-    property point selectionEnd: Qt.point(0, 0)
-    property bool selectionOpen: false
+
+    property int             pendingCaptureCount: 0
+    property string          pendingWindowAction: ""
+    property var             pickForRecordCallback: null
+    property real            regionScale: 1
+    property bool            selectionDragging: false
+    property point           selectionEnd: Qt.point(0, 0)
+    property bool            selectionOpen: false
 
     // Shared selection state in virtual desktop logical pixels
-    property point selectionStart: Qt.point(0, 0)
-    property bool windowPickerOpen: false
+    property point           selectionStart: Qt.point(0, 0)
+    property bool            windowPickerOpen: false
 
-    signal notify(string summary, string body, string urgency, string icon, string app, var actions)
+    signal                   notify(string summary, string body, string urgency, string icon, string app, var actions)
 
-    function compositeAllCaptures() {
+    function                 compositeAllCaptures() {
         multiCaptureWatchdog.stop();
         if (root.allScreenPaths.length === 0) {
             root.isMultiCapturing = false;
             root.notify("Screenshot Failed", "No screens captured.", "critical", "dialog-error", "Screenshot");
             if (root.captureDoneCallback) {
-                const cb = root.captureDoneCallback;
+                const cb                 = root.captureDoneCallback;
                 root.captureDoneCallback = null;
                 cb("");
             }
@@ -53,21 +55,21 @@ Scope {
         }
         compositeLoader.active = true;
     }
-    function copyToClipboard(img) {
+    function                 copyToClipboard(img) {
         saver.copyFile(img);
     }
-    function freezeAllScreens(callback) {
-        root.allScreenPaths = [];
+    function                 freezeAllScreens(callback) {
+        root.allScreenPaths      = [];
         root.captureDoneCallback = callback;
         root.pendingCaptureCount = Quickshell.screens.length;
-        root.isMultiCapturing = true;
+        root.isMultiCapturing    = true;
         multiCaptureWatchdog.restart();
     }
-    function getMonitors(callback) {
+    function                 getMonitors(callback) {
         const names = Quickshell.screens.map(s => s.name);
         callback(names);
     }
-    function notifySaved(path): void {
+    function                 notifySaved(path): void {
         notify("Screenshot Saved", path, "normal", path, "Screenshot", [
             {
                 "id": "open",
@@ -79,7 +81,7 @@ Scope {
             }
         ]);
     }
-    function pickWindowForRecord(callback) {
+    function                 pickWindowForRecord(callback) {
         console.log("pickWindowForRecord: opening window picker for recording");
         root.pickForRecordCallback = callback;
         Hyprland.refreshToplevels();
@@ -87,71 +89,71 @@ Scope {
         Hyprland.refreshMonitors();
         root.windowPickerOpen = true;
     }
-    function screenshotAllOutputs(action) {
-        delayTimer.running = false;
+    function                 screenshotAllOutputs(action) {
+        delayTimer.running   = false;
         delayTimer.pendingFn = null;
-        delayTimer.interval = 2000;
+        delayTimer.interval  = 2000;
         delayTimer.pendingFn = () => {
             root.freezeAllScreens(path => {
                 if (!path) {
                     root.notify("Screenshot Failed", "Failed to capture all outputs.", "critical", "dialog-error", "Screenshot");
                     return;
                 }
-                const srcPath = path.startsWith("file://") ? path.slice(7) : path;
-                const outPath = Utils.screenshotPath(root.screenshotDir);
+                const srcPath            = path.startsWith("file://") ? path.slice(7) : path;
+                const outPath            = Utils.screenshotPath(root.screenshotDir);
                 fileCopyProcess.destPath = outPath;
-                fileCopyProcess.command = ["cp", srcPath, outPath];
-                fileCopyProcess.running = true;
+                fileCopyProcess.command  = ["cp", srcPath, outPath];
+                fileCopyProcess.running  = true;
             });
         };
-        delayTimer.running = true;
+        delayTimer.running   = true;
     }
-    function screenshotOutput(target, action) {
-        delayTimer.running = false;
+    function                 screenshotOutput(target, action) {
+        delayTimer.running   = false;
         delayTimer.pendingFn = null;
-        root.pendingAction = action || "save+copy";
-        const screen = Quickshell.screens.find(s => s.name === target) ?? Quickshell.screens[0];
+        root.pendingAction   = action || "save+copy";
+        const screen         = Quickshell.screens.find(s => s.name === target) ?? Quickshell.screens[0];
         if (!screen) {
             root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
             return;
         }
         captureLoader.targetToplevel = null;
-        captureLoader.targetScreen = screen;
-        captureLoader.targetWidth = screen.width;
-        captureLoader.targetHeight = screen.height;
-        delayTimer.interval = 2000;
-        delayTimer.pendingFn = () => {
+        captureLoader.targetScreen   = screen;
+        captureLoader.targetWidth    = screen.width;
+        captureLoader.targetHeight   = screen.height;
+        delayTimer.interval          = 2000;
+        delayTimer.pendingFn         = () => {
             captureLoader.active = true;
         };
-        delayTimer.running = true;
+        delayTimer.running           = true;
     }
-    function screenshotSelection(action) {
+    function                 screenshotSelection(action) {
         if (GlobalStates.isSelectionOpen)
             return;
-        delayTimer.running = false;
+        delayTimer.running   = false;
         delayTimer.pendingFn = null;
 
         if (Quickshell.screens.length <= 1) {
-            root.pendingAction = "region";
+            root.pendingAction           = "region";
             captureLoader.targetToplevel = null;
-            const screen = Quickshell.screens[0];
+            const screen                 = Quickshell.screens[0];
             if (!screen) {
                 root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
                 return;
             }
-            root.regionScale = Hyprland.monitorFor(screen)?.scale ?? 1;
+            root.regionScale           = Hyprland.monitorFor(screen)?.scale ?? 1;
             captureLoader.targetScreen = screen;
-            captureLoader.targetWidth = screen.width;
+            captureLoader.targetWidth  = screen.width;
             captureLoader.targetHeight = screen.height;
-            delayTimer.interval = 2000;
-            delayTimer.pendingFn = () => {
+            delayTimer.interval        = 2000;
+            delayTimer.pendingFn       = () => {
                 captureLoader.active = true;
             };
-            delayTimer.running = true;
+            delayTimer.running         = true;
         } else {
-            const firstScreen = Quickshell.screens[0];
-            root.regionScale = Hyprland.monitorFor(firstScreen)?.scale ?? 1;
-            delayTimer.interval = 2000;
+            const firstScreen    = Quickshell.screens[0];
+            root.regionScale     = Hyprland.monitorFor(firstScreen)?.scale ?? 1;
+            delayTimer.interval  = 2000;
             delayTimer.pendingFn = () => {
                 root.freezeAllScreens(path => {
                     if (!path) {
@@ -159,16 +161,16 @@ Scope {
                         return;
                     }
                     root.frozenImageUrl = path;
-                    root.selectionOpen = true;
+                    root.selectionOpen  = true;
                 });
             };
-            delayTimer.running = true;
+            delayTimer.running   = true;
         }
     }
-    function screenshotWindow(action) {
+    function                 screenshotWindow(action) {
         console.log("screenshotWindow: opening window picker, action:", action);
         root.pickForRecordCallback = null;
-        root.pendingWindowAction = action || "save+copy";
+        root.pendingWindowAction   = action || "save+copy";
         Hyprland.refreshToplevels();
         Hyprland.refreshWorkspaces();
         Hyprland.refreshMonitors();
@@ -179,10 +181,10 @@ Scope {
         id: saver
 
         screenshotDir: root.screenshotDir
-
         onFailed: reason => root.notify("Screenshot Failed", reason, "critical", "dialog-error", "Screenshot")
         onSaved: path => root.notifySaved(path)
     }
+
     Process {
         id: fileCopyProcess
 
@@ -200,23 +202,23 @@ Scope {
             destPath = "";
         }
     }
+
     LazyLoader {
         id: captureLoader
 
-        property int targetHeight: 1
+        property int         targetHeight: 1
         property ShellScreen targetScreen: null
-        property Toplevel targetToplevel: null
-        property int targetWidth: 1
+        property Toplevel    targetToplevel: null
+        property int         targetWidth: 1
 
         activeAsync: false
-
         component: PanelWindow {
             id: captureWindow
 
             property bool done: false
-            property int grabRetries: 0
+            property int  grabRetries: 0
 
-            function doGrab() {
+            function      doGrab() {
                 if (screencopyView.width <= 0 || screencopyView.height <= 0) {
                     if (captureWindow.grabRetries < 20) {
                         captureWindow.grabRetries++;
@@ -225,11 +227,11 @@ Scope {
                         console.log("grabToImage: giving up after retries, closing overlays");
                         root.notify("Screenshot Failed", "Capture timed out, please try again.", "critical", "dialog-error", "Screenshot");
                         root.isMultiCapturing = false;
-                        root.selectionOpen = false;
-                        root.frozenImageUrl = "";
-                        captureLoader.active = false;
+                        root.selectionOpen    = false;
+                        root.frozenImageUrl   = "";
+                        captureLoader.active  = false;
                         if (root.captureDoneCallback) {
-                            const cb = root.captureDoneCallback;
+                            const cb                 = root.captureDoneCallback;
                             root.captureDoneCallback = null;
                             cb("");
                         }
@@ -240,7 +242,7 @@ Scope {
                 if (root.isMultiCapturing) {
                     screencopyView.grabToImage(result => {
                         const screen = captureLoader.targetScreen;
-                        const path = Utils.tempCapturePath();
+                        const path   = Utils.tempCapturePath();
                         if (result && result.saveToFile(path)) {
                             root.allScreenPaths.push({
                                 screen: screen,
@@ -260,9 +262,9 @@ Scope {
                             return;
                         }
                         if (result.saveToFile(path)) {
-                            root.frozenImageUrl = "file://" + path;
+                            root.frozenImageUrl  = "file://" + path;
                             captureLoader.active = false;
-                            root.selectionOpen = true;
+                            root.selectionOpen   = true;
                         } else {
                             root.notify("Screenshot Failed", "Failed to save region preview.", "critical", "dialog-error", "Screenshot");
                             captureLoader.active = false;
@@ -292,9 +294,9 @@ Scope {
 
                 interval: 50
                 repeat: false
-
                 onTriggered: captureWindow.doGrab()
             }
+
             ScreencopyView {
                 id: screencopyView
 
@@ -302,7 +304,6 @@ Scope {
                 captureSource: captureLoader.targetToplevel ?? captureLoader.targetScreen
                 live: false
                 paintCursor: false
-
                 onHasContentChanged: {
                     if (!hasContent || captureWindow.done)
                         return;
@@ -311,12 +312,11 @@ Scope {
                 }
             }
         }
-
         onActiveChanged: {
             // PanelWindow persists across activations; reset the one-shot grab
             // guard so a second capture actually grabs instead of no-op'ing.
             if (active && item) {
-                item.done = false;
+                item.done        = false;
                 item.grabRetries = 0;
             }
             // Never carry a window source into the next capture; each flow sets
@@ -325,13 +325,13 @@ Scope {
                 targetToplevel = null;
         }
     }
+
     LazyLoader {
         id: compositeLoader
 
         property string resultPath: ""
 
         activeAsync: false
-
         component: PanelWindow {
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
@@ -339,7 +339,6 @@ Scope {
             exclusionMode: ExclusionMode.Ignore
             screen: Quickshell.screens[0]
             visible: true
-
             onVisibleChanged: {
                 if (!visible)
                     return;
@@ -348,9 +347,9 @@ Scope {
                     compositeLoader.active = false;
                     return;
                 }
-                const bounds = Utils.totalBounds(screens.map(entry => entry.screen));
-                compositeCanvas.width = bounds.width;
-                compositeCanvas.height = bounds.height;
+                const bounds                 = Utils.totalBounds(screens.map(entry => entry.screen));
+                compositeCanvas.width        = bounds.width;
+                compositeCanvas.height       = bounds.height;
                 compositeCanvas.imagesToLoad = screens.length;
                 compositeCanvas.imagesLoaded = 0;
                 Qt.callLater(() => {
@@ -377,7 +376,7 @@ Scope {
                     if (compositeCanvas.width <= 0 || compositeCanvas.height <= 0)
                         return;
                     const screens = root.allScreenPaths;
-                    const bounds = Utils.totalBounds(screens.map(entry => entry.screen));
+                    const bounds  = Utils.totalBounds(screens.map(entry => entry.screen));
                     ctx.clearRect(0, 0, bounds.width, bounds.height);
                     for (let i = 0; i < screens.length; i++) {
                         const s = screens[i].screen;
@@ -386,12 +385,12 @@ Scope {
                     grabTimer.restart();
                 }
             }
+
             Timer {
                 id: grabTimer
 
                 interval: 150
                 repeat: false
-
                 onTriggered: {
                     compositeCanvas.grabToImage(result => {
                         const path = Utils.tempCapturePath();
@@ -399,9 +398,9 @@ Scope {
                             compositeLoader.resultPath = "file://" + path;
                         }
                         compositeLoader.active = false;
-                        root.isMultiCapturing = false;
+                        root.isMultiCapturing  = false;
                         if (root.captureDoneCallback) {
-                            const cb = root.captureDoneCallback;
+                            const cb                 = root.captureDoneCallback;
                             root.captureDoneCallback = null;
                             cb(compositeLoader.resultPath);
                         }
@@ -410,20 +409,21 @@ Scope {
             }
         }
     }
+
     Binding {
         property: "isScreenshotSelectionOpen"
         target: GlobalStates
         value: root.selectionOpen
     }
+
     LazyLoader {
         id: cropEngine
 
         activeAsync: false
-
         component: PanelWindow {
             function doCrop(sourceUrl, x, y, w, h) {
                 cropImage.sourceClipRect = Qt.rect(x, y, w, h);
-                cropImage.source = sourceUrl;
+                cropImage.source         = sourceUrl;
             }
 
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
@@ -440,18 +440,17 @@ Scope {
                 source: ""
                 sourceClipRect: Qt.rect(0, 0, 0, 0)
                 width: sourceClipRect.width > 0 ? sourceClipRect.width : 1
-
                 onStatusChanged: {
                     if (status === Image.Ready && sourceClipRect.width > 0 && sourceClipRect.height > 0)
                         cropGrabTimer.restart();
                 }
             }
+
             Timer {
                 id: cropGrabTimer
 
                 interval: 50
                 repeat: false
-
                 onTriggered: {
                     cropImage.grabToImage(result => {
                         const path = Utils.screenshotPath(root.screenshotDir);
@@ -461,20 +460,20 @@ Scope {
                         } else {
                             root.notify("Screenshot Failed", "Failed to save cropped image.", "critical", "dialog-error", "Screenshot");
                         }
-                        cropEngine.active = false;
-                        root.selectionOpen = false;
+                        cropEngine.active   = false;
+                        root.selectionOpen  = false;
                         root.frozenImageUrl = "";
                     });
                 }
             }
         }
     }
+
     Timer {
         id: multiCaptureWatchdog
 
         interval: 4000
         repeat: false
-
         onTriggered: {
             if (root.isMultiCapturing) {
                 console.log("multiCapture watchdog: timed out with", root.pendingCaptureCount, "pending,", root.allScreenPaths.length, "succeeded");
@@ -482,7 +481,7 @@ Scope {
                 if (root.allScreenPaths.length === 0) {
                     root.notify("Screenshot Failed", "Capture timed out, please try again.", "critical", "dialog-error", "Screenshot");
                     if (root.captureDoneCallback) {
-                        const cb = root.captureDoneCallback;
+                        const cb                 = root.captureDoneCallback;
                         root.captureDoneCallback = null;
                         cb("");
                     }
@@ -492,19 +491,20 @@ Scope {
             }
         }
     }
+
     Variants {
         id: multiCaptureVariants
 
         model: root.isMultiCapturing ? Quickshell.screens : []
-
         delegate: PanelWindow {
             id: multiCaptureWindow
 
             required property ShellScreen modelData
-            property bool multiDone: false
-            property int multiGrabRetries: 0
 
-            function multiDoGrab() {
+            property bool                 multiDone: false
+            property int                  multiGrabRetries: 0
+
+            function                      multiDoGrab() {
                 if (multiCaptureWindow.width <= 0 || multiCaptureWindow.height <= 0) {
                     if (multiCaptureWindow.multiGrabRetries < 20) {
                         multiCaptureWindow.multiGrabRetries++;
@@ -547,9 +547,9 @@ Scope {
 
                 interval: 50
                 repeat: false
-
                 onTriggered: multiCaptureWindow.multiDoGrab()
             }
+
             ScreencopyView {
                 id: multiScreencopyView
 
@@ -557,7 +557,6 @@ Scope {
                 captureSource: modelData
                 live: false
                 paintCursor: false
-
                 onHasContentChanged: {
                     if (!hasContent || multiCaptureWindow.multiDone)
                         return;
@@ -567,16 +566,17 @@ Scope {
             }
         }
     }
+
     Variants {
         id: selectionOverlay
 
         model: root.selectionOpen ? Quickshell.screens : []
-
         delegate: PanelWindow {
-            readonly property var frozenBounds: Utils.totalBounds(Quickshell.screens)
             required property ShellScreen modelData
-            readonly property real offsetX: modelData.x
-            readonly property real offsetY: modelData.y
+
+            readonly property var         frozenBounds: Utils.totalBounds(Quickshell.screens)
+            readonly property real        offsetX: modelData.x
+            readonly property real        offsetY: modelData.y
 
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
@@ -592,6 +592,7 @@ Scope {
                 right: true
                 top: true
             }
+
             Image {
                 cache: false
                 fillMode: Image.Pad
@@ -603,10 +604,12 @@ Scope {
                 x: frozenBounds.x - offsetX
                 y: frozenBounds.y - offsetY
             }
+
             Rectangle {
                 anchors.fill: parent
                 color: Qt.alpha(Colours.m3Colors.m3Background, 0.5)
             }
+
             Rectangle {
                 border.color: Colours.m3Colors.m3OnSurface
                 border.width: 2
@@ -622,48 +625,48 @@ Scope {
                     color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.25)
                 }
             }
+
             Item {
                 id: focusCatcher
 
                 anchors.fill: parent
                 focus: root.selectionOpen
-
                 Component.onCompleted: forceActiveFocus()
                 Keys.onEscapePressed: {
-                    root.selectionOpen = false;
+                    root.selectionOpen  = false;
                     root.frozenImageUrl = "";
                 }
             }
+
             Timer {
                 id: overlayWatchdog
 
                 interval: 30000
                 repeat: false
                 running: root.selectionOpen
-
                 onTriggered: {
                     console.log("selectionOverlay watchdog: force-closing frozen overlay");
-                    root.selectionOpen = false;
+                    root.selectionOpen  = false;
                     root.frozenImageUrl = "";
                 }
             }
+
             MouseArea {
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
                 anchors.fill: parent
                 cursorShape: Qt.CrossCursor
-
                 onPositionChanged: e => {
                     if (root.selectionDragging)
                         root.selectionEnd = Qt.point(e.x + offsetX, e.y + offsetY);
                 }
                 onPressed: e => {
                     if (e.button === Qt.RightButton) {
-                        root.selectionOpen = false;
+                        root.selectionOpen  = false;
                         root.frozenImageUrl = "";
                         return;
                     }
-                    root.selectionStart = Qt.point(e.x + offsetX, e.y + offsetY);
-                    root.selectionEnd = root.selectionStart;
+                    root.selectionStart    = Qt.point(e.x + offsetX, e.y + offsetY);
+                    root.selectionEnd      = root.selectionStart;
                     root.selectionDragging = true;
                 }
                 onReleased: e => {
@@ -671,24 +674,24 @@ Scope {
                         return;
                     root.selectionDragging = false;
 
-                    const selectionMinX = Math.min(root.selectionStart.x, root.selectionEnd.x);
-                    const selectionMinY = Math.min(root.selectionStart.y, root.selectionEnd.y);
-                    const selectionWidth = Math.abs(root.selectionEnd.x - root.selectionStart.x);
-                    const selectionHeight = Math.abs(root.selectionEnd.y - root.selectionStart.y);
+                    const selectionMinX    = Math.min(root.selectionStart.x, root.selectionEnd.x);
+                    const selectionMinY    = Math.min(root.selectionStart.y, root.selectionEnd.y);
+                    const selectionWidth   = Math.abs(root.selectionEnd.x - root.selectionStart.x);
+                    const selectionHeight  = Math.abs(root.selectionEnd.y - root.selectionStart.y);
 
                     if (selectionWidth < 5 || selectionHeight < 5) {
-                        root.selectionOpen = false;
+                        root.selectionOpen  = false;
                         root.frozenImageUrl = "";
                         return;
                     }
 
                     // Crop coords are relative to the composite's min corner
-                    const bounds = Utils.totalBounds(Quickshell.screens);
-                    const scale = root.regionScale;
-                    const cropX = Math.round((selectionMinX - bounds.x) * scale);
-                    const cropY = Math.round((selectionMinY - bounds.y) * scale);
-                    const cropWidth = Math.round(selectionWidth * scale);
-                    const cropHeight = Math.round(selectionHeight * scale);
+                    const bounds      = Utils.totalBounds(Quickshell.screens);
+                    const scale       = root.regionScale;
+                    const cropX       = Math.round((selectionMinX - bounds.x) * scale);
+                    const cropY       = Math.round((selectionMinY - bounds.y) * scale);
+                    const cropWidth   = Math.round(selectionWidth * scale);
+                    const cropHeight  = Math.round(selectionHeight * scale);
 
                     cropEngine.active = true;
                     cropEngine.item.doCrop(root.frozenImageUrl, cropX, cropY, cropWidth, cropHeight);
@@ -696,26 +699,26 @@ Scope {
             }
         }
     }
+
     Timer {
         id: delayTimer
 
         property var pendingFn: null
 
         repeat: false
-
         onTriggered: {
             if (pendingFn) {
-                const fn = pendingFn;
+                const fn  = pendingFn;
                 pendingFn = null;
                 fn();
             }
         }
     }
+
     LazyLoader {
         id: windowPicker
 
         activeAsync: root.windowPickerOpen
-
         component: PanelWindow {
             id: pickerWindow
 
@@ -729,19 +732,19 @@ Scope {
             // Window boxes use global at[] coords: pin the overlay to the
             // focused monitor's screen or they land on the wrong output when
             // the external monitor is active.
-            property var pickerScreen: Quickshell.screens.find(s => s.name === Hypr.focusedMonitor?.name) ?? Quickshell.screens[0]
+            property var  pickerScreen: Quickshell.screens.find(s => s.name === Hypr.focusedMonitor?.name) ?? Quickshell.screens[0]
             property real pickerScreenX: pickerScreen?.x ?? 0
             property real pickerScreenY: pickerScreen?.y ?? 0
 
-            function recalcPickerTransform() {
-                let minX = Infinity, minY = Infinity;
-                let maxX = -Infinity, maxY = -Infinity;
+            function      recalcPickerTransform() {
+                let minX        = Infinity, minY = Infinity;
+                let maxX        = -Infinity, maxY = -Infinity;
                 const toplevels = Hypr.toplevels;
                 for (let i = 0; i < toplevels.length; i++) {
                     if (Hypr.toplevelWorkspaceAddress(toplevels[i]) !== Hypr.activeWsAddress)
                         continue;
-                    const ipc = toplevels[i].lastIpcObject;
-                    const at = ipc?.at;
+                    const ipc  = toplevels[i].lastIpcObject;
+                    const at   = ipc?.at;
                     const size = ipc?.size;
                     if (!at || !size || size[0] <= 0 || size[1] <= 0)
                         continue;
@@ -751,28 +754,28 @@ Scope {
                     // boxes map 1:1 onto this overlay's output, not the primary.
                     const lx = at[0] - pickerScreenX;
                     const ly = at[1] - pickerScreenY;
-                    minX = Math.min(minX, lx);
-                    minY = Math.min(minY, ly);
-                    maxX = Math.max(maxX, lx + size[0]);
-                    maxY = Math.max(maxY, ly + size[1]);
+                    minX     = Math.min(minX, lx);
+                    minY     = Math.min(minY, ly);
+                    maxX     = Math.max(maxX, lx + size[0]);
+                    maxY     = Math.max(maxY, ly + size[1]);
                 }
                 if (minX === Infinity) {
                     pickerOriginX = 0;
                     pickerOriginY = 0;
-                    pickerScale = 1;
+                    pickerScale   = 1;
                     return;
                 }
-                const margin = Appearance.margin.normal * 2;
-                const spanWidth = Math.max(1, maxX - minX);
+                const margin     = Appearance.margin.normal * 2;
+                const spanWidth  = Math.max(1, maxX - minX);
                 const spanHeight = Math.max(1, maxY - minY);
                 // Never upscale — ordinary layouts keep 1:1 geometry
-                pickerScale = Math.min(1, Math.max(1, pickerWindow.width - margin * 2) / spanWidth, Math.max(1, pickerWindow.height - margin * 2) / spanHeight);
-                pickerOriginX = minX;
-                pickerOriginY = minY;
+                pickerScale      = Math.min(1, Math.max(1, pickerWindow.width - margin * 2) / spanWidth, Math.max(1, pickerWindow.height - margin * 2) / spanHeight);
+                pickerOriginX    = minX;
+                pickerOriginY    = minY;
             }
 
             // True when the window rect intersects this overlay's screen.
-            function windowOverlapsPicker(at, size): bool {
+            function      windowOverlapsPicker(at, size): bool {
                 if (!at || !size || size[0] <= 0 || size[1] <= 0)
                     return false;
                 const lx = at[0] - pickerScreenX;
@@ -788,7 +791,6 @@ Scope {
             exclusionMode: ExclusionMode.Ignore
             screen: pickerScreen
             visible: true
-
             Component.onCompleted: {
                 recalcPickerTransform();
                 pickerRefreshTimer.start();
@@ -800,37 +802,37 @@ Scope {
                 right: true
                 top: true
             }
+
             Item {
                 id: pickerFocus
 
                 anchors.fill: parent
                 focus: true
-
                 Component.onCompleted: forceActiveFocus()
                 Keys.onEscapePressed: {
                     root.pickForRecordCallback = null;
-                    root.windowPickerOpen = false;
+                    root.windowPickerOpen      = false;
                 }
             }
+
             Rectangle {
                 anchors.fill: parent
                 color: Qt.alpha(Colours.m3Colors.m3Background, 0.6)
 
                 MouseArea {
                     anchors.fill: parent
-
                     onClicked: {
                         root.pickForRecordCallback = null;
-                        root.windowPickerOpen = false;
+                        root.windowPickerOpen      = false;
                     }
                 }
             }
+
             Timer {
                 id: pickerRefreshTimer
 
                 interval: 400
                 repeat: false
-
                 onTriggered: {
                     Hyprland.refreshToplevels();
                     pickerRecalcTimer.restart();
@@ -840,14 +842,15 @@ Scope {
             // Geometry arrives over IPC after refreshToplevels(); recalc on a
             // short delay as well as on toplevel changes so the picker never
             // maps windows with stale at/size.
+
             Timer {
                 id: pickerRecalcTimer
 
                 interval: 150
                 repeat: false
-
                 onTriggered: recalcPickerTransform()
             }
+
             Connections {
                 function onToplevelsChanged() {
                     pickerRecalcTimer.restart();
@@ -855,6 +858,7 @@ Scope {
 
                 target: Hypr
             }
+
             Connections {
                 function onRawEvent(event) {
                     const eventName = event.name;
@@ -864,16 +868,17 @@ Scope {
 
                 target: Hyprland
             }
+
             Repeater {
                 id: pickerRepeater
 
                 model: Hypr.toplevels
-
                 delegate: Rectangle {
                     id: pickerDelegate
 
-                    readonly property var ipc: modelData.lastIpcObject
                     required property HyprlandToplevel modelData
+
+                    readonly property var              ipc: modelData.lastIpcObject
 
                     border.color: pickerMouse.containsMouse ? Colours.m3Colors.m3OnPrimary : "transparent"
                     border.width: 3
@@ -900,6 +905,7 @@ Scope {
                             source: Quickshell.iconPath(DesktopEntries.heuristicLookup(modelData.lastIpcObject?.class)?.icon, "image-missing")
                             width: 32
                         }
+
                         StyledText {
                             anchors.horizontalCenter: parent.horizontalCenter
                             color: Colours.m3Colors.m3OnPrimary
@@ -912,6 +918,7 @@ Scope {
                             wrapMode: Text.WordWrap
                         }
                     }
+
                     Rectangle {
                         color: Qt.alpha(Colours.m3Colors.m3Scrim, 0.6)
                         height: Appearance.spacing.large
@@ -923,6 +930,7 @@ Scope {
                             left: parent.left
                             right: parent.right
                         }
+
                         StyledText {
                             anchors.centerIn: parent
                             color: Colours.m3Colors.m3OnSurface
@@ -930,40 +938,40 @@ Scope {
                             text: Math.round(pickerDelegate.x) + "," + Math.round(pickerDelegate.y) + "  " + Math.round(pickerDelegate.width) + "×" + Math.round(pickerDelegate.height)
                         }
                     }
+
                     MouseArea {
                         id: pickerMouse
 
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
-
                         onClicked: {
                             if (root.pickForRecordCallback) {
-                                const appId = modelData.lastIpcObject?.class;
-                                const cb = root.pickForRecordCallback;
+                                const appId                = modelData.lastIpcObject?.class;
+                                const cb                   = root.pickForRecordCallback;
                                 root.pickForRecordCallback = null;
-                                root.windowPickerOpen = false;
+                                root.windowPickerOpen      = false;
                                 cb(appId);
                                 return;
                             }
-                            const ipc = modelData.lastIpcObject;
-                            const size = ipc?.size ?? [0, 0];
-                            const at = ipc?.at ?? [0, 0];
+                            const ipc                    = modelData.lastIpcObject;
+                            const size                   = ipc?.size ?? [0, 0];
+                            const at                     = ipc?.at ?? [0, 0];
                             // Capture on the window's own output: the focused
                             // workspace monitor is wrong when the window lives
                             // on the other screen.
-                            const cx = at[0] + size[0] / 2;
-                            const cy = at[1] + size[1] / 2;
-                            const workspace = Hypr.focusedWorkspace;
-                            const monitor = workspace?.monitor;
-                            const screen = Quickshell.screens.find(s => cx >= s.x && cx < s.x + s.width && cy >= s.y && cy < s.y + s.height) ?? (monitor ? (Quickshell.screens.find(s => s.name === monitor.name) ?? Quickshell.screens[0]) : Quickshell.screens[0]);
-                            root.pendingAction = root.pendingWindowAction;
-                            captureLoader.targetScreen = screen;
+                            const cx                     = at[0] + size[0] / 2;
+                            const cy                     = at[1] + size[1] / 2;
+                            const workspace              = Hypr.focusedWorkspace;
+                            const monitor                = workspace?.monitor;
+                            const screen                 = Quickshell.screens.find(s => cx >= s.x && cx < s.x + s.width && cy >= s.y && cy < s.y + s.height) ?? (monitor ? (Quickshell.screens.find(s => s.name === monitor.name) ?? Quickshell.screens[0]) : Quickshell.screens[0]);
+                            root.pendingAction           = root.pendingWindowAction;
+                            captureLoader.targetScreen   = screen;
                             captureLoader.targetToplevel = modelData.wayland;
-                            captureLoader.targetWidth = size[0] || 1;
-                            captureLoader.targetHeight = size[1] || 1;
-                            captureLoader.active = true;
-                            root.windowPickerOpen = false;
+                            captureLoader.targetWidth    = size[0] || 1;
+                            captureLoader.targetHeight   = size[1] || 1;
+                            captureLoader.active         = true;
+                            root.windowPickerOpen        = false;
                         }
                     }
                 }

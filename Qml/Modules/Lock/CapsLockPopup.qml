@@ -17,7 +17,6 @@ Item {
     opacity: 0
     scale: 0.92
     visible: opacity > 0
-
     Behavior on opacity {
         NAnim {
             duration: Appearance.animations.durations.normal
@@ -43,6 +42,7 @@ Item {
             level: 3
             radius: parent.radius
         }
+
         Row {
             id: popupContent
 
@@ -55,6 +55,7 @@ Item {
                 font.weight: Font.Medium
                 text: qsTr("Caps Lock")
             }
+
             Icon {
                 color: root.capsLockOn ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Tertiary
                 font.pixelSize: Appearance.fonts.size.extraLarge
@@ -62,22 +63,23 @@ Item {
             }
         }
     }
+
     Timer {
         id: capslockPopupTimer
 
         interval: 2000
         repeat: false
-
         onTriggered: {
             root.opacity = 0;
-            root.scale = 0.92;
+            root.scale   = 0.92;
         }
     }
+
     Connections {
         function onCapsLockChanged() {
             root.capsLockOn = KeylockState.capsLock;
-            root.opacity = 1;
-            root.scale = 1;
+            root.opacity    = 1;
+            root.scale      = 1;
             capslockPopupTimer.restart();
         }
 

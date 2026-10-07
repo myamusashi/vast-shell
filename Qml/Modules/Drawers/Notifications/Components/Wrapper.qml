@@ -10,19 +10,20 @@ import qs.Services
 Item {
     id: root
 
-    property alias contentLayout: contentLayout
-    property alias iconLayout: iconLayout
-    property bool isPopup: false
-    property alias mouseArea: delegateMouseNotif
     required property var notif
-    property real timerDuration: 3000
-    property real timerRemaining: timerDuration
-    property real timerStartTime: 0
 
-    signal entered
-    signal exited
+    property alias        contentLayout: contentLayout
+    property alias        iconLayout: iconLayout
+    property bool         isPopup: false
+    property alias        mouseArea: delegateMouseNotif
+    property real         timerDuration: 3000
+    property real         timerRemaining: timerDuration
+    property real         timerStartTime: 0
 
-    function pauseTimer() {
+    signal                entered
+    signal                exited
+
+    function              pauseTimer() {
         if (timer.running) {
             timerRemaining = Math.max(0, timerRemaining - (Date.now() - timerStartTime));
             timer.stop();
@@ -30,14 +31,14 @@ Item {
         if (borderAnimation.animation.running)
             borderAnimation.animation.pause();
     }
-    function resetTimer() {
+    function              resetTimer() {
         timerRemaining = timerDuration;
         timer.interval = timerDuration;
         timerStartTime = Date.now();
         timer.restart();
         borderAnimation.animation.restart();
     }
-    function resumeTimer() {
+    function              resumeTimer() {
         if (!timer.running && timerRemaining > 0) {
             timer.interval = timerRemaining;
             timerStartTime = Date.now();
@@ -51,7 +52,6 @@ Item {
     implicitHeight: innerRow.implicitHeight + 20
     implicitWidth: parent.width
     x: parent.width
-
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.emphasized
@@ -64,7 +64,6 @@ Item {
             easing.bezierCurve: Appearance.animations.curves.emphasized
         }
     }
-
     Component.onCompleted: {
         slideInAnim.start();
         timerStartTime = Date.now();
@@ -90,9 +89,9 @@ Item {
         id: timer
 
         interval: root.timerDuration
-
         onTriggered: slideOutAnim.start()
     }
+
     NAnim {
         id: slideInAnim
 
@@ -102,9 +101,9 @@ Item {
         property: "x"
         target: root
         to: 0
-
         onFinished: borderAnimation.animation.start()
     }
+
     NAnim {
         id: slideOutAnim
 
@@ -113,13 +112,13 @@ Item {
         property: "x"
         target: root
         to: root.parent.width
-
         onFinished: {
             if (root.isPopup)
                 root.notif.popup = false;
             root.notif.unlock(root);
         }
     }
+
     NAnim {
         id: swipeOutAnim
 
@@ -127,12 +126,12 @@ Item {
         easing.bezierCurve: Appearance.animations.curves.standardAccel
         property: "x"
         target: root
-
         onFinished: {
             root.notif.unlock(root);
             root.notif.close();
         }
     }
+
     StyledRect {
         id: wrapperRect
 
@@ -143,9 +142,11 @@ Item {
             fill: parent
             leftMargin: 10
         }
+
         HoverHandler {
             id: notifHover
         }
+
         Connections {
             function onHoveredChanged() {
                 if (notifHover.hovered) {
@@ -157,6 +158,7 @@ Item {
 
             target: notifHover
         }
+
         Connections {
             function onReplyFocusedChanged() {
                 if (contentLayout.replyFocused)
@@ -167,6 +169,7 @@ Item {
 
             target: contentLayout
         }
+
         H.MArea {
             id: delegateMouseNotif
 
@@ -181,7 +184,6 @@ Item {
                 maximumX: root.width
                 minimumX: -root.width
                 target: root
-
                 onActiveChanged: {
                     if (drag.active) {
                         root.pauseTimer();
@@ -198,6 +200,7 @@ Item {
                 }
             }
         }
+
         Row {
             id: innerRow
 
@@ -211,11 +214,13 @@ Item {
                 top: parent.top
                 topMargin: Appearance.margin.small
             }
+
             NotifIcon {
                 id: iconLayout
 
                 modelData: root.notif
             }
+
             Content {
                 id: contentLayout
 
@@ -224,6 +229,7 @@ Item {
             }
         }
     }
+
     Rectangle {
         anchors.fill: wrapperRect
         color: "transparent"
@@ -234,6 +240,7 @@ Item {
             width: 2.0
         }
     }
+
     BorderProgress {
         id: borderAnimation
 

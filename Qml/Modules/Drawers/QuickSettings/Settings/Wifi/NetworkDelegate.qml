@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
 import Quickshell.Networking
+import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
@@ -17,9 +17,10 @@ WrapperRectangle {
 
     required property var network
     required property var pskDialog
-    property color target: network.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
 
-    function tryConnect() {
+    property color        target: network.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+
+    function              tryConnect() {
         WifiUtils.tryConnect(root.network, net => root.pskDialog.show(net));
     }
 
@@ -33,11 +34,13 @@ WrapperRectangle {
         host: root
         target: root.target
     }
+
     TapHandler {
         id: networkTap
 
         onTapped: root.tryConnect()
     }
+
     Connections {
         function onConnectionFailed(reason) {
             WifiUtils.handleConnectionFailed(root.network, reason, net => root.pskDialog.show(net));
@@ -45,6 +48,7 @@ WrapperRectangle {
 
         target: root.network
     }
+
     RowLayout {
         spacing: Appearance.spacing.small
 
@@ -58,6 +62,7 @@ WrapperRectangle {
                 font.pixelSize: Appearance.fonts.size.large * 1.5
                 icon: "signal_wifi_0_bar"
             }
+
             Icon {
                 anchors.fill: parent
                 color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
@@ -65,6 +70,7 @@ WrapperRectangle {
                 icon: WifiUtils.iconFor(root.network?.signalStrength ?? 0, root.network ? !root.network.known : false)
             }
         }
+
         ColumnLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small * 0.5
@@ -76,12 +82,14 @@ WrapperRectangle {
                 font.pixelSize: Appearance.fonts.size.normal
                 text: root.network?.name ?? ""
             }
+
             StyledText {
                 color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small
                 text: ConnectionState.toString(root.network.state)
             }
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -90,9 +98,9 @@ WrapperRectangle {
             icon.size: Appearance.fonts.size.large * 1.5
             implicitHeight: 28
             implicitWidth: 28
-
             onClicked: root.network?.connected ? root.network.disconnect() : root.tryConnect()
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -101,7 +109,6 @@ WrapperRectangle {
             icon.size: Appearance.fonts.size.large * 1.5
             implicitHeight: 28
             implicitWidth: 28
-
             onClicked: root.network?.forget()
         }
     }

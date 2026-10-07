@@ -23,6 +23,7 @@ StyledRect {
             font.pixelSize: Appearance.fonts.size.large
             icon: "schedule"
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
@@ -30,11 +31,11 @@ StyledRect {
             text: Qt.formatDateTime(Time?.date, "h:mm AP")
         }
     }
+
     MArea {
         anchors.fill: clock
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-
         onClicked: GlobalStates.isCalendarOpen = !GlobalStates.isCalendarOpen
     }
 }

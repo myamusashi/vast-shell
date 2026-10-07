@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-
 import Quickshell.Bluetooth
 
 import qs.Components.Base
@@ -29,6 +28,7 @@ SettingsPageBase {
             visible: !BluetoothServices.adapterAvailable
             wrapMode: Text.WordWrap
         }
+
         SettingRow {
             description: qsTr("Turn the Bluetooth adapter on or off.")
             label: qsTr("Enable Bluetooth:")
@@ -39,10 +39,10 @@ SettingsPageBase {
                 Layout.preferredWidth: 52
                 checked: BluetoothServices.adapterEnabled
                 enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
-
                 onToggled: BluetoothServices.setEnabled(checked)
             }
         }
+
         SettingRow {
             description: qsTr("Allow nearby devices to discover this machine.")
             label: qsTr("Discoverable:")
@@ -52,10 +52,10 @@ SettingsPageBase {
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 52
                 checked: BluetoothServices.discoverable
-
                 onToggled: BluetoothServices.setDiscoverable(checked)
             }
         }
+
         SettingRow {
             description: qsTr("Allow nearby devices to request pairing.")
             label: qsTr("Pairable:")
@@ -65,10 +65,10 @@ SettingsPageBase {
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 52
                 checked: BluetoothServices.pairable
-
                 onToggled: BluetoothServices.setPairable(checked)
             }
         }
+
         StyledText {
             Layout.fillWidth: true
             color: Colours.m3Colors.m3Error
@@ -77,18 +77,21 @@ SettingsPageBase {
             visible: BluetoothServices.adapterBlocked
             wrapMode: Text.WordWrap
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("Enabling…")
             visible: BluetoothServices.adapterAvailable && BluetoothServices.adapter && BluetoothServices.adapter.state === BluetoothAdapterState.Enabling // qmllint disable
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("Disabling…")
             visible: BluetoothServices.adapterAvailable && BluetoothServices.adapter && BluetoothServices.adapter.state === BluetoothAdapterState.Disabling // qmllint disable
         }
+
         GridLayout {
             columnSpacing: Appearance.spacing.normal
             columns: 2
@@ -106,7 +109,7 @@ SettingsPageBase {
                     text: {
                         if (!BluetoothServices.adapter)
                             return "—";
-                        const id = BluetoothServices.adapter.adapterId || "";
+                        const id   = BluetoothServices.adapter.adapterId || "";
                         const name = BluetoothServices.adapter.name || "";
                         if (name && id)
                             return `${name} (${id})`;
@@ -114,6 +117,7 @@ SettingsPageBase {
                     }
                 }
             }
+
             SettingRow {
                 description: qsTr("Bluetooth device address.")
                 label: qsTr("Address")
@@ -129,6 +133,7 @@ SettingsPageBase {
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Paired devices")
         visible: BluetoothServices.adapterEnabled
@@ -144,18 +149,17 @@ SettingsPageBase {
                 text: qsTr("No paired devices")
                 visible: pairedRepeater.count === 0
             }
+
             Repeater {
                 id: pairedRepeater
 
                 model: BluetoothServices.pairedDevices
-
                 delegate: BluetoothDeviceDelegate {
                     required property var modelData
 
                     device: modelData
                     showBlockAction: true
                     showForgetAction: true
-
                     onBlockToggled: modelData.blocked = !modelData.blocked
                     onForgetAction: modelData.forget()
                     onPrimaryAction: modelData.connected ? modelData.disconnect() : modelData.connect()
@@ -163,6 +167,7 @@ SettingsPageBase {
             }
         }
     }
+
     SettingsCard {
         title: ""
         visible: BluetoothServices.adapterEnabled
@@ -171,6 +176,7 @@ SettingsPageBase {
             Layout.fillWidth: true
             condition: BluetoothServices.isDiscovering
         }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small
@@ -182,6 +188,7 @@ SettingsPageBase {
                 font.weight: Font.DemiBold
                 text: qsTr("Available devices")
             }
+
             FloatingButton {
                 backgroundRadius: Appearance.rounding.small
                 color: "transparent"
@@ -190,7 +197,6 @@ SettingsPageBase {
                 icon.name: "bluetooth_searching"
                 implicitHeight: 32
                 implicitWidth: 32
-
                 onClicked: {
                     if (BluetoothServices.isDiscovering)
                         BluetoothServices.setDiscovering(false);
@@ -199,7 +205,9 @@ SettingsPageBase {
                 }
             }
         }
+
         ColumnLayout {
+
             StyledText {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -209,6 +217,7 @@ SettingsPageBase {
                 visible: availableRepeater.count === 0 && !BluetoothServices.isDiscovering
                 wrapMode: Text.WordWrap
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignHCenter
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -216,17 +225,16 @@ SettingsPageBase {
                 text: qsTr("Searching for devices…")
                 visible: availableRepeater.count === 0 && BluetoothServices.isDiscovering
             }
+
             Repeater {
                 id: availableRepeater
 
                 model: BluetoothServices.availableDevices
-
                 delegate: BluetoothDeviceDelegate {
                     required property var modelData
 
                     device: modelData
                     showPairActions: true
-
                     onPrimaryAction: modelData.pair()
                     onSecondaryAction: modelData.cancelPair()
                 }

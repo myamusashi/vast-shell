@@ -11,35 +11,36 @@ import qs.Services
 Singleton {
     id: root
 
+    property string          band: ""
+    property int             channel: 6
+    property string          errorMessage: ""
+
     enum Status {
-        Inactive = 0,
-        Starting = 1,
-        Active = 2,
-        Stopping = 3,
+        Inactive    = 0,
+        Starting    = 1,
+        Active      = 2,
+        Stopping    = 3,
         ErrorStatus = 4
     }
 
-    property string band: ""
-    property int channel: 6
-    property string errorMessage: ""
-
     // prefer a active device as hotspot interface
     readonly property string hotspotInterface: wifiDevicePicker.hotspotInterface
-    readonly property bool isActive: status === Hotspot.Status.Active
-    property string password: ""
-    property string ssid: ""
-    property int status: Hotspot.Status.Inactive
+    readonly property bool   isActive: status === Hotspot.Status.Active
+
+    property string          password: ""
+    property string          ssid: ""
+    property int             status: Hotspot.Status.Inactive
 
     // Prefer a connected ethernet device as upstream
     readonly property string upstreamInterface: SystemUsage.allEthernetDevices
 
-    function setError(msg) {
+    function                 setError(msg) {
         errorMessage = msg;
-        status = Hotspot.Status.ErrorStatus;
+        status       = Hotspot.Status.ErrorStatus;
         console.warn("[Hotspot] Error:", msg);
         ToastService.show(qsTr("[Hotspot] Error: %1").arg(msg), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
     }
-    function start() {
+    function                 start() {
         if (status === Hotspot.Status.Active || status === Hotspot.Status.Starting)
             return;
         if (!hotspotInterface) {
@@ -48,23 +49,23 @@ Singleton {
         }
 
         // Apply defaults at start time, not at bind time
-        const ssid = ssid || "Quickshell";
-        const password = password || "password123";
-        const band = band || "bg";
-        const channel = channel || 6;
+        const ssid            = ssid || "Quickshell";
+        const password        = password || "password123";
+        const band            = band || "bg";
+        const channel         = channel || 6;
 
-        status = Hotspot.Status.Starting;
-        errorMessage = "";
+        status                = Hotspot.Status.Starting;
+        errorMessage          = "";
         createHotspot.command = ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${password}" ` + `wifi.band ${band} ` + `wifi.channel ${channel}`];
         createHotspot.running = true;
     }
-    function stop() {
+    function                 stop() {
         if (status !== Hotspot.Status.Active)
             return;
-        status = Hotspot.Status.Stopping;
+        status              = Hotspot.Status.Stopping;
         stopHotspot.running = true;
     }
-    function toggle() {
+    function                 toggle() {
         isActive ? stop() : start();
     }
 
@@ -88,21 +89,21 @@ Singleton {
         }
 
         model: Networking.devices
-
         delegate: QtObject {
             // qmllint enable
-            readonly property string ifname: isWifi ? (modelData.name ?? "") : ""
+            readonly property string        ifname: isWifi ? (modelData.name ?? "") : ""
 
             // qmllint disable
-            readonly property bool isWifi: modelData.type === DeviceType.Wifi
             required property NetworkDevice modelData
+
+            readonly property bool          isWifi: modelData.type === DeviceType.Wifi
         }
     }
+
     Process {
         id: createHotspot
 
         command: []
-
         stderr: StdioCollector {
             id: stdCreateHotspot
         }
@@ -117,11 +118,11 @@ Singleton {
             startHotspot.running = true;
         }
     }
+
     Process {
         id: startHotspot
 
         command: ["nmcli", "con", "up", "Hotspot"]
-
         stderr: StdioCollector {
             id: stdStartHotspot
         }
@@ -138,11 +139,11 @@ Singleton {
             ToastService.show(qsTr("[Hotspot] Active on %1 | SSID: %2").arg(root.hotspotInterface).arg(root.ssid), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         }
     }
+
     Process {
         id: stopHotspot
 
         command: ["bash", "-c", "nmcli con down Hotspot; nmcli con delete Hotspot"]
-
         stderr: StdioCollector {
             id: stdStopHotspot
         }
@@ -159,13 +160,12 @@ Singleton {
             ToastService.show(qsTr("Hotspot stopped"), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
         }
     }
+
     Process {
         id: queryStatus
 
         command: ["nmcli", "-t", "-f", "NAME,STATE", "con", "show", "--active"]
-
-        stderr: StdioCollector {
-        }
+        stderr: StdioCollector {}
         stdout: StdioCollector {
             id: stdQueryStatus
 

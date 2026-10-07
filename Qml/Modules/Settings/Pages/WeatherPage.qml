@@ -22,10 +22,10 @@ SettingsPageBase {
                 placeHolderText: "e.g., -6.200000"
                 text: Configs.weather.latitude
                 toggleButtonVisible: false
-
                 onTextChanged: Configs.weather.latitude = text
             }
         }
+
         SettingRow {
             description: qsTr("Longitude of your location for weather and astronomy data.")
             label: qsTr("Longitude:")
@@ -35,11 +35,11 @@ SettingsPageBase {
                 placeHolderText: "e.g., 106.816666"
                 text: Configs.weather.longitude
                 toggleButtonVisible: false
-
                 onTextChanged: Configs.weather.longitude = text
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Astronomy API")
 
@@ -52,11 +52,11 @@ SettingsPageBase {
                 placeHolderText: qsTr("Enter your WeatherAPI.com API key")
                 text: Configs.weather.astronomyApiKey
                 toggleButtonVisible: false
-
                 onTextChanged: Configs.weather.astronomyApiKey = text
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Sync & Overview")
 
@@ -66,10 +66,10 @@ SettingsPageBase {
 
             StyledSwitch {
                 checked: Configs.weather.enableQuickSummary
-
                 onCheckedChanged: Configs.weather.enableQuickSummary = checked
             }
         }
+
         SettingRow {
             description: qsTr("Interval for refreshing weather data, in seconds.")
             label: qsTr("Weather Reload Time (s):")
@@ -83,11 +83,11 @@ SettingsPageBase {
                     return qsTr("(%1 min)").arg(mins);
                 }
             }
+
             StyledTextInput {
                 Layout.preferredWidth: 200
                 text: (Configs.weather.reloadTime / 1000).toString()
                 toggleButtonVisible: false
-
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0) {

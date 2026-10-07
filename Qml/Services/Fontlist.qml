@@ -7,11 +7,12 @@ Singleton {
     id: root
 
     readonly property int fontCount: fontListModel.count
-    property ListModel fontListModel: ListModel {
+
+    property ListModel    fontListModel: ListModel {
         id: fontListModel
     }
 
-    function indexOfFont(familyName) {
+    function              indexOfFont(familyName) {
         for (let i = 0; i < fontListModel.count; i++)
             if (fontListModel.get(i).name === familyName)
                 return i;

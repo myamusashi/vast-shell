@@ -1,10 +1,11 @@
 pragma ComponentBehavior: Bound
 
-import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
 import Quickshell.Services.Mpris
+import Quickshell.Widgets
+import Qt5Compat.GraphicalEffects
+import Vast.Lyrics
 
 import qs.Core.Configs
 import qs.Core.States
@@ -12,7 +13,6 @@ import qs.Core.Utils
 import qs.Components.Base
 import qs.Components.Button
 import qs.Services
-import Vast.Lyrics
 
 StyledRect {
     id: mediaPlayerRect
@@ -25,8 +25,9 @@ StyledRect {
     readonly property color dynSurface: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.surface : Colours.m3Colors.m3Surface
     readonly property color dynSurfaceVariant: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.surfaceVariant : Colours.m3Colors.m3SurfaceVariant
     readonly property color dynTertiary: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.tertiary : Colours.m3Colors.m3Tertiary
-    property alias mediaLayout: mediaLayout
-    property var trackArtColors: TrackArt.colors
+
+    property alias          mediaLayout: mediaLayout
+    property var            trackArtColors: TrackArt.colors
 
     Layout.alignment: Qt.AlignVCenter
     color: GlobalStates.drawerColors
@@ -40,6 +41,7 @@ StyledRect {
         level: 1
         radius: parent.radius
     }
+
     ColumnLayout {
         id: mediaLayout
 
@@ -51,6 +53,7 @@ StyledRect {
             right: parent.right
             top: parent.top
         }
+
         RowLayout {
             id: mediaRow
 
@@ -67,6 +70,7 @@ StyledRect {
                     font.pixelSize: Appearance.fonts.size.large
                     icon: "music_note"
                 }
+
                 Image {
                     anchors.fill: parent
                     asynchronous: true
@@ -75,6 +79,7 @@ StyledRect {
                     visible: TrackArt.cachedPath !== ""
                 }
             }
+
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 0
@@ -87,6 +92,7 @@ StyledRect {
                     font.weight: Font.DemiBold
                     text: Players.active?.trackTitle ?? ""
                 }
+
                 StyledText {
                     Layout.fillWidth: true
                     color: mediaPlayerRect.dynOnSurfaceVariant
@@ -95,6 +101,7 @@ StyledRect {
                     text: Players.active?.trackArtist ?? ""
                 }
             }
+
             FloatingButton {
                 backgroundRadius: Appearance.rounding.normal
                 icon.color: mediaPlayerRect.dynSurface
@@ -102,9 +109,9 @@ StyledRect {
                 icon.size: Appearance.fonts.size.large
                 implicitHeight: 24
                 implicitWidth: 24
-
                 onClicked: Players.active?.previous()
             }
+
             FloatingButton {
                 backgroundRadius: Appearance.rounding.normal
                 icon.color: mediaPlayerRect.dynSurface
@@ -112,9 +119,9 @@ StyledRect {
                 icon.size: Appearance.fonts.size.large
                 implicitHeight: 24
                 implicitWidth: 24
-
                 onClicked: Players.active?.togglePlaying()
             }
+
             FloatingButton {
                 backgroundRadius: Appearance.rounding.normal
                 icon.color: mediaPlayerRect.dynSurface
@@ -122,10 +129,10 @@ StyledRect {
                 icon.size: Appearance.fonts.size.large
                 implicitHeight: 24
                 implicitWidth: 24
-
                 onClicked: Players.active?.next()
             }
         }
+
         Wavy {
             Layout.fillWidth: true
             activeColor: mediaPlayerRect.dynPrimary
@@ -133,21 +140,21 @@ StyledRect {
             implicitHeight: 28
             inactiveColor: mediaPlayerRect.dynSurfaceVariant
             value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
-
             onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
 
             FrameAnimation {
                 running: Players.active?.playbackState === MprisPlaybackState.Playing
-
                 onTriggered: Players.active.positionChanged()
             }
         }
     }
+
     HoverHandler {
         id: mediaHover
 
         cursorShape: Qt.PointingHandCursor
     }
+
     ClippingRectangle {
         id: mediaPopup
 
@@ -164,7 +171,6 @@ StyledRect {
         scale: mediaHover.hovered || popupHovered ? 1 : 0.92
         visible: opacity > 0
         width: parent.width
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.normal
@@ -180,11 +186,13 @@ StyledRect {
         HoverHandler {
             onHoveredChanged: mediaPopup.popupHovered = hovered
         }
+
         Elevation {
             anchors.fill: parent
             level: 3
             radius: parent.radius
         }
+
         Image {
             id: popupCoverArt
 
@@ -195,22 +203,22 @@ StyledRect {
             layer.enabled: true
             source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
             visible: !!Players.active?.trackArtUrl
-
             layer.effect: FastBlur {
                 radius: Configs.generals.coverBlurRadius
                 source: popupCoverArt
             }
         }
+
         Rectangle {
             anchors.fill: parent
             color: mediaPlayerRect.dynSurface
             opacity: 0.82
         }
+
         ColumnLayout {
             id: popupLayout
 
             spacing: Appearance.spacing.small
-
             Component.onCompleted: {
                 const p = Players.active;
                 if (!p?.trackTitle)
@@ -223,6 +231,7 @@ StyledRect {
                 fill: parent
                 margins: Appearance.margin.normal
             }
+
             RowLayout {
                 spacing: Appearance.spacing.normal
 
@@ -240,6 +249,7 @@ StyledRect {
                         source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
                     }
                 }
+
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 0
@@ -252,6 +262,7 @@ StyledRect {
                         font.weight: Font.DemiBold
                         text: Players.active?.trackTitle ?? ""
                     }
+
                     StyledText {
                         Layout.fillWidth: true
                         color: mediaPlayerRect.dynOnSurfaceVariant
@@ -261,6 +272,7 @@ StyledRect {
                     }
                 }
             }
+
             Wavy {
                 Layout.fillWidth: true
                 activeColor: mediaPlayerRect.dynPrimary
@@ -268,15 +280,14 @@ StyledRect {
                 implicitHeight: 24
                 inactiveColor: mediaPlayerRect.dynSurfaceVariant
                 value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
-
                 onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
 
                 FrameAnimation {
                     running: Players.active?.playbackState === MprisPlaybackState.Playing
-
                     onTriggered: Players.active.positionChanged()
                 }
             }
+
             Item {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 80
@@ -290,19 +301,18 @@ StyledRect {
                     currentIndex: LyricsProvider.currentLineIndex
                     model: Lyrics.lines
                     spacing: 4
-
                     delegate: Item {
                         id: lyricDelegate
 
-                        required property int index
+                        required property int  index
+                        required property var  modelData
+
                         readonly property bool isActiveLine: index === LyricsProvider.currentLineIndex
-                        required property var modelData
 
                         implicitHeight: lineText.implicitHeight
                         opacity: isActiveLine ? 1.0 : 0.5
                         scale: isActiveLine ? 1.0 : 0.9
                         width: lyricsListView.width
-
                         Behavior on opacity {
                             NAnim {
                                 duration: 250
@@ -328,7 +338,6 @@ StyledRect {
                             wrapMode: Text.Wrap
                         }
                     }
-
                     onCurrentIndexChanged: {
                         if (currentIndex < 0)
                             positionViewAtBeginning();
@@ -337,6 +346,7 @@ StyledRect {
                     }
                 }
             }
+
             RowLayout {
                 Layout.alignment: Qt.AlignCenter
                 spacing: Appearance.spacing.small
@@ -349,12 +359,12 @@ StyledRect {
                     icon.name: Players.active?.shuffle ? "shuffle_on" : "shuffle"
                     implicitHeight: 24
                     implicitWidth: 24
-
                     onClicked: {
                         if (Players.active)
                             Players.active.shuffle = !Players.active.shuffle;
                     }
                 }
+
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
@@ -363,9 +373,9 @@ StyledRect {
                     icon.size: Appearance.fonts.size.extraLarge
                     implicitHeight: 32
                     implicitWidth: 32
-
                     onClicked: Players.active?.previous()
                 }
+
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
@@ -374,9 +384,9 @@ StyledRect {
                     icon.size: Appearance.fonts.size.extraLarge
                     implicitHeight: 32
                     implicitWidth: 32
-
                     onClicked: Players.active?.togglePlaying()
                 }
+
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
@@ -385,9 +395,9 @@ StyledRect {
                     icon.size: Appearance.fonts.size.extraLarge
                     implicitHeight: 32
                     implicitWidth: 32
-
                     onClicked: Players.active?.next()
                 }
+
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
@@ -396,7 +406,6 @@ StyledRect {
                     icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
                     implicitHeight: 24
                     implicitWidth: 24
-
                     onClicked: {
                         if (!Players.active)
                             return;
@@ -414,6 +423,7 @@ StyledRect {
                     }
                 }
             }
+
             Connections {
                 function onPositionChanged() {
                     if (mediaHover.hovered || mediaPopup.popupHovered) {

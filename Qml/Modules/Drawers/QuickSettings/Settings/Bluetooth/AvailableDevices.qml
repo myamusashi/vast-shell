@@ -23,6 +23,7 @@ ColumnLayout {
             font.weight: Font.DemiBold
             text: qsTr("Available devices")
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.small
             color: "transparent"
@@ -32,7 +33,6 @@ ColumnLayout {
             implicitHeight: 28
             implicitWidth: 28
             spinning: BluetoothServices.isDiscovering
-
             onClicked: {
                 if (BluetoothServices.isDiscovering)
                     BluetoothServices.setDiscovering(false);
@@ -41,21 +41,21 @@ ColumnLayout {
             }
         }
     }
+
     Repeater {
         id: availableRepeater
 
         model: BluetoothServices.availableDevices
-
         delegate: BluetoothDeviceDelegate {
             required property var modelData
 
             device: modelData
             showPairActions: true
-
             onPrimaryAction: modelData.pair()
             onSecondaryAction: modelData.cancelPair()
         }
     }
+
     StyledText {
         Layout.alignment: Qt.AlignHCenter
         color: Colours.m3Colors.m3OnSurfaceVariant
@@ -63,6 +63,7 @@ ColumnLayout {
         text: qsTr("Searching for devices…")
         visible: availableRepeater.count === 0 && BluetoothServices.isDiscovering
     }
+
     StyledText {
         Layout.alignment: Qt.AlignHCenter
         color: Colours.m3Colors.m3OnSurfaceVariant

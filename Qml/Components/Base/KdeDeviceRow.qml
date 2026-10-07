@@ -12,11 +12,12 @@ import qs.Services
 RowLayout {
     id: root
 
-    property bool actionEnabled: true
-    property string actionText: ""
     required property var device
 
-    signal actionTriggered
+    property bool         actionEnabled: true
+    property string       actionText: ""
+
+    signal                actionTriggered
 
     Layout.fillWidth: true
     spacing: Appearance.spacing.normal
@@ -26,6 +27,7 @@ RowLayout {
         font.pixelSize: Appearance.fonts.size.normal
         icon: "smartphone"
     }
+
     ColumnLayout {
         spacing: 2
 
@@ -35,6 +37,7 @@ RowLayout {
             font.weight: Font.DemiBold
             text: root.device?.name ?? ""
         }
+
         StyledText {
             Layout.maximumWidth: 250
             color: Colours.m3Colors.m3OnSurfaceVariant
@@ -43,9 +46,11 @@ RowLayout {
             text: root.device?.id ?? ""
         }
     }
+
     Item {
         Layout.fillWidth: true
     }
+
     ExtendedFloatingButton {
         color: "transparent"
         enabled: root.actionEnabled
@@ -53,7 +58,6 @@ RowLayout {
         text: root.actionText
         textColor: Colours.m3Colors.m3Primary
         visible: root.actionText !== ""
-
         onClicked: root.actionTriggered()
     }
 }

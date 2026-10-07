@@ -22,10 +22,10 @@ SettingsPageBase {
                 stepSize: 10
                 to: 500
                 value: Configs.notification.maximumNotification
-
                 onMoved: Configs.notification.maximumNotification = value
             }
         }
+
         SettingRow {
             description: qsTr("Auto-remove notifications older than this many days.")
             label: qsTr("Maximum Notification Age (Days):")
@@ -36,7 +36,6 @@ SettingsPageBase {
                 stepSize: 1
                 to: 30
                 value: Configs.notification.maximumNotificationAge / 86400000
-
                 onMoved: Configs.notification.maximumNotificationAge = value * 86400000
             }
         }

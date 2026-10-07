@@ -11,9 +11,10 @@ import qs.Services
 ColumnLayout {
     id: root
 
-    property alias carousel: wallpaperCarousel
     required property var controller
-    property alias searchField: searchField
+
+    property alias        carousel: wallpaperCarousel
+    property alias        searchField: searchField
 
     spacing: Appearance.spacing.normal
 
@@ -24,16 +25,17 @@ ColumnLayout {
         carousel: wallpaperCarousel
         controller: root.controller
     }
+
     ConnectedButtonGroup {
         Layout.alignment: Qt.AlignHCenter
         currentIndex: root.controller?.wallpaperType ?? 0
         model: [qsTr("Static"), qsTr("Video")]
-
         onClicked: index => {
             root.controller.wallpaperType = index;
             Qt.callLater(() => wallpaperCarousel.selectCurrentWallpaper());
         }
     }
+
     Carousel {
         id: wallpaperCarousel
 
@@ -43,6 +45,7 @@ ColumnLayout {
         thumbnailAvailability: root.controller?.thumbnailAvailability ?? ({})
         visibleWallpapers: root.controller?.visibleWallpapers ?? []
     }
+
     StyledText {
         Layout.alignment: Qt.AlignHCenter
         color: Colours.m3Colors.m3OnSurface

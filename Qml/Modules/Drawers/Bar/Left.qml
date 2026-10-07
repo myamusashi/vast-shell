@@ -16,16 +16,20 @@ RowLayout {
         fill: parent
         leftMargin: Appearance.margin.small
     }
+
     OsText {
         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
     }
+
     Workspaces {
         Layout.alignment: Qt.AlignCenter
         monitor: root.monitor
     }
+
     WorkspaceName {
         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
     }
+
     Item {
         Layout.fillWidth: true
     }

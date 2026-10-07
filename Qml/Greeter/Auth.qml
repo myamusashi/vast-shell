@@ -12,37 +12,37 @@ Scope {
     id: root
 
     readonly property bool available: Greetd.available
-    property alias currentText: authFlow.currentText
-    property string currentUser: ""
-    property bool echoResponse: false
-    property bool isUnlock: false
-    property string lastSessionCommand: ""
-    property bool launching: false
-    property bool messageIsError: false
-    property int selectedSessionIndex: -1
-    property ListModel sessions: ListModel {
-    }
-    property alias showFailure: authFlow.showFailure
-    property string statusMessage: ""
-    property alias unlockInProgress: authFlow.inProgress
-    property var users: []
 
-    signal launchReady
+    property alias         currentText: authFlow.currentText
+    property string        currentUser: ""
+    property bool          echoResponse: false
+    property bool          isUnlock: false
+    property string        lastSessionCommand: ""
+    property bool          launching: false
+    property bool          messageIsError: false
+    property int           selectedSessionIndex: -1
+    property ListModel     sessions: ListModel {}
+    property alias         showFailure: authFlow.showFailure
+    property string        statusMessage: ""
+    property alias         unlockInProgress: authFlow.inProgress
+    property var           users: []
 
-    function launch() {
+    signal                 launchReady
+
+    function               launch() {
         if (launching || Greetd.state !== GreetdState.ReadyToLaunch)
             return;
         launching = true;
         let index = selectedSessionIndex;
         if (index < 0 || index >= sessions.count)
             index = 0;
-        const session = sessions.get(index);
+        const session    = sessions.get(index);
         const rawCommand = session && session.command ? session.command : "bash";
         if (session && session.command)
             saveLastSession(session.command);
         Greetd.launch(rawCommand.split(" ").filter(part => part.length > 0));
     }
-    function saveLastSession(command) {
+    function               saveLastSession(command) {
         if (lastSessionCommand === command)
             return;
         lastSessionCommand = command;
@@ -50,15 +50,15 @@ Scope {
             command: [Paths.projectRoot + "/Assets/shell/last-session.sh", command]
         });
     }
-    function selectSession(index) {
+    function               selectSession(index) {
         if (index < 0 || index >= sessions.count)
             return;
         selectedSessionIndex = index;
-        const session = sessions.get(index);
+        const session        = sessions.get(index);
         if (session && session.command)
             saveLastSession(session.command);
     }
-    function sessionIndexForCommand(command) {
+    function               sessionIndexForCommand(command) {
         if (command === "")
             return -1;
         for (let i = 0; i < sessions.count; i++)
@@ -67,22 +67,22 @@ Scope {
 
         return -1;
     }
-    function switchUser(username) {
+    function               switchUser(username) {
         if (currentUser === username || unlockInProgress)
             return;
 
         currentUser = username;
         authFlow.clear();
         messageIsError = false;
-        statusMessage = "";
+        statusMessage  = "";
     }
-    function tryUnlock() {
+    function               tryUnlock() {
         if (currentUser === "")
             return;
         if (Greetd.state !== GreetdState.Inactive)
             return;
 
-        statusMessage = qsTr("Authenticating…");
+        statusMessage  = qsTr("Authenticating…");
         messageIsError = false;
         if (!authFlow.submitSecret())
             return;
@@ -91,9 +91,9 @@ Scope {
 
     onCurrentTextChanged: {
         if (showFailure || messageIsError) {
-            showFailure = false;
+            showFailure    = false;
             messageIsError = false;
-            statusMessage = "";
+            statusMessage  = "";
         }
     }
     onLastSessionCommandChanged: selectSession(sessionIndexForCommand(lastSessionCommand))
@@ -102,12 +102,12 @@ Scope {
         function onAuthFailure(message) {
             authFlow.fail();
             root.messageIsError = true;
-            root.statusMessage = message;
+            root.statusMessage  = message;
         }
         function onAuthMessage(message, error, responseRequired, echoResponse) {
-            root.statusMessage = message;
+            root.statusMessage  = message;
             root.messageIsError = error;
-            root.echoResponse = echoResponse;
+            root.echoResponse   = echoResponse;
 
             if (responseRequired) {
                 if (root.currentText.length > 0) {
@@ -122,7 +122,7 @@ Scope {
             root.launching = false;
             authFlow.fail();
             root.messageIsError = true;
-            root.statusMessage = error;
+            root.statusMessage  = error;
         }
         function onReadyToLaunch() {
             root.statusMessage = qsTr("Session Start");
@@ -131,30 +131,31 @@ Scope {
 
         target: Greetd
     }
+
     AuthFlow {
         id: authFlow
     }
+
     Process {
         id: usersProcess
 
         command: ["awk", "-F:", "/\\/home/ { print $1 }", "/etc/passwd"]
         running: true
-
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = text.trim().split("\n").filter(line => line.length > 0);
-                root.users = lines;
+                root.users  = lines;
                 if (root.currentUser === "" && lines.length > 0)
                     root.currentUser = lines[0];
             }
         }
     }
+
     Process {
         id: sessionsProcess
 
         command: [Paths.projectRoot + "/Assets/shell/desktop-session.sh"]
         running: true
-
         stdout: StdioCollector {
             onStreamFinished: {
                 const lines = text.trim().split("\n").filter(line => line.length > 0);
@@ -171,12 +172,12 @@ Scope {
             }
         }
     }
+
     Process {
         id: lastSessionProcess
 
         command: [Paths.projectRoot + "/Assets/shell/last-session.sh"]
         running: true
-
         stdout: StdioCollector {
             onStreamFinished: {
                 const value = text.trim();

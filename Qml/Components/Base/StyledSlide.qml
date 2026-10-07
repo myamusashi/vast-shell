@@ -1,63 +1,61 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Shapes
+import Vast.Utils
 
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import Vast.Utils
 
 Slider {
     id: root
 
-    enum ContainerSize {
-        XS = 16,
-        S = 24,
-        M = 40,
-        L = 56,
-        XL = 96
-    }
-
-    property bool animateChanges: true
     readonly property real availableTrackSize: isHorizontal ? availableWidth - handleGap * 2 : availableHeight - handleGap * 2
-    readonly property int dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
-    property alias emptyRectColor: emptyRect.color
-    property alias emptyRectOpacity: emptyRect.opacity
-    property alias filledRectColor: filledRect.color
-    property alias filledRectOpacity: filledRect.opacity
-    property alias handleColor: handle.color
-    property real handleGap: 6
-    property alias handleOpacity: handle.opacity
+    readonly property int  dotCount: stepSize > 0 ? Math.floor((to - from) / stepSize) + 1 : 0
     readonly property real handleSize: pressed ? 2 : 4
-    property string icon: ""
-    property int iconSize: 0
     readonly property real invertedVisualPosition: 1 - visualPosition
     readonly property bool isHorizontal: orientation === Qt.Horizontal
     readonly property bool isVertical: root.orientation === Qt.Vertical
-    property int popupDecimals: 0
-    property bool popupOnHoverToo: false
-    property var popupValueFormat: v => v.toFixed(root.popupDecimals)
     readonly property bool popupVisible: showValuePopup && (pressed || (popupOnHoverToo && hovered))
-    property bool showValuePopup: true
-    property color snapDotEmptyColor: Colours.m3Colors.m3OnSurfaceVariant // qmllint:ignore
-
-    property color snapDotFilledColor: Colours.m3Colors.m3OnPrimary
-    property real snapDotSize: 4
-    property bool snapEnabled: false
     readonly property real trackSize: isHorizontal ? height - trackSizeDiff : width - trackSizeDiff
-    property real trackSizeDiff: 15
-    property int valueHeight: isHorizontal ? StyledSlide.ContainerSize.M : 200
-    property int valueWidth: isHorizontal ? 200 : StyledSlide.ContainerSize.M
 
+    property bool          animateChanges: true
+    property alias         emptyRectColor: emptyRect.color
+    property alias         emptyRectOpacity: emptyRect.opacity
+    property alias         filledRectColor: filledRect.color
+    property alias         filledRectOpacity: filledRect.opacity
+    property alias         handleColor: handle.color
+    property real          handleGap: 6
+    property alias         handleOpacity: handle.opacity
+    property string        icon: ""
+    property int           iconSize: 0
+    property int           popupDecimals: 0
+    property bool          popupOnHoverToo: false
+    property var           popupValueFormat: v => v.toFixed(root.popupDecimals)
+    property bool          showValuePopup: true
+    property color         snapDotEmptyColor: Colours.m3Colors.m3OnSurfaceVariant // qmllint:ignore
+    property color         snapDotFilledColor: Colours.m3Colors.m3OnPrimary
+    property real          snapDotSize: 4
+    property bool          snapEnabled: false
+    property real          trackSizeDiff: 15
+    property int           valueHeight: isHorizontal ? StyledSlide.ContainerSize.M : 200
+    property int           valueWidth: isHorizontal ? 200 : StyledSlide.ContainerSize.M
+
+    enum ContainerSize {
+        XS = 16,
+        S  = 24,
+        M  = 40,
+        L  = 56,
+        XL = 96
+    }
     Layout.alignment: isHorizontal ? Qt.AlignHCenter : Qt.AlignVCenter
     hoverEnabled: true
     implicitHeight: valueHeight
     implicitWidth: valueWidth
     snapMode: (snapEnabled && stepSize > 0) ? Slider.SnapAlways : Slider.NoSnap
-
     background: Item {
         height: root.availableHeight
         implicitHeight: root.valueHeight
@@ -77,7 +75,6 @@ Slider {
 
             active: root.icon !== ""
             z: 10
-
             sourceComponent: Icon {
                 color: iconLoader.iconInEmpty ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnPrimary
                 font.pixelSize: root.iconSize || Appearance.fonts.size.large
@@ -102,6 +99,7 @@ Slider {
                             verticalCenter: parent.verticalCenter
                         }
                     }
+
                     PropertyChanges {
                         anchors.leftMargin: 10
                         target: iconLoader
@@ -123,6 +121,7 @@ Slider {
                             verticalCenter: parent.verticalCenter
                         }
                     }
+
                     PropertyChanges {
                         anchors.rightMargin: 10
                         target: iconLoader
@@ -144,6 +143,7 @@ Slider {
                             verticalCenter: undefined
                         }
                     }
+
                     PropertyChanges {
                         anchors.bottomMargin: 10
                         target: iconLoader
@@ -165,6 +165,7 @@ Slider {
                             verticalCenter: undefined
                         }
                     }
+
                     PropertyChanges {
                         anchors.topMargin: 10
                         target: iconLoader
@@ -183,6 +184,7 @@ Slider {
                 }
             }
         }
+
         StyledRect {
             id: filledRect
 
@@ -199,6 +201,7 @@ Slider {
                 verticalCenter: root.isHorizontal ? parent.verticalCenter : undefined
             }
         }
+
         StyledRect {
             id: emptyRect
 
@@ -215,19 +218,21 @@ Slider {
                 verticalCenter: root.isHorizontal ? parent.verticalCenter : undefined
             }
         }
+
         Repeater {
             model: (root.snapEnabled && root.stepSize > 0) ? root.dotCount : 0
-
             delegate: Rectangle {
                 id: snapDot
 
-                property real colorBlendProgress: 1.0
-                property bool colorBlending: false
-                property color colorFrom
-                property color colorTo
-                required property int index
+                required property int  index
+
                 readonly property bool isFilled: normalPos <= root.visualPosition
                 readonly property real normalPos: root.dotCount > 1 ? index / (root.dotCount - 1) : 0.5
+
+                property bool          colorBlending: false
+                property real          colorBlendProgress: 1.0
+                property color         colorFrom
+                property color         colorTo
 
                 color: isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor
                 height: root.snapDotSize
@@ -236,12 +241,11 @@ Slider {
                 x: root.isHorizontal ? root.handleGap + (normalPos * root.availableTrackSize) - root.snapDotSize / 2 : (parent.width - root.snapDotSize) / 2
                 y: root.isVertical ? root.handleGap + ((1 - normalPos) * root.availableTrackSize) - root.snapDotSize / 2 : (parent.height - root.snapDotSize) / 2
                 z: 5
-
                 onColorBlendProgressChanged: {
                     if (!colorBlending)
                         return;
                     if (colorBlendProgress >= 1) {
-                        color = colorTo;
+                        color         = colorTo;
                         colorBlending = false;
                     } else if (colorBlendProgress > 0) {
                         color = ColorUtils.blendColors(colorFrom, colorTo, colorBlendProgress);
@@ -249,9 +253,9 @@ Slider {
                 }
                 onIsFilledChanged: {
                     colorBlendAnim.stop();
-                    colorFrom = color;
-                    colorTo = isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor;
-                    colorBlending = true;
+                    colorFrom          = color;
+                    colorTo            = isFilled ? root.snapDotFilledColor : root.snapDotEmptyColor;
+                    colorBlending      = true;
                     colorBlendProgress = 0.0;
                     colorBlendAnim.start();
                 }
@@ -279,18 +283,15 @@ Slider {
         width: root.isHorizontal ? root.handleSize : root.width
         x: root.isHorizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - width / 2 : 0
         y: root.isVertical ? root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - height / 2 : 0
-
         Behavior on height {
             enabled: root.animateChanges
 
-            NAnim {
-            }
+            NAnim {}
         }
         Behavior on width {
             enabled: root.animateChanges
 
-            NAnim {
-            }
+            NAnim {}
         }
 
         Item {
@@ -305,7 +306,6 @@ Slider {
             x: root.isHorizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
             y: root.isHorizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
             z: 20
-
             Behavior on opacity {
                 enabled: root.animateChanges
 
@@ -344,6 +344,7 @@ Slider {
                     text: root.popupValueFormat(root.value) // qmllint disable
                 }
             }
+
             Shape {
                 id: caret
 
@@ -359,6 +360,7 @@ Slider {
                     top: root.isHorizontal ? valuePopupBubble.bottom : undefined
                     verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
                 }
+
                 ShapePath {
                     fillColor: Colours.m3Colors.m3InverseSurface
                     startX: 0
@@ -368,14 +370,17 @@ Slider {
 
                     // Horizontal ▼: (0,0) → (12,0) → (6,6)
                     // Vertical   ▶: (0,0) → (0,12) → (6,6)
+
                     PathLine {
                         x: root.isHorizontal ? caret.caretSize * 2 : 0
                         y: root.isHorizontal ? 0 : caret.caretSize * 2
                     }
+
                     PathLine {
                         x: caret.caretSize
                         y: caret.caretSize
                     }
+
                     PathLine {
                         x: 0
                         y: 0
@@ -388,11 +393,10 @@ Slider {
     MouseArea {
         anchors.fill: parent
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
-
         onPressed: mouse => {
             if (root.isVertical) {
-                var pos = 1 - ((mouse.y - root.topPadding) / root.availableHeight);
-                pos = Math.max(0, Math.min(1, pos));
+                var pos      = 1 - ((mouse.y - root.topPadding) / root.availableHeight);
+                pos          = Math.max(0, Math.min(1, pos));
                 var newValue = root.from + (pos * (root.to - root.from));
                 if (root.stepSize > 0)
                     newValue = Math.round(newValue / root.stepSize) * root.stepSize;

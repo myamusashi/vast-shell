@@ -5,14 +5,13 @@ import Quickshell
 import Quickshell.Io
 import Vast.ImageCache
 import Vast.Utils
+
 import qs.Core.Configs
 import qs.Services
 
 Singleton {
     id: root
 
-    property string cachedPath: ""
-    property var colors: fallbackColors
     readonly property var fallbackColors: ({
             primary: Colours.m3Colors.m3Primary,
             onPrimary: Colours.m3Colors.m3OnPrimary,
@@ -29,8 +28,11 @@ Singleton {
             outline: Colours.m3Colors.m3Outline
         })
 
-    function refresh() {
-        const url = String(Players.active?.trackArtUrl ?? "");
+    property string       cachedPath: ""
+    property var          colors: fallbackColors
+
+    function              refresh() {
+        const url       = String(Players.active?.trackArtUrl ?? "");
         root.cachedPath = "";
         if (url.startsWith("http"))
             downloader.download(url);
@@ -50,7 +52,7 @@ Singleton {
 
         property string targetPath: ""
 
-        function download(url) {
+        function        download(url) {
             const hash = Qt.md5(url);
             targetPath = `/tmp/qs_art_${hash}.jpg`;
             exec(["curl", "-sLz", targetPath, "-o", targetPath, url]);
@@ -61,16 +63,17 @@ Singleton {
                 root.cachedPath = targetPath;
         }
     }
+
     ColorMaterial {
         darkMode: Configs.colors.isDarkMode
         scheme: Colours.schemeEnum(Configs.colors.scheme)
         source: root.cachedPath
-
         onColorsChanged: {
             if (ready)
                 root.colors = colors;
         }
     }
+
     Connections {
         function onIndexChanged() {
             root.refresh();
@@ -78,6 +81,7 @@ Singleton {
 
         target: Players
     }
+
     Connections {
         function onPostTrackChanged() {
             root.refresh();

@@ -14,10 +14,9 @@ import "../Components"
 SettingsPageBase {
     id: root
 
-    property ListModel timeoutsModel: ListModel {
-    }
+    property ListModel timeoutsModel: ListModel {}
 
-    function addTimeout() {
+    function           addTimeout() {
         timeoutsModel.append({
             timeoutSeconds: 60,
             timeoutCommand: "notify-send 'Idle' 'Timeout reached'",
@@ -25,7 +24,7 @@ SettingsPageBase {
         });
         flushToConfig();
     }
-    function flushToConfig() {
+    function           flushToConfig() {
         const arr = [];
         for (let i = 0; i < timeoutsModel.count; i++) {
             const e = timeoutsModel.get(i);
@@ -37,11 +36,11 @@ SettingsPageBase {
         }
         Configs.idle.timeouts = arr;
     }
-    function removeTimeout(i) {
+    function           removeTimeout(i) {
         timeoutsModel.remove(i);
         flushToConfig();
     }
-    function seedFromConfig() {
+    function           seedFromConfig() {
         timeoutsModel.clear();
         for (const e of Configs.idle.timeouts)
             timeoutsModel.append({
@@ -52,7 +51,6 @@ SettingsPageBase {
     }
 
     pageTitle: qsTr("Idle")
-
     Component.onCompleted: seedFromConfig()
 
     SettingsCard {
@@ -64,11 +62,11 @@ SettingsPageBase {
 
             StyledSwitch {
                 checked: Configs.idle.enabled
-
                 onCheckedChanged: Configs.idle.enabled = checked
             }
         }
     }
+
     SettingsCard {
         title: qsTr("Timeouts")
 
@@ -80,7 +78,6 @@ SettingsPageBase {
                 id: timeoutRepeater
 
                 model: root.timeoutsModel
-
                 delegate: Rectangle {
                     id: rootDelegate
 
@@ -103,6 +100,7 @@ SettingsPageBase {
                             right: parent.right
                             top: parent.top
                         }
+
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
@@ -112,6 +110,7 @@ SettingsPageBase {
                                 font.pixelSize: Appearance.fonts.size.normal
                                 text: qsTr("Timeout (seconds):")
                             }
+
                             TextField {
                                 id: timeoutField
 
@@ -123,13 +122,11 @@ SettingsPageBase {
                                 inputMethodHints: Qt.ImhDigitsOnly
                                 padding: Appearance.margin.normal
                                 text: rootDelegate.modelData.timeoutSeconds
-
                                 background: Rectangle {
                                     color: Colours.m3Colors.m3SurfaceVariant
                                     opacity: 0.4
                                     radius: Appearance.rounding.small
                                 }
-
                                 onEditingFinished: {
                                     let val = parseInt(text, 10);
                                     if (isNaN(val) || val < 1)
@@ -139,6 +136,7 @@ SettingsPageBase {
                                 }
                             }
                         }
+
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
@@ -148,6 +146,7 @@ SettingsPageBase {
                                 font.pixelSize: Appearance.fonts.size.normal
                                 text: qsTr("Command on Timeout:")
                             }
+
                             TextField {
                                 id: onTimeoutField
 
@@ -157,16 +156,15 @@ SettingsPageBase {
                                 font.pixelSize: Appearance.fonts.size.normal
                                 padding: Appearance.margin.normal
                                 text: rootDelegate.modelData.timeoutCommand
-
                                 background: Rectangle {
                                     color: Colours.m3Colors.m3SurfaceVariant
                                     opacity: 0.4
                                     radius: Appearance.rounding.small
                                 }
-
                                 onEditingFinished: root.timeoutsModel.setProperty(rootDelegate.index, "timeoutCommand", text)
                             }
                         }
+
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
@@ -176,6 +174,7 @@ SettingsPageBase {
                                 font.pixelSize: Appearance.fonts.size.normal
                                 text: qsTr("Command on Resume:")
                             }
+
                             TextField {
                                 id: onResumeField
 
@@ -185,16 +184,15 @@ SettingsPageBase {
                                 font.pixelSize: Appearance.fonts.size.normal
                                 padding: Appearance.margin.normal
                                 text: rootDelegate.modelData.resumeCommand
-
                                 background: Rectangle {
                                     color: Colours.m3Colors.m3SurfaceVariant
                                     opacity: 0.4
                                     radius: Appearance.rounding.small
                                 }
-
                                 onEditingFinished: root.timeoutsModel.setProperty(rootDelegate.index, "resumeCommand", text)
                             }
                         }
+
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
@@ -202,13 +200,12 @@ SettingsPageBase {
                             ExtendedFloatingButton {
                                 Layout.preferredHeight: 32
                                 text: qsTr("Apply")
-
                                 onClicked: root.flushToConfig()
                             }
+
                             ExtendedFloatingButton {
                                 Layout.preferredHeight: 32
                                 text: qsTr("Remove")
-
                                 onClicked: root.removeTimeout(rootDelegate.index)
                             }
                         }
@@ -217,13 +214,13 @@ SettingsPageBase {
             }
         }
     }
+
     ExtendedFloatingButton {
         Layout.fillWidth: true
         Layout.preferredHeight: 40
         outlined: true
         text: qsTr("Add Timeout")
         textColor: Colours.m3Colors.m3OnSurface
-
         onClicked: root.addTimeout()
     }
 }

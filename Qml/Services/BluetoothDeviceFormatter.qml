@@ -9,7 +9,7 @@ Singleton {
     function addressLine(device): string {
         if (!device)
             return "";
-        const addr = device.address || "";
+        const addr  = device.address || "";
         const extra = device.pairing ? " · " + qsTr("Pairing…") : "";
         return addr + extra;
     }

@@ -11,30 +11,31 @@ import qs.Services
 Item {
     id: root
 
-    property int currentIndex: 0
     readonly property real distributedSegmentWidth: model.length > 0 ? (width - (model.length - 1) * 2) / model.length : 0
-    property bool fillWidth: false
-    property var model: []
-    property var reportedSegmentWidths: []
     readonly property real segmentWidth: {
         let maxWidth = 0;
         for (let i = 0; i < reportedSegmentWidths.length; ++i)
             maxWidth = Math.max(maxWidth, reportedSegmentWidths[i]);
         return maxWidth;
     }
-    property color selectedColor: Colours.m3Colors.m3SecondaryContainer
-    property color selectedContentColor: Colours.m3Colors.m3OnSecondaryContainer
-    property int textSize: Appearance.fonts.size.normal
-    property color unselectedColor: Colours.m3Colors.m3SurfaceContainerHigh
-    property color unselectedContentColor: Colours.m3Colors.m3OnSurfaceVariant
 
-    signal clicked(int index)
+    property int           currentIndex: 0
+    property bool          fillWidth: false
+    property var           model: []
+    property var           reportedSegmentWidths: []
+    property color         selectedColor: Colours.m3Colors.m3SecondaryContainer
+    property color         selectedContentColor: Colours.m3Colors.m3OnSecondaryContainer
+    property int           textSize: Appearance.fonts.size.normal
+    property color         unselectedColor: Colours.m3Colors.m3SurfaceContainerHigh
+    property color         unselectedContentColor: Colours.m3Colors.m3OnSurfaceVariant
 
-    function reportSegmentWidth(index, width) {
+    signal                 clicked(int index)
+
+    function               reportSegmentWidth(index, width) {
         const widths = reportedSegmentWidths.slice();
         if (widths[index] === width)
             return;
-        widths[index] = width;
+        widths[index]         = width;
         reportedSegmentWidths = widths;
     }
 
@@ -51,34 +52,34 @@ Item {
             id: segmentRepeater
 
             model: root.model
-
-            delegate: Segment {
-            }
+            delegate: Segment {}
         }
     }
 
     component Segment: Item {
         id: segment
 
-        readonly property color contentColor: isSelected ? root.selectedContentColor : root.unselectedContentColor
-        property bool hovered: segmentHoverHandler.hovered
-        required property int index
-        readonly property bool isFirst: index === 0
-        readonly property bool isLast: index === root.model.length - 1
-        readonly property bool isSelected: root.currentIndex === index
-        readonly property string label: typeof modelData === "string" ? modelData : (modelData.label ?? "")
-        required property var modelData
-        readonly property real preferredWidth: contentRow.implicitWidth + 32
-        property bool pressed: segmentTapHandler.pressed
-        readonly property string segmentIconName: typeof modelData === "string" ? "" : (modelData.icon ?? "")
-        readonly property real targetInnerRadius: isSelected ? height * 0.5 : pressed ? 4 : 8
+        required property int    index
+        required property var    modelData
 
-        function moveFocus(delta) {
+        readonly property color  contentColor: isSelected ? root.selectedContentColor : root.unselectedContentColor
+        readonly property bool   isFirst: index === 0
+        readonly property bool   isLast: index === root.model.length - 1
+        readonly property bool   isSelected: root.currentIndex === index
+        readonly property string label: typeof modelData === "string" ? modelData : (modelData.label ?? "")
+        readonly property real   preferredWidth: contentRow.implicitWidth + 32
+        readonly property string segmentIconName: typeof modelData === "string" ? "" : (modelData.icon ?? "")
+        readonly property real   targetInnerRadius: isSelected ? height * 0.5 : pressed ? 4 : 8
+
+        property bool            hovered: segmentHoverHandler.hovered
+        property bool            pressed: segmentTapHandler.pressed
+
+        function                 moveFocus(delta) {
             const target = segmentRepeater.itemAt(index + delta);
             if (target)
                 target.forceActiveFocus();
         }
-        function select() {
+        function                 select() {
             if (!root.enabled)
                 return;
             root.clicked(index);
@@ -87,7 +88,6 @@ Item {
         activeFocusOnTab: root.enabled
         height: root.height
         width: root.fillWidth ? root.distributedSegmentWidth : root.segmentWidth
-
         Component.onCompleted: root.reportSegmentWidth(index, preferredWidth)
         Component.onDestruction: root.reportSegmentWidth(index, 0)
         Keys.onLeftPressed: event => {
@@ -117,28 +117,23 @@ Item {
             color: segment.isSelected ? root.selectedColor : root.unselectedColor
             topLeftRadius: segment.isFirst ? Appearance.rounding.full : segment.targetInnerRadius
             topRightRadius: segment.isLast ? Appearance.rounding.full : segment.targetInnerRadius
-
             Behavior on bottomLeftRadius {
-                NAnim {
-                }
+                NAnim {}
             }
             Behavior on bottomRightRadius {
-                NAnim {
-                }
+                NAnim {}
             }
             Behavior on color {
-                CAnim {
-                }
+                CAnim {}
             }
             Behavior on topLeftRadius {
-                NAnim {
-                }
+                NAnim {}
             }
             Behavior on topRightRadius {
-                NAnim {
-                }
+                NAnim {}
             }
         }
+
         StateLayer {
             anchors.fill: parent
             bottomLeftRadius: segmentBackground.bottomLeftRadius
@@ -150,6 +145,7 @@ Item {
             topLeftRadius: segmentBackground.topLeftRadius
             topRightRadius: segmentBackground.topRightRadius
         }
+
         Rectangle {
             id: focusRing
 
@@ -163,6 +159,7 @@ Item {
             topLeftRadius: segmentBackground.topLeftRadius
             topRightRadius: segmentBackground.topRightRadius
         }
+
         RowLayout {
             id: contentRow
 
@@ -174,34 +171,32 @@ Item {
                 font.pixelSize: Appearance.fonts.size.large * 1.2
                 icon: segment.segmentIconName
                 visible: segment.segmentIconName !== ""
-
                 Behavior on color {
-                    CAnim {
-                    }
+                    CAnim {}
                 }
             }
+
             StyledText {
                 color: segment.contentColor
                 font.pixelSize: root.textSize
                 font.weight: segment.isSelected ? Font.DemiBold : Font.Medium
                 text: segment.label
-
                 Behavior on color {
-                    CAnim {
-                    }
+                    CAnim {}
                 }
             }
         }
+
         HoverHandler {
             id: segmentHoverHandler
 
             cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
         }
+
         TapHandler {
             id: segmentTapHandler
 
             enabled: root.enabled
-
             onTapped: segment.select()
         }
     }

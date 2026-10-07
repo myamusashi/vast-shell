@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -16,8 +16,8 @@ Control {
     property int currentYear
     property int startYear: currentYear - 10
 
-    signal monthPicked(int month)
-    signal yearPicked(int year)
+    signal       monthPicked(int month)
+    signal       yearPicked(int year)
 
     contentItem: ColumnLayout {
         anchors.fill: parent
@@ -40,13 +40,14 @@ Control {
                     font.pixelSize: Appearance.fonts.size.large
                     icon: "chevron_left"
                 }
+
                 MArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-
                     onClicked: root.startYear = Math.max(1900, root.startYear - 10)
                 }
             }
+
             StyledText {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurface
@@ -55,6 +56,7 @@ Control {
                 horizontalAlignment: Text.AlignHCenter
                 text: root.startYear + " \u2013 " + (root.startYear + 9)
             }
+
             StyledRect {
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 32
@@ -67,14 +69,15 @@ Control {
                     font.pixelSize: Appearance.fonts.size.large
                     icon: "chevron_right"
                 }
+
                 MArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-
                     onClicked: root.startYear += 10
                 }
             }
         }
+
         GridLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -85,11 +88,11 @@ Control {
 
             Repeater {
                 model: 10
-
                 delegate: StyledRect {
                     id: yearDelegate
 
                     required property int index
+
                     readonly property int year: root.startYear + index
 
                     Layout.fillHeight: true
@@ -100,9 +103,9 @@ Control {
                     MArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-
                         onClicked: root.yearPicked(yearDelegate.year)
                     }
+
                     StyledText {
                         anchors.centerIn: parent
                         color: yearDelegate.year === root.currentYear ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurface
@@ -113,6 +116,7 @@ Control {
                 }
             }
         }
+
         GridLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -123,7 +127,6 @@ Control {
 
             Repeater {
                 model: 12
-
                 delegate: StyledRect {
                     id: monthDelegate
 
@@ -141,9 +144,9 @@ Control {
                     MArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-
                         onClicked: root.monthPicked(monthDelegate.index)
                     }
+
                     StyledText {
                         anchors.centerIn: parent
                         color: {

@@ -10,14 +10,14 @@ import qs.Core.Utils
 Singleton {
     id: root
 
-    property int cachedYear: 0
-    property var holidaysByDate: ({})
+    property int  cachedYear: 0
+    property var  holidaysByDate: ({})
     property bool loaded: false
     property bool loading: false
 
-    signal dataChanged
+    signal        dataChanged
 
-    function applyData(json: var, year: int): void {
+    function      applyData(json: var, year: int): void {
         const map = {};
         for (const y in json) {
             const entries = json[y];
@@ -30,12 +30,12 @@ Singleton {
             }
         }
         holidaysByDate = map;
-        loaded = true;
-        cachedYear = year;
-        loading = false;
+        loaded         = true;
+        cachedYear     = year;
+        loading        = false;
         dataChanged();
     }
-    function ensureYear(year: int): void {
+    function      ensureYear(year: int): void {
         if (loaded && cachedYear === year)
             return;
         if (loading)
@@ -52,9 +52,9 @@ Singleton {
             }
         } catch (e) {}
 
-        loading = true;
-        const req = new XMLHttpRequest();
-        req.timeout = 15000;
+        loading                = true;
+        const req              = new XMLHttpRequest();
+        req.timeout            = 15000;
 
         req.onreadystatechange = function () {
             if (req.readyState !== XMLHttpRequest.DONE)
@@ -79,24 +79,24 @@ Singleton {
             loading = false;
         };
 
-        req.onerror = function () {
+        req.onerror            = function () {
             loading = false;
         };
-        req.ontimeout = function () {
+        req.ontimeout          = function () {
             loading = false;
         };
         req.open("GET", "https://tanggalmerah.upset.dev/api/holidays?year=" + year);
         req.send();
     }
-    function getHolidaysForDate(date: var): var {
+    function      getHolidaysForDate(date: var): var {
         if (!loaded)
             return [];
         return holidaysByDate[isoDate(date)] || [];
     }
-    function hasHoliday(date: var): bool {
+    function      hasHoliday(date: var): bool {
         return getHolidaysForDate(date).length > 0;
     }
-    function isoDate(date: var): string {
+    function      isoDate(date: var): string {
         if (typeof date === "string")
             return date;
         const y = date.getFullYear();
@@ -104,7 +104,7 @@ Singleton {
         const d = String(date.getDate()).padStart(2, "0");
         return y + "-" + m + "-" + d;
     }
-    function nameForDate(date: var): string {
+    function      nameForDate(date: var): string {
         const entries = getHolidaysForDate(date);
         if (entries.length === 0)
             return "";
@@ -112,7 +112,7 @@ Singleton {
             return e.name;
         }).join(", ");
     }
-    function writeCache(json: var): void {
+    function      writeCache(json: var): void {
         fileView.setText(JSON.stringify(json, null, 0));
     }
 
@@ -120,7 +120,6 @@ Singleton {
         id: fileView
 
         path: Paths.cacheDir + "/holidays/holidays.json"
-
         onLoadFailed: function (err) {
             try {
                 setText("{}");
@@ -131,7 +130,7 @@ Singleton {
                 const raw = text();
                 if (raw && raw.trim()) {
                     const json = JSON.parse(raw);
-                    const now = new Date();
+                    const now  = new Date();
                     applyData(json, now.getFullYear());
                 }
             } catch (e) {}

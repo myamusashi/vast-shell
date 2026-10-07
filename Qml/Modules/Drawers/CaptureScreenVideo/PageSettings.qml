@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -40,26 +40,29 @@ StyledRect {
                     icon: "arrow_back"
                     type: Icon.Material
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
                     text: qsTr("Settings")
                 }
+
                 Item {
                     Layout.fillWidth: true
                 }
             }
+
             MArea {
                 id: backButtonMouseArea
 
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
-
                 onClicked: root.goBack()
             }
         }
+
         Flickable {
             id: flickable
 
@@ -69,7 +72,6 @@ StyledRect {
             clip: true
             contentHeight: settingsColumn.implicitHeight
             contentWidth: width
-
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
             }
@@ -97,9 +99,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.maxFps
-
                     onSelected: value => CaptureScreenVideo.maxFps = value
                 }
+
                 SettingSection {
                     label: qsTr("Bitrate")
                     model: [
@@ -121,9 +123,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.bitrate
-
                     onSelected: value => CaptureScreenVideo.bitrate = value
                 }
+
                 SettingSection {
                     label: qsTr("Video Codec")
                     model: [
@@ -153,9 +155,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.videoCodec
-
                     onSelected: value => CaptureScreenVideo.videoCodec = value
                 }
+
                 SettingSection {
                     label: qsTr("Audio Codec")
                     model: [
@@ -181,9 +183,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.audioCodec
-
                     onSelected: value => CaptureScreenVideo.audioCodec = value
                 }
+
                 SettingSection {
                     label: qsTr("Power Mode")
                     model: [
@@ -201,9 +203,9 @@ StyledRect {
                         }
                     ]
                     selectedValue: CaptureScreenVideo.lowPower
-
                     onSelected: value => CaptureScreenVideo.lowPower = value
                 }
+
                 SettingSection {
                     extraActive: item => {
                         switch (item.value) {
@@ -227,7 +229,6 @@ StyledRect {
                         }
                     ]
                     selectedValue: ""
-
                     onSelected: value => {
                         switch (value) {
                         case "cursor":
@@ -246,12 +247,13 @@ StyledRect {
     component SettingSection: ColumnLayout {
         id: section
 
-        property var extraActive: null
         required property string label
-        required property var model
-        required property var selectedValue
+        required property var    model
+        required property var    selectedValue
 
-        signal selected(var value)
+        property var             extraActive: null
+
+        signal                   selected(var value)
 
         spacing: Appearance.spacing.small
 
@@ -260,6 +262,7 @@ StyledRect {
             font.pixelSize: Appearance.fonts.size.normal
             text: section.label
         }
+
         GridLayout {
             Layout.fillWidth: true
             columnSpacing: Appearance.spacing.small
@@ -268,14 +271,13 @@ StyledRect {
 
             Repeater {
                 model: section.model
-
                 delegate: StyledRect {
                     id: optionDelegate
 
-                    readonly property bool active: section.extraActive ? section.extraActive(modelData) : section.selectedValue === value // qmllint disable
+                    required property var  modelData
 
-                    required property var modelData
-                    readonly property var value: optionDelegate.modelData.value ?? optionDelegate.modelData
+                    readonly property bool active: section.extraActive ? section.extraActive(modelData) : section.selectedValue === value // qmllint disable
+                    readonly property var  value: optionDelegate.modelData.value ?? optionDelegate.modelData
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 40
@@ -289,13 +291,13 @@ StyledRect {
                         font.weight: optionDelegate.active ? Font.DemiBold : Font.Normal
                         text: optionDelegate.modelData.text ?? optionDelegate.modelData
                     }
+
                     MArea {
                         id: pillMouse
 
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
-
                         onClicked: section.selected(optionDelegate.value)
                     }
                 }

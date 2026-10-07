@@ -12,7 +12,7 @@ Item {
         id: root
 
         property bool isDndEnable: Notifs.dnd
-        property int notificationCount: Notifs.notClosed.length
+        property int  notificationCount: Notifs.notClosed.length
 
         height: parent.height
         width: 30
@@ -38,6 +38,7 @@ Item {
             type: Icon.Material
         }
     }
+
     MArea {
         id: mouseArea
 
@@ -45,7 +46,6 @@ Item {
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
         layerColor: "transparent"
-
         onClicked: GlobalStates.isNotificationCenterOpen = !GlobalStates.isNotificationCenterOpen
     }
 }

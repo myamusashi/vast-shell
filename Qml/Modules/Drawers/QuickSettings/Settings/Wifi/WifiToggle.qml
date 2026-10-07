@@ -21,6 +21,7 @@ ColumnLayout {
         Layout.fillWidth: true
         condition: GlobalStates.isWifiScannerOpen && root.isVisible
     }
+
     RowLayout {
         Layout.fillWidth: true
 
@@ -29,14 +30,15 @@ ColumnLayout {
             font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("Wi-Fi")
         }
+
         Item {
             Layout.fillWidth: true
         }
+
         StyledSwitch {
             Layout.preferredHeight: 32
             Layout.preferredWidth: 52
             checked: Networking.wifiEnabled
-
             onToggled: Qt.callLater(() => {
                 Networking.wifiEnabled = checked;
             })

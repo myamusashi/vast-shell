@@ -17,7 +17,6 @@ DialogBox {
     contentMinWidth: 280
     contentSpacing: Appearance.spacing.normal
     needKeyboardFocus: true
-
     body: Body {
         id: bodyPolkit
 
@@ -38,6 +37,5 @@ DialogBox {
             target: root
         }
     }
-    header: Header {
-    }
+    header: Header {}
 }

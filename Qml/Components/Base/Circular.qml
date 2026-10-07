@@ -8,11 +8,12 @@ import qs.Components.Base
 StyledRect {
     id: root
 
-    property alias circleColor: shapePath.strokeColor
-    property alias text: styledText.text
-    property real textPadding: 20
-    property alias textSize: styledText.font.pixelSize
     required property real value
+
+    property alias         circleColor: shapePath.strokeColor
+    property alias         text: styledText.text
+    property real          textPadding: 20
+    property alias         textSize: styledText.font.pixelSize
 
     implicitHeight: 100
     implicitWidth: 100
@@ -24,6 +25,7 @@ StyledRect {
         font.pixelSize: root.textSize
         text: root.text
     }
+
     Shape {
         id: indicatorShape
 
@@ -31,6 +33,7 @@ StyledRect {
         preferredRendererType: Shape.CurveRenderer
 
         // Background circle
+
         ShapePath {
             capStyle: ShapePath.RoundCap
             fillColor: "transparent"
@@ -48,6 +51,7 @@ StyledRect {
         }
 
         // Progress arc
+
         ShapePath {
             id: shapePath
 
@@ -65,6 +69,7 @@ StyledRect {
             }
         }
     }
+
     StyledText {
         id: styledText
 

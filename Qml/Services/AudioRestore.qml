@@ -2,22 +2,23 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-
 import Vast.Audio
+
 import qs.Core.Configs
 
 Scope {
     id: root
 
     required property bool audioConnected
-    required property var cards
-    property bool restoring: false
-    property bool wasConnected: false
+    required property var  cards
 
-    function restoreAudioState() {
+    property bool          restoring: false
+    property bool          wasConnected: false
+
+    function               restoreAudioState() {
         if (restoring)
             return;
-        restoring = true;
+        restoring       = true;
         const savedSink = Configs.audio.defaultSinkName;
         if (savedSink && cards) {
             for (let i = 0; i < cards.count; i++) {
@@ -30,7 +31,7 @@ Scope {
         }
         profileRestoreTimer.start();
     }
-    function restoreProfiles() {
+    function               restoreProfiles() {
         const profiles = Configs.audio.sinkProfiles;
         if (!profiles || typeof profiles !== "object" || !cards)
             return;
@@ -58,7 +59,7 @@ Scope {
             }
         }
     }
-    function scheduleRestoreIfNeeded() {
+    function               scheduleRestoreIfNeeded() {
         if (audioConnected && !restoring) {
             wasConnected = true;
             restoreTimer.start();
@@ -73,7 +74,7 @@ Scope {
         }
         if (!audioConnected) {
             wasConnected = false;
-            restoring = false;
+            restoring    = false;
             restoreTimer.stop();
             profileRestoreTimer.stop();
         }
@@ -84,15 +85,14 @@ Scope {
 
         interval: 1000
         repeat: false
-
         onTriggered: root.restoreAudioState()
     }
+
     Timer {
         id: profileRestoreTimer
 
         interval: 1500
         repeat: false
-
         onTriggered: {
             root.restoreProfiles();
             root.restoring = false;

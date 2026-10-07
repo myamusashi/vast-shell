@@ -7,17 +7,18 @@ import qs.Services
 Item {
     id: root
 
-    readonly property real caretRawX: visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, root.passwordInput.cursorPosition))
-    required property bool hasSelection
-    required property bool isFocused
+    required property bool      hasSelection
+    required property bool      isFocused
     required property TextInput passwordInput
-    readonly property real scrollOffset: Math.max(0, caretRawX - (visibleArea.width - 4))
-    required property int selectionEnd
-    required property int selectionStart
-    required property Item toggleButton
-    required property bool unlockInProgress
+    required property int       selectionEnd
+    required property int       selectionStart
+    required property Item      toggleButton
+    required property bool      unlockInProgress
 
-    signal editingFinished
+    readonly property real      caretRawX: visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, root.passwordInput.cursorPosition))
+    readonly property real      scrollOffset: Math.max(0, caretRawX - (visibleArea.width - 4))
+
+    signal                      editingFinished
 
     Item {
         id: visibleArea
@@ -32,6 +33,7 @@ Item {
             rightMargin: root.toggleButton.width + Appearance.margin.normal + Appearance.spacing.small
             verticalCenter: parent.verticalCenter
         }
+
         Rectangle {
             id: visibleRectSelected
 
@@ -42,7 +44,6 @@ Item {
             opacity: 0.0
             radius: 2
             x: visibleInputMetrics.advanceWidth(visibleInput.text.substring(0, root.selectionStart)) - root.scrollOffset
-
             Behavior on implicitWidth {
                 NAnim {
                     duration: Appearance.animations.durations.small
@@ -54,10 +55,12 @@ Item {
                     when: root.hasSelection
 
                     // qmllint disable
+
                     PropertyChanges {
                         opacity: 0.25
                         target: visibleRectSelected
                     }
+
                     // qmllint enable
                 }
             ]
@@ -78,6 +81,7 @@ Item {
                 }
             }
         }
+
         TextInput {
             id: visibleInput
 
@@ -88,13 +92,13 @@ Item {
             readOnly: true
             text: root.passwordInput.text
             x: -root.scrollOffset
-
             Keys.onReturnPressed: root.editingFinished()
 
             anchors {
                 verticalCenter: parent.verticalCenter
             }
         }
+
         Rectangle {
             id: textCaret
 
@@ -105,7 +109,6 @@ Item {
             radius: 1
             visible: root.isFocused && !root.unlockInProgress && !root.hasSelection
             x: root.caretRawX - root.scrollOffset
-
             SequentialAnimation on opacity {
                 loops: Animation.Infinite
                 running: textCaret.visible
@@ -114,13 +117,16 @@ Item {
                     duration: 0
                     to: 1
                 }
+
                 PauseAnimation {
                     duration: Appearance.animations.durations.large
                 }
+
                 NAnim {
                     duration: 0
                     to: 0
                 }
+
                 PauseAnimation {
                     duration: Appearance.animations.durations.large
                 }
@@ -130,13 +136,13 @@ Item {
                     duration: Appearance.animations.durations.small
                 }
             }
-
             onVisibleChanged: {
                 if (visible)
                     opacity = 1;
             }
         }
     }
+
     FontMetrics {
         id: visibleInputMetrics
 

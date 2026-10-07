@@ -14,20 +14,20 @@ import "../../../Base"
 Rectangle {
     id: root
 
-    property bool canGoBack: false
-    property bool canGoForward: false
-    property bool canGoUp: false
+    property bool   canGoBack: false
+    property bool   canGoForward: false
+    property bool   canGoUp: false
     property string currentPath: ""
-    property bool isLoading: false
-    property alias pathField: input
+    property bool   isLoading: false
+    property alias  pathField: input
 
-    signal backClicked
-    signal forwardClicked
-    signal pathEntered(string path)
-    signal refreshClicked
-    signal searchToggled
-    signal showHiddenToggled
-    signal upClicked
+    signal          backClicked
+    signal          forwardClicked
+    signal          pathEntered(string path)
+    signal          refreshClicked
+    signal          searchToggled
+    signal          showHiddenToggled
+    signal          upClicked
 
     color: Colours.m3Colors.m3SurfaceContainer
     implicitHeight: 64
@@ -37,6 +37,7 @@ Rectangle {
         level: 3
         z: -1
     }
+
     Rectangle {
         anchors.bottom: parent.bottom
         color: Colours.m3Colors.m3OutlineVariant
@@ -44,6 +45,7 @@ Rectangle {
         implicitWidth: parent.width
         opacity: 0.4
     }
+
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: Appearance.margin.normal
@@ -73,7 +75,6 @@ Rectangle {
                     clicked: () => root.searchToggled()
                 }
             ]
-
             delegate: FloatingButton {
                 id: iconBtnDelegate
 
@@ -89,10 +90,10 @@ Rectangle {
                 icon.name: modelData.icon
                 icon.size: Appearance.fonts.size.large * 1.2
                 spinning: index === 3 && root.isLoading
-
                 onClicked: modelData.clicked()
             }
         }
+
         Rectangle {
             id: textField
 
@@ -107,28 +108,32 @@ Rectangle {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 implicitHeight: 1
                 implicitWidth: parent.width - 4
-
                 states: [
                     State {
                         name: "activeFocus"
                         when: input.activeFocus
 
                         // qmllint disable
+
                         PropertyChanges {
                             color: Colours.m3Colors.m3Primary
                             implicitHeight: 2
                             implicitWidth: parent.width
                             target: activeIndicatorLine
                         }
+
                         // qmllint enable
                     }
                 ]
                 transitions: Transition {
+
                     ParallelAnimation {
+
                         NAnim {
                             duration: Appearance.animations.durations.small
                             properties: "implicitWidth,implicitHeight"
                         }
+
                         CAnim {
                             duration: Appearance.animations.durations.small
                             property: "color"
@@ -141,6 +146,7 @@ Rectangle {
                     horizontalCenter: parent.horizontalCenter
                 }
             }
+
             RowLayout {
                 spacing: Appearance.spacing.small
 
@@ -149,17 +155,19 @@ Rectangle {
                     leftMargin: Appearance.margin.larger
                     rightMargin: Appearance.margin.smaller
                 }
+
                 Icon {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.medium
                     icon: "folder_open"
                 }
+
                 TextInput {
                     id: input
 
                     property bool keyboardFocusable: true
 
-                    function requestKeyboardFocus() {
+                    function      requestKeyboardFocus() {
                         input.forceActiveFocus();
                     }
 
@@ -168,7 +176,6 @@ Rectangle {
                     font.pixelSize: Appearance.fonts.size.normal
                     text: root.currentPath
                     verticalAlignment: TextInput.AlignVCenter
-
                     onAccepted: root.pathEntered(text)
                 }
             }

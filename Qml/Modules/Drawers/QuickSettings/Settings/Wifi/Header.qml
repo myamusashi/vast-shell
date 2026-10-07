@@ -18,6 +18,7 @@ ColumnLayout {
         font.weight: Font.DemiBold
         text: qsTr("Internet")
     }
+
     StyledText {
         Layout.alignment: Qt.AlignCenter
         color: Colours.m3Colors.m3OnSurfaceVariant

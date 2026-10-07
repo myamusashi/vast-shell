@@ -11,20 +11,21 @@ import qs.Services
 Item {
     id: root
 
-    property string actionButtonIcon: ""
-    property string actionButtonLabel: ""
-    property real animatedRailWidth: expanded ? expandedWidth : compactWidth
-    property color backgroundColor: Colours.m3Colors.m3SurfaceContainerLow
     readonly property real compactWidth: 80
-    property int currentIndex: 0
-    property bool expanded: false
     readonly property real expandedWidth: 220
-    property var model: []
 
-    signal actionButtonTriggered
-    signal activated(int index)
+    property string        actionButtonIcon: ""
+    property string        actionButtonLabel: ""
+    property real          animatedRailWidth: expanded ? expandedWidth : compactWidth
+    property color         backgroundColor: Colours.m3Colors.m3SurfaceContainerLow
+    property int           currentIndex: 0
+    property bool          expanded: false
+    property var           model: []
 
-    function sectionBaseIndex(sectionIndex) {
+    signal                 actionButtonTriggered
+    signal                 activated(int index)
+
+    function               sectionBaseIndex(sectionIndex) {
         let sum = 0;
         for (let i = 0; i < sectionIndex; i++)
             sum += model[i]?.items?.length ?? 0;
@@ -33,7 +34,6 @@ Item {
 
     implicitHeight: parent ? parent.height : 480
     implicitWidth: animatedRailWidth
-
     Behavior on animatedRailWidth {
         SpringAnimation {
             damping: 0.3
@@ -47,6 +47,7 @@ Item {
         color: root.backgroundColor
         radius: 0
     }
+
     Column {
         id: railColumn
 
@@ -60,6 +61,7 @@ Item {
             visible: actionButtonItem.visible
             width: 1
         }
+
         WrapperItem {
             id: actionButtonItem
 
@@ -67,13 +69,13 @@ Item {
             anchors.leftMargin: Appearance.margin.normal
             implicitHeight: 56
             visible: root.actionButtonIcon !== ""
-
             states: [
                 State {
                     name: "compact"
                     when: !root.expanded
 
                     // qmllint disable Quick.property-changes-parsed
+
                     PropertyChanges {
                         implicitWidth: 56
                         target: actionButtonItem
@@ -93,7 +95,9 @@ Item {
 
             ]
             transitions: Transition {
+
                 ParallelAnimation {
+
                     NAnim {
                         properties: "implicitWidth"
                     }
@@ -103,7 +107,6 @@ Item {
             MArea {
                 layerRadius: Appearance.rounding.large
                 layerRect.opacity: 0.0
-
                 onClicked: root.actionButtonTriggered()
 
                 StyledRect {
@@ -121,6 +124,7 @@ Item {
                         font.pixelSize: Appearance.fonts.size.larger
                         icon: root.actionButtonIcon
                     }
+
                     StyledText {
                         anchors.left: actionButtonLeadingIcon.right
                         anchors.leftMargin: Appearance.spacing.normal
@@ -133,19 +137,19 @@ Item {
                         font.weight: Font.Medium
                         opacity: root.expanded ? 1 : 0
                         text: root.actionButtonLabel
-
                         Behavior on opacity {
-                            NAnim {
-                            }
+                            NAnim {}
                         }
                     }
                 }
             }
         }
+
         Item {
             height: Appearance.spacing.large + Appearance.spacing.normal - Appearance.spacing.small * 2
             width: 1
         }
+
         Flickable {
             id: destinationsFlick
 
@@ -160,12 +164,12 @@ Item {
 
             WheelHandler {
                 target: destinationsFlick
-
                 onWheel: event => {
-                    const maxY = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
+                    const maxY                 = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
                     destinationsFlick.contentY = Math.max(0, Math.min(maxY, destinationsFlick.contentY - event.angleDelta.y));
                 }
             }
+
             Column {
                 id: destinationsColumn
 
@@ -174,13 +178,13 @@ Item {
 
                 Repeater {
                     model: root.model
-
                     delegate: Column {
                         id: sectionColumn
 
-                        readonly property int baseIndex: root.sectionBaseIndex(index)
                         required property int index
                         required property var modelData
+
+                        readonly property int baseIndex: root.sectionBaseIndex(index)
                         readonly property int topGap: index === 0 ? Appearance.spacing.small : Appearance.spacing.large
 
                         spacing: 0
@@ -191,10 +195,8 @@ Item {
 
                             height: root.expanded ? sectionColumn.topGap + headerLabel.implicitHeight + Appearance.spacing.small : 0
                             width: parent.width
-
                             Behavior on height {
-                                NAnim {
-                                }
+                                NAnim {}
                             }
 
                             StyledText {
@@ -211,16 +213,14 @@ Item {
                                 font.weight: Font.Medium
                                 opacity: root.expanded ? 1 : 0
                                 text: sectionColumn.modelData.label ?? ""
-
                                 Behavior on opacity {
-                                    NAnim {
-                                    }
+                                    NAnim {}
                                 }
                             }
                         }
+
                         Repeater {
                             model: sectionColumn.modelData.items ?? []
-
                             delegate: NavigationRailItem {
                                 required property int index
                                 required property var modelData
@@ -234,7 +234,6 @@ Item {
                                 selected: sectionColumn.baseIndex + index === root.currentIndex
                                 width: destinationsColumn.width - (root.expanded ? Appearance.margin.normal : Appearance.margin.smaller) * 2
                                 x: (destinationsColumn.width - width) / 2
-
                                 onTriggered: {
                                     root.currentIndex = sectionColumn.baseIndex + index;
                                     root.activated(sectionColumn.baseIndex + index);

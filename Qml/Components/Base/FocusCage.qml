@@ -5,10 +5,9 @@ import QtQuick
 Item {
     id: root
 
-    property bool active: false
+    property bool          active: false
     default property alias data: contentItem.data // qmllint disable
-
-    property Item defaultFocus
+    property Item          defaultFocus
 
     Component.onCompleted: {
         if (active && defaultFocus)

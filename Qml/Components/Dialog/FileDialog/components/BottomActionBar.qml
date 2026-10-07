@@ -14,15 +14,15 @@ Rectangle {
     id: root
 
     property alias fileName: fileNameField.text
-    property bool hasSelection: false
-    property real labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabelLoader.item.text)) + 10 // qmllint disable
-    property var nameFilters: ["*"]
-    property bool selectFolder: false
+    property bool  hasSelection: false
+    property real  labelWidth: Math.max(fileNameMetrics.advanceWidth(fileNameLabel.text), filterMetrics.advanceWidth(filterLabelLoader.item.text)) + 10 // qmllint disable
+    property var   nameFilters: ["*"]
+    property bool  selectFolder: false
 
-    signal cancelClicked
-    signal openClicked
+    signal         cancelClicked
+    signal         openClicked
 
-    function setFileName(name) {
+    function       setFileName(name) {
         fileNameField.text = name;
     }
 
@@ -34,16 +34,19 @@ Rectangle {
 
         font: fileNameLabel.font
     }
+
     FontMetrics {
         id: filterMetrics
 
         font: filterLabelLoader.item.font // qmllint disable
     }
+
     Elevation {
         anchors.fill: parent
         level: 1
         z: -1
     }
+
     Rectangle {
         anchors.top: parent.top
         color: Colours.m3Colors.m3OutlineVariant
@@ -51,6 +54,7 @@ Rectangle {
         implicitWidth: parent.width
         opacity: 0.4
     }
+
     ColumnLayout {
         id: bottomCol
 
@@ -62,6 +66,7 @@ Rectangle {
             right: parent.right
             top: parent.top
         }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
@@ -74,6 +79,7 @@ Rectangle {
                 font.pixelSize: Appearance.fonts.size.normal
                 text: root.selectFolder ? qsTr("Folder") : qsTr("File name")
             }
+
             WrapperRectangle {
                 Layout.fillWidth: true
                 color: "transparent"
@@ -85,13 +91,16 @@ Rectangle {
 
                     font: fileNameField.font
                 }
+
                 Item {
+
                     StyledText {
                         id: fileNameField
 
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.normal
                     }
+
                     Rectangle {
                         anchors.bottom: parent.bottom
                         color: Colours.m3Colors.m3Primary
@@ -101,6 +110,7 @@ Rectangle {
                 }
             }
         }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
@@ -110,18 +120,17 @@ Rectangle {
 
                 Layout.preferredWidth: root.labelWidth
                 active: !root.selectFolder
-
                 sourceComponent: StyledText {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
                     text: qsTr("Filter")
                 }
             }
+
             Loader {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 250
                 active: !root.selectFolder
-
                 sourceComponent: WrapperRectangle {
                     color: "transparent"
                     margin: Appearance.margin.normal
@@ -131,6 +140,7 @@ Rectangle {
                         color: Colours.m3Colors.m3OutlineVariant
                         width: 2
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
@@ -138,19 +148,20 @@ Rectangle {
                     }
                 }
             }
+
             Item {
                 Layout.fillWidth: true
             }
+
             ExtendedFloatingButton {
                 color: "transparent"
                 text: qsTr("Cancel")
-
                 onClicked: root.cancelClicked()
             }
+
             ExtendedFloatingButton {
                 enabled: root.selectFolder ? true : root.hasSelection
                 text: root.selectFolder ? qsTr("Select") : qsTr("Open")
-
                 onClicked: root.openClicked()
             }
         }

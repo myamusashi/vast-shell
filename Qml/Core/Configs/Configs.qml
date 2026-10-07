@@ -35,10 +35,10 @@ Singleton {
 
         target: root.language
     }
+
     FileView {
         path: Paths.shellDir + "/configurations.json"
         watchChanges: true
-
         onAdapterUpdated: writeAdapter()
         onFileChanged: reload()
         onLoadFailed: err => {
@@ -56,38 +56,22 @@ Singleton {
         JsonAdapter { // qmllint disable
             id: adapter
 
-            property AppearanceConfig appearance: AppearanceConfig {
-            }
-            property AudioConfig audio: AudioConfig {
-            }
-            property BarConfig bar: BarConfig {
-            }
-            property CaptureScreenVideoConfig captureScreenVideo: CaptureScreenVideoConfig {
-            }
-            property ClipboardConfig clipboard: ClipboardConfig {
-            }
-            property ColorSystemConfig colors: ColorSystemConfig {
-            }
-            property GeneralConfig generals: GeneralConfig {
-            }
-            property IdleConfig idle: IdleConfig {
-            }
-            property KDEConnectConfig kdeConnect: KDEConnectConfig {
-            }
-            property LocalizationConfig language: LocalizationConfig {
-            }
-            property MediaPlayerConfig mediaPlayer: MediaPlayerConfig {
-            }
-            property NotificationConfig notification: NotificationConfig {
-            }
-            property PrivacyIndicatorConfig privacy: PrivacyIndicatorConfig {
-            }
-            property SearchConfig search: SearchConfig {
-            }
-            property WallpaperConfig wallpaper: WallpaperConfig {
-            }
-            property WeatherConfig weather: WeatherConfig {
-            }
+            property AppearanceConfig         appearance: AppearanceConfig {}
+            property AudioConfig              audio: AudioConfig {}
+            property BarConfig                bar: BarConfig {}
+            property CaptureScreenVideoConfig captureScreenVideo: CaptureScreenVideoConfig {}
+            property ClipboardConfig          clipboard: ClipboardConfig {}
+            property ColorSystemConfig        colors: ColorSystemConfig {}
+            property GeneralConfig            generals: GeneralConfig {}
+            property IdleConfig               idle: IdleConfig {}
+            property KDEConnectConfig         kdeConnect: KDEConnectConfig {}
+            property LocalizationConfig       language: LocalizationConfig {}
+            property MediaPlayerConfig        mediaPlayer: MediaPlayerConfig {}
+            property NotificationConfig       notification: NotificationConfig {}
+            property PrivacyIndicatorConfig   privacy: PrivacyIndicatorConfig {}
+            property SearchConfig             search: SearchConfig {}
+            property WallpaperConfig          wallpaper: WallpaperConfig {}
+            property WeatherConfig            weather: WeatherConfig {}
         }
     }
 }

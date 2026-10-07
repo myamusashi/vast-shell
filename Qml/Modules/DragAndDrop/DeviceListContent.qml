@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import qs.Components.Button
 import qs.Components.Base
@@ -14,13 +14,14 @@ Item {
     id: root
 
     required property bool active
-    readonly property int deviceCount: KDEConnect.availableDevices.length
-    required property var island
+    required property var  island
+
+    readonly property int  deviceCount: KDEConnect.availableDevices.length
     readonly property real maxContentHeight: FileListMetrics.clampHeight(deviceCount, rowHeight, 4, 200)
     readonly property real rowHeight: 36
     readonly property real visibleHeight: maxContentHeight
 
-    function computeActiveWidth() {
+    function               computeActiveWidth() {
         return FileListMetrics.computeActiveWidth(KDEConnect.availableDevices, device => {
             deviceMetrics.text = device.name;
             return deviceMetrics.width;
@@ -35,6 +36,7 @@ Item {
 
         font.pixelSize: Appearance.fonts.size.normal
     }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -42,13 +44,13 @@ Item {
         Loader {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
             active: root.active && root.deviceCount === 0
-
             sourceComponent: StyledText {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.normal
                 text: qsTr("No devices available")
             }
         }
+
         Flickable {
             id: deviceFlickable
 
@@ -64,7 +66,6 @@ Item {
             contentWidth: width
             flickableDirection: Flickable.VerticalFlick
             visible: root.active
-
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded
             }
@@ -88,7 +89,6 @@ Item {
                         implicitHeight: root.rowHeight - 12   // or keep 24
                         text: modelData.name
                         textColor: Colours.m3Colors.m3Primary
-
                         onClicked: {
                             root.island.selectedDevice = modelData;
                             root.island.goToConfirmation();
@@ -97,6 +97,7 @@ Item {
                 }
             }
         }
+
         Item {
             Layout.fillHeight: true
         } // spacer: pushes Back to the bottom
@@ -113,7 +114,6 @@ Item {
             implicitHeight: 24
             text: qsTr("Back")
             textColor: Colours.m3Colors.m3OnSurface
-
             onClicked: root.island.goBack()
         }
     }

@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Quickshell.Widgets
 
 import qs.Core.Configs
@@ -15,9 +15,7 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Moon {
-    }
-
+    content: Moon {}
     component Moon: ScrollView {
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AsNeeded
@@ -31,9 +29,9 @@ Pages {
             Header {
                 icon: "bedtime"
                 title: qsTr("Moon")
-
                 onClicked: root.isOpen = false
             }
+
             WrapperRectangle {
                 color: Colours.m3Colors.m3SurfaceContainer
                 implicitHeight: parent.height * 0.3
@@ -42,6 +40,7 @@ Pages {
                 radius: Appearance.rounding.normal
 
                 RowLayout {
+
                     ColumnLayout {
                         Layout.alignment: Qt.AlignLeft
                         Layout.fillHeight: true
@@ -52,6 +51,7 @@ Pages {
                             font.pixelSize: Appearance.fonts.size.extraLarge
                             text: Weather.moonPhaseText(Weather.moonPhase)
                         }
+
                         StyledRect {
                             color: Colours.m3Colors.m3SurfaceContainerHigh
                             implicitHeight: illumination.implicitHeight + 15
@@ -71,6 +71,7 @@ Pages {
                                 }
                             }
                         }
+
                         StyledRect {
                             color: Colours.m3Colors.m3SurfaceContainerHigh
                             implicitHeight: moonRise.implicitHeight + 15
@@ -90,6 +91,7 @@ Pages {
                                 }
                             }
                         }
+
                         StyledRect {
                             color: Colours.m3Colors.m3SurfaceContainerHigh
                             implicitHeight: moonSet.implicitHeight + 15
@@ -110,9 +112,11 @@ Pages {
                             }
                         }
                     }
+
                     Item {
                         Layout.fillWidth: true
                     }
+
                     Image {
                         readonly property var moonPhaseMap: ({
                                 "New Moon": "NewMoon",
@@ -136,6 +140,7 @@ Pages {
                     }
                 }
             }
+
             WrapperRectangle {
                 color: Colours.m3Colors.m3Surface
                 implicitHeight: pressureDescription.contentHeight + 20
@@ -147,6 +152,7 @@ Pages {
                     color: Colours.m3Colors.m3OutlineVariant
                     width: 1
                 }
+
                 StyledText {
                     id: pressureDescription
 
@@ -157,6 +163,7 @@ Pages {
                     wrapMode: Text.Wrap
                 }
             }
+
             Item {
                 Layout.fillHeight: true
             }

@@ -27,6 +27,7 @@ MaterialShape {
             rightMargin: 20
             topMargin: 20
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignLeft
 
@@ -37,6 +38,7 @@ MaterialShape {
                 icon: "waves"
                 type: Icon.Material
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
@@ -44,6 +46,7 @@ MaterialShape {
                 text: qsTr("AQI")
             }
         }
+
         StyledText {
             Layout.alignment: Qt.AlignRight
             color: Colours.m3Colors.m3OnSurface
@@ -51,9 +54,11 @@ MaterialShape {
             font.weight: Font.Bold
             text: canvas.aqi
         }
+
         Item {
             Layout.fillHeight: true
         }
+
         Item {
             Layout.bottomMargin: 8
             Layout.fillWidth: true
@@ -63,7 +68,6 @@ MaterialShape {
                 implicitHeight: 5
                 implicitWidth: parent.width
                 radius: Appearance.rounding.small
-
                 gradient: Gradient {
                     orientation: Gradient.Horizontal
 
@@ -71,28 +75,34 @@ MaterialShape {
                         color: Colours.m3Colors.m3Green
                         position: 0.0
                     }
+
                     GradientStop {
                         color: Colours.m3Colors.m3Yellow
                         position: 0.2
                     }
+
                     GradientStop {
                         color: Colours.m3Colors.m3Orange
                         position: 0.4
                     }
+
                     GradientStop {
                         color: Colours.m3Colors.m3Red
                         position: 0.6
                     }
+
                     GradientStop {
                         color: Colours.m3Colors.m3Purple
                         position: 0.8
                     }
+
                     GradientStop {
                         color: Colours.m3Colors.m3Maroon
                         position: 1.0
                     }
                 }
             }
+
             StyledRect {
                 border.color: Colours.m3Colors.m3OnSurface
                 border.width: 2
@@ -105,13 +115,12 @@ MaterialShape {
                     return Math.min(Math.max(0, position * parent.width - width / 2), parent.width - width);
                 }
                 y: parent.height / 2 - height / 2
-
                 Behavior on x {
-                    NAnim {
-                    }
+                    NAnim {}
                 }
             }
         }
+
         StyledText {
             Layout.alignment: Qt.AlignRight
             color: Colours.m3Colors.m3OnSurface

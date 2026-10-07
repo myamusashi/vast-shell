@@ -27,18 +27,17 @@ Item {
 
             Repeater {
                 model: 3
-
                 delegate: Rectangle {
                     id: dot
 
                     required property int index
-                    property int stagger: index * 90
+
+                    property int          stagger: index * 90
 
                     color: Colours.m3Colors.m3Green
                     height: 8
                     radius: width / 2
                     width: 8
-
                     SequentialAnimation on scale {
                         loops: Animation.Infinite
                         running: root.active
@@ -46,9 +45,11 @@ Item {
                         PauseAnimation {
                             duration: dot.stagger
                         }
+
                         NAnim {
                             to: 0.55
                         }
+
                         NAnim {
                             to: 1
                         }
@@ -56,6 +57,7 @@ Item {
                 }
             }
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal

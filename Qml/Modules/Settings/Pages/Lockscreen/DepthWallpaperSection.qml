@@ -25,6 +25,7 @@ Item {
             right: parent.right
             top: parent.top
         }
+
         SettingsCard {
             title: qsTr("Depth Wallpaper")
 
@@ -33,6 +34,7 @@ Item {
                 label: qsTr("Video wallpaper active")
                 visible: MediaKind.isVideo(Paths.currentWallpaper)
             }
+
             SettingRow {
                 description: qsTr("Enable depth effect (Apple like).")
                 label: qsTr("Enable Depth Wallpaper")
@@ -40,29 +42,29 @@ Item {
                 StyledSwitch {
                     checked: Configs.wallpaper.depthWallpaperEnabled
                     enabled: !MediaKind.isVideo(Paths.currentWallpaper)
-
                     onCheckedChanged: DepthWallpaperController.onToggle(checked)
                 }
             }
+
             SettingRow {
                 description: qsTr("Automatically regenerate the depth map whenever the wallpaper changes.")
                 label: qsTr("Auto-process on wallpaper change:")
 
                 StyledSwitch {
                     checked: Configs.wallpaper.autoProcessedDepthWallpaper
-
                     onCheckedChanged: Configs.wallpaper.autoProcessedDepthWallpaper = checked
                 }
             }
+
             ExtendedFloatingButton {
                 enabled: DepthWallpaperController.state !== "processing" && !MediaKind.isVideo(Paths.currentWallpaper)
                 icon.name: "refresh"
                 implicitHeight: 36
                 text: qsTr("Re-generate")
                 visible: Configs.wallpaper.depthWallpaperEnabled && DepthWallpaperController.state !== "processing" && !MediaKind.isVideo(Paths.currentWallpaper)
-
                 onClicked: DepthWallpaperController.runRembg()
             }
+
             StyledText {
                 color: DepthWallpaperController.state === "error" ? Colours.m3Colors.m3Error : DepthWallpaperController.state === "done" ? Colours.m3Colors.m3Green : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.medium
@@ -80,6 +82,7 @@ Item {
                 }
                 visible: text !== ""
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small

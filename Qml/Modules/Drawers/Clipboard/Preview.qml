@@ -15,10 +15,10 @@ Item {
 
     property int entryId: -1
 
-    signal copyRequested(int id)
-    signal pinToggled(int id, bool newState)
+    signal       copyRequested(int id)
+    signal       pinToggled(int id, bool newState)
 
-    function requestPreview(): void {
+    function     requestPreview(): void {
         entryDetails.clear();
         previewTimeout.stop();
 
@@ -38,29 +38,30 @@ Item {
                 return;
             previewTimeout.stop();
             entryDetails.loading = false;
-            entryDetails.error = true;
+            entryDetails.error   = true;
         }
         function onFullEntryReady(entry) {
             if (entry.id !== root.entryId)
                 return;
             previewTimeout.stop();
-            entryDetails.error = false;
-            entryDetails.entryType = entry.type ?? "text";
-            entryDetails.isImage = entry.type === "image";
-            entryDetails.content = entry.content ?? "";
-            entryDetails.sourceApp = entry.sourceApp ?? "";
-            entryDetails.pinned = entry.pinned ?? false;
-            entryDetails.sizeBytes = entry.sizeBytes ?? 0;
-            entryDetails.timestamp = FormatTimeUtils.formatClipboard(entry.timestamp ?? 0);
-            entryDetails.fileName = entry.fileName ?? "";
+            entryDetails.error       = false;
+            entryDetails.entryType   = entry.type ?? "text";
+            entryDetails.isImage     = entry.type === "image";
+            entryDetails.content     = entry.content ?? "";
+            entryDetails.sourceApp   = entry.sourceApp ?? "";
+            entryDetails.pinned      = entry.pinned ?? false;
+            entryDetails.sizeBytes   = entry.sizeBytes ?? 0;
+            entryDetails.timestamp   = FormatTimeUtils.formatClipboard(entry.timestamp ?? 0);
+            entryDetails.fileName    = entry.fileName ?? "";
 
             entryDetails.previewPath = entry.previewPath ?? "";
 
-            entryDetails.loading = false;
+            entryDetails.loading     = false;
         }
 
         target: ClipboardManager
     }
+
     Timer {
         id: previewTimeout
 
@@ -68,7 +69,6 @@ Item {
 
         interval: 150
         repeat: true
-
         onTriggered: {
             if (entryDetails.loading) {
                 if (retry < entryDetails.previewLoadRetry) {
@@ -76,27 +76,21 @@ Item {
                     root.requestPreview();
                 } else {
                     stop();
-                    retry = 0;
+                    retry                = 0;
                     entryDetails.loading = false;
-                    entryDetails.error = true;
+                    entryDetails.error   = true;
                 }
             } else {
                 stop();
             }
         }
     }
+
     QtObject {
         id: entryDetails
 
-        property string content: ""
-        property string entryType: "text"
-        property bool error: false
-        property string fileName: ""
-        readonly property bool isHtml: entryType === "html"
-        property bool isImage: false
-        property bool loading: false
-        readonly property int maxPreviewChars: 20000
-        property bool pinned: false
+        readonly property bool   isHtml: entryType === "html"
+        readonly property int    maxPreviewChars: 20000
         readonly property string previewContent: {
             if (!truncated)
                 return content;
@@ -105,27 +99,36 @@ Item {
             const cut = content.lastIndexOf(">", maxPreviewChars);
             return content.slice(0, cut > 0 ? cut + 1 : maxPreviewChars);
         }
-        readonly property int previewLoadRetry: 3
-        property string previewPath: ""
-        property int sizeBytes: 0
-        property string sourceApp: ""
-        property string timestamp: ""
-        readonly property bool truncated: content.length > maxPreviewChars
+        readonly property int    previewLoadRetry: 3
+        readonly property bool   truncated: content.length > maxPreviewChars
 
-        function clear() {
-            loading = false;
-            error = false;
-            isImage = false;
+        property string          content: ""
+        property string          entryType: "text"
+        property bool            error: false
+        property string          fileName: ""
+        property bool            isImage: false
+        property bool            loading: false
+        property bool            pinned: false
+        property string          previewPath: ""
+        property int             sizeBytes: 0
+        property string          sourceApp: ""
+        property string          timestamp: ""
+
+        function                 clear() {
+            loading     = false;
+            error       = false;
+            isImage     = false;
             previewPath = "";
-            content = "";
-            sourceApp = "";
-            timestamp = "";
-            pinned = false;
-            sizeBytes = 0;
-            entryType = "text";
-            fileName = "";
+            content     = "";
+            sourceApp   = "";
+            timestamp   = "";
+            pinned      = false;
+            sizeBytes   = 0;
+            entryType   = "text";
+            fileName    = "";
         }
     }
+
     Column {
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
@@ -137,6 +140,7 @@ Item {
             font.pixelSize: Appearance.fonts.size.extraLarge
             icon: "content_paste"
         }
+
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
             color: Colours.m3Colors.m3OnSurfaceVariant
@@ -144,6 +148,7 @@ Item {
             text: qsTr("Select an entry to preview")
         }
     }
+
     LoadingIndicator {
         anchors.centerIn: parent
         contained: true
@@ -151,6 +156,7 @@ Item {
         implicitWidth: 30
         status: root.entryId >= 0 && entryDetails.loading
     }
+
     Column {
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
@@ -162,22 +168,24 @@ Item {
             font.pixelSize: Appearance.fonts.size.extraLarge
             icon: "error"
         }
+
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("Couldn't load preview")
         }
+
         ExtendedFloatingButton {
             anchors.horizontalCenter: parent.horizontalCenter
             color: Colours.m3Colors.m3SecondaryContainer
             icon.name: "refresh"
             text: qsTr("Retry")
             textColor: Colours.m3Colors.m3OnSecondaryContainer
-
             onClicked: root.requestPreview()
         }
     }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Appearance.margin.normal
@@ -208,12 +216,14 @@ Item {
                             icon: entryDetails.isImage ? "image" : "assignment"
                         }
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.Medium
                         text: entryDetails.isImage ? qsTr("Image") : qsTr("Text")
                     }
+
                     StyledText {
                         Layout.fillWidth: false
                         Layout.maximumWidth: 220
@@ -223,6 +233,7 @@ Item {
                         text: entryDetails.fileName
                         visible: entryDetails.isImage && entryDetails.fileName.length > 0
                     }
+
                     StyledRect {
                         color: Qt.alpha(Colours.m3Colors.m3SecondaryContainer, 0.8)
                         implicitHeight: 18
@@ -240,6 +251,7 @@ Item {
                         }
                     }
                 }
+
                 RowLayout {
                     spacing: Appearance.spacing.smaller
 
@@ -248,6 +260,7 @@ Item {
                         font.pixelSize: Appearance.fonts.size.small
                         text: entryDetails.timestamp
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.small
@@ -257,23 +270,24 @@ Item {
             }
 
             // Pin button
+
             FloatingButton {
                 color: Qt.alpha(Colours.m3Colors.m3SurfaceContainerHigh, 0.5)
                 icon.color: entryDetails.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: entryDetails.pinned ? "keep" : "keep_off"
                 size: "small"
-
                 onClicked: root.pinToggled(root.entryId, !entryDetails.pinned)
             }
+
             ExtendedFloatingButton {
                 color: Colours.m3Colors.m3SecondaryContainer
                 icon.name: "content_copy"
                 text: qsTr("Copy")
                 textColor: Colours.m3Colors.m3OnSecondaryContainer
-
                 onClicked: root.copyRequested(root.entryId)
             }
         }
+
         Rectangle {
             Layout.fillWidth: true
             color: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.6)
@@ -281,6 +295,7 @@ Item {
         }
 
         // Text preview
+
         ScrollView {
             id: textScroll
 
@@ -290,23 +305,22 @@ Item {
             ScrollBar.vertical.policy: ScrollBar.AsNeeded
             clip: true
             visible: !entryDetails.isImage
-
             Keys.onPressed: event => {
                 if (event.key === Qt.Key_PageUp) {
                     contentItem.contentY = Math.max(0, contentItem.contentY - height); // qmllint disable
-                    event.accepted = true;
+                    event.accepted       = true;
                 }
                 if (event.key === Qt.Key_PageDown) {
                     contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + height); // qmllint disable
-                    event.accepted = true;
+                    event.accepted       = true;
                 }
                 if (event.key === Qt.Key_Up) {
                     contentItem.contentY = Math.max(0, contentItem.contentY - 40); // qmllint disable
-                    event.accepted = true;
+                    event.accepted       = true;
                 }
                 if (event.key === Qt.Key_Down) {
                     contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + 40); // qmllint disable
-                    event.accepted = true;
+                    event.accepted       = true;
                 }
             }
 
@@ -329,6 +343,7 @@ Item {
                     textFormat: entryDetails.isHtml ? TextEdit.RichText : TextEdit.PlainText
                     wrapMode: TextEdit.Wrap
                 }
+
                 StyledText {
                     Layout.fillWidth: true
                     color: Colours.m3Colors.m3OnSurfaceVariant
@@ -338,6 +353,7 @@ Item {
                 }
             }
         }
+
         ScrollView {
             id: imageScroll
 
@@ -347,11 +363,9 @@ Item {
             ScrollBar.vertical.policy: ScrollBar.AsNeeded
             clip: true
             visible: entryDetails.isImage
-
             Keys.onDownPressed: contentItem.contentY += 40 // qmllint disable
             Keys.onLeftPressed: contentItem.contentX -= 40 // qmllint disable
             Keys.onRightPressed: contentItem.contentX += 40 // qmllint disable
-
             Keys.onUpPressed: contentItem.contentY -= 40 // qmllint disable
 
             WheelHandler {
@@ -360,12 +374,12 @@ Item {
                 property real scale: 1.0
 
                 acceptedModifiers: Qt.ControlModifier
-
                 onWheel: event => {
                     const step = event.angleDelta.y / 120;
-                    scale = Math.max(0.25, Math.min(4.0, scale + step * 0.15));
+                    scale      = Math.max(0.25, Math.min(4.0, scale + step * 0.15));
                 }
             }
+
             Item {
                 height: Math.max(imageScroll.height, previewImage.paintedHeight * imageZoom.scale)
                 width: Math.max(imageScroll.width, previewImage.paintedWidth * imageZoom.scale)
@@ -382,12 +396,11 @@ Item {
                     source: entryDetails.previewPath.length > 0 ? ("file://" + entryDetails.previewPath) : ""
                     sourceSize: Qt.size(300, 300)
                     width: imageScroll.width * imageZoom.scale
-
                     Behavior on opacity {
-                        NAnim {
-                        }
+                        NAnim {}
                     }
                 }
+
                 StyledText {
                     anchors.centerIn: parent
                     color: Colours.m3Colors.m3Secondary

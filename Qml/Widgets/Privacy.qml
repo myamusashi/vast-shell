@@ -24,6 +24,7 @@ RowLayout {
         shape: MaterialShape.Circle
         visible: PrivacyServices.activeAppNames.length > 0
     }
+
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
@@ -32,6 +33,7 @@ RowLayout {
         type: Icon.Material
         visible: PrivacyServices.screenshareAppNames.length > 0
     }
+
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
@@ -40,6 +42,7 @@ RowLayout {
         type: Icon.Material
         visible: PrivacyServices.audioInAppNames.length > 0
     }
+
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
@@ -48,6 +51,7 @@ RowLayout {
         type: Icon.Material
         visible: PrivacyServices.audioOutAppNames.length > 0
     }
+
     Item {
         id: marquee
 
@@ -81,6 +85,7 @@ RowLayout {
                     model: PrivacyServices.activeAppNames
                 }
             }
+
             Row {
                 id: contentCopy
 
@@ -93,6 +98,7 @@ RowLayout {
                     model: PrivacyServices.activeAppNames
                 }
             }
+
             SequentialAnimation {
                 id: scrollAnim
 
@@ -102,6 +108,7 @@ RowLayout {
                 PauseAnimation {
                     duration: 5000
                 }
+
                 NumberAnimation {
                     duration: (content.implicitWidth + marquee.gap) / 40 * 1000
                     easing.type: Easing.Linear
@@ -112,6 +119,7 @@ RowLayout {
                 }
             }
         }
+
         Connections {
             function onActiveAppNamesChanged() {
                 scrollAnim.stop();
@@ -123,6 +131,7 @@ RowLayout {
             target: PrivacyServices
         }
     }
+
     Component {
         id: appDelegate
 
@@ -141,6 +150,7 @@ RowLayout {
                 source: IconUtils.iconForId(entry.modelData)
                 visible: Configs.privacy.enablePrivacyIcon
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
                 color: Colours.m3Colors.m3OnSurface

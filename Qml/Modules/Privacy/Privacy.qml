@@ -19,6 +19,7 @@ Scope {
             kind: "screenshare"
         }
     }
+
     Component {
         id: audioInContent
 
@@ -26,6 +27,7 @@ Scope {
             kind: "audioIn"
         }
     }
+
     Component {
         id: audioOutContent
 
@@ -33,16 +35,19 @@ Scope {
             kind: "audioOut"
         }
     }
+
     IslandHost {
         content: root.isPrivacyNodesEnabled ? screenshareContent : null
         propertyName: root.isPrivacyNodesEnabled ? "screenshareContent" : ""
         service: root.isPrivacyNodesEnabled ? PrivacyServices : null
     }
+
     IslandHost {
         content: root.isPrivacyNodesEnabled ? audioInContent : null
         propertyName: root.isPrivacyNodesEnabled ? "audioInContent" : ""
         service: root.isPrivacyNodesEnabled ? PrivacyServices : null
     }
+
     IslandHost {
         content: root.isPrivacyNodesEnabled ? audioOutContent : null
         propertyName: root.isPrivacyNodesEnabled ? "audioOutContent" : ""

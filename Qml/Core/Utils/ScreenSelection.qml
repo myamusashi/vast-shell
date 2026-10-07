@@ -10,42 +10,42 @@ import qs.Services
 Scope {
     id: root
 
-    property point endPos
+    property point  endPos
     property string frozenImageUrl: ""
     property string mode: "single"
-    property bool selecting: false
-    property point startPos
-    property var virtualScreens: []
+    property bool   selecting: false
+    property point  startPos
+    property var    virtualScreens: []
 
-    signal cancelled
-    signal geometrySelected(string geometry)
+    signal          cancelled
+    signal          geometrySelected(string geometry)
 
-    function close() {
-        mode = "single";
-        frozenImageUrl = "";
+    function        close() {
+        mode                         = "single";
+        frozenImageUrl               = "";
         GlobalStates.isSelectionOpen = false;
     }
-    function open() {
-        startPos = Qt.point(0, 0);
-        endPos = Qt.point(0, 0);
-        selecting = false;
+    function        open() {
+        startPos                     = Qt.point(0, 0);
+        endPos                       = Qt.point(0, 0);
+        selecting                    = false;
         GlobalStates.isSelectionOpen = true;
     }
-    function openCrossMonitor(frozenUrl) {
-        mode = "cross-monitor";
+    function        openCrossMonitor(frozenUrl) {
+        mode           = "cross-monitor";
         frozenImageUrl = frozenUrl;
         open();
     }
 
     Variants {
         model: GlobalStates.isSelectionOpen ? Quickshell.screens : []
-
         delegate: PanelWindow {
             id: window
 
             required property ShellScreen modelData
-            readonly property real offsetX: modelData.x
-            readonly property real offsetY: modelData.y
+
+            readonly property real        offsetX: modelData.x
+            readonly property real        offsetY: modelData.y
 
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
             WlrLayershell.layer: WlrLayer.Overlay
@@ -59,6 +59,7 @@ Scope {
                 right: true
                 top: true
             }
+
             Image {
                 anchors.fill: parent
                 cache: false
@@ -66,10 +67,12 @@ Scope {
                 source: root.mode === "cross-monitor" ? root.frozenImageUrl : ""
                 visible: root.mode === "cross-monitor" && root.frozenImageUrl !== ""
             }
+
             Rectangle {
                 anchors.fill: parent
                 color: Qt.alpha(Colours.m3Colors.m3Background, 0.5)
             }
+
             Rectangle {
                 border.color: Colours.m3Colors.m3OnSurface
                 border.width: 2
@@ -85,21 +88,21 @@ Scope {
                     color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.25)
                 }
             }
+
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.CrossCursor
-
                 onPositionChanged: e => {
                     if (root.selecting)
                         root.endPos = Qt.point(e.x + window.offsetX, e.y + window.offsetY);
                 }
                 onPressed: e => {
-                    root.startPos = Qt.point(e.x + window.offsetX, e.y + window.offsetY);
-                    root.endPos = Qt.point(e.x + window.offsetX, e.y + window.offsetY);
+                    root.startPos  = Qt.point(e.x + window.offsetX, e.y + window.offsetY);
+                    root.endPos    = Qt.point(e.x + window.offsetX, e.y + window.offsetY);
                     root.selecting = true;
                 }
                 onReleased: e => {
-                    root.selecting = false;
+                    root.selecting   = false;
                     const releasePos = Qt.point(e.x + window.offsetX, e.y + window.offsetY);
                     root.close();
 
@@ -115,12 +118,12 @@ Scope {
                     root.geometrySelected(`${Math.round(x)},${Math.round(y)} ${Math.round(w)}x${Math.round(h)}`);
                 }
             }
+
             Item {
                 id: focusCatcher
 
                 anchors.fill: parent
                 focus: GlobalStates.isSelectionOpen
-
                 Component.onCompleted: forceActiveFocus()
                 Keys.onEscapePressed: {
                     root.close();

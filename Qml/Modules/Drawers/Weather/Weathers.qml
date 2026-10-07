@@ -38,13 +38,11 @@ Drawer {
         clip: true
         contentHeight: contentColumn.implicitHeight + 40
         contentWidth: width
-
         ScrollBar.vertical: ScrollBar {
             id: scrollBar
 
             policy: ScrollBar.AsNeeded
             width: 6
-
             background: StyledRect {
                 color: Colours.m3Colors.m3OutlineVariant
                 implicitWidth: 6
@@ -77,15 +75,15 @@ Drawer {
                 right: parent.right
                 top: parent.top
             }
-            Headers {
-            }
+
+            Headers {}
+
             Loader {
                 id: summaryLoader
 
                 Layout.fillWidth: true
                 active: Configs.weather.enableQuickSummary && GlobalStates.isWeatherPanelOpen
                 asynchronous: true
-
                 sourceComponent: WrapperRectangle {
                     color: Colours.m3Colors.m3SurfaceContainer
                     implicitHeight: summaryText.implicitHeight + 20
@@ -103,22 +101,24 @@ Drawer {
                     }
                 }
             }
+
             Loader {
                 Layout.fillWidth: true
                 active: ((Weather.hourlyForecast && Weather.hourlyForecast.length > 0) || (Weather.dailyForecast && Weather.dailyForecast.length > 0)) && GlobalStates.isWeatherPanelOpen
                 asynchronous: true
-
                 sourceComponent: ColumnLayout {
                     spacing: Appearance.spacing.large
 
                     WeatherItems.ForecastHourly {
                         Layout.fillWidth: true
                     }
+
                     WeatherItems.ForecastDaily {
                         Layout.fillWidth: true
                     }
                 }
             }
+
             GridLayout {
                 Layout.alignment: Qt.AlignCenter
                 Layout.fillWidth: true
@@ -135,104 +135,105 @@ Drawer {
 
                     Card {
                         zoomPage: humidityPages
-
-                        content: WeatherItems.Humidity {
-                        }
+                        content: WeatherItems.Humidity {}
                     }
+
                     Card {
                         zoomPage: sunPages
-
-                        content: WeatherItems.Sun {
-                        }
+                        content: WeatherItems.Sun {}
                     }
+
                     Card {
                         zoomPage: pressurePages
-
-                        content: WeatherItems.Pressure {
-                        }
+                        content: WeatherItems.Pressure {}
                     }
+
                     Card {
                         zoomPage: visibilityPages
-
-                        content: WeatherItems.Visibility {
-                        }
+                        content: WeatherItems.Visibility {}
                     }
+
                     Card {
                         zoomPage: windPages
-
-                        content: WeatherItems.Wind {
-                        }
+                        content: WeatherItems.Wind {}
                     }
+
                     Card {
                         zoomPage: uvIndexPages
-
-                        content: WeatherItems.UVIndex {
-                        }
+                        content: WeatherItems.UVIndex {}
                     }
+
                     Card {
                         zoomPage: aqiPages
-
-                        content: WeatherItems.AQI {
-                        }
+                        content: WeatherItems.AQI {}
                     }
+
                     Card {
                         zoomPage: precipitationPages
-
-                        content: WeatherItems.Precipitation {
-                        }
+                        content: WeatherItems.Precipitation {}
                     }
+
                     Card {
                         zoomPage: moonPages
-
-                        content: WeatherItems.Moon {
-                        }
+                        content: WeatherItems.Moon {}
                     }
+
                     WeatherItems.Cloudiness {
                         implicitHeight: 150
                         implicitWidth: 150
                     }
                 }
             }
+
             Item {
                 Layout.fillHeight: true
                 Layout.preferredHeight: 20
             }
         }
     }
+
     MouseArea {
         anchors.fill: parent
         enabled: root.anyPageOpen
         hoverEnabled: true
         visible: root.anyPageOpen
-
         onClicked: {}
         onPressed: {}
         onReleased: {}
     }
+
     WeatherPages.Humidity {
         id: humidityPages
     }
+
     WeatherPages.Sun {
         id: sunPages
     }
+
     WeatherPages.Pressure {
         id: pressurePages
     }
+
     WeatherPages.Visibility {
         id: visibilityPages
     }
+
     WeatherPages.Wind {
         id: windPages
     }
+
     WeatherPages.AQI {
         id: aqiPages
     }
+
     WeatherPages.Precipitation {
         id: precipitationPages
     }
+
     WeatherPages.Moon {
         id: moonPages
     }
+
     WeatherPages.UVIndex {
         id: uvIndexPages
     }
@@ -240,8 +241,9 @@ Drawer {
     component Card: Item {
         id: cardRoot
 
+        required property var  zoomPage
+
         default property alias content: contentLoader.sourceComponent
-        required property var zoomPage
 
         implicitHeight: 150
         implicitWidth: 150
@@ -251,15 +253,15 @@ Drawer {
 
             anchors.fill: parent
         }
+
         MArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             enabled: !root.anyPageOpen
-
             onClicked: {
                 cardRoot.zoomPage.zoomOriginX = cardRoot.mapToItem(root, 0, 0).x + cardRoot.width / 2;
                 cardRoot.zoomPage.zoomOriginY = cardRoot.mapToItem(root, 0, 0).y + cardRoot.height / 2;
-                cardRoot.zoomPage.isOpen = true;
+                cardRoot.zoomPage.isOpen      = true;
             }
         }
     }

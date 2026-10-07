@@ -3,10 +3,10 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import Quickshell
-import Quickshell.Wayland
-import Quickshell.Widgets
 import Quickshell.Hyprland
 import Quickshell.Services.SystemTray
+import Quickshell.Wayland
+import Quickshell.Widgets
 
 import qs.Components.Effects
 import qs.Components.Base
@@ -18,17 +18,18 @@ import qs.Services
 StyledRect {
     id: root
 
-    property var activeIconItem: null
-    property var activeMenu: null
     readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
     readonly property real horizontalPadding: Appearance.spacing.normal
-    property bool menuMapped: false
-    property bool menuShowing: false
-    property real menuX: 0
     readonly property real shadowPadding: 12
-    property alias widgetHeight: root.implicitHeight
 
-    function closeMenu(): void {
+    property var           activeIconItem: null
+    property var           activeMenu: null
+    property bool          menuMapped: false
+    property bool          menuShowing: false
+    property real          menuX: 0
+    property alias         widgetHeight: root.implicitHeight
+
+    function               closeMenu(): void {
         closeTimer.stop();
         hideTimer.stop();
         if (!root.menuMapped)
@@ -36,28 +37,28 @@ StyledRect {
         root.menuShowing = false;
         hideTimer.restart();
     }
-    function finishClose(): void {
+    function               finishClose(): void {
         closeTimer.stop();
-        root.menuMapped = false;
+        root.menuMapped     = false;
         root.activeIconItem = null;
-        root.activeMenu = null;
+        root.activeMenu     = null;
     }
-    function openMenuFor(item, iconItem): void {
+    function               openMenuFor(item, iconItem): void {
         closeTimer.stop();
         hideTimer.stop();
         if (!item || !item.hasMenu) {
             root.closeMenu();
             return;
         }
-        root.menuX = iconItem.mapToGlobal(0, 0).x;
+        root.menuX          = iconItem.mapToGlobal(0, 0).x;
         root.activeIconItem = iconItem;
         if (root.menuShowing && root.activeMenu === item.menu)
             return;
-        root.activeMenu = item.menu;
+        root.activeMenu  = item.menu;
         root.menuShowing = true;
-        root.menuMapped = true;
+        root.menuMapped  = true;
     }
-    function scheduleClose(): void {
+    function               scheduleClose(): void {
         if (!root.menuMapped)
             return;
         closeTimer.restart();
@@ -68,10 +69,8 @@ StyledRect {
     implicitWidth: visible ? systemTrayRow.width + horizontalPadding * 1.2 : 0
     radius: Appearance.rounding.small
     visible: SystemTray.items.values.length > 0
-
     Behavior on implicitWidth {
-        NAnim {
-        }
+        NAnim {}
     }
 
     Row {
@@ -82,12 +81,12 @@ StyledRect {
 
         Repeater {
             model: SystemTray.items.values
-
             delegate: Item {
                 id: delegateTray
 
-                property string iconSource: IconUtils.iconSource(modelData ? modelData.icon : "")
                 required property SystemTrayItem modelData
+
+                property string                  iconSource: IconUtils.iconSource(modelData ? modelData.icon : "")
 
                 height: 25
                 width: 25
@@ -106,6 +105,7 @@ StyledRect {
                         target: bgTrayIcon.target
                     }
                 }
+
                 IconImage {
                     anchors.centerIn: parent
                     asynchronous: true
@@ -116,7 +116,6 @@ StyledRect {
                     smooth: true
                     source: delegateTray.iconSource
                     width: Appearance.fonts.size.large * 1.2
-
                     layer.effect: MultiEffect {
                         autoPaddingEnabled: false
                         colorization: 1.0
@@ -128,6 +127,7 @@ StyledRect {
                         }
                     }
                 }
+
                 MArea {
                     id: trayItemArea
 
@@ -135,7 +135,6 @@ StyledRect {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: mouse => {
                         if (!delegateTray.modelData || mouse.button !== Qt.LeftButton)
                             return;
@@ -149,32 +148,30 @@ StyledRect {
             }
         }
     }
+
     Timer {
         id: closeTimer
 
         interval: Appearance.animations.durations.normal
-
         onTriggered: root.closeMenu()
     }
+
     Timer {
         id: hideTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial
-
         onTriggered: root.finishClose()
     }
+
     LazyLoader {
         loading: true
-
         component: PanelWindow {
             HyprlandWindow.visibleMask: mask // qmllint disable
-
             WlrLayershell.layer: menuSurface.open ? WlrLayer.Top : WlrLayer.Bottom
             WlrLayershell.namespace: "shell:drawers"
             aboveWindows: false
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
-
             mask: Region {
                 item: menuSurface
             }
@@ -185,9 +182,11 @@ StyledRect {
                 right: true
                 top: true
             }
+
             margins { // qmllint disable
                 right: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
             }
+
             Connections {
                 function onActiveMenuChanged(): void {
                     if (root.activeMenu !== null)
@@ -196,6 +195,7 @@ StyledRect {
 
                 target: root
             }
+
             Item {
                 id: panelRoot
 
@@ -211,7 +211,6 @@ StyledRect {
                     width: menuSurface.width + root.shadowPadding * 2
                     x: Math.max(root.shadowPadding, Math.min(root.menuX - root.shadowPadding - menuSurface.bodyInsetX, maxX))
                     y: Math.min(root.barBottom - root.shadowPadding, maxY)
-
                     Behavior on x {
                         enabled: root.menuMapped
 
@@ -227,7 +226,6 @@ StyledRect {
                         open: root.menuShowing
                         x: root.shadowPadding
                         y: root.shadowPadding
-
                         onEntered: {
                             closeTimer.stop();
                             hideTimer.stop();

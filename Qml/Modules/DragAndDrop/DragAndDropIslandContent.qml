@@ -29,7 +29,6 @@ Item {
         id: dropArea
 
         anchors.fill: parent
-
         onDropped: drop => {
             if (DragAndDropServices.currentState !== DragAndDropServices.State.Dragging)
                 return;
@@ -52,6 +51,7 @@ Item {
                 DragAndDropServices.currentState = DragAndDropServices.droppedFiles.length > 0 ? DragAndDropServices.State.FilesDropped : DragAndDropServices.State.Idle;
         }
     }
+
     StackLayout {
         id: stackLayout
 
@@ -87,25 +87,31 @@ Item {
                 width: 10
             }
         }
+
         DraggingContent {
             active: DragAndDropServices.isDragging
         }
+
         FilesDroppedContent {
             active: DragAndDropServices.isFilesDropped
             island: DragAndDropServices
         }
+
         DeviceListContent {
             active: DragAndDropServices.isSelectingDevice
             island: DragAndDropServices
         }
+
         ConfirmDeviceContent {
             active: DragAndDropServices.isConfirmDevice
             island: DragAndDropServices
         }
+
         ProgressContent {
             active: DragAndDropServices.isTransferring
             island: DragAndDropServices
         }
+
         DoneContent {
             active: DragAndDropServices.isCompleted
             island: DragAndDropServices

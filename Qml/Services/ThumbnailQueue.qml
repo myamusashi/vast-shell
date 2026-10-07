@@ -9,19 +9,20 @@ Singleton {
     id: root
 
     readonly property bool busy: currentJob !== null
-    property var currentJob: null
-    property var queue: []
 
-    signal thumbnailReady(string videoPath, string thumbnailPath)
+    property var           currentJob: null
+    property var           queue: []
 
-    function finish(videoPath, thumbnailPath, callback) {
+    signal                 thumbnailReady(string videoPath, string thumbnailPath)
+
+    function               finish(videoPath, thumbnailPath, callback) {
         thumbnailReady(videoPath, thumbnailPath);
         if (callback)
             callback(videoPath, thumbnailPath);
         currentJob = null;
         startNext();
     }
-    function generate(videoPath, thumbnailPath, callback) {
+    function               generate(videoPath, thumbnailPath, callback) {
         if (!videoPath || !thumbnailPath)
             return;
         if ((currentJob && currentJob.videoPath === videoPath && currentJob.thumbnailPath === thumbnailPath) || queue.some(job => job.videoPath === videoPath && job.thumbnailPath === thumbnailPath))
@@ -33,64 +34,62 @@ Singleton {
         });
         startNext();
     }
-    function pathFor(videoPath, outputDirectory) {
+    function               pathFor(videoPath, outputDirectory) {
         const fileName = String(videoPath).split("/").pop();
-        const dot = fileName.lastIndexOf(".");
+        const dot      = fileName.lastIndexOf(".");
         return `${outputDirectory}/${dot > 0 ? fileName.substring(0, dot) : fileName}.png`;
     }
-    function startNext() {
+    function               startNext() {
         if (currentJob || queue.length === 0)
             return;
-        currentJob = queue.shift();
-        probeProcess.videoPath = currentJob.videoPath;
+        currentJob                 = queue.shift();
+        probeProcess.videoPath     = currentJob.videoPath;
         probeProcess.thumbnailPath = currentJob.thumbnailPath;
-        probeProcess.callback = currentJob.callback;
-        probeProcess.running = true;
+        probeProcess.callback      = currentJob.callback;
+        probeProcess.running       = true;
     }
 
     Process {
         id: probeProcess
 
-        property var callback: null
+        property var    callback: null
         property string thumbnailPath: ""
         property string videoPath: ""
 
         command: ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", videoPath]
-
         stdout: StdioCollector {
             onStreamFinished: {
-                const duration = parseFloat(text.trim());
-                const timestamp = isNaN(duration) ? 0 : duration / 2.0;
-                const hours = Math.floor(timestamp / 3600);
-                const minutes = Math.floor((timestamp % 3600) / 60);
-                const seconds = Math.floor(timestamp % 60);
-                const seek = String(hours).padStart(2, "0") + ":" + String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
-                const outputDirectory = probeProcess.thumbnailPath.substring(0, probeProcess.thumbnailPath.lastIndexOf("/"));
-                extractProcess.seek = seek;
-                extractProcess.videoPath = probeProcess.videoPath;
-                extractProcess.thumbnailPath = probeProcess.thumbnailPath;
+                const duration                 = parseFloat(text.trim());
+                const timestamp                = isNaN(duration) ? 0 : duration / 2.0;
+                const hours                    = Math.floor(timestamp / 3600);
+                const minutes                  = Math.floor((timestamp % 3600) / 60);
+                const seconds                  = Math.floor(timestamp % 60);
+                const seek                     = String(hours).padStart(2, "0") + ":" + String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+                const outputDirectory          = probeProcess.thumbnailPath.substring(0, probeProcess.thumbnailPath.lastIndexOf("/"));
+                extractProcess.seek            = seek;
+                extractProcess.videoPath       = probeProcess.videoPath;
+                extractProcess.thumbnailPath   = probeProcess.thumbnailPath;
                 extractProcess.outputDirectory = outputDirectory;
-                extractProcess.callback = probeProcess.callback;
-                extractProcess.running = true;
+                extractProcess.callback        = probeProcess.callback;
+                extractProcess.running         = true;
             }
         }
-
         onExited: function (exitCode) { // qmllint disable signal-handler-parameters
             if (exitCode !== 0)
                 root.finish(probeProcess.videoPath, "", probeProcess.callback);
         }
     }
+
     Process {
         id: extractProcess
 
-        property var callback: null
+        property var    callback: null
         property string outputDirectory: ""
         property string seek: ""
         property string thumbnailPath: ""
         property string videoPath: ""
 
         command: ["sh", "-c", "mkdir -p \"$1\" && exec ffmpeg -ss \"$2\" -i \"$3\" -vframes 1 -q:v 2 -vf scale=256:-1 \"$4\" -y -v error", "sh", outputDirectory, seek, videoPath, thumbnailPath]
-
         onExited: function (exitCode) { // qmllint disable signal-handler-parameters
             root.finish(extractProcess.videoPath, exitCode === 0 ? extractProcess.thumbnailPath : "", extractProcess.callback);
         }

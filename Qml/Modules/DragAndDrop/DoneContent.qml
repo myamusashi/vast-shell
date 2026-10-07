@@ -11,8 +11,10 @@ import qs.Services
 Item {
     id: root
 
-    required property bool active
-    readonly property real contentHeight: 44
+    required property bool   active
+    required property var    island
+
+    readonly property real   contentHeight: 44
     readonly property string detailText: {
         switch (outcome) {
         case DragAndDropServices.Outcome.Sent:
@@ -37,7 +39,7 @@ Item {
         }
     }
     readonly property string deviceName: root.islandService.selectedDevice?.name ?? ""
-    readonly property int failure: root.islandService.failure
+    readonly property int    failure: root.islandService.failure
     readonly property string headlineText: {
         switch (outcome) {
         case DragAndDropServices.Outcome.Sent:
@@ -52,10 +54,9 @@ Item {
             return qsTr("Couldn't send to %1").arg(root.deviceName);
         }
     }
-    required property var island
-    readonly property var islandService: root.island
-    readonly property int outcome: root.islandService.outcome
-    readonly property color outcomeColor: {
+    readonly property var    islandService: root.island
+    readonly property int    outcome: root.islandService.outcome
+    readonly property color  outcomeColor: {
         switch (outcome) {
         case DragAndDropServices.Outcome.Sent:
             return Colours.m3Colors.m3Green;
@@ -99,9 +100,9 @@ Item {
             icon.size: Appearance.fonts.size.extraLarge
             text: root.headlineText
             textColor: Colours.m3Colors.m3OnSurface
-
             onClicked: {}
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.small

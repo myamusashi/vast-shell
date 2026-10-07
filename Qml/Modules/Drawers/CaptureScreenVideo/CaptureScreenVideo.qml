@@ -16,11 +16,12 @@ import qs.Services
 Drawer {
     id: root
 
-    property int currentPage: 0
-    property bool isHistoryOpen: false
     readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
 
-    function openVideoFile(path) {
+    property int           currentPage: 0
+    property bool          isHistoryOpen: false
+
+    function               openVideoFile(path) {
         Quickshell.execDetached({
             command: [Configs.generals.apps.videoViewer, path]
         });
@@ -36,7 +37,6 @@ Drawer {
     filletRadius: 40
     length: 380
     open: GlobalStates.isRecordingPanelOpen
-
     onIsHistoryOpenChanged: {
         if (isHistoryOpen)
             ScreenCaptureHistory.reloadFiles();
@@ -46,7 +46,6 @@ Drawer {
         active: root.shown
         anchors.fill: parent
         asynchronous: true
-
         sourceComponent: ColumnLayout {
             anchors.fill: parent
             anchors.margins: Appearance.spacing.small
@@ -67,6 +66,7 @@ Drawer {
                         icon: "screen_record"
                         type: Icon.Material
                     }
+
                     StyledText {
                         Layout.alignment: Qt.AlignVCenter
                         Layout.fillWidth: true
@@ -75,6 +75,7 @@ Drawer {
                         font.weight: Font.DemiBold
                         text: qsTr("Screen Recorder")
                     }
+
                     FloatingButton {
                         Layout.alignment: Qt.AlignVCenter
                         backgroundRadius: Appearance.rounding.normal
@@ -84,11 +85,11 @@ Drawer {
                         icon.size: Appearance.fonts.size.large
                         implicitHeight: 28
                         implicitWidth: 28
-
                         onClicked: GlobalStates.isRecordingPanelOpen = false
                     }
                 }
             }
+
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
@@ -104,12 +105,12 @@ Drawer {
                         leftMargin: Appearance.spacing.small
                         rightMargin: Appearance.spacing.small
                     }
+
                     Rectangle {
                         color: Colours.m3Colors.m3Red
                         implicitHeight: Appearance.spacing.small
                         implicitWidth: Appearance.spacing.small
                         radius: Appearance.padding.small
-
                         SequentialAnimation on opacity {
                             loops: Animation.Infinite
                             running: CaptureScreenVideo.isRecording
@@ -118,30 +119,34 @@ Drawer {
                                 duration: 600
                                 to: 0.3
                             }
+
                             PropertyAnimation {
                                 duration: 600
                                 to: 1.0
                             }
                         }
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Red
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.DemiBold
                         text: qsTr("Recording")
                     }
+
                     Item {
                         Layout.fillWidth: true
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.bold: true
                         font.family: Fonts.mono
                         font.pixelSize: Appearance.fonts.size.normal
                         text: {
-                            const s = CaptureScreenVideo.recordingElapsedSeconds;
-                            const h = Math.floor(s / 3600);
-                            const m = Math.floor((s % 3600) / 60);
+                            const s   = CaptureScreenVideo.recordingElapsedSeconds;
+                            const h   = Math.floor(s / 3600);
+                            const m   = Math.floor((s % 3600) / 60);
                             const sec = s % 60;
                             if (h > 0)
                                 return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
@@ -150,6 +155,7 @@ Drawer {
                     }
                 }
             }
+
             StackLayout {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -159,16 +165,19 @@ Drawer {
                     onOpenAudio: root.currentPage = 1
                     onOpenHistory: {
                         root.isHistoryOpen = true;
-                        root.currentPage = 3;
+                        root.currentPage   = 3;
                     }
                     onOpenSettings: root.currentPage = 2
                 }
+
                 PageAudio {
                     onGoBack: root.currentPage = 0
                 }
+
                 PageSettings {
                     onGoBack: root.currentPage = 0
                 }
+
                 PageHistory {
                     onGoBack: root.currentPage = 0
                     onOpenFile: path => root.openVideoFile(path)

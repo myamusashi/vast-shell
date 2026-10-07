@@ -12,12 +12,14 @@ import qs.Services
 Item {
     id: root
 
-    property bool active: false
-    readonly property bool isEnabled: modelData?.enabled ?? false
-    readonly property bool isSeparator: modelData?.isSeparator ?? false
     required property QsMenuEntry modelData
 
-    signal clicked
+    readonly property bool        isEnabled: modelData?.enabled ?? false
+    readonly property bool        isSeparator: modelData?.isSeparator ?? false
+
+    property bool                 active: false
+
+    signal                        clicked
 
     implicitHeight: isSeparator ? 1 : 44
     opacity: isSeparator || isEnabled ? 1 : 0.4
@@ -36,6 +38,7 @@ Item {
             verticalCenter: parent.verticalCenter
         }
     }
+
     Row {
         id: contentRow
 
@@ -47,6 +50,7 @@ Item {
             leftMargin: Appearance.margin.larger
             rightMargin: Appearance.margin.larger
         }
+
         IconImage {
             id: leadingIcon
 
@@ -58,6 +62,7 @@ Item {
             visible: root.modelData.icon !== ""
             width: 20
         }
+
         Text {
             id: contentText
 
@@ -78,6 +83,7 @@ Item {
                 return Math.max(avail, 0);
             }
         }
+
         Icon {
             id: checkIcon
 
@@ -89,6 +95,7 @@ Item {
             visible: root.modelData.buttonType === QsMenuButtonType.CheckBox
             width: 20
         }
+
         Icon {
             id: radioIcon
 
@@ -100,6 +107,7 @@ Item {
             visible: root.modelData.buttonType === QsMenuButtonType.RadioButton
             width: 20
         }
+
         Icon {
             id: chevronIcon
 
@@ -112,12 +120,12 @@ Item {
             width: 20
         }
     }
+
     MArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         enabled: !root.isSeparator && root.isEnabled
         layerRadius: Appearance.rounding.small
-
         onClicked: root.clicked()
     }
 }

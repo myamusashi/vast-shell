@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import QtQuick.Layouts
+import QtQuick.Shapes
 import Quickshell.Widgets
 import M3Shapes
 
@@ -27,6 +27,7 @@ MaterialShape {
             fillPercentage: Weather.humidity
         }
     }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: Appearance.spacing.normal
@@ -44,6 +45,7 @@ MaterialShape {
                 icon: "water_drop"
                 type: Icon.Material
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
@@ -51,6 +53,7 @@ MaterialShape {
                 text: qsTr("Humidity")
             }
         }
+
         StyledText {
             Layout.alignment: Qt.AlignCenter
             color: Colours.m3Colors.m3Primary
@@ -58,6 +61,7 @@ MaterialShape {
             font.weight: Font.Bold
             text: Weather.humidity + "%"
         }
+
         RowLayout {
             Layout.alignment: Qt.AlignBottom | Qt.AlignCenter
             Layout.bottomMargin: 30
@@ -81,12 +85,14 @@ MaterialShape {
                     text: Weather.dewPoint.toFixed(0) + "°"
                 }
             }
+
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
                 text: qsTr("Dew point")
             }
         }
+
         Item {
             Layout.fillHeight: true
         }
@@ -109,22 +115,24 @@ MaterialShape {
                 path: waveGeo.buildPath()
             }
         }
+
         QtObject {
             id: waveGeo
 
-            property real amplitude: 3
-            property real fillHeight: heightPx * (fillPercentage / 100)
-            property real fillPercentage: 0
             readonly property real heightPx: waveShape.parent.height
-            property real waveY: heightPx - fillHeight
-            property real wavelength: widthPx / 5
             readonly property real widthPx: waveShape.parent.width
 
-            function buildPath() {
+            property real          amplitude: 3
+            property real          fillHeight: heightPx * (fillPercentage / 100)
+            property real          fillPercentage: 0
+            property real          wavelength: widthPx / 5
+            property real          waveY: heightPx - fillHeight
+
+            function               buildPath() {
                 if (fillHeight <= 0)
                     return "M 0 0";
 
-                var points = 100;
+                var points   = 100;
                 var pathData = "M 0 " + heightPx + " L 0 " + waveY;
 
                 for (var i = 0; i <= points; i++) {

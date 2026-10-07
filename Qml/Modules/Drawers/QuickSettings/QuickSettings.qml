@@ -10,13 +10,14 @@ import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
+
 import "Settings"
 
 Drawer {
     id: root
 
     property bool isControlCenterOpen: GlobalStates.isQuickSettingsOpen
-    property int saveIndex: 0
+    property int  saveIndex: 0
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -60,10 +61,10 @@ Drawer {
                         label: qsTr("Performance")
                     }
                 ]
-
                 onClicked: index => root.saveIndex = index
             }
         }
+
         Item {
             id: pageContainer
 
@@ -75,28 +76,27 @@ Drawer {
             SettingsPage {
                 currentIndex: root.saveIndex
                 pageIndex: 0
-
                 content: Component {
-                    Settings {
-                    }
+
+                    Settings {}
                 }
             }
+
             SettingsPage {
                 currentIndex: root.saveIndex
                 pageIndex: 1
-
                 content: Component {
-                    VolumeSettings {
-                    }
+
+                    VolumeSettings {}
                 }
             }
+
             SettingsPage {
                 currentIndex: root.saveIndex
                 pageIndex: 2
-
                 content: Component {
-                    Performances {
-                    }
+
+                    Performances {}
                 }
             }
         }
@@ -106,15 +106,14 @@ Drawer {
         id: animRoot
 
         required property Component content
-        required property int currentIndex
-        required property int pageIndex
+        required property int       currentIndex
+        required property int       pageIndex
 
         anchors.fill: parent
         enabled: currentIndex === pageIndex
         opacity: currentIndex === pageIndex ? 1 : 0
         x: currentIndex === pageIndex ? 0 : currentIndex > pageIndex ? -parent.width * 0.05 : parent.width * 0.05
         z: currentIndex === pageIndex ? 1 : 0
-
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.small
@@ -139,7 +138,6 @@ Drawer {
 
                 interval: 30000
                 running: !pageLoader.active
-
                 onTriggered: {}
             }
         }

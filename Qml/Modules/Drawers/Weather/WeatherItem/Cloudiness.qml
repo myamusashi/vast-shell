@@ -21,12 +21,15 @@ MaterialShape {
         opacity: 0.6
         shape: MaterialShape.Cookie6Sided
     }
+
     RowLayout {
+
         anchors {
             horizontalCenter: parent.horizontalCenter
             top: parent.top
             topMargin: 20
         }
+
         Icon {
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large * 1.5
@@ -38,18 +41,21 @@ MaterialShape {
             icon: "cloud"
             type: Icon.Material
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal
             text: qsTr("Cloudiness")
         }
     }
+
     StyledText {
         anchors.centerIn: parent
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.extraLarge
         text: Weather.cloudCover
     }
+
     StyledText {
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.large

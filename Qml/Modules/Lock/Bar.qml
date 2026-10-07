@@ -12,10 +12,11 @@ import qs.Services
 WrapperRectangle {
     id: bottomWrapperRect
 
-    property alias contentLayout: contentLayout
-    property alias lockIcon: lockIcon
-    required property var mediaLayout
+    required property var  mediaLayout
     required property bool showErrorMessage
+
+    property alias         contentLayout: contentLayout
+    property alias         lockIcon: lockIcon
 
     Layout.fillHeight: true
     clip: true
@@ -30,6 +31,7 @@ WrapperRectangle {
 
         font: lockIcon.font
     }
+
     RowLayout {
         id: contentLayout
 
@@ -52,6 +54,7 @@ WrapperRectangle {
                 z: 1
             }
         }
+
         Icon {
             id: lockIcon
 
@@ -70,6 +73,7 @@ WrapperRectangle {
 
                 host: lockIcon
             }
+
             SequentialAnimation {
                 id: shakeAnim
 
@@ -82,6 +86,7 @@ WrapperRectangle {
                     target: lockIcon
                     to: 18
                 }
+
                 NAnim {
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -89,6 +94,7 @@ WrapperRectangle {
                     target: lockIcon
                     to: -18
                 }
+
                 NAnim {
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -96,6 +102,7 @@ WrapperRectangle {
                     target: lockIcon
                     to: 12
                 }
+
                 NAnim {
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -103,6 +110,7 @@ WrapperRectangle {
                     target: lockIcon
                     to: -12
                 }
+
                 NAnim {
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -110,6 +118,7 @@ WrapperRectangle {
                     target: lockIcon
                     to: 6
                 }
+
                 NAnim {
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -117,6 +126,7 @@ WrapperRectangle {
                     target: lockIcon
                     to: -6
                 }
+
                 NAnim {
                     duration: 100
                     easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -124,11 +134,13 @@ WrapperRectangle {
                     target: lockIcon
                     to: 0
                 }
+
                 ScriptAction {
                     script: lockIcon.color(Colours.m3Colors.m3Red)
                 }
             }
         }
+
         StyledText {
             id: errorLabel
 
@@ -139,13 +151,13 @@ WrapperRectangle {
             opacity: bottomWrapperRect.showErrorMessage ? 1 : 0
             text: "WRONG"
             visible: bottomWrapperRect.showErrorMessage
-
             Behavior on opacity {
                 NAnim {
                     duration: 200
                 }
             }
         }
+
         Clock {
             id: clockItem
 

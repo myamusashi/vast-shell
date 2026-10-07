@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell.Io
 
 JsonObject {
-    property bool enabled: true
+    property bool      enabled: true
     property list<var> timeouts: [
         {
             timeoutMonitor: 60,

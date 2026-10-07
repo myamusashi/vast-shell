@@ -11,8 +11,8 @@ RowLayout {
     id: root
 
     default property alias content: controlContainer.data
-    property alias description: description.text
-    property alias label: label.text
+    property alias         description: description.text
+    property alias         label: label.text
 
     Layout.fillWidth: true
     spacing: Appearance.spacing.normal
@@ -31,6 +31,7 @@ RowLayout {
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.Wrap
         }
+
         StyledText {
             id: description
 
@@ -42,6 +43,7 @@ RowLayout {
             wrapMode: Text.Wrap
         }
     }
+
     RowLayout {
         id: controlContainer
 

@@ -12,33 +12,17 @@ import qs.Services
 Singleton {
     id: root
 
-    property alias dnd: persistentProps.dnd
-
     readonly property list<Notif> notClosed: notifications.filter(notif => !notif.closed)
     readonly property list<Notif> popups: notifications.filter(notif => notif.popup)
 
-    property list<Notif> notifications: []
-    property bool loaded: false
-    property int maxNotifications: 100
-    property int maxNotificationAge: 604800000
+    property alias                dnd: persistentProps.dnd
+    property bool                 loaded: false
+    property int                  maxNotificationAge: 604800000
+    property int                  maxNotifications: 100
+    property list<Notif>          notifications: []
 
-    function clearAll() {
-        for (const notif of notifications.slice())
-            notif.close();
-    }
-
-    function forceCleanup() {
-        const now = Date.now();
-        for (const notif of notifications.slice()) {
-            if (now - notif.time.getTime() > maxNotificationAge * 2) {
-                notif.locks.clear();
-                notif.close();
-            }
-        }
-    }
-
-    function cleanupOldNotifications() {
-        const now = Date.now();
+    function                      cleanupOldNotifications() {
+        const now              = Date.now();
         const oldNotifications = notifications.filter(notif => {
             const age = now - notif.time.getTime();
             return age > maxNotificationAge;
@@ -51,20 +35,32 @@ Singleton {
                 notif.close();
         }
     }
-
-    function enforceNotificationLimit() {
+    function                      clearAll() {
+        for (const notif of notifications.slice())
+            notif.close();
+    }
+    function                      enforceNotificationLimit() {
         cleanupOldNotifications();
 
         const currentCount = notClosed.length;
 
         if (currentCount >= maxNotifications) {
             const sortedNotifs = notClosed.slice().sort((a, b) => a.time - b.time);
-            const toRemove = currentCount - maxNotifications + 1;
+            const toRemove     = currentCount - maxNotifications + 1;
 
             console.log(`Removing ${toRemove} oldest notification(s) to enforce limit`);
             ToastService.show(qsTr("Removing %1 oldest notification(s) to enforce limit").arg(toRemove), qsTr("Notifications"), "dialog-information", 3000);
             for (let i = 0; i < toRemove && i < sortedNotifs.length; i++)
                 sortedNotifs[i].close();
+        }
+    }
+    function                      forceCleanup() {
+        const now = Date.now();
+        for (const notif of notifications.slice()) {
+            if (now - notif.time.getTime() > maxNotificationAge * 2) {
+                notif.locks.clear();
+                notif.close();
+            }
         }
     }
 
@@ -82,8 +78,8 @@ Singleton {
                 let persistentImage = notif.image ?? "";
 
                 if (persistentImage.startsWith("image://")) {
-                    const key = "notif-" + notif.idNotif;
-                    const cached = ImageCache.cachedPath(key);
+                    const key       = "notif-" + notif.idNotif;
+                    const cached    = ImageCache.cachedPath(key);
                     persistentImage = cached || "";
                 }
 
@@ -127,6 +123,7 @@ Singleton {
         id: persistentProps
 
         property bool dnd: false
+
         reloadableId: "notifs"
     }
 
@@ -143,7 +140,6 @@ Singleton {
         imageSupported: true
         persistenceSupported: true
         inlineReplySupported: true
-
         onNotification: notif => {
             notif.tracked = true;
 
@@ -163,7 +159,6 @@ Singleton {
         id: storage
 
         path: Paths.cacheDir + "/vast-shell/notifications.json"
-
         onLoaded: {
             try {
                 const content = text();
@@ -182,7 +177,7 @@ Singleton {
                     return;
                 }
 
-                const now = Date.now();
+                const now       = Date.now();
                 let loadedCount = 0;
 
                 for (const notifData of data) {
@@ -190,13 +185,13 @@ Singleton {
                     if (notifAge > root.maxNotificationAge)
                         continue;
 
-                    const raw = notifData.image ?? "";
+                    const raw       = notifData.image ?? "";
                     // image:// URLs are provider-ephemeral and cannot survive a reload;
                     // they should never appear in JSON after the saveTimer fix, but discard
                     // any that slipped through from an older cache.
                     const stableUrl = raw.startsWith("image://") ? "" : raw;
 
-                    const notif = notifComponent.createObject(root, {
+                    const notif     = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
                         idNotif: notifData.id,
                         summary: notifData.summary,
@@ -231,7 +226,6 @@ Singleton {
                 root.loaded = true;
             }
         }
-
         onLoadFailed: error => {
             console.log("Notification cache doesn't exist, creating it");
             ToastService.show(qsTr("Notification cache doesn't exist, creating it"), qsTr("Notifications"), "dialog-information", 3000);
@@ -244,28 +238,34 @@ Singleton {
         id: notif
 
         readonly property Connections connection: Connections {
-            target: notif.notification
-
-            function onClosed() {
-                notif.close();
+            function onActionsChanged() {
+                notif.actions = notif.notification.actions.map(action => ({
+                            identifier: action.identifier,
+                            text: action.text,
+                            invoke: () => action.invoke()
+                        }));
             }
-
-            function onSummaryChanged() {
-                notif.summary = notif.notification.summary;
-            }
-
-            function onBodyChanged() {
-                notif.body = notif.notification.body;
-            }
-
             function onAppIconChanged() {
                 notif.appIcon = notif.notification.appIcon;
             }
-
             function onAppNameChanged() {
                 notif.appName = notif.notification.appName;
             }
-
+            function onBodyChanged() {
+                notif.body = notif.notification.body;
+            }
+            function onClosed() {
+                notif.close();
+            }
+            function onExpireTimeoutChanged() {
+                notif.expireTimeout = notif.notification.expireTimeout;
+            }
+            function onHasActionIconsChanged() {
+                notif.hasActionIcons = notif.notification.hasActionIcons;
+            }
+            function onHasInlineReplyChanged() {
+                notif.hasInlineReply = notif.notification.hasInlineReply;
+            }
             function onImageChanged() {
                 const raw = notif.notification.image ?? "";
 
@@ -285,75 +285,44 @@ Singleton {
                 } else
                     notif.image = raw;
             }
-
-            function onExpireTimeoutChanged() {
-                notif.expireTimeout = notif.notification.expireTimeout;
+            function onInlineReplyPlaceholderChanged() {
+                notif.inlineReplyPlaceholder = notif.notification.inlineReplyPlaceholder;
             }
-
+            function onResidentChanged() {
+                notif.resident = notif.notification.resident;
+            }
+            function onSummaryChanged() {
+                notif.summary = notif.notification.summary;
+            }
             function onUrgencyChanged() {
                 notif.urgency = notif.notification.urgency;
             }
 
-            function onResidentChanged() {
-                notif.resident = notif.notification.resident;
-            }
-
-            function onHasActionIconsChanged() {
-                notif.hasActionIcons = notif.notification.hasActionIcons;
-            }
-
-            function onHasInlineReplyChanged() {
-                notif.hasInlineReply = notif.notification.hasInlineReply;
-            }
-
-            function onInlineReplyPlaceholderChanged() {
-                notif.inlineReplyPlaceholder = notif.notification.inlineReplyPlaceholder;
-            }
-
-            function onActionsChanged() {
-                notif.actions = notif.notification.actions.map(action => ({
-                            identifier: action.identifier,
-                            text: action.text,
-                            invoke: () => action.invoke()
-                        }));
-            }
+            target: notif.notification
         }
+        readonly property string      timeStr: FormatTimeUtils.formatCompactAge(Time.date.getTime() - time.getTime())
 
-        readonly property string timeStr: FormatTimeUtils.formatCompactAge(Time.date.getTime() - time.getTime())
-        property bool popup: false
-        property bool closed: false
+        property list<var>            actions: []
+        property string               appIcon: ""
+        property string               appName: ""
+        property string               body: ""
+        property bool                 closed: false
+        property string               desktopEntry: ""
+        property real                 expireTimeout: 5000
+        property bool                 hasActionIcons: false
+        property bool                 hasInlineReply: false
+        property string               idNotif: ""
+        property string               image: ""
+        property string               inlineReplyPlaceholder: ""
+        property var                  locks: new Set()
+        property Notification         notification
+        property bool                 popup: false
+        property bool                 resident: false
+        property string               summary: ""
+        property date                 time: new Date()
+        property int                  urgency: NotificationUrgency.Normal
 
-        property date time: new Date()
-
-        property string desktopEntry: ""
-
-        property Notification notification
-        property string idNotif: ""
-        property string summary: ""
-        property string body: ""
-        property string appIcon: ""
-        property string appName: ""
-        property string image: ""
-        property real expireTimeout: 5000
-        property int urgency: NotificationUrgency.Normal
-        property bool resident: false
-        property bool hasActionIcons: false
-        property bool hasInlineReply: false
-        property string inlineReplyPlaceholder: ""
-        property list<var> actions: []
-        property var locks: new Set()
-
-        function lock(item) {
-            locks.add(item);
-        }
-
-        function unlock(item) {
-            locks.delete(item);
-            if (closed)
-                close();
-        }
-
-        function close() {
+        function                      close() {
             closed = true;
             if (locks.size === 0 && root.notifications.includes(this)) {
                 root.notifications = root.notifications.filter(notif => notif !== this);
@@ -364,8 +333,7 @@ Singleton {
                 destroy();
             }
         }
-
-        function closeQuiet() {
+        function                      closeQuiet() {
             closed = true;
             if (locks.size === 0 && root.notifications.includes(this)) {
                 root.notifications = root.notifications.filter(notif => notif !== this);
@@ -375,8 +343,13 @@ Singleton {
                 destroy();
             }
         }
-
-        function sendInlineReply(text) {
+        function                      dismissPopup() {
+            popup = false;
+        }
+        function                      lock(item) {
+            locks.add(item);
+        }
+        function                      sendInlineReply(text) {
             const trimmed = text.trim();
 
             if (!notification || closed || !hasInlineReply || trimmed === "")
@@ -384,16 +357,17 @@ Singleton {
 
             notification.sendInlineReply(trimmed);
         }
-
-        function dismissPopup() {
-            popup = false;
+        function                      unlock(item) {
+            locks.delete(item);
+            if (closed)
+                close();
         }
 
         Component.onCompleted: {
             if (!notification)
                 return;
 
-            const raw = notification.image ?? "";
+            const raw       = notification.image ?? "";
             let cachedImage = raw;
             if (raw.startsWith("image://")) {
                 if (raw.startsWith("image://icon//"))
@@ -404,25 +378,24 @@ Singleton {
                     cachedImage = ImageCache.saveProviderImageQml(raw, "notif-" + notification.id);
             }
 
-            idNotif = notification.id;
-            summary = notification.summary;
-            body = notification.body;
-            appIcon = notification.appIcon;
-            appName = notification.appName;
-            image = cachedImage;
-            expireTimeout = notification.expireTimeout;
-            urgency = notification.urgency;
-            resident = notification.resident;
-            hasActionIcons = notification.hasActionIcons;
-            hasInlineReply = notification.hasInlineReply;
+            idNotif                = notification.id;
+            summary                = notification.summary;
+            body                   = notification.body;
+            appIcon                = notification.appIcon;
+            appName                = notification.appName;
+            image                  = cachedImage;
+            expireTimeout          = notification.expireTimeout;
+            urgency                = notification.urgency;
+            resident               = notification.resident;
+            hasActionIcons         = notification.hasActionIcons;
+            hasInlineReply         = notification.hasInlineReply;
             inlineReplyPlaceholder = notification.inlineReplyPlaceholder;
-            actions = notification.actions.map(action => ({
+            actions                = notification.actions.map(action => ({
                         identifier: action.identifier,
                         text: action.text,
                         invoke: () => action.invoke()
                     }));
         }
-
         Component.onDestruction: {
             if (connection.target)
                 connection.target = null;

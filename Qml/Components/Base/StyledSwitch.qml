@@ -11,8 +11,8 @@ Switch {
     id: root
 
     property string currentIcon: offIcon
-    property color currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-    property alias isUseIcon: iconLoader.active
+    property color  currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
+    property alias  isUseIcon: iconLoader.active
     property string offIcon: "close"
     property string onIcon: "check"
 
@@ -40,7 +40,6 @@ Switch {
                 active: true
                 anchors.centerIn: parent
                 asynchronous: true
-
                 sourceComponent: Icon {
                     color: root.currentIconColor
                     font.pixelSize: Appearance.fonts.size.medium
@@ -61,6 +60,7 @@ Switch {
                 color: Colours.m3Colors.m3SurfaceContainerHighest
                 target: track
             }
+
             PropertyChanges {
                 color: Colours.m3Colors.m3Outline
                 height: 16
@@ -68,6 +68,7 @@ Switch {
                 width: 16
                 x: handle.margin
             }
+
             PropertyChanges {
                 currentIcon: offIcon
                 currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
@@ -83,6 +84,7 @@ Switch {
                 color: Colours.m3Colors.m3Primary
                 target: track
             }
+
             PropertyChanges {
                 color: Colours.m3Colors.m3OnPrimary
                 height: 24
@@ -90,6 +92,7 @@ Switch {
                 width: 28
                 x: track.width - 28 - handle.margin
             }
+
             PropertyChanges {
                 currentIcon: onIcon
                 currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
@@ -105,6 +108,7 @@ Switch {
                 color: Colours.m3Colors.m3SurfaceContainerHighest
                 target: track
             }
+
             PropertyChanges {
                 color: Colours.m3Colors.m3Outline
                 height: 28
@@ -112,6 +116,7 @@ Switch {
                 width: 28
                 x: handle.margin
             }
+
             PropertyChanges {
                 currentIcon: offIcon
                 currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
@@ -127,6 +132,7 @@ Switch {
                 color: Colours.m3Colors.m3Primary
                 target: track
             }
+
             PropertyChanges {
                 color: Colours.m3Colors.m3OnPrimary
                 height: 28
@@ -134,6 +140,7 @@ Switch {
                 width: 28
                 x: track.width - 28 - handle.margin
             }
+
             PropertyChanges {
                 currentIcon: onIcon
                 currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
@@ -144,6 +151,7 @@ Switch {
     // qmllint enable
 
     transitions: Transition {
+
         NAnim {
             duration: Appearance.animations.durations.small
             easing.bezierCurve: Appearance.animations.curves.emphasized

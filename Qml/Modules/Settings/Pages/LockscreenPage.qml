@@ -15,7 +15,7 @@ import "./Lockscreen"
 SettingsPageBase {
     id: root
 
-    readonly property bool currentIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
+    readonly property bool   currentIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
     readonly property string sourcePreview: currentIsVideo ? "file://" + MediaKind.videoThumbnailPathFor(Paths.currentWallpaper) + "?v=" + Wallpaper.thumbnailVersion : MediaKind.staticPathFor(Paths.currentWallpaper)
 
     pageTitle: qsTr("Lockscreen")
@@ -31,6 +31,7 @@ SettingsPageBase {
             visible: root.currentIsVideo
             wrapMode: Text.Wrap
         }
+
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
@@ -47,6 +48,7 @@ SettingsPageBase {
                     fillMode: Image.PreserveAspectFit
                     source: root.sourcePreview
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.small
@@ -61,6 +63,7 @@ SettingsPageBase {
                     }
                 }
             }
+
             Rectangle {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3SurfaceContainerHigh
@@ -73,6 +76,7 @@ SettingsPageBase {
                     source: DepthWallpaperController.state === "done" ? "file://" + DepthWallpaperController.fgPath : ""
                     visible: source !== ""
                 }
+
                 Rectangle {
                     anchors.fill: parent
                     color: Qt.alpha(Colours.m3Colors.m3SurfaceContainerHigh, 0.7)
@@ -89,6 +93,7 @@ SettingsPageBase {
                             implicitWidth: 24
                             status: DepthWallpaperController.state === "processing"
                         }
+
                         StyledText {
                             Layout.alignment: Qt.AlignCenter
                             color: Colours.m3Colors.m3Primary
@@ -97,6 +102,7 @@ SettingsPageBase {
                         }
                     }
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.small
@@ -124,6 +130,7 @@ SettingsPageBase {
             }
         }
     }
+
     DepthWallpaperSection {
         Layout.fillWidth: true
     }

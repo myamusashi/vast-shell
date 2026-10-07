@@ -26,7 +26,6 @@ SettingsPageBase {
                         }))
                 text: model[selectedIndex]?.display ?? Configs.language.language
                 textRole: "display"
-
                 onMenuItemActivated: index => Configs.language.language = model[index].display
             }
         }

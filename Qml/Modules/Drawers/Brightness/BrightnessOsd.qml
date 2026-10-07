@@ -12,15 +12,14 @@ Item {
     id: root
 
     readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
-
-    readonly property int pillHeight: 104
-    readonly property int pillWidth: 260
-    property bool primed: false
+    readonly property int  pillHeight: 104
+    readonly property int  pillWidth: 260
     readonly property bool shouldShow: Brightness.available && GlobalStates.isOSDVisible("brightness")
+
+    property bool          primed: false
 
     implicitHeight: pillHeight
     implicitWidth: shouldShow && onFocusedMonitor ? pillWidth : 0
-
     Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -33,6 +32,7 @@ Item {
         bottomMargin: 50
         horizontalCenter: parent.horizontalCenter
     }
+
     Connections {
         function onValueChanged() {
             if (!Brightness.available)
@@ -46,16 +46,17 @@ Item {
 
         target: Brightness
     }
+
     Loader {
         active: root.shouldShow && root.onFocusedMonitor
         anchors.fill: parent
         asynchronous: true
-
         sourceComponent: StyledRect {
             id: pill
 
             readonly property real levelRatio: Brightness.value / (Brightness.maxValue || 1)
-            property bool showLevel: false
+
+            property bool          showLevel: false
 
             anchors.fill: parent
             clip: true
@@ -66,9 +67,9 @@ Item {
                 id: levelHideTimer
 
                 interval: 500
-
                 onTriggered: pill.showLevel = false
             }
+
             HoverHandler {
                 onHoveredChanged: {
                     if (hovered)
@@ -77,6 +78,7 @@ Item {
                         GlobalStates.resumeOSD("brightness");
                 }
             }
+
             Column {
                 anchors.centerIn: parent
                 spacing: Appearance.spacing.small
@@ -94,7 +96,6 @@ Item {
                         anchors.fill: parent
                         opacity: pill.showLevel ? 0 : 1
                         scale: pill.showLevel ? 0.5 : 1
-
                         Behavior on opacity {
                             NAnim {
                                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -119,7 +120,6 @@ Item {
                             // Lower brightness -> darker icon
                             opacity: 0.25 + 0.75 * pill.levelRatio
                             type: Icon.Material
-
                             Behavior on opacity {
                                 NAnim {
                                     duration: Appearance.animations.durations.normal
@@ -127,6 +127,7 @@ Item {
                             }
                         }
                     }
+
                     StyledText {
                         anchors.centerIn: parent
                         color: Colours.m3Colors.m3OnSurface
@@ -135,7 +136,6 @@ Item {
                         opacity: pill.showLevel ? 1 : 0
                         scale: pill.showLevel ? 1 : 0.5
                         text: Brightness.value.toFixed(0)
-
                         Behavior on opacity {
                             NAnim {
                                 duration: Appearance.animations.durations.small
@@ -148,9 +148,9 @@ Item {
                         }
                     }
                 }
+
                 SegmentBar {
                     anchors.horizontalCenter: parent.horizontalCenter
-
                     onInteractEnded: {
                         GlobalStates.resumeOSD("brightness");
                         levelHideTimer.restart();

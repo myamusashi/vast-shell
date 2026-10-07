@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Qt5Compat.GraphicalEffects
 import Quickshell.Wayland
+import Qt5Compat.GraphicalEffects
 
 import qs.Core.Configs
 import qs.Core.States
@@ -13,12 +13,11 @@ import qs.Components.Base
 WlSessionLockSurface {
     id: root
 
-    property string inputBuffer: ""
-    property bool isAllSelected: false
-    property bool isClosing: false
     required property WlSessionLock lock
-    readonly property list<string> maskChars: ["║", "║▌█", "║▌", "▌│", "█║", "𝄂▌║", "▌│", "█║", "𝄂▌║"]
-    readonly property color maskColor: {
+    required property Pam           pam
+
+    readonly property list<string>  maskChars: ["║", "║▌█", "║▌", "▌│", "█║", "𝄂▌║", "▌│", "█║", "𝄂▌║"]
+    readonly property color         maskColor: {
         if (root.showErrorMessage)
             return Colours.m3Colors.m3Error;
         if (root.pam?.isUnlock ?? false)
@@ -29,40 +28,42 @@ WlSessionLockSurface {
             return Colours.m3Colors.m3Primary;
         return Colours.m3Colors.m3OnSurface;
     }
-    property var maskEntries: []
-    property string maskedBuffer: ""
-    required property Pam pam
-    property bool showErrorMessage: false
-    property bool zoomedIn: false
 
-    function jitterMaskEntry() {
+    property string                 inputBuffer: ""
+    property bool                   isAllSelected: false
+    property bool                   isClosing: false
+    property string                 maskedBuffer: ""
+    property var                    maskEntries: []
+    property bool                   showErrorMessage: false
+    property bool                   zoomedIn: false
+
+    function                        jitterMaskEntry() {
         if (root.maskEntries.length === 0)
             return;
-        const idx = Math.floor(Math.random() * root.maskEntries.length);
+        const idx      = Math.floor(Math.random() * root.maskEntries.length);
         const oldEntry = root.maskEntries[idx];
         const newEntry = root.randomMaskEntry();
         let unitOffset = 0;
         for (let i = 0; i < idx; i++)
             unitOffset += root.maskEntries[i].length;
         root.maskEntries[idx] = newEntry;
-        root.maskedBuffer = root.maskedBuffer.substring(0, unitOffset) + newEntry + root.maskedBuffer.substring(unitOffset + oldEntry.length);
+        root.maskedBuffer     = root.maskedBuffer.substring(0, unitOffset) + newEntry + root.maskedBuffer.substring(unitOffset + oldEntry.length);
     }
-    function popMaskEntry() {
+    function                        popMaskEntry() {
         if (root.maskEntries.length === 0)
             return;
-        const entry = root.maskEntries.pop();
+        const entry       = root.maskEntries.pop();
         root.maskedBuffer = root.maskedBuffer.substring(0, root.maskedBuffer.length - entry.length);
     }
-    function pushMaskEntry(entry) {
+    function                        pushMaskEntry(entry) {
         root.maskEntries.push(entry);
         root.maskedBuffer += entry;
     }
-    function randomMaskEntry() {
+    function                        randomMaskEntry() {
         return root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
     }
 
     color: "transparent"
-
     onInputBufferChanged: {
         var diff = inputBuffer.length - maskEntries.length;
         var grew = diff > 0;
@@ -89,14 +90,15 @@ WlSessionLockSurface {
 
         target: root.lock
     }
+
     Connections {
         function onShowFailureChanged() {
             if (root.pam.showFailure) {
                 root.showErrorMessage = true;
-                root.inputBuffer = "";
-                root.maskEntries = [];
-                root.maskedBuffer = "";
-                root.zoomedIn = false;
+                root.inputBuffer      = "";
+                root.maskEntries      = [];
+                root.maskedBuffer     = "";
+                root.zoomedIn         = false;
                 zoomOutAnimation.start();
                 errorShakeAnimation.start();
             } else {
@@ -107,6 +109,7 @@ WlSessionLockSurface {
         enabled: root.pam !== null
         target: root.pam
     }
+
     Item {
         id: wallpaper
 
@@ -116,7 +119,6 @@ WlSessionLockSurface {
         layer.enabled: wallpaper.blurRadius > 0
         opacity: 0
         transformOrigin: Item.Center
-
         layer.effect: FastBlur {
             radius: wallpaper.blurRadius
             source: wallpaper
@@ -133,6 +135,7 @@ WlSessionLockSurface {
             visible: true
         }
     }
+
     StyledRect {
         id: rectSurface
 
@@ -140,7 +143,6 @@ WlSessionLockSurface {
         color: "transparent"
         focus: true
         radius: 0
-
         Component.onCompleted: {
             lockSequence.start();
         }
@@ -159,10 +161,10 @@ WlSessionLockSurface {
 
             if (event.key === Qt.Key_Backspace) {
                 if (root.isAllSelected) {
-                    root.inputBuffer = "";
+                    root.inputBuffer   = "";
                     root.isAllSelected = false;
                 } else if (event.modifiers & Qt.ControlModifier) {
-                    const idx = root.inputBuffer.lastIndexOf(' ');
+                    const idx        = root.inputBuffer.lastIndexOf(' ');
                     root.inputBuffer = root.inputBuffer.substring(0, idx > -1 ? idx : 0);
                 } else if (root.inputBuffer.length > 0) {
                     root.inputBuffer = root.inputBuffer.substring(0, root.inputBuffer.length - 1);
@@ -173,7 +175,7 @@ WlSessionLockSurface {
 
             if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
                 root.isAllSelected = true;
-                event.accepted = true;
+                event.accepted     = true;
                 return;
             }
 
@@ -186,7 +188,7 @@ WlSessionLockSurface {
                 else
                     root.inputBuffer = "";
 
-                root.zoomedIn = false;
+                root.zoomedIn  = false;
                 event.accepted = true;
                 return;
             }
@@ -194,7 +196,7 @@ WlSessionLockSurface {
             const text = event.text;
             if (text.length === 1 && text.charCodeAt(0) >= 32) {
                 if (root.isAllSelected) {
-                    root.inputBuffer = "";
+                    root.inputBuffer   = "";
                     root.isAllSelected = false;
                 }
                 root.inputBuffer += text;
@@ -212,7 +214,6 @@ WlSessionLockSurface {
             opacity: root.inputBuffer.length > 0 || root.showErrorMessage ? 1.0 : 0.3
             text: root.maskedBuffer.length > 0 ? root.maskedBuffer : (root.showErrorMessage ? "" : "·")
             z: 3
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -231,6 +232,7 @@ WlSessionLockSurface {
             }
         }
     }
+
     Image {
         id: fgLayer
 
@@ -246,6 +248,7 @@ WlSessionLockSurface {
         visible: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" && !DepthWallpaperController.generating && GlobalStates.previewWallpaper === ""
         z: 2
     }
+
     BottomItem {
         id: bottomItem
 
@@ -255,10 +258,12 @@ WlSessionLockSurface {
         showErrorMessage: root.showErrorMessage
         z: 3
     }
+
     SequentialAnimation {
         id: lockSequence
 
         ParallelAnimation {
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -266,6 +271,7 @@ WlSessionLockSurface {
                 target: bottomItem
                 to: 80
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -273,6 +279,7 @@ WlSessionLockSurface {
                 target: bottomItem.contentLayout
                 to: 1
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -280,6 +287,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 1
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -287,6 +295,7 @@ WlSessionLockSurface {
                 target: fgLayer
                 to: 1
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -295,12 +304,14 @@ WlSessionLockSurface {
                 to: 1
             }
         }
+
         ScriptAction {
             script: {
                 GlobalStates.isLockscreenOpen = true;
             }
         }
     }
+
     SequentialAnimation {
         id: unlockSequence
 
@@ -311,6 +322,7 @@ WlSessionLockSurface {
             target: bottomItem.lockIcon
             to: 18
         }
+
         NAnim {
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -318,6 +330,7 @@ WlSessionLockSurface {
             target: bottomItem.lockIcon
             to: -18
         }
+
         NAnim {
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -325,6 +338,7 @@ WlSessionLockSurface {
             target: bottomItem.lockIcon
             to: 12
         }
+
         NAnim {
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -332,6 +346,7 @@ WlSessionLockSurface {
             target: bottomItem.lockIcon
             to: -12
         }
+
         NAnim {
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -339,6 +354,7 @@ WlSessionLockSurface {
             target: bottomItem.lockIcon
             to: -6
         }
+
         NAnim {
             duration: 100
             easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
@@ -346,16 +362,20 @@ WlSessionLockSurface {
             target: bottomItem.lockIcon
             to: 0
         }
+
         ScriptAction {
             script: {
                 bottomItem.lockIcon.color = Colours.m3Colors.m3Green;
-                bottomItem.iconName = "lock_open_right";
+                bottomItem.iconName       = "lock_open_right";
             }
         }
+
         PauseAnimation {
             duration: Appearance.animations.durations.emphasized
         }
+
         ParallelAnimation {
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -363,6 +383,7 @@ WlSessionLockSurface {
                 target: bottomItem
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -370,6 +391,7 @@ WlSessionLockSurface {
                 target: bottomItem.contentLayout
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -377,6 +399,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -384,6 +407,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -391,6 +415,7 @@ WlSessionLockSurface {
                 target: fgLayer
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -399,19 +424,21 @@ WlSessionLockSurface {
                 to: 0
             }
         }
+
         ScriptAction {
             script: {
-                root.lock.locked = false;
+                root.lock.locked              = false;
                 GlobalStates.isLockscreenOpen = false;
-                root.pam.isUnlock = false;
-                root.pam.currentText = "";
-                root.inputBuffer = "";
-                root.maskEntries = [];
-                root.maskedBuffer = "";
-                root.zoomedIn = false;
+                root.pam.isUnlock             = false;
+                root.pam.currentText          = "";
+                root.inputBuffer              = "";
+                root.maskEntries              = [];
+                root.maskedBuffer             = "";
+                root.zoomedIn                 = false;
             }
         }
     }
+
     SequentialAnimation {
         id: errorShakeAnimation
 
@@ -421,30 +448,35 @@ WlSessionLockSurface {
             target: passwordShake
             to: 12
         }
+
         NAnim {
             duration: 50
             property: "x"
             target: passwordShake
             to: -12
         }
+
         NAnim {
             duration: 50
             property: "x"
             target: passwordShake
             to: 8
         }
+
         NAnim {
             duration: 50
             property: "x"
             target: passwordShake
             to: -8
         }
+
         NAnim {
             duration: 50
             property: "x"
             target: passwordShake
             to: 4
         }
+
         NAnim {
             duration: 50
             property: "x"
@@ -452,19 +484,21 @@ WlSessionLockSurface {
             to: 0
         }
     }
+
     Timer {
         id: jitterTimer
 
         interval: 2500
         repeat: true
         running: root.inputBuffer.length > 0
-
         onTriggered: root.jitterMaskEntry()
     }
+
     SequentialAnimation {
         id: zoomInAnimation
 
         ParallelAnimation {
+
             NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -472,6 +506,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 1.12
             }
+
             NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -479,6 +514,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 30
             }
+
             NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -486,6 +522,7 @@ WlSessionLockSurface {
                 target: fgLayer
                 to: 1.12
             }
+
             NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -493,6 +530,7 @@ WlSessionLockSurface {
                 target: bottomItem
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.emphasizedAccel
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -502,14 +540,17 @@ WlSessionLockSurface {
             }
         }
     }
+
     CapsLockPopup {
         anchors.centerIn: parent
         z: 999
     }
+
     SequentialAnimation {
         id: zoomOutAnimation
 
         ParallelAnimation {
+
             NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -517,6 +558,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 1.0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -524,6 +566,7 @@ WlSessionLockSurface {
                 target: wallpaper
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -531,6 +574,7 @@ WlSessionLockSurface {
                 target: fgLayer
                 to: 1.0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.small
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -538,6 +582,7 @@ WlSessionLockSurface {
                 target: bottomItem
                 to: 1
             }
+
             NAnim {
                 duration: Appearance.animations.durations.emphasizedAccel
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial

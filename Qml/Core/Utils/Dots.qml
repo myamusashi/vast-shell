@@ -30,6 +30,7 @@ RowLayout {
             font.pixelSize: Appearance.fonts.size.medium
         }
     }
+
     WrapperItem {
         id: textContainer
 

@@ -1,11 +1,11 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.Pipewire
+import Quickshell.Widgets
 import Vast.Audio
 
 import qs.Core.Configs
@@ -18,10 +18,10 @@ import qs.Components.Effects
 ScrollView {
     id: root
 
-    property var audioCards: ({})
+    property var    audioCards: ({})
     property string audioProfileDescription: ""
     property string audioProfileName: ""
-    property int currentSinkIndex: 0
+    property int    currentSinkIndex: 0
 
     anchors.fill: parent
     clip: true
@@ -31,19 +31,19 @@ ScrollView {
         id: audioProfiles
 
         model: AudioProfilesWatcher.cards
-
         delegate: QtObject {
-            required property var card
+            required property var    card
             required property string description
             required property string name
 
             Component.onCompleted: {
-                root.audioCards = card;
-                root.audioProfileName = name;
+                root.audioCards              = card;
+                root.audioProfileName        = name;
                 root.audioProfileDescription = description;
             }
         }
     }
+
     RowLayout {
         Layout.margins: 15
         anchors.fill: parent
@@ -58,6 +58,7 @@ ScrollView {
 
                 node: Pipewire.defaultAudioSink
             }
+
             Repeater {
                 delegate: RowLayout {
                     id: volumeEntryDelegate
@@ -82,12 +83,14 @@ ScrollView {
                             target: sinkIndicator.target
                         }
                     }
+
                     StyledText {
                         color: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: root.currentSinkIndex === volumeEntryDelegate.index ? Font.Medium : Font.Normal
                         text: volumeEntryDelegate.modelData.description ?? ""
                     }
+
                     TapHandler {
                         onTapped: {
                             root.currentSinkIndex = volumeEntryDelegate.index;
@@ -104,23 +107,24 @@ ScrollView {
                             }))
                 }
             }
+
             MixerEntry {
                 audioNode: Pipewire.defaultAudioSink
                 useCustomProperties: true
-
                 customProperty: AudioProfiles {
                     Layout.fillWidth: true
                     card: root.audioCards
                 }
             }
+
             Rectangle {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3Outline
                 implicitHeight: 1
             }
+
             Repeater {
                 model: linkTracker.linkGroups
-
                 delegate: RowLayout {
                     id: groups
 
@@ -132,6 +136,7 @@ ScrollView {
                     PwObjectTracker {
                         objects: [groups.modelData.source]
                     }
+
                     IconImage {
                         Layout.alignment: Qt.AlignVCenter
                         Layout.preferredHeight: 60
@@ -139,6 +144,7 @@ ScrollView {
                         asynchronous: true
                         source: IconUtils.guessIconPath(groups.modelData.source)
                     }
+
                     MixerEntry {
                         id: mixerGroup
 

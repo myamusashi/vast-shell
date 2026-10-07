@@ -42,13 +42,13 @@ SettingsPageBase {
                     ]
                     text: model[selectedIndex]?.display ?? ""
                     textRole: "display"
-
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.maxFps = model[index].value;
-                        CaptureScreenVideo.maxFps = model[index].value;
+                        CaptureScreenVideo.maxFps         = model[index].value;
                     }
                 }
             }
+
             SettingRow {
                 description: qsTr("Bitrate limit for recordings. Higher values give sharper video but larger files.")
                 label: qsTr("Bitrate")
@@ -78,13 +78,13 @@ SettingsPageBase {
                     ]
                     text: model[selectedIndex]?.display ?? ""
                     textRole: "display"
-
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.bitrate = model[index].value;
-                        CaptureScreenVideo.bitrate = model[index].value;
+                        CaptureScreenVideo.bitrate         = model[index].value;
                     }
                 }
             }
+
             SettingRow {
                 description: qsTr("Encoder for the video stream.")
                 label: qsTr("Video Codec")
@@ -122,13 +122,13 @@ SettingsPageBase {
                     ]
                     text: model[selectedIndex]?.display ?? ""
                     textRole: "display"
-
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.videoCodec = model[index].value;
-                        CaptureScreenVideo.videoCodec = model[index].value;
+                        CaptureScreenVideo.videoCodec         = model[index].value;
                     }
                 }
             }
+
             SettingRow {
                 description: qsTr("Encoder for the audio stream.")
                 label: qsTr("Audio Codec")
@@ -162,13 +162,13 @@ SettingsPageBase {
                     ]
                     text: model[selectedIndex]?.display ?? ""
                     textRole: "display"
-
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.audioCodec = model[index].value;
-                        CaptureScreenVideo.audioCodec = model[index].value;
+                        CaptureScreenVideo.audioCodec         = model[index].value;
                     }
                 }
             }
+
             SettingRow {
                 description: qsTr("Power profile for recording. Low saves battery, Normal favors quality.")
                 label: qsTr("Power Mode")
@@ -194,36 +194,35 @@ SettingsPageBase {
                     ]
                     text: model[selectedIndex]?.display ?? ""
                     textRole: "display"
-
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.lowPower = model[index].value;
-                        CaptureScreenVideo.lowPower = model[index].value;
+                        CaptureScreenVideo.lowPower         = model[index].value;
                     }
                 }
             }
         }
+
         SettingRow {
             description: qsTr("Include the mouse cursor in the recording.")
             label: qsTr("Show Cursor")
 
             StyledSwitch {
                 checked: Configs.captureScreenVideo.showCursor
-
                 onCheckedChanged: {
                     Configs.captureScreenVideo.showCursor = checked;
-                    CaptureScreenVideo.showCursor = checked;
+                    CaptureScreenVideo.showCursor         = checked;
                 }
             }
         }
+
         SettingRow {
             label: qsTr("Replay Buffer")
 
             StyledSwitch {
                 checked: Configs.captureScreenVideo.historyMode
-
                 onCheckedChanged: {
                     Configs.captureScreenVideo.historyMode = checked;
-                    CaptureScreenVideo.historyMode = checked;
+                    CaptureScreenVideo.historyMode         = checked;
                 }
             }
         }

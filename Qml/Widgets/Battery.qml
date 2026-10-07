@@ -82,11 +82,13 @@ Item {
                 SequentialAnimation on opacity {
                     loops: Animation.Infinite
                     running: root.batCharging
+
                     NumberAnimation {
                         duration: 700
                         from: 0
                         to: 0.35
                     }
+
                     NumberAnimation {
                         duration: 700
                         from: 0.35

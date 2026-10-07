@@ -48,6 +48,7 @@ SettingsPageBase {
                 textRole: "display"
             }
         }
+
         SettingRow {
             description: qsTr("Select and upload a new greeter wallpaper file.")
             label: qsTr("Upload wallpaper:")
@@ -55,26 +56,25 @@ SettingsPageBase {
             ExtendedFloatingButton {
                 icon.name: "image"
                 text: qsTr("Upload static")
-
                 onClicked: {
                     page.videoUploadMode = false;
                     wallpaperDialog.openFileDialog();
                 }
             }
+
             ExtendedFloatingButton {
                 icon.name: "video_file"
                 text: qsTr("Upload video")
-
                 onClicked: {
                     page.videoUploadMode = true;
                     wallpaperDialog.openFileDialog();
                 }
             }
+
             FileDialog {
                 id: wallpaperDialog
 
                 nameFilters: page.videoUploadMode ? ["*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi"] : ["*.png", "*.jpg", "*.jpeg", "*.webp"]
-
                 onFileSelected: path => {
                     if (page.videoUploadMode)
                         GreetConfigs.uploadVideo(path);
@@ -83,6 +83,7 @@ SettingsPageBase {
                 }
             }
         }
+
         SettingRow {
             description: qsTr("Live preview of the current greeter wallpaper.")
             label: qsTr("Preview:")
@@ -99,7 +100,6 @@ SettingsPageBase {
                     fillMode: Image.PreserveAspectCrop
                     source: GreeterWallpaper.colorSource(GreetConfigs.greeterConfig.useVideoWallpaper, GreetConfigs.greeterConfig.videoWallpaper, GreetConfigs.greeterConfig.staticWallpaper) + "?v=" + GreetConfigs.thumbnailVersion
                     visible: status === Image.Ready
-
                     onStatusChanged: {
                         if (status === Image.Error && GreetConfigs.greeterConfig.useVideoWallpaper)
                             GreetConfigs.regenerateVideoThumbnail();
@@ -116,6 +116,7 @@ SettingsPageBase {
                             font.pixelSize: Appearance.fonts.size.extraLarge
                             icon: "image"
                         }
+
                         StyledText {
                             anchors.centerIn: parent
                             anchors.verticalCenterOffset: 28

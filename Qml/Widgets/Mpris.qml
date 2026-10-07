@@ -23,6 +23,7 @@ StyledRect {
         spacing: Appearance.spacing.small
 
         RowLayout {
+
             Repeater {
                 model: [
                     {
@@ -38,7 +39,6 @@ StyledRect {
                         clicked: () => Players.active?.next()
                     }
                 ]
-
                 delegate: FloatingButton {
                     required property var modelData
 
@@ -48,11 +48,11 @@ StyledRect {
                     icon.size: Appearance.fonts.size.large * 1.4
                     implicitHeight: 24
                     implicitWidth: 24
-
                     onClicked: modelData.clicked()
                 }
             }
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnBackground
             font.weight: Font.DemiBold

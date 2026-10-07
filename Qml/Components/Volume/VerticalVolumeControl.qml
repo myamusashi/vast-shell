@@ -2,9 +2,9 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
+import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -16,14 +16,15 @@ ColumnLayout {
     id: root
 
     required property PwNode audioNode
-    property bool enableMuteToggle: false
-    property var footerController: null
-    property int itemSize: 50
-    property bool showAppIcon: false
-    property bool showFooter: false
-    property alias showVolume: root.showVolumeInternal
-    property bool showVolumeInternal: false
-    required property real sliderHeight
+    required property real   sliderHeight
+
+    property bool            enableMuteToggle: false
+    property var             footerController: null
+    property int             itemSize: 50
+    property bool            showAppIcon: false
+    property bool            showFooter: false
+    property alias           showVolume: root.showVolumeInternal
+    property bool            showVolumeInternal: false
 
     implicitHeight: 250
     implicitWidth: root.itemSize
@@ -32,6 +33,7 @@ ColumnLayout {
     PwObjectTracker {
         objects: [root.audioNode]
     }
+
     Item {
         Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
         implicitHeight: 30
@@ -48,7 +50,6 @@ ColumnLayout {
             scale: root.showVolumeInternal ? 0.5 : 1
             type: Icon.Material
             visible: !root.showAppIcon
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -62,6 +63,7 @@ ColumnLayout {
                 }
             }
         }
+
         IconImage {
             anchors.centerIn: parent
             asynchronous: true
@@ -71,7 +73,6 @@ ColumnLayout {
             scale: root.showVolumeInternal ? 0.5 : 1
             source: root.showAppIcon ? IconUtils.guessIconPath(root.audioNode) : ""
             visible: root.showAppIcon
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -85,6 +86,7 @@ ColumnLayout {
                 }
             }
         }
+
         StyledText {
             anchors.centerIn: volumeIcon
             color: Colours.m3Colors.m3OnSurface
@@ -93,7 +95,6 @@ ColumnLayout {
             opacity: root.showVolumeInternal ? 1 : 0
             scale: root.showVolumeInternal ? 1 : 0.5
             text: VolumeUtils.toPercent(root.audioNode.audio.volume)
-
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.small
@@ -105,31 +106,31 @@ ColumnLayout {
                 }
             }
         }
+
         MArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             visible: root.enableMuteToggle
-
             onClicked: mouseEvent => {
                 if (mouseEvent.button === Qt.LeftButton)
                     Audio.toggleMute(root.audioNode);
             }
         }
     }
+
     Timer {
         id: volumeHideTimer
 
         interval: 500
-
         onTriggered: root.showVolumeInternal = false
     }
+
     StyledSlide {
         Layout.fillWidth: true
         Layout.preferredHeight: root.sliderHeight
         orientation: Qt.Vertical
         popupValueFormat: VolumeUtils.toPercent
         value: root.audioNode.audio.volume
-
         onMoved: root.audioNode.audio.volume = value
         onPressedChanged: {
             if (pressed) {
@@ -147,6 +148,7 @@ ColumnLayout {
                 volumeHideTimer.restart();
         }
     }
+
     Item {
         Layout.alignment: Qt.AlignHCenter
         implicitHeight: 15
@@ -157,10 +159,10 @@ ColumnLayout {
             anchors.centerIn: parent
             isActive: Players.active.playbackState === MprisPlaybackState.Playing && GlobalStates.isOSDVisible("volume")
         }
+
         MouseArea {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
-
             onClicked: {
                 if (root.footerController)
                     root.footerController.openPerAppVolume = !root.footerController.openPerAppVolume;

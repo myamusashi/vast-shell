@@ -27,8 +27,6 @@ Drawer {
         active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && container.isCalendarShow // qmllint disable
         anchors.fill: parent
         asynchronous: true
-
-        sourceComponent: Content {
-        }
+        sourceComponent: Content {}
     }
 }

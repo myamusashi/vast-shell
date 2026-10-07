@@ -25,9 +25,9 @@ Singleton {
             return;
         }
         actionProcess.filePath = body;
-        actionProcess.dirPath = body.substring(0, Math.max(body.lastIndexOf("/"), 0)) || "/";
-        actionProcess.command = args;
-        actionProcess.running = true;
+        actionProcess.dirPath  = body.substring(0, Math.max(body.lastIndexOf("/"), 0)) || "/";
+        actionProcess.command  = args;
+        actionProcess.running  = true;
     }
 
     Process {

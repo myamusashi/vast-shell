@@ -13,15 +13,17 @@ ColumnLayout {
     id: root
 
     required property PwNode audioNode
-    property Component customProperty
-    property alias slider: volumeSlider
-    property bool useCustomProperties: false
+
+    property Component       customProperty
+    property alias           slider: volumeSlider
+    property bool            useCustomProperties: false
 
     PwObjectTracker {
         id: objectTracker
 
         objects: [root.audioNode]
     }
+
     Loader {
         Layout.alignment: Qt.AlignLeft
         Layout.fillHeight: true
@@ -29,6 +31,7 @@ ColumnLayout {
         active: root.useCustomProperties
         sourceComponent: root.customProperty
     }
+
     RowLayout {
         Layout.alignment: Qt.AlignCenter
         Layout.fillWidth: true
@@ -49,12 +52,12 @@ ColumnLayout {
                 type: Icon.Material
                 visible: icon !== ""
             }
+
             MArea {
                 id: mouseArea
 
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-
                 onClicked: mouseEvent => {
                     if (mouseEvent.button === Qt.LeftButton)
                         Audio.toggleMute(root.audioNode);
@@ -62,6 +65,7 @@ ColumnLayout {
                 onWheel: mouseEvent => Audio.wheelAction(mouseEvent, root.audioNode)
             }
         }
+
         StyledSlide {
             id: volumeSlider
 
@@ -69,7 +73,6 @@ ColumnLayout {
             Layout.preferredHeight: 44
             popupValueFormat: VolumeUtils.toPercent
             value: root.audioNode.audio.volume
-
             onMoved: root.audioNode.audio.volume = value
         }
     }

@@ -1,5 +1,5 @@
-import AnotherRipple
 import QtQuick
+import AnotherRipple
 
 import qs.Core.Configs
 import qs.Services
@@ -8,19 +8,18 @@ import qs.Components.Base
 MouseArea {
     id: area
 
-    property real clickOpacity: 0.2
-    property real hoverOpacity: 0.08
-    property alias layerColor: layer.color
+    property real      clickOpacity: 0.2
+    property real      hoverOpacity: 0.08
+    property alias     layerColor: layer.color
     property Animation layerOpacityAnimation: SpringAnimation {
         damping: 0.3
         spring: 2
     }
-    property alias layerRadius: layer.radius
-    property alias layerRect: layer
+    property alias     layerRadius: layer.radius
+    property alias     layerRect: layer
 
     anchors.fill: parent
     hoverEnabled: true
-
     Component.onCompleted: {
         if (layer.radius === 0)
             layer.radius = Appearance.rounding.small;
@@ -35,7 +34,6 @@ MouseArea {
         clip: true
         color: Colours.m3Colors.m3Primary
         opacity: 0
-
         Behavior on opacity {
             animation: area.layerOpacityAnimation
         }

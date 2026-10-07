@@ -2,34 +2,28 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtMultimedia
-import Qt5Compat.GraphicalEffects
-
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import QtMultimedia
+import Qt5Compat.GraphicalEffects
+import Vast.Utils
 
 import qs.Components.Base
 import qs.Components.Button
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import Vast.Utils
 
 WlSessionLockSurface {
     id: root
 
-    readonly property string assetWallpaper: Paths.projectRoot + "/Assets/images/wallpaper.png"
-    required property Auth auth
-    readonly property url colorSource: effectiveIsVideo ? GreeterWallpaper.colorSource(true, wallpaperPath) + `?v=${thumbnailVersion}` : effectiveWallpaper
-    property bool configLoaded: false
-    property string configStaticPath: ""
-    property bool configUseVideo: false
-    property string configVideoPath: ""
-    property var dynColors: fallbackColors
-    property bool effectiveIsVideo: useVideoWallpaper
-    property url effectiveWallpaper: GreeterWallpaper.effectiveWallpaper(useVideoWallpaper, wallpaperPath, wallpaperPath)
-    readonly property var fallbackColors: ({
+    required property Auth          auth
+    required property WlSessionLock lock
+
+    readonly property string        assetWallpaper: Paths.projectRoot + "/Assets/images/wallpaper.png"
+    readonly property url           colorSource: effectiveIsVideo ? GreeterWallpaper.colorSource(true, wallpaperPath) + `?v=${thumbnailVersion}` : effectiveWallpaper
+    readonly property var           fallbackColors: ({
             scrim: Colours.m3Colors.m3Scrim,
             onBackground: Colours.m3Colors.m3OnBackground,
             onSurface: Colours.m3Colors.m3OnSurface,
@@ -46,20 +40,27 @@ WlSessionLockSurface {
             secondaryContainer: Colours.m3Colors.m3SecondaryContainer,
             onSecondaryContainer: Colours.m3Colors.m3OnSecondaryContainer
         })
-    required property WlSessionLock lock
-    property int thumbnailVersion: 0
-    readonly property bool useVideoWallpaper: configLoaded ? configUseVideo : false
-    readonly property string wallpaperPath: useVideoWallpaper ? (configLoaded ? configVideoPath : "/etc/vast-shell/wallpaper.mp4") : (configLoaded ? configStaticPath : "/etc/vast-shell/wallpaper.png")
+    readonly property bool          useVideoWallpaper: configLoaded ? configUseVideo : false
+    readonly property string        wallpaperPath: useVideoWallpaper ? (configLoaded ? configVideoPath : "/etc/vast-shell/wallpaper.mp4") : (configLoaded ? configStaticPath : "/etc/vast-shell/wallpaper.png")
 
-    function playEntrance() {
-        background.opacity = 0;
+    property bool                   configLoaded: false
+    property string                 configStaticPath: ""
+    property bool                   configUseVideo: false
+    property string                 configVideoPath: ""
+    property var                    dynColors: fallbackColors
+    property bool                   effectiveIsVideo: useVideoWallpaper
+    property url                    effectiveWallpaper: GreeterWallpaper.effectiveWallpaper(useVideoWallpaper, wallpaperPath, wallpaperPath)
+    property int                    thumbnailVersion: 0
+
+    function                        playEntrance() {
+        background.opacity    = 0;
         background.blurRadius = 0;
         entranceSequence.restart();
     }
-    function playExit() {
+    function                        playExit() {
         exitSequence.start();
     }
-    function refreshVideoColorSource() {
+    function                        refreshVideoColorSource() {
         if (!root.useVideoWallpaper)
             return;
         ThumbnailQueue.generate(root.wallpaperPath, GreeterWallpaper.thumbnailFor(root.wallpaperPath), (path, thumbnailPath) => {
@@ -69,23 +70,22 @@ WlSessionLockSurface {
                 root.thumbnailVersion++;
             else {
                 root.effectiveWallpaper = root.assetWallpaper;
-                root.effectiveIsVideo = false;
+                root.effectiveIsVideo   = false;
             }
         });
     }
-    function resetEffectiveWallpaper() {
+    function                        resetEffectiveWallpaper() {
         if (!root.useVideoWallpaper) {
-            root.effectiveIsVideo = false;
+            root.effectiveIsVideo   = false;
             root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
             return;
         }
         root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
-        root.effectiveIsVideo = true;
+        root.effectiveIsVideo   = true;
         root.refreshVideoColorSource();
     }
 
     color: "transparent"
-
     Component.onCompleted: {
         playEntrance();
     }
@@ -93,19 +93,19 @@ WlSessionLockSurface {
     FileView {
         path: "/etc/vast-shell/greeter.json"
         watchChanges: true
-
         onFileChanged: reload()
         onLoaded: {
             try {
-                const config = GreeterWallpaper.loadConfig(text());
-                root.configUseVideo = config.useVideoWallpaper;
+                const config          = GreeterWallpaper.loadConfig(text());
+                root.configUseVideo   = config.useVideoWallpaper;
                 root.configStaticPath = config.staticWallpaper;
-                root.configVideoPath = config.videoWallpaper;
-                root.configLoaded = true;
+                root.configVideoPath  = config.videoWallpaper;
+                root.configLoaded     = true;
                 root.resetEffectiveWallpaper();
             } catch (error) {}
         }
     }
+
     Connections {
         function onLockedChanged() {
             if (root.lock.locked)
@@ -114,6 +114,7 @@ WlSessionLockSurface {
 
         target: root.lock
     }
+
     Connections {
         function onLaunchReady() {
             root.playExit();
@@ -121,16 +122,17 @@ WlSessionLockSurface {
 
         target: root.auth
     }
+
     ColorMaterial {
         darkMode: Configs.colors.isDarkMode
         scheme: Colours.schemeEnum(Configs.colors.scheme)
         source: root.colorSource
-
         onColorsChanged: {
             if (ready)
                 root.dynColors = colors;
         }
     }
+
     Item {
         id: background
 
@@ -141,7 +143,6 @@ WlSessionLockSurface {
         opacity: 0
         scale: 1.0
         transformOrigin: Item.Center
-
         Behavior on blurRadius {
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -173,12 +174,12 @@ WlSessionLockSurface {
             fillMode: Image.PreserveAspectCrop
             source: root.effectiveIsVideo ? "" : root.effectiveWallpaper
         }
+
         Image {
             id: staticProbe
 
             source: GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath)
             visible: false
-
             onStatusChanged: {
                 if (status === Image.Ready)
                     root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
@@ -187,26 +188,27 @@ WlSessionLockSurface {
                 root.effectiveIsVideo = false;
             }
         }
+
         MediaPlayer {
             id: videoPlayer
 
             loops: MediaPlayer.Infinite
             source: root.useVideoWallpaper ? GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath) : ""
             videoOutput: videoOutput
-
             onMediaStatusChanged: {
                 if (!root.useVideoWallpaper)
                     return;
                 if (mediaStatus === MediaPlayer.LoadedMedia) {
                     root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath);
-                    root.effectiveIsVideo = true;
+                    root.effectiveIsVideo   = true;
                     play();
                 } else if (mediaStatus === MediaPlayer.InvalidMedia) {
                     root.effectiveWallpaper = root.assetWallpaper;
-                    root.effectiveIsVideo = false;
+                    root.effectiveIsVideo   = false;
                 }
             }
         }
+
         VideoOutput {
             id: videoOutput
 
@@ -215,6 +217,7 @@ WlSessionLockSurface {
             visible: root.useVideoWallpaper
         }
     }
+
     Column {
         id: clockColumn
 
@@ -225,6 +228,7 @@ WlSessionLockSurface {
             top: parent.top
             topMargin: Appearance.margin.large * 4
         }
+
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
             color: root.dynColors.onBackground
@@ -232,6 +236,7 @@ WlSessionLockSurface {
             font.weight: Font.Medium
             text: Qt.formatDateTime(Time.date, "HH:mm")
         }
+
         StyledText {
             anchors.horizontalCenter: parent.horizontalCenter
             color: root.dynColors.onSurfaceVariant
@@ -240,6 +245,7 @@ WlSessionLockSurface {
             text: Qt.formatDateTime(Time.date, "dddd, d MMMM")
         }
     }
+
     UserCard {
         id: userCard
 
@@ -248,6 +254,7 @@ WlSessionLockSurface {
         colors: root.dynColors
         opacity: 0
     }
+
     Item {
         id: powerControls
 
@@ -261,6 +268,7 @@ WlSessionLockSurface {
             right: parent.right
             rightMargin: Appearance.margin.large * 2
         }
+
         RowLayout {
             id: powerRow
 
@@ -271,23 +279,23 @@ WlSessionLockSurface {
                 icon.color: root.dynColors.onSurface
                 icon.name: "restart_alt"
                 size: "regular"
-
                 onClicked: Quickshell.execDetached({
                     command: ["systemctl", "reboot"]
                 })
             }
+
             FloatingButton {
                 color: Qt.alpha(root.dynColors.surfaceContainerHighest, 0.8)
                 icon.color: root.dynColors.onSurface
                 icon.name: "power_settings_new"
                 size: "regular"
-
                 onClicked: Quickshell.execDetached({
                     command: ["systemctl", "poweroff"]
                 })
             }
         }
     }
+
     ParallelAnimation {
         id: entranceSequence
 
@@ -298,6 +306,7 @@ WlSessionLockSurface {
             target: background
             to: 1
         }
+
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -305,6 +314,7 @@ WlSessionLockSurface {
             target: background
             to: 12
         }
+
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -312,6 +322,7 @@ WlSessionLockSurface {
             target: powerControls
             to: 1
         }
+
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -320,10 +331,12 @@ WlSessionLockSurface {
             to: 1.0
         }
     }
+
     SequentialAnimation {
         id: exitSequence
 
         ParallelAnimation {
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -331,6 +344,7 @@ WlSessionLockSurface {
                 target: background
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -338,6 +352,7 @@ WlSessionLockSurface {
                 target: background
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -345,6 +360,7 @@ WlSessionLockSurface {
                 target: background
                 to: 1.15
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -352,6 +368,7 @@ WlSessionLockSurface {
                 target: powerControls
                 to: 0
             }
+
             NAnim {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -360,6 +377,7 @@ WlSessionLockSurface {
                 to: 0
             }
         }
+
         ScriptAction {
             script: root.lock.locked = false
         }

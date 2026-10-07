@@ -6,9 +6,10 @@ import qs.Components.Base.DrawerComponents
 WrapperItem {
     id: root
 
-    property real barHeight: 40
     required property ScreenBorder border
-    property bool open: false
+
+    property real                  barHeight: 40
+    property bool                  open: false
 
     clip: true
     height: border.topThickness
@@ -21,11 +22,11 @@ WrapperItem {
         right: parent.right
         top: parent.top
     }
+
     Loader {
         active: root.open
         asynchronous: false
         height: root.barHeight
-
         sourceComponent: Item {
             anchors.fill: parent
 
@@ -39,11 +40,13 @@ WrapperItem {
                     verticalCenter: parent.verticalCenter
                 }
             }
+
             Middle {
                 anchors.centerIn: parent
                 implicitHeight: parent.height
                 implicitWidth: parent.width / 6
             }
+
             Right {
                 implicitHeight: parent.height
                 implicitWidth: parent.width / 6

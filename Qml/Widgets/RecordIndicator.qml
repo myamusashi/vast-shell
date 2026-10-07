@@ -27,7 +27,6 @@ StyledRect {
 
             Layout.preferredHeight: 30
             Layout.preferredWidth: 30
-
             Behavior on scale {
                 NAnim {
                     duration: Appearance.animations.durations.small
@@ -44,7 +43,6 @@ StyledRect {
                 opacity: iconStatus.isHovering ? 0 : 1
                 scale: iconStatus.isHovering ? 0.5 : 1.0
                 type: Icon.Material
-
                 Behavior on opacity {
                     NAnim {
                         duration: Appearance.animations.durations.small
@@ -56,6 +54,7 @@ StyledRect {
                     }
                 }
             }
+
             Icon {
                 id: stopIcon
 
@@ -66,7 +65,6 @@ StyledRect {
                 opacity: iconStatus.isHovering ? 1 : 0
                 scale: iconStatus.isHovering ? 1.0 : 0.5
                 type: Icon.Material
-
                 Behavior on opacity {
                     NAnim {
                         duration: Appearance.animations.durations.small
@@ -78,11 +76,11 @@ StyledRect {
                     }
                 }
             }
+
             HoverHandler {
                 id: hoverArea
 
                 cursorShape: Qt.PointingHandCursor
-
                 onHoveredChanged: {
                     if (hovered)
                         iconStatus.isHovering = true;
@@ -90,12 +88,14 @@ StyledRect {
                         iconStatus.isHovering = false;
                 }
             }
+
             TapHandler {
                 id: tapHandler
 
                 onTapped: CaptureScreenVideo.stopRecording()
             }
         }
+
         StyledText {
             color: Colours.m3Colors.m3OnBackground
             font.bold: true

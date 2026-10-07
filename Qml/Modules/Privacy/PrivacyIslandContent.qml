@@ -13,10 +13,11 @@ import qs.Services
 RowLayout {
     id: root
 
-    property real islandRadius: Appearance.rounding.full
+    property real                  islandRadius: Appearance.rounding.full
 
     // "screenshare" | "audioIn" | "audioOut"
-    required property string kind
+    required property string       kind
+
     readonly property list<string> kindAppNames: {
         if (kind === "audioIn")
             return PrivacyServices.audioInAppNames;
@@ -24,8 +25,8 @@ RowLayout {
             return PrivacyServices.audioOutAppNames;
         return PrivacyServices.screenshareAppNames;
     }
-    readonly property string kindIcon: kind === "audioIn" ? "mic" : kind === "audioOut" ? "volume_up" : "videocam"
-    readonly property string kindLabel: kind === "audioIn" ? qsTr("Mic is on") : kind === "audioOut" ? qsTr("Speaker is on") : qsTr("Screen share is on")
+    readonly property string       kindIcon: kind === "audioIn" ? "mic" : kind === "audioOut" ? "volume_up" : "videocam"
+    readonly property string       kindLabel: kind === "audioIn" ? qsTr("Mic is on") : kind === "audioOut" ? qsTr("Speaker is on") : qsTr("Screen share is on")
 
     implicitHeight: childrenRect.height + Appearance.spacing.normal
     implicitWidth: childrenRect.width + Appearance.spacing.large
@@ -35,6 +36,7 @@ RowLayout {
         leftMargin: Appearance.margin.normal
         rightMargin: Appearance.margin.normal
     }
+
     MaterialShape {
         Layout.alignment: Qt.AlignVCenter
         animationDuration: 0
@@ -43,6 +45,7 @@ RowLayout {
         implicitWidth: 10
         shape: MaterialShape.Circle
     }
+
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
@@ -50,15 +53,16 @@ RowLayout {
         icon: root.kindIcon
         type: Icon.Material
     }
+
     StyledText {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
         text: root.kindLabel
     }
+
     Repeater {
         model: root.kindAppNames
-
         delegate: RowLayout {
             required property string modelData
 
@@ -73,6 +77,7 @@ RowLayout {
                 source: IconUtils.iconForId(parent.modelData)
                 visible: Configs.privacy.enablePrivacyIcon
             }
+
             StyledText {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.maximumWidth: 160

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Networking
+
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -16,21 +17,20 @@ ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
 
-        EthernetCard {
-        }
-        WiFiCard {
-        }
+        EthernetCard {}
+
+        WiFiCard {}
     }
-    BluetoothCard {
-    }
+
+    BluetoothCard {}
 
     component BluetoothCard: StyledRect {
         id: bluetoothCardComopnent
 
         readonly property string cardIconName: BluetoothServices.cardIconName
         readonly property string cardSubtitle: BluetoothServices.cardSubtitle
-        readonly property bool hasConnected: BluetoothServices.hasConnected
-        readonly property bool isPowered: BluetoothServices.isPowered
+        readonly property bool   hasConnected: BluetoothServices.hasConnected
+        readonly property bool   isPowered: BluetoothServices.isPowered
 
         Layout.fillWidth: true
         color: Colours.m3Colors.m3SurfaceContainer
@@ -42,12 +42,12 @@ ColumnLayout {
             cursorShape: content && content.bluetooth.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
             enabled: content && !content.bluetooth.isVisible // qmllint disable
             hoverEnabled: true
-
             onClicked: {
                 if (content) // qmllint disable
                     content.bluetooth.isVisible = !content.bluetooth.isVisible; // qmllint disable
             }
         }
+
         RowLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
@@ -67,6 +67,7 @@ ColumnLayout {
                     type: Icon.Material
                 }
             }
+
             Column {
                 Layout.fillWidth: true
                 spacing: 2
@@ -76,6 +77,7 @@ ColumnLayout {
                     font.pixelSize: Appearance.fonts.size.large
                     text: qsTr("Bluetooth")
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     elide: Text.ElideRight
@@ -90,7 +92,7 @@ ColumnLayout {
     component EthernetCard: StyledRect {
         id: ethernetCard
 
-        readonly property bool isConnected: (wiredDevice?.state ?? ConnectionState.Disconnected) === ConnectionState.Connected
+        readonly property bool        isConnected: (wiredDevice?.state ?? ConnectionState.Disconnected) === ConnectionState.Connected
         readonly property WiredDevice wiredDevice: Networking.devices.values.find(d => d.type === DeviceType.Wired) ?? null
 
         Layout.fillWidth: true
@@ -103,12 +105,12 @@ ColumnLayout {
             cursorShape: content && content.ethernet.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
             enabled: content && !content.ethernet.isVisible // qmllint disable
             hoverEnabled: true
-
             onClicked: {
                 if (content) // qmllint disable
                     content.ethernet.isVisible = !content.ethernet.isVisible; // qmllint disable
             }
         }
+
         RowLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
@@ -128,6 +130,7 @@ ColumnLayout {
                     type: Icon.Material
                 }
             }
+
             Column {
                 Layout.fillWidth: true
                 spacing: 2
@@ -141,6 +144,7 @@ ColumnLayout {
                         font.weight: Font.Medium
                         text: qsTr("Ethernet")
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.small
@@ -148,6 +152,7 @@ ColumnLayout {
                         visible: SystemUsage.statusVPNInterface !== ""
                     }
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.normal
@@ -159,8 +164,8 @@ ColumnLayout {
     component WiFiCard: StyledRect {
         id: wifiCard
 
-        readonly property var connectedNetwork: wifiDevice?.networks.values.find(n => n.connected) ?? null
-        readonly property bool isConnected: Networking.wifiEnabled && (connectedNetwork?.connected ?? false)
+        readonly property var        connectedNetwork: wifiDevice?.networks.values.find(n => n.connected) ?? null
+        readonly property bool       isConnected: Networking.wifiEnabled && (connectedNetwork?.connected ?? false)
 
         // Pure declarative bindings — no manual update functions needed
         readonly property WifiDevice wifiDevice: Networking.devices.values.find(d => d.type === DeviceType.Wifi) ?? null
@@ -175,12 +180,12 @@ ColumnLayout {
             cursorShape: content && content.wifi.isVisible ? Qt.ArrowCursor : Qt.PointingHandCursor // qmllint disable
             enabled: content && !content.wifi.isVisible // qmllint disable
             hoverEnabled: true
-
             onClicked: {
                 if (content) // qmllint disable
                     content.wifi.isVisible = !content.wifi.isVisible; // qmllint disable
             }
         }
+
         RowLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
@@ -200,6 +205,7 @@ ColumnLayout {
                     type: Icon.Material
                 }
             }
+
             Column {
                 Layout.fillWidth: true
                 spacing: 2
@@ -209,6 +215,7 @@ ColumnLayout {
                     font.pixelSize: Appearance.fonts.size.large
                     text: qsTr("Internet")
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     elide: Text.ElideRight

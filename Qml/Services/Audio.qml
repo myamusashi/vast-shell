@@ -1,11 +1,11 @@
 pragma ComponentBehavior: Bound
 pragma Singleton
 
-import Vast.Audio
 import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Pipewire
+import Vast.Audio
 
 Singleton {
     id: root
@@ -15,12 +15,12 @@ Singleton {
     readonly property bool audioConnected: AudioProfilesWatcher.connected
 
     // Mirrors the AudioCardsModel backing object; values are AudioCard* instances.
-    readonly property var cards: AudioProfilesWatcher.cards
+    readonly property var  cards: AudioProfilesWatcher.cards
 
     // Pick the AudioCard that backs Pipewire's current default sink. Falls back
     // to the first card so the Quick Settings drawer still has a profile to show
     // when the user hasn't selected anything yet.
-    readonly property var defaultSinkCard: {
+    readonly property var  defaultSinkCard: {
         if (!cards)
             return null;
         const all = cards.count;
@@ -37,10 +37,10 @@ Singleton {
         return cards.card(0);
     }
 
-    function getIcon(node) {
+    function               getIcon(node) {
         return node.isSink ? getSinkIcon(node) : getSourceIcon(node);
     }
-    function getSinkIcon(node) {
+    function               getSinkIcon(node) {
         if (node.audio.muted)
             return "volume_off";
         if (node.audio.volume > 0.5)
@@ -49,14 +49,14 @@ Singleton {
             return "volume_down";
         return "volume_mute";
     }
-    function getSourceIcon(node) {
+    function               getSourceIcon(node) {
         return node.audio.muted ? "mic_off" : "mic";
     }
-    function toggleMute(node) {
+    function               toggleMute(node) {
         node.audio.muted = !node.audio.muted;
     }
-    function wheelAction(event, node) {
-        const delta = event.angleDelta.y < 0 ? -0.01 : 0.01;
+    function               wheelAction(event, node) {
+        const delta       = event.angleDelta.y < 0 ? -0.01 : 0.01;
         node.audio.volume = Math.max(0.0, Math.min(1.3, node.audio.volume + delta));
     }
 
@@ -64,6 +64,7 @@ Singleton {
         audioConnected: root.audioConnected
         cards: root.cards
     }
+
     IpcHandler {
         function deviceList(): string {
             const m = AudioDevicesWatcher.devices;
@@ -95,9 +96,9 @@ Singleton {
                     profiles: []
                 });
 
-            const m = card.profiles;
+            const m     = card.profiles;
             const count = m.count;
-            const r = {
+            const r     = {
                 deviceId: card.deviceId,
                 deviceName: card.name,
                 activeIndex: card.activeIndex,

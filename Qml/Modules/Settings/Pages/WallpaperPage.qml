@@ -27,20 +27,20 @@ SettingsPageBase {
             ExtendedFloatingButton {
                 icon.name: "image"
                 text: qsTr("Browse\u2026")
-
                 onClicked: pickWallpaperDialog.openFileDialog()
             }
+
             FileDialog {
                 id: pickWallpaperDialog
 
                 nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.svg", "*.webp", "*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi", "*.m4v"]
-
                 onFileSelected: path => Quickshell.execDetached({
                         command: ["vastctl", "wallpaper", "set", path]
                     })
             }
         }
     }
+
     SettingsCard {
         Layout.fillWidth: true
         title: qsTr("Wallpaper Picker")
@@ -52,9 +52,9 @@ SettingsPageBase {
             Layout.fillWidth: true
             placeHolderText: qsTr("Search wallpapers\u2026")
             toggleButtonVisible: false
-
             onTextChanged: WallpaperFileModels.searchQuery = text
         }
+
         PathView {
             id: wallpaperPath
 
@@ -65,12 +65,12 @@ SettingsPageBase {
             pathItemCount: 5
             preferredHighlightBegin: 0.5
             preferredHighlightEnd: 0.5
-
             delegate: Item {
                 id: delegateRoot
 
+                required property var  modelData
+
                 readonly property real itemWidth: wallpaperPath.width / wallpaperPath.pathItemCount
-                required property var modelData
 
                 implicitHeight: itemWidth * 0.65
                 implicitWidth: itemWidth
@@ -90,12 +90,14 @@ SettingsPageBase {
                         source: (width > 0 && height > 0 && !MediaKind.isVideo(delegateRoot.modelData)) ? delegateRoot.modelData : ""
                         sourceSize: Qt.size(150, 150)
                     }
+
                     Rectangle {
                         anchors.fill: parent
                         color: Qt.alpha(Colours.m3Colors.m3Primary, 0.15)
                         radius: parent.radius
                         visible: delegateRoot.modelData === WallpaperFileModels.currentWallpaper
                     }
+
                     Rectangle {
                         color: Qt.alpha(Colours.m3Colors.m3Scrim, 0.35)
                         height: fileNameText.implicitHeight + 4
@@ -105,6 +107,7 @@ SettingsPageBase {
                             left: parent.left
                             right: parent.right
                         }
+
                         StyledText {
                             id: fileNameText
 
@@ -122,10 +125,10 @@ SettingsPageBase {
                             }
                         }
                     }
+
                     MouseArea {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-
                         onClicked: Quickshell.execDetached({
                             command: ["vastctl", "wallpaper", "set", delegateRoot.modelData]
                         })
@@ -146,6 +149,7 @@ SettingsPageBase {
             }
         }
     }
+
     SettingsCard {
         Layout.fillWidth: true
         title: qsTr("Image Sourcing")
@@ -159,20 +163,20 @@ SettingsPageBase {
 
                 StyledSwitch {
                     checked: Configs.wallpaper.enabledWallpaper
-
                     onCheckedChanged: Configs.wallpaper.enabledWallpaper = checked
                 }
             }
+
             SettingRow {
                 label: qsTr("Wallpaper Live Preview:")
 
                 StyledSwitch {
                     checked: Configs.wallpaper.livePreview
-
                     onCheckedChanged: Configs.wallpaper.livePreview = checked
                 }
             }
         }
+
         SettingRow {
             description: qsTr("Folder scanned for available wallpapers.")
             label: qsTr("Wallpaper Directory Path:")
@@ -183,30 +187,29 @@ SettingsPageBase {
                 implicitWidth: 350
                 text: Configs.wallpaper.wallpaperDir
                 toggleButtonVisible: false
-
                 onTextChanged: Configs.wallpaper.wallpaperDir = text
 
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
-
                     onClicked: {
                         wallpaperDirField.forceActiveFocus();
                         fileDialog.openFileDialog();
                     }
                 }
             }
+
             FileDialog {
                 id: fileDialog
 
                 foldersOnly: true
                 selectFolder: true
                 showHidden: true
-
                 onFileSelected: path => Configs.wallpaper.wallpaperDir = path
             }
         }
+
         SettingRow {
             description: qsTr("Number of wallpapers kept in the picker carousel.")
             label: qsTr("Loaded Wallpaper Count:")
@@ -219,11 +222,11 @@ SettingsPageBase {
                 stepSize: 1
                 to: 10
                 value: Configs.wallpaper.visibleWallpaper
-
                 onMoved: Configs.wallpaper.visibleWallpaper = value
             }
         }
     }
+
     SettingsCard {
         Layout.fillWidth: true
         title: qsTr("Transitions & Performance")
@@ -280,20 +283,20 @@ SettingsPageBase {
                 ]
                 text: model[selectedIndex]?.display ?? Configs.wallpaper.transition
                 textRole: "display"
-
                 onMenuItemActivated: index => Configs.wallpaper.transition = model[index].display
             }
         }
+
         SettingRow {
             description: qsTr("Reduce transition quality to improve performance on low-end hardware.")
             label: qsTr("Transition Low Performance Priority:")
 
             StyledSwitch {
                 checked: Configs.wallpaper.transitionLowPerfMode
-
                 onCheckedChanged: Configs.wallpaper.transitionLowPerfMode = checked
             }
         }
+
         SettingRow {
             description: qsTr("Duration of the wallpaper switch animation in milliseconds.")
             label: qsTr("Transition Duration (ms):")
@@ -304,7 +307,6 @@ SettingsPageBase {
                 stepSize: 50
                 to: 2000
                 value: Configs.wallpaper.transitionDuration
-
                 onMoved: Configs.wallpaper.transitionDuration = value
             }
         }

@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import qs.Core.Configs
 import qs.Components.Button
+
 import "../Components"
 import "./Volume"
 
@@ -28,6 +29,7 @@ SettingsPageBase {
             Item {
                 Layout.fillWidth: true
             }
+
             ConnectedButtonGroup {
                 id: tabBar
 
@@ -53,48 +55,44 @@ SettingsPageBase {
                         label: qsTr("Configuration")
                     }
                 ]
-
                 onClicked: idx => root.currentTab = idx
             }
+
             Item {
                 Layout.fillWidth: true
             }
         }
+
         Loader {
             Layout.fillHeight: true
             Layout.fillWidth: true
             active: root.currentTab === 0
             visible: root.currentTab === 0
-
-            sourceComponent: PlaybackTab {
-            }
+            sourceComponent: PlaybackTab {}
         }
+
         Loader {
             Layout.fillHeight: true
             Layout.fillWidth: true
             active: root.currentTab === 1
             visible: root.currentTab === 1
-
-            sourceComponent: OutputDevicesTab {
-            }
+            sourceComponent: OutputDevicesTab {}
         }
+
         Loader {
             Layout.fillHeight: true
             Layout.fillWidth: true
             active: root.currentTab === 2
             visible: root.currentTab === 2
-
-            sourceComponent: InputDevicesTab {
-            }
+            sourceComponent: InputDevicesTab {}
         }
+
         Loader {
             Layout.fillHeight: true
             Layout.fillWidth: true
             active: root.currentTab === 3
             visible: root.currentTab === 3
-
-            sourceComponent: ConfigurationTab {
-            }
+            sourceComponent: ConfigurationTab {}
         }
     }
 }

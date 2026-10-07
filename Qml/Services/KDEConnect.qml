@@ -4,7 +4,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-
 import Vast.Utils
 
 import qs.Core.Configs
@@ -12,38 +11,39 @@ import qs.Core.Configs
 Singleton {
     id: root
 
-    property var allDevices: []
-    property var availableDevices: []
     readonly property bool hasAvailableDevices: availableDevices.length > 0
     readonly property bool hasDevices: allDevices.length > 0
-    property string myDeviceId: ""
 
-    function deviceById(id) {
+    property var           allDevices: []
+    property var           availableDevices: []
+    property string        myDeviceId: ""
+
+    function               deviceById(id) {
         for (const d of root.allDevices) {
             if (d.id === id)
                 return d;
         }
         return null;
     }
-    function deviceByName(name) {
+    function               deviceByName(name) {
         for (const d of root.allDevices) {
             if (d.name === name)
                 return d;
         }
         return null;
     }
-    function lockDevice(deviceId) {
+    function               lockDevice(deviceId) {
         if (!deviceId)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--lock"], "lock");
     }
-    function pair(deviceId) {
+    function               pair(deviceId) {
         if (!deviceId)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--pair"], "pair");
     }
-    function parseDeviceList(text) {
-        const lines = text.trim().split("\n").filter(l => l.trim() !== "");
+    function               parseDeviceList(text) {
+        const lines  = text.trim().split("\n").filter(l => l.trim() !== "");
         const result = [];
         for (const line of lines) {
             const match = line.match(/^(\S+)\s+(.+)$/);
@@ -55,8 +55,8 @@ Singleton {
         }
         return result;
     }
-    function parseFullDeviceList(text) {
-        const lines = text.trim().split("\n").filter(l => l.trim() !== "");
+    function               parseFullDeviceList(text) {
+        const lines  = text.trim().split("\n").filter(l => l.trim() !== "");
         const result = [];
         for (const line of lines) {
             const match = line.match(/^-\s+(.+?):\s+(\S+)\s+(.+)$/);
@@ -69,7 +69,7 @@ Singleton {
         }
         return result;
     }
-    function ping(deviceId, message) {
+    function               ping(deviceId, message) {
         if (!deviceId)
             return;
         const args = ["kdeconnect-cli", "-d", deviceId];
@@ -79,47 +79,47 @@ Singleton {
             args.push("--ping");
         runKdeConnect(args, "ping");
     }
-    function refresh() {
+    function               refresh() {
         discoverCommand.running = true;
     }
-    function ring(deviceId) {
+    function               ring(deviceId) {
         if (!deviceId)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--ring"], "ring");
     }
-    function runKdeConnect(args, warnTag) {
-        const process = kdeConnectProcess.createObject(root, {
+    function               runKdeConnect(args, warnTag) {
+        const process   = kdeConnectProcess.createObject(root, {
             command: args,
             warnTag: warnTag
         });
         process.running = true;
     }
-    function sendClipboard(deviceId) {
+    function               sendClipboard(deviceId) {
         if (!deviceId)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--send-clipboard"], "sendClipboard");
     }
-    function sendSms(deviceId, message, destination) {
+    function               sendSms(deviceId, message, destination) {
         if (!deviceId || !message || !destination)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--send-sms", message, "--destination", destination], "sendSms");
     }
-    function shareFile(deviceId, path) {
+    function               shareFile(deviceId, path) {
         if (!deviceId || !path)
             return;
         KdeConnectShare.share(deviceId, path);
     }
-    function shareText(deviceId, text) {
+    function               shareText(deviceId, text) {
         if (!deviceId || !text)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--share-text", text], "shareText");
     }
-    function unlockDevice(deviceId) {
+    function               unlockDevice(deviceId) {
         if (!deviceId)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--unlock"], "unlock");
     }
-    function unpair(deviceId) {
+    function               unpair(deviceId) {
         if (!deviceId)
             return;
         runKdeConnect(["kdeconnect-cli", "-d", deviceId, "--unpair"], "unpair");
@@ -132,53 +132,53 @@ Singleton {
         repeat: true
         running: Configs.kdeConnect.pollingEnabled
         triggeredOnStart: true
-
         onTriggered: root.refresh()
     }
+
     Process {
         id: myIdProcess
 
         command: ["kdeconnect-cli", "--my-id"]
         running: true
-
         stdout: StdioCollector {
             onStreamFinished: {
                 root.myDeviceId = text.trim();
             }
         }
     }
+
     Process {
         id: discoverCommand
 
         command: ["kdeconnect-cli", "--refresh"]
-
         onExited: { // qmllint disable
             listAvailable.running = true;
-            listAll.running = true;
+            listAll.running       = true;
         }
     }
+
     Process {
         id: listAvailable
 
         command: ["kdeconnect-cli", "--list-available", "--id-name-only"]
-
         stdout: StdioCollector {
             onStreamFinished: {
                 root.availableDevices = root.parseDeviceList(text);
             }
         }
     }
+
     Process {
         id: listAll
 
         command: ["kdeconnect-cli", "--list-devices", "--id-name-only"]
-
         stdout: StdioCollector {
             onStreamFinished: {
                 root.allDevices = root.parseDeviceList(text);
             }
         }
     }
+
     Component {
         id: kdeConnectProcess
 
@@ -191,7 +191,6 @@ Singleton {
             stderr: StdioCollector {
                 onStreamFinished: process.stderrText = text
             }
-
             onExited: code => { // qmllint disable
                 if (code !== 0)
                     console.warn("[KDEConnect] " + process.warnTag + " failed:", process.stderrText);

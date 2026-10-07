@@ -45,7 +45,6 @@ PopupWidget {
 
     icon: "computer"
     text: qsTr("Display")
-
     content: ColumnLayout {
         spacing: Appearance.spacing.normal
 
@@ -80,7 +79,6 @@ PopupWidget {
                     value: SystemUsage.openglVendor
                 }
             ])
-
             delegate: ColumnLayout {
                 id: delegate
 
@@ -98,6 +96,7 @@ PopupWidget {
                     text: delegate.modelData.header
                     visible: delegate.modelData.header !== ""
                 }
+
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: Appearance.spacing.small
@@ -111,6 +110,7 @@ PopupWidget {
                         horizontalAlignment: Text.AlignLeft
                         text: delegate.modelData.text
                     }
+
                     StyledText {
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurface
@@ -122,6 +122,7 @@ PopupWidget {
                         wrapMode: Text.Wrap
                     }
                 }
+
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.topMargin: Appearance.spacing.small

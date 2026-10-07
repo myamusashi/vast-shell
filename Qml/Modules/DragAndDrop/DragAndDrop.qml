@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+
 import qs.Components.Feedback
 import qs.Core.States
 import qs.Services
@@ -15,14 +16,15 @@ Scope {
     Component {
         id: islandContent
 
-        DragAndDropIslandContent {
-        }
+        DragAndDropIslandContent {}
     }
+
     IslandHost {
         content: islandContent
         propertyName: "islandContent"
         service: DragAndDropServices
     }
+
     Connections {
         function onIslandContentChanged(): void {
             if (GlobalStates.isDragAndDropActive)

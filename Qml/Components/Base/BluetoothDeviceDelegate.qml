@@ -15,15 +15,16 @@ WrapperRectangle {
     id: root
 
     required property var device
-    property bool showBlockAction: false
-    property bool showForgetAction: false
-    property bool showPairActions: false
-    property color target: root.device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
 
-    signal blockToggled
-    signal forgetAction
-    signal primaryAction
-    signal secondaryAction
+    property bool         showBlockAction: false
+    property bool         showForgetAction: false
+    property bool         showPairActions: false
+    property color        target: root.device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+
+    signal                blockToggled
+    signal                forgetAction
+    signal                primaryAction
+    signal                secondaryAction
 
     Layout.alignment: Qt.AlignVCenter
     Layout.fillWidth: true
@@ -37,6 +38,7 @@ WrapperRectangle {
         host: root
         target: root.target
     }
+
     RowLayout {
         spacing: Appearance.spacing.small
 
@@ -53,6 +55,7 @@ WrapperRectangle {
                 icon: root.device?.connected ? "bluetooth_connected" : root.device?.pairing ? "bluetooth_searching" : "bluetooth"
             }
         }
+
         ColumnLayout {
             Layout.fillWidth: true
             spacing: 2
@@ -65,11 +68,13 @@ WrapperRectangle {
                 font.weight: Font.Medium
                 text: BluetoothServices.displayName(root.device)
             }
+
             StyledText {
                 color: root.device?.connected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.normal
                 text: BluetoothServices.stateString(root.device)
             }
+
             StyledText {
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
@@ -79,6 +84,7 @@ WrapperRectangle {
                 visible: !!root.device?.address
             }
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -88,9 +94,9 @@ WrapperRectangle {
             implicitHeight: 32
             implicitWidth: 32
             visible: root.showPairActions
-
             onClicked: root.primaryAction()
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -98,9 +104,9 @@ WrapperRectangle {
             implicitHeight: 32
             implicitWidth: 32
             visible: root.showPairActions && root.device?.pairing
-
             onClicked: root.secondaryAction()
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -109,9 +115,9 @@ WrapperRectangle {
             implicitHeight: 32
             implicitWidth: 32
             visible: !root.showPairActions && !root.showBlockAction
-
             onClicked: root.primaryAction()
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -120,9 +126,9 @@ WrapperRectangle {
             implicitHeight: 32
             implicitWidth: 32
             visible: root.showBlockAction
-
             onClicked: root.blockToggled()
         }
+
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
@@ -131,7 +137,6 @@ WrapperRectangle {
             implicitHeight: 32
             implicitWidth: 32
             visible: root.showForgetAction
-
             onClicked: root.forgetAction()
         }
     }

@@ -6,28 +6,15 @@ import "DrawerOutline.js" as OutlineBuilder
 Item {
     id: root
 
-    property int alignment: 0             // 0 = centered; Qt.AlignLeft/Right (top/bottom edges), Qt.AlignTop/Bottom (left/right edges)
-    property real animatedDepth: open ? depth : 0
-    property int animationDuration: 300
-    property list<real> animationEasingCurve: []
-    property int animationEasingType: Easing.OutCubic
-    readonly property real bodyInsetX: contentItem.x
-    property real borderOverlap: 1
-    property bool clipContent: true
-    required property color color
-    default property alias content: contentItem.data
-    property real cornerRadius: 30
-    property real depth: 300
-    required property int edge            // Qt.TopEdge / BottomEdge / LeftEdge / RightEdge
+    required property color  color
+    required property int    edge            // Qt.TopEdge / BottomEdge / LeftEdge / RightEdge
+
+    readonly property real   bodyInsetX: contentItem.x
     readonly property string edgeName: edge === Qt.TopEdge ? "top" : edge === Qt.BottomEdge ? "bottom" : edge === Qt.LeftEdge ? "left" : "right"
-    property real edgeOffset: 0
-    property real filletRadius: 40
-    readonly property bool isFlushToEnd: isHorizontalEdge ? !!(alignment & Qt.AlignRight) : !!(alignment & Qt.AlignBottom)
-    readonly property bool isFlushToStart: isHorizontalEdge ? !!(alignment & Qt.AlignLeft) : !!(alignment & Qt.AlignTop)
-    readonly property bool isHorizontalEdge: edge === Qt.TopEdge || edge === Qt.BottomEdge
-    readonly property bool isReflectedEdge: edge === Qt.TopEdge || edge === Qt.RightEdge
-    property real length: 400
-    property bool open: false
+    readonly property bool   isFlushToEnd: isHorizontalEdge ? !!(alignment & Qt.AlignRight) : !!(alignment & Qt.AlignBottom)
+    readonly property bool   isFlushToStart: isHorizontalEdge ? !!(alignment & Qt.AlignLeft) : !!(alignment & Qt.AlignTop)
+    readonly property bool   isHorizontalEdge: edge === Qt.TopEdge || edge === Qt.BottomEdge
+    readonly property bool   isReflectedEdge: edge === Qt.TopEdge || edge === Qt.RightEdge
     readonly property string outlinePath: OutlineBuilder.buildOutline({
         edgeName: edgeName,
         snappedDepth: metrics.snappedDepth,
@@ -43,12 +30,26 @@ Item {
         acrossEdgeExtent: metrics.acrossEdgeExtent
     })
 
+    property int             alignment: 0             // 0 = centered; Qt.AlignLeft/Right (top/bottom edges), Qt.AlignTop/Bottom (left/right edges)
+    property real            animatedDepth: open ? depth : 0
+    property int             animationDuration: 300
+    property list<real>      animationEasingCurve: []
+    property int             animationEasingType: Easing.OutCubic
+    property real            borderOverlap: 1
+    property bool            clipContent: true
+    default property alias   content: contentItem.data
+    property real            cornerRadius: 30
+    property real            depth: 300
+    property real            edgeOffset: 0
+    property real            filletRadius: 40
+    property real            length: 400
+    property bool            open: false
+
     height: isHorizontalEdge ? metrics.acrossEdgeExtent : metrics.alongEdgeExtent
     visible: metrics.snappedDepth > 0
     width: isHorizontalEdge ? metrics.alongEdgeExtent : metrics.acrossEdgeExtent
     x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset))
     y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height : (parent.height - height) / 2))
-
     Behavior on animatedDepth {
         NumberAnimation {
             duration: root.animationDuration
@@ -72,10 +73,12 @@ Item {
         // bounds include the fillet tips so Region { item: drawer } covers everything painted
         readonly property real startPadding: root.isFlushToStart ? 0 : root.filletRadius
     }
+
     DrawerShape {
         color: root.color
         pathData: root.outlinePath
     }
+
     Item {
         id: contentItem
 

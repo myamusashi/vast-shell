@@ -6,8 +6,9 @@ Item {
     id: root
 
     readonly property real cellWidth: width / 7
-    property Component delegate: null
-    property int firstDayOfWeek: Qt.locale().firstDayOfWeek
+
+    property Component     delegate: null
+    property int           firstDayOfWeek: Qt.locale().firstDayOfWeek
 
     implicitHeight: 28
 

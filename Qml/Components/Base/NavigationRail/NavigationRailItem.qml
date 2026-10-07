@@ -11,21 +11,22 @@ import qs.Services
 WrapperItem {
     id: root
 
-    property bool badgeDot: false
-    property string badgeText: ""
     readonly property real compactLabelGap: 5
     readonly property real compactPillHeight: 32
     readonly property real compactPillWidth: 56
-    property bool expanded: false
     readonly property real expandedItemHeight: 56
     readonly property real expandedLabelWidth: 124
-    property string icon: ""
     readonly property real iconCellSize: 24
     readonly property real iconCellX: Appearance.margin.normal
-    property string label: ""
-    property bool selected: false
 
-    signal triggered
+    property bool          badgeDot: false
+    property string        badgeText: ""
+    property bool          expanded: false
+    property string        icon: ""
+    property string        label: ""
+    property bool          selected: false
+
+    signal                 triggered
 
     implicitHeight: compactPillHeight + (Math.max(expandedItemHeight, labelText.implicitHeight) - compactPillHeight) * labelText.progress
     implicitWidth: compactPillWidth
@@ -41,7 +42,6 @@ WrapperItem {
         layerRect.width: background.width
         layerRect.x: background.x
         layerRect.y: background.y
-
         onClicked: root.triggered()
 
         StyledRect {
@@ -53,10 +53,8 @@ WrapperItem {
             width: root.expanded ? parent.width : parent.width - Appearance.margin.normal
             x: root.expanded ? 0 : root.iconCellX + root.iconCellSize / 2 - root.compactPillWidth / 2
             y: 0
-
             Behavior on color {
-                CAnim {
-                }
+                CAnim {}
             }
             Behavior on height {
                 SpringAnimation {
@@ -71,6 +69,7 @@ WrapperItem {
                 }
             }
         }
+
         Item {
             id: iconCell
 
@@ -84,12 +83,11 @@ WrapperItem {
                 color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.larger
                 icon: root.icon
-
                 Behavior on color {
-                    CAnim {
-                    }
+                    CAnim {}
                 }
             }
+
             RailBadge {
                 anchors.right: parent.right
                 anchors.rightMargin: root.expanded ? -6 : -4
@@ -99,6 +97,7 @@ WrapperItem {
                 text: root.badgeText
             }
         }
+
         StyledText {
             id: labelText
 
@@ -108,7 +107,8 @@ WrapperItem {
             readonly property real expandedLabelX: iconCell.x + iconCell.width + Appearance.spacing.normal
             readonly property real expandedX: expandedLabelX
             readonly property real expandedY: (root.expandedItemHeight - expandedLabelHeight) / 2
-            property real progress: root.expanded ? 1 : 0
+
+            property real          progress: root.expanded ? 1 : 0
 
             color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.normal
@@ -120,10 +120,8 @@ WrapperItem {
             wrapMode: Text.Wrap
             x: compactX + (expandedX - compactX) * progress
             y: compactY + (expandedY - compactY) * progress
-
             Behavior on color {
-                CAnim {
-                }
+                CAnim {}
             }
             Behavior on progress {
                 NAnim {

@@ -22,7 +22,6 @@ WrapperRectangle {
     implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
     radius: Appearance.rounding.normal
     visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
-
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -33,7 +32,6 @@ WrapperRectangle {
     Loader {
         active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
         asynchronous: true
-
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen
             anchors.fill: parent
@@ -47,6 +45,7 @@ WrapperRectangle {
             }
         }
     }
+
     ConfirmDialog {
         id: deleteConfirmation
 
@@ -60,7 +59,6 @@ WrapperRectangle {
         cancelText: qsTr("Cancel")
         confirmText: qsTr("Delete")
         title: qsTr("Clipboard")
-
         onAccepted: ClipboardServices.uiState.confirmDelete()
         onRejected: ClipboardServices.uiState.cancelDelete()
     }

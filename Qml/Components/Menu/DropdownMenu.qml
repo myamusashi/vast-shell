@@ -9,26 +9,27 @@ import qs.Components.Menu
 Popup {
     id: root
 
-    property Item anchorItem: null
-    property int currentIndex: -1
-    property var disabledLabel: modelData => ""
-    readonly property int gap: 4
-    property var isItemActive: (modelData, itemIndex) => itemIndex === currentIndex
-    property var isItemEnabled: modelData => true
-    property real maxWidth: 280
-    property int minVisibleRows: 3
-    property alias model: itemRepeater.model
-    property bool openUpward: false
+    readonly property int  gap: 4
     readonly property bool openingUpward: openUpward
-    property string preferredDirection: "auto"
-    property bool resolveGuard: false
-    property real resolvedMaxHeight: 336
-    property bool showScrollBar: false
-    property var textRole: "text"
 
-    signal activated(int index)
+    property Item          anchorItem: null
+    property int           currentIndex: -1
+    property var           disabledLabel: modelData => ""
+    property var           isItemActive: (modelData, itemIndex) => itemIndex === currentIndex
+    property var           isItemEnabled: modelData => true
+    property real          maxWidth: 280
+    property int           minVisibleRows: 3
+    property alias         model: itemRepeater.model
+    property bool          openUpward: false
+    property string        preferredDirection: "auto"
+    property real          resolvedMaxHeight: 336
+    property bool          resolveGuard: false
+    property bool          showScrollBar: false
+    property var           textRole: "text"
 
-    function availableSpaceAbove(): real {
+    signal                 activated(int index)
+
+    function               availableSpaceAbove(): real {
         const win = anchorItem ? anchorItem.QsWindow.window : null;
         if (!win)
             return 336 + 200;
@@ -42,7 +43,7 @@ Popup {
         return win.height;
         // qmllint enable missing-property
     }
-    function availableSpaceBelow(): real {
+    function               availableSpaceBelow(): real {
         const win = anchorItem ? anchorItem.QsWindow.window : null;
         if (!win)
             return 336 + 200;
@@ -56,19 +57,19 @@ Popup {
         return win.height - (anchorItem.height + gap);
         // qmllint enable missing-property
     }
-    function resolvePlacement() {
+    function               resolvePlacement() {
         if (!anchorItem || !anchorItem.QsWindow.window || resolveGuard)
             return;
-        resolveGuard = true;
+        resolveGuard      = true;
 
         // qmllint disable missing-property
-        const win = anchorItem.QsWindow.window;
-        const placement = PopupPlacement.resolve(preferredDirection, availableSpaceAbove(), availableSpaceBelow(), menuSurface.contentImplicitHeight, 336, minVisibleRows, 48, gap, win.height);
-        openUpward = placement.openUpward;
+        const win         = anchorItem.QsWindow.window;
+        const placement   = PopupPlacement.resolve(preferredDirection, availableSpaceAbove(), availableSpaceBelow(), menuSurface.contentImplicitHeight, 336, minVisibleRows, 48, gap, win.height);
+        openUpward        = placement.openUpward;
         resolvedMaxHeight = placement.maxHeight;
         // qmllint enable missing-property
 
-        resolveGuard = false;
+        resolveGuard      = false;
     }
 
     background: null
@@ -79,14 +80,12 @@ Popup {
     transformOrigin: openUpward ? Popup.BottomLeft : Popup.TopLeft
     width: anchorItem ? Math.max(menuSurface.minWidth, Math.min(maxWidth, anchorItem.width)) : menuSurface.implicitWidth
     y: openUpward ? -height - gap : (anchorItem ? anchorItem.height + gap : 0)
-
     enter: MenuTransitions {
         opening: true
     }
     exit: MenuTransitions {
         opening: false
     }
-
     onAboutToShow: resolvePlacement()
     onAnchorItemChanged: {
         if (anchorItem)
@@ -111,6 +110,7 @@ Popup {
         ignoreUnknownSignals: true
         target: root.anchorItem && root.anchorItem.QsWindow.window ? root.anchorItem.QsWindow.window : null
     }
+
     MenuSurface {
         id: menuSurface
 
@@ -123,7 +123,6 @@ Popup {
             id: itemRepeater
 
             model: root.model
-
             delegate: MenuItem {
                 required property int index
                 required property var modelData

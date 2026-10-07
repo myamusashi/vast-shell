@@ -10,20 +10,23 @@ import qs.Core.States
 import qs.Core.Utils
 
 Singleton {
-    readonly property int itemSize: 40
-    readonly property int itemSpacing: Appearance.spacing.large
-    property alias linkTracker: linkTracker
-    property bool openPerAppVolume: false
+    readonly property int  itemSize: 40
+    readonly property int  itemSpacing: Appearance.spacing.large
     readonly property real sliderHeight: 250 - 30 - 40 - 2 * Appearance.spacing.normal
+
+    property alias         linkTracker: linkTracker
+    property bool          openPerAppVolume: false
 
     PwNodeLinkTracker {
         id: linkTracker
 
         node: Pipewire.defaultAudioSink
     }
+
     PwObjectTracker {
         objects: [Pipewire.defaultAudioSink]
     }
+
     Connections {
         function onVolumeChanged() {
             GlobalStates.showOSD("volume");
@@ -31,6 +34,7 @@ Singleton {
 
         target: Pipewire.defaultAudioSink.audio
     }
+
     IpcHandler {
         function appChange(id: int, delta: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
@@ -38,7 +42,7 @@ Singleton {
                 stream.audio.volume = VolumeUtils.clamp(stream.audio.volume + delta / 100);
         }
         function appList(): string {
-            const streams = Pipewire.nodes.values.filter(node => node.isStream);
+            const streams         = Pipewire.nodes.values.filter(node => node.isStream);
             const streamSummaries = [];
             for (const stream of streams)
                 streamSummaries.push({

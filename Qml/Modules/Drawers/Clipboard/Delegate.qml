@@ -1,6 +1,6 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 import Vast.Clipboard
 
 import qs.Core.States
@@ -13,11 +13,19 @@ import qs.Components.Button
 ItemDelegate {
     id: root
 
-    required property var entryId
+    required property var    entryId
     required property string fileName
+    required property int    index
+    required property bool   isSelected
+    required property bool   pinned
+    required property string preview
+    required property string sourceApp
+    required property var    timestamp
+    required property string type
+
     readonly property string formattedTime: {
-        const d = new Date(timestamp);
-        const now = new Date();
+        const d    = new Date(timestamp);
+        const now  = new Date();
         const diff = now - d;
 
         if (diff < 60000)
@@ -28,26 +36,19 @@ ItemDelegate {
             return qsTr("%1h ago").arg(Math.floor(diff / 3600000));
         return d.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
     }
-    property bool inVisual: false
-    required property int index
-    readonly property bool isFiles: type === "files"
-    readonly property bool isImage: type === "image"
-    required property bool isSelected
-    required property bool pinned
-    required property string preview
-    required property string sourceApp
-    required property var timestamp
-    required property string type
+    readonly property bool   isFiles: type === "files"
+    readonly property bool   isImage: type === "image"
 
-    signal activated
-    signal pinToggled(var id, bool pinned)
-    signal removeRequested(var id)
+    property bool            inVisual: false
+
+    signal                   activated
+    signal                   pinToggled(var id, bool pinned)
+    signal                   removeRequested(var id)
 
     height: 64
     highlighted: isSelected
     hoverEnabled: true
     width: ListView.view?.width ?? parent?.width ?? 320
-
     background: Rectangle {
         color: root.inVisual && !root.isImage && !root.isFiles ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15) : "transparent"
         radius: Appearance.rounding.small
@@ -72,6 +73,7 @@ ItemDelegate {
         Item {
             Layout.preferredWidth: root.pinned ? Appearance.margin.large - Appearance.margin.normal : 0
         }
+
         Rectangle {
             Layout.alignment: Qt.AlignVCenter
             color: {
@@ -119,6 +121,7 @@ ItemDelegate {
                 }
             }
         }
+
         ColumnLayout {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
@@ -135,6 +138,7 @@ ItemDelegate {
                 text: root.isImage ? (root.fileName || qsTr("Image")) : root.isFiles ? qsTr("Files (%1)").arg(fileCount) : root.preview || qsTr("(empty)")
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
+
             RowLayout {
                 spacing: Appearance.spacing.small
                 visible: root.sourceApp !== ""
@@ -146,11 +150,13 @@ ItemDelegate {
                     font.pixelSize: Appearance.fonts.size.small
                     text: root.sourceApp
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OutlineVariant
                     font.pixelSize: Appearance.fonts.size.small
                     text: "·"
                 }
+
                 StyledText {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     font.pixelSize: Appearance.fonts.size.small
@@ -158,6 +164,7 @@ ItemDelegate {
                 }
             }
         }
+
         FloatingButton {
             id: pinButton
 
@@ -171,16 +178,12 @@ ItemDelegate {
             icon.size: Appearance.fonts.size.large
             opacity: pinButton.hovered ? 1.0 : 0.6
             visible: root.hovered || root.pinned
-
             Behavior on opacity {
-                NAnim {
-                }
+                NAnim {}
             }
-
             onClicked: root.pinToggled(root.entryId, !root.pinned)
         }
     }
-
     onClicked: activated()
 
     TapHandler {

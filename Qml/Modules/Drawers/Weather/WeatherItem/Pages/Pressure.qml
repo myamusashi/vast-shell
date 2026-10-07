@@ -15,9 +15,7 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Pressure {
-    }
-
+    content: Pressure {}
     component Pressure: Column {
         clip: true
         spacing: Appearance.spacing.normal
@@ -26,12 +24,13 @@ Pages {
             fill: parent
             topMargin: 20
         }
+
         Header {
             icon: "compress"
             title: qsTr("Pressure")
-
             onClicked: root.isOpen = false
         }
+
         WrapperRectangle {
             anchors.margins: Appearance.margin.normal
             clip: true
@@ -51,6 +50,7 @@ Pages {
                     font.pixelSize: Appearance.fonts.size.large * 1.5
                     text: qsTr("Current conditions")
                 }
+
                 RowLayout {
                     Layout.alignment: Qt.AlignLeft
                     Layout.fillWidth: true
@@ -61,12 +61,14 @@ Pages {
                         font.pixelSize: Appearance.fonts.size.extraLarge
                         text: Weather.pressure
                     }
+
                     StyledText {
                         color: Colours.m3Colors.m3Primary
                         font.pixelSize: Appearance.fonts.size.normal
                         text: "hPa"
                     }
                 }
+
                 Flickable {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 200
@@ -99,6 +101,7 @@ Pages {
                                     to: 1500
                                     value: hourlyDelegate.modelData.pressure
                                 }
+
                                 ColumnLayout {
                                     Layout.alignment: Qt.AlignHCenter
 
@@ -108,6 +111,7 @@ Pages {
                                         font.pixelSize: Appearance.fonts.size.normal
                                         text: hourlyDelegate.modelData.pressure
                                     }
+
                                     StyledText {
                                         Layout.alignment: Qt.AlignHCenter
                                         color: Colours.m3Colors.m3OnBackground
@@ -124,6 +128,7 @@ Pages {
                 }
             }
         }
+
         StyledRect {
             color: Colours.m3Colors.m3Surface
             implicitHeight: pressureDescription.contentHeight + 20
@@ -133,6 +138,7 @@ Pages {
                 color: Colours.m3Colors.m3OutlineVariant
                 width: 1
             }
+
             StyledText {
                 id: pressureDescription
 
@@ -148,6 +154,7 @@ Pages {
                 }
             }
         }
+
         Item {
             Layout.fillHeight: true
         }

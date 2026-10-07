@@ -2,11 +2,12 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import "Wifi" as WF
 
 import qs.Core.Configs
 import qs.Components.Dialog
 import qs.Components.Popup
+
+import "Wifi" as WF
 
 ZoomPopup {
     id: root
@@ -14,16 +15,16 @@ ZoomPopup {
     clipContent: true
     contentMargin: Appearance.margin.normal
     enableScroll: false
-
     content: ColumnLayout {
         spacing: Appearance.spacing.small
         width: root.width
 
-        WF.Header {
-        }
+        WF.Header {}
+
         WF.WifiToggle {
             isVisible: root.isVisible
         }
+
         WF.NetworkList {
             pskDialog: wifiPskDialog
         }

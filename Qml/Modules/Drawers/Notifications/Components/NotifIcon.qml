@@ -2,8 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Widgets
 import Quickshell.Services.Notifications
+import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -12,9 +12,10 @@ import qs.Services
 Item {
     id: root
 
+    required property var  modelData
+
     readonly property bool hasAppIcon: modelData.appIcon?.length > 0
     readonly property bool hasImage: modelData.image?.length > 0
-    required property var modelData
 
     implicitHeight: 40
     implicitWidth: 40
@@ -36,6 +37,7 @@ Item {
             }
         }
     }
+
     Component {
         id: imageComponent
 
@@ -46,6 +48,7 @@ Item {
             source: Qt.resolvedUrl(root.modelData.image)
         }
     }
+
     Component {
         id: iconComponent
 
@@ -56,6 +59,7 @@ Item {
             source: Quickshell.iconPath(root.modelData.appIcon)
         }
     }
+
     Component {
         id: fallbackIconComponent
 
@@ -66,6 +70,7 @@ Item {
             source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : root.modelData.image
         }
     }
+
     Loader {
         id: appIcon
 
@@ -73,7 +78,6 @@ Item {
         height: 20
         width: 20
         z: 1
-
         sourceComponent: StyledRect {
             color: Colours.m3Colors.m3Surface
             implicitHeight: 20
@@ -84,6 +88,7 @@ Item {
                 color: Colours.m3Colors.m3OutlineVariant
                 width: 1.5
             }
+
             ClippingWrapperRectangle {
                 anchors.centerIn: parent
                 implicitHeight: 16

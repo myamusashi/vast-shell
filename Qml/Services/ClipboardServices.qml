@@ -19,6 +19,7 @@ Singleton {
         target: ClipboardManager
         value: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.appId : ""
     }
+
     IpcHandler {
         function clear(): bool {
             return ClipboardManager.clearAll();
@@ -42,34 +43,37 @@ Singleton {
 
         target: "clipboardHistory"
     }
+
     QtObject {
         id: uiState
 
         readonly property bool isDeletePending: pendingDeleteIds.length > 0
-        readonly property int listWidth: Configs.clipboard.width
-        property var pendingDeleteIds: []
-        property bool previewFocused: false
-        readonly property int previewWidth: 400
-        property bool visualActive: false
-        property int visualAnchor: 0
+        readonly property int  listWidth: Configs.clipboard.width
+        readonly property int  previewWidth: 400
 
-        signal deleteConfirmed(var ids)
+        property var           pendingDeleteIds: []
+        property bool          previewFocused: false
+        property bool          visualActive: false
+        property int           visualAnchor: 0
 
-        function cancelDelete(): void {
+        signal                 deleteConfirmed(var ids)
+
+        function               cancelDelete(): void {
             pendingDeleteIds = [];
         }
-        function confirmDelete(): void {
-            const ids = pendingDeleteIds;
+        function               confirmDelete(): void {
+            const ids        = pendingDeleteIds;
             pendingDeleteIds = [];
             if (ids.length > 0)
                 deleteConfirmed(ids);
         }
-        function requestDelete(ids: var): void {
+        function               requestDelete(ids: var): void {
             if (ids.length === 0)
                 return;
             pendingDeleteIds = ids;
         }
     }
+
     Connections {
         function onIsClipboardOpenChanged() {
             if (GlobalStates.isClipboardOpen)
@@ -82,10 +86,10 @@ Singleton {
 
         target: GlobalStates
     }
+
     FileView {
         path: `${Paths.cacheDir}/clipboard.db`
         watchChanges: false
-
         onLoadFailed: err => {
             if (err === FileViewError.FileNotFound) {
                 ToastService.show(qsTr("Clipboard database not found, created it"), qsTr("Clipboard"), "edit-paste");

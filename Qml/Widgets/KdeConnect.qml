@@ -18,7 +18,6 @@ StyledRect {
     implicitHeight: parent.height
     implicitWidth: kdeIcon.width + Appearance.padding.normal * 2
     radius: Appearance.rounding.small
-
     Behavior on color {
         CAnim {
             duration: Appearance.animations.durations.small
@@ -34,15 +33,13 @@ StyledRect {
         implicitSize: Appearance.fonts.size.large * 1.5
         opacity: KDEConnect.hasAvailableDevices ? 1.0 : 0.4
         source: Quickshell.iconPath("kdeconnect", "image-missing")
-
         Behavior on opacity {
-            NAnim {
-            }
+            NAnim {}
         }
     }
+
     DropArea {
         anchors.fill: parent
-
         onDropped: drop => {
             root.dragHover = false;
             if (!drop.hasUrls)

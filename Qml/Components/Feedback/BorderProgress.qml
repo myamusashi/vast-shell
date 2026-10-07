@@ -21,18 +21,19 @@ Item {
     ShaderEffect {
         id: borderEffect
 
-        property color borderColor: Colours.m3Colors.m3Primary
-        property real borderWidth: 2.0
-        property real progress: 1.0
-        property real radius: source.radius
+        property color    borderColor: Colours.m3Colors.m3Primary
+        property real     borderWidth: 2.0
+        property real     progress: 1.0
+        property real     radius: source.radius
         property vector2d resolution: Qt.vector2d(source.width, source.height)
-        property var source: ({})
+        property var      source: ({})
 
         anchors.fill: parent
         fragmentShader: Paths.projectRoot + "/Assets/shaders/borderProgress.frag.qsb"
         vertexShader: Paths.projectRoot + "/Assets/shaders/borderProgress.vert.qsb"
         z: 999
     }
+
     NAnim {
         id: progressAnimation
 
@@ -41,7 +42,6 @@ Item {
         property: "progress"
         target: borderEffect
         to: 0.0
-
         onFinished: borderEffect.destroy()
     }
 }

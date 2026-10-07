@@ -15,6 +15,7 @@ import qs.Services
 import "../Base"
 
 Scope {
+
     IpcHandler {
         function open(header: string, description: string, icon: string, duration: int): void {
             ToastService.show(description, header, icon, duration);
@@ -22,9 +23,9 @@ Scope {
 
         target: "toast"
     }
+
     LazyLoader {
         activeAsync: ToastService.model.count > 0
-
         component: PanelWindow {
             WlrLayershell.layer: Hypr.focusedWsHasFullscreen ? WlrLayer.Background : WlrLayer.Overlay
             anchors.bottom: true
@@ -33,9 +34,7 @@ Scope {
             implicitHeight: 720
             implicitWidth: 320
             margins.bottom: Appearance.margin.large // qmllint disable
-
-            mask: Region {
-            } // ignore mouse input
+            mask: Region {} // ignore mouse input
 
             ListView {
                 id: toastListView
@@ -44,8 +43,8 @@ Scope {
                 model: ToastService.model
                 spacing: Appearance.spacing.small
                 verticalLayoutDirection: ListView.BottomToTop
-
                 add: Transition {
+
                     NAnim {
                         duration: Appearance.animations.durations.emphasizedDecel
                         easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
@@ -53,6 +52,7 @@ Scope {
                         property: "opacity"
                         to: 1
                     }
+
                     NAnim {
                         duration: Appearance.animations.durations.emphasizedDecel
                         easing.bezierCurve: Appearance.animations.curves.emphasizedDecel
@@ -64,12 +64,14 @@ Scope {
                     implicitWidth: toastListView.width
                 }
                 displaced: Transition {
+
                     NAnim {
                         duration: Appearance.animations.durations.small
                         properties: "x,y"
                     }
                 }
                 remove: Transition {
+
                     NAnim {
                         duration: Appearance.animations.durations.emphasizedAccel
                         easing.bezierCurve: Appearance.animations.curves.emphasizedAccel
@@ -91,10 +93,10 @@ Scope {
         id: root
 
         required property string description
-        required property int duration
+        required property int    duration
         required property string header
         required property string icon
-        required property int index
+        required property int    index
 
         color: GlobalStates.drawerColors
         margin: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize + Appearance.margin.small : Appearance.margin.small
@@ -112,6 +114,7 @@ Scope {
                 implicitSize: 32
                 source: Quickshell.iconPath(root.icon, "image-missing")
             }
+
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
@@ -125,6 +128,7 @@ Scope {
                     maximumLineCount: 1
                     text: root.header
                 }
+
                 StyledText {
                     Layout.fillWidth: true
                     color: Colours.m3Colors.m3OnSurfaceVariant
@@ -136,10 +140,10 @@ Scope {
                 }
             }
         }
+
         Timer {
             interval: root.duration
             running: true
-
             onTriggered: ToastService.model.remove(root.index)
         }
     }
