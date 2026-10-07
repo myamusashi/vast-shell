@@ -1,0 +1,8 @@
+maximum_name_column = 40
+align_bindings = false
+align_assignments = true
+sort_imports = true
+normalize_members = true
+excluded_bindings = ["id"]
+ternary_max_line = 100
+suggest_ternaries = true

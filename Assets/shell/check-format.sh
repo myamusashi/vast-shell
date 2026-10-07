@@ -11,7 +11,15 @@ cd "${ROOT}" || exit 1
 status=0
 
 CLANG_FORMAT="${CLANG_FORMAT:-clang-format}"
-QMLFORMAT="${QMLFORMAT:-qmlformat}"
+if [ -z "${QMLFORMAT:-}" ]; then
+    if command -v qmlformat-rs >/dev/null 2>&1; then
+        QMLFORMAT=qmlformat-rs
+    else
+        QMLFORMAT=qmlformat
+    fi
+fi
+echo "qmlformat command: ${QMLFORMAT}"
+
 
 mapfile -t cpp_files < <(find Plugins/Vast -type f \( -name '*.cpp' -o -name '*.hpp' \) | sort)
 
