@@ -82,14 +82,14 @@ Singleton {
                 let persistentImage = notif.image ?? "";
 
                 if (persistentImage.startsWith("image://")) {
-                    const key = "notif-" + notif.id;
+                    const key = "notif-" + notif.idNotif;
                     const cached = ImageCache.cachedPath(key);
                     persistentImage = cached || "";
                 }
 
                 return {
                     time: notif.time.getTime(),
-                    id: notif.id,
+                    id: notif.idNotif,
                     summary: notif.summary,
                     body: notif.body,
                     appIcon: notif.appIcon,
@@ -198,7 +198,7 @@ Singleton {
 
                     const notif = notifComponent.createObject(root, {
                         time: new Date(notifData.time),
-                        id: notifData.id,
+                        idNotif: notifData.id,
                         summary: notifData.summary,
                         body: notifData.body,
                         appIcon: notifData.appIcon,
@@ -328,7 +328,7 @@ Singleton {
         property string desktopEntry: ""
 
         property Notification notification
-        property string id: ""
+        property string idNotif: ""
         property string summary: ""
         property string body: ""
         property string appIcon: ""
@@ -357,7 +357,7 @@ Singleton {
             closed = true;
             if (locks.size === 0 && root.notifications.includes(this)) {
                 root.notifications = root.notifications.filter(notif => notif !== this);
-                ImageCache.evictKey("notif-" + id);
+                ImageCache.evictKey("notif-" + idNotif);
                 if (notification)
                     notification.dismiss();
                 connection.target = null;
@@ -404,7 +404,7 @@ Singleton {
                     cachedImage = ImageCache.saveProviderImageQml(raw, "notif-" + notification.id);
             }
 
-            id = notification.id;
+            idNotif = notification.id;
             summary = notification.summary;
             body = notification.body;
             appIcon = notification.appIcon;
