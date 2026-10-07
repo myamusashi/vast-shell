@@ -162,7 +162,7 @@ Singleton {
     FileView {
         id: storage
 
-        path: Paths.cacheDir + "/mushell/notifications.json"
+        path: Paths.cacheDir + "/vast-shell/notifications.json"
 
         onLoaded: {
             try {

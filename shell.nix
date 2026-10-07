@@ -68,6 +68,6 @@
             compile_if_missing "Assets/shaders/$shader.frag.qsb" "Assets/shaders/$shader.frag"
         done
 
-        echo "mushell environment (clang toolchain)"
+        echo "vast-shell environment (clang toolchain)"
     '';
 }
