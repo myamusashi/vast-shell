@@ -21,9 +21,6 @@ jobs:
       with:
         use-flakehub: false
     - uses: nicknovitski/nix-develop@v1
-
     - name: Check formatting
       run: |
-        clang-format --version
-        qmlformat --version
         Assets/shell/check-format.sh
