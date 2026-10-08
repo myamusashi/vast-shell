@@ -9,9 +9,9 @@ import Quickshell
 import qs.Components.Feedback
 import qs.Modules.BluetoothAgent
 import qs.Modules.Drawers
-import qs.Modules.DragAndDrop
+import qs.Modules.DynamicIslandHost.DragAndDrop
+import qs.Modules.DynamicIslandHost.Privacy
 import qs.Modules.Lock
-import qs.Modules.Privacy
 import qs.Modules.Polkit
 import qs.Modules.Wallpaper
 import qs.Modules.Settings
