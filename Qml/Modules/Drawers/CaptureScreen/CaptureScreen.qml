@@ -13,17 +13,26 @@ import qs.Core.Utils
 import qs.Services.CaptureScreenVideo
 import qs.Services
 
+import "Screenshot"
+import "Video"
+
 Drawer {
     id: root
 
-    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
+    readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
+    readonly property string title: mode === 0 ? qsTr("Screen Recorder") : qsTr("Screenshot")
+    readonly property string titleIcon: mode === 0 ? "screen_record" : "photo_camera"
 
-    property int           currentPage: 0
-    property bool          isHistoryOpen: false
+    property int             mode: 0
+    property int             screenshotPage: 0
+    property int             videoPage: 0
 
-    function               openVideoFile(path) {
+    function                 openCaptureFile(path, isVideo) {
+        const app = isVideo ? Configs.generals.apps.videoViewer : Configs.generals.apps.imageViewer;
+        if (app === "")
+            return;
         Quickshell.execDetached({
-            command: [Configs.generals.apps.videoViewer, path]
+            command: [app, path]
         });
     }
 
@@ -32,15 +41,15 @@ Drawer {
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
-    depth: parent.height * 0.25
+    depth: parent.height * 0.35
     edge: Qt.BottomEdge
     filletRadius: 40
     length: 380
-    open: GlobalStates.isRecordingPanelOpen
-    onIsHistoryOpenChanged: {
-        if (isHistoryOpen)
+    onOpenChanged: {
+        if (open)
             ScreenCaptureHistory.reloadFiles();
     }
+    open: GlobalStates.isRecordingPanelOpen
 
     Loader {
         active: root.shown
@@ -63,7 +72,7 @@ Drawer {
                         Layout.alignment: Qt.AlignVCenter
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.large
-                        icon: "screen_record"
+                        icon: root.titleIcon
                         type: Icon.Material
                     }
 
@@ -73,7 +82,7 @@ Drawer {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.DemiBold
-                        text: qsTr("Screen Recorder")
+                        text: root.title
                     }
 
                     FloatingButton {
@@ -90,12 +99,23 @@ Drawer {
                 }
             }
 
+            ConnectedButtonGroup {
+                Layout.alignment: Qt.AlignHCenter
+                currentIndex: root.mode
+                model: [qsTr("Video"), qsTr("Screenshot")]
+                onClicked: index => {
+                    root.mode = index;
+                    if (index === 1)
+                        ScreenCaptureHistory.reloadFiles();
+                }
+            }
+
             StyledRect {
                 Layout.fillWidth: true
                 Layout.preferredHeight: Appearance.margin.normal + Appearance.fonts.size.normal
                 color: CaptureScreenVideo.isRecording ? Qt.alpha(Colours.m3Colors.m3Red, 0.15) : Colours.m3Colors.m3SurfaceContainerHighest
                 radius: Appearance.rounding.small
-                visible: CaptureScreenVideo.isRecording
+                visible: root.mode === 0 && CaptureScreenVideo.isRecording
 
                 RowLayout {
                     spacing: Appearance.spacing.small
@@ -143,15 +163,7 @@ Drawer {
                         font.bold: true
                         font.family: Fonts.mono
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: {
-                            const s   = CaptureScreenVideo.recordingElapsedSeconds;
-                            const h   = Math.floor(s / 3600);
-                            const m   = Math.floor((s % 3600) / 60);
-                            const sec = s % 60;
-                            if (h > 0)
-                                return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-                            return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-                        }
+                        text: FormatTimeUtils.formatDuration(CaptureScreenVideo.recordingElapsedSeconds)
                     }
                 }
             }
@@ -159,28 +171,48 @@ Drawer {
             StackLayout {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                currentIndex: root.currentPage
+                currentIndex: root.mode
 
-                PageMain {
-                    onOpenAudio: root.currentPage = 1
-                    onOpenHistory: {
-                        root.isHistoryOpen = true;
-                        root.currentPage   = 3;
+                StackLayout {
+                    currentIndex: root.videoPage
+
+                    PageMain {
+                        onOpenAudio: root.videoPage = 1
+                        onOpenHistory: {
+                            ScreenCaptureHistory.reloadFiles();
+                            root.videoPage = 3;
+                        }
+                        onOpenSettings: root.videoPage = 2
                     }
-                    onOpenSettings: root.currentPage = 2
+
+                    PageAudio {
+                        onGoBack: root.videoPage = 0
+                    }
+
+                    PageSettings {
+                        onGoBack: root.videoPage = 0
+                    }
+
+                    PageHistory {
+                        onGoBack: root.videoPage = 0
+                        onOpenFile: path => root.openCaptureFile(path, true)
+                    }
                 }
 
-                PageAudio {
-                    onGoBack: root.currentPage = 0
-                }
+                StackLayout {
+                    currentIndex: root.screenshotPage
 
-                PageSettings {
-                    onGoBack: root.currentPage = 0
-                }
+                    PageActions {
+                        onOpenHistory: {
+                            ScreenCaptureHistory.reloadFiles();
+                            root.screenshotPage = 1;
+                        }
+                    }
 
-                PageHistory {
-                    onGoBack: root.currentPage = 0
-                    onOpenFile: path => root.openVideoFile(path)
+                    PageCaptures {
+                        onGoBack: root.screenshotPage = 0
+                        onOpenFile: path => root.openCaptureFile(path, false)
+                    }
                 }
             }
         }

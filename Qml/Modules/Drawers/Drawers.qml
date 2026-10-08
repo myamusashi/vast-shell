@@ -21,7 +21,7 @@ import "OSD"
 import "Bar"
 import "Volume"
 import "Brightness"
-import "CaptureScreenVideo"
+import "CaptureScreen"
 
 Variants {
     model: Quickshell.screens
@@ -105,7 +105,7 @@ Variants {
                 session: session
             }
 
-            CaptureScreenVideo {}
+            CaptureScreen {}
 
             Notifications {}
 
