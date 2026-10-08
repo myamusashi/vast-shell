@@ -41,7 +41,7 @@ trap 'rm -rf "${scratch}"' EXIT
 
 qml_status=0
 for file in "${qml_files[@]}"; do
-    if "${QMLFORMAT_RS}" "${file}" 2>"${scratch}/err" | diff -q "${file}" - >/dev/null 2>&1; then
+    if "${QMLFORMAT_RS}" "-i" "${file}" 2>"${scratch}/err" | diff -q "${file}" - >/dev/null 2>&1; then
         continue
     fi
     if [ -s "${scratch}/err" ]; then
