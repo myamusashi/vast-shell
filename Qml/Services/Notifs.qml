@@ -185,10 +185,10 @@ Singleton {
                     if (notifAge > root.maxNotificationAge)
                         continue;
 
-                    const raw       = notifData.image ?? "";
                     // image:// URLs are provider-ephemeral and cannot survive a reload;
                     // they should never appear in JSON after the saveTimer fix, but discard
                     // any that slipped through from an older cache.
+                    const raw       = notifData.image ?? "";
                     const stableUrl = raw.startsWith("image://") ? "" : raw;
 
                     const notif     = notifComponent.createObject(root, {

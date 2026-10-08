@@ -3,12 +3,12 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Vast.Clipboard
 
+import qs.Components.Button
+import qs.Components.Base
 import qs.Core.States
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
-import qs.Components.Base
-import qs.Components.Button
 
 ItemDelegate {
     id: root
