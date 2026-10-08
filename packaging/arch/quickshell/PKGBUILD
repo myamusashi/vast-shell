@@ -1,9 +1,3 @@
-# Maintainer: myamusashi
-# Contributor: Entailz <entail-wraps0r at icloud dot com>
-# Mirrors the nix derivation (nixpkgs quickshell 0.3.1):
-#   cmakeFlags: DISTRIBUTOR, INSTALL_QML_PREFIX, GIT_REVISION
-#   RelWithDebInfo build type
-
 pkgname=quickshell
 pkgver=0.3.1
 pkgrel=1

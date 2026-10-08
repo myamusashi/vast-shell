@@ -22,5 +22,4 @@ jobs:
         use-flakehub: false
     - uses: nicknovitski/nix-develop@v1
     - name: Check formatting
-      run: |
-        Assets/shell/check-format.sh
+      run: bash Assets/shell/check-format.sh
