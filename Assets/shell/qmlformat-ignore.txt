@@ -1,2 +1,1 @@
 # Remove this entry once qmlformat can format the file.
-Qml/Services/Notifs.qml

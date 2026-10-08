@@ -11,14 +11,8 @@ cd "${ROOT}" || exit 1
 status=0
 
 CLANG_FORMAT="${CLANG_FORMAT:-clang-format}"
-if [ -z "${QMLFORMAT:-}" ]; then
-    if command -v qmlformat-rs >/dev/null 2>&1; then
-        QMLFORMAT=qmlformat-rs
-    else
-        QMLFORMAT=qmlformat
-    fi
-fi
-echo "qmlformat command: ${QMLFORMAT}"
+QMLFORMAT_RS=qmlformat-rs
+echo "qmlformat-rs command: ${QMLFORMAT_RS}"
 
 
 mapfile -t cpp_files < <(find Plugins/Vast -type f \( -name '*.cpp' -o -name '*.hpp' \) | sort)
@@ -40,18 +34,18 @@ mapfile -t qml_files < <(
         fi
 )
 
-echo "::group::qmlformat (${#qml_files[@]} files, ${#excluded[@]} excluded)"
+echo "::group::qmlformat-rs (${#qml_files[@]} files, ${#excluded[@]} excluded)"
 
 scratch=$(mktemp -d)
 trap 'rm -rf "${scratch}"' EXIT
 
 qml_status=0
 for file in "${qml_files[@]}"; do
-    if "${QMLFORMAT}" "${file}" 2>"${scratch}/err" | diff -q "${file}" - >/dev/null 2>&1; then
+    if "${QMLFORMAT_RS}" "${file}" 2>"${scratch}/err" | diff -q "${file}" - >/dev/null 2>&1; then
         continue
     fi
     if [ -s "${scratch}/err" ]; then
-        echo "${file}: qmlformat failed"
+        echo "${file}: qmlformat-rs failed"
         sed 's/^/    /' "${scratch}/err"
     else
         echo "${file}: not formatted"
@@ -60,8 +54,8 @@ for file in "${qml_files[@]}"; do
 done
 
 if [ "${qml_status}" -ne 0 ]; then
-    echo "qmlformat: the files above are not formatted. Run 'qmlformat -i' on them."
-    echo "If qmlformat cannot parse a file at all, add it to Assets/shell/qmlformat-ignore.txt with a reason."
+    echo "qmlformat-rs: the files above are not formatted. Run 'qmlformat-rs -i' on them."
+    echo "If qmlformat-rs cannot parse a file at all, add it to Assets/shell/qmlformat-ignore.txt with a reason."
     status=1
 fi
 echo "::endgroup::"
