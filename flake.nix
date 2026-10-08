@@ -19,6 +19,10 @@
             url = "github:quickshell-mirror/quickshell";
             inputs.nixpkgs.follows = "nixpkgs";
         };
+        qmlformat-rs = {
+            url = "git+https://git.myamusashi.cc/myamusashi/qmlformat-rs";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
     };
 
     outputs = {
@@ -28,6 +32,7 @@
         quickshell,
         another-ripple,
         wl-screenrec-fork,
+        qmlformat-rs,
     }: let
         systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
 
@@ -88,7 +93,10 @@
         devShells = forAllSystems (system: let
             pkgs = pkgsFor system;
         in {
-            default = import ./shell.nix {inherit pkgs;};
+            default = import ./shell.nix {
+                inherit pkgs;
+                qmlformat-rs = qmlformat-rs.packages.${system}.default;
+            };
         });
     };
 }

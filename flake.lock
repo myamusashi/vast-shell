@@ -74,6 +74,26 @@
         "type": "github"
       }
     },
+    "qmlformat-rs": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791413838,
+        "narHash": "sha256-RABzIViqWRW/9meswTsI0D08hiFIVlm72K+QmuBrCiQ=",
+        "ref": "refs/heads/master",
+        "rev": "a8bc4c6336dadec3aaec8f15303ad34bf6925f4c",
+        "revCount": 26,
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/qmlformat-rs"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/qmlformat-rs"
+      }
+    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -99,6 +119,7 @@
         "another-ripple": "another-ripple",
         "m3Shapes": "m3Shapes",
         "nixpkgs": "nixpkgs",
+        "qmlformat-rs": "qmlformat-rs",
         "quickshell": "quickshell",
         "wl-screenrec-fork": "wl-screenrec-fork"
       }

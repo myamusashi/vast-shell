@@ -1,4 +1,7 @@
-{pkgs}:
+{
+    pkgs,
+    qmlformat-rs,
+}:
 (pkgs.mkShell.override {stdenv = pkgs.clangStdenv;}) {
     nativeBuildInputs = with pkgs; [
         qt6.wrapQtAppsHook
@@ -37,6 +40,7 @@
         clazy
         clang-tools
         gdb
+        qmlformat-rs
     ];
 
     shellHook = ''
