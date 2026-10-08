@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Vast.Utils
 
 import qs.Components.Base
@@ -10,7 +11,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-Item {
+Scope {
     id: root
 
     property string currentDeviceName: ""
@@ -240,9 +241,8 @@ Item {
             root.displayActive     = false;
         }
         function onPairingCancelled(devicePath) {
-            if (root.currentDevicePath === devicePath) {
+            if (root.currentDevicePath === devicePath)
                 root.clearState();
-            }
             root.displayActive = false;
             displayTimer.stop();
         }
