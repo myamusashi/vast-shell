@@ -1095,17 +1095,17 @@
 <context>
     <name>ConfirmDeviceContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="33"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ConfirmDeviceContent.qml" line="33"/>
         <source>Send to %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="87"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ConfirmDeviceContent.qml" line="87"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="113"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ConfirmDeviceContent.qml" line="113"/>
         <source>Send</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1437,12 +1437,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DeviceListContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="48"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DeviceListContent.qml" line="48"/>
         <source>No devices available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="114"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DeviceListContent.qml" line="114"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1588,62 +1588,62 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DoneContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="28"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="28"/>
         <source>Handed to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="30"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="30"/>
         <source>Handed %1 of %2 to %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="32"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="32"/>
         <source>Stopped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="34"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="34"/>
         <source>Transfer ended at %1%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="36"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="36"/>
         <source>Couldn&apos;t send to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="45"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="45"/>
         <source>%1 not sent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="47"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="47"/>
         <source>nothing was sent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="49"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="49"/>
         <source>the device stopped responding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="53"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="53"/>
         <source>%1 is unreachable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="55"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="55"/>
         <source>some files are no longer available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="57"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="57"/>
         <source>some files could not be read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="59"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="59"/>
         <source>transfer failed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1651,7 +1651,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DraggingContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DraggingContent.qml" line="60"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DraggingContent.qml" line="60"/>
         <source>Drop files here</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1787,12 +1787,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>FilesDroppedContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="35"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/FilesDroppedContent.qml" line="35"/>
         <source>%1 file(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="96"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/FilesDroppedContent.qml" line="96"/>
         <source>Next</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3515,17 +3515,17 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PrivacyIslandContent</name>
     <message>
-        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Privacy/PrivacyIslandContent.qml" line="39"/>
         <source>Mic is on</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Privacy/PrivacyIslandContent.qml" line="39"/>
         <source>Speaker is on</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Privacy/PrivacyIslandContent.qml" line="39"/>
         <source>Screen share is on</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3601,24 +3601,24 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>ProgressContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="21"/>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="21"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="39"/>
         <source>%1% of %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="22"/>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="32"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="22"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="32"/>
         <source>Sending %1 of %2…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="22"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="22"/>
         <source>Transferring…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="88"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="88"/>
         <source>Stop sending</source>
         <translation type="unfinished"></translation>
     </message>

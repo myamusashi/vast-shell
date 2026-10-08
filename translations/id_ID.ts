@@ -28,37 +28,37 @@
         <translation type="vanished">Berbahaya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="42"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="46"/>
         <source>AQI</source>
         <translation>AQI</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="54"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="53"/>
         <source>Air quality</source>
         <translation>Kualitas udara</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="72"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="73"/>
         <source>Current conditions</source>
         <translation>Cuaca sekarang</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="156"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="161"/>
         <source>United States AQI:</source>
         <translation>United States AQI:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="160"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="165"/>
         <source>European AQi:</source>
         <translation>Eropa AQI:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="209"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="213"/>
         <source>United States AQI</source>
         <translation>AQI Amerika Serikat</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="209"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="213"/>
         <source>European AQI</source>
         <translation>AQI Eropa</translation>
     </message>
@@ -66,12 +66,12 @@
 <context>
     <name>AdapterControls</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AdapterControls.qml" line="27"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AdapterControls.qml" line="29"/>
         <source>Bluetooth</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AdapterControls.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AdapterControls.qml" line="52"/>
         <source>Discoverable</source>
         <translation>Ditemukan</translation>
     </message>
@@ -90,17 +90,17 @@
 <context>
     <name>AppearancePage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="50"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="55"/>
         <source>Appearance &amp; Theming</source>
         <translation>Tampilan &amp; Tema</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="59"/>
         <source>Color System</source>
         <translation>Sistem Warna</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="64"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="66"/>
         <source>Dark Mode:</source>
         <translation>Mode Gelap:</translation>
     </message>
@@ -110,7 +110,7 @@
         <translation>Gunakan palet gelap untuk semua shell</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="73"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="76"/>
         <source>Use Static Colors:</source>
         <translation>Gunakan Warna Statis:</translation>
     </message>
@@ -123,7 +123,7 @@
         <translation type="vanished">Menghasilkan warna dinamis dari Material You</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="83"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="87"/>
         <source>Static Colors Path:</source>
         <translation>Jalur Warna Statis:</translation>
     </message>
@@ -132,147 +132,147 @@
         <translation type="vanished">Gunakan Warna Material:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="75"/>
         <source>Load colors from a custom JSON file and override the generated palette.</source>
         <translation>Muat warna dari berkas JSON kustom dan ganti palet yang dihasilkan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="84"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="86"/>
         <source>File path to the custom colors JSON when static colors are enabled.</source>
         <translation>Path ke berkas JSON warna kustom ketika warna statis dinyalakan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="115"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="119"/>
         <source>Material Scheme:</source>
         <translation>Skema Material:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="116"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="118"/>
         <source>Material You color scheme variant for palette generation.</source>
         <translation>Variasi skema Material You untuk menghasilkan palet warna</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="135"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="137"/>
         <source>Typography System</source>
         <translation>Sistem Tipografi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="141"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="144"/>
         <source>Sans Serif Font:</source>
         <translation>Font Sans Serif:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="142"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="143"/>
         <source>Primary font for UI text and labels.</source>
         <translation>Font utama untuk teks dan label</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="151"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="155"/>
         <source>Monospace Font:</source>
         <translation>Font Monospace:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="152"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="154"/>
         <source>Font for code and monospaced text.</source>
         <translation>Font untuk kode dan teks monospaced.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="161"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="166"/>
         <source>Nerd Font:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="162"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="165"/>
         <source>Nerd font used for icon or font text.</source>
         <translation>Nerd font untuk ikon atau text font</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="171"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="177"/>
         <source>Material Icon Font:</source>
         <translation>Font Ikon Material:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="172"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="176"/>
         <source>Icon font used for Material Symbols throughout the shell.</source>
         <translation>Font ikon yang digunakan untuk Material Symbols di seluruh antarmuka.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="181"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="188"/>
         <source>Font Size Scale:</source>
         <translation>Skala Ukuran Font:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="182"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="187"/>
         <source>Global multiplier for all font sizes.</source>
         <translation>Pengganda global untuk semua ukuran font</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="199"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="206"/>
         <source>Shapes &amp; Layout</source>
         <translation>Bentuk &amp; Tata Letak</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="205"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="213"/>
         <source>UI Corner Roundness (Normal):</source>
         <translation>Kelengkungan Sudut UI (Normal):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="206"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="212"/>
         <source>Corner radius.</source>
         <translation>Radius sudut</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="218"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="227"/>
         <source>Element Spacing (Normal):</source>
         <translation>Jarak Elemen (Normal):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="219"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="226"/>
         <source>Default spacing between UI elements.</source>
         <translation>Jarak antar elemen antarmuka pengguna</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="231"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="241"/>
         <source>Padding (Normal):</source>
         <translation>Padding (Normal):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="232"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="240"/>
         <source>Inner padding.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="244"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="255"/>
         <source>Margin (Normal):</source>
         <translation>Margin (Normal):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="245"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="254"/>
         <source>Outer margin.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="259"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="270"/>
         <source>Motion &amp; Animation</source>
         <translation>Gerakan &amp; Animasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="262"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="274"/>
         <source>Animation Durations Scale:</source>
         <translation>Skala Durasi Animasi:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="263"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="273"/>
         <source>Multiplier for all animation durations. Higher is slower.</source>
         <translation>Pengganda semua durasi animasi. Makin besar makin pelan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="359"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="372"/>
         <source>Search font...</source>
         <translation>Cari font...</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="436"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="441"/>
         <source>System default</source>
         <translation>Pengaturan standar</translation>
     </message>
@@ -331,7 +331,7 @@
 <context>
     <name>AudioProfiles</name>
     <message>
-        <location filename="../Qml/Widgets/AudioProfiles.qml" line="46"/>
+        <location filename="../Qml/Widgets/AudioProfiles.qml" line="38"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -339,12 +339,12 @@
 <context>
     <name>Auth</name>
     <message>
-        <location filename="../Qml/Greeter/Auth.qml" line="49"/>
+        <location filename="../Qml/Greeter/Auth.qml" line="85"/>
         <source>Authenticating…</source>
         <translation>Otentikasi...</translation>
     </message>
     <message>
-        <location filename="../Qml/Greeter/Auth.qml" line="133"/>
+        <location filename="../Qml/Greeter/Auth.qml" line="128"/>
         <source>Session Start</source>
         <translation>Mulai Sesi</translation>
     </message>
@@ -352,17 +352,17 @@
 <context>
     <name>AvailableDevices</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="21"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="24"/>
         <source>Available devices</source>
         <translation>Perangkat tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="61"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="63"/>
         <source>Searching for devices…</source>
         <translation>Mencari perangkat...</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="69"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/AvailableDevices.qml" line="71"/>
         <source>No new devices — turn on scanning</source>
         <translation>Tidak ada perangkat baru — nyalakan scan</translation>
     </message>
@@ -380,27 +380,27 @@
         <translation>Tata Letak &amp; Perilaku</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="18"/>
         <source>Always Open Bar:</source>
         <translation>Selalu Buka Bilah:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="18"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="17"/>
         <source>Keep the top bar visible.</source>
         <translation>Tetap buka top bar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="28"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="27"/>
         <source>Use a condensed layout.</source>
         <translation>Gunakan layout compact</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="37"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="38"/>
         <source>Bar Height:</source>
         <translation>Tinggi Bilah:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="38"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="37"/>
         <source>Height of the top bar in pixels.</source>
         <translation>Tinggi dari top bar dalam piksel</translation>
     </message>
@@ -410,27 +410,25 @@
         <translation>Tampilan Workspace</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="55"/>
         <source>Workspace Indicator Style:</source>
-        <translation>Gaya Indikator Workspace:</translation>
+        <translation type="vanished">Gaya Indikator Workspace:</translation>
+    </message>
+    <message>
+        <source>Visual style for workspace indicators on the bar.</source>
+        <translation type="vanished">Gaya visual untuk indikator workspace di bar.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="56"/>
-        <source>Visual style for workspace indicators on the bar.</source>
-        <translation>Gaya visual untuk indikator workspace di bar.</translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="79"/>
         <source>Number of Visible Workspaces:</source>
         <translation>Jumlah workspaces Terlihat:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="80"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="55"/>
         <source>How many workspace indicators are shown on the bar.</source>
         <translation>Berapa banyak indikator workspace di tampilkan di bar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="27"/>
+        <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="28"/>
         <source>Compact Navigation Bar:</source>
         <translation>Bilah Navigasi Kompak:</translation>
     </message>
@@ -443,57 +441,57 @@
         <translation>Baterai</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="16"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="17"/>
         <source>Battery level</source>
         <translation>Daya baterai</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="20"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="21"/>
         <source>Temperature</source>
         <translation>Temperatur</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="24"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
         <source>Status</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="26"/>
         <source>Charging</source>
         <translation>Mengisi daya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="26"/>
         <source>Discharging</source>
         <translation>Menguras daya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="28"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="29"/>
         <source>Technology</source>
         <translation>Teknologi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="32"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="33"/>
         <source>Overall Health</source>
         <translation>Kesehatan Keseluruhan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="36"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="37"/>
         <source>Voltage</source>
         <translation>Tegangan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="42"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="43"/>
         <source>%1 - Design Capacity</source>
         <translation>%1 - Kapasitas desain</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="46"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="47"/>
         <source>%1 - Current Capacity</source>
         <translation>%1 - kapsitas saat ini</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="51"/>
         <source>%1 - Health</source>
         <translation>%1 - Kesehatan</translation>
     </message>
@@ -501,7 +499,7 @@
 <context>
     <name>BlockedDevices</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/BlockedDevices.qml" line="18"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/BlockedDevices.qml" line="21"/>
         <source>Blocked devices</source>
         <translation>Perangkat yang di block</translation>
     </message>
@@ -509,64 +507,64 @@
 <context>
     <name>BluetoothDeviceFormatter</name>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="19"/>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="27"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="13"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="60"/>
         <source>Pairing…</source>
         <translation>Pasang...</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="33"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="45"/>
         <source>No Bluetooth adapter found</source>
         <translation>Tidak ada adapter bluetooth yang ditemukan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="35"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="47"/>
         <source>Adapter blocked (rfkill)</source>
         <translation>Adapter diblokir (rfkill)</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="37"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="49"/>
         <source>Enabling…</source>
         <translation>Mengaktifkan…</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="39"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="51"/>
         <source>Disabling…</source>
         <translation>Mematikan...</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="41"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="53"/>
         <source>Bluetooth is off</source>
         <translation>Bluetooth dimatikan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="42"/>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="53"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="35"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="54"/>
         <source>Scanning…</source>
         <translation>Memindai...</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="42"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="54"/>
         <source>Tap a device to connect</source>
         <translation>Pilih perangkat yang di ingin di sambungkan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="47"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="29"/>
         <source>No adapter</source>
         <translation>Tidak ada adapter</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="49"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="31"/>
         <source>Off</source>
         <translation>Mati</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="51"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="33"/>
         <source>%1 connected</source>
         <translation>Tersambung %1 </translation>
     </message>
     <message>
-        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="54"/>
+        <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="36"/>
         <source>On — not connected</source>
         <translation>Nyala — tidak tersambung</translation>
     </message>
@@ -574,33 +572,33 @@
 <context>
     <name>BluetoothPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="19"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="18"/>
         <source>Bluetooth</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="22"/>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="102"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="21"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="101"/>
         <source>Adapter</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="26"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="27"/>
         <source>No Bluetooth adapter found. Ensure Bluetooth hardware is present and BlueZ is running.</source>
         <translation>Tidak ditemukan adaptor Bluetooth. Pastikan perangkat keras Bluetooth terpasang dan BlueZ sedang berjalan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="35"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="34"/>
         <source>Enable Bluetooth:</source>
         <translation>Bluetooth Dinyalakan:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="36"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="33"/>
         <source>Turn the Bluetooth adapter on or off.</source>
         <translation>Nyalakan atau matikan adaptor Bluetooth.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="76"/>
         <source>Adapter is blocked by rfkill. Unblock it with: rfkill unblock bluetooth</source>
         <translation>Adapter di block oleh rfkill. Unblock ini dengan: rfkill unblock bluetooth</translation>
     </message>
@@ -615,57 +613,57 @@
         <translation>Mematikan...</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="103"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="100"/>
         <source>Local Bluetooth adapter.</source>
         <translation>Lokal Adapter Bluetooth.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="124"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="123"/>
         <source>Address</source>
         <translation>Alamat</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="125"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="122"/>
         <source>Bluetooth device address.</source>
         <translation>Alaman perangkat bluetooth.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="49"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="48"/>
         <source>Discoverable:</source>
         <translation>Dapat ditemukan:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="50"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="47"/>
         <source>Allow nearby devices to discover this machine.</source>
         <translation>Izinkan perangkat di sekitar untuk mendeteksi perangkat ini.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="62"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="61"/>
         <source>Pairable:</source>
         <translation>Bisa dipasakang:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="63"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="60"/>
         <source>Allow nearby devices to request pairing.</source>
         <translation>Izinkam perangkat di sekitar untuk minta dipasangkan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="139"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="138"/>
         <source>Paired devices</source>
         <translation>Perangkat dipasangkan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="148"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="149"/>
         <source>No paired devices</source>
         <translation>Tidak ada perangkat yang terpasang</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="188"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="189"/>
         <source>Available devices</source>
         <translation>Perangkat tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="215"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="216"/>
         <source>No devices found — turn on scanning to discover nearby devices.</source>
         <translation>Tidak ada perangkat ditemukan — nyalakan scan untuk menemukan perangkat di sekitar</translation>
     </message>
@@ -725,12 +723,12 @@
 <context>
     <name>Body</name>
     <message>
-        <location filename="../Qml/Modules/Polkit/Body.qml" line="50"/>
+        <location filename="../Qml/Modules/Polkit/Body.qml" line="51"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Polkit/Body.qml" line="71"/>
+        <location filename="../Qml/Modules/Polkit/Body.qml" line="74"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Gagal autentikasi. Tolong Coba lagi.</translation>
     </message>
@@ -738,32 +736,32 @@
 <context>
     <name>BottomActionBar</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="76"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="80"/>
         <source>File name</source>
         <translation>Nama berkas</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="76"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="80"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="120"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="126"/>
         <source>Filter</source>
         <translation>Filter</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="152"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="158"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="158"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="164"/>
         <source>Open</source>
         <translation>Buka</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="158"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/BottomActionBar.qml" line="164"/>
         <source>Select</source>
         <translation>Pilih</translation>
     </message>
@@ -771,12 +769,12 @@
 <context>
     <name>Brightness</name>
     <message>
-        <location filename="../Qml/Services/Brightness.qml" line="104"/>
+        <location filename="../Qml/Services/Brightness.qml" line="89"/>
         <source>Brightness</source>
         <translation>Kecerahan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Brightness.qml" line="104"/>
+        <location filename="../Qml/Services/Brightness.qml" line="89"/>
         <source>Brightness unavailable: %1</source>
         <translation>Brightness tidak tersedia: %1</translation>
     </message>
@@ -784,13 +782,13 @@
 <context>
     <name>BrightnessControls</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="20"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="85"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="19"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="83"/>
         <source>All</source>
         <translation>Semua</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="24"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/BrightnessControls.qml" line="23"/>
         <source>Internal</source>
         <translation>Internal</translation>
     </message>
@@ -798,7 +796,7 @@
 <context>
     <name>CapsLockPopup</name>
     <message>
-        <location filename="../Qml/Modules/Lock/CapsLockPopup.qml" line="54"/>
+        <location filename="../Qml/Modules/Lock/CapsLockPopup.qml" line="56"/>
         <source>Caps Lock</source>
         <translation>Caps Lock</translation>
     </message>
@@ -811,19 +809,41 @@
     </message>
 </context>
 <context>
+    <name>CaptureScreen</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="23"/>
+        <source>Screen Recorder</source>
+        <translation type="unfinished">Perekam Layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="23"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="105"/>
+        <source>Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="105"/>
+        <source>Video</source>
+        <translation type="unfinished">Vidio</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="154"/>
+        <source>Recording</source>
+        <translation type="unfinished">Perekaman</translation>
+    </message>
+</context>
+<context>
     <name>CaptureScreenVideo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/CaptureScreenVideo.qml" line="123"/>
         <source>Screen Recorder</source>
-        <translation>Perekam Layar</translation>
+        <translation type="vanished">Perekam Layar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/CaptureScreenVideo.qml" line="181"/>
         <source>Recording</source>
-        <translation>Perekaman</translation>
+        <translation type="vanished">Perekaman</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/CaptureScreenVideo/CaptureScreenVideo.qml" line="393"/>
+        <location filename="../Qml/Services/CaptureScreenVideo/CaptureScreenVideo.qml" line="69"/>
         <source>Open</source>
         <translation>Buka</translation>
     </message>
@@ -841,82 +861,82 @@
         <translation>Perekaman</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="21"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="22"/>
         <source>Frame Rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="22"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="21"/>
         <source>Target frames per second for screen recordings.</source>
         <translation>target frames per second untuk merekam layar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="53"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="54"/>
         <source>Bitrate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="54"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="53"/>
         <source>Bitrate limit for recordings. Higher values give sharper video but larger files.</source>
         <translation>Batas bitrate untuk rekaman. Nilai yang lebih tinggi menghasilkan video yang lebih tajam, tetapi ukuran file menjadi lebih besar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="89"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="90"/>
         <source>Video Codec</source>
         <translation>Codec Vidio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="90"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="89"/>
         <source>Encoder for the video stream.</source>
         <translation>Encoder untuk aliran video.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="133"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="134"/>
         <source>Audio Codec</source>
         <translation>Codec Audio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="134"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="133"/>
         <source>Encoder for the audio stream.</source>
         <translation>Encoder untuk aliran audio.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="173"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="174"/>
         <source>Power Mode</source>
         <translation>Mode Daya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="174"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="173"/>
         <source>Power profile for recording. Low saves battery, Normal favors quality.</source>
         <translation>Profil daya untuk perekaman. Pengaturan Rendah menghemat daya baterai, sedangkan pengaturan Normal mengutamakan kualitas.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="181"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="183"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="185"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="187"/>
         <source>Low</source>
         <translation>Rendah</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="189"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="191"/>
         <source>Normal</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="206"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="207"/>
         <source>Show Cursor</source>
         <translation>Menampilkan Kursor</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="207"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="206"/>
         <source>Include the mouse cursor in the recording.</source>
         <translation>Sertakan kursor mouse dalam rekaman.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="218"/>
+        <location filename="../Qml/Modules/Settings/Pages/CaptureScreenVideoPage.qml" line="219"/>
         <source>Replay Buffer</source>
         <translation>Putar Ulang</translation>
     </message>
@@ -924,17 +944,17 @@
 <context>
     <name>Clipboard</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="53"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="61"/>
         <source>Clipboard</source>
         <translation>Clipboard</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="57"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="56"/>
         <source>Delete this entry? This cannot be undone.</source>
         <translation>Hapus entri ini? Tindakan ini tidak bisa di balikan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="58"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="57"/>
         <source>Delete %1 entries? This cannot be undone.</source>
         <translation>Hapus entri %1? Tindakan ini tidak bisa dibalikkan.</translation>
     </message>
@@ -944,7 +964,7 @@
         <translation>Hapus</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="61"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="59"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
@@ -962,42 +982,42 @@
         <translation>Pengaturan Umum</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="19"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="20"/>
         <source>Enable Clipboard:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="20"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="19"/>
         <source>Turn on clipboard manager.</source>
         <translation>Nyalakan clipboard manager.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="29"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="30"/>
         <source>Enable Previews:</source>
         <translation>Nyalakan previews:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="30"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="29"/>
         <source>Show thumbnail previews in the clipboard.</source>
         <translation>Menampilkan thumbnail previews di clipboard</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="39"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="40"/>
         <source>Enable Vim Keybinds:</source>
         <translation>Mengaktifkan Vim Keybinds:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="40"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="39"/>
         <source>Use Vim-style navigation inside the clipboard manager.</source>
         <translation>Gunakan navigasi bergaya Vim di clipboard manager.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="49"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="50"/>
         <source>Keep Clipboard Open After Copy:</source>
         <translation>Biarkan Clipboard Tetap Terbuka Setelah Menyalin:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="50"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="49"/>
         <source>Keep the clipboard window open after copying an entry.</source>
         <translation>Tetap munculkan clipboard window ketika copy.</translation>
     </message>
@@ -1007,22 +1027,22 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="66"/>
         <source>Preview Width:</source>
         <translation>Lebar preview:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="66"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="65"/>
         <source>Width of the clipboard preview in pixels.</source>
         <translation>Panjang dari preview clipboard dalam piksel.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="79"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="80"/>
         <source>Preview Height:</source>
         <translation>Tinggi preview:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="80"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="79"/>
         <source>Height of the clipboard preview in pixels.</source>
         <translation>Panjang dari clipboard preview dalam piksel.</translation>
     </message>
@@ -1030,12 +1050,12 @@
 <context>
     <name>ClipboardServices</name>
     <message>
-        <location filename="../Qml/Services/ClipboardServices.qml" line="102"/>
+        <location filename="../Qml/Services/ClipboardServices.qml" line="95"/>
         <source>Clipboard database not found, created it</source>
         <translation>Database clipboard tidak ditemukan, buat file database</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ClipboardServices.qml" line="102"/>
+        <location filename="../Qml/Services/ClipboardServices.qml" line="95"/>
         <source>Clipboard</source>
         <translation>Clipboard</translation>
     </message>
@@ -1043,102 +1063,102 @@
 <context>
     <name>Clock</name>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Sunday</source>
         <translation>Minggu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Monday</source>
         <translation>Senin</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Tuesday</source>
         <translation>Selasa</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Wednesday</source>
         <translation>Rabu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Thuesday</source>
         <translation>Kamis</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Friday</source>
         <translation>Jumat</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="19"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="17"/>
         <source>Saturday</source>
         <translation>Sabtu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Jan</source>
         <translation>Jan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Feb</source>
         <translation>Feb</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Mar</source>
         <translation>Mar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Apr</source>
         <translation>Apr</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Mei</source>
         <translation>Mei</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Jun</source>
         <translation>Jun</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Jul</source>
         <translation>Jul</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Aug</source>
         <translation>Agu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Sep</source>
         <translation>Sep</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Okt</source>
         <translation>Okt</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Nov</source>
         <translation>Nov</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="24"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="21"/>
         <source>Des</source>
         <translation>Des</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Lock/Clock.qml" line="45"/>
+        <location filename="../Qml/Modules/Lock/Clock.qml" line="44"/>
         <source>%1 %2</source>
         <translation></translation>
     </message>
@@ -1146,7 +1166,7 @@
 <context>
     <name>Cloudiness</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Cloudiness.qml" line="46"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Cloudiness.qml" line="48"/>
         <source>Cloudiness</source>
         <translation>Mendung</translation>
     </message>
@@ -1154,18 +1174,18 @@
 <context>
     <name>Configs</name>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="45"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="47"/>
         <source>Failed to read config files</source>
         <translation>Gagal membaca berkas konfigurasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="45"/>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="52"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="47"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="53"/>
         <source>Configuration</source>
         <translation>Konfigurasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="52"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="53"/>
         <source>Failed to save config: %1</source>
         <translation>Gagal menyimpan konfigurasi: %1</translation>
     </message>
@@ -1173,12 +1193,12 @@
 <context>
     <name>ConfigurationTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="22"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="23"/>
         <source>Level Meters</source>
         <translation>Meter Level</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="27"/>
         <source>Show Audio Level Meters:</source>
         <translation>Tampilkan Level Meter Audio:</translation>
     </message>
@@ -1188,7 +1208,7 @@
         <translation>Pantau level input dan output secara langsung. Nonaktifkan fitur ini jika PipeWire melaporkan adanya saluran yang hilang pada perangkat Anda.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="39"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="41"/>
         <source>No audio cards detected.</source>
         <translation>Tidak ada audio cards yang terdeteksi</translation>
     </message>
@@ -1196,17 +1216,17 @@
 <context>
     <name>ConfirmDeviceContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="33"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ConfirmDeviceContent.qml" line="35"/>
         <source>Send to %1?</source>
         <translation>Kirim ke %1?</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="87"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ConfirmDeviceContent.qml" line="87"/>
         <source>Cancel</source>
         <translation>Batal</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ConfirmDeviceContent.qml" line="113"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ConfirmDeviceContent.qml" line="113"/>
         <source>Send</source>
         <translation>Kirim</translation>
     </message>
@@ -1214,12 +1234,12 @@
 <context>
     <name>ConfirmDialog</name>
     <message>
-        <location filename="../Qml/Components/Dialog/ConfirmDialog.qml" line="13"/>
+        <location filename="../Qml/Components/Dialog/ConfirmDialog.qml" line="16"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/ConfirmDialog.qml" line="14"/>
+        <location filename="../Qml/Components/Dialog/ConfirmDialog.qml" line="15"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
@@ -1231,35 +1251,35 @@
         <translation type="vanished">Buka</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="168"/>
+        <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="165"/>
         <source>Reply…</source>
         <translation>Balas…</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="126"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="208"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="201"/>
         <source>entry</source>
         <translation>entri</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="126"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="208"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="99"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="201"/>
         <source>entries</source>
         <translation>entri</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="127"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
         <source>Copied %1 %2</source>
         <translation>Disalin %1 %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="127"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="209"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="202"/>
         <source>Clipboard</source>
         <translation>Clipboard</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="209"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="202"/>
         <source>Deleted %1 %2</source>
         <translation>Menghapus %1 %2</translation>
     </message>
@@ -1277,32 +1297,32 @@
 <context>
     <name>Delegate</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="36"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="32"/>
         <source>just now</source>
         <translation>Saat ini</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="38"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="34"/>
         <source>%1m ago</source>
         <translation>%1m lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="40"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="36"/>
         <source>%1h ago</source>
         <translation>%1j lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="136"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="138"/>
         <source>Image</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="136"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="138"/>
         <source>Files (%1)</source>
         <translation>Files (%1)</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="136"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="138"/>
         <source>(empty)</source>
         <translation>(Kosong)</translation>
     </message>
@@ -1310,24 +1330,24 @@
 <context>
     <name>DepthWallpaperController</name>
     <message>
-        <location filename="../Qml/Services/DepthWallpaperController.qml" line="52"/>
+        <location filename="../Qml/Services/DepthWallpaperController.qml" line="53"/>
         <source>Generating depth wallpaper…</source>
         <translation>Membuat depth wallpaper</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/DepthWallpaperController.qml" line="52"/>
-        <location filename="../Qml/Services/DepthWallpaperController.qml" line="86"/>
-        <location filename="../Qml/Services/DepthWallpaperController.qml" line="90"/>
+        <location filename="../Qml/Services/DepthWallpaperController.qml" line="53"/>
+        <location filename="../Qml/Services/DepthWallpaperController.qml" line="77"/>
+        <location filename="../Qml/Services/DepthWallpaperController.qml" line="81"/>
         <source>Depth Wallpaper</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/DepthWallpaperController.qml" line="86"/>
+        <location filename="../Qml/Services/DepthWallpaperController.qml" line="77"/>
         <source>Depth wallpaper ready</source>
         <translation>Depth wallpaper tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/DepthWallpaperController.qml" line="90"/>
+        <location filename="../Qml/Services/DepthWallpaperController.qml" line="81"/>
         <source>Foreground extraction failed</source>
         <translation>Ekstraksi latar depan gagal</translation>
     </message>
@@ -1335,12 +1355,12 @@
 <context>
     <name>DepthWallpaperSection</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="29"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="30"/>
         <source>Depth Wallpaper</source>
         <translation>Depth Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="32"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="34"/>
         <source>Video wallpaper active</source>
         <translation>Wallpaper video aktif</translation>
     </message>
@@ -1350,7 +1370,7 @@
         <translation>Depth wallpaper hanya tersedia dalam bentuk gambar statis. Ganti ke wallpaper statis untuk mengaktifkannya.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="38"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="40"/>
         <source>Enable Depth Wallpaper</source>
         <translation>Izinkan Depth Wallpaper</translation>
     </message>
@@ -1360,7 +1380,7 @@
         <translation>Menyalakan depth effect (Seperti Apple).</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="49"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="51"/>
         <source>Auto-process on wallpaper change:</source>
         <translation>Memproses secara otomatis ketika wallpaper berubah</translation>
     </message>
@@ -1370,22 +1390,22 @@
         <translation>Menghasilkan depth otomatis ketika wallpaper berubah.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="59"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="63"/>
         <source>Re-generate</source>
         <translation>Memperbarui ulang</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="71"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="74"/>
         <source>Generating depth map…</source>
         <translation>Menghasilkan depth map</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="73"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="76"/>
         <source>Depth wallpaper ready</source>
         <translation>Depth wallpaper sudah siap</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="86"/>
+        <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="89"/>
         <source>Unavailable while a video wallpaper is active.</source>
         <translation>Fitur ini tidak tersedia saat wallpaper video sedang aktif.</translation>
     </message>
@@ -1460,7 +1480,7 @@ Indeks Kualitas Udara Eropa (European AQI) adalah sistem standar dari Badan Ling
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="28"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="69"/>
         <source>
 The USA AQI is a standard system from the EPA (Environmental Protection Agency) for measuring air quality on a scale of 0-500. The higher the AQI value, the worse the air quality.
 
@@ -1489,7 +1509,7 @@ Indeks Kualitas Udara AS (USA AQI) adalah sistem standar dari EPA (Badan Perlind
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="42"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="27"/>
         <source>
 Humidity measures the amount of water vapor in the air, typically expressed as relative humidity—the percentage of moisture the air holds compared to its maximum capacity at that temperature. High humidity makes hot weather feel more uncomfortable because sweat evaporates slowly from our skin, while low humidity causes rapid evaporation, leading to dry skin and making cold air feel harsher.
 
@@ -1504,7 +1524,7 @@ Titik embun adalah suhu di mana udara menjadi jenuh dan uap air mengembun menjad
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="49"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="33"/>
         <source>
 Lunar illumination shows how much of the moon we can see from Earth, from 0% (new moon) to 100% (full moon). Full moons provide bright light for nighttime activities, while new moons create dark skies perfect for stargazing.
 
@@ -1545,7 +1565,7 @@ Penerangan bulan menunjukkan seberapa besar bulan yang dapat kita lihat dari Bum
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="69"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="52"/>
         <source>
 Precipitation is any form of water that falls from the atmosphere to the Earth&apos;s surface, including rain, snow, hail, or drizzle. Some important aspects of precipitation include probability, duration, intensity, and accumulation.
 
@@ -1562,7 +1582,7 @@ Intensitas mengklasifikasikan seberapa deras presipitasi turun. Hujan ringan ber
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="77"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="59"/>
         <source>
 Surface air pressure measures the weight of the atmosphere above sea level, expressed in hPa (hectopascals) or mbar (millibars). Normal pressure ranges from 1013 to 1015 hPa.
 High pressure (above 1020 hPa) usually brings clear and stable weather because the air descends and prevents cloud formation. Conversely, low pressure (below 1000 hPa) is often associated with bad weather, thick clouds, and the possibility of rain because the air rises and condenses.
@@ -1575,7 +1595,7 @@ Perubahan tekanan yang cepat menunjukkan perubahan cuaca yang signifikan. Penuru
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="83"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="64"/>
         <source>
 Sunrise occurs when the sun appears above the horizon in the morning, marking the beginning of daylight hours. The exact time varies by location and season. During sunrise, temperatures are typically at their coolest point of the day, and visibility gradually improves as natural light increases.
 
@@ -1588,7 +1608,7 @@ Matahari terbenam adalah ketika matahari menghilang di bawah cakrawala di sore h
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="89"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="82"/>
         <source>
 The UV Index measures the intensity of ultraviolet radiation from the sun that reaches the earth&apos;s surface, on a scale of 0-11+. The higher the number, the greater the risk of skin and eye damage from sun exposure.
 
@@ -1617,7 +1637,7 @@ Paparan UV berlebihan tanpa perlindungan dapat menyebabkan sunburn, penuaan dini
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="103"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="95"/>
         <source>
 Visibility measures how far you can see clearly, usually expressed in kilometers or meters. Ideal conditions provide visibility of more than 10 km, allowing you to see the landscape clearly.
 
@@ -1638,7 +1658,7 @@ Kabut adalah penyebab utama jarak pandang rendah, terutama kabut tebal, yang dap
 </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="113"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Markdown/DetailText.qml" line="104"/>
         <source>
 Wind speed measures how fast the air is moving, usually expressed in km/h, m/s, or knots. A light breeze ranges from 5-20 km/h, a moderate wind is between 20-40 km/h, and a strong wind is above 40 km/h.
 
@@ -1662,12 +1682,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DeviceListContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="48"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DeviceListContent.qml" line="50"/>
         <source>No devices available</source>
         <translation>Tidak ada perangkat yang tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DeviceListContent.qml" line="114"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DeviceListContent.qml" line="115"/>
         <source>Back</source>
         <translation>Kembali</translation>
     </message>
@@ -1675,12 +1695,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DialogBox</name>
     <message>
-        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="22"/>
+        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="26"/>
         <source>No</source>
         <translation>Tidak</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="21"/>
+        <location filename="../Qml/Components/Dialog/DialogBox.qml" line="20"/>
         <source>Yes</source>
         <translation>Ya</translation>
     </message>
@@ -1688,37 +1708,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DiskInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="15"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="49"/>
         <source>Storage</source>
         <translation>Penyimpanan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="19"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="58"/>
         <source> GB used</source>
         <translation> Penggunaan GB</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="26"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="65"/>
         <source> GB total</source>
         <translation> Total GB</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="81"/>
         <source>Root</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="86"/>
         <source>Boot</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="55"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="91"/>
         <source>Free</source>
         <translation>Kosong</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="87"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="126"/>
         <source>Internal storage</source>
         <translation>Penyimpanan internal</translation>
     </message>
@@ -1726,78 +1746,78 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DisplayInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="14"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="47"/>
         <source>Display</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="21"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="18"/>
         <source>Monitor</source>
         <translation>Monitor</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="22"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="19"/>
         <source>Description</source>
         <translation>Deskripsi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="27"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="24"/>
         <source>Resolution</source>
         <translation>Resolusi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="32"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="29"/>
         <source>Scale</source>
         <translation>Skala</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="37"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="34"/>
         <source>Refresh Rate</source>
         <translation>Refresh Rate</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="42"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="39"/>
         <source>Color Management</source>
         <translation>Manajemen Warna</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="55"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="54"/>
         <source>GPU</source>
         <translation>GPU</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="59"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="58"/>
         <source>Vulkan</source>
         <translation>Vulkan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="60"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="65"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="59"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="64"/>
         <source>Not available</source>
         <translation>Tidak tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="64"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="63"/>
         <source>OpenGL</source>
         <translation>OpenGL</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="69"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="68"/>
         <source>vaAPI Driver</source>
         <translation>Driver vaAPI</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="74"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="73"/>
         <source>OpenGL Renderer</source>
         <translation>Renderer OpenGL</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="79"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="78"/>
         <source>OpenGL Vendor</source>
         <translation>Vendor OpenGL</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="116"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="121"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -1805,7 +1825,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Distro</name>
     <message>
-        <location filename="../Qml/Core/Utils/Distro.qml" line="198"/>
+        <location filename="../Qml/Core/Utils/Distro.qml" line="187"/>
         <source>Unknown</source>
         <translation>ndak tau</translation>
     </message>
@@ -1821,62 +1841,62 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="obsolete">Terkirim %1 dari %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="28"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="46"/>
         <source>Handed to %1</source>
         <translation>Diteruskan ke %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="30"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="48"/>
         <source>Handed %1 of %2 to %3</source>
         <translation>Diteruskan %1 dari %2 ke %3</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="32"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="50"/>
         <source>Stopped</source>
         <translation>Dihentikan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="34"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="52"/>
         <source>Transfer ended at %1%</source>
         <translation>Transfer berhenti pada %1%</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="36"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="54"/>
         <source>Couldn&apos;t send to %1</source>
         <translation>Tidak dapat mengirim ke %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="45"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="23"/>
         <source>%1 not sent</source>
         <translation>%1 tidak terkirim</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="47"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="25"/>
         <source>nothing was sent</source>
         <translation>tidak ada yang terkirim</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="49"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="27"/>
         <source>the device stopped responding</source>
         <translation>perangkat berhenti merespons</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="53"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="31"/>
         <source>%1 is unreachable</source>
         <translation>%1 tidak dapat dijangkau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="55"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="33"/>
         <source>some files are no longer available</source>
         <translation>beberapa file tidak lagi tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="57"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="35"/>
         <source>some files could not be read</source>
         <translation>beberapa file tidak dapat dibaca</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DoneContent.qml" line="59"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="37"/>
         <source>transfer failed</source>
         <translation>transfer gagal</translation>
     </message>
@@ -1888,7 +1908,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DraggingContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/DraggingContent.qml" line="60"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DraggingContent.qml" line="64"/>
         <source>Drop files here</source>
         <translation>Letakkan berkas disini</translation>
     </message>
@@ -1896,12 +1916,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DropdownField</name>
     <message>
-        <location filename="../Qml/Components/Menu/DropdownField.qml" line="20"/>
+        <location filename="../Qml/Components/Menu/DropdownField.qml" line="23"/>
         <source>Select…</source>
         <translation>Pilih...</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Menu/DropdownField.qml" line="22"/>
+        <location filename="../Qml/Components/Menu/DropdownField.qml" line="19"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
@@ -1909,12 +1929,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>EntryGrid</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="242"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="228"/>
         <source>No results for </source>
         <translation>Tidak ada hasil untuk </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="242"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="228"/>
         <source>Clipboard is empty</source>
         <translation>Clipboard kosong</translation>
     </message>
@@ -1922,32 +1942,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>EthernetList</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="28"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="31"/>
         <source>Ethernet</source>
         <translation>Ethernet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="36"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="39"/>
         <source>No wired device</source>
         <translation>Tidak ada perangkat kabel</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="44"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="43"/>
         <source>Interface</source>
         <translation>Antarmuka</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="49"/>
         <source>Link speed</source>
         <translation>Kecepatan tautan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="56"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="55"/>
         <source>Hardware address</source>
         <translation>Alamat Hardware</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="65"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/EthernetList.qml" line="67"/>
         <source>Autoconnect</source>
         <translation>Koneksi Otomatis</translation>
     </message>
@@ -1981,12 +2001,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">GiB</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="273"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="258"/>
         <source>Search files…</source>
         <translation>Cari berkas...</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="338"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="327"/>
         <source>Preview</source>
         <translation>Pratinjau</translation>
     </message>
@@ -1994,17 +2014,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListItem</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="70"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="34"/>
         <source>Folder</source>
         <translation>Folder</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="72"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="36"/>
         <source>file</source>
         <translation>berkas</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="72"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="36"/>
         <source>File</source>
         <translation>Berkas</translation>
     </message>
@@ -2028,27 +2048,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileListView</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="60"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="59"/>
         <source>Show hidden</source>
         <translation>Tampilkan file tersembunyi</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="87"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="92"/>
         <source>Name</source>
         <translation>Nama</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="95"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="101"/>
         <source>Size</source>
         <translation>Ukuran</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="103"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="110"/>
         <source>Type</source>
         <translation>Jenis</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="111"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="119"/>
         <source>Modified</source>
         <translation>Diubah</translation>
     </message>
@@ -2060,12 +2080,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FilesDroppedContent</name>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="35"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/FilesDroppedContent.qml" line="30"/>
         <source>%1 file(s)</source>
         <translation>%1 berkas</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/FilesDroppedContent.qml" line="96"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/FilesDroppedContent.qml" line="86"/>
         <source>Next</source>
         <translation>Lanjut</translation>
     </message>
@@ -2073,47 +2093,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>ForecastDaily</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="39"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="42"/>
         <source>Daily Forecast</source>
         <translation>Prakiraan harian</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="128"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="131"/>
         <source>Today</source>
         <translation>Hari ini</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Sun</source>
         <translation>Min</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Mon</source>
         <translation>Sen</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Tue</source>
         <translation>Sel</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Wed</source>
         <translation>Rabu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Thu</source>
         <translation>Kam</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Fri</source>
         <translation>Jum</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
         <source>Sat</source>
         <translation>Sab</translation>
     </message>
@@ -2121,7 +2141,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>ForecastHourly</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastHourly.qml" line="43"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastHourly.qml" line="47"/>
         <source>Hourly forecast</source>
         <translation>Prakiraan cuaca per jam</translation>
     </message>
@@ -2129,102 +2149,102 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FormatTimeUtils</name>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="30"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="186"/>
         <source>just now</source>
         <translation>Saat ini</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="32"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="188"/>
         <source>%1 seconds ago</source>
         <translation>%1 Detik lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="34"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="190"/>
         <source>1 minute ago</source>
         <translation>1 menit lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="34"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="190"/>
         <source>%1 minutes ago</source>
         <translation>%1 menit lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="36"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="192"/>
         <source>1 hour ago</source>
         <translation>1 jam lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="36"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="192"/>
         <source>%1 hours ago</source>
         <translation>%1 jam lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="38"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="194"/>
         <source>1 day ago</source>
         <translation>1 hari lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="38"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="194"/>
         <source>%1 days ago</source>
         <translation>%1 hari lalu</translation>
     </message>
     <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="34"/>
         <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="56"/>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="79"/>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="118"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="168"/>
         <source>PM</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="34"/>
         <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="56"/>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="79"/>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="118"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="168"/>
         <source>AM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="168"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="67"/>
         <source>N/A</source>
         <translation>T/A</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="171"/>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="174"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="70"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="73"/>
         <source> min</source>
         <translation> menit</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="174"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="73"/>
         <source> h </source>
         <translation> j </translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="174"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="73"/>
         <source> h</source>
         <translation> j</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="203"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="111"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="205"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="113"/>
         <source>KiB</source>
         <translation>KiB</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="207"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="115"/>
         <source>MiB</source>
         <translation>MiB</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="208"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="116"/>
         <source>GiB</source>
         <translation>GiB</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="214"/>
+        <location filename="../Qml/Core/Utils/FormatTimeUtils.qml" line="86"/>
         <source>now</source>
         <translation>Sekarang</translation>
     </message>
@@ -2232,32 +2252,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GeneralConfig</name>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="21"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="29"/>
         <source>Low battery</source>
         <translation>Baterai lemah</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="22"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="30"/>
         <source>You might want to plug in a charger</source>
         <translation>Kamu mungkin mau colok chargernya</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="27"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="35"/>
         <source>Did you see the previous message?</source>
         <translation>Kamu bisa lihat pesan sebelumnya kan?</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="28"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="36"/>
         <source>You should probably plug in a charger &lt;b&gt;now&lt;/b&gt;</source>
         <translation>Kamu mungkin ingin colok charger kamu &lt;b&gt;sekarang&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="33"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="41"/>
         <source>Critical battery level</source>
         <translation>Level baterai kritis</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="34"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="42"/>
         <source>PLUG THE CHARGER RIGHT NOW!!</source>
         <translation>MASUKAN CHARGER NYA SEKARANG!!</translation>
     </message>
@@ -2265,7 +2285,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="15"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="19"/>
         <source>General Settings</source>
         <translation>Pengaturan Umum</translation>
     </message>
@@ -2275,47 +2295,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Jendela &amp; Fokus</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="26"/>
         <source>Follow Focus Monitor:</source>
         <translation>Ikuti Monitor Fokus:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="59"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="61"/>
         <source>Enable Transparent Mode:</source>
         <translation>Aktifkan Mode Transparan:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="69"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="71"/>
         <source>Transparency Alpha:</source>
         <translation>Alpha Transparansi:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="124"/>
         <source>How much radius blur for album cover:</source>
         <translation>Seberapa banyak blur radius untuk cover album:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="45"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="46"/>
         <source>Enable Outer Border:</source>
         <translation>Aktifkan Outer Border:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="35"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="36"/>
         <source>Show Holidays in Calendar:</source>
         <translation>Menampilkan Hari Libur di Kalendar:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="26"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="25"/>
         <source>Automatically switch the active drawers to the monitor where cursor in.</source>
         <translation>Secara otomatis mengalihkan Drawers yang aktif ke monitor tempat kursor berada.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="36"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="35"/>
         <source>Display public holidays inside the calendar widget (NOTE: not every country).</source>
         <translation>Tampilkan hari libur nasional di dalam widget kalender (CATATAN: tidak berlaku untuk semua negara).</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="46"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="45"/>
         <source>Draw an outer border around shell.</source>
         <translation>Menggambar outer border (sudut monitor) di sekitar shell.</translation>
     </message>
@@ -2330,67 +2350,67 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Nilai rendah akan lebih transparan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="134"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="137"/>
         <source>Charging indicator spreads on the screen edge:</source>
         <translation>Indikator pengisian daya tersebar di tepi layar:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="135"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="136"/>
         <source>Thickness of the glowing edge indicator when charging detected.</source>
         <translation>Ketebalan indikator tepi yang bercahaya saat terdeteksi sedang diisi daya.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="149"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="151"/>
         <source>Default Applications</source>
         <translation>Aplikasi Default</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="155"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="160"/>
         <source>Terminal:</source>
         <translation>Terminal:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="156"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="159"/>
         <source>Default terminal emulator for opening shell commands.</source>
         <translation>Emulator terminal bawaan untuk menjalankan perintah shell.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="162"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="168"/>
         <source>File Explorer:</source>
         <translation>Penjelajah File:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="163"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="167"/>
         <source>Default file manager for opening folders.</source>
         <translation>File manager bawaan untuk mebuka folder.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="169"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="176"/>
         <source>Image Viewer:</source>
         <translation>Penampil Gambar:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="170"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="175"/>
         <source>Default app for viewing images.</source>
         <translation>Aplikasi bawaan untuk melihat gambar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="176"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="184"/>
         <source>Video Viewer:</source>
         <translation>Penampil Video:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="183"/>
         <source>Default app for playing videos.</source>
         <translation>Aplikasi bawaan untuk memutar vidio.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="183"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="192"/>
         <source>Audio Settings:</source>
         <translation>Pengaturan Audio:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="184"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="191"/>
         <source>Default app for audio and sound configuration.</source>
         <translation>Aplikasi bawaan untuk pengaturan audio dan suara.</translation>
     </message>
@@ -2398,12 +2418,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GlobalStates</name>
     <message>
-        <location filename="../Qml/Core/States/GlobalStates.qml" line="95"/>
+        <location filename="../Qml/Core/States/GlobalStates.qml" line="77"/>
         <source>Drag and drop is active. Drop files onto the island to share them.</source>
         <translation>Fitur drag and drop sedang aktif. Letakkan berkas di atas drag and drop untuk membagikannya.</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/States/GlobalStates.qml" line="95"/>
+        <location filename="../Qml/Core/States/GlobalStates.qml" line="77"/>
         <source>Drag and Drop</source>
         <translation></translation>
     </message>
@@ -2411,17 +2431,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GreeterPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="19"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="22"/>
         <source>Greeter</source>
         <translation>Greeter</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="24"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="26"/>
         <source>Greeter Wallpaper</source>
         <translation>Wallpaper Greeter</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="28"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="30"/>
         <source>Wallpaper type:</source>
         <translation>Tipe Wallpaper</translation>
     </message>
@@ -2431,37 +2451,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Memilih antara vidio dan gambar statis untuk login manager.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="53"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="54"/>
         <source>Upload wallpaper:</source>
         <translation>Unggah wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="54"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="53"/>
         <source>Select and upload a new greeter wallpaper file.</source>
         <translation>Memilih dan unggah berkas baru untuk wallpaper greeter.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="57"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="58"/>
         <source>Upload static</source>
         <translation>Unggal statis</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="66"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="67"/>
         <source>Upload video</source>
         <translation>Unggah vidio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="88"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="89"/>
         <source>Preview:</source>
         <translation>Pratinjau:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="89"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="88"/>
         <source>Live preview of the current greeter wallpaper.</source>
         <translation>Pratinjau langsung dari wallpaper halaman sambutan saat ini.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="123"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="125"/>
         <source>Preview not available yet</source>
         <translation>Pratinjau belum tersedia</translation>
     </message>
@@ -2469,27 +2489,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Header</name>
     <message>
-        <location filename="../Qml/Modules/Polkit/Header.qml" line="36"/>
+        <location filename="../Qml/Modules/Polkit/Header.qml" line="39"/>
         <source>Authentication Is Required</source>
         <translation>Membutuhkan Autentikasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Polkit/Header.qml" line="45"/>
+        <location filename="../Qml/Modules/Polkit/Header.qml" line="48"/>
         <source>&lt;no message&gt;</source>
         <translation>&lt;tidak ada pesan&gt;</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/Header.qml" line="15"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/Header.qml" line="18"/>
         <source>Bluetooth</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="16"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="19"/>
         <source>Internet</source>
         <translation>Internet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="24"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/Header.qml" line="27"/>
         <source>Tap/click a network to connect</source>
         <translation>Tap/klik menyambungkan untuk jaringan</translation>
     </message>
@@ -2609,7 +2629,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">Badai petir dengan hujan es lebat</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="158"/>
+        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="160"/>
         <source>Feels like %1°</source>
         <translation>Terasa seperti %1°</translation>
     </message>
@@ -2628,21 +2648,21 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Hotspot</name>
     <message>
-        <location filename="../Qml/Services/Hotspot.qml" line="38"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="73"/>
         <source>Upstream Interface: %1</source>
         <translation>Antarmuka Upstream: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hotspot.qml" line="38"/>
-        <location filename="../Qml/Services/Hotspot.qml" line="102"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="41"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="73"/>
         <location filename="../Qml/Services/Hotspot.qml" line="139"/>
-        <location filename="../Qml/Services/Hotspot.qml" line="155"/>
-        <location filename="../Qml/Services/Hotspot.qml" line="159"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="156"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="160"/>
         <source>Hotspot</source>
         <translation>Hotspot</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hotspot.qml" line="102"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="41"/>
         <source>[Hotspot] Error: %1</source>
         <translation>[Hotspot] Kesalahan: %1</translation>
     </message>
@@ -2652,12 +2672,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>[Hotspot] Aktif di %1 | SSID: %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hotspot.qml" line="155"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="156"/>
         <source>[Hotspot] Stop exited with code %1: %2</source>
         <translation>[Hotspot] Berhenti dengan kode %1: %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hotspot.qml" line="159"/>
+        <location filename="../Qml/Services/Hotspot.qml" line="160"/>
         <source>Hotspot stopped</source>
         <translation>Hotspot dihentikan</translation>
     </message>
@@ -2665,18 +2685,18 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Humidity</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="50"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="53"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="30"/>
         <source>Humidity</source>
         <translation>Kelembapan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="91"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="92"/>
         <source>Dew point</source>
         <translation>Titik embun</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="48"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="51"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
     </message>
@@ -2684,57 +2704,57 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>IdlePage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="53"/>
         <source>Idle</source>
         <translation>Nganggur (Idle)</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="57"/>
         <source>Idle Management</source>
         <translation>Manajemen Nganggur</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="64"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="61"/>
         <source>Enable Idle Detection:</source>
         <translation>Menyalakan Deteksi Nganggur:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="60"/>
         <source>Enable automatic actions after periods of inactivity.</source>
         <translation>Aktifkan tindakan otomatis setelah periode tidak aktif.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="71"/>
         <source>Timeouts</source>
         <translation>Waktu habis</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="112"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="111"/>
         <source>Timeout (seconds):</source>
         <translation>Waktu habis (detik):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="149"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="147"/>
         <source>Command on Timeout:</source>
         <translation>Perintah saat waktu habis:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="179"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="175"/>
         <source>Command on Resume:</source>
         <translation>Perintah saat melanjutkan (bangun)</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="209"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="202"/>
         <source>Apply</source>
         <translation>Daftar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="215"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="208"/>
         <source>Remove</source>
         <translation>Hapus</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="227"/>
+        <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="222"/>
         <source>Add Timeout</source>
         <translation>Tambah Batas Waktu</translation>
     </message>
@@ -2742,12 +2762,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>InputDevicesTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="15"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="25"/>
         <source>Input Devices</source>
         <translation>Perangkat Masuk</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="33"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="34"/>
         <source>No input devices detected.</source>
         <translation>Tidak ada perangkat masuk yang terdeteksi</translation>
     </message>
@@ -2755,87 +2775,87 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>InternetPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="51"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="55"/>
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="72"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="74"/>
         <source>Hotspot</source>
         <translation>Hotspot</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="87"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="90"/>
         <source>Enable hotspot &amp; sharing internet:</source>
         <translation>Nyalakan hotspot &amp; berbagi internet:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="88"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="89"/>
         <source>Toggle Wi-Fi hotspot and internet sharing.</source>
         <translation>Aktifkan atau nonaktifkan hotspot Wi-Fi dan berbagi koneksi internet.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="102"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="105"/>
         <source>User hotspot:</source>
         <translation>hotspot user:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="103"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="104"/>
         <source>SSID broadcast name for the hotspot.</source>
         <translation>Nama SSID yang disiarkan untuk hotspot.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="117"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="120"/>
         <source>Password hotspot:</source>
         <translation>hotspot password:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="118"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="119"/>
         <source>Password required.</source>
         <translation>Password dibutuhkan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="132"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="135"/>
         <source>Hotspot interface:</source>
         <translation>interface hotspot:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="133"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="134"/>
         <source>Network interface used for hotspot sharing.</source>
         <translation>Antarmuka jaringan yang digunakan untuk berbagi hotspot.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="137"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="141"/>
         <source>Default: %1</source>
         <translation>Default: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="137"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="141"/>
         <source>none detected</source>
         <translation>tidak terdeteksi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="146"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="149"/>
         <source>Bandwidth:</source>
         <translation>Bandwidth:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="147"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="148"/>
         <source>Wi-Fi band for the hotspot.</source>
         <translation>Pita frekuensi Wi-Fi untuk hotspot.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="172"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="174"/>
         <source>Apply &amp;&amp; Restart</source>
         <translation>Menerapkan &amp;&amp; Restart</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="189"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="190"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="192"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="194"/>
         <source>Enable Wi-Fi:</source>
         <translation>Wi-Fi nyala:</translation>
     </message>
@@ -2845,12 +2865,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Menyalakan pemindaian koneksi Wi-Fi </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="107"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="111"/>
         <source>Default: MyHotspot</source>
         <translation>Default: MyHotspot</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="126"/>
         <source>Default: password123</source>
         <translation>Default: password123</translation>
     </message>
@@ -2858,7 +2878,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>KDEConnectPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="16"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="18"/>
         <source>KDE Connect</source>
         <translation></translation>
     </message>
@@ -2868,22 +2888,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Perangkat yang Ditemukan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="24"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="25"/>
         <source>Enable Polling:</source>
         <translation>Aktifkan Pooling:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="24"/>
         <source>Periodically poll for KDE Connect devices on the network.</source>
         <translation>Secara berkala, lakukan pemindaian terhadap perangkat KDE Connect yang ada di jaringan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="35"/>
         <source>Poll Interval (s):</source>
         <translation>Interval poll (detik):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="35"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="34"/>
         <source>How often to scan for devices, in seconds.</source>
         <translation>Seberapa sering melakukan pemindaian perangkat, dalam detik.</translation>
     </message>
@@ -2893,17 +2913,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Perangkat Lokal</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="54"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="55"/>
         <source>Device ID:</source>
         <translation>ID Perangkat:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="55"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="54"/>
         <source>Unique identifier of this device.</source>
         <translation>Pengidentifikasi unik perangkat ini.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="62"/>
         <source>Not detected</source>
         <translation>Tidak terdeteksi</translation>
     </message>
@@ -2913,27 +2933,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Perangkat yang Terhubung</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="77"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="79"/>
         <source>No devices paired</source>
         <translation>Tidak ada perangkat yang terhubung</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="90"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="88"/>
         <source>Transfer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="101"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="100"/>
         <source>Available Devices</source>
         <translation>Perangkat yang Tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="110"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="111"/>
         <source>No devices available</source>
         <translation>Tidak ada perangkat yang tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="123"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="120"/>
         <source>Pair</source>
         <translation>Terhubung</translation>
     </message>
@@ -2951,12 +2971,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Preferensi Lokal</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LanguagePage.qml" line="16"/>
+        <location filename="../Qml/Modules/Settings/Pages/LanguagePage.qml" line="17"/>
         <source>Current Language:</source>
         <translation>Bahasa Saat Ini:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LanguagePage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/LanguagePage.qml" line="16"/>
         <source>Locale code used for translations.</source>
         <translation>Kode wilayah yang digunakan untuk terjemahan.</translation>
     </message>
@@ -2964,109 +2984,85 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>LauncherServices</name>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="59"/>
-        <location filename="../Qml/Services/LauncherServices.qml" line="79"/>
         <source>In this page</source>
-        <translation>Di halaman ini</translation>
+        <translation type="vanished">Di halaman ini</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="65"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="16"/>
         <source>Apps</source>
         <translation>Aplikasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="73"/>
-        <location filename="../Qml/Services/LauncherServices.qml" line="74"/>
-        <source>Screenshot</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="78"/>
         <source>Actions and history</source>
-        <translation>Tindakan dan riwayat</translation>
+        <translation type="vanished">Tindakan dan riwayat</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="83"/>
-        <location filename="../Qml/Services/LauncherServices.qml" line="84"/>
         <source>Screenshot action</source>
-        <translation>Tindakan screenshot</translation>
+        <translation type="vanished">Tindakan screenshot</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="88"/>
         <source>Capture monitors, windows or selections</source>
-        <translation>Menangkap tampilan monitor, windows, atau area yang dipilih</translation>
+        <translation type="vanished">Menangkap tampilan monitor, windows, atau area yang dipilih</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="89"/>
         <source>No matching actions</source>
-        <translation>Tidak ada tindakan yang sesuai</translation>
+        <translation type="vanished">Tidak ada tindakan yang sesuai</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="90"/>
         <source>Filter actions</source>
-        <translation>Tindakan penyaringan</translation>
+        <translation type="vanished">Tindakan penyaringan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="94"/>
-        <location filename="../Qml/Services/LauncherServices.qml" line="95"/>
         <source>Screenshot history</source>
-        <translation>Riwayat screenshot</translation>
+        <translation type="vanished">Riwayat screenshot</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="99"/>
         <source>Browse recent captures</source>
-        <translation>Tampilkan tangkapan layar terbaru</translation>
+        <translation type="vanished">Tampilkan tangkapan layar terbaru</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="100"/>
         <source>No captures yet</source>
-        <translation>Belum ada tangkapan</translation>
+        <translation type="vanished">Belum ada tangkapan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="101"/>
-        <source>Filter history</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="109"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="12"/>
         <source>No applications found</source>
         <translation>Tidak ada aplikasi yang ditemukan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="116"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="19"/>
         <source>Search</source>
         <translation>Cari</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="156"/>
         <source>Sections</source>
-        <translation>Bagian-bagian</translation>
+        <translation type="vanished">Bagian-bagian</translation>
     </message>
 </context>
 <context>
     <name>LockscreenPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="21"/>
         <source>Lockscreen</source>
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="22"/>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="24"/>
         <source>Preview</source>
         <translation>Pratinjau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="26"/>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="30"/>
         <source>Depth wallpaper supports static images only. A video wallpaper is active, so the depth effect is paused.</source>
         <translation>Wallpaper kedalaman hanya mendukung gambar statis. Wallpaper video sedang aktif, sehingga efek kedalaman ditangguhkan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="57"/>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="56"/>
         <source>Source</source>
         <translation>Sumber</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="96"/>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="101"/>
         <source>Loading</source>
         <translation>Memuat</translation>
     </message>
@@ -3104,32 +3100,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Preferensi Pemutar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="18"/>
         <source>Enable lyrics in media player:</source>
         <translation>Aktifkan lirik di pemutar media:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="18"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="17"/>
         <source>Fetch and display synchronized lyrics when available.</source>
         <translation>Mengambil dan menampilkan lirik yang disinkronkan jika tersedia.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="29"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="30"/>
         <source>Enable dynamic colors from cover art:</source>
         <translation>Aktifkan warna dinamis dari sampul album:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="30"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="29"/>
         <source>Tint the player with colors extracted from the album cover.</source>
         <translation>Warnai pemutar dengan warna-warna yang diambil dari sampul album.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="41"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="42"/>
         <source>Slider type:</source>
         <translation>Jenis slider:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="42"/>
+        <location filename="../Qml/Modules/Settings/Pages/MediaPlayerPage.qml" line="41"/>
         <source>Visual style for the playback progress slider.</source>
         <translation>Gaya tampilan untuk slider pemutaran.</translation>
     </message>
@@ -3137,8 +3133,8 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Moon</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Moon.qml" line="45"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="33"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Moon.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="31"/>
         <source>Moon</source>
         <translation>Bulan</translation>
     </message>
@@ -3179,17 +3175,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">ndak tau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="69"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="65"/>
         <source>Illumination: %1%</source>
         <translation>Iluminasi:%1%</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="88"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="85"/>
         <source>Moonrise: %1</source>
         <translation>Bulan naik: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="107"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="105"/>
         <source>Moonset: %1</source>
         <translation>Bulan turun: %1</translation>
     </message>
@@ -3202,57 +3198,57 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Jaringan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="20"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="23"/>
         <source>Ethernet</source>
         <translation>Ethernet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="20"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="23"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="28"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="29"/>
         <source>Status</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="30"/>
         <source>Connected</source>
         <translation>Tersambung</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="30"/>
         <source>Disconnected</source>
         <translation>Terputus</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="32"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="33"/>
         <source>Link speed</source>
         <translation>Kecepatan tautan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="36"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="37"/>
         <source>Signal strength</source>
         <translation>Kekuaatan sinyal</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="40"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="41"/>
         <source>Total wireless upload</source>
         <translation>Total unggah nirkabel</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="44"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="45"/>
         <source>Total wired upload</source>
         <translation>total unggah kabel</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="48"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="49"/>
         <source>Total wireless download</source>
         <translation>total unduh nirkabel</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="52"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="53"/>
         <source>Total wired download</source>
         <translation>Total unduh kabel</translation>
     </message>
@@ -3260,32 +3256,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>NetworkInfoColumn</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="75"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="145"/>
         <source>Ethernet</source>
         <translation>Ethernet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="90"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="159"/>
         <source>Connected</source>
         <translation>Terhubung</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="90"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="159"/>
         <source>Not Connected</source>
         <translation>Tidak Terhubung</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="149"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="216"/>
         <source>Internet</source>
         <translation>Internet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="155"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="224"/>
         <source>WiFi Disconnected</source>
         <translation>WiFi Terputus</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="214"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="78"/>
         <source>Bluetooth</source>
         <translation></translation>
     </message>
@@ -3303,22 +3299,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Limit notifikasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="16"/>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="17"/>
         <source>Maximum Notifications:</source>
         <translation>Maximal notifikasi:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="16"/>
         <source>Maximum number of stored notifications to keep.</source>
         <translation>Jumlah maksimum notifikasi yang disimpan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="30"/>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="31"/>
         <source>Maximum Notification Age (Days):</source>
         <translation>Maksimal umur notifikasi (hari):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="31"/>
+        <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="30"/>
         <source>Auto-remove notifications older than this many days.</source>
         <translation>Hapus secara otomatis notifikasi yang usianya lebih dari sekian hari.</translation>
     </message>
@@ -3326,12 +3322,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifications</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="52"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="54"/>
         <source>Clear all</source>
         <translation>Bersihkan semuanya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="237"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="238"/>
         <source>No notifications</source>
         <translation>Tidak ada notifikasi</translation>
     </message>
@@ -3339,48 +3335,48 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Notifs</name>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="49"/>
+        <location filename="../Qml/Services/Notifs.qml" line="33"/>
         <source>Cleaning up %1 old notification(s)</source>
         <translation>Membersihkan %1 notifikasi lama</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="49"/>
-        <location filename="../Qml/Services/Notifs.qml" line="65"/>
-        <location filename="../Qml/Services/Notifs.qml" line="171"/>
-        <location filename="../Qml/Services/Notifs.qml" line="180"/>
-        <location filename="../Qml/Services/Notifs.qml" line="226"/>
-        <location filename="../Qml/Services/Notifs.qml" line="230"/>
-        <location filename="../Qml/Services/Notifs.qml" line="237"/>
+        <location filename="../Qml/Services/Notifs.qml" line="33"/>
+        <location filename="../Qml/Services/Notifs.qml" line="52"/>
+        <location filename="../Qml/Services/Notifs.qml" line="166"/>
+        <location filename="../Qml/Services/Notifs.qml" line="175"/>
+        <location filename="../Qml/Services/Notifs.qml" line="221"/>
+        <location filename="../Qml/Services/Notifs.qml" line="225"/>
+        <location filename="../Qml/Services/Notifs.qml" line="231"/>
         <source>Notifications</source>
         <translation>Notifikasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="65"/>
+        <location filename="../Qml/Services/Notifs.qml" line="52"/>
         <source>Removing %1 oldest notification(s) to enforce limit</source>
         <translation>Menghapus %1 notifikasi terlama untuk menegakkan batas</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="171"/>
+        <location filename="../Qml/Services/Notifs.qml" line="166"/>
         <source>No cached notifications found</source>
         <translation>Tidak ada notifikasi tersimpan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="180"/>
+        <location filename="../Qml/Services/Notifs.qml" line="175"/>
         <source>Invalid notification cache format</source>
         <translation>Format cache notifikasi tidak valid</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="226"/>
+        <location filename="../Qml/Services/Notifs.qml" line="221"/>
         <source>Loaded %1 notification(s) from cache</source>
         <translation>Memuat %1 notifikasi dari cache</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="230"/>
+        <location filename="../Qml/Services/Notifs.qml" line="225"/>
         <source>Failed to load notifications: %1</source>
         <translation>Gagal memuat notifikasi: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Notifs.qml" line="237"/>
+        <location filename="../Qml/Services/Notifs.qml" line="231"/>
         <source>Notification cache doesn&apos;t exist, creating it</source>
         <translation>Cache notifikasi tidak ada, sedang membuat</translation>
     </message>
@@ -3417,17 +3413,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Sistem operasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="15"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="16"/>
         <source>Distro version</source>
         <translation>Versi distro</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="19"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="20"/>
         <source>kernel name</source>
         <translation>Nama kernel</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="23"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="24"/>
         <source>architecture design</source>
         <translation>Desain arsitektur</translation>
     </message>
@@ -3435,43 +3431,69 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>OutputDevicesTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="15"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="25"/>
         <source>Output Devices</source>
         <translation>Perangkat Keluar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="33"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="34"/>
         <source>No output devices detected.</source>
         <translation>Tidak perangkat keluar yang terdeteksi</translation>
     </message>
 </context>
 <context>
+    <name>PageActions</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageActions.qml" line="45"/>
+        <source>Capture</source>
+        <translation type="unfinished">Menangkap</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageActions.qml" line="94"/>
+        <source>Captures</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PageAudio</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="47"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageAudio.qml" line="51"/>
         <source>Audio Input</source>
         <translation>Input Audio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="90"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageAudio.qml" line="94"/>
         <source>Microphones</source>
         <translation>Mikrofon</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="125"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageAudio.qml" line="129"/>
         <source>Desktop Audio</source>
         <translation>Audio Desktop</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageAudio.qml" line="161"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageAudio.qml" line="160"/>
         <source>No Audio</source>
         <translation>Tidak ada Audio</translation>
     </message>
 </context>
 <context>
+    <name>PageCaptures</name>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageCaptures.qml" line="52"/>
+        <source>Captures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageCaptures.qml" line="153"/>
+        <source>No captures yet</source>
+        <translation type="unfinished">Belum ada tangkapan</translation>
+    </message>
+</context>
+<context>
     <name>PageHistory</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageHistory.qml" line="48"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageHistory.qml" line="52"/>
         <source>Recordings</source>
         <translation>Rekaman</translation>
     </message>
@@ -3479,58 +3501,58 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PageMain</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="21"/>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="25"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="18"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="28"/>
         <source>No Audio</source>
         <translation>Tidak ada Audio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="32"/>
         <source>Choose an audio source...</source>
         <translation>Pilih sumber audio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="88"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="90"/>
         <source>Source</source>
         <translation>Sumber</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="100"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="99"/>
         <source>Full Screen</source>
         <translation>Layar Penuh</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="104"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="103"/>
         <source>Region</source>
         <translation>Wilayah</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="108"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="107"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="168"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="168"/>
         <source>Monitor:</source>
         <translation>Monitor:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="279"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="282"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="324"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="329"/>
         <source>Recordings</source>
         <translation>Rekaman</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="400"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="401"/>
         <source>Stop</source>
         <translation>Berhenti</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageMain.qml" line="400"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="401"/>
         <source>Start Recording</source>
         <translation>Mulai Merekam</translation>
     </message>
@@ -3538,62 +3560,62 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PageSettings</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="48"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="86"/>
         <source>Frame Rate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="106"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="106"/>
         <source>Bitrate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="130"/>
         <source>Video Codec</source>
         <translation>Codec Vidio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="162"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="162"/>
         <source>Audio Codec</source>
         <translation>Codec Audio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="190"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="190"/>
         <source>Power Mode</source>
         <translation>Mode Daya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="193"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="193"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="197"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="197"/>
         <source>Low</source>
         <translation>Rendah</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="201"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="201"/>
         <source>Normal</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="210"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="220"/>
         <source>Toggles</source>
         <translation>Tombol Beralih</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="213"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="223"/>
         <source>Show Cursor</source>
         <translation>Menampilkan Kursor</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreenVideo/PageSettings.qml" line="217"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageSettings.qml" line="227"/>
         <source>Replay Buffer</source>
         <translation></translation>
     </message>
@@ -3601,12 +3623,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PairedDevices</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/PairedDevices.qml" line="15"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/PairedDevices.qml" line="18"/>
         <source>Paired devices</source>
         <translation>Perangkat yang dipasangkan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/PairedDevices.qml" line="39"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/PairedDevices.qml" line="40"/>
         <source>No paired devices</source>
         <translation>Tidak ada perangkat yang dipasangkan</translation>
     </message>
@@ -3614,72 +3636,72 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PairingDialog</name>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="34"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="40"/>
         <source>Unknown device</source>
         <translation>Perangkat tidak dikenal</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="79"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="204"/>
         <source>Bluetooth Pairing Request</source>
         <translation>Permintaan Pemasangan Bluetooth</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="90"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="214"/>
         <source>Confirm the passkey matches your device</source>
         <translation>Pastikan kode sandi tersebut sesuai dengan perangkat Anda</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="92"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="216"/>
         <source>Enter a passkey / PIN to pair</source>
         <translation>Masukkan kode sandi / PIN untuk melakukan pemasangan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="94"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="218"/>
         <source>Allow this device to connect?</source>
         <translation>Izinkan perangkat ini terhubung?</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="95"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="219"/>
         <source>Pairing requested</source>
         <translation>Diminta untuk dipasangkan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="123"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="115"/>
         <source>Your phone shows passkey %1 (%2 digits entered)</source>
         <translation>Ponsel Anda menampilkan kode sandi %1 (%2 digit telah dimasukkan)</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="125"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="117"/>
         <source>Passkey %1 — does this match %2?</source>
         <translation>Kode akses %1 — apakah ini cocok dengan %2?</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="127"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="119"/>
         <source>Allow %1 to connect? %2</source>
         <translation>Izinkan %1 untuk terhubung? %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="129"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="121"/>
         <source>Enter 6-digit passkey for %1</source>
         <translation>Masukkan kode sandi 6 digit untuk %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="131"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="123"/>
         <source>Enter PIN for %1</source>
         <translation>Masukkan PIN untuk %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="132"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="124"/>
         <source>Passkey: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="140"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="135"/>
         <source>Enter PIN</source>
         <translation>Masukkan PIN</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="140"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="135"/>
         <source>Enter 6-digit passkey</source>
         <translation>Masukkan kode sandi 6 digit</translation>
     </message>
@@ -3687,12 +3709,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PanelScreenshot</name>
     <message>
-        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="38"/>
+        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="76"/>
         <source>Open Image</source>
         <translation>Buka Gambar</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="42"/>
+        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="80"/>
         <source>Show in Folder</source>
         <translation>Tampilkan di Folder</translation>
     </message>
@@ -3716,120 +3738,120 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished"> j</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="60"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="61"/>
         <source>CPU status</source>
         <translation>Status CPU</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="100"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="102"/>
         <source>CPU: %1°C</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="106"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="108"/>
         <source>GPU: %1°C</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="125"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="126"/>
         <source>Battery</source>
         <translation>Baterai</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="161"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="165"/>
         <source>Charging</source>
         <translation>Mengisi daya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="161"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="165"/>
         <source>Discharging</source>
         <translation>Menggunakan daya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="168"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="172"/>
         <source>Rem. </source>
         <translation>Sisa. </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="180"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="185"/>
         <source>Network</source>
         <translation>Jaringan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="202"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="206"/>
         <source>Ethernet</source>
         <translation>Ethernet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="202"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="206"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="211"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="212"/>
         <source>Download ↓</source>
         <translation>Unduh ↓</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="215"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="216"/>
         <source>Upload ↑</source>
         <translation>Unggah ↑</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="254"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="254"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="260"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="260"/>
         <source>Link speed: </source>
         <translation>Kecepatan link: </translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="266"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="268"/>
         <source>Apps</source>
         <translation>Aplikasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="284"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="288"/>
         <source>Total</source>
         <translation>Total</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="294"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="299"/>
         <source> GUI</source>
         <translation> GUI</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="300"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="306"/>
         <source> CLI</source>
         <translation> CLI</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="310"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="313"/>
         <source>Display</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="337"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="343"/>
         <source>%1x%2 @ %3Hz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="347"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="351"/>
         <source>RAM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="368"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="406"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="374"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="412"/>
         <source> GB used</source>
         <translation> GB terpakai</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="375"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="413"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="381"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="419"/>
         <source> GB total</source>
         <translation> GB total</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="385"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="389"/>
         <source>Disk</source>
         <translation>Penyimpanan</translation>
     </message>
@@ -3841,47 +3863,47 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PlacesSidebar</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="47"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="53"/>
         <source>Places</source>
         <translation>Lokasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="68"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="66"/>
         <source>Home</source>
         <translation>Beranda</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="73"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="71"/>
         <source>Desktop</source>
         <translation>Desktop</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="78"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="76"/>
         <source>Documents</source>
         <translation>Dokumen</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="83"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="81"/>
         <source>Downloads</source>
         <translation>Unduhan</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="88"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="86"/>
         <source>Music</source>
         <translation>Musik</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="93"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="91"/>
         <source>Pictures</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="98"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="96"/>
         <source>Videos</source>
         <translation>Video</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="103"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/components/PlacesSidebar.qml" line="101"/>
         <source>Computer</source>
         <translation>Komputer</translation>
     </message>
@@ -3889,12 +3911,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PlaybackTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="26"/>
         <source>Playback</source>
         <translation>Pemutaran</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="35"/>
         <source>No active playback streams.</source>
         <translation>Tidak ada pemutaran yang sedang berlangsung</translation>
     </message>
@@ -3903,17 +3925,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <name>Precipitation</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="30"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="33"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="37"/>
         <source>Precipitation</source>
         <translation>Curah hujan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="49"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="51"/>
         <source>Today&apos;s amount</source>
         <translation>Jumlah hari ini</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="67"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="72"/>
         <source>Total rain for the day</source>
         <translation>Total hujan pada hari ini</translation>
     </message>
@@ -3921,13 +3943,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Pressure</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="29"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="42"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="30"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="47"/>
         <source>Pressure</source>
         <translation>Tekanan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="48"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="51"/>
         <source>Current conditions</source>
         <translation>Kondisi sekarang</translation>
     </message>
@@ -3935,17 +3957,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Preview</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="149"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="148"/>
         <source>Select an entry to preview</source>
         <translation>Pilih entri untuk pratinjau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="177"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="176"/>
         <source>Couldn&apos;t load preview</source>
         <translation>Tidak dapat memuat pratinjau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="184"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="183"/>
         <source>Retry</source>
         <translation>Ngulang</translation>
     </message>
@@ -3960,17 +3982,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Teks</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="286"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="285"/>
         <source>Copy</source>
         <translation>Salin</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="356"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="351"/>
         <source>Preview truncated (%1 of %2 shown) — copy to get the full content</source>
         <translation>Pratinjau terpotong (%1 dari %2 ditampilkan) — salin untuk melihat konten lengkapnya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="416"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="408"/>
         <source>Loading…</source>
         <translation>Memuat...</translation>
     </message>
@@ -3978,17 +4000,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PrivacyIslandContent</name>
     <message>
-        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Privacy/PrivacyIslandContent.qml" line="29"/>
         <source>Mic is on</source>
         <translation>Mikrofon aktif</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Privacy/PrivacyIslandContent.qml" line="29"/>
         <source>Speaker is on</source>
         <translation>Speaker aktif</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Privacy/PrivacyIslandContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Privacy/PrivacyIslandContent.qml" line="29"/>
         <source>Screen share is on</source>
         <translation>Berbagi layar sedang aktif</translation>
     </message>
@@ -3996,67 +4018,67 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PrivacyNodesPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="50"/>
         <source>Pipewire Privacy Nodes</source>
         <translation>Node Privasi Pipewire</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="54"/>
         <source>Privacy nodes</source>
         <translation>Node privasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="58"/>
         <source>Enable privacy indicator</source>
         <translation>Aktifkan indikator privasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="62"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="57"/>
         <source>Show a privacy list or names through Dynamic Island</source>
         <translation>Menampilkan daftar privasi atau nama-nama melalui Dynamic Island</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="73"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="70"/>
         <source>Privacy indicator in Dynamic Island</source>
         <translation>Indikator privasi di Dynamic Island</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="69"/>
         <source>Detect privacy indicator state through Dynamic Island</source>
         <translation>Mendeteksi status indikator privasi melalui Dynamic Island</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="85"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="82"/>
         <source>Show icon for privacy indicator</source>
         <translation>Tampilkan ikon untuk indikator privasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="86"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="81"/>
         <source>Show an icon for privacy indicator in widgets or Dynamic Island</source>
         <translation>Tampilkan ikon indikator privasi di widget atau Dynamic Island</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="98"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="94"/>
         <source>Privacy nodes block title</source>
         <translation>Blokir judul node privasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="123"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="118"/>
         <source>Name:</source>
         <translation>Nama:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="132"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="127"/>
         <source>Value:</source>
         <translation>Isi:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="145"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="142"/>
         <source>Remove title blocked</source>
         <translation>Hapus judul yang diblokir</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="156"/>
+        <location filename="../Qml/Modules/Settings/Pages/PrivacyNodesPage.qml" line="154"/>
         <source>Add title blocked</source>
         <translation>Tambah judul yang diblokir</translation>
     </message>
@@ -4072,24 +4094,24 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">Batal</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="21"/>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="39"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="22"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="41"/>
         <source>%1% of %2</source>
         <translation>%1%% dari %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="22"/>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="32"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="23"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="34"/>
         <source>Sending %1 of %2…</source>
         <translation>Mengirimkan %1 dari %2…</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="22"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="23"/>
         <source>Transferring…</source>
         <translation>Meng transferring…</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/DragAndDrop/ProgressContent.qml" line="88"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="88"/>
         <source>Stop sending</source>
         <translation>Berhenti mengirim</translation>
     </message>
@@ -4097,17 +4119,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>QuickSettings</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="75"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="53"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="79"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="57"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="83"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="61"/>
         <source>Performance</source>
         <translation>Kinerja</translation>
     </message>
@@ -4120,7 +4142,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Memori</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="20"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="23"/>
         <source>RAM Size</source>
         <translation>Ukuran RAM</translation>
     </message>
@@ -4138,18 +4160,18 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>ScreenCapture</name>
     <message>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="19"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="52"/>
         <source>All monitors</source>
         <translation>Semua monitor</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="25"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="58"/>
         <source>Window</source>
         <translation>Jendela</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="31"/>
-        <location filename="../Qml/Services/ScreenCapture.qml" line="55"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="19"/>
+        <location filename="../Qml/Services/ScreenCapture.qml" line="64"/>
         <source>Selection</source>
         <translation>Seleksi</translation>
     </message>
@@ -4157,12 +4179,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>ScreenCaptureHistory</name>
     <message>
-        <location filename="../Qml/Services/ScreenCaptureHistory.qml" line="23"/>
+        <location filename="../Qml/Services/ScreenCaptureHistory.qml" line="33"/>
         <source>Failed to parse file metadata: %1</source>
         <translation>Gagal memuat berkas metadata: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/ScreenCaptureHistory.qml" line="23"/>
+        <location filename="../Qml/Services/ScreenCaptureHistory.qml" line="33"/>
         <source>Screen Capture</source>
         <translation>Tangkapan Layar</translation>
     </message>
@@ -4190,7 +4212,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Cari di clipboard...</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="101"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="102"/>
         <source>VISUAL</source>
         <translation></translation>
     </message>
@@ -4198,7 +4220,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>SearchField</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/WallpaperSelector/SearchField.qml" line="17"/>
+        <location filename="../Qml/Modules/Drawers/WallpaperSelector/SearchField.qml" line="30"/>
         <source>Search wallpapers</source>
         <translation>Cari wallpapers</translation>
     </message>
@@ -4206,37 +4228,37 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Session</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="68"/>
         <source>Shutdown</source>
         <translation>Matikan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="91"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="73"/>
         <source>Reboot</source>
         <translation>Mulai ulang</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="96"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="78"/>
         <source>Sleep</source>
         <translation>Tidur</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="101"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="83"/>
         <source>Logout</source>
         <translation>Keluar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="106"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="88"/>
         <source>Lockscreen</source>
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="220"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="200"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="221"/>
+        <location filename="../Qml/Modules/Drawers/Session/Session.qml" line="199"/>
         <source>Do you want to %1?</source>
         <translation>Kamu mau melakukan %1?</translation>
     </message>
@@ -4244,109 +4266,109 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="59"/>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="63"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="62"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="66"/>
         <source>General</source>
         <translation>Umum</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="72"/>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="76"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="79"/>
         <source>Appearance</source>
         <translation>Tampilan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="130"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="133"/>
         <source>Bluetooth</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="143"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="146"/>
         <source>Greeter</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="89"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="92"/>
         <source>Top Bar</source>
         <translation>Bilah Atas</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="80"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="83"/>
         <source>Wallpaper</source>
         <translation>Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="93"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="96"/>
         <source>Media Player</source>
         <translation>Pemutar Media</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="97"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="100"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="67"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="70"/>
         <source>Language</source>
         <translation>Bahasa</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="85"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="88"/>
         <source>Modules</source>
         <translation>Modul</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="109"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="112"/>
         <source>Capture Video</source>
         <translation>Merekam Video</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="113"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="116"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="117"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="120"/>
         <source>Privacy Nodes</source>
         <translation>Node privasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="125"/>
         <source>Connectivity</source>
         <translation>Konektivitas</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="126"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="129"/>
         <source>Network &amp; Internet</source>
         <translation>Jaringan &amp; Internet</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="151"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="154"/>
         <source>Lockscreen</source>
         <translation>Layar kunci</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="105"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="108"/>
         <source>Clipboard</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="101"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="104"/>
         <source>Notification</source>
         <translation>Notifikasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="134"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="137"/>
         <source>KDE Connect</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="139"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="142"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="147"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="150"/>
         <source>Idle</source>
         <translation>Nganggur</translation>
     </message>
@@ -4362,12 +4384,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="173"/>
+        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="165"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="173"/>
+        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="165"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
@@ -4375,18 +4397,18 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Sun</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="29"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Sun.qml" line="51"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="31"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Sun.qml" line="55"/>
         <source>Sun</source>
         <translation>Matahari</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="78"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="82"/>
         <source>Sunrise</source>
         <translation>Matahari terbit</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="98"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="103"/>
         <source>Sunset</source>
         <translation>Matahari terbenam</translation>
     </message>
@@ -4429,12 +4451,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>UVIndex</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="30"/>
         <source>UV Index</source>
         <translation>UV Index</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="48"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="51"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
     </message>
@@ -4459,7 +4481,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">Ekstrim</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="38"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="41"/>
         <source>UV index</source>
         <translation>UV Index</translation>
     </message>
@@ -4467,18 +4489,18 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>UserCard</name>
     <message>
-        <location filename="../Qml/Greeter/UserCard.qml" line="113"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="117"/>
         <source>Password</source>
         <translation>Kata sandi</translation>
     </message>
     <message>
-        <location filename="../Qml/Greeter/UserCard.qml" line="127"/>
-        <location filename="../Qml/Greeter/UserCard.qml" line="127"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="129"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="129"/>
         <source>Session</source>
         <translation>Sesi</translation>
     </message>
     <message>
-        <location filename="../Qml/Greeter/UserCard.qml" line="140"/>
+        <location filename="../Qml/Greeter/UserCard.qml" line="148"/>
         <source>Sign in</source>
         <translation>Masuk</translation>
     </message>
@@ -4486,13 +4508,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Visibility</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="28"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Visibility.qml" line="36"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Visibility.qml" line="40"/>
         <source>Visibility</source>
         <translation>Visibilitas</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="82"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="86"/>
         <source>Current conditions</source>
         <translation>Kondisi sekarang</translation>
     </message>
@@ -4500,27 +4522,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>VolumePage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="14"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="17"/>
         <source>Volume</source>
         <translation>Volume</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="42"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="43"/>
         <source>Playback</source>
         <translation>Pemutaran</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="46"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="47"/>
         <source>Output Devices</source>
         <translation>Perangkat Keluar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="50"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="51"/>
         <source>Input Devices</source>
         <translation>Perangkat Masuk</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="54"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="55"/>
         <source>Configuration</source>
         <translation>Konfigurasi</translation>
     </message>
@@ -4533,17 +4555,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Mesin Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="20"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="21"/>
         <source>Pick Wallpaper File</source>
         <translation>Memilih Berkas Wallpaper</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="24"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="25"/>
         <source>Select a wallpaper image file:</source>
         <translation>Pilih berkas gambar untuk wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="24"/>
         <source>Browse and set a new wallpaper image or video.</source>
         <translation>Telusuri dan atur gambar atau video wallpaper baru.</translation>
     </message>
@@ -4553,87 +4575,87 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Mencari...</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="44"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="46"/>
         <source>Wallpaper Picker</source>
         <translation>Memilih wallpaper</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="51"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="53"/>
         <source>Search wallpapers…</source>
         <translation>Mencari wallpaper...</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="150"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="155"/>
         <source>Image Sourcing</source>
         <translation>Sumber Gambar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="157"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="162"/>
         <source>Enable Wallpaper:</source>
         <translation>Aktifkan Wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="158"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="161"/>
         <source>Show wallpaper.</source>
         <translation>Wallpaper di tampilkan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="166"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="171"/>
         <source>Wallpaper Live Preview:</source>
         <translation>Pratinjau Wallpaper Secara Langsung:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="175"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="182"/>
         <source>Wallpaper Directory Path:</source>
         <translation>Jalur Direktori Wallpaper:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="176"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="181"/>
         <source>Folder scanned for available wallpapers.</source>
         <translation>Folder telah dipindai untuk mencari wallpaper yang tersedia.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="206"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="215"/>
         <source>Loaded Wallpaper Count:</source>
         <translation>Jumlah Wallpaper Terdimuat:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="207"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="214"/>
         <source>Number of wallpapers kept in the picker carousel.</source>
         <translation>Jumlah wallpaper yang disimpan di karousel pemilih.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="223"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="232"/>
         <source>Transitions &amp; Performance</source>
         <translation>Transisi &amp; Performa</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="227"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="236"/>
         <source>Transition Animation Mode:</source>
         <translation>Mode Animasi Transisi:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="228"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="235"/>
         <source>Animation used when switching wallpapers.</source>
         <translation>Animasi yang ditampilkan saat mengganti wallpaper.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="284"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="292"/>
         <source>Transition Low Performance Priority:</source>
         <translation>Prioritas Performa Rendah Transisi:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="285"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="291"/>
         <source>Reduce transition quality to improve performance on low-end hardware.</source>
         <translation>Kurangi kualitas transisi untuk meningkatkan kinerja pada perangkat keras kelas bawah.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="294"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="302"/>
         <source>Transition Duration (ms):</source>
         <translation>Durasi Transisi (md):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="295"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="301"/>
         <source>Duration of the wallpaper switch animation in milliseconds.</source>
         <translation>Durasi animasi pergantian wallpaper dalam milidetik.</translation>
     </message>
@@ -4721,80 +4743,80 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">Suhu saat ini %1° dengan terasa seperti %2°.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="462"/>
-        <location filename="../Qml/Services/Weather.qml" line="545"/>
+        <location filename="../Qml/Services/Weather.qml" line="382"/>
+        <location filename="../Qml/Services/Weather.qml" line="530"/>
         <source>Invalid coordinates</source>
         <translation>Koordinat tidak valid untuk</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="491"/>
+        <location filename="../Qml/Services/Weather.qml" line="411"/>
         <source>%1 updated</source>
         <translation>Perbarui %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="493"/>
+        <location filename="../Qml/Services/Weather.qml" line="413"/>
         <source>%1 failed: bad data</source>
         <translation>gagal %1: data buruk</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="497"/>
+        <location filename="../Qml/Services/Weather.qml" line="417"/>
         <source>%1 failed (%2)</source>
         <translation>gagal %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="504"/>
+        <location filename="../Qml/Services/Weather.qml" line="424"/>
         <source>%1 %2</source>
         <translation>%1 %2</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="510"/>
-        <location filename="../Qml/Services/Weather.qml" line="603"/>
+        <location filename="../Qml/Services/Weather.qml" line="430"/>
+        <location filename="../Qml/Services/Weather.qml" line="588"/>
         <source>network error</source>
         <translation>gagal jaringan</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="511"/>
-        <location filename="../Qml/Services/Weather.qml" line="604"/>
+        <location filename="../Qml/Services/Weather.qml" line="431"/>
+        <location filename="../Qml/Services/Weather.qml" line="589"/>
         <source>timed out</source>
         <translation>waktu habis</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="462"/>
-        <location filename="../Qml/Services/Weather.qml" line="491"/>
-        <location filename="../Qml/Services/Weather.qml" line="493"/>
-        <location filename="../Qml/Services/Weather.qml" line="497"/>
-        <location filename="../Qml/Services/Weather.qml" line="504"/>
-        <location filename="../Qml/Services/Weather.qml" line="545"/>
-        <location filename="../Qml/Services/Weather.qml" line="551"/>
-        <location filename="../Qml/Services/Weather.qml" line="584"/>
-        <location filename="../Qml/Services/Weather.qml" line="588"/>
-        <location filename="../Qml/Services/Weather.qml" line="596"/>
-        <location filename="../Qml/Services/Weather.qml" line="856"/>
+        <location filename="../Qml/Services/Weather.qml" line="382"/>
+        <location filename="../Qml/Services/Weather.qml" line="411"/>
+        <location filename="../Qml/Services/Weather.qml" line="413"/>
+        <location filename="../Qml/Services/Weather.qml" line="417"/>
+        <location filename="../Qml/Services/Weather.qml" line="424"/>
+        <location filename="../Qml/Services/Weather.qml" line="530"/>
+        <location filename="../Qml/Services/Weather.qml" line="536"/>
+        <location filename="../Qml/Services/Weather.qml" line="569"/>
+        <location filename="../Qml/Services/Weather.qml" line="573"/>
+        <location filename="../Qml/Services/Weather.qml" line="581"/>
+        <location filename="../Qml/Services/Weather.qml" line="845"/>
         <source>Weather</source>
         <translation>Cuaca</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="551"/>
+        <location filename="../Qml/Services/Weather.qml" line="536"/>
         <source>No astronomy API key configured</source>
         <translation>Tidak ada kunci API astronomi yang dikonfigurasi</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="584"/>
+        <location filename="../Qml/Services/Weather.qml" line="569"/>
         <source>Astronomy failed: bad data</source>
         <translation>Kesalahan astronomi: data jelek</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="588"/>
+        <location filename="../Qml/Services/Weather.qml" line="573"/>
         <source>Astronomy failed (%1)</source>
         <translation>Kesalahan astronomy: (%1)</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="596"/>
+        <location filename="../Qml/Services/Weather.qml" line="581"/>
         <source>Astronomy %1</source>
         <translation>Asttronomi %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="856"/>
+        <location filename="../Qml/Services/Weather.qml" line="845"/>
         <source>No cached weather data found, fetching fresh data</source>
         <translation>Tidak ada data cuaca tersimpan, mengambil data baru</translation>
     </message>
@@ -4802,172 +4824,172 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WeatherFormatter</name>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="52"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="113"/>
         <source>New Moon</source>
         <translation>Bulan Baru</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="54"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="115"/>
         <source>Waxing Crescent</source>
         <translation>Bulan Sabit Awal</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="56"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="117"/>
         <source>First Quarter</source>
         <translation>Bulan Separuh Awal</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="58"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="119"/>
         <source>Waxing Gibbous</source>
         <translation>Bulan Cembung Awal</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="60"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="121"/>
         <source>Full Moon</source>
         <translation>Bulan Penuh</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="62"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="123"/>
         <source>Waning Gibbous</source>
         <translation>Bulan Sabit Akhir</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="64"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="125"/>
         <source>Last Quarter</source>
         <translation>Bulan Separuh Akhir</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="66"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="127"/>
         <source>Waning Crescent</source>
         <translation>Bulan Sabit Akhir</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="68"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="129"/>
         <source>Unknown</source>
         <translation>ndak tau</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="149"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="276"/>
         <source>Low</source>
         <translation>Rendah</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="154"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="281"/>
         <source>Moderate</source>
         <translation>Sedang</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="159"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="286"/>
         <source>High</source>
         <translation>Tinggi</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="164"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="291"/>
         <source>Very High</source>
         <translation>Sangat Tinggi</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="168"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="295"/>
         <source>Extreme</source>
         <translation>Ekstrim</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="233"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="174"/>
         <source>A muggy and warm day — take care in the sun.</source>
         <translation>Hari yang lembab dan hangat — berhati-hatilah terhadap sinar matahari.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="235"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="176"/>
         <source>A humid day with sticky conditions.</source>
         <translation>Hari yang lembab dengan kondisi lengket.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="237"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="178"/>
         <source>A hot day ahead — stay hydrated and seek shade.</source>
         <translation>Hari yang panas di depan — tetap terhidrasi dan cari tempat teduh.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="239"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="180"/>
         <source>A cold day — dress warmly before heading out.</source>
         <translation>Hari yang dingin — berpakaian hangat sebelum keluar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="241"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="182"/>
         <source>A pleasant day with comfortable conditions.</source>
         <translation>Hari yang menyenangkan dengan kondisi nyaman.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="243"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="184"/>
         <source>Today&apos;s weather looks moderate.</source>
         <translation>Cuaca hari ini terlihat sedang.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="249"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="190"/>
         <source>Air quality is poor right now — consider limiting time outside.</source>
         <translation>Kualitas udara buruk saat ini — pertimbangkan untuk membatasi waktu di luar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="254"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="195"/>
         <source>Air quality is moderate — sensitive groups should take precautions.</source>
         <translation>Kualitas udara sedang — kelompok sensitif harus mengambil tindakan pencegahan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="260"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="201"/>
         <source>UV index is very high (%1) — avoid direct sun exposure.</source>
         <translation>Indeks UV sangat tinggi (%1) — hindari paparan sinar matahari langsung.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="265"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="206"/>
         <source>Strong UV levels at %1 — use sun protection.</source>
         <translation>Tingkat UV tinggi pada %1 — gunakan perlindungan matahari.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="271"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="212"/>
         <source>Heavy rain expected — bring an umbrella.</source>
         <translation>Hujan lebat diperkirakan — bawalah payung.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="276"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="217"/>
         <source>Light rain possible — keep an umbrella handy.</source>
         <translation>Hujan ringan mungkin terjadi — siapkan payung.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="282"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="223"/>
         <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
         <translation>Kondisi sangat berangin dengan kecepatan %1 km/jam — berhati-hatilah di luar.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="287"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="228"/>
         <source>Breezy day with winds around %1 km/h.</source>
         <translation>Hari berangin dengan kecepatan angin sekitar %1 km/jam.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="293"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="234"/>
         <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
         <translation>Perubahan suhu besar hari ini: %1° hingga %2° — berpakaian berlapis.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="298"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="239"/>
         <source>Temperature ranging from %1° to %2° today.</source>
         <translation>Suhu berkisar dari %1° hingga %2° hari ini.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="304"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="245"/>
         <source>Very sticky conditions with %1% humidity.</source>
         <translation>Kondisi sangat lengket dengan kelembaban %1%.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="309"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="250"/>
         <source>Poor visibility at %1 km — drive carefully.</source>
         <translation>Jarak pandang buruk pada %1 km — berkendara dengan hati-hati.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="314"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="255"/>
         <source>Perfect weather for outdoor activities.</source>
         <translation>Cuaca sempurna untuk aktivitas luar ruangan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="320"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="261"/>
         <source>Current temperature is %1° with feels like %2°.</source>
         <translation>Suhu saat ini %1° dengan terasa seperti %2°.</translation>
     </message>
@@ -4985,22 +5007,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Data Geografis</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="18"/>
         <source>Latitude:</source>
         <translation>Lintang:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="18"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="17"/>
         <source>Latitude of your location for weather and astronomy data.</source>
         <translation>Lintang lokasi Anda untuk data cuaca dan astronomi.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="30"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="31"/>
         <source>Longitude:</source>
         <translation>Bujur:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="31"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="30"/>
         <source>Longitude of your location for weather and astronomy data.</source>
         <translation>Bujur lokasi Anda untuk data cuaca dan astronomi.</translation>
     </message>
@@ -5010,17 +5032,17 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>API Astronomi</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="47"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="48"/>
         <source>WeatherAPI.com Key:</source>
         <translation>Kunci WeatherAPI.com</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="48"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="47"/>
         <source>API key from WeatherAPI.com for astronomy and forecast data.</source>
         <translation>Kunci API dari WeatherAPI.com untuk data astronomi dan prakiraan cuaca.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="54"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="52"/>
         <source>Enter your WeatherAPI.com API key</source>
         <translation>Masukkan kunci API WeatherAPI.com kamu</translation>
     </message>
@@ -5030,27 +5052,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Sinkronisasi &amp; Ikhtisar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="64"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="65"/>
         <source>Enable Quick Summary Widget:</source>
         <translation>Aktifkan Widget Ringkasan Cepat:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="64"/>
         <source>Show a compact weather summary in quick settings.</source>
         <translation>Tampilkan ringkasan cuaca singkat di pengaturan cepat.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="75"/>
         <source>Weather Reload Time (s):</source>
         <translation>Muat ulang cuaca (d):</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="74"/>
         <source>Interval for refreshing weather data, in seconds.</source>
         <translation>Interval penyegaran data cuaca, dalam detik.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="81"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="83"/>
         <source>(%1 min)</source>
         <translation>(%1 menit)</translation>
     </message>
@@ -5058,32 +5080,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WifiPskDialog</name>
     <message>
-        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="25"/>
+        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="103"/>
         <source>Connect to Wi-Fi</source>
         <translation>Hubungkan ke Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="42"/>
+        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="49"/>
         <source>Enter the password for &quot;%1&quot;</source>
         <translation>Masukkan password untu &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="42"/>
+        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="49"/>
         <source>Enter the Wi-Fi password</source>
         <translation>Masukkan password Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="55"/>
+        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="59"/>
         <source>Incorrect password</source>
         <translation>Password salah</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="55"/>
+        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="59"/>
         <source>Wi-Fi password</source>
         <translation>Password Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="62"/>
+        <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="68"/>
         <source>Can&apos;t connect. Check the password and try again.</source>
         <translation>Tidak nyambung. Cek kembali passwordnya dan coba lagi</translation>
     </message>
@@ -5091,7 +5113,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>WifiToggle</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/WifiToggle.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Wifi/WifiToggle.qml" line="31"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>
@@ -5099,13 +5121,13 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Wind</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="29"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Wind.qml" line="73"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="30"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Wind.qml" line="72"/>
         <source>Wind</source>
         <translation>Angin</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="48"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="51"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
     </message>
@@ -5113,7 +5135,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>greeter</name>
     <message>
-        <location filename="../Qml/greeter.qml" line="162"/>
+        <location filename="../Qml/greeter.qml" line="161"/>
         <source>Session Start</source>
         <translation>Sesi Mulai</translation>
     </message>
