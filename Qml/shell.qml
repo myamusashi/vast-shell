@@ -11,6 +11,7 @@ import qs.Modules.BluetoothAgent
 import qs.Modules.Drawers
 import qs.Modules.DynamicIslandHost.DragAndDrop
 import qs.Modules.DynamicIslandHost.Privacy
+import qs.Modules.DynamicIslandHost.Status
 import qs.Modules.Lock
 import qs.Modules.Polkit
 import qs.Modules.Wallpaper
@@ -31,6 +32,8 @@ ShellRoot {
     DragAndDrop {}
 
     Privacy {}
+
+    Status {}
 
     DynamicIsland {}
 
