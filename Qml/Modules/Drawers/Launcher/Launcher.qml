@@ -27,14 +27,11 @@ Drawer {
     open: GlobalStates.isLauncherOpen
     onIsLauncherOpenChanged: {
         if (isLauncherOpen) {
-            LauncherServices.launcherPage = "";
-            LauncherServices.lastEscapeAt = 0;
-            LauncherServices.query        = "";
-            const deepLink                = GlobalStates.launcherQuery;
-            GlobalStates.launcherQuery    = "";
+            LauncherServices.query     = "";
+            const deepLink             = GlobalStates.launcherQuery;
+            GlobalStates.launcherQuery = "";
             if (deepLink !== "")
-                LauncherServices.openPath(deepLink);
-            ScreenCaptureHistory.reloadFiles();
+                LauncherServices.query = deepLink;
         }
     }
 
@@ -52,14 +49,11 @@ Drawer {
                 anchors.fill: parent
                 anchors.margins: Appearance.margin.large
                 spacing: Appearance.spacing.normal
-                Component.onCompleted: {
-                    search.text = LauncherServices.query;
-                }
 
                 Connections {
                     function onLauncherQueryChanged() {
                         if (GlobalStates.launcherQuery !== "") {
-                            LauncherServices.openPath(GlobalStates.launcherQuery);
+                            LauncherServices.query     = GlobalStates.launcherQuery;
                             GlobalStates.launcherQuery = "";
                         }
                     }
@@ -90,21 +84,6 @@ Drawer {
                 StyledTextInput {
                     id: search
 
-                    function handleEscape(): void {
-                        if (LauncherServices.isSubPage) {
-                            LauncherServices.goBack();
-                            return;
-                        }
-
-                        const now = Date.now();
-                        if (now - LauncherServices.lastEscapeAt < 600) {
-                            LauncherServices.lastEscapeAt = 0;
-                            GlobalStates.isLauncherOpen   = false;
-                        } else {
-                            LauncherServices.lastEscapeAt = now;
-                        }
-                    }
-
                     implicitHeight: 60
                     implicitWidth: parent.width
                     placeHolderText: LauncherServices.placeHolderText
@@ -112,7 +91,7 @@ Drawer {
                     Keys.onPressed: function (event) {
                         switch (event.key) {
                         case Qt.Key_Escape:
-                            handleEscape();
+                            GlobalStates.isLauncherOpen = false;
                             event.accepted = true;
                             break;
                         case Qt.Key_Tab:
@@ -128,12 +107,6 @@ Drawer {
                             if (listView.count > 0)
                                 listView.currentIndex = Math.max(listView.currentIndex - 1, 0);
                             event.accepted = true;
-                            break;
-                        case Qt.Key_Backspace:
-                            if (LauncherServices.isSubPage && search.text === LauncherServices.currentCrumb) {
-                                LauncherServices.goBack();
-                                event.accepted = true;
-                            }
                             break;
                         }
                     }
@@ -281,7 +254,7 @@ Drawer {
                     font.pixelSize: Appearance.fonts.size.large
                     horizontalAlignment: Text.AlignHCenter
                     text: LauncherServices.emptyText
-                    visible: listView.count === 0 && (LauncherServices.isSubPage || search.text !== "")
+                    visible: listView.count === 0 && search.text !== ""
                 }
             }
         }

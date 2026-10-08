@@ -14,14 +14,11 @@ import qs.Services
 ItemDelegate {
     id: root
 
-    required property int  index
-    required property var  modelData
+    required property int index
+    required property var modelData
 
-    readonly property bool hasImage: (modelData.image ?? "") !== ""
-    readonly property bool isApp: modelData.kind === "app"
-
-    signal                 rowClicked(var row)
-    signal                 rowHovered(int rowIndex)
+    signal                rowClicked(var row)
+    signal                rowHovered(int rowIndex)
 
     implicitHeight: 50
     implicitWidth: 300
@@ -41,29 +38,7 @@ ItemDelegate {
                 asynchronous: true
                 backer.cache: true
                 implicitSize: parent.height
-                source: root.isApp ? Quickshell.iconPath(root.modelData.entry.icon, "image-missing") : ""
-                visible: root.isApp
-            }
-
-            Image {
-                anchors.centerIn: parent
-                asynchronous: true
-                cache: true
-                fillMode: Image.PreserveAspectCrop
-                height: parent.height
-                source: root.modelData.image ?? ""
-                sourceSize: Qt.size(96, 96)
-                visible: !root.isApp && root.hasImage
-                width: parent.height
-            }
-
-            Icon {
-                anchors.centerIn: parent
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.extraLarge
-                icon: root.modelData.icon ?? ""
-                type: Icon.Material
-                visible: !root.isApp && !root.hasImage
+                source: Quickshell.iconPath(root.modelData.entry.icon, "image-missing")
             }
         }
 
@@ -88,11 +63,7 @@ ItemDelegate {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.small
-                text: {
-                    if (root.modelData.kind === "shotFile")
-                        return FormatTimeUtils.formatLauncher(root.modelData.file.created);
-                    return root.modelData.comment ?? "";
-                }
+                text: root.modelData.comment ?? ""
                 visible: text !== ""
             }
         }

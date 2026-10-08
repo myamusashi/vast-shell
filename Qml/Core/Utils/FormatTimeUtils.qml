@@ -104,18 +104,6 @@ Singleton {
             return h + ":" + String(m).padStart(2, "0") + ":" + ss;
         return m + ":" + ss;
     }
-    function              formatLauncher(timestamp) {
-        const date = new Date(timestamp * 1000);
-        if (isNaN(date.getTime()))
-            return "";
-        return date.toLocaleString("en-US", {
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true
-        });
-    }
     function              formatSize(bytes) {
         if (!(bytes >= 0))
             return "";
