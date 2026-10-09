@@ -204,16 +204,16 @@ Pages {
                         }
                     }
                 }
-
-                ConnectedButtonGroup {
-                    id: tabGroup
-
-                    Layout.alignment: Qt.AlignHCenter
-                    currentIndex: column.selectedTab
-                    model: [qsTr("United States AQI"), qsTr("European AQI")]
-                    onClicked: index => column.selectedTab = index
-                }
             }
+        }
+
+        ConnectedButtonGroup {
+            id: tabGroup
+
+            Layout.alignment: Qt.AlignHCenter
+            currentIndex: column.selectedTab
+            model: [qsTr("United States AQI"), qsTr("European AQI")]
+            onClicked: index => column.selectedTab = index
         }
 
         WrapperRectangle {
