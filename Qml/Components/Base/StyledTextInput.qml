@@ -98,8 +98,8 @@ Item {
             const len = text.length;
             while (dotsModel.count < len)
                 dotsModel.append({});
-            while (dotsModel.count > len)
-                dotsModel.remove(dotsModel.count - 1);
+            if (dotsModel.count > len)
+                dotsModel.remove(len, dotsModel.count - len);
         }
     }
 
@@ -146,6 +146,12 @@ Item {
     Loader {
         active: !root.hasText
         sourceComponent: placeHolderComponent
+        opacity: root.isFocused ? 0 : 1
+        Behavior on opacity {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
 
         anchors {
             left: parent.left
@@ -193,7 +199,7 @@ Item {
     Loader {
         id: visibleModeLoader
 
-        active: !root.passwordMode && root.hasText
+        active: !root.passwordMode && (root.hasText || root.isFocused)
         anchors.fill: parent
         sourceComponent: visibleModeComponent
     }

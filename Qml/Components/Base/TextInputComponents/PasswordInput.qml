@@ -57,6 +57,11 @@ Item {
                     duration: Appearance.animations.durations.small
                 }
             }
+            Behavior on x {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
             states: [
                 State {
                     name: "selection"
@@ -79,11 +84,6 @@ Item {
                     }
                 }
             ]
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
-            }
         }
     }
 
