@@ -15,6 +15,9 @@ MaterialShape {
     property var uvColors: [Colours.m3Colors.m3Green, Colours.m3Colors.m3Yellow, Colours.m3Colors.m3Orange, Colours.m3Colors.m3Red, Colours.m3Colors.m3Purple]
     property int uvIndex: Weather.uvIndex
 
+    color: Colours.m3Colors.m3SurfaceContainer
+    shape: MaterialShape.Cookie12Sided
+
     RowLayout {
 
         anchors {
