@@ -679,7 +679,7 @@ main() {
 	create_wrapper
 
 	log "System-wide installation complete!"
-	log "Run 'shell' to start quickshell."
+	log "Run 'vastctl daemon start' to start quickshell."
 }
 
 main "$@"
