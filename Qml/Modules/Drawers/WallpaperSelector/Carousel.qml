@@ -94,8 +94,8 @@ ListView {
     }
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Escape) {
-            GlobalStates.isWallpaperSwitcherOpen = false;
-            event.accepted                       = true;
+            GlobalStates.closePanel("wallpaperSwitcher");
+            event.accepted = true;
         }
     }
     onContentXChanged: {

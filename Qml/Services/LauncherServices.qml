@@ -23,7 +23,7 @@ Singleton {
 
     function                 activateRow(row: var): void {
         launch(row.entry);
-        GlobalStates.isLauncherOpen = false;
+        GlobalStates.closePanel("launcher");
     }
     function                 launch(entry: DesktopEntry): void {
         const cmd = entry.runInTerminal ? ["app2unit", "--", Configs.generals.apps.terminal, ...entry.command] : ["app2unit", "--", ...entry.command];

@@ -7,7 +7,7 @@ Item {
     id: root
 
     required property color  color
-    required property int    edge            // Qt.TopEdge / BottomEdge / LeftEdge / RightEdge
+    required property int    edge
 
     readonly property real   bodyInsetX: contentItem.x
     readonly property string edgeName: edge === Qt.TopEdge ? "top" : edge === Qt.BottomEdge ? "bottom" : edge === Qt.LeftEdge ? "left" : "right"
@@ -30,8 +30,9 @@ Item {
         acrossEdgeExtent: metrics.acrossEdgeExtent
     })
 
-    property int             alignment: 0             // 0 = centered; Qt.AlignLeft/Right (top/bottom edges), Qt.AlignTop/Bottom (left/right edges)
+    property int             alignment: 0  // 0 = centered; Qt.AlignLeft/Right (top/bottom edges), Qt.AlignTop/Bottom (left/right edges)
     property real            animatedDepth: open ? depth : 0
+    property bool            animateDepth: true
     property int             animationDuration: 300
     property list<real>      animationEasingCurve: []
     property int             animationEasingType: Easing.OutCubic
@@ -51,6 +52,8 @@ Item {
     x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset))
     y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height : (parent.height - height) / 2))
     Behavior on animatedDepth {
+        enabled: root.animateDepth
+
         NumberAnimation {
             duration: root.animationDuration
             easing.bezierCurve: root.animationEasingCurve

@@ -14,19 +14,26 @@ import qs.Services
 Drawer {
     id: root
 
+    property real depthRatio: 0.5
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
+    property real lengthRatio: 0.3
 
+    animateDepth: !GlobalStates.isSwitchingDrawer
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
-    cornerRadius: Appearance.rounding.normal
-    depth: parent.height * 0.5
+    // From the shared ratios while the slot is handing over, so the hand-over
+    // morphs from whatever size the previous drawer had, otherwise from this
+    // drawer's own ratio, so opening from closed animates from its real size.
+    depth: Math.max(0, parent.height - GlobalStates.reservedBottomSpace) * (GlobalStates.isSwitchingDrawer ? GlobalStates.drawerDepthRatio : depthRatio)
     edge: Qt.BottomEdge
+    edgeOffset: GlobalStates.reservedBottomSpace
     filletRadius: 40
-    length: parent.width * 0.3
+    length: parent.width * (GlobalStates.isSwitchingDrawer ? GlobalStates.drawerLengthRatio : lengthRatio)
     open: GlobalStates.isLauncherOpen
     onIsLauncherOpenChanged: {
         if (isLauncherOpen) {
+            GlobalStates.requestDrawerGeometry(lengthRatio, depthRatio);
             LauncherServices.query     = "";
             const deepLink             = GlobalStates.launcherQuery;
             GlobalStates.launcherQuery = "";
@@ -91,7 +98,7 @@ Drawer {
                     Keys.onPressed: function (event) {
                         switch (event.key) {
                         case Qt.Key_Escape:
-                            GlobalStates.isLauncherOpen = false;
+                            GlobalStates.closePanel("launcher");
                             event.accepted = true;
                             break;
                         case Qt.Key_Tab:

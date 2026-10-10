@@ -30,7 +30,7 @@ StyledTextInput {
     placeHolderText: qsTr("Search wallpapers")
     toggleButtonVisible: false
     Component.onCompleted: text = WallpaperFileModels.searchQuery
-    Keys.onEscapePressed: GlobalStates.isWallpaperSwitcherOpen = false
+    Keys.onEscapePressed: GlobalStates.closePanel("wallpaperSwitcher")
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Down) {
             carousel.moveCurrentIndex(1);
