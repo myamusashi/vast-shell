@@ -16,6 +16,8 @@ vast_module(vast-utils
         PaletteAnimator.hpp
         KdeConnectShare.hpp
         KdeConnectShare.cpp
+        KdeConnectReceive.hpp
+        KdeConnectReceive.cpp
         Read.hpp
         Read.cpp
         Write.hpp

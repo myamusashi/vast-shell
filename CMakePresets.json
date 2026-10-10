@@ -94,7 +94,8 @@
         "tst_translation",
         "tst_jobexecutor",
         "tst_bluetoothagent",
-        "tst_kdeconnectshare"
+        "tst_kdeconnectshare",
+        "tst_kdeconnectreceive"
       ]
     }
   ]
