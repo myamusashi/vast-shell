@@ -207,13 +207,18 @@ Pages {
             }
         }
 
-        ConnectedButtonGroup {
-            id: tabGroup
+        Item {
+            implicitHeight: tabGroup.implicitHeight
+            implicitWidth: parent.width
 
-            Layout.alignment: Qt.AlignHCenter
-            currentIndex: column.selectedTab
-            model: [qsTr("United States AQI"), qsTr("European AQI")]
-            onClicked: index => column.selectedTab = index
+            ConnectedButtonGroup {
+                id: tabGroup
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                currentIndex: column.selectedTab
+                model: [qsTr("United States AQI"), qsTr("European AQI")]
+                onClicked: index => column.selectedTab = index
+            }
         }
 
         WrapperRectangle {

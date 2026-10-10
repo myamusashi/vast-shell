@@ -143,6 +143,4 @@ Pages {
             Layout.fillHeight: true
         }
     }
-
-    // Replaced by shared HourlyValueSlider.qml.
 }
