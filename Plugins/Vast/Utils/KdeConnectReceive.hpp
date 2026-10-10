@@ -11,6 +11,8 @@ namespace vast {
 
     class KdeConnectShareEndpoint : public QObject {
         Q_OBJECT
+        QML_ELEMENT
+        QML_SINGLETON
 
       public:
         explicit KdeConnectShareEndpoint(QString deviceId, QObject* parent = nullptr);
