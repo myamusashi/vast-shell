@@ -1,5 +1,5 @@
 pkgname=quickshell
-pkgver=0.3.1
+pkgver=0.3.2
 pkgrel=1
 pkgdesc='Flexible QtQuick based desktop shell toolkit'
 arch=(x86_64 aarch64)
@@ -32,7 +32,7 @@ makedepends=(
   'vulkan-headers'
 )
 source=("$pkgname-$pkgver.tar.gz::https://git.outfoxxed.me/quickshell/quickshell/archive/v$pkgver.tar.gz")
-sha256sums=('d60592622f1aa1cbb853d4814f605dfde827bc692befbfecffaccf4c90e352d8')
+sha256sums=('f14115a73c9fff6aa6399f924b632e88c3ce2cead2657f814a7825341f35baad')
 
 build() {
   cmake -B build -S "$pkgname" -G Ninja \

@@ -109,7 +109,7 @@ here is non-fatal — the depth-wallpaper feature is skipped with a warning.
 
 > [!NOTE]
 > The script also builds these from source rather than installing them:
-> - `quickshell` 0.3.1 — via `packaging/arch/quickshell/PKGBUILD`
+> - `quickshell` 0.3.2 — via `packaging/arch/quickshell/PKGBUILD`
 > - `wl-screenrec` (pinned git rev)
 > - `m3shapes` and `AnotherRipple` (pinned git revs, installed into the Qt module path)
 > - `vastctl` (Go, → `/usr/local/bin`)
@@ -150,7 +150,7 @@ The following packages must always be built from source, regardless of distro:
 
 | Package | Source | Note |
 |---|---|---|
-| `quickshell` | https://github.com/quickshell/quickshell | 0.3.1; a PKGBUILD is provided in `packaging/arch/quickshell/` |
+| `quickshell` | https://github.com/quickshell/quickshell | 0.3.2; a PKGBUILD is provided in `packaging/arch/quickshell/` |
 | `app2unit` | https://github.com/valpackett/app2unit | |
 | `wl-screenrec` | https://github.com/russelltg/wl-screenrec | |
 | `m3shapes` | https://github.com/soramanew/m3shapes | Material shape library, built into the Qt module path |
@@ -253,7 +253,7 @@ sudo xbps-install -S pipewire iw libnotify polkit \
 
 ## Bluetooth — Phone pairing troubleshooting
 
-The shell's Bluetooth UI (`BluetoothServices`) calls `Device1.Pair()` via [`Quickshell.Bluetooth`](https://quickshell.org/docs/v0.3.1/types/Quickshell.Bluetooth/BluetoothDevice/). BlueZ **requires a registered pairing agent** (`org.bluez.AgentManager1`) to answer SSP confirmations; without one you get:
+The shell's Bluetooth UI (`BluetoothServices`) calls `BluetoothDevice.pair()` via [`Quickshell.Bluetooth`](https://quickshell.org/docs/v0.3.2/types/Quickshell.Bluetooth/BluetoothDevice/). BlueZ **requires a registered pairing agent** (`org.bluez.AgentManager1`) to answer SSP confirmations; without one you get:
 
 ```
 [SIGNAL] BREDR.Disconnected - org.bluez.Reason.Local  Connection terminated by local host

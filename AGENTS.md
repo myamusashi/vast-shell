@@ -52,10 +52,10 @@ You can read Quickshel library in Quickshell docs or `.qmltypes`.
 For Quickshell docs, check quickshell.org instead:
 
 1. Get the type's import (e.g. `Quickshell.Wayland`) and name (e.g. `ScreencopyView`).
-2. URL: `https://quickshell.org/docs/v0.3.1/types/<import path>/<TypeName>`
+2. URL: `https://quickshell.org/docs/v0.3.2/types/<import path>/<TypeName>`
    (root `Quickshell` module types live at `Quickshell/<TypeName>`, not under a submodule).
 3. Fetch before writing/reviewing code using the type — don't guess properties/signals/enums from the name.
-4. Unsure of the module? Check `https://quickshell.org/docs/v0.3.1/types/` first.
+4. Unsure of the module? Check `https://quickshell.org/docs/v0.3.2/types/` first.
 5. 404? Type may have moved/renamed — check the listing page or `https://quickshell.org/changelog`.
 6. If you get `StatusCode: non 2xx status code (404 GET ...)` ALWAYS SCRAPE THE QUICKSHELL DOCS TYPES UNTIL YOU FIND WHAT YOU LOOKING FOR. Read from number 4 again.
 

@@ -174,7 +174,7 @@ vast-shell/
 │   │                          # generate_colors_material.py (legacy, unused — see below)
 │   └── weather_icon/          # Moon phase SVGs
 │
-├── packaging/arch/quickshell/ # PKGBUILD (quickshell 0.3.1 built from source)
+├── packaging/arch/quickshell/ # PKGBUILD (quickshell 0.3.2 built from source)
 ├── patches/                   # upstream qmlfmt/qt-creator build fixes
 ├── Data/                      # configurations.json (defaults), colors.json,
 │                              # dark-colors.json, light-colors.json
