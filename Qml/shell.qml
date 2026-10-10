@@ -10,6 +10,7 @@ import qs.Components.Feedback
 import qs.Modules.BluetoothAgent
 import qs.Modules.Drawers
 import qs.Modules.DynamicIslandHost.DragAndDrop
+import qs.Modules.DynamicIslandHost.KDEConnect
 import qs.Modules.DynamicIslandHost.Privacy
 import qs.Modules.DynamicIslandHost.Status
 import qs.Modules.Lock
@@ -30,6 +31,8 @@ ShellRoot {
     Drawers {}
 
     DragAndDrop {}
+
+    KDEConnect {}
 
     Privacy {}
 

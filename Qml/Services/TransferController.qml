@@ -9,15 +9,7 @@ import qs.Services
 Scope {
     id: root
 
-    enum Failure {
-        None,
-        Unreachable,
-        Missing,
-        Unreadable
-    }
-
-    // Outcome and Failure are mirrored on DragAndDropServices, same order.
-    readonly property int fileIntervalMs: 400
+    readonly property int fileIntervalMs: 3000
 
     property int          currentState: TransferController.State.Idle
     property int          cursor: 0
@@ -27,6 +19,12 @@ Scope {
     property bool         handoffPending: false
     property int          maxPercent: 0
 
+    enum Failure {
+        None,
+        Unreachable,
+        Missing,
+        Unreadable
+    }
     enum Outcome {
         Sent,
         Partial,
@@ -72,9 +70,6 @@ Scope {
     readonly property int transferDwell: Math.max(minDwellMs, totalCount * fileIntervalMs)
 
     property bool         stopped: false
-
-    // watchingTransfer is live progress; sawTransfer is sticky history. The window
-    // covers a whole batch, so it can open before the last file is handed off.
     property bool         watchingTransfer: false
 
     function              acceptDroppedFiles(files) {
@@ -189,7 +184,7 @@ Scope {
 
     Connections {
         function onActiveChanged() {
-            if (KDEConnectTransfer.active) {
+            if (KDEConnectTransfer.active && !KDEConnectTransfer.receiving) {
                 if (!root.watchingTransfer) {
                     // Real progress: the dwell fallback must not cut it short.
                     observationTimer.stop();
@@ -205,9 +200,10 @@ Scope {
                 root.completeTransfer();
         }
         function onPercentChanged() {
+            if (KDEConnectTransfer.receiving)
+                return;
             const advanced  = KDEConnectTransfer.percent > root.maxPercent;
             root.maxPercent = Math.max(root.maxPercent, KDEConnectTransfer.percent);
-            // A re-render at the same percentage is not progress and must not restart.
             if (root.watchingTransfer && advanced)
                 stallTimer.restart();
         }
