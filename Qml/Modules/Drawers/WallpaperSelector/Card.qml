@@ -5,7 +5,6 @@ import Quickshell.Widgets
 import Vast.ImageCache
 
 import qs.Components.Base
-import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.Utils
 
@@ -18,27 +17,17 @@ Item {
     required property bool isCurrent
     required property var  modelData
     required property var  thumbnailAvailability
-    required property real unitWidth
 
     signal                 activateRequested(var modelData)
     signal                 selectRequested(int index)
 
-    implicitHeight: carouselHeight
-    implicitWidth: isCurrent ? unitWidth * 2 : unitWidth
-    opacity: isCurrent ? 1.0 : 0.92
+    // Portion of this slot currently inside the viewport. Cards squash against
+    // the edge while scrolling instead of being cropped by the view clip.
+    readonly property real viewportLeft: ListView.view.contentX
+    readonly property real viewportRight: viewportLeft + ListView.view.width
+    readonly property real visibleWidth: Math.max(0, Math.min(x + width, viewportRight) - Math.max(x, viewportLeft))
+
     z: isCurrent ? 100 : 1
-    Behavior on implicitWidth {
-        NAnim {
-            duration: Appearance.animations.durations.normal
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-    Behavior on opacity {
-        NAnim {
-            duration: Appearance.animations.durations.normal
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
     onIsCurrentChanged: {
         if (!isCurrent)
             return;
@@ -49,20 +38,22 @@ Item {
     }
 
     ClippingRectangle {
-        id: cardRect
+        id: card
 
-        anchors.centerIn: parent
+        height: root.isCurrent ? root.carouselHeight : root.carouselHeight * 0.82
+        width: root.visibleWidth
+        x: Math.max(root.x, root.viewportLeft) - root.x
+        y: (root.carouselHeight - height) / 2
         color: "transparent"
-        implicitHeight: parent.height
-        implicitWidth: parent.width - (root.isCurrent ? Math.max(20, root.unitWidth * 0.3) : Math.max(12, root.unitWidth * 0.2))
-        radius: root.isCurrent ? Appearance.rounding.large : 20
-        Behavior on implicitHeight {
+        opacity: root.isCurrent ? 1.0 : 0.92
+        radius: root.isCurrent ? Appearance.rounding.large : Appearance.rounding.normal
+        Behavior on height {
             NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             }
         }
-        Behavior on implicitWidth {
+        Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -75,6 +66,12 @@ Item {
             }
         }
 
+        Elevation {
+            anchors.fill: parent
+            level: root.isCurrent ? 3 : 0
+            z: -1
+        }
+
         Image {
             anchors.fill: parent
             asynchronous: true
@@ -82,12 +79,6 @@ Item {
             fillMode: Image.PreserveAspectCrop
             source: MediaKind.isVideo(root.modelData) ? "" : "file://" + root.modelData
             sourceSize: Qt.size(200, 200)
-
-            Elevation {
-                anchors.fill: parent
-                level: 3
-                z: -1
-            }
         }
 
         Image {
@@ -107,14 +98,11 @@ Item {
         Rectangle {
             id: dimOverlay
 
-            property color target: Qt.rgba(0, 0, 0, root.isCurrent ? 0.0 : 0.22)
-
             anchors.fill: parent
-            radius: cardRect.radius
-
-            BlendColor {
-                host: dimOverlay
-                target: dimOverlay.target
+            color: root.isCurrent ? "transparent" : Qt.rgba(0, 0, 0, 0.22)
+            radius: card.radius
+            Behavior on color {
+                CAnim {}
             }
         }
 

@@ -8,7 +8,7 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
-PathView {
+ListView {
     id: root
 
     required property var  controller
@@ -17,6 +17,27 @@ PathView {
 
     readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
 
+    function               centerCurrent(animated: bool): void {
+        if (currentIndex < 0 || !currentItem || width <= 0)
+            return;
+        const target   = currentItem.x + currentItem.width / 2 - width / 2;
+        const distance = Math.abs(target - contentX);
+        if (distance < 0.5)
+            return;
+        if (!animated || distance > width * 1.2) {
+            centerAnimation.stop();
+            contentX = target;
+            return;
+        }
+        centerAnimation.from = contentX;
+        centerAnimation.to   = target;
+        centerAnimation.restart();
+    }
+    function               indexAtViewportCenter(): int {
+        if (count === 0 || width <= 0 || height <= 0)
+            return -1;
+        return indexAt(contentX + width / 2, height / 2);
+    }
     function               moveCurrentIndex(step: int): void {
         if (count === 0)
             return;
@@ -28,17 +49,20 @@ PathView {
         currentIndex = idx !== -1 ? idx : 0;
     }
 
-    cacheItemCount: Configs.wallpaper.visibleWallpaper + 2
+    boundsBehavior: ListView.StopAtBounds
+    cacheBuffer: unitWidth * 2
+    leftMargin: (width - unitWidth) / 2
+    rightMargin: (width - unitWidth) / 2
     clip: true
-    pathItemCount: Configs.wallpaper.visibleWallpaper
-    preferredHighlightBegin: 0.5
-    preferredHighlightEnd: 0.5
     delegate: Card {
+        id: card
+
         carouselHeight: root.height
         controller: root.controller
-        isCurrent: PathView.isCurrentItem
+        height: root.height
+        isCurrent: index === root.currentIndex
         thumbnailAvailability: root.thumbnailAvailability
-        unitWidth: root.unitWidth
+        width: root.unitWidth
         onActivateRequested: path => {
             if (MediaKind.isVideo(path))
                 root.controller.setVideoWallpaper(path);
@@ -50,17 +74,23 @@ PathView {
     model: ScriptModel {
         values: root.visibleWallpapers ?? []
     }
-    path: Path {
-        startX: 0
-        startY: root.height / 2
+    orientation: ListView.Horizontal
+    spacing: Appearance.spacing.small
 
-        PathLine {
-            x: root.width
-            y: root.height / 2
-        }
+    NumberAnimation {
+        id: centerAnimation
+
+        easing.bezierCurve: Appearance.animations.curves.standard
+        easing.type: Easing.BezierSpline
+        property: "contentX"
+        target: root
     }
+
     Component.onCompleted: {
-        Qt.callLater(() => selectCurrentWallpaper());
+        Qt.callLater(() => {
+            selectCurrentWallpaper();
+            root.centerCurrent(false);
+        });
     }
     Keys.onPressed: event => {
         if (event.key === Qt.Key_Escape) {
@@ -68,14 +98,33 @@ PathView {
             event.accepted                       = true;
         }
     }
+    onContentXChanged: {
+        if (!dragging)
+            return;
+        const nearest = indexAtViewportCenter();
+        if (nearest !== -1)
+            currentIndex = nearest;
+    }
     onCurrentIndexChanged: {
+        if (!dragging)
+            root.centerCurrent(true);
         if (Configs.wallpaper.livePreview && count > 0)
             GlobalStates.previewWallpaper = (visibleWallpapers ?? [])[currentIndex] ?? "";
     }
+    onHeightChanged: Qt.callLater(() => root.centerCurrent(false))
+    onMovementEnded: {
+        const nearest = root.indexAtViewportCenter();
+        if (nearest !== -1 && nearest !== currentIndex)
+            currentIndex = nearest;
+        else
+            root.centerCurrent(true);
+    }
+    onWidthChanged: Qt.callLater(() => root.centerCurrent(false))
 
     Connections {
         function onFilteredWallpaperListChanged(): void {
             root.selectCurrentWallpaper();
+            Qt.callLater(() => root.centerCurrent(false));
         }
 
         target: WallpaperFileModels
