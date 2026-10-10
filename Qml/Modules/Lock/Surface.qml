@@ -130,9 +130,12 @@ WlSessionLockSurface {
             }
         }
 
-        Wallpaper {
+        Image {
             anchors.fill: parent
-            visible: true
+            asynchronous: true
+            cache: true
+            source: Paths.currentWallpaper
+            fillMode: Image.PreserveAspectCrop
         }
     }
 
