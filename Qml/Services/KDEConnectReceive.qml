@@ -14,7 +14,7 @@ Singleton {
     readonly property bool   isReceived: currentState === KDEConnectReceive.State.Received
     readonly property bool   isReceiving: currentState === KDEConnectReceive.State.Receiving
     readonly property string label: KDEConnectTransfer.label
-    readonly property int    outcome: maxPercent >= 100 ? KDEConnectReceive.Outcome.Received : KDEConnectReceive.Outcome.Interrupted
+    readonly property int    outcome: (gotFile || maxPercent >= 100) ? KDEConnectReceive.Outcome.Received : KDEConnectReceive.Outcome.Interrupted
     readonly property int    percent: maxPercent
     readonly property string sizeText: KDEConnectTransfer.sizeText
 
@@ -22,6 +22,7 @@ Singleton {
     property string          deviceId: ""
     property string          deviceName: ""
     property string          fileName: ""
+    property bool            gotFile: false // the daemon's completion signal arrived; see recordFile
     property Component       islandContent: null
     property int             islandRequestId: -1
     property int             maxPercent: 0 // sticky, so a dropped percentage never rewinds the island
@@ -35,26 +36,28 @@ Singleton {
         }
     }
     function                 beginReceiving() {
-        if (currentState !== KDEConnectReceive.State.Idle)
+        if (root.currentState !== KDEConnectReceive.State.Idle)
             return;
         dismissTimer.stop();
-        deviceId     = "";
-        deviceName   = "";
-        fileName     = "";
-        maxPercent   = Math.max(0, KDEConnectTransfer.percent);
-        currentState = KDEConnectReceive.State.Receiving;
+        root.deviceId     = "";
+        root.deviceName   = "";
+        root.fileName     = "";
+        root.gotFile      = false;
+        root.maxPercent   = Math.max(0, KDEConnectTransfer.percent);
+        root.currentState = KDEConnectReceive.State.Receiving;
         root.openIsland();
     }
     function                 dismiss() {
         dismissTimer.stop();
         if (root.islandRequestId >= 0)
             DynamicIslandService.dismiss(root.islandRequestId);
-        islandRequestId = -1;
-        deviceId        = "";
-        deviceName      = "";
-        fileName        = "";
-        maxPercent      = 0;
-        currentState    = KDEConnectReceive.State.Idle;
+        root.islandRequestId = -1;
+        root.deviceId        = "";
+        root.gotFile         = false;
+        root.deviceName      = "";
+        root.fileName        = "";
+        root.maxPercent      = 0;
+        root.currentState    = KDEConnectReceive.State.Idle;
     }
 
     enum State {
@@ -69,9 +72,9 @@ Singleton {
     // The window is the only end-of-transfer signal that always arrives; the
     // file name may show up before it or not at all.
     function                 finishReceiving() {
-        if (currentState !== KDEConnectReceive.State.Receiving)
+        if (root.currentState !== KDEConnectReceive.State.Receiving)
             return;
-        currentState = KDEConnectReceive.State.Received;
+        root.currentState = KDEConnectReceive.State.Received;
         root.showResult();
         dismissTimer.restart();
     }
@@ -84,10 +87,11 @@ Singleton {
         root.islandRequestId = DynamicIslandService.show(root.islandContent, 0);
     }
     function                 recordFile(receivedDeviceId, destinationUrl) {
-        deviceId     = receivedDeviceId;
-        deviceName   = KDEConnect.deviceById(receivedDeviceId)?.name ?? "";
-        fileName     = root.baseName(destinationUrl);
-        currentState = KDEConnectReceive.State.Received;
+        root.deviceId     = receivedDeviceId;
+        root.deviceName   = KDEConnect.deviceById(receivedDeviceId)?.name ?? "";
+        root.fileName     = root.baseName(destinationUrl);
+        root.gotFile      = true;
+        root.currentState = KDEConnectReceive.State.Received;
         root.showResult();
         dismissTimer.restart();
     }
@@ -104,12 +108,12 @@ Singleton {
     Component.onCompleted: {
         if (KDEConnectTransfer.receiving)
             root.beginReceiving();
-        VUTILS.KdeConnectShare.watchDevices(KDEConnect.allDevices.map(device => device.id));
+        VUTILS.KdeConnectReceive.watchDevices(KDEConnect.allDevices.map(device => device.id));
     }
 
     Connections {
         function onAllDevicesChanged() {
-            VUTILS.KdeConnectShare.watchDevices(KDEConnect.allDevices.map(device => device.id));
+            VUTILS.KdeConnectReceive.watchDevices(KDEConnect.allDevices.map(device => device.id));
         }
 
         target: KDEConnect
@@ -120,7 +124,7 @@ Singleton {
             root.recordFile(deviceId, destinationUrl);
         }
 
-        target: VUTILS.KdeConnectShare
+        target: VUTILS.KdeConnectReceive
     }
 
     Connections {
