@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Widgets
+import QtMultimedia
 import Vast.ImageCache
 
 import qs.Components.Base
@@ -88,10 +89,47 @@ Item {
             asynchronous: true
             fillMode: Image.PreserveAspectCrop
             source: root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
-            visible: status === Image.Ready
+            visible: status === Image.Ready && !videoPreview.active
             onStatusChanged: {
                 if (status === Image.Error && MediaKind.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
                     root.controller.markThumbnail(root.modelData, false);
+            }
+        }
+
+        Loader {
+            id: videoPreview
+
+            active: root.isCurrent && MediaKind.isVideo(root.modelData)
+            anchors.fill: parent
+            asynchronous: false
+            sourceComponent: Component {
+
+                Item {
+
+                    MediaPlayer {
+                        id: cardVideoPlayer
+
+                        loops: MediaPlayer.Infinite
+                        source: Qt.resolvedUrl(root.modelData)
+                        videoOutput: cardVideoOutput
+                        onErrorOccurred: (error, errorString) => {
+                            console.warn("[WallpaperSelector] Card video error:", errorString);
+                            videoPreview.active = false;
+                        }
+                        onMediaStatusChanged: {
+                            if (mediaStatus === MediaPlayer.LoadedMedia)
+                                play();
+                        }
+                    }
+
+                    VideoOutput {
+                        id: cardVideoOutput
+
+                        anchors.fill: parent
+                        endOfStreamPolicy: VideoOutput.KeepLastFrame
+                        fillMode: VideoOutput.PreserveAspectCrop
+                    }
+                }
             }
         }
 
