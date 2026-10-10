@@ -89,8 +89,8 @@ SettingsPageBase {
             label: qsTr("Preview:")
 
             ClippingRectangle {
-                Layout.preferredHeight: 180
-                Layout.preferredWidth: 320
+                implicitWidth: 320
+                implicitHeight: 180
                 radius: Appearance.rounding.normal
 
                 Image {

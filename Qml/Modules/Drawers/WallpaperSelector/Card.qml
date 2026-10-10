@@ -41,14 +41,14 @@ Item {
     ClippingRectangle {
         id: card
 
-        height: root.isCurrent ? root.carouselHeight : root.carouselHeight * 0.82
-        width: root.visibleWidth
+        implicitWidth: root.visibleWidth
+        implicitHeight: root.isCurrent ? root.carouselHeight : root.carouselHeight * 0.82
         x: Math.max(root.x, root.viewportLeft) - root.x
         y: (root.carouselHeight - height) / 2
         color: "transparent"
         opacity: root.isCurrent ? 1.0 : 0.92
         radius: root.isCurrent ? Appearance.rounding.large : Appearance.rounding.normal
-        Behavior on height {
+        Behavior on implicitHeight {
             NAnim {
                 duration: Appearance.animations.durations.normal
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial

@@ -160,17 +160,20 @@ StyledRect {
 
         property bool popupHovered: false
 
-        anchors.bottom: mediaPlayerRect.top
-        anchors.bottomMargin: Appearance.spacing.small
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+            bottom: mediaPlayerRect.top
+            bottomMargin: Appearance.spacing.small
+            horizontalCenter: parent.horizontalCenter
+        }
+
+        implicitWidth: parent.width
+        implicitHeight: popupLayout.implicitHeight + Appearance.margin.normal * 2
         clip: true
         color: mediaPlayerRect.dynSurface
-        implicitHeight: popupLayout.implicitHeight + Appearance.margin.normal * 2
         opacity: mediaHover.hovered || popupHovered ? 1 : 0
         radius: Appearance.rounding.normal
         scale: mediaHover.hovered || popupHovered ? 1 : 0.92
         visible: opacity > 0
-        width: parent.width
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.normal
