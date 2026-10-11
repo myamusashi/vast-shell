@@ -12,7 +12,7 @@ import "Bluetooth" as BT
 ZoomPopup {
     id: root
 
-    clipContent: true
+    clipContent: false
     contentMargin: Appearance.margin.normal
     enableScroll: false
     content: ColumnLayout {
@@ -40,6 +40,7 @@ ZoomPopup {
 
                 spacing: Appearance.spacing.small
                 width: deviceScroll.availableWidth
+                clip: true
 
                 BT.PairedDevices {
                     Layout.fillWidth: true

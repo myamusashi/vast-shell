@@ -10,6 +10,7 @@ import qs.Services
 ColumnLayout {
     spacing: Appearance.spacing.small * 0.5
     visible: BluetoothServices.adapterEnabled
+    clip: true
 
     StyledText {
         color: Colours.m3Colors.m3OnSurfaceVariant

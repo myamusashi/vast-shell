@@ -16,10 +16,10 @@ ListView {
     required property var pskDialog
 
     Layout.fillWidth: true
-    Layout.preferredHeight: Math.min(contentHeight, 320)
+    Layout.preferredHeight: contentHeight
     boundsBehavior: Flickable.StopAtBounds
     clip: true
-    implicitHeight: Math.min(contentHeight, 320)
+    implicitHeight: contentHeight
     interactive: contentHeight > height
     model: Networking.devices
     spacing: Appearance.spacing.small
@@ -32,6 +32,7 @@ ListView {
         required property WifiDevice modelData
 
         width: root.width
+        clip: true
         Component.onCompleted: {
             if (modelData)
                 modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;

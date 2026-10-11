@@ -12,7 +12,7 @@ import "Wifi" as WF
 ZoomPopup {
     id: root
 
-    clipContent: true
+    clipContent: false
     contentMargin: Appearance.margin.normal
     enableScroll: false
     content: ColumnLayout {

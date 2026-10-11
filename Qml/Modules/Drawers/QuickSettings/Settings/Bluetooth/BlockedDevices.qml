@@ -13,6 +13,7 @@ import qs.Services
 ColumnLayout {
     spacing: Appearance.spacing.small * 0.5
     visible: BluetoothServices.hasBlocked
+    clip: true
 
     StyledText {
         color: Colours.m3Colors.m3OnSurfaceVariant

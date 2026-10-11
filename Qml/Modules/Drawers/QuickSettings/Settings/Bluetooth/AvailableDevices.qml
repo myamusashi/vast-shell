@@ -11,6 +11,7 @@ import qs.Services
 ColumnLayout {
     spacing: Appearance.spacing.small * 0.5
     visible: BluetoothServices.adapterEnabled
+    clip: true
 
     RowLayout {
         Layout.fillWidth: true
