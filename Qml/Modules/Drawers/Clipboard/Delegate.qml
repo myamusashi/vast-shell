@@ -74,6 +74,11 @@ ItemDelegate {
             Layout.preferredWidth: root.pinned ? Appearance.margin.large - Appearance.margin.normal : 0
         }
 
+        StyledText {
+            color: Colours.m3Colors.m3OnSurface
+            text: (root.index + 1).toString() + "."
+        }
+
         Rectangle {
             Layout.alignment: Qt.AlignVCenter
             color: {

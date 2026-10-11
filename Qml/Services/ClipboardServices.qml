@@ -49,7 +49,7 @@ Singleton {
 
         readonly property bool isDeletePending: pendingDeleteIds.length > 0
         readonly property int  listWidth: Configs.clipboard.width
-        readonly property int  previewWidth: 400
+        readonly property int  previewWidth: Configs.clipboard.preview.sourceWidth
 
         property var           pendingDeleteIds: []
         property bool          previewFocused: false

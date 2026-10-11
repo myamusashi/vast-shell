@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell
 import Vast.Clipboard
 
 import qs.Components.Feedback
@@ -86,7 +87,7 @@ Item {
         }
     }
 
-    QtObject {
+    Scope {
         id: entryDetails
 
         readonly property bool   isHtml: entryType === "html"
