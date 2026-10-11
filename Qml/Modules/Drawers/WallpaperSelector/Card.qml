@@ -28,6 +28,24 @@ Item {
     readonly property real viewportRight: viewportLeft + ListView.view.width
     readonly property real visibleWidth: Math.max(0, Math.min(x + width, viewportRight) - Math.max(x, viewportLeft))
 
+    // 0 = large, 1 = medium, 2 and beyond = small.
+    readonly property int  distance: isCurrent ? 0 : Math.abs(index - ListView.view.currentIndex)
+
+    property real          heightFactor: distance === 0 ? 1 : (distance === 1 ? 0.9 : 0.82)
+    property real          widthFactor: distance === 0 ? 1.2 : (distance === 1 ? 0.88 : 0.72)
+
+    Behavior on heightFactor {
+        NAnim {
+            duration: Appearance.animations.durations.normal
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+    Behavior on widthFactor {
+        NAnim {
+            duration: Appearance.animations.durations.normal
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
     z: isCurrent ? 100 : 1
     onIsCurrentChanged: {
         if (!isCurrent)
@@ -41,19 +59,13 @@ Item {
     ClippingRectangle {
         id: card
 
-        implicitWidth: root.visibleWidth
-        implicitHeight: root.isCurrent ? root.carouselHeight : root.carouselHeight * 0.82
-        x: Math.max(root.x, root.viewportLeft) - root.x
+        implicitWidth: root.visibleWidth * root.widthFactor
+        implicitHeight: root.carouselHeight * root.heightFactor
+        x: Math.max(root.x, root.viewportLeft) - root.x + (root.visibleWidth - width) / 2
         y: (root.carouselHeight - height) / 2
         color: "transparent"
-        opacity: root.isCurrent ? 1.0 : 0.92
+        opacity: root.distance === 0 ? 1.0 : (root.distance === 1 ? 0.92 : 0.85)
         radius: root.isCurrent ? Appearance.rounding.large : Appearance.rounding.normal
-        Behavior on implicitHeight {
-            NAnim {
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.normal

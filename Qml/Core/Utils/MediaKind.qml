@@ -25,6 +25,6 @@ Singleton {
         if (!isVideo(source))
             return "";
         const directory = cacheDirectory || `${Paths.cacheDir}/vast-shell`;
-        return `${directory}/vast-wallpaper-${Qt.md5(source)}.png`;
+        return `${directory}/vast-wallpaper-${Qt.md5(source)}-1024.png`;
     }
 }

@@ -17,6 +17,17 @@ ListView {
 
     readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
 
+    property bool          applyOnClick: false
+    property bool          closeDrawerOnEscape: true
+
+    function               applyWallpaper(path: string): void {
+        if (path === "")
+            return;
+        if (MediaKind.isVideo(path))
+            controller.setVideoWallpaper(path);
+        else
+            controller.setWallpaper(path, path);
+    }
     function               centerCurrent(animated: bool): void {
         if (currentIndex < 0 || !currentItem || width <= 0)
             return;
@@ -63,13 +74,12 @@ ListView {
         isCurrent: index === root.currentIndex
         thumbnailAvailability: root.thumbnailAvailability
         width: root.unitWidth
-        onActivateRequested: path => {
-            if (MediaKind.isVideo(path))
-                root.controller.setVideoWallpaper(path);
-            else
-                root.controller.setWallpaper(path, path);
+        onActivateRequested: path => root.applyWallpaper(path)
+        onSelectRequested: idx => {
+            root.currentIndex = idx;
+            if (root.applyOnClick)
+                root.applyWallpaper((root.visibleWallpapers ?? [])[idx] ?? "");
         }
-        onSelectRequested: idx => root.currentIndex = idx
     }
     model: ScriptModel {
         values: root.visibleWallpapers ?? []
@@ -93,10 +103,10 @@ ListView {
         });
     }
     Keys.onPressed: event => {
-        if (event.key === Qt.Key_Escape) {
-            GlobalStates.closePanel("wallpaperSwitcher");
-            event.accepted = true;
-        }
+        if (!root.closeDrawerOnEscape || event.key !== Qt.Key_Escape)
+            return;
+        GlobalStates.closePanel("wallpaperSwitcher");
+        event.accepted = true;
     }
     onContentXChanged: {
         if (!dragging)

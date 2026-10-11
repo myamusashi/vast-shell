@@ -7,146 +7,133 @@ import Quickshell
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
+import qs.Services as Svc
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog.FileDialog
+import qs.Modules.Drawers.WallpaperSelector
 
 import "../Components"
 
 SettingsPageBase {
+    id: root
+
+    readonly property string currentWallpaperPreview: {
+        const path = Paths.currentWallpaper;
+        if (path === "")
+            return "";
+        if (!MediaKind.isVideo(path))
+            return "file://" + MediaKind.staticPathFor(path);
+        if (Svc.Wallpaper.thumbnailAvailability[path] !== true)
+            return "";
+        return `file://${MediaKind.videoThumbnailPathFor(path)}?v=${Svc.Wallpaper.thumbnailVersion}`;
+    }
+
     pageTitle: qsTr("Wallpaper Engine")
 
     SettingsCard {
         Layout.fillWidth: true
-        title: qsTr("Pick Wallpaper File")
-
-        SettingRow {
-            description: qsTr("Browse and set a new wallpaper image or video.")
-            label: qsTr("Select a wallpaper image file:")
-
-            ExtendedFloatingButton {
-                icon.name: "image"
-                text: qsTr("Browse\u2026")
-                onClicked: pickWallpaperDialog.openFileDialog()
-            }
-
-            FileDialog {
-                id: pickWallpaperDialog
-
-                nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.svg", "*.webp", "*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi", "*.m4v"]
-                onFileSelected: path => Quickshell.execDetached({
-                        command: ["vastctl", "wallpaper", "set", path]
-                    })
-            }
-        }
-    }
-
-    SettingsCard {
-        Layout.fillWidth: true
         title: qsTr("Wallpaper Picker")
-        visible: WallpaperFileModels.wallpaperList.length > 0
 
-        StyledTextInput {
-            id: searchField
-
+        Rectangle {
             Layout.fillWidth: true
-            placeHolderText: qsTr("Search wallpapers\u2026")
-            toggleButtonVisible: false
-            onTextChanged: WallpaperFileModels.searchQuery = text
-        }
+            Layout.preferredHeight: 300
+            color: Colours.m3Colors.m3SurfaceContainerHigh
+            radius: Appearance.rounding.normal
 
-        PathView {
-            id: wallpaperPath
+            Image {
+                id: currentPreview
 
-            Layout.fillWidth: true
-            Layout.minimumHeight: 160
-            cacheItemCount: pathItemCount + 2
-            clip: true
-            pathItemCount: 5
-            preferredHighlightBegin: 0.5
-            preferredHighlightEnd: 0.5
-            delegate: Item {
-                id: delegateRoot
-
-                required property var  modelData
-
-                readonly property real itemWidth: wallpaperPath.width / wallpaperPath.pathItemCount
-
-                implicitHeight: itemWidth * 0.65
-                implicitWidth: itemWidth
+                anchors.fill: parent
+                asynchronous: true
+                cache: true
+                fillMode: Image.PreserveAspectCrop
+                source: root.currentWallpaperPreview
+                sourceSize: Qt.size(1000, 300)
+                visible: status === Image.Ready
 
                 Rectangle {
                     anchors.fill: parent
-                    border.color: delegateRoot.modelData === WallpaperFileModels.currentWallpaper ? Colours.m3Colors.m3Primary : "transparent"
-                    border.width: delegateRoot.modelData === WallpaperFileModels.currentWallpaper ? 2 : 0
                     color: Colours.m3Colors.m3SurfaceContainerHigh
-                    radius: Appearance.rounding.small
+                    visible: !currentPreview.visible
 
-                    Image {
-                        anchors.bottomMargin: fileNameText.implicitHeight + 4
-                        anchors.fill: parent
-                        asynchronous: true
-                        fillMode: Image.PreserveAspectCrop
-                        source: (width > 0 && height > 0 && !MediaKind.isVideo(delegateRoot.modelData)) ? delegateRoot.modelData : ""
-                        sourceSize: Qt.size(150, 150)
-                    }
-
-                    Rectangle {
-                        anchors.fill: parent
-                        color: Qt.alpha(Colours.m3Colors.m3Primary, 0.15)
-                        radius: parent.radius
-                        visible: delegateRoot.modelData === WallpaperFileModels.currentWallpaper
-                    }
-
-                    Rectangle {
-                        color: Qt.alpha(Colours.m3Colors.m3Scrim, 0.35)
-                        height: fileNameText.implicitHeight + 4
-
-                        anchors {
-                            bottom: parent.bottom
-                            left: parent.left
-                            right: parent.right
-                        }
-
-                        StyledText {
-                            id: fileNameText
-
-                            color: Colours.m3Colors.m3OnSurface
-                            elide: Text.ElideRight
-                            font.pixelSize: Appearance.fonts.size.small
-                            horizontalAlignment: Text.AlignHCenter
-                            text: delegateRoot.modelData.split('/').pop()
-
-                            anchors {
-                                left: parent.left
-                                margins: 2
-                                right: parent.right
-                                verticalCenter: parent.verticalCenter
-                            }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: Quickshell.execDetached({
-                            command: ["vastctl", "wallpaper", "set", delegateRoot.modelData]
-                        })
+                    Icon {
+                        anchors.centerIn: parent
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.extraLarge
+                        icon: "image"
                     }
                 }
             }
-            model: ScriptModel {
-                values: WallpaperFileModels.filteredWallpaperList
-            }
-            path: Path {
-                startX: 0
-                startY: wallpaperPath.height / 2
+        }
 
-                PathLine {
-                    x: wallpaperPath.width
-                    y: wallpaperPath.height / 2
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Appearance.spacing.normal
+
+            StyledTextInput {
+                Layout.fillWidth: true
+                placeHolderText: qsTr("Search wallpapers…")
+                text: Svc.WallpaperFileModels.searchQuery
+                toggleButtonVisible: false
+                onTextChanged: {
+                    Svc.WallpaperFileModels.searchQuery = text;
+                    wallpaperCarousel.currentIndex      = 0;
                 }
             }
+
+            StyledText {
+                color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.5)
+                elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.small
+                text: qsTr("Browse and set a new wallpaper image or video.")
+            }
+
+            ExtendedFloatingButton {
+                icon.name: "image"
+                text: qsTr("Browse…")
+                onClicked: pickWallpaperDialog.openFileDialog()
+            }
+        }
+
+        FileDialog {
+            id: pickWallpaperDialog
+
+            nameFilters: ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.svg", "*.webp", "*.mp4", "*.mkv", "*.webm", "*.mov", "*.avi", "*.m4v"]
+            onFileSelected: path => Quickshell.execDetached({
+                    command: ["vastctl", "wallpaper", "set", path]
+                })
+        }
+
+        ConnectedButtonGroup {
+            Layout.alignment: Qt.AlignHCenter
+            currentIndex: Svc.Wallpaper.wallpaperType
+            model: [qsTr("Static"), qsTr("Video")]
+            onClicked: index => {
+                Svc.Wallpaper.wallpaperType = index;
+                Qt.callLater(() => wallpaperCarousel.selectCurrentWallpaper());
+            }
+        }
+
+        Carousel {
+            id: wallpaperCarousel
+
+            Layout.fillWidth: true
+            Layout.minimumHeight: 180
+            Layout.preferredHeight: 200
+            applyOnClick: true
+            closeDrawerOnEscape: false
+            controller: Svc.Wallpaper
+            thumbnailAvailability: Svc.Wallpaper.thumbnailAvailability
+            visibleWallpapers: Svc.Wallpaper.visibleWallpapers
+        }
+
+        StyledText {
+            Layout.alignment: Qt.AlignHCenter
+            color: Colours.m3Colors.m3OnSurface
+            font.pixelSize: Appearance.fonts.size.small
+            text: wallpaperCarousel.count > 0 ? (wallpaperCarousel.currentIndex + 1) + " / " + wallpaperCarousel.count : "0 / 0"
+            visible: wallpaperCarousel.count > 0
         }
     }
 

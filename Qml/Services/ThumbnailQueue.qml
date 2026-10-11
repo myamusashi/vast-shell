@@ -89,7 +89,7 @@ Singleton {
         property string thumbnailPath: ""
         property string videoPath: ""
 
-        command: ["sh", "-c", "mkdir -p \"$1\" && exec ffmpeg -ss \"$2\" -i \"$3\" -vframes 1 -q:v 2 -vf scale=256:-1 \"$4\" -y -v error", "sh", outputDirectory, seek, videoPath, thumbnailPath]
+        command: ["sh", "-c", "mkdir -p \"$1\" && exec ffmpeg -ss \"$2\" -i \"$3\" -vframes 1 -q:v 2 -vf scale=1024:-1 \"$4\" -y -v error", "sh", outputDirectory, seek, videoPath, thumbnailPath]
         onExited: function (exitCode) { // qmllint disable signal-handler-parameters
             root.finish(extractProcess.videoPath, exitCode === 0 ? extractProcess.thumbnailPath : "", extractProcess.callback);
         }
