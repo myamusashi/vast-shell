@@ -53,12 +53,12 @@
         <translation>Eropa AQI:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="213"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="219"/>
         <source>United States AQI</source>
         <translation>AQI Amerika Serikat</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="213"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="219"/>
         <source>European AQI</source>
         <translation>AQI Eropa</translation>
     </message>
@@ -497,6 +497,29 @@
     </message>
 </context>
 <context>
+    <name>BatteryStatus</name>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BatteryStatus.qml" line="31"/>
+        <source>Battery low</source>
+        <translation>Baterai lemah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BatteryStatus.qml" line="40"/>
+        <source>Battery full</source>
+        <translation>Baterai penuh</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BatteryStatus.qml" line="44"/>
+        <source>Charging started</source>
+        <translation>Pengisian daya dimulai</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BatteryStatus.qml" line="46"/>
+        <source>Charging stopped</source>
+        <translation>Pengisian daya berhenti</translation>
+    </message>
+</context>
+<context>
     <name>BlockedDevices</name>
     <message>
         <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Bluetooth/BlockedDevices.qml" line="21"/>
@@ -721,6 +744,31 @@
     </message>
 </context>
 <context>
+    <name>BluetoothStatus</name>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="22"/>
+        <source>Pairing with %1</source>
+        <translation>Memasangkan dengan %1</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="24"/>
+        <source>%1 paired</source>
+        <translation>%1 berhasil dipasangkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="26"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="63"/>
+        <source>Bluetooth connected</source>
+        <translation>Bluetooth terhubung</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="28"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="72"/>
+        <source>Bluetooth disconnected</source>
+        <translation>Bluetooth terputus</translation>
+    </message>
+</context>
+<context>
     <name>Body</name>
     <message>
         <location filename="../Qml/Modules/Polkit/Body.qml" line="51"/>
@@ -813,23 +861,23 @@
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="23"/>
         <source>Screen Recorder</source>
-        <translation type="unfinished">Perekam Layar</translation>
+        <translation>Perekam Layar</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="23"/>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="105"/>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkapan Layar</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="105"/>
         <source>Video</source>
-        <translation type="unfinished">Vidio</translation>
+        <translation>Vidio</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="154"/>
         <source>Recording</source>
-        <translation type="unfinished">Perekaman</translation>
+        <translation>Perekaman</translation>
     </message>
 </context>
 <context>
@@ -987,6 +1035,47 @@
         <translation></translation>
     </message>
     <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="49"/>
+        <source>Keep the clipboard window open after copying an entry (default: false)</source>
+        <translation>Biarkan jendela clipboard tetap terbuka setelah menyalin entri (default: false)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="60"/>
+        <source>Width of the clipboard in pixels (default: 300)</source>
+        <translation>Lebar clipboard dalam piksel (default: 300)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="61"/>
+        <source>Width:</source>
+        <translation>Lebar:</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="74"/>
+        <source>Height of the clipboard in pixels (default: 700)</source>
+        <translation>Tinggi clipboard dalam piksel (default: 700)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="105"/>
+        <source>Height:</source>
+        <translation>Tinggi:</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="88"/>
+        <source>List of clipboard entries in one page (default: 15)</source>
+        <translation>Jumlah entri clipboard dalam satu halaman (default: 15)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="89"/>
+        <source>List entries:</source>
+        <translation>Jumlah entri:</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="104"/>
+        <source>The maximum of entries to saving clipboard (default: 300)</source>
+        <translation>Jumlah maksimum entri yang disimpan di clipboard (default: 300)</translation>
+    </message>
+    <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="19"/>
         <source>Turn on clipboard manager.</source>
         <translation>Nyalakan clipboard manager.</translation>
@@ -1002,14 +1091,18 @@
         <translation>Menampilkan thumbnail previews di clipboard</translation>
     </message>
     <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="39"/>
+        <source>Use Vim-style navigation inside the clipboard manager (default: true)</source>
+        <translation>Gunakan navigasi bergaya Vim di dalam clipboard manager (default: true)</translation>
+    </message>
+    <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="40"/>
         <source>Enable Vim Keybinds:</source>
         <translation>Mengaktifkan Vim Keybinds:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="39"/>
         <source>Use Vim-style navigation inside the clipboard manager.</source>
-        <translation>Gunakan navigasi bergaya Vim di clipboard manager.</translation>
+        <translation type="vanished">Gunakan navigasi bergaya Vim di clipboard manager.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="50"/>
@@ -1017,34 +1110,35 @@
         <translation>Biarkan Clipboard Tetap Terbuka Setelah Menyalin:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="49"/>
         <source>Keep the clipboard window open after copying an entry.</source>
-        <translation>Tetap munculkan clipboard window ketika copy.</translation>
+        <translation type="vanished">Tetap munculkan clipboard window ketika copy.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="121"/>
         <source>Preview Dimensions</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="66"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="125"/>
+        <source>Width of the clipboard preview in pixels (default: 300)</source>
+        <translation>Lebar preview clipboard dalam piksel (default: 300)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="126"/>
         <source>Preview Width:</source>
         <translation>Lebar preview:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="65"/>
         <source>Width of the clipboard preview in pixels.</source>
-        <translation>Panjang dari preview clipboard dalam piksel.</translation>
+        <translation type="vanished">Panjang dari preview clipboard dalam piksel.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="80"/>
         <source>Preview Height:</source>
-        <translation>Tinggi preview:</translation>
+        <translation type="vanished">Tinggi preview:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="79"/>
         <source>Height of the clipboard preview in pixels.</source>
-        <translation>Panjang dari clipboard preview dalam piksel.</translation>
+        <translation type="vanished">Panjang dari clipboard preview dalam piksel.</translation>
     </message>
 </context>
 <context>
@@ -1312,17 +1406,17 @@
         <translation>%1j lalu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="138"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="143"/>
         <source>Image</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="138"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="143"/>
         <source>Files (%1)</source>
         <translation>Files (%1)</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="138"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="143"/>
         <source>(empty)</source>
         <translation>(Kosong)</translation>
     </message>
@@ -2418,12 +2512,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>GlobalStates</name>
     <message>
-        <location filename="../Qml/Core/States/GlobalStates.qml" line="77"/>
+        <location filename="../Qml/Core/States/GlobalStates.qml" line="84"/>
         <source>Drag and drop is active. Drop files onto the island to share them.</source>
         <translation>Fitur drag and drop sedang aktif. Letakkan berkas di atas drag and drop untuk membagikannya.</translation>
     </message>
     <message>
-        <location filename="../Qml/Core/States/GlobalStates.qml" line="77"/>
+        <location filename="../Qml/Core/States/GlobalStates.qml" line="84"/>
         <source>Drag and Drop</source>
         <translation></translation>
     </message>
@@ -3287,6 +3381,30 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>NetworkStatus</name>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/NetworkStatus.qml" line="31"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/NetworkStatus.qml" line="89"/>
+        <source>WiFi connected</source>
+        <translation>WiFi terhubung</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/NetworkStatus.qml" line="56"/>
+        <source>WiFi disconnected</source>
+        <translation>WiFi terputus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/NetworkStatus.qml" line="62"/>
+        <source>Ethernet connected</source>
+        <translation>Ethernet terhubung</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/Status/NetworkStatus.qml" line="64"/>
+        <source>Ethernet disconnected</source>
+        <translation>Ethernet terputus</translation>
+    </message>
+</context>
+<context>
     <name>NotificationPage</name>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/NotificationPage.qml" line="10"/>
@@ -3444,14 +3562,14 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PageActions</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageActions.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageActions.qml" line="43"/>
         <source>Capture</source>
-        <translation type="unfinished">Menangkap</translation>
+        <translation>Menangkap</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageActions.qml" line="94"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageActions.qml" line="99"/>
         <source>Captures</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkapan</translation>
     </message>
 </context>
 <context>
@@ -3480,14 +3598,14 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>PageCaptures</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageCaptures.qml" line="52"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageCaptures.qml" line="50"/>
         <source>Captures</source>
-        <translation type="unfinished"></translation>
+        <translation>Tangkapan</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageCaptures.qml" line="153"/>
+        <location filename="../Qml/Modules/Drawers/CaptureScreen/Screenshot/PageCaptures.qml" line="151"/>
         <source>No captures yet</source>
-        <translation type="unfinished">Belum ada tangkapan</translation>
+        <translation>Belum ada tangkapan</translation>
     </message>
 </context>
 <context>
@@ -3957,42 +4075,42 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Preview</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="148"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="149"/>
         <source>Select an entry to preview</source>
         <translation>Pilih entri untuk pratinjau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="176"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="177"/>
         <source>Couldn&apos;t load preview</source>
         <translation>Tidak dapat memuat pratinjau</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="183"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="184"/>
         <source>Retry</source>
         <translation>Ngulang</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="224"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="225"/>
         <source>Image</source>
         <translation>Gambar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="224"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="225"/>
         <source>Text</source>
         <translation>Teks</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="285"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="286"/>
         <source>Copy</source>
         <translation>Salin</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="351"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="352"/>
         <source>Preview truncated (%1 of %2 shown) — copy to get the full content</source>
         <translation>Pratinjau terpotong (%1 dari %2 ditampilkan) — salin untuk melihat konten lengkapnya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="408"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="409"/>
         <source>Loading…</source>
         <translation>Memuat...</translation>
     </message>
@@ -4155,6 +4273,43 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="45"/>
         <source>Free</source>
         <translation>Kosong</translation>
+    </message>
+</context>
+<context>
+    <name>ReceivedContent</name>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivedContent.qml" line="22"/>
+        <source>%1% of %2</source>
+        <translation>%1%% dari %2</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivedContent.qml" line="25"/>
+        <source>from %1</source>
+        <translation>dari %1</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivedContent.qml" line="29"/>
+        <source>Transfer ended at %1%</source>
+        <translation>Transfer berhenti pada %1%</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivedContent.qml" line="31"/>
+        <source>Received</source>
+        <translation>Diterima</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivedContent.qml" line="32"/>
+        <source>Received %1</source>
+        <translation>Diterima %1</translation>
+    </message>
+</context>
+<context>
+    <name>ReceivingContent</name>
+    <message>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivingContent.qml" line="18"/>
+        <location filename="../Qml/Modules/DynamicIslandHost/KDEConnect/ReceivingContent.qml" line="28"/>
+        <source>%1 %2% of %3</source>
+        <translation>%1 %2%% dari %3</translation>
     </message>
 </context>
 <context>
@@ -4384,12 +4539,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>StyledTextInput</name>
     <message>
-        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="165"/>
+        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="171"/>
         <source>Password invalid</source>
         <translation>Password tidak valid</translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="165"/>
+        <location filename="../Qml/Components/Base/StyledTextInput.qml" line="171"/>
         <source>Enter password</source>
         <translation>Masukkan password</translation>
     </message>
@@ -4481,7 +4636,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation type="vanished">Ekstrim</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="41"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="44"/>
         <source>UV index</source>
         <translation>UV Index</translation>
     </message>
