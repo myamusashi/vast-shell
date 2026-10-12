@@ -1,6 +1,6 @@
 <h1 align="center">vast-shell</h1>
 
-[![Preview]()](https://github.com/user-attachments/assets/13b0c961-3925-4516-b57b-89ae0f8361d0)
+https://github.com/user-attachments/assets/4afcea46-d833-41de-84cd-04570b14e8dd
 
 ## Pages
 
