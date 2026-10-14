@@ -47,7 +47,7 @@ vastctl brightness set -5%
 | (global) | `--json` | `false` | Print raw JSON instead of the rendered tree. |
 | `daemon start` | `-v`, `--verbose` | `false` | Stream quickshell output to the terminal. |
 | `daemon` | `-f`, `--foreground` | `false` | Run the supervisor in the foreground. |
-| `daemon` | `--config` | `$VAST_SHELL_DIRECTORY` (from `$VAST_SHELL_DEV_DIRECTORY`) | Config directory to run. Honoured only when starting a daemon, never by IPC commands. |
+| `daemon` | `--config` | `$VAST_SHELL_DEV_DIRECTORY`, else the installed config | Config directory to run. Honoured only when starting a daemon, never by IPC commands. |
 | `log` | `-n`, `--lines` | `20` | Number of trailing lines to print. |
 | `log` | `--no-follow` | `false` | Print the tail once and exit instead of following. |
 | `toast open` | `-H`, `--header` | `vast-shell` | Toast header. |
@@ -87,11 +87,11 @@ process won the race.
 environment variable cannot redirect a call to a shell that isn't
 running.
 
-The packaged `vastctl` derives `VAST_SHELL_DIRECTORY` itself, from
-`VAST_SHELL_DEV_DIRECTORY` when that is set and from its own install
-otherwise, so an ambient value cannot redirect the installed shell. The
-variable you set is `VAST_SHELL_DEV_DIRECTORY`; `VAST_SHELL_DIRECTORY`
-is what the wrapper exports for the process tree.
+The package wrappers set `VAST_SHELL_DIRECTORY` themselves, so an
+ambient value cannot redirect the installed shell. A development
+checkout does not set that variable; it sets
+`VAST_SHELL_DEV_DIRECTORY`, which `vastctl` honours when it decides what
+to start and which then beats the wrapper value.
 
 ### Running two shells on purpose
 
@@ -124,12 +124,12 @@ is the quickest way to confirm which instance a command will reach.
 
 The repo's `.envrc` exports `VAST_SHELL_DEV_DIRECTORY="$PWD"`, so with
 direnv enabled, `vastctl daemon start` inside the repo starts the
-development checkout. Every binary the package wraps (`vastctl`, `qs`,
-`quickshell`) exports that as `VAST_SHELL_DIRECTORY` at launch, so the
-shell vastctl starts agrees with the one you launched. An ambient
-`VAST_SHELL_DIRECTORY` is ignored by the packaged wrappers, which is what
-keeps a rebuilt system from launching the previous generation's store
-path.
+development checkout. Only `vastctl` reads the dev variable, so a dev
+shell is started through it (`vastctl daemon start`, or `vastctl daemon
+run` in the foreground) rather than by running `qs` directly — `qs` runs
+the installed config. An ambient `VAST_SHELL_DIRECTORY` is ignored by the
+packaged wrappers, which is what keeps a rebuilt system from launching
+the previous generation's store path.
 
 ### Shell completions
 

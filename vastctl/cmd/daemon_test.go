@@ -22,6 +22,7 @@ func daemonRuntime(t *testing.T, instanceID string) {
 	t.Setenv("XDG_RUNTIME_DIR", t.TempDir())
 	t.Setenv("VAST_INSTANCE", "")
 	t.Setenv("VAST_SHELL_DIRECTORY", "")
+	t.Setenv("VAST_SHELL_DEV_DIRECTORY", "")
 	if instanceID == "" {
 		return
 	}
@@ -147,12 +148,8 @@ func TestDaemonStatusNamesTheNamespace(t *testing.T) {
 	}
 }
 
-// TestDaemonStatusNamesTheDirectoryAStartWouldUse pins the rebuild case. A
-// shell opened before `nixos-rebuild switch` can still name the previous
-// generation's VAST_SHELL_DIRECTORY, and a start follows the install beside
-// this binary instead. `daemon status` is where a user looks to find out
-// which shell they are running, so it has to print both the directory a
-// start would use and the one that was passed over.
+// TestDaemonStatusNamesTheDirectoryAStartWouldUse pins that status names
+// the directory a start would use and the one it passed over.
 func TestDaemonStatusNamesTheDirectoryAStartWouldUse(t *testing.T) {
 	daemonRuntime(t, "")
 
@@ -178,8 +175,7 @@ func TestDaemonStatusNamesTheDirectoryAStartWouldUse(t *testing.T) {
 	}
 }
 
-// shellCheckout builds a vast-shell root holding the Qml/shell.qml layout
-// the installed package uses, and returns the root.
+// shellCheckout builds a vast-shell root in the installed Qml/ layout.
 func shellCheckout(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()

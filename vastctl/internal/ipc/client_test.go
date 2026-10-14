@@ -11,6 +11,9 @@ import (
 // resolves to a shell.qml sitting directly in the chosen directory, so
 // pointing at a parent that only holds shell.qml in a subdirectory is a
 // routing bug that surfaces as "Could not open config file".
+//
+// No t.Parallel here: these cases drive VAST_SHELL_DIRECTORY, and
+// t.Setenv panics when combined with it.
 func TestShellDirectory(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -80,12 +83,29 @@ func TestShellDirectory(t *testing.T) {
 	}
 }
 
-// TestShellDirectoryPrefersItsOwnInstall covers the rebuild case. A shell
-// opened before `nixos-rebuild switch` can still carry the previous
-// generation's VAST_SHELL_DIRECTORY; following it starts the vast-shell
-// that was just replaced. The directory installed beside this binary has
-// to win, and the passed-over value has to be reported so a start can say
-// which shell it launched.
+// TestShellDirectoryPrefersTheDevOverride pins the explicit opt-in: a dev
+// directory beats the wrapper value and the install, and nothing is ignored.
+func TestShellDirectoryPrefersTheDevOverride(t *testing.T) {
+	installed := t.TempDir()
+	writeShellQml(t, filepath.Join(installed, "Qml", "shell.qml"))
+	stubInstall(t, installed)
+
+	checkout := t.TempDir()
+	writeShellQml(t, filepath.Join(checkout, "Qml", "shell.qml"))
+
+	t.Setenv("VAST_SHELL_DIRECTORY", installed)
+	t.Setenv("VAST_SHELL_DEV_DIRECTORY", checkout)
+
+	if got, want := ShellDirectory(), filepath.Join(checkout, "Qml"); got != want {
+		t.Fatalf("ShellDirectory() = %q, want the dev checkout %q", got, want)
+	}
+	if got := IgnoredShellDirectory(); got != "" {
+		t.Fatalf("IgnoredShellDirectory() = %q, want none: a dev directory is explicit", got)
+	}
+}
+
+// TestShellDirectoryPrefersItsOwnInstall covers the rebuild case: a shell
+// opened before it still carries the previous generation's path.
 func TestShellDirectoryPrefersItsOwnInstall(t *testing.T) {
 	stale := t.TempDir()
 	writeShellQml(t, filepath.Join(stale, "Qml", "shell.qml"))
@@ -121,8 +141,7 @@ func TestShellDirectoryKeepsAnEnvironmentMatchingTheInstall(t *testing.T) {
 }
 
 // TestShellDirectoryKeepsTheEnvironmentWithoutAnInstall pins that a dev
-// build is not part of an install, so a checkout named by the environment
-// is still what gets started.
+// build, being no install, lets the environment choose.
 func TestShellDirectoryKeepsTheEnvironmentWithoutAnInstall(t *testing.T) {
 	checkout := t.TempDir()
 	writeShellQml(t, filepath.Join(checkout, "Qml", "shell.qml"))
@@ -137,9 +156,8 @@ func TestShellDirectoryKeepsTheEnvironmentWithoutAnInstall(t *testing.T) {
 	}
 }
 
-// stubInstall points the install lookup at a directory, standing in for a
-// <prefix>/share/quickshell that exists next to the vastctl binary. An
-// empty root stands for a binary that is not part of an install.
+// stubInstall stands in for a <prefix>/share/quickshell beside the binary;
+// an empty root stands for a binary outside an install.
 func stubInstall(t *testing.T, root string) {
 	t.Helper()
 	previous := InstallConfigDir

@@ -11,8 +11,12 @@ import (
 	"github.com/myamusashi/vast-shell/vastctl/internal/daemon"
 )
 
+// LogFilePath is where background shell output is forwarded. It is a var
+// so tests can redirect the log without touching the real file.
 var LogFilePath = "/tmp/vast-shell.log"
 
+// LogFile opens the background log file for appending, creating it if
+// needed. Returns nil if the file cannot be opened.
 func LogFile() *os.File {
 	f, err := os.OpenFile(LogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600)
 	if err != nil {
@@ -21,9 +25,19 @@ func LogFile() *os.File {
 	return f
 }
 
+// InstallConfigDir is the vast-shell installed next to this binary, or ""
+// when this binary is not part of an install. A var for the tests.
 var InstallConfigDir = ownConfigDir
 
+// ShellDirectory returns the config directory a started daemon runs from.
+// IPC calls ignore it on purpose: a stray variable must not redirect a
+// client to a shell that is not running. The dev directory wins, then the
+// install beside this binary, then VAST_SHELL_DIRECTORY -- after a rebuild a
+// session can still carry the previous generation's path.
 func ShellDirectory() string {
+	if dev := ConfigDir(os.Getenv("VAST_SHELL_DEV_DIRECTORY")); dev != "" {
+		return dev
+	}
 	env := ConfigDir(os.Getenv("VAST_SHELL_DIRECTORY"))
 	if own := InstallConfigDir(); own != "" && env != own {
 		return own
@@ -31,7 +45,13 @@ func ShellDirectory() string {
 	return env
 }
 
+// IgnoredShellDirectory reports the VAST_SHELL_DIRECTORY value
+// ShellDirectory() passed over, so a start can say which one it launched.
+// A dev directory replaces it deliberately and reports nothing.
 func IgnoredShellDirectory() string {
+	if ConfigDir(os.Getenv("VAST_SHELL_DEV_DIRECTORY")) != "" {
+		return ""
+	}
 	env := ConfigDir(os.Getenv("VAST_SHELL_DIRECTORY"))
 	own := InstallConfigDir()
 	if own == "" || env == "" || env == own {
@@ -40,6 +60,8 @@ func IgnoredShellDirectory() string {
 	return env
 }
 
+// ownConfigDir is the share/quickshell directory beside this binary:
+// <prefix>/bin/vastctl next to <prefix>/share/quickshell.
 func ownConfigDir() string {
 	exe, err := os.Executable()
 	if err != nil {
@@ -56,10 +78,18 @@ func ownConfigDir() string {
 	return ConfigDir(root)
 }
 
+// hasEntryPoint reports whether root holds a shell.qml quickshell can run.
 func hasEntryPoint(root string) bool {
 	return isFile(filepath.Join(root, "shell.qml")) || isFile(filepath.Join(root, "Qml", "shell.qml"))
 }
 
+// ConfigDir resolves a vast-shell root to the directory that holds
+// shell.qml, or "" for an empty root. A user names a checkout by its
+// root, so the entry point has to be located rather than assumed: it may
+// sit directly in the root or in a Qml/ subdirectory, and quickshell
+// resolves a config selector to a shell.qml sitting directly in the
+// chosen directory. Pointing -p at the wrong one yields "Could not open
+// config file".
 func ConfigDir(root string) string {
 	if root == "" {
 		return ""
@@ -71,6 +101,8 @@ func ConfigDir(root string) string {
 	return filepath.Join(root, "Qml")
 }
 
+// ShellBinArgs returns the binary and arguments that select the config
+// ShellDirectory resolved, falling back to the installed "shell" wrapper.
 func ShellBinArgs() (string, []string) {
 	if dir := ShellDirectory(); dir != "" {
 		return "quickshell", []string{"-p", dir}
@@ -78,6 +110,9 @@ func ShellBinArgs() (string, []string) {
 	return "quickshell", nil
 }
 
+// canonical resolves dir to an absolute path with symlinks expanded.
+// quickshell matches IPC instances by literal config path, so the path
+// handed to it has to be spelled exactly the way the shell is launched.
 func canonical(dir string) string {
 	abs, err := filepath.Abs(dir)
 	if err != nil {

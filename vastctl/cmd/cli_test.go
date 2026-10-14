@@ -76,6 +76,7 @@ func TestMain(m *testing.M) {
 	// developer's real -p argument, and an inherited SHIM_* variable
 	// would let a value leak from one test into the next.
 	setenv("VAST_SHELL_DIRECTORY", "")
+	setenv("VAST_SHELL_DEV_DIRECTORY", "")
 	for _, k := range []string{
 		"SHIM_LOG", "SHIM_OUT", "SHIM_ERR", "SHIM_CODE",
 		"SHIM_KILL_LOG",

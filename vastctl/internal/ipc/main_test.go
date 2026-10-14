@@ -37,9 +37,10 @@ func TestMain(m *testing.M) {
 	}
 	shimDir = dir
 	setenv("PATH", dir+string(os.PathListSeparator)+os.Getenv("PATH"))
-	// An inherited VAST_SHELL_DIRECTORY would let a developer's real
-	// config leak into assertions about what a client resolves.
+	// An inherited directory variable would leak the developer's real
+	// config into assertions about what a client resolves.
 	setenv("VAST_SHELL_DIRECTORY", "")
+	setenv("VAST_SHELL_DEV_DIRECTORY", "")
 
 	code := m.Run()
 

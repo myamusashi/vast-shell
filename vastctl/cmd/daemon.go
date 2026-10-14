@@ -88,9 +88,8 @@ var daemonRestartCmd = &cobra.Command{
 	},
 }
 
-// A shell opened before a rebuild still exports the previous
-// generation's store path, so starting the daemon has to say that the path
-// it ignored was not what got launched.
+// staleShellNotice explains a VAST_SHELL_DIRECTORY that resolveShell passed
+// over, so a start says which path it actually launched.
 func staleShellNotice() string {
 	ignored := ipc.IgnoredShellDirectory()
 	if ignored == "" {
