@@ -11,7 +11,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-WrapperRectangle {
+ClippingWrapperRectangle {
     id: root
 
     required property var device
@@ -19,7 +19,7 @@ WrapperRectangle {
     property bool         showBlockAction: false
     property bool         showForgetAction: false
     property bool         showPairActions: false
-    property color        target: root.device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+    property color        target: device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
 
     signal                blockToggled
     signal                forgetAction
@@ -29,7 +29,7 @@ WrapperRectangle {
     Layout.alignment: Qt.AlignVCenter
     Layout.fillWidth: true
     border.color: Colours.m3Colors.m3OutlineVariant
-    border.width: root.device?.connected ? 1 : 0
+    border.width: device?.connected ? 1 : 0
     color: "transparent"
     margin: Appearance.margin.small
     radius: Appearance.rounding.large

@@ -12,7 +12,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-WrapperRectangle {
+ClippingWrapperRectangle {
     id: root
 
     required property var network
