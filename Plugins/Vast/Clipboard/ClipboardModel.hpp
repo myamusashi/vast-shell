@@ -48,6 +48,7 @@ namespace vast {
         [[nodiscard]] QHash<int, QByteArray>       roleNames() const override;
         [[nodiscard]] const QList<ClipboardEntry>& allEntries() const noexcept;
 
+        [[nodiscard]] bool                         contains(qint64 id) const;
         void                                       reset(QList<ClipboardEntry> entries);
         void                                       prepend(const ClipboardEntry& entry);
         void                                       removeById(qint64 id);

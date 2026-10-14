@@ -66,7 +66,9 @@ class TestClipboardManager : public QObject {
     void copyToClipboardMovesEntryToTop();
     void copyToClipboardDebouncesRepeatCalls();
     void copyToClipboardUnknownIdFails();
-    void removeUpdatesModelImmediatelyAndDatabaseAfterEventLoop();
+    void removeUpdatesModelAndDatabaseImmediately();
+    void removeWhileFilteredDropsTheRowImmediately();
+    void removeManyWhileFilteredDropsEverySelectedRowImmediately();
     void removeManySkipsPinnedAndReturnsCount();
     void pinPersistsToDatabase();
     void clearUnpinnedKeepsPinned();
@@ -199,7 +201,7 @@ void TestClipboardManager::copyToClipboardUnknownIdFails() {
     QVERIFY(!mManager->copyToClipboard(999999));
 }
 
-void TestClipboardManager::removeUpdatesModelImmediatelyAndDatabaseAfterEventLoop() {
+void TestClipboardManager::removeUpdatesModelAndDatabaseImmediately() {
     const SSeeded ids = seedThreeUnpinned();
     QVERIFY2(ids.a > 0 && ids.b > 0 && ids.c > 0, "seeding failed");
 
@@ -207,24 +209,85 @@ void TestClipboardManager::removeUpdatesModelImmediatelyAndDatabaseAfterEventLoo
     QVERIFY(mManager->initialize(dbPath()));
     QCOMPARE(mManager->model()->rowCount(), 3);
 
+    // The DELETE runs before remove() returns: a reload triggered in between
+    // would read the row back and put the entry back on screen.
     mManager->remove(ids.b);
     QCOMPARE(mManager->model()->rowCount(), 2);
-
-    // remove() defers the DELETE through QTimer::singleShot(0), so poll the
-    // database itself rather than the model.
-    QVERIFY(spinUntil([this, ids] {
-        vast::ClipboardDatabase db;
-        if (!db.open(dbPath()).has_value())
-            return false;
-        const bool gone = !db.fetchById(ids.b).has_value();
-        db.close();
-        return gone;
-    }));
 
     vast::ClipboardDatabase db;
     QVERIFY(db.open(dbPath()).has_value());
     QVERIFY(!db.fetchById(ids.b).has_value());
     QVERIFY(db.fetchById(ids.a).has_value());
+    db.close();
+}
+
+// The drawer deletes a single row straight from the filtered list, so the row
+// has to disappear from both the filtered model and the database in the same
+// call. A removal that only touched the filtered view without a model reset
+// left the row painted until the drawer was reopened.
+void TestClipboardManager::removeWhileFilteredDropsTheRowImmediately() {
+    vast::ClipboardDatabase db;
+    QVERIFY(db.open(dbPath()).has_value());
+    const qint64 needle = seed(db, QStringLiteral("alpha needle"), 1000);
+    seed(db, QStringLiteral("beta haystack"), 2000);
+    seed(db, QStringLiteral("gamma haystack"), 3000);
+    db.close();
+
+    mManager = std::make_unique<vast::ClipboardManager>();
+    QVERIFY(mManager->initialize(dbPath()));
+
+    mManager->model()->setFilter(QStringLiteral("needle"));
+    QCOMPARE(mManager->model()->rowCount(), 1);
+    QCOMPARE(mManager->model()->idAtRow(0), needle);
+
+    mManager->remove(needle);
+    QCOMPARE(mManager->model()->rowCount(), 0);
+    QVERIFY(!mManager->model()->contains(needle));
+
+    QVERIFY(db.open(dbPath()).has_value());
+    QVERIFY2(!db.fetchById(needle).has_value(), "the row must be deleted before remove() returns");
+    db.close();
+}
+
+// Visual mode collects the ids it covers with idAtRow and hands them to
+// removeMany; every one of them has to leave the filtered list at once, and
+// rows the selection did not cover must survive.
+void TestClipboardManager::removeManyWhileFilteredDropsEverySelectedRowImmediately() {
+    vast::ClipboardDatabase db;
+    QVERIFY(db.open(dbPath()).has_value());
+    const qint64 first  = seed(db, QStringLiteral("first needle"), 1000);
+    const qint64 second = seed(db, QStringLiteral("second needle"), 2000);
+    const qint64 third  = seed(db, QStringLiteral("third needle"), 3000);
+    seed(db, QStringLiteral("unrelated haystack"), 4000);
+    db.close();
+
+    mManager = std::make_unique<vast::ClipboardManager>();
+    QVERIFY(mManager->initialize(dbPath()));
+
+    mManager->model()->setFilter(QStringLiteral("needle"));
+    QCOMPARE(mManager->model()->rowCount(), 3);
+
+    QVariantList selection;
+    for (int row = 0; row < mManager->model()->rowCount(); ++row) {
+        const qint64 id = mManager->model()->idAtRow(row);
+        if (id != third)
+            selection.append(id);
+    }
+    QCOMPARE(selection.size(), 2);
+
+    QCOMPARE(mManager->removeMany(selection), 2);
+    QCOMPARE(mManager->model()->rowCount(), 1);
+    QCOMPARE(mManager->model()->idAtRow(0), third);
+    QVERIFY(!mManager->model()->contains(first));
+    QVERIFY(!mManager->model()->contains(second));
+
+    mManager->model()->setFilter(QString());
+    QCOMPARE(mManager->model()->rowCount(), 2);
+
+    QVERIFY(db.open(dbPath()).has_value());
+    QVERIFY2(!db.fetchById(first).has_value(), "every selected row must be deleted before removeMany() returns");
+    QVERIFY(!db.fetchById(second).has_value());
+    QVERIFY(db.fetchById(third).has_value());
     db.close();
 }
 

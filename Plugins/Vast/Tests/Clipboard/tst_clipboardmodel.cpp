@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <qabstractitemmodel.h>
 #include <qlist.h>
 #include <qsignalspy.h>
@@ -47,6 +49,7 @@ class TestClipboardModel : public QObject {
     void prependExistingIdUpdatesTimestampInPlace();
     void removeByIdRemovesOnlyThatRow();
     void removeByIdsRemovesTheGivenSet();
+    void filteredMutationsResetTheModel();
     void setPinByIdResortsPinnedFirst();
     void setFilterNarrowsToFuzzyMatches();
     void setFilterPutsPinnedFirstAmongMatches();
@@ -175,6 +178,34 @@ void TestClipboardModel::removeByIdsRemovesTheGivenSet() {
 
     model.removeByIds({});
     QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+}
+
+// Regression guard: a mutation of the filtered rows has to reset the model.
+// ClipboardModel mutated mEntries and rebuilt the filter without bracketing it
+// in beginResetModel/endResetModel, so the GridView bound to it kept painting
+// rows that were already deleted, and pinning never re-sorted a filtered list.
+void TestClipboardModel::filteredMutationsResetTheModel() {
+    vast::ClipboardModel model;
+    model.reset({entry(1, QStringLiteral("alpha"), 3000), entry(2, QStringLiteral("beta"), 2000), entry(3, QStringLiteral("alpine"), 1000)});
+
+    model.setFilter(QStringLiteral("alp"));
+
+    QList<qint64> shown = visibleIds(model);
+    std::sort(shown.begin(), shown.end());
+    QCOMPARE(shown, (QList<qint64>{1, 3}));
+
+    QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
+
+    model.setPinById(3, true);
+    QVERIFY2(resetSpy.count() >= 1, "pinning while filtered must reset the model");
+
+    model.removeById(3);
+    QCOMPARE(visibleIds(model), (QList<qint64>{1}));
+    QVERIFY2(resetSpy.count() >= 2, "removing a filtered row must reset the model");
+
+    model.removeByIds({1});
+    QCOMPARE(visibleIds(model), QList<qint64>{});
+    QVERIFY2(resetSpy.count() >= 3, "removing filtered rows must reset the model");
 }
 
 void TestClipboardModel::setPinByIdResortsPinnedFirst() {

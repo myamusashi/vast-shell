@@ -150,8 +150,10 @@ namespace vast {
             return;
 
         if (mFiltering) {
+            beginResetModel();
             mEntries.removeAt(idx);
             rebuildFilter();
+            endResetModel();
             Q_EMIT countChanged();
         } else {
             beginRemoveRows({}, idx, idx);
@@ -171,8 +173,10 @@ namespace vast {
             toRemove.insert(v.toLongLong());
 
         if (mFiltering) {
+            beginResetModel();
             mEntries.removeIf([&](const ClipboardEntry& e) { return toRemove.contains(e.id); });
             rebuildFilter();
+            endResetModel();
         } else {
             mEntries.removeIf([&](const ClipboardEntry& e) { return toRemove.contains(e.id); });
             beginResetModel();
@@ -194,9 +198,11 @@ namespace vast {
             return a.timestamp > b.timestamp;
         });
 
-        if (mFiltering)
+        if (mFiltering) {
+            beginResetModel();
             rebuildFilter();
-        else {
+            endResetModel();
+        } else {
             beginResetModel();
             endResetModel();
         }
@@ -263,6 +269,10 @@ namespace vast {
 
     const QList<ClipboardEntry>& ClipboardModel::allEntries() const noexcept {
         return mEntries;
+    }
+
+    bool ClipboardModel::contains(qint64 id) const {
+        return indexById(id) >= 0;
     }
 
     void ClipboardModel::rebuildFilter() {

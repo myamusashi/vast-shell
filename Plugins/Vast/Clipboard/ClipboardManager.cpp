@@ -338,17 +338,13 @@ namespace vast {
         if (count == 0)
             return 0;
 
+        if (auto r = mDatabase->removeMany(unpinned); !r)
+            qWarning() << "[ClipboardManager] removeMany failed:" << r.error();
+
         mModel->removeByIds(QVariantList(unpinned.begin(), unpinned.end()));
 
         for (qint64 const id : unpinned)
             ClipboardPreviewCache::remove(id);
-
-        QTimer::singleShot(0, this, [this, unpinned = std::move(unpinned)]() {
-            if (!mDatabase)
-                return;
-            if (auto r = mDatabase->removeMany(unpinned); !r)
-                qWarning() << "[ClipboardManager] removeMany failed:" << r.error();
-        });
 
         return count;
     }
@@ -365,16 +361,14 @@ namespace vast {
     }
 
     void ClipboardManager::remove(qint64 id) {
+        if (mDatabase)
+            if (auto r = mDatabase->remove(id); !r)
+                qWarning() << "[ClipboardManager] remove failed:" << r.error();
+
         if (mModel)
             mModel->removeById(id);
 
         ClipboardPreviewCache::remove(id);
-
-        QTimer::singleShot(0, this, [this, id]() {
-            if (mDatabase)
-                if (auto r = mDatabase->remove(id); !r)
-                    qWarning() << "[ClipboardManager] remove failed:" << r.error();
-        });
     }
 
     [[nodiscard]] bool ClipboardManager::clearUnpinned() {
@@ -412,6 +406,10 @@ namespace vast {
 
         QTimer::singleShot(0, this, [this, id]() {
             if (!mDatabase) {
+                Q_EMIT fullEntryFailed(id);
+                return;
+            }
+            if (mModel && !mModel->contains(id)) {
                 Q_EMIT fullEntryFailed(id);
                 return;
             }
