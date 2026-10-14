@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 
+import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -87,11 +88,9 @@ ListView {
     orientation: ListView.Horizontal
     spacing: Appearance.spacing.small
 
-    NumberAnimation {
+    NAnim {
         id: centerAnimation
 
-        easing.bezierCurve: Appearance.animations.curves.standard
-        easing.type: Easing.BezierSpline
         property: "contentX"
         target: root
     }
