@@ -184,13 +184,18 @@ ColumnLayout {
     Timer {
         id: focusRestore
 
-        property int attempts: 0
+        property int           attempts: 0
+
+        readonly property bool settled: {
+            const win = root.Window.window;
+            return (!win || win.active) && !!root.defaultFocusItem && root.defaultFocusItem.activeFocus;
+        }
 
         interval: 30
         repeat: true
         onTriggered: {
             root.focusDefault();
-            if (root.defaultFocusItem.activeFocus || ++focusRestore.attempts >= 10)
+            if (focusRestore.settled || ++focusRestore.attempts >= 20)
                 focusRestore.running = false;
         }
     }

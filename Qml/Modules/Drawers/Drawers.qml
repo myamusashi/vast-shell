@@ -45,8 +45,17 @@ Variants {
             return false;
         }
 
+        property bool                 yieldKeyboardFocus: false
+
+        function                      reclaimKeyboardFocus(): void {
+            window.yieldKeyboardFocus = true;
+            Qt.callLater(() => {
+                window.yieldKeyboardFocus = false;
+            });
+        }
+
         HyprlandWindow.visibleMask: window.mask // qmllint disable
-        WlrLayershell.keyboardFocus: needFocusKeyboard ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: needFocusKeyboard && !yieldKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.namespace: "shell:drawers"
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore

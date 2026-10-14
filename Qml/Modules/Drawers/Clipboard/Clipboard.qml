@@ -59,6 +59,10 @@ WrapperRectangle {
         cancelText: qsTr("Cancel")
         confirmText: qsTr("Delete")
         title: qsTr("Clipboard")
+        onActiveChanged: {
+            if (!active && GlobalStates.isClipboardOpen)
+                window.reclaimKeyboardFocus(); // qmllint disable
+        }
         onAccepted: ClipboardServices.uiState.confirmDelete()
         onRejected: ClipboardServices.uiState.cancelDelete()
     }
