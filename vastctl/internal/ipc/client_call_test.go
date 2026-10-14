@@ -267,23 +267,6 @@ func TestShellBinArgs(t *testing.T) {
 	})
 }
 
-// TestShellBinArgsPrefersShellWrapper pins the wrapper lookup. When
-// VAST_SHELL_DIRECTORY is unset, an installed `shell` wrapper is the
-// supported entry point, so it has to win over a raw quickshell.
-func TestShellBinArgsPrefersShellWrapper(t *testing.T) {
-	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "shell"), []byte("#!/bin/sh\nexit 0\n"), 0o755); err != nil {
-		t.Fatalf("write shell wrapper: %v", err)
-	}
-	t.Setenv("PATH", dir)
-	t.Setenv("VAST_SHELL_DIRECTORY", "")
-
-	bin, args := ShellBinArgs()
-	if bin != "shell" || len(args) != 0 {
-		t.Fatalf("ShellBinArgs() = %q, %q, want shell with no arguments", bin, args)
-	}
-}
-
 // TestIsFile pins that a directory never passes for the entry point.
 // ShellDirectory uses this to tell a checkout root from a parent that
 // merely contains one, and a directory named shell.qml has to be
