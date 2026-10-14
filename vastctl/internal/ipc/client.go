@@ -11,12 +11,8 @@ import (
 	"github.com/myamusashi/vast-shell/vastctl/internal/daemon"
 )
 
-// LogFilePath is where background shell output is forwarded. It is a var
-// so tests can redirect the log without touching the real file.
 var LogFilePath = "/tmp/vast-shell.log"
 
-// LogFile opens the background log file for appending, creating it if
-// needed. Returns nil if the file cannot be opened.
 func LogFile() *os.File {
 	f, err := os.OpenFile(LogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o600)
 	if err != nil {
@@ -25,21 +21,45 @@ func LogFile() *os.File {
 	return f
 }
 
-// ShellDirectory returns the config directory of the checkout named by
-// VAST_SHELL_DIRECTORY, or "" when unset. It resolves the checkout for
-// *starting* a daemon; IPC calls deliberately ignore it so a stray
-// environment cannot redirect a client to a shell that is not running.
+var InstallConfigDir = ownConfigDir
+
 func ShellDirectory() string {
-	return ConfigDir(os.Getenv("VAST_SHELL_DIRECTORY"))
+	env := ConfigDir(os.Getenv("VAST_SHELL_DIRECTORY"))
+	if own := InstallConfigDir(); own != "" && env != own {
+		return own
+	}
+	return env
 }
 
-// ConfigDir resolves a vast-shell root to the directory that holds
-// shell.qml, or "" for an empty root. A user names a checkout by its
-// root, so the entry point has to be located rather than assumed: it may
-// sit directly in the root or in a Qml/ subdirectory, and quickshell
-// resolves a config selector to a shell.qml sitting directly in the
-// chosen directory. Pointing -p at the wrong one yields "Could not open
-// config file".
+func IgnoredShellDirectory() string {
+	env := ConfigDir(os.Getenv("VAST_SHELL_DIRECTORY"))
+	own := InstallConfigDir()
+	if own == "" || env == "" || env == own {
+		return ""
+	}
+	return env
+}
+
+func ownConfigDir() string {
+	exe, err := os.Executable()
+	if err != nil {
+		return ""
+	}
+	exe = canonical(exe)
+	if filepath.Base(filepath.Dir(exe)) != "bin" {
+		return ""
+	}
+	root := filepath.Join(filepath.Dir(filepath.Dir(exe)), "share", "quickshell")
+	if !hasEntryPoint(root) {
+		return ""
+	}
+	return ConfigDir(root)
+}
+
+func hasEntryPoint(root string) bool {
+	return isFile(filepath.Join(root, "shell.qml")) || isFile(filepath.Join(root, "Qml", "shell.qml"))
+}
+
 func ConfigDir(root string) string {
 	if root == "" {
 		return ""
@@ -51,22 +71,13 @@ func ConfigDir(root string) string {
 	return filepath.Join(root, "Qml")
 }
 
-// ShellBinArgs returns the binary and arguments that select the config
-// named by VAST_SHELL_DIRECTORY, falling back to the installed "shell"
-// wrapper.
 func ShellBinArgs() (string, []string) {
 	if dir := ShellDirectory(); dir != "" {
 		return "quickshell", []string{"-p", dir}
 	}
-	if _, err := exec.LookPath("shell"); err == nil {
-		return "shell", nil
-	}
 	return "quickshell", nil
 }
 
-// canonical resolves dir to an absolute path with symlinks expanded.
-// quickshell matches IPC instances by literal config path, so the path
-// handed to it has to be spelled exactly the way the shell is launched.
 func canonical(dir string) string {
 	abs, err := filepath.Abs(dir)
 	if err != nil {
@@ -83,9 +94,6 @@ func isFile(path string) bool {
 	return err == nil && !info.IsDir()
 }
 
-// ExpandEnv expands session variable references in s. The supported forms
-// are $VAR, ${VAR}, and $env.VAR — all read from the process environment.
-// Unknown variables expand to an empty string.
 func ExpandEnv(s string) string {
 	if !strings.ContainsRune(s, '$') {
 		return s
@@ -136,14 +144,6 @@ func ExpandEnv(s string) string {
 	return b.String()
 }
 
-// Call invokes `quickshell ipc --id <instance> call <target> <method>
-// [args...]` against the running daemon and returns stdout trimmed.
-//
-// It only ever connects. The target comes from the state file the daemon
-// supervisor publishes, so the call reaches whichever shell is actually
-// running regardless of the caller's working directory, environment, or
-// config path. Starting a daemon from here is what turns a path
-// mismatch into a second shell, so Call refuses instead.
 func Call(target string, method string, args ...string) (string, error) {
 	state, err := daemon.Running()
 	if err != nil {
@@ -157,12 +157,6 @@ func Call(target string, method string, args ...string) (string, error) {
 	return strings.TrimSpace(string(output)), nil
 }
 
-// ipcError turns a failed quickshell invocation into an error carrying
-// whatever diagnostics the binary produced. quickshell reports IPC
-// failures — a closed socket, an unknown instance — on stdout as often
-// as on stderr, so both streams are folded into the message. Dropping
-// stdout reduces every routing failure to a bare exit status that names
-// neither the target nor the reason.
 func ipcError(bin string, args []string, stdout []byte, err error) error {
 	invocation := strings.Join(append([]string{bin}, args...), " ")
 	details := make([]string, 0, 2)

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/myamusashi/vast-shell/vastctl/internal/daemon"
+	"github.com/myamusashi/vast-shell/vastctl/internal/ipc"
 )
 
 // daemonRuntime points the namespace at a fresh runtime directory and
@@ -144,6 +145,52 @@ func TestDaemonStatusNamesTheNamespace(t *testing.T) {
 	if !strings.Contains(out, "dev"+string(os.PathSeparator)+"state.json") {
 		t.Errorf("output = %q, want the dev state path", out)
 	}
+}
+
+// TestDaemonStatusNamesTheDirectoryAStartWouldUse pins the rebuild case. A
+// shell opened before `nixos-rebuild switch` can still name the previous
+// generation's VAST_SHELL_DIRECTORY, and a start follows the install beside
+// this binary instead. `daemon status` is where a user looks to find out
+// which shell they are running, so it has to print both the directory a
+// start would use and the one that was passed over.
+func TestDaemonStatusNamesTheDirectoryAStartWouldUse(t *testing.T) {
+	daemonRuntime(t, "")
+
+	stale := shellCheckout(t)
+	installed := shellCheckout(t)
+	previous := ipc.InstallConfigDir
+	t.Cleanup(func() { ipc.InstallConfigDir = previous })
+	ipc.InstallConfigDir = func() string { return ipc.ConfigDir(installed) }
+	t.Setenv("VAST_SHELL_DIRECTORY", stale)
+
+	res, err := runCLI(t, "daemon", "status")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	out := res.output()
+	for _, want := range []string{
+		"start dir: " + ipc.ConfigDir(installed),
+		"ignoring VAST_SHELL_DIRECTORY=" + ipc.ConfigDir(stale),
+	} {
+		if !strings.Contains(out, want) {
+			t.Errorf("output = %q, want it to contain %q", out, want)
+		}
+	}
+}
+
+// shellCheckout builds a vast-shell root holding the Qml/shell.qml layout
+// the installed package uses, and returns the root.
+func shellCheckout(t *testing.T) string {
+	t.Helper()
+	root := t.TempDir()
+	dir := filepath.Join(root, "Qml")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatalf("mkdir %s: %v", dir, err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "shell.qml"), []byte("import QtQuick\n"), 0o644); err != nil {
+		t.Fatalf("write shell.qml: %v", err)
+	}
+	return root
 }
 
 // TestDaemonStatusIgnoresStaleState pins the ghost case. A state file

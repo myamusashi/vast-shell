@@ -43,7 +43,7 @@ environment.systemPackages = [
 }
 ```
 
-The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, exports `VAST_SHELL_DIRECTORY`, and automatically installs the required fonts (`material-symbols`, `weather-icons`).
+The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, exports the shell's config directory through its wrappers, and automatically installs the required fonts (`material-symbols`, `weather-icons`).
 
 **Options** (`programs.quickshell-shell`):
 

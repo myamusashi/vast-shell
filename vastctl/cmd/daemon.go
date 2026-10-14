@@ -35,7 +35,7 @@ var daemonStartCmd = &cobra.Command{
 			return nil
 		}
 		if daemonForeground {
-			return runSupervisor(cmd, cmd.OutOrStdout(), cmd.ErrOrStderr())
+			return runSupervisor(cmd.OutOrStdout(), cmd.ErrOrStderr())
 		}
 		return spawnSupervisor(cmd)
 	},
@@ -49,7 +49,7 @@ var daemonRunCmd = &cobra.Command{
 		"and publishes the shell's identity, so this is what a service manager should\n" +
 		"exec. vastctl daemon start is the user-facing wrapper.",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return runSupervisor(cmd, cmd.OutOrStdout(), cmd.ErrOrStderr())
+		return runSupervisor(cmd.OutOrStdout(), cmd.ErrOrStderr())
 	},
 }
 
@@ -82,10 +82,21 @@ var daemonRestartCmd = &cobra.Command{
 			return err
 		}
 		if daemonForeground {
-			return runSupervisor(cmd, cmd.OutOrStdout(), cmd.ErrOrStderr())
+			return runSupervisor(cmd.OutOrStdout(), cmd.ErrOrStderr())
 		}
 		return spawnSupervisor(cmd)
 	},
+}
+
+// A shell opened before a rebuild still exports the previous
+// generation's store path, so starting the daemon has to say that the path
+// it ignored was not what got launched.
+func staleShellNotice() string {
+	ignored := ipc.IgnoredShellDirectory()
+	if ignored == "" {
+		return ""
+	}
+	return fmt.Sprintf("ignoring VAST_SHELL_DIRECTORY=%s; running the vast-shell installed next to vastctl", ignored)
 }
 
 var daemonStatusCmd = &cobra.Command{
@@ -98,6 +109,14 @@ var daemonStatusCmd = &cobra.Command{
 			return err
 		}
 		cmd.Printf("state:     %s\n", path)
+		if dir := ipc.ShellDirectory(); dir != "" {
+			cmd.Printf("start dir: %s\n", dir)
+		} else {
+			cmd.Println("start dir: (installed \"shell\" wrapper)")
+		}
+		if notice := staleShellNotice(); notice != "" {
+			cmd.Printf("note:      %s\n", notice)
+		}
 
 		state, err := daemon.Running()
 		if err != nil {
@@ -120,7 +139,7 @@ var daemonStatusCmd = &cobra.Command{
 
 // runSupervisor executes in this process, so a service manager can track
 // the shell directly.
-func runSupervisor(cmd *cobra.Command, stdout, stderr io.Writer) error {
+func runSupervisor(stdout, stderr io.Writer) error {
 	bin, args, configPath, err := resolveShell()
 	if err != nil {
 		return err
@@ -149,6 +168,9 @@ func spawnSupervisor(cmd *cobra.Command) error {
 	}
 	if err := proc.Start(); err != nil {
 		return err
+	}
+	if notice := staleShellNotice(); notice != "" {
+		cmd.Println(notice)
 	}
 	cmd.Println("vast-shell starting")
 	cmd.Println("logs: " + ipc.LogFilePath)
