@@ -2,15 +2,11 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Effects
-import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Services.SystemTray
-import Quickshell.Wayland
 import Quickshell.Widgets
 
 import qs.Components.Effects
 import qs.Components.Base
-import qs.Components.Menu
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -163,78 +159,9 @@ StyledRect {
         onTriggered: root.finishClose()
     }
 
-    LazyLoader {
-        loading: true
-        component: PanelWindow {
-            HyprlandWindow.visibleMask: mask // qmllint disable
-            WlrLayershell.layer: menuSurface.open ? WlrLayer.Top : WlrLayer.Bottom
-            WlrLayershell.namespace: "shell:drawers"
-            aboveWindows: false
-            color: "transparent"
-            exclusionMode: ExclusionMode.Ignore
-            mask: Region {
-                item: menuSurface
-            }
-
-            anchors {
-                bottom: true
-                left: true
-                right: true
-                top: true
-            }
-
-            margins { // qmllint disable
-                right: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
-            }
-
-            Connections {
-                function onActiveMenuChanged(): void {
-                    if (root.activeMenu !== null)
-                        Qt.callLater(() => menuSurface.openMenu(root.activeMenu)); // qmllint disable
-                }
-
-                target: root
-            }
-
-            Item {
-                id: panelRoot
-
-                anchors.fill: parent
-
-                Item {
-                    id: menuHost
-
-                    readonly property real maxX: panelRoot.width - menuSurface.width - root.shadowPadding
-                    readonly property real maxY: panelRoot.height - menuSurface.height - root.shadowPadding
-
-                    height: menuSurface.height + root.shadowPadding * 2
-                    width: menuSurface.width + root.shadowPadding * 2
-                    x: Math.max(root.shadowPadding, Math.min(root.menuX - root.shadowPadding - menuSurface.bodyInsetX, maxX))
-                    y: Math.min(root.barBottom - root.shadowPadding, maxY)
-                    Behavior on x {
-                        enabled: root.menuMapped
-
-                        NAnim {
-                            duration: Appearance.animations.durations.expressiveDefaultSpatial
-                            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                        }
-                    }
-
-                    TrayMenuStack {
-                        id: menuSurface
-
-                        open: root.menuShowing
-                        x: root.shadowPadding
-                        y: root.shadowPadding
-                        onEntered: {
-                            closeTimer.stop();
-                            hideTimer.stop();
-                        }
-                        onEntryActivated: root.closeMenu()
-                        onExited: root.scheduleClose()
-                    }
-                }
-            }
-        }
+    TrayPanel {
+        trayRoot: root
+        closeTimer: closeTimer
+        hideTimer: hideTimer
     }
 }
