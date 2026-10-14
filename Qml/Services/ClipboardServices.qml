@@ -61,6 +61,11 @@ Singleton {
         function               cancelDelete(): void {
             pendingDeleteIds = [];
         }
+        function               clearTransientState(): void {
+            visualActive = false;
+            if (ClipboardManager.model)
+                ClipboardManager.model.setFilter("");
+        }
         function               confirmDelete(): void {
             const ids        = pendingDeleteIds;
             pendingDeleteIds = [];
@@ -76,11 +81,7 @@ Singleton {
 
     Connections {
         function onIsClipboardOpenChanged() {
-            if (GlobalStates.isClipboardOpen)
-                return;
-
-            uiState.visualActive = false;
-            ClipboardManager.model.setFilter("");
+            uiState.clearTransientState();
             uiState.cancelDelete();
         }
 

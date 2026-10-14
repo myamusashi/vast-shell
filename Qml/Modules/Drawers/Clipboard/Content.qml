@@ -179,6 +179,7 @@ ColumnLayout {
     focus: true
     spacing: 0
     Keys.onPressed: event => handleKey(event)
+    Component.onDestruction: root.uiState.clearTransientState()
 
     Timer {
         id: focusRestore
