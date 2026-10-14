@@ -152,6 +152,10 @@
         installPhase = ''
             runHook preInstall
 
+            wrapperDirectoryArguments=(
+                --run "export VAST_SHELL_DIRECTORY=\"\''${VAST_SHELL_DEV_DIRECTORY:-$out/share/quickshell}\""
+            )
+
             mkdir -p $out/share/quickshell
             shopt -s extglob
             cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
@@ -165,7 +169,7 @@
 
             makeWrapper ${vastctl}/bin/vastctl \
               $out/bin/vastctl \
-                --set-default VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+                "''${wrapperDirectoryArguments[@]}" \
                 --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
@@ -177,7 +181,7 @@
 
             makeWrapper ${quickshell}/bin/quickshell \
               $out/bin/qs \
-                --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+                "''${wrapperDirectoryArguments[@]}" \
                 --set QT_MEDIA_BACKEND ffmpeg \
                 --set VDPAU_DRIVER va_gl \
                 --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
@@ -193,7 +197,7 @@
 
             makeWrapper ${quickshell}/bin/quickshell \
               $out/bin/quickshell \
-                --set VAST_SHELL_DIRECTORY "$out/share/quickshell" \
+                "''${wrapperDirectoryArguments[@]}" \
                 --set QT_MEDIA_BACKEND ffmpeg \
                 --set VDPAU_DRIVER va_gl \
                 --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
