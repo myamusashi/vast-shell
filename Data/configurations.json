@@ -12,6 +12,11 @@
 			"size": {
 				"scale": 1
 			}
+		},
+		"icons": {
+			"materialFontPath": "",
+			"phosphorFontPath": "",
+			"type": "material"
 		}
 	},
 	"bar": {

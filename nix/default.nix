@@ -28,7 +28,6 @@
     libvdpau-va-gl,
 }: let
     app2unit = callPackage ./packages/app2unit.nix {};
-    material-symbols = callPackage ./packages/material-symbols.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
     vastctl = callPackage ./packages/vastctl.nix {};
     remove-bg = callPackage ./packages/remove-bg.nix {};
@@ -46,7 +45,6 @@
         libnotify
         polkit
         weather-icons
-        material-symbols
         wl-clipboard
         wl-screenrec-fork
         ffmpeg
@@ -172,7 +170,6 @@
             makeWrapper ${vastctl}/bin/vastctl \
               $out/bin/vastctl \
                 "''${wrapperDirectoryArguments[@]}" \
-                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
@@ -187,7 +184,6 @@
                 --set QT_MEDIA_BACKEND ffmpeg \
                 --set VDPAU_DRIVER va_gl \
                 --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
-                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
@@ -203,7 +199,6 @@
                 --set QT_MEDIA_BACKEND ffmpeg \
                 --set VDPAU_DRIVER va_gl \
                 --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
-                --set QT_QPA_FONTDIR "${material-symbols}/share/fonts/truetype" \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
@@ -212,9 +207,6 @@
                 --prefix QML2_IMPORT_PATH : "${vastPlugin}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix PATH : ${lib.makeBinPath runtimeDeps} \
                 --suffix PATH : /run/current-system/sw/bin \
-
-            mkdir -p $out/share/fonts/truetype
-            cp -r ${material-symbols}/share/fonts/truetype/* $out/share/fonts/truetype/
 
             mkdir -p $out/${qt6.qtbase.qtQmlPrefix}
             if [ -d "${m3Shapes-pkgs}/${qt6.qtbase.qtQmlPrefix}" ]; then
@@ -234,7 +226,6 @@ in {
     inherit
         vastctl
         vastPlugin
-        material-symbols
         app2unit
         remove-bg
         runtimeDeps

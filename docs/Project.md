@@ -25,7 +25,7 @@ vast-shell/
 ├── nix/
 │   ├── default.nix
 │   ├── nixos-modules.nix
-│   ├── packages/               # app2unit, material-symbols, remove-bg, vastctl
+│   ├── packages/               # app2unit, remove-bg, vastctl
 │   └── plugins/
 │       └── vastPlugin.nix      # C++ plugin derivation
 │
@@ -164,7 +164,9 @@ vast-shell/
 ├── Assets/
 │   ├── images/                # image_not_found.svg, kuru.gif, wallpaper.png,
 │   │                          # notif-icon-image-fallback.jpg
-│   ├── pam.d/                 # password.conf (lock-screen PAM stack)
+│   ├── fonts/material/        # MaterialSymbolsRounded.ttf
+│   ├── fonts/phosphor/        # Phosphor.ttf
+│   ├── pam.d/                 # password.conf
 │   ├── shaders/               # borderProgress, waveForm, wavy, ImageTransition
 │   │   └── transitions/       # boxExpand, circleExpand, diagonalWipe, dissolve, fade,
 │   │                          # hexTile, pixelate, roll, slideUp, splitHorizontal, wipeDown
@@ -174,8 +176,7 @@ vast-shell/
 │   │                          # generate_colors_material.py (legacy, unused — see below)
 │   └── weather_icon/          # Moon phase SVGs
 │
-├── packaging/arch/quickshell/ # PKGBUILD (quickshell 0.3.2 built from source)
-├── patches/                   # upstream qmlfmt/qt-creator build fixes
+├── packaging/arch/quickshell/ # PKGBUILD
 ├── Data/                      # configurations.json (defaults), colors.json,
 │                              # dark-colors.json, light-colors.json
 └── translations/              # en_US.{ts,qm}, id_ID.{ts,qm}

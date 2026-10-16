@@ -4,11 +4,12 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import qs.Components.Button
-import qs.Core.Configs
-import qs.Services
 import qs.Components.Base
+import qs.Components.Button
 import qs.Components.Dialog.FileDialog
+import qs.Core.Configs
+import qs.Core.Utils
+import qs.Services
 
 import "../Components"
 
@@ -173,17 +174,6 @@ Item {
                     }
 
                     SettingRow {
-                        description: qsTr("Icon font used for Material Symbols throughout the shell.")
-                        label: qsTr("Material Icon Font:")
-
-                        FontPicker {
-                            Layout.preferredWidth: 250
-                            searchField: Appearance.fonts.family.material
-                            onConfigChanged: value => Appearance.fonts.family.material = value
-                        }
-                    }
-
-                    SettingRow {
                         description: qsTr("Global multiplier for all font sizes.")
                         label: qsTr("Font Size Scale:")
 
@@ -197,6 +187,75 @@ Item {
                             to: 2.0
                             value: Appearance.fonts.size.scale
                             onMoved: Appearance.fonts.size.scale = value
+                        }
+                    }
+                }
+            }
+
+            SettingsCard {
+                id: iconCard
+
+                readonly property var samples: ["settings", "search", "lock", "wifi", "mic", "music_note", "folder", "volume_up", "refresh", "power", "palette", "delete"]
+
+                title: qsTr("Icons")
+
+                SettingRow {
+                    description: qsTr("Icon font used across the shell. Both sets ship with the shell; only the selected one is loaded.")
+                    label: qsTr("Icon Set:")
+
+                    RowLayout {
+                        spacing: Appearance.spacing.smaller
+
+                        SplitButton {
+                            readonly property int selectedIndex: model.findIndex(entry => entry.id === IconFonts.type)
+
+                            currentIndex: selectedIndex
+                            icon.name: "apps"
+                            model: IconFonts.availableSets.map(set => ({
+                                        "display": set.display,
+                                        "id": set.id
+                                    }))
+                            text: model[selectedIndex]?.display ?? IconFonts.type
+                            textRole: "display"
+                            onMenuItemActivated: index => Appearance.icons.type = model[index]?.id ?? Appearance.icons.type
+                        }
+
+                        FloatingButton {
+                            color: "transparent"
+                            icon.name: "refresh"
+                            implicitHeight: 40
+                            implicitWidth: 40
+                            onClicked: IconFonts.reload()
+                        }
+                    }
+                }
+
+                StyledText {
+                    Layout.bottomMargin: Appearance.spacing.smaller
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: qsTr("Rendering with \"%1\"%2%3.").arg(IconFonts.activeFamily).arg(IconFonts.isLoaded(IconFonts.type) ? qsTr(" (registered)") : qsTr(" (system font)")).arg(IconFonts.isAvailable(IconFonts.type) ? "" : qsTr(" Font file not found."))
+                }
+
+                RowLayout {
+                    spacing: Appearance.spacing.normal
+
+                    StyledText {
+                        color: Colours.m3Colors.m3Primary
+                        font.bold: true
+                        font.pixelSize: Appearance.fonts.size.normal
+                        text: IconFonts.activeSet.display
+                    }
+
+                    Repeater {
+                        model: iconCard.samples
+                        delegate: Icon {
+                            required property string modelData
+
+                            color: Colours.m3Colors.m3OnSurfaceVariant
+                            font.pixelSize: Appearance.fonts.size.larger
+                            icon: modelData
+                            // type follows the selection, same as every other icon in the shell
                         }
                     }
                 }

@@ -61,6 +61,11 @@ You generally do **not** need to copy the color files — the Material palette i
       },
       "size": { "scale": 1.0 }
     },
+    "icons": {
+      "materialFontPath": "",
+      "phosphorFontPath": "",
+      "type": "material"
+    },
     "margin":  { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
     "padding": { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
     "rounding": { "small": 12, "normal": 17, "large": 25, "full": 1000 },
@@ -198,15 +203,20 @@ You generally do **not** need to copy the color files — the Material palette i
 | `animations.durations.scale` | `1` | Global multiplier for all derived animation durations (200–1000 ms). |
 | `animations.durations.*` | derived | `small` 200, `normal` 300, `expressiveFastSpatial` 350, `emphasizedDecel` 400, `emphasized` 500, `expressiveDefaultSpatial` 500, `large` 600, `expressiveEffects` 200, `emphasizedAccel` 200, `extraLarge` 1000 — each × `scale`. |
 | `animations.curves.*` | derived | Material 3 easing curves: `standard`, `standardAccel`, `standardDecel`, `emphasized`, `emphasizedAccel`, `emphasizedDecel`, `expressiveDefaultSpatial`, `expressiveFastSpatial`, `expressiveEffects`. |
-| `fonts.family.material` | `"Material Symbols Rounded"` | Icon font. |
+| `fonts.family.material` | `"Material Symbols Rounded"` | Fallback family while the bundled Material Symbols font is loading. Not exposed in the Appearance UI; set it here if you use a custom system family. |
 | `fonts.family.mono` | `"monospace"` | Monospace face. |
 | `fonts.family.nerd` | `""` | Nerd Font face; empty falls back to the system sans. |
 | `fonts.family.sans` | `"sans-serif"` | UI face. |
 | `fonts.size.scale` | `1.0` | Global font size multiplier (derived sizes 12/13/14/16/18/30 × `scale`). |
+| `icons.type` | `"material"` | Icon set: `material` (Material Symbols) or `phosphor` (Phosphor, bundled in `Assets/fonts/phosphor`). |
+| `icons.materialFontPath` | `""` | Optional Material Symbols TTF; empty uses the bundled `Assets/fonts/material/MaterialSymbolsRounded.ttf`. |
+| `icons.phosphorFontPath` | `""` | Optional Phosphor TTF; empty uses the bundled `Assets/fonts/phosphor/Phosphor.ttf`. |
 | `margin` | 5/7/10/12/15 | `small`…`large` outer spacing in px. |
 | `padding` | 5/7/10/12/15 | `small`…`large` inner spacing in px. |
 | `rounding` | 12/17/25/1000 | `small`/`normal`/`large`/`full` corner radius in px. |
 | `spacing` | 7/10/12/15/20 | `small`…`large` gaps in px. |
+
+Icon fonts are registered lazily with QtQuick's `FontLoader`: only the selected set is ever read from disk, and switching the `SplitButton` swaps the family without a restart. **Settings → Appearance → Icons** has a **Reload** button that re-registers the active font from disk. When `icons.type` is `phosphor`, Material ligature names are translated through `Qml/Core/Utils/IconMap.qml` (152 names); unmapped names pass through unchanged, so the shell never renders a name as literal text.
 
 ### Bar
 

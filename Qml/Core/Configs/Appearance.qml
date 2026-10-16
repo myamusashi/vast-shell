@@ -9,6 +9,7 @@ Singleton {
     // qmllint disable
     property AppearanceConfig.AnimationsComponent animations: Configs.appearance.animations
     property AppearanceConfig.FontsComponent fonts: Configs.appearance.fonts
+    property AppearanceConfig.IconsComponent icons: Configs.appearance.icons
     property AppearanceConfig.MarginComponent margin: Configs.appearance.margin
     property AppearanceConfig.PaddingComponent padding: Configs.appearance.padding
     property AppearanceConfig.RoundingComponent rounding: Configs.appearance.rounding

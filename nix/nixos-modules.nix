@@ -6,8 +6,6 @@
 }: let
     cfg = config.programs.quickshell-shell;
 
-    material-symbols = pkgs.callPackage ./packages/material-symbols.nix {};
-
     greeterConfig = pkgs.writeText "mango-greeter.conf" ''
         ${cfg.greetd.extraConfig}
         exec=${cfg.package}/bin/quickshell -p ${cfg.package}/share/quickshell/Qml/greeter.qml
@@ -81,7 +79,6 @@ in {
         environment.systemPackages = [cfg.package] ++ cfg.extraPackages;
 
         fonts.packages = lib.optionals cfg.installFonts [
-            material-symbols
             pkgs.weather-icons
         ];
 

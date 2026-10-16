@@ -3,9 +3,9 @@ import Quickshell.Io
 
 JsonObject {
     id: root
-
     property AnimationsComponent animations: AnimationsComponent {}
     property FontsComponent      fonts: FontsComponent {}
+    property IconsComponent      icons: IconsComponent {}
     property MarginComponent     margin: MarginComponent {}
     property PaddingComponent    padding: PaddingComponent {}
     property RoundingComponent   rounding: RoundingComponent {}
@@ -59,6 +59,11 @@ JsonObject {
     component FontsComponent: JsonObject {
         property FontFamily family: FontFamily {}
         property FontSize   size: FontSize {}
+    }
+    component IconsComponent: JsonObject {
+        property string materialFontPath: ""
+        property string phosphorFontPath: ""
+        property string type: "material"
     }
     component MarginComponent: JsonObject {
         property int large: 15
