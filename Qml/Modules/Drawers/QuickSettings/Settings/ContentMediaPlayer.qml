@@ -558,13 +558,13 @@ RowLayout {
                                 color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                                 elide: Text.ElideRight
                                 font.pixelSize: Appearance.fonts.size.normal
-                                font.weight: playerComboBox.currentIndex === playerDelegate.index ? Font.Medium : Font.Normal
+                                font.weight: Players.index === playerDelegate.index ? Font.Medium : Font.Normal
                                 text: root.cleanDesktopEntry(playerDelegate.modelData.desktopEntry) ?? ""
                             }
                         }
                         onClicked: {
                             playerComboBox.currentIndex = index;
-                            Players.index               = index;
+                            Players.manualIndex         = index;
                             playerComboBox.popup.close();
                         }
                     }
@@ -590,7 +590,7 @@ RowLayout {
 
                             cacheBuffer: 0
                             clip: true
-                            currentIndex: playerComboBox.currentIndex
+                            currentIndex: Players.index
                             implicitHeight: Math.min(contentHeight, 320)
                             model: playerComboBox.delegateModel
                             ScrollBar.vertical: ScrollBar {
@@ -630,9 +630,9 @@ RowLayout {
                         }
                     }
                     onActivated: index => {
-                        currentIndex  = index;
-                        Players.index = index;
-                        const player  = Players.players[index];
+                        currentIndex        = index;
+                        Players.manualIndex = index;
+                        const player        = Players.players[index];
                         LyricsProvider.fetch(player.trackTitle, player.trackArtist, player.length);
                     }
 

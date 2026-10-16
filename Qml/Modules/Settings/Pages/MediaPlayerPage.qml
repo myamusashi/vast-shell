@@ -38,6 +38,18 @@ SettingsPageBase {
         }
 
         SettingRow {
+            description: qsTr("Follow the player that is currently playing instead of staying on the first one.")
+            label: qsTr("Auto-switch to the active player:")
+
+            StyledSwitch {
+                Layout.preferredHeight: 32
+                Layout.preferredWidth: 52
+                checked: Configs.mediaPlayer.autoSwitchActivePlayer
+                onToggled: Configs.mediaPlayer.autoSwitchActivePlayer = checked
+            }
+        }
+
+        SettingRow {
             description: qsTr("Visual style for the playback progress slider.")
             label: qsTr("Slider type:")
 
