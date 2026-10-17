@@ -11,10 +11,6 @@ import qs.Components.Feedback
 ColumnLayout {
     id: root
 
-    function getWeatherCondition(condition) {
-        return condition || "";
-    }
-
     Layout.fillHeight: true
     Layout.fillWidth: true
     spacing: Appearance.spacing.normal
@@ -150,7 +146,7 @@ ColumnLayout {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.medium
                 font.weight: Font.DemiBold
-                text: root.getWeatherCondition(Weather.weatherCondition)
+                text: Weather.weatherCondition
             }
 
             StyledText {

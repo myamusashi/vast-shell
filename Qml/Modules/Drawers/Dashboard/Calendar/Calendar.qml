@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
-import qs.Core.Utils
 import qs.Services
 import qs.Widgets
 
@@ -17,6 +16,7 @@ ColumnLayout {
     property int  currentMonth: currentDate.getMonth()
     property int  currentYear: currentDate.getFullYear()
     property var  monthNames: buildMonthNames()
+    property var  selectedDate: new Date()
     property bool showYearMonthPicker: false
 
     function      buildMonthNames(): var {
@@ -63,6 +63,7 @@ ColumnLayout {
     Item {
         Layout.fillHeight: true
         Layout.fillWidth: true
+        implicitHeight: calendarContent.implicitHeight
 
         ColumnLayout {
             id: calendarContent
@@ -129,6 +130,7 @@ ColumnLayout {
             Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                Layout.preferredHeight: monthGrid.cellHeight * 6
                 clip: false
 
                 CustomMonthGrid {
@@ -143,51 +145,10 @@ ColumnLayout {
                         cellWidth: monthGrid.cellWidth
                         currentMonth: root.currentMonth
                         openPopoverDate: monthGrid.openPopoverDate
+                        selectedDate: root.selectedDate
                         onClosePopoverRequested: monthGrid.closePopover()
+                        onDateClicked: date => root.selectedDate = date
                         onOpenPopoverRequested: date => monthGrid.openPopoverDate = date
-                    }
-                    popoverDelegate: StyledRect {
-                        id: popover
-
-                        readonly property var    holidayEntries: cellDate ? HolidayModel.getHolidaysForDate(cellDate) : []
-                        readonly property string holidayName: cellDate ? HolidayModel.nameForDate(cellDate) : ""
-
-                        property var             cellDate
-
-                        border.color: Qt.alpha(Colours.m3Colors.m3Primary, 0.3)
-                        border.width: 1
-                        clip: true
-                        color: Colours.m3Colors.m3SurfaceContainerHigh
-                        implicitHeight: popoverLabel.implicitHeight + 12
-                        radius: Appearance.rounding.small
-                        Behavior on implicitHeight {
-                            NAnim {
-                                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                            }
-                        }
-
-                        StyledText {
-                            id: popoverLabel
-
-                            anchors.left: parent.left
-                            anchors.margins: 8
-                            anchors.right: parent.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            color: Colours.m3Colors.m3OnSurface
-                            elide: Text.ElideRight
-                            font.pixelSize: Appearance.fonts.size.medium
-                            horizontalAlignment: Text.AlignHCenter
-                            maximumLineCount: 2
-                            text: popover.holidayName
-                            wrapMode: Text.WordWrap
-                        }
-
-                        MArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: monthGrid.closePopover()
-                        }
                     }
                 }
             }

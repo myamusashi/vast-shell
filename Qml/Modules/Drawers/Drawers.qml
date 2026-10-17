@@ -9,8 +9,8 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
-import "Calendar"
 import "Clipboard"
+import "Dashboard"
 import "Launcher"
 import "QuickSettings"
 import "Notifications"
@@ -41,6 +41,10 @@ Variants {
             if (GlobalStates.isClipboardOpen)
                 return true;
             if (GlobalStates.hasInlineReply)
+                return true;
+            if (GlobalStates.isAddTodoListOpen)
+                return true;
+            if (GlobalStates.isEditTodoListOpen)
                 return true;
             return false;
         }
@@ -98,7 +102,7 @@ Variants {
 
             Clipboard {}
 
-            Calendar {}
+            Dashboard {}
 
             QuickSettings {}
 

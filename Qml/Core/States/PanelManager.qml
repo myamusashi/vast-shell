@@ -15,7 +15,7 @@ Scope {
     readonly property bool isLauncherOpen: activeDrawer === "launcher"
     readonly property bool isWallpaperSwitcherOpen: activeDrawer === "wallpaperSwitcher"
     readonly property var  panelProps: ({
-            "calendar": "isCalendarOpen",
+            "dashboard": "isDashboardOpen",
             "session": "isSessionOpen",
             "mediaPlayer": "isMediaPlayerOpen",
             "notificationCenter": "isNotificationCenterOpen",
@@ -29,8 +29,8 @@ Scope {
     property string        activeDrawer: ""
     property real          drawerDepthRatio: 0
     property real          drawerLengthRatio: 0
-    property bool          isCalendarOpen: false
     property bool          isClipboardOpen: false
+    property bool          isDashboardOpen: false
     property bool          isMediaPlayerOpen: false
     property bool          isNotificationCenterOpen: false
     property bool          isQuickSettingsOpen: false

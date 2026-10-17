@@ -36,6 +36,6 @@ StyledRect {
         anchors.fill: clock
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
-        onClicked: GlobalStates.isCalendarOpen = !GlobalStates.isCalendarOpen
+        onClicked: GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen
     }
 }

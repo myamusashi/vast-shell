@@ -26,13 +26,15 @@ Singleton {
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
 
     property var             inlineReplyOwner: null
+    property bool            isAddTodoListOpen: false
     property bool            isBarOpen: Configs.bar.alwaysOpenBar
-    property alias           isCalendarOpen: panel.isCalendarOpen
     property alias           isCapsLockOSDShow: root.isCapsLockOSDVisible
     property alias           isClipboardOpen: panel.isClipboardOpen
+    property alias           isDashboardOpen: panel.isDashboardOpen
     property bool            isDragAndDropActive: false
+    property bool            isEditTodoListOpen: false
     property alias           isLauncherOpen: panel.isLauncherOpen
-    property bool            isLockscreenOpen: false
+    property bool            isLockscreenOpen: false // qmllint disable
     property alias           isMediaPlayerOpen: panel.isMediaPlayerOpen
     property alias           isNotificationCenterOpen: panel.isNotificationCenterOpen
     property alias           isNumLockOSDShow: root.isNumLockOSDVisible

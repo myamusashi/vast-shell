@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Components.Base
+import qs.Components.Button
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -22,29 +23,6 @@ RowLayout {
     Layout.fillWidth: true
     Layout.preferredHeight: 48
     spacing: Appearance.spacing.normal
-
-    StyledRect {
-        id: prevButton
-
-        Layout.preferredHeight: 40
-        Layout.preferredWidth: 40
-        color: "transparent"
-        radius: Appearance.rounding.full
-
-        Icon {
-            anchors.centerIn: parent
-            color: Colours.m3Colors.m3Primary
-            font.pixelSize: Appearance.fonts.size.large * 2
-            icon: "chevron_left"
-        }
-
-        MArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            hoverEnabled: true
-            onClicked: root.prevClicked()
-        }
-    }
 
     StyledText {
         id: headerLabel
@@ -67,25 +45,27 @@ RowLayout {
         }
     }
 
-    StyledRect {
-        id: nextButton
+    RowLayout {
+        Layout.alignment: Qt.AlignRight
+        spacing: 0
 
-        Layout.preferredHeight: 40
-        Layout.preferredWidth: 40
-        color: "transparent"
-        radius: Appearance.rounding.full
-
-        Icon {
-            anchors.centerIn: parent
-            color: Colours.m3Colors.m3Primary
-            font.pixelSize: Appearance.fonts.size.large * 2
-            icon: "chevron_right"
+        FloatingButton {
+            Layout.alignment: Qt.AlignRight
+            size: "small"
+            color: "transparent"
+            icon.color: Colours.m3Colors.m3OnSurface
+            icon.name: "chevron_left"
+            icon.size: Appearance.fonts.size.larger
+            onClicked: root.prevClicked()
         }
 
-        MArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            hoverEnabled: true
+        FloatingButton {
+            Layout.alignment: Qt.AlignRight
+            size: "small"
+            color: "transparent"
+            icon.color: Colours.m3Colors.m3OnSurface
+            icon.name: "chevron_right"
+            icon.size: Appearance.fonts.size.larger
             onClicked: root.nextClicked()
         }
     }

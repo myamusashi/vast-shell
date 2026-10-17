@@ -8,6 +8,7 @@ Singleton {
 
     readonly property var phosphorNames: ({
             "account_circle": "user-circle",
+            "add": "plus",
             "air": "wind",
             "apps": "app-window",
             "arrow_back": "arrow-left",
@@ -49,6 +50,7 @@ Singleton {
             "discover_tune": "magic-wand",
             "door_open": "door-open",
             "download": "download-simple",
+            "edit": "pen",
             "error": "warning-circle",
             "expand_less": "caret-up",
             "expand_more": "caret-down",

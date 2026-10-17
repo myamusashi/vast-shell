@@ -17,6 +17,7 @@ Item {
     required property int  index
     required property var  modelData
     required property var  openPopoverDate
+    required property var  selectedDate
 
     readonly property date cellDate: modelData.date
     readonly property int  dayFontWeight: isToday ? 1000 : (isCurrentMonth ? 600 : 100)
@@ -44,6 +45,7 @@ Item {
     }
 
     signal                 closePopoverRequested
+    signal                 dateClicked(var date)
     signal                 openPopoverRequested(var date)
 
     height: cellHeight
@@ -72,14 +74,7 @@ Item {
             hoverEnabled: true
             visible: root.isCurrentMonth
             onClicked: {
-                if (root.showHoliday && root.holidayLabel !== "") {
-                    if (root.isPopoverOpen)
-                        root.closePopoverRequested();
-                    else
-                        root.openPopoverRequested(root.cellDate);
-                } else {
-                    root.closePopoverRequested();
-                }
+                root.dateClicked(root.cellDate);
             }
         }
     }
