@@ -37,7 +37,7 @@ SettingsPageBase {
 
         Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: 300
+            Layout.preferredHeight: 150
             color: Colours.m3Colors.m3SurfaceContainerHigh
             radius: Appearance.rounding.normal
 
@@ -49,7 +49,7 @@ SettingsPageBase {
                 cache: true
                 fillMode: Image.PreserveAspectCrop
                 source: root.currentWallpaperPreview
-                sourceSize: Qt.size(1000, 300)
+                sourceSize: Qt.size(720, 150)
                 visible: status === Image.Ready
 
                 Rectangle {
@@ -69,7 +69,42 @@ SettingsPageBase {
 
         RowLayout {
             Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
             spacing: Appearance.spacing.normal
+
+            // qmlformat off
+            readonly property list<color> palettePreviewColors: [
+                Colours.m3Colors.m3Primary,
+                Colours.m3Colors.m3PrimaryContainer,
+                Colours.m3Colors.m3Secondary,
+                Colours.m3Colors.m3SecondaryContainer,
+                Colours.m3Colors.m3Tertiary,
+                Colours.m3Colors.m3TertiaryContainer,
+            ]
+            // qmlformat on
+
+            Repeater {
+                model: parent.palettePreviewColors
+                delegate: Rectangle {
+                    required property color modelData
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+                    color: modelData
+                    radius: Appearance.rounding.small
+                }
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Appearance.spacing.normal
+
+            Icon {
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.large
+                icon: "search"
+            }
 
             StyledTextInput {
                 Layout.fillWidth: true
@@ -80,19 +115,6 @@ SettingsPageBase {
                     Svc.WallpaperFileModels.searchQuery = text;
                     wallpaperCarousel.currentIndex      = 0;
                 }
-            }
-
-            StyledText {
-                color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.5)
-                elide: Text.ElideRight
-                font.pixelSize: Appearance.fonts.size.small
-                text: qsTr("Browse and set a new wallpaper image or video.")
-            }
-
-            ExtendedFloatingButton {
-                icon.name: "image"
-                text: qsTr("Browse…")
-                onClicked: pickWallpaperDialog.openFileDialog()
             }
         }
 
@@ -134,6 +156,19 @@ SettingsPageBase {
             font.pixelSize: Appearance.fonts.size.small
             text: wallpaperCarousel.count > 0 ? (wallpaperCarousel.currentIndex + 1) + " / " + wallpaperCarousel.count : "0 / 0"
             visible: wallpaperCarousel.count > 0
+        }
+
+        StyledText {
+            color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.5)
+            elide: Text.ElideRight
+            font.pixelSize: Appearance.fonts.size.small
+            text: qsTr("Browse and set a new wallpaper image or video.")
+        }
+
+        ExtendedFloatingButton {
+            icon.name: "image"
+            text: qsTr("Browse…")
+            onClicked: pickWallpaperDialog.openFileDialog()
         }
     }
 
