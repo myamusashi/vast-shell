@@ -3,24 +3,27 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
 StyledRect {
     Layout.fillHeight: true
     color: "transparent"
-    implicitWidth: container.width
+    implicitWidth: childrenRect.width
     radius: 5
 
-    Dots {
-        id: container
+    Icon {
+        Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
+        color: Colours.m3Colors.m3Primary
+        font.pixelSize: Appearance.fonts.size.extraLarge
+        icon: Distro.icon(SystemUsage.osId, SystemUsage.osIdLike)
+        type: Icon.Nerd
 
-        Icon {
-            Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
-            color: Colours.m3Colors.m3Primary
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            icon: Distro.icon(SystemUsage.osId, SystemUsage.osIdLike)
-            type: Icon.Nerd
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            onClicked: GlobalStates.isSettingsOpen = true
         }
     }
 }
