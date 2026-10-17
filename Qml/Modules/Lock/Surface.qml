@@ -1,8 +1,8 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import Quickshell.Wayland
-import Qt5Compat.GraphicalEffects
 
 import qs.Core.Configs
 import qs.Core.States
@@ -78,7 +78,19 @@ WlSessionLockSurface {
         isAllSelected = false;
         if (grew && inputBuffer.length > 0 && !zoomedIn) {
             zoomedIn = true;
-            zoomInAnimation.start();
+            Quickshell.execDetached({
+                command: ["hyprctl", "eval", `local m = hl.get_monitors();
+                local active = m[1];
+                for _, v in ipairs(m) do
+                    if v.focused then active = v end
+                end;
+
+                local cx = active.x + (active.width / 2);
+                local cy = active.y + (active.height / 2);
+
+                hl.dispatch(hl.dsp.cursor.move({ x = cx, y = cy }));
+                hl.config({ cursor = { zoom_factor = 1.2 } })`]
+            });
         }
     }
 
@@ -99,7 +111,9 @@ WlSessionLockSurface {
                 root.maskEntries      = [];
                 root.maskedBuffer     = "";
                 root.zoomedIn         = false;
-                zoomOutAnimation.start();
+                Quickshell.execDetached({
+                    command: ["hyprctl", "reload"]
+                });
                 errorShakeAnimation.start();
             } else {
                 root.showErrorMessage = false;
@@ -108,35 +122,6 @@ WlSessionLockSurface {
 
         enabled: root.pam !== null
         target: root.pam
-    }
-
-    Item {
-        id: wallpaper
-
-        property real blurRadius: 0
-
-        anchors.fill: parent
-        layer.enabled: wallpaper.blurRadius > 0
-        opacity: 0
-        transformOrigin: Item.Center
-        layer.effect: FastBlur {
-            radius: wallpaper.blurRadius
-            source: wallpaper
-            transparentBorder: false
-        }
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-            }
-        }
-
-        Image {
-            anchors.fill: parent
-            asynchronous: true
-            cache: true
-            source: Paths.currentWallpaper
-            fillMode: Image.PreserveAspectCrop
-        }
     }
 
     StyledRect {
@@ -152,8 +137,11 @@ WlSessionLockSurface {
         Keys.onPressed: event => {
             if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                 if (root.inputBuffer.length > 0) {
-                    if (root.zoomedIn)
-                        zoomOutAnimation.start();
+                    if (root.zoomedIn) {
+                        Quickshell.execDetached({
+                            command: ["hyprctl", "reload"]
+                        });
+                    }
 
                     root.pam.currentText = root.inputBuffer;
                     root.pam.tryUnlock();
@@ -183,8 +171,11 @@ WlSessionLockSurface {
             }
 
             if (event.key === Qt.Key_Escape) {
-                if (root.zoomedIn)
-                    zoomOutAnimation.start();
+                if (root.zoomedIn) {
+                    Quickshell.execDetached({
+                        command: ["hyprctl", "reload"]
+                    });
+                }
 
                 if (root.isAllSelected)
                     root.isAllSelected = false;
@@ -280,14 +271,6 @@ WlSessionLockSurface {
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "opacity"
                 target: bottomItem.contentLayout
-                to: 1
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: wallpaper
                 to: 1
             }
 
@@ -399,22 +382,6 @@ WlSessionLockSurface {
                 duration: Appearance.animations.durations.expressiveDefaultSpatial
                 easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
                 property: "opacity"
-                target: wallpaper
-                to: 0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "blurRadius"
-                target: wallpaper
-                to: 0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
                 target: fgLayer
                 to: 0
             }
@@ -497,102 +464,8 @@ WlSessionLockSurface {
         onTriggered: root.jitterMaskEntry()
     }
 
-    SequentialAnimation {
-        id: zoomInAnimation
-
-        ParallelAnimation {
-
-            NAnim {
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "scale"
-                target: wallpaper
-                to: 1.12
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "blurRadius"
-                target: wallpaper
-                to: 30
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "scale"
-                target: fgLayer
-                to: 1.12
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: bottomItem
-                to: 0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.emphasizedAccel
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "implicitHeight"
-                target: bottomItem
-                to: 0
-            }
-        }
-    }
-
     CapsLockPopup {
         anchors.centerIn: parent
         z: 999
-    }
-
-    SequentialAnimation {
-        id: zoomOutAnimation
-
-        ParallelAnimation {
-
-            NAnim {
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "scale"
-                target: wallpaper
-                to: 1.0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "blurRadius"
-                target: wallpaper
-                to: 0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "scale"
-                target: fgLayer
-                to: 1.0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.small
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: bottomItem
-                to: 1
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.emphasizedAccel
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "implicitHeight"
-                target: bottomItem
-                to: 80
-            }
-        }
     }
 }
