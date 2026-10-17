@@ -4,17 +4,10 @@ import QtQuick
 import QtQuick.Controls
 
 import qs.Core.Configs
-import qs.Core.Utils
 import qs.Services
 
 Switch {
     id: root
-
-    property string currentIcon: offIcon
-    property color  currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-    property alias  isUseIcon: iconLoader.active
-    property string offIcon: "close"
-    property string onIcon: "check"
 
     indicator: StyledRect {
         id: track
@@ -33,19 +26,6 @@ Switch {
 
             radius: Appearance.rounding.full
             y: (parent.height - height) / 2
-
-            Loader {
-                id: iconLoader
-
-                active: true
-                anchors.centerIn: parent
-                asynchronous: true
-                sourceComponent: Icon {
-                    color: root.currentIconColor
-                    font.pixelSize: Appearance.fonts.size.medium
-                    icon: root.currentIcon
-                }
-            }
         }
     }
 
@@ -68,12 +48,6 @@ Switch {
                 width: 16
                 x: handle.margin
             }
-
-            PropertyChanges {
-                currentIcon: offIcon
-                currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-                target: root
-            }
         },
         State {
             name: "checked"
@@ -91,12 +65,6 @@ Switch {
                 target: handle
                 width: 28
                 x: track.width - 28 - handle.margin
-            }
-
-            PropertyChanges {
-                currentIcon: onIcon
-                currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
-                target: root
             }
         },
         State {
@@ -116,12 +84,6 @@ Switch {
                 width: 28
                 x: handle.margin
             }
-
-            PropertyChanges {
-                currentIcon: offIcon
-                currentIconColor: Colours.m3Colors.m3SurfaceContainerHighest
-                target: root
-            }
         },
         State {
             name: "pressedChecked"
@@ -139,12 +101,6 @@ Switch {
                 target: handle
                 width: 28
                 x: track.width - 28 - handle.margin
-            }
-
-            PropertyChanges {
-                currentIcon: onIcon
-                currentIconColor: Colours.m3Colors.m3OnPrimaryContainer
-                target: root
             }
         }
     ]
