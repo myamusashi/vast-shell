@@ -30,7 +30,7 @@ namespace {
         return bytes;
     }
 
-} // namespace
+}
 
 class TestClipboardHelpers : public QObject {
     Q_OBJECT

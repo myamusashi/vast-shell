@@ -23,7 +23,6 @@ struct SGolden {
     QMap<QString, QString> colors;
 };
 
-// QFETCH is function-like, so a type containing a comma needs a typedef.
 using TExpected = QMap<QString, QString>;
 
 namespace {
@@ -48,7 +47,7 @@ namespace {
         return goldens;
     }
 
-} // namespace
+}
 
 // Spec parity: every role must match the reference implementation byte for
 // byte. The goldens in data/golden/ record the source color they were built

@@ -35,7 +35,7 @@ namespace {
         return out;
     }
 
-} // namespace
+}
 
 class TestLyricsScheduler : public QObject {
     Q_OBJECT
@@ -95,7 +95,7 @@ void TestLyricsScheduler::setOffsetMsStoresTheValue() {
 void TestLyricsScheduler::settingTheSameOffsetIsANoOp() {
     mScheduler.setWordLines({wordLine(10000, {word(10000, 500)})});
     mScheduler.setPlayback(0.0, 1.0, false);
-    mScheduler.setOffsetMs(150); // already the default
+    mScheduler.setOffsetMs(150);
 
     QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentIndexChanged);
     mScheduler.setOffsetMs(150);
@@ -132,7 +132,7 @@ void TestLyricsScheduler::aPositionBeforeTheFirstBoundaryHasNoLine() {
 }
 
 void TestLyricsScheduler::aPositionExactlyOnABoundarySelectsIt() {
-    // upper_bound plus std::prev: a position on a boundary selects it.
+    // a position on a boundary selects it.
     mScheduler.setWordLines({wordLine(10000, {word(10000, 500), word(10500, 500)})});
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(10.5, 1.0, false);
@@ -186,7 +186,6 @@ void TestLyricsScheduler::exposesTheDurationOfTheCurrentWord() {
 }
 
 void TestLyricsScheduler::emitsCurrentIndexChangedOnlyWhenTheIndexMoves() {
-    // Two boundaries, so there is somewhere to move to.
     mScheduler.setWordLines({wordLine(10000, {word(10000, 500), word(10500, 500)})});
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(10.0, 1.0, false);
@@ -247,7 +246,7 @@ void TestLyricsScheduler::outOfOrderWordTimesAreSortedByTime() {
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(3.5, 1.0, false);
 
-    // Boundaries are stable-sorted by time, so 3500 lands on the 3000 word.
+    // 3500 lands on the 3000 word.
     QCOMPARE(mScheduler.currentLineIndex(), 2);
     QCOMPARE(mScheduler.currentWordIndex(), 0);
 }
@@ -311,8 +310,6 @@ void TestLyricsScheduler::acceptsWordLinesStraightFromLrcParser() {
 }
 
 void TestLyricsScheduler::playingAdvancesTheIndexOverWallClockTime() {
-    // The only time-dependent slot: it depends on a QTimer firing, so it uses a
-    // generous QTRY timeout rather than an exact equality.
     mScheduler.setWordLines({wordLine(0, {word(0, 100)})});
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(0.0, 1.0, true);
@@ -321,8 +318,6 @@ void TestLyricsScheduler::playingAdvancesTheIndexOverWallClockTime() {
 }
 
 void TestLyricsScheduler::aHigherRateReachesTheSameIndexSooner() {
-    // A boundary far in the future is unreachable at rate 1.0 within the
-    // timeout, but rate 4.0 covers the distance in a fraction of it.
     mScheduler.setWordLines({wordLine(1200, {word(1200, 100)})});
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(0.0, 4.0, true);

@@ -29,7 +29,7 @@ namespace {
         };
     }
 
-} // namespace
+}
 
 class TestAudioProfiles : public QObject {
     Q_OBJECT

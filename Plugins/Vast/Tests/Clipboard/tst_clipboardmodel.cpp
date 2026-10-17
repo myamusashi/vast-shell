@@ -32,7 +32,7 @@ namespace {
         return ids;
     }
 
-} // namespace
+}
 
 class TestClipboardModel : public QObject {
     Q_OBJECT
@@ -180,10 +180,7 @@ void TestClipboardModel::removeByIdsRemovesTheGivenSet() {
     QCOMPARE(visibleIds(model), (QList<qint64>{2}));
 }
 
-// Regression guard: a mutation of the filtered rows has to reset the model.
-// ClipboardModel mutated mEntries and rebuilt the filter without bracketing it
-// in beginResetModel/endResetModel, so the GridView bound to it kept painting
-// rows that were already deleted, and pinning never re-sorted a filtered list.
+// A mutation of the filtered rows has to reset the model.
 void TestClipboardModel::filteredMutationsResetTheModel() {
     vast::ClipboardModel model;
     model.reset({entry(1, QStringLiteral("alpha"), 3000), entry(2, QStringLiteral("beta"), 2000), entry(3, QStringLiteral("alpine"), 1000)});
@@ -227,11 +224,7 @@ void TestClipboardModel::setFilterNarrowsToFuzzyMatches() {
     QCOMPARE(visibleIds(model), (QList<qint64>{1}));
 }
 
-// Regression guard for the pinned-first ordering under an active filter.
-// ClipboardModel::rebuildFilter used to return `b.pinned` when pin states
-// differed, which inverted the branch and sank pinned rows to the bottom of a
-// filtered list — inconsistent with fetchAll's `ORDER BY pinned DESC`,
-// setPinById, and prepend. Fixed in ClipboardModel.cpp.
+// Pinned-first ordering under an active filter.
 void TestClipboardModel::setFilterPutsPinnedFirstAmongMatches() {
     vast::ClipboardModel model;
     model.reset({entry(1, QStringLiteral("firefox browser"), 3000), entry(2, QStringLiteral("firefox nightly"), 2000, true)});

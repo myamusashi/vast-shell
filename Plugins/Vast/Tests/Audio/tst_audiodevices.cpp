@@ -30,7 +30,7 @@ namespace {
         };
     }
 
-} // namespace
+}
 
 class TestAudioDevices : public QObject {
     Q_OBJECT
@@ -180,10 +180,6 @@ void TestAudioDevices::setDevicesAlwaysResetsEvenWhenIdentical() {
     model.setDevices(entries);
     QCOMPARE(resetSpy.count(), 1);
 
-    // Unlike AudioProfilesModel::setProfiles there is no std::ranges::equal
-    // fast path, so an identical span still resets. That is only safe because
-    // AudioDevicesWatcher::poll guards the call with `if (changed)`. This test
-    // exists so adding a dedup path later is a deliberate, visible change.
     model.setDevices(entries);
     QCOMPARE(resetSpy.count(), 2);
 }

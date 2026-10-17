@@ -35,10 +35,6 @@ namespace {
     constexpr int               kTimeoutMs = 5000;
     constexpr int               kShortMs   = 1000; // a reply the code sends inline arrives in tens of ms
 
-    // Permissive on purpose: the suite only talks to its own FakeBlueZ over a
-    // socket nobody else can reach, so the point is to start, not to sandbox.
-    // A plain literal, not R"xml()": moc 6.11 parses no classes out of a file
-    // containing a raw string, and this file's classes come from moc.
     const char* const kBusConfigTemplate = "<busconfig>\n"
                                            "  <type>session</type>\n"
                                            "  <listen>%1</listen>\n"
@@ -57,10 +53,6 @@ namespace {
                                            "  </policy>\n"
                                            "</busconfig>\n";
 
-    // Which step of the private-bus setup failed, and why. Every branch in
-    // initTestCase used to return silently, so a missing binary, a daemon that
-    // would not start, an unread address and a refused service registration
-    // all reported the same "dbus-daemon is unavailable".
     [[nodiscard]] QString describeBusFailure(QProcess& daemon, const QString& address) {
         if (daemon.state() == QProcess::NotRunning && daemon.error() != QProcess::UnknownError)
             return QStringLiteral("could not run dbus-daemon: %1").arg(daemon.errorString());
@@ -69,7 +61,6 @@ namespace {
         return QStringLiteral("dbus-daemon ran but connect or registerService failed on %1").arg(address);
     }
 
-    // Counters are public members: moc rejects data members in Q_SLOTS.
     class FakeBlueZ : public QObject, public QDBusContext {
         Q_OBJECT
         Q_CLASSINFO("D-Bus Interface", "org.bluez.AgentManager1")
@@ -126,8 +117,6 @@ namespace {
         return call;
     }
 
-// A macro, not a function: QSKIP expands to `return;`, which in a helper
-// would leave the slot to run on an empty connection.
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define REQUIRE_BUS()                                                                                                                                                              \
     do {                                                                                                                                                                           \
@@ -138,7 +127,7 @@ namespace {
         QFAIL(qPrintable(describeBusFailure(daemon, address)));                                                                                                                    \
     } while (false)
 
-} // namespace
+}
 
 class TestBluetoothAgent : public QObject {
     Q_OBJECT
@@ -177,16 +166,12 @@ class TestBluetoothAgent : public QObject {
     void displayPasskeyEmitsWithoutStoringAPendingRequest();
 
   private:
-    // std::optional: QDBusConnection has no default constructor. Named
-    // connections persist until disconnectFromBus(), done in cleanupTestCase.
     [[nodiscard]] QDBusConnection& caller() {
         if (!caller_)
             caller_.emplace(QDBusConnection::connectToBus(address, QStringLiteral("caller")));
         return *caller_;
     }
 
-    // A member so cleanup() always destroys it. The caller must await the
-    // handshake: QTRY_VERIFY expands to `return;`.
     vast::BluetoothAgentManager& agent() {
         manager = std::make_unique<vast::BluetoothAgentManager>(nullptr, *bus);
         return *manager;
@@ -204,15 +189,8 @@ class TestBluetoothAgent : public QObject {
 };
 
 void TestBluetoothAgent::initTestCase() {
-    // Safety net: anything that reaches the system bus fails to connect here
-    // rather than registering on the developer's real bluetoothd. Must run
-    // before the first systemBus() call.
     qputenv("DBUS_SYSTEM_BUS_ADDRESS", "unix:path=/nonexistent-system-bus");
 
-    // A self-written config, not --session. --session reads the installed
-    // session.conf, which a bare Nix environment need not have: dbus-daemon
-    // then exits immediately and silently, leaving nothing to report. An
-    // explicit config and socket make the bus depend on nothing but the binary.
     busDir = std::make_unique<QTemporaryDir>();
     if (!busDir->isValid())
         return;
@@ -223,8 +201,6 @@ void TestBluetoothAgent::initTestCase() {
         QFile config(configPath);
         if (!config.open(QIODeviceBase::WriteOnly | QIODeviceBase::Text))
             return;
-        // dbus-daemon rejects a config with no <listen>, so the socket path
-        // goes in the file rather than only on the command line.
         config.write(QString::fromLatin1(kBusConfigTemplate).arg(QStringLiteral("unix:path=%1").arg(socketPath)).toLatin1());
         config.close();
     }
@@ -611,11 +587,6 @@ void TestBluetoothAgent::bluezGoingAwayCancelsPendingAndClearsActive() {
     QTRY_VERIFY_WITH_TIMEOUT(spy.count() == 1, kTimeoutMs);
     QVERIFY(mgr.busy());
 
-    // The reply assertion below guards a contract with no real consumer:
-    // bluetoothd owns the org.bluez name and is also the only caller of
-    // Agent1.*, so when the name loses its owner the waiter is already gone. Only
-    // this test has a caller on a separate connection that outlives the name, so
-    // the path is defensive rather than a live bug.
     QSignalSpy cancelledSpy(&mgr, &vast::BluetoothAgentManager::pairingCancelled);
     QVERIFY2(bus->unregisterService(QString(kBluezService)), "could not unregister org.bluez");
     bluezServiceUp = false;

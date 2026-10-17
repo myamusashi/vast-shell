@@ -42,7 +42,7 @@ namespace {
         return QString::fromStdString(out);
     }
 
-} // namespace
+}
 
 class TestBrightnessDisplay : public QObject {
     Q_OBJECT

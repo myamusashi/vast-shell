@@ -13,8 +13,6 @@
 
 namespace {
 
-    // Posts a job that signals `sem` and reports the thread it ran on. QSemaphore is
-    // default-constructed on purpose: its argument is the initial count, not a target.
     [[nodiscard]] QThread* postAndWait(vast::JobExecutor& ex, QSemaphore& sem) {
         QThread* ranOn = nullptr;
         ex.post([&sem, &ranOn] {
@@ -25,7 +23,7 @@ namespace {
         return ranOn;
     }
 
-} // namespace
+}
 
 class TestJobExecutor : public QObject {
     Q_OBJECT
@@ -49,7 +47,6 @@ class TestJobExecutor : public QObject {
 };
 
 void TestJobExecutor::instanceReturnsTheSameObjectOnEveryCall() {
-    // A second worker thread for the whole process.
     QCOMPARE(&vast::JobExecutor::instance(), &vast::JobExecutor::instance());
 }
 
@@ -57,7 +54,6 @@ void TestJobExecutor::threadAccessorIsStableAndNonNull() {
     vast::JobExecutor& ex = vast::JobExecutor::instance();
 
     QVERIFY(ex.thread() != nullptr);
-    // Callers move objects onto this pointer.
     QCOMPARE(ex.thread(), ex.thread());
 }
 
@@ -76,7 +72,6 @@ void TestJobExecutor::jobsRunOffTheCallingThread() {
 
     QThread*           ranOn = postAndWait(ex, sem);
 
-    // Heavy work stays off the UI thread.
     QVERIFY2(ranOn != QThread::currentThread(), "the job ran on the posting thread");
 }
 
@@ -155,7 +150,6 @@ void TestJobExecutor::postingFromSeveralThreadsIsSafe() {
     QSemaphore         sem;
     std::atomic<int>   ran{0};
 
-    // Guards posting from a non-UI thread.
     std::vector<std::thread> posters;
     posters.reserve(kPosters);
     for (int p = 0; p < kPosters; ++p) {
@@ -204,7 +198,6 @@ void TestJobExecutor::aJobMayPostAnotherJobWithoutDeadlocking() {
     std::atomic<bool>  nested{false};
 
     ex.post([&] {
-        // Posted from the worker itself; post() only enqueues.
         ex.post([&] {
             nested = true;
             inner.release();
@@ -213,7 +206,6 @@ void TestJobExecutor::aJobMayPostAnotherJobWithoutDeadlocking() {
     });
 
     outer.acquire();
-    // Bounded only as a deadlock guard.
     QVERIFY2(inner.tryAcquire(1, 5000), "a job posting another job deadlocked the worker");
     QVERIFY(nested.load());
 }
@@ -259,7 +251,6 @@ void TestJobExecutor::anObjectMovedToTheWorkerThreadIsSeenFromAJob() {
     // The pattern WaylandDataControl uses.
     QVERIFY(sameThread.load());
 
-    // Move it back so it is not destroyed on a foreign thread.
     probe.moveToThread(QThread::currentThread());
 }
 

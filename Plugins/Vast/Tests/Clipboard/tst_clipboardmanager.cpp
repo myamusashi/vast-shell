@@ -34,8 +34,6 @@ namespace {
         return predicate();
     }
 
-    // The manager's database is private, so seed the SQLite file first and let
-    // initialize() load it through the normal path.
     qint64 seed(vast::ClipboardDatabase& db, const QString& content, qint64 timestamp, bool pinned = false) {
         vast::ClipboardEntry entry;
         entry.type      = vast::ClipboardType::Text;
@@ -49,7 +47,7 @@ namespace {
         return id.has_value() ? *id : -1;
     }
 
-} // namespace
+}
 
 class TestClipboardManager : public QObject {
     Q_OBJECT
@@ -80,8 +78,6 @@ class TestClipboardManager : public QObject {
     void propertySettersNotifyOnlyOnChange();
 
   private:
-    // Fixed for the duration of one test: a fresh file each time, because
-    // close() leaves the SQLite file behind and would carry rows across tests.
     [[nodiscard]] const QString& dbPath() const {
         return mDbPath;
     }
@@ -113,8 +109,6 @@ void TestClipboardManager::cleanupTestCase() {
     mManager.reset();
 }
 
-// QVERIFY expands to a bare `return`, so it cannot appear in a non-void
-// function; return a sentinel the caller checks instead.
 SSeeded TestClipboardManager::seedThreeUnpinned() {
     vast::ClipboardDatabase db;
     const auto              opened = db.open(dbPath());
@@ -317,7 +311,6 @@ void TestClipboardManager::pinPersistsToDatabase() {
     mManager->pin(ids.a, true);
     QCOMPARE(mManager->model()->idAtRow(0), ids.a);
 
-    // pin() defers the UPDATE through QTimer::singleShot(0).
     QVERIFY(spinUntil([this, ids] {
         vast::ClipboardDatabase db;
         if (!db.open(dbPath()).has_value())

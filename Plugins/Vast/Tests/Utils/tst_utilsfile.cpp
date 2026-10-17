@@ -77,7 +77,7 @@ void TestUtilsFile::writingOverAnExistingFileReplacesItEntirely() {
 }
 
 void TestUtilsFile::writingIntoAMissingDirectoryFails() {
-    // writeFile does not create parent directories (Write.cpp:9-12).
+    // writeFile does not create parent directories.
     QVERIFY(!Write::writeFile(path("nope/child.txt"), QStringLiteral("x")));
     QVERIFY(Read::readFile(path("nope/child.txt")).isNull());
 }

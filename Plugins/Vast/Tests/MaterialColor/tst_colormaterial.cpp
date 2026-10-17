@@ -14,8 +14,6 @@
 
 #include "../../Utils/ColorMaterial.hpp"
 
-// Rebuilds are debounced and finish on a worker thread, so waits pump the
-// event loop. The ceiling stops a deadlock from hanging the run.
 namespace {
 
     constexpr int K_TIMEOUT_MS = 30000;
@@ -49,7 +47,7 @@ namespace {
             QCoreApplication::processEvents(QEventLoop::AllEvents, 5);
     }
 
-} // namespace
+}
 
 class TestColorMaterial : public QObject {
     Q_OBJECT
@@ -112,8 +110,7 @@ void TestColorMaterial::clearsStateForEmptySource() {
     QVERIFY(material.error().isEmpty());
 }
 
-// A non-local source takes the empty-path branch: the palette clears and
-// nothing ever becomes ready, so wait on a fixed budget.
+// A non-local source clears the palette and never becomes ready.
 void TestColorMaterial::clearsStateForNonLocalSource() {
     ColorMaterial material;
     material.setSource(QUrl(QStringLiteral("https://example.invalid/wallpaper.png")));
@@ -218,19 +215,15 @@ void TestColorMaterial::settingUnchangedPropertyDoesNotNotify() {
     QCOMPARE(colorsSpy.count(), 0);
 }
 
-// The generation counter must stop an already-queued job from repopulating the
-// palette after the source was cleared.
 void TestColorMaterial::inFlightResultCannotResurrectClearedState() {
     ColorMaterial material;
 
     material.setSource(QUrl::fromLocalFile(mImages.first()));
-    // Pump just enough to queue the job on the worker.
     QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
 
     material.setSource(QUrl());
     QVERIFY(spinUntil([&material] { return material.colors().isEmpty(); }));
     QVERIFY(!material.ready());
-
     // Give any queued job ample time to land; it must be discarded.
     drain(K_DRAIN_MS);
     QVERIFY2(material.colors().isEmpty(), "a superseded result repopulated the palette after the source was cleared");
@@ -259,8 +252,6 @@ void TestColorMaterial::schemeChangeChangesColors() {
     QVERIFY(material.error().isEmpty());
 }
 
-// rescaleSize and smart can quantize to the same source color as the defaults,
-// and applyResult() only emits on a real change, so these wait on a drain.
 void TestColorMaterial::rescaleSizeChangeKeepsPaletteValid() {
     ColorMaterial material;
     material.setSource(QUrl::fromLocalFile(mImages.first()));

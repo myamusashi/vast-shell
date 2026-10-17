@@ -128,8 +128,6 @@ void TestBrightnessStore::concurrentFindDuringSaveIsSafe() {
     vast::BrightnessProfileStore store;
     store.save(QStringLiteral("p"), QVariantMap{{QStringLiteral("a"), 1}});
 
-    // std::shared_mutex is the class's entire concurrency contract; nothing
-    // else in the codebase exercises it under contention.
     auto reader = std::async(std::launch::async, [&store]() {
         for (int i = 0; i < 256; ++i) {
             const auto found = store.find(QStringLiteral("p"));

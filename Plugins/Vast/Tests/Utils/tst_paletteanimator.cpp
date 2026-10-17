@@ -35,7 +35,7 @@ namespace {
     constexpr qreal kEasedHalf    = 0.875;    // OutCubic(0.5) on a 300 ms animation
     constexpr qreal kEasedQuarter = 0.578125; // OutCubic(0.25)
 
-} // namespace
+}
 
 class TestPaletteAnimator : public QObject {
     Q_OBJECT
@@ -62,7 +62,6 @@ void TestPaletteAnimator::init() {
 }
 
 void TestPaletteAnimator::durationDefaultsTo300() {
-    // PaletteAnimator.cpp:7.
     QCOMPARE(mAnimator->duration(), 300);
 }
 
@@ -76,7 +75,6 @@ void TestPaletteAnimator::setDurationStoresAndSignals() {
 }
 
 void TestPaletteAnimator::currentPaletteStartsEmpty() {
-    // PaletteAnimator.cpp:35 leaves mCurrent default-constructed.
     QVERIFY(mAnimator->currentPalette().isEmpty());
 }
 
@@ -143,7 +141,7 @@ void TestPaletteAnimator::transitionToRestartsFromTheCurrentIntermediateFrame() 
     const QColor midway = primaryOf(mAnimator->currentPalette());
     QVERIFY(midway != QColor::fromRgba(0xFFFF0000));
 
-    // Interrupting mid-flight blends from the last interpolated frame (PaletteAnimator.cpp:18-23).
+    // Interrupting mid-flight blends from the last interpolated frame.
     mAnimator->transitionTo(uniformPalette("#00FF00"));
     settle(*mAnimator);
 

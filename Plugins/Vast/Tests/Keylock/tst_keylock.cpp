@@ -22,7 +22,7 @@ namespace {
 
     using Change = vast::KeyEventDecoder::Change;
 
-} // namespace
+}
 
 class TestKeylock : public QObject {
     Q_OBJECT
@@ -123,14 +123,13 @@ void TestKeylock::keyEventForNumLockTogglesOnlyNumLock() {
 
     QCOMPARE(d.applyEvent(ev(EV_KEY, KEY_NUMLOCK, 1), false), Change::NumLock);
     QVERIFY(d.numLock());
-    QVERIFY(d.capsLock()); // untouched
+    QVERIFY(d.capsLock());
 }
 
 void TestKeylock::keyModeTogglesEvenWhenTheStateDisagrees() {
     vast::KeyEventDecoder d;
     d.setState(true, false);
 
-    // Key mode toggles unconditionally and may drift; not a defect to fix.
     QCOMPARE(d.applyEvent(ev(EV_KEY, KEY_CAPSLOCK, 1), false), Change::CapsLock);
     QVERIFY(!d.capsLock());
 }
@@ -191,8 +190,7 @@ void TestKeylock::setStateSeedsBothLocks() {
 }
 
 void TestKeylock::keylockPropertiesMatchTheQmlSingleton() {
-    // A metaObject walk, so no Keylock is constructed. KeylockState.qml:9-10,
-    // OSD.qml:73,79 and CapsLockPopup.qml:82 bind these by name.
+    // KeylockState.qml:9-10, OSD.qml:73,79 and CapsLockPopup.qml:82 bind these by name.
     const QMetaObject* const meta = &vast::Keylock::staticMetaObject;
 
     for (const char* name : {"capsLock", "numLock"}) {

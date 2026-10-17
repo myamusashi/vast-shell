@@ -35,10 +35,9 @@ namespace {
         return sum;
     }
 
-    // Ten tokens: the 10 * 800 cap does not mask a 5000 ms gap.
     const char* const TEN_TOKENS = "a bb ccc dddd eeeee f g h i j";
 
-} // namespace
+}
 
 class TestLrcParser : public QObject {
     Q_OBJECT
@@ -110,7 +109,6 @@ void TestLrcParser::parsesThreeDigitMillisecondFraction() {
 }
 
 void TestLrcParser::rejectsOneDigitFraction() {
-    // The line regex requires \d{2,3} after the dot.
     const auto r = vast::LrcParser::parseLrc(QStringLiteral("[00:10.5]x"), 0.0);
     QVERIFY(r.lines.isEmpty());
 }
@@ -121,7 +119,6 @@ void TestLrcParser::rejectsTimestampWithoutAFraction() {
 }
 
 void TestLrcParser::rejectsSingleDigitMinutes() {
-    // \d{2} is required for minutes as well as seconds.
     const auto r = vast::LrcParser::parseLrc(QStringLiteral("[0:10.00]x"), 0.0);
     QVERIFY(r.lines.isEmpty());
 }
@@ -174,23 +171,19 @@ void TestLrcParser::translationIsTrimmed() {
 }
 
 void TestLrcParser::lastLineEndsAtFiveSecondsPastItsStartWhenTheTrackIsShorter() {
-    // lineEnd = max(lineStart + 5000, totalMs) = 15000, so the gap is 5000.
     const auto r  = vast::LrcParser::parseLrc(QStringLiteral("[00:10.00]%1").arg(QLatin1String(TEN_TOKENS)), 0.0);
     const auto ws = wordsAt(r, 0);
 
     QCOMPARE(ws.size(), 10);
-    // 5000 less 3 ms of per-word truncation.
     QCOMPARE(totalWordDuration(ws), 4997ll);
 }
 
 void TestLrcParser::lastLineEndsAtTheTotalDurationWhenTheTrackIsLonger() {
     const QString lrc = QStringLiteral("[00:10.00]%1").arg(QLatin1String(TEN_TOKENS));
 
-    // totalMs beats the +5000 floor: max(15000, 16000) = 16000, gap 6000.
     const auto mid = vast::LrcParser::parseLrc(lrc, 16.0);
     QCOMPARE(totalWordDuration(wordsAt(mid, 0)), 6000ll);
 
-    // A far longer track clamps the gap to tokens * 800.
     const auto longTrack = vast::LrcParser::parseLrc(lrc, 300.0);
     QCOMPARE(totalWordDuration(wordsAt(longTrack, 0)), 7997ll);
 }
@@ -207,7 +200,6 @@ void TestLrcParser::aNonFinalLineEndsAtTheNextTimestamp() {
 }
 
 void TestLrcParser::anEmptyLineIsDroppedButStillBoundsThePreviousLine() {
-    // lineEnd is computed before the empty-line continue, so line 0 still ends at 1000, not 2000.
     const auto r = vast::LrcParser::parseLrc(QStringLiteral("[00:00.00]aa bb\n[00:01.00]\n[00:02.00]cc"), 0.0);
 
     QCOMPARE(r.lines.size(), 2);
@@ -220,7 +212,6 @@ void TestLrcParser::anEmptyLineIsDroppedButStillBoundsThePreviousLine() {
 }
 
 void TestLrcParser::interpolatesWordDurationsByCharacterLength() {
-    // totalWeight 9, gap min(3000, 3*800) = 2400, shares (len+1)/9 * 2400.
     const auto ws = wordsAt(vast::LrcParser::parseLrc(QStringLiteral("[00:00.00]a bb ccc\n[00:03.00]next"), 0.0), 0);
 
     QCOMPARE(ws.size(), 3);
@@ -242,12 +233,10 @@ void TestLrcParser::interpolatedWordTimesAreCumulative() {
 }
 
 void TestLrcParser::capsInterpolatedDurationAtTokensTimes800() {
-    // A 60 s line for three tokens: the gap is clamped to 3 * 800 = 2400.
     const auto ws = wordsAt(vast::LrcParser::parseLrc(QStringLiteral("[00:00.00]a bb ccc\n[01:00.00]end"), 0.0), 0);
 
     QCOMPARE(ws.size(), 3);
     QVERIFY2(totalWordDuration(ws) <= 3 * 800, "words spread past tokens * 800");
-    // Truncation loses 1 ms of the 2400 budget; nothing is invented beyond it.
     QCOMPARE(totalWordDuration(ws), 2399ll);
 }
 
@@ -268,7 +257,6 @@ void TestLrcParser::wordSyncedIsFalseForInterpolatedLines() {
 }
 
 void TestLrcParser::anEmptyLineYieldsAnEmptyWordList() {
-    // Every token is stripped, so interpolateWords returns {}.
     const auto r = vast::LrcParser::parseLrc(QStringLiteral("[00:00.00]<b>\n[00:10.00]x"), 0.0);
 
     QCOMPARE(r.lines.size(), 2);
@@ -293,7 +281,6 @@ void TestLrcParser::wordTagDurationSpansToTheNextTag() {
 }
 
 void TestLrcParser::capsTheLastWordAt1500ms() {
-    // The next line is at 30000, so an uncapped duration would be 19100 ms.
     const auto ws = wordsAt(vast::LrcParser::parseLrc(QStringLiteral("[00:10.50]<00:10.50>Hello <00:10.90>world\n[00:30.00]end"), 0.0), 0);
     QCOMPARE(wordDuration(ws, 1), 1500ll);
 }
@@ -307,7 +294,6 @@ void TestLrcParser::wordTagsAcceptCentisecondAndMillisecondFractions() {
 }
 
 void TestLrcParser::duplicateWordTagTimesGiveZeroDuration() {
-    // qMax<qint64>(0, nextT - t) floors the zero-length span at 0.
     const auto ws = wordsAt(vast::LrcParser::parseLrc(QStringLiteral("[00:00.00]<00:10.00>A <00:10.00>B\n[00:30.00]e"), 0.0), 0);
 
     QCOMPARE(ws.size(), 2);
@@ -381,7 +367,6 @@ void TestLrcParser::parsePlainSplitsWordsOnSpaces() {
 }
 
 void TestLrcParser::parsePlainTreatsLrcTagsAsLiteralText() {
-    // No tag handling on this path: the bracket is part of the lyric.
     const auto ln = lineAt(vast::LrcParser::parsePlain(QStringLiteral("[00:10.00]hello")), 0);
     QCOMPARE(ln.value(QStringLiteral("text")).toString(), QStringLiteral("[00:10.00]hello"));
 }
@@ -394,7 +379,6 @@ void TestLrcParser::parsePlainOnEmptyInputYieldsEmptyLists() {
 }
 
 void TestLrcParser::linesAndWordLinesStayIndexAligned() {
-    // rebuildBoundaries indexes mWordLines by lineIndex, so the two stay aligned.
     const QList<QString> lrcs{
         QStringLiteral("[00:00.00]a bb\n[00:01.00]\n[00:02.00]c d"),
         QStringLiteral("[00:10.50]<00:10.50>Hello <00:10.90>world\n[00:30.00]end"),

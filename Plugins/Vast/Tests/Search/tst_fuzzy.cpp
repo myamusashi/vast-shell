@@ -8,29 +8,24 @@
 
 #include <array>
 
-// Ranking vectors ported from the vendored upstream fzy suite
-// (Plugins/third_party/fzy/test/test_match.c), which is the authority on what
-// fzy scoring should prefer.
 namespace {
 
     double rank(const char* needle, const char* haystack) {
         return vast::fzy::score(QString::fromLatin1(needle), QString::fromLatin1(haystack));
     }
 
-} // namespace
+}
 
 class TestFuzzy : public QObject {
     Q_OBJECT
 
   private Q_SLOTS:
-    // --- upstream fzy parity: has_match ---
     void exactMatchIsTrue();
     void partialMatchIsTrue();
     void delimitersBetweenNeedleCharsStillMatch();
     void nonMatchIsFalse();
     void emptyNeedleNeverMatches();
 
-    // --- upstream fzy parity: ranking ---
     void prefersWordStarts();
     void prefersConsecutiveLetters();
     void prefersContiguousOverPeriodBoundary();
@@ -39,14 +34,12 @@ class TestFuzzy : public QObject {
     void prefersStartOfCandidate();
     void prefersShorterPathsOnTie();
 
-    // --- upstream fzy parity: positions ---
     void positionsConsecutive();
     void positionsPreferWordStart();
     void positionsWithoutBonuses();
     void positionsMultipleCandidatesPickWordStarts();
     void positionsExactMatch();
 
-    // --- FuzzyCore contract beyond upstream ---
     void scoredMatchAgreesWithGateAndScore();
     void utf8OverloadAgreesWithQStringOverload();
     void positionsAreStrictlyAscendingAndInRange();
@@ -55,7 +48,6 @@ class TestFuzzy : public QObject {
     void needleLongerThanHaystackDoesNotMatch();
     void scoresAreFinite();
 
-    // --- FuzzyMatcher: normalization ---
     void normalizesAccentedLatin();
     void normalizationIsIdempotent();
     void iAndLShareAFoldTarget();
@@ -63,17 +55,14 @@ class TestFuzzy : public QObject {
     void normalizationLowercasesAscii();
     void normalizationPreservesLength();
 
-    // --- FuzzyMatcher: html escaping ---
     void escapesAllFiveEntities();
     void escapeIsIdentityOnPlainText();
 
-    // --- FuzzyMatcher: highlighting ---
     void highlightWrapsMatchedRun();
     void highlightEscapesInsideAndOutside();
     void highlightWithoutMatchIsPlainEscaped();
     void highlightEmptyQueryIsPlainEscaped();
 
-    // --- FuzzyMatcher: scoring ---
     void emptyQueryScoresZero();
     void whitespaceOnlyQueryScoresZero();
     void exactMatchOutranksPartial();
@@ -103,8 +92,6 @@ void TestFuzzy::nonMatchIsFalse() {
     QVERIFY(!vast::fzy::hasMatch(QStringLiteral("ass"), QStringLiteral("tags")));
 }
 
-// Deviation from upstream, which matches an empty needle. An empty needle
-// means "no filter" here, so it must not count as a match.
 void TestFuzzy::emptyNeedleNeverMatches() {
     QVERIFY(!vast::fzy::hasMatch(QString(), QString()));
     QVERIFY(!vast::fzy::hasMatch(QString(), QStringLiteral("a")));
@@ -266,7 +253,6 @@ void TestFuzzy::positionsAreQCharIndicesNotByteOffsets() {
 void TestFuzzy::overlongHaystackIsUnscoreable() {
     const QString                huge(3000, QChar('a'));
     const vast::fzy::MatchResult result = vast::fzy::matchPositions(QStringLiteral("a"), huge);
-    // Gated as a match, but not scoreable: no backtrace.
     QVERIFY(!result.matched);
     QVERIFY(result.positions.empty());
 }
@@ -277,7 +263,6 @@ void TestFuzzy::needleLongerThanHaystackDoesNotMatch() {
     QVERIFY(result.positions.empty());
 }
 
-// fzy signals "no score" with infinity; the port substitutes finite sentinels.
 void TestFuzzy::scoresAreFinite() {
     const std::array cases = {
         std::pair{QStringLiteral("app"), QStringLiteral("app")},
@@ -327,13 +312,10 @@ void TestFuzzy::normalizationFoldsLeetspeak() {
 
 void TestFuzzy::normalizationLowercasesAscii() {
     QCOMPARE(vast::FuzzyMatcher::normalizeText(QStringLiteral("ABCdef")), QStringLiteral("abcdef"));
-    // Digits and punctuation are folded too; see normalizationFoldsLeetspeak.
     QCOMPARE(vast::FuzzyMatcher::normalizeText(QStringLiteral("MiXeD App")), QStringLiteral("mlxed app"));
 }
 
 void TestFuzzy::normalizationPreservesLength() {
-    // highlightedHtml slices the original using positions from the normalized
-    // text, so normalization must preserve length.
     const QStringList samples{QStringLiteral("Café"), QStringLiteral("日本語"), QStringLiteral("naïve"), QStringLiteral("Ångström"), QStringLiteral("İ"), QStringLiteral("açaí")};
     for (const QString& sample : samples)
         QCOMPARE(vast::FuzzyMatcher::normalizeText(sample).length(), sample.length());
@@ -400,7 +382,6 @@ void TestFuzzy::multiWordAveragesAcrossWords() {
 }
 
 void TestFuzzy::typoFallbackFindsNonSubsequence() {
-    // Not a subsequence, so only the edit-distance fallback can find it.
     QVERIFY(!vast::fzy::hasMatch(QStringLiteral("firefoz"), QStringLiteral("firefox")));
     const double typo = vast::FuzzyMatcher::fuzzyScore(QStringLiteral("firefoz"), QStringLiteral("firefox"));
     QVERIFY2(typo > 0.0, "the typo fallback must still produce a positive score");
@@ -423,7 +404,6 @@ void TestFuzzy::cachedEncodingMatchesStringApi() {
 }
 
 void TestFuzzy::multiFieldPrefersPrimaryWhenDecisive() {
-    // A perfect primary match short-circuits, so the result equals it.
     const QStringList words{QStringLiteral("firefox")};
     const double      primary     = vast::FuzzyMatcher::multiFieldScore(words, QStringLiteral("firefox"), QStringLiteral("firefox"), QStringLiteral("zzzz"));
     const double      primaryOnly = vast::FuzzyMatcher::multiWordScore(words, QStringLiteral("firefox"));

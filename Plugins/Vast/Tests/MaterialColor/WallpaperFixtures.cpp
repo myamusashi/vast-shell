@@ -48,7 +48,7 @@ namespace vast::test {
             return manifest;
         }
 
-    } // namespace
+    }
 
     QStringList wallpaperFixtures() {
         const SManifest manifest = readManifest();
@@ -81,4 +81,4 @@ namespace vast::test {
         return true;
     }
 
-} // namespace vast::test
+}

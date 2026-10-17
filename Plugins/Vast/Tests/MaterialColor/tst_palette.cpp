@@ -68,7 +68,7 @@ namespace {
         return ramp;
     }
 
-} // namespace
+}
 
 class TestPalette : public QObject {
     Q_OBJECT
@@ -106,7 +106,6 @@ class TestPalette : public QObject {
     QStringList mImages;
 };
 
-// 20 images x 2 modes covers every fixture in every pairing.
 void TestPalette::initTestCase() {
     QString error;
     QVERIFY2(vast::test::requireWallpaperFixtures(error), qPrintable(error));

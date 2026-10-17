@@ -54,7 +54,7 @@ namespace {
                          {profile(0, "output:stereo", "Stereo"), profile(1, "output:surround-51", "Surround 51")});
     }
 
-} // namespace
+}
 
 class TestAudioCards : public QObject {
     Q_OBJECT
@@ -373,7 +373,6 @@ void TestAudioCards::countChangesOnlyFireOnInsertAndRemove() {
 }
 
 void TestAudioCards::watchersConstructAndExposeNonNullModels() {
-    // connected() is not asserted: the result depends on whether a PipeWire daemon is running. The
     // models must exist and start empty.
     AudioProfilesWatcher profiles;
     AudioDevicesWatcher  devices;

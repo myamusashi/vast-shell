@@ -40,14 +40,8 @@ namespace {
         return goldens;
     }
 
-} // namespace
+}
 
-// Quantizer parity: image bytes -> sourceColor, the step before the one
-// tst_spec_parity covers. ImageQuantizer reimplements Pillow's bicubic
-// resample, so it is compared against the reference here.
-//
-// The quantizer is not scale-invariant, so the goldens must be generated from
-// these exact fixture bytes; build_quantizer_fixtures.py does both.
 class TestQuantizerParity : public QObject {
     Q_OBJECT
 
@@ -120,8 +114,6 @@ void TestQuantizerParity::survivesEveryBitmapSize() {
     }
 }
 
-// Guards the rescale path: without it every size returns the same accent and
-// the per-image checks still pass. Observed spread is 13 colors.
 void TestQuantizerParity::rescalePathVariesWithBitmapSize() {
     const QDir    dir(QString::fromLatin1(VAST_TEST_QUANTIZER_DIR));
     QSet<quint32> seen;

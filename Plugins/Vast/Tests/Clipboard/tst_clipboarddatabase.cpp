@@ -11,7 +11,6 @@
 #include <memory>
 #include <vector>
 
-// Every method returns std::expected, so tests assert has_value() and read *result.
 namespace {
 
     vast::ClipboardEntry makeEntry(const QByteArray& content, vast::ClipboardType type = vast::ClipboardType::Text, bool pinned = false, qint64 timestamp = 0) {
@@ -27,7 +26,7 @@ namespace {
         return entry;
     }
 
-} // namespace
+}
 
 class TestClipboardDatabase : public QObject {
     Q_OBJECT
@@ -77,8 +76,6 @@ void TestClipboardDatabase::initTestCase() {
 }
 
 void TestClipboardDatabase::init() {
-    // std::expected::error() is undefined when the value is held, and QVERIFY2
-    // evaluates its message eagerly, so branch before touching error().
     const auto opened = mDb.open(dbPath());
     if (!opened.has_value())
         QFAIL(qPrintable(opened.error()));

@@ -23,7 +23,7 @@ namespace {
         file.close();
     }
 
-} // namespace
+}
 
 class TestImageCacheIndex : public QObject {
     Q_OBJECT
@@ -146,7 +146,6 @@ void TestImageCacheIndex::allPathsReturnsEveryValue() {
 
 void TestImageCacheIndex::indexPersistsAcrossInstances() {
     const QString dir = freshDir("persist");
-    // load() drops entries whose file is gone, so the file must exist.
     const QString real = dir + QStringLiteral("/persisted.png");
     {
         QFile file(real);
@@ -159,7 +158,6 @@ void TestImageCacheIndex::indexPersistsAcrossInstances() {
     const QString   url = ImageCacheIndex::toFileUrl(real);
     first.insert(QStringLiteral("key"), url);
 
-    // The on-disk contract save()/load() exist for.
     ImageCacheIndex second(dir);
     QCOMPARE(second.lookup(QStringLiteral("key")), url);
 }
@@ -181,10 +179,7 @@ void TestImageCacheIndex::loadDropsEntriesWhoseFileIsMissing() {
 
     ImageCacheIndex index(dir);
 
-    // load() stores the JSON value verbatim, so a plain path stays plain; the
-    // file:// conversion is the caller's job, not the index's.
     QCOMPARE(index.lookup(QStringLiteral("live")), live);
-    // The QFile::exists filter drops dead entries.
     QVERIFY(index.lookup(QStringLiteral("dead")).isEmpty());
     QCOMPARE(index.allPaths().size(), 1);
 }
@@ -206,7 +201,6 @@ void TestImageCacheIndex::loadOnAMissingIndexFileYieldsAnEmptyIndex() {
 
 void TestImageCacheIndex::loadOnTruncatedJsonYieldsAnEmptyIndex() {
     const QString dir = freshDir("truncated");
-    // A half-written file is a real state: the process can die mid-save().
     writeIndex(dir, QByteArrayLiteral("{\"a\":"));
 
     ImageCacheIndex index(dir);
@@ -227,12 +221,9 @@ void TestImageCacheIndex::indexFileLandsInsideTheInjectedDirectory() {
     ImageCacheIndex index(dir);
     index.insert(QStringLiteral("key"), ImageCacheIndex::toFileUrl(real));
 
-    // path() is private, so the injected-directory seam is proven by its
-    // effect: the index file lands inside the directory that was passed in.
     const QString injected = dir + QStringLiteral("/.index.json");
     QVERIFY2(QFile::exists(injected), qPrintable(injected));
 
-    // And what was written really is the index, readable by a fresh instance.
     ImageCacheIndex reloaded(dir);
     QCOMPARE(reloaded.lookup(QStringLiteral("key")), ImageCacheIndex::toFileUrl(real));
 }
@@ -240,8 +231,6 @@ void TestImageCacheIndex::indexFileLandsInsideTheInjectedDirectory() {
 void TestImageCacheIndex::staticDirectoryIsUnaffectedByInjection() {
     ImageCacheIndex index(freshDir("staticcheck"));
 
-    // The seam is instance-scoped: production still resolves to the real
-    // notification directory, and injecting a directory does not change it.
     QCOMPARE(ImageCacheIndex::directory(), QStringLiteral("/tmp/vast-shell/notif-images"));
     QVERIFY(index.lookup(QStringLiteral("absent")).isEmpty());
 }

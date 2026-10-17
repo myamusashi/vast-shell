@@ -29,7 +29,7 @@ namespace {
         return raw.toBase64();
     }
 
-} // namespace
+}
 
 class TestLyricsCache : public QObject {
     Q_OBJECT
@@ -55,7 +55,6 @@ class TestLyricsCache : public QObject {
 };
 
 void TestLyricsCache::initTestCase() {
-    // Runs before anything touches CacheLocation, so the real cache is untouched.
     QStandardPaths::setTestModeEnabled(true);
     QDir dir(cacheDir());
     dir.removeRecursively();
@@ -97,7 +96,6 @@ void TestLyricsCache::saveThenLoadRoundTripsRawJsonAndDuration() {
 
 void TestLyricsCache::roundTripsNonAsciiPayloadsByteForByte() {
     const QString key = QStringLiteral("tst-utf8");
-    // Accents, CJK and a non-BMP emoji, so the base64 envelope is proven lossless.
     const QByteArray payload = QString::fromUtf8("{\"t\":\"Café 日本語 🎵\"}").toUtf8();
 
     vast::LyricsCache::save(key, payload, 1.0);
@@ -121,7 +119,6 @@ void TestLyricsCache::loadRejectsAnEmptyRawPayload() {
 
 void TestLyricsCache::loadRejectsAnOldFormatRawPassthroughFile() {
     const QString key = QStringLiteral("tst-oldformat");
-    // The pre-envelope format stored the payload verbatim; such files miss on purpose.
     writeRaw(key, R"([{"id":1,"trackName":"x"}])");
 
     QVERIFY(!vast::LyricsCache::load(key).has_value());
@@ -173,7 +170,6 @@ void TestLyricsCache::savingTheSamePayloadTwiceIsStable() {
 }
 
 void TestLyricsCache::writesIntoTheCacheLocationLyricsSubdirectory() {
-    // path() is private, so the location is checked by its effect.
     vast::LyricsCache::save(QStringLiteral("tst-location"), QByteArrayLiteral("{}"), 1.0);
 
     QVERIFY2(QDir(cacheDir()).exists(), qPrintable(cacheDir()));

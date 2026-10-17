@@ -17,7 +17,6 @@
 
 namespace {
 
-    // imageType() is non-virtual, so the type must come from the base constructor.
     class TestImageProvider : public QQuickImageProvider {
       public:
         explicit TestImageProvider(QQmlImageProviderBase::ImageType type) : QQuickImageProvider(type) {}
@@ -42,7 +41,6 @@ namespace {
         int    mCalls{0};
     };
 
-    // QVERIFY cannot be used in a value-returning function.
     [[nodiscard]] QString writePng(const QTemporaryDir& dir, const QString& name, const QSize& size) {
         QImage image(size, QImage::Format_RGB32);
         image.fill(QColor(40, 90, 180));
@@ -56,7 +54,7 @@ namespace {
         return ImageCacheIndex::fromFileUrl(fileUrl);
     }
 
-} // namespace
+}
 
 class TestImageCache : public QObject {
     Q_OBJECT
@@ -88,18 +86,15 @@ class TestImageCache : public QObject {
         return mCache;
     }
 
-    // A unique source per case, so mDone cannot suppress the signal.
     [[nodiscard]] QString uniqueSource(const char* tag, const QSize& size = QSize(8, 8)) {
         const QString path = writePng(*mSource, QStringLiteral("%1-%2.png").arg(QString::fromLatin1(tag), QString::number(mSeq++)), size);
         Q_ASSERT(!path.isEmpty());
         return path;
     }
 
-    // Drain completions from earlier cases, or spy.at(0) is a leftover path. Waits for two quiet
-    // windows.
+    // Drain completions from earlier cases.
     void settleCompletions();
 
-    // A failed case can leave tst-key-* behind and make the next run pass for the wrong reason.
     void                           evictTestKeys();
 
     std::unique_ptr<QTemporaryDir> mSource;
@@ -127,8 +122,6 @@ void TestImageCache::initTestCase() {
     mPixmapProv = new TestImageProvider(QQmlImageProviderBase::Pixmap);
     mEngine->addImageProvider(QStringLiteral("qstestpixmap"), mPixmapProv);
 
-    // One instance per process; create() takes the engine so saveProviderImage passes its NoEngine
-    // guard.
     mCache = ImageCache::create(mEngine.get(), nullptr);
     QVERIFY(mCache != nullptr);
 }
@@ -305,7 +298,6 @@ void TestImageCache::saveProviderImageReturnsTheCachedValueOnASecondCall() {
 
     QVERIFY(second.has_value());
     QCOMPARE(*second, *first);
-    // The mIndex.lookup short-circuit means the provider is not consulted again.
     QCOMPARE(mProvider->calls(), callsBefore);
 }
 

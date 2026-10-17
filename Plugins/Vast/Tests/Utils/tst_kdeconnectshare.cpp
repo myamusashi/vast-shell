@@ -51,7 +51,7 @@ namespace {
         return QStringLiteral("private bus setup failed at %1 on %2").arg(step, address);
     }
 
-} // namespace
+}
 
 class FakeSharePlugin : public QObject, public QDBusContext {
     Q_OBJECT

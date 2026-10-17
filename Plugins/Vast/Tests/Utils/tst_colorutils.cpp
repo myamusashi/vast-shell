@@ -18,12 +18,12 @@ namespace {
     }
 
     // QRgb, not int: 0xFFFF0000 exceeds INT_MAX.
-    constexpr QRgb kRedRgba   = 0xFFFF0000; // #FF0000
-    constexpr QRgb kBlueRgba  = 0xFF0000FF; // #0000FF
-    constexpr QRgb kHalfRgba  = 0xFF8C53A2; // #8C53A2, the OKLab midpoint
+    constexpr QRgb kRedRgba   = 0xFFFF0000;
+    constexpr QRgb kBlueRgba  = 0xFF0000FF;
+    constexpr QRgb kHalfRgba  = 0xFF8C53A2; // the OKLab midpoint
     constexpr QRgb kHalfARgba = 0x808C53A2; // the same RGB, alpha 128
 
-} // namespace
+}
 
 class TestColorUtils : public QObject {
     Q_OBJECT
@@ -228,7 +228,7 @@ void TestColorUtils::createAnalogousColorWrapsNegativeShifts() {
 }
 
 void TestColorUtils::createTonalColorIsDarkerForLowTone() {
-    // tone < 10 scales chroma by 0.4 (ColorUtils.cpp:146).
+    // tone < 10 scales chroma by 0.4
     QCOMPARE(ColorUtils::createTonalColor(QColor::fromRgba(0xFF3F51B5), 5.0).rgba(), 0xFF0A0D2E);
 }
 

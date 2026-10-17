@@ -21,7 +21,7 @@ namespace {
         return QGuiApplication::translate(kContext, source);
     }
 
-} // namespace
+}
 
 class TestTranslation : public QObject {
     Q_OBJECT
@@ -55,7 +55,6 @@ void TestTranslation::init() {
 }
 
 void TestTranslation::currentLanguageDefaultsToEnUs() {
-    // TranslationManager.cpp:14.
     QCOMPARE(mManager->currentLanguage(), QStringLiteral("en_US"));
 }
 
@@ -81,7 +80,6 @@ void TestTranslation::loadTranslationEmitsLanguageChangedExactlyOnce() {
 }
 
 void TestTranslation::loadTranslationSetsTheDefaultLocale() {
-    // QLocale::setDefault is process-wide (TranslationManager.cpp:50), so pin the C locale first.
     QLocale::setDefault(QLocale::c());
 
     QVERIFY(mManager->loadTranslation(QStringLiteral("id_ID"), QStringLiteral(VAST_TRANSLATIONS_DIR)));
@@ -121,8 +119,6 @@ void TestTranslation::aFailedLoadLeavesTheCurrentLanguageAlone() {
 }
 
 void TestTranslation::theDefaultTranslationPathIsNotUsable() {
-    // DEFAULT_TRANSLATION_PATH is ":/translations" (TranslationManager.hpp:19) and nothing installs it
-    // there, so Configs.qml always passes an explicit path.
     QVERIFY(!mManager->loadTranslation(QStringLiteral("id_ID")));
 
     QCOMPARE(mManager->currentLanguage(), QStringLiteral("en_US"));
@@ -134,7 +130,6 @@ void TestTranslation::setCurrentLanguageWithTheSameValueEmitsNothing() {
     QSignalSpy spy(mManager.get(), &TranslationManager::languageChanged);
     mManager->setCurrentLanguage(QStringLiteral("id_ID"));
 
-    // The early return at TranslationManager.cpp:26-27.
     QCOMPARE(spy.count(), 0);
 }
 
@@ -157,7 +152,6 @@ void TestTranslation::setCurrentLanguageToAnUnknownValueKeepsTheCurrentOne() {
 
     mManager->setCurrentLanguage(QStringLiteral("zz_ZZ"));
 
-    // The warning branch at TranslationManager.cpp:29-30.
     QCOMPARE(mManager->currentLanguage(), QStringLiteral("id_ID"));
 }
 

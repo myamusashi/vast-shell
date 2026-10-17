@@ -127,7 +127,7 @@ namespace {
         };
     }
 
-} // namespace
+}
 
 class TestSearch : public QObject {
     Q_OBJECT
@@ -371,10 +371,6 @@ void TestSearch::appSearchToleratesDroppedCharacter() {
 // The edit-distance fallback scores at most K_TYPO_FALLBACK_WEIGHT (0.5),
 // while the floor is 0.45 per query character -- 3.15 here -- so a
 // non-subsequence typo is never listed.
-//
-// The band pins the magnitude: "below the floor" alone would survive a
-// tenfold cut in K_TYPO_FALLBACK_WEIGHT. Retuning that constant should mean
-// updating this test deliberately.
 void TestSearch::editDistanceFallbackStaysBelowAppThreshold() {
     const QString query = QStringLiteral("firefoz");
     const double  score = vast::FuzzyMatcher::fuzzyScore(query, QStringLiteral("firefox"));

@@ -16,5 +16,4 @@ namespace vast::test {
     /// missing, so a partial checkout reports "regenerate fixtures" rather than
     /// a confusing null-image failure deep inside the quantizer.
     bool requireWallpaperFixtures(QString& error);
-
-} // namespace vast::test
+}
