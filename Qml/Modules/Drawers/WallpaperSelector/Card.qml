@@ -12,41 +12,21 @@ import qs.Core.Utils
 Item {
     id: root
 
-    required property real carouselHeight
+    required property real closeness
     required property var  controller
     required property int  index
     required property bool isCurrent
     required property var  modelData
     required property var  thumbnailAvailability
+    required property real viewportWidth
+
+    readonly property real foldFraction: width > 0 ? visibleWidth / width : 0
+    readonly property real visibleWidth: Math.max(0, Math.min(x + width, viewportWidth) - Math.max(x, 0))
 
     signal                 activateRequested(var modelData)
     signal                 selectRequested(int index)
 
-    // Portion of this slot currently inside the viewport. Cards squash against
-    // the edge while scrolling instead of being cropped by the view clip.
-    readonly property real viewportLeft: ListView.view.contentX
-    readonly property real viewportRight: viewportLeft + ListView.view.width
-    readonly property real visibleWidth: Math.max(0, Math.min(x + width, viewportRight) - Math.max(x, viewportLeft))
-
-    // 0 = large, 1 = medium, 2 and beyond = small.
-    readonly property int  distance: isCurrent ? 0 : Math.abs(index - ListView.view.currentIndex)
-
-    property real          heightFactor: distance === 0 ? 1 : (distance === 1 ? 0.9 : 0.82)
-    property real          widthFactor: distance === 0 ? 1.2 : (distance === 1 ? 0.88 : 0.72)
-
-    Behavior on heightFactor {
-        NAnim {
-            duration: Appearance.animations.durations.normal
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-    Behavior on widthFactor {
-        NAnim {
-            duration: Appearance.animations.durations.normal
-            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-        }
-    }
-    z: isCurrent ? 100 : 1
+    z: closeness
     onIsCurrentChanged: {
         if (!isCurrent)
             return;
@@ -59,29 +39,19 @@ Item {
     ClippingRectangle {
         id: card
 
-        implicitWidth: root.visibleWidth * root.widthFactor
-        implicitHeight: root.carouselHeight * root.heightFactor
-        x: Math.max(root.x, root.viewportLeft) - root.x + (root.visibleWidth - width) / 2
-        y: (root.carouselHeight - height) / 2
+        anchors.fill: parent
         color: "transparent"
-        opacity: root.distance === 0 ? 1.0 : (root.distance === 1 ? 0.92 : 0.85)
-        radius: root.isCurrent ? Appearance.rounding.large : Appearance.rounding.normal
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
-        }
-        Behavior on radius {
-            NAnim {
-                duration: Appearance.animations.durations.normal
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            }
+        opacity: 0.85 + 0.15 * root.closeness
+        radius: Appearance.rounding.normal
+        visible: root.foldFraction > 0.01
+        transform: Scale {
+            origin.x: root.x < 0 ? root.width : 0
+            xScale: root.foldFraction
         }
 
         Elevation {
             anchors.fill: parent
-            level: root.isCurrent ? 3 : 0
+            level: root.closeness > 0.5 ? 3 : 0
             z: -1
         }
 
@@ -90,7 +60,7 @@ Item {
             asynchronous: true
             cache: true
             fillMode: Image.PreserveAspectCrop
-            source: MediaKind.isVideo(root.modelData) ? "" : "file://" + root.modelData
+            source: root.visible && !MediaKind.isVideo(root.modelData) ? "file://" + root.modelData : ""
             sourceSize: Qt.size(200, 200)
         }
 
@@ -100,7 +70,7 @@ Item {
             anchors.fill: parent
             asynchronous: true
             fillMode: Image.PreserveAspectCrop
-            source: root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
+            source: root.visible && root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
             visible: status === Image.Ready && !videoPreview.active
             onStatusChanged: {
                 if (status === Image.Error && MediaKind.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
@@ -149,11 +119,8 @@ Item {
             id: dimOverlay
 
             anchors.fill: parent
-            color: root.isCurrent ? "transparent" : Qt.rgba(0, 0, 0, 0.22)
+            color: Qt.rgba(0, 0, 0, 0.22 * (1 - root.closeness) + 0.3 * (1 - root.foldFraction))
             radius: card.radius
-            Behavior on color {
-                CAnim {}
-            }
         }
 
         MArea {
