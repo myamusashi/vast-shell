@@ -36,13 +36,13 @@ Drawer {
         });
     }
 
-    alignment: Qt.AlignRight
+    alignment: Qt.AlignBottom
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
     depth: parent.height * 0.35
-    edge: Qt.BottomEdge
+    edge: Qt.RightEdge
     filletRadius: 40
     length: 380
     onOpenChanged: {

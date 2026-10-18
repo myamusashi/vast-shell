@@ -24,6 +24,8 @@ Singleton {
     readonly property bool   isNumLockOSDVisible: osd.isActive("numlock")
     readonly property bool   isSwitchingDrawer: panel.isSwitchingDrawer
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
+    readonly property real   launcherLengthRatio: panel.launcherLengthRatio
+    readonly property real   wallpaperSwitcherLengthRatio: panel.wallpaperSwitcherLengthRatio
 
     property var             inlineReplyOwner: null
     property bool            isAddTodoListOpen: false

@@ -15,6 +15,7 @@ Item {
     required property color       color
     required property bool        isFocusedMonitor
     required property ShellScreen window
+    required property bool        isDockVisible
 
     readonly property real        borderSize: enableOuterBorder ? outerBorderSize : 0
     readonly property real        effectiveInnerRadius: Math.max(0, Math.min(innerRadius, holeWidth / 2, holeHeight / 2))
@@ -27,6 +28,7 @@ Item {
 
     property real                 barHeight: 40
     property real                 bottomThickness: exclusiveBottom.zone
+    property real                 dockHeight: 0
     property bool                 enableOuterBorder: false
     property real                 innerRadius: 24
     property bool                 isBarOpen: false
@@ -89,6 +91,16 @@ Item {
             anchors.bottom: true
             exclusiveZone: root.borderSize
             name: "bottom"
+        }
+
+        Exclusion {
+            id: exclusiveDock
+
+            property alias zone: exclusiveDock.exclusiveZone
+
+            anchors.bottom: true
+            exclusiveZone: root.isDockVisible ? root.dockHeight : 0
+            name: "dock"
         }
     }
 

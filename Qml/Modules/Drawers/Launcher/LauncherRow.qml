@@ -67,6 +67,28 @@ ItemDelegate {
                 visible: text !== ""
             }
         }
+
+        Item {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.rightMargin: Appearance.margin.normal
+            implicitHeight: 32
+            implicitWidth: 32
+
+            Icon {
+                anchors.centerIn: parent
+                color: DockServices.isPinned(root.modelData.entry.id) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.large
+                icon: "push_pin"
+            }
+
+            MArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                layerRadius: Appearance.rounding.normal
+                z: 1
+                onClicked: DockServices.togglePin(root.modelData.entry.id)
+            }
+        }
     }
 
     MArea {

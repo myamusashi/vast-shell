@@ -14,9 +14,11 @@ Item {
     property real                barHeight: 40
     property alias               bottomThickness: frame.bottomThickness
     default property alias       content: holeItem.data
+    property real                dockHeight: 0
     property bool                enableOuterBorder: false
     property alias               innerRadius: frame.innerRadius
     property bool                isBarOpen: false
+    property bool                isDockVisible: false
     property alias               leftThickness: frame.leftThickness
     property real                outerBorderSize: 0
     property alias               rightThickness: frame.rightThickness
@@ -38,9 +40,11 @@ Item {
 
         anchors.fill: parent
         barHeight: root.barHeight
+        dockHeight: root.dockHeight
         color: root.color
         enableOuterBorder: root.enableOuterBorder
         isBarOpen: root.isBarOpen
+        isDockVisible: root.isDockVisible
         isFocusedMonitor: root.isFocusedMonitor
         outerBorderSize: root.outerBorderSize
         window: root.window

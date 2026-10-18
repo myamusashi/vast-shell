@@ -118,6 +118,10 @@ LazyLoader {
                                     {
                                         icon: "privacy",
                                         label: qsTr("Privacy Nodes")
+                                    },
+                                    {
+                                        icon: "dock",
+                                        label: qsTr("Dock")
                                     }
                                 ]
                             },
@@ -331,7 +335,7 @@ LazyLoader {
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 12
                             visible: settingsLoader.currentPage === 12
-                            sourceComponent: InternetPage {}
+                            sourceComponent: DockPage {}
                         }
 
                         Loader {
@@ -339,7 +343,7 @@ LazyLoader {
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 13
                             visible: settingsLoader.currentPage === 13
-                            sourceComponent: BluetoothPage {}
+                            sourceComponent: InternetPage {}
                         }
 
                         Loader {
@@ -347,7 +351,7 @@ LazyLoader {
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 14
                             visible: settingsLoader.currentPage === 14
-                            sourceComponent: KDEConnectPage {}
+                            sourceComponent: BluetoothPage {}
                         }
 
                         Loader {
@@ -355,7 +359,7 @@ LazyLoader {
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 15
                             visible: settingsLoader.currentPage === 15
-                            sourceComponent: GreeterPage {}
+                            sourceComponent: KDEConnectPage {}
                         }
 
                         Loader {
@@ -363,7 +367,7 @@ LazyLoader {
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 16
                             visible: settingsLoader.currentPage === 16
-                            sourceComponent: IdlePage {}
+                            sourceComponent: GreeterPage {}
                         }
 
                         Loader {
@@ -371,6 +375,14 @@ LazyLoader {
                             Layout.fillWidth: true
                             active: settingsLoader.currentPage === 17
                             visible: settingsLoader.currentPage === 17
+                            sourceComponent: IdlePage {}
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 18
+                            visible: settingsLoader.currentPage === 18
                             sourceComponent: LockscreenPage {}
                         }
                     }

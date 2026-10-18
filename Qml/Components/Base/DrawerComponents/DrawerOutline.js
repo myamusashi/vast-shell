@@ -17,6 +17,9 @@ function toPoint(options, alongEdge, acrossEdge) {
 }
 
 function arc(options, radius, sweep, alongEdge, acrossEdge) {
+    if (radius <= 0)
+        return "L " + toPoint(options, alongEdge, acrossEdge);
+
     return "A " + radius + " " + radius + " 0 0 " + sweep + " " + toPoint(options, alongEdge, acrossEdge);
 }
 
@@ -25,6 +28,7 @@ function buildOutline(options) {
     const depth = options.snappedDepth;
     const length = options.snappedLength;
     const filletRadius = options.activeFilletRadius;
+    const attachedFilletRadius = options.isMergedWithBase ? 0 : filletRadius;
     const cornerRadius = options.activeCornerRadius;
 
     // arc sweeps flip on reflected edges
@@ -37,13 +41,13 @@ function buildOutline(options) {
     if (options.isFlushToStart)
         pathData += "M " + toPoint(options, -borderOverlap, depth + borderOverlap) + " L " + toPoint(options, -borderOverlap, -filletRadius) + " L " + toPoint(options, 0, -filletRadius) + " " + arc(options, filletRadius, counterClockwiseSweep, filletRadius, 0);
     else
-        pathData += "M " + toPoint(options, -filletRadius, depth + borderOverlap) + " L " + toPoint(options, -filletRadius, depth) + " " + arc(options, filletRadius, counterClockwiseSweep, 0, depth - filletRadius) + " L " + toPoint(options, 0, cornerRadius) + " " + arc(options, cornerRadius, clockwiseSweep, cornerRadius, 0);
+        pathData += "M " + toPoint(options, -attachedFilletRadius, depth + borderOverlap) + " L " + toPoint(options, -attachedFilletRadius, depth) + " " + arc(options, attachedFilletRadius, counterClockwiseSweep, 0, depth - attachedFilletRadius) + " L " + toPoint(options, 0, cornerRadius) + " " + arc(options, cornerRadius, clockwiseSweep, cornerRadius, 0);
 
     // one closed path: separate shapes sharing an edge left a hairline seam
     if (options.isFlushToEnd)
         pathData += " L " + toPoint(options, length - filletRadius, 0) + " " + arc(options, filletRadius, counterClockwiseSweep, length, -filletRadius) + " L " + toPoint(options, length + borderOverlap, -filletRadius) + " L " + toPoint(options, length + borderOverlap, depth + borderOverlap);
     else
-        pathData += " L " + toPoint(options, length - cornerRadius, 0) + " " + arc(options, cornerRadius, clockwiseSweep, length, cornerRadius) + " L " + toPoint(options, length, depth - filletRadius) + " " + arc(options, filletRadius, counterClockwiseSweep, length + filletRadius, depth) + " L " + toPoint(options, length + filletRadius, depth + borderOverlap);
+        pathData += " L " + toPoint(options, length - cornerRadius, 0) + " " + arc(options, cornerRadius, clockwiseSweep, length, cornerRadius) + " L " + toPoint(options, length, depth - attachedFilletRadius) + " " + arc(options, attachedFilletRadius, counterClockwiseSweep, length + attachedFilletRadius, depth) + " L " + toPoint(options, length + attachedFilletRadius, depth + borderOverlap);
 
     return pathData + " Z";
 }

@@ -14,6 +14,7 @@ Scope {
     readonly property var  exclusiveDrawers: ["launcher", "wallpaperSwitcher"]
     readonly property bool isLauncherOpen: activeDrawer === "launcher"
     readonly property bool isWallpaperSwitcherOpen: activeDrawer === "wallpaperSwitcher"
+    readonly property real launcherLengthRatio: 0.45
     readonly property var  panelProps: ({
             "dashboard": "isDashboardOpen",
             "session": "isSessionOpen",
@@ -25,10 +26,11 @@ Scope {
             "clipboard": "isClipboardOpen",
             "recordingPanel": "isRecordingPanelOpen"
         })
+    readonly property real wallpaperSwitcherLengthRatio: 0.6
 
     property string        activeDrawer: ""
-    property real          drawerDepthRatio: 0
-    property real          drawerLengthRatio: 0
+    property real          drawerDepthRatio: 0.5
+    property real          drawerLengthRatio: 0.45
     property bool          isClipboardOpen: false
     property bool          isDashboardOpen: false
     property bool          isMediaPlayerOpen: false
@@ -104,6 +106,12 @@ Scope {
         }
     }
     Behavior on drawerLengthRatio {
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
+    Behavior on reservedBottomSpace {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial

@@ -17,6 +17,7 @@ Singleton {
     property alias captureScreenVideo: adapter.captureScreenVideo
     property alias clipboard: adapter.clipboard
     property alias colors: adapter.colors
+    property alias dock: adapter.dock
     property alias generals: adapter.generals
     property alias idle: adapter.idle
     property alias kdeConnect: adapter.kdeConnect
@@ -62,6 +63,7 @@ Singleton {
             property CaptureScreenVideoConfig captureScreenVideo: CaptureScreenVideoConfig {}
             property ClipboardConfig          clipboard: ClipboardConfig {}
             property ColorSystemConfig        colors: ColorSystemConfig {}
+            property DockConfig               dock: DockConfig {}
             property GeneralConfig            generals: GeneralConfig {}
             property IdleConfig               idle: IdleConfig {}
             property KDEConnectConfig         kdeConnect: KDEConnectConfig {}

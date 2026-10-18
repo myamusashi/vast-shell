@@ -24,6 +24,7 @@ Item {
         borderOverlap: borderOverlap,
         isFlushToStart: isFlushToStart,
         isFlushToEnd: isFlushToEnd,
+        isMergedWithBase: isMergedWithBase,
         isReflectedEdge: isReflectedEdge,
         startPadding: metrics.startPadding,
         freeSidePadding: metrics.freeSidePadding,
@@ -37,12 +38,14 @@ Item {
     property list<real>      animationEasingCurve: []
     property int             animationEasingType: Easing.OutCubic
     property real            borderOverlap: 1
+    property real            bottomMargin: 0
     property bool            clipContent: true
     default property alias   content: contentItem.data
     property real            cornerRadius: 30
     property real            depth: 300
     property real            edgeOffset: 0
     property real            filletRadius: 40
+    property bool            isMergedWithBase: false
     property real            length: 400
     property bool            open: false
 
@@ -50,7 +53,7 @@ Item {
     visible: metrics.snappedDepth > 0
     width: isHorizontalEdge ? metrics.alongEdgeExtent : metrics.acrossEdgeExtent
     x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset))
-    y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height : (parent.height - height) / 2))
+    y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height - bottomMargin : (parent.height - height) / 2))
     Behavior on animatedDepth {
         enabled: root.animateDepth
 

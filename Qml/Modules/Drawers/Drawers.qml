@@ -22,6 +22,7 @@ import "Bar"
 import "Volume"
 import "Brightness"
 import "CaptureScreen"
+import "Dock"
 
 Variants {
     model: Quickshell.screens
@@ -31,6 +32,7 @@ Variants {
         required property ShellScreen modelData
 
         readonly property bool        barOpen: FocusedMonitor.isOnFocusedMonitor(modelData.name) && GlobalStates.isBarOpen
+        readonly property bool        dockVisible: FocusedMonitor.isOnFocusedMonitor(modelData.name) && Configs.dock.enabled
         readonly property bool        needFocusKeyboard: {
             if (GlobalStates.isLauncherOpen)
                 return true;
@@ -91,9 +93,11 @@ Variants {
             id: screenBorder
 
             barHeight: Configs.bar.barHeight
+            dockHeight: window.dockVisible ? Configs.dock.dockHeight : 0
             color: GlobalStates.drawerColors
             enableOuterBorder: Configs.generals.enableOuterBorder
             isBarOpen: GlobalStates.isBarOpen
+            isDockVisible: window.dockVisible
             isFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name)
             outerBorderSize: Configs.generals.outerBorderSize
             window: window.modelData
@@ -125,6 +129,14 @@ Variants {
             WallpaperSelector {}
 
             Weathers {}
+
+            // Must stay last so the dock paints above the drawer shapes
+
+            Dock {
+                id: dock
+                border: screenBorder
+                parentWindow: window
+            }
         }
 
         Bar {

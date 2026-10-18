@@ -14,7 +14,7 @@ Drawer {
 
     property real depthRatio: 0.3
     property bool isWallpaperSwitcherOpen: GlobalStates.isWallpaperSwitcherOpen
-    property real lengthRatio: 0.6
+    property real lengthRatio: GlobalStates.wallpaperSwitcherLengthRatio
 
     animateDepth: !GlobalStates.isSwitchingDrawer
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -27,8 +27,17 @@ Drawer {
     depth: Math.max(0, parent.height - GlobalStates.reservedBottomSpace) * (GlobalStates.isSwitchingDrawer ? GlobalStates.drawerDepthRatio : depthRatio)
     edge: Qt.BottomEdge
     edgeOffset: GlobalStates.reservedBottomSpace
+    isMergedWithBase: root.edgeOffset > 0
     filletRadius: 40
-    length: parent.width * (GlobalStates.isSwitchingDrawer ? GlobalStates.drawerLengthRatio : lengthRatio)
+    length: GlobalStates.isSwitchingDrawer ? parent.width * GlobalStates.drawerLengthRatio : Configs.dock.enabled && !root.open ? DockServices.contentLength(parent.width) : parent.width * lengthRatio
+    Behavior on length {
+        enabled: Configs.dock.enabled && !GlobalStates.isSwitchingDrawer
+
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+        }
+    }
     open: GlobalStates.isWallpaperSwitcherOpen
     Component.onCompleted: Wallpaper.requestThumbnailChecks()
     onIsWallpaperSwitcherOpenChanged: {
