@@ -6,7 +6,6 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Widgets
 
-import qs.Components.Base
 import qs.Core.Configs
 import qs.Services
 
@@ -147,7 +146,7 @@ LazyLoader {
                 antialiasing: true
                 color: "black"
                 height: Math.round(animatedHeight)
-                opacity: DynamicIslandService.fadingOut ? 0 : (DynamicIslandService.hasContent ? 1 : 0)
+                opacity: DynamicIslandService.hasContent || DynamicIslandService.closing ? 1 : 0
                 radius: Math.min(height / 2, targetRadius)
                 width: Math.round(animatedWidth)
                 x: Math.round((islandHost.width - width) / 2)
@@ -171,11 +170,6 @@ LazyLoader {
                         spring: 6
                     }
                 }
-                Behavior on opacity {
-                    NAnim {
-                        duration: Appearance.animations.durations.small
-                    }
-                }
 
                 Item {
                     id: contentFrame
@@ -193,11 +187,6 @@ LazyLoader {
                         opacity: DynamicIslandService.overlay === null ? 1 : 0
                         sourceComponent: DynamicIslandService.current ? DynamicIslandService.current.content : null
                         visible: opacity > 0
-                        Behavior on opacity {
-                            NAnim {
-                                duration: Appearance.animations.durations.small
-                            }
-                        }
                         onItemChanged: Qt.callLater(targetWindow.updateContentSize)
                     }
 

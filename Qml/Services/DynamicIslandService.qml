@@ -13,7 +13,6 @@ Singleton {
     property int           _nextId: 1
     property bool          closing: false
     property var           current: null
-    property bool          fadingOut: false
     property var           overlay: null
     property var           queue: []
 
@@ -34,14 +33,12 @@ Singleton {
         root.promoteOrClose();
     }
     function               _finishClose(): void {
-        contractTimer.stop();
         closeTimer.stop();
         baseTimer.stop();
         overlayTimer.stop();
-        root.current   = null;
-        root.overlay   = null;
-        root.closing   = false;
-        root.fadingOut = false;
+        root.current = null;
+        root.overlay = null;
+        root.closing = false;
         // A queued request that arrived mid-close promotes immediately so
         // the shell stays alive and shows it without tearing down.
         if (root.queue.length > 0) {
@@ -58,9 +55,7 @@ Singleton {
     function               beginClose(): void {
         if (root.closing || (root.current === null && root.overlay === null))
             return;
-        root.closing   = true;
-        root.fadingOut = false;
-        contractTimer.restart();
+        root.closing = true;
         closeTimer.restart();
     }
     function               dismiss(id): void {
@@ -154,14 +149,12 @@ Singleton {
             infinite: !(durationMs > 0)
         };
         if (root.closing) {
-            contractTimer.stop();
             closeTimer.stop();
             baseTimer.stop();
             overlayTimer.stop();
-            root.closing   = false;
-            root.fadingOut = false;
-            root.current   = null;
-            root.overlay   = null;
+            root.closing = false;
+            root.current = null;
+            root.overlay = null;
         }
         if (root.current === null) {
             if (root.overlay === null) {
@@ -199,13 +192,6 @@ Singleton {
 
         repeat: false
         onTriggered: root._expireOverlay()
-    }
-
-    Timer {
-        id: contractTimer
-
-        interval: Appearance.animations.durations.expressiveDefaultSpatial
-        onTriggered: root.fadingOut = true
     }
 
     Timer {
