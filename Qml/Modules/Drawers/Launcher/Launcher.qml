@@ -16,30 +16,35 @@ Drawer {
 
     property real depthRatio: 0.5
     property bool isLauncherOpen: GlobalStates.isLauncherOpen
-    property real lengthRatio: 0.3
+    property real lengthRatio: 0.45
+
+    function      consumeDeepLink(): void {
+        const deepLink = GlobalStates.launcherQuery;
+
+        if (deepLink === "")
+            return;
+
+        LauncherServices.query     = deepLink;
+        GlobalStates.launcherQuery = "";
+    }
 
     animateDepth: !GlobalStates.isSwitchingDrawer
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
-    // From the shared ratios while the slot is handing over, so the hand-over
-    // morphs from whatever size the previous drawer had, otherwise from this
-    // drawer's own ratio, so opening from closed animates from its real size.
     depth: Math.max(0, parent.height - GlobalStates.reservedBottomSpace) * (GlobalStates.isSwitchingDrawer ? GlobalStates.drawerDepthRatio : depthRatio)
     edge: Qt.BottomEdge
     edgeOffset: GlobalStates.reservedBottomSpace
     filletRadius: 40
     length: parent.width * (GlobalStates.isSwitchingDrawer ? GlobalStates.drawerLengthRatio : lengthRatio)
-    open: GlobalStates.isLauncherOpen
+    open: isLauncherOpen
     onIsLauncherOpenChanged: {
-        if (isLauncherOpen) {
-            GlobalStates.requestDrawerGeometry(lengthRatio, depthRatio);
-            LauncherServices.query     = "";
-            const deepLink             = GlobalStates.launcherQuery;
-            GlobalStates.launcherQuery = "";
-            if (deepLink !== "")
-                LauncherServices.query = deepLink;
-        }
+        if (!isLauncherOpen)
+            return;
+
+        GlobalStates.requestDrawerGeometry(lengthRatio, depthRatio);
+        LauncherServices.reset();
+        consumeDeepLink();
     }
 
     Loader {
@@ -53,16 +58,18 @@ Drawer {
             ColumnLayout {
                 id: contentLayout
 
+                function cycleCategory(step: int): void {
+                    LauncherServices.cycleCategory(step);
+                    selectionReset.restart();
+                }
+
                 anchors.fill: parent
                 anchors.margins: Appearance.margin.large
                 spacing: Appearance.spacing.normal
 
                 Connections {
                     function onLauncherQueryChanged() {
-                        if (GlobalStates.launcherQuery !== "") {
-                            LauncherServices.query     = GlobalStates.launcherQuery;
-                            GlobalStates.launcherQuery = "";
-                        }
+                        root.consumeDeepLink();
                     }
 
                     target: GlobalStates
@@ -91,35 +98,40 @@ Drawer {
                 StyledTextInput {
                     id: search
 
-                    implicitHeight: 60
-                    implicitWidth: parent.width
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 60
                     placeHolderText: LauncherServices.placeHolderText
                     toggleButtonVisible: false
                     Keys.onPressed: function (event) {
                         switch (event.key) {
                         case Qt.Key_Escape:
                             GlobalStates.closePanel("launcher");
-                            event.accepted = true;
                             break;
                         case Qt.Key_Tab:
+                        case Qt.Key_Right:
+                            contentLayout.cycleCategory(1);
+                            break;
                         case Qt.Key_Backtab:
-                            event.accepted = true;
+                        case Qt.Key_Left:
+                            contentLayout.cycleCategory(-1);
                             break;
                         case Qt.Key_Down:
-                            if (listView.count > 0)
-                                listView.currentIndex = Math.min(listView.currentIndex + 1, listView.count - 1);
-                            event.accepted = true;
+                            listView.incrementCurrentIndex();
                             break;
                         case Qt.Key_Up:
-                            if (listView.count > 0)
-                                listView.currentIndex = Math.max(listView.currentIndex - 1, 0);
-                            event.accepted = true;
+                            listView.decrementCurrentIndex();
                             break;
+                        default:
+                            return;
                         }
+
+                        event.accepted = true;
                     }
                     onAccepted: {
-                        if (listView.currentIndex >= 0 && listView.currentIndex < LauncherServices.filteredItems.length)
-                            LauncherServices.activateRow(LauncherServices.filteredItems[listView.currentIndex]);
+                        const row = LauncherServices.filteredItems[listView.currentIndex];
+
+                        if (row)
+                            LauncherServices.activateRow(row);
                     }
                     onTextChanged: {
                         LauncherServices.query = text;
@@ -127,141 +139,117 @@ Drawer {
                     }
                 }
 
-                ListView {
-                    id: listView
-
+                RowLayout {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    cacheBuffer: implicitHeight
-                    clip: true
-                    highlightFollowsCurrentItem: true
-                    highlightMoveDuration: 200
-                    highlightMoveVelocity: -1
-                    maximumFlickVelocity: 1000
-                    section.criteria: ViewSection.FullString
-                    section.delegate: sectionHeader
-                    section.property: "section"
                     spacing: Appearance.spacing.normal
-                    add: Transition {
 
-                        NAnim {
-                            from: 0
-                            properties: "opacity,scale"
-                            to: 1
-                        }
-                    }
-                    addDisplaced: Transition {
+                    CategoryList {
+                        id: categoryList
 
-                        NAnim {
-                            duration: Appearance.animations.durations.small
-                            property: "y"
-                        }
-
-                        NAnim {
-                            properties: "opacity,scale"
-                            to: 1
-                        }
-                    }
-                    delegate: LauncherRow {
-                        implicitWidth: listView.width
-                        onRowClicked: row => LauncherServices.activateRow(row)
-                        onRowHovered: rowIndex => listView.currentIndex = rowIndex
-                    }
-                    displaced: Transition {
-
-                        NAnim {
-                            property: "y"
-                        }
-
-                        NAnim {
-                            properties: "opacity,scale"
-                            to: 1
-                        }
-                    }
-                    highlight: StyledRect {
-                        color: Colours.m3Colors.m3SurfaceContainerHigh
-                        width: listView.width
-                    }
-                    model: ScriptModel {
-                        values: LauncherServices.filteredItems
-                    }
-                    move: Transition {
-
-                        NAnim {
-                            property: "y"
-                        }
-
-                        NAnim {
-                            properties: "opacity,scale"
-                            to: 1
-                        }
-                    }
-                    rebound: Transition {
-
-                        NAnim {
-                            properties: "x,y"
-                        }
-                    }
-                    remove: Transition {
-
-                        NAnim {
-                            from: 1
-                            properties: "opacity,scale"
-                            to: 0
+                        Layout.fillHeight: true
+                        onCategorySelected: function (categoryId) {
+                            LauncherServices.activeCategory = categoryId;
+                            selectionReset.restart();
                         }
                     }
 
-                    Component {
-                        id: sectionHeader
+                    ColumnLayout {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        spacing: Appearance.spacing.normal
 
-                        Item {
-                            id: sectionHeaderRoot
+                        ListView {
+                            id: listView
 
-                            required property string section
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            cacheBuffer: implicitHeight
+                            clip: true
+                            highlightFollowsCurrentItem: true
+                            highlightMoveDuration: 200
+                            highlightMoveVelocity: -1
+                            maximumFlickVelocity: 1000
+                            spacing: Appearance.spacing.normal
+                            add: Transition {
 
-                            height: sectionHeaderRoot.section !== "" ? sectionRow.implicitHeight + Appearance.spacing.small : 0
-                            visible: sectionHeaderRoot.section !== ""
-                            width: listView.width
+                                NAnim {
+                                    from: 0
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+                            addDisplaced: Transition {
 
-                            RowLayout {
-                                id: sectionRow
-
-                                spacing: Appearance.spacing.small
-
-                                anchors {
-                                    left: parent.left
-                                    leftMargin: Appearance.margin.normal
-                                    right: parent.right
-                                    verticalCenter: parent.verticalCenter
+                                NAnim {
+                                    duration: Appearance.animations.durations.small
+                                    property: "y"
                                 }
 
-                                StyledText {
-                                    color: Colours.m3Colors.m3Primary
-                                    font.pixelSize: Appearance.fonts.size.small
-                                    font.weight: Font.DemiBold
-                                    text: sectionHeaderRoot.section
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+                            delegate: LauncherRow {
+                                implicitWidth: listView.width
+                                onRowClicked: row => LauncherServices.activateRow(row)
+                                onRowHovered: rowIndex => listView.currentIndex = rowIndex
+                            }
+                            displaced: Transition {
+
+                                NAnim {
+                                    property: "y"
                                 }
 
-                                Rectangle {
-                                    Layout.alignment: Qt.AlignVCenter
-                                    Layout.fillWidth: true
-                                    Layout.preferredHeight: 1
-                                    Layout.rightMargin: Appearance.margin.normal
-                                    color: Colours.m3Colors.m3OutlineVariant
-                                    opacity: 0.5
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+                            highlight: StyledRect {
+                                color: Colours.m3Colors.m3SurfaceContainerHigh
+                                width: listView.width
+                            }
+                            model: ScriptModel {
+                                values: LauncherServices.filteredItems
+                            }
+                            move: Transition {
+
+                                NAnim {
+                                    property: "y"
+                                }
+
+                                NAnim {
+                                    properties: "opacity,scale"
+                                    to: 1
+                                }
+                            }
+                            rebound: Transition {
+
+                                NAnim {
+                                    properties: "x,y"
+                                }
+                            }
+                            remove: Transition {
+
+                                NAnim {
+                                    from: 1
+                                    properties: "opacity,scale"
+                                    to: 0
                                 }
                             }
                         }
-                    }
-                }
 
-                StyledText {
-                    Layout.fillWidth: true
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.large
-                    horizontalAlignment: Text.AlignHCenter
-                    text: LauncherServices.emptyText
-                    visible: listView.count === 0 && search.text !== ""
+                        StyledText {
+                            Layout.fillWidth: true
+                            color: Colours.m3Colors.m3OnSurfaceVariant
+                            font.pixelSize: Appearance.fonts.size.large
+                            horizontalAlignment: Text.AlignHCenter
+                            text: LauncherServices.emptyText
+                            visible: listView.count === 0
+                        }
+                    }
                 }
             }
         }
