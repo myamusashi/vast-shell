@@ -11,7 +11,6 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property real dotSize: 24
     readonly property int  failedCount: transferController.failedCount
     readonly property int  failure: transferController.failure
     readonly property bool isCompleted: currentState === DragAndDropServices.State.Completed

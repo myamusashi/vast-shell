@@ -13,14 +13,10 @@ Item {
 
     anchors.fill: parent
     implicitHeight: {
-        if (DragAndDropServices.currentState === DragAndDropServices.State.Idle)
-            return DragAndDropServices.dotSize;
         var child = stackLayout.children[stackLayout.currentIndex];
         return Math.max(44, (child ? child.implicitHeight : 0) + 16);
     }
     implicitWidth: {
-        if (DragAndDropServices.currentState === DragAndDropServices.State.Idle)
-            return DragAndDropServices.dotSize;
         var child = stackLayout.children[stackLayout.currentIndex];
         return Math.max(120, (child ? child.implicitWidth : 0) + 24);
     }
@@ -58,33 +54,21 @@ Item {
         anchors.fill: parent
         currentIndex: {
             switch (DragAndDropServices.currentState) {
+            case DragAndDropServices.State.Idle:
             case DragAndDropServices.State.Dragging:
-                return 1;
+                return 0;
             case DragAndDropServices.State.FilesDropped:
-                return 2;
+                return 1;
             case DragAndDropServices.State.SelectingDevice:
-                return 3;
+                return 2;
             case DragAndDropServices.State.ConfirmDevice:
-                return 4;
+                return 3;
             case DragAndDropServices.State.Transferring:
-                return 5;
+                return 4;
             case DragAndDropServices.State.Completed:
-                return 6;
+                return 5;
             default:
                 return 0;
-            }
-        }
-
-        Item {
-            implicitHeight: DragAndDropServices.dotSize
-            implicitWidth: DragAndDropServices.dotSize
-
-            Rectangle {
-                anchors.centerIn: parent
-                color: Colours.m3Colors.m3Green
-                height: 10
-                radius: width / 2
-                width: 10
             }
         }
 

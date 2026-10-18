@@ -14,11 +14,12 @@ LazyLoader {
     component: PanelWindow {
         id: targetWindow
 
-        readonly property real dotSize: 24
         readonly property bool islandVisible: DynamicIslandService.hasContent || DynamicIslandService.closing
 
         // qmllint disable
         function               updateContentSize(): void {
+            if (DynamicIslandService.closing)
+                return;
             var item = overlayLoader.item ?? baseLoader.item;
             if (!item)
                 return;
@@ -38,8 +39,8 @@ LazyLoader {
         // qmllint enable
         function               onClosingChanged(): void {
             if (DynamicIslandService.closing) {
-                islandBox.contentWidth  = targetWindow.dotSize;
-                islandBox.contentHeight = targetWindow.dotSize;
+                islandBox.contentWidth  = 0;
+                islandBox.contentHeight = 0;
             }
         }
 
@@ -69,17 +70,13 @@ LazyLoader {
             function onClosingChanged(): void {
                 if (DynamicIslandService.closing) {
                     islandBox.contentWidth  = 0;
-                    islandBox.contentHeight = targetWindow.dotSize;
+                    islandBox.contentHeight = 0;
                 }
             }
             function onCurrentChanged(): void {
-                if (DynamicIslandService.closing)
-                    return;
                 Qt.callLater(targetWindow.updateContentSize);
             }
             function onOverlayChanged(): void {
-                if (DynamicIslandService.closing)
-                    return;
                 Qt.callLater(targetWindow.updateContentSize);
             }
 
@@ -88,13 +85,9 @@ LazyLoader {
 
         Connections {
             function onImplicitHeightChanged(): void {
-                if (DynamicIslandService.closing)
-                    return;
                 Qt.callLater(targetWindow.updateContentSize);
             }
             function onImplicitWidthChanged(): void {
-                if (DynamicIslandService.closing)
-                    return;
                 Qt.callLater(targetWindow.updateContentSize);
             }
 
@@ -103,13 +96,9 @@ LazyLoader {
 
         Connections {
             function onImplicitHeightChanged(): void {
-                if (DynamicIslandService.closing)
-                    return;
                 targetWindow.updateContentSize();
             }
             function onImplicitWidthChanged(): void {
-                if (DynamicIslandService.closing)
-                    return;
                 targetWindow.updateContentSize();
             }
 
@@ -136,19 +125,19 @@ LazyLoader {
 
                 property real          animatedHeight: contentHeight
                 property real          animatedWidth: contentWidth
-                property real          contentHeight: targetWindow.dotSize
-                property real          contentWidth: targetWindow.dotSize
+                property real          contentHeight
+                property real          contentWidth
                 property bool          measured: false
-                property real          measuredHeight: targetWindow.dotSize
-                property real          measuredWidth: targetWindow.dotSize
+                property real          measuredHeight
+                property real          measuredWidth
                 property bool          sizeAnimated: false
 
                 antialiasing: true
                 color: "black"
-                height: Math.round(animatedHeight)
                 opacity: DynamicIslandService.hasContent || DynamicIslandService.closing ? 1 : 0
                 radius: Math.min(height / 2, targetRadius)
-                width: Math.round(animatedWidth)
+                implicitHeight: Math.round(animatedHeight)
+                implicitWidth: Math.round(animatedWidth)
                 x: Math.round((islandHost.width - width) / 2)
                 Behavior on animatedHeight {
                     enabled: islandBox.sizeAnimated
@@ -164,10 +153,10 @@ LazyLoader {
                     enabled: islandBox.sizeAnimated
 
                     SpringAnimation {
-                        damping: 0.42
-                        epsilon: 0.5
+                        spring: 7.5
+                        damping: 0.55
                         mass: 0.7
-                        spring: 6
+                        epsilon: 0.5
                     }
                 }
 

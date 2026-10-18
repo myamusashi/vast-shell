@@ -20,7 +20,6 @@ Item {
 
         anchors.centerIn: parent
         spacing: Appearance.spacing.normal
-        visible: root.active
 
         Row {
             spacing: 5
