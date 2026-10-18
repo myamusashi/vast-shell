@@ -49,6 +49,7 @@ Singleton {
             "description": "file-text",
             "desktop_windows": "desktop",
             "discover_tune": "magic-wand",
+            "dock_to_bottom": "tabs",
             "door_open": "door-open",
             "download": "download-simple",
             "edit": "pen",

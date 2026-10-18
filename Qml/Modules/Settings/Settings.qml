@@ -120,7 +120,7 @@ LazyLoader {
                                         label: qsTr("Privacy Nodes")
                                     },
                                     {
-                                        icon: "dock",
+                                        icon: "dock_to_bottom",
                                         label: qsTr("Dock")
                                     }
                                 ]

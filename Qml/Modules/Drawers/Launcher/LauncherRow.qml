@@ -78,7 +78,7 @@ ItemDelegate {
                 anchors.centerIn: parent
                 color: DockServices.isPinned(root.modelData.entry.id) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.large
-                icon: "push_pin"
+                icon: "keep"
             }
 
             MArea {
