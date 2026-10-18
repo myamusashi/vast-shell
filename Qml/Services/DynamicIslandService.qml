@@ -9,14 +9,13 @@ Singleton {
     id: root
 
     readonly property bool hasContent: current !== null || overlay !== null
-    readonly property int  slideDuration: 300
 
     property int           _nextId: 1
     property bool          closing: false
     property var           current: null
+    property bool          fadingOut: false
     property var           overlay: null
     property var           queue: []
-    property bool          slidingUp: false
 
     function               _expireBase(): void {
         if (root.current === null || root.closing)
@@ -36,13 +35,13 @@ Singleton {
     }
     function               _finishClose(): void {
         contractTimer.stop();
-        slideTimer.stop();
+        closeTimer.stop();
         baseTimer.stop();
         overlayTimer.stop();
         root.current   = null;
         root.overlay   = null;
         root.closing   = false;
-        root.slidingUp = false;
+        root.fadingOut = false;
         // A queued request that arrived mid-close promotes immediately so
         // the shell stays alive and shows it without tearing down.
         if (root.queue.length > 0) {
@@ -60,9 +59,9 @@ Singleton {
         if (root.closing || (root.current === null && root.overlay === null))
             return;
         root.closing   = true;
-        root.slidingUp = false;
+        root.fadingOut = false;
         contractTimer.restart();
-        slideTimer.restart();
+        closeTimer.restart();
     }
     function               dismiss(id): void {
         if (id === undefined || id === null) {
@@ -156,11 +155,11 @@ Singleton {
         };
         if (root.closing) {
             contractTimer.stop();
-            slideTimer.stop();
+            closeTimer.stop();
             baseTimer.stop();
             overlayTimer.stop();
             root.closing   = false;
-            root.slidingUp = false;
+            root.fadingOut = false;
             root.current   = null;
             root.overlay   = null;
         }
@@ -206,11 +205,11 @@ Singleton {
         id: contractTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial
-        onTriggered: root.slidingUp = true
+        onTriggered: root.fadingOut = true
     }
 
     Timer {
-        id: slideTimer
+        id: closeTimer
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial + 300
         onTriggered: root._finishClose()
