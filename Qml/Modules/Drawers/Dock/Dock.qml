@@ -78,11 +78,14 @@ Drawer {
 
             RowLayout {
                 anchors.fill: parent
+                spacing: 0
 
                 Row {
-                    id: pinnedRow
-
-                    Layout.alignment: Qt.AlignLeft
+                    Layout.fillWidth: false
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    Layout.minimumWidth: 0
+                    Layout.preferredWidth: implicitWidth
+                    clip: true
                     spacing: Appearance.spacing.small
 
                     Repeater {
@@ -107,15 +110,18 @@ Drawer {
                 }
 
                 Rectangle {
-                    implicitWidth: 1
                     implicitHeight: parent.height
+                    implicitWidth: 1
                     color: Colours.m3Colors.m3OutlineVariant
+                    Layout.minimumWidth: 1
+                    Layout.preferredWidth: 1
                 }
 
                 Row {
-                    id: workspaceRow
-
-                    Layout.preferredWidth: Math.min(implicitWidth, Math.max(0, root.border.width - pinnedRow.implicitWidth - toggle.width - Appearance.spacing.small * 4))
+                    Layout.fillWidth: false
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    Layout.minimumWidth: 0
+                    Layout.preferredWidth: implicitWidth
                     clip: true
                     spacing: Appearance.spacing.small
 
@@ -140,29 +146,31 @@ Drawer {
                 }
 
                 Rectangle {
-                    implicitWidth: 1
                     implicitHeight: parent.height
+                    implicitWidth: 1
                     color: Colours.m3Colors.m3OutlineVariant
+                    Layout.minimumWidth: 1
+                    Layout.preferredWidth: 1
                 }
 
                 Item {
-                    id: toggle
-
-                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                    Layout.rightMargin: Appearance.margin.small
-                    Layout.preferredHeight: Configs.dock.iconSlot
-                    Layout.preferredWidth: Configs.dock.iconSlot
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillWidth: false
+                    Layout.minimumWidth: implicitWidth
+                    Layout.preferredWidth: implicitWidth
+                    implicitHeight: Configs.dock.iconSlot + Appearance.spacing.small * 2
+                    implicitWidth: Configs.dock.iconSlot + Appearance.spacing.small * 2
 
                     Icon {
                         anchors.centerIn: parent
                         color: GlobalStates.isLauncherOpen ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.larger
+                        font.pixelSize: Appearance.fonts.size.extraLarge
                         icon: "apps"
-                    }
 
-                    MArea {
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: GlobalStates.togglePanel("launcher")
+                        MArea {
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: GlobalStates.togglePanel("launcher")
+                        }
                     }
                 }
             }

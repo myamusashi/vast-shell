@@ -58,12 +58,10 @@ Singleton {
         }
     }
     function               contentLength(availableWidth: real): real {
-        const spacing         = Appearance.spacing.small;
-        const toggleWidth     = Configs.dock.iconSlot;
-        const sideWidth       = Math.max(root.pinnedContentWidth, toggleWidth);
-        const sequentialWidth = root.pinnedContentWidth + root.workspaceContentWidth + toggleWidth + spacing * 4;
-        const centeredWidth   = sideWidth * 2 + root.workspaceContentWidth + spacing * 4;
-        return Math.min(availableWidth, Math.max(sequentialWidth, centeredWidth));
+        const spacing      = Appearance.spacing.small;
+        const toggleWidth  = Configs.dock.iconSlot + spacing * 2;
+        const contentWidth = root.pinnedContentWidth + root.workspaceContentWidth + toggleWidth + spacing * 4 + 2;
+        return Math.min(availableWidth, contentWidth);
     }
     function               entryForToplevel(toplevel: var): DesktopEntry {
         return DesktopEntries.heuristicLookup(toplevel?.lastIpcObject?.class ?? "");
