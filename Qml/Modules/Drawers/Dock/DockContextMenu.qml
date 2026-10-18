@@ -32,7 +32,7 @@ LazyLoader {
         root.clickX          = x;
         root.clickY          = y;
         root.menuX           = Math.max(0, Math.min(x, (root.screen ? root.screen.width : x) - 220));
-        root.menuY           = Math.max(0, y - 240);
+        root.menuY           = Math.max(0, y - 180);
         root.opened          = true;
     }
 
