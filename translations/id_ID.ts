@@ -4,30 +4,6 @@
 <context>
     <name>AQI</name>
     <message>
-        <source>Good</source>
-        <translation type="vanished">Bagus</translation>
-    </message>
-    <message>
-        <source>Fair</source>
-        <translation type="vanished">Baik</translation>
-    </message>
-    <message>
-        <source>Moderate</source>
-        <translation type="vanished">Sedang</translation>
-    </message>
-    <message>
-        <source>Poor</source>
-        <translation type="vanished">Buruk</translation>
-    </message>
-    <message>
-        <source>Very Poor</source>
-        <translation type="vanished">Sangat Buruk</translation>
-    </message>
-    <message>
-        <source>Hazardous</source>
-        <translation type="vanished">Berbahaya</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="46"/>
         <source>AQI</source>
         <translation>AQI</translation>
@@ -77,17 +53,6 @@
     </message>
 </context>
 <context>
-    <name>App</name>
-    <message>
-        <source>Search</source>
-        <translation type="vanished">Cari</translation>
-    </message>
-    <message>
-        <source>No applications found</source>
-        <translation type="vanished">Tidak ada aplikasi yang ditemukan</translation>
-    </message>
-</context>
-<context>
     <name>AppearancePage</name>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="56"/>
@@ -115,21 +80,9 @@
         <translation>Gunakan Warna Statis:</translation>
     </message>
     <message>
-        <source>Load colors from a custom JSON file instead of the generated palette.</source>
-        <translation type="vanished">Memuat kustom warna dari berkas JSON daripada palet generate</translation>
-    </message>
-    <message>
-        <source>Generate colors from the Material You dynamic color system.</source>
-        <translation type="vanished">Menghasilkan warna dinamis dari Material You</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="88"/>
         <source>Static Colors Path:</source>
         <translation>Jalur Warna Statis:</translation>
-    </message>
-    <message>
-        <source>Use Material Colors:</source>
-        <translation type="vanished">Gunakan Warna Material:</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="76"/>
@@ -185,14 +138,6 @@
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="166"/>
         <source>Nerd font used for icon or font text.</source>
         <translation>Nerd font untuk ikon atau text font</translation>
-    </message>
-    <message>
-        <source>Material Icon Font:</source>
-        <translation type="vanished">Font Ikon Material:</translation>
-    </message>
-    <message>
-        <source>Icon font used for Material Symbols throughout the shell.</source>
-        <translation type="vanished">Font ikon yang digunakan untuk Material Symbols di seluruh antarmuka.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="178"/>
@@ -441,14 +386,6 @@
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="52"/>
         <source>Workspace Display</source>
         <translation>Tampilan Workspace</translation>
-    </message>
-    <message>
-        <source>Workspace Indicator Style:</source>
-        <translation type="vanished">Gaya Indikator Workspace:</translation>
-    </message>
-    <message>
-        <source>Visual style for workspace indicators on the bar.</source>
-        <translation type="vanished">Gaya visual untuk indikator workspace di bar.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="56"/>
@@ -730,53 +667,6 @@
     </message>
 </context>
 <context>
-    <name>BluetoothServices</name>
-    <message>
-        <source>No Bluetooth adapter found</source>
-        <translation type="vanished">Tidak ada adapter bluetooth yang ditemukan</translation>
-    </message>
-    <message>
-        <source>Adapter blocked (rfkill)</source>
-        <translation type="vanished">Adapter diblokir (rfkill)</translation>
-    </message>
-    <message>
-        <source>Enabling…</source>
-        <translation type="vanished">Menyalakan...</translation>
-    </message>
-    <message>
-        <source>Disabling…</source>
-        <translation type="vanished">Dimatikan...</translation>
-    </message>
-    <message>
-        <source>Bluetooth is off</source>
-        <translation type="vanished">Bluetooth dimatikan</translation>
-    </message>
-    <message>
-        <source>Tap a device to connect</source>
-        <translation type="vanished">Pilih perangkat yang di ingin di sambungkan</translation>
-    </message>
-    <message>
-        <source>No adapter</source>
-        <translation type="vanished">Tidak ada adapter</translation>
-    </message>
-    <message>
-        <source>Off</source>
-        <translation type="vanished">Mati</translation>
-    </message>
-    <message>
-        <source>%1 connected</source>
-        <translation type="vanished">Tersambung %1 </translation>
-    </message>
-    <message>
-        <source>On — not connected</source>
-        <translation type="vanished">Nyala — tidak tersambung</translation>
-    </message>
-    <message>
-        <source>Pairing…</source>
-        <translation type="vanished">Pasang...</translation>
-    </message>
-</context>
-<context>
     <name>BluetoothStatus</name>
     <message>
         <location filename="../Qml/Modules/DynamicIslandHost/Status/BluetoothStatus.qml" line="22"/>
@@ -883,13 +773,6 @@
     </message>
 </context>
 <context>
-    <name>CapsLockWidget</name>
-    <message>
-        <source>Caps Lock</source>
-        <translation type="vanished">Caps Lock</translation>
-    </message>
-</context>
-<context>
     <name>CaptureScreen</name>
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/CaptureScreen.qml" line="23"/>
@@ -915,14 +798,6 @@
 </context>
 <context>
     <name>CaptureScreenVideo</name>
-    <message>
-        <source>Screen Recorder</source>
-        <translation type="vanished">Perekam Layar</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <translation type="vanished">Perekaman</translation>
-    </message>
     <message>
         <location filename="../Qml/Services/CaptureScreenVideo/CaptureScreenVideo.qml" line="69"/>
         <source>Open</source>
@@ -1134,17 +1009,9 @@
         <translation>Mengaktifkan Vim Keybinds:</translation>
     </message>
     <message>
-        <source>Use Vim-style navigation inside the clipboard manager.</source>
-        <translation type="vanished">Gunakan navigasi bergaya Vim di clipboard manager.</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="50"/>
         <source>Keep Clipboard Open After Copy:</source>
         <translation>Biarkan Clipboard Tetap Terbuka Setelah Menyalin:</translation>
-    </message>
-    <message>
-        <source>Keep the clipboard window open after copying an entry.</source>
-        <translation type="vanished">Tetap munculkan clipboard window ketika copy.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="121"/>
@@ -1160,18 +1027,6 @@
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="126"/>
         <source>Preview Width:</source>
         <translation>Lebar preview:</translation>
-    </message>
-    <message>
-        <source>Width of the clipboard preview in pixels.</source>
-        <translation type="vanished">Panjang dari preview clipboard dalam piksel.</translation>
-    </message>
-    <message>
-        <source>Preview Height:</source>
-        <translation type="vanished">Tinggi preview:</translation>
-    </message>
-    <message>
-        <source>Height of the clipboard preview in pixels.</source>
-        <translation type="vanished">Panjang dari clipboard preview dalam piksel.</translation>
     </message>
 </context>
 <context>
@@ -1374,10 +1229,6 @@
 <context>
     <name>Content</name>
     <message>
-        <source>Open</source>
-        <translation type="vanished">Buka</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="165"/>
         <source>Reply…</source>
         <translation>Balas…</translation>
@@ -1535,30 +1386,6 @@
         <location filename="../Qml/Modules/Settings/Pages/Lockscreen/DepthWallpaperSection.qml" line="89"/>
         <source>Unavailable while a video wallpaper is active.</source>
         <translation>Fitur ini tidak tersedia saat wallpaper video sedang aktif.</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="vanished">Sumber</translation>
-    </message>
-    <message>
-        <source>Loading</source>
-        <translation type="vanished">Memuat</translation>
-    </message>
-    <message>
-        <source>Processing</source>
-        <translation type="vanished">Memproses</translation>
-    </message>
-    <message>
-        <source>Foreground</source>
-        <translation type="vanished">Latar depan</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Kesalahan</translation>
-    </message>
-    <message>
-        <source>Not generated</source>
-        <translation type="vanished">Tidak dihasilkan</translation>
     </message>
 </context>
 <context>
@@ -1960,32 +1787,32 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>DockContextMenu</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="96"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="101"/>
         <source>Open</source>
         <translation>Buka</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="104"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="109"/>
         <source>New Window</source>
         <translation>Jendela Baru</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="112"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="117"/>
         <source>Unpin from Dock</source>
         <translation>Lepas dari Dock</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="112"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="117"/>
         <source>Pin to Dock</source>
         <translation>Sematkan ke Dock</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="121"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="126"/>
         <source>Close</source>
         <translation>Tutup</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="131"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="136"/>
         <source>Close All Windows</source>
         <translation>Tutup Semua Jendela</translation>
     </message>
@@ -2035,14 +1862,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 </context>
 <context>
     <name>DoneContent</name>
-    <message>
-        <source>Sent to %1</source>
-        <translation type="vanished">Kirim ke %1</translation>
-    </message>
-    <message>
-        <source>Sent %1 of %2</source>
-        <translation type="obsolete">Terkirim %1 dari %2</translation>
-    </message>
     <message>
         <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="46"/>
         <source>Handed to %1</source>
@@ -2102,10 +1921,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/DoneContent.qml" line="37"/>
         <source>transfer failed</source>
         <translation>transfer gagal</translation>
-    </message>
-    <message>
-        <source>Transfer cancelled</source>
-        <translation type="vanished">Membatalkan transfer</translation>
     </message>
 </context>
 <context>
@@ -2206,22 +2021,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>FileDialog</name>
     <message>
-        <source>B</source>
-        <translation type="vanished">B</translation>
-    </message>
-    <message>
-        <source>KiB</source>
-        <translation type="vanished">KiB</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation type="vanished">MiB</translation>
-    </message>
-    <message>
-        <source>GiB</source>
-        <translation type="vanished">GiB</translation>
-    </message>
-    <message>
         <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="258"/>
         <source>Search files…</source>
         <translation>Cari berkas...</translation>
@@ -2248,22 +2047,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Components/Dialog/FileDialog/delegate/FileListItem.qml" line="36"/>
         <source>File</source>
         <translation>Berkas</translation>
-    </message>
-    <message>
-        <source>B</source>
-        <translation type="vanished">B</translation>
-    </message>
-    <message>
-        <source>KiB</source>
-        <translation type="vanished">KiB</translation>
-    </message>
-    <message>
-        <source>MiB</source>
-        <translation type="vanished">MiB</translation>
-    </message>
-    <message>
-        <source>GiB</source>
-        <translation type="vanished">GiB</translation>
     </message>
 </context>
 <context>
@@ -2292,10 +2075,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Components/Dialog/FileDialog/components/FileListView.qml" line="119"/>
         <source>Modified</source>
         <translation>Diubah</translation>
-    </message>
-    <message>
-        <source>Forget Network</source>
-        <translation type="obsolete">Lupakan Jaringan</translation>
     </message>
 </context>
 <context>
@@ -2738,132 +2517,9 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Headers</name>
     <message>
-        <source>Clear sky</source>
-        <translation type="vanished">Langit cerah</translation>
-    </message>
-    <message>
-        <source>Mainly clear</source>
-        <translation type="vanished">Sebagian besar cerah</translation>
-    </message>
-    <message>
-        <source>Partly cloudy</source>
-        <translation type="vanished">Berawan sebagian</translation>
-    </message>
-    <message>
-        <source>Overcast</source>
-        <translation type="vanished">Mendung</translation>
-    </message>
-    <message>
-        <source>Fog</source>
-        <translation type="vanished">Berkabut</translation>
-    </message>
-    <message>
-        <source>Depositing rime fog</source>
-        <translation type="vanished">Kabut es</translation>
-    </message>
-    <message>
-        <source>Light drizzle</source>
-        <translation type="vanished">Gerimis ringan</translation>
-    </message>
-    <message>
-        <source>Moderate drizzle</source>
-        <translation type="vanished">Gerimis sedang</translation>
-    </message>
-    <message>
-        <source>Dense drizzle</source>
-        <translation type="vanished">Gerimis lebat</translation>
-    </message>
-    <message>
-        <source>Light freezing drizzle</source>
-        <translation type="vanished">Gerimis beku ringan</translation>
-    </message>
-    <message>
-        <source>Dense freezing drizzle</source>
-        <translation type="vanished">Gerimis beku lebat</translation>
-    </message>
-    <message>
-        <source>Slight rain</source>
-        <translation type="vanished">Hujan ringan</translation>
-    </message>
-    <message>
-        <source>Moderate rain</source>
-        <translation type="vanished">Hujan sedang</translation>
-    </message>
-    <message>
-        <source>Heavy rain</source>
-        <translation type="vanished">Hujan lebat</translation>
-    </message>
-    <message>
-        <source>Light freezing rain</source>
-        <translation type="vanished">Hujan beku ringan</translation>
-    </message>
-    <message>
-        <source>Heavy freezing rain</source>
-        <translation type="vanished">Hujan beku lebat</translation>
-    </message>
-    <message>
-        <source>Slight snow fall</source>
-        <translation type="vanished">Salju ringan</translation>
-    </message>
-    <message>
-        <source>Moderate snow fall</source>
-        <translation type="vanished">Salju sedang</translation>
-    </message>
-    <message>
-        <source>Heavy snow fall</source>
-        <translation type="vanished">Salju lebat</translation>
-    </message>
-    <message>
-        <source>Snow grains</source>
-        <translation type="vanished">Butiran salju</translation>
-    </message>
-    <message>
-        <source>Slight rain showers</source>
-        <translation type="vanished">Hujan rintik-rintik</translation>
-    </message>
-    <message>
-        <source>Moderate rain showers</source>
-        <translation type="vanished">Hujan deras sesaat</translation>
-    </message>
-    <message>
-        <source>Violent rain showers</source>
-        <translation type="vanished">Hujan sangat deras</translation>
-    </message>
-    <message>
-        <source>Slight snow showers</source>
-        <translation type="vanished">Salju rintik-rintik</translation>
-    </message>
-    <message>
-        <source>Heavy snow showers</source>
-        <translation type="vanished">Salju deras</translation>
-    </message>
-    <message>
-        <source>Thunderstorm</source>
-        <translation type="vanished">Badai petir</translation>
-    </message>
-    <message>
-        <source>Thunderstorm with slight hail</source>
-        <translation type="vanished">Badai petir dengan hujan es ringan</translation>
-    </message>
-    <message>
-        <source>Thunderstorm with heavy hail</source>
-        <translation type="vanished">Badai petir dengan hujan es lebat</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="156"/>
         <source>Feels like %1°</source>
         <translation>Terasa seperti %1°</translation>
-    </message>
-</context>
-<context>
-    <name>History</name>
-    <message>
-        <source>Recent screenshot</source>
-        <translation type="vanished">Tangkapan layar terbaru</translation>
-    </message>
-    <message>
-        <source>Recent screen record</source>
-        <translation type="vanished">Rekaman layar terbaru</translation>
     </message>
 </context>
 <context>
@@ -3218,46 +2874,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>LauncherServices</name>
     <message>
-        <source>In this page</source>
-        <translation type="vanished">Di halaman ini</translation>
-    </message>
-    <message>
-        <source>Apps</source>
-        <translation type="vanished">Aplikasi</translation>
-    </message>
-    <message>
-        <source>Actions and history</source>
-        <translation type="vanished">Tindakan dan riwayat</translation>
-    </message>
-    <message>
-        <source>Screenshot action</source>
-        <translation type="vanished">Tindakan screenshot</translation>
-    </message>
-    <message>
-        <source>Capture monitors, windows or selections</source>
-        <translation type="vanished">Menangkap tampilan monitor, windows, atau area yang dipilih</translation>
-    </message>
-    <message>
-        <source>No matching actions</source>
-        <translation type="vanished">Tidak ada tindakan yang sesuai</translation>
-    </message>
-    <message>
-        <source>Filter actions</source>
-        <translation type="vanished">Tindakan penyaringan</translation>
-    </message>
-    <message>
-        <source>Screenshot history</source>
-        <translation type="vanished">Riwayat screenshot</translation>
-    </message>
-    <message>
-        <source>Browse recent captures</source>
-        <translation type="vanished">Tampilkan tangkapan layar terbaru</translation>
-    </message>
-    <message>
-        <source>No captures yet</source>
-        <translation type="vanished">Belum ada tangkapan</translation>
-    </message>
-    <message>
         <location filename="../Qml/Services/LauncherServices.qml" line="16"/>
         <source>All</source>
         <translation>Semua</translation>
@@ -3321,10 +2937,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Services/LauncherServices.qml" line="87"/>
         <source>Search</source>
         <translation>Cari</translation>
-    </message>
-    <message>
-        <source>Sections</source>
-        <translation type="vanished">Bagian-bagian</translation>
     </message>
 </context>
 <context>
@@ -3435,42 +3047,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="31"/>
         <source>Moon</source>
         <translation>Bulan</translation>
-    </message>
-    <message>
-        <source>New Moon</source>
-        <translation type="vanished">Bulan Baru</translation>
-    </message>
-    <message>
-        <source>Waxing Crescent</source>
-        <translation type="vanished">Bulan Sabit Awal</translation>
-    </message>
-    <message>
-        <source>First Quarter</source>
-        <translation type="vanished">Bulan Separuh Awal</translation>
-    </message>
-    <message>
-        <source>Waxing Gibbous</source>
-        <translation type="vanished">Bulan Cembung Awal</translation>
-    </message>
-    <message>
-        <source>Full Moon</source>
-        <translation type="vanished">Bulan Penuh</translation>
-    </message>
-    <message>
-        <source>Waning Gibbous</source>
-        <translation type="vanished">Bulan Sabit Akhir</translation>
-    </message>
-    <message>
-        <source>Last Quarter</source>
-        <translation type="vanished">Bulan Separuh Akhir</translation>
-    </message>
-    <message>
-        <source>Waning Crescent</source>
-        <translation type="vanished">Bulan Sabit Akhir</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="vanished">ndak tau</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="65"/>
@@ -3701,17 +3277,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Services/Notifs.qml" line="231"/>
         <source>Notification cache doesn&apos;t exist, creating it</source>
         <translation>Cache notifikasi tidak ada, sedang membuat</translation>
-    </message>
-    <message>
-        <source>now</source>
-        <translation type="vanished">Sekarang</translation>
-    </message>
-</context>
-<context>
-    <name>NumLockWidget</name>
-    <message>
-        <source>Num Lock</source>
-        <translation type="vanished">Num Lock</translation>
     </message>
 </context>
 <context>
@@ -4044,22 +3609,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Performances</name>
     <message>
-        <source>N/A</source>
-        <translation type="vanished">T/A</translation>
-    </message>
-    <message>
-        <source> min</source>
-        <translation type="vanished"> menit</translation>
-    </message>
-    <message>
-        <source> h </source>
-        <translation type="vanished"> j </translation>
-    </message>
-    <message>
-        <source> h</source>
-        <translation type="vanished"> j</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="61"/>
         <source>CPU status</source>
         <translation>Status CPU</translation>
@@ -4176,10 +3725,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="389"/>
         <source>Disk</source>
         <translation>Penyimpanan</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation type="vanished">ndak tau</translation>
     </message>
 </context>
 <context>
@@ -4408,14 +3953,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>ProgressContent</name>
     <message>
-        <source>Sending...</source>
-        <translation type="vanished">Mengirimkan...</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Batal</translation>
-    </message>
-    <message>
         <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="22"/>
         <location filename="../Qml/Modules/DynamicIslandHost/DragAndDrop/ProgressContent.qml" line="41"/>
         <source>%1% of %2</source>
@@ -4546,21 +4083,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Services/ScreenCaptureHistory.qml" line="33"/>
         <source>Screen Capture</source>
         <translation>Tangkapan Layar</translation>
-    </message>
-</context>
-<context>
-    <name>Screencapture</name>
-    <message>
-        <source>Capture</source>
-        <translation type="vanished">Menangkap</translation>
-    </message>
-    <message>
-        <source>History</source>
-        <translation type="vanished">Histori</translation>
-    </message>
-    <message>
-        <source>No captures yet</source>
-        <translation type="vanished">Belum ada tangkapan</translation>
     </message>
 </context>
 <context>
@@ -4778,41 +4300,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
-    <name>TimeAgo</name>
-    <message>
-        <source>just now</source>
-        <translation type="vanished">Saat ini</translation>
-    </message>
-    <message>
-        <source>%1 seconds ago</source>
-        <translation type="vanished">%1 Detik lalu</translation>
-    </message>
-    <message>
-        <source>1 minute ago</source>
-        <translation type="vanished">1 menit lalu</translation>
-    </message>
-    <message>
-        <source>%1 minutes ago</source>
-        <translation type="vanished">%1 menit lalu</translation>
-    </message>
-    <message>
-        <source>1 hour ago</source>
-        <translation type="vanished">1 jam lalu</translation>
-    </message>
-    <message>
-        <source>%1 hours ago</source>
-        <translation type="vanished">%1 jam lalu</translation>
-    </message>
-    <message>
-        <source>1 day ago</source>
-        <translation type="vanished">1 hari lalu</translation>
-    </message>
-    <message>
-        <source>%1 days ago</source>
-        <translation type="vanished">%1 hari lalu</translation>
-    </message>
-</context>
-<context>
     <name>UVIndex</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="30"/>
@@ -4823,26 +4310,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/UVIndex.qml" line="51"/>
         <source>Today&apos;s average</source>
         <translation>Rata-rata hari ini</translation>
-    </message>
-    <message>
-        <source>Moderate</source>
-        <translation type="vanished">Sedang</translation>
-    </message>
-    <message>
-        <source>Low</source>
-        <translation type="vanished">Rendah</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="vanished">Tinggi</translation>
-    </message>
-    <message>
-        <source>Very High</source>
-        <translation type="vanished">Sangat Tinggi</translation>
-    </message>
-    <message>
-        <source>Extreme</source>
-        <translation type="vanished">Ekstrim</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="44"/>
@@ -4917,14 +4384,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="32"/>
         <source>Wallpaper Engine</source>
         <translation>Mesin Wallpaper</translation>
-    </message>
-    <message>
-        <source>Pick Wallpaper File</source>
-        <translation type="vanished">Memilih Berkas Wallpaper</translation>
-    </message>
-    <message>
-        <source>Select a wallpaper image file:</source>
-        <translation type="vanished">Pilih berkas gambar untuk wallpaper:</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="165"/>
@@ -5034,86 +4493,6 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 </context>
 <context>
     <name>Weather</name>
-    <message>
-        <source>A muggy and warm day — take care in the sun.</source>
-        <translation type="vanished">Hari yang lembab dan hangat — berhati-hatilah terhadap sinar matahari.</translation>
-    </message>
-    <message>
-        <source>A humid day with sticky conditions.</source>
-        <translation type="vanished">Hari yang lembab dengan kondisi lengket.</translation>
-    </message>
-    <message>
-        <source>A hot day ahead — stay hydrated and seek shade.</source>
-        <translation type="vanished">Hari yang panas di depan — tetap terhidrasi dan cari tempat teduh.</translation>
-    </message>
-    <message>
-        <source>A cold day — dress warmly before heading out.</source>
-        <translation type="vanished">Hari yang dingin — berpakaian hangat sebelum keluar.</translation>
-    </message>
-    <message>
-        <source>A pleasant day with comfortable conditions.</source>
-        <translation type="vanished">Hari yang menyenangkan dengan kondisi nyaman.</translation>
-    </message>
-    <message>
-        <source>Today&apos;s weather looks moderate.</source>
-        <translation type="vanished">Cuaca hari ini terlihat sedang.</translation>
-    </message>
-    <message>
-        <source>Air quality is poor right now — consider limiting time outside.</source>
-        <translation type="vanished">Kualitas udara buruk saat ini — pertimbangkan untuk membatasi waktu di luar.</translation>
-    </message>
-    <message>
-        <source>Air quality is moderate — sensitive groups should take precautions.</source>
-        <translation type="vanished">Kualitas udara sedang — kelompok sensitif harus mengambil tindakan pencegahan.</translation>
-    </message>
-    <message>
-        <source>UV index is very high (%1) — avoid direct sun exposure.</source>
-        <translation type="vanished">Indeks UV sangat tinggi (%1) — hindari paparan sinar matahari langsung.</translation>
-    </message>
-    <message>
-        <source>Strong UV levels at %1 — use sun protection.</source>
-        <translation type="vanished">Tingkat UV tinggi pada %1 — gunakan perlindungan matahari.</translation>
-    </message>
-    <message>
-        <source>Heavy rain expected — bring an umbrella.</source>
-        <translation type="vanished">Hujan lebat diperkirakan — bawalah payung.</translation>
-    </message>
-    <message>
-        <source>Light rain possible — keep an umbrella handy.</source>
-        <translation type="vanished">Hujan ringan mungkin terjadi — siapkan payung.</translation>
-    </message>
-    <message>
-        <source>Very windy conditions at %1 km/h — be cautious outdoors.</source>
-        <translation type="vanished">Kondisi sangat berangin dengan kecepatan %1 km/jam — berhati-hatilah di luar.</translation>
-    </message>
-    <message>
-        <source>Breezy day with winds around %1 km/h.</source>
-        <translation type="vanished">Hari berangin dengan kecepatan angin sekitar %1 km/jam.</translation>
-    </message>
-    <message>
-        <source>Large temperature swing today: %1° to %2° — dress in layers.</source>
-        <translation type="vanished">Perubahan suhu besar hari ini: %1° hingga %2° — berpakaian berlapis.</translation>
-    </message>
-    <message>
-        <source>Temperature ranging from %1° to %2° today.</source>
-        <translation type="vanished">Suhu berkisar dari %1° hingga %2° hari ini.</translation>
-    </message>
-    <message>
-        <source>Very sticky conditions with %1% humidity.</source>
-        <translation type="vanished">Kondisi sangat lengket dengan kelembaban %1%.</translation>
-    </message>
-    <message>
-        <source>Poor visibility at %1 km — drive carefully.</source>
-        <translation type="vanished">Jarak pandang buruk pada %1 km — berkendara dengan hati-hati.</translation>
-    </message>
-    <message>
-        <source>Perfect weather for outdoor activities.</source>
-        <translation type="vanished">Cuaca sempurna untuk aktivitas luar ruangan.</translation>
-    </message>
-    <message>
-        <source>Current temperature is %1° with feels like %2°.</source>
-        <translation type="vanished">Suhu saat ini %1° dengan terasa seperti %2°.</translation>
-    </message>
     <message>
         <location filename="../Qml/Services/Weather.qml" line="382"/>
         <location filename="../Qml/Services/Weather.qml" line="530"/>
@@ -5454,7 +4833,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Drawers/Dashboard/WeatherSummary/WeatherSummary.qml" line="77"/>
         <source>Feels like %1°</source>
-        <translation>Terasa seperti %1°</translation>
+        <translation>seperti %1°</translation>
     </message>
 </context>
 <context>

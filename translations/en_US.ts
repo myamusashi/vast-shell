@@ -1691,32 +1691,32 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DockContextMenu</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="96"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="101"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="104"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="109"/>
         <source>New Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="112"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="117"/>
         <source>Unpin from Dock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="112"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="117"/>
         <source>Pin to Dock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="121"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="126"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="131"/>
+        <location filename="../Qml/Modules/Drawers/Dock/DockContextMenu.qml" line="136"/>
         <source>Close All Windows</source>
         <translation type="unfinished"></translation>
     </message>
