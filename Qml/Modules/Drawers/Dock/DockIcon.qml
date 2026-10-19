@@ -16,6 +16,9 @@ Item {
     required property var    entry
     required property var    toplevel
 
+    readonly property bool   isFocusedToplevel: toplevel !== null && toplevel.wayland?.activated === true
+    readonly property bool   showsIndicator: toplevel !== null || (isPinned && entry !== null && DockServices.runningEntryIds.includes(entryId))
+
     property bool            hovered: false
     property real            iconSlot: 44
     property bool            isPinned: false
@@ -25,8 +28,8 @@ Item {
     signal                   hoverEntered
     signal                   hoverExited
 
-    implicitHeight: root.iconSlot + Appearance.spacing.small * 2
-    implicitWidth: root.iconSlot + Appearance.spacing.small * 2
+    implicitHeight: iconSlot + Appearance.spacing.small * 2
+    implicitWidth: iconSlot + Appearance.spacing.small * 2
     height: implicitHeight
     width: implicitWidth
 
@@ -48,11 +51,16 @@ Item {
     StyledRect {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color: Colours.m3Colors.m3Primary
+        color: root.isFocusedToplevel || root.toplevel === null ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
         height: 4
         radius: 2
-        visible: root.isPinned && root.entry !== null && DockServices.runningEntryIds.includes(root.entryId)
-        width: 4
+        visible: root.showsIndicator
+        width: root.isFocusedToplevel ? 16 : 4
+        Behavior on width {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
     }
 
     MArea {
@@ -79,7 +87,7 @@ Item {
         anchors.fill: parent
         enabled: root.entry !== null
         onClicked: mouse => {
-            const point = root.mapToItem(null, mouse.x, mouse.y);
+            const point = root.mapToItem(null, mouse.x, 0);
             dockContextMenu.openAt(point.x, point.y, root.entry, root.toplevel);
         }
     }

@@ -11,7 +11,11 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property var  activeToplevels: Hypr.toplevelsByWorkspace[Hypr.activeWsAddress] ?? []
+    readonly property var  activeToplevels: {
+        const list = Hypr.toplevelsByWorkspace[Hypr.activeWsAddress] ?? [];
+
+        return [...list].sort((a, b) => windowAddressKey(a) - windowAddressKey(b));
+    }
     readonly property var  entriesById: {
         const acc    = {};
         const values = DesktopEntries.applications.values ?? DesktopEntries.applications;
@@ -24,7 +28,7 @@ Singleton {
         const ids = Configs.dock.pinnedApps ?? [];
         const out = [];
         for (const id of ids) {
-            const entry = root.entriesById[id];
+            const entry = entriesById[id];
             if (entry)
                 out.push(entry);
         }
@@ -34,7 +38,7 @@ Singleton {
         const ids    = [];
         const values = Hypr.toplevels.values ?? Hypr.toplevels;
         for (const tl of values) {
-            const entry = root.entryForToplevel(tl);
+            const entry = entryForToplevel(tl);
             if (entry && !ids.includes(entry.id))
                 ids.push(entry.id);
         }
@@ -44,23 +48,23 @@ Singleton {
 
     function               activatePinned(entry: var): void {
         for (const toplevel of (Hypr.toplevels.values ?? Hypr.toplevels)) {
-            if (root.entryForToplevel(toplevel)?.id === entry.id) {
-                root.focusToplevel(toplevel);
+            if (entryForToplevel(toplevel)?.id === entry.id) {
+                focusToplevel(toplevel);
                 return;
             }
         }
-        root.launchEntry(entry);
+        launchEntry(entry);
     }
     function               closeAllWindows(entryId: string): void {
         for (const toplevel of (Hypr.toplevels.values ?? Hypr.toplevels)) {
-            if (root.entryForToplevel(toplevel)?.id === entryId)
+            if (entryForToplevel(toplevel)?.id === entryId)
                 toplevel?.wayland?.close();
         }
     }
     function               contentLength(availableWidth: real): real {
         const spacing      = Appearance.spacing.small;
         const toggleWidth  = Configs.dock.iconSlot + spacing * 2;
-        const contentWidth = root.pinnedContentWidth + root.workspaceContentWidth + toggleWidth + spacing * 4 + 2;
+        const contentWidth = pinnedContentWidth + workspaceContentWidth + toggleWidth + spacing * 4 + 2;
         return Math.min(availableWidth, contentWidth);
     }
     function               entryForToplevel(toplevel: var): DesktopEntry {
@@ -85,5 +89,10 @@ Singleton {
         const current           = Configs.dock.pinnedApps ?? [];
         const next              = current.includes(entryId) ? current.filter(id => id !== entryId) : [...current, entryId];
         Configs.dock.pinnedApps = next;
+    }
+    function               windowAddressKey(toplevel: var): int {
+        const parsed = parseInt(toplevel?.address ?? "", 16);
+
+        return isNaN(parsed) ? 0 : parsed;
     }
 }

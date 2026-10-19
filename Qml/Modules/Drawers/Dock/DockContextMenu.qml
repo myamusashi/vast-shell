@@ -14,31 +14,36 @@ import qs.Services
 LazyLoader {
     id: root
 
-    property real        clickX: 0
-    property real        clickY: 0
-    property var         currentEntry: null
-    property var         currentToplevel: null
-    property real        menuX: 0
-    property real        menuY: 0
-    property bool        opened: false
-    property ShellScreen screen: null
+    readonly property real cardWidth: 220
 
-    function             closeMenu(): void {
-        root.opened = false;
+    property real          anchorX: 0
+    property real          anchorY: 0
+    property var           currentEntry: null
+    property var           currentToplevel: null
+    property bool          opened: false
+    property ShellScreen   screen: null
+
+    function               closeMenu(): void {
+        opened = false;
     }
-    function             openAt(x: real, y: real, entry: var, toplevel: var): void {
-        root.currentEntry    = entry;
-        root.currentToplevel = toplevel;
-        root.clickX          = x;
-        root.clickY          = y;
-        root.menuX           = Math.max(0, Math.min(x, (root.screen ? root.screen.width : x) - 220));
-        root.menuY           = Math.max(0, y - 180);
-        root.opened          = true;
+    function               openAt(x: real, y: real, entry: var, toplevel: var): void {
+        currentEntry    = entry;
+        currentToplevel = toplevel;
+        anchorX         = x;
+        anchorY         = y;
+        opened          = true;
     }
 
     activeAsync: opened
     component: PanelWindow {
         id: popupWindow
+
+        readonly property real cardX: Math.max(0, Math.min(root.anchorX, (root.screen ? root.screen.width : root.anchorX) - root.cardWidth))
+        readonly property real cardY: {
+            const maxY = (root.screen ? root.screen.height : root.anchorY) - menuCard.implicitHeight;
+
+            return Math.max(0, Math.min(root.anchorY - menuCard.implicitHeight - Appearance.spacing.small, maxY));
+        }
 
         anchors {
             bottom: true
@@ -79,17 +84,17 @@ LazyLoader {
 
         Rectangle {
             id: menuCard
-            x: root.menuX
-            y: root.menuY
+            x: popupWindow.cardX
+            y: popupWindow.cardY
             color: GlobalStates.drawerColors
             implicitHeight: menuSurface.implicitHeight
-            implicitWidth: 220
+            implicitWidth: root.cardWidth
             radius: Appearance.rounding.small
 
             MenuSurface {
                 id: menuSurface
                 anchors.fill: parent
-                implicitWidth: 220
+                implicitWidth: root.cardWidth
                 showScrollBar: false
 
                 MenuItem {
