@@ -7,8 +7,6 @@ import qs.Core.Configs
 import qs.Widgets as Wid
 
 RowLayout {
-    layoutDirection: Qt.RightToLeft
-    spacing: Appearance.spacing.normal
 
     Wid.Clock {}
 

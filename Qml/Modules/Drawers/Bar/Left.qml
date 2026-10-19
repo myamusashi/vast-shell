@@ -10,8 +10,6 @@ RowLayout {
 
     required property ShellScreen monitor
 
-    spacing: Appearance.spacing.normal
-
     anchors {
         fill: parent
         leftMargin: Appearance.margin.small

@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Widgets
 
+import qs.Core.Configs
 import qs.Components.Base.DrawerComponents
 
 WrapperItem {
@@ -31,30 +32,37 @@ WrapperItem {
             anchors.fill: parent
 
             Left {
-                implicitHeight: parent.height
-                implicitWidth: parent.width / 6
-                monitor: window.modelData // qmllint disable
 
                 anchors {
                     left: parent.left
                     verticalCenter: parent.verticalCenter
                 }
+
+                spacing: Appearance.spacing.normal
+                implicitHeight: parent.height
+                implicitWidth: parent.width / 6
+                monitor: window.modelData // qmllint disable
+
             }
 
             Middle {
                 anchors.centerIn: parent
+                spacing: Appearance.spacing.normal
                 implicitHeight: parent.height
                 implicitWidth: parent.width / 6
             }
 
             Right {
-                implicitHeight: parent.height
-                implicitWidth: parent.width / 6
 
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
                 }
+
+                layoutDirection: Qt.RightToLeft
+                spacing: Appearance.spacing.normal
+                implicitHeight: parent.height
+                implicitWidth: parent.width / 6
             }
         }
     }
