@@ -95,7 +95,7 @@ void TestLyricsCache::saveThenLoadRoundTripsRawJsonAndDuration() {
 }
 
 void TestLyricsCache::roundTripsNonAsciiPayloadsByteForByte() {
-    const QString key = QStringLiteral("tst-utf8");
+    const QString    key     = QStringLiteral("tst-utf8");
     const QByteArray payload = QString::fromUtf8("{\"t\":\"Café 日本語 🎵\"}").toUtf8();
 
     vast::LyricsCache::save(key, payload, 1.0);

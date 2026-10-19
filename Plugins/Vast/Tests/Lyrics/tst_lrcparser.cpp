@@ -181,7 +181,7 @@ void TestLrcParser::lastLineEndsAtFiveSecondsPastItsStartWhenTheTrackIsShorter()
 void TestLrcParser::lastLineEndsAtTheTotalDurationWhenTheTrackIsLonger() {
     const QString lrc = QStringLiteral("[00:10.00]%1").arg(QLatin1String(TEN_TOKENS));
 
-    const auto mid = vast::LrcParser::parseLrc(lrc, 16.0);
+    const auto    mid = vast::LrcParser::parseLrc(lrc, 16.0);
     QCOMPARE(totalWordDuration(wordsAt(mid, 0)), 6000ll);
 
     const auto longTrack = vast::LrcParser::parseLrc(lrc, 300.0);

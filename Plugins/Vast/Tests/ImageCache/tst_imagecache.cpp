@@ -93,7 +93,7 @@ class TestImageCache : public QObject {
     }
 
     // Drain completions from earlier cases.
-    void settleCompletions();
+    void                           settleCompletions();
 
     void                           evictTestKeys();
 

@@ -35,25 +35,25 @@ namespace {
     constexpr int               kTimeoutMs = 5000;
     constexpr int               kShortMs   = 1000; // a reply the code sends inline arrives in tens of ms
 
-    const char* const kBusConfigTemplate = "<busconfig>\n"
-                                           "  <type>session</type>\n"
-                                           "  <listen>%1</listen>\n"
-                                           "  <keep_umask/>\n"
-                                           "  <policy context=\"default\">\n"
-                                           "    <allow user=\"*\"/>\n"
-                                           "    <allow own=\"*\"/>\n"
-                                           "    <allow send_type=\"method_call\"/>\n"
-                                           "    <allow send_type=\"method_return\"/>\n"
-                                           "    <allow send_type=\"error\"/>\n"
-                                           "    <allow send_type=\"signal\"/>\n"
-                                           "    <allow receive_type=\"method_call\"/>\n"
-                                           "    <allow receive_type=\"method_return\"/>\n"
-                                           "    <allow receive_type=\"error\"/>\n"
-                                           "    <allow receive_type=\"signal\"/>\n"
-                                           "  </policy>\n"
-                                           "</busconfig>\n";
+    const char* const           kBusConfigTemplate = "<busconfig>\n"
+                                                     "  <type>session</type>\n"
+                                                     "  <listen>%1</listen>\n"
+                                                     "  <keep_umask/>\n"
+                                                     "  <policy context=\"default\">\n"
+                                                     "    <allow user=\"*\"/>\n"
+                                                     "    <allow own=\"*\"/>\n"
+                                                     "    <allow send_type=\"method_call\"/>\n"
+                                                     "    <allow send_type=\"method_return\"/>\n"
+                                                     "    <allow send_type=\"error\"/>\n"
+                                                     "    <allow send_type=\"signal\"/>\n"
+                                                     "    <allow receive_type=\"method_call\"/>\n"
+                                                     "    <allow receive_type=\"method_return\"/>\n"
+                                                     "    <allow receive_type=\"error\"/>\n"
+                                                     "    <allow receive_type=\"signal\"/>\n"
+                                                     "  </policy>\n"
+                                                     "</busconfig>\n";
 
-    [[nodiscard]] QString describeBusFailure(QProcess& daemon, const QString& address) {
+    [[nodiscard]] QString       describeBusFailure(QProcess& daemon, const QString& address) {
         if (daemon.state() == QProcess::NotRunning && daemon.error() != QProcess::UnknownError)
             return QStringLiteral("could not run dbus-daemon: %1").arg(daemon.errorString());
         if (address.isEmpty())

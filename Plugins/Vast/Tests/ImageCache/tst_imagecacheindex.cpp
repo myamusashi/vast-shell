@@ -145,7 +145,7 @@ void TestImageCacheIndex::allPathsReturnsEveryValue() {
 }
 
 void TestImageCacheIndex::indexPersistsAcrossInstances() {
-    const QString dir = freshDir("persist");
+    const QString dir  = freshDir("persist");
     const QString real = dir + QStringLiteral("/persisted.png");
     {
         QFile file(real);

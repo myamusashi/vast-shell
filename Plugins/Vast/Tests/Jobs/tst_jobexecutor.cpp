@@ -142,13 +142,13 @@ void TestJobExecutor::jobsRunInPostOrder() {
 }
 
 void TestJobExecutor::postingFromSeveralThreadsIsSafe() {
-    vast::JobExecutor& ex = vast::JobExecutor::instance();
+    vast::JobExecutor&       ex = vast::JobExecutor::instance();
 
-    constexpr int      kPosters   = 4;
-    constexpr int      kPerPoster = 10;
-    constexpr int      kTotal     = kPosters * kPerPoster;
-    QSemaphore         sem;
-    std::atomic<int>   ran{0};
+    constexpr int            kPosters   = 4;
+    constexpr int            kPerPoster = 10;
+    constexpr int            kTotal     = kPosters * kPerPoster;
+    QSemaphore               sem;
+    std::atomic<int>         ran{0};
 
     std::vector<std::thread> posters;
     posters.reserve(kPosters);
