@@ -82,7 +82,7 @@ Singleton {
         startRender(wallpaper, mode, scheme);
     }
     function                 startRender(wallpaper: string, mode: string, scheme: string) {
-        renderCommand         = [`${Paths.projectRoot}/vastctl/vastctl`, "colors", "render", "--wallpaper", wallpaper, "--mode", mode, "--scheme", scheme];
+        renderCommand         = ["vastctl", "colors", "render", "--wallpaper", wallpaper, "--mode", mode, "--scheme", scheme];
         lastError             = "";
         renderProcess.running = true;
     }
