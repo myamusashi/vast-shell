@@ -15,9 +15,10 @@ var colorScheme string
 var colorOut string
 
 var colorCmd = &cobra.Command{
-	Use:   "color",
-	Short: "Generate Material palettes without touching shell colors",
-	Long:  "Resolve a full Material role map from an image or a hex color via the shell's color IPC target. Prints JSON and never changes the live palette.",
+	Use:     "color",
+	Aliases: []string{"colors"},
+	Short:   "Generate Material palettes without touching shell colors",
+	Long:    "Resolve a full Material role map from an image or a hex color via the shell's color IPC target. Prints JSON and never changes the live palette.",
 }
 
 var colorGenerateCmd = &cobra.Command{

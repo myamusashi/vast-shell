@@ -240,6 +240,38 @@ Icon fonts are registered lazily with QtQuick's `FontLoader`: only the selected 
 > [!NOTE]
 > `colors.toDarkColor` and `colors.toWhiteColor` still appear in `Data/configurations.json` but are **dead keys** — no code reads them. Generated palettes are never written to disk. Safe to delete.
 
+### Color templates
+
+
+| Path | Value |
+|---|---|
+| **template list** | **`<shellDir>/templates.json`** |
+
+
+```json
+{
+  "templates": [
+    {
+      "name": "hyprland",
+      "input": "~/.config/hypr/colors.conf.tmpl",
+      "output_path": "",
+      "post_hook": "hyprctl reload",
+      "enabled": true
+    }
+  ]
+}
+```
+
+| Key | Default | Description |
+|---|---|---|
+| `name` | `""` | The name `vastctl color render --template` selects. |
+| `input` | `""` | The template file. `~` and environment variables are expanded. |
+| `output_path` | `""` | The rendered file. Empty means next to the template. |
+| `post_hook` | `""` | Command that runs after the file was written. |
+| `enabled` | `true` | A disabled template is skipped by a render of all templates. |
+
+See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming rules.
+
 ### Generals
 
 | Key | Default | Description |

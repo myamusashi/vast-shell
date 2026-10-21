@@ -22,6 +22,7 @@ Singleton {
         source: root.animatedMaterialColors
     }
     readonly property var              materialPaletteSource: materialColor.ready ? materialColor.colors : lastValidPalette
+    readonly property bool             materialReady: materialColor.ready
     readonly property var              materialTemplateColors: animatedMaterialColors
     readonly property M3TemplateColors staticColors: M3TemplateColors {
         source: root.staticTemplateColors

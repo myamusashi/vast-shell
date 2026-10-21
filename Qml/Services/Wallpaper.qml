@@ -140,6 +140,7 @@ Singleton {
         function onCurrentWallpaperChanged(): void {
             root.ensureThumbnail(Paths.currentWallpaper);
             root.updateWallpaperColors(Paths.currentWallpaper);
+            TemplateServices.noteWallpaperChange();
         }
 
         target: Paths

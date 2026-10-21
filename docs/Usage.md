@@ -17,6 +17,7 @@ vastctl [--json]
 ├── clipboard list / status / remove <id> / clear / search <query>
 ├── color generate <image-path>                           # --mode, --scheme, --out, --raw
 │       from <hex-color>
+│       render                                           # --template, --wallpaper, --mode, --scheme
 ├── volume system get / set [+|-]<%> / mute / unmute / toggle-mute
 │       app list / set <id> [+|-]<%> / mute <id> / unmute <id> / toggle-mute <id>
 ├── wallpaper get / set <path>
@@ -57,6 +58,74 @@ vastctl brightness set -5%
 | `color` | `--scheme` | `tonal-spot` | Any of the nine Material schemes. |
 | `color` | `--out` | *(stdout)* | Write the JSON result to a file. |
 | `color` | `--raw` | `false` | Skip the tree renderer (implied by `--out`). |
+| `color render` | `--template` | *(every enabled template)* | Render only the template with this name. |
+| `color render` | `--wallpaper` | *(the current wallpaper)* | Render from this wallpaper instead of the current one. |
+
+### Color templates
+
+`vastctl color render` renders your own templates with the palette of the current wallpaper. 
+The palette comes from the running shell, so a rendered file always matches the colors
+the shell is using.
+
+A template is a plain text file with placeholders:
+
+```
+{{colors.<role>.<format>}}
+```
+
+- `role` is a Material role name. `onSurface` and `on_surface` are the same role.
+- `format` is one of `hex`, `hex_stripped`, `rgb` or `rgba`.
+- `{{mode}}` is the color mode (`dark` or `light`), `{{image}}` is the wallpaper path.
+- `| alpha: 0.5` sets the alpha of a single placeholder.
+
+Example, `~/.config/hypr/colors.conf.tmpl`:
+
+```
+$primary = 0x{{colors.primary.hex_stripped | alpha: 0.6}}
+$background = {{colors.background.rgba | alpha: 0.5}}
+$text = {{colors.onSurface.rgb}}
+$surface = {{colors.surface.hex}}
+$dim = {{colors.onSurfaceVariant.hex | alpha: 0.6}}
+```
+
+The output file is named after the template: `colors.conf.tmpl` and
+`colors.conf.template` are rendered into `colors.conf`, and a template
+without one of those suffixes is rendered into `<name>.rendered`. The file
+lands next to the template unless `output_path` says otherwise.
+
+> [!WARNING]
+> A rendered file **replaces** the file that is already there. A file you
+> edited by hand is lost when the template is rendered again.
+
+A **video wallpaper** is rendered from a frame of it: the frame the shell
+already cached (`~/.cache/vast-shell/vast-wallpaper-<hash>-1024.png`), or a
+new one taken from the middle of the video with `ffmpeg` when the cache does
+not have it yet.
+
+The templates live in `~/.config/vast-shell/templates.json`:
+
+```json
+{
+  "templates": [
+    {
+      "name": "hyprland",
+      "input": "~/.config/hypr/colors.conf.tmpl",
+      "output_path": "",
+      "post_hook": "hyprctl reload",
+      "enabled": true
+    }
+  ]
+}
+```
+
+| Key | Description |
+|---|---|
+| `name` | The name `--template` selects. |
+| `input` | The template file. `~` and environment variables are expanded. |
+| `output_path` | Optional. Empty means next to the template. |
+| `post_hook` | Optional command that runs after the file was written. |
+| `enabled` | Optional, defaults to `true`. A disabled template is skipped. |
+
 
 ### The running daemon is the source of truth
 

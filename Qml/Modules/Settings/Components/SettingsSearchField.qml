@@ -164,79 +164,85 @@ Item {
             terms: ["Audio Profile", "Card Profile", "Off", "Pro Audio"]
         },
         {
-            page: 13,
+            page: 14,
             pageLabel: "Network & Internet",
             card: "Hotspot",
             terms: ["Hotspot Sharing", "User Hotspot", "Hotspot Password", "Hotspot Interface", "Bandwidth"]
         },
         {
-            page: 13,
+            page: 14,
             pageLabel: "Network & Internet",
             card: "Wi-Fi",
             terms: ["Enable Wi-Fi"]
         },
         {
-            page: 14,
+            page: 13,
+            pageLabel: "Templates",
+            card: "Templates",
+            terms: ["Template", "Add Template", "Render Now", "Output", "Post hook"]
+        },
+        {
+            page: 15,
             pageLabel: "Bluetooth",
             card: "Adapter",
             terms: ["Bluetooth", "Enable Bluetooth", "Discoverable", "Pairable", "Scanning", "Adapter"]
         },
         {
-            page: 14,
+            page: 15,
             pageLabel: "Bluetooth",
             card: "Paired devices",
             terms: ["Paired", "Connected", "Forget", "Blocked"]
         },
         {
-            page: 14,
+            page: 15,
             pageLabel: "Bluetooth",
             card: "Available devices",
             terms: ["Available", "Pair", "Discover"]
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "KDE Connect",
             card: "Device Discovery",
             terms: ["Enable Polling"]
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "KDE Connect",
             card: "Local Device",
             terms: ["Device ID"]
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "KDE Connect",
             card: "Paired Devices",
             terms: []
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "KDE Connect",
             card: "Available Devices",
             terms: []
         },
         {
-            page: 16,
+            page: 17,
             pageLabel: "Greeter",
             card: "Greeter Wallpaper",
             terms: ["Wallpaper Type", "Upload Wallpaper", "Preview"]
         },
         {
-            page: 17,
+            page: 18,
             pageLabel: "Idle",
             card: "Idle Management",
             terms: ["Enable Idle Detection"]
         },
         {
-            page: 17,
+            page: 18,
             pageLabel: "Idle",
             card: "Timeouts",
             terms: []
         },
         {
-            page: 18,
+            page: 19,
             pageLabel: "Lockscreen",
             card: "Depth Wallpaper",
             terms: ["Enable Depth Wallpaper", "Auto-process On Wallpaper Change"]
