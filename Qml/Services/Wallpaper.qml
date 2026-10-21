@@ -149,6 +149,7 @@ Singleton {
     Connections {
         function onSchemeChanged(): void {
             root.updateWallpaperColors(Paths.currentWallpaper);
+            TemplateServices.noteWallpaperChange();
         }
 
         target: Configs.colors
