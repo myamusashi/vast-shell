@@ -222,15 +222,8 @@ namespace vast {
     }
 
     BrightnessManager::WorkerMap BrightnessManager::scanDisplays() noexcept {
-        // The snapshot is rebuilt from scratch on every scan: a rescan is the
-        // only way a display that was unplugged can leave the list, and a
-        // display that was plugged can enter it.
-        WorkerMap discovered;
+        WorkerMap         discovered;
 
-        // ddcutil detects the displays once, when its library is initialised.
-        // A monitor that is plugged in later only shows up after a
-        // redetection, and a redetection closes every open display handle -
-        // which is why no handle is kept between two hardware accesses.
         const DDCA_Status redetect = ddca_redetect_displays();
         if (redetect != 0)
             qWarning() << "[BrightnessManager] display redetection failed:" << ddca_rc_desc(redetect);
@@ -248,32 +241,27 @@ namespace vast {
                     .device = info.path.io_mode == DDCA_IO_I2C ? 0 : info.usb_device,
                 };
 
-                // The id is derived from the port the display is attached to,
-                // not from ddcutil's display number: that number is reassigned
-                // on every detection run, so it would let one monitor take
-                // over the identity of another one when the topology changes.
+                // that number is reassigned on every detection run,
+                // so it would let one monitor take over the identity
+                // of another one when the topology changes.
                 const QString id   = target.mode == DDCA_IO_I2C ? QStringLiteral("ddc-%1").arg(target.bus) : QStringLiteral("ddc-usb-%1-%2").arg(target.bus).arg(target.device);
                 const QString name = QStringLiteral("%1 %2").arg(QString::fromUtf8(info.mfg_id), QString::fromUtf8(info.model_name));
 
                 const auto    read = readDdcBrightness(target);
                 if (!read && read.error().unavailable) {
-                    // The display is gone or cannot be opened: it does not
-                    // belong in the list.
                     qWarning() << "[BrightnessManager] dropping display" << id << "—" << read.error().message;
                     continue;
                 }
 
                 const int initial = read.value_or(50);
 
-                // clang-format off
-                auto          meta = DisplayMeta{
-                                                 .id            = id,
-                                                 .name          = name,
-                                                 .type          = DisplayType::Ddc,
-                                                 .backlightPath = {},
-                                                 .ddc           = target,
+                auto      meta = DisplayMeta{
+                         .id            = id,
+                         .name          = name,
+                         .type          = DisplayType::Ddc,
+                         .backlightPath = {},
+                         .ddc           = target,
                 };
-                // clang-format on
 
                 discovered.emplace(id, std::make_shared<DisplayWorker>(std::move(meta), initial));
             }
@@ -298,15 +286,13 @@ namespace vast {
             for (const auto& path : entries) {
                 const int     initial = readBacklightBrightness(path).value_or(50);
                 const QString id      = QString::fromStdString(path.filename().string());
-                // clang-format off
                 auto          meta    = DisplayMeta{
-                                                   .id            = id,
-                                                   .name          = QStringLiteral("Internal: %1").arg(id),
-                                                   .type          = DisplayType::Backlight,
-                                                   .backlightPath = path,
-                                                   .ddc           = {},
+                                .id            = id,
+                                .name          = QStringLiteral("Internal: %1").arg(id),
+                                .type          = DisplayType::Backlight,
+                                .backlightPath = path,
+                                .ddc           = {},
                 };
-                // clang-format on
                 discovered.emplace(id, std::make_shared<DisplayWorker>(std::move(meta), initial));
             }
         }
@@ -315,26 +301,14 @@ namespace vast {
     }
 
     void BrightnessManager::publishDisplays(WorkerMap workers) {
-        // Replacing the map drops the workers of the displays that are gone.
-        // A write that is still in flight keeps its worker alive through the
-        // shared_ptr it captured, so its hardware access stays valid; the
-        // completion handler checks that the id is still known before it
-        // publishes anything.
         mWorkers = std::move(workers);
-
         Q_EMIT displayListChanged();
     }
 
-    // Queues exactly one hardware write per display onto the shared worker.
-    // Called from the UI thread and re-invoked from write completions when a
-    // newer value arrived while the previous write was in flight.
     void BrightnessManager::dispatchWrite(const QString& id, const std::shared_ptr<DisplayWorker>& worker) {
         if (!worker->beginWrite())
             return;
 
-        // The target is copied: a rescan can replace the worker while the
-        // write is queued, and the write still has to reach the display the
-        // request was made for.
         const DdcTarget             target = worker->meta().ddc;
         const DisplayType           type   = worker->meta().type;
         const std::filesystem::path path   = worker->meta().backlightPath;
@@ -354,10 +328,6 @@ namespace vast {
                 [this, id, worker, percent, result] {
                     worker->endWrite();
 
-                    // A rescan may have replaced or dropped this display while
-                    // the write was in flight. The hardware write already
-                    // happened, so the value is published for the display that
-                    // carries this id now, if there is one.
                     const auto it = mWorkers.find(id);
                     if (it == mWorkers.end())
                         return;
@@ -370,10 +340,6 @@ namespace vast {
                         qWarning() << "[BrightnessManager] set failed for" << id << "—" << result.error().message;
                     }
 
-                    // A newer value may have arrived while the hardware write
-                    // was in flight; drain it instead of leaving the display stale.
-                    // A replaced worker is not drained: the display it belonged
-                    // to is gone and its pending value is not the current one.
                     if (it->second == worker && worker->hasPending())
                         dispatchWrite(id, worker);
                 },
@@ -405,8 +371,6 @@ namespace vast {
     }
 
     void BrightnessManager::setBrightnessGroup(const QVariantMap& targets) {
-        // Store all pending values first, then dispatch, so every display's
-        // queued write picks up its final value in one sweep.
         for (const auto& [id, value] : targets.asKeyValueRange())
             if (const auto it = mWorkers.find(id); it != mWorkers.end())
                 it->second->storePending(clampPercent(value.toInt()));
