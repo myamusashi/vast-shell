@@ -14,12 +14,8 @@ import (
 	"time"
 )
 
-// hookTimeout is how long a post hook may run before it is killed.
 const hookTimeout = 30 * time.Second
 
-// paletteSource hands the renderer the wallpaper and the palette it
-// renders from. The CLI fills it with the shell's IPC, the tests fill
-// it with a fixed palette.
 type paletteSource interface {
 	CurrentWallpaper() (string, error)
 	Palette(wallpaper, mode, scheme string) (map[string]string, error)
@@ -39,9 +35,6 @@ type RenderOptions struct {
 	TemplateName string
 }
 
-// Render renders the selected templates. Every template is attempted,
-// so one broken template does not hide the state of the others; the
-// failures are reported together.
 func (r *Renderer) Render(options RenderOptions) error {
 	templateList, err := loadConfig(r.ConfigPath)
 	if err != nil {
@@ -74,7 +67,6 @@ func (r *Renderer) Render(options RenderOptions) error {
 	return errors.Join(failures...)
 }
 
-// resolveWallpaper returns the wallpaper the palette is built from.
 func (r *Renderer) resolveWallpaper(options RenderOptions) (string, error) {
 	if options.Wallpaper != "" {
 		return options.Wallpaper, nil
@@ -89,7 +81,6 @@ func (r *Renderer) resolveWallpaper(options RenderOptions) (string, error) {
 	return wallpaper, nil
 }
 
-// loadPalette asks the source for the palette of a wallpaper.
 func (r *Renderer) loadPalette(wallpaper string, options RenderOptions) (palette, error) {
 	raw, err := r.Source.Palette(wallpaper, options.Mode, options.Scheme)
 	if err != nil {
@@ -146,9 +137,6 @@ func (r *Renderer) reportError(message string) {
 	_, _ = fmt.Fprintln(r.Stderr, message)
 }
 
-// resolveOutputPath returns the file a template renders into. An
-// explicit output path wins; otherwise the template suffix is stripped
-// and the result lands next to the template.
 func resolveOutputPath(entry template, inputPath string) (string, error) {
 	if entry.OutputPath != "" {
 		expanded, err := expandPath(entry.OutputPath)
@@ -182,11 +170,6 @@ func expandPath(path string) (string, error) {
 	return expanded, nil
 }
 
-// writeFile writes content to a path and replaces the file that is
-// there. The write is atomic: the content lands in a temporary file in
-// the same directory and is renamed over the target, so a reader never
-// sees a half-written file. A file that already holds the same content
-// is left alone, so a watcher does not fire for nothing.
 func writeFile(path string, content []byte) (bool, error) {
 	if existing, err := os.ReadFile(path); err == nil && bytes.Equal(existing, content) {
 		return false, nil
@@ -217,7 +200,6 @@ func writeFile(path string, content []byte) (bool, error) {
 	return true, nil
 }
 
-// runHook runs the post hook in the directory of the file it rendered.
 func runHook(command, directory string, timeout time.Duration) error {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()

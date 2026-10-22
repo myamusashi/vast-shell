@@ -8,7 +8,6 @@ import (
 	"unicode"
 )
 
-// palette holds the palette roles under their canonical names.
 type palette struct {
 	colors map[string]color
 }
@@ -27,8 +26,6 @@ func (p palette) roleNames() []string {
 	return roles
 }
 
-// buildPalette folds the role names to one spelling. Two names that
-// fold to the same one are an error rather than a silent overwrite.
 func buildPalette(raw map[string]string) (palette, error) {
 	colors := make(map[string]color, len(raw))
 	origins := make(map[string]string, len(raw))
@@ -67,9 +64,6 @@ func ParsePalette(payload string) (map[string]string, error) {
 	return response.Colors, nil
 }
 
-// canonicalRole folds a role name into one spelling: the words of a
-// snake_case or camelCase name are lower-cased and joined in camelCase,
-// so onSurface, on_surface and ON_SURFACE are the same role.
 func canonicalRole(name string) string {
 	words := splitWords(name)
 	if len(words) == 0 {
@@ -92,9 +86,6 @@ func upperFirst(word string) string {
 	return string(letters)
 }
 
-// splitWords breaks a role name into its words. Both the snake_case and
-// the camelCase spelling are recognised, and a run of capitals counts
-// as one word, so HTTPColor is HTTP and color.
 func splitWords(name string) []string {
 	var words []string
 	var current strings.Builder
@@ -126,8 +117,6 @@ func splitWords(name string) []string {
 	return words
 }
 
-// suggestRoles returns the roles closest to a name, so a typo in a
-// template says what was meant and not only what was wrong.
 func suggestRoles(target string, roles []string, limit int) []string {
 	type candidate struct {
 		name     string
@@ -175,8 +164,6 @@ func editDistance(first, second string) int {
 	return previous[len(secondRunes)]
 }
 
-// sortedKeys returns the keys of a map in a stable order, so a palette
-// error always names the same pair of roles.
 func sortedKeys(values map[string]string) []string {
 	keys := make([]string, 0, len(values))
 	for key := range values {

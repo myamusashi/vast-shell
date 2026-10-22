@@ -6,17 +6,11 @@ import (
 	"strings"
 )
 
-// variables are the values a template can reference next to the
-// palette.
 type variables struct {
 	Mode  string
 	Image string
 }
 
-// templateError describes a placeholder that could not be resolved.
-// The file and the line are part of the message: a template is a
-// document the user edits by hand, and a bare "unknown role" does not
-// tell them where to look.
 type templateError struct {
 	File        string
 	Line        int
@@ -28,7 +22,6 @@ func (e *templateError) Error() string {
 	return fmt.Sprintf("%s:%d: %s: %s", e.File, e.Line, e.Placeholder, e.Message)
 }
 
-// render replaces every placeholder in a template with its value.
 func render(fileName, source string, roles palette, values variables) (string, error) {
 	var rendered strings.Builder
 	rendered.Grow(len(source))
@@ -87,7 +80,6 @@ func evaluate(fileName, source string, offset int, expression string, roles pale
 	return resolveColor(base, filters, roles, failure)
 }
 
-// resolveColor resolves a colors.<role>.<format> placeholder.
 func resolveColor(base string, filters []string, roles palette, failure func(string) error) (string, error) {
 	if !strings.HasPrefix(base, "colors.") {
 		return "", failure(fmt.Sprintf("unknown placeholder %q, expected colors.<role>.<format>, mode or image", base))

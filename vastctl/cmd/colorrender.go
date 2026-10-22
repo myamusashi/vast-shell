@@ -10,9 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// colorRenderCommand renders the configured templates with the palette
-// the shell holds. The renderer lives in the templates package; this
-// command only names the files and forwards the flags.
 func colorRenderCommand() *cobra.Command {
 	var templateName string
 	var wallpaperPath string
@@ -56,9 +53,6 @@ func colorRenderCommand() *cobra.Command {
 	return command
 }
 
-// shellPaletteSource asks the running shell for the wallpaper and the
-// palette. The shell owns the palette: the renderer must not
-// reimplement the color math.
 type shellPaletteSource struct{}
 
 func (shellPaletteSource) CurrentWallpaper() (string, error) {
