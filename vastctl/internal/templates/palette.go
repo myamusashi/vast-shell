@@ -3,6 +3,7 @@ package templates
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"sort"
 	"strings"
 	"unicode"
@@ -62,6 +63,27 @@ func ParsePalette(payload string) (map[string]string, error) {
 		return nil, fmt.Errorf("the shell returned no colors")
 	}
 	return response.Colors, nil
+}
+
+func parsePaletteFile(path string) (map[string]string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("read %s: %w", path, err)
+	}
+	var wrapped struct {
+		Colors map[string]string `json:"colors"`
+	}
+	if err := json.Unmarshal(data, &wrapped); err == nil && len(wrapped.Colors) > 0 {
+		return wrapped.Colors, nil
+	}
+	var flat map[string]string
+	if err := json.Unmarshal(data, &flat); err != nil {
+		return nil, fmt.Errorf("parse %s: %w", path, err)
+	}
+	if len(flat) == 0 {
+		return nil, fmt.Errorf("%s holds no colors", path)
+	}
+	return flat, nil
 }
 
 func canonicalRole(name string) string {

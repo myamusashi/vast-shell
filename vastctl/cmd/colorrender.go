@@ -11,6 +11,7 @@ import (
 )
 
 func colorRenderCommand() *cobra.Command {
+	var palettePath string
 	var templateName string
 	var wallpaperPath string
 
@@ -19,6 +20,7 @@ func colorRenderCommand() *cobra.Command {
 		Short: "Render the configured color templates",
 		Long: "Render every enabled template of the template list with the current palette. " +
 			"The palette comes from the shell, so the rendered files always match the live colors. " +
+			"A palette file takes its place, for a shell that shows a palette of its own. " +
 			"An output file that is already there is replaced.",
 		Args: cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -41,6 +43,7 @@ func colorRenderCommand() *cobra.Command {
 				Stderr:     os.Stderr,
 			}
 			return renderer.Render(templates.RenderOptions{
+				PalettePath:  palettePath,
 				Wallpaper:    wallpaperPath,
 				Mode:         mode,
 				Scheme:       scheme,
@@ -48,6 +51,7 @@ func colorRenderCommand() *cobra.Command {
 			})
 		},
 	}
+	command.Flags().StringVar(&palettePath, "palette", "", "Render with the palette in this file instead of the one from the wallpaper")
 	command.Flags().StringVar(&templateName, "template", "", "Render only the template with this name")
 	command.Flags().StringVar(&wallpaperPath, "wallpaper", "", "Render from this wallpaper instead of the current one")
 	return command

@@ -60,6 +60,7 @@ vastctl brightness set -5%
 | `color` | `--raw` | `false` | Skip the tree renderer (implied by `--out`). |
 | `color render` | `--template` | *(every enabled template)* | Render only the template with this name. |
 | `color render` | `--wallpaper` | *(the current wallpaper)* | Render from this wallpaper instead of the current one. |
+| `color render` | `--palette` | *(the palette of the wallpaper)* | Render with the palette in this file instead of the one from the wallpaper. |
 
 ### Color templates
 
@@ -126,6 +127,17 @@ The templates live in `~/.config/vast-shell/templates.json`:
 | `post_hook` | Optional command that runs after the file was written. |
 | `enabled` | Optional, defaults to `true`. A disabled template is skipped. |
 
+A static palette is a JSON file with the role map:
+
+```json
+{
+  "background": "#1a1111",
+  "onSurface": "#f0dede"
+}
+```
+
+`vastctl color render --palette <file>` renders with such a file instead of
+the palette of the wallpaper.
 
 ### The running daemon is the source of truth
 

@@ -323,3 +323,87 @@ func TestRunHookTimeout(t *testing.T) {
 		t.Fatal("the child of the hook outlived the timeout")
 	}
 }
+
+// TestRenderUsesThePaletteFile pins that a palette file takes the place
+// of the palette the shell builds: the shell shows a palette of its own
+// when the static colors are on, and the templates have to follow.
+func TestRenderUsesThePaletteFile(t *testing.T) {
+	directory := t.TempDir()
+	input := filepath.Join(directory, "colors.conf.tmpl")
+	if err := os.WriteFile(input, []byte("bg={{colors.background.hex}}\n"), 0o644); err != nil {
+		t.Fatalf("write %s: %v", input, err)
+	}
+	paletteFile := filepath.Join(directory, "colors.json")
+	if err := os.WriteFile(paletteFile, []byte(`{"background":"#1a1111","onSurface":"#f0dede"}`), 0o644); err != nil {
+		t.Fatalf("write %s: %v", paletteFile, err)
+	}
+	config := filepath.Join(directory, "templates.json")
+	writeConfig(t, config, `{"templates":[{"name":"colors","input":"`+input+`","enabled":true}]}`)
+
+	renderer := Renderer{
+		ConfigPath: config,
+		Source:     fakeSource{wallpaper: "/wall.png", colors: map[string]string{"background": "#000000"}},
+	}
+	options := RenderOptions{Mode: "dark", Scheme: "tonal-spot", PalettePath: paletteFile}
+	if err := renderer.Render(options); err != nil {
+		t.Fatalf("Render: %v", err)
+	}
+	written, err := os.ReadFile(filepath.Join(directory, "colors.conf"))
+	if err != nil {
+		t.Fatalf("read the rendered file: %v", err)
+	}
+	if string(written) != "bg=#1a1111\n" {
+		t.Fatalf("the rendered file holds %q", written)
+	}
+}
+
+// TestRenderPaletteFileShapes pins that a palette file is read whether
+// it holds the role map flat or under "colors".
+func TestRenderPaletteFileShapes(t *testing.T) {
+	directory := t.TempDir()
+	for name, content := range map[string]string{
+		"flat.json":    `{"background":"#1a1111"}`,
+		"wrapped.json": `{"colors":{"background":"#1a1111"}}`,
+	} {
+		path := filepath.Join(directory, name)
+		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+			t.Fatalf("write %s: %v", path, err)
+		}
+		colors, err := parsePaletteFile(path)
+		if err != nil {
+			t.Fatalf("parsePaletteFile(%s): %v", name, err)
+		}
+		if colors["background"] != "#1a1111" {
+			t.Fatalf("parsePaletteFile(%s) = %v", name, colors)
+		}
+	}
+}
+
+// TestRenderReportsABrokenPaletteFile pins that a palette file that
+// cannot be read fails with a reason.
+func TestRenderReportsABrokenPaletteFile(t *testing.T) {
+	directory := t.TempDir()
+	input := filepath.Join(directory, "colors.conf.tmpl")
+	if err := os.WriteFile(input, []byte("bg={{colors.background.hex}}\n"), 0o644); err != nil {
+		t.Fatalf("write %s: %v", input, err)
+	}
+	paletteFile := filepath.Join(directory, "colors.json")
+	if err := os.WriteFile(paletteFile, []byte("not json"), 0o644); err != nil {
+		t.Fatalf("write %s: %v", paletteFile, err)
+	}
+	config := filepath.Join(directory, "templates.json")
+	writeConfig(t, config, `{"templates":[{"name":"colors","input":"`+input+`","enabled":true}]}`)
+
+	renderer := Renderer{
+		ConfigPath: config,
+		Source:     fakeSource{wallpaper: "/wall.png", colors: map[string]string{"background": "#000000"}},
+	}
+	options := RenderOptions{Mode: "dark", Scheme: "tonal-spot", PalettePath: paletteFile}
+	err := renderer.Render(options)
+	if err == nil {
+		t.Fatal("a palette file that is not json must fail")
+	}
+	if !strings.Contains(err.Error(), paletteFile) {
+		t.Errorf("the error %q does not name the file", err)
+	}
+}

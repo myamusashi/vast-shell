@@ -230,3 +230,35 @@ func TestColorRenderUsesAFrameOfAVideo(t *testing.T) {
 		t.Fatalf("the frame was not written: %v", err)
 	}
 }
+
+// TestColorRenderUsesThePaletteFile pins that a palette file takes the
+// place of the palette the shell would build, and that the shell is
+// not asked for one.
+func TestColorRenderUsesThePaletteFile(t *testing.T) {
+	installRenderShims(t)
+	directory := writeTemplateList(t, "")
+	input := filepath.Join(directory, "colors.conf.tmpl")
+	if err := os.WriteFile(input, []byte("bg={{colors.background.hex}}\n"), 0o644); err != nil {
+		t.Fatalf("write %s: %v", input, err)
+	}
+	writeTemplateList(t, `{"templates":[{"name":"colors","input":"`+input+`","enabled":true}]}`)
+	paletteFile := filepath.Join(directory, "colors.json")
+	if err := os.WriteFile(paletteFile, []byte(`{"background":"#1a1111"}`), 0o644); err != nil {
+		t.Fatalf("write %s: %v", paletteFile, err)
+	}
+	t.Setenv("SHIM_WALLPAPER", "/wall.png")
+	t.Setenv("SHIM_PALETTE", `{"colors":{"background":"#000000"}}`)
+
+	log := recordShell(t)
+	if _, err := runCLI(t, "color", "render", "--palette", paletteFile); err != nil {
+		t.Fatalf("vastctl color render: %v", err)
+	}
+	written, err := os.ReadFile(filepath.Join(directory, "colors.conf"))
+	if err != nil {
+		t.Fatalf("read the rendered file: %v", err)
+	}
+	if string(written) != "bg=#1a1111\n" {
+		t.Fatalf("the rendered file holds %q", written)
+	}
+	wantCall(t, log, "img", "get")
+}

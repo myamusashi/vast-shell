@@ -29,6 +29,7 @@ type Renderer struct {
 }
 
 type RenderOptions struct {
+	PalettePath  string
 	Wallpaper    string
 	Mode         string
 	Scheme       string
@@ -82,6 +83,13 @@ func (r *Renderer) resolveWallpaper(options RenderOptions) (string, error) {
 }
 
 func (r *Renderer) loadPalette(wallpaper string, options RenderOptions) (palette, error) {
+	if options.PalettePath != "" {
+		raw, err := parsePaletteFile(options.PalettePath)
+		if err != nil {
+			return palette{}, err
+		}
+		return buildPalette(raw)
+	}
 	raw, err := r.Source.Palette(wallpaper, options.Mode, options.Scheme)
 	if err != nil {
 		return palette{}, fmt.Errorf("generate the palette: %w", err)
