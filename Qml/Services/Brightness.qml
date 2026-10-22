@@ -36,13 +36,12 @@ Singleton {
     function               refresh() {
         const list = BrightnessManager.displays();
         displays   = list;
-        if (primaryId === "") {
+        if (!list.some(d => d.id === primaryId)) {
             const internal = list.find(d => d.isInternal);
             primaryId      = (internal ?? list[0])?.id ?? "";
         }
         const primary = list.find(d => d.id === primaryId);
-        if (primary)
-            value = primary.brightness;
+        value         = primary ? primary.brightness : 0;
     }
     function               removeProfile(name: string) {
         BrightnessManager.removeProfile(name);
@@ -73,6 +72,29 @@ Singleton {
     Component.onCompleted: Qt.callLater(() => {
         BrightnessManager.initialize();
     })
+
+    Connections {
+        function onScreensChanged() {
+            rescanTimer.restart();
+            rescanSettleTimer.restart();
+        }
+
+        target: Quickshell
+    }
+
+    Timer {
+        id: rescanTimer
+
+        interval: 2000
+        onTriggered: BrightnessManager.initialize()
+    }
+
+    Timer {
+        id: rescanSettleTimer
+
+        interval: 6000
+        onTriggered: BrightnessManager.initialize()
+    }
 
     Connections {
         function onBrightnessChanged(displayId: string, percent: int) {

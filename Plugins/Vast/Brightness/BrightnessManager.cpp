@@ -27,60 +27,137 @@ namespace vast {
 
     namespace {
         constexpr uint8_t K_VCP_BRIGHTNESS = 0x10;
+
+        class DdcHandle final {
+          public:
+            DdcHandle() noexcept = default;
+            explicit DdcHandle(DDCA_Display_Handle handle) noexcept : mHandle(handle) {}
+            ~DdcHandle() noexcept {
+                reset();
+            }
+
+            DdcHandle(const DdcHandle&)            = delete;
+            DdcHandle& operator=(const DdcHandle&) = delete;
+            DdcHandle(DdcHandle&& o) noexcept : mHandle(std::exchange(o.mHandle, nullptr)) {}
+
+            DdcHandle& operator=(DdcHandle&& o) noexcept {
+                if (this != &o) {
+                    reset();
+                    mHandle = std::exchange(o.mHandle, nullptr);
+                }
+                return *this;
+            }
+
+            [[nodiscard]] DDCA_Display_Handle get() const noexcept {
+                return mHandle;
+            }
+
+            void reset() noexcept {
+                if (mHandle) {
+                    ddca_close_display(mHandle);
+                    mHandle = nullptr;
+                }
+            }
+
+          private:
+            DDCA_Display_Handle mHandle{nullptr};
+        };
+
+        // The display the target points at, in the list ddcutil knows about.
+        [[nodiscard]] const DDCA_Display_Info* findDisplay(const DDCA_Display_Info_List& list, const DdcTarget& target) noexcept {
+            for (int i = 0; i < list.ct; ++i) {
+                const auto& info = list.info[i];
+                if (info.path.io_mode != target.mode)
+                    continue;
+                if (target.mode == DDCA_IO_I2C) {
+                    if (info.path.path.i2c_busno == target.bus)
+                        return &info;
+                } else if (info.usb_bus == target.bus && info.usb_device == target.device) {
+                    return &info;
+                }
+            }
+            return nullptr;
+        }
+
+        template <typename Action>
+        [[nodiscard]] std::expected<void, BrightnessError> withDdcDisplay(const DdcTarget& target, Action action) noexcept {
+            DDCA_Display_Info_List* list{};
+            ddca_get_display_info_list2(/*include_invalid_displays=*/false, &list);
+            if (!list)
+                return std::unexpected(BrightnessError{.message = "ddcutil returned no display list", .unavailable = true});
+
+            const DDCA_Display_Info* info = findDisplay(*list, target);
+            if (!info) {
+                ddca_free_display_info_list(list);
+                return std::unexpected(BrightnessError{.message = "display is not connected any more", .unavailable = true});
+            }
+
+            DDCA_Display_Handle handle{};
+            const DDCA_Status   rc = ddca_open_display2(info->dref, /*wait=*/false, &handle);
+            ddca_free_display_info_list(list);
+            if (rc != 0) {
+                return std::unexpected(BrightnessError{
+                    .message     = ddca_rc_desc(rc),
+                    .code        = static_cast<int>(rc),
+                    .unavailable = true,
+                });
+            }
+
+            DdcHandle owned{handle};
+            return action(owned.get());
+        }
     } // namespace
 
     BrightnessManager::BrightnessManager(QObject* parent) : QObject(parent) {}
 
     /* NOTE: no explicit destructor body needed.
      * Write jobs capture shared_ptr<DisplayWorker>, so a write still queued or
-     * running at shutdown keeps its state alive and closes DDC handles from
-     * the worker thread. Completion callbacks are queued with `this` as
-     * context, so once the manager is gone they are dropped, never dereferenced.
-     * A queued write may still be dropped at exit: JobExecutor does not drain.
+     * running at shutdown keeps its state alive. Completion callbacks are
+     * queued with `this` as context, so once the manager is gone they are
+     * dropped, never dereferenced.
+     * A queued write may still be dropped at exit.
      */
 
-    std::expected<DdcHandle, BrightnessError> BrightnessManager::openDdcHandle(DDCA_Display_Ref ref) noexcept {
-        DDCA_Display_Handle h{};
-        const DDCA_Status   rc = ddca_open_display2(ref, /*wait=*/false, &h);
-        if (rc != 0) {
-            return std::unexpected(BrightnessError{
-                .message = ddca_rc_desc(rc),
-                .code    = static_cast<int>(rc),
-            });
-        }
-        return DdcHandle{h};
+    std::expected<int, BrightnessError> BrightnessManager::readDdcBrightness(const DdcTarget& target) noexcept {
+        int        value{0};
+        const auto result = withDdcDisplay(target, [&value](DDCA_Display_Handle handle) -> std::expected<void, BrightnessError> {
+            DDCA_Non_Table_Vcp_Value val{};
+            const DDCA_Status        rc = ddca_get_non_table_vcp_value(handle, K_VCP_BRIGHTNESS, &val);
+            if (rc != 0) {
+                return std::unexpected(BrightnessError{
+                    .message = ddca_rc_desc(rc),
+                    .code    = static_cast<int>(rc),
+                });
+            }
+            const int current = (val.sh << 8) | val.sl;
+            const int max     = (val.mh << 8) | val.ml;
+            if (max == 0) {
+                return std::unexpected(BrightnessError{.message = "monitor reported max brightness of 0"});
+            }
+            value = (current * K_MAX_PERCENT) / max;
+            return {};
+        });
+
+        if (!result)
+            return std::unexpected(result.error());
+        return value;
     }
 
-    std::expected<int, BrightnessError> BrightnessManager::readDdcBrightness(const DdcHandle& handle) noexcept {
-        DDCA_Non_Table_Vcp_Value val{};
-        const DDCA_Status        rc = ddca_get_non_table_vcp_value(handle.get(), K_VCP_BRIGHTNESS, &val);
-        if (rc != 0) {
-            return std::unexpected(BrightnessError{
-                .message = ddca_rc_desc(rc),
-                .code    = static_cast<int>(rc),
-            });
-        }
-        const int current = (val.sh << 8) | val.sl;
-        const int max     = (val.mh << 8) | val.ml;
-        if (max == 0) {
-            return std::unexpected(BrightnessError{.message = "monitor reported max brightness of 0"});
-        }
-        return (current * K_MAX_PERCENT) / max;
-    }
-
-    std::expected<void, BrightnessError> BrightnessManager::writeDdcBrightness(const DdcHandle& handle, int percent) noexcept {
-        // most modern monitors use a 0–100 native range for VCP 0x10
-        // hi_byte = 0, lo_byte = percent
-        const DDCA_Status rc = ddca_set_non_table_vcp_value(handle.get(), K_VCP_BRIGHTNESS,
-                                                            /*hi_byte=*/static_cast<uint8_t>(percent >> 8),
-                                                            /*lo_byte=*/static_cast<uint8_t>(percent & 0xFF));
-        if (rc != 0) {
-            return std::unexpected(BrightnessError{
-                .message = ddca_rc_desc(rc),
-                .code    = static_cast<int>(rc),
-            });
-        }
-        return {};
+    std::expected<void, BrightnessError> BrightnessManager::writeDdcBrightness(const DdcTarget& target, int percent) noexcept {
+        return withDdcDisplay(target, [percent](DDCA_Display_Handle handle) -> std::expected<void, BrightnessError> {
+            // most modern monitors use a 0–100 native range for VCP 0x10
+            // hi_byte = 0, lo_byte = percent
+            const DDCA_Status rc = ddca_set_non_table_vcp_value(handle, K_VCP_BRIGHTNESS,
+                                                                /*hi_byte=*/static_cast<uint8_t>(percent >> 8),
+                                                                /*lo_byte=*/static_cast<uint8_t>(percent & 0xFF));
+            if (rc != 0) {
+                return std::unexpected(BrightnessError{
+                    .message = ddca_rc_desc(rc),
+                    .code    = static_cast<int>(rc),
+                });
+            }
+            return {};
+        });
     }
 
     std::expected<int, BrightnessError> BrightnessManager::readBacklightBrightness(const std::filesystem::path& root) noexcept {
@@ -108,7 +185,7 @@ namespace vast {
         std::ifstream mStream(root / "max_brightness");
         if (!mStream) {
             return std::unexpected(BrightnessError{
-                .message = "cannot write " + root.string() + "/brightness — add user to 'video' group or check udev rules",
+                .message = std::string("cannot write ") + root.string() + "/brightness — add user to 'video' group or check udev rules",
             });
         }
         int max{0};
@@ -125,29 +202,68 @@ namespace vast {
     }
 
     void BrightnessManager::initialize() {
+        // The scan runs on the job thread: ddcutil refuses to open a display
+        // that is already open, so every hardware access has to be serialised
+        // with the writes, and the redetection must not block the UI thread.
+        vast::JobExecutor::instance().post([this] {
+            WorkerMap discovered = scanDisplays();
+
+            QMetaObject::invokeMethod(
+                this,
+                [this, discovered = std::move(discovered)]() mutable {
+                    if (discovered.empty()) {
+                        Q_EMIT initializationFailed(QStringLiteral("no controllable displays found (no DDC/CI monitors and no sysfs backlight device)"));
+                    }
+
+                    publishDisplays(std::move(discovered));
+                },
+                Qt::QueuedConnection);
+        });
+    }
+
+    BrightnessManager::WorkerMap BrightnessManager::scanDisplays() noexcept {
+        // The snapshot is rebuilt from scratch on every scan: a rescan is the
+        // only way a display that was unplugged can leave the list, and a
+        // display that was plugged can enter it.
+        WorkerMap discovered;
+
+        // ddcutil detects the displays once, when its library is initialised.
+        // A monitor that is plugged in later only shows up after a
+        // redetection, and a redetection closes every open display handle -
+        // which is why no handle is kept between two hardware accesses.
+        const DDCA_Status redetect = ddca_redetect_displays();
+        if (redetect != 0)
+            qWarning() << "[BrightnessManager] display redetection failed:" << ddca_rc_desc(redetect);
+
         DDCA_Display_Info_List* infoList{};
         ddca_get_display_info_list2(/*include_invalid_displays=*/false, &infoList);
 
         if (infoList) {
             for (int i = 0; i < infoList->ct; ++i) {
-                const auto& info = infoList->info[i];
+                const auto&     info = infoList->info[i];
 
-                auto        handleResult = openDdcHandle(info.dref);
-                if (!handleResult) {
-                    qWarning() << "[BrightnessManager] DDC open failed:" << handleResult.error().message;
-                    Q_EMIT initializationFailed(
-                        QStringLiteral("DDC open failed for %1: %2").arg(QString::fromUtf8(info.model_name), QString::fromStdString(handleResult.error().message)));
+                const DdcTarget target{
+                    .mode   = info.path.io_mode,
+                    .bus    = info.path.io_mode == DDCA_IO_I2C ? info.path.path.i2c_busno : info.usb_bus,
+                    .device = info.path.io_mode == DDCA_IO_I2C ? 0 : info.usb_device,
+                };
+
+                // The id is derived from the port the display is attached to,
+                // not from ddcutil's display number: that number is reassigned
+                // on every detection run, so it would let one monitor take
+                // over the identity of another one when the topology changes.
+                const QString id   = target.mode == DDCA_IO_I2C ? QStringLiteral("ddc-%1").arg(target.bus) : QStringLiteral("ddc-usb-%1-%2").arg(target.bus).arg(target.device);
+                const QString name = QStringLiteral("%1 %2").arg(QString::fromUtf8(info.mfg_id), QString::fromUtf8(info.model_name));
+
+                const auto    read = readDdcBrightness(target);
+                if (!read && read.error().unavailable) {
+                    // The display is gone or cannot be opened: it does not
+                    // belong in the list.
+                    qWarning() << "[BrightnessManager] dropping display" << id << "—" << read.error().message;
                     continue;
                 }
 
-                const int initial = readDdcBrightness(*handleResult).value_or(50);
-                // dispno is ddcutil's own stable per-monitor identifier, unique
-                // even across two identical-model displays; model_name alone
-                // collides for matched monitor pairs and silently drops the
-                // second one from mWorkers (std::map::emplace is a no-op on an
-                // existing key).
-                const QString id   = QStringLiteral("ddc-%1").arg(info.dispno);
-                const QString name = QStringLiteral("%1 %2").arg(QString::fromUtf8(info.mfg_id), QString::fromUtf8(info.model_name));
+                const int initial = read.value_or(50);
 
                 // clang-format off
                 auto          meta = DisplayMeta{
@@ -155,11 +271,11 @@ namespace vast {
                                                  .name          = name,
                                                  .type          = DisplayType::Ddc,
                                                  .backlightPath = {},
-                                                 .ddcHandle     = std::move(*handleResult),
+                                                 .ddc           = target,
                 };
                 // clang-format on
 
-                mWorkers.emplace(id, std::make_shared<DisplayWorker>(std::move(meta), initial));
+                discovered.emplace(id, std::make_shared<DisplayWorker>(std::move(meta), initial));
             }
             ddca_free_display_info_list(infoList);
         }
@@ -184,19 +300,27 @@ namespace vast {
                 const QString id      = QString::fromStdString(path.filename().string());
                 // clang-format off
                 auto          meta    = DisplayMeta{
-                                                    .id            = id,
-                                                    .name          = QStringLiteral("Internal: %1").arg(id),
-                                                    .type          = DisplayType::Backlight,
-                                                    .backlightPath = path,
-                                                    .ddcHandle     = {},
+                                                   .id            = id,
+                                                   .name          = QStringLiteral("Internal: %1").arg(id),
+                                                   .type          = DisplayType::Backlight,
+                                                   .backlightPath = path,
+                                                   .ddc           = {},
                 };
                 // clang-format on
-                mWorkers.emplace(id, std::make_shared<DisplayWorker>(std::move(meta), initial));
+                discovered.emplace(id, std::make_shared<DisplayWorker>(std::move(meta), initial));
             }
         }
 
-        if (mWorkers.empty())
-            Q_EMIT initializationFailed(QStringLiteral("no controllable displays found (no DDC/CI monitors and no sysfs backlight device)"));
+        return discovered;
+    }
+
+    void BrightnessManager::publishDisplays(WorkerMap workers) {
+        // Replacing the map drops the workers of the displays that are gone.
+        // A write that is still in flight keeps its worker alive through the
+        // shared_ptr it captured, so its hardware access stays valid; the
+        // completion handler checks that the id is still known before it
+        // publishes anything.
+        mWorkers = std::move(workers);
 
         Q_EMIT displayListChanged();
     }
@@ -208,14 +332,19 @@ namespace vast {
         if (!worker->beginWrite())
             return;
 
-        vast::JobExecutor::instance().post([this, id, worker]() {
-            const int          percent = clampPercent(worker->takePending());
+        // The target is copied: a rescan can replace the worker while the
+        // write is queued, and the write still has to reach the display the
+        // request was made for.
+        const DdcTarget             target = worker->meta().ddc;
+        const DisplayType           type   = worker->meta().type;
+        const std::filesystem::path path   = worker->meta().backlightPath;
 
-            const DisplayMeta& meta   = worker->meta();
-            const auto         result = [&]() -> std::expected<void, BrightnessError> {
-                switch (meta.type) {
-                    case DisplayType::Ddc: return writeDdcBrightness(meta.ddcHandle, percent);
-                    case DisplayType::Backlight: return writeBacklightBrightness(meta.backlightPath, percent);
+        vast::JobExecutor::instance().post([this, id, worker, target, type, path]() {
+            const int  percent = clampPercent(worker->takePending());
+            const auto result  = [&]() -> std::expected<void, BrightnessError> {
+                switch (type) {
+                    case DisplayType::Ddc: return writeDdcBrightness(target, percent);
+                    case DisplayType::Backlight: return writeBacklightBrightness(path, percent);
                 }
                 std::unreachable();
             }();
@@ -225,8 +354,17 @@ namespace vast {
                 [this, id, worker, percent, result] {
                     worker->endWrite();
 
+                    // A rescan may have replaced or dropped this display while
+                    // the write was in flight. The hardware write already
+                    // happened, so the value is published for the display that
+                    // carries this id now, if there is one.
+                    const auto it = mWorkers.find(id);
+                    if (it == mWorkers.end())
+                        return;
+
                     if (result) {
                         worker->setCurrentBrightness(percent);
+                        it->second->setCurrentBrightness(percent);
                         Q_EMIT brightnessChanged(id, percent);
                     } else {
                         qWarning() << "[BrightnessManager] set failed for" << id << "—" << result.error().message;
@@ -234,7 +372,9 @@ namespace vast {
 
                     // A newer value may have arrived while the hardware write
                     // was in flight; drain it instead of leaving the display stale.
-                    if (worker->hasPending())
+                    // A replaced worker is not drained: the display it belonged
+                    // to is gone and its pending value is not the current one.
+                    if (it->second == worker && worker->hasPending())
                         dispatchWrite(id, worker);
                 },
                 Qt::QueuedConnection);

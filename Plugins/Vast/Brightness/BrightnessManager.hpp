@@ -30,44 +30,7 @@ namespace vast {
     struct BrightnessError {
         std::string message;
         int         code{0};
-    };
-
-    class DdcHandle final {
-      public:
-        DdcHandle() noexcept = default;
-        explicit DdcHandle(DDCA_Display_Handle h) noexcept : mHandle(h) {}
-        ~DdcHandle() noexcept {
-            reset();
-        }
-
-        DdcHandle(const DdcHandle&)            = delete;
-        DdcHandle& operator=(const DdcHandle&) = delete;
-        DdcHandle(DdcHandle&& o) noexcept : mHandle(std::exchange(o.mHandle, nullptr)) {}
-
-        DdcHandle& operator=(DdcHandle&& o) noexcept {
-            if (this != &o) {
-                reset();
-                mHandle = std::exchange(o.mHandle, nullptr);
-            }
-            return *this;
-        }
-
-        [[nodiscard]] bool valid() const noexcept {
-            return mHandle != nullptr;
-        }
-        [[nodiscard]] DDCA_Display_Handle get() const noexcept {
-            return mHandle;
-        }
-
-        void reset() noexcept {
-            if (mHandle) {
-                ddca_close_display(mHandle);
-                mHandle = nullptr;
-            }
-        }
-
-      private:
-        DDCA_Display_Handle mHandle{nullptr};
+        bool        unavailable{false};
     };
 
     enum class DisplayType : uint8_t {
@@ -75,18 +38,24 @@ namespace vast {
         Backlight
     };
 
+    struct DdcTarget {
+        DDCA_IO_Mode       mode{DDCA_IO_I2C};
+        int                bus{0};
+        int                device{0};
+
+        [[nodiscard]] bool operator==(const DdcTarget& other) const noexcept {
+            return mode == other.mode && bus == other.bus && device == other.device;
+        }
+    };
+
     struct DisplayMeta {
         QString               id;
         QString               name;
         DisplayType           type;
         std::filesystem::path backlightPath;
-        DdcHandle             ddcHandle;
+        DdcTarget             ddc;
     };
 
-    // Per-display state shared between the UI thread and the single JobExecutor
-    // worker that performs every hardware write. No thread per display anymore:
-    // rapid changes coalesce into the one pending slot, and a single queued
-    // write per display drains whatever value is latest by the time it runs.
     class DisplayWorker final {
       public:
         ~DisplayWorker()                          = default;
@@ -141,6 +110,8 @@ namespace vast {
         QML_SINGLETON
 
       public:
+        using WorkerMap = std::map<QString, std::shared_ptr<DisplayWorker>>;
+
         explicit BrightnessManager(QObject* parent = nullptr);
         ~BrightnessManager() override                            = default;
         BrightnessManager(const BrightnessManager&)              = delete;
@@ -151,27 +122,20 @@ namespace vast {
         [[nodiscard]] Q_INVOKABLE QList<QVariant> displays() const;
         Q_INVOKABLE void                          initialize();
 
-        Q_INVOKABLE void                          setBrightness(const QString& displayId, int percent);
-        Q_INVOKABLE void                          setBrightnessGroup(const QVariantMap& targets);
-        Q_INVOKABLE void                          setBrightnessAll(int percent);
+        void                                  publishDisplays(WorkerMap workers);
 
-        Q_INVOKABLE void                          saveProfile(const QString& name, const QVariantMap& targets);
-        Q_INVOKABLE void                          applyProfile(const QString& name);
-        Q_INVOKABLE void                          removeProfile(const QString& name);
-        [[nodiscard]] Q_INVOKABLE QStringList     profileNames() const;
+        Q_INVOKABLE void                      setBrightness(const QString& displayId, int percent);
+        Q_INVOKABLE void                      setBrightnessGroup(const QVariantMap& targets);
+        Q_INVOKABLE void                      setBrightnessAll(int percent);
 
-        // The one definition of the percent range: the .cpp scales sysfs and DDC
-        // values against these, and clampPercent is defined here rather than
-        // out of line because a constexpr member is implicitly inline, so an
-        // out-of-line definition would leave every other TU with an undefined
-        // inline reference.
+        Q_INVOKABLE void                      saveProfile(const QString& name, const QVariantMap& targets);
+        Q_INVOKABLE void                      applyProfile(const QString& name);
+        Q_INVOKABLE void                      removeProfile(const QString& name);
+        [[nodiscard]] Q_INVOKABLE QStringList profileNames() const;
+
         static constexpr int K_MIN_PERCENT = 0;
         static constexpr int K_MAX_PERCENT = 100;
 
-        // Public so they can be exercised without a DDC monitor:
-        // readBacklightBrightness/writeBacklightBrightness take a
-        // caller-supplied root purely so a temp directory works, while
-        // production passes /sys/class/backlight/<name>.
         [[nodiscard]] static constexpr int clampPercent(int v) noexcept {
             return v < K_MIN_PERCENT ? K_MIN_PERCENT : (v > K_MAX_PERCENT ? K_MAX_PERCENT : v);
         }
@@ -185,14 +149,13 @@ namespace vast {
         void displayListChanged();
 
       private:
-        using WorkerMap = std::map<QString, std::shared_ptr<DisplayWorker>>;
-        [[nodiscard]] static std::expected<DdcHandle, BrightnessError> openDdcHandle(DDCA_Display_Ref ref) noexcept;
-        [[nodiscard]] static std::expected<int, BrightnessError>       readDdcBrightness(const DdcHandle& handle) noexcept;
-        [[nodiscard]] static std::expected<void, BrightnessError>      writeDdcBrightness(const DdcHandle& handle, int percent) noexcept;
-        void                                                           dispatchWrite(const QString& id, const std::shared_ptr<DisplayWorker>& worker);
+        [[nodiscard]] static std::expected<int, BrightnessError>  readDdcBrightness(const DdcTarget& target) noexcept;
+        [[nodiscard]] static std::expected<void, BrightnessError> writeDdcBrightness(const DdcTarget& target, int percent) noexcept;
+        [[nodiscard]] static WorkerMap scanDisplays() noexcept;
+        void                           dispatchWrite(const QString& id, const std::shared_ptr<DisplayWorker>& worker);
 
-        WorkerMap                                                      mWorkers;
-        BrightnessProfileStore                                         mProfileStore;
+        WorkerMap                      mWorkers;
+        BrightnessProfileStore         mProfileStore;
     };
 
 } // namespace vast

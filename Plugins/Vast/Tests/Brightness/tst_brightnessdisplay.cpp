@@ -21,7 +21,7 @@ namespace {
             .name          = QStringLiteral("Internal: %1").arg(id),
             .type          = vast::DisplayType::Backlight,
             .backlightPath = root,
-            .ddcHandle     = {},
+            .ddc           = {},
         };
     }
 
@@ -142,8 +142,6 @@ void TestBrightnessDisplay::beginWriteIsExclusiveAndEndWriteReleasesIt() {
 void TestBrightnessDisplay::beginWriteDoesNotDisturbAPendingValue() {
     vast::DisplayWorker worker(backlightMeta(QStringLiteral("d"), "/tmp"), 0);
 
-    // The in-flight flag and the pending slot are independent; conflating them
-    // would drop the user's final slider position.
     worker.storePending(60);
     QVERIFY(worker.beginWrite());
     worker.endWrite();
@@ -174,7 +172,9 @@ void TestBrightnessDisplay::metaIsExposedByReference() {
     QCOMPARE(worker.meta().name, QStringLiteral("Internal: ddc-7"));
     QCOMPARE(worker.meta().type, vast::DisplayType::Backlight);
     QCOMPARE(worker.meta().backlightPath, std::filesystem::path("/tmp"));
-    QVERIFY(!worker.meta().ddcHandle.valid());
+
+    // A backlight has no DDC target: the default one points at no connector.
+    QCOMPARE(worker.meta().ddc, vast::DdcTarget{});
 }
 
 void TestBrightnessDisplay::clampPercentClampsBelowRange() {
@@ -274,9 +274,6 @@ void TestBrightnessDisplay::writeBacklightFailsOnAMissingDirectory() {
     const auto                  written = vast::BrightnessManager::writeBacklightBrightness(missing, 50);
 
     QVERIFY(!written.has_value());
-    // The message names the brightness file, not max_brightness: the branch is
-    // taken because max_brightness could not be read, but the operator-facing
-    // hint is about the file the user is expected to be able to write.
     QVERIFY(written.error().message.find("cannot write") != std::string::npos);
     QVERIFY(written.error().message.find("brightness") != std::string::npos);
 }

@@ -30,7 +30,7 @@ RowLayout {
 
     Connections {
         function onDisplaysChanged() {
-            if (root.targetId !== "" && !root.selectedDisplay)
+            if (root.targetId !== "" && !Brightness.displays.some(d => d.id === root.targetId))
                 root.targetId = "";
         }
 

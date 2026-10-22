@@ -5,9 +5,31 @@
 #include <qvariant.h>
 #include <qvariantmap.h>
 
+#include <filesystem>
 #include <memory>
+#include <utility>
 
 #include "../../Brightness/BrightnessManager.hpp"
+
+namespace {
+
+    // A synthetic display, so the snapshot semantics can be exercised without
+    // a DDC monitor and without a sysfs backlight device.
+    [[nodiscard]] std::shared_ptr<vast::DisplayWorker> fakeWorker(const QString& id, int brightness) {
+        // clang-format off
+        vast::DisplayMeta meta{
+                                     .id            = id,
+                                     .name          = QStringLiteral("Internal: %1").arg(id),
+                                     .type          = vast::DisplayType::Backlight,
+                                     .backlightPath = std::filesystem::path("/sys/class/backlight") / id.toStdString(),
+                                     .ddc           = {},
+        };
+        // clang-format on
+
+        return std::make_shared<vast::DisplayWorker>(std::move(meta), brightness);
+    }
+
+} // namespace
 
 class TestBrightnessManager : public QObject {
     Q_OBJECT
@@ -26,6 +48,9 @@ class TestBrightnessManager : public QObject {
 
     void initializeEmitsDisplayListChangedExactlyOnce();
     void initializeEitherFindsDisplaysOrReportsFailure();
+
+    void publishDisplaysReplacesTheSnapshot();
+    void publishDisplaysWithAnEmptyMapClearsTheSnapshot();
 
   private:
     // Every case runs against a manager whose initialize() was never called,
@@ -127,6 +152,10 @@ void TestBrightnessManager::initializeEmitsDisplayListChangedExactlyOnce() {
 
     m.initialize();
 
+    // The scan runs on the job thread and the snapshot is published back on
+    // the UI thread, so the signal is not immediate.
+    QVERIFY(spy.wait(10000));
+
     // Emitted unconditionally, including on the no-displays path.
     QCOMPARE(spy.count(), 1);
 }
@@ -134,8 +163,13 @@ void TestBrightnessManager::initializeEmitsDisplayListChangedExactlyOnce() {
 void TestBrightnessManager::initializeEitherFindsDisplaysOrReportsFailure() {
     auto&      m = manager();
     QSignalSpy failSpy(&m, &vast::BrightnessManager::initializationFailed);
+    QSignalSpy listSpy(&m, &vast::BrightnessManager::displayListChanged);
 
     m.initialize();
+
+    // The failure is reported before the snapshot is published, so waiting for
+    // the list change is enough to see both.
+    QVERIFY(listSpy.wait(10000));
 
     // The one invariant that holds everywhere: this machine has
     // /sys/class/backlight/intel_backlight, CI has no backlight at all, and a
@@ -146,6 +180,46 @@ void TestBrightnessManager::initializeEitherFindsDisplaysOrReportsFailure() {
         QVERIFY2(m.displays().isEmpty(), "initializationFailed fired but displays() is not empty");
     else
         QVERIFY2(!m.displays().isEmpty(), "initialization succeeded but no displays were found");
+}
+
+void TestBrightnessManager::publishDisplaysReplacesTheSnapshot() {
+    auto&      m = manager();
+    QSignalSpy spy(&m, &vast::BrightnessManager::displayListChanged);
+
+    m.publishDisplays(vast::BrightnessManager::WorkerMap{
+        {QStringLiteral("intel_backlight"), fakeWorker(QStringLiteral("intel_backlight"), 40)},
+    });
+
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(m.displays().size(), 1);
+
+    // A rescan replaces the snapshot instead of merging into it: the display
+    // that is gone must not survive the scan, and the display that appeared
+    // must be visible.
+    m.publishDisplays(vast::BrightnessManager::WorkerMap{
+        {QStringLiteral("ddc-1"), fakeWorker(QStringLiteral("ddc-1"), 70)},
+    });
+
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(m.displays().size(), 1);
+
+    const auto entry = m.displays().first().toMap();
+    QCOMPARE(entry.value(QStringLiteral("id")).toString(), QStringLiteral("ddc-1"));
+    QCOMPARE(entry.value(QStringLiteral("brightness")).toInt(), 70);
+}
+
+void TestBrightnessManager::publishDisplaysWithAnEmptyMapClearsTheSnapshot() {
+    auto& m = manager();
+
+    m.publishDisplays(vast::BrightnessManager::WorkerMap{
+        {QStringLiteral("intel_backlight"), fakeWorker(QStringLiteral("intel_backlight"), 40)},
+    });
+    QVERIFY(!m.displays().isEmpty());
+
+    // Every display was unplugged: the snapshot is empty afterwards.
+    m.publishDisplays({});
+
+    QVERIFY(m.displays().isEmpty());
 }
 
 QTEST_GUILESS_MAIN(TestBrightnessManager)
