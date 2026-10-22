@@ -77,10 +77,11 @@ func evaluate(fileName, source string, offset int, expression string, roles pale
 		}
 		return values.Image, nil
 	}
-	return resolveColor(base, filters, roles, failure)
+	return resolveColor(base, filters, roles, values, failure)
 }
 
-func resolveColor(base string, filters []string, roles palette, failure func(string) error) (string, error) {
+// resolves a colors.<role>.<format> placeholder.
+func resolveColor(base string, filters []string, roles palette, values variables, failure func(string) error) (string, error) {
 	if !strings.HasPrefix(base, "colors.") {
 		return "", failure(fmt.Sprintf("unknown placeholder %q, expected colors.<role>.<format>, mode or image", base))
 	}
@@ -91,6 +92,9 @@ func resolveColor(base string, filters []string, roles palette, failure func(str
 	}
 
 	canonical := canonicalRole(role)
+	if canonical == "mode" {
+		return resolveMode(format, filters, values.Mode, failure)
+	}
 	roleColor, exists := roles.lookup(canonical)
 	if !exists {
 		message := fmt.Sprintf("unknown color role %q", role)
@@ -117,6 +121,21 @@ func resolveColor(base string, filters []string, roles palette, failure func(str
 		return roleColor.rgba(), nil
 	default:
 		return "", failure(fmt.Sprintf("unknown format %q, expected hex, hex_stripped, rgb or rgba", format))
+	}
+}
+
+// resolves the colors.mode.<auto|light|dark> placeholders.
+func resolveMode(format string, filters []string, current string, failure func(string) error) (string, error) {
+	if len(filters) > 0 {
+		return "", failure("the alpha filter only applies to a color placeholder")
+	}
+	switch format {
+	case "auto":
+		return current, nil
+	case "light", "dark":
+		return format, nil
+	default:
+		return "", failure(fmt.Sprintf("unknown mode %q, expected auto, light or dark", format))
 	}
 }
 

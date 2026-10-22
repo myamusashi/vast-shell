@@ -77,6 +77,9 @@ A template is a plain text file with placeholders:
 - `role` is a Material role name. `onSurface` and `on_surface` are the same role.
 - `format` is one of `hex`, `hex_stripped`, `rgb` or `rgba`.
 - `{{mode}}` is the color mode (`dark` or `light`), `{{image}}` is the wallpaper path.
+- `{{colors.mode.auto}}` is the mode the shell is in, `{{colors.mode.light}}` and
+  `{{colors.mode.dark}}` name one of the two. The role `mode` answers before
+  the palette is read, so it is not a color.
 - `| alpha: 0.5` sets the alpha of a single placeholder.
 
 Example, `~/.config/hypr/colors.conf.tmpl`:

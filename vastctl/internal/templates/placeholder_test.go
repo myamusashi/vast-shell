@@ -42,6 +42,9 @@ func TestRenderPlaceholders(t *testing.T) {
 		{"alpha filter on rgb", "{{colors.surface.rgb | alpha: 0.5}}", "rgb(17, 34, 51)"},
 		{"alpha filter with rgba", "{{colors.surface.rgba | alpha: 0.5}}", "rgba(17, 34, 51, 0.5)"},
 		{"mode", "{{mode}}", "dark"},
+		{"mode auto", "{{colors.mode.auto}}", "dark"},
+		{"mode light", "{{colors.mode.light}}", "light"},
+		{"mode dark", "{{colors.mode.dark}}", "dark"},
 		{"image", "{{image}}", "/home/user/wall.png"},
 		{"text around a placeholder", "bg = {{colors.surface.hex}};\n", "bg = #112233;\n"},
 		{"two placeholders", "{{colors.surface.hex}} {{colors.primary.hex}}", "#112233 #ff0000"},
@@ -104,6 +107,8 @@ func TestRenderUnknownPlaceholder(t *testing.T) {
 	}{
 		{"unknown name", "{{wallpaper}}", []string{"unknown placeholder"}},
 		{"unknown format", "{{colors.surface.hsv}}", []string{"unknown format"}},
+		{"unknown mode", "{{colors.mode.gray}}", []string{"unknown mode"}},
+		{"alpha on a mode", "{{colors.mode.auto | alpha: 0.5}}", []string{"alpha filter"}},
 		{"missing format", "{{colors.surface}}", []string{"unknown placeholder"}},
 		{"unterminated", "{{colors.surface.hex", []string{"unterminated placeholder"}},
 		{"unknown filter", "{{colors.surface.hex | blur: 2}}", []string{"unknown filter"}},
