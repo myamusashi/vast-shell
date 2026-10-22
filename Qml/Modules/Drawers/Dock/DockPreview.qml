@@ -127,7 +127,6 @@ LazyLoader {
                 return y;
             })()), 1, 1)
         color: "transparent"
-        parentWindow: root.parentWindow
         implicitHeight: root.boardHeight
         implicitWidth: root.boardWidth
         visible: opacity > 0.0

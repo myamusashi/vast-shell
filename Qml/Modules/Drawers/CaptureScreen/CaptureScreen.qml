@@ -19,6 +19,7 @@ import "Video"
 Drawer {
     id: root
 
+    readonly property real   dockSpacing: Appearance.spacing.normal
     readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
     readonly property string title: mode === 0 ? qsTr("Screen Recorder") : qsTr("Screenshot")
     readonly property string titleIcon: mode === 0 ? "screen_record" : "photo_camera"
@@ -36,20 +37,21 @@ Drawer {
         });
     }
 
-    alignment: Qt.AlignBottom
+    alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
     depth: parent.height * 0.35
+    yOffset: (parent.height - height) / 2 - GlobalStates.reservedBottomSpace - root.dockSpacing
     edge: Qt.RightEdge
     filletRadius: 40
     length: 380
+    open: GlobalStates.isRecordingPanelOpen
     onOpenChanged: {
         if (open)
             ScreenCaptureHistory.reloadFiles();
     }
-    open: GlobalStates.isRecordingPanelOpen
 
     Loader {
         active: root.shown
