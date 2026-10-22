@@ -5,46 +5,48 @@ import Quickshell
 import Quickshell.Io
 
 import qs.Core.Configs
-import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
 Singleton {
     id: root
 
-    readonly property string liveMode: Configs.colors.isDarkMode ? "dark" : "light"
-    readonly property string liveScheme: Configs.colors.scheme
-    readonly property bool   renderRunning: renderProcess.running
+    readonly property bool renderRunning: renderProcess.running
 
-    property string          lastError: ""
-    property bool            palettePending: false
-    property string          queuedMode: ""
-    property string          queuedScheme: ""
-    property string          queuedWallpaper: ""
-    property list<string>    renderCommand: []
+    property string        lastError: ""
+    property string        queuedMode: ""
+    property string        queuedScheme: ""
+    property string        queuedWallpaper: ""
+    property list<string>  renderCommand: []
+    property bool          renderPending: false
 
-    function                 clearQueuedRender() {
+    function               clearQueuedRender() {
         queuedWallpaper = "";
         queuedMode      = "";
         queuedScheme    = "";
     }
-    function                 hasQueuedRender(): bool {
+    function               hasQueuedRender(): bool {
         return queuedWallpaper !== "";
     }
-    function                 noteWallpaperChange() {
-        palettePending = true;
+    function               render() {
+        const templates = TemplateConfigs.templates;
+        if (!templates || templates.length === 0) {
+            renderPending = true;
+            return;
+        }
+        renderPending = false;
+        const mode    = Configs.colors.isDarkMode ? "dark" : "light";
+        requestRender(Paths.currentWallpaper, mode, Configs.colors.scheme);
     }
-    function                 renderNow() {
-        requestRender(Paths.currentWallpaper, liveMode, liveScheme);
-    }
-    function                 reportRenderFailure() {
+    function               reportRenderFailure() {
         console.warn("[Templates] render failed:", lastError);
         ToastService.show(qsTr("Template render failed"), qsTr("Templates"), "error", 5000);
     }
-    function                 requestRender(wallpaper: string, mode: string, scheme: string) {
+    function               requestRender(wallpaper: string, mode: string, scheme: string) {
         if (wallpaper === "")
             return;
-        if (TemplateConfigs.enabledTemplates.length === 0)
+        const templates = TemplateConfigs.templates;
+        if (!templates || templates.length === 0)
             return;
         if (renderProcess.running) {
             queuedWallpaper = wallpaper;
@@ -54,7 +56,7 @@ Singleton {
         }
         startRender(wallpaper, mode, scheme);
     }
-    function                 resolvedOutputPath(template): string {
+    function               resolvedOutputPath(template): string {
         if (!template)
             return "";
         const input = template.input ?? "";
@@ -72,7 +74,7 @@ Singleton {
             return input.substring(0, input.length - 9);
         return `${input}.rendered`;
     }
-    function                 startQueuedRender() {
+    function               startQueuedRender() {
         if (!hasQueuedRender())
             return;
         const wallpaper = queuedWallpaper;
@@ -81,8 +83,13 @@ Singleton {
         clearQueuedRender();
         startRender(wallpaper, mode, scheme);
     }
-    function                 startRender(wallpaper: string, mode: string, scheme: string) {
-        renderCommand         = ["vastctl", "colors", "render", "--wallpaper", wallpaper, "--mode", mode, "--scheme", scheme];
+    function               startRender(wallpaper: string, mode: string, scheme: string) {
+        const command = ["vastctl", "colors", "render", "--wallpaper", wallpaper, "--mode", mode, "--scheme", scheme];
+        if (Configs.colors.useStaticColors)
+            // The shell shows the palette of the file, so the templates
+            // are rendered with it and not with the generated one.
+            command.push("--palette", Configs.colors.staticColorsPath);
+        renderCommand         = command;
         lastError             = "";
         renderProcess.running = true;
     }
@@ -103,17 +110,29 @@ Singleton {
     }
 
     Connections {
-        function onMaterialPaletteSourceChanged(): void {
-            if (!Colours.materialReady)
+        function onStaticTemplateColorsChanged(): void {
+            if (!Configs.colors.useStaticColors)
                 return;
-            if (!root.palettePending)
-                return;
-            if (GlobalStates.previewWallpaper !== "")
-                return;
-            root.palettePending = false;
-            root.requestRender(Paths.currentWallpaper, root.liveMode, root.liveScheme);
+            root.render();
         }
 
         target: Colours
+    }
+
+    Connections {
+        function onUseStaticColorsChanged(): void {
+            root.render();
+        }
+
+        target: Configs.colors
+    }
+
+    Connections {
+        function onTemplatesChanged(): void {
+            if (root.renderPending)
+                root.render();
+        }
+
+        target: TemplateConfigs
     }
 }

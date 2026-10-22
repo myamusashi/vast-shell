@@ -140,16 +140,19 @@ Singleton {
         function onCurrentWallpaperChanged(): void {
             root.ensureThumbnail(Paths.currentWallpaper);
             root.updateWallpaperColors(Paths.currentWallpaper);
-            TemplateServices.noteWallpaperChange();
+            TemplateServices.render();
         }
 
         target: Paths
     }
 
     Connections {
+        function onIsDarkModeChanged(): void {
+            TemplateServices.render();
+        }
         function onSchemeChanged(): void {
             root.updateWallpaperColors(Paths.currentWallpaper);
-            TemplateServices.noteWallpaperChange();
+            TemplateServices.render();
         }
 
         target: Configs.colors

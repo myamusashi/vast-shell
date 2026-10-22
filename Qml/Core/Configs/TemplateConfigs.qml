@@ -11,7 +11,6 @@ Singleton {
     id: root
 
     readonly property string configPath: Paths.shellDir + "/templates.json"
-    readonly property var    enabledTemplates: (templates ?? []).filter(template => template.enabled !== false)
 
     property alias           templates: adapter.templates
 

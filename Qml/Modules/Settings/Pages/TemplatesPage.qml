@@ -294,7 +294,7 @@ SettingsPageBase {
                 ExtendedFloatingButton {
                     enabled: !TemplateServices.renderRunning
                     icon.name: "refresh"
-                    onClicked: TemplateServices.renderNow()
+                    onClicked: TemplateServices.render()
                     text: qsTr("Render Now")
                 }
             }
