@@ -20,11 +20,11 @@ Item {
         snappedDepth: metrics.snappedDepth,
         snappedLength: metrics.snappedLength,
         activeFilletRadius: metrics.activeFilletRadius,
+        activeAttachedFilletRadius: metrics.activeAttachedFilletRadius,
         activeCornerRadius: metrics.activeCornerRadius,
         borderOverlap: borderOverlap,
         isFlushToStart: isFlushToStart,
         isFlushToEnd: isFlushToEnd,
-        isMergedWithBase: isMergedWithBase,
         isReflectedEdge: isReflectedEdge,
         startPadding: metrics.startPadding,
         freeSidePadding: metrics.freeSidePadding,
@@ -37,6 +37,7 @@ Item {
     property int             animationDuration: 300
     property list<real>      animationEasingCurve: []
     property int             animationEasingType: Easing.OutCubic
+    property real            attachedFilletRadius: filletRadius
     property real            borderOverlap: 1
     property real            bottomMargin: 0
     property bool            clipContent: true
@@ -45,7 +46,6 @@ Item {
     property real            depth: 300
     property real            edgeOffset: 0
     property real            filletRadius: 40
-    property bool            isMergedWithBase: false
     property real            length: 400
     property bool            open: false
     property real            xOffset: 0
@@ -70,6 +70,7 @@ Item {
         id: metrics
 
         readonly property real acrossEdgeExtent: snappedDepth + freeSidePadding
+        readonly property real activeAttachedFilletRadius: Math.min(root.attachedFilletRadius, snappedDepth / 2)
         readonly property real activeCornerRadius: Math.min(root.cornerRadius, snappedLength / 2, snappedDepth / 2)
         readonly property real activeFilletRadius: Math.min(root.filletRadius, snappedDepth / 2)
         readonly property real alongEdgeExtent: snappedLength + startPadding + endPadding

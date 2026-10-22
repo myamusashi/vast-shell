@@ -11,18 +11,17 @@ import qs.Services
 
 import "Clipboard"
 import "Dashboard"
-import "Launcher"
 import "QuickSettings"
 import "Notifications"
 import "Session"
-import "WallpaperSelector"
 import "Weather"
 import "OSD"
 import "Bar"
 import "Volume"
 import "Brightness"
 import "CaptureScreen"
-import "Dock"
+import "BottomDrawers"
+import "BottomDrawers/Dock"
 
 Variants {
     model: Quickshell.screens
@@ -102,8 +101,6 @@ Variants {
             outerBorderSize: Configs.generals.outerBorderSize
             window: window.modelData
 
-            Launcher {}
-
             Clipboard {}
 
             Dashboard {}
@@ -126,15 +123,24 @@ Variants {
 
             Notifications {}
 
-            WallpaperSelector {}
-
             Weathers {}
+
+            PanelDrawer {
+                id: panelDrawer
+
+                border: screenBorder
+                depthRatio: dock.panelDepthRatio
+                dockWidth: dock.dockWidth
+                isPanelMerged: dock.isPanelMerged
+                lengthRatio: dock.panelLengthRatio
+            }
 
             // Must stay last so the dock paints above the drawer shapes
 
             Dock {
                 id: dock
                 border: screenBorder
+                panelVisible: panelDrawer.visible
                 parentWindow: window
             }
         }

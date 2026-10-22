@@ -17,15 +17,10 @@ Singleton {
 
     readonly property string currentLanguage: TranslationManager.currentLanguage
     readonly property color  drawerColors: Configs.generals.transparent ? Qt.alpha(Colours.m3Colors.m3Background, Configs.generals.alpha) : Colours.m3Colors.m3Background
-    readonly property real   drawerDepthRatio: panel.drawerDepthRatio
-    readonly property real   drawerLengthRatio: panel.drawerLengthRatio
     readonly property bool   hasInlineReply: inlineReplyOwner !== null
     readonly property bool   isCapsLockOSDVisible: osd.isActive("capslock")
     readonly property bool   isNumLockOSDVisible: osd.isActive("numlock")
-    readonly property bool   isSwitchingDrawer: panel.isSwitchingDrawer
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
-    readonly property real   launcherLengthRatio: panel.launcherLengthRatio
-    readonly property real   wallpaperSwitcherLengthRatio: panel.wallpaperSwitcherLengthRatio
 
     property var             inlineReplyOwner: null
     property bool            isAddTodoListOpen: false
@@ -72,9 +67,6 @@ Singleton {
     }
     function                 pauseOSD(name): void {
         osd.pause(name);
-    }
-    function                 requestDrawerGeometry(lengthRatio, depthRatio): void {
-        panel.requestDrawerGeometry(lengthRatio, depthRatio);
     }
     function                 resumeOSD(name): void {
         osd.resume(name);

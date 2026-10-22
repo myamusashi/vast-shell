@@ -28,7 +28,7 @@ function buildOutline(options) {
     const depth = options.snappedDepth;
     const length = options.snappedLength;
     const filletRadius = options.activeFilletRadius;
-    const attachedFilletRadius = options.isMergedWithBase ? 0 : filletRadius;
+    const attachedFilletRadius = options.activeAttachedFilletRadius;
     const cornerRadius = options.activeCornerRadius;
 
     // arc sweeps flip on reflected edges

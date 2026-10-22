@@ -11,7 +11,7 @@ import qs.Services as Svc
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog.FileDialog
-import qs.Modules.Drawers.WallpaperSelector
+import qs.Modules.Drawers.BottomDrawers.WallpaperSelector
 
 import "../Components"
 
