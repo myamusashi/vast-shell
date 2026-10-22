@@ -14,7 +14,6 @@ Slider {
 
     property color  handleColor: Colours.m3Colors.m3OnPrimary
     property string handleIcon: ""
-    property alias  handleRotation: handleShape.rotation
     property string handleText: Math.round(root.value).toString()
     property color  handleTextColor: Colours.m3Colors.m3Primary
     property color  trackColor: Colours.m3Colors.m3Primary
@@ -23,6 +22,7 @@ Slider {
 
     enabled: false
     hoverEnabled: false
+    implicitHeight: 150
     orientation: Qt.Vertical
     background: Item {
         anchors.fill: parent

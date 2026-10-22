@@ -17,14 +17,19 @@ Pages {
 
     content: Moon {}
     component Moon: ScrollView {
+        id: scroll
+
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AsNeeded
         anchors.fill: parent
         anchors.topMargin: 20
+        contentWidth: availableWidth
 
-        Column {
-            anchors.fill: parent
+        ColumnLayout {
+            id: pageContent
+
             spacing: Appearance.spacing.normal
+            width: scroll.availableWidth
 
             Header {
                 icon: "bedtime"
@@ -34,17 +39,20 @@ Pages {
 
             WrapperRectangle {
                 color: Colours.m3Colors.m3SurfaceContainer
-                implicitHeight: parent.height * 0.3
+                implicitHeight: moonRow.implicitHeight + 20
                 implicitWidth: parent.width
-                margin: Appearance.margin.normal
+                margin: 10
                 radius: Appearance.rounding.normal
 
                 RowLayout {
+                    id: moonRow
+
+                    spacing: Appearance.spacing.large
 
                     ColumnLayout {
-                        Layout.alignment: Qt.AlignLeft
                         Layout.fillHeight: true
                         Layout.fillWidth: true
+                        Layout.minimumWidth: 0
 
                         StyledText {
                             color: Colours.m3Colors.m3OnSurface
@@ -113,10 +121,6 @@ Pages {
                         }
                     }
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     Image {
                         readonly property var moonPhaseMap: ({
                                 "New Moon": "NewMoon",
@@ -129,6 +133,9 @@ Pages {
                                 "Waning Crescent": "WaningCrescentMoon"
                             })
 
+                        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                        Layout.minimumHeight: 120
+                        Layout.minimumWidth: 120
                         Layout.preferredHeight: 120
                         Layout.preferredWidth: 120
                         asynchronous: true
@@ -141,12 +148,10 @@ Pages {
                 }
             }
 
-            WrapperRectangle {
+            StyledRect {
                 color: Colours.m3Colors.m3Surface
-                implicitHeight: pressureDescription.contentHeight + 20
+                implicitHeight: moonDescription.contentHeight + 20
                 implicitWidth: parent.width
-                margin: 20
-                radius: Appearance.rounding.normal
 
                 border {
                     color: Colours.m3Colors.m3OutlineVariant
@@ -154,7 +159,12 @@ Pages {
                 }
 
                 StyledText {
-                    id: pressureDescription
+                    id: moonDescription
+
+                    anchors {
+                        fill: parent
+                        margins: 10
+                    }
 
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
@@ -162,10 +172,6 @@ Pages {
                     textFormat: Text.MarkdownText
                     wrapMode: Text.Wrap
                 }
-            }
-
-            Item {
-                Layout.fillHeight: true
             }
         }
     }

@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
@@ -16,120 +17,120 @@ Pages {
     id: root
 
     content: Humidity {}
-    component Humidity: Column {
-        clip: true
-        spacing: Appearance.spacing.normal
+    component Humidity: ScrollView {
+        id: scroll
 
-        anchors {
-            fill: parent
-            topMargin: 20
-        }
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+        anchors.fill: parent
+        anchors.topMargin: 20
+        contentWidth: availableWidth
 
-        Header {
-            icon: "water_drop"
-            title: qsTr("Humidity")
-            onClicked: root.isOpen = false
-        }
+        ColumnLayout {
+            id: pageContent
 
-        WrapperRectangle {
-            anchors.margins: Appearance.margin.normal
-            clip: true
-            color: Colours.m3Colors.m3SurfaceContainer
-            implicitHeight: content.implicitHeight + 20
-            implicitWidth: parent.width
-            margin: 10
-            radius: Appearance.rounding.normal
+            spacing: Appearance.spacing.normal
+            width: scroll.availableWidth
 
-            ColumnLayout {
-                id: content
+            Header {
+                icon: "water_drop"
+                title: qsTr("Humidity")
+                onClicked: root.isOpen = false
+            }
 
-                spacing: Appearance.spacing.normal
+            WrapperRectangle {
+                clip: true
+                color: Colours.m3Colors.m3SurfaceContainer
+                implicitHeight: content.implicitHeight + 20
+                implicitWidth: parent.width
+                margin: 10
+                radius: Appearance.rounding.normal
 
-                StyledText {
-                    color: Colours.m3Colors.m3OnBackground
-                    font.pixelSize: Appearance.fonts.size.large * 1.5
-                    text: qsTr("Today's average")
-                }
+                ColumnLayout {
+                    id: content
 
-                StyledText {
-                    color: Colours.m3Colors.m3Primary
-                    font.pixelSize: Appearance.fonts.size.extraLarge
-                    text: Weather.humidity + "%"
-                }
+                    spacing: Appearance.spacing.normal
 
-                Flickable {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 180
-                    Layout.topMargin: Appearance.margin.large * 2
-                    boundsBehavior: Flickable.StopAtBounds
-                    contentHeight: sliderRow.height
-                    contentWidth: sliderRow.width
-                    flickableDirection: Flickable.HorizontalFlick
+                    StyledText {
+                        color: Colours.m3Colors.m3OnBackground
+                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                        text: qsTr("Today's average")
+                    }
 
-                    Row {
-                        id: sliderRow
+                    StyledText {
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.extraLarge
+                        text: Weather.humidity + "%"
+                    }
 
-                        spacing: Appearance.spacing.large
+                    Flickable {
+                        Layout.alignment: Qt.AlignBottom
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: sliderRow.implicitHeight
+                        Layout.topMargin: Appearance.margin.large
+                        boundsBehavior: Flickable.StopAtBounds
+                        contentHeight: sliderRow.height
+                        contentWidth: sliderRow.width
+                        flickableDirection: Flickable.HorizontalFlick
 
-                        Repeater {
-                            delegate: ColumnLayout {
-                                required property var modelData
+                        Row {
+                            id: sliderRow
 
-                                spacing: Appearance.spacing.normal
+                            spacing: Appearance.spacing.large
 
-                                HourlyValueSlider {
-                                    from: 0
-                                    implicitHeight: 150
-                                    implicitWidth: 30
-                                    to: 100
-                                    value: parent.modelData.humidity
+                            Repeater {
+                                delegate: ColumnLayout {
+                                    required property var modelData
+
+                                    spacing: Appearance.spacing.normal
+
+                                    HourlyValueSlider {
+                                        from: 0
+                                        implicitWidth: 30
+                                        to: 100
+                                        value: parent.modelData.humidity
+                                    }
+
+                                    StyledText {
+                                        color: Colours.m3Colors.m3OnBackground
+                                        font.pixelSize: Appearance.fonts.size.normal
+                                        text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
+                                    }
                                 }
-
-                                StyledText {
-                                    color: Colours.m3Colors.m3OnBackground
-                                    font.pixelSize: Appearance.fonts.size.normal
-                                    text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
+                                model: ScriptModel {
+                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
                                 }
-                            }
-                            model: ScriptModel {
-                                values: Weather.hourlyFromNow(Weather.hourlyForecast)
                             }
                         }
                     }
                 }
             }
-        }
 
-        StyledRect {
-            color: Colours.m3Colors.m3Surface
-            implicitHeight: humidityDescription.contentHeight + 20
-            implicitWidth: parent.width
+            StyledRect {
+                color: Colours.m3Colors.m3Surface
+                implicitHeight: humidityDescription.contentHeight + 20
+                implicitWidth: parent.width
 
-            border {
-                color: Colours.m3Colors.m3OutlineVariant
-                width: 1
-            }
+                border {
+                    color: Colours.m3Colors.m3OutlineVariant
+                    width: 1
+                }
 
-            StyledText {
-                id: humidityDescription
+                StyledText {
+                    id: humidityDescription
 
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.normal
-                text: DetailText.humidity
-                textFormat: Text.MarkdownText
-                wrapMode: Text.Wrap
+                    anchors {
+                        fill: parent
+                        margins: 10
+                    }
 
-                anchors {
-                    fill: parent
-                    margins: 10
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: DetailText.humidity
+                    textFormat: Text.MarkdownText
+                    wrapMode: Text.Wrap
                 }
             }
         }
-
-        Item {
-            Layout.fillHeight: true
-        }
     }
-
-    // Replaced by shared HourlyValueSlider.qml.
 }

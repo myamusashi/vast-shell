@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
@@ -16,135 +17,139 @@ Pages {
     id: root
 
     content: Precipitation {}
-    component Precipitation: Column {
-        clip: true
-        spacing: Appearance.spacing.normal
+    component Precipitation: ScrollView {
+        id: scroll
 
         anchors {
             fill: parent
-            topMargin: 20
+            topMargin: Appearance.margin.large
         }
 
-        Header {
-            icon: "rainy"
-            title: qsTr("Precipitation")
-            onClicked: root.isOpen = false
-        }
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+        contentWidth: availableWidth
 
-        WrapperRectangle {
-            anchors.margins: Appearance.margin.normal
-            clip: true
-            color: Colours.m3Colors.m3SurfaceContainer
-            implicitHeight: content.implicitHeight + 20
-            implicitWidth: parent.width
-            margin: 10
-            radius: Appearance.rounding.normal
+        ColumnLayout {
+            id: pageContent
 
-            ColumnLayout {
-                id: content
+            spacing: Appearance.spacing.normal
+            width: scroll.availableWidth
 
-                spacing: Appearance.spacing.normal
+            Header {
+                icon: "rainy"
+                title: qsTr("Precipitation")
+                onClicked: root.isOpen = false
+            }
 
-                StyledText {
-                    color: Colours.m3Colors.m3OnBackground
-                    font.pixelSize: Appearance.fonts.size.large * 1.5
-                    text: qsTr("Today's amount")
-                }
+            WrapperRectangle {
+                clip: true
+                color: Colours.m3Colors.m3SurfaceContainer
+                implicitHeight: content.implicitHeight + Appearance.spacing.large
+                implicitWidth: parent.width
+                margin: Appearance.margin.normal
+                radius: Appearance.rounding.normal
 
-                RowLayout {
-                    Layout.alignment: Qt.AlignLeft
-                    Layout.fillWidth: true
-                    spacing: Appearance.spacing.small
+                ColumnLayout {
+                    id: content
+
+                    spacing: Appearance.spacing.normal
 
                     StyledText {
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.extraLarge
-                        text: Weather.precipitation
+                        color: Colours.m3Colors.m3OnBackground
+                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                        text: qsTr("Today's amount")
                     }
 
-                    StyledText {
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.normal
-                        text: "mm"
+                    RowLayout {
+                        Layout.alignment: Qt.AlignLeft
+                        Layout.fillWidth: true
+                        spacing: Appearance.spacing.small
+
+                        StyledText {
+                            color: Colours.m3Colors.m3Primary
+                            font.pixelSize: Appearance.fonts.size.extraLarge
+                            text: Weather.precipitation
+                        }
+
+                        StyledText {
+                            color: Colours.m3Colors.m3Primary
+                            font.pixelSize: Appearance.fonts.size.normal
+                            text: "mm"
+                        }
                     }
-                }
 
-                Flickable {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 180
-                    Layout.topMargin: Appearance.margin.large * 2
-                    boundsBehavior: Flickable.StopAtBounds
-                    contentHeight: sliderRow.height
-                    contentWidth: sliderRow.width
-                    flickableDirection: Flickable.HorizontalFlick
+                    Flickable {
+                        Layout.alignment: Qt.AlignBottom
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: sliderRow.implicitHeight
+                        Layout.topMargin: 50
+                        boundsBehavior: Flickable.StopAtBounds
+                        contentHeight: sliderRow.height
+                        contentWidth: sliderRow.width
+                        flickableDirection: Flickable.HorizontalFlick
 
-                    Row {
-                        id: sliderRow
+                        RowLayout {
+                            id: sliderRow
 
-                        spacing: Appearance.spacing.large
+                            anchors.centerIn: parent
+                            spacing: Appearance.spacing.large
 
-                        Repeater {
-                            delegate: ColumnLayout {
-                                id: precipitationDelegate
-
-                                required property var modelData
-
-                                spacing: Appearance.spacing.normal
-
-                                HourlyValueSlider {
-                                    from: 0
-                                    handleText: Math.round(value) + "%"
-                                    implicitHeight: 150
-                                    implicitWidth: 30
-                                    to: 100
-                                    value: precipitationDelegate.modelData.probability
+                            Repeater {
+                                model: ScriptModel {
+                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
                                 }
+                                delegate: ColumnLayout {
+                                    id: precipitationDelegate
 
-                                StyledText {
-                                    color: Colours.m3Colors.m3OnBackground
-                                    font.pixelSize: Appearance.fonts.size.normal
-                                    text: FormatTimeUtils.convertTo12HourCompact(precipitationDelegate.modelData.time)
+                                    required property var modelData
+
+                                    spacing: Appearance.spacing.normal
+
+                                    HourlyValueSlider {
+                                        from: 0
+                                        handleText: Math.round(value) + "%"
+                                        implicitWidth: 30
+                                        to: 100
+                                        value: precipitationDelegate.modelData.probability
+                                    }
+
+                                    StyledText {
+                                        color: Colours.m3Colors.m3OnBackground
+                                        font.pixelSize: Appearance.fonts.size.normal
+                                        text: FormatTimeUtils.convertTo12HourCompact(precipitationDelegate.modelData.time)
+                                    }
                                 }
-                            }
-                            model: ScriptModel {
-                                values: Weather.hourlyFromNow(Weather.hourlyForecast)
                             }
                         }
                     }
                 }
             }
-        }
 
-        StyledRect {
-            color: Colours.m3Colors.m3Surface
-            implicitHeight: precipitationDescription.contentHeight + 20
-            implicitWidth: parent.width
+            StyledRect {
+                color: Colours.m3Colors.m3Surface
+                implicitHeight: precipitationDescription.contentHeight + 20
+                implicitWidth: parent.width
 
-            border {
-                color: Colours.m3Colors.m3OutlineVariant
-                width: 1
-            }
+                border {
+                    color: Colours.m3Colors.m3OutlineVariant
+                    width: 1
+                }
 
-            StyledText {
-                id: precipitationDescription
+                StyledText {
+                    id: precipitationDescription
 
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.normal
-                text: DetailText.precipitation
-                textFormat: Text.MarkdownText
-                wrapMode: Text.Wrap
+                    anchors {
+                        fill: parent
+                        margins: 10
+                    }
 
-                anchors {
-                    fill: parent
-                    margins: 10
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: DetailText.precipitation
+                    textFormat: Text.MarkdownText
+                    wrapMode: Text.Wrap
                 }
             }
         }
-
-        Item {
-            Layout.fillHeight: true
-        }
     }
-
-    // Replaced by shared HourlyValueSlider.qml.
 }

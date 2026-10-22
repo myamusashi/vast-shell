@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
@@ -16,131 +17,131 @@ Pages {
     id: root
 
     content: UVIndex {}
-    component UVIndex: Column {
-        clip: true
-        spacing: Appearance.spacing.normal
+    component UVIndex: ScrollView {
+        id: scroll
 
-        anchors {
-            fill: parent
-            topMargin: 20
-        }
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        ScrollBar.vertical.policy: ScrollBar.AsNeeded
+        anchors.fill: parent
+        anchors.topMargin: 20
+        contentWidth: availableWidth
 
-        Header {
-            icon: "wb_sunny"
-            title: qsTr("UV Index")
-            onClicked: root.isOpen = false
-        }
+        Column {
+            id: pageContent
 
-        WrapperRectangle {
-            anchors.margins: Appearance.margin.normal
-            clip: true
-            color: Colours.m3Colors.m3SurfaceContainer
-            implicitHeight: content.width * 0.75
-            implicitWidth: parent.width
-            margin: 10
-            radius: Appearance.rounding.normal
+            spacing: Appearance.spacing.normal
+            width: scroll.availableWidth
 
-            ColumnLayout {
-                id: content
+            Header {
+                icon: "wb_sunny"
+                title: qsTr("UV Index")
+                onClicked: root.isOpen = false
+            }
 
-                spacing: Appearance.spacing.normal
+            WrapperRectangle {
+                clip: true
+                color: Colours.m3Colors.m3SurfaceContainer
+                implicitHeight: content.implicitHeight + 20
+                implicitWidth: parent.width
+                margin: 10
+                radius: Appearance.rounding.normal
 
-                StyledText {
-                    color: Colours.m3Colors.m3OnBackground
-                    font.pixelSize: Appearance.fonts.size.large * 1.5
-                    text: qsTr("Today's average")
-                }
+                ColumnLayout {
+                    id: content
 
-                RowLayout {
-                    Layout.alignment: Qt.AlignLeft
-                    Layout.fillWidth: true
-                    spacing: Appearance.spacing.small
+                    spacing: Appearance.spacing.normal
 
                     StyledText {
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.extraLarge
-                        text: Weather.uvIndex
+                        color: Colours.m3Colors.m3OnBackground
+                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                        text: qsTr("Today's average")
                     }
 
-                    StyledText {
-                        color: Colours.m3Colors.m3Primary
-                        font.pixelSize: Appearance.fonts.size.normal
-                        text: Weather.uvCategoryLabel(Weather.uvIndex)
+                    RowLayout {
+                        Layout.alignment: Qt.AlignLeft
+                        Layout.fillWidth: true
+                        spacing: Appearance.spacing.small
+
+                        StyledText {
+                            color: Colours.m3Colors.m3Primary
+                            font.pixelSize: Appearance.fonts.size.extraLarge
+                            text: Weather.uvIndex
+                        }
+
+                        StyledText {
+                            color: Colours.m3Colors.m3Primary
+                            font.pixelSize: Appearance.fonts.size.normal
+                            text: Weather.uvCategoryLabel(Weather.uvIndex)
+                        }
                     }
-                }
 
-                Flickable {
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.topMargin: Appearance.margin.large * 2
-                    boundsBehavior: Flickable.StopAtBounds
-                    contentHeight: sliderRow.height
-                    contentWidth: sliderRow.width
-                    flickableDirection: Flickable.HorizontalFlick
+                    Flickable {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 200
+                        boundsBehavior: Flickable.StopAtBounds
+                        contentHeight: sliderRow.height
+                        contentWidth: sliderRow.width
+                        flickableDirection: Flickable.HorizontalFlick
+                        implicitHeight: 200
 
-                    Row {
-                        id: sliderRow
+                        Row {
+                            id: sliderRow
 
-                        spacing: Appearance.spacing.large
+                            spacing: Appearance.spacing.large
 
-                        Repeater {
-                            delegate: ColumnLayout {
-                                required property var modelData
+                            Repeater {
+                                delegate: ColumnLayout {
+                                    required property var modelData
 
-                                spacing: Appearance.spacing.normal
+                                    spacing: Appearance.spacing.normal
 
-                                HourlyValueSlider {
-                                    from: 0
-                                    implicitHeight: 150
-                                    implicitWidth: 30
-                                    to: 10
-                                    value: parent.modelData.uvIndex
+                                    HourlyValueSlider {
+                                        from: 0
+                                        implicitWidth: 30
+                                        to: 10
+                                        value: parent.modelData.uvIndex
+                                    }
+
+                                    StyledText {
+                                        color: Colours.m3Colors.m3OnBackground
+                                        font.pixelSize: Appearance.fonts.size.normal
+                                        text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
+                                    }
                                 }
-
-                                StyledText {
-                                    color: Colours.m3Colors.m3OnBackground
-                                    font.pixelSize: Appearance.fonts.size.normal
-                                    text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
+                                model: ScriptModel {
+                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
                                 }
-                            }
-                            model: ScriptModel {
-                                values: Weather.hourlyFromNow(Weather.hourlyForecast)
                             }
                         }
                     }
                 }
+            }
 
-                Item {
-                    Layout.fillHeight: true
+            StyledRect {
+                color: Colours.m3Colors.m3Surface
+                implicitHeight: uvIndexDescription.contentHeight + 20
+                implicitWidth: parent.width
+
+                border {
+                    color: Colours.m3Colors.m3OutlineVariant
+                    width: 1
+                }
+
+                StyledText {
+                    id: uvIndexDescription
+
+                    anchors {
+                        fill: parent
+                        margins: 10
+                    }
+
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: DetailText.uvIndex
+                    textFormat: Text.MarkdownText
+                    wrapMode: Text.Wrap
                 }
             }
-        }
-
-        StyledRect {
-            color: Colours.m3Colors.m3Surface
-            implicitHeight: uvIndexDescription.contentHeight + 20
-            implicitWidth: parent.width
-
-            border {
-                color: Colours.m3Colors.m3OutlineVariant
-                width: 1
-            }
-
-            StyledText {
-                id: uvIndexDescription
-
-                anchors.fill: parent
-                anchors.margins: 10
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.normal
-                text: DetailText.uvIndex
-                textFormat: Text.MarkdownText
-                wrapMode: Text.Wrap
-            }
-        }
-
-        Item {
-            Layout.fillHeight: true
         }
     }
 }
