@@ -48,12 +48,14 @@ Item {
     property bool            isMergedWithBase: false
     property real            length: 400
     property bool            open: false
+    property real            xOffset: 0
+    property real            yOffset: 0
 
     height: isHorizontalEdge ? metrics.acrossEdgeExtent : metrics.alongEdgeExtent
     visible: metrics.snappedDepth > 0
     width: isHorizontalEdge ? metrics.alongEdgeExtent : metrics.acrossEdgeExtent
-    x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset))
-    y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height - bottomMargin : (parent.height - height) / 2))
+    x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset)) + xOffset
+    y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height - bottomMargin : (parent.height - height) / 2)) + yOffset
     Behavior on animatedDepth {
         enabled: root.animateDepth
 
