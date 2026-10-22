@@ -60,7 +60,7 @@ Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 35
             autoFocus: !Configs.clipboard.enableVimKeybinds
-            placeHolderText: qsTr("Search clipboard…")
+            placeholderText: qsTr("Search clipboard…")
             toggleButtonVisible: false
             onAccepted: {
                 if (Configs.clipboard.enableVimKeybinds && !searchField.isFocused) {

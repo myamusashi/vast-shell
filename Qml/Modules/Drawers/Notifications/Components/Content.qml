@@ -162,7 +162,7 @@ Column {
             Layout.fillWidth: true
             Layout.preferredHeight: 40
             autoFocus: false
-            placeHolderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
+            placeholderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
             toggleButtonVisible: false
             onAccepted: root.sendReply()
             onKeyPressed: event => {

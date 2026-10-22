@@ -108,7 +108,7 @@ SettingsPageBase {
 
             StyledTextInput {
                 Layout.fillWidth: true
-                placeHolderText: qsTr("Search wallpapers…")
+                placeholderText: qsTr("Search wallpapers…")
                 text: Svc.WallpaperFileModels.searchQuery
                 toggleButtonVisible: false
                 onTextChanged: {

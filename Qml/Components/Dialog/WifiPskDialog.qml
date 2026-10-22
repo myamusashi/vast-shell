@@ -56,7 +56,7 @@ DialogBox {
             Layout.fillWidth: true
             Layout.preferredHeight: 56
             passwordMode: true
-            placeHolderText: passwordBody.failed ? qsTr("Incorrect password") : qsTr("Wi-Fi password")
+            placeholderText: passwordBody.failed ? qsTr("Incorrect password") : qsTr("Wi-Fi password")
             toggleButtonVisible: true
             onAccepted: passwordBody.submit()
         }

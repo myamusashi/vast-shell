@@ -27,7 +27,7 @@ StyledTextInput {
     }
 
     implicitHeight: 40
-    placeHolderText: qsTr("Search wallpapers")
+    placeholderText: qsTr("Search wallpapers")
     toggleButtonVisible: false
     Component.onCompleted: text = WallpaperFileModels.searchQuery
     Keys.onEscapePressed: GlobalStates.closePanel("wallpaperSwitcher")

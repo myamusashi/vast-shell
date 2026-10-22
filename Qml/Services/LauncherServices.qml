@@ -84,7 +84,7 @@ Singleton {
                 "comment": entry.comment,
                 "entry": entry
             }))
-    readonly property string placeHolderText: qsTr("Search")
+    readonly property string placeholderText: qsTr("Search")
     readonly property var    rankedCategories: {
         const [allCategory, ...otherCategories] = categoryDefinitions.map((definition, index) => ({
                     "count": categoryCounts[index],

@@ -29,7 +29,7 @@ Item {
     property bool           keyboardFocusable: true
     property var            pam: null
     property bool           passwordMode: false
-    property string         placeHolderText: ""
+    property string         placeholderText: ""
     property alias          text: passwordInput.text
     property alias          toggleButtonVisible: toggleButton.visible
 
@@ -146,12 +146,6 @@ Item {
     Loader {
         active: !root.hasText
         sourceComponent: placeHolderComponent
-        opacity: root.isFocused ? 0 : 1
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
 
         anchors {
             left: parent.left
@@ -168,7 +162,7 @@ Item {
         StyledText {
             color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.large
-            text: root.placeHolderText !== "" ? root.placeHolderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
+            text: root.placeholderText !== "" ? root.placeholderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
         }
     }
 
@@ -284,8 +278,8 @@ Item {
         }
     }
 
-    MArea {
-        layerRadius: background.radius
+    MouseArea {
+        anchors.fill: parent
         propagateComposedEvents: true
         z: 0
         onClicked: passwordInput.forceActiveFocus()

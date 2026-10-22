@@ -325,7 +325,7 @@ Item {
 
             Layout.fillWidth: true
             autoFocus: false
-            placeHolderText: qsTr("Search settings…")
+            placeholderText: qsTr("Search settings…")
             toggleButtonVisible: false
             onAccepted: {
                 if (root.selectedIndex >= 0 && root.selectedIndex < root.results.length)

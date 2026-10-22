@@ -416,7 +416,7 @@ Item {
             }
             return result;
         }
-        property alias  searchField: searchField.placeHolderText
+        property alias  searchField: searchField.placeholderText
         property string searchText: ""
 
         signal          configChanged(string value)
@@ -428,7 +428,7 @@ Item {
             id: searchField
 
             anchors.fill: parent
-            placeHolderText: qsTr("Search font...")
+            placeholderText: qsTr("Search font...")
             toggleButtonVisible: false
             Component.onCompleted: text = fontPicker.configValue
             onActiveFocusChanged: {

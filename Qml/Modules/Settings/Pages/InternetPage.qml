@@ -108,7 +108,7 @@ Item {
                                 enabled: !Hotspot.isActive
                                 opacity: enabled ? 1.0 : 0.5
                                 passwordMode: false
-                                placeHolderText: qsTr("Default: MyHotspot")
+                                placeholderText: qsTr("Default: MyHotspot")
                                 text: Hotspot.ssid
                                 toggleButtonVisible: false
                                 onTextChanged: Hotspot.ssid = text
@@ -123,7 +123,7 @@ Item {
                                 enabled: !Hotspot.isActive
                                 opacity: enabled ? 1.0 : 0.5
                                 passwordMode: true
-                                placeHolderText: qsTr("Default: password123")
+                                placeholderText: qsTr("Default: password123")
                                 text: Hotspot.password
                                 toggleButtonVisible: true
                                 onTextChanged: Hotspot.password = text
@@ -138,7 +138,7 @@ Item {
                                 enabled: false
                                 opacity: 0.7
                                 passwordMode: false
-                                placeHolderText: qsTr("Default: %1").arg(Hotspot.hotspotInterface || qsTr("none detected"))
+                                placeholderText: qsTr("Default: %1").arg(Hotspot.hotspotInterface || qsTr("none detected"))
                                 text: Hotspot.hotspotInterface
                                 toggleButtonVisible: false
                             }

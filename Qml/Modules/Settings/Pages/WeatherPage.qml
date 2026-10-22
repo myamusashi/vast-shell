@@ -19,7 +19,7 @@ SettingsPageBase {
 
             StyledTextInput {
                 Layout.preferredWidth: 250
-                placeHolderText: "e.g., -6.200000"
+                placeholderText: "e.g., -6.200000"
                 text: Configs.weather.latitude
                 toggleButtonVisible: false
                 onTextChanged: Configs.weather.latitude = text
@@ -32,7 +32,7 @@ SettingsPageBase {
 
             StyledTextInput {
                 Layout.preferredWidth: 250
-                placeHolderText: "e.g., 106.816666"
+                placeholderText: "e.g., 106.816666"
                 text: Configs.weather.longitude
                 toggleButtonVisible: false
                 onTextChanged: Configs.weather.longitude = text
@@ -49,7 +49,7 @@ SettingsPageBase {
 
             StyledTextInput {
                 Layout.preferredWidth: 300
-                placeHolderText: qsTr("Enter your WeatherAPI.com API key")
+                placeholderText: qsTr("Enter your WeatherAPI.com API key")
                 text: Configs.weather.astronomyApiKey
                 toggleButtonVisible: false
                 onTextChanged: Configs.weather.astronomyApiKey = text

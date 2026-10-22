@@ -59,7 +59,7 @@ WrapperRectangle {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 36
                 passwordMode: false
-                placeHolderText: qsTr("Add todo…")
+                placeholderText: qsTr("Add todo…")
                 toggleButtonVisible: false
                 visible: root.addingTodo
                 Keys.onEscapePressed: root.addingTodo = false
@@ -182,7 +182,7 @@ WrapperRectangle {
 
                         StyledTextInput {
                             passwordMode: false
-                            placeHolderText: qsTr("Edit todo…")
+                            placeholderText: qsTr("Edit todo…")
                             toggleButtonVisible: false
                             text: todoRow.modelData.text
                             Keys.onEscapePressed: todoRow.editing = false

@@ -114,7 +114,7 @@ Item {
             autoFocus: true
             pam: root.auth
             passwordMode: true
-            placeHolderText: qsTr("Password")
+            placeholderText: qsTr("Password")
         }
 
         SplitButton {

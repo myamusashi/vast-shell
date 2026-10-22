@@ -255,7 +255,7 @@ LazyLoader {
 
                         Layout.fillWidth: true
                         autoFocus: false
-                        placeHolderText: qsTr("Search files…")
+                        placeholderText: qsTr("Search files…")
                         toggleButtonVisible: false
                         onKeyPressed: event => {
                             if (event.key === Qt.Key_Escape) {

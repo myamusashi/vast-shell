@@ -48,7 +48,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.preferredHeight: 44
         passwordMode: !root.responseVisible
-        placeHolderText: qsTr("Enter password")
+        placeholderText: qsTr("Enter password")
         onAccepted: root.submit()
         onKeyPressed: event => {
             if (event.key === Qt.Key_Escape && !event.accepted)

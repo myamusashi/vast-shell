@@ -110,7 +110,7 @@ Drawer {
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 60
-                    placeHolderText: LauncherServices.placeHolderText
+                    placeholderText: LauncherServices.placeholderText
                     toggleButtonVisible: false
                     Keys.onPressed: function (event) {
                         switch (event.key) {
