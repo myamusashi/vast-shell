@@ -343,7 +343,7 @@ namespace vast {
 
         mModel->removeByIds(QVariantList(unpinned.begin(), unpinned.end()));
 
-        for (qint64 const id : unpinned)
+        for (qint64 const id : std::as_const(unpinned))
             ClipboardPreviewCache::remove(id);
 
         return count;

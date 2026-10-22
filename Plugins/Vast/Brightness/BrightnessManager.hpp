@@ -43,9 +43,7 @@ namespace vast {
         int                bus{0};
         int                device{0};
 
-        [[nodiscard]] bool operator==(const DdcTarget& other) const noexcept {
-            return mode == other.mode && bus == other.bus && device == other.device;
-        }
+        [[nodiscard]] bool operator==(const DdcTarget&) const noexcept = default;
     };
 
     struct DisplayMeta {
@@ -122,21 +120,21 @@ namespace vast {
         [[nodiscard]] Q_INVOKABLE QList<QVariant> displays() const;
         Q_INVOKABLE void                          initialize();
 
-        void                                  publishDisplays(WorkerMap workers);
+        void                                      publishDisplays(WorkerMap workers);
 
-        Q_INVOKABLE void                      setBrightness(const QString& displayId, int percent);
-        Q_INVOKABLE void                      setBrightnessGroup(const QVariantMap& targets);
-        Q_INVOKABLE void                      setBrightnessAll(int percent);
+        Q_INVOKABLE void                          setBrightness(const QString& displayId, int percent);
+        Q_INVOKABLE void                          setBrightnessGroup(const QVariantMap& targets);
+        Q_INVOKABLE void                          setBrightnessAll(int percent);
 
-        Q_INVOKABLE void                      saveProfile(const QString& name, const QVariantMap& targets);
-        Q_INVOKABLE void                      applyProfile(const QString& name);
-        Q_INVOKABLE void                      removeProfile(const QString& name);
-        [[nodiscard]] Q_INVOKABLE QStringList profileNames() const;
+        Q_INVOKABLE void                          saveProfile(const QString& name, const QVariantMap& targets);
+        Q_INVOKABLE void                          applyProfile(const QString& name);
+        Q_INVOKABLE void                          removeProfile(const QString& name);
+        [[nodiscard]] Q_INVOKABLE QStringList     profileNames() const;
 
-        static constexpr int K_MIN_PERCENT = 0;
-        static constexpr int K_MAX_PERCENT = 100;
+        static constexpr int                      K_MIN_PERCENT = 0;
+        static constexpr int                      K_MAX_PERCENT = 100;
 
-        [[nodiscard]] static constexpr int clampPercent(int v) noexcept {
+        [[nodiscard]] static constexpr int        clampPercent(int v) noexcept {
             return v < K_MIN_PERCENT ? K_MIN_PERCENT : (v > K_MAX_PERCENT ? K_MAX_PERCENT : v);
         }
 
@@ -149,13 +147,13 @@ namespace vast {
         void displayListChanged();
 
       private:
-        [[nodiscard]] static std::expected<int, BrightnessError>  readDdcBrightness(const DdcTarget& target) noexcept;
-        [[nodiscard]] static std::expected<void, BrightnessError> writeDdcBrightness(const DdcTarget& target, int percent) noexcept;
-        [[nodiscard]] static WorkerMap scanDisplays() noexcept;
-        void                           dispatchWrite(const QString& id, const std::shared_ptr<DisplayWorker>& worker);
+        [[nodiscard]] static std::expected<int, BrightnessError>  readDdcBrightness(DdcTarget target) noexcept;
+        [[nodiscard]] static std::expected<void, BrightnessError> writeDdcBrightness(DdcTarget target, int percent) noexcept;
+        [[nodiscard]] static WorkerMap                            scanDisplays() noexcept;
+        void                                                      dispatchWrite(const QString& id, const std::shared_ptr<DisplayWorker>& worker);
 
-        WorkerMap                      mWorkers;
-        BrightnessProfileStore         mProfileStore;
+        WorkerMap                                                 mWorkers;
+        BrightnessProfileStore                                    mProfileStore;
     };
 
 } // namespace vast

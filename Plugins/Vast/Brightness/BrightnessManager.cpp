@@ -10,7 +10,6 @@
 #include <qcontainerfwd.h>
 #include <qdebug.h>
 
-#include <algorithm>
 #include <fstream>
 #include <qlist.h>
 #include <qobject.h>
@@ -64,9 +63,8 @@ namespace vast {
         };
 
         // The display the target points at, in the list ddcutil knows about.
-        [[nodiscard]] const DDCA_Display_Info* findDisplay(const DDCA_Display_Info_List& list, const DdcTarget& target) noexcept {
-            for (int i = 0; i < list.ct; ++i) {
-                const auto& info = list.info[i];
+        [[nodiscard]] const DDCA_Display_Info* findDisplay(std::span<const DDCA_Display_Info> displays, DdcTarget target) noexcept {
+            for (const auto& info : displays) {
                 if (info.path.io_mode != target.mode)
                     continue;
                 if (target.mode == DDCA_IO_I2C) {
@@ -80,13 +78,14 @@ namespace vast {
         }
 
         template <typename Action>
-        [[nodiscard]] std::expected<void, BrightnessError> withDdcDisplay(const DdcTarget& target, Action action) noexcept {
+        [[nodiscard]] std::expected<void, BrightnessError> withDdcDisplay(DdcTarget target, Action action) noexcept {
             DDCA_Display_Info_List* list{};
             ddca_get_display_info_list2(/*include_invalid_displays=*/false, &list);
             if (!list)
                 return std::unexpected(BrightnessError{.message = "ddcutil returned no display list", .unavailable = true});
 
-            const DDCA_Display_Info* info = findDisplay(*list, target);
+            auto                     displays = std::span<const DDCA_Display_Info>(list->info, static_cast<std::size_t>(list->ct));
+            const DDCA_Display_Info* info     = findDisplay(displays, target);
             if (!info) {
                 ddca_free_display_info_list(list);
                 return std::unexpected(BrightnessError{.message = "display is not connected any more", .unavailable = true});
@@ -103,7 +102,7 @@ namespace vast {
                 });
             }
 
-            DdcHandle owned{handle};
+            const DdcHandle owned{handle};
             return action(owned.get());
         }
     } // namespace
@@ -118,7 +117,7 @@ namespace vast {
      * A queued write may still be dropped at exit.
      */
 
-    std::expected<int, BrightnessError> BrightnessManager::readDdcBrightness(const DdcTarget& target) noexcept {
+    std::expected<int, BrightnessError> BrightnessManager::readDdcBrightness(DdcTarget target) noexcept {
         int        value{0};
         const auto result = withDdcDisplay(target, [&value](DDCA_Display_Handle handle) -> std::expected<void, BrightnessError> {
             DDCA_Non_Table_Vcp_Value val{};
@@ -143,7 +142,7 @@ namespace vast {
         return value;
     }
 
-    std::expected<void, BrightnessError> BrightnessManager::writeDdcBrightness(const DdcTarget& target, int percent) noexcept {
+    std::expected<void, BrightnessError> BrightnessManager::writeDdcBrightness(DdcTarget target, int percent) noexcept {
         return withDdcDisplay(target, [percent](DDCA_Display_Handle handle) -> std::expected<void, BrightnessError> {
             // most modern monitors use a 0–100 native range for VCP 0x10
             // hi_byte = 0, lo_byte = percent
@@ -202,9 +201,6 @@ namespace vast {
     }
 
     void BrightnessManager::initialize() {
-        // The scan runs on the job thread: ddcutil refuses to open a display
-        // that is already open, so every hardware access has to be serialised
-        // with the writes, and the redetection must not block the UI thread.
         vast::JobExecutor::instance().post([this] {
             WorkerMap discovered = scanDisplays();
 
@@ -271,7 +267,6 @@ namespace vast {
         constexpr std::string_view kBacklightRoot = "/sys/class/backlight";
 
         if (std::filesystem::exists(kBacklightRoot)) {
-            // collect all backlight entries, sorted by max_brightness descending
             // prefer intel_backlight / amdgpu_bl* over acpi_video* which is a
             // virtual ACPI interface requiring root to write
             std::vector<std::filesystem::path> entries;
