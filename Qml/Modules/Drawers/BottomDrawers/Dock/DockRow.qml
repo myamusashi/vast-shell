@@ -14,7 +14,7 @@ Item {
 
     required property ShellScreen screen
 
-    property var parentWindow: null
+    property var                  parentWindow: null
 
     anchors {
         fill: parent
