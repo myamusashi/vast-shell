@@ -11,8 +11,6 @@ file(GLOB_RECURSE VAST_TIDY_SOURCES
 
 list(FILTER VAST_TIDY_SOURCES EXCLUDE REGEX "/Plugins/Vast/Tests/")
 
-# The source list must reach the shell without CMake's `;` list separator
-# collapsing: write it newline-separated and let the shell split on newlines.
 file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/tidy-sources.txt" CONTENT "$<JOIN:${VAST_TIDY_SOURCES},\n>\n")
 
 include(ProcessorCount)
@@ -32,10 +30,6 @@ add_custom_target(lint-tidy
   USES_TERMINAL
 )
 
-# Same ordering hazard as lint-clazy: TU compile commands reference the
-# pchset .pch files and the generated Wayland header, neither of which exists
-# in a fresh build dir when lint-tidy runs first. Build them first.
-# pchset entries no-op when VAST_NO_PCH=ON (targets do not exist).
 foreach(VAST_TIDY_DEP IN ITEMS vast-pchset-common vast-pchset-large vast-pchset-plugin wayland-ext-data-control)
     if(TARGET ${VAST_TIDY_DEP})
         add_dependencies(lint-tidy ${VAST_TIDY_DEP})

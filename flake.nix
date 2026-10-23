@@ -34,7 +34,7 @@
         wl-screenrec-fork,
         qmlformat-rs,
     }: let
-        systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
+        systems = ["x86_64-linux" "aarch64-linux"];
 
         forAllSystems = nixpkgs.lib.genAttrs systems;
 
@@ -57,9 +57,6 @@
             inherit self;
         };
 
-        # qmllint module search paths plus a buildable stand-in for them, so
-        # CI can fetch the module roots without knowing anything about which
-        # packages they come from. See nix/qmllint-imports.nix.
         qmllintModules = forAllSystems (system: let
             pkgs = pkgsFor system;
             vastShell = pkgs.callPackage ./nix/default.nix {

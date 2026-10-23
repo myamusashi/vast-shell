@@ -48,8 +48,6 @@ function(vast_module arg_TARGET)
 
     target_include_directories(${arg_TARGET} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-    # Reuse the shared pchset for the backing library; its generated QML
-    # plugin gets the minimal Core-only set (see pch.cmake).
     if(arg_PCH_SET)
         vast_pch(${arg_TARGET} SET ${arg_PCH_SET})
     else()

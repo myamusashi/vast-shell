@@ -150,8 +150,6 @@
         installPhase = ''
             runHook preInstall
 
-            # --set, not --set-default: an ambient VAST_SHELL_DIRECTORY must not
-            # redirect the packaged shell.
             wrapperDirectoryArguments=(
                 --set VAST_SHELL_DIRECTORY "$out/share/quickshell"
             )

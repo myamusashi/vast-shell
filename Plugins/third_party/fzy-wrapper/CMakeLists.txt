@@ -1,4 +1,3 @@
-# Thin CMake wrapper for the vendored fzy submodule.
 # Upstream (github.com/jhawthorn/fzy) builds via autoconf/Makefile and expects
 # a generated "config.h"; we provide one on the include path instead of
 # configuring the vendored tree, keeping it pristine. Only the scoring core
@@ -10,7 +9,6 @@ add_library(fzy_core STATIC
     "${FZY_ROOT}/src/match.c"
 )
 
-# match.h/bonus.h are included by name from src/.
 target_include_directories(fzy_core SYSTEM PUBLIC "${FZY_ROOT}/src")
 
 # match.c and bonus.h both include "../config.h", which upstream generates

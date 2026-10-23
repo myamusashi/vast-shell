@@ -61,10 +61,6 @@ add_custom_target(lint-clazy
   USES_TERMINAL
 )
 
-# TU compile commands reference the pchset .pch files via -include-pch, but
-# the sets are EXCLUDE_FROM_ALL: in a fresh PCH-enabled build dir the .pch
-# files do not exist yet when lint-clazy runs first. Build them first.
-# No-op when VAST_NO_PCH=ON (targets do not exist).
 foreach(VAST_LINT_DEP IN ITEMS vast-pchset-common vast-pchset-large vast-pchset-plugin wayland-ext-data-control)
     if(TARGET ${VAST_LINT_DEP})
         add_dependencies(lint-clazy ${VAST_LINT_DEP})
