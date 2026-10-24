@@ -303,11 +303,13 @@ LazyLoader {
                 Rectangle {
                     id: previewPanel
 
-                    property var    fileModified
-                    property string fileName: ""
-                    property int    fileSize: 0
-                    property bool   imageFileSelected: false
-                    property string selectedFilePath: ""
+                    readonly property string fileModifiedText: FormatTimeUtils.formatFileDate(previewPanel.fileModified)
+
+                    property var             fileModified
+                    property string          fileName: ""
+                    property int             fileSize: 0
+                    property bool            imageFileSelected: false
+                    property string          selectedFilePath: ""
 
                     Layout.fillHeight: true
                     Layout.preferredWidth: 200
@@ -363,7 +365,7 @@ LazyLoader {
                             StyledText {
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.small
-                                text: Qt.formatDateTime(previewPanel.fileModified, "yyyy-MM-dd hh:mm")
+                                text: previewPanel.fileModifiedText
                             }
                         }
                     }
