@@ -296,7 +296,7 @@ Rectangle {
             Layout.preferredWidth: 110
             font.pixelSize: Appearance.fonts.size.small
             leftPadding: 6
-            text: Qt.formatDateTime(root.fileModified, "yyyy-MM-dd hh:mm")
+            text: FormatTimeUtils.formatFileDate(root.fileModified)
             onDateColorBlendProgressChanged: {
                 if (!dateColorBlending)
                     return;

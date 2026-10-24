@@ -12,8 +12,8 @@ Popup {
     property bool          showScrollBar: false
 
     function               openAt(x: real, y: real) {
-        x = x;
-        y = y;
+        root.x = x;
+        root.y = y;
         open();
     }
 

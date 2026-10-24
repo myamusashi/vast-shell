@@ -104,6 +104,14 @@ Singleton {
             return h + ":" + String(m).padStart(2, "0") + ":" + ss;
         return m + ":" + ss;
     }
+    function              formatFileDate(value) {
+        if (value === undefined || value === null || value === "")
+            return "";
+        const date = value instanceof Date ? value : new Date(value);
+        if (isNaN(date.getTime()))
+            return "";
+        return Qt.formatDateTime(date, "yyyy-MM-dd hh:mm");
+    }
     function              formatSize(bytes) {
         if (!(bytes >= 0))
             return "";
