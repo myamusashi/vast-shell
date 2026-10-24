@@ -1,6 +1,7 @@
 {
     lib,
     makeWrapper,
+    cmake,
     stdenv,
     gnugrep,
     findutils,
@@ -24,8 +25,9 @@
     hyprland,
     qt6,
     callPackage,
-    cmake,
     libvdpau-va-gl,
+    version ? "0.1.0",
+    revision ? "unknown",
 }: let
     app2unit = callPackage ./packages/app2unit.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
@@ -58,7 +60,7 @@
 
     vast-shell = stdenv.mkDerivation {
         pname = "vast-shell";
-        version = "0.1.0";
+        inherit version;
         src = ../.;
 
         nativeBuildInputs = [
@@ -179,6 +181,8 @@
             makeWrapper ${quickshell}/bin/quickshell \
               $out/bin/qs \
                 "''${wrapperDirectoryArguments[@]}" \
+                --set VAST_SHELL_VERSION ${version} \
+                --set VAST_SHELL_REVISION ${revision} \
                 --set QT_MEDIA_BACKEND ffmpeg \
                 --set VDPAU_DRIVER va_gl \
                 --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
@@ -194,6 +198,8 @@
             makeWrapper ${quickshell}/bin/quickshell \
               $out/bin/quickshell \
                 "''${wrapperDirectoryArguments[@]}" \
+                --set VAST_SHELL_VERSION ${version} \
+                --set VAST_SHELL_REVISION ${revision} \
                 --set QT_MEDIA_BACKEND ffmpeg \
                 --set VDPAU_DRIVER va_gl \
                 --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \

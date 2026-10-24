@@ -14,6 +14,9 @@ die() {
 
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)" || die "Failed to determine project root"
 readonly PROJECT_ROOT
+readonly VAST_SHELL_VERSION="0.1.0"
+VAST_SHELL_REVISION="$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || printf 'unknown')"
+readonly VAST_SHELL_REVISION
 
 readonly INSTALL_DIR="/usr/local/share/quickshell"
 readonly BIN_DIR="/usr/local/bin"
@@ -542,6 +545,8 @@ create_wrapper() {
 	log "Creating wrapper script..."
 	cat >"$BIN_DIR/shell" <<EOF
 #!/bin/bash
+export VAST_SHELL_VERSION="$VAST_SHELL_VERSION"
+export VAST_SHELL_REVISION="$VAST_SHELL_REVISION"
 export VAST_SHELL_DIRECTORY="$INSTALL_DIR"
 export QUICKSHELL_CONFIG_DIR="\$VAST_SHELL_DIRECTORY"
 export QT_QPA_FONTDIR="$FONT_DIR"
