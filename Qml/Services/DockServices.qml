@@ -23,7 +23,6 @@ Singleton {
             acc[entry.id] = entry;
         return acc;
     }
-    readonly property var  pinnedIds: (Configs.dock.pinnedApps ?? []).slice()
     readonly property real pinnedContentWidth: pinnedEntries.length === 0 ? 0 : pinnedEntries.length * (Configs.dock.iconSlot + Appearance.spacing.small * 2) + (pinnedEntries.length - 1) * Appearance.spacing.small
     readonly property var  pinnedEntries: {
         const ids = Configs.dock.pinnedApps ?? [];
@@ -35,6 +34,7 @@ Singleton {
         }
         return out;
     }
+    readonly property var  pinnedIds: (Configs.dock.pinnedApps ?? []).slice()
     readonly property var  runningEntryIds: {
         const ids    = [];
         const values = Hypr.toplevels.values ?? Hypr.toplevels;
