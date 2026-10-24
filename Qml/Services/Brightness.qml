@@ -75,25 +75,10 @@ Singleton {
 
     Connections {
         function onScreensChanged() {
-            rescanTimer.restart();
-            rescanSettleTimer.restart();
+            BrightnessManager.initialize();
         }
 
         target: Quickshell
-    }
-
-    Timer {
-        id: rescanTimer
-
-        interval: 2000
-        onTriggered: BrightnessManager.initialize()
-    }
-
-    Timer {
-        id: rescanSettleTimer
-
-        interval: 6000
-        onTriggered: BrightnessManager.initialize()
     }
 
     Connections {
