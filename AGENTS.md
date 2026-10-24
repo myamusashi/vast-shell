@@ -5,7 +5,7 @@
 Prioritize: correctness, no regressions, performance, API stability, readability. Flag: algorithmic regressions in hot paths, silent config-behavior breakage, and violations of the style/code/QML/Go/Qt guidelines below.
 
 # READ THIS CAREFULLY
-NEVER AND EVER SMOKE TEST AND PROBE THE QML AND NEVER EVER WRITING FILES FROM THE OUTSIDE OF THIS PROJECT EXCEPT /tmp.
+NEVER AND EVER SMOKE TEST THE QML AND NEVER EVER WRITING FILES FROM THE OUTSIDE OF THIS PROJECT EXCEPT /tmp.
 
 ## Qt and C++ style
 
