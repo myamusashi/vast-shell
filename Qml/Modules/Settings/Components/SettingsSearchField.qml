@@ -252,7 +252,13 @@ Item {
             pageLabel: "Dock",
             card: "Layout & Behavior",
             terms: ["Enable Dock", "Dock Height", "Icon Size", "Pinned Applications"]
-        }
+        },
+        {
+            page: 20,
+            pageLabel: "About",
+            card: "About",
+            terms: ["Version", "Operating System", "Kernel", "Architecture"]
+        },
     ]
     readonly property string query: searchField.text.trim()
 

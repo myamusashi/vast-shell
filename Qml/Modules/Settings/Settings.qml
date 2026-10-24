@@ -162,6 +162,15 @@ LazyLoader {
                                         label: qsTr("Lockscreen")
                                     }
                                 ]
+                            },
+                            {
+                                label: qsTr("System"),
+                                items: [
+                                    {
+                                        icon: "info",
+                                        label: qsTr("About")
+                                    }
+                                ]
                             }
                         ]
                         onActivated: function (index) {
@@ -396,6 +405,14 @@ LazyLoader {
                             active: settingsLoader.currentPage === 19
                             visible: settingsLoader.currentPage === 19
                             sourceComponent: LockscreenPage {}
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 20
+                            visible: settingsLoader.currentPage === 20
+                            sourceComponent: AboutPage {}
                         }
                     }
                 }

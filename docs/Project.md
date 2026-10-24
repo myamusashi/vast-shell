@@ -100,7 +100,7 @@ vast-shell/
 │   │   ├── Settings/
 │   │   │   ├── Components/    # CardRevealer, SettingRow, SettingsCard,
 │   │   │   │                  # SettingsPageBase, SettingsSearchField
-│   │   │   └── Pages/         # Appearance, Bar, Bluetooth, CaptureScreenVideo, Clipboard,
+│   │   │   └── Pages/         # About, Appearance, Bar, Bluetooth, CaptureScreenVideo, Clipboard,
 │   │   │                      # General, Greeter, Idle, Internet, KDEConnect, Language,
 │   │   │                      # Lockscreen (+ Lockscreen/DepthWallpaperSection),
 │   │   │                      # MediaPlayer, Notification, PrivacyNodes, Volume (+ tabs),
