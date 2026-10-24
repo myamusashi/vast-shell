@@ -76,9 +76,9 @@ ItemDelegate {
 
             Icon {
                 anchors.centerIn: parent
-                color: DockServices.isPinned(root.modelData.entry.id) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                color: DockServices.pinnedIds.includes(root.modelData.entry.id) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.large
-                icon: "keep"
+                icon: DockServices.pinnedIds.includes(root.modelData.entry.id) ? "keep" : "keep_off"
             }
 
             MArea {

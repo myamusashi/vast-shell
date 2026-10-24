@@ -114,7 +114,7 @@ LazyLoader {
                 }
 
                 MenuItem {
-                    label: DockServices.isPinned(root.currentEntry ? root.currentEntry.id : "") ? qsTr("Unpin from Dock") : qsTr("Pin to Dock")
+                    label: DockServices.pinnedIds.includes(root.currentEntry ? root.currentEntry.id : "") ? qsTr("Unpin from Dock") : qsTr("Pin to Dock")
                     onTriggered: {
                         if (root.currentEntry)
                             DockServices.togglePin(root.currentEntry.id);

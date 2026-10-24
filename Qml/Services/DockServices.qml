@@ -23,6 +23,7 @@ Singleton {
             acc[entry.id] = entry;
         return acc;
     }
+    readonly property var  pinnedIds: (Configs.dock.pinnedApps ?? []).slice()
     readonly property real pinnedContentWidth: pinnedEntries.length === 0 ? 0 : pinnedEntries.length * (Configs.dock.iconSlot + Appearance.spacing.small * 2) + (pinnedEntries.length - 1) * Appearance.spacing.small
     readonly property var  pinnedEntries: {
         const ids = Configs.dock.pinnedApps ?? [];
@@ -75,9 +76,6 @@ Singleton {
         if (workspaceNumber > 0)
             Workspaces.switchWorkspace(workspaceNumber);
         toplevel?.wayland?.activate();
-    }
-    function               isPinned(entryId: string): bool {
-        return (Configs.dock.pinnedApps ?? []).includes(entryId);
     }
     function               launchEntry(entry: var): void {
         LauncherServices.launch(entry);
