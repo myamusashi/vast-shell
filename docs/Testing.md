@@ -44,7 +44,7 @@ ctest --test-dir build/test -R clipboardmodel -V      # scope to one binary
 | `tst_brightnessmanager` | `BrightnessManager` without hardware |
 | `tst_clipboarddatabase` | schema, CRUD, hash dedup, pinned-aware pruning, signals |
 | `tst_clipboardmodel` | role names, ordering, fuzzy filter, pin re-sort |
-| `tst_clipboardhelpers` | `ClipboardEntry`, classifier, `LoopbackGuard`, preview cache, `htmlToPlainText` |
+| `tst_clipboardhelpers` | `ClipboardEntry`, classifier, `LoopbackGuard`, preview cache, HTML payload preservation and `htmlToPlainText` |
 | `tst_clipboardmanager` | end to end over a seeded database file |
 | `tst_imagecacheindex` | `ImageCacheIndex`: file-URL helpers, persistence, load filters |
 | `tst_imagecache` | `ImageCache`: `copyAndPreload`, provider cache, `evictKey`, async hop |

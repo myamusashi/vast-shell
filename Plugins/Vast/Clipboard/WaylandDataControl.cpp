@@ -72,19 +72,6 @@ namespace vast {
     }
 
     namespace {
-        constexpr const char* K_MIME_IMAGE_PNG  = "image/png";
-        constexpr const char* K_MIME_HTML       = "text/html";
-        constexpr const char* K_MIME_URI_LIST   = "text/uri-list";
-        constexpr const char* K_MIME_SUGGESTED  = "application/x-kde-suggestedfilename";
-        constexpr const char* K_MIME_TEXT_UTF8  = "text/plain;charset=utf-8";
-        constexpr const char* K_MIME_TEXT       = "text/plain";
-        constexpr const char* K_MIME_X11_STRING = "UTF8_STRING";
-        constexpr const char* K_PASSWORD_HINT   = "x-kde-passwordManagerHint";
-
-        // Namespace-scope QStrings would run their QStringLiteral initializers
-        // during static init, where an allocation failure cannot be caught
-        // (bugprone-throwing-static-initialization). Accessors build them on
-        // demand instead, and QStringLiteral itself never allocates.
         QString mimeTextUtf8() {
             return QStringLiteral("text/plain;charset=utf-8");
         }
@@ -100,6 +87,16 @@ namespace vast {
         QString mimeSuggested() {
             return QStringLiteral("application/x-kde-suggestedfilename");
         }
+
+        constexpr const char* K_MIME_IMAGE_PNG  = "image/png";
+        constexpr const char* K_MIME_HTML       = "text/html";
+        constexpr const char* K_MIME_URI_LIST   = "text/uri-list";
+        constexpr const char* K_MIME_SUGGESTED  = "application/x-kde-suggestedfilename";
+        constexpr const char* K_MIME_TEXT_UTF8  = "text/plain;charset=utf-8";
+        constexpr const char* K_MIME_TEXT       = "text/plain";
+        constexpr const char* K_MIME_X11_STRING = "UTF8_STRING";
+        constexpr const char* K_PASSWORD_HINT   = "x-kde-passwordManagerHint";
+
     }
 
     void registryGlobal(void* data, wl_registry* registry, uint32_t name, const char* interface, uint32_t version) {
@@ -612,8 +609,20 @@ namespace vast {
             return;
         }
 
-        auto*                      source = ext_data_control_manager_v1_create_data_source(mManager.get());
+        auto*                      source  = ext_data_control_manager_v1_create_data_source(mManager.get());
+        QHash<QString, QByteArray> payload = buildClipboardPayload(mimeType, content, fileName);
 
+        for (auto it = payload.cbegin(); it != payload.cend(); ++it)
+            ext_data_control_source_v1_offer(source, it.key().toUtf8().constData());
+
+        mPendingSources.insert(source, std::move(payload));
+
+        ext_data_control_source_v1_add_listener(source, &SOURCE_LISTENER, this);
+        ext_data_control_device_v1_set_selection(mDevice.get(), source);
+        wl_display_flush(mDisplay.get());
+    }
+
+    [[nodiscard]] QHash<QString, QByteArray> WaylandDataControl::buildClipboardPayload(const QString& mimeType, const QByteArray& content, const QString& fileName) {
         QHash<QString, QByteArray> payload;
         payload.insert(mimeType, content);
 
@@ -623,13 +632,12 @@ namespace vast {
             payload.insert(mimeX11String(), content);
         }
 
+        // Preserve content as text/html; synthesize plain text only for the text MIME aliases.
         if (mimeType == QLatin1StringView{K_MIME_HTML}) {
-            QByteArray plain = htmlToPlainText(content);
-            if (plain.isEmpty())
-                plain = content;
-            payload.insert(mimeTextUtf8(), plain);
-            payload.insert(mimeText(), plain);
-            payload.insert(mimeX11String(), plain);
+            const QByteArray plain = htmlToPlainText(content);
+            payload.insert(mimeTextUtf8(), plain.isEmpty() ? content : plain);
+            payload.insert(mimeText(), plain.isEmpty() ? content : plain);
+            payload.insert(mimeX11String(), plain.isEmpty() ? content : plain);
         }
 
         if (mimeType == QLatin1StringView{K_MIME_URI_LIST}) {
@@ -643,20 +651,12 @@ namespace vast {
         }
 
         if (mimeType == QLatin1StringView{K_MIME_IMAGE_PNG} && !fileName.isEmpty()) {
-            if (QFileInfo::exists(fileName)) {
+            if (QFileInfo::exists(fileName))
                 payload.insert(mimeUriList(), QUrl::fromLocalFile(fileName).toString(QUrl::FullyEncoded).toUtf8());
-            } else {
+            else
                 payload.insert(mimeSuggested(), QFileInfo(fileName).fileName().toUtf8());
-            }
         }
 
-        for (auto it = payload.cbegin(); it != payload.cend(); ++it)
-            ext_data_control_source_v1_offer(source, it.key().toUtf8().constData());
-
-        mPendingSources.insert(source, std::move(payload));
-
-        ext_data_control_source_v1_add_listener(source, &SOURCE_LISTENER, this);
-        ext_data_control_device_v1_set_selection(mDevice.get(), source);
-        wl_display_flush(mDisplay.get());
+        return payload;
     }
 }

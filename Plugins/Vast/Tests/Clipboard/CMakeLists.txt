@@ -1,8 +1,8 @@
 #   tst_clipboarddatabase   ClipboardDatabase: schema, CRUD, dedup, pruning
 #   tst_clipboardmodel      ClipboardModel: roles, ordering, fuzzy filter
-#   tst_clipboardhelpers    ClipboardEntry, ClipboardContentClassifier,
-#                           LoopbackGuard, ClipboardPreviewCache, htmlToPlainText
-#   tst_clipboardmanager    ClipboardManager end to end over a seeded database
+ #   tst_clipboardhelpers    ClipboardEntry, ClipboardContentClassifier,
+ #                           LoopbackGuard, ClipboardPreviewCache, HTML payload preservation
+ #   tst_clipboardmanager    ClipboardManager end to end over a seeded database
 
 add_executable(tst_clipboarddatabase
     tst_clipboarddatabase.cpp

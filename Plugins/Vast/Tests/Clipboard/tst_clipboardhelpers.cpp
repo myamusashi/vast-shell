@@ -53,7 +53,7 @@ class TestClipboardHelpers : public QObject {
     void htmlToPlainTextStripsScriptAndStyle();
     void htmlToPlainTextConvertsBlockEndsToNewlines();
     void htmlToPlainTextTrimsResult();
-    void htmlToPlainTextHandlesEmptyInput();
+    void buildClipboardPayloadPreservesFormattedHtml();
 
     // vast::LoopbackGuard
     void loopbackGuardUnarmedNeverSuppresses();
@@ -199,8 +199,14 @@ void TestClipboardHelpers::htmlToPlainTextTrimsResult() {
     QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText("<b>  x  </b>")), QStringLiteral("x"));
 }
 
-void TestClipboardHelpers::htmlToPlainTextHandlesEmptyInput() {
-    QVERIFY(vast::WaylandDataControl::htmlToPlainText(QByteArray()).isEmpty());
+void TestClipboardHelpers::buildClipboardPayloadPreservesFormattedHtml() {
+    const QByteArray html    = "<html>\n  <body>\n    <p>alpha</p>\n    <p>beta</p>\n  </body>\n</html>";
+    const auto       payload = vast::WaylandDataControl::buildClipboardPayload(QStringLiteral("text/html"), html);
+
+    QCOMPARE(payload.value(QStringLiteral("text/html")), html);
+    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), QByteArray("alpha \nbeta"));
+    QCOMPARE(payload.value(QStringLiteral("text/plain")), QByteArray("alpha \nbeta"));
+    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), QByteArray("alpha \nbeta"));
 }
 
 void TestClipboardHelpers::loopbackGuardUnarmedNeverSuppresses() {

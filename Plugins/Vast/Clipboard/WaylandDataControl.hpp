@@ -33,15 +33,16 @@ namespace vast {
       public:
         explicit WaylandDataControl(QObject* parent = nullptr);
         ~WaylandDataControl() override;
-        WaylandDataControl(WaylandDataControl&&)                        = delete;
-        WaylandDataControl&             operator=(WaylandDataControl&&) = delete;
+        WaylandDataControl(WaylandDataControl&&)                                        = delete;
+        WaylandDataControl&                             operator=(WaylandDataControl&&) = delete;
 
-        Q_INVOKABLE [[nodiscard]] bool  initialize();
-        [[nodiscard]] bool              isAvailable() const noexcept;
+        Q_INVOKABLE [[nodiscard]] bool                  initialize();
+        [[nodiscard]] bool                              isAvailable() const noexcept;
 
-        void                            setClipboardContent(const QString& mimeType, const QByteArray& content, const QString& fileName = {});
+        void                                            setClipboardContent(const QString& mimeType, const QByteArray& content, const QString& fileName = {});
 
-        [[nodiscard]] static QByteArray htmlToPlainText(const QByteArray& html);
+        [[nodiscard]] static QHash<QString, QByteArray> buildClipboardPayload(const QString& mimeType, const QByteArray& content, const QString& fileName = {});
+        [[nodiscard]] static QByteArray                 htmlToPlainText(const QByteArray& html);
 
       Q_SIGNALS:
         void selectionReceived(const QString& mimeType, const QByteArray& content, const QString& fileName = {});
