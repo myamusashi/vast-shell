@@ -37,7 +37,7 @@ MaterialShape {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large * 1.5
                     font.weight: Font.DemiBold
-                    icon: "vertical_align_center"
+                    icon: "compress"
                     type: Icon.Material
                 }
 
