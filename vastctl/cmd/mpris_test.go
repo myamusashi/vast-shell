@@ -2,9 +2,6 @@ package cmd
 
 import "testing"
 
-// TestMpris pins the transport verbs. play-pause maps to
-// togglePlaying rather than to a literal play or pause, which is the
-// only method that works on a player that is already playing.
 func TestMpris(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -23,9 +20,6 @@ func TestMpris(t *testing.T) {
 	}
 }
 
-// TestMprisListRendersPlayers pins the list rendering. The identity
-// line is how a user tells which player is which, so a nameless entry
-// losing its heading would make the list unusable.
 func TestMprisListRendersPlayers(t *testing.T) {
 	t.Setenv("SHIM_OUT", `[{"identity":"spotify","trackTitle":"Dreams","playbackStatus":"Playing"}]`)
 

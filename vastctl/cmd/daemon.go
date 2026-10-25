@@ -76,8 +76,7 @@ var daemonRestartCmd = &cobra.Command{
 		if err := daemon.Stop(); err != nil && err != daemon.ErrNotRunning {
 			return err
 		}
-		// Wait for the supervisor to release the lock and clear the state
-		// before the replacement tries to take them.
+		// Wait for the old supervisor to release its lock before starting another.
 		if err := waitForExit(); err != nil {
 			return err
 		}
@@ -136,8 +135,6 @@ var daemonStatusCmd = &cobra.Command{
 	},
 }
 
-// runSupervisor executes in this process, so a service manager can track
-// the shell directly.
 func runSupervisor(stdout, stderr io.Writer) error {
 	bin, args, configPath, err := resolveShell()
 	if err != nil {
@@ -150,8 +147,6 @@ func runSupervisor(stdout, stderr io.Writer) error {
 	return daemon.Supervise(cfg)
 }
 
-// spawnSupervisor re-execs vastctl as a detached supervisor so the shell
-// outlives the command that started it.
 func spawnSupervisor(cmd *cobra.Command) error {
 	self, err := os.Executable()
 	if err != nil {
@@ -176,12 +171,8 @@ func spawnSupervisor(cmd *cobra.Command) error {
 	return nil
 }
 
-// resolveShell picks the config to run. This is the only place
-// VAST_SHELL_DIRECTORY and --config are honoured: they decide what to
-// start, never what to talk to.
+// resolveShell selects the shell to start; IPC routing uses the running daemon's instance ID.
 func resolveShell() (string, []string, string, error) {
-	// An explicit --config wins over the environment for the same reason
-	// the environment is read at all: both name what to start.
 	if daemonConfig != "" {
 		dir := ipc.ConfigDir(daemonConfig)
 		return "quickshell", []string{"-p", dir}, dir, nil

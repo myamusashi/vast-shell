@@ -11,9 +11,7 @@ import (
 	"time"
 )
 
-// BootTimeout bounds how long the supervisor waits for quickshell to
-// publish its IPC instance. quickshell only becomes addressable once the
-// QML graph has loaded.
+// BootTimeout bounds how long the supervisor waits for quickshell IPC readiness.
 const BootTimeout = 60 * time.Second
 
 // Config describes one supervised shell.
@@ -32,14 +30,7 @@ type Config struct {
 	Stderr io.Writer
 }
 
-// Supervise runs the shell under this namespace's exclusive lock and
-// publishes its identity for clients. It returns when the shell exits,
-// which is what a service manager needs in order to supervise it.
-//
-// The lock is the single-instance guard: it is taken before the shell is
-// spawned and held for the shell's whole life, so a second daemon fails
-// immediately no matter which config path or environment it was started
-// with.
+// Supervise holds the namespace lock for the shell's lifetime and publishes its identity.
 func Supervise(cfg Config) error {
 	lock, err := AcquireLock()
 	if err != nil {
@@ -108,9 +99,7 @@ func Supervise(cfg Config) error {
 	}
 }
 
-// Stop asks the running daemon to exit. It addresses the recorded
-// supervisor rather than any quickshell on the system, so an unrelated
-// instance is never killed.
+// Stop asks the recorded supervisor to exit, leaving unrelated shells untouched.
 func Stop() error {
 	state, err := Running()
 	if err != nil {
@@ -126,8 +115,6 @@ func Stop() error {
 	return nil
 }
 
-// firstWriter picks the stream a child should write to, preferring the
-// caller's own so a foreground run stays attached to its terminal.
 func firstWriter(primary, fallback io.Writer) io.Writer {
 	if primary != nil {
 		return primary
@@ -135,8 +122,6 @@ func firstWriter(primary, fallback io.Writer) io.Writer {
 	return fallback
 }
 
-// exitStatus reports how the shell finished, keeping a crash visible
-// instead of reporting a clean supervisor exit.
 func exitStatus(cmd *exec.Cmd) error {
 	err := cmd.ProcessState.Sys().(syscall.WaitStatus)
 	switch {

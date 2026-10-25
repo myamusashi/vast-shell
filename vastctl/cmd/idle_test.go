@@ -2,7 +2,6 @@ package cmd
 
 import "testing"
 
-// TestIdle pins the idle monitor verbs.
 func TestIdle(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -19,9 +18,6 @@ func TestIdle(t *testing.T) {
 	}
 }
 
-// TestIdleStatusPrintsState pins that status is readable. The whole
-// point of the command is to answer "is the monitor on", and a void
-// call would answer nothing.
 func TestIdleStatusPrintsState(t *testing.T) {
 	t.Setenv("SHIM_OUT", "true")
 

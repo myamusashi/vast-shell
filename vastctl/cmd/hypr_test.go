@@ -2,9 +2,6 @@ package cmd
 
 import "testing"
 
-// TestHyprDispatch pins the dispatched string. The quickshell: prefix
-// is what routes a Hyprland global bind to the shell, so losing it
-// turns a working keybinding into a silent no-op.
 func TestHyprDispatch(t *testing.T) {
 	t.Setenv("SHIM_HYPR_LOG", newHyprLog(t))
 
@@ -15,9 +12,6 @@ func TestHyprDispatch(t *testing.T) {
 	wantHyprCall(t, "dispatch", `hl.dsp.global("quickshell:wallpaperSwitcher")`)
 }
 
-// TestHyprDispatchRequiresShortcut pins the arity. An empty name would
-// dispatch a Lua expression that matches no bind and still exits
-// cleanly.
 func TestHyprDispatchRequiresShortcut(t *testing.T) {
 	newHyprLog(t)
 	if _, err := runCLI(t, "hypr", "dispatch"); err == nil {
@@ -25,7 +19,6 @@ func TestHyprDispatchRequiresShortcut(t *testing.T) {
 	}
 }
 
-// TestHyprDispatchFailure pins that a rejected dispatch is reported.
 func TestHyprDispatchFailure(t *testing.T) {
 	newHyprLog(t)
 	t.Setenv("SHIM_HYPR_CODE", "1")
@@ -35,9 +28,6 @@ func TestHyprDispatchFailure(t *testing.T) {
 	wantError(t, err, "hyprctl dispatch", "exit status 1")
 }
 
-// TestHyprShortcutsList pins the filtered rendering. Only the
-// quickshell: binds are of any use here, and the prefix is trimmed so
-// the printed name is what `hypr dispatch` expects back.
 func TestHyprShortcutsList(t *testing.T) {
 	t.Setenv("SHIM_HYPR_LOG", newHyprLog(t))
 	t.Setenv("SHIM_HYPR_OUT", `[
@@ -63,9 +53,6 @@ func TestHyprShortcutsList(t *testing.T) {
 	wantHyprCall(t, "globalshortcuts", "-j")
 }
 
-// TestHyprShortcutsListJSON pins the raw output. A caller that wants to
-// feed the bind table into another program needs the JSON, and the
-// trimmed name has to survive the round trip.
 func TestHyprShortcutsListJSON(t *testing.T) {
 	newHyprLog(t)
 	t.Setenv("SHIM_HYPR_OUT", `[{"name":"quickshell:bar","description":"toggle"}]`)
@@ -81,8 +68,6 @@ func TestHyprShortcutsListJSON(t *testing.T) {
 	}
 }
 
-// TestHyprShortcutsListEmpty pins the no-binds answer. Printing
-// nothing leaves the user wondering whether the command worked.
 func TestHyprShortcutsListEmpty(t *testing.T) {
 	newHyprLog(t)
 	t.Setenv("SHIM_HYPR_OUT", "[]")
@@ -97,9 +82,6 @@ func TestHyprShortcutsListEmpty(t *testing.T) {
 	}
 }
 
-// TestHyprShortcutsListFailure pins that a broken Hyprland is
-// reported. Silently printing an empty list makes a misconfigured
-// bind table look like a shell with no shortcuts.
 func TestHyprShortcutsListFailure(t *testing.T) {
 	newHyprLog(t)
 	t.Setenv("SHIM_HYPR_CODE", "1")

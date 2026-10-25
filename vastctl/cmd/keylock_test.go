@@ -2,7 +2,6 @@ package cmd
 
 import "testing"
 
-// TestKeylock pins the two lock queries.
 func TestKeylock(t *testing.T) {
 	t.Setenv("SHIM_OUT", `{"capsLock":false,"numLock":true}`)
 
@@ -20,9 +19,6 @@ func TestKeylock(t *testing.T) {
 	}
 }
 
-// TestKeylockRendersTree pins the display. Keybinding scripts branch
-// on the printed value, so the booleans have to reach the terminal as
-// yes/no and not as raw JSON.
 func TestKeylockRendersTree(t *testing.T) {
 	t.Setenv("SHIM_OUT", `{"capsLock":true,"numLock":false}`)
 

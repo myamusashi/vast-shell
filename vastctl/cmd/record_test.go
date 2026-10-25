@@ -2,9 +2,6 @@ package cmd
 
 import "testing"
 
-// TestRecord pins the recording verbs and the `record` alias. The
-// alias is what the Short advertises, so a rename that drops it breaks
-// every keybinding at once.
 func TestRecord(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -23,8 +20,6 @@ func TestRecord(t *testing.T) {
 	}
 }
 
-// TestRecordStatusPrintsState pins that status answers. A toggle bound
-// to a key needs to know whether recording is already running.
 func TestRecordStatusPrintsState(t *testing.T) {
 	t.Setenv("SHIM_OUT", "true")
 

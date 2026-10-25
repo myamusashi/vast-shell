@@ -7,9 +7,6 @@ import (
 	"testing"
 )
 
-// TestColorGenerate pins the argument order. The shell reads them
-// positionally as image, mode, scheme, so a reshuffle here is a
-// palette generated from the wrong input.
 func TestColorGenerate(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -38,9 +35,6 @@ func TestColorGenerate(t *testing.T) {
 	}
 }
 
-// TestColorFromHex pins the hash normalisation. The shell parses
-// #RRGGBB, so forwarding a bare "ff0000" fails there and a
-// double-hashed value would too.
 func TestColorFromHex(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -58,9 +52,6 @@ func TestColorFromHex(t *testing.T) {
 	}
 }
 
-// TestColorOutFile pins the --out path. It is the documented way to
-// feed a generated palette to a dotfile generator, so the file has to
-// hold the exact payload and the notification has to name it.
 func TestColorOutFile(t *testing.T) {
 	t.Setenv("SHIM_OUT", `{"primary":"#6750a4"}`)
 	out := filepath.Join(t.TempDir(), "palette.json")
@@ -84,10 +75,6 @@ func TestColorOutFile(t *testing.T) {
 	}
 }
 
-// TestColorOutFileFailure pins that an unwritable destination is
-// reported. Writing the palette to stdout anyway would look like it
-// worked while the dotfile generator reads a file that was never
-// created.
 func TestColorOutFileFailure(t *testing.T) {
 	t.Setenv("SHIM_OUT", `{"primary":"#6750a4"}`)
 	out := filepath.Join(t.TempDir(), "absent", "palette.json")
@@ -100,9 +87,6 @@ func TestColorOutFileFailure(t *testing.T) {
 	}
 }
 
-// TestColorFromRendersTree pins that a palette is readable as a tree
-// by default. The role map is the point of the command, and printing
-// one long JSON line makes it unreadable in a terminal.
 func TestColorFromRendersTree(t *testing.T) {
 	t.Setenv("SHIM_OUT", `{"primary":"#6750a4","onPrimary":"#ffffff"}`)
 
@@ -116,8 +100,6 @@ func TestColorFromRendersTree(t *testing.T) {
 	}
 }
 
-// TestColorRequiresExactlyOneSource pins the arity of both
-// subcommands.
 func TestColorRequiresExactlyOneSource(t *testing.T) {
 	for _, tc := range []struct {
 		name string

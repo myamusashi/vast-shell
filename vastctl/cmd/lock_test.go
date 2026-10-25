@@ -2,10 +2,7 @@ package cmd
 
 import "testing"
 
-// TestLock pins the screen-lock verbs. Status asks for isLocked,
-// which is not the same method name as the lock and unlock verbs —
-// a copy-paste slip here would lock the screen when asked for its
-// state.
+// Status maps to isLocked, not lock or unlock.
 func TestLock(t *testing.T) {
 	t.Setenv("SHIM_OUT", "false")
 
@@ -24,9 +21,6 @@ func TestLock(t *testing.T) {
 	}
 }
 
-// TestLockStatusPrintsState pins that status answers with a value.
-// Scripts that gate on `vastctl lock status` have nothing to branch on
-// if the command stays silent.
 func TestLockStatusPrintsState(t *testing.T) {
 	t.Setenv("SHIM_OUT", "true")
 

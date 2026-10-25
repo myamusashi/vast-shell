@@ -19,10 +19,7 @@ const defaultNamespace = "vast"
 // the namespace can be used verbatim in a filesystem path.
 var namespacePattern = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
 
-// ErrNotRunning is returned when no live daemon is registered for the
-// namespace. It is deliberately explicit: an IPC command that silently
-// starts a shell is how two shells end up fighting over the same IPC
-// targets.
+// ErrNotRunning means no live daemon is registered for the namespace.
 var ErrNotRunning = errors.New("vast-shell is not running; start it with `vastctl daemon start`")
 
 // State is the identity a running daemon publishes for its clients.
@@ -89,10 +86,7 @@ func StatePath() (string, error) {
 	return filepath.Join(dir, "state.json"), nil
 }
 
-// ReadState returns the published daemon state, or nil when none has been
-// written. It never returns an error for a missing state: a daemon that
-// was never started and a daemon that left a stale file behind are both
-// simply "not running" as far as a client is concerned.
+// ReadState returns nil without error when no state file exists.
 func ReadState() (*State, error) {
 	path, err := StatePath()
 	if err != nil {
@@ -176,9 +170,7 @@ type Lock struct {
 	file *os.File
 }
 
-// AcquireLock takes the namespace's exclusive lock without blocking. A
-// second daemon fails immediately, whatever config path or environment
-// it was started with, because the guard is the lock and not the path.
+// AcquireLock takes the namespace lock without blocking.
 func AcquireLock() (*Lock, error) {
 	dir, err := RuntimeDir()
 	if err != nil {
@@ -244,9 +236,7 @@ func Ready(pid int) bool {
 	return err == nil
 }
 
-// InstanceID resolves the quickshell IPC instance id for a process from
-// the by-pid symlink quickshell maintains. Publishing this id is what
-// lets a client address the daemon without resolving any config path.
+// InstanceID resolves quickshell's IPC id from the process's by-pid symlink.
 func InstanceID(pid int) (string, error) {
 	dir, err := InstanceDir(pid)
 	if err != nil {
@@ -259,9 +249,7 @@ func InstanceID(pid int) (string, error) {
 	return filepath.Base(target), nil
 }
 
-// AwaitInstance blocks until the shell publishes its instance id, the
-// process dies, or the timeout elapses. The id cannot be read before
-// quickshell has registered, so a fixed sleep is a race.
+// AwaitInstance waits for quickshell to publish its instance ID, exit, or time out.
 func AwaitInstance(pid int, died <-chan struct{}, timeout time.Duration) (string, error) {
 	deadline := time.Now().Add(timeout)
 	for {

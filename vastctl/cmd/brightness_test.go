@@ -5,10 +5,6 @@ import (
 	"testing"
 )
 
-// TestBrightness pins the target/method pairs and the absolute/relative
-// split. BrightnessSet goes straight to ipc.Call rather than through
-// the ipcCallVoid helper, so it is the one set command where a
-// regression in the helper would not be caught elsewhere.
 func TestBrightness(t *testing.T) {
 	t.Setenv("SHIM_OUT", `[{"id":"DP-1","brightness":75}]`)
 
@@ -32,9 +28,6 @@ func TestBrightness(t *testing.T) {
 	}
 }
 
-// TestBrightnessSetRejects pins the bounds. An out-of-range brightness
-// that reaches the shell is either clamped silently or turns the
-// display black, and neither is visible from the CLI.
 func TestBrightnessSetRejects(t *testing.T) {
 	for _, tc := range []struct {
 		name string
@@ -54,9 +47,6 @@ func TestBrightnessSetRejects(t *testing.T) {
 	}
 }
 
-// TestBrightnessGetRendersTree pins the display path. The list command
-// is what a user reads to find out which display is which, so the
-// per-display rows have to survive to the terminal.
 func TestBrightnessGetRendersTree(t *testing.T) {
 	t.Setenv("SHIM_OUT", `[{"id":"DP-1","name":"DEL DELL","brightness":75,"isInternal":false}]`)
 
@@ -70,10 +60,6 @@ func TestBrightnessGetRendersTree(t *testing.T) {
 	}
 }
 
-// TestJSONFlagBypassesTree pins the global --json switch. Scripts pipe
-// vastctl into jq, and a tree rendering cannot be parsed back; the
-// reverse also matters, because a human reading raw JSON loses the
-// point of the tree in the first place.
 func TestJSONFlagBypassesTree(t *testing.T) {
 	const payload = `{"capsLock":true,"numLock":false}`
 
@@ -100,10 +86,6 @@ func TestJSONFlagBypassesTree(t *testing.T) {
 	})
 }
 
-// TestIPCFailureReachesUser pins that a rejected call is reported and
-// that nothing is printed as if it had succeeded. A script driving
-// vastctl turns on the exit status, and a swallowed error makes a
-// failed brightness change look like it worked.
 func TestIPCFailureReachesUser(t *testing.T) {
 	t.Setenv("SHIM_CODE", "255")
 	t.Setenv("SHIM_OUT", "No running instances for \"/cfg/Qml/shell.qml\"\n")

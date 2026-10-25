@@ -28,13 +28,13 @@ Drawer {
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
-    depth: Math.max(0, parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio
+    depth: Math.max(0, parent.height - GlobalStates.reservedBottomSpace) * depthRatio
     edge: Qt.BottomEdge
     edgeOffset: GlobalStates.reservedBottomSpace
     filletRadius: Appearance.rounding.normal
-    attachedFilletRadius: root.isPanelMerged ? 0 : Appearance.rounding.normal
-    length: root.isPanelActive ? parent.width * root.lengthRatio : root.dockWidth
-    open: root.isFocusedMonitor && root.isPanelActive
+    attachedFilletRadius: isPanelMerged ? 0 : Appearance.rounding.normal
+    length: isPanelActive ? parent.width * lengthRatio : dockWidth
+    open: isFocusedMonitor && isPanelActive
     Behavior on attachedFilletRadius {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial

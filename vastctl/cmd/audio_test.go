@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-// TestAudio pins the four audio commands' target/method pairs.
 func TestAudio(t *testing.T) {
 	t.Setenv("SHIM_OUT", `[{"name":"profile-a","description":"flat"}]`)
 
@@ -24,9 +23,6 @@ func TestAudio(t *testing.T) {
 	}
 }
 
-// TestAudioProfileSetRequiresName pins that a missing profile is
-// rejected. EmptyArgs would otherwise reach the shell and clear the
-// active profile, which the user reads as a mute.
 func TestAudioProfileSetRequiresName(t *testing.T) {
 	t.Run("profile set", func(t *testing.T) {
 		if _, err := runCLI(t, "audio", "profile", "set"); err == nil {

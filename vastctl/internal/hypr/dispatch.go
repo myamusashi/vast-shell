@@ -9,7 +9,6 @@ import (
 )
 
 // Dispatch fires a vast-shell global shortcut via Hyprland's Lua dispatcher.
-// Example: hyprctl dispatch 'hl.dsp.global(wallpaperSwitcher)'
 func Dispatch(shortcut string) error {
 	arg := fmt.Sprintf("hl.dsp.global(\"quickshell:%s\")", shortcut)
 	cmd := exec.Command("hyprctl", "dispatch", arg)
