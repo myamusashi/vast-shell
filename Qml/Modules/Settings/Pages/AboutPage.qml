@@ -119,7 +119,7 @@ SettingsPageBase {
     }
 
     SettingsCard {
-        title: qsTr("RAM & ROM")
+        title: qsTr("RAM & Storage")
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -151,7 +151,7 @@ SettingsPageBase {
                 Layout.topMargin: Appearance.spacing.normal
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
-                text: qsTr("ROM: %1 / %2").arg(SystemUsage.formatKB(SystemUsage.diskUsed)).arg(SystemUsage.formatKB(SystemUsage.diskTotal))
+                text: qsTr("Storage: %1 / %2").arg(SystemUsage.formatKB(SystemUsage.diskUsed)).arg(SystemUsage.formatKB(SystemUsage.diskTotal))
             }
 
             Rectangle {
