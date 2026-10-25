@@ -101,12 +101,6 @@ vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 
 **AUR** (installed with `yay`): `ttf-weather-icons`, `ttf-material-symbols-variable-git`, `app2unit`
 
-**pip** (installed into `/usr/local/libexec/remove-bg-venv` by the script): `rembg`, exposed as
-`/usr/local/bin/remove-bg.py`. This is the Arch equivalent of the Nix `remove-bg` package, which
-resolves to `python314Packages.rembg`. The AUR `python-rembg` package is not used: it pulls the
-`gradio`/`transformers` chain, whose `check()` currently fails on `huggingface-hub` 2.x. A failure
-here is non-fatal — the depth-wallpaper feature is skipped with a warning.
-
 > [!NOTE]
 > The script also builds these from source rather than installing them:
 > - `quickshell` 0.3.2 — via `packaging/arch/quickshell/PKGBUILD`
@@ -122,9 +116,7 @@ here is non-fatal — the depth-wallpaper feature is skipped with a warning.
 | Shell | `hyprland`, `foot`, `polkit`, `xdg-desktop-portal` |
 | Media | `ffmpeg`, `wl-clipboard`, `wl-screenrec`, `libvdpau-va-gl` |
 | Network / Notifications | `iw`, `libnotify` |
-| Fonts | `ttf-material-symbols-variable-git`, `ttf-weather-icons` |
 | Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
-| AI / Depth Wallpaper | `python`, `rembg` |
 | Other | `app2unit` (AUR), `ddcutil`, `i2c-tools` |
 
 After install, `shell` is available on `PATH` and your config lives in `~/.config/vast-shell/` (seeded from `Data/`). See [Configuration](Configuration.md).
@@ -138,9 +130,6 @@ After install, `shell` is available on `PATH` and your config lives in `~/.confi
 
 > [!WARNING]
 > Package names below were accurate at time of writing but **may be outdated**. Always verify against your distro's official package index. PRs to keep this list updated are welcome.
->
-> **`rembg`** is not available in most distro repositories. Install it via `pip install rembg` (requires Python 3.9+). NixOS users get it automatically via the flake definition.
->
 > - **Fedora** → https://packages.fedoraproject.org
 > - **openSUSE** → https://software.opensuse.org
 > - **Gentoo** → https://packages.gentoo.org

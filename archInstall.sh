@@ -486,40 +486,6 @@ install_quickshell_config() {
 	cat >/etc/profile.d/vast-shell.sh <<'EOF'
 export VAST_SHELL_DIRECTORY="/usr/local/share/quickshell"
 EOF
-	chmod 644 /etc/profile.d/vast-shell.sh
-}
-
-install_remove_bg() {
-	local -r script="$INSTALL_DIR/Assets/shell/remove-bg.py"
-	local -r venv="$LIBEXEC_DIR/remove-bg-venv"
-
-	[[ -f $script ]] || {
-		warn "remove-bg.py not found at $script — skipping background removal setup"
-		return 0
-	}
-
-	if [[ -x $venv/bin/python ]] && "$venv/bin/python" -c 'import rembg' &>/dev/null; then
-		log "rembg already installed in $venv"
-	else
-		log "Creating rembg virtualenv..."
-		python -m venv "$venv" || {
-			rm -rf "$venv"
-			warn "Failed to create the rembg virtualenv — depth wallpaper extraction unavailable"
-			return 0
-		}
-		if ! "$venv/bin/pip" install --disable-pip-version-check rembg; then
-			rm -rf "$venv"
-			warn "Failed to install rembg — depth wallpaper extraction unavailable"
-			return 0
-		fi
-	fi
-
-	log "Installing remove-bg.py wrapper to $BIN_DIR..."
-	cat >"$BIN_DIR/remove-bg.py" <<EOF
-#!/bin/bash
-exec "$venv/bin/python" "$script" "\$@"
-EOF
-	chmod +x "$BIN_DIR/remove-bg.py"
 }
 
 setup_user_config() {
@@ -679,7 +645,6 @@ main() {
 	cleanup_build_deps
 
 	install_quickshell_config
-	install_remove_bg
 	setup_user_config
 	create_wrapper
 

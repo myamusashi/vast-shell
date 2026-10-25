@@ -32,7 +32,7 @@ Popup {
     function               availableSpaceAbove(): real {
         const win = anchorItem ? anchorItem.QsWindow.window : null;
         if (!win)
-            return 336 + 200;
+            return 336 + 200; // just pull random number huh
         // qmllint disable missing-property
         const contentItem = win.contentItem;
         if (contentItem) {
@@ -127,14 +127,10 @@ Popup {
                 required property int index
                 required property var modelData
 
-                disabledLabel: root.disabledLabel(modelData)
-                enabled: root.isItemEnabled(modelData)
+                disabledLabel: root.disabledLabel(modelData) // qmllint disable use-proper-function
+                enabled: root.isItemEnabled(modelData) // qmllint disable use-proper-function
                 label: typeof modelData === "string" ? modelData : modelData[root.textRole] ?? ""
-                // qmllint disable
-                selected: root.isItemActive(modelData, index)
-
-                // qmllint enable
-
+                selected: root.isItemActive(modelData, index) // qmllint disable use-proper-function
                 onTriggered: {
                     root.activated(index);
                     root.close();

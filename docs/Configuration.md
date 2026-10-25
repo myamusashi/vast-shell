@@ -172,11 +172,7 @@ You generally do **not** need to copy the color files — the Material palette i
     "transitionDuration": 300,
     "transitionLowPerfMode": false,
     "visibleWallpaper": 3,
-    "depthWallpaperEnabled": true,
-    "livePreview": true,
-    "autoProcessedDepthWallpaper": false,
-    "depthWallpaperSource": "",
-    "depthFgPath": ""
+    "livePreview": true
   },
   "weather": {
     "enableQuickSummary": false,
@@ -358,11 +354,8 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 | `transitionDuration` | `300` | Transition duration in ms (slider 100–2000). |
 | `transitionLowPerfMode` | `false` | Swap transitions for instant cuts. |
 | `visibleWallpaper` | `3` | Wallpapers shown in the picker. |
-| `depthWallpaperEnabled` | `true` | Enable the depth/parallax lock-screen effect (see below). |
 | `livePreview` | `true` | Generate a palette from the wallpaper as soon as it loads. |
-| `autoProcessedDepthWallpaper` | `false` | Process depth wallpapers without asking. |
-| `depthWallpaperSource` | `""` | Wallpaper path the depth effect was built from. |
-| `depthFgPath` | `""` | Cached extracted foreground for that wallpaper. |
+
 
 > [!WARNING]
 > `WallpaperConfig.qml` currently hardcodes `wallpaperDir` to the maintainer's home directory (`/home/myamusashi/Pictures/wallpapers`). Set it explicitly if you use a config file of your own.
@@ -522,31 +515,4 @@ vastctl color from "#ce8fd6" --mode light --scheme vibrant
 
 ---
 
-## Depth Wallpaper
-
-> [!NOTE]
-> Depth wallpaper extracts the foreground subject from your wallpaper and layers it separately over a blurred background, creating a **parallax depth effect** on the lock screen.
-
-**How it works:**
-
-1. When `depthWallpaperEnabled` is on, the first wallpaper change triggers foreground extraction
-2. `Assets/shell/extract-fg.sh` runs `remove-bg.py` with the **BiRefNet-portrait** model to separate the foreground subject from the background
-3. The extracted foreground is cached by content hash (`depthFgPath`) so subsequent uses of the same wallpaper are instant
-4. On the lock screen, the wallpaper blurs and the foreground layer sits on top with independent scaling
-
-**Model details:**
-
-| Property | Value |
-|---|---|
-| Model | `birefnet-portrait` (BiRefNet for portraits/foregrounds) |
-| Download size | ~176 MB (downloaded once on first use) |
-| RAM usage during inference | ~800 MB – 1.5 GB |
-| Processing time (GPU) | ~2 – 8 seconds |
-| Processing time (CPU) | ~10 – 40 seconds |
-
-> [!TIP]
-> - Processing runs **asynchronously** in the background — you can continue using the shell normally
-> - The extracted foreground is cached in `~/.cache/vast-shell/depthwp/foregrounds/`
-> - To reprocess a wallpaper, delete its cached foreground from that directory and trigger a wallpaper change
-> - Depth wallpaper needs a **static** image; it does not apply to video wallpapers
-> - GPU acceleration requires `onnxruntime` with CUDA support — `pip install onnxruntime-gpu`
+## Material Colors

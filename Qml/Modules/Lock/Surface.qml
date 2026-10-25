@@ -6,7 +6,6 @@ import Quickshell.Wayland
 
 import qs.Core.Configs
 import qs.Core.States
-import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 
@@ -79,17 +78,25 @@ WlSessionLockSurface {
         if (grew && inputBuffer.length > 0 && !zoomedIn) {
             zoomedIn = true;
             Quickshell.execDetached({
-                command: ["hyprctl", "eval", `local m = hl.get_monitors();
-                local active = m[1];
-                for _, v in ipairs(m) do
-                    if v.focused then active = v end
-                end;
+                command: ["hyprctl", "eval", `
+                    local monitors = hl.get_monitors()
+                    local activeMonitor = monitors[1]
 
-                local cx = active.x + (active.width / 2);
-                local cy = active.y + (active.height / 2);
+                    for _, monitor in ipairs(monitors) do
+                        if monitor.focused then
+                            activeMonitor = monitor
+                        end
+                    end
 
-                hl.dispatch(hl.dsp.cursor.move({ x = cx, y = cy }));
-                hl.config({ cursor = { zoom_factor = 1.2 } })`]
+                    local logicalWidth = activeMonitor.width / activeMonitor.scale
+                    local logicalHeight = activeMonitor.height / activeMonitor.scale
+
+                    local centerX = activeMonitor.x + logicalWidth / 2
+                    local centerY = activeMonitor.y + logicalHeight / 2
+
+                    hl.dispatch(hl.dsp.cursor.move({ x = centerX, y = centerY }))
+                    hl.config({ cursor = { zoom_factor = 1.2 } })
+                `]
             });
         }
     }
@@ -225,247 +232,215 @@ WlSessionLockSurface {
                 verticalCenter: parent.verticalCenter
             }
         }
-    }
 
-    Image {
-        id: fgLayer
+        BottomItem {
+            id: bottomItem
 
-        readonly property bool currentWallpaperIsVideo: MediaKind.isVideo(Paths.currentWallpaper)
+            inputBuffer: root.inputBuffer
+            isLockscreenOpen: GlobalStates.isLockscreenOpen
+            pam: root.pam
+            showErrorMessage: root.showErrorMessage
+            z: 3
+        }
 
-        anchors.fill: parent
-        asynchronous: true
-        cache: true
-        fillMode: Image.PreserveAspectCrop
-        opacity: 0
-        scale: 1.0
-        source: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" ? "file://" + Configs.wallpaper.depthFgPath : ""
-        visible: !currentWallpaperIsVideo && Configs.wallpaper.depthWallpaperEnabled && Configs.wallpaper.depthFgPath !== "" && !DepthWallpaperController.generating && GlobalStates.previewWallpaper === ""
-        z: 2
-    }
+        SequentialAnimation {
+            id: lockSequence
 
-    BottomItem {
-        id: bottomItem
+            ParallelAnimation {
 
-        inputBuffer: root.inputBuffer
-        isLockscreenOpen: GlobalStates.isLockscreenOpen
-        pam: root.pam
-        showErrorMessage: root.showErrorMessage
-        z: 3
-    }
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    property: "implicitHeight"
+                    target: bottomItem
+                    to: 80
+                }
 
-    SequentialAnimation {
-        id: lockSequence
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    property: "opacity"
+                    target: bottomItem.contentLayout
+                    to: 1
+                }
 
-        ParallelAnimation {
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    property: "opacity"
+                    target: passwordDisplay
+                    to: 1
+                }
+            }
+
+            ScriptAction {
+                script: {
+                    GlobalStates.isLockscreenOpen = true;
+                }
+            }
+        }
+
+        SequentialAnimation {
+            id: unlockSequence
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "implicitHeight"
-                target: bottomItem
-                to: 80
+                duration: 100
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "rotation"
+                target: bottomItem.lockIcon
+                to: 18
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: bottomItem.contentLayout
-                to: 1
+                duration: 100
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "rotation"
+                target: bottomItem.lockIcon
+                to: -18
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: fgLayer
-                to: 1
+                duration: 100
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "rotation"
+                target: bottomItem.lockIcon
+                to: 12
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: passwordDisplay
-                to: 1
+                duration: 100
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "rotation"
+                target: bottomItem.lockIcon
+                to: -12
             }
-        }
-
-        ScriptAction {
-            script: {
-                GlobalStates.isLockscreenOpen = true;
-            }
-        }
-    }
-
-    SequentialAnimation {
-        id: unlockSequence
-
-        NAnim {
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            property: "rotation"
-            target: bottomItem.lockIcon
-            to: 18
-        }
-
-        NAnim {
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            property: "rotation"
-            target: bottomItem.lockIcon
-            to: -18
-        }
-
-        NAnim {
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            property: "rotation"
-            target: bottomItem.lockIcon
-            to: 12
-        }
-
-        NAnim {
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            property: "rotation"
-            target: bottomItem.lockIcon
-            to: -12
-        }
-
-        NAnim {
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            property: "rotation"
-            target: bottomItem.lockIcon
-            to: -6
-        }
-
-        NAnim {
-            duration: 100
-            easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
-            property: "rotation"
-            target: bottomItem.lockIcon
-            to: 0
-        }
-
-        ScriptAction {
-            script: {
-                bottomItem.lockIcon.color = Colours.m3Colors.m3Green;
-                bottomItem.iconName       = "lock_open_right";
-            }
-        }
-
-        PauseAnimation {
-            duration: Appearance.animations.durations.emphasized
-        }
-
-        ParallelAnimation {
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "implicitHeight"
-                target: bottomItem
+                duration: 100
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "rotation"
+                target: bottomItem.lockIcon
+                to: -6
+            }
+
+            NAnim {
+                duration: 100
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "rotation"
+                target: bottomItem.lockIcon
                 to: 0
             }
 
+            ScriptAction {
+                script: {
+                    bottomItem.lockIcon.color = Colours.m3Colors.m3Green;
+                    bottomItem.iconName       = "lock_open_right";
+                }
+            }
+
+            PauseAnimation {
+                duration: Appearance.animations.durations.emphasized
+            }
+
+            ParallelAnimation {
+
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    property: "implicitHeight"
+                    target: bottomItem
+                    to: 0
+                }
+
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    property: "opacity"
+                    target: bottomItem.contentLayout
+                    to: 0
+                }
+
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    property: "opacity"
+                    target: passwordDisplay
+                    to: 0
+                }
+            }
+
+            ScriptAction {
+                script: {
+                    root.lock.locked              = false;
+                    GlobalStates.isLockscreenOpen = false;
+                    root.pam.isUnlock             = false;
+                    root.pam.currentText          = "";
+                    root.inputBuffer              = "";
+                    root.maskEntries              = [];
+                    root.maskedBuffer             = "";
+                    root.zoomedIn                 = false;
+                }
+            }
+        }
+
+        SequentialAnimation {
+            id: errorShakeAnimation
+
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: bottomItem.contentLayout
+                duration: 50
+                property: "x"
+                target: passwordShake
+                to: 12
+            }
+
+            NAnim {
+                duration: 50
+                property: "x"
+                target: passwordShake
+                to: -12
+            }
+
+            NAnim {
+                duration: 50
+                property: "x"
+                target: passwordShake
+                to: 8
+            }
+
+            NAnim {
+                duration: 50
+                property: "x"
+                target: passwordShake
+                to: -8
+            }
+
+            NAnim {
+                duration: 50
+                property: "x"
+                target: passwordShake
+                to: 4
+            }
+
+            NAnim {
+                duration: 50
+                property: "x"
+                target: passwordShake
                 to: 0
             }
-
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: fgLayer
-                to: 0
-            }
-
-            NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                property: "opacity"
-                target: passwordDisplay
-                to: 0
-            }
         }
 
-        ScriptAction {
-            script: {
-                root.lock.locked              = false;
-                GlobalStates.isLockscreenOpen = false;
-                root.pam.isUnlock             = false;
-                root.pam.currentText          = "";
-                root.inputBuffer              = "";
-                root.maskEntries              = [];
-                root.maskedBuffer             = "";
-                root.zoomedIn                 = false;
-            }
-        }
-    }
+        Timer {
+            id: jitterTimer
 
-    SequentialAnimation {
-        id: errorShakeAnimation
-
-        NAnim {
-            duration: 50
-            property: "x"
-            target: passwordShake
-            to: 12
+            interval: 2500
+            repeat: true
+            running: root.inputBuffer.length > 0
+            onTriggered: root.jitterMaskEntry()
         }
 
-        NAnim {
-            duration: 50
-            property: "x"
-            target: passwordShake
-            to: -12
+        CapsLockPopup {
+            anchors.centerIn: parent
+            z: 999
         }
-
-        NAnim {
-            duration: 50
-            property: "x"
-            target: passwordShake
-            to: 8
-        }
-
-        NAnim {
-            duration: 50
-            property: "x"
-            target: passwordShake
-            to: -8
-        }
-
-        NAnim {
-            duration: 50
-            property: "x"
-            target: passwordShake
-            to: 4
-        }
-
-        NAnim {
-            duration: 50
-            property: "x"
-            target: passwordShake
-            to: 0
-        }
-    }
-
-    Timer {
-        id: jitterTimer
-
-        interval: 2500
-        repeat: true
-        running: root.inputBuffer.length > 0
-        onTriggered: root.jitterMaskEntry()
-    }
-
-    CapsLockPopup {
-        anchors.centerIn: parent
-        z: 999
     }
 }

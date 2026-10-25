@@ -32,7 +32,6 @@
         wayland-scanner
         qt6.qttools
         qt6.qtshadertools
-        python314Packages.rembg
         python314Packages.pillow
         python314Packages.materialyoucolor
         dbus

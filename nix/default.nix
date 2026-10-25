@@ -32,7 +32,6 @@
     app2unit = callPackage ./packages/app2unit.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
     vastctl = callPackage ./packages/vastctl.nix {};
-    remove-bg = callPackage ./packages/remove-bg.nix {};
     m3Shapes-pkgs = m3Shapes.packages.${stdenv.hostPlatform.system}.default;
     another-ripple-pkg = another-ripple.packages.${stdenv.hostPlatform.system}.default;
 
@@ -42,7 +41,6 @@
         gawk
         gnused
         util-linux
-        remove-bg
         iw
         libnotify
         polkit
@@ -231,7 +229,6 @@ in {
         vastctl
         vastPlugin
         app2unit
-        remove-bg
         runtimeDeps
         ;
     default = vast-shell;

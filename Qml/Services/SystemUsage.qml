@@ -185,7 +185,7 @@ Singleton {
     }
 
     Component.onCompleted: {
-        diskDfProc.running    = true;
+        diskDfProc.running     = true;
         gpuNameProc.running    = true;
         cpuNameProc.running    = true;
         osInfoProc.running     = true;

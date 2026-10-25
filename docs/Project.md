@@ -25,7 +25,7 @@ vast-shell/
 ├── nix/
 │   ├── default.nix
 │   ├── nixos-modules.nix
-│   ├── packages/               # app2unit, remove-bg, vastctl
+│   ├── packages/               # app2unit, vastctl
 │   └── plugins/
 │       └── vastPlugin.nix      # C++ plugin derivation
 │
@@ -100,19 +100,17 @@ vast-shell/
 │   │   ├── Settings/
 │   │   │   ├── Components/    # CardRevealer, SettingRow, SettingsCard,
 │   │   │   │                  # SettingsPageBase, SettingsSearchField
-│   │   │   └── Pages/         # About, Appearance, Bar, Bluetooth, CaptureScreenVideo, Clipboard,
+│   │   └── Pages/         # About, Appearance, Bar, Bluetooth, CaptureScreenVideo, Clipboard,
 │   │   │                      # General, Greeter, Idle, Internet, KDEConnect, Language,
-│   │   │                      # Lockscreen (+ Lockscreen/DepthWallpaperSection),
-│   │   │                      # MediaPlayer, Notification, PrivacyNodes, Volume (+ tabs),
+│   │   │                      # Lockscreen, MediaPlayer, Notification, PrivacyNodes, Volume (+ tabs),
 │   │   │                      # Wallpaper, Weather
 │   │   └── Wallpaper/         # Wall
 │   │
 │   ├── Services/              # Audio, AudioRestore, AuthFlow, Battery,
 │   │                          # BluetoothDeviceFormatter, BluetoothDeviceIndex,
 │   │                          # BluetoothServices, Brightness, CaptureNotify,
-│   │                          # CaptureSaver, ClipboardServices, Colours,
-│   │                          # DepthWallpaperController, DragAndDropServices,
-│   │                          # DynamicIslandService, Fontlist, GreeterWallpaper,
+                          # CaptureSaver, ClipboardServices, Colours,
+                          # DragAndDropServices, DynamicIslandService, Fontlist, GreeterWallpaper,
 │   │                          # HolidayModel, Hotspot, Hypr, Hyprsunset, KDEConnect,
 │   │                          # KeylockState, LauncherServices, Lyrics, Notifs,
 │   │                          # Players, PolAgent, PrivacyServices, ScreenCapture,
@@ -171,9 +169,8 @@ vast-shell/
 │   │   └── transitions/       # boxExpand, circleExpand, diagonalWipe, dissolve, fade,
 │   │                          # hexTile, pixelate, roll, slideUp, splitHorizontal, wipeDown
 │   ├── shell/                 # check-format.sh, gen-qs-modules.sh, desktop-session.sh,
-│   │                          # extract-fg.sh, last-session.sh, pkexec.sh, qmllint_qs.sh,
-│   │                          # qmlformat-ignore.txt, remove-bg.py,
-│   │                          # generate_colors_material.py (legacy, unused — see below)
+│   │                          # last-session.sh, pkexec.sh, qmllint_qs.sh,
+│   │                          # qmlformat-ignore.txt
 │   └── weather_icon/          # Moon phase SVGs
 │
 ├── packaging/arch/quickshell/ # PKGBUILD
