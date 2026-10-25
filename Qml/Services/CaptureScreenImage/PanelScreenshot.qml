@@ -17,20 +17,17 @@ import "../captureUtils.js" as Utils
 Scope {
     id: root
 
-    property var             allScreenPaths: []
-    property var             captureDoneCallback: null
-    property string          frozenImageUrl: ""
-    property bool            isMultiCapturing: false
-    property string          pendingAction: ""
-
-    // Each screen gets its own PanelWindow + ScreencopyView
-    // so all outputs freeze at the same compositor frame
     required property string screenshotDir
 
+    property var             allScreenPaths: []
+    property var             captureDoneCallback: null
+    property bool            isMultiCapturing: false
+    property string          pendingAction: ""
     property int             pendingCaptureCount: 0
     property string          pendingWindowAction: ""
     property var             pickForRecordCallback: null
     property real            regionScale: 1
+    property rect            selectionCropRect: Qt.rect(0, 0, 0, 0)
     property bool            selectionDragging: false
     property point           selectionEnd: Qt.point(0, 0)
     property bool            selectionOpen: false
@@ -41,6 +38,39 @@ Scope {
 
     signal                   notify(string summary, string body, string urgency, string icon, string app, var actions)
 
+    function                 captureSelectedRegion() {
+        const bounds           = Utils.totalBounds(Quickshell.screens);
+        const scale            = root.regionScale;
+        root.selectionCropRect = Qt.rect(Math.round((Math.min(root.selectionStart.x, root.selectionEnd.x) - bounds.x) * scale), Math.round((Math.min(root.selectionStart.y, root.selectionEnd.y) - bounds.y) * scale), Math.round(Math.abs(root.selectionEnd.x - root.selectionStart.x) * scale), Math.round(Math.abs(root.selectionEnd.y - root.selectionStart.y) * scale));
+        root.selectionOpen     = false;
+
+        delayTimer.interval    = 100;
+        delayTimer.pendingFn   = () => {
+            if (Quickshell.screens.length > 1) {
+                root.freezeAllScreens(path => {
+                    if (!path) {
+                        root.notify("Screenshot Failed", "Failed to capture screens.", "critical", "dialog-error", "Screenshot");
+                        return;
+                    }
+                    root.cropCapturedRegion(path);
+                });
+                return;
+            }
+
+            const screen = Quickshell.screens[0];
+            if (!screen) {
+                root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
+                return;
+            }
+            root.pendingAction           = "region";
+            captureLoader.targetToplevel = null;
+            captureLoader.targetScreen   = screen;
+            captureLoader.targetWidth    = screen.width;
+            captureLoader.targetHeight   = screen.height;
+            captureLoader.active         = true;
+        };
+        delayTimer.running     = true;
+    }
     function                 compositeAllCaptures() {
         multiCaptureWatchdog.stop();
         if (root.allScreenPaths.length === 0) {
@@ -57,6 +87,11 @@ Scope {
     }
     function                 copyToClipboard(img) {
         saver.copyFile(img);
+    }
+    function                 cropCapturedRegion(sourceUrl) {
+        const crop        = root.selectionCropRect;
+        cropEngine.active = true;
+        cropEngine.item.doCrop(sourceUrl, crop.x, crop.y, crop.width, crop.height);
     }
     function                 freezeAllScreens(callback) {
         root.allScreenPaths      = [];
@@ -92,7 +127,7 @@ Scope {
     function                 screenshotAllOutputs(action) {
         delayTimer.running   = false;
         delayTimer.pendingFn = null;
-        delayTimer.interval  = 2000;
+        delayTimer.interval  = 500;
         delayTimer.pendingFn = () => {
             root.freezeAllScreens(path => {
                 if (!path) {
@@ -121,7 +156,7 @@ Scope {
         captureLoader.targetScreen   = screen;
         captureLoader.targetWidth    = screen.width;
         captureLoader.targetHeight   = screen.height;
-        delayTimer.interval          = 2000;
+        delayTimer.interval          = 500;
         delayTimer.pendingFn         = () => {
             captureLoader.active = true;
         };
@@ -133,39 +168,15 @@ Scope {
         delayTimer.running   = false;
         delayTimer.pendingFn = null;
 
-        if (Quickshell.screens.length <= 1) {
-            root.pendingAction           = "region";
-            captureLoader.targetToplevel = null;
-            const screen                 = Quickshell.screens[0];
-            if (!screen) {
-                root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
-                return;
-            }
-            root.regionScale           = Hyprland.monitorFor(screen)?.scale ?? 1;
-            captureLoader.targetScreen = screen;
-            captureLoader.targetWidth  = screen.width;
-            captureLoader.targetHeight = screen.height;
-            delayTimer.interval        = 2000;
-            delayTimer.pendingFn       = () => {
-                captureLoader.active = true;
-            };
-            delayTimer.running         = true;
-        } else {
-            const firstScreen    = Quickshell.screens[0];
-            root.regionScale     = Hyprland.monitorFor(firstScreen)?.scale ?? 1;
-            delayTimer.interval  = 2000;
-            delayTimer.pendingFn = () => {
-                root.freezeAllScreens(path => {
-                    if (!path) {
-                        root.notify("Screenshot Failed", "Failed to capture screens.", "critical", "dialog-error", "Screenshot");
-                        return;
-                    }
-                    root.frozenImageUrl = path;
-                    root.selectionOpen  = true;
-                });
-            };
-            delayTimer.running   = true;
+        const screen         = Quickshell.screens[0];
+        if (!screen) {
+            root.notify("Screenshot Failed", "No screen found.", "critical", "dialog-error", "Screenshot");
+            return;
         }
+
+        root.regionScale       = Hyprland.monitorFor(screen)?.scale ?? 1;
+        root.selectionDragging = false;
+        root.selectionOpen     = true;
     }
     function                 screenshotWindow(action) {
         console.log("screenshotWindow: opening window picker, action:", action);
@@ -191,10 +202,7 @@ Scope {
         property string destPath: ""
 
         running: false
-
-        // qmllint disable
-        onExited: (code, status) => {
-            // qmllint enable
+        onExited: (code, status) => { // qmllint disable
             if (code === 0 && destPath) {
                 root.notifySaved(destPath);
                 saver.copyFile(destPath);
@@ -228,7 +236,6 @@ Scope {
                         root.notify("Screenshot Failed", "Capture timed out, please try again.", "critical", "dialog-error", "Screenshot");
                         root.isMultiCapturing = false;
                         root.selectionOpen    = false;
-                        root.frozenImageUrl   = "";
                         captureLoader.active  = false;
                         if (root.captureDoneCallback) {
                             const cb                 = root.captureDoneCallback;
@@ -262,9 +269,8 @@ Scope {
                             return;
                         }
                         if (result.saveToFile(path)) {
-                            root.frozenImageUrl  = "file://" + path;
+                            root.cropCapturedRegion("file://" + path);
                             captureLoader.active = false;
-                            root.selectionOpen   = true;
                         } else {
                             root.notify("Screenshot Failed", "Failed to save region preview.", "critical", "dialog-error", "Screenshot");
                             captureLoader.active = false;
@@ -313,14 +319,10 @@ Scope {
             }
         }
         onActiveChanged: {
-            // PanelWindow persists across activations; reset the one-shot grab
-            // guard so a second capture actually grabs instead of no-op'ing.
             if (active && item) {
                 item.done        = false;
                 item.grabRetries = 0;
             }
-            // Never carry a window source into the next capture; each flow sets
-            // exactly the source it needs when it activates the loader.
             if (!active)
                 targetToplevel = null;
         }
@@ -460,9 +462,9 @@ Scope {
                         } else {
                             root.notify("Screenshot Failed", "Failed to save cropped image.", "critical", "dialog-error", "Screenshot");
                         }
-                        cropEngine.active   = false;
-                        root.selectionOpen  = false;
-                        root.frozenImageUrl = "";
+                        cropEngine.active  = false;
+                        root.selectionOpen = false;
+                        root.selectionOpen = false;
                     });
                 }
             }
@@ -574,7 +576,6 @@ Scope {
         delegate: PanelWindow {
             required property ShellScreen modelData
 
-            readonly property var         frozenBounds: Utils.totalBounds(Quickshell.screens)
             readonly property real        offsetX: modelData.x
             readonly property real        offsetY: modelData.y
 
@@ -591,18 +592,6 @@ Scope {
                 left: true
                 right: true
                 top: true
-            }
-
-            Image {
-                cache: false
-                fillMode: Image.Pad
-                height: frozenBounds.height
-                source: root.frozenImageUrl
-                width: frozenBounds.width
-                // Composite starts at the virtual desktop's min corner; offset by
-                // it so screens left of / above the primary stay aligned
-                x: frozenBounds.x - offsetX
-                y: frozenBounds.y - offsetY
             }
 
             Rectangle {
@@ -632,10 +621,7 @@ Scope {
                 anchors.fill: parent
                 focus: root.selectionOpen
                 Component.onCompleted: forceActiveFocus()
-                Keys.onEscapePressed: {
-                    root.selectionOpen  = false;
-                    root.frozenImageUrl = "";
-                }
+                Keys.onEscapePressed: root.selectionOpen = false
             }
 
             Timer {
@@ -645,9 +631,8 @@ Scope {
                 repeat: false
                 running: root.selectionOpen
                 onTriggered: {
-                    console.log("selectionOverlay watchdog: force-closing frozen overlay");
-                    root.selectionOpen  = false;
-                    root.frozenImageUrl = "";
+                    console.log("selectionOverlay watchdog: force-closing selection overlay");
+                    root.selectionOpen = false;
                 }
             }
 
@@ -661,8 +646,7 @@ Scope {
                 }
                 onPressed: e => {
                     if (e.button === Qt.RightButton) {
-                        root.selectionOpen  = false;
-                        root.frozenImageUrl = "";
+                        root.selectionOpen = false;
                         return;
                     }
                     root.selectionStart    = Qt.point(e.x + offsetX, e.y + offsetY);
@@ -674,27 +658,14 @@ Scope {
                         return;
                     root.selectionDragging = false;
 
-                    const selectionMinX    = Math.min(root.selectionStart.x, root.selectionEnd.x);
-                    const selectionMinY    = Math.min(root.selectionStart.y, root.selectionEnd.y);
                     const selectionWidth   = Math.abs(root.selectionEnd.x - root.selectionStart.x);
                     const selectionHeight  = Math.abs(root.selectionEnd.y - root.selectionStart.y);
-
                     if (selectionWidth < 5 || selectionHeight < 5) {
-                        root.selectionOpen  = false;
-                        root.frozenImageUrl = "";
+                        root.selectionOpen = false;
                         return;
                     }
 
-                    // Crop coords are relative to the composite's min corner
-                    const bounds      = Utils.totalBounds(Quickshell.screens);
-                    const scale       = root.regionScale;
-                    const cropX       = Math.round((selectionMinX - bounds.x) * scale);
-                    const cropY       = Math.round((selectionMinY - bounds.y) * scale);
-                    const cropWidth   = Math.round(selectionWidth * scale);
-                    const cropHeight  = Math.round(selectionHeight * scale);
-
-                    cropEngine.active = true;
-                    cropEngine.item.doCrop(root.frozenImageUrl, cropX, cropY, cropWidth, cropHeight);
+                    root.captureSelectedRegion();
                 }
             }
         }
@@ -768,7 +739,7 @@ Scope {
                 const margin     = Appearance.margin.normal * 2;
                 const spanWidth  = Math.max(1, maxX - minX);
                 const spanHeight = Math.max(1, maxY - minY);
-                // Never upscale — ordinary layouts keep 1:1 geometry
+                // Never upscale, ordinary layouts keep 1:1 geometry
                 pickerScale      = Math.min(1, Math.max(1, pickerWindow.width - margin * 2) / spanWidth, Math.max(1, pickerWindow.height - margin * 2) / spanHeight);
                 pickerOriginX    = minX;
                 pickerOriginY    = minY;
