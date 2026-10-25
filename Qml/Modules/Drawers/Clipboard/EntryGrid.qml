@@ -35,9 +35,6 @@ Item {
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
-        onDragStarted: scrollAnim.stop()
-        onDraggingChanged: scrollAnim.stop()
-        onFlickStarted: scrollAnim.stop()
 
         GridView {
             id: entryList
@@ -58,7 +55,12 @@ Item {
             }
             readonly property int visualStart: root.uiState.visualActive ? Math.min(root.uiState.visualAnchor, currentIndex) : -1
 
+            function              clampCurrentIndex() {
+                currentIndex = maxVisibleCount > 0 ? Math.max(0, Math.min(currentIndex, maxVisibleCount - 1)) : -1;
+            }
             function              ensureCurrentVisible() {
+                if (currentIndex < 0)
+                    return;
                 const itemY    = (currentIndex % itemsPerPage) * cellHeight;
                 const viewport = verticalFlick.height;
                 const currentY = verticalFlick.contentY;
@@ -69,10 +71,8 @@ Item {
                     targetY = itemY + cellHeight - viewport;
                 if (targetY < 0)
                     return;
-                targetY = Math.max(0, Math.min(targetY, verticalFlick.contentHeight - viewport));
-                scrollAnim.stop();
-                scrollAnim.to = targetY;
-                scrollAnim.start();
+                targetY                = Math.max(0, Math.min(targetY, verticalFlick.contentHeight - viewport));
+                verticalFlick.contentY = targetY;
             }
             function              moveCurrentIndexByPage(delta) {
                 const page    = currentPage;
@@ -82,13 +82,13 @@ Item {
 
                 const row       = currentIndex % itemsPerPage;
                 const pageStart = newPage * itemsPerPage;
-                const pageEnd   = Math.min(pageStart + itemsPerPage, count) - 1;
+                const pageEnd   = Math.min(pageStart + itemsPerPage, maxVisibleCount) - 1;
 
                 currentIndex    = Math.min(Math.max(pageStart + row, pageStart), pageEnd);
                 contentX        = newPage * width;
             }
             function              moveCurrentIndexDown() {
-                if (currentIndex < count - 1)
+                if (currentIndex < maxVisibleCount - 1)
                     currentIndex++;
             }
             function              moveCurrentIndexLeft() {
@@ -119,7 +119,7 @@ Item {
             flow: GridView.FlowTopToBottom
             height: Math.max(1, Configs.clipboard.listEntries) * (64 + Appearance.spacing.small)
             highlightFollowsCurrentItem: true
-            highlightMoveDuration: 200
+            highlightMoveDuration: 0
             highlightRangeMode: GridView.ApplyRange
             maximumFlickVelocity: 1000
             model: ClipboardManager.model
@@ -210,14 +210,8 @@ Item {
                 }
             }
             onCurrentIndexChanged: ensureCurrentVisible()
-
-            NAnim {
-                id: scrollAnim
-
-                duration: Appearance.animations.durations.small
-                property: "contentY"
-                target: verticalFlick
-            }
+            onCountChanged: clampCurrentIndex()
+            onMaxVisibleCountChanged: clampCurrentIndex()
         }
     }
 
