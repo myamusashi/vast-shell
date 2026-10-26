@@ -222,10 +222,10 @@ func TestColorRenderUsesAFrameOfAVideo(t *testing.T) {
 		t.Fatalf("CachePath: %v", err)
 	}
 	log := recordShell(t)
-	if _, err := runCLI(t, "color", "render", "--wallpaper", "/videos/wall.mp4"); err != nil {
+	if _, err := runCLI(t, "color", "render", "--mode", "dark", "--wallpaper", "/videos/wall.mp4"); err != nil {
 		t.Fatalf("vastctl color render: %v", err)
 	}
-	wantCall(t, log, "color", "generate", frame, "dark", "tonal-spot")
+	wantCall(t, log, "color", "generate", frame, "light", "tonal-spot")
 	if _, err := os.Stat(frame); err != nil {
 		t.Fatalf("the frame was not written: %v", err)
 	}

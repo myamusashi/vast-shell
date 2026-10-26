@@ -88,13 +88,35 @@ func (r *Renderer) loadPalette(wallpaper string, options RenderOptions) (palette
 		if err != nil {
 			return palette{}, err
 		}
-		return buildPalette(raw)
+		roles, err := buildPalette(raw)
+		if err != nil {
+			return palette{}, err
+		}
+		roles.modes = map[string]palette{options.Mode: roles}
+		return roles, nil
 	}
 	raw, err := r.Source.Palette(wallpaper, options.Mode, options.Scheme)
 	if err != nil {
-		return palette{}, fmt.Errorf("generate the palette: %w", err)
+		return palette{}, fmt.Errorf("generate the %s palette: %w", options.Mode, err)
 	}
-	return buildPalette(raw)
+	current, err := buildPalette(raw)
+	if err != nil {
+		return palette{}, err
+	}
+	otherMode := "light"
+	if options.Mode == "light" {
+		otherMode = "dark"
+	}
+	raw, err = r.Source.Palette(wallpaper, otherMode, options.Scheme)
+	if err != nil {
+		return palette{}, fmt.Errorf("generate the %s palette: %w", otherMode, err)
+	}
+	other, err := buildPalette(raw)
+	if err != nil {
+		return palette{}, err
+	}
+	current.modes = map[string]palette{options.Mode: current, otherMode: other}
+	return current, nil
 }
 
 func (r *Renderer) renderTemplate(entry template, roles palette, values variables) error {

@@ -80,25 +80,38 @@ func evaluate(fileName, source string, offset int, expression string, roles pale
 	return resolveColor(base, filters, roles, values, failure)
 }
 
-// resolves a colors.<role>.<format> placeholder.
+// resolves a colors.<role>[.<light|dark>].<format> placeholder.
 func resolveColor(base string, filters []string, roles palette, values variables, failure func(string) error) (string, error) {
 	if !strings.HasPrefix(base, "colors.") {
-		return "", failure(fmt.Sprintf("unknown placeholder %q, expected colors.<role>.<format>, mode or image", base))
+		return "", failure(fmt.Sprintf("unknown placeholder %q, expected colors.<role>[.<light|dark>].<format>, mode or image", base))
 	}
-	remainder := strings.TrimPrefix(base, "colors.")
-	role, format, found := strings.Cut(remainder, ".")
-	if !found || role == "" || format == "" {
-		return "", failure(fmt.Sprintf("unknown placeholder %q, expected colors.<role>.<format>", base))
+	parts := strings.Split(strings.TrimPrefix(base, "colors."), ".")
+	if len(parts) != 2 && len(parts) != 3 {
+		return "", failure(fmt.Sprintf("unknown placeholder %q, expected colors.<role>[.<light|dark>].<format>", base))
+	}
+	role := parts[0]
+	format := parts[len(parts)-1]
+	selected := roles
+	if len(parts) == 3 {
+		mode := parts[1]
+		if mode != "light" && mode != "dark" {
+			return "", failure(fmt.Sprintf("unknown color mode %q, expected light or dark", mode))
+		}
+		var exists bool
+		selected, exists = roles.modes[mode]
+		if !exists {
+			return "", failure(fmt.Sprintf("color palette for %q mode is unavailable", mode))
+		}
 	}
 
 	canonical := canonicalRole(role)
 	if canonical == "mode" {
 		return resolveMode(format, filters, values.Mode, failure)
 	}
-	roleColor, exists := roles.lookup(canonical)
+	roleColor, exists := selected.lookup(canonical)
 	if !exists {
 		message := fmt.Sprintf("unknown color role %q", role)
-		if suggestions := suggestRoles(canonical, roles.roleNames(), 3); len(suggestions) > 0 {
+		if suggestions := suggestRoles(canonical, selected.roleNames(), 3); len(suggestions) > 0 {
 			message += fmt.Sprintf(", did you mean %s", strings.Join(quoteAll(suggestions), ", "))
 		}
 		return "", failure(message)

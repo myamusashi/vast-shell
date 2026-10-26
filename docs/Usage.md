@@ -72,10 +72,14 @@ A template is a plain text file with placeholders:
 
 ```
 {{colors.<role>.<format>}}
+{{colors.<role>.<light|dark>.<format>}}
 ```
 
 - `role` is a Material role name. `onSurface` and `on_surface` are the same role.
 - `format` is one of `hex`, `hex_stripped`, `rgb` or `rgba`.
+- Without a mode suffix, colors use the shell's current mode. Add `.light` or `.dark`
+  before the format to select that mode explicitly, for example
+  `{{colors.background.light.hex}}` or `{{colors.background.dark.hex}}`.
 - `{{mode}}` is the color mode (`dark` or `light`), `{{image}}` is the wallpaper path.
 - `{{colors.mode.auto}}` is the mode the shell is in, `{{colors.mode.light}}` and
   `{{colors.mode.dark}}` name one of the two. The role `mode` answers before

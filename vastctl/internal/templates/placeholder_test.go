@@ -25,6 +25,15 @@ func testPalette(t *testing.T) palette {
 // to write the color the way the target expects it.
 func TestRenderPlaceholders(t *testing.T) {
 	roles := testPalette(t)
+	light, err := buildPalette(map[string]string{
+		"onSurface": "#ffffff",
+		"surface":   "#abcdef",
+		"primary":   "#00ff00",
+	})
+	if err != nil {
+		t.Fatalf("build light palette: %v", err)
+	}
+	roles.modes = map[string]palette{"dark": roles, "light": light}
 	values := variables{Mode: "dark", Image: "/home/user/wall.png"}
 
 	for _, testCase := range []struct {
@@ -38,6 +47,9 @@ func TestRenderPlaceholders(t *testing.T) {
 		{"hex stripped", "{{colors.onSurface.hex_stripped}}", "dce0e8"},
 		{"rgb", "{{colors.onSurface.rgb}}", "rgb(220, 224, 232)"},
 		{"rgba", "{{colors.onSurface.rgba}}", "rgba(220, 224, 232, 1)"},
+		{"dark mode suffix", "{{colors.surface.dark.hex}}", "#112233"},
+		{"light mode suffix", "{{colors.surface.light.hex}}", "#abcdef"},
+		{"automatic mode without suffix", "{{colors.surface.hex}}", "#112233"},
 		{"alpha filter", "{{colors.surface.hex | alpha: 0.5}}", "#11223380"},
 		{"alpha filter on rgb", "{{colors.surface.rgb | alpha: 0.5}}", "rgb(17, 34, 51)"},
 		{"alpha filter with rgba", "{{colors.surface.rgba | alpha: 0.5}}", "rgba(17, 34, 51, 0.5)"},
@@ -107,6 +119,7 @@ func TestRenderUnknownPlaceholder(t *testing.T) {
 	}{
 		{"unknown name", "{{wallpaper}}", []string{"unknown placeholder"}},
 		{"unknown format", "{{colors.surface.hsv}}", []string{"unknown format"}},
+		{"unknown color mode", "{{colors.surface.gray.hex}}", []string{"unknown color mode"}},
 		{"unknown mode", "{{colors.mode.gray}}", []string{"unknown mode"}},
 		{"alpha on a mode", "{{colors.mode.auto | alpha: 0.5}}", []string{"alpha filter"}},
 		{"missing format", "{{colors.surface}}", []string{"unknown placeholder"}},

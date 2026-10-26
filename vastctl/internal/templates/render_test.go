@@ -11,8 +11,9 @@ import (
 
 // fakeSource is the palette the renderer tests render with.
 type fakeSource struct {
-	wallpaper string
-	colors    map[string]string
+	wallpaper  string
+	colors     map[string]string
+	modeColors map[string]map[string]string
 }
 
 func (f fakeSource) CurrentWallpaper() (string, error) {
@@ -20,6 +21,9 @@ func (f fakeSource) CurrentWallpaper() (string, error) {
 }
 
 func (f fakeSource) Palette(wallpaper, mode, scheme string) (map[string]string, error) {
+	if colors, exists := f.modeColors[mode]; exists {
+		return colors, nil
+	}
 	return f.colors, nil
 }
 
@@ -76,6 +80,38 @@ func TestRenderWritesTemplate(t *testing.T) {
 	}
 	if string(written) != "bg=#112233\n" {
 		t.Fatalf("the rendered file holds %q", written)
+	}
+}
+
+func TestRenderUsesExplicitColorModes(t *testing.T) {
+	directory := t.TempDir()
+	input := filepath.Join(directory, "colors.conf.tmpl")
+	template := "auto={{colors.surface.hex}} light={{colors.surface.light.hex}} dark={{colors.surface.dark.hex}}\n"
+	if err := os.WriteFile(input, []byte(template), 0o644); err != nil {
+		t.Fatalf("write %s: %v", input, err)
+	}
+	config := filepath.Join(directory, "templates.json")
+	writeConfig(t, config, `{"templates":[{"name":"colors","input":"`+input+`","enabled":true}]}`)
+
+	renderer := Renderer{
+		ConfigPath: config,
+		Source: fakeSource{
+			wallpaper: "/wall.png",
+			modeColors: map[string]map[string]string{
+				"dark":  {"surface": "#112233"},
+				"light": {"surface": "#abcdef"},
+			},
+		},
+	}
+	if err := renderer.Render(RenderOptions{Mode: "dark", Scheme: "tonal-spot"}); err != nil {
+		t.Fatalf("Render: %v", err)
+	}
+	written, err := os.ReadFile(filepath.Join(directory, "colors.conf"))
+	if err != nil {
+		t.Fatalf("read the rendered file: %v", err)
+	}
+	if got, want := string(written), "auto=#112233 light=#abcdef dark=#112233\n"; got != want {
+		t.Fatalf("the rendered file holds %q, want %q", got, want)
 	}
 }
 

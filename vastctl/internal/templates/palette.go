@@ -11,6 +11,7 @@ import (
 
 type palette struct {
 	colors map[string]color
+	modes  map[string]palette
 }
 
 func (p palette) lookup(role string) (color, bool) {
