@@ -81,11 +81,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791413838,
-        "narHash": "sha256-RABzIViqWRW/9meswTsI0D08hiFIVlm72K+QmuBrCiQ=",
+        "lastModified": 1793058463,
+        "narHash": "sha256-9sK8dKW6/n+fQzoEvjC3ZzLwk+rCgvycYQOJS7LvnYg=",
         "ref": "refs/heads/master",
-        "rev": "a8bc4c6336dadec3aaec8f15303ad34bf6925f4c",
-        "revCount": 26,
+        "rev": "89bf3da68b147004cbbd7829b436da71eb88a772",
+        "revCount": 28,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/qmlformat-rs"
       },
