@@ -16,7 +16,7 @@ ListView {
     required property var pskDialog
 
     Layout.fillWidth: true
-    Layout.preferredHeight: contentHeight
+    Layout.preferredHeight: Math.min(contentHeight, 320)
     boundsBehavior: Flickable.StopAtBounds
     clip: true
     implicitHeight: contentHeight

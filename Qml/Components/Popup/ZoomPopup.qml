@@ -37,6 +37,11 @@ ClippingWrapperRectangle {
         root.isVisible   = true;
     }
 
+    border {
+        color: Colours.m3Colors.m3Outline
+        width: 1
+    }
+
     color: Colours.m3Colors.m3SurfaceContainer
     enabled: root.isVisible
     implicitHeight: Math.min((header.visible ? header.implicitHeight + bodyColumn.spacing : 0) + (root.enableScroll ? scrollLoader.implicitHeight : staticLoader.implicitHeight) + root.contentMargin * 2, parent.height * 0.8)
@@ -85,15 +90,10 @@ ClippingWrapperRectangle {
         }
     }
 
-    border {
-        color: Colours.m3Colors.m3Outline
-        width: 1
-    }
-
     Timer {
         id: hideTimer
 
-        interval: Appearance.animations.durations.expressiveDefaultSpatial + 50
+        interval: Appearance.animations.durations.expressiveDefaultSpatial
         onTriggered: root.closing = false
     }
 
