@@ -54,6 +54,7 @@ class TestClipboardHelpers : public QObject {
     void htmlToPlainTextConvertsBlockEndsToNewlines();
     void htmlToPlainTextTrimsResult();
     void buildClipboardPayloadPreservesFormattedHtml();
+    void buildClipboardPayloadKeepsHtmlNewlinesVerbatim();
 
     // vast::LoopbackGuard
     void loopbackGuardUnarmedNeverSuppresses();
@@ -204,9 +205,21 @@ void TestClipboardHelpers::buildClipboardPayloadPreservesFormattedHtml() {
     const auto       payload = vast::WaylandDataControl::buildClipboardPayload(QStringLiteral("text/html"), html);
 
     QCOMPARE(payload.value(QStringLiteral("text/html")), html);
-    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), QByteArray("alpha \nbeta"));
-    QCOMPARE(payload.value(QStringLiteral("text/plain")), QByteArray("alpha \nbeta"));
-    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), QByteArray("alpha \nbeta"));
+    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), html);
+    QCOMPARE(payload.value(QStringLiteral("text/plain")), html);
+    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), html);
+}
+
+void TestClipboardHelpers::buildClipboardPayloadKeepsHtmlNewlinesVerbatim() {
+    // Regression: literal newlines without block markup used to collapse onto
+    // one line when the plain-text aliases were synthesized.
+    const QByteArray html    = "<span>line1\nline2\nline3</span>";
+    const auto       payload = vast::WaylandDataControl::buildClipboardPayload(QStringLiteral("text/html"), html);
+
+    QCOMPARE(payload.value(QStringLiteral("text/html")), html);
+    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), html);
+    QCOMPARE(payload.value(QStringLiteral("text/plain")), html);
+    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), html);
 }
 
 void TestClipboardHelpers::loopbackGuardUnarmedNeverSuppresses() {

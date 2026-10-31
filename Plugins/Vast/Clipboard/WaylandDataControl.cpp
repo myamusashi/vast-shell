@@ -626,18 +626,10 @@ namespace vast {
         QHash<QString, QByteArray> payload;
         payload.insert(mimeType, content);
 
-        if (mimeType == QLatin1StringView{K_MIME_TEXT_UTF8} || mimeType == QLatin1StringView{K_MIME_TEXT}) {
+        if (mimeType == QLatin1StringView{K_MIME_TEXT_UTF8} || mimeType == QLatin1StringView{K_MIME_TEXT} || mimeType == QLatin1StringView{K_MIME_HTML}) {
             payload.insert(mimeTextUtf8(), content);
             payload.insert(mimeText(), content);
             payload.insert(mimeX11String(), content);
-        }
-
-        // Preserve content as text/html; synthesize plain text only for the text MIME aliases.
-        if (mimeType == QLatin1StringView{K_MIME_HTML}) {
-            const QByteArray plain = htmlToPlainText(content);
-            payload.insert(mimeTextUtf8(), plain.isEmpty() ? content : plain);
-            payload.insert(mimeText(), plain.isEmpty() ? content : plain);
-            payload.insert(mimeX11String(), plain.isEmpty() ? content : plain);
         }
 
         if (mimeType == QLatin1StringView{K_MIME_URI_LIST}) {

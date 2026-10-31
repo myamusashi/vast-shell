@@ -267,7 +267,8 @@ namespace vast {
             return false;
 
         // Merge the selected text/html entries into a single plain-text paste,
-        // skipping images and files.
+        // skipping images and files. Entry content is joined verbatim,
+        // text/html is never reformatted.
         QStringList parts;
         parts.reserve(ids.size());
 
@@ -284,13 +285,9 @@ namespace vast {
                 continue;
 
             const ClipboardEntry* entry = it.value();
-            if (entry->type == ClipboardType::Text) {
+            if (entry->type == ClipboardType::Text || entry->type == ClipboardType::Html) {
                 if (!entry->content.trimmed().isEmpty())
                     parts.append(entry->content.trimmed());
-            } else if (entry->type == ClipboardType::Html) {
-                const QString plain = QString::fromUtf8(WaylandDataControl::htmlToPlainText(entry->content.toUtf8()));
-                if (!plain.isEmpty())
-                    parts.append(plain);
             }
         }
 
@@ -426,10 +423,6 @@ namespace vast {
             }
 
             if (result->isImage() && !ClipboardPreviewCache::exists(result->id) && !result->data.isEmpty()) {
-                // The heavy PNG encode + disk write run on the shared worker.
-                // Exactly one of fullEntryReady/fullEntryFailed fires per
-                // request, ready only after the preview path exists, same
-                // contract as the old synchronous write minus the UI stall.
                 auto entry = std::move(*result);
                 vast::JobExecutor::instance().post([this, entry = std::move(entry)]() mutable {
                     ClipboardPreviewCache::write(entry.id, entry.data);
