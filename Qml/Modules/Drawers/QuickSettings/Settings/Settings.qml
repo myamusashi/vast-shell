@@ -27,6 +27,7 @@ Item {
         anchors.fill: parent
         enabled: !wifi.isVisible && !ethernet.isVisible && !bluetooth.isVisible
         spacing: Appearance.spacing.normal
+
         BrightnessControls {}
 
         NetworkInfoColumn {}

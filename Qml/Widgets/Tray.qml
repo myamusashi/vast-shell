@@ -26,22 +26,22 @@ StyledRect {
     property alias         widgetHeight: root.implicitHeight
 
     function               closeMenu(): void {
-        closeTimer.stop();
-        hideTimer.stop();
+        closeT.stop();
+        hideT.stop();
         if (!root.menuMapped)
             return;
         root.menuShowing = false;
-        hideTimer.restart();
+        hideT.restart();
     }
     function               finishClose(): void {
-        closeTimer.stop();
+        closeT.stop();
         root.menuMapped     = false;
         root.activeIconItem = null;
         root.activeMenu     = null;
     }
     function               openMenuFor(item, iconItem): void {
-        closeTimer.stop();
-        hideTimer.stop();
+        closeT.stop();
+        hideT.stop();
         if (!item || !item.hasMenu) {
             root.closeMenu();
             return;
@@ -57,7 +57,7 @@ StyledRect {
     function               scheduleClose(): void {
         if (!root.menuMapped)
             return;
-        closeTimer.restart();
+        closeT.restart();
     }
 
     color: "transparent"
@@ -146,14 +146,14 @@ StyledRect {
     }
 
     Timer {
-        id: closeTimer
+        id: closeT
 
         interval: Appearance.animations.durations.normal
         onTriggered: root.closeMenu()
     }
 
     Timer {
-        id: hideTimer
+        id: hideT
 
         interval: Appearance.animations.durations.expressiveDefaultSpatial
         onTriggered: root.finishClose()
@@ -161,7 +161,7 @@ StyledRect {
 
     TrayPanel {
         trayRoot: root
-        closeTimer: closeTimer
-        hideTimer: hideTimer
+        closeTimer: closeT
+        hideTimer: hideT
     }
 }
