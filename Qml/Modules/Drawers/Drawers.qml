@@ -94,12 +94,13 @@ Variants {
             barHeight: Configs.bar.barHeight
             dockHeight: window.dockVisible ? Configs.dock.dockHeight : 0
             color: GlobalStates.drawerColors
-            enableOuterBorder: Configs.generals.enableOuterBorder
+            enableOuterBorder: GlobalStates.isLockscreenOpen ? 0 : Configs.generals.enableOuterBorder
             isBarOpen: GlobalStates.isBarOpen
             isDockVisible: window.dockVisible
             isFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name)
             outerBorderSize: Configs.generals.outerBorderSize
             window: window.modelData
+            visible: !GlobalStates.isLockscreenOpen
 
             Clipboard {}
 
@@ -108,7 +109,7 @@ Variants {
             QuickSettings {}
 
             Session {
-                id: session
+                id: sessionDrawer
             }
 
             BrightnessOsd {}
@@ -116,7 +117,7 @@ Variants {
             OSD {}
 
             Volume {
-                session: session
+                session: sessionDrawer
             }
 
             CaptureScreen {}

@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell.Widgets
 
 import qs.Core.Configs
+import qs.Core.States
 import qs.Components.Base.DrawerComponents
 
 WrapperItem {
@@ -16,7 +17,6 @@ WrapperItem {
     height: border.topThickness
     leftMargin: 5
     rightMargin: 5
-    visible: height > 0
 
     anchors {
         left: parent.left
