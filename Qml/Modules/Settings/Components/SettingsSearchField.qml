@@ -259,6 +259,132 @@ Item {
             card: "About",
             terms: ["Version", "Operating System", "Kernel", "Architecture"]
         },
+        {
+            page: 21,
+            pageLabel: "Hyprland Monitors",
+            card: "Monitor Layout",
+            terms: ["Monitor Position", "Drag Monitors", "Monitor Arrangement", "Display Layout"]
+        },
+        {
+            page: 21,
+            pageLabel: "Hyprland Monitors",
+            card: "Monitors",
+            terms: ["Resolution", "Refresh Rate", "Scale", "Transform", "Bit Depth", "Color Preset", "SDR Brightness", "SDR Saturation", "ICC Profile", "Disable Monitor"]
+        },
+        {
+            page: 22,
+            pageLabel: "Hyprland General",
+            card: "Windows",
+            terms: ["Tearing", "Border Size", "Gaps In", "Gaps Out", "Layout", "Resize On Border", "Resize Corner"]
+        },
+        {
+            page: 22,
+            pageLabel: "Hyprland General",
+            card: "Snapping",
+            terms: ["Snap", "Monitor Gap", "Window Gap", "Respect Gaps", "Border Overlap"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Decoration",
+            terms: ["Opacity", "Rounding", "Dim Inactive", "Dim Strength", "Screen Shader"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur",
+            terms: ["Blur Size", "Blur Passes", "Noise", "Contrast", "Brightness", "Vibrancy", "Xray", "Blur Variant"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Shadow",
+            terms: ["Shadow Range", "Shadow Scale", "Shadow Sharp", "Render Power"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Wobble",
+            terms: ["Wobble Windows", "Stiffness", "Damping", "Mass", "Intensity"]
+        },
+        {
+            page: 24,
+            pageLabel: "Hyprland Input",
+            card: "Input",
+            terms: ["Keyboard Layout", "Repeat Delay", "Repeat Rate", "Follow Mouse", "Sensitivity", "Scroll Factor", "Natural Scroll", "Numlock"]
+        },
+        {
+            page: 24,
+            pageLabel: "Hyprland Input",
+            card: "Touchpad",
+            terms: ["Tap To Click", "Disable While Typing", "Drag Lock", "Clickfinger Behavior", "Middle Button Emulation"]
+        },
+        {
+            page: 24,
+            pageLabel: "Hyprland Input",
+            card: "Tablet",
+            terms: ["Tablet Output", "Relative Input", "Active Area"]
+        },
+        {
+            page: 25,
+            pageLabel: "Hyprland Group",
+            card: "Group",
+            terms: ["Auto Group", "Drag Into Group", "Insert After Current", "Merge Groups"]
+        },
+        {
+            page: 25,
+            pageLabel: "Hyprland Group",
+            card: "Group Bar",
+            terms: ["Group Bar Height", "Font Size", "Render Titles", "Stacked", "Text Color"]
+        },
+        {
+            page: 26,
+            pageLabel: "Hyprland Misc",
+            card: "Misc",
+            terms: ["Font Family", "VRR", "Swallow", "Focus On Activate", "Splash", "Force Default Wallpaper", "Middle Click Paste", "Disable Autoreload"]
+        },
+        {
+            page: 27,
+            pageLabel: "Hyprland Binds",
+            card: "Binds",
+            terms: ["Workspace Cycles", "Scroll Event Delay", "Drag Threshold", "Workspace Back And Forth", "Pass Mouse When Bound"]
+        },
+        {
+            page: 28,
+            pageLabel: "Hyprland Render",
+            card: "Render",
+            terms: ["Direct Scanout", "Color Management", "CM Auto HDR", "Use FP16", "Async Commit"]
+        },
+        {
+            page: 29,
+            pageLabel: "Hyprland Cursor",
+            card: "Cursor",
+            terms: ["Cursor Size", "Zoom Factor", "Inactive Timeout", "Hardware Cursors", "Hide On Touch", "Use CPU Buffer"]
+        },
+        {
+            page: 30,
+            pageLabel: "Hyprland Debug",
+            card: "Debug",
+            terms: ["Damage Tracking", "Disable Logs", "Overlay", "VFR", "Error Limit", "Stdout Logs"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Xwayland",
+            terms: ["Xwayland", "Force Zero Scaling", "Nearest Neighbor"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Layers",
+            terms: ["Layers Hog Keyboard Focus"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Ecosystem",
+            terms: ["Enforce Permissions", "Donation Nag", "Update News"]
+        },
     ]
     readonly property string query: searchField.text.trim()
 

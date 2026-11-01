@@ -12,6 +12,7 @@ import qs.Services
 
 import "./Components"
 import "./Pages"
+import "./Pages/Hyprland"
 
 LazyLoader {
     id: settingsLoader
@@ -169,6 +170,55 @@ LazyLoader {
                                     {
                                         icon: "info",
                                         label: qsTr("About")
+                                    }
+                                ]
+                            },
+                            {
+                                label: qsTr("Hyprland Configurations"),
+                                items: [
+                                    {
+                                        icon: "monitor",
+                                        label: qsTr("Monitors")
+                                    },
+                                    {
+                                        icon: "tune",
+                                        label: qsTr("General")
+                                    },
+                                    {
+                                        icon: "format_color_fill",
+                                        label: qsTr("Decoration")
+                                    },
+                                    {
+                                        icon: "sliders",
+                                        label: qsTr("Input")
+                                    },
+                                    {
+                                        icon: "columns",
+                                        label: qsTr("Group")
+                                    },
+                                    {
+                                        icon: "category",
+                                        label: qsTr("Misc")
+                                    },
+                                    {
+                                        icon: "settings",
+                                        label: qsTr("Binds")
+                                    },
+                                    {
+                                        icon: "aperture",
+                                        label: qsTr("Render")
+                                    },
+                                    {
+                                        icon: "select",
+                                        label: qsTr("Cursor")
+                                    },
+                                    {
+                                        icon: "code",
+                                        label: qsTr("Debug")
+                                    },
+                                    {
+                                        icon: "gear",
+                                        label: qsTr("Advanced")
                                     }
                                 ]
                             }
@@ -413,6 +463,114 @@ LazyLoader {
                             active: settingsLoader.currentPage === 20
                             visible: settingsLoader.currentPage === 20
                             sourceComponent: AboutPage {}
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 21
+                            visible: settingsLoader.currentPage === 21
+                            sourceComponent: MonitorsPage {}
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 22
+                            visible: settingsLoader.currentPage === 22
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "general"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 23
+                            visible: settingsLoader.currentPage === 23
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "decoration"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 24
+                            visible: settingsLoader.currentPage === 24
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "input"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 25
+                            visible: settingsLoader.currentPage === 25
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "group"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 26
+                            visible: settingsLoader.currentPage === 26
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "misc"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 27
+                            visible: settingsLoader.currentPage === 27
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "binds"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 28
+                            visible: settingsLoader.currentPage === 28
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "render"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 29
+                            visible: settingsLoader.currentPage === 29
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "cursor"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 30
+                            visible: settingsLoader.currentPage === 30
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "debug"
+                            }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 31
+                            visible: settingsLoader.currentPage === 31
+                            sourceComponent: HyprlandOptionsPage {
+                                category: "advanced"
+                            }
                         }
                     }
                 }
