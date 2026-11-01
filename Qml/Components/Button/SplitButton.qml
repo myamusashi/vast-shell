@@ -35,6 +35,7 @@ Item {
     property MenuIconComponent menuIcon: MenuIconComponent {}
     property bool              menuOpen: false
     property var               model: []
+    property bool              showScrollBar: false
     property string            text: ""
     property string            textRole: "text"
     property int               textSize: Appearance.fonts.size.normal
@@ -85,6 +86,7 @@ Item {
         isItemEnabled: root.isItemEnabled
         maxWidth: mainSegment.width
         model: root.model
+        showScrollBar: root.showScrollBar
         textRole: root.textRole
         onAboutToHide: root.menuOpen = false
         onAboutToShow: root.menuOpen = true
