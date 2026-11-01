@@ -267,8 +267,8 @@ namespace vast {
             return false;
 
         // Merge the selected text/html entries into a single plain-text paste,
-        // skipping images and files. Entry content is joined verbatim,
-        // text/html is never reformatted.
+        // skipping images and files. Html entries contribute their stripped
+        // text — markup never reaches the paste.
         QStringList parts;
         parts.reserve(ids.size());
 
@@ -285,9 +285,13 @@ namespace vast {
                 continue;
 
             const ClipboardEntry* entry = it.value();
-            if (entry->type == ClipboardType::Text || entry->type == ClipboardType::Html) {
+            if (entry->type == ClipboardType::Text) {
                 if (!entry->content.trimmed().isEmpty())
                     parts.append(entry->content.trimmed());
+            } else if (entry->type == ClipboardType::Html) {
+                const QString plain = QString::fromUtf8(WaylandDataControl::htmlToPlainText(entry->content.toUtf8()));
+                if (!plain.isEmpty())
+                    parts.append(plain);
             }
         }
 

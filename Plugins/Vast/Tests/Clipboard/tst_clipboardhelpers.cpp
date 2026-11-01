@@ -53,8 +53,11 @@ class TestClipboardHelpers : public QObject {
     void htmlToPlainTextStripsScriptAndStyle();
     void htmlToPlainTextConvertsBlockEndsToNewlines();
     void htmlToPlainTextTrimsResult();
+    void htmlToPlainTextStripsSpanAttributes();
+    void htmlToPlainTextDecodesEntities();
+    void htmlToPlainTextKeepsParagraphLines();
     void buildClipboardPayloadPreservesFormattedHtml();
-    void buildClipboardPayloadKeepsHtmlNewlinesVerbatim();
+    void buildClipboardPayloadKeepsHtmlNewlinesInPlainText();
 
     // vast::LoopbackGuard
     void loopbackGuardUnarmedNeverSuppresses();
@@ -200,26 +203,50 @@ void TestClipboardHelpers::htmlToPlainTextTrimsResult() {
     QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText("<b>  x  </b>")), QStringLiteral("x"));
 }
 
+void TestClipboardHelpers::htmlToPlainTextStripsSpanAttributes() {
+    // Styled spans (colors) must paste as their text only.
+    const QByteArray html = "<span style=\"color: rgb(112, 184, 255);\">grep</span> <span style=\"color: rgb(155, 233, 99);\">-n</span> -A6 file";
+    const QString    text = QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText(html));
+    QCOMPARE(text, QStringLiteral("grep -n -A6 file"));
+}
+
+void TestClipboardHelpers::htmlToPlainTextDecodesEntities() {
+    QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText("a &amp; b &lt;c&gt;")), QStringLiteral("a & b <c>"));
+}
+
+void TestClipboardHelpers::htmlToPlainTextKeepsParagraphLines() {
+    // ProseMirror-style markup: one <p> per line, attributes on the first tag.
+    const QByteArray html = "<p data-pm-slice=\"0 0 []\">vim.lsp.config(\"php_lsp\", {</p><p>    cmd = { \"php-lsp\" },</p><p>    filetypes = { \"php\" },</p><p>    root_markers "
+                            "= { \"composer.json\", \".git\" },</p><p>})</p><p></p>";
+    const QString    expected = QStringLiteral("vim.lsp.config(\"php_lsp\", {\n"
+                                                  "    cmd = { \"php-lsp\" },\n"
+                                                  "    filetypes = { \"php\" },\n"
+                                                  "    root_markers = { \"composer.json\", \".git\" },\n"
+                                                  "})");
+    QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText(html)), expected);
+}
+
 void TestClipboardHelpers::buildClipboardPayloadPreservesFormattedHtml() {
     const QByteArray html    = "<html>\n  <body>\n    <p>alpha</p>\n    <p>beta</p>\n  </body>\n</html>";
     const auto       payload = vast::WaylandDataControl::buildClipboardPayload(QStringLiteral("text/html"), html);
 
+    // text/html stays verbatim; plain-text targets get the stripped text.
     QCOMPARE(payload.value(QStringLiteral("text/html")), html);
-    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), html);
-    QCOMPARE(payload.value(QStringLiteral("text/plain")), html);
-    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), html);
+    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), QByteArray("alpha\nbeta"));
+    QCOMPARE(payload.value(QStringLiteral("text/plain")), QByteArray("alpha\nbeta"));
+    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), QByteArray("alpha\nbeta"));
 }
 
-void TestClipboardHelpers::buildClipboardPayloadKeepsHtmlNewlinesVerbatim() {
-    // Regression: literal newlines without block markup used to collapse onto
+void TestClipboardHelpers::buildClipboardPayloadKeepsHtmlNewlinesInPlainText() {
+    // Regression: literal newlines inside inline markup used to collapse onto
     // one line when the plain-text aliases were synthesized.
     const QByteArray html    = "<span>line1\nline2\nline3</span>";
     const auto       payload = vast::WaylandDataControl::buildClipboardPayload(QStringLiteral("text/html"), html);
 
     QCOMPARE(payload.value(QStringLiteral("text/html")), html);
-    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), html);
-    QCOMPARE(payload.value(QStringLiteral("text/plain")), html);
-    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), html);
+    QCOMPARE(payload.value(QStringLiteral("text/plain;charset=utf-8")), QByteArray("line1\nline2\nline3"));
+    QCOMPARE(payload.value(QStringLiteral("text/plain")), QByteArray("line1\nline2\nline3"));
+    QCOMPARE(payload.value(QStringLiteral("UTF8_STRING")), QByteArray("line1\nline2\nline3"));
 }
 
 void TestClipboardHelpers::loopbackGuardUnarmedNeverSuppresses() {

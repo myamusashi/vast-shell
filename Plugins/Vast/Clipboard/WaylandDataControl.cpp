@@ -486,14 +486,26 @@ namespace vast {
                                                    QRegularExpression::CaseInsensitiveOption | QRegularExpression::DotMatchesEverythingOption};
         static const QRegularExpression brRegex{QStringLiteral("<br\\s*/?>"), QRegularExpression::CaseInsensitiveOption};
         static const QRegularExpression blockRegex{QStringLiteral("</(p|div|li|tr|h[1-6]|pre|blockquote|section|article)>"), QRegularExpression::CaseInsensitiveOption};
+        static const QRegularExpression tagRegex{QStringLiteral("<(?:[^>\"']|\"[^\"]*\"|'[^']*')*>")};
+        // Only runs of multiple newlines (block boundaries plus formatting
+        // whitespace between tags) collapse to one; a single newline followed
+        // by spaces is line-break plus indentation and must survive.
+        static const QRegularExpression newlineRunRegex{QStringLiteral("(?:[^\\S\\n]*\\n){2,}[^\\S\\n]*")};
         text.remove(scriptRegex);
         text.remove(styleRegex);
         text.replace(brRegex, QStringLiteral("\n"));
         text.replace(blockRegex, QStringLiteral("\n"));
+        text.remove(tagRegex);
 
+        // A preformatted context keeps the source spacing so pasted code
+        // keeps its indentation, while QTextDocument still decodes entities.
         QTextDocument doc;
-        doc.setHtml(text);
-        return doc.toPlainText().trimmed().toUtf8();
+        doc.setHtml(QStringLiteral("<pre>") + text + QStringLiteral("</pre>"));
+        QString plain = doc.toPlainText();
+        plain.replace(u'\u2028', u'\n');
+        plain.replace(u'\u2029', u'\n');
+        plain.replace(newlineRunRegex, QStringLiteral("\n"));
+        return plain.trimmed().toUtf8();
     }
 
     void WaylandDataControl::readOfferAsync(int fd, std::function<void(QByteArray)> onRead) {
@@ -626,10 +638,19 @@ namespace vast {
         QHash<QString, QByteArray> payload;
         payload.insert(mimeType, content);
 
-        if (mimeType == QLatin1StringView{K_MIME_TEXT_UTF8} || mimeType == QLatin1StringView{K_MIME_TEXT} || mimeType == QLatin1StringView{K_MIME_HTML}) {
+        if (mimeType == QLatin1StringView{K_MIME_TEXT_UTF8} || mimeType == QLatin1StringView{K_MIME_TEXT}) {
             payload.insert(mimeTextUtf8(), content);
             payload.insert(mimeText(), content);
             payload.insert(mimeX11String(), content);
+        }
+
+        // The text/html payload stays verbatim for rich targets; plain-text
+        // targets receive only the stripped text so pastes never carry markup.
+        if (mimeType == QLatin1StringView{K_MIME_HTML}) {
+            const QByteArray plain = htmlToPlainText(content);
+            payload.insert(mimeTextUtf8(), plain.isEmpty() ? content : plain);
+            payload.insert(mimeText(), plain.isEmpty() ? content : plain);
+            payload.insert(mimeX11String(), plain.isEmpty() ? content : plain);
         }
 
         if (mimeType == QLatin1StringView{K_MIME_URI_LIST}) {
