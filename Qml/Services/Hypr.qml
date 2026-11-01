@@ -21,7 +21,7 @@ Singleton {
     }
     readonly property HyprlandMonitor   focusedMonitor: Hyprland.focusedMonitor
     readonly property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
-    readonly property bool              focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen
+    readonly property bool              focusedWsHasFullscreen: focusedWorkspace?.hasFullscreen ?? false
     readonly property var               monitors: Hyprland.monitors
     readonly property var               toplevels: Hyprland.toplevels
     readonly property var               toplevelsByWorkspace: {
