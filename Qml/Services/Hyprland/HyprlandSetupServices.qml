@@ -18,11 +18,15 @@ Singleton {
     readonly property string hyprConfigDir: `${Paths.configDir}/hypr`
     readonly property bool   onHyprland: Hyprland.usingLua
     readonly property string requireLine: "require(\"vast_shell\")"
+    readonly property string rulesLuaPath: `${hyprConfigDir}/vast_shell_rules.lua`
+    readonly property string rulesRequireLine: "require(\"vast_shell_rules\")"
     readonly property string vastShellLuaPath: `${hyprConfigDir}/vast_shell.lua`
 
     property string          cjsonState: "unknown"
     // vast_shell.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
     property string          luaFileState: "unknown"
+    // vast_shell_rules.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
+    property string          rulesLuaFileState: "unknown"
 
     onOnHyprlandChanged: {
         if (onHyprland && cjsonState === "unknown")
@@ -117,6 +121,103 @@ Singleton {
         hl.on("monitor.removed", applyMonitors)
     `
 
+    // Rules reader: registers every stored rule in JSON array order on every
+    // (re)load. No event listeners are needed because a reload rebuilds the Lua
+    // state and re-runs this file.
+    readonly property string rulesLuaTemplate: `
+        -- Created once by vast-shell; yours to edit. Reads ~/.config/vast-shell/*.json.
+        -- Adjust it if your lua-cjson lives elsewhere.
+        package.cpath = os.getenv("HOME") .. "/.config/hypr/?.so;" .. package.cpath
+        local ok, cjson = pcall(require, "cjson")
+        if not ok or not hl or not hl.window_rule or not hl.layer_rule then
+            return
+        end
+
+        local configDirectory = os.getenv("HOME") .. "/.config/vast-shell/"
+
+        -- lua-cjson decodes every JSON number as a float; integer-typed fields reject those.
+        local function normalizeNumbers(value)
+            if type(value) == "table" then
+                for key, item in pairs(value) do
+                    value[key] = normalizeNumbers(item)
+                end
+                return value
+            end
+            if type(value) == "number" then
+                return math.tointeger(value) or value
+            end
+            return value
+        end
+
+        local function readJson(fileName)
+            local file = io.open(configDirectory .. fileName, "r")
+            if not file then
+                return nil
+            end
+            local content = file:read("*a")
+            file:close()
+            local decodedOk, decoded = pcall(cjson.decode, content)
+            if not decodedOk or type(decoded) ~= "table" then
+                return nil
+            end
+            return normalizeNumbers(decoded)
+        end
+
+        local function isNull(value)
+            return value == nil or value == cjson.null
+        end
+
+        -- Copies entries into the rule, skipping nulls so an omitted or null field
+        -- never reaches Hyprland. JSON false is kept: effects like float = false
+        -- and decorate = false are meaningful.
+        local function fillTable(target, source)
+            for key, value in pairs(source or {}) do
+                if not isNull(value) then
+                    target[key] = value
+                end
+            end
+            return target
+        end
+
+        local function buildRule(entry)
+            if type(entry) ~= "table" then
+                return nil
+            end
+            local rule = {}
+            if type(entry.name) == "string" and entry.name ~= "" then
+                rule.name = entry.name
+            end
+            if entry.enabled == false then
+                rule.enabled = false
+            end
+            rule.match = fillTable({}, entry.match)
+            -- Hyprland ignores rules without match properties, so skip them outright.
+            if next(rule.match) == nil then
+                return nil
+            end
+            fillTable(rule, entry.effects)
+            return rule
+        end
+
+        local function applyRules(fileName, registerRule)
+            local data = readJson(fileName)
+            if not data or type(data.rules) ~= "table" then
+                return
+            end
+            -- ipairs keeps the JSON array order; effects are applied top to bottom
+            -- and the last matching rule wins.
+            for _, entry in ipairs(data.rules) do
+                local rule = buildRule(entry)
+                if rule then
+                    pcall(registerRule, rule)
+                end
+            end
+        end
+
+        applyRules("windowrules.json", hl.window_rule)
+        applyRules("layerrules.json", hl.layer_rule)
+    `
+
     function                 checkCjson(): void {
         if (!onHyprland || cjsonState === "checking")
             return;
@@ -128,11 +229,24 @@ Singleton {
         requireCopy.running = true;
     }
 
+    function                 copyRulesRequireLine(): void {
+        requireRulesCopy.running = true;
+    }
+
     function                 ensureLuaFile(): void {
         if (luaFileState !== "missing")
             return;
         luaFileState = "creating";
         luaFile.setText(luaTemplate);
+    }
+
+    // setText only runs in the "missing" state, exactly once.
+
+    function                 ensureRulesLuaFile(): void {
+        if (rulesLuaFileState !== "missing")
+            return;
+        rulesLuaFileState = "creating";
+        rulesLuaFile.setText(rulesLuaTemplate);
     }
 
     function                 reloadHyprland(): void {
@@ -161,6 +275,32 @@ Singleton {
             if (root.luaFileState === "creating") {
                 root.luaFileState = "missing";
                 ToastService.show(qsTr("Failed to create vast_shell.lua"), qsTr("Hyprland"), "warning", 3000);
+            }
+        }
+    }
+
+    FileView {
+        id: rulesLuaFile
+
+        path: root.rulesLuaPath
+        watchChanges: false
+        onLoaded: root.rulesLuaFileState = "exists"
+        onLoadFailed: err => {
+            if (err === FileViewError.FileNotFound) {
+                root.rulesLuaFileState = "missing";
+                root.ensureRulesLuaFile();
+            } else {
+                root.rulesLuaFileState = "unknown";
+            }
+        }
+        onSaved: {
+            if (root.rulesLuaFileState === "creating")
+                root.rulesLuaFileState = "created";
+        }
+        onSaveFailed: {
+            if (root.rulesLuaFileState === "creating") {
+                root.rulesLuaFileState = "missing";
+                ToastService.show(qsTr("Failed to create vast_shell_rules.lua"), qsTr("Hyprland"), "warning", 3000);
             }
         }
     }
@@ -199,6 +339,12 @@ Singleton {
         id: requireCopy
 
         command: ["sh", "-c", "printf '%s' 'require(\"vast_shell\")' | wl-copy"]
+    }
+
+    Process {
+        id: requireRulesCopy
+
+        command: ["sh", "-c", "printf '%s' 'require(\"vast_shell_rules\")' | wl-copy"]
     }
 
     Process {

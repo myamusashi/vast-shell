@@ -385,6 +385,18 @@ Item {
             card: "Ecosystem",
             terms: ["Enforce Permissions", "Donation Nag", "Update News"]
         },
+        {
+            page: 32,
+            pageLabel: "Window Rules",
+            card: "Rules",
+            terms: ["Window Rules", "Float Windows", "Opacity Rules", "Border Color", "Rounding", "Match Class", "Match Title", "Pin Windows", "Fullscreen Rule", "Suppress Events"]
+        },
+        {
+            page: 33,
+            pageLabel: "Layer Rules",
+            card: "Rules",
+            terms: ["Layer Rules", "Layer Blur", "Blur Bar", "Namespace", "Ignore Alpha", "Dim Around", "Blur Popups", "Above Lock", "No Screen Share"]
+        },
     ]
     readonly property string query: searchField.text.trim()
 

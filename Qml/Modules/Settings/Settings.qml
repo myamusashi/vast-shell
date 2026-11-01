@@ -193,7 +193,7 @@ LazyLoader {
                                         label: qsTr("Input")
                                     },
                                     {
-                                        icon: "columns",
+                                        icon: "view_column",
                                         label: qsTr("Group")
                                     },
                                     {
@@ -205,7 +205,7 @@ LazyLoader {
                                         label: qsTr("Binds")
                                     },
                                     {
-                                        icon: "aperture",
+                                        icon: "shutter_speed",
                                         label: qsTr("Render")
                                     },
                                     {
@@ -217,8 +217,16 @@ LazyLoader {
                                         label: qsTr("Debug")
                                     },
                                     {
-                                        icon: "gear",
+                                        icon: "data_object",
                                         label: qsTr("Advanced")
+                                    },
+                                    {
+                                        icon: "rule",
+                                        label: qsTr("Window Rules")
+                                    },
+                                    {
+                                        icon: "layers",
+                                        label: qsTr("Layer Rules")
                                     }
                                 ]
                             }
@@ -571,6 +579,22 @@ LazyLoader {
                             sourceComponent: HyprlandOptionsPage {
                                 category: "advanced"
                             }
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 32
+                            visible: settingsLoader.currentPage === 32
+                            sourceComponent: WindowRulesPage {}
+                        }
+
+                        Loader {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            active: settingsLoader.currentPage === 33
+                            visible: settingsLoader.currentPage === 33
+                            sourceComponent: LayerRulesPage {}
                         }
                     }
                 }
