@@ -162,7 +162,7 @@ Item {
         StyledText {
             color: root.showFailure ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
             font.pixelSize: Appearance.fonts.size.large
-            text: root.placeholderText !== "" ? root.placeholderText : (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password"))
+            text: root.placeholderText !== "" ? root.placeholderText : (root.pam ? (root.showFailure ? qsTr("Password invalid") : qsTr("Enter password")) : "")
         }
     }
 
