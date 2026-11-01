@@ -57,9 +57,11 @@ WlSessionLockSurface {
         background.blurRadius = 0;
         entranceSequence.restart();
     }
+
     function                        playExit() {
         exitSequence.start();
     }
+
     function                        refreshVideoColorSource() {
         if (!root.useVideoWallpaper)
             return;
@@ -74,6 +76,7 @@ WlSessionLockSurface {
             }
         });
     }
+
     function                        resetEffectiveWallpaper() {
         if (!root.useVideoWallpaper) {
             root.effectiveIsVideo   = false;
@@ -107,6 +110,7 @@ WlSessionLockSurface {
     }
 
     Connections {
+
         function onLockedChanged() {
             if (root.lock.locked)
                 root.playEntrance();
@@ -116,6 +120,7 @@ WlSessionLockSurface {
     }
 
     Connections {
+
         function onLaunchReady() {
             root.playExit();
         }

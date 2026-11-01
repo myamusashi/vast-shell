@@ -163,6 +163,7 @@ Item {
             }
 
             Connections {
+
                 function onIsUnlockedChanged() {
                     if (root.isUnlocked)
                         shapeDelegate.shape = MaterialShape.Circle;
@@ -226,9 +227,11 @@ Item {
     }
 
     Connections {
+
         function onCursorPositionChanged() {
             root.scrollToCursor();
         }
+
         function onTextChanged() {
             root.scrollToCursor();
         }

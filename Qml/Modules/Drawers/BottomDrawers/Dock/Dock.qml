@@ -43,6 +43,7 @@ Drawer {
         LauncherServices.query     = deepLink;
         GlobalStates.launcherQuery = "";
     }
+
     function                       syncReservedSpace(): void {
         if (!root.border.isFocusedMonitor)
             return;
@@ -80,6 +81,7 @@ Drawer {
     onReservedHeightChanged: syncReservedSpace()
 
     Connections {
+
         function onIsFocusedMonitorChanged() {
             root.syncReservedSpace();
         }
@@ -88,6 +90,7 @@ Drawer {
     }
 
     Connections {
+
         function onIsLauncherActiveChanged() {
             if (!root.isLauncherActive)
                 return;
@@ -105,6 +108,7 @@ Drawer {
     }
 
     Connections {
+
         function onIsLauncherQueryChanged() {
             if (!root.isLauncherActive || !root.border.isFocusedMonitor)
                 return;
@@ -116,6 +120,7 @@ Drawer {
     }
 
     Connections {
+
         function onIsWallpaperActiveChanged() {
             if (!root.isWallpaperActive) {
                 if (root.border.isFocusedMonitor)

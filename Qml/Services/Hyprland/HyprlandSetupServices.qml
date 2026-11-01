@@ -123,15 +123,18 @@ Singleton {
         cjsonState         = "checking";
         cjsonCheck.running = true;
     }
+
     function                 copyRequireLine(): void {
         requireCopy.running = true;
     }
+
     function                 ensureLuaFile(): void {
         if (luaFileState !== "missing")
             return;
         luaFileState = "creating";
         luaFile.setText(luaTemplate);
     }
+
     function                 reloadHyprland(): void {
         hyprctlReload.running = true;
     }

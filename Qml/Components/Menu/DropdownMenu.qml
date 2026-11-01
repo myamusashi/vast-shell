@@ -43,6 +43,7 @@ Popup {
         return win.height;
         // qmllint enable missing-property
     }
+
     function               availableSpaceBelow(): real {
         const win = anchorItem ? anchorItem.QsWindow.window : null;
         if (!win)
@@ -57,6 +58,7 @@ Popup {
         return win.height - (anchorItem.height + gap);
         // qmllint enable missing-property
     }
+
     function               resolvePlacement() {
         if (!anchorItem || !anchorItem.QsWindow.window || resolveGuard)
             return;
@@ -94,15 +96,19 @@ Popup {
     onOpened: resolvePlacement()
 
     Connections {
+
         function onHeightChanged() {
             root.resolvePlacement();
         }
+
         function onWidthChanged() {
             root.resolvePlacement();
         }
+
         function onXChanged() {
             root.resolvePlacement();
         }
+
         function onYChanged() {
             root.resolvePlacement();
         }

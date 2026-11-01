@@ -12,6 +12,7 @@ Singleton {
         if (reason === ConnectionFailReason.NoSecrets && showPsk)
             showPsk(network);
     }
+
     function iconFor(strength, locked) {
         const s  = strength ?? 0;
         var base = "";
@@ -27,6 +28,7 @@ Singleton {
             return "signal_wifi_0_bar";
         return locked ? base + "_locked" : base;
     }
+
     function sorted(networks) {
         return [...(networks ?? [])].sort((a, b) => {
             if (a.connected !== b.connected)
@@ -36,6 +38,7 @@ Singleton {
             return b.signalStrength - a.signalStrength;
         });
     }
+
     function tryConnect(network, showPsk) {
         if (!network || network.connected)
             return;

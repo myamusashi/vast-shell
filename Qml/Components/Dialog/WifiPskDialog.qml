@@ -30,6 +30,7 @@ DialogBox {
             passwordField.text  = "";
             passwordField.forceActiveFocus();
         }
+
         function      submit() {
             passwordBody.failed = false;
 
@@ -71,9 +72,11 @@ DialogBox {
         }
 
         Connections {
+
             function onAccepted() {
                 passwordBody.submit();
             }
+
             function onRejected() {
                 root.network = null;
             }
@@ -82,10 +85,12 @@ DialogBox {
         }
 
         Connections {
+
             function onConnectedChanged() {
                 if (root.network?.connected)
                     root.network = null;
             }
+
             function onConnectionFailed(reason) {
                 if (reason === ConnectionFailReason.NoSecrets)
                     passwordBody.markFailed();

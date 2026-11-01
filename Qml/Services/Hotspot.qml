@@ -40,6 +40,7 @@ Singleton {
         console.warn("[Hotspot] Error:", msg);
         ToastService.show(qsTr("[Hotspot] Error: %1").arg(msg), qsTr("Hotspot"), "network-wireless-hotspot-symbolic", 3000);
     }
+
     function                 start() {
         if (status === Hotspot.Status.Active || status === Hotspot.Status.Starting)
             return;
@@ -59,12 +60,14 @@ Singleton {
         createHotspot.command = ["bash", "-c", `nmcli con delete "Hotspot" 2>/dev/null; ` + `nmcli con add type wifi ifname ${hotspotInterface} ` + `con-name Hotspot autoconnect no ssid "${ssid}" ` + `mode ap ipv4.method shared ` + `wifi-sec.key-mgmt wpa-psk ` + `wifi-sec.psk "${password}" ` + `wifi.band ${band} ` + `wifi.channel ${channel}`];
         createHotspot.running = true;
     }
+
     function                 stop() {
         if (status !== Hotspot.Status.Active)
             return;
         status              = Hotspot.Status.Stopping;
         stopHotspot.running = true;
     }
+
     function                 toggle() {
         isActive ? stop() : start();
     }

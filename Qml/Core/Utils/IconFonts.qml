@@ -37,11 +37,13 @@ Singleton {
     function                 configuredPath(configured: string, fallback: string): string {
         return configured === undefined || configured === null || configured === "" ? fallback : configured;
     }
+
     function                 familyFor(iconType: string): string {
         const loader = iconType === "material" ? materialLoader : phosphorLoader;
 
         return loader.status === FontLoader.Ready ? loader.name : root.set(iconType).family;
     }
+
     function                 fontFileFor(iconType: string): string {
         const fontFile = root.set(iconType).fontFile ?? "";
         if (fontFile === "")
@@ -49,6 +51,7 @@ Singleton {
 
         return `file://${fontFile}?v=${root.reloadToken}`;
     }
+
     function                 isAvailable(iconType: string): bool {
         const set = root.set(iconType);
         if (set.fontFile)
@@ -56,20 +59,25 @@ Singleton {
 
         return Fonts.isAvailable(set.family);
     }
+
     function                 isLoaded(iconType: string): bool {
         const loader = iconType === "material" ? materialLoader : phosphorLoader;
         return loader.status === FontLoader.Ready;
     }
+
     function                 isPending(iconType: string): bool {
         const loader = iconType === "material" ? materialLoader : phosphorLoader;
         return loader.status === FontLoader.Loading;
     }
+
     function                 reload() {
         root.reloadToken++;
     }
+
     function                 set(iconType: string): var {
         return sets.find(entry => entry.id === iconType) ?? sets[0];
     }
+
     function                 sourceFor(iconType: string): string {
         return iconType === root.type ? root.fontFileFor(iconType) : "";
     }

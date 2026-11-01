@@ -28,6 +28,7 @@ Singleton {
     }
 
     Connections {
+
         function onVolumeChanged() {
             GlobalStates.showOSD("volume");
         }
@@ -36,11 +37,13 @@ Singleton {
     }
 
     IpcHandler {
+
         function appChange(id: int, delta: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
                 stream.audio.volume = VolumeUtils.clamp(stream.audio.volume + delta / 100);
         }
+
         function appList(): string {
             const streams         = Pipewire.nodes.values.filter(node => node.isStream);
             const streamSummaries = [];
@@ -55,44 +58,54 @@ Singleton {
                 });
             return JSON.stringify(streamSummaries);
         }
+
         function appMute(id: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
                 stream.audio.muted = true;
         }
+
         function appSet(id: int, percent: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
                 stream.audio.volume = VolumeUtils.fromPercent(percent);
         }
+
         function appToggleMute(id: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
                 stream.audio.muted = !stream.audio.muted;
         }
+
         function appUnmute(id: int): void {
             const stream = Pipewire.nodes.values.filter(node => node.isStream).find(node => node.id === id);
             if (stream)
                 stream.audio.muted = false;
         }
+
         function systemChange(delta: int): void {
             Pipewire.defaultAudioSink.audio.volume = VolumeUtils.clamp(Pipewire.defaultAudioSink.audio.volume + delta / 100);
         }
+
         function systemGet(): string {
             return JSON.stringify({
                 volume: Pipewire.defaultAudioSink.audio.volume,
                 muted: Pipewire.defaultAudioSink.audio.muted
             });
         }
+
         function systemMute(): void {
             Pipewire.defaultAudioSink.audio.muted = true;
         }
+
         function systemSet(percent: int): void {
             Pipewire.defaultAudioSink.audio.volume = VolumeUtils.fromPercent(percent);
         }
+
         function systemToggleMute(): void {
             Pipewire.defaultAudioSink.audio.muted = !Pipewire.defaultAudioSink.audio.muted;
         }
+
         function systemUnmute(): void {
             Pipewire.defaultAudioSink.audio.muted = false;
         }

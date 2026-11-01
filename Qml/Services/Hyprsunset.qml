@@ -13,6 +13,7 @@ Singleton {
         isNightModeOn          = false;
         killHyprsunset.running = true;
     }
+
     function      up(): void {
         isNightModeOn      = true;
         hyprsunset.running = true;

@@ -2775,27 +2775,34 @@ Singleton {
         }
         return cards;
     }
+
     function              choicesFor(path: string): var {
         return root.choicesByPath[path] ?? null;
     }
+
     function              descriptionFor(path: string): string {
         return root.descriptionsByPath[path] ?? "";
     }
+
     function              optionLabel(path: string): string {
         const name   = path.substring(path.lastIndexOf(".") + 1);
         const spaced = name.replace(/_/g, " ");
         return spaced.charAt(0).toUpperCase() + spaced.slice(1);
     }
+
     function              optionsForCard(category: string, card: string): var {
         return root.options.filter(option => option.category === category && option.card === card);
     }
+
     function              optionsForCategory(category: string): var {
         return root.options.filter(option => option.category === category);
     }
+
     function              pageLabel(key: string): string {
         const page = root.pages.find(candidate => candidate.key === key);
         return page ? page.label : key;
     }
+
     // Value meanings for small integer ranges, taken from the wiki's Limits and
     // Description columns (0.57.0). Options listed here get a SplitButton instead
     // of a number field.

@@ -58,6 +58,7 @@ Item {
             function              clampCurrentIndex() {
                 currentIndex = maxVisibleCount > 0 ? Math.max(0, Math.min(currentIndex, maxVisibleCount - 1)) : -1;
             }
+
             function              ensureCurrentVisible() {
                 if (currentIndex < 0)
                     return;
@@ -74,6 +75,7 @@ Item {
                 targetY                = Math.max(0, Math.min(targetY, verticalFlick.contentHeight - viewport));
                 verticalFlick.contentY = targetY;
             }
+
             function              moveCurrentIndexByPage(delta) {
                 const page    = currentPage;
                 const newPage = page + delta;
@@ -87,20 +89,25 @@ Item {
                 currentIndex    = Math.min(Math.max(pageStart + row, pageStart), pageEnd);
                 contentX        = newPage * width;
             }
+
             function              moveCurrentIndexDown() {
                 if (currentIndex < maxVisibleCount - 1)
                     currentIndex++;
             }
+
             function              moveCurrentIndexLeft() {
                 moveCurrentIndexByPage(-1);
             }
+
             function              moveCurrentIndexRight() {
                 moveCurrentIndexByPage(1);
             }
+
             function              moveCurrentIndexUp() {
                 if (currentIndex > 0)
                     currentIndex--;
             }
+
             function              visualSelectedIds(): var {
                 const ids   = [];
                 const start = Math.min(root.uiState.visualAnchor, currentIndex);

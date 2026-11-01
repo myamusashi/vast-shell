@@ -76,6 +76,7 @@ Item {
     }
 
     Connections {
+
         function onCapsLockChanged() {
             root.capsLockOn = KeylockState.capsLock;
             root.opacity    = 1;

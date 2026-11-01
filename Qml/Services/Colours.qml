@@ -47,6 +47,7 @@ Singleton {
     function                           clamp01(x) {
         return Math.min(1, Math.max(0, x));
     }
+
     function                           overlayColor(baseColor, targetColor, overlayOpacity) {
         if (overlayOpacity <= 0)
             // Impossible to influence the base
@@ -60,6 +61,7 @@ Singleton {
 
         return Qt.rgba(clamp01(r), clamp01(g), clamp01(b), 1.0);
     }
+
     function                           schemeEnum(name) {
         switch (name) {
         case "vibrant":
@@ -115,9 +117,11 @@ Singleton {
     }
 
     IpcHandler {
+
         function generate(imagePath: string, mode: string, scheme: string): string {
             return colorPreview.generate(imagePath, mode, scheme);
         }
+
         function generateFromColor(colorHex: string, mode: string, scheme: string): string {
             return colorPreview.generateFromColor(colorHex, mode, scheme);
         }

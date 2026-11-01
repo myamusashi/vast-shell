@@ -34,6 +34,7 @@ Item {
     onEntryIdChanged: requestPreview()
 
     Connections {
+
         function onFullEntryFailed(id) {
             if (id !== root.entryId)
                 return;
@@ -41,6 +42,7 @@ Item {
             entryDetails.loading = false;
             entryDetails.error   = true;
         }
+
         function onFullEntryReady(entry) {
             if (entry.id !== root.entryId)
                 return;

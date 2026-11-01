@@ -26,6 +26,7 @@ Singleton {
         const parts = basename.split(".");
         return parts.length > 1 ? parts.pop().toLowerCase() : "";
     }
+
     function        regenerateVideoThumbnail() {
         const videoPath = greeterConfig.videoWallpaper;
         if (!greeterConfig.useVideoWallpaper || videoPath === "" || lastRegenTarget === videoPath)
@@ -37,9 +38,11 @@ Singleton {
             root.thumbnailVersion++;
         });
     }
+
     function        thumbnailCachePathFor(path) {
         return GreeterWallpaper.thumbnailFor(path);
     }
+
     function        uploadStatic(path) {
         const extension = extensionOf(path);
         if (extension === "") {
@@ -50,6 +53,7 @@ Singleton {
         staticUpload.command = [Paths.projectRoot + "/Assets/shell/pkexec.sh", "sh", "-c", `mkdir -p /etc/vast-shell && cp -f ${JSON.stringify(path)} ${JSON.stringify(lastStaticTarget)}`];
         staticUpload.running = true;
     }
+
     function        uploadVideo(path) {
         const extension = extensionOf(path);
         if (extension === "") {

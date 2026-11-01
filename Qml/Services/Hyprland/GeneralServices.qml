@@ -21,9 +21,11 @@ Singleton {
     function               isCategoryDirty(category: string): bool {
         return root.canonical(root.pending[category] ?? {}) !== root.canonical(root.flatten(root.stored[category] ?? {}, ""));
     }
+
     function               pendingValue(category: string, leafPath: string): var {
         return root.pending[category]?.[leafPath];
     }
+
     function               resetFromDisk(): void {
         const fromDisk = adapter.generals ?? {};
         root.stored    = root.deepCopy(fromDisk);
@@ -32,11 +34,13 @@ Singleton {
             seeded[category] = root.flatten(root.stored[category], "");
         root.pending = seeded;
     }
+
     function               revertCategory(category: string): void {
         const next     = Object.assign({}, root.pending);
         next[category] = root.flatten(root.stored[category] ?? {}, "");
         root.pending   = next;
     }
+
     function               setPendingValue(category: string, leafPath: string, value: var): void {
         const next               = Object.assign({}, root.pending);
         next[category]           = Object.assign({}, next[category] ?? {});
@@ -67,6 +71,7 @@ Singleton {
     }
 
     // Writes only the given category's draft into generals.json, then reloads Hyprland.
+
     function               applyCategory(category: string): void {
         const draft = root.pending[category];
         if (draft === undefined)
@@ -81,9 +86,11 @@ Singleton {
         adapter.generals = root.deepCopy(next);
         generalsFile.writeAdapter();
     }
+
     function               deepCopy(value: var): var {
         return JSON.parse(JSON.stringify(value ?? {}));
     }
+
     function               flatten(value: var, prefix: string): var {
         const flat = {};
         for (const key of Object.keys(value ?? {})) {
@@ -95,6 +102,7 @@ Singleton {
         }
         return flat;
     }
+
     function               unflatten(flat: var): var {
         const nested = {};
         for (const path of Object.keys(flat ?? {})) {
@@ -109,7 +117,9 @@ Singleton {
         }
         return nested;
     }
+
     // Stable string form (sorted keys) so drafts and parsed files compare order-independently.
+
     function               canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
@@ -123,8 +133,10 @@ Singleton {
     }
 
     // qmllint disable
+
     function               reloadHyprland(): void {
         HyprlandSetupServices.reloadHyprland();
     }
+
     // qmllint enable
 }

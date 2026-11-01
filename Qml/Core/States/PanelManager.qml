@@ -39,12 +39,15 @@ Scope {
     function               closePanel(name) {
         setPanel(name, false);
     }
+
     function               openPanel(name) {
         setPanel(name, true);
     }
+
     function               setActiveDrawer(nextDrawer) {
         root.activeDrawer = nextDrawer;
     }
+
     function               setPanel(name, value) {
         if (root.exclusiveDrawers.includes(name)) {
             if (!value && root.activeDrawer !== name)
@@ -58,6 +61,7 @@ Scope {
         else
             console.warn("Unknown panel:", name);
     }
+
     function               togglePanel(name) {
         if (root.exclusiveDrawers.includes(name)) {
             setPanel(name, root.activeDrawer !== name);

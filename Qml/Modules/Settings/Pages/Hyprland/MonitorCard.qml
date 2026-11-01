@@ -36,24 +36,28 @@ Rectangle {
         setField("height", parsed.height);
         setField("refreshRate", parsed.refreshRate);
     }
+
     function                 commitFloat(field: string, text: string, min: real, max: real): void {
         const parsed = parseFloat(text);
         if (isNaN(parsed))
             return;
         setField(field, Math.min(Math.max(parsed, min), max));
     }
+
     function                 currentModeIndex(): int {
         return availableModes.findIndex(mode => {
             const parsed = MonitorServices.parseModeString(mode);
             return parsed !== null && parsed.width === (entry.width ?? -1) && parsed.height === (entry.height ?? -1) && Math.abs(parsed.refreshRate - (entry.refreshRate ?? 0)) < 0.01;
         });
     }
+
     function                 currentModeText(): string {
         const index = currentModeIndex();
         if (index >= 0)
             return availableModes[index];
         return `${entry.width ?? "?"}x${entry.height ?? "?"}@${entry.refreshRate ?? "?"}`;
     }
+
     function                 setField(field: string, value: var): void {
         MonitorServices.setField(modelData, field, value);
     }

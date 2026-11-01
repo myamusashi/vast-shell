@@ -25,9 +25,11 @@ Singleton {
         queuedMode      = "";
         queuedScheme    = "";
     }
+
     function               hasQueuedRender(): bool {
         return queuedWallpaper !== "";
     }
+
     function               render() {
         const templates = TemplateConfigs.templates;
         if (!templates || templates.length === 0) {
@@ -38,10 +40,12 @@ Singleton {
         const mode    = Configs.colors.isDarkMode ? "dark" : "light";
         requestRender(Paths.currentWallpaper, mode, Configs.colors.scheme);
     }
+
     function               reportRenderFailure() {
         console.warn("[Templates] render failed:", lastError);
         ToastService.show(qsTr("Template render failed"), qsTr("Templates"), "error", 5000);
     }
+
     function               requestRender(wallpaper: string, mode: string, scheme: string) {
         if (wallpaper === "")
             return;
@@ -56,6 +60,7 @@ Singleton {
         }
         startRender(wallpaper, mode, scheme);
     }
+
     function               resolvedOutputPath(template): string {
         if (!template)
             return "";
@@ -74,6 +79,7 @@ Singleton {
             return input.substring(0, input.length - 9);
         return `${input}.rendered`;
     }
+
     function               startQueuedRender() {
         if (!hasQueuedRender())
             return;
@@ -83,6 +89,7 @@ Singleton {
         clearQueuedRender();
         startRender(wallpaper, mode, scheme);
     }
+
     function               startRender(wallpaper: string, mode: string, scheme: string) {
         const command = ["vastctl", "colors", "render", "--wallpaper", wallpaper, "--mode", mode, "--scheme", scheme];
         if (Configs.colors.useStaticColors)
@@ -110,6 +117,7 @@ Singleton {
     }
 
     Connections {
+
         function onStaticTemplateColorsChanged(): void {
             if (!Configs.colors.useStaticColors)
                 return;
@@ -120,6 +128,7 @@ Singleton {
     }
 
     Connections {
+
         function onUseStaticColorsChanged(): void {
             root.render();
         }
@@ -128,6 +137,7 @@ Singleton {
     }
 
     Connections {
+
         function onTemplatesChanged(): void {
             if (root.renderPending)
                 root.render();

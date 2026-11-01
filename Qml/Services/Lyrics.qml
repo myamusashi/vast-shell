@@ -36,6 +36,7 @@ Singleton {
     Connections {
 
         // re-anchor so dead-reckoning stays accurate
+
         function onPlaybackStateChanged() {
             const p = Players.active;
             if (!p)
@@ -46,6 +47,7 @@ Singleton {
             }
             LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
         }
+
         function onPostTrackChanged() {
             const p = Players.active;
             if (!p)
@@ -59,6 +61,7 @@ Singleton {
     }
 
     Connections {
+
         function onIsQuickSettingsOpenChanged() {
             if (!GlobalStates.isQuickSettingsOpen)
                 return;

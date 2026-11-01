@@ -19,6 +19,7 @@ Singleton {
             return binary.split(".").pop();
         return (node.name ?? "").split(".").pop();
     }
+
     function                 guessIconPath(node: PwNode): string {
         if (!node)
             return root.fallbackSource;
@@ -27,6 +28,7 @@ Singleton {
             return root.iconSource(iconName);
         return root.iconForId(root.desktopId(node));
     }
+
     function                 iconForId(desktopId: string): string {
         if (!desktopId)
             return root.fallbackSource;
@@ -36,6 +38,7 @@ Singleton {
         }
         return root.iconSource(DesktopEntries.heuristicLookup(desktopId)?.icon);
     }
+
     function                 iconSource(value: string): string {
         if (!value)
             return root.fallbackSource;

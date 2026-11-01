@@ -15,6 +15,7 @@ Scope {
         else
             item.forceActiveFocus();
     }
+
     function      collect(item, out) {
         walk(item, out, []);
     }
@@ -24,6 +25,7 @@ Scope {
     // can pull focus back after a popup or another item took it. Making
     // this conditional on nothing being focused would silently turn
     // every later call into a no-op.
+
     function      firstFocus() {
         const list = focusables();
         if (list.length === 0)
@@ -33,6 +35,7 @@ Scope {
         else
             activate(list[0]);
     }
+
     function      focusables() {
         const list = [];
         collect(scope, list);
@@ -45,6 +48,7 @@ Scope {
         });
         return list;
     }
+
     function      isFocused(item) {
         if (!item)
             return false;
@@ -53,6 +57,7 @@ Scope {
         const winItem = item.window ? item.window.activeFocusItem : null;
         return winItem !== null && item.isAncestorOf(winItem);
     }
+
     function      move(delta) {
         const list = focusables();
         if (list.length === 0)
@@ -65,12 +70,15 @@ Scope {
         const target = ((index + delta) % list.length + list.length) % list.length;
         activate(list[target]);
     }
+
     function      next() {
         move(1);
     }
+
     function      previous() {
         move(-1);
     }
+
     function      walk(item, out, seen) {
         if (item === null || item === undefined || seen.indexOf(item) !== -1)
             return;
@@ -87,6 +95,7 @@ Scope {
         walkList(item.children, out, seen);
         walkList(item.data, out, seen);
     }
+
     function      walkList(list, out, seen) {
         if (list === null || list === undefined)
             return;

@@ -64,10 +64,12 @@ LazyLoader {
                 }
             }
         }
+
         function               clearSearch() {
             searchField.text = "";
             SearchEngine.clearFileResults();
         }
+
         function               goBack() {
             if (root.historyIndex > 0) {
                 root.historyIndex--;
@@ -75,6 +77,7 @@ LazyLoader {
                 fileListView.clearSelection();
             }
         }
+
         function               goForward() {
             if (root.historyIndex < root.history.length - 1) {
                 root.historyIndex++;
@@ -82,10 +85,12 @@ LazyLoader {
                 fileListView.clearSelection();
             }
         }
+
         function               goUp() {
             if (folderModel.parentFolder)
                 navigateTo(folderModel.parentFolder.toString().replace("file://", ""));
         }
+
         function               navigateTo(path: string): url {
             const url = path.startsWith("file://") ? path : "file://" + path;
 
@@ -100,11 +105,13 @@ LazyLoader {
             root.currentFolder = url;
             fileListView.clearSelection();
         }
+
         function               refresh() {
             var temp           = root.currentFolder;
             root.currentFolder = "file:///";
             root.currentFolder = temp;
         }
+
         function               runFileSearch() {
             const query = searchField.text;
             if (!root.searchVisible || query.length === 0) {
@@ -128,6 +135,7 @@ LazyLoader {
 
             SearchEngine.searchFilesAsync(root.searchedEntries, query);
         }
+
         function               toggleSearch() {
             root.searchVisible = !root.searchVisible;
             if (root.searchVisible)
@@ -186,6 +194,7 @@ LazyLoader {
         }
 
         Connections {
+
             function onWalkFinished(entries) {
                 root.searchedEntries = entries;
                 if (root.searchVisible && searchField.text.length > 0)

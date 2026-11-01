@@ -26,6 +26,7 @@ Scope {
     }
 
     Connections {
+
         function onIslandContentChanged(): void {
             if (GlobalStates.isDragAndDropActive)
                 DragAndDropServices.openIsland();

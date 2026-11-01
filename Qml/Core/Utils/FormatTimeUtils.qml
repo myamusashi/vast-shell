@@ -40,6 +40,7 @@ Singleton {
 
         return hours + ":" + minutes + " " + period;
     }
+
     function              convertTo12HourCompact(time24) {
         if (!time24)
             return "";
@@ -62,6 +63,7 @@ Singleton {
 
         return hours + period;
     }
+
     function              formatBattery(seconds) {
         if (!(seconds > 0))
             return qsTr("N/A");
@@ -72,6 +74,7 @@ Singleton {
         const remainingMinutes = minutes % 60;
         return remainingMinutes > 0 ? hours + qsTr(" h ") + remainingMinutes + qsTr(" min") : hours + qsTr(" h");
     }
+
     function              formatClipboard(ms) {
         if (!(ms > 0))
             return "";
@@ -80,6 +83,7 @@ Singleton {
             return "";
         return date.toLocaleString(Qt.locale(), "MMM d, hh:mm ap");
     }
+
     function              formatCompactAge(diffMs) {
         const minutes = Math.floor(diffMs / 60000);
         if (minutes < 1)
@@ -92,6 +96,7 @@ Singleton {
             return `${hours}h`;
         return `${minutes}m`;
     }
+
     function              formatDuration(seconds) {
         if (seconds === null || seconds === undefined || isNaN(seconds) || seconds <= 0)
             return "0:00";
@@ -104,6 +109,7 @@ Singleton {
             return h + ":" + String(m).padStart(2, "0") + ":" + ss;
         return m + ":" + ss;
     }
+
     function              formatFileDate(value) {
         if (value === undefined || value === null || value === "")
             return "";
@@ -112,6 +118,7 @@ Singleton {
             return "";
         return Qt.formatDateTime(date, "yyyy-MM-dd hh:mm");
     }
+
     function              formatSize(bytes) {
         if (!(bytes >= 0))
             return "";
@@ -123,6 +130,7 @@ Singleton {
             return (bytes / 1048576).toFixed(1) + " " + qsTr("MiB");
         return (bytes / 1073741824).toFixed(1) + " " + qsTr("GiB");
     }
+
     function              formatTimestamp(timestamp) {
         const date    = new Date(timestamp);
         const options = {
@@ -135,6 +143,7 @@ Singleton {
         };
         return date.toLocaleString('en-GB', options);
     }
+
     function              formatTimestampCustom(timestamp, format) {
         const date         = new Date(timestamp);
 
@@ -154,10 +163,12 @@ Singleton {
 
         return result;
     }
+
     function              formatTimestampRelative(timestamp) {
         const date = new Date(timestamp);
         return timeAgoWithIfElse(date);
     }
+
     function              formatTimestampShort(timestamp) {
         const date  = new Date(timestamp);
         const day   = String(date.getDate()).padStart(2, '0');
@@ -165,6 +176,7 @@ Singleton {
         const year  = date.getFullYear();
         return `${day}/${month}/${year}`;
     }
+
     function              formatTimestampWithTime(timestamp) {
         const date    = new Date(timestamp);
         const day     = String(date.getDate()).padStart(2, '0');
@@ -182,6 +194,7 @@ Singleton {
 
         return `${day} ${month} ${year}, ${hours}:${minutes} ${period}`;
     }
+
     function              timeAgoWithIfElse(timestamp) {
         const date    = new Date(timestamp);
         const seconds = Math.floor((new Date() - date) / 1000);

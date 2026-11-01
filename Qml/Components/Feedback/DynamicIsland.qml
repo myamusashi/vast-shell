@@ -17,6 +17,7 @@ LazyLoader {
         readonly property bool islandVisible: DynamicIslandService.hasContent || DynamicIslandService.closing
 
         // qmllint disable
+
         function               updateContentSize(): void {
             if (DynamicIslandService.closing)
                 return;
@@ -36,7 +37,9 @@ LazyLoader {
                 islandBox.contentHeight = newHeight;
             islandBox.measured = true;
         }
+
         // qmllint enable
+
         function               onClosingChanged(): void {
             if (DynamicIslandService.closing) {
                 islandBox.contentWidth  = 0;
@@ -67,15 +70,18 @@ LazyLoader {
         Component.onCompleted: Qt.callLater(updateContentSize)
 
         Connections {
+
             function onClosingChanged(): void {
                 if (DynamicIslandService.closing) {
                     islandBox.contentWidth  = 0;
                     islandBox.contentHeight = 0;
                 }
             }
+
             function onCurrentChanged(): void {
                 Qt.callLater(targetWindow.updateContentSize);
             }
+
             function onOverlayChanged(): void {
                 Qt.callLater(targetWindow.updateContentSize);
             }
@@ -84,9 +90,11 @@ LazyLoader {
         }
 
         Connections {
+
             function onImplicitHeightChanged(): void {
                 Qt.callLater(targetWindow.updateContentSize);
             }
+
             function onImplicitWidthChanged(): void {
                 Qt.callLater(targetWindow.updateContentSize);
             }
@@ -95,9 +103,11 @@ LazyLoader {
         }
 
         Connections {
+
             function onImplicitHeightChanged(): void {
                 targetWindow.updateContentSize();
             }
+
             function onImplicitWidthChanged(): void {
                 targetWindow.updateContentSize();
             }

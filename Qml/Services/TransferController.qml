@@ -80,11 +80,13 @@ Scope {
         droppedFiles = droppedFiles.concat(files);
         currentState = TransferController.State.FilesDropped;
     }
+
     function              beginObservation() {
         root.watchingTransfer     = false;
         observationTimer.interval = root.transferDwell;
         observationTimer.start();
     }
+
     function              completeTransfer() {
         observationTimer.stop();
         stallTimer.stop();
@@ -92,6 +94,7 @@ Scope {
             return;
         currentState = TransferController.State.Completed;
     }
+
     function              dismiss() {
         observationTimer.stop();
         stallTimer.stop();
@@ -108,19 +111,23 @@ Scope {
         maxPercent          = 0;
         currentState        = TransferController.State.Idle;
     }
+
     function              goBack() {
         if (currentState === TransferController.State.SelectingDevice || currentState === TransferController.State.ConfirmDevice)
             currentState = TransferController.State.FilesDropped;
     }
+
     function              goToConfirmation() {
         currentState = TransferController.State.ConfirmDevice;
     }
+
     function              goToDeviceSelection() {
         currentState = TransferController.State.SelectingDevice;
     }
 
     // One handoff in flight at a time, so every reply belongs to the file that
     // started it and Stop sending still has something to cancel.
+
     function              pumpNext() {
         root.handoffPending = false;
 
@@ -146,11 +153,13 @@ Scope {
         root.handoffPending = true;
         KdeConnectShare.share(root.selectedDevice.id, path);
     }
+
     function              recordFailure(kind) {
         root.failedCount++;
         if (root.failure === TransferController.Failure.None)
             root.failure = kind;
     }
+
     function              startTransfer() {
         if (currentState !== TransferController.State.ConfirmDevice)
             return;
@@ -160,6 +169,7 @@ Scope {
         root.cursor  = 0;
         root.pumpNext();
     }
+
     function              stopSending() {
         if (currentState !== TransferController.State.Transferring)
             return;
@@ -170,10 +180,12 @@ Scope {
     }
 
     Connections {
+
         function onShared(deviceId) {
             root.sentCount++;
             root.pumpNext();
         }
+
         function onShareFailed(deviceId, errorMessage) {
             root.recordFailure(TransferController.Failure.Unreachable);
             root.pumpNext();
@@ -183,6 +195,7 @@ Scope {
     }
 
     Connections {
+
         function onActiveChanged() {
             if (KDEConnectTransfer.active && !KDEConnectTransfer.receiving) {
                 if (!root.watchingTransfer) {
@@ -199,6 +212,7 @@ Scope {
             if (root.sawTransfer && !root.handoffPending)
                 root.completeTransfer();
         }
+
         function onPercentChanged() {
             if (KDEConnectTransfer.receiving)
                 return;

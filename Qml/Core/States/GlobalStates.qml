@@ -54,23 +54,29 @@ Singleton {
     function                 closePanel(name): void {
         panel.closePanel(name);
     }
+
     function                 hideOSD(name): void {
         osd.hide(name);
         if (osd.allHidden())
             cleanupTimer.start();
     }
+
     function                 isOSDVisible(name): bool {
         return osd.isActive(name);
     }
+
     function                 openPanel(name): void {
         panel.openPanel(name);
     }
+
     function                 pauseOSD(name): void {
         osd.pause(name);
     }
+
     function                 resumeOSD(name): void {
         osd.resume(name);
     }
+
     function                 setDragAndDropActive(value, silent): void {
         if (root.isDragAndDropActive === value)
             return;
@@ -79,6 +85,7 @@ Singleton {
             return;
         ToastService.show(qsTr("Drag and drop is active. Drop files onto the island to share them."), qsTr("Drag and Drop"), "application-vnd.oasis.opendocument.text", 5000);
     }
+
     function                 setPanel(name, value): void {
         if (name === "bar") {
             root.isBarOpen = value;
@@ -86,18 +93,22 @@ Singleton {
         }
         panel.setPanel(name, value);
     }
+
     function                 shareFilesViaKdeConnect(files): void {
         if (!files || files.length === 0)
             return;
         root.pendingShareFiles = files;
         root.setDragAndDropActive(true, true);
     }
+
     function                 showOSD(name): void {
         osd.show(name);
     }
+
     function                 toggleOSD(name): void {
         osd.toggle(name);
     }
+
     function                 togglePanel(name): void {
         if (name === "bar") {
             root.setPanel(name, !root.isBarOpen);
@@ -170,12 +181,15 @@ Singleton {
     }
 
     IpcHandler {
+
         function off(): void {
             Configs.idle.enabled = false;
         }
+
         function on(): void {
             Configs.idle.enabled = true;
         }
+
         function status(): bool {
             return Configs.idle.enabled;
         }
@@ -184,9 +198,11 @@ Singleton {
     }
 
     Connections {
+
         function onCapsLockChanged() {
             root.showOSD("capslock");
         }
+
         function onNumLockChanged() {
             root.showOSD("numlock");
         }
@@ -232,17 +248,21 @@ Singleton {
         required property string panelName
 
         property IpcHandler      ipc: IpcHandler {
+
             function close(): void {
                 root.closePanel(panelController.panelName);
             }
+
             function open(): void {
                 root.openPanel(panelController.panelName);
             }
+
             function openWith(query: string): void {
                 if (panelController.panelName === "launcher")
                     root.launcherQuery = query;
                 root.openPanel(panelController.panelName);
             }
+
             function toggle(): void {
                 root.togglePanel(panelController.panelName);
             }

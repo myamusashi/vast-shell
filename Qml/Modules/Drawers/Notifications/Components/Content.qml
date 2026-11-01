@@ -28,6 +28,7 @@ Column {
         modelData.sendInlineReply(text);
         replyField.text = "";
     }
+
     function               syncInlineReplyFocus(): void {
         const hasReply = root.modelData?.hasInlineReply ?? false;
         if (root.replyFocused && hasReply)

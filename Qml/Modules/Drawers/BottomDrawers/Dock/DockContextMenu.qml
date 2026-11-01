@@ -26,6 +26,7 @@ LazyLoader {
     function               closeMenu(): void {
         opened = false;
     }
+
     function               openAt(x: real, y: real, entry: var, toplevel: var): void {
         currentEntry    = entry;
         currentToplevel = toplevel;

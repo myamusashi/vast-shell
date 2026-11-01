@@ -17,6 +17,7 @@ Scope {
         wlCopy.imgPath = path;
         wlCopy.running = true;
     }
+
     function        saveResult(result, action) {
         if (!result || !result.saveToFile) {
             failed("Invalid grab result");

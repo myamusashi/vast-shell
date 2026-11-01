@@ -71,6 +71,7 @@ Scope {
         };
         delayTimer.running     = true;
     }
+
     function                 compositeAllCaptures() {
         multiCaptureWatchdog.stop();
         if (root.allScreenPaths.length === 0) {
@@ -85,14 +86,17 @@ Scope {
         }
         compositeLoader.active = true;
     }
+
     function                 copyToClipboard(img) {
         saver.copyFile(img);
     }
+
     function                 cropCapturedRegion(sourceUrl) {
         const crop        = root.selectionCropRect;
         cropEngine.active = true;
         cropEngine.item.doCrop(sourceUrl, crop.x, crop.y, crop.width, crop.height);
     }
+
     function                 freezeAllScreens(callback) {
         root.allScreenPaths      = [];
         root.captureDoneCallback = callback;
@@ -100,10 +104,12 @@ Scope {
         root.isMultiCapturing    = true;
         multiCaptureWatchdog.restart();
     }
+
     function                 getMonitors(callback) {
         const names = Quickshell.screens.map(s => s.name);
         callback(names);
     }
+
     function                 notifySaved(path): void {
         notify("Screenshot Saved", path, "normal", path, "Screenshot", [
             {
@@ -116,6 +122,7 @@ Scope {
             }
         ]);
     }
+
     function                 pickWindowForRecord(callback) {
         console.log("pickWindowForRecord: opening window picker for recording");
         root.pickForRecordCallback = callback;
@@ -124,6 +131,7 @@ Scope {
         Hyprland.refreshMonitors();
         root.windowPickerOpen = true;
     }
+
     function                 screenshotAllOutputs(action) {
         delayTimer.running   = false;
         delayTimer.pendingFn = null;
@@ -143,6 +151,7 @@ Scope {
         };
         delayTimer.running   = true;
     }
+
     function                 screenshotOutput(target, action) {
         delayTimer.running   = false;
         delayTimer.pendingFn = null;
@@ -162,6 +171,7 @@ Scope {
         };
         delayTimer.running           = true;
     }
+
     function                 screenshotSelection(action) {
         if (GlobalStates.isSelectionOpen)
             return;
@@ -178,6 +188,7 @@ Scope {
         root.selectionDragging = false;
         root.selectionOpen     = true;
     }
+
     function                 screenshotWindow(action) {
         console.log("screenshotWindow: opening window picker, action:", action);
         root.pickForRecordCallback = null;
@@ -423,6 +434,7 @@ Scope {
 
         activeAsync: false
         component: PanelWindow {
+
             function doCrop(sourceUrl, x, y, w, h) {
                 cropImage.sourceClipRect = Qt.rect(x, y, w, h);
                 cropImage.source         = sourceUrl;
@@ -746,6 +758,7 @@ Scope {
             }
 
             // True when the window rect intersects this overlay's screen.
+
             function      windowOverlapsPicker(at, size): bool {
                 if (!at || !size || size[0] <= 0 || size[1] <= 0)
                     return false;
@@ -823,6 +836,7 @@ Scope {
             }
 
             Connections {
+
                 function onToplevelsChanged() {
                     pickerRecalcTimer.restart();
                 }
@@ -831,6 +845,7 @@ Scope {
             }
 
             Connections {
+
                 function onRawEvent(event) {
                     const eventName = event.name;
                     if (["movewindow", "openwindow", "closewindow", "changefloatingmode"].includes(eventName))

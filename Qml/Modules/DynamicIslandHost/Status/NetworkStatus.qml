@@ -24,6 +24,7 @@ Scope {
 
     // NetworkManager reports the interface up before it lists the network it
     // joined, so the connect toast waits briefly for the SSID.
+
     function                 announceWifi() {
         if (root.wifiName !== "") {
             root.awaitingSsid = false;
@@ -36,6 +37,7 @@ Scope {
         root.awaitingSsid = true;
         ssidTimer.start();
     }
+
     function                 sync() {
         if (!root.sampled) {
             if (!root.ready)
@@ -91,9 +93,11 @@ Scope {
     }
 
     Connections {
+
         function onIsEthernetConnectedChanged() {
             root.sync();
         }
+
         function onWifiConnectedChanged() {
             root.sync();
         }

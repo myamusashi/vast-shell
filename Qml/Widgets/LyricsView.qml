@@ -188,6 +188,7 @@ Item {
         }
 
         Connections {
+
             function onLinesChanged() {
                 listView.positionViewAtBeginning();
             }

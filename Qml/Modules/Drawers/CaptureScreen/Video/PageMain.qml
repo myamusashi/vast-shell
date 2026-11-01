@@ -39,9 +39,11 @@ StyledRect {
     Component.onCompleted: root.updateAudioLabel()
 
     Connections {
+
         function onAudioDeviceChanged() {
             root.updateAudioLabel();
         }
+
         function onIncludeAudioChanged() {
             root.updateAudioLabel();
         }

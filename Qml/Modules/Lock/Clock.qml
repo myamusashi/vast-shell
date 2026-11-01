@@ -17,6 +17,7 @@ WrapperRectangle {
         const days = [qsTr("Sunday"), qsTr("Monday"), qsTr("Tuesday"), qsTr("Wednesday"), qsTr("Thuesday"), qsTr("Friday"), qsTr("Saturday")];
         return days[index];
     }
+
     function       getMonthName(index) {
         const months = [qsTr("Jan"), qsTr("Feb"), qsTr("Mar"), qsTr("Apr"), qsTr("Mei"), qsTr("Jun"), qsTr("Jul"), qsTr("Aug"), qsTr("Sep"), qsTr("Okt"), qsTr("Nov"), qsTr("Des")];
         return months[index];

@@ -41,6 +41,7 @@ LazyLoader {
         }
 
         Connections {
+
             function onActiveMenuChanged(): void {
                 if (root.trayRoot.activeMenu !== null)
                     Qt.callLater(() => menuSurface.openMenu(root.trayRoot.activeMenu)); // qmllint disable

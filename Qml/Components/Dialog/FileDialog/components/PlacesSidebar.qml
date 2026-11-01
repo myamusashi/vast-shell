@@ -18,6 +18,7 @@ Rectangle {
     function clearSelection() {
         placesList.currentIndex = -1;
     }
+
     function xdgPath(type) {
         const locs = StandardPaths.standardLocations(type);
         return locs.length > 0 ? locs[0].toString().replace("file://", "") : null;

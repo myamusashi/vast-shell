@@ -9,6 +9,7 @@ import qs.Core.Utils
 import "Weather/weatherData.js" as WD
 
 Singleton {
+
     function calculateDayLength(sunRise, sunSet) {
         if (!sunRise || !sunSet)
             return {
@@ -32,6 +33,7 @@ Singleton {
             };
         }
     }
+
     function dominantPollutant(pm25, pm10) {
         const pm25Ratio = pm25 / 15.0;
         const pm10Ratio = pm10 / 45.0;
@@ -43,13 +45,16 @@ Singleton {
             return "PM2.5";
         return "PM10";
     }
+
     function europeanAQIInfo(aqi) {
         return WD.getAQIInfo(aqi, WD.europeanAQI);
     }
+
     function forecastHour(entry) {
         const time = String(entry?.time || "").split(" ")[1] || entry?.time || "";
         return Number(String(time).split(":")[0]);
     }
+
     function formatDate(dateStr) {
         if (!dateStr)
             return "";
@@ -63,6 +68,7 @@ Singleton {
             return dateStr;
         }
     }
+
     function formatHourOfDay(timeStr) {
         if (!timeStr)
             return "";
@@ -73,6 +79,7 @@ Singleton {
             return timeStr;
         }
     }
+
     function healthRecommendation(euAQI, usAQI, pm25, pm10) {
         let maxAQI = euAQI;
         if (usAQI > 150)
@@ -89,6 +96,7 @@ Singleton {
             return "Avoid prolonged outdoor exertion. Everyone should reduce outdoor activities. Keep outdoor activities short and less strenuous.";
         return "Avoid all outdoor physical activities. Stay indoors, keep windows closed, and use air purifiers if available. Sensitive groups should remain indoors.";
     }
+
     function hourlyFromNow(forecast, currentMinutes) {
         const currentHour = Math.floor(currentMinutes / 60);
         return (forecast || []).filter(function (entry) {
@@ -96,6 +104,7 @@ Singleton {
             return isFinite(hour) && hour >= currentHour;
         });
     }
+
     function iconFor(code, isDayTime, dayIcons, nightIcons) {
         if (code === null || code === undefined)
             return WeatherIcon.windy;
@@ -104,9 +113,11 @@ Singleton {
             return nightIcons[codeStr];
         return dayIcons[codeStr] || WeatherIcon.windy;
     }
+
     function isCurrentForecastHour(entry, currentMinutes) {
         return forecastHour(entry) === Math.floor(currentMinutes / 60);
     }
+
     function moonPhaseText(phase) {
         switch (phase) {
         case "New Moon":
@@ -129,6 +140,7 @@ Singleton {
             return phase || qsTr("Unknown");
         }
     }
+
     function parseAstronomyTime(timeStr) {
         if (!timeStr)
             return "";
@@ -147,6 +159,7 @@ Singleton {
             return timeStr;
         }
     }
+
     function pressureTrendIcon(currentPressure, pressures, index) {
         const previous = index === 0 ? null : pressures?.[index - 1];
         const diff     = previous === null || previous === undefined ? 0 : currentPressure - previous;
@@ -154,6 +167,7 @@ Singleton {
             return "arrow_forward";
         return diff > 0 ? "arrow_upward" : "arrow_downward";
     }
+
     function quickSummary(data) {
         if (!data.weatherLoaded)
             return "";
@@ -263,12 +277,15 @@ Singleton {
         const finalParts = parts.slice(0, 4);
         return finalParts.length === 0 ? "" : finalParts[0] + "\n\n• " + finalParts.slice(1).join("\n\n• ");
     }
+
     function usAQIInfo(aqi) {
         return WD.getAQIInfo(aqi, WD.usAQI);
     }
+
     function uvCategoryIndex(index) {
         return uvCategoryInfo(index).index;
     }
+
     function uvCategoryInfo(index) {
         if (index <= 2)
             return {
@@ -295,12 +312,15 @@ Singleton {
             label: qsTr("Extreme")
         };
     }
+
     function uvCategoryLabel(index) {
         return uvCategoryInfo(index).label;
     }
+
     function weatherStatus(code) {
         return WD.statusTexts[code] || "Unknown";
     }
+
     function windDirectionText(degrees) {
         return WD.getWindDirection(degrees);
     }

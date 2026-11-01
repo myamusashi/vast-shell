@@ -178,6 +178,7 @@ Item {
     }
 
     Connections {
+
         function onShowFailureChanged() {
             if (root.auth.showFailure)
                 shakeAnimation.restart();

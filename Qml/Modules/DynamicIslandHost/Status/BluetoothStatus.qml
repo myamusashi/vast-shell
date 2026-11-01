@@ -27,6 +27,7 @@ Scope {
         else if (!after.connected && before.connected)
             StatusNotifications.notify("bluetooth_disabled", qsTr("Bluetooth disconnected"), after.name, "error");
     }
+
     function              buildSnapshot() {
         const map = {};
         for (const device of root.devices) {
@@ -39,10 +40,12 @@ Scope {
         }
         return map;
     }
+
     function              sample() {
         root.snapshot = root.buildSnapshot();
         root.sampled  = true;
     }
+
     function              sync() {
         if (!root.sampled) {
             // A host with no adapter enumerates an empty model forever, so the
@@ -84,12 +87,15 @@ Scope {
     }
 
     Connections {
+
         function onConnectedDevicesChanged() {
             root.sync();
         }
+
         function onPairedDevicesChanged() {
             root.sync();
         }
+
         function onPairingDevicesChanged() {
             root.sync();
         }

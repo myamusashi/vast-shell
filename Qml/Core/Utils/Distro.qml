@@ -186,12 +186,14 @@ Singleton {
     function                 ascii(id, idLike) {
         return match(id, idLike)?.ascii ?? qsTr("Unknown");
     }
+
     function                 icon(id, idLike) {
         return match(id, idLike)?.icon ?? fallbackIcon;
     }
 
     // An exact os-release ID wins over ID_LIKE, and an exact ID wins over an alias,
     // so derivatives keep their own logo.
+
     function                 match(id, idLike) {
         const tokens = `${id} ${idLike}`.toLowerCase().trim().split(/\s+/);
         return (tokens.map(token => art.find(entry => entry.name === token)).find(Boolean) ?? tokens.map(token => art.find(entry => entry.aliases?.includes(token))).find(Boolean));

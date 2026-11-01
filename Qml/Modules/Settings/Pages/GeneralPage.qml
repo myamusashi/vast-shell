@@ -12,6 +12,7 @@ import qs.Components.Base
 import "../Components"
 
 SettingsPageBase {
+
     function cleanExec(exec) {
         return exec.replace(/%[uUfFdDnNickvm]/g, "").replace(/--\S+/g, "").replace(/--/g, "").trim();
     }

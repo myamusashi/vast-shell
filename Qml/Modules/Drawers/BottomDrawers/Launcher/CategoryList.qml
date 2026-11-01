@@ -50,6 +50,7 @@ ListView {
     }
 
     Connections {
+
         function onActiveCategoryChanged() {
             const index = LauncherServices.categoryIndex(LauncherServices.activeCategory);
 

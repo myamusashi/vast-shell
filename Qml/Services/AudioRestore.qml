@@ -31,6 +31,7 @@ Scope {
         }
         profileRestoreTimer.start();
     }
+
     function               restoreProfiles() {
         const profiles = Configs.audio.sinkProfiles;
         if (!profiles || typeof profiles !== "object" || !cards)
@@ -59,6 +60,7 @@ Scope {
             }
         }
     }
+
     function               scheduleRestoreIfNeeded() {
         if (audioConnected && !restoring) {
             wasConnected = true;

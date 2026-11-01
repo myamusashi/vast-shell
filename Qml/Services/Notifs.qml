@@ -35,10 +35,12 @@ Singleton {
                 notif.close();
         }
     }
+
     function                      clearAll() {
         for (const notif of notifications.slice())
             notif.close();
     }
+
     function                      enforceNotificationLimit() {
         cleanupOldNotifications();
 
@@ -54,6 +56,7 @@ Singleton {
                 sortedNotifs[i].close();
         }
     }
+
     function                      forceCleanup() {
         const now = Date.now();
         for (const notif of notifications.slice()) {
@@ -238,6 +241,7 @@ Singleton {
         id: notif
 
         readonly property Connections connection: Connections {
+
             function onActionsChanged() {
                 notif.actions = notif.notification.actions.map(action => ({
                             identifier: action.identifier,
@@ -245,27 +249,35 @@ Singleton {
                             invoke: () => action.invoke()
                         }));
             }
+
             function onAppIconChanged() {
                 notif.appIcon = notif.notification.appIcon;
             }
+
             function onAppNameChanged() {
                 notif.appName = notif.notification.appName;
             }
+
             function onBodyChanged() {
                 notif.body = notif.notification.body;
             }
+
             function onClosed() {
                 notif.close();
             }
+
             function onExpireTimeoutChanged() {
                 notif.expireTimeout = notif.notification.expireTimeout;
             }
+
             function onHasActionIconsChanged() {
                 notif.hasActionIcons = notif.notification.hasActionIcons;
             }
+
             function onHasInlineReplyChanged() {
                 notif.hasInlineReply = notif.notification.hasInlineReply;
             }
+
             function onImageChanged() {
                 const raw = notif.notification.image ?? "";
 
@@ -285,15 +297,19 @@ Singleton {
                 } else
                     notif.image = raw;
             }
+
             function onInlineReplyPlaceholderChanged() {
                 notif.inlineReplyPlaceholder = notif.notification.inlineReplyPlaceholder;
             }
+
             function onResidentChanged() {
                 notif.resident = notif.notification.resident;
             }
+
             function onSummaryChanged() {
                 notif.summary = notif.notification.summary;
             }
+
             function onUrgencyChanged() {
                 notif.urgency = notif.notification.urgency;
             }
@@ -333,6 +349,7 @@ Singleton {
                 destroy();
             }
         }
+
         function                      closeQuiet() {
             closed = true;
             if (locks.size === 0 && root.notifications.includes(this)) {
@@ -343,12 +360,15 @@ Singleton {
                 destroy();
             }
         }
+
         function                      dismissPopup() {
             popup = false;
         }
+
         function                      lock(item) {
             locks.add(item);
         }
+
         function                      sendInlineReply(text) {
             const trimmed = text.trim();
 
@@ -357,6 +377,7 @@ Singleton {
 
             notification.sendInlineReply(trimmed);
         }
+
         function                      unlock(item) {
             locks.delete(item);
             if (closed)

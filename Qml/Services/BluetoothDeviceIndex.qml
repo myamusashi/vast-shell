@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 
 Singleton {
+
     function availableDevices(devices, adapter): var {
         if (!adapter)
             return [];
@@ -16,11 +17,13 @@ Singleton {
             return (a.name || a.address).localeCompare(b.name || b.address);
         });
     }
+
     function blockedDevices(devices, adapter): var {
         if (!adapter)
             return [];
         return [...devices].filter(d => d.adapter === adapter && d.blocked);
     }
+
     function connectedCount(devices, adapter): int {
         if (!adapter)
             return 0;
@@ -30,6 +33,7 @@ Singleton {
                 n++;
         return n;
     }
+
     function hasWhere(devices, adapter, key): bool {
         if (!adapter)
             return false;
@@ -38,6 +42,7 @@ Singleton {
                 return true;
         return false;
     }
+
     function pairedDevices(devices, adapter): var {
         if (!adapter)
             return [];

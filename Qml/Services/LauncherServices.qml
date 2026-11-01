@@ -116,6 +116,7 @@ Singleton {
         launch(row.entry);
         GlobalStates.closePanel("launcher");
     }
+
     function                 categoryIndex(categoryId: string): int {
         for (let index = 0; index < categoriesModel.count; index++) {
             if (categoriesModel.get(index).categoryId === categoryId)
@@ -124,6 +125,7 @@ Singleton {
 
         return -1;
     }
+
     function                 categoryRow(category: var): var {
         return {
             "categoryId": category.id,
@@ -132,6 +134,7 @@ Singleton {
             "resultCount": category.count
         };
     }
+
     function                 cycleCategory(step: int): void {
         const count = categoriesModel.count;
 
@@ -142,6 +145,7 @@ Singleton {
 
         activeCategory = categoriesModel.get(((current + step) % count + count) % count).categoryId;
     }
+
     function                 launch(entry: DesktopEntry): void {
         const terminalPrefix = entry.runInTerminal ? [Configs.generals.apps.terminal] : [];
 
@@ -150,6 +154,7 @@ Singleton {
             workingDirectory: entry.workingDirectory
         });
     }
+
     function                 matchesCategory(entry: DesktopEntry, categoryId: string): bool {
         if (categoryId === "")
             return true;
@@ -161,10 +166,12 @@ Singleton {
 
         return tokens.some(token => tokenOwners[token] === categoryId);
     }
+
     function                 reset(): void {
         query          = "";
         activeCategory = "";
     }
+
     function                 syncCategories(): void {
         for (let index = categoriesModel.count - 1; index >= 0; index--) {
             if (!rankedCategories.some(category => category.id === categoriesModel.get(index).categoryId))

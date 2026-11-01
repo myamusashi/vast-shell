@@ -17,6 +17,7 @@ import "../Base"
 Scope {
 
     IpcHandler {
+
         function open(header: string, description: string, icon: string, duration: int): void {
             ToastService.show(description, header, icon, duration);
         }

@@ -397,11 +397,13 @@ Item {
         activated(entry.page, entry.card);
         clear();
     }
+
     function                 clear() {
         searchField.text = "";
         results          = [];
         selectedIndex    = -1;
     }
+
     function                 runSearch() {
         if (query.length === 0) {
             results       = [];

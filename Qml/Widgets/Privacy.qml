@@ -121,6 +121,7 @@ RowLayout {
         }
 
         Connections {
+
             function onActiveAppNamesChanged() {
                 scrollAnim.stop();
                 scroller.scrollOffset = 0;

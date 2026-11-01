@@ -21,6 +21,7 @@ SettingsPageBase {
             return qsTr("lua-cjson was not found in Hyprland's embedded Lua (5.5). vast_shell.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell.lua).");
         return "";
     }
+
     function        luaFileText(): string {
         if (HyprlandSetupServices.luaFileState === "exists" || HyprlandSetupServices.luaFileState === "created")
             return qsTr("vast_shell.lua is set up.");

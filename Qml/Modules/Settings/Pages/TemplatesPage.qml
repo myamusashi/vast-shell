@@ -28,6 +28,7 @@ SettingsPageBase {
         });
         flushToConfig();
     }
+
     function           configEntries() {
         const entries = [];
         for (let index = 0; index < templateModel.count; index++) {
@@ -42,13 +43,16 @@ SettingsPageBase {
         }
         return entries;
     }
+
     function           flushToConfig() {
         TemplateConfigs.templates = configEntries();
     }
+
     function           removeTemplate(index) {
         templateModel.remove(index);
         flushToConfig();
     }
+
     function           saveField(index, role, value) {
         const entry = templateModel.get(index);
         if (entry[role] === value)
@@ -56,6 +60,7 @@ SettingsPageBase {
         templateModel.setProperty(index, role, value);
         flushToConfig();
     }
+
     function           seedFromConfig() {
         templateModel.clear();
         for (const template of TemplateConfigs.templates ?? []) {
@@ -73,6 +78,7 @@ SettingsPageBase {
     Component.onCompleted: seedFromConfig()
 
     Connections {
+
         function onTemplatesChanged(): void {
             if (JSON.stringify(root.configEntries()) === JSON.stringify(TemplateConfigs.templates ?? []))
                 return;

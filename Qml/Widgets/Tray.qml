@@ -33,12 +33,14 @@ StyledRect {
         root.menuShowing = false;
         hideT.restart();
     }
+
     function               finishClose(): void {
         closeT.stop();
         root.menuMapped     = false;
         root.activeIconItem = null;
         root.activeMenu     = null;
     }
+
     function               openMenuFor(item, iconItem): void {
         closeT.stop();
         hideT.stop();
@@ -54,6 +56,7 @@ StyledRect {
         root.menuShowing = true;
         root.menuMapped  = true;
     }
+
     function               scheduleClose(): void {
         if (!root.menuMapped)
             return;

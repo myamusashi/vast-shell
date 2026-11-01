@@ -39,6 +39,7 @@ Item {
         positionAnimation.to   = clampPosition(currentIndex);
         positionAnimation.restart();
     }
+
     function               applyWallpaper(path: string): void {
         if (path === "")
             return;
@@ -47,16 +48,20 @@ Item {
         else
             controller.setWallpaper(path, path);
     }
+
     function               clampPosition(value: real): real {
         return Math.max(0, Math.min(count - 1, value));
     }
+
     function               closenessOf(itemIndex: int): real {
         return Math.max(0, 1 - Math.abs(itemIndex - position));
     }
+
     function               jumpToCurrent(): void {
         positionAnimation.stop();
         position = clampPosition(currentIndex);
     }
+
     function               leftEdgeOf(itemIndex: int): real {
         let growth = 0;
         if (itemIndex > baseIndex)
@@ -65,17 +70,20 @@ Item {
             growth += fraction;
         return itemIndex * (smallWidth + Appearance.spacing.small) + (largeWidth - smallWidth) * growth;
     }
+
     function               moveCurrentIndex(step: int): void {
         if (count === 0)
             return;
         currentIndex = (currentIndex + step + count) % count;
     }
+
     function               selectCurrentWallpaper(): void {
         const list   = visibleWallpapers ?? [];
         const idx    = list.indexOf(Paths.currentWallpaper);
         currentIndex = idx !== -1 ? idx : 0;
         jumpToCurrent();
     }
+
     function               widthOf(itemIndex: int): real {
         return smallWidth + (largeWidth - smallWidth) * closenessOf(itemIndex);
     }
@@ -165,6 +173,7 @@ Item {
     }
 
     Connections {
+
         function onFilteredWallpaperListChanged(): void {
             root.selectCurrentWallpaper();
         }

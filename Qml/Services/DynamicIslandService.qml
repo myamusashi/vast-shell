@@ -21,6 +21,7 @@ Singleton {
             return;
         root.promoteOrClose();
     }
+
     function               _expireOverlay(): void {
         if (root.overlay === null || root.closing)
             return;
@@ -32,6 +33,7 @@ Singleton {
         root.overlay = null;
         root.promoteOrClose();
     }
+
     function               _finishClose(): void {
         closeTimer.stop();
         baseTimer.stop();
@@ -52,12 +54,14 @@ Singleton {
             }
         }
     }
+
     function               beginClose(): void {
         if (root.closing || (root.current === null && root.overlay === null))
             return;
         root.closing = true;
         closeTimer.restart();
     }
+
     function               dismiss(id): void {
         if (id === undefined || id === null) {
             dismissCurrent();
@@ -85,6 +89,7 @@ Singleton {
             }
         }
     }
+
     function               dismissCurrent(): void {
         if (root.current === null) {
             if (root.overlay === null)
@@ -102,6 +107,7 @@ Singleton {
         }
         promoteOrClose();
     }
+
     function               finishDismissedOverlay(): void {
         if (root.queue.length > 0) {
             var pending  = root.queue.slice();
@@ -117,6 +123,7 @@ Singleton {
             root.beginClose();
         }
     }
+
     function               promoteOrClose(): void {
         if (root.queue.length > 0) {
             var pending  = root.queue.slice();
@@ -134,6 +141,7 @@ Singleton {
 
     // Only an infinite base yields to a finite override (overlay). Every
     // other pairing queues behind the current content.
+
     function               show(content, duration): int {
         if (!content) {
             console.warn("[DynamicIsland] show called without content");

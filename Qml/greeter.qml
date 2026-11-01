@@ -44,6 +44,7 @@ ShellRoot {
     }
 
     Connections {
+
         function onLaunchReady() {
             if (rootFlow.launching)
                 return;
@@ -56,6 +57,7 @@ ShellRoot {
     }
 
     Connections {
+
         function onError() {
             sessionTimer.stop();
             rootFlow.launching = false;

@@ -34,6 +34,7 @@ Item {
     }
 
     Connections {
+
         function onValueChanged() {
             if (!Brightness.available)
                 return;

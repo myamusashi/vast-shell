@@ -30,6 +30,7 @@ Singleton {
     property alias weather: adapter.weather
 
     Connections {
+
         function onLanguageChanged() {
             TranslationManager.loadTranslation(root.language.language, Paths.translateFilePath);
         }

@@ -12,9 +12,11 @@ Singleton {
         const rows      = itemCount * rowHeight + Math.max(0, itemCount - 1) * spacing;
         return Math.min(maximum, rows);
     }
+
     function clampWidth(width, minimum, maximum) {
         return Math.min(maximum, Math.max(minimum, width));
     }
+
     function computeActiveWidth(items, measure, minimum, padding, emptyWidth) {
         const values = items ?? [];
         if (values.length === 0)
@@ -24,6 +26,7 @@ Singleton {
             width = Math.max(width, Number(measure(item)) || 0);
         return Math.max(minimum, width + padding);
     }
+
     function computeMaxWidth(items, measure, maximum, padding) {
         let width = 0;
         for (const item of items ?? [])

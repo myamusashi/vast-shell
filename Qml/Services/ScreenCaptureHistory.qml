@@ -24,6 +24,7 @@ Singleton {
         files.sort((a, b) => b.created - a.created);
         return files.slice(0, 10);
     }
+
     function           parseFileList(jsonText) {
         try {
             const lines = jsonText.trim().split('\n').filter(line => line.length > 0);
@@ -34,6 +35,7 @@ Singleton {
             return [];
         }
     }
+
     function           reloadFiles(): void {
         getScreenshotFilesMetadata.started();
         getScreenrecordFilesMetadata.started();

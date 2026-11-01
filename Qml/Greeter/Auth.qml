@@ -42,6 +42,7 @@ Scope {
             saveLastSession(session.command);
         Greetd.launch(rawCommand.split(" ").filter(part => part.length > 0));
     }
+
     function               saveLastSession(command) {
         if (lastSessionCommand === command)
             return;
@@ -50,6 +51,7 @@ Scope {
             command: [Paths.projectRoot + "/Assets/shell/last-session.sh", command]
         });
     }
+
     function               selectSession(index) {
         if (index < 0 || index >= sessions.count)
             return;
@@ -58,6 +60,7 @@ Scope {
         if (session && session.command)
             saveLastSession(session.command);
     }
+
     function               sessionIndexForCommand(command) {
         if (command === "")
             return -1;
@@ -67,6 +70,7 @@ Scope {
 
         return -1;
     }
+
     function               switchUser(username) {
         if (currentUser === username || unlockInProgress)
             return;
@@ -76,6 +80,7 @@ Scope {
         messageIsError = false;
         statusMessage  = "";
     }
+
     function               tryUnlock() {
         if (currentUser === "")
             return;
@@ -99,11 +104,13 @@ Scope {
     onLastSessionCommandChanged: selectSession(sessionIndexForCommand(lastSessionCommand))
 
     Connections {
+
         function onAuthFailure(message) {
             authFlow.fail();
             root.messageIsError = true;
             root.statusMessage  = message;
         }
+
         function onAuthMessage(message, error, responseRequired, echoResponse) {
             root.statusMessage  = message;
             root.messageIsError = error;
@@ -118,12 +125,14 @@ Scope {
                 }
             }
         }
+
         function onError(error) {
             root.launching = false;
             authFlow.fail();
             root.messageIsError = true;
             root.statusMessage  = error;
         }
+
         function onReadyToLaunch() {
             root.statusMessage = qsTr("Session Start");
             root.launchReady();

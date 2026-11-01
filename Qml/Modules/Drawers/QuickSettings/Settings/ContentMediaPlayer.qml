@@ -244,15 +244,18 @@ RowLayout {
             }
 
             Connections {
+
                 function onPositionChanged() {
                     LyricsProvider.setPlayback(Players.active.position, Players.active.rate, Players.active.isPlaying);
                 }
+
                 function onPostTrackChanged() {
                     if (LyricsProvider.currentLineIndex < 0)
                         lyricsView.listView.positionViewAtBeginning();
                     else
                         lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
                 }
+
                 function onTrackChanged() {
                     if (LyricsProvider.currentLineIndex < 0) {
                         LyricsProvider.fetch(Players.active.trackTitle, Players.active.trackArtist, Players.active.length);

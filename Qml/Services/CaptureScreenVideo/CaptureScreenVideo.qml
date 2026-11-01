@@ -46,21 +46,27 @@ Singleton {
     function                 all() {
         return deviceCache;
     }
+
     function                 byId(id) {
         return deviceCache.find(d => d.id === id) ?? null;
     }
+
     function                 byName(name) {
         return deviceCache.find(d => d.name === name) ?? null;
     }
+
     function                 checkActiveRecording() {
         checkProcess.running = true;
     }
+
     function                 cleanupFiles() {
         removePidFile.running = true;
     }
+
     function                 createThumbnail(videoPath, outputDir) {
         ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, outputDir), null);
     }
+
     function                 gotoLink(file, thumb, showNotification) {
         if (showNotification)
             CaptureNotify.sendNotification("Capture Saved", file, "normal", thumb ?? "", "screengrab", [
@@ -74,12 +80,15 @@ Singleton {
                 command: ["xdg-open", file]
             });
     }
+
     function                 inputs() {
         return deviceCache.filter(d => d.mediaClass === "source");
     }
+
     function                 monitors() {
         return deviceCache.filter(d => d.isMonitor);
     }
+
     function                 onRecordingStopped(videoPath) {
         ThumbnailQueue.generate(videoPath, ThumbnailQueue.pathFor(videoPath, thumbnailDir), (vp, tp) => {
             if (tp)
@@ -89,6 +98,7 @@ Singleton {
             gotoLink(vp, tp, false);
         });
     }
+
     function                 rebuild() {
         const m   = AudioDevicesWatcher.devices;
         const arr = [];
@@ -97,6 +107,7 @@ Singleton {
         deviceCache = arr;
         devicesChanged();
     }
+
     function                 recordSelection(geometry) {
         if (isRecording) {
             stopRecording();
@@ -104,6 +115,7 @@ Singleton {
         }
         startRecording(geometry, "");
     }
+
     function                 recordToplevel(appId) {
         if (isRecording) {
             stopRecording();
@@ -111,18 +123,22 @@ Singleton {
         }
         startRecordingToplevel(appId);
     }
+
     function                 saveHistory() {
         if (isRecording && recordingPid > 0) {
             recordingProcess.signal(10);
             CaptureNotify.sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
         }
     }
+
     function                 sinks() {
         return deviceCache.filter(d => d.mediaClass === "sink" && !d.isMonitor);
     }
+
     function                 sources() {
         return deviceCache.filter(d => d.mediaClass === "source" && !d.isMonitor);
     }
+
     function                 startRecording(geometry, output) {
         if (isRecording) {
             CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
@@ -152,6 +168,7 @@ Singleton {
         recordingProcess.command = args;
         recordingProcess.running = true;
     }
+
     function                 startRecordingToplevel(appId) {
         if (isRecording) {
             CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
@@ -181,6 +198,7 @@ Singleton {
         recordingProcess.command = args;
         recordingProcess.running = true;
     }
+
     function                 stopRecording() {
         if (!isRecording || recordingPid <= 0) {
             CaptureNotify.sendNotification("Recording Failed", "No active recording found.", "critical", "dialog-error", "Screen Record");
@@ -258,9 +276,11 @@ Singleton {
     }
 
     Connections {
+
         function onConnectedChanged() {
             root.rebuild();
         }
+
         function onDevicesChanged() {
             root.rebuild();
         }
@@ -382,15 +402,19 @@ Singleton {
     }
 
     IpcHandler {
+
         function start(): void {
             CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
         }
+
         function status(): bool {
             return CaptureScreenVideo.isRecording;
         }
+
         function stop(): void {
             CaptureScreenVideo.stopRecording();
         }
+
         function toggle(): void {
             CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
         }

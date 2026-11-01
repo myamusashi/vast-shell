@@ -47,6 +47,7 @@ Item {
         if (enabled && hasMenu)
             menu.open();
     }
+
     function                   toggleMenu() {
         if (!enabled || !hasMenu)
             return;

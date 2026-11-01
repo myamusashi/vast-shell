@@ -195,6 +195,7 @@ Elevation {
     }
 
     Connections {
+
         function onPercentageChanged() {
             const percentage = Math.round(UPower.displayDevice.percentage * 100);
             const levels     = Configs.generals.battery.warnLevels;
@@ -205,6 +206,7 @@ Elevation {
                 CaptureNotify.sendNotification(warn.title, warn.message, warn.level === percentage ? warn.urgency : "normal", warn.icon, "vast-shell", []);
             }
         }
+
         function onStateChanged() {
             if (UPower.displayDevice.state === UPowerDeviceState.Charging)
                 chargeFlash.restart();

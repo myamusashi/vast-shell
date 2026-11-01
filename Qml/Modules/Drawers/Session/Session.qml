@@ -161,6 +161,7 @@ Drawer {
                         }
 
                         Connections {
+
                             function onCurrentIndexChanged() {
                                 if (root.currentIndex === rectDelegate.index)
                                     iconDelegate.forceActiveFocus();

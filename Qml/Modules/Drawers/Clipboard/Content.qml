@@ -27,6 +27,7 @@ ColumnLayout {
         if (defaultFocusItem)
             defaultFocusItem.forceActiveFocus();
     }
+
     function               handleKey(event: var): void {
         if (!entryGrid || !entryGrid.entryList)
             return;
@@ -171,6 +172,7 @@ ColumnLayout {
             break;
         }
     }
+
     function               restoreFocus(): void {
         focusRestore.attempts = 0;
         focusRestore.restart();
@@ -201,6 +203,7 @@ ColumnLayout {
     }
 
     Connections {
+
         function onDeleteConfirmed(ids: var): void {
             const removed = ClipboardManager.removeMany(ids);
             if (removed > 0) {
@@ -211,6 +214,7 @@ ColumnLayout {
             root.uiState.visualActive        = false;
             entryGrid.entryList.currentIndex = Math.min(entryGrid.entryList.currentIndex, entryGrid.entryList.count - 1);
         }
+
         function onIsDeletePendingChanged() {
             if (root.uiState.isDeletePending || !GlobalStates.isClipboardOpen)
                 return;

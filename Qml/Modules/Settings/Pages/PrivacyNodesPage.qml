@@ -22,6 +22,7 @@ SettingsPageBase {
             value: ""
         });
     }
+
     function           flushToConfig() {
         const obj = {};
         for (let i = 0; i < privacyBlockListModel.count; i++) {
@@ -32,10 +33,12 @@ SettingsPageBase {
         }
         Configs.privacy.blockPrivacyListNodesName = obj;
     }
+
     function           removeEntry(i) {
         privacyBlockListModel.remove(i);
         flushToConfig();
     }
+
     function           seedFromConfig() {
         privacyBlockListModel.clear();
         const map = Configs.privacy.blockPrivacyListNodesName;

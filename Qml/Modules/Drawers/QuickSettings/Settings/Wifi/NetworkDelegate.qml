@@ -42,6 +42,7 @@ ClippingWrapperRectangle {
     }
 
     Connections {
+
         function onConnectionFailed(reason) {
             WifiUtils.handleConnectionFailed(root.network, reason, net => root.pskDialog.show(net));
         }

@@ -21,6 +21,7 @@ ColumnLayout {
         passwordInput.text = "";
         PolAgent.cancel();
     }
+
     function                 submit() {
         const response     = passwordInput.text;
 

@@ -52,6 +52,7 @@ ColumnLayout {
     }
 
     Connections {
+
         function onShowHolidaysChanged() {
             if (Configs.generals.showHolidays)
                 HolidayModel.ensureYear(root.currentYear);

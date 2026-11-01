@@ -24,6 +24,7 @@ SettingsPageBase {
         });
         flushToConfig();
     }
+
     function           flushToConfig() {
         const arr = [];
         for (let i = 0; i < timeoutsModel.count; i++) {
@@ -36,10 +37,12 @@ SettingsPageBase {
         }
         Configs.idle.timeouts = arr;
     }
+
     function           removeTimeout(i) {
         timeoutsModel.remove(i);
         flushToConfig();
     }
+
     function           seedFromConfig() {
         timeoutsModel.clear();
         for (const e of Configs.idle.timeouts)

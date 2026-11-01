@@ -22,6 +22,7 @@ Singleton {
         currentJob = null;
         startNext();
     }
+
     function               generate(videoPath, thumbnailPath, callback) {
         if (!videoPath || !thumbnailPath)
             return;
@@ -34,11 +35,13 @@ Singleton {
         });
         startNext();
     }
+
     function               pathFor(videoPath, outputDirectory) {
         const fileName = String(videoPath).split("/").pop();
         const dot      = fileName.lastIndexOf(".");
         return `${outputDirectory}/${dot > 0 ? fileName.substring(0, dot) : fileName}.png`;
     }
+
     function               startNext() {
         if (currentJob || queue.length === 0)
             return;

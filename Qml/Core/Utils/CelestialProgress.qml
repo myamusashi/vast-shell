@@ -22,6 +22,7 @@ Singleton {
             return -1;
         return hours * 60 + minutes;
     }
+
     function              progressBetween(rise, set) {
         const riseMinutes = minutesOf(rise);
         const setMinutes  = minutesOf(set);

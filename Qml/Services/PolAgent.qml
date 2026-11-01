@@ -10,6 +10,7 @@ Singleton {
     function                cancel(): void {
         agent.flow?.cancelAuthenticationRequest(); // qmllint disable
     }
+
     function                submit(response: string): void {
         agent.flow?.submit(response); // qmllint disable
     }

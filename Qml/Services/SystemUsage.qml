@@ -168,18 +168,23 @@ Singleton {
         previousData   = currentData;
         lastUpdateTime = currentTime;
     }
+
     function                 formatKB(kb) {
         return SystemInfoFormatter.formatKB(kb);
     }
+
     function                 formatSpeed(speedMBps) {
         return SystemInfoFormatter.formatSpeed(speedMBps, speedThresholds);
     }
+
     function                 formatUsage(usageMB) {
         return SystemInfoFormatter.formatUsage(usageMB);
     }
+
     function                 parseNetworkData(data) {
         return SystemInfoFormatter.parseNetworkData(data, wirelessInterface, wiredInterface);
     }
+
     function                 parsePerCoreCpu(data) {
         return SystemInfoFormatter.parsePerCoreCpu(data);
     }

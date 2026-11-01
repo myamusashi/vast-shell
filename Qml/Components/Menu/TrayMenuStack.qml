@@ -53,6 +53,7 @@ Drawer {
                     return;
                 pages = pages.concat(page);
             }
+
             function               openMenu(handle: var): void {
                 const page = pageAt(0);
                 if (!page) {
@@ -65,14 +66,17 @@ Drawer {
                 page.highlightedEntry    = null;
                 stackLayout.currentIndex = 0;
             }
+
             function               pageAt(level: int): var {
                 return level >= 0 && level < pages.length ? pages[level] : null;
             }
+
             function               popSubmenu(): void {
                 if (stackLayout.currentIndex <= 0)
                     return;
                 stackLayout.currentIndex -= 1;
             }
+
             function               pushSubmenu(entry: var): void {
                 if (!entry || !entry.hasChildren)
                     return;

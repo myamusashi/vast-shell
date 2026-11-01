@@ -29,6 +29,7 @@ RowLayout {
     spacing: Appearance.spacing.normal
 
     Connections {
+
         function onDisplaysChanged() {
             if (root.targetId !== "" && !Brightness.displays.some(d => d.id === root.targetId))
                 root.targetId = "";

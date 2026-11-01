@@ -21,18 +21,23 @@ Singleton {
     }
 
     IpcHandler {
+
         function clear(): bool {
             return ClipboardManager.clearAll();
         }
+
         function list(): string {
             return JSON.stringify(ClipboardManager.model.entries());
         }
+
         function remove(id: int): void {
             ClipboardManager.remove(id);
         }
+
         function search(query: string): void {
             ClipboardManager.model.setFilter(query);
         }
+
         function status(): string {
             return JSON.stringify({
                 enabled: ClipboardManager.enabled,
@@ -61,17 +66,20 @@ Singleton {
         function               cancelDelete(): void {
             pendingDeleteIds = [];
         }
+
         function               clearTransientState(): void {
             visualActive = false;
             if (ClipboardManager.model)
                 ClipboardManager.model.setFilter("");
         }
+
         function               confirmDelete(): void {
             const ids        = pendingDeleteIds;
             pendingDeleteIds = [];
             if (ids.length > 0)
                 deleteConfirmed(ids);
         }
+
         function               requestDelete(ids: var): void {
             if (ids.length === 0)
                 return;
@@ -80,6 +88,7 @@ Singleton {
     }
 
     Connections {
+
         function onIsClipboardOpenChanged() {
             uiState.clearTransientState();
             uiState.cancelDelete();

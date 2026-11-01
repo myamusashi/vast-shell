@@ -30,13 +30,16 @@ Scope {
     }
 
     IpcHandler {
+
         function isLocked(): bool {
             return lock.locked;
         }
+
         function lock(): void {
             lock.locked                   = true;
             GlobalStates.isLockscreenOpen = true;
         }
+
         function unlock(): void {
             lock.unlock();
         }

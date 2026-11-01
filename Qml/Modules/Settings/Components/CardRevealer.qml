@@ -24,6 +24,7 @@ Scope {
         }
         return null;
     }
+
     function                    refreshPending() {
         if (pendingTitle === "")
             return;
@@ -38,6 +39,7 @@ Scope {
     // The page layout may still be settling right after a page switch, so
     // the scroll target is re-applied on every contentHeight change until
     // it stays quiet, keeping the card pinned below the top margin.
+
     function                    reveal(cardTitle: string): bool {
         const card = findCard(container, cardTitle);
 
@@ -53,6 +55,7 @@ Scope {
         settleTimer.restart();
         return true;
     }
+
     function                    scrollToCard(card) {
         const y       = card.mapToItem(target.contentItem).y - Appearance.margin.large;
 
@@ -61,6 +64,7 @@ Scope {
     }
 
     Connections {
+
         function onContentHeightChanged() {
             root.refreshPending();
         }

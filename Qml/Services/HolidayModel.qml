@@ -35,6 +35,7 @@ Singleton {
         loading        = false;
         dataChanged();
     }
+
     function      ensureYear(year: int): void {
         if (loaded && cachedYear === year)
             return;
@@ -88,14 +89,17 @@ Singleton {
         req.open("GET", "https://tanggalmerah.upset.dev/api/holidays?year=" + year);
         req.send();
     }
+
     function      getHolidaysForDate(date: var): var {
         if (!loaded)
             return [];
         return holidaysByDate[isoDate(date)] || [];
     }
+
     function      hasHoliday(date: var): bool {
         return getHolidaysForDate(date).length > 0;
     }
+
     function      isoDate(date: var): string {
         if (typeof date === "string")
             return date;
@@ -104,6 +108,7 @@ Singleton {
         const d = String(date.getDate()).padStart(2, "0");
         return y + "-" + m + "-" + d;
     }
+
     function      nameForDate(date: var): string {
         const entries = getHolidaysForDate(date);
         if (entries.length === 0)
@@ -112,6 +117,7 @@ Singleton {
             return e.name;
         }).join(", ");
     }
+
     function      writeCache(json: var): void {
         fileView.setText(JSON.stringify(json, null, 0));
     }

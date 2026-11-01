@@ -20,19 +20,23 @@ Singleton {
     function               applyProfile(name: string) {
         BrightnessManager.applyProfile(name);
     }
+
     function               decreaseBrightness(amount: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, Math.max(0, value - Math.round(amount)));
     }
+
     function               increaseBrightness(amount: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, Math.min(100, value + Math.round(amount)));
     }
+
     function               profileNames(): var {
         return BrightnessManager.profileNames();
     }
+
     function               refresh() {
         const list = BrightnessManager.displays();
         displays   = list;
@@ -43,26 +47,33 @@ Singleton {
         const primary = list.find(d => d.id === primaryId);
         value         = primary ? primary.brightness : 0;
     }
+
     function               removeProfile(name: string) {
         BrightnessManager.removeProfile(name);
     }
+
     function               saveProfile(name: string, targets: var) {
         BrightnessManager.saveProfile(name, targets);
     }
+
     function               setBrightness(newValue: int) {
         if (!available)
             return;
         BrightnessManager.setBrightness(primaryId, newValue);
     }
+
     function               setBrightnessAll(percent: int) {
         BrightnessManager.setBrightnessAll(percent);
     }
+
     function               setBrightnessForDisplay(displayId: string, percent: int) {
         BrightnessManager.setBrightness(displayId, percent);
     }
+
     function               setBrightnessGroup(targets: var) {
         BrightnessManager.setBrightnessGroup(targets);
     }
+
     function               setBrightnessPercent(percent: int) {
         if (!available)
             return;
@@ -74,6 +85,7 @@ Singleton {
     })
 
     Connections {
+
         function onScreensChanged() {
             BrightnessManager.initialize();
         }
@@ -82,15 +94,18 @@ Singleton {
     }
 
     Connections {
+
         function onBrightnessChanged(displayId: string, percent: int) {
             root.displays = BrightnessManager.displays();
 
             if (displayId === root.primaryId)
                 root.value = percent;
         }
+
         function onDisplayListChanged() {
             root.refresh();
         }
+
         function onInitializationFailed(reason: string) {
             console.warn("BrightnessManager init failed:", reason);
             ToastService.show(qsTr("Brightness unavailable: %1").arg(reason), qsTr("Brightness"), "display-brightness-symbolic", 3000);
@@ -100,15 +115,18 @@ Singleton {
     }
 
     IpcHandler {
+
         function change(delta: int): void {
             const targets = {};
             for (const d of BrightnessManager.displays())
                 targets[d.id] = Math.max(0, Math.min(100, d.brightness + delta));
             BrightnessManager.setBrightnessGroup(targets);
         }
+
         function get(): string {
             return JSON.stringify(BrightnessManager.displays());
         }
+
         function set(percent: int): void {
             BrightnessManager.setBrightnessAll(percent);
         }

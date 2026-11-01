@@ -68,6 +68,7 @@ LazyLoader {
     }
 
     // Cell under a board-relative point, or -1 outside the grid.
+
     function                    cellAt(x: real, y: real): int {
         const column = Math.floor((x - root.cardPadding) / (root.cellSize + root.cellGap));
         const row    = Math.floor((y - root.cardPadding) / (root.cellSize + root.cellGap));
@@ -79,6 +80,7 @@ LazyLoader {
 
     // Freeze the hovered workspace's window list, so the board keeps showing it
     // after the pointer has left the dot.
+
     function                    latch(): void {
         const latched = root.latchOrder(root.toplevels);
         if (latched.length > 0 && latched.join() !== root.latchedOrder.join())
@@ -87,6 +89,7 @@ LazyLoader {
 
     // Snapshot the display order at open time, so it outlives the activation
     // the click is about to cause.
+
     function                    latchOrder(list: var): var {
         return [...(list ?? [])].slice(0, root.cells).map(toplevel => toplevel.address);
     }
@@ -129,6 +132,7 @@ LazyLoader {
         }
 
         Connections {
+
             function onDotHoveredChanged(): void {
                 if (root.dotHovered) {
                     closeTimer.stop();
@@ -138,6 +142,7 @@ LazyLoader {
                     root.grace = true;
                 }
             }
+
             function onShowingChanged(): void {
                 if (root.showing) {
                     hideTimer.stop();
@@ -147,6 +152,7 @@ LazyLoader {
                     hideTimer.restart();
                 }
             }
+
             function onToplevelsChanged(): void {
                 root.latch();
             }
@@ -288,6 +294,7 @@ LazyLoader {
         }
 
         ColumnLayout {
+
             function iconForToplevel(toplevel: var): string {
                 const windowClass = toplevel?.class;
                 const entry       = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;

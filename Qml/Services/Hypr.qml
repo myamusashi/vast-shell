@@ -56,9 +56,11 @@ Singleton {
     function                            dispatch(request: string): void {
         Hyprland.dispatch(request);
     }
+
     function                            monitorFor(screen: ShellScreen): HyprlandMonitor {
         return Hyprland.monitorFor(screen);
     }
+
     function                            rememberFocus(): void {
         const tl = Hyprland.activeToplevel;
         if (!tl?.activated)
@@ -72,6 +74,7 @@ Singleton {
         map[ws]                  = tl.address;
         root.lastFocusedToplevel = map;
     }
+
     function                            toplevelWorkspaceAddress(tl: var): string {
         if (!tl)
             return "";
@@ -93,6 +96,7 @@ Singleton {
         }
         return workspaceAddress(tl.workspace);
     }
+
     function                            workspaceAddress(ws: var): string {
         if (!ws)
             return "";
@@ -103,12 +107,14 @@ Singleton {
             return String(ws.id);
         return "";
     }
+
     function                            workspaceNumber(ws: var): int {
         const n = parseInt(workspaceAddress(ws), 10);
         return isNaN(n) ? -1 : n;
     }
 
     Connections {
+
         function onRawEvent(event: HyprlandEvent): void {
             const n = event.name;
             if (n.endsWith("v2"))
@@ -132,6 +138,7 @@ Singleton {
     }
 
     Connections {
+
         function onActivatedChanged(): void {
             root.rememberFocus();
         }

@@ -28,14 +28,17 @@ Singleton {
         };
         replaceTodos([...todos, entry]);
     }
+
     function      clearCompleted(date: var): void {
         const dateKey = date ? isoDate(date) : null;
         replaceTodos(todos.filter(todo => !(todo.done && (dateKey === null || todo.date === dateKey))));
     }
+
     function      forDate(date: var): var {
         const dateKey = isoDate(date);
         return todos.filter(todo => todo && todo.date === dateKey);
     }
+
     function      isoDate(date: var): string {
         if (typeof date === "string")
             return date;
@@ -44,9 +47,11 @@ Singleton {
         const day        = String(parsedDate.getDate()).padStart(2, "0");
         return `${parsedDate.getFullYear()}-${month}-${day}`;
     }
+
     function      nextId(): int {
         return todos.reduce((highestId, todo) => (todo && todo.id > highestId) ? todo.id : highestId, 0) + 1;
     }
+
     function      parseTodos(rawText: string): var {
         if (!rawText || !rawText.trim())
             return [];
@@ -58,17 +63,21 @@ Singleton {
             return [];
         }
     }
+
     function      patchTodo(id: int, changes: var): void {
         replaceTodos(todos.map(todo => todo.id === id ? Object.assign({}, todo, changes) : todo));
     }
+
     function      remove(id: int): void {
         replaceTodos(todos.filter(todo => todo.id !== id));
     }
+
     function      replaceTodos(updatedTodos: var): void {
         todos = updatedTodos;
         save();
         dataChanged();
     }
+
     function      save(): void {
         try {
             storage.setText(JSON.stringify(todos));
@@ -76,6 +85,7 @@ Singleton {
             console.warn("TodoModel: failed to save todos:", error);
         }
     }
+
     function      toggle(id: int): void {
         const todo = todos.find(entry => entry.id === id);
         if (todo)
@@ -83,6 +93,7 @@ Singleton {
                 done: !todo.done
             });
     }
+
     function      update(id: int, text: string): void {
         const trimmedText = (text || "").trim();
         if (trimmedText)

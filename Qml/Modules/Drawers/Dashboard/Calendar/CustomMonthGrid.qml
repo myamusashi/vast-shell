@@ -41,6 +41,7 @@ Item {
         }
         return cells;
     }
+
     function              closePopover() {
         openPopoverDate = null;
     }

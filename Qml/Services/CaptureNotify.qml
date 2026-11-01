@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Io
 
 Singleton {
+
     function sendNotification(summary, body, urgency, icon, app, actions) {
         const args = ["notify-send", "-a", app || "screengrab"];
         if (urgency && urgency !== "normal")

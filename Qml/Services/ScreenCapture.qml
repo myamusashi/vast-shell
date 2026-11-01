@@ -84,6 +84,7 @@ Singleton {
         if (!CaptureScreenVideo.isRecording)
             select.open();
     }
+
     function     recordWindow(): void {
         if (CaptureScreenVideo.isRecording) {
             CaptureScreenVideo.stopRecording();
@@ -95,9 +96,11 @@ Singleton {
                 CaptureScreenVideo.recordToplevel(appId);
         });
     }
+
     function     startRecording(output: string): void {
         CaptureScreenVideo.startRecording("", output);
     }
+
     function     stopRecording(): void {
         CaptureScreenVideo.stopRecording();
     }

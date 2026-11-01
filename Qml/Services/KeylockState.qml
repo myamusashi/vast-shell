@@ -10,9 +10,11 @@ Singleton {
     readonly property bool numLock: Keylock.numLock
 
     IpcHandler {
+
         function capslock(): bool {
             return KeylockState.capsLock;
         }
+
         function numlock(): bool {
             return KeylockState.numLock;
         }

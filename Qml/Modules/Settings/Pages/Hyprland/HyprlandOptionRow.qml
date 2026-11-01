@@ -31,6 +31,7 @@ SettingRow {
     function                 choiceIndex(): int {
         return choices === null ? -1 : choices.findIndex(choice => choice.value === currentValue);
     }
+
     function                 clampNumber(value: real): real {
         if (descriptor.min !== undefined && value < descriptor.min)
             return descriptor.min;
@@ -38,6 +39,7 @@ SettingRow {
             return descriptor.max;
         return value;
     }
+
     function                 commitGaps(uniformText: string, topText: string, leftText: string, rightText: string, bottomText: string): void {
         const sides   = {};
         let hasSide   = false;
@@ -57,33 +59,39 @@ SettingRow {
         if (!isNaN(uniform))
             writeValue(clampNumber(uniform));
     }
+
     function                 commitNumber(text: string): void {
         const parsed = descriptor.type === "int" ? parseInt(text, 10) : parseFloat(text);
         if (isNaN(parsed))
             return;
         writeValue(clampNumber(parsed));
     }
+
     function                 commitSliderValue(value: real): void {
         writeValue(descriptor.type === "int" ? Math.round(value) : Number(value.toFixed(4)));
     }
+
     function                 commitVec2(xText: string, yText: string): void {
         const current = Array.isArray(currentValue) ? currentValue : [0, 0];
         const x       = parseFloat(xText);
         const y       = parseFloat(yText);
         writeValue([isNaN(x) ? (current[0] ?? 0) : x, isNaN(y) ? (current[1] ?? 0) : y]);
     }
+
     function                 currentChoiceLabel(): string {
         const index = choiceIndex();
         if (index >= 0)
             return choices[index].label;
         return currentValue === null || currentValue === undefined ? "" : String(currentValue);
     }
+
     function                 currentEnumLabel(): string {
         const values  = descriptor.values;
         const index   = values.indexOf(String(currentValue ?? ""));
         const current = index >= 0 ? values[index] : String(currentValue ?? "");
         return current === "" ? qsTr("Default") : current;
     }
+
     function                 descriptionText(): string {
         const parts = [];
         const base  = HyprlandGeneralSchema.descriptionFor(descriptor.path);
@@ -93,18 +101,23 @@ SettingRow {
             parts.push(descriptor.note);
         return parts.join(" · ");
     }
+
     function                 enumIndex(): int {
         return descriptor.values.indexOf(String(currentValue ?? ""));
     }
+
     function                 gapSideText(side: string): string {
         return (currentValue !== null && typeof currentValue === "object" && !Array.isArray(currentValue)) ? String(currentValue[side] ?? "") : "";
     }
+
     function                 gapUniformText(): string {
         return typeof currentValue === "number" ? String(currentValue) : "";
     }
+
     function                 hasSliderRange(): bool {
         return descriptor.min !== undefined && descriptor.max !== undefined;
     }
+
     function                 isValidColor(text: string): bool {
         if (text === "")
             return true;
@@ -116,12 +129,14 @@ SettingRow {
             return true;
         return /^rgba?\(\d+(\.\d+)?(,\d+(\.\d+)?){2,3}\)$/.test(text);
     }
+
     function                 sliderDecimals(): int {
         if (descriptor.type === "int")
             return 0;
         const text = String(sliderStep());
         return text.includes(".") ? text.split(".")[1].length : 0;
     }
+
     function                 sliderStep(): real {
         if (descriptor.type === "int")
             return 1;
@@ -133,6 +148,7 @@ SettingRow {
         }
         return 10.0;
     }
+
     function                 swatchColor(value: var): color {
         if (typeof value !== "string" || value === "")
             return "transparent";
@@ -145,9 +161,11 @@ SettingRow {
             return "transparent";
         }
     }
+
     function                 vecComponent(index: int): string {
         return Array.isArray(currentValue) ? String(currentValue[index] ?? 0) : "0";
     }
+
     function                 writeValue(value: var): void {
         GeneralServices.setPendingValue(category, leafPath, value);
     }

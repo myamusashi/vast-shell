@@ -35,6 +35,7 @@ Singleton {
             return raw;
         }
     }
+
     function                 beginReceiving() {
         if (root.currentState !== KDEConnectReceive.State.Idle)
             return;
@@ -47,6 +48,7 @@ Singleton {
         root.currentState = KDEConnectReceive.State.Receiving;
         root.openIsland();
     }
+
     function                 dismiss() {
         dismissTimer.stop();
         if (root.islandRequestId >= 0)
@@ -71,6 +73,7 @@ Singleton {
     }
     // The window is the only end-of-transfer signal that always arrives; the
     // file name may show up before it or not at all.
+
     function                 finishReceiving() {
         if (root.currentState !== KDEConnectReceive.State.Receiving)
             return;
@@ -78,6 +81,7 @@ Singleton {
         root.showResult();
         dismissTimer.restart();
     }
+
     function                 openIsland() {
         if (root.islandContent === null)
             return;
@@ -86,6 +90,7 @@ Singleton {
             DynamicIslandService.dismiss(root.islandRequestId);
         root.islandRequestId = DynamicIslandService.show(root.islandContent, 0);
     }
+
     function                 recordFile(receivedDeviceId, destinationUrl) {
         root.deviceId     = receivedDeviceId;
         root.deviceName   = KDEConnect.deviceById(receivedDeviceId)?.name ?? "";
@@ -95,6 +100,7 @@ Singleton {
         root.showResult();
         dismissTimer.restart();
     }
+
     function                 showResult() {
         if (root.islandContent === null) {
             root.islandRequestId = -1;
@@ -112,6 +118,7 @@ Singleton {
     }
 
     Connections {
+
         function onAllDevicesChanged() {
             VUTILS.KdeConnectReceive.watchDevices(KDEConnect.allDevices.map(device => device.id));
         }
@@ -120,6 +127,7 @@ Singleton {
     }
 
     Connections {
+
         function onFileReceived(deviceId, destinationUrl) {
             root.recordFile(deviceId, destinationUrl);
         }
@@ -128,10 +136,12 @@ Singleton {
     }
 
     Connections {
+
         function onPercentChanged() {
             if (root.isReceiving)
                 root.maxPercent = Math.max(root.maxPercent, KDEConnectTransfer.percent);
         }
+
         function onReceivingChanged() {
             if (KDEConnectTransfer.receiving)
                 root.beginReceiving();

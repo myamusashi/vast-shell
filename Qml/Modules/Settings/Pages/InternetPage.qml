@@ -253,6 +253,7 @@ Item {
                                     }
 
                                     Connections {
+
                                         function onConnectionFailed(reason) {
                                             WifiUtils.handleConnectionFailed(networkDelegate.modelData, reason, net => wifiPskDialog.show(net));
                                         }

@@ -592,6 +592,7 @@ Item {
         Component.onCompleted: Qt.callLater(pushValue)
 
         Connections {
+
             function onCpuPercChanged() {
                 graph.pushValue();
             }
@@ -660,9 +661,11 @@ Item {
         }
 
         Connections {
+
             function onPointAdded(index) {
                 borderLine.append(dataPoints.at(index).x, dataPoints.at(index).y);
             }
+
             function onPointsRemoved(index, count) {
                 borderLine.removeMultiple(index, count);
             }

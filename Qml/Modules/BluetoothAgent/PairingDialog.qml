@@ -28,6 +28,7 @@ Scope {
         currentPasskey = "";
         currentUuid    = "";
     }
+
     function        nameForDisplay(): string {
         if (root.currentDeviceName && root.currentDeviceName.length > 0)
             return root.currentDeviceName;
@@ -70,6 +71,7 @@ Scope {
                     pinField.text = "";
                     root.clearState();
                 }
+
                 function       submit() {
                     if (root.currentMethod === "passkey") {
                         const raw = pinField.text.trim();
@@ -139,6 +141,7 @@ Scope {
                 }
 
                 Connections {
+
                     function onAccepted() {
                         if (root.currentMethod === "confirmation" || root.currentMethod === "authorization") {
                             bodyRoot.submit();
@@ -148,6 +151,7 @@ Scope {
                             root.displayActive = false;
                         }
                     }
+
                     function onRejected() {
                         if (root.displayActive) {
                             root.displayActive = false;
@@ -160,6 +164,7 @@ Scope {
                 }
 
                 Connections {
+
                     function onActiveChanged() {
                         if (!dialog.active)
                             return;
@@ -226,6 +231,7 @@ Scope {
     }
 
     Connections {
+
         function onAuthorizationRequested(devicePath, deviceName, uuid) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
@@ -233,6 +239,7 @@ Scope {
             root.currentUuid       = uuid;
             root.displayActive     = false;
         }
+
         function onConfirmationRequested(devicePath, deviceName, passkey) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
@@ -240,18 +247,21 @@ Scope {
             root.currentPasskey    = String(passkey).padStart(6, "0");
             root.displayActive     = false;
         }
+
         function onPairingCancelled(devicePath) {
             if (root.currentDevicePath === devicePath)
                 root.clearState();
             root.displayActive = false;
             displayTimer.stop();
         }
+
         function onPasskeyDisplayed(devicePath, passkey, entered) {
             root.displayPasskeyValue = String(passkey).padStart(6, "0");
             root.displayEntered      = entered;
             root.displayActive       = true;
             displayTimer.restart();
         }
+
         function onPasskeyRequested(devicePath, deviceName) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;
@@ -260,6 +270,7 @@ Scope {
             root.currentUuid       = "";
             root.displayActive     = false;
         }
+
         function onPinCodeRequested(devicePath, deviceName) {
             root.currentDevicePath = devicePath;
             root.currentDeviceName = deviceName;

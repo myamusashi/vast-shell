@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 
 Scope {
+
     function resolve(preferredDirection, availableAbove, availableBelow, desiredHeight, maxHeight, minVisibleRows, rowHeight, gap, windowHeight) {
         const minHeight       = Math.min(maxHeight, Math.max(80, minVisibleRows * rowHeight));
         let openUpward        = false;

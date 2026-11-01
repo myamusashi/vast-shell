@@ -36,12 +36,14 @@ Singleton {
     function               acceptDroppedFiles(files) {
         transferController.acceptDroppedFiles(files);
     }
+
     function               closeIsland() {
         if (root.islandRequestId < 0)
             return;
         DynamicIslandService.dismiss(root.islandRequestId);
         root.islandRequestId = -1;
     }
+
     function               dismiss() {
         const wasActive = GlobalStates.isDragAndDropActive;
         transferController.dismiss();
@@ -49,23 +51,29 @@ Singleton {
         if (wasActive)
             GlobalStates.setDragAndDropActive(false);
     }
+
     function               goBack() {
         transferController.goBack();
     }
+
     function               goToConfirmation() {
         transferController.goToConfirmation();
     }
+
     function               goToDeviceSelection() {
         transferController.goToDeviceSelection();
     }
+
     function               openIsland() {
         if (root.islandRequestId >= 0 || root.islandContent === null)
             return;
         root.islandRequestId = DynamicIslandService.show(root.islandContent, 0);
     }
+
     function               startTransfer() {
         transferController.startTransfer();
     }
+
     function               stopSending() {
         transferController.stopSending();
     }
@@ -98,6 +106,7 @@ Singleton {
     }
 
     Connections {
+
         function onIsDragAndDropActiveChanged() {
             if (GlobalStates.isDragAndDropActive) {
                 root.openIsland();
@@ -106,6 +115,7 @@ Singleton {
             transferController.dismiss();
             root.closeIsland();
         }
+
         function onPendingShareFilesChanged() {
             if (GlobalStates.pendingShareFiles.length === 0)
                 return;
@@ -117,6 +127,7 @@ Singleton {
     }
 
     Connections {
+
         function onCurrentStateChanged(): void {
             if (transferController.currentState === TransferController.State.Completed)
                 dismissTimer.start();
@@ -139,15 +150,19 @@ Singleton {
     }
 
     IpcHandler {
+
         function start(): void {
             GlobalStates.setDragAndDropActive(true);
         }
+
         function status(): bool {
             return GlobalStates.isDragAndDropActive;
         }
+
         function stop(): void {
             GlobalStates.setDragAndDropActive(false);
         }
+
         function toggle(): void {
             GlobalStates.setDragAndDropActive(!GlobalStates.isDragAndDropActive);
         }

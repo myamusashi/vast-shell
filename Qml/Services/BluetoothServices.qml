@@ -30,25 +30,31 @@ Singleton {
     function                           addressLine(device): string {
         return BluetoothDeviceFormatter.addressLine(device);
     }
+
     function                           displayName(device): string {
         return BluetoothDeviceFormatter.displayName(device);
     }
+
     function                           setDiscoverable(checked: bool): void {
         if (adapter)
             adapter.discoverable = checked;
     }
+
     function                           setDiscovering(checked: bool): void {
         if (adapter)
             adapter.discovering = checked;
     }
+
     function                           setEnabled(checked: bool): void {
         if (adapter)
             adapter.enabled = checked;
     }
+
     function                           setPairable(checked: bool): void {
         if (adapter)
             adapter.pairable = checked;
     }
+
     function                           stateString(device): string {
         return BluetoothDeviceFormatter.stateString(device);
     }

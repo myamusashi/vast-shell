@@ -32,6 +32,7 @@ Singleton {
     property int                        manualIndex: 0
 
     IpcHandler {
+
         function list(): string {
             const playerSummaries = [];
             const players         = root.players;
@@ -48,18 +49,23 @@ Singleton {
             }
             return JSON.stringify(playerSummaries);
         }
+
         function next(): void {
             root.active?.next();
         }
+
         function previous(): void {
             root.active?.previous();
         }
+
         function status(): bool {
             return root.active?.isPlaying;
         }
+
         function stop(): void {
             root.active?.stop();
         }
+
         function togglePlaying(): void {
             root.active?.togglePlaying();
         }

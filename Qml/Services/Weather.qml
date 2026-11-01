@@ -361,9 +361,11 @@ Singleton {
             data[field.key] = root[field.key];
         return data;
     }
+
     function               calculateDayLength() {
         return WeatherFormatter.calculateDayLength(sunRise, sunSet);
     }
+
     function               cleanupRequest(request) {
         if (request) {
             try {
@@ -375,6 +377,7 @@ Singleton {
             }
         }
     }
+
     function               fetchData(config) {
         const lat = parseFloat(configLatitude);
         const lon = parseFloat(configLongitude);
@@ -436,24 +439,31 @@ Singleton {
         request.open("GET", fullUrl);
         request.send();
     }
+
     function               forecastHour(entry) {
         return WeatherFormatter.forecastHour(entry);
     }
+
     function               formatDate(dateStr) {
         return WeatherFormatter.formatDate(dateStr);
     }
+
     function               formatHourOfDay(timeStr) {
         return WeatherFormatter.formatHourOfDay(timeStr);
     }
+
     function               getDominantPollutant(pm25, pm10) {
         return WeatherFormatter.dominantPollutant(pm25, pm10);
     }
+
     function               getEuropeanAQIInfo(aqi) {
         return WeatherFormatter.europeanAQIInfo(aqi);
     }
+
     function               getHealthRecommendation(euAQI, usAQI, pm25, pm10) {
         return WeatherFormatter.healthRecommendation(euAQI, usAQI, pm25, pm10);
     }
+
     function               getQuickSummary() {
         return WeatherFormatter.quickSummary({
             weatherLoaded: weatherLoaded,
@@ -470,33 +480,43 @@ Singleton {
             feelsLike: feelsLike
         });
     }
+
     function               getUSAQIInfo(aqi) {
         return WeatherFormatter.usAQIInfo(aqi);
     }
+
     function               getWeatherIconFromCode(code, isDayTime) {
         return WeatherFormatter.iconFor(code, isDayTime, weatherIcons, weatherIconsNight);
     }
+
     function               getWeatherStatus(code) {
         return WeatherFormatter.weatherStatus(code);
     }
+
     function               getWindDirectionText(degrees) {
         return WeatherFormatter.windDirectionText(degrees);
     }
+
     function               hourlyFromNow(forecast) {
         return WeatherFormatter.hourlyFromNow(forecast, CelestialProgress.nowMinutes);
     }
+
     function               isCurrentForecastHour(entry) {
         return WeatherFormatter.isCurrentForecastHour(entry, CelestialProgress.nowMinutes);
     }
+
     function               moonPhaseText(phase) {
         return WeatherFormatter.moonPhaseText(phase);
     }
+
     function               parseAstronomyTime(timeStr) {
         return WeatherFormatter.parseAstronomyTime(timeStr);
     }
+
     function               pressureTrendIcon(currentPressure, index) {
         return WeatherFormatter.pressureTrendIcon(currentPressure, hourlyForecast.map(entry => entry.pressure), index);
     }
+
     function               refresh() {
         if (canRefresh) {
             console.log("[WEATHER SERVICES] Refresh/reload weather data");
@@ -507,11 +527,13 @@ Singleton {
             return false;
         }
     }
+
     function               reload() {
         reloadWeather();
         reloadAQI();
         reloadAstronomy();
     }
+
     function               reloadAQI() {
         console.log("[WEATHER] Fetching AQI data from Open-Meteo...");
         fetchData({
@@ -522,6 +544,7 @@ Singleton {
             label: "AQI"
         });
     }
+
     function               reloadAstronomy() {
         console.log("[WEATHER] Fetching astronomy data from WeatherAPI.com...");
         var lat = parseFloat(configLatitude);
@@ -593,10 +616,12 @@ Singleton {
         request.open("GET", url);
         request.send();
     }
+
     function               reloadIfLoaded() {
         if (weatherLoaded || aqiLoaded || astronomyLoaded)
             reload();
     }
+
     function               reloadWeather() {
         console.log("[WEATHER] Fetching weather data from Open-Meteo...");
         fetchData({
@@ -607,10 +632,12 @@ Singleton {
             label: "Weather"
         });
     }
+
     function               restoreFromCache(data) {
         for (const field of weatherSchema)
             root[field.key] = data[field.key] ?? field.def;
     }
+
     function               updateAQIData(json) {
         try {
             var cur         = json.current || {}, hourly = json.hourly || {};
@@ -670,6 +697,7 @@ Singleton {
             aqiLoading = false;
         }
     }
+
     function               updateAstronomyData(json) {
         try {
             const astro         = json.astronomy?.astro || {}, loc = json.location || {};
@@ -699,6 +727,7 @@ Singleton {
             astronomyLoading = false;
         }
     }
+
     function               updateWeatherData(json) {
         try {
             var cur              = json.current || {}, hourly = json.hourly || {}, daily = json.daily || {};
@@ -790,9 +819,11 @@ Singleton {
             weatherLoading = false;
         }
     }
+
     function               uvCategoryIndex(index) {
         return WeatherFormatter.uvCategoryIndex(index);
     }
+
     function               uvCategoryLabel(index) {
         return WeatherFormatter.uvCategoryLabel(index);
     }

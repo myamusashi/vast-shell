@@ -428,6 +428,7 @@ StyledRect {
             }
 
             Connections {
+
                 function onPositionChanged() {
                     if (mediaHover.hovered || mediaPopup.popupHovered) {
                         const p = Players.active;
@@ -436,6 +437,7 @@ StyledRect {
                         LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
                     }
                 }
+
                 function onPostTrackChanged() {
                     const p = Players.active;
                     if (!p)

@@ -37,6 +37,7 @@ Singleton {
     function                       contentFor(kind) {
         return root[kind + "Content"];
     }
+
     function                       discardAll() {
         notifyTimer.stop();
         root.pendingKinds = [];
@@ -48,6 +49,7 @@ Singleton {
             }
         }
     }
+
     function                       discardKind(kind) {
         const id          = root.requestIdFor(kind);
         root.pendingKinds = root.pendingKinds.filter(k => k !== kind);
@@ -56,12 +58,14 @@ Singleton {
         DynamicIslandService.dismiss(id);
         root.setRequestId(kind, -1);
     }
+
     function                       fingerprint(nodes) {
         return nodes.map(pw => (pw ? pw.id + ":" + pw.name : "?")).sort().join("|");
     }
 
     // One show() per pending kind in fixed order. DynamicIslandService queues
     // finite requests behind a finite current, so simultaneous fires queue.
+
     function                       flushPending() {
         const pending     = root.pendingKinds;
         root.pendingKinds = [];
@@ -73,6 +77,7 @@ Singleton {
 
     // Only fires when the effective node set for the kind really changed.
     // A cleared kind dismisses its own request instead of notifying.
+
     function                       handleKindChanged(kind) {
         const key = root.fingerprint(root.nodesFor(kind));
         if (key === root.lastKeyFor(kind))
@@ -84,19 +89,23 @@ Singleton {
         }
         root.scheduleNotification(kind);
     }
+
     function                       isRequestLive(id) {
         return id >= 0 && (root.isRequestVisible(id) || root.isRequestQueued(id));
     }
+
     function                       isRequestQueued(id) {
         id = Number(id);
         return DynamicIslandService.queue.some(entry => entry.id === id);
     }
+
     function                       isRequestVisible(id) {
         id = Number(id);
         if (DynamicIslandService.current !== null && DynamicIslandService.current.id === id)
             return true;
         return DynamicIslandService.overlay !== null && DynamicIslandService.overlay.id === id;
     }
+
     function                       lastKeyFor(kind) {
         return root[kind + "Key"];
     }
@@ -104,20 +113,25 @@ Singleton {
     // "kind" is one of kindOrder ("screenshare" / "audioIn" / "audioOut"),
     // which is also the prefix used by each kind's Content/RequestId/Key
     // properties above.
+
     function                       nodesFor(kind) {
         return root[kind];
     }
+
     function                       refreshKeys() {
         for (const kind of root.kindOrder)
             root.setLastKey(kind, root.fingerprint(root.nodesFor(kind)));
     }
+
     function                       requestIdFor(kind) {
         return root[kind + "RequestId"];
     }
+
     function                       scheduleActiveKinds() {
         for (const kind of root.kindOrder)
             root.scheduleNotification(kind);
     }
+
     function                       scheduleNotification(kind) {
         if (root.contentFor(kind) === null || !root.privacyActive)
             return;
@@ -127,12 +141,15 @@ Singleton {
             root.pendingKinds = root.pendingKinds.concat([kind]);
         notifyTimer.restart();
     }
+
     function                       setLastKey(kind, key) {
         root[kind + "Key"] = key;
     }
+
     function                       setRequestId(kind, id) {
         root[kind + "RequestId"] = id;
     }
+
     function                       showKindNow(kind) {
         const content = root.contentFor(kind);
         if (content === null || root.nodesFor(kind).length === 0)
@@ -153,15 +170,18 @@ Singleton {
         }
         root.setRequestId(kind, DynamicIslandService.show(content, root.autoDismissMs));
     }
+
     function                       syncAllRequests() {
         for (const kind of root.kindOrder)
             root.syncRequest(kind);
     }
+
     function                       syncRequest(kind) {
         const id = root.requestIdFor(kind);
         if (id >= 0 && !root.isRequestLive(id))
             root.setRequestId(kind, -1);
     }
+
     function                       uniqueNames(nodes, blocked) {
         const map          = blocked ?? {};
         const blockedNames = Object.values(map);
@@ -198,12 +218,15 @@ Singleton {
     }
 
     Connections {
+
         function onCurrentChanged() {
             root.syncAllRequests();
         }
+
         function onOverlayChanged() {
             root.syncAllRequests();
         }
+
         function onQueueChanged() {
             root.syncAllRequests();
         }

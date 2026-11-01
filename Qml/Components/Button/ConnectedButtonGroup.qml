@@ -79,6 +79,7 @@ Item {
             if (target)
                 target.forceActiveFocus();
         }
+
         function                 select() {
             if (!root.enabled)
                 return;

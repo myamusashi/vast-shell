@@ -21,15 +21,18 @@ DialogBox {
         id: bodyPolkit
 
         Connections {
+
             function onAccepted() {
                 bodyPolkit.submit();
             }
+
             function onActiveChanged() {
                 if (!root.active)
                     return;
 
                 bodyPolkit.passwordInput.forceActiveFocus();
             }
+
             function onRejected() {
                 bodyPolkit.cancel();
             }

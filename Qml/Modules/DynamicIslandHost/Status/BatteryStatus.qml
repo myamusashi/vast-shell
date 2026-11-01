@@ -30,6 +30,7 @@ Scope {
 
         StatusNotifications.notify("battery_alert", qsTr("Battery low"), root.percentage + "%", "error");
     }
+
     function                    handleState(previous, next) {
         if (next === UPowerDeviceState.Discharging && previous !== UPowerDeviceState.Discharging)
             root.firedThresholds = [];
@@ -46,9 +47,11 @@ Scope {
             StatusNotifications.notify("power", qsTr("Charging stopped"), root.percentage + "%", "primary");
         }
     }
+
     function                    isPlugged(value) {
         return value === UPowerDeviceState.Charging || value === UPowerDeviceState.PendingCharge || value === UPowerDeviceState.FullyCharged;
     }
+
     function                    levelCrossed(current) {
         const crossed = root.lowThresholds.filter(threshold => current <= threshold && !root.firedThresholds.includes(threshold));
         if (crossed.length === 0)
@@ -58,11 +61,13 @@ Scope {
         root.firedThresholds = root.lowThresholds.filter(threshold => threshold >= lowest);
         return lowest;
     }
+
     function                    sample() {
         root.lastState = root.deviceState;
         root.sampled   = true;
         root.handlePercentage();
     }
+
     function                    sync() {
         if (!root.sampled) {
             if (root.ready)
@@ -91,12 +96,15 @@ Scope {
     }
 
     Connections {
+
         function onDeviceStateChanged() {
             root.sync();
         }
+
         function onPercentageChanged() {
             root.sync();
         }
+
         function onReadyChanged() {
             root.sync();
         }

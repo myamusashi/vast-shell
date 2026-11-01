@@ -32,6 +32,7 @@ Item {
             spacing: Appearance.spacing.normal
 
             Connections {
+
                 function onQueryChanged() {
                     if (LauncherServices.query !== search.text)
                         search.text = LauncherServices.query;

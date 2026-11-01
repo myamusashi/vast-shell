@@ -227,6 +227,7 @@ PopupWidget {
     }
 
     Connections {
+
         function onFilesystemNamesChanged() {
             diskInfo.syncFilesystems();
         }

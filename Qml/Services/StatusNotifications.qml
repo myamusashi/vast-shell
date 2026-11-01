@@ -24,6 +24,7 @@ Singleton {
             return true;
         return DynamicIslandService.queue.some(entry => entry.content === root.islandContent);
     }
+
     function              notify(icon, title, subtitle, tone) {
         const entry        = {
             icon: icon ?? "",
@@ -36,6 +37,7 @@ Singleton {
         root.pendingQueue  = deduplicated.concat([entry]).slice(-root.maxQueued);
         root.promoteIfIdle();
     }
+
     function              promoteIfIdle() {
         if (root.islandContent === null || root.pendingQueue.length === 0 || root.isLive())
             return;
@@ -47,12 +49,15 @@ Singleton {
     }
 
     Connections {
+
         function onCurrentChanged() {
             root.promoteIfIdle();
         }
+
         function onOverlayChanged() {
             root.promoteIfIdle();
         }
+
         function onQueueChanged() {
             root.promoteIfIdle();
         }

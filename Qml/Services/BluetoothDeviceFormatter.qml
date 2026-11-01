@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Bluetooth
 
 Singleton {
+
     function addressLine(device): string {
         if (!device)
             return "";
@@ -13,6 +14,7 @@ Singleton {
         const extra = device.pairing ? " · " + qsTr("Pairing…") : "";
         return addr + extra;
     }
+
     function cardIconName(hasAdapter, isPowered, hasConnected, discovering): string {
         if (!hasAdapter)
             return "bluetooth_disabled";
@@ -24,6 +26,7 @@ Singleton {
             return "bluetooth_searching";
         return "bluetooth";
     }
+
     function cardSubtitle(hasAdapter, isPowered, hasConnected, connectedCount, discovering): string {
         if (!hasAdapter)
             return qsTr("No adapter");
@@ -35,11 +38,13 @@ Singleton {
             return qsTr("Scanning…");
         return qsTr("On — not connected");
     }
+
     function displayName(device): string {
         if (!device)
             return "";
         return device.name || device.deviceName || device.address || "";
     }
+
     function headerSubtitle(adapterAvailable, adapterBlocked, adapterState, adapterEnabled, isDiscovering): string {
         if (!adapterAvailable)
             return qsTr("No Bluetooth adapter found");
@@ -53,6 +58,7 @@ Singleton {
             return qsTr("Bluetooth is off");
         return isDiscovering ? qsTr("Scanning…") : qsTr("Tap a device to connect");
     }
+
     function stateString(device): string {
         if (!device)
             return "";

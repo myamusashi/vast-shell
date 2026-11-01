@@ -31,6 +31,7 @@ Singleton {
     function                 isAvailable(family) {
         return genericFamilies.includes(family) || installedFamilies.includes(family);
     }
+
     function                 resolve(configured, fallback) {
         if (!configured)
             return fallback;

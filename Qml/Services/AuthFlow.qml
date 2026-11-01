@@ -18,15 +18,18 @@ Scope {
         inProgress = false;
         cancelled();
     }
+
     function        clear() {
         currentText = "";
         showFailure = false;
     }
+
     function        fail() {
         clear();
         showFailure = true;
         inProgress  = false;
     }
+
     function        submitSecret() {
         if (currentText === "")
             return false;

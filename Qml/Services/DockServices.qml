@@ -56,38 +56,46 @@ Singleton {
         }
         launchEntry(entry);
     }
+
     function               closeAllWindows(entryId: string): void {
         for (const toplevel of (Hypr.toplevels.values ?? Hypr.toplevels)) {
             if (entryForToplevel(toplevel)?.id === entryId)
                 toplevel?.wayland?.close();
         }
     }
+
     function               contentLength(availableWidth: real): real {
         const spacing      = Appearance.spacing.small;
         const toggleWidth  = Configs.dock.iconSlot + spacing * 2;
         const contentWidth = pinnedContentWidth + workspaceContentWidth + toggleWidth + spacing * 4 + 2;
         return Math.min(availableWidth, contentWidth);
     }
+
     function               entryForToplevel(toplevel: var): DesktopEntry {
         return DesktopEntries.heuristicLookup(toplevel?.lastIpcObject?.class ?? "");
     }
+
     function               focusToplevel(toplevel: var): void {
         const workspaceNumber = Workspaces.wsNumber(toplevel?.workspace);
         if (workspaceNumber > 0)
             Workspaces.switchWorkspace(workspaceNumber);
         toplevel?.wayland?.activate();
     }
+
     function               launchEntry(entry: var): void {
         LauncherServices.launch(entry);
     }
+
     function               setReservedBottomSpace(value: real): void {
         GlobalStates.reservedBottomSpace = value;
     }
+
     function               togglePin(entryId: string): void {
         const current           = Configs.dock.pinnedApps ?? [];
         const next              = current.includes(entryId) ? current.filter(id => id !== entryId) : [...current, entryId];
         Configs.dock.pinnedApps = next;
     }
+
     function               windowAddressKey(toplevel: var): int {
         const parsed = parseInt(toplevel?.address ?? "", 16);
 

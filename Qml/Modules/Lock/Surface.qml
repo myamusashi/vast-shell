@@ -50,19 +50,23 @@ WlSessionLockSurface {
         root.maskEntries[idx] = newEntry;
         root.maskedBuffer     = root.maskedBuffer.substring(0, unitOffset) + newEntry + root.maskedBuffer.substring(unitOffset + oldEntry.length);
     }
+
     function                        popMaskEntry() {
         if (root.maskEntries.length === 0)
             return;
         const entry       = root.maskEntries.pop();
         root.maskedBuffer = root.maskedBuffer.substring(0, root.maskedBuffer.length - entry.length);
     }
+
     function                        pushMaskEntry(entry) {
         root.maskEntries.push(entry);
         root.maskedBuffer += entry;
     }
+
     function                        randomMaskEntry() {
         return root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
     }
+
     function                        restoreStashedWorkspaceWindows() {
         const workspaceName = stashedWorkspaceName;
         const windowPids    = stashedWindowPids;
@@ -72,6 +76,7 @@ WlSessionLockSurface {
             });
         }
     }
+
     function                        stashFocusedWorkspaceWindows() {
         const workspaceName = Hypr.focusedWorkspace?.name ?? "";
         const toplevels     = (Hypr.toplevels.values ?? Hypr.toplevels).filter(toplevel => Hypr.toplevelWorkspaceAddress(toplevel) === workspaceName);
@@ -127,6 +132,7 @@ WlSessionLockSurface {
     }
 
     Connections {
+
         function onUnlock(): void {
             root.isClosing = true;
             unlockSequence.start();
@@ -136,6 +142,7 @@ WlSessionLockSurface {
     }
 
     Connections {
+
         function onShowFailureChanged() {
             if (root.pam.showFailure) {
                 root.showErrorMessage = true;

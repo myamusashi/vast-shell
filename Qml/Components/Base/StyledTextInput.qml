@@ -40,6 +40,7 @@ Item {
     function                forceActiveFocus() {
         passwordInput.forceActiveFocus();
     }
+
     function                requestKeyboardFocus() {
         passwordInput.forceActiveFocus();
     }
@@ -104,6 +105,7 @@ Item {
     }
 
     Connections {
+
         function onCurrentTextChanged() {
             if (passwordInput.text !== root.pam.currentText)
                 passwordInput.text = root.pam.currentText;

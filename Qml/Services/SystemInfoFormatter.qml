@@ -5,18 +5,22 @@ import QtQuick
 import Quickshell
 
 Singleton {
+
     function formatKB(kb) {
         return formatUsage(kb / 1024);
     }
+
     function formatSpeed(speedMBps, thresholds) {
         for (const threshold of thresholds)
             if (speedMBps < threshold.limit)
                 return threshold.format(speedMBps);
         return "0.00 MB/s";
     }
+
     function formatUsage(usageMB) {
         return usageMB < 1024 ? usageMB.toFixed(2) + " MB" : (usageMB / 1024).toFixed(2) + " GB";
     }
+
     function parseNetworkData(data, wirelessInterface, wiredInterface) {
         const lines      = data.split("\n");
         const interfaces = {};
@@ -38,6 +42,7 @@ Singleton {
         }
         return interfaces;
     }
+
     function parsePerCoreCpu(data) {
         const regex  = /^cpu(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)(?:\s+(\d+))?/gm;
         const result = {};

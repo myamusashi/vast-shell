@@ -25,12 +25,14 @@ Scope {
         frozenImageUrl               = "";
         GlobalStates.isSelectionOpen = false;
     }
+
     function        open() {
         startPos                     = Qt.point(0, 0);
         endPos                       = Qt.point(0, 0);
         selecting                    = false;
         GlobalStates.isSelectionOpen = true;
     }
+
     function        openCrossMonitor(frozenUrl) {
         mode           = "cross-monitor";
         frozenImageUrl = frozenUrl;

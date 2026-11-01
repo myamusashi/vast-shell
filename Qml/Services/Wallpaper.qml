@@ -33,6 +33,7 @@ Singleton {
         thumbnailChecker.command = args;
         thumbnailChecker.running = true;
     }
+
     function                 ensureThumbnail(path, force) {
         if (path === "" || !MediaKind.isVideo(path))
             return;
@@ -51,6 +52,7 @@ Singleton {
         requestThumbnailCheck(path); // unknown, stat the cache before spawning ffmpeg
         drainThumbnailChecks();
     }
+
     function                 generateThumbnail(path) {
         ThumbnailQueue.generate(path, MediaKind.videoThumbnailPathFor(path), (videoPath, thumbnailPath) => {
             const success = thumbnailPath !== "";
@@ -69,6 +71,7 @@ Singleton {
             root.markThumbnail(videoPath, success);
         });
     }
+
     function                 markThumbnail(path, exists) {
         const previous = thumbnailAvailability[path];
         if (path === "" || previous === exists)
@@ -88,11 +91,13 @@ Singleton {
         if (path === Paths.currentWallpaper)
             updateWallpaperColors(path);
     }
+
     function                 requestThumbnailCheck(path) {
         if (thumbnailCheckQueue.includes(path))
             return;
         thumbnailCheckQueue.push(path);
     }
+
     function                 requestThumbnailChecks() {
         for (const path of WallpaperFileModels.filteredWallpaperList) {
             if (!MediaKind.isVideo(path) || thumbnailAvailability[path] !== undefined)
@@ -101,6 +106,7 @@ Singleton {
         }
         drainThumbnailChecks();
     }
+
     function                 setVideoWallpaper(path) {
         if (path === "")
             return;
@@ -112,6 +118,7 @@ Singleton {
         pendingVideoPath = path;
         ensureThumbnail(path, true);
     }
+
     function                 setWallpaper(path, colorSource) {
         Quickshell.execDetached({
             command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
@@ -119,6 +126,7 @@ Singleton {
         if (colorSource !== "" && colorSourceImage)
             colorSourceImage.source = "file://" + colorSource + (MediaKind.isVideo(path) ? "?v=" + thumbnailVersion : "");
     }
+
     function                 updateWallpaperColors(path) {
         if (path === "" || !colorSourceImage)
             return;
@@ -129,6 +137,7 @@ Singleton {
     }
 
     Connections {
+
         function onFilteredWallpaperListChanged(): void {
             root.requestThumbnailChecks();
         }
@@ -137,6 +146,7 @@ Singleton {
     }
 
     Connections {
+
         function onCurrentWallpaperChanged(): void {
             root.ensureThumbnail(Paths.currentWallpaper);
             root.updateWallpaperColors(Paths.currentWallpaper);
@@ -147,9 +157,11 @@ Singleton {
     }
 
     Connections {
+
         function onIsDarkModeChanged(): void {
             TemplateServices.render();
         }
+
         function onSchemeChanged(): void {
             root.updateWallpaperColors(Paths.currentWallpaper);
             TemplateServices.render();
@@ -181,9 +193,11 @@ Singleton {
     }
 
     IpcHandler {
+
         function get(): string {
             return Paths.currentWallpaper;
         }
+
         function set(path: string): void {
             if (!MediaKind.isVideo(path))
                 ImageCache.preload(path, Qt.size(Screen.width, Screen.height));

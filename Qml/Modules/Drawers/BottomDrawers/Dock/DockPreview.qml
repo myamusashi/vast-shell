@@ -65,6 +65,7 @@ LazyLoader {
         DockServices.focusToplevel(toplevel);
         root.closePopup();
     }
+
     function                    closePopup(): void {
         root.iconHovered        = false;
         root.popupPointerInside = false;
@@ -72,6 +73,7 @@ LazyLoader {
         if (root.closeTimerRef)
             root.closeTimerRef.stop();
     }
+
     function                    iconExited(entryId: string): void {
         if (root.hoveredEntryId !== entryId)
             return;
@@ -80,14 +82,17 @@ LazyLoader {
             root.closeTimerRef.restart();
         root.grace = true;
     }
+
     function                    latch(): void {
         const latched = root.latchOrder(root.hoveredToplevels);
         if (latched.length > 0 && latched.join() !== root.latchedOrder.join())
             root.latchedOrder = latched;
     }
+
     function                    latchOrder(list: var): var {
         return [...(list ?? [])].map(toplevel => toplevel.address);
     }
+
     function                    showForIcon(entryId: string, iconLeft: real, iconTop: real, iconWidth: real, iconHeight: real): void {
         const toplevels = [];
         for (const toplevel of (Hypr.toplevels.values ?? Hypr.toplevels))
@@ -159,9 +164,11 @@ LazyLoader {
         }
 
         Connections {
+
             function onHoveredToplevelsChanged(): void {
                 root.latch();
             }
+
             function onShowingChanged(): void {
                 if (root.showing) {
                     hideTimer.stop();
@@ -258,6 +265,7 @@ LazyLoader {
         }
 
         ColumnLayout {
+
             function iconForToplevel(toplevel: var): string {
                 const windowClass = toplevel?.class;
                 const entry       = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;

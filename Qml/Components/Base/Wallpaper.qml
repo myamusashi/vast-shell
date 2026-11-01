@@ -63,9 +63,11 @@ Item {
     function                 activeImage() {
         return activeImageSlot === 0 ? imageA : imageB;
     }
+
     function                 activeVideoOutput() {
         return activeVideoSlot === 0 ? videoOutputA : videoOutputB;
     }
+
     function                 beginTransition() {
         if (transitionStarted)
             return;
@@ -75,6 +77,7 @@ Item {
             Window.window.requestActivate();
         progressAnimation.restart();
     }
+
     function                 commitTransition() {
         if (!transitionBusy)
             return;
@@ -120,6 +123,7 @@ Item {
 
         loadPendingUrl();
     }
+
     function                 handleImageStatus(img) {
         if (!transitionBusy || img !== incomingImage)
             return;
@@ -133,6 +137,7 @@ Item {
             loadPendingUrl();
         }
     }
+
     function                 handleVideoError(player) {
         if (!transitionBusy || transitionStarted || incomingPlayer !== player)
             return;
@@ -144,15 +149,19 @@ Item {
         videoOutputA.layer.enabled = false;
         videoOutputB.layer.enabled = false;
     }
+
     function                 inactiveImage() {
         return activeImageSlot === 0 ? imageB : imageA;
     }
+
     function                 inactiveVideoOutput() {
         return activeVideoSlot === 0 ? videoOutputB : videoOutputA;
     }
+
     function                 inactiveVideoPlayer() {
         return activeVideoSlot === 0 ? videoPlayerB : videoPlayerA;
     }
+
     function                 load(url) {
         if (MediaKind.isVideo(url)) {
             startVideoTransition(url);
@@ -182,6 +191,7 @@ Item {
         }
         startImageTransition(url);
     }
+
     function                 loadPendingUrl() {
         if (hasPendingUrl) {
             const url     = pendingUrl;
@@ -193,18 +203,21 @@ Item {
                 startImageTransition(url);
         }
     }
+
     function                 playVideo(player) {
         if (pauseVideo)
             player.pause();
         else
             player.play();
     }
+
     function                 releaseTransitionSources() {
         transitionEffect.source1 = null;
         transitionEffect.source2 = null;
     }
 
     // Returns -1 when lowPerfMode is on; startImageTransition intercepts it.
+
     function                 resolveTransitionType() {
         if (Configs.wallpaper.transitionLowPerfMode)
             return -1;
@@ -214,6 +227,7 @@ Item {
         const v = transitionTypeMap[t];
         return (v !== undefined) ? v : 0;
     }
+
     function                 startImageTransition(url) {
         resolvedTransitionType = resolveTransitionType();
         sourceIsVideo          = isVideoWallpaper;
@@ -262,6 +276,7 @@ Item {
             incomingImage  = null;
         }
     }
+
     function                 startVideoTransition(url) {
         if (transitionBusy) {
             pendingUrl    = url;
@@ -299,6 +314,7 @@ Item {
         player.source                   = Qt.resolvedUrl(url);
         playVideo(player);
     }
+
     function                 tryBeginVideoTransition() {
         if (incomingPlayer === null)
             return;
@@ -308,6 +324,7 @@ Item {
     }
 
     // Resolution helper (call whenever viewport resizes and shader is idle)
+
     function                 updateResolution() {
         if (!transitionBusy) {
             const w                        = root.width;
@@ -316,6 +333,7 @@ Item {
             transitionEffect.invResolution = Qt.vector2d(1.0 / w, 1.0 / h);
         }
     }
+
     function                 updateVideoPlayback() {
         if (pauseVideo) {
             videoPlayerA.pause();
@@ -360,6 +378,7 @@ Item {
     }
 
     Connections {
+
         function onMediaStatusChanged() {
             root.tryBeginVideoTransition();
         }
@@ -389,6 +408,7 @@ Item {
     }
 
     Connections {
+
         function onMediaStatusChanged() {
             root.tryBeginVideoTransition();
         }

@@ -93,6 +93,7 @@ StyledRect {
                 Component.onCompleted: ThumbnailQueue.generate(modelData.path, ThumbnailQueue.pathFor(modelData.path, Paths.cacheDir + "/video-thumbnails"), null)
 
                 Connections {
+
                     function onThumbnailReady(videoPath, thumbnailPath) {
                         if (videoPath !== delegateRoot.modelData.path)
                             return;

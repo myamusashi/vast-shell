@@ -21,6 +21,7 @@ Scope {
     function               allHidden(): bool {
         return !anyVisible;
     }
+
     function               hide(name): void {
         if (!name)
             return;
@@ -29,21 +30,25 @@ Scope {
         activeOSDsChanged();
         timers[name]?.stop();
     }
+
     function               isActive(name): bool {
         return activeOSDs[name] || false;
     }
+
     function               pause(name): void {
         if (!name || !activeOSDs[name])
             return;
         pausedOSDs[name] = true;
         timers[name]?.stop();
     }
+
     function               resume(name): void {
         if (!name || !activeOSDs[name])
             return;
         pausedOSDs[name] = false;
         timers[name]?.restart();
     }
+
     function               show(name): void {
         if (!name)
             return;
@@ -52,6 +57,7 @@ Scope {
         if (!pausedOSDs[name])
             timers[name]?.restart();
     }
+
     function               toggle(name): void {
         activeOSDs[name] ? hide(name) : show(name);
     }

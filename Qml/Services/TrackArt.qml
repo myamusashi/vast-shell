@@ -75,6 +75,7 @@ Singleton {
     }
 
     Connections {
+
         function onIndexChanged() {
             root.refresh();
         }
@@ -83,12 +84,15 @@ Singleton {
     }
 
     Connections {
+
         function onPostTrackChanged() {
             root.refresh();
         }
+
         function onTrackArtUrlChanged() {
             root.refresh();
         }
+
         function onTrackChanged() {
             root.refresh();
         }

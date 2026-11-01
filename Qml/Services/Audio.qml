@@ -40,6 +40,7 @@ Singleton {
     function               getIcon(node) {
         return node.isSink ? getSinkIcon(node) : getSourceIcon(node);
     }
+
     function               getSinkIcon(node) {
         if (node.audio.muted)
             return "volume_off";
@@ -49,12 +50,15 @@ Singleton {
             return "volume_down";
         return "volume_mute";
     }
+
     function               getSourceIcon(node) {
         return node.audio.muted ? "mic_off" : "mic";
     }
+
     function               toggleMute(node) {
         node.audio.muted = !node.audio.muted;
     }
+
     function               wheelAction(event, node) {
         const delta       = event.angleDelta.y < 0 ? -0.01 : 0.01;
         node.audio.volume = Math.max(0.0, Math.min(1.3, node.audio.volume + delta));
@@ -66,6 +70,7 @@ Singleton {
     }
 
     IpcHandler {
+
         function deviceList(): string {
             const m = AudioDevicesWatcher.devices;
             const r = [];
@@ -83,9 +88,11 @@ Singleton {
             }
             return JSON.stringify(r);
         }
+
         function deviceSet(name: string): void {
             AudioDevicesWatcher.setDefaultSink(name);
         }
+
         function profileList(): string {
             const card = root.defaultSinkCard;
             if (!card)
@@ -116,6 +123,7 @@ Singleton {
             }
             return JSON.stringify(r);
         }
+
         function profileSet(name: string): void {
             const card = root.defaultSinkCard;
             if (!card)

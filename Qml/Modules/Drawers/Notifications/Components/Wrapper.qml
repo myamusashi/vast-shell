@@ -31,6 +31,7 @@ Item {
         if (borderAnimation.animation.running)
             borderAnimation.animation.pause();
     }
+
     function              resetTimer() {
         timerRemaining = timerDuration;
         timer.interval = timerDuration;
@@ -38,6 +39,7 @@ Item {
         timer.restart();
         borderAnimation.animation.restart();
     }
+
     function              resumeTimer() {
         if (!timer.running && timerRemaining > 0) {
             timer.interval = timerRemaining;
@@ -148,6 +150,7 @@ Item {
         }
 
         Connections {
+
             function onHoveredChanged() {
                 if (notifHover.hovered) {
                     root.pauseTimer();
@@ -160,6 +163,7 @@ Item {
         }
 
         Connections {
+
             function onReplyFocusedChanged() {
                 if (contentLayout.replyFocused)
                     root.pauseTimer();

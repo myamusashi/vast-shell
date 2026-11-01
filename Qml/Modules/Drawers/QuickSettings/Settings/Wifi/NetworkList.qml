@@ -39,6 +39,7 @@ ListView {
         }
 
         Connections {
+
             function onIsWifiScannerOpenChanged() {
                 if (deviceDelegate.modelData)
                     deviceDelegate.modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;

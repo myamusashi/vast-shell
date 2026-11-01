@@ -44,6 +44,7 @@ StyledRect {
                 drawWidth: endX - startX
             };
         }
+
         function      roundedRectPath() {
             var r = clampedRect();
             if (r.drawWidth <= 0)
@@ -52,6 +53,7 @@ StyledRect {
             var x = r.startX, w = r.drawWidth, h = height, cr = root.cornerRadius;
             return "M " + (x + cr) + " 0" + " L " + (x + w - cr) + " 0" + " A " + cr + " " + cr + " 0 0 1 " + (x + w) + " " + cr + " L " + (x + w) + " " + (h - cr) + " A " + cr + " " + cr + " 0 0 1 " + (x + w - cr) + " " + h + " L " + (x + cr) + " " + h + " A " + cr + " " + cr + " 0 0 1 " + x + " " + (h - cr) + " L " + x + " " + cr + " A " + cr + " " + cr + " 0 0 1 " + (x + cr) + " 0 Z";
         }
+
         function      wavePath(r) {
             if (r.drawWidth <= 0)
                 return "M 0 0";

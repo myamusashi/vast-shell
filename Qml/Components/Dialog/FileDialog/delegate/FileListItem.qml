@@ -35,6 +35,7 @@ Rectangle {
         var dot = name.lastIndexOf(".");
         return dot >= 0 ? name.substring(dot + 1).toUpperCase() + " " + qsTr("file") : qsTr("File");
     }
+
     function        requestKeyboardFocus() {
         root.forceActiveFocus();
     }
