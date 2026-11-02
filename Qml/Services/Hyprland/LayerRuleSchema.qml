@@ -18,31 +18,31 @@ Singleton {
             default: 0,
             min: 0,
             max: 2,
-            description: "Render the layer above the lock screen; 2 stays interactive on the lock screen."
+            description: qsTr("Render the layer above the lock screen; 2 stays interactive on the lock screen.")
         },
         {
             key: "animation",
             type: "string",
             default: "",
-            description: "Animation style for this layer."
+            description: qsTr("Animation style for this layer.")
         },
         {
             key: "blur",
             type: "bool",
             default: false,
-            description: "Enable blur for the layer."
+            description: qsTr("Enable blur for the layer.")
         },
         {
             key: "blur_popups",
             type: "bool",
             default: false,
-            description: "Enable blur for the layer's popups."
+            description: qsTr("Enable blur for the layer's popups.")
         },
         {
             key: "dim_around",
             type: "bool",
             default: false,
-            description: "Dim everything behind the layer."
+            description: qsTr("Dim everything behind the layer.")
         },
         {
             key: "ignore_alpha",
@@ -50,38 +50,38 @@ Singleton {
             default: 0,
             min: 0,
             max: 1,
-            description: "Blur ignores pixels at or below this opacity."
+            description: qsTr("Blur ignores pixels at or below this opacity.")
         },
         {
             key: "no_anim",
             type: "bool",
             default: false,
-            description: "Disable animations for the layer."
+            description: qsTr("Disable animations for the layer.")
         },
         {
             key: "no_screen_share",
             type: "bool",
             default: false,
-            description: "Hide the layer from screen sharing."
+            description: qsTr("Hide the layer from screen sharing.")
         },
         {
             key: "order",
             type: "int",
             default: 0,
-            description: "Space-reservation priority relative to other layers; higher wins, may be negative."
+            description: qsTr("Space-reservation priority relative to other layers; higher wins, may be negative.")
         },
         {
             key: "xray",
             type: "bool",
             default: false,
-            description: "Blur xray mode for the layer."
+            description: qsTr("Blur xray mode for the layer.")
         }
     ]
     readonly property var    matchProps: [
         {
             key: "namespace",
             type: "regex",
-            description: "Layer namespace, e.g. waybar or shell:drawers."
+            description: qsTr("Layer namespace, e.g. waybar or shell:drawers.")
         }
     ]
 

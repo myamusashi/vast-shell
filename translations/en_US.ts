@@ -2520,6 +2520,159 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>HyprlandGeneralSchema</name>
     <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="331"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="363"/>
+        <source>Must be at least 1 for blur to apply.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="355"/>
+        <source>Requires render.use_shader_blur_blend.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="379"/>
+        <source>Selects which blur variant sub-options apply.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="405"/>
+        <source>Disabled when blur.new_optimizations is false.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="755"/>
+        <source>Falls back to glow.color when empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1081"/>
+        <source>Step and points list; requires accel_profile set to custom.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1210"/>
+        <source>Empty string stops auto-detection of the output.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1250"/>
+        <source>Monitor name or current.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1335"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1345"/>
+        <source>Negative means device default.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1405"/>
+        <source>Requires drag_into_group set to 2 and merge_groups_on_drag enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1434"/>
+        <source>Falls back to misc.font_family when empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1620"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1628"/>
+        <source>Falls back to text_color when empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1636"/>
+        <source>Falls back to text_color_inactive when empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1700"/>
+        <source>Requires disable_hyprland_logo enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1708"/>
+        <source>none or empty mutes, default uses the system sound, otherwise a path.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1751"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1947"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1978"/>
+        <source>Monitor reload required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1830"/>
+        <source>-1 picks a random wallpaper.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1925"/>
+        <source>Requires session_lock_xray enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2016"/>
+        <source>0 disables the threshold.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2119"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2144"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2535"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2543"/>
+        <source>Hyprland restart required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2304"/>
+        <source>0 means never hide.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2394"/>
+        <source>-1 follows warp_on_change_workspace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2427"/>
+        <source>1.0 means no zoom.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2450"/>
+        <source>Epilepsy warning: flashes the screen on damage.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2460"/>
+        <source>Do not change.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2567"/>
+        <source>Disables VFR for accurate results.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2618"/>
+        <source>Space-separated, e.g. 4 3. Zero disables.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2642"/>
+        <source>Xwayland restart required, Linux only.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2664"/>
+        <source>Ignored on non-NVIDIA GPUs.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2812"/>
         <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2904"/>
         <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2932"/>
@@ -2898,6 +3051,1706 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <message>
         <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3314"/>
         <source>Allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3320"/>
+        <source>Allow fullscreen on pinned windows, restoring pin state after</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3321"/>
+        <source>Workspaces remember their previous workspace, enabling cycle loops</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3322"/>
+        <source>Let the layout handler manage client-requested fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3323"/>
+        <source>Ignore apps that request to disable keybinds, e.g. VMs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3324"/>
+        <source>Movement threshold in px for window drags and click/drag bind flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3325"/>
+        <source>How directional focus picks a window when several match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3326"/>
+        <source>Hide the special workspace when changing workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3327"/>
+        <source>Group move dispatchers ignore per-group locks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3328"/>
+        <source>Directional focus can seek windows out of fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3329"/>
+        <source>Directional focus cycles through group windows first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3330"/>
+        <source>Pass mouse events through while a keybind fires</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3331"/>
+        <source>Delay in ms between scroll bind events</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3332"/>
+        <source>Moving focus or a window past a monitor edge reaches the next monitor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3333"/>
+        <source>Switching to the current workspace goes back to the previous one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3334"/>
+        <source>What the cursor centers on when switching workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3335"/>
+        <source>Monitor the cursor starts on, by name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3336"/>
+        <source>Enable hyprcursor cursor theme support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3337"/>
+        <source>Hide the cursor while typing until the mouse moves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3338"/>
+        <source>Hide the cursor after tablet input until the mouse moves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3339"/>
+        <source>Hide the cursor after touch input until the mouse moves</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3340"/>
+        <source>Padding in logical px between the cursor and screen edges</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3341"/>
+        <source>Seconds of cursor inactivity before hiding it, 0 for never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3342"/>
+        <source>Do not render the cursor at all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3343"/>
+        <source>Minimum refresh rate for cursor updates when VRR is active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3344"/>
+        <source>Avoid cursor-driven frame spikes on fullscreen VRR apps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3345"/>
+        <source>When to avoid hardware cursors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3346"/>
+        <source>Never warp the cursor on focus changes or keybinds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3347"/>
+        <source>Cursor returns to its last position within a refocused window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3348"/>
+        <source>Sync the XCursor theme and size with GSettings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3349"/>
+        <source>When hardware cursors use a CPU buffer; NVIDIA needs it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3350"/>
+        <source>Restore cursor position after it was moved by non-mouse input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3351"/>
+        <source>Warp to the last focused window after changing workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3352"/>
+        <source>Warp to the last focused window when changing monitors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3353"/>
+        <source>Warp to the last focused window when toggling special workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3354"/>
+        <source>When zoomed, only follow the cursor at screen edges</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3355"/>
+        <source>Disable antialiasing while zoomed, making things pixelated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3356"/>
+        <source>Magnification factor around the cursor, 1 disables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3357"/>
+        <source>Zoom view follows the cursor rigidly instead of loosely</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3358"/>
+        <source>Colorize stdout logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3359"/>
+        <source>Flash damaged areas on screen; epilepsy warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3360"/>
+        <source>Redraw only damaged parts of the display; leave at Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3361"/>
+        <source>Disable logging to a file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3362"/>
+        <source>Skip scale verification; causes rounding artifacts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3363"/>
+        <source>Omit timestamps from logs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3364"/>
+        <source>Direct scanout special case for unmodified buffers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3365"/>
+        <source>Direct scanout FIFO variant of the same-buffer case</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3366"/>
+        <source>Also log to stdout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3367"/>
+        <source>How many config errors to display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3368"/>
+        <source>Which screen edge the config error bar sits on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3369"/>
+        <source>Workaround for empty FIFO pending lists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3370"/>
+        <source>Claim support for all color-management protocol features</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3371"/>
+        <source>Enable OpenGL and EGL debugging</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3372"/>
+        <source>Whether buffer invalidation is allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3373"/>
+        <source>Log damage events</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3374"/>
+        <source>Show the debug performance overlay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3375"/>
+        <source>Debug render passes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3376"/>
+        <source>Render solitary windows with empty damage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3377"/>
+        <source>Hide config error popups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3378"/>
+        <source>Variable frame rate; leave enabled to save resources</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3379"/>
+        <source>Opacity of focused windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3380"/>
+        <source>Count the border as part of the window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3381"/>
+        <source>How much dim_around window rules dim</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3382"/>
+        <source>Dim unfocused windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3383"/>
+        <source>Dim parents of modal windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3384"/>
+        <source>Dim the screen behind special workspaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3385"/>
+        <source>How strongly inactive windows dim</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3386"/>
+        <source>Opacity of fullscreen windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3387"/>
+        <source>Opacity of unfocused windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3388"/>
+        <source>Corner radius in layout pixels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3389"/>
+        <source>Corner curve shape: 2.0 is a circle, 4.0 a squircle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3390"/>
+        <source>Path to a custom screen shader, empty to disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3391"/>
+        <source>Enable window background blur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3392"/>
+        <source>Blur brightness modulation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3393"/>
+        <source>Blur contrast modulation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3394"/>
+        <source>Blur windows regardless of their opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3395"/>
+        <source>Blur input method windows like fcitx5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3396"/>
+        <source>Skip blurring pixels below this opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3397"/>
+        <source>Extra blur optimizations, recommended</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3398"/>
+        <source>Noise applied to the blur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3399"/>
+        <source>Blur passes; needs at least 1 for blur to apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3400"/>
+        <source>Blur popups like right-click menus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3401"/>
+        <source>Skip blurring popup pixels below this opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3402"/>
+        <source>Scale blur strength with pixel opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3403"/>
+        <source>Blur size (distance)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3404"/>
+        <source>Blur behind the special workspace; expensive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3405"/>
+        <source>Blur pattern; heavier ones cost GPU time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3406"/>
+        <source>Boost saturation of blurred colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3407"/>
+        <source>How strongly vibrancy affects dark areas</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3408"/>
+        <source>Floating windows ignore tiled windows in their blur</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3409"/>
+        <source>Acrylic chromatic separation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3410"/>
+        <source>Curved acrylic edge width in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3411"/>
+        <source>Sharp backdrop passing through the acrylic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3412"/>
+        <source>Maximum acrylic lens displacement in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3413"/>
+        <source>Acrylic tint color; alpha sets absorption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3414"/>
+        <source>First aurora color; alpha sets its contribution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3415"/>
+        <source>Second aurora color; alpha sets its contribution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3416"/>
+        <source>Aurora color strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3417"/>
+        <source>Aurora animation speed, 0 freezes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3418"/>
+        <source>Drops animation speed, 0 disables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3419"/>
+        <source>Fluid color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3420"/>
+        <source>Fluid refraction distortion multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3421"/>
+        <source>How full the fluid container is</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3422"/>
+        <source>Fluid inertial mass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3423"/>
+        <source>Fluid simulation precision multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3424"/>
+        <source>Fluid animation speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3425"/>
+        <source>Interior fluid turbulence multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3426"/>
+        <source>Maximum glass refraction displacement in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3427"/>
+        <source>Glass relief shading strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3428"/>
+        <source>Glass pattern size in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3429"/>
+        <source>Haze sheen strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3430"/>
+        <source>Haze color-shift strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3431"/>
+        <source>Shimmer animation speed, 0 disables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3432"/>
+        <source>Ripple duration in seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3433"/>
+        <source>Ripple maximum radius in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3434"/>
+        <source>Ripple maximum refraction in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3435"/>
+        <source>Ripple wave width in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3436"/>
+        <source>Water wave damping</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3437"/>
+        <source>Water maximum duration in seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3438"/>
+        <source>Water pointer radius in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3439"/>
+        <source>Water propagation speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3440"/>
+        <source>Water refraction and injection strength in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3441"/>
+        <source>Active window glow color; alpha sets opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3442"/>
+        <source>Inactive glow color; empty falls back to color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3443"/>
+        <source>Enable inner window glow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3444"/>
+        <source>Glow size in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3445"/>
+        <source>Glow falloff power; higher is a faster falloff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3446"/>
+        <source>Blur windows while they move or resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3447"/>
+        <source>Motion blur samples; more is smoother but costlier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3448"/>
+        <source>Enable window drop shadows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3449"/>
+        <source>Shadow rendering offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3450"/>
+        <source>Shadow size in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3451"/>
+        <source>Shadow falloff power; higher is a faster falloff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3452"/>
+        <source>Shadow scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3453"/>
+        <source>Render shadows sharp, as with infinite falloff power</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3454"/>
+        <source>Wobble spring damping</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3455"/>
+        <source>Wobble windows while they move or resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3456"/>
+        <source>Wobble impulse multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3457"/>
+        <source>Wobble spring mass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3458"/>
+        <source>Wobble mesh vertices per edge</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3459"/>
+        <source>Wobble spring stiffness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3460"/>
+        <source>Position delta treated as settled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3461"/>
+        <source>Velocity delta treated as settled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3462"/>
+        <source>Enable the permission control system</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3463"/>
+        <source>Hide the periodic donation popup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3464"/>
+        <source>Hide the new-version news popup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3465"/>
+        <source>Allow color-management protocol version 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3466"/>
+        <source>Master switch for tearing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3467"/>
+        <source>Window border width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3468"/>
+        <source>Extend the draggable border area; needs resize_on_border</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3469"/>
+        <source>Gaps between floating windows and monitor edges, -1 for default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3470"/>
+        <source>Gaps between windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3471"/>
+        <source>Gaps between windows and monitor edges</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3472"/>
+        <source>Gaps between workspaces, stacks with gaps_out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3473"/>
+        <source>Show a resize cursor icon on borders; needs resize_on_border</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3474"/>
+        <source>Which tiling layout to use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3475"/>
+        <source>Override the system locale, e.g. en_US</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3476"/>
+        <source>Keep parents of modal windows interactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3477"/>
+        <source>No fallback window when directional focus finds none</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3478"/>
+        <source>Force a resize corner for floating windows, 0 to disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3479"/>
+        <source>Resize windows by dragging borders and gaps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3480"/>
+        <source>Snap floating windows to one border width apart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3481"/>
+        <source>Enable floating window snapping</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3482"/>
+        <source>Snapping distance to monitor edges in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3483"/>
+        <source>Snapping respects gaps_in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3484"/>
+        <source>Snapping distance between windows in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3485"/>
+        <source>New windows join the focused unlocked group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3486"/>
+        <source>Whether dragging a window into a group merges them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3487"/>
+        <source>Focus the window just moved out of a group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3488"/>
+        <source>Blur the groupbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3489"/>
+        <source>Hide the groupbar for single-window groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3490"/>
+        <source>Enable groupbars</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3491"/>
+        <source>Groupbar font; empty uses misc.font_family</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3492"/>
+        <source>Groupbar title font size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3493"/>
+        <source>Active title font weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3494"/>
+        <source>Inactive title font weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3495"/>
+        <source>Gap between groupbar gradients</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3496"/>
+        <source>Gap between gradients and the window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3497"/>
+        <source>Gradient corner rounding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3498"/>
+        <source>Gradient corner curve shape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3499"/>
+        <source>Round only the groupbar gradient edges</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3500"/>
+        <source>Enable groupbar gradients</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3501"/>
+        <source>Groupbar height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3502"/>
+        <source>Gap between indicator and titles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3503"/>
+        <source>Groupbar indicator height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3504"/>
+        <source>Keep the gap above the groupbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3505"/>
+        <source>Middle click on the groupbar closes the window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3506"/>
+        <source>Groupbar decoration priority</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3507"/>
+        <source>Render titles in the groupbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3508"/>
+        <source>Indicator corner rounding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3509"/>
+        <source>Indicator corner curve shape</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3510"/>
+        <source>Round only the indicator edges</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3511"/>
+        <source>Scrolling the groupbar switches windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3512"/>
+        <source>Render the groupbar vertically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3513"/>
+        <source>Active title color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3514"/>
+        <source>Inactive title color; empty falls back to text_color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3515"/>
+        <source>Locked-group active title color; falls back to text_color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3516"/>
+        <source>Locked-group inactive title color; falls back to text_color_inactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3517"/>
+        <source>Vertical title offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3518"/>
+        <source>Horizontal title padding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3519"/>
+        <source>Moving a window to a workspace merges it into its group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3520"/>
+        <source>New group windows spawn after the current one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3521"/>
+        <source>Dragging a floating window into a groupbar merges it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3522"/>
+        <source>Groups can be dragged into other groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3523"/>
+        <source>Dragging a group onto another groupbar merges them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3524"/>
+        <source>Pointer acceleration profile; empty uses libinput default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3525"/>
+        <source>Turn high-resolution scrolling into discrete scroll events</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3526"/>
+        <source>Focus the cursor window on tiling-float switches</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3527"/>
+        <source>What gets focus when a window closes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3528"/>
+        <source>How cursor movement affects window focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3529"/>
+        <source>Shrink inactive hitboxes to create focus dead zones in gaps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3530"/>
+        <source>Minimum cursor travel before refocusing, in px</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3531"/>
+        <source>Use raw pointer input without acceleration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3532"/>
+        <source>Path to a custom XKB keymap file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3533"/>
+        <source>XKB keyboard layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3534"/>
+        <source>XKB keyboard model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3535"/>
+        <source>XKB options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3536"/>
+        <source>XKB rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3537"/>
+        <source>XKB layout variant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3538"/>
+        <source>Swap left and right mouse buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3539"/>
+        <source>Refocus on window boundary crossings; needs follow_mouse 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3540"/>
+        <source>Invert scrolling direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3541"/>
+        <source>Turn numlock on at startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3542"/>
+        <source>How scroll events around a window edges behave</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3543"/>
+        <source>Delay before key repeat kicks in, in ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3544"/>
+        <source>Key repeats per second while held</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3545"/>
+        <source>Match keybinds by symbol across keyboard layouts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3546"/>
+        <source>Device rotation in degrees clockwise</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3547"/>
+        <source>Button used for on-button scrolling, 0 default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3548"/>
+        <source>Toggle scroll-button lock instead of holding it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3549"/>
+        <source>Scroll movement multiplier for mice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3550"/>
+        <source>How scrolling is performed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3551"/>
+        <source>Custom scroll acceleration curve for accel_profile custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3552"/>
+        <source>Mouse sensitivity in the libinput range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3553"/>
+        <source>Floating-only special workspaces do not block regular focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3554"/>
+        <source>First click on an unfocused window only focuses it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3555"/>
+        <source>Treat region_position as absolute in the monitor layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3556"/>
+        <source>Tablet active area position in mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3557"/>
+        <source>Tablet active area size in mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3558"/>
+        <source>Enable tablet input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3559"/>
+        <source>Rotate the tablet 180 degrees</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3560"/>
+        <source>Monitor the tablet maps to; empty maps across all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3561"/>
+        <source>Mapped region position relative to the bound monitor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3562"/>
+        <source>Map tablet input to this region size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3563"/>
+        <source>Use relative tablet input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3564"/>
+        <source>Transform applied to tablet input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3565"/>
+        <source>Eraser button sends a button event instead of erasing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3566"/>
+        <source>Which button the eraser button emulates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3567"/>
+        <source>Tool pressure maximum; negative uses device default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3568"/>
+        <source>Tool pressure minimum; negative uses device default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3569"/>
+        <source>Enable touch device input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3570"/>
+        <source>Monitor touch devices map to; empty string stops auto-detection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3571"/>
+        <source>Transform applied to touch input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3572"/>
+        <source>Multi-finger clicks send fixed buttons instead of by position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3573"/>
+        <source>Disable the touchpad while typing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3574"/>
+        <source>Enable multi-finger drag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3575"/>
+        <source>Keep dragging after lifting the finger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3576"/>
+        <source>Invert horizontal touchpad movement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3577"/>
+        <source>Invert vertical touchpad movement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3578"/>
+        <source>LMB and RMB together act as middle click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3579"/>
+        <source>Invert touchpad scrolling direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3580"/>
+        <source>Touchpad scroll movement multiplier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3581"/>
+        <source>Tap then hold to drag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3582"/>
+        <source>Finger-count to button mapping for taps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3583"/>
+        <source>Taps send mouse clicks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3584"/>
+        <source>Release held keys when the virtual keyboard closes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3585"/>
+        <source>Share key and modifier states with other keyboards</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3586"/>
+        <source>Also capture and forward modifier keys</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3587"/>
+        <source>Error out on invalid pointer barriers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3588"/>
+        <source>Let newly mapped layers render over a covering fullscreen window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3589"/>
+        <source>Keyboard-interactive layers like launchers keep keyboard focus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3590"/>
+        <source>Pad the screen so a lone window matches the ratio, e.g. 4 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3591"/>
+        <source>Skip the aspect ratio when padding would be smaller than this</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3592"/>
+        <source>Allow restarting a crashed lock screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3593"/>
+        <source>Focus follows the mouse during drag and drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3594"/>
+        <source>Animate manual window resizes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3595"/>
+        <source>Animate windows dragged by the mouse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3596"/>
+        <source>Missed pings before the app-not-responding dialog shows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3597"/>
+        <source>Background color; needs disable_hyprland_logo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3598"/>
+        <source>System bell sound: none, default, or a wav/ogg path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3599"/>
+        <source>Close special workspaces when their last window closes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3600"/>
+        <source>Do not auto-reload the config on file changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3601"/>
+        <source>Hide the missing hyprland-guiutils warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3602"/>
+        <source>Hide the Hyprland logo and anime background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3603"/>
+        <source>Hide the scale-failure notification popup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3604"/>
+        <source>Hide the splash text on the background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3605"/>
+        <source>Hide the start-hyprland watchdog warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3606"/>
+        <source>Hide the externally-managed XDG environment warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3607"/>
+        <source>Show the app-not-responding dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3608"/>
+        <source>Enable window swallowing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3609"/>
+        <source>Whether closing a fullscreen window fullscreenes the next one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3610"/>
+        <source>Keep existing floating windows on screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3611"/>
+        <source>Focus apps that request activation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3612"/>
+        <source>Global default font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3613"/>
+        <source>Which default wallpaper to enforce, -1 random</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3614"/>
+        <source>Seconds before workspace-tracking tokens expire</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3615"/>
+        <source>Open windows on the workspace they were invoked from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3616"/>
+        <source>A key press wakes screensaver-off monitors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3617"/>
+        <source>Delay before the lockdead screen shows, in ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3618"/>
+        <source>Enable middle-click primary-selection paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3619"/>
+        <source>Mouse movement wakes screensaver-off monitors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3620"/>
+        <source>Hovering a monitor focuses it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3621"/>
+        <source>Name virtual keyboards after their creating process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3622"/>
+        <source>Keep newly spawned floating windows on screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3623"/>
+        <source>What happens when a tiled window is focused under fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3624"/>
+        <source>FPS cap for windows rendered while unfocused</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3625"/>
+        <source>Force 8-bit screen capture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3626"/>
+        <source>Blur the lock screen; needs session_lock_xray</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3627"/>
+        <source>Keep rendering workspaces under the lock screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3628"/>
+        <source>Apply min and max size rules to tiled windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3629"/>
+        <source>Splash text font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3630"/>
+        <source>Title regex for windows exempt from swallowing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3631"/>
+        <source>Class regex of windows that swallow others, e.g. terminals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3632"/>
+        <source>Monitor adaptive-sync (VRR) mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3633"/>
+        <source>Splash text color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3634"/>
+        <source>Reduce NVIDIA flickering; may cost frames on weaker GPUs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3635"/>
+        <source>Report HDR as the preferred mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3636"/>
+        <source>Do not report dmabuf formats KMS cannot import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3637"/>
+        <source>Async DRM commits to cut cursor latency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3638"/>
+        <source>Auto-switch to HDR in fullscreen when content wants it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3639"/>
+        <source>Enable the color management pipeline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3640"/>
+        <source>Transfer function used for SDR content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3641"/>
+        <source>Fade animation for color temperature changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3642"/>
+        <source>Enable the commit timing protocol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3643"/>
+        <source>Direct scanout for fullscreen apps to reduce lag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3644"/>
+        <source>Expand undersized textures instead of stretching them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3645"/>
+        <source>Transfer function of the fp16 SDR workbuffer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3646"/>
+        <source>Send VCGT ramps from ICC profiles to the display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3647"/>
+        <source>Keep an SDR frame copy for screen sharing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3648"/>
+        <source>Automatic triple buffering; helps weaker GPUs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3649"/>
+        <source>FIFO locking for surfaces that are not shown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3650"/>
+        <source>When to use color management without shaders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3651"/>
+        <source>How external color temperature interacts with fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3652"/>
+        <source>Report window content types for profile autoswitch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3653"/>
+        <source>Use FP16 render buffers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3654"/>
+        <source>Experimental blurred background blending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3655"/>
+        <source>Disable back buffer and bottom layer rendering</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3656"/>
+        <source>Create the abstract Unix socket for Xwayland; needs restart</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3657"/>
+        <source>Allow running X11 applications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3658"/>
+        <source>Force scale 1 on Xwayland windows under scaled displays</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3659"/>
+        <source>Nearest-neighbor filtering for Xwayland; pixelated not blurry</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3375,6 +5228,64 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <message>
         <location filename="../Qml/Services/LauncherServices.qml" line="87"/>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LayerRuleSchema</name>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="21"/>
+        <source>Render the layer above the lock screen; 2 stays interactive on the lock screen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="27"/>
+        <source>Animation style for this layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="33"/>
+        <source>Enable blur for the layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="39"/>
+        <source>Enable blur for the layer&apos;s popups.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="45"/>
+        <source>Dim everything behind the layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="53"/>
+        <source>Blur ignores pixels at or below this opacity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="59"/>
+        <source>Disable animations for the layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="65"/>
+        <source>Hide the layer from screen sharing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="71"/>
+        <source>Space-reservation priority relative to other layers; higher wins, may be negative.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="77"/>
+        <source>Blur xray mode for the layer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="84"/>
+        <source>Layer namespace, e.g. waybar or shell:drawers.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5944,70 +7855,509 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
 </context>
 <context>
+    <name>WindowRuleSchema</name>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="17"/>
+        <source>Force an Xwayland window to receive input even when it requests not to.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="24"/>
+        <source>Force an animation style onto the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="25"/>
+        <source>e.g. popin or popin 80%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="32"/>
+        <source>Border color or gradient.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="33"/>
+        <source>one color rgb(FF0000), or two colors rgb(FF0000) rgb(880808) as a gradient; combine with the focus match for active/inactive colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="41"/>
+        <source>Border size in pixels.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="48"/>
+        <source>Center the window on the monitor when it floats.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="55"/>
+        <source>Lock the mouse cursor to the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="63"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="468"/>
+        <source>Content type of the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="70"/>
+        <source>Whether to draw window decorations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="77"/>
+        <source>Dim everything around the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="84"/>
+        <source>Float the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="91"/>
+        <source>Focus the window when the app requests to be focused.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="98"/>
+        <source>Disable the window&apos;s own transparency.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="105"/>
+        <source>Fullscreen the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="112"/>
+        <source>Fullscreen mode, internal then client.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="113"/>
+        <source>two numbers 0-3 separated by a space, e.g. 1 2; 0 none, 1 maximize, 2 fullscreen, 3 maximize and fullscreen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="120"/>
+        <source>Window group behavior.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="121"/>
+        <source>barred, deny, invade, lock [always], new, override, set [always], unset; bare group means set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="129"/>
+        <source>Idle inhibit mode for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="136"/>
+        <source>Allow tearing for this window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="143"/>
+        <source>Keep the aspect ratio when resizing with the mouse.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="150"/>
+        <source>Maximum size for floating windows.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="157"/>
+        <source>Maximize the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="164"/>
+        <source>Minimum size for floating windows.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="171"/>
+        <source>Monitor the window opens on.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="172"/>
+        <source>name, index or desc:…; append  silent to open without focusing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="179"/>
+        <source>Monitor-local position for the floating window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="186"/>
+        <source>Force nearest-neighbor filtering.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="193"/>
+        <source>Disable animations for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="200"/>
+        <source>Disable AutoHDR for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="207"/>
+        <source>Disable blur for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="215"/>
+        <source>Uncloseable with killactive for this many milliseconds on open.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="222"/>
+        <source>Disable window dimming for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="229"/>
+        <source>Disable focusing the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="236"/>
+        <source>Do not focus the window when the mouse moves over it.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="243"/>
+        <source>Disable glow for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="250"/>
+        <source>Do not focus the window when it opens.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="257"/>
+        <source>Remove max size limitations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="264"/>
+        <source>Hide the window and its popups from screen sharing.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="271"/>
+        <source>Disable shadows for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="278"/>
+        <source>Disallow the app from inhibiting your shortcuts.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="285"/>
+        <source>Disable VRR for the window (misc.vrr must be 2 or 3).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="292"/>
+        <source>Disable wobble for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="299"/>
+        <source>Disable XDG-driven drags for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="306"/>
+        <source>Opacity multipliers for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="307"/>
+        <source>up to three values: active, inactive, fullscreen; append override after a value for absolute opacity, e.g. 0.8 override 0.8 override</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="314"/>
+        <source>Force the window opacities to 1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="321"/>
+        <source>Restore the stored size when a floating window with the same class and title opens.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="328"/>
+        <source>Pin the window to all workspaces.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="329"/>
+        <source>ignored for non-floating windows; usually combined with float</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="336"/>
+        <source>Pseudotile the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="343"/>
+        <source>Keep rendering the window while it is not visible.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="352"/>
+        <source>Rounding in pixels, ignoring the default.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="361"/>
+        <source>Rounding power for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="370"/>
+        <source>Mouse scroll factor for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="379"/>
+        <source>Touchpad scroll factor for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="387"/>
+        <source>Column width when the window opens on a workspace with the scrolling layout.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="394"/>
+        <source>Size for the floating window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="401"/>
+        <source>Keep focus on the window as long as it is visible.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="408"/>
+        <source>Events the window ignores.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="409"/>
+        <source>space-separated: fullscreen, maximize, activate, activatefocus, fullscreenoutput, x11configurerequest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="416"/>
+        <source>Always send the compositor fullscreen mode to the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="423"/>
+        <source>Apply a dynamic tag to the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="424"/>
+        <source>+name adds, -name unsets, bare name toggles; dynamic tags end with *</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="431"/>
+        <source>Tile the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="439"/>
+        <source>Tonemapping behavior for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="446"/>
+        <source>Workspace the window opens on.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="447"/>
+        <source>workspace selector or unset; append  silent to open without focusing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="454"/>
+        <source>Blur xray mode for the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="462"/>
+        <source>Window class.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="473"/>
+        <source>Whether the window is floating.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="478"/>
+        <source>Whether the window currently has focus.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="483"/>
+        <source>Whether the window is fullscreen (covering or not).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="490"/>
+        <source>Fullscreen state the client requested.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="497"/>
+        <source>Fullscreen state the compositor uses.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="502"/>
+        <source>Whether the window is in a group.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="508"/>
+        <source>Class the window was created with.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="514"/>
+        <source>Title the window was created with.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="519"/>
+        <source>Whether the window is modal (e.g. confirmation popups).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="524"/>
+        <source>Whether the window is pinned to all workspaces.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="529"/>
+        <source>Tag name. Dynamic tags end with *.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="535"/>
+        <source>Window title. Static effects only ever see the initial title.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="540"/>
+        <source>Workspace selector, e.g. 3, name:web or special:magic.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="546"/>
+        <source>XDG tag of the window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="551"/>
+        <source>Whether the window is an Xwayland window.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="557"/>
+        <source>Numbers or expressions such as monitor_w * 0.5, using monitor_w, monitor_h, window_x, window_y, window_w, window_h, cursor_x, cursor_y.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WindowRuleServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="55"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="54"/>
         <source>Failed to read window rules: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="55"/>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="57"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="54"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="56"/>
         <source>Hyprland</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="57"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="56"/>
         <source>Failed to save window rules: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="192"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="191"/>
         <source>Add at least one match property.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="195"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="194"/>
         <source>This name is used by more than one rule; Hyprland merges rules with the same name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="199"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="198"/>
         <source>Unknown match property: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="210"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="209"/>
         <source>Unknown effect: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="279"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="278"/>
         <source>Must be a number.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="281"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="280"/>
         <source>Must be at least %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="283"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="282"/>
         <source>Must be at most %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="288"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="287"/>
         <source>Must be two values.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="290"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="289"/>
         <source>Both values are required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="294"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="293"/>
         <source>Must be one of: %1.</source>
         <translation type="unfinished"></translation>
     </message>

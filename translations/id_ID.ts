@@ -6,6 +6,7 @@
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="46"/>
         <source>AQI</source>
+        <translatorcomment>la</translatorcomment>
         <translation>AQI</translation>
     </message>
     <message>
@@ -171,7 +172,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="66"/>
         <source>Use a dark color palette for the entire shell.</source>
-        <translation>Gunakan palet gelap untuk semua shell</translation>
+        <translation>Gunakan palet gelap untuk semua shell.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="77"/>
@@ -191,7 +192,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="87"/>
         <source>File path to the custom colors JSON when static colors are enabled.</source>
-        <translation>Path ke berkas JSON warna kustom ketika warna statis dinyalakan</translation>
+        <translation>Path ke berkas JSON warna kustom ketika warna statis dinyalakan.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="120"/>
@@ -201,7 +202,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="119"/>
         <source>Material You color scheme variant for palette generation.</source>
-        <translation>Variasi skema Material You untuk menghasilkan palet warna</translation>
+        <translation>Variasi skema Material You untuk menghasilkan palet warna.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="138"/>
@@ -216,7 +217,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="144"/>
         <source>Primary font for UI text and labels.</source>
-        <translation>Font utama untuk teks dan label</translation>
+        <translation>Font utama untuk teks dan label.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="156"/>
@@ -236,7 +237,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="166"/>
         <source>Nerd font used for icon or font text.</source>
-        <translation>Nerd font untuk ikon atau text font</translation>
+        <translation>Nerd font untuk ikon atau text font.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="178"/>
@@ -246,7 +247,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="177"/>
         <source>Global multiplier for all font sizes.</source>
-        <translation>Pengganda global untuk semua ukuran font</translation>
+        <translation>Pengganda global untuk semua ukuran font.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="200"/>
@@ -296,7 +297,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="271"/>
         <source>Corner radius.</source>
-        <translation>Radius sudut</translation>
+        <translation>Radius sudut.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="286"/>
@@ -306,7 +307,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="285"/>
         <source>Default spacing between UI elements.</source>
-        <translation>Jarak antar elemen antarmuka pengguna</translation>
+        <translation>Jarak antar elemen antarmuka pengguna.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="300"/>
@@ -464,12 +465,12 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="16"/>
         <source>Keep the top bar visible.</source>
-        <translation>Tetap buka top bar</translation>
+        <translation>Tetap buka top bar.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="26"/>
         <source>Use a condensed layout.</source>
-        <translation>Gunakan layout compact</translation>
+        <translation>Gunakan layout compact.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="37"/>
@@ -479,7 +480,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="36"/>
         <source>Height of the top bar in pixels.</source>
-        <translation>Tinggi dari top bar dalam piksel</translation>
+        <translation>Tinggi dari top bar dalam piksel.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BarPage.qml" line="51"/>
@@ -653,7 +654,7 @@
     <message>
         <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="36"/>
         <source>%1 connected</source>
-        <translation>Tersambung %1 </translation>
+        <translation>Tersambung %1</translation>
     </message>
     <message>
         <location filename="../Qml/Services/BluetoothDeviceFormatter.qml" line="39"/>
@@ -737,7 +738,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="60"/>
         <source>Allow nearby devices to request pairing.</source>
-        <translation>Izinkam perangkat di sekitar untuk minta dipasangkan</translation>
+        <translation>Izinkam perangkat di sekitar untuk minta dipasangkan.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="138"/>
@@ -757,7 +758,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="216"/>
         <source>No devices found — turn on scanning to discover nearby devices.</source>
-        <translation>Tidak ada perangkat ditemukan — nyalakan scan untuk menemukan perangkat di sekitar</translation>
+        <translation>Tidak ada perangkat ditemukan — nyalakan scan untuk menemukan perangkat di sekitar.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="225"/>
@@ -1095,7 +1096,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="29"/>
         <source>Show thumbnail previews in the clipboard.</source>
-        <translation>Menampilkan thumbnail previews di clipboard</translation>
+        <translation>Menampilkan thumbnail previews di clipboard.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="39"/>
@@ -1291,7 +1292,7 @@
     <message>
         <location filename="../Qml/Modules/Settings/Pages/Volume/ConfigurationTab.qml" line="41"/>
         <source>No audio cards detected.</source>
-        <translation>Tidak ada audio cards yang terdeteksi</translation>
+        <translation>Tidak ada audio cards yang terdeteksi.</translation>
     </message>
 </context>
 <context>
@@ -2544,7 +2545,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="30"/>
         <source>Wallpaper type:</source>
-        <translation>Tipe Wallpaper</translation>
+        <translation>Tipe Wallpaper:</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="29"/>
@@ -2681,6 +2682,159 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 </context>
 <context>
     <name>HyprlandGeneralSchema</name>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="331"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="363"/>
+        <source>Must be at least 1 for blur to apply.</source>
+        <translation>Harus minimal 1 agar blur berlaku.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="355"/>
+        <source>Requires render.use_shader_blur_blend.</source>
+        <translation>Memerlukan render.use_shader_blur_blend.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="379"/>
+        <source>Selects which blur variant sub-options apply.</source>
+        <translation>Memilih sub-opsi varian blur mana yang berlaku.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="405"/>
+        <source>Disabled when blur.new_optimizations is false.</source>
+        <translation>Dinonaktifkan saat blur.new_optimizations bernilai false.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="755"/>
+        <source>Falls back to glow.color when empty.</source>
+        <translation>Kembali ke glow.color saat kosong.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1081"/>
+        <source>Step and points list; requires accel_profile set to custom.</source>
+        <translation>Daftar langkah dan titik; memerlukan accel_profile diatur ke custom.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1210"/>
+        <source>Empty string stops auto-detection of the output.</source>
+        <translation>String kosong menghentikan deteksi otomatis output.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1250"/>
+        <source>Monitor name or current.</source>
+        <translation>Nama monitor atau current.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1335"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1345"/>
+        <source>Negative means device default.</source>
+        <translation>Negatif berarti bawaan perangkat.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1405"/>
+        <source>Requires drag_into_group set to 2 and merge_groups_on_drag enabled.</source>
+        <translation>Memerlukan drag_into_group bernilai 2 dan merge_groups_on_drag diaktifkan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1434"/>
+        <source>Falls back to misc.font_family when empty.</source>
+        <translation>Kembali ke misc.font_family saat kosong.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1620"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1628"/>
+        <source>Falls back to text_color when empty.</source>
+        <translation>Kembali ke text_color saat kosong.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1636"/>
+        <source>Falls back to text_color_inactive when empty.</source>
+        <translation>Kembali ke text_color_inactive saat kosong.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1700"/>
+        <source>Requires disable_hyprland_logo enabled.</source>
+        <translation>Memerlukan disable_hyprland_logo diaktifkan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1708"/>
+        <source>none or empty mutes, default uses the system sound, otherwise a path.</source>
+        <translation>none atau kosong membisukan, default memakai suara sistem, selain itu berupa path.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1751"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1947"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1978"/>
+        <source>Monitor reload required.</source>
+        <translation>Monitor perlu dimuat ulang.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1830"/>
+        <source>-1 picks a random wallpaper.</source>
+        <translation>-1 memilih wallpaper acak.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1925"/>
+        <source>Requires session_lock_xray enabled.</source>
+        <translation>Memerlukan session_lock_xray diaktifkan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2016"/>
+        <source>0 disables the threshold.</source>
+        <translation>0 menonaktifkan ambang batas.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2119"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2144"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2535"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2543"/>
+        <source>Hyprland restart required.</source>
+        <translation>Hyprland perlu dimulai ulang.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2304"/>
+        <source>0 means never hide.</source>
+        <translation>0 berarti tidak pernah disembunyikan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2394"/>
+        <source>-1 follows warp_on_change_workspace.</source>
+        <translation>-1 mengikuti warp_on_change_workspace.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2427"/>
+        <source>1.0 means no zoom.</source>
+        <translation>1.0 berarti tanpa zoom.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2450"/>
+        <source>Epilepsy warning: flashes the screen on damage.</source>
+        <translation>Peringatan epilepsi: layar berkedip saat area rusak digambar.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2460"/>
+        <source>Do not change.</source>
+        <translation>Jangan ubah.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2567"/>
+        <source>Disables VFR for accurate results.</source>
+        <translation>Menonaktifkan VFR untuk hasil yang akurat.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2618"/>
+        <source>Space-separated, e.g. 4 3. Zero disables.</source>
+        <translation>Dipisahkan spasi, mis. 4 3. Nol menonaktifkan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2642"/>
+        <source>Xwayland restart required, Linux only.</source>
+        <translation>Xwayland perlu dimulai ulang, khusus Linux.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2664"/>
+        <source>Ignored on non-NVIDIA GPUs.</source>
+        <translation>Diabaikan pada GPU non-NVIDIA.</translation>
+    </message>
     <message>
         <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2812"/>
         <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2904"/>
@@ -3062,6 +3216,1706 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <source>Allowed</source>
         <translation>Diizinkan</translation>
     </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3320"/>
+        <source>Allow fullscreen on pinned windows, restoring pin state after</source>
+        <translation>Izinkan fullscreen pada jendela yang di-pin, lalu memulihkan status pin</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3321"/>
+        <source>Workspaces remember their previous workspace, enabling cycle loops</source>
+        <translation>Workspace mengingat workspace sebelumnya, memungkinkan perulangan siklus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3322"/>
+        <source>Let the layout handler manage client-requested fullscreen</source>
+        <translation>Biarkan pengelola layout mengatur fullscreen yang diminta klien</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3323"/>
+        <source>Ignore apps that request to disable keybinds, e.g. VMs</source>
+        <translation>Abaikan aplikasi yang meminta menonaktifkan keybind, contoh: VM</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3324"/>
+        <source>Movement threshold in px for window drags and click/drag bind flags</source>
+        <translation>Ambang pergerakan dalam px untuk seret jendela dan flag klik/seret bind</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3325"/>
+        <source>How directional focus picks a window when several match</source>
+        <translation>Cara fokus arah memilih jendela saat beberapa cocok</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3326"/>
+        <source>Hide the special workspace when changing workspaces</source>
+        <translation>Sembunyikan workspace khusus saat berpindah workspace</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3327"/>
+        <source>Group move dispatchers ignore per-group locks</source>
+        <translation>Dispatcher perpindahan grup mengabaikan kunci per-grup</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3328"/>
+        <source>Directional focus can seek windows out of fullscreen</source>
+        <translation>Fokus arah dapat mencari jendela yang keluar dari fullscreen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3329"/>
+        <source>Directional focus cycles through group windows first</source>
+        <translation>Fokus arah berputar melewati jendela grup terlebih dahulu</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3330"/>
+        <source>Pass mouse events through while a keybind fires</source>
+        <translation>Teruskan event mouse saat sebuah keybind aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3331"/>
+        <source>Delay in ms between scroll bind events</source>
+        <translation>Jeda dalam ms antar event scroll bind</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3332"/>
+        <source>Moving focus or a window past a monitor edge reaches the next monitor</source>
+        <translation>Memindahkan fokus atau jendela melewati tepi monitor menuju monitor berikutnya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3333"/>
+        <source>Switching to the current workspace goes back to the previous one</source>
+        <translation>Berpindah ke workspace saat ini kembali ke workspace sebelumnya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3334"/>
+        <source>What the cursor centers on when switching workspaces</source>
+        <translation>Apa yang menjadi pusat kursor saat berpindah workspace</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3335"/>
+        <source>Monitor the cursor starts on, by name</source>
+        <translation>Monitor tempat kursor mulai, berdasarkan nama</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3336"/>
+        <source>Enable hyprcursor cursor theme support</source>
+        <translation>Aktifkan dukungan tema kursor hyprcursor</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3337"/>
+        <source>Hide the cursor while typing until the mouse moves</source>
+        <translation>Sembunyikan kursor saat mengetik sampai mouse bergerak</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3338"/>
+        <source>Hide the cursor after tablet input until the mouse moves</source>
+        <translation>Sembunyikan kursor setelah input tablet sampai mouse bergerak</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3339"/>
+        <source>Hide the cursor after touch input until the mouse moves</source>
+        <translation>Sembunyikan kursor setelah input sentuh sampai mouse bergerak</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3340"/>
+        <source>Padding in logical px between the cursor and screen edges</source>
+        <translation>Padding dalam px logis antara kursor dan tepi layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3341"/>
+        <source>Seconds of cursor inactivity before hiding it, 0 for never</source>
+        <translation>Detik tidak aktif kursor sebelum disembunyikan, 0 untuk tidak pernah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3342"/>
+        <source>Do not render the cursor at all</source>
+        <translation>Jangan render kursor sama sekali</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3343"/>
+        <source>Minimum refresh rate for cursor updates when VRR is active</source>
+        <translation>Refresh rate minimum untuk pembaruan kursor saat VRR aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3344"/>
+        <source>Avoid cursor-driven frame spikes on fullscreen VRR apps</source>
+        <translation>Hindari lonjakan frame akibat kursor pada aplikasi fullscreen VRR</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3345"/>
+        <source>When to avoid hardware cursors</source>
+        <translation>Kapan menghindari kursor perangkat keras</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3346"/>
+        <source>Never warp the cursor on focus changes or keybinds</source>
+        <translation>Jangan pernah memindahkan kursor saat fokus berubah atau keybind aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3347"/>
+        <source>Cursor returns to its last position within a refocused window</source>
+        <translation>Kursor kembali ke posisi terakhirnya di dalam jendela yang difokuskan ulang</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3348"/>
+        <source>Sync the XCursor theme and size with GSettings</source>
+        <translation>Sinkronkan tema dan ukuran XCursor dengan GSettings</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3349"/>
+        <source>When hardware cursors use a CPU buffer; NVIDIA needs it</source>
+        <translation>Kapan kursor perangkat keras memakai buffer CPU; NVIDIA memerlukannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3350"/>
+        <source>Restore cursor position after it was moved by non-mouse input</source>
+        <translation>Pulihkan posisi kursor setelah dipindahkan oleh input non-mouse</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3351"/>
+        <source>Warp to the last focused window after changing workspaces</source>
+        <translation>Pindah ke jendela terakhir yang difokuskan setelah berpindah workspace</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3352"/>
+        <source>Warp to the last focused window when changing monitors</source>
+        <translation>Pindah ke jendela terakhir yang difokuskan saat berpindah monitor</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3353"/>
+        <source>Warp to the last focused window when toggling special workspaces</source>
+        <translation>Pindah ke jendela terakhir yang difokuskan saat mengaktifkan workspace khusus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3354"/>
+        <source>When zoomed, only follow the cursor at screen edges</source>
+        <translation>Saat diperbesar, hanya ikuti kursor di tepi layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3355"/>
+        <source>Disable antialiasing while zoomed, making things pixelated</source>
+        <translation>Nonaktifkan antialiasing saat diperbesar, membuat gambar berpiksel</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3356"/>
+        <source>Magnification factor around the cursor, 1 disables</source>
+        <translation>Faktor pembesaran di sekitar kursor, 1 menonaktifkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3357"/>
+        <source>Zoom view follows the cursor rigidly instead of loosely</source>
+        <translation>Tampilan zoom mengikuti kursor secara kaku, bukan longgar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3358"/>
+        <source>Colorize stdout logs</source>
+        <translation>Warnai log stdout</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3359"/>
+        <source>Flash damaged areas on screen; epilepsy warning</source>
+        <translation>Kedipkan area rusak di layar; peringatan epilepsi</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3360"/>
+        <source>Redraw only damaged parts of the display; leave at Full</source>
+        <translation>Gambar ulang hanya bagian rusak layar; biarkan pada Full</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3361"/>
+        <source>Disable logging to a file</source>
+        <translation>Nonaktifkan pencatatan log ke berkas</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3362"/>
+        <source>Skip scale verification; causes rounding artifacts</source>
+        <translation>Lewati verifikasi skala; menyebabkan artefak pembulatan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3363"/>
+        <source>Omit timestamps from logs</source>
+        <translation>Hilangkan timestamp dari log</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3364"/>
+        <source>Direct scanout special case for unmodified buffers</source>
+        <translation>Kasus khusus direct scanout untuk buffer yang tidak diubah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3365"/>
+        <source>Direct scanout FIFO variant of the same-buffer case</source>
+        <translation>Varian FIFO direct scanout untuk kasus buffer yang sama</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3366"/>
+        <source>Also log to stdout</source>
+        <translation>Juga catat ke stdout</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3367"/>
+        <source>How many config errors to display</source>
+        <translation>Berapa banyak error konfigurasi yang ditampilkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3368"/>
+        <source>Which screen edge the config error bar sits on</source>
+        <translation>Tepi layar mana tempat bilah error konfigurasi berada</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3369"/>
+        <source>Workaround for empty FIFO pending lists</source>
+        <translation>Solusi untuk daftar FIFO pending yang kosong</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3370"/>
+        <source>Claim support for all color-management protocol features</source>
+        <translation>Klaim dukungan untuk semua fitur protokol manajemen warna</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3371"/>
+        <source>Enable OpenGL and EGL debugging</source>
+        <translation>Aktifkan debugging OpenGL dan EGL</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3372"/>
+        <source>Whether buffer invalidation is allowed</source>
+        <translation>Apakah invalidasi buffer diizinkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3373"/>
+        <source>Log damage events</source>
+        <translation>Catat event damage</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3374"/>
+        <source>Show the debug performance overlay</source>
+        <translation>Tampilkan overlay performa debug</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3375"/>
+        <source>Debug render passes</source>
+        <translation>Render pass debug</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3376"/>
+        <source>Render solitary windows with empty damage</source>
+        <translation>Render jendela soliter dengan damage kosong</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3377"/>
+        <source>Hide config error popups</source>
+        <translation>Sembunyikan popup error konfigurasi</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3378"/>
+        <source>Variable frame rate; leave enabled to save resources</source>
+        <translation>Variable frame rate; biarkan aktif untuk menghemat sumber daya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3379"/>
+        <source>Opacity of focused windows</source>
+        <translation>Opasitas jendela yang difokuskan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3380"/>
+        <source>Count the border as part of the window</source>
+        <translation>Hitung border sebagai bagian dari jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3381"/>
+        <source>How much dim_around window rules dim</source>
+        <translation>Seberapa banyak aturan jendela dim_around meredupkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3382"/>
+        <source>Dim unfocused windows</source>
+        <translation>Redupkan jendela yang tidak difokuskan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3383"/>
+        <source>Dim parents of modal windows</source>
+        <translation>Redupkan induk jendela modal</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3384"/>
+        <source>Dim the screen behind special workspaces</source>
+        <translation>Redupkan layar di belakang workspace khusus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3385"/>
+        <source>How strongly inactive windows dim</source>
+        <translation>Seberapa kuat jendela tidak aktif diredupkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3386"/>
+        <source>Opacity of fullscreen windows</source>
+        <translation>Opasitas jendela fullscreen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3387"/>
+        <source>Opacity of unfocused windows</source>
+        <translation>Opasitas jendela yang tidak difokuskan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3388"/>
+        <source>Corner radius in layout pixels</source>
+        <translation>Radius sudut dalam piksel layout</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3389"/>
+        <source>Corner curve shape: 2.0 is a circle, 4.0 a squircle</source>
+        <translation>Bentuk kurva sudut: 2.0 lingkaran, 4.0 squircle</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3390"/>
+        <source>Path to a custom screen shader, empty to disable</source>
+        <translation>Path ke shader layar kustom, kosong untuk menonaktifkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3391"/>
+        <source>Enable window background blur</source>
+        <translation>Aktifkan blur latar jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3392"/>
+        <source>Blur brightness modulation</source>
+        <translation>Modulasi kecerahan blur</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3393"/>
+        <source>Blur contrast modulation</source>
+        <translation>Modulasi kontras blur</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3394"/>
+        <source>Blur windows regardless of their opacity</source>
+        <translation>Blur jendela tanpa memandang opasitasnya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3395"/>
+        <source>Blur input method windows like fcitx5</source>
+        <translation>Blur jendela metode input seperti fcitx5</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3396"/>
+        <source>Skip blurring pixels below this opacity</source>
+        <translation>Lewati blur piksel di bawah opasitas ini</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3397"/>
+        <source>Extra blur optimizations, recommended</source>
+        <translation>Optimasi blur tambahan, disarankan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3398"/>
+        <source>Noise applied to the blur</source>
+        <translation>Noise yang diterapkan pada blur</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3399"/>
+        <source>Blur passes; needs at least 1 for blur to apply</source>
+        <translation>Pass blur; perlu minimal 1 agar blur berlaku</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3400"/>
+        <source>Blur popups like right-click menus</source>
+        <translation>Blur popup seperti menu klik kanan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3401"/>
+        <source>Skip blurring popup pixels below this opacity</source>
+        <translation>Lewati blur piksel popup di bawah opasitas ini</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3402"/>
+        <source>Scale blur strength with pixel opacity</source>
+        <translation>Sesuaikan kekuatan blur dengan opasitas piksel</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3403"/>
+        <source>Blur size (distance)</source>
+        <translation>Ukuran blur (jarak)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3404"/>
+        <source>Blur behind the special workspace; expensive</source>
+        <translation>Blur di belakang workspace khusus; berat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3405"/>
+        <source>Blur pattern; heavier ones cost GPU time</source>
+        <translation>Pola blur; yang lebih berat memakan waktu GPU</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3406"/>
+        <source>Boost saturation of blurred colors</source>
+        <translation>Tingkatkan saturasi warna yang di-blur</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3407"/>
+        <source>How strongly vibrancy affects dark areas</source>
+        <translation>Seberapa kuat vibrancy memengaruhi area gelap</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3408"/>
+        <source>Floating windows ignore tiled windows in their blur</source>
+        <translation>Jendela float mengabaikan jendela tiled dalam blur-nya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3409"/>
+        <source>Acrylic chromatic separation</source>
+        <translation>Pemisahan kromatik akrilik</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3410"/>
+        <source>Curved acrylic edge width in px</source>
+        <translation>Lebar tepi akrilik melengkung dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3411"/>
+        <source>Sharp backdrop passing through the acrylic</source>
+        <translation>Latar belakang tajam yang melewati akrilik</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3412"/>
+        <source>Maximum acrylic lens displacement in px</source>
+        <translation>Perpindahan maksimum lensa akrilik dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3413"/>
+        <source>Acrylic tint color; alpha sets absorption</source>
+        <translation>Warna tint akrilik; alpha mengatur penyerapan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3414"/>
+        <source>First aurora color; alpha sets its contribution</source>
+        <translation>Warna aurora pertama; alpha mengatur kontribusinya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3415"/>
+        <source>Second aurora color; alpha sets its contribution</source>
+        <translation>Warna aurora kedua; alpha mengatur kontribusinya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3416"/>
+        <source>Aurora color strength</source>
+        <translation>Kekuatan warna aurora</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3417"/>
+        <source>Aurora animation speed, 0 freezes</source>
+        <translation>Kecepatan animasi aurora, 0 membekukan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3418"/>
+        <source>Drops animation speed, 0 disables</source>
+        <translation>Kecepatan animasi tetesan, 0 menonaktifkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3419"/>
+        <source>Fluid color</source>
+        <translation>Warna fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3420"/>
+        <source>Fluid refraction distortion multiplier</source>
+        <translation>Pengali distorsi refraksi fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3421"/>
+        <source>How full the fluid container is</source>
+        <translation>Seberapa penuh wadah fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3422"/>
+        <source>Fluid inertial mass</source>
+        <translation>Massa inersia fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3423"/>
+        <source>Fluid simulation precision multiplier</source>
+        <translation>Pengali presisi simulasi fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3424"/>
+        <source>Fluid animation speed</source>
+        <translation>Kecepatan animasi fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3425"/>
+        <source>Interior fluid turbulence multiplier</source>
+        <translation>Pengali turbulensi interior fluida</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3426"/>
+        <source>Maximum glass refraction displacement in px</source>
+        <translation>Perpindahan maksimum refraksi kaca dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3427"/>
+        <source>Glass relief shading strength</source>
+        <translation>Kekuatan shading relief kaca</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3428"/>
+        <source>Glass pattern size in px</source>
+        <translation>Ukuran pola kaca dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3429"/>
+        <source>Haze sheen strength</source>
+        <translation>Kekuatan kilau haze</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3430"/>
+        <source>Haze color-shift strength</source>
+        <translation>Kekuatan pergeseran warna haze</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3431"/>
+        <source>Shimmer animation speed, 0 disables</source>
+        <translation>Kecepatan animasi shimmer, 0 menonaktifkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3432"/>
+        <source>Ripple duration in seconds</source>
+        <translation>Durasi ripple dalam detik</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3433"/>
+        <source>Ripple maximum radius in px</source>
+        <translation>Radius maksimum ripple dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3434"/>
+        <source>Ripple maximum refraction in px</source>
+        <translation>Refraksi maksimum ripple dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3435"/>
+        <source>Ripple wave width in px</source>
+        <translation>Lebar gelombang ripple dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3436"/>
+        <source>Water wave damping</source>
+        <translation>Peredaman gelombang air</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3437"/>
+        <source>Water maximum duration in seconds</source>
+        <translation>Durasi maksimum air dalam detik</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3438"/>
+        <source>Water pointer radius in px</source>
+        <translation>Radius penunjuk air dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3439"/>
+        <source>Water propagation speed</source>
+        <translation>Kecepatan rambat air</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3440"/>
+        <source>Water refraction and injection strength in px</source>
+        <translation>Kekuatan refraksi dan injeksi air dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3441"/>
+        <source>Active window glow color; alpha sets opacity</source>
+        <translation>Warna glow jendela aktif; alpha mengatur opasitas</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3442"/>
+        <source>Inactive glow color; empty falls back to color</source>
+        <translation>Warna glow tidak aktif; kosong kembali ke color</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3443"/>
+        <source>Enable inner window glow</source>
+        <translation>Aktifkan glow interior jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3444"/>
+        <source>Glow size in px</source>
+        <translation>Ukuran glow dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3445"/>
+        <source>Glow falloff power; higher is a faster falloff</source>
+        <translation>Daya falloff glow; lebih tinggi berarti falloff lebih cepat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3446"/>
+        <source>Blur windows while they move or resize</source>
+        <translation>Blur jendela saat bergerak atau diubah ukurannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3447"/>
+        <source>Motion blur samples; more is smoother but costlier</source>
+        <translation>Sampel motion blur; lebih banyak lebih halus tapi lebih berat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3448"/>
+        <source>Enable window drop shadows</source>
+        <translation>Aktifkan bayangan jatuh jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3449"/>
+        <source>Shadow rendering offset</source>
+        <translation>Offset render bayangan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3450"/>
+        <source>Shadow size in px</source>
+        <translation>Ukuran bayangan dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3451"/>
+        <source>Shadow falloff power; higher is a faster falloff</source>
+        <translation>Daya falloff bayangan; lebih tinggi berarti falloff lebih cepat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3452"/>
+        <source>Shadow scale</source>
+        <translation>Skala bayangan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3453"/>
+        <source>Render shadows sharp, as with infinite falloff power</source>
+        <translation>Render bayangan tajam, seperti dengan daya falloff tak hingga</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3454"/>
+        <source>Wobble spring damping</source>
+        <translation>Peredaman pegas wobble</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3455"/>
+        <source>Wobble windows while they move or resize</source>
+        <translation>Wobble jendela saat bergerak atau diubah ukurannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3456"/>
+        <source>Wobble impulse multiplier</source>
+        <translation>Pengali impuls wobble</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3457"/>
+        <source>Wobble spring mass</source>
+        <translation>Massa pegas wobble</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3458"/>
+        <source>Wobble mesh vertices per edge</source>
+        <translation>Vertek mesh wobble per tepi</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3459"/>
+        <source>Wobble spring stiffness</source>
+        <translation>Kekakuan pegas wobble</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3460"/>
+        <source>Position delta treated as settled</source>
+        <translation>Delta posisi yang dianggap telah tenang</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3461"/>
+        <source>Velocity delta treated as settled</source>
+        <translation>Delta kecepatan yang dianggap telah tenang</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3462"/>
+        <source>Enable the permission control system</source>
+        <translation>Aktifkan sistem kontrol izin</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3463"/>
+        <source>Hide the periodic donation popup</source>
+        <translation>Sembunyikan popup donasi berkala</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3464"/>
+        <source>Hide the new-version news popup</source>
+        <translation>Sembunyikan popup berita versi baru</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3465"/>
+        <source>Allow color-management protocol version 2</source>
+        <translation>Izinkan protokol manajemen warna versi 2</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3466"/>
+        <source>Master switch for tearing</source>
+        <translation>Saklar utama untuk tearing</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3467"/>
+        <source>Window border width</source>
+        <translation>Lebar border jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3468"/>
+        <source>Extend the draggable border area; needs resize_on_border</source>
+        <translation>Perluas area border yang dapat diseret; memerlukan resize_on_border</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3469"/>
+        <source>Gaps between floating windows and monitor edges, -1 for default</source>
+        <translation>Jarak antara jendela float dan tepi monitor, -1 untuk bawaan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3470"/>
+        <source>Gaps between windows</source>
+        <translation>Jarak antar jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3471"/>
+        <source>Gaps between windows and monitor edges</source>
+        <translation>Jarak antara jendela dan tepi monitor</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3472"/>
+        <source>Gaps between workspaces, stacks with gaps_out</source>
+        <translation>Jarak antar workspace, menumpuk dengan gaps_out</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3473"/>
+        <source>Show a resize cursor icon on borders; needs resize_on_border</source>
+        <translation>Tampilkan ikon kursor ubah ukuran pada border; memerlukan resize_on_border</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3474"/>
+        <source>Which tiling layout to use</source>
+        <translation>Layout tiling mana yang dipakai</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3475"/>
+        <source>Override the system locale, e.g. en_US</source>
+        <translation>Timpa locale sistem, mis. en_US</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3476"/>
+        <source>Keep parents of modal windows interactive</source>
+        <translation>Pertahankan induk jendela modal tetap interaktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3477"/>
+        <source>No fallback window when directional focus finds none</source>
+        <translation>Tidak ada jendela fallback saat fokus arah tidak menemukan apa pun</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3478"/>
+        <source>Force a resize corner for floating windows, 0 to disable</source>
+        <translation>Paksa sudut ubah ukuran untuk jendela float, 0 untuk menonaktifkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3479"/>
+        <source>Resize windows by dragging borders and gaps</source>
+        <translation>Ubah ukuran jendela dengan menyeret border dan gap</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3480"/>
+        <source>Snap floating windows to one border width apart</source>
+        <translation>Tempel jendela float berjarak satu lebar border</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3481"/>
+        <source>Enable floating window snapping</source>
+        <translation>Aktifkan penempelan jendela float</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3482"/>
+        <source>Snapping distance to monitor edges in px</source>
+        <translation>Jarak penempelan ke tepi monitor dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3483"/>
+        <source>Snapping respects gaps_in</source>
+        <translation>Penempelan menghormati gaps_in</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3484"/>
+        <source>Snapping distance between windows in px</source>
+        <translation>Jarak penempelan antar jendela dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3485"/>
+        <source>New windows join the focused unlocked group</source>
+        <translation>Jendela baru bergabung ke grup terbuka yang difokuskan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3486"/>
+        <source>Whether dragging a window into a group merges them</source>
+        <translation>Apakah menyeret jendela ke sebuah grup menggabungkannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3487"/>
+        <source>Focus the window just moved out of a group</source>
+        <translation>Fokuskan jendela yang baru keluar dari grup</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3488"/>
+        <source>Blur the groupbar</source>
+        <translation>Blur groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3489"/>
+        <source>Hide the groupbar for single-window groups</source>
+        <translation>Sembunyikan groupbar untuk grup berjendela tunggal</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3490"/>
+        <source>Enable groupbars</source>
+        <translation>Aktifkan groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3491"/>
+        <source>Groupbar font; empty uses misc.font_family</source>
+        <translation>Font groupbar; kosong memakai misc.font_family</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3492"/>
+        <source>Groupbar title font size</source>
+        <translation>Ukuran font judul groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3493"/>
+        <source>Active title font weight</source>
+        <translation>Bobot font judul aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3494"/>
+        <source>Inactive title font weight</source>
+        <translation>Bobot font judul tidak aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3495"/>
+        <source>Gap between groupbar gradients</source>
+        <translation>Jarak antar gradien groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3496"/>
+        <source>Gap between gradients and the window</source>
+        <translation>Jarak antara gradien dan jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3497"/>
+        <source>Gradient corner rounding</source>
+        <translation>Pembulatan sudut gradien</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3498"/>
+        <source>Gradient corner curve shape</source>
+        <translation>Bentuk kurva sudut gradien</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3499"/>
+        <source>Round only the groupbar gradient edges</source>
+        <translation>Bulatkan hanya tepi gradien groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3500"/>
+        <source>Enable groupbar gradients</source>
+        <translation>Aktifkan gradien groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3501"/>
+        <source>Groupbar height</source>
+        <translation>Tinggi groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3502"/>
+        <source>Gap between indicator and titles</source>
+        <translation>Jarak antara indikator dan judul</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3503"/>
+        <source>Groupbar indicator height</source>
+        <translation>Tinggi indikator groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3504"/>
+        <source>Keep the gap above the groupbar</source>
+        <translation>Pertahankan jarak di atas groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3505"/>
+        <source>Middle click on the groupbar closes the window</source>
+        <translation>Klik tengah pada groupbar menutup jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3506"/>
+        <source>Groupbar decoration priority</source>
+        <translation>Prioritas dekorasi groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3507"/>
+        <source>Render titles in the groupbar</source>
+        <translation>Render judul di groupbar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3508"/>
+        <source>Indicator corner rounding</source>
+        <translation>Pembulatan sudut indikator</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3509"/>
+        <source>Indicator corner curve shape</source>
+        <translation>Bentuk kurva sudut indikator</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3510"/>
+        <source>Round only the indicator edges</source>
+        <translation>Bulatkan hanya tepi indikator</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3511"/>
+        <source>Scrolling the groupbar switches windows</source>
+        <translation>Menggulir groupbar berpindah jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3512"/>
+        <source>Render the groupbar vertically</source>
+        <translation>Render groupbar secara vertikal</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3513"/>
+        <source>Active title color</source>
+        <translation>Warna judul aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3514"/>
+        <source>Inactive title color; empty falls back to text_color</source>
+        <translation>Warna judul tidak aktif; kosong kembali ke text_color</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3515"/>
+        <source>Locked-group active title color; falls back to text_color</source>
+        <translation>Warna judul aktif grup terkunci; kembali ke text_color</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3516"/>
+        <source>Locked-group inactive title color; falls back to text_color_inactive</source>
+        <translation>Warna judul tidak aktif grup terkunci; kembali ke text_color_inactive</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3517"/>
+        <source>Vertical title offset</source>
+        <translation>Offset vertikal judul</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3518"/>
+        <source>Horizontal title padding</source>
+        <translation>Padding horizontal judul</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3519"/>
+        <source>Moving a window to a workspace merges it into its group</source>
+        <translation>Memindahkan jendela ke sebuah workspace menggabungkannya ke grupnya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3520"/>
+        <source>New group windows spawn after the current one</source>
+        <translation>Jendela grup baru muncul setelah jendela saat ini</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3521"/>
+        <source>Dragging a floating window into a groupbar merges it</source>
+        <translation>Menyeret jendela float ke groupbar menggabungkannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3522"/>
+        <source>Groups can be dragged into other groups</source>
+        <translation>Grup dapat diseret ke grup lain</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3523"/>
+        <source>Dragging a group onto another groupbar merges them</source>
+        <translation>Menyeret grup ke groupbar lain menggabungkannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3524"/>
+        <source>Pointer acceleration profile; empty uses libinput default</source>
+        <translation>Profil akselerasi pointer; kosong memakai bawaan libinput</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3525"/>
+        <source>Turn high-resolution scrolling into discrete scroll events</source>
+        <translation>Ubah scrolling resolusi tinggi menjadi event scroll diskrit</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3526"/>
+        <source>Focus the cursor window on tiling-float switches</source>
+        <translation>Fokuskan jendela di bawah kursor saat berpindah tiling-float</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3527"/>
+        <source>What gets focus when a window closes</source>
+        <translation>Apa yang difokuskan saat sebuah jendela ditutup</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3528"/>
+        <source>How cursor movement affects window focus</source>
+        <translation>Cara pergerakan kursor memengaruhi fokus jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3529"/>
+        <source>Shrink inactive hitboxes to create focus dead zones in gaps</source>
+        <translation>Kecilkan hitbox tidak aktif untuk membuat zona mati fokus di gap</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3530"/>
+        <source>Minimum cursor travel before refocusing, in px</source>
+        <translation>Jarak minimum kursor sebelum fokus ulang, dalam px</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3531"/>
+        <source>Use raw pointer input without acceleration</source>
+        <translation>Pakai input pointer mentah tanpa akselerasi</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3532"/>
+        <source>Path to a custom XKB keymap file</source>
+        <translation>Path ke berkas keymap XKB kustom</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3533"/>
+        <source>XKB keyboard layout</source>
+        <translation>Layout keyboard XKB</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3534"/>
+        <source>XKB keyboard model</source>
+        <translation>Model keyboard XKB</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3535"/>
+        <source>XKB options</source>
+        <translation>Opsi XKB</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3536"/>
+        <source>XKB rules</source>
+        <translation>Aturan XKB</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3537"/>
+        <source>XKB layout variant</source>
+        <translation>Varian layout XKB</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3538"/>
+        <source>Swap left and right mouse buttons</source>
+        <translation>Tukar tombol kiri dan kanan mouse</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3539"/>
+        <source>Refocus on window boundary crossings; needs follow_mouse 1</source>
+        <translation>Fokus ulang saat melewati batas jendela; memerlukan follow_mouse 1</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3540"/>
+        <source>Invert scrolling direction</source>
+        <translation>Balik arah scrolling</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3541"/>
+        <source>Turn numlock on at startup</source>
+        <translation>Nyalakan numlock saat mulai</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3542"/>
+        <source>How scroll events around a window edges behave</source>
+        <translation>Cara event scroll di sekitar tepi jendela berperilaku</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3543"/>
+        <source>Delay before key repeat kicks in, in ms</source>
+        <translation>Jeda sebelum repeat tombol mulai, dalam ms</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3544"/>
+        <source>Key repeats per second while held</source>
+        <translation>Jumlah repeat tombol per detik saat ditahan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3545"/>
+        <source>Match keybinds by symbol across keyboard layouts</source>
+        <translation>Cocokkan keybind berdasarkan simbol di berbagai layout keyboard</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3546"/>
+        <source>Device rotation in degrees clockwise</source>
+        <translation>Rotasi perangkat dalam derajat searah jarum jam</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3547"/>
+        <source>Button used for on-button scrolling, 0 default</source>
+        <translation>Tombol untuk scrolling pada tombol, 0 bawaan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3548"/>
+        <source>Toggle scroll-button lock instead of holding it</source>
+        <translation>Alihkan kunci tombol scroll daripada menahannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3549"/>
+        <source>Scroll movement multiplier for mice</source>
+        <translation>Pengali gerakan scroll untuk mouse</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3550"/>
+        <source>How scrolling is performed</source>
+        <translation>Cara scrolling dilakukan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3551"/>
+        <source>Custom scroll acceleration curve for accel_profile custom</source>
+        <translation>Kurva akselerasi scroll kustom untuk accel_profile custom</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3552"/>
+        <source>Mouse sensitivity in the libinput range</source>
+        <translation>Sensitivitas mouse dalam rentang libinput</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3553"/>
+        <source>Floating-only special workspaces do not block regular focus</source>
+        <translation>Workspace khusus khusus-float tidak memblokir fokus reguler</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3554"/>
+        <source>First click on an unfocused window only focuses it</source>
+        <translation>Klik pertama pada jendela tidak difokus hanya memfokuskannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3555"/>
+        <source>Treat region_position as absolute in the monitor layout</source>
+        <translation>Perlakukan region_position sebagai absolut dalam layout monitor</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3556"/>
+        <source>Tablet active area position in mm</source>
+        <translation>Posisi area aktif tablet dalam mm</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3557"/>
+        <source>Tablet active area size in mm</source>
+        <translation>Ukuran area aktif tablet dalam mm</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3558"/>
+        <source>Enable tablet input</source>
+        <translation>Aktifkan input tablet</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3559"/>
+        <source>Rotate the tablet 180 degrees</source>
+        <translation>Putar tablet 180 derajat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3560"/>
+        <source>Monitor the tablet maps to; empty maps across all</source>
+        <translation>Monitor tempat tablet dipetakan; kosong memetakan ke semua</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3561"/>
+        <source>Mapped region position relative to the bound monitor</source>
+        <translation>Posisi region petak relatif terhadap monitor terikat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3562"/>
+        <source>Map tablet input to this region size</source>
+        <translation>Petakan input tablet ke ukuran region ini</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3563"/>
+        <source>Use relative tablet input</source>
+        <translation>Pakai input tablet relatif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3564"/>
+        <source>Transform applied to tablet input</source>
+        <translation>Transformasi yang diterapkan pada input tablet</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3565"/>
+        <source>Eraser button sends a button event instead of erasing</source>
+        <translation>Tombol penghapus mengirim event tombol, bukan menghapus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3566"/>
+        <source>Which button the eraser button emulates</source>
+        <translation>Tombol mana yang ditiru tombol penghapus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3567"/>
+        <source>Tool pressure maximum; negative uses device default</source>
+        <translation>Tekanan alat maksimum; negatif memakai bawaan perangkat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3568"/>
+        <source>Tool pressure minimum; negative uses device default</source>
+        <translation>Tekanan alat minimum; negatif memakai bawaan perangkat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3569"/>
+        <source>Enable touch device input</source>
+        <translation>Aktifkan input perangkat sentuh</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3570"/>
+        <source>Monitor touch devices map to; empty string stops auto-detection</source>
+        <translation>Monitor tempat perangkat sentuh dipetakan; string kosong menghentikan deteksi otomatis</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3571"/>
+        <source>Transform applied to touch input</source>
+        <translation>Transformasi yang diterapkan pada input sentuh</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3572"/>
+        <source>Multi-finger clicks send fixed buttons instead of by position</source>
+        <translation>Klik multi-jari mengirim tombol tetap, bukan berdasarkan posisi</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3573"/>
+        <source>Disable the touchpad while typing</source>
+        <translation>Nonaktifkan touchpad saat mengetik</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3574"/>
+        <source>Enable multi-finger drag</source>
+        <translation>Aktifkan seret multi-jari</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3575"/>
+        <source>Keep dragging after lifting the finger</source>
+        <translation>Lanjutkan menyeret setelah jari diangkat</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3576"/>
+        <source>Invert horizontal touchpad movement</source>
+        <translation>Balik gerakan horizontal touchpad</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3577"/>
+        <source>Invert vertical touchpad movement</source>
+        <translation>Balik gerakan vertikal touchpad</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3578"/>
+        <source>LMB and RMB together act as middle click</source>
+        <translation>LMB dan RMB bersama bertindak sebagai klik tengah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3579"/>
+        <source>Invert touchpad scrolling direction</source>
+        <translation>Balik arah scrolling touchpad</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3580"/>
+        <source>Touchpad scroll movement multiplier</source>
+        <translation>Pengali gerakan scroll touchpad</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3581"/>
+        <source>Tap then hold to drag</source>
+        <translation>Ketuk lalu tahan untuk menyeret</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3582"/>
+        <source>Finger-count to button mapping for taps</source>
+        <translation>Pemetaan jumlah jari ke tombol untuk ketukan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3583"/>
+        <source>Taps send mouse clicks</source>
+        <translation>Ketukan mengirim klik mouse</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3584"/>
+        <source>Release held keys when the virtual keyboard closes</source>
+        <translation>Lepaskan tombol yang ditahan saat keyboard virtual ditutup</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3585"/>
+        <source>Share key and modifier states with other keyboards</source>
+        <translation>Bagikan status tombol dan modifier dengan keyboard lain</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3586"/>
+        <source>Also capture and forward modifier keys</source>
+        <translation>Tangkap dan teruskan tombol modifier juga</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3587"/>
+        <source>Error out on invalid pointer barriers</source>
+        <translation>Hentikan dengan error saat pointer barrier tidak valid</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3588"/>
+        <source>Let newly mapped layers render over a covering fullscreen window</source>
+        <translation>Biarkan layer yang baru dipetakan tampil di atas jendela fullscreen penuh</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3589"/>
+        <source>Keyboard-interactive layers like launchers keep keyboard focus</source>
+        <translation>Layer interaktif-keyboard seperti launcher tetap memegang fokus keyboard</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3590"/>
+        <source>Pad the screen so a lone window matches the ratio, e.g. 4 3</source>
+        <translation>Pad layar agar satu jendela cocok dengan rasio, mis. 4 3</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3591"/>
+        <source>Skip the aspect ratio when padding would be smaller than this</source>
+        <translation>Lewati rasio aspek saat padding akan lebih kecil dari ini</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3592"/>
+        <source>Allow restarting a crashed lock screen</source>
+        <translation>Izinkan memulai ulang lock screen yang crash</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3593"/>
+        <source>Focus follows the mouse during drag and drop</source>
+        <translation>Fokus mengikuti mouse saat seret dan lepas</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3594"/>
+        <source>Animate manual window resizes</source>
+        <translation>Animasikan pengubahan ukuran jendela manual</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3595"/>
+        <source>Animate windows dragged by the mouse</source>
+        <translation>Animasikan jendela yang diseret mouse</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3596"/>
+        <source>Missed pings before the app-not-responding dialog shows</source>
+        <translation>Ping terlewat sebelum dialog aplikasi tidak merespons muncul</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3597"/>
+        <source>Background color; needs disable_hyprland_logo</source>
+        <translation>Warna latar; memerlukan disable_hyprland_logo</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3598"/>
+        <source>System bell sound: none, default, or a wav/ogg path</source>
+        <translation>Suara bel sistem: none, default, atau path wav/ogg</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3599"/>
+        <source>Close special workspaces when their last window closes</source>
+        <translation>Tutup workspace khusus saat jendela terakhirnya ditutup</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3600"/>
+        <source>Do not auto-reload the config on file changes</source>
+        <translation>Jangan muat ulang konfigurasi otomatis saat berkas berubah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3601"/>
+        <source>Hide the missing hyprland-guiutils warning</source>
+        <translation>Sembunyikan peringatan hyprland-guiutils tidak ditemukan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3602"/>
+        <source>Hide the Hyprland logo and anime background</source>
+        <translation>Sembunyikan logo Hyprland dan latar anime</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3603"/>
+        <source>Hide the scale-failure notification popup</source>
+        <translation>Sembunyikan popup notifikasi kegagalan skala</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3604"/>
+        <source>Hide the splash text on the background</source>
+        <translation>Sembunyikan teks splash di latar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3605"/>
+        <source>Hide the start-hyprland watchdog warning</source>
+        <translation>Sembunyikan peringatan watchdog start-hyprland</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3606"/>
+        <source>Hide the externally-managed XDG environment warning</source>
+        <translation>Sembunyikan peringatan lingkungan XDG yang dikelola eksternal</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3607"/>
+        <source>Show the app-not-responding dialog</source>
+        <translation>Tampilkan dialog aplikasi tidak merespons</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3608"/>
+        <source>Enable window swallowing</source>
+        <translation>Aktifkan penelanan jendela</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3609"/>
+        <source>Whether closing a fullscreen window fullscreenes the next one</source>
+        <translation>Apakah menutup jendela fullscreen membuat jendela berikutnya fullscreen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3610"/>
+        <source>Keep existing floating windows on screen</source>
+        <translation>Pertahankan jendela float yang ada tetap di layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3611"/>
+        <source>Focus apps that request activation</source>
+        <translation>Fokuskan aplikasi yang meminta aktivasi</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3612"/>
+        <source>Global default font</source>
+        <translation>Font bawaan global</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3613"/>
+        <source>Which default wallpaper to enforce, -1 random</source>
+        <translation>Wallpaper bawaan mana yang dipaksakan, -1 acak</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3614"/>
+        <source>Seconds before workspace-tracking tokens expire</source>
+        <translation>Detik sebelum token pelacak workspace kedaluwarsa</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3615"/>
+        <source>Open windows on the workspace they were invoked from</source>
+        <translation>Buka jendela pada workspace tempat ia dipanggil</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3616"/>
+        <source>A key press wakes screensaver-off monitors</source>
+        <translation>Tekanan tombol membangunkan monitor yang layarnya mati</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3617"/>
+        <source>Delay before the lockdead screen shows, in ms</source>
+        <translation>Jeda sebelum layar lockdead muncul, dalam ms</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3618"/>
+        <source>Enable middle-click primary-selection paste</source>
+        <translation>Aktifkan tempel seleksi-primer dengan klik tengah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3619"/>
+        <source>Mouse movement wakes screensaver-off monitors</source>
+        <translation>Pergerakan mouse membangunkan monitor yang layarnya mati</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3620"/>
+        <source>Hovering a monitor focuses it</source>
+        <translation>Melayangi sebuah monitor memfokuskannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3621"/>
+        <source>Name virtual keyboards after their creating process</source>
+        <translation>Beri nama keyboard virtual sesuai proses pembuatnya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3622"/>
+        <source>Keep newly spawned floating windows on screen</source>
+        <translation>Pertahankan jendela float yang baru muncul tetap di layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3623"/>
+        <source>What happens when a tiled window is focused under fullscreen</source>
+        <translation>Apa yang terjadi saat jendela tiled difokuskan di bawah fullscreen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3624"/>
+        <source>FPS cap for windows rendered while unfocused</source>
+        <translation>Batas FPS untuk jendela yang dirender saat tidak difokus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3625"/>
+        <source>Force 8-bit screen capture</source>
+        <translation>Paksa tangkapan layar 8-bit</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3626"/>
+        <source>Blur the lock screen; needs session_lock_xray</source>
+        <translation>Blur lock screen; memerlukan session_lock_xray</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3627"/>
+        <source>Keep rendering workspaces under the lock screen</source>
+        <translation>Terus render workspace di bawah lock screen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3628"/>
+        <source>Apply min and max size rules to tiled windows</source>
+        <translation>Terapkan aturan ukuran min dan maks pada jendela tiled</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3629"/>
+        <source>Splash text font</source>
+        <translation>Font teks splash</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3630"/>
+        <source>Title regex for windows exempt from swallowing</source>
+        <translation>Regex judul untuk jendela yang dikecualikan dari penelanan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3631"/>
+        <source>Class regex of windows that swallow others, e.g. terminals</source>
+        <translation>Regex class jendela yang menelan jendela lain, mis. terminal</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3632"/>
+        <source>Monitor adaptive-sync (VRR) mode</source>
+        <translation>Mode adaptive-sync monitor (VRR)</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3633"/>
+        <source>Splash text color</source>
+        <translation>Warna teks splash</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3634"/>
+        <source>Reduce NVIDIA flickering; may cost frames on weaker GPUs</source>
+        <translation>Kurangi kedipan NVIDIA; dapat mengurangi frame pada GPU lemah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3635"/>
+        <source>Report HDR as the preferred mode</source>
+        <translation>Laporkan HDR sebagai mode yang disukai</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3636"/>
+        <source>Do not report dmabuf formats KMS cannot import</source>
+        <translation>Jangan laporkan format dmabuf yang tidak dapat diimpor KMS</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3637"/>
+        <source>Async DRM commits to cut cursor latency</source>
+        <translation>Commit DRM asinkron untuk menurunkan latensi kursor</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3638"/>
+        <source>Auto-switch to HDR in fullscreen when content wants it</source>
+        <translation>Alihkan otomatis ke HDR di fullscreen saat konten memintanya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3639"/>
+        <source>Enable the color management pipeline</source>
+        <translation>Aktifkan pipeline manajemen warna</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3640"/>
+        <source>Transfer function used for SDR content</source>
+        <translation>Fungsi transfer yang dipakai untuk konten SDR</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3641"/>
+        <source>Fade animation for color temperature changes</source>
+        <translation>Animasi fade untuk perubahan suhu warna</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3642"/>
+        <source>Enable the commit timing protocol</source>
+        <translation>Aktifkan protokol commit timing</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3643"/>
+        <source>Direct scanout for fullscreen apps to reduce lag</source>
+        <translation>Direct scanout untuk aplikasi fullscreen guna mengurangi lag</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3644"/>
+        <source>Expand undersized textures instead of stretching them</source>
+        <translation>Perluas tekstur yang terlalu kecil, bukan meregangkannya</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3645"/>
+        <source>Transfer function of the fp16 SDR workbuffer</source>
+        <translation>Fungsi transfer dari workbuffer SDR fp16</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3646"/>
+        <source>Send VCGT ramps from ICC profiles to the display</source>
+        <translation>Kirim ramp VCGT dari profil ICC ke layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3647"/>
+        <source>Keep an SDR frame copy for screen sharing</source>
+        <translation>Simpan salinan frame SDR untuk berbagi layar</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3648"/>
+        <source>Automatic triple buffering; helps weaker GPUs</source>
+        <translation>Triple buffering otomatis; membantu GPU lemah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3649"/>
+        <source>FIFO locking for surfaces that are not shown</source>
+        <translation>Penguncian FIFO untuk permukaan yang tidak ditampilkan</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3650"/>
+        <source>When to use color management without shaders</source>
+        <translation>Kapan memakai manajemen warna tanpa shader</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3651"/>
+        <source>How external color temperature interacts with fullscreen</source>
+        <translation>Cara suhu warna eksternal berinteraksi dengan fullscreen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3652"/>
+        <source>Report window content types for profile autoswitch</source>
+        <translation>Laporkan tipe konten jendela untuk peralihan profil otomatis</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3653"/>
+        <source>Use FP16 render buffers</source>
+        <translation>Pakai buffer render FP16</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3654"/>
+        <source>Experimental blurred background blending</source>
+        <translation>Pencampuran latar blur eksperimental</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3655"/>
+        <source>Disable back buffer and bottom layer rendering</source>
+        <translation>Nonaktifkan render back buffer dan layer bawah</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3656"/>
+        <source>Create the abstract Unix socket for Xwayland; needs restart</source>
+        <translation>Buat socket Unix abstrak untuk Xwayland; perlu dimulai ulang</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3657"/>
+        <source>Allow running X11 applications</source>
+        <translation>Izinkan menjalankan aplikasi X11</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3658"/>
+        <source>Force scale 1 on Xwayland windows under scaled displays</source>
+        <translation>Paksa skala 1 pada jendela Xwayland di layar berskala</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3659"/>
+        <source>Nearest-neighbor filtering for Xwayland; pixelated not blurry</source>
+        <translation>Pemfilteran nearest-neighbor untuk Xwayland; berpiksel bukan blur</translation>
+    </message>
 </context>
 <context>
     <name>HyprlandOptionRow</name>
@@ -3232,7 +5086,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="178"/>
         <source>Command on Resume:</source>
-        <translation>Perintah saat melanjutkan (bangun)</translation>
+        <translation>Perintah saat melanjutkan (bangun):</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/IdlePage.qml" line="205"/>
@@ -3260,7 +5114,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="34"/>
         <source>No input devices detected.</source>
-        <translation>Tidak ada perangkat masuk yang terdeteksi</translation>
+        <translation>Tidak ada perangkat masuk yang terdeteksi.</translation>
     </message>
 </context>
 <context>
@@ -3353,7 +5207,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="193"/>
         <source>Turn Wi-Fi scanning and connections.</source>
-        <translation>Menyalakan pemindaian koneksi Wi-Fi </translation>
+        <translation>Menyalakan pemindaian koneksi Wi-Fi.</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="111"/>
@@ -3538,6 +5392,64 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <location filename="../Qml/Services/LauncherServices.qml" line="87"/>
         <source>Search</source>
         <translation>Cari</translation>
+    </message>
+</context>
+<context>
+    <name>LayerRuleSchema</name>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="21"/>
+        <source>Render the layer above the lock screen; 2 stays interactive on the lock screen.</source>
+        <translation>Tampilkan layer di atas lock screen; 2 tetap interaktif pada lock screen.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="27"/>
+        <source>Animation style for this layer.</source>
+        <translation>Gaya animasi untuk layer ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="33"/>
+        <source>Enable blur for the layer.</source>
+        <translation>Aktifkan blur untuk layer ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="39"/>
+        <source>Enable blur for the layer&apos;s popups.</source>
+        <translation>Aktifkan blur untuk popup layer ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="45"/>
+        <source>Dim everything behind the layer.</source>
+        <translation>Redupkan semua di belakang layer.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="53"/>
+        <source>Blur ignores pixels at or below this opacity.</source>
+        <translation>Blur mengabaikan piksel pada atau di bawah opasitas ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="59"/>
+        <source>Disable animations for the layer.</source>
+        <translation>Nonaktifkan animasi untuk layer ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="65"/>
+        <source>Hide the layer from screen sharing.</source>
+        <translation>Sembunyikan layer ini dari berbagi layar.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="71"/>
+        <source>Space-reservation priority relative to other layers; higher wins, may be negative.</source>
+        <translation>Prioritas reservasi ruang relatif terhadap layer lain; lebih tinggi menang, boleh negatif.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="77"/>
+        <source>Blur xray mode for the layer.</source>
+        <translation>Mode xray blur untuk layer ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="84"/>
+        <source>Layer namespace, e.g. waybar or shell:drawers.</source>
+        <translation>Namespace layer, mis. waybar atau shell:drawers.</translation>
     </message>
 </context>
 <context>
@@ -4293,7 +6205,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="34"/>
         <source>No output devices detected.</source>
-        <translation>Tidak perangkat keluar yang terdeteksi</translation>
+        <translation>Tidak perangkat keluar yang terdeteksi.</translation>
     </message>
 </context>
 <context>
@@ -4364,7 +6276,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="32"/>
         <source>Choose an audio source...</source>
-        <translation>Pilih sumber audio</translation>
+        <translation>Pilih sumber audio...</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/CaptureScreen/Video/PageMain.qml" line="92"/>
@@ -4753,7 +6665,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="35"/>
         <source>No active playback streams.</source>
-        <translation>Tidak ada pemutaran yang sedang berlangsung</translation>
+        <translation>Tidak ada pemutaran yang sedang berlangsung.</translation>
     </message>
 </context>
 <context>
@@ -6023,7 +7935,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="48"/>
         <source>WeatherAPI.com Key:</source>
-        <translation>Kunci WeatherAPI.com</translation>
+        <translation>Kunci WeatherAPI.com:</translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="47"/>
@@ -6104,7 +8016,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Components/Dialog/WifiPskDialog.qml" line="69"/>
         <source>Can&apos;t connect. Check the password and try again.</source>
-        <translation>Tidak nyambung. Cek kembali passwordnya dan coba lagi</translation>
+        <translation>Tidak nyambung. Cek kembali passwordnya dan coba lagi.</translation>
     </message>
 </context>
 <context>
@@ -6130,70 +8042,509 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     </message>
 </context>
 <context>
+    <name>WindowRuleSchema</name>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="17"/>
+        <source>Force an Xwayland window to receive input even when it requests not to.</source>
+        <translation>Paksa jendela Xwayland menerima input meski ia meminta tidak.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="24"/>
+        <source>Force an animation style onto the window.</source>
+        <translation>Paksa gaya animasi pada jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="25"/>
+        <source>e.g. popin or popin 80%</source>
+        <translation>mis. popin atau popin 80%</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="32"/>
+        <source>Border color or gradient.</source>
+        <translation>Warna atau gradien border.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="33"/>
+        <source>one color rgb(FF0000), or two colors rgb(FF0000) rgb(880808) as a gradient; combine with the focus match for active/inactive colors</source>
+        <translation>satu warna rgb(FF0000), atau dua warna rgb(FF0000) rgb(880808) sebagai gradien; kombinasikan dengan pencocokan focus untuk warna aktif/tidak aktif</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="41"/>
+        <source>Border size in pixels.</source>
+        <translation>Ukuran border dalam piksel.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="48"/>
+        <source>Center the window on the monitor when it floats.</source>
+        <translation>Tengahkan jendela di monitor saat ia float.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="55"/>
+        <source>Lock the mouse cursor to the window.</source>
+        <translation>Kunci kursor mouse ke jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="63"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="468"/>
+        <source>Content type of the window.</source>
+        <translation>Tipe konten jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="70"/>
+        <source>Whether to draw window decorations.</source>
+        <translation>Apakah menggambar dekorasi jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="77"/>
+        <source>Dim everything around the window.</source>
+        <translation>Redupkan semua di sekitar jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="84"/>
+        <source>Float the window.</source>
+        <translation>Float jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="91"/>
+        <source>Focus the window when the app requests to be focused.</source>
+        <translation>Fokuskan jendela saat aplikasi meminta difokuskan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="98"/>
+        <source>Disable the window&apos;s own transparency.</source>
+        <translation>Nonaktifkan transparansi milik jendela itu sendiri.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="105"/>
+        <source>Fullscreen the window.</source>
+        <translation>Fullscreen jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="112"/>
+        <source>Fullscreen mode, internal then client.</source>
+        <translation>Mode fullscreen, internal lalu klien.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="113"/>
+        <source>two numbers 0-3 separated by a space, e.g. 1 2; 0 none, 1 maximize, 2 fullscreen, 3 maximize and fullscreen</source>
+        <translation>dua angka 0-3 dipisahkan spasi, mis. 1 2; 0 none, 1 maximize, 2 fullscreen, 3 maximize dan fullscreen</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="120"/>
+        <source>Window group behavior.</source>
+        <translation>Perilaku grup jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="121"/>
+        <source>barred, deny, invade, lock [always], new, override, set [always], unset; bare group means set</source>
+        <translation>barred, deny, invade, lock [always], new, override, set [always], unset; group saja berarti set</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="129"/>
+        <source>Idle inhibit mode for the window.</source>
+        <translation>Mode idle inhibit untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="136"/>
+        <source>Allow tearing for this window.</source>
+        <translation>Izinkan tearing untuk jendela ini.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="143"/>
+        <source>Keep the aspect ratio when resizing with the mouse.</source>
+        <translation>Pertahankan rasio aspek saat mengubah ukuran dengan mouse.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="150"/>
+        <source>Maximum size for floating windows.</source>
+        <translation>Ukuran maksimum untuk jendela float.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="157"/>
+        <source>Maximize the window.</source>
+        <translation>Maksimalkan jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="164"/>
+        <source>Minimum size for floating windows.</source>
+        <translation>Ukuran minimum untuk jendela float.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="171"/>
+        <source>Monitor the window opens on.</source>
+        <translation>Monitor tempat jendela dibuka.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="172"/>
+        <source>name, index or desc:…; append  silent to open without focusing</source>
+        <translation>nama, indeks atau desc:…; tambahkan  silent untuk membuka tanpa fokus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="179"/>
+        <source>Monitor-local position for the floating window.</source>
+        <translation>Posisi lokal-monitor untuk jendela float.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="186"/>
+        <source>Force nearest-neighbor filtering.</source>
+        <translation>Paksa pemfilteran nearest-neighbor.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="193"/>
+        <source>Disable animations for the window.</source>
+        <translation>Nonaktifkan animasi untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="200"/>
+        <source>Disable AutoHDR for the window.</source>
+        <translation>Nonaktifkan AutoHDR untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="207"/>
+        <source>Disable blur for the window.</source>
+        <translation>Nonaktifkan blur untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="215"/>
+        <source>Uncloseable with killactive for this many milliseconds on open.</source>
+        <translation>Tidak dapat ditutup dengan killactive selama milidetik ini saat dibuka.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="222"/>
+        <source>Disable window dimming for the window.</source>
+        <translation>Nonaktifkan peredupan jendela untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="229"/>
+        <source>Disable focusing the window.</source>
+        <translation>Nonaktifkan pemfokusan jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="236"/>
+        <source>Do not focus the window when the mouse moves over it.</source>
+        <translation>Jangan fokuskan jendela saat mouse melewatinya.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="243"/>
+        <source>Disable glow for the window.</source>
+        <translation>Nonaktifkan glow untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="250"/>
+        <source>Do not focus the window when it opens.</source>
+        <translation>Jangan fokuskan jendela saat dibuka.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="257"/>
+        <source>Remove max size limitations.</source>
+        <translation>Hapus batasan ukuran maksimum.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="264"/>
+        <source>Hide the window and its popups from screen sharing.</source>
+        <translation>Sembunyikan jendela dan popup-nya dari berbagi layar.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="271"/>
+        <source>Disable shadows for the window.</source>
+        <translation>Nonaktifkan bayangan untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="278"/>
+        <source>Disallow the app from inhibiting your shortcuts.</source>
+        <translation>Larang aplikasi menonaktifkan shortcut Anda.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="285"/>
+        <source>Disable VRR for the window (misc.vrr must be 2 or 3).</source>
+        <translation>Nonaktifkan VRR untuk jendela (misc.vrr harus 2 atau 3).</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="292"/>
+        <source>Disable wobble for the window.</source>
+        <translation>Nonaktifkan wobble untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="299"/>
+        <source>Disable XDG-driven drags for the window.</source>
+        <translation>Nonaktifkan seretan yang digerakkan XDG untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="306"/>
+        <source>Opacity multipliers for the window.</source>
+        <translation>Pengali opasitas untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="307"/>
+        <source>up to three values: active, inactive, fullscreen; append override after a value for absolute opacity, e.g. 0.8 override 0.8 override</source>
+        <translation>hingga tiga nilai: aktif, tidak aktif, fullscreen; tambahkan override setelah sebuah nilai untuk opasitas absolut, mis. 0.8 override 0.8 override</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="314"/>
+        <source>Force the window opacities to 1.</source>
+        <translation>Paksa opasitas jendela menjadi 1.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="321"/>
+        <source>Restore the stored size when a floating window with the same class and title opens.</source>
+        <translation>Pulihkan ukuran tersimpan saat jendela float dengan class dan judul yang sama dibuka.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="328"/>
+        <source>Pin the window to all workspaces.</source>
+        <translation>Pin jendela ke semua workspace.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="329"/>
+        <source>ignored for non-floating windows; usually combined with float</source>
+        <translation>diabaikan untuk jendela non-float; biasanya digabung dengan float</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="336"/>
+        <source>Pseudotile the window.</source>
+        <translation>Pseudotile jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="343"/>
+        <source>Keep rendering the window while it is not visible.</source>
+        <translation>Terus render jendela saat ia tidak terlihat.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="352"/>
+        <source>Rounding in pixels, ignoring the default.</source>
+        <translation>Pembulatan dalam piksel, mengabaikan bawaan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="361"/>
+        <source>Rounding power for the window.</source>
+        <translation>Daya pembulatan untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="370"/>
+        <source>Mouse scroll factor for the window.</source>
+        <translation>Faktor scroll mouse untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="379"/>
+        <source>Touchpad scroll factor for the window.</source>
+        <translation>Faktor scroll touchpad untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="387"/>
+        <source>Column width when the window opens on a workspace with the scrolling layout.</source>
+        <translation>Lebar kolom saat jendela dibuka pada workspace dengan layout scrolling.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="394"/>
+        <source>Size for the floating window.</source>
+        <translation>Ukuran untuk jendela float.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="401"/>
+        <source>Keep focus on the window as long as it is visible.</source>
+        <translation>Pertahankan fokus pada jendela selama ia terlihat.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="408"/>
+        <source>Events the window ignores.</source>
+        <translation>Event yang diabaikan jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="409"/>
+        <source>space-separated: fullscreen, maximize, activate, activatefocus, fullscreenoutput, x11configurerequest</source>
+        <translation>dipisahkan spasi: fullscreen, maximize, activate, activatefocus, fullscreenoutput, x11configurerequest</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="416"/>
+        <source>Always send the compositor fullscreen mode to the window.</source>
+        <translation>Selalu kirim mode fullscreen compositor ke jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="423"/>
+        <source>Apply a dynamic tag to the window.</source>
+        <translation>Terapkan tag dinamis ke jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="424"/>
+        <source>+name adds, -name unsets, bare name toggles; dynamic tags end with *</source>
+        <translation>+name menambahkan, -name melepas, name saja mengalihkan; tag dinamis berakhiran *</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="431"/>
+        <source>Tile the window.</source>
+        <translation>Tile jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="439"/>
+        <source>Tonemapping behavior for the window.</source>
+        <translation>Perilaku tonemapping untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="446"/>
+        <source>Workspace the window opens on.</source>
+        <translation>Workspace tempat jendela dibuka.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="447"/>
+        <source>workspace selector or unset; append  silent to open without focusing</source>
+        <translation>pemilih workspace atau unset; tambahkan  silent untuk membuka tanpa fokus</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="454"/>
+        <source>Blur xray mode for the window.</source>
+        <translation>Mode xray blur untuk jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="462"/>
+        <source>Window class.</source>
+        <translation>Class jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="473"/>
+        <source>Whether the window is floating.</source>
+        <translation>Apakah jendela sedang float.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="478"/>
+        <source>Whether the window currently has focus.</source>
+        <translation>Apakah jendela sedang difokuskan.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="483"/>
+        <source>Whether the window is fullscreen (covering or not).</source>
+        <translation>Apakah jendela fullscreen (menutup atau tidak).</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="490"/>
+        <source>Fullscreen state the client requested.</source>
+        <translation>Status fullscreen yang diminta klien.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="497"/>
+        <source>Fullscreen state the compositor uses.</source>
+        <translation>Status fullscreen yang dipakai compositor.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="502"/>
+        <source>Whether the window is in a group.</source>
+        <translation>Apakah jendela berada dalam grup.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="508"/>
+        <source>Class the window was created with.</source>
+        <translation>Class saat jendela dibuat.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="514"/>
+        <source>Title the window was created with.</source>
+        <translation>Judul saat jendela dibuat.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="519"/>
+        <source>Whether the window is modal (e.g. confirmation popups).</source>
+        <translation>Apakah jendela modal (mis. popup konfirmasi).</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="524"/>
+        <source>Whether the window is pinned to all workspaces.</source>
+        <translation>Apakah jendela di-pin ke semua workspace.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="529"/>
+        <source>Tag name. Dynamic tags end with *.</source>
+        <translation>Nama tag. Tag dinamis berakhiran *.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="535"/>
+        <source>Window title. Static effects only ever see the initial title.</source>
+        <translation>Judul jendela. Efek statis hanya melihat judul awal.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="540"/>
+        <source>Workspace selector, e.g. 3, name:web or special:magic.</source>
+        <translation>Pemilih workspace, mis. 3, name:web atau special:magic.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="546"/>
+        <source>XDG tag of the window.</source>
+        <translation>Tag XDG jendela.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="551"/>
+        <source>Whether the window is an Xwayland window.</source>
+        <translation>Apakah jendela merupakan jendela Xwayland.</translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="557"/>
+        <source>Numbers or expressions such as monitor_w * 0.5, using monitor_w, monitor_h, window_x, window_y, window_w, window_h, cursor_x, cursor_y.</source>
+        <translation>Angka atau ekspresi seperti monitor_w * 0.5, memakai monitor_w, monitor_h, window_x, window_y, window_w, window_h, cursor_x, cursor_y.</translation>
+    </message>
+</context>
+<context>
     <name>WindowRuleServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="55"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="54"/>
         <source>Failed to read window rules: %1</source>
         <translation>Gagal membaca aturan jendela: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="55"/>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="57"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="54"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="56"/>
         <source>Hyprland</source>
         <translation>Hyprland</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="57"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="56"/>
         <source>Failed to save window rules: %1</source>
         <translation>Gagal menyimpan aturan jendela: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="192"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="191"/>
         <source>Add at least one match property.</source>
         <translation>Tambahkan setidaknya satu properti pencocokan.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="195"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="194"/>
         <source>This name is used by more than one rule; Hyprland merges rules with the same name.</source>
         <translation>Nama ini digunakan oleh lebih dari satu aturan; Hyprland menggabungkan aturan dengan nama yang sama.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="199"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="198"/>
         <source>Unknown match property: %1</source>
         <translation>Properti pencocokan tidak dikenal: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="210"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="209"/>
         <source>Unknown effect: %1</source>
         <translation>Efek tidak dikenal: %1</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="279"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="278"/>
         <source>Must be a number.</source>
         <translation>Harus berupa angka.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="281"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="280"/>
         <source>Must be at least %1.</source>
         <translation>Harus setidaknya %1.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="283"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="282"/>
         <source>Must be at most %1.</source>
         <translation>Harus paling banyak %1.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="288"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="287"/>
         <source>Must be two values.</source>
         <translation>Harus dua nilai.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="290"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="289"/>
         <source>Both values are required.</source>
         <translation>Kedua nilai wajib diisi.</translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="294"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="293"/>
         <source>Must be one of: %1.</source>
         <translation>Harus salah satu dari: %1.</translation>
     </message>
