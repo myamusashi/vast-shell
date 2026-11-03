@@ -32,8 +32,8 @@ ColumnLayout {
         if (!entryGrid || !entryGrid.entryList)
             return;
 
-        if (searchBar.searchField.isFocused) {
-            if (!searchBar.searchField.hasSelection && event.key === Qt.Key_Escape) {
+        if (searchBar.searchField.activeFocus) {
+            if (searchBar.searchField.selectionStart === searchBar.searchField.selectionEnd && event.key === Qt.Key_Escape) {
                 root.forceActiveFocus();
                 event.accepted = true;
                 return;
@@ -49,7 +49,7 @@ ColumnLayout {
         switch (event.key) {
         case Qt.Key_Slash:
             if (vim) {
-                searchBar.searchField.requestKeyboardFocus();
+                searchBar.searchField.forceActiveFocus();
                 event.accepted = true;
             }
             break;
@@ -179,7 +179,7 @@ ColumnLayout {
     }
 
     focus: true
-    spacing: 0
+    spacing: Appearance.spacing.large
     Keys.onPressed: event => handleKey(event)
     Component.onDestruction: root.uiState.clearTransientState()
 

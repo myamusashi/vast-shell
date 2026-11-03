@@ -14,10 +14,10 @@ Item {
     required property string searchText
     required property var    uiState
 
-    property alias           entryList: entryList
+    property alias           entryList: gridEntryList
     property alias           verticalFlick: verticalFlick
 
-    implicitHeight: entryList.height
+    implicitHeight: gridEntryList.height
 
     Flickable {
         id: verticalFlick
@@ -29,7 +29,7 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: Appearance.margin.small
         clip: true
-        contentHeight: entryList.height
+        contentHeight: gridEntryList.height
         contentWidth: width
         flickableDirection: Flickable.VerticalFlick
         ScrollBar.vertical: ScrollBar {
@@ -37,7 +37,7 @@ Item {
         }
 
         GridView {
-            id: entryList
+            id: gridEntryList
 
             readonly property int currentPage: Math.max(0, Math.min(totalPages - 1, Math.round(contentX / width)))
             readonly property int itemsPerPage: Math.max(1, Configs.clipboard.listEntries)
@@ -157,7 +157,7 @@ Item {
                 entryId: modelData.entryId
                 fileName: modelData.fileName
                 height: 64
-                inVisual: root.uiState.visualActive && index >= entryList.visualStart && index <= entryList.visualEnd
+                inVisual: root.uiState.visualActive && index >= gridEntryList.visualStart && index <= gridEntryList.visualEnd
                 isSelected: GridView.isCurrentItem // qmllint disable
                 pinned: modelData.pinned
                 preview: modelData.preview
@@ -180,8 +180,8 @@ Item {
             }
             highlight: StyledRect {
                 color: Colours.m3Colors.m3SurfaceContainerHigh
-                height: entryList.cellHeight
-                width: entryList.cellWidth
+                height: gridEntryList.cellHeight
+                width: gridEntryList.cellWidth
             }
             move: Transition {
 
@@ -227,7 +227,7 @@ Item {
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.medium
         text: root.searchText.length > 0 ? qsTr("No results for ") + root.searchText : qsTr("Clipboard is empty")
-        visible: entryList.count === 0
+        visible: gridEntryList.count === 0
     }
 
     Row {
@@ -237,17 +237,17 @@ Item {
         anchors.bottomMargin: Appearance.margin.small
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 6
-        visible: entryList.totalPages > 1
+        visible: gridEntryList.totalPages > 1
 
         Repeater {
-            model: entryList.totalPages
+            model: gridEntryList.totalPages
             delegate: Rectangle {
                 required property int index
 
-                color: entryList.currentPage === index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OutlineVariant
+                color: gridEntryList.currentPage === index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OutlineVariant
                 implicitHeight: 6
-                implicitWidth: entryList.currentPage === index ? 16 : 6
-                opacity: entryList.currentPage === index ? 1.0 : 0.5
+                implicitWidth: gridEntryList.currentPage === index ? 16 : 6
+                opacity: gridEntryList.currentPage === index ? 1.0 : 0.5
                 radius: 3
                 Behavior on implicitWidth {
                     NAnim {}
