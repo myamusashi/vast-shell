@@ -87,12 +87,11 @@ Item {
                     description: qsTr("File path to the custom colors JSON when static colors are enabled.")
                     label: qsTr("Static Colors Path:")
 
-                    StyledTextInput {
+                    MaterialTextField {
                         id: staticColorsPathField
 
                         implicitWidth: 350
                         text: Configs.colors.staticColorsPath
-                        toggleButtonVisible: false
                         onEditingFinished: Configs.colors.staticColorsPath = text
 
                         MouseArea {
@@ -370,11 +369,10 @@ Item {
             text: filePathRow.label
         }
 
-        StyledTextInput {
+        MaterialTextField {
             id: pathField
 
             implicitWidth: 350
-            toggleButtonVisible: false
             Component.onCompleted: text = filePathRow.configValue
             onEditingFinished: filePathRow.configChanged(text)
 
@@ -416,20 +414,19 @@ Item {
             }
             return result;
         }
-        property alias  searchField: searchField.placeholderText
+        property alias  searchField: input.placeholderText
         property string searchText: ""
 
         signal          configChanged(string value)
 
-        implicitHeight: 48
+        implicitHeight: input.implicitHeight
         implicitWidth: 250
 
-        StyledTextInput {
-            id: searchField
+        MaterialTextField {
+            id: input
 
             anchors.fill: parent
             placeholderText: qsTr("Search font...")
-            toggleButtonVisible: false
             Component.onCompleted: text = fontPicker.configValue
             onActiveFocusChanged: {
                 if (activeFocus && !popup.visible)
@@ -447,8 +444,8 @@ Item {
 
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
             implicitHeight: Math.min(listView.contentHeight + 16, 280)
-            width: searchField.width
-            y: searchField.height + 4
+            width: input.width
+            y: input.height + 4
             background: StyledRect {
                 color: Colours.m3Colors.m3SurfaceContainerLow
                 radius: Appearance.rounding.large
@@ -502,7 +499,7 @@ Item {
                     }
                     onClicked: {
                         fontPicker.configChanged(modelData.name);
-                        searchField.text      = modelData.name;
+                        input.text            = modelData.name;
                         fontPicker.searchText = "";
                         popup.close();
                     }
