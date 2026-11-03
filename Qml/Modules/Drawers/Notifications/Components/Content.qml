@@ -15,7 +15,7 @@ Column {
 
     required property var  modelData
 
-    readonly property bool replyFocused: replyField.isFocused
+    readonly property bool replyFocused: replyField.activeFocus
 
     property bool          isShowMoreBody: false
 
@@ -157,16 +157,13 @@ Column {
         visible: root.modelData.hasInlineReply
         width: parent.width
 
-        StyledTextInput {
+        MaterialTextField {
             id: replyField
 
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            autoFocus: false
             placeholderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
-            toggleButtonVisible: false
             onAccepted: root.sendReply()
-            onKeyPressed: event => {
+            Keys.onPressed: event => {
                 if (event.key === Qt.Key_Escape) {
                     event.accepted = true;
                     root.forceActiveFocus();
@@ -181,11 +178,11 @@ Column {
             Layout.preferredWidth: 40
             backgroundRadius: Appearance.rounding.full
             color: Colours.m3Colors.m3SurfaceContainerHigh
-            icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.hasText ? 1 : 0.4)
+            icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.length > 0 ? 1 : 0.4)
             icon.name: "send"
             icon.size: Appearance.fonts.size.extraLarge
             onClicked: {
-                if (replyField.hasText)
+                if (replyField.length > 0)
                     root.sendReply();
             }
         }

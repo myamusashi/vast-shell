@@ -259,14 +259,12 @@ LazyLoader {
                         icon: "search"
                     }
 
-                    StyledTextInput {
+                    MaterialTextField {
                         id: searchField
 
                         Layout.fillWidth: true
-                        autoFocus: false
                         placeholderText: qsTr("Search files…")
-                        toggleButtonVisible: false
-                        onKeyPressed: event => {
+                        Keys.onPressed: event => {
                             if (event.key === Qt.Key_Escape) {
                                 event.accepted = true;
                                 window.toggleSearch();

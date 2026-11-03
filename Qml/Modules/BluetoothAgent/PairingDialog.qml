@@ -128,15 +128,13 @@ Scope {
                     wrapMode: Text.Wrap
                 }
 
-                StyledTextInput {
+                MaterialTextField {
                     id: pinField
 
                     Layout.fillWidth: true
-                    autoFocus: true
-                    passwordMode: false
                     placeholderText: root.currentMethod === "pin" ? qsTr("Enter PIN") : qsTr("Enter 6-digit passkey")
-                    toggleButtonVisible: false
                     visible: root.currentMethod === "passkey" || root.currentMethod === "pin"
+                    Component.onCompleted: forceActiveFocus()
                     onAccepted: bodyRoot.submit()
                 }
 

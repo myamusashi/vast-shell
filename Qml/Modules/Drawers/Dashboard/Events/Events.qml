@@ -53,14 +53,11 @@ WrapperRectangle {
                 visible: !root.addingTodo
             }
 
-            StyledTextInput {
+            MaterialTextField {
                 id: newTodoInput
 
                 Layout.fillWidth: true
-                Layout.preferredHeight: 36
-                passwordMode: false
                 placeholderText: qsTr("Add todo…")
-                toggleButtonVisible: false
                 visible: root.addingTodo
                 Keys.onEscapePressed: root.addingTodo = false
                 onAccepted: root.addTodo()
@@ -180,10 +177,8 @@ WrapperRectangle {
                     Component {
                         id: editComponent
 
-                        StyledTextInput {
-                            passwordMode: false
+                        MaterialTextField {
                             placeholderText: qsTr("Edit todo…")
-                            toggleButtonVisible: false
                             text: todoRow.modelData.text
                             Keys.onEscapePressed: todoRow.editing = false
                             onAccepted: {

@@ -104,13 +104,11 @@ Item {
                             description: qsTr("SSID broadcast name for the hotspot.")
                             label: qsTr("User hotspot:")
 
-                            StyledTextInput {
+                            MaterialTextField {
                                 enabled: !Hotspot.isActive
                                 opacity: enabled ? 1.0 : 0.5
-                                passwordMode: false
                                 placeholderText: qsTr("Default: MyHotspot")
                                 text: Hotspot.ssid
-                                toggleButtonVisible: false
                                 onTextChanged: Hotspot.ssid = text
                             }
                         }
@@ -134,13 +132,11 @@ Item {
                             description: qsTr("Network interface used for hotspot sharing.")
                             label: qsTr("Hotspot interface:")
 
-                            StyledTextInput {
+                            MaterialTextField {
                                 enabled: false
                                 opacity: 0.7
-                                passwordMode: false
                                 placeholderText: qsTr("Default: %1").arg(Hotspot.hotspotInterface || qsTr("none detected"))
                                 text: Hotspot.hotspotInterface
-                                toggleButtonVisible: false
                             }
                         }
 

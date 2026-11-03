@@ -7,7 +7,7 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
-StyledTextInput {
+MaterialTextField {
     id: root
 
     required property var carousel
@@ -26,9 +26,7 @@ StyledTextInput {
             controller.setWallpaper(selectedPath, selectedPath);
     }
 
-    implicitHeight: 40
-    placeholderText: qsTr("Search wallpapers")
-    toggleButtonVisible: false
+    label: qsTr("Search wallpapers")
     Component.onCompleted: text = WallpaperFileModels.searchQuery
     Keys.onEscapePressed: GlobalStates.closePanel("wallpaperSwitcher")
     Keys.onPressed: event => {

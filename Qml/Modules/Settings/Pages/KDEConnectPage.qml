@@ -34,10 +34,9 @@ SettingsPageBase {
             description: qsTr("How often to scan for devices, in seconds.")
             label: qsTr("Poll Interval (s):")
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 120
                 text: (Configs.kdeConnect.pollInterval / 1000).toString()
-                toggleButtonVisible: false
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0)

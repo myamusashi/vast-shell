@@ -52,13 +52,11 @@ Item {
                 }
             }
 
-            StyledTextInput {
+            MaterialTextField {
                 id: search
 
                 Layout.fillWidth: true
-                Layout.preferredHeight: 60
-                placeholderText: LauncherServices.placeholderText
-                toggleButtonVisible: false
+                label: LauncherServices.placeholderText
                 Keys.onPressed: function (event) {
                     switch (event.key) {
                     case Qt.Key_Escape:

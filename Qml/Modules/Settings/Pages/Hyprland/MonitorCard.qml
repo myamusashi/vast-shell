@@ -66,10 +66,8 @@ Rectangle {
     color: Colours.m3Colors.m3SurfaceContainerHighest
     implicitHeight: contentColumn.implicitHeight + Appearance.margin.large * 2
     radius: Appearance.rounding.normal
-    component EditorField: StyledTextInput {
-        autoFocus: false
+    component EditorField: MaterialTextField {
         placeholderText: ""
-        toggleButtonVisible: false
     }
 
     ColumnLayout {
@@ -170,8 +168,8 @@ Rectangle {
 
                 implicitWidth: 90
                 onAccepted: root.commitFloat("scale", text, 0.25, 10)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitFloat("scale", text, 0.25, 10);
                 }
 
@@ -179,7 +177,7 @@ Rectangle {
                     target: scaleField
                     property: "text"
                     value: String(root.entry.scale ?? 1)
-                    when: !scaleField.isFocused
+                    when: !scaleField.activeFocus
                 }
             }
         }
@@ -255,8 +253,8 @@ Rectangle {
 
                 implicitWidth: 90
                 onAccepted: root.commitFloat("sdrbrightness", text, 0.0, 10.0)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitFloat("sdrbrightness", text, 0.0, 10.0);
                 }
 
@@ -264,7 +262,7 @@ Rectangle {
                     target: sdrBrightnessField
                     property: "text"
                     value: String(root.entry.sdrbrightness ?? 1.0)
-                    when: !sdrBrightnessField.isFocused
+                    when: !sdrBrightnessField.activeFocus
                 }
             }
         }
@@ -278,8 +276,8 @@ Rectangle {
 
                 implicitWidth: 90
                 onAccepted: root.commitFloat("sdrsaturation", text, 0.0, 10.0)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitFloat("sdrsaturation", text, 0.0, 10.0);
                 }
 
@@ -287,7 +285,7 @@ Rectangle {
                     target: sdrSaturationField
                     property: "text"
                     value: String(root.entry.sdrsaturation ?? 1.0)
-                    when: !sdrSaturationField.isFocused
+                    when: !sdrSaturationField.activeFocus
                 }
             }
         }
@@ -302,8 +300,8 @@ Rectangle {
                 implicitWidth: 190
                 placeholderText: qsTr("None")
                 onAccepted: root.setField("icc", text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.setField("icc", text);
                 }
 
@@ -311,7 +309,7 @@ Rectangle {
                     target: iccField
                     property: "text"
                     value: String(root.entry.icc ?? "")
-                    when: !iccField.isFocused
+                    when: !iccField.activeFocus
                 }
             }
 

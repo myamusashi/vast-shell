@@ -17,11 +17,10 @@ SettingsPageBase {
             description: qsTr("Latitude of your location for weather and astronomy data.")
             label: qsTr("Latitude:")
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 250
                 placeholderText: "e.g., -6.200000"
                 text: Configs.weather.latitude
-                toggleButtonVisible: false
                 onTextChanged: Configs.weather.latitude = text
             }
         }
@@ -30,11 +29,10 @@ SettingsPageBase {
             description: qsTr("Longitude of your location for weather and astronomy data.")
             label: qsTr("Longitude:")
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 250
                 placeholderText: "e.g., 106.816666"
                 text: Configs.weather.longitude
-                toggleButtonVisible: false
                 onTextChanged: Configs.weather.longitude = text
             }
         }
@@ -47,11 +45,10 @@ SettingsPageBase {
             description: qsTr("API key from WeatherAPI.com for astronomy and forecast data.")
             label: qsTr("WeatherAPI.com Key:")
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 300
                 placeholderText: qsTr("Enter your WeatherAPI.com API key")
                 text: Configs.weather.astronomyApiKey
-                toggleButtonVisible: false
                 onTextChanged: Configs.weather.astronomyApiKey = text
             }
         }
@@ -84,10 +81,9 @@ SettingsPageBase {
                 }
             }
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 200
                 text: (Configs.weather.reloadTime / 1000).toString()
-                toggleButtonVisible: false
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0) {

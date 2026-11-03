@@ -466,18 +466,16 @@ Item {
             icon: "search"
         }
 
-        StyledTextInput {
+        MaterialTextField {
             id: searchField
 
             Layout.fillWidth: true
-            autoFocus: false
             placeholderText: qsTr("Search settings…")
-            toggleButtonVisible: false
             onAccepted: {
                 if (root.selectedIndex >= 0 && root.selectedIndex < root.results.length)
                     root.activate(root.results[root.selectedIndex]);
             }
-            onKeyPressed: event => {
+            Keys.onPressed: event => {
                 switch (event.key) {
                 case Qt.Key_Escape:
                     if (root.query.length > 0 || root.results.length > 0) {

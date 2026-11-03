@@ -35,10 +35,10 @@ vast-shell/
 │   ├── greeter.qml            # greetd greeter entry point
 │   ├── Components/
 │   │   ├── Base/              # CAnim, Circular, Cornery, ElevatedCharging, Elevation,
-│   │   │                      # FocusCage, M3TemplateColors, NAnim, StateLayer, StyledRect,
-│   │   │                      # StyledSlide, StyledSwitch, StyledText, StyledTextInput,
-│   │   │                      # TabNavigator, Wallpaper, Wavy, BluetoothDeviceDelegate,
-│   │   │                      # KdeDeviceRow
+│   │   │                      # FocusCage, M3TemplateColors, MaterialTextField, NAnim,
+│   │   │                      # StateLayer, StyledRect, StyledSlide, StyledSwitch,
+│   │   │                      # StyledText, StyledTextInput, TabNavigator, Wallpaper,
+│   │   │                      # Wavy, BluetoothDeviceDelegate, KdeDeviceRow
 │   │   │   ├── NavigationRail/   # NavigationRail, NavigationRailItem, RailBadge
 │   │   │   └── TextInputComponents/ # PasswordInput, VisibleInput
 │   │   ├── Button/            # ConnectedButtonGroup, ExtendedFloatingButton,

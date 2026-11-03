@@ -88,10 +88,9 @@ SettingsPageBase {
             description: qsTr("List of clipboard entries in one page (default: 15)")
             label: qsTr("List entries:")
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 120
                 text: Configs.clipboard.listEntries
-                toggleButtonVisible: false
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0)
@@ -104,10 +103,9 @@ SettingsPageBase {
             description: qsTr("The maximum of entries to saving clipboard (default: 300)")
             label: qsTr("Height:")
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.preferredWidth: 120
                 text: Configs.clipboard.maxEntries
-                toggleButtonVisible: false
                 onTextChanged: {
                     var parsed = parseInt(text);
                     if (!isNaN(parsed) && parsed > 0)

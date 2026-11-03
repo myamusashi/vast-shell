@@ -106,11 +106,10 @@ SettingsPageBase {
                 icon: "search"
             }
 
-            StyledTextInput {
+            MaterialTextField {
                 Layout.fillWidth: true
                 placeholderText: qsTr("Search wallpapers…")
                 text: Svc.WallpaperFileModels.searchQuery
-                toggleButtonVisible: false
                 onTextChanged: {
                     Svc.WallpaperFileModels.searchQuery = text;
                     wallpaperCarousel.currentIndex      = 0;
@@ -203,12 +202,11 @@ SettingsPageBase {
             description: qsTr("Folder scanned for available wallpapers.")
             label: qsTr("Wallpaper Directory Path:")
 
-            StyledTextInput {
+            MaterialTextField {
                 id: wallpaperDirField
 
                 implicitWidth: 350
                 text: Configs.wallpaper.wallpaperDir
-                toggleButtonVisible: false
                 onTextChanged: Configs.wallpaper.wallpaperDir = text
 
                 MouseArea {

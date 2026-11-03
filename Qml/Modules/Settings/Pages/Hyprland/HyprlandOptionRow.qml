@@ -205,10 +205,8 @@ SettingRow {
         }
     }
 
-    component EditorField: StyledTextInput {
-        autoFocus: false
+    component EditorField: MaterialTextField {
         placeholderText: ""
-        toggleButtonVisible: false
     }
     component SideField: EditorField {
         property string sidePlaceholder: ""
@@ -268,8 +266,8 @@ SettingRow {
 
             implicitWidth: 90
             onAccepted: root.commitNumber(text)
-            onIsFocusedChanged: {
-                if (!isFocused)
+            onActiveFocusChanged: {
+                if (!activeFocus)
                     root.commitNumber(text);
             }
 
@@ -277,7 +275,7 @@ SettingRow {
                 target: numberField
                 property: "text"
                 value: root.currentValue === null || root.currentValue === undefined ? "" : String(root.currentValue)
-                when: !numberField.isFocused
+                when: !numberField.activeFocus
             }
         }
     }
@@ -290,8 +288,8 @@ SettingRow {
 
             implicitWidth: 200
             onAccepted: root.writeValue(text)
-            onIsFocusedChanged: {
-                if (!isFocused)
+            onActiveFocusChanged: {
+                if (!activeFocus)
                     root.writeValue(text);
             }
 
@@ -299,7 +297,7 @@ SettingRow {
                 target: stringField
                 property: "text"
                 value: root.currentValue === null || root.currentValue === undefined ? "" : String(root.currentValue)
-                when: !stringField.isFocused
+                when: !stringField.activeFocus
             }
         }
     }
@@ -347,8 +345,8 @@ SettingRow {
                     if (root.isValidColor(text))
                         root.writeValue(text);
                 }
-                onIsFocusedChanged: {
-                    if (!isFocused && root.isValidColor(text))
+                onActiveFocusChanged: {
+                    if (!activeFocus && root.isValidColor(text))
                         root.writeValue(text);
                 }
 
@@ -356,7 +354,7 @@ SettingRow {
                     target: colorField
                     property: "text"
                     value: String(root.currentValue ?? "")
-                    when: !colorField.isFocused
+                    when: !colorField.activeFocus
                 }
             }
         }
@@ -374,8 +372,8 @@ SettingRow {
                 implicitWidth: 70
                 placeholderText: qsTr("X")
                 onAccepted: root.commitVec2(vecXField.text, vecYField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitVec2(vecXField.text, vecYField.text);
                 }
 
@@ -383,7 +381,7 @@ SettingRow {
                     target: vecXField
                     property: "text"
                     value: root.vecComponent(0)
-                    when: !vecXField.isFocused
+                    when: !vecXField.activeFocus
                 }
             }
 
@@ -393,8 +391,8 @@ SettingRow {
                 implicitWidth: 70
                 placeholderText: qsTr("Y")
                 onAccepted: root.commitVec2(vecXField.text, vecYField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitVec2(vecXField.text, vecYField.text);
                 }
 
@@ -402,7 +400,7 @@ SettingRow {
                     target: vecYField
                     property: "text"
                     value: root.vecComponent(1)
-                    when: !vecYField.isFocused
+                    when: !vecYField.activeFocus
                 }
             }
         }
@@ -420,8 +418,8 @@ SettingRow {
                 implicitWidth: 70
                 placeholderText: qsTr("All")
                 onAccepted: root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text);
                 }
 
@@ -429,7 +427,7 @@ SettingRow {
                     target: uniformField
                     property: "text"
                     value: root.gapUniformText()
-                    when: !uniformField.isFocused
+                    when: !uniformField.activeFocus
                 }
             }
 
@@ -438,8 +436,8 @@ SettingRow {
 
                 sidePlaceholder: qsTr("T")
                 onAccepted: root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text);
                 }
 
@@ -447,7 +445,7 @@ SettingRow {
                     target: topField
                     property: "text"
                     value: root.gapSideText("top")
-                    when: !topField.isFocused
+                    when: !topField.activeFocus
                 }
             }
 
@@ -456,8 +454,8 @@ SettingRow {
 
                 sidePlaceholder: qsTr("L")
                 onAccepted: root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text);
                 }
 
@@ -465,7 +463,7 @@ SettingRow {
                     target: leftField
                     property: "text"
                     value: root.gapSideText("left")
-                    when: !leftField.isFocused
+                    when: !leftField.activeFocus
                 }
             }
 
@@ -474,8 +472,8 @@ SettingRow {
 
                 sidePlaceholder: qsTr("R")
                 onAccepted: root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text);
                 }
 
@@ -483,7 +481,7 @@ SettingRow {
                     target: rightField
                     property: "text"
                     value: root.gapSideText("right")
-                    when: !rightField.isFocused
+                    when: !rightField.activeFocus
                 }
             }
 
@@ -492,8 +490,8 @@ SettingRow {
 
                 sidePlaceholder: qsTr("B")
                 onAccepted: root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.commitGaps(uniformField.text, topField.text, leftField.text, rightField.text, bottomField.text);
                 }
 
@@ -501,7 +499,7 @@ SettingRow {
                     target: bottomField
                     property: "text"
                     value: root.gapSideText("bottom")
-                    when: !bottomField.isFocused
+                    when: !bottomField.activeFocus
                 }
             }
         }
