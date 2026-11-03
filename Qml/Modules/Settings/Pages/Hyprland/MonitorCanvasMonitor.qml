@@ -10,8 +10,6 @@ import qs.Services.Hyprland
 Rectangle {
     id: root
 
-    // Logical-space rect from MonitorServices.rectForKey; positions update
-    // reactively from the draft while dragging (no delegate rebuilds).
     required property string modelData
 
     readonly property bool   dragActive: dragArea.pressed
@@ -26,9 +24,6 @@ Rectangle {
     signal                   dragStateChanged(bool active)
 
     function                 finalizePosition(): void {
-        // Re-run snap and overlap resolution on the final position so a
-        // gesture that was interrupted mid-drag can never store an
-        // overlapping layout (Hyprland refuses to register those).
         const snapped = MonitorServices.snappedPosition(root.modelData, root.rectData.x, root.rectData.y, root.snapThreshold);
         MonitorServices.setField(root.modelData, "x", snapped.x);
         MonitorServices.setField(root.modelData, "y", snapped.y);
@@ -93,8 +88,6 @@ Rectangle {
         anchors.fill: parent
         cursorShape: Qt.SizeAllCursor
         enabled: root.draggable && root.rectData !== null
-        // Keep the grab on the monitor rectangle: without this the page Flickable
-        // steals vertical drags and scrolls the settings page instead.
         preventStealing: true
         onPressed: mouse => {
             grabOffsetX = mouse.x / root.pxPerLogical;

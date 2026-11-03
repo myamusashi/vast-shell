@@ -41,8 +41,8 @@ SettingsPageBase {
         return "";
     }
 
-    Component.onCompleted: root.refreshRuleIds()
-    onRuleIdSnapshotChanged: root.refreshRuleIds()
+    Component.onCompleted: refreshRuleIds()
+    onRuleIdSnapshotChanged: refreshRuleIds()
     pageTitle: qsTr("Window Rules")
 
     HyprlandNoticeCard {

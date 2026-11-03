@@ -7,12 +7,11 @@ import Quickshell.Io
 
 import qs.Core.Utils
 import qs.Services
+import qs.Services.Hyprland
 
 Singleton {
     id: root
 
-    // stored mirrors generals.json (nested objects); pending holds the working draft
-    // as flat leaf-path → value maps per category (leaf path relative to the category).
     readonly property bool loaded: generalsFile.loaded
 
     property var           pending: ({})
@@ -70,8 +69,6 @@ Singleton {
         }
     }
 
-    // Writes only the given category's draft into generals.json, then reloads Hyprland.
-
     function               applyCategory(category: string): void {
         const draft = root.pending[category];
         if (draft === undefined)
@@ -118,8 +115,6 @@ Singleton {
         return nested;
     }
 
-    // Stable string form (sorted keys) so drafts and parsed files compare order-independently.
-
     function               canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
@@ -132,11 +127,7 @@ Singleton {
         return JSON.stringify(value);
     }
 
-    // qmllint disable
-
     function               reloadHyprland(): void {
         HyprlandSetupServices.reloadHyprland();
     }
-
-    // qmllint enable
 }

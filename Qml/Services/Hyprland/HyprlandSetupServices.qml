@@ -26,14 +26,6 @@ Singleton {
     // vast_shell.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
     property string          luaFileState: "unknown"
     // vast_shell_rules.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
-    property string          rulesLuaFileState: "unknown"
-
-    onOnHyprlandChanged: {
-        if (onHyprland && cjsonState === "unknown")
-            checkCjson();
-    }
-
-    // setText only runs in the "missing" state, exactly once.
     readonly property string luaTemplate: `
         -- Created once by vast-shell; yours to edit. Reads ~/.config/vast-shell/*.json.
         -- Adjust it if your lua-cjson lives elsewhere.
@@ -120,10 +112,6 @@ Singleton {
         hl.on("monitor.added", applyMonitors)
         hl.on("monitor.removed", applyMonitors)
     `
-
-    // Rules reader: registers every stored rule in JSON array order on every
-    // (re)load. No event listeners are needed because a reload rebuilds the Lua
-    // state and re-runs this file.
     readonly property string rulesLuaTemplate: `
         -- Created once by vast-shell; yours to edit. Reads ~/.config/vast-shell/*.json.
         -- Adjust it if your lua-cjson lives elsewhere.
@@ -218,6 +206,8 @@ Singleton {
         applyRules("layerrules.json", hl.layer_rule)
     `
 
+    property string          rulesLuaFileState: "unknown"
+
     function                 checkCjson(): void {
         if (!onHyprland || cjsonState === "checking")
             return;
@@ -240,8 +230,6 @@ Singleton {
         luaFile.setText(luaTemplate);
     }
 
-    // setText only runs in the "missing" state, exactly once.
-
     function                 ensureRulesLuaFile(): void {
         if (rulesLuaFileState !== "missing")
             return;
@@ -251,6 +239,11 @@ Singleton {
 
     function                 reloadHyprland(): void {
         hyprctlReload.running = true;
+    }
+
+    onOnHyprlandChanged: {
+        if (onHyprland && cjsonState === "unknown")
+            checkCjson();
     }
 
     FileView {
@@ -304,9 +297,6 @@ Singleton {
             }
         }
     }
-
-    // hyprctl eval prints only "ok" for the chunk, never the chunk's value, so the
-    // chunk writes its answer to a file and we read that back after the process exits.
 
     Process {
         id: cjsonCheck

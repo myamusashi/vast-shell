@@ -44,7 +44,7 @@ Singleton {
         rulesFile.writeAdapter();
     }
 
-    function               canonical(value: var): string { // qmllint disable
+    function               canonical(value: var): string { 
         if (value === null || value === undefined)
             return "null";
         if (Array.isArray(value))
@@ -80,7 +80,7 @@ Singleton {
         setRules(next);
     }
 
-    function               matchPickValues(descriptor: var): var { // qmllint disable
+    function               matchPickValues(descriptor: var): var { 
         if (!descriptor || descriptor.type !== "regex")
             return [];
         return namespaceQuickPicks();
@@ -125,7 +125,7 @@ Singleton {
         return `l-${Date.now().toString(36)}-${Math.floor(Math.random() * 1679616).toString(36)}`;
     }
 
-    function               parseLayers(text: string): void { // qmllint disable
+    function               parseLayers(text: string): void { 
         let data = null;
         try {
             data = JSON.parse(text);
@@ -196,7 +196,7 @@ Singleton {
         return snapshot.findIndex(rule => rule.id === id);
     }
 
-    function               ruleProblems(rule: var, nameCounts: var): var { // qmllint disable
+    function               ruleProblems(rule: var, nameCounts: var): var { 
         const found = [];
         const match = typeof rule.match === "object" && rule.match !== null ? rule.match : {};
         if (Object.keys(match).length === 0)
@@ -261,7 +261,7 @@ Singleton {
         adapter.rules = deepCopy(next);
     }
 
-    function               updateRule(id: string, update: var): void { // qmllint disable
+    function               updateRule(id: string, update: var): void { 
         const index = ruleIndex(id);
         if (index < 0)
             return;
@@ -270,7 +270,7 @@ Singleton {
         setRules(next);
     }
 
-    function               valueProblem(descriptor: var, value: var): string { // qmllint disable
+    function               valueProblem(descriptor: var, value: var): string { 
         if (descriptor.type === "int" || descriptor.type === "float") {
             if (typeof value !== "number" || isNaN(value))
                 return qsTr("Must be a number.");

@@ -13,8 +13,6 @@ import qs.Services.Hyprland
 Singleton {
     id: root
 
-    // stored mirrors monitor.json; pending holds the working draft.
-    // Both are maps keyed by monitor identity (description, falling back to model).
     readonly property bool dirty: canonical(pending) !== canonical(stored)
     readonly property var  liveMonitors: Hyprland.monitors?.values ?? []
     readonly property bool loaded: monitorFile.loaded
@@ -22,29 +20,84 @@ Singleton {
     property var           pending: ({})
     property var           stored: ({})
 
-    FileView {
-        id: monitorFile
-
-        path: Paths.shellDir + "/monitor.json"
-        watchChanges: false
-        onLoaded: root.resetFromDisk()
-        onLoadFailed: err => {
-            if (err !== FileViewError.FileNotFound)
-                ToastService.show(qsTr("Failed to read monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
-        }
-        onSaveFailed: err => ToastService.show(qsTr("Failed to save monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
-        onSaved: HyprlandSetupServices.reloadHyprland()
-
-        JsonAdapter { // qmllint disable
-            id: adapter
-
-            property var monitors: ({})
-        }
+    function               apply(): void {
+        resolveOverlaps();
+        stored           = deepCopy(pending);
+        adapter.monitors = deepCopy(stored);
+        monitorFile.writeAdapter();
     }
 
-    // Display list: live monitors first, then stored entries not currently connected.
+    function               canonical(value: var): string {
+        if (value === null || value === undefined)
+            return "null";
+        if (Array.isArray(value))
+            return `[${value.map(item => canonical(item)).join(",")}]`;
+        if (typeof value === "object") {
+            const keys = Object.keys(value).sort();
+            return `{${keys.map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
+        }
+        return JSON.stringify(value);
+    }
 
-    function               entryFor(monitor: HyprlandMonitor, key: string): var { // qmllint disable
+    function               currentMode(monitor: HyprlandMonitor): var {
+        const modes = (monitor?.lastIpcObject.availableModes ?? []).map(mode => parseModeString(mode)).filter(mode => mode !== null);
+        if (modes.length === 0)
+            return {
+                height: monitor?.height ?? 1080,
+                refreshRate: monitor?.lastIpcObject.refreshRate ?? 60.0,
+                width: monitor?.width ?? 1920
+            };
+        const width   = monitor?.width ?? -1;
+        const height  = monitor?.height ?? -1;
+        const refresh = monitor?.lastIpcObject.refreshRate ?? -1;
+        const running = modes.find(mode => mode.width === width && mode.height === height && Math.abs(mode.refreshRate - refresh) < 0.05);
+        if (running)
+            return running;
+        const byRefresh = modes.find(mode => Math.abs(mode.refreshRate - refresh) < 0.05);
+        if (byRefresh)
+            return byRefresh;
+        const bySize = modes.find(mode => mode.width === width && mode.height === height);
+        return bySize ?? modes[0];
+    }
+
+    function               deepCopy(value: var): var {
+        return JSON.parse(JSON.stringify(value ?? {}));
+    }
+
+    function               discardAll(): void {
+        pending = deepCopy(stored);
+    }
+
+    function               drawableRects(): var {
+        const rects = [];
+        for (const monitor of liveMonitors) {
+            const key   = identityOf(monitor);
+            const entry = entryFor(monitor, key);
+            if (entry.disabled)
+                continue;
+            const size = logicalSize(entry);
+            rects.push({
+                height: size.height,
+                key: key,
+                label: monitor.name,
+                width: size.width,
+                x: entry.x ?? 0,
+                y: entry.y ?? 0
+            });
+        }
+        return rects;
+    }
+
+    function               duplicateIdentities(): var {
+        const counts = {};
+        for (const monitor of liveMonitors) {
+            const key   = identityOf(monitor);
+            counts[key] = (counts[key] ?? 0) + 1;
+        }
+        return Object.keys(counts).filter(key => counts[key] > 1);
+    }
+
+    function               entryFor(monitor: HyprlandMonitor, key: string): var {
         if (pending[key] !== undefined)
             return pending[key];
         if (stored[key] !== undefined)
@@ -52,14 +105,14 @@ Singleton {
         return seedEntry(monitor);
     }
 
-    function               identityOf(monitor: HyprlandMonitor): string { // qmllint disable
+    function               identityOf(monitor: HyprlandMonitor): string {
         const description = monitor?.description ?? "";
         if (description !== "")
             return description;
         return monitor?.lastIpcObject.model ?? monitor?.name ?? "";
     }
 
-    function               liveMonitorFor(key: string): HyprlandMonitor { // qmllint disable
+    function               liveMonitorFor(key: string): HyprlandMonitor {
         return liveMonitors.find(monitor => identityOf(monitor) === key) ?? null;
     }
 
@@ -96,53 +149,6 @@ Singleton {
         return result;
     }
 
-    function               seedEntry(monitor: HyprlandMonitor): var { // qmllint disable
-        const ipc  = monitor?.lastIpcObject ?? {};
-        const mode = currentMode(monitor);
-        return {
-            bitdepth: 8,
-            cm: ipc.colorManagementPreset ?? "srgb",
-            disabled: false,
-            height: mode.height,
-            icc: "",
-            lastConnector: monitor?.name ?? "",
-            model: ipc.model ?? "",
-            refreshRate: mode.refreshRate,
-            sdrbrightness: 1.0,
-            sdrsaturation: 1.0,
-            scale: monitor?.scale ?? 1,
-            transform: ipc.transform ?? 0,
-            width: mode.width,
-            x: monitor?.x ?? 0,
-            y: monitor?.y ?? 0
-        };
-    }
-
-    // Current mode from availableModes. Monitors list several modes with the same
-    // resolution at different refresh rates (sometimes duplicate pixel clocks), so
-    // the running refresh rate must decide, not the first size match.
-
-    function               currentMode(monitor: HyprlandMonitor): var { // qmllint disable
-        const modes = (monitor?.lastIpcObject.availableModes ?? []).map(mode => parseModeString(mode)).filter(mode => mode !== null);
-        if (modes.length === 0)
-            return {
-                height: monitor?.height ?? 1080,
-                refreshRate: monitor?.lastIpcObject.refreshRate ?? 60.0,
-                width: monitor?.width ?? 1920
-            };
-        const width   = monitor?.width ?? -1;
-        const height  = monitor?.height ?? -1;
-        const refresh = monitor?.lastIpcObject.refreshRate ?? -1;
-        const running = modes.find(mode => mode.width === width && mode.height === height && Math.abs(mode.refreshRate - refresh) < 0.05);
-        if (running)
-            return running;
-        const byRefresh = modes.find(mode => Math.abs(mode.refreshRate - refresh) < 0.05);
-        if (byRefresh)
-            return byRefresh;
-        const bySize = modes.find(mode => mode.width === width && mode.height === height);
-        return bySize ?? modes[0];
-    }
-
     function               parseModeString(mode: string): var {
         const match = /^(\d+)x(\d+)@([\d.]+)(Hz)?$/.exec(mode.trim());
         if (!match)
@@ -152,45 +158,6 @@ Singleton {
             refreshRate: parseFloat(match[3]),
             width: parseInt(match[1], 10)
         };
-    }
-
-    function               revertMonitor(key: string): void {
-        const next = Object.assign({}, pending);
-        if (stored[key] !== undefined)
-            next[key] = deepCopy(stored[key]);
-        else
-            delete next[key];
-        pending = next;
-    }
-
-    function               setField(key: string, field: string, value: var): void {
-        const monitor    = liveMonitorFor(key);
-        const base       = pending[key] ?? (stored[key] !== undefined ? deepCopy(stored[key]) : (monitor ? seedEntry(monitor) : {}));
-        const next       = Object.assign({}, pending);
-        next[key]        = Object.assign({}, base);
-        next[key][field] = value;
-        pending          = next;
-    }
-
-    // Writes the whole draft into monitor.json, then reloads Hyprland (onSaved).
-
-    function               apply(): void {
-        resolveOverlaps();
-        stored           = deepCopy(pending);
-        adapter.monitors = deepCopy(stored);
-        monitorFile.writeAdapter();
-    }
-
-    // Hyprland refuses to register overlapping monitors, so nothing overlapping
-    // may ever reach monitor.json. Iterated until stable: clamping one monitor
-    // can push it into another.
-
-    function               deepCopy(value: var): var {
-        return JSON.parse(JSON.stringify(value ?? {}));
-    }
-
-    function               discardAll(): void {
-        pending = deepCopy(stored);
     }
 
     function               resetFromDisk(): void {
@@ -214,37 +181,71 @@ Singleton {
         }
     }
 
-    // Stable string form (sorted keys) so drafts and parsed files compare order-independently.
-
-    function               canonical(value: var): string {
-        if (value === null || value === undefined)
-            return "null";
-        if (Array.isArray(value))
-            return `[${value.map(item => canonical(item)).join(",")}]`;
-        if (typeof value === "object") {
-            const keys = Object.keys(value).sort();
-            return `{${keys.map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
-        }
-        return JSON.stringify(value);
+    function               revertMonitor(key: string): void {
+        const next = Object.assign({}, pending);
+        if (stored[key] !== undefined)
+            next[key] = deepCopy(stored[key]);
+        else
+            delete next[key];
+        pending = next;
     }
 
-    // Identities shared by more than one connected monitor: desc: rules would hit both.
+    function               seedEntry(monitor: HyprlandMonitor): var {
+        const ipc  = monitor?.lastIpcObject ?? {};
+        const mode = currentMode(monitor);
+        return {
+            bitdepth: 8,
+            cm: ipc.colorManagementPreset ?? "srgb",
+            disabled: false,
+            height: mode.height,
+            icc: "",
+            lastConnector: monitor?.name ?? "",
+            model: ipc.model ?? "",
+            refreshRate: mode.refreshRate,
+            sdrbrightness: 1.0,
+            sdrsaturation: 1.0,
+            scale: monitor?.scale ?? 1,
+            transform: ipc.transform ?? 0,
+            width: mode.width,
+            x: monitor?.x ?? 0,
+            y: monitor?.y ?? 0
+        };
+    }
 
-    function               duplicateIdentities(): var {
-        const counts = {};
-        for (const monitor of liveMonitors) {
-            const key   = identityOf(monitor);
-            counts[key] = (counts[key] ?? 0) + 1;
-        }
-        return Object.keys(counts).filter(key => counts[key] > 1);
+    function               setField(key: string, field: string, value: var): void {
+        const monitor    = liveMonitorFor(key);
+        const base       = pending[key] ?? (stored[key] !== undefined ? deepCopy(stored[key]) : (monitor ? seedEntry(monitor) : {}));
+        const next       = Object.assign({}, pending);
+        next[key]        = Object.assign({}, base);
+        next[key][field] = value;
+        pending          = next;
     }
 
     function               transformSwapsDimensions(transform: int): bool {
         return transform === 1 || transform === 3 || transform === 5 || transform === 7;
     }
 
-    // Logical (post-scale, transform-aware) size used by the layout canvas.
+    FileView {
+        id: monitorFile
 
+        path: Paths.shellDir + "/monitor.json"
+        watchChanges: false
+        onLoaded: root.resetFromDisk()
+        onLoadFailed: err => {
+            if (err !== FileViewError.FileNotFound)
+                ToastService.show(qsTr("Failed to read monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
+        }
+        onSaveFailed: err => ToastService.show(qsTr("Failed to save monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
+        onSaved: HyprlandSetupServices.reloadHyprland()
+
+        JsonAdapter { // qmllint disable
+            id: adapter
+
+            property var monitors: ({})
+        }
+    }
+
+    // Logical (post-scale, transform-aware) size used by the layout canvas.
     function               logicalSize(entry: var): var {
         const scale = (typeof entry.scale === "number" && entry.scale > 0) ? entry.scale : 1;
         let width   = (entry.width ?? 1920) / scale;
@@ -260,42 +261,15 @@ Singleton {
         };
     }
 
-    // Layout rectangles of connected, enabled monitors only. Stored entries for
-    // monitors that are not currently connected have no real geometry.
-
-    function               drawableRects(): var {
-        const rects = [];
-        for (const monitor of liveMonitors) {
-            const key   = identityOf(monitor);
-            const entry = entryFor(monitor, key);
-            if (entry.disabled)
-                continue;
-            const size = logicalSize(entry);
-            rects.push({
-                height: size.height,
-                key: key,
-                label: monitor.name,
-                width: size.width,
-                x: entry.x ?? 0,
-                y: entry.y ?? 0
-            });
-        }
-        return rects;
-    }
-
-    function               monitorItemForKey(key: string): var { // qmllint disable
+    function               monitorItemForKey(key: string): var {
         return monitorList().find(item => item.key === key) ?? null;
     }
 
-    function               rectForKey(key: string): var { // qmllint disable
+    function               rectForKey(key: string): var {
         return drawableRects().find(rect => rect.key === key) ?? null;
     }
 
-    // Snap the dragged top-left corner to other rects' edges and the origin, then
-    // resolve any overlap by clamping along the dominant drag axis. Hyprland
-    // refuses to register overlapping monitors, so overlap must never survive.
-
-    function               snappedPosition(key: string, x: real, y: real, threshold: real): var { // qmllint disable
+    function               snappedPosition(key: string, x: real, y: real, threshold: real): var {
         const others = drawableRects().filter(rect => rect.key !== key);
         const me     = drawableRects().find(rect => rect.key === key);
         if (!me)

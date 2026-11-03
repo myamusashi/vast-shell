@@ -13,10 +13,6 @@ import "../../Components"
 SettingRow {
     id: root
 
-    // One match property or effect of a rule: label, optional static/dynamic
-    // badge, optional pick-from-running menu, the typed editor and a remove
-    // button.
-
     required property var descriptor
     required property var currentValue
 

@@ -24,10 +24,6 @@ Item {
 
     property int           activeDrags: 0
     property var           frozenWorld: null
-
-    implicitHeight: 300
-    // The key list is only reassigned when it actually changes, so delegates are
-    // not rebuilt (and drags not killed) on every draft mutation mid-drag.
     property string        rectKeyCache: ""
     property var           rectKeys: []
 
@@ -51,6 +47,7 @@ Item {
         };
     }
 
+    implicitHeight: 300
     onActiveDragsChanged: {
         if (activeDrags === 1)
             frozenWorld = liveWorld;

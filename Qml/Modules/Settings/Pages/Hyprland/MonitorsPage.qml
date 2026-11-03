@@ -14,8 +14,6 @@ import "../../Components"
 SettingsPageBase {
     id: root
 
-    // Delegates are keyed; the list is only rebuilt when keys actually change,
-    // so text fields and active drags survive draft mutations.
     readonly property var monitorSnapshot: MonitorServices.monitorList()
 
     property string       monitorKeyCache: ""
