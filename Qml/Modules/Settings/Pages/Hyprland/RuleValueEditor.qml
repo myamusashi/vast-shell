@@ -10,78 +10,90 @@ import qs.Core.Configs
 Loader {
     id: root
 
-    // Typed editor for one rule match property or effect value. The value is
-    // committed on accepted and on focus loss (never while typing), mirroring
-    // the option rows.
-
     property var descriptor
     property var value
 
     signal       valueCommitted(var value)
 
-    function     canonicalVec2(value: var): string { // qmllint disable
+    function     canonicalVec2(value: var): string {
         return Array.isArray(value) ? value.map(item => String(item)).join("\u0001") : "";
     }
 
     function     clampNumber(value: real): real {
-        if (root.descriptor.min !== undefined && value < root.descriptor.min)
-            return root.descriptor.min;
-        if (root.descriptor.max !== undefined && value > root.descriptor.max)
-            return root.descriptor.max;
+        if (descriptor.min !== undefined && value < descriptor.min)
+            return descriptor.min;
+        if (descriptor.max !== undefined && value > descriptor.max)
+            return descriptor.max;
         return value;
     }
 
     function     commitNumber(text: string): void {
-        const parsed = root.descriptor.type === "int" ? parseInt(text, 10) : parseFloat(text);
-        if (isNaN(parsed))
+        const parsed = descriptor.type === "int" ? parseInt(text, 10) : parseFloat(text);
+        if (isNaN(parsed)) {
+            writeEditorText(value);
             return;
-        root.valueCommitted(root.clampNumber(parsed));
+        }
+        const clamped = clampNumber(parsed);
+        valueCommitted(clamped);
+        writeEditorText(clamped);
     }
 
     function     commitVec2(xText: string, yText: string): void {
-        // Expression elements are stored as strings: expressions and plain
-        // numbers are both accepted by Hyprland's parser.
         const next = [String(xText), String(yText)];
-        if (root.canonicalVec2(next) === root.canonicalVec2(root.value))
+        if (canonicalVec2(next) === canonicalVec2(value))
             return;
-        root.valueCommitted(next);
+        valueCommitted(next);
+        writeEditorText(next);
     }
 
     function     currentEnumLabel(): string {
-        const values = root.descriptor.values ?? [];
-        const index  = values.indexOf(root.value);
-        return root.enumLabel(index >= 0 ? root.value : "");
+        const values = descriptor.values ?? [];
+        const index  = values.indexOf(value);
+        return enumLabel(index >= 0 ? value : "");
     }
 
     function     enumLabel(value: var): string {
         if (value === "" || value === null || value === undefined)
             return qsTr("Default");
-        const labels = root.descriptor.labels ?? [];
-        const index  = (root.descriptor.values ?? []).indexOf(value);
+        const labels = descriptor.labels ?? [];
+        const index  = (descriptor.values ?? []).indexOf(value);
         return index >= 0 && index < labels.length ? labels[index] : String(value);
     }
 
-    function     vecComponent(index: int): string {
-        return Array.isArray(root.value) ? String(root.value[index] ?? "") : "";
+    function     writeEditorText(displayValue: var): void {
+        const layout = item;
+        if (layout === null)
+            return;
+        if (layout instanceof MaterialTextField) {
+            if (!layout.activeFocus) // qmllint disable missing-property
+                layout.text = displayValue === null || displayValue === undefined ? "" : String(displayValue); // qmllint disable missing-property
+            return;
+        }
+        const fields = layout.children.filter(child => child instanceof MaterialTextField); // qmllint disable missing-property
+        if (fields.length !== 2)
+            return;
+        if (!fields[0].activeFocus)
+            fields[0].text = Array.isArray(displayValue) ? String(displayValue[0] ?? "") : "";
+        if (!fields[1].activeFocus)
+            fields[1].text = Array.isArray(displayValue) ? String(displayValue[1] ?? "") : "";
     }
 
     sourceComponent: {
-        if (!root.descriptor)
+        if (!descriptor)
             return emptyEditor;
-        if (root.descriptor.type === "bool")
+        if (descriptor.type === "bool")
             return boolEditor;
-        if (root.descriptor.type === "int" || root.descriptor.type === "float")
+        if (descriptor.type === "int" || descriptor.type === "float")
             return numberEditor;
-        if (root.descriptor.type === "enum")
+        if (descriptor.type === "enum")
             return enumEditor;
-        if (root.descriptor.type === "exprVec2")
+        if (descriptor.type === "exprVec2")
             return exprVec2Editor;
         return stringEditor;
     }
-    component EditorField: StyledTextInput {
-        autoFocus: false
-        toggleButtonVisible: false
-    }
+    onItemChanged: writeEditorText(value)
+    onValueChanged: writeEditorText(value)
+    component EditorField: MaterialTextField {}
 
     Component {
         id: emptyEditor
@@ -109,16 +121,9 @@ Loader {
 
             implicitWidth: 90
             onAccepted: root.commitNumber(text)
-            onIsFocusedChanged: {
-                if (!isFocused)
+            onActiveFocusChanged: {
+                if (!activeFocus)
                     root.commitNumber(text);
-            }
-
-            Binding {
-                target: numberField
-                property: "text"
-                value: root.value === null || root.value === undefined ? "" : String(root.value)
-                when: !numberField.isFocused
             }
         }
     }
@@ -131,16 +136,11 @@ Loader {
 
             implicitWidth: 220
             onAccepted: root.valueCommitted(text)
-            onIsFocusedChanged: {
-                if (!isFocused)
+            onActiveFocusChanged: {
+                if (!activeFocus) {
                     root.valueCommitted(text);
-            }
-
-            Binding {
-                target: stringField
-                property: "text"
-                value: root.value === null || root.value === undefined ? "" : String(root.value)
-                when: !stringField.isFocused
+                    root.writeEditorText(text);
+                }
             }
         }
     }
@@ -168,6 +168,12 @@ Loader {
         id: exprVec2Editor
 
         RowLayout {
+            id: vec2Row
+
+            function commitFields(): void {
+                root.commitVec2(xField.text, yField.text);
+            }
+
             spacing: Appearance.spacing.small
 
             EditorField {
@@ -175,17 +181,11 @@ Loader {
 
                 implicitWidth: 130
                 placeholderText: qsTr("X")
-                onAccepted: root.commitVec2(xField.text, yField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
-                        root.commitVec2(xField.text, yField.text);
-                }
-
-                Binding {
-                    target: xField
-                    property: "text"
-                    value: root.vecComponent(0)
-                    when: !xField.isFocused
+                onTextEdited: vec2Row.commitFields()
+                onAccepted: vec2Row.commitFields()
+                onActiveFocusChanged: {
+                    if (!activeFocus)
+                        vec2Row.commitFields();
                 }
             }
 
@@ -194,17 +194,11 @@ Loader {
 
                 implicitWidth: 130
                 placeholderText: qsTr("Y")
-                onAccepted: root.commitVec2(xField.text, yField.text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
-                        root.commitVec2(xField.text, yField.text);
-                }
-
-                Binding {
-                    target: yField
-                    property: "text"
-                    value: root.vecComponent(1)
-                    when: !yField.isFocused
+                onTextEdited: vec2Row.commitFields()
+                onAccepted: vec2Row.commitFields()
+                onActiveFocusChanged: {
+                    if (!activeFocus)
+                        vec2Row.commitFields();
                 }
             }
         }

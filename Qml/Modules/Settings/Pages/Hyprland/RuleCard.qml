@@ -11,9 +11,6 @@ import qs.Services
 Rectangle {
     id: root
 
-    // One rule of the list. The Repeater model is the array of rule ids so
-    // value edits never recreate the card, mirroring the monitors page.
-
     required property int    index
     required property string modelData
 
@@ -70,6 +67,10 @@ Rectangle {
     }
     onEffectsChanged: root.refreshEffectKeys()
     onMatchChanged: root.refreshMatchKeys()
+    onRuleChanged: {
+        if (!nameField.activeFocus)
+            nameField.text = root.rule?.name ?? "";
+    }
     Layout.fillWidth: true
     color: Colours.m3Colors.m3SurfaceContainerLow
     implicitHeight: cardLayout.implicitHeight + (Appearance.margin.large * 2)
@@ -113,25 +114,16 @@ Rectangle {
                 onToggled: root.services.setRuleField(root.modelData, "enabled", checked)
             }
 
-            StyledTextInput {
+            MaterialTextField {
                 id: nameField
 
                 Layout.fillWidth: true
                 Layout.maximumWidth: 320
-                autoFocus: false
                 placeholderText: qsTr("Unique name (optional)")
-                toggleButtonVisible: false
                 onAccepted: root.services.setRuleField(root.modelData, "name", text)
-                onIsFocusedChanged: {
-                    if (!isFocused)
+                onActiveFocusChanged: {
+                    if (!activeFocus)
                         root.services.setRuleField(root.modelData, "name", text);
-                }
-
-                Binding {
-                    target: nameField
-                    property: "text"
-                    value: root.rule?.name ?? ""
-                    when: !nameField.isFocused
                 }
             }
 

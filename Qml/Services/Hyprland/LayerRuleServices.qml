@@ -12,68 +12,37 @@ import qs.Services.Hyprland
 Singleton {
     id: root
 
-    // stored mirrors layerrules.json; pending holds the working draft.
-    // Both are ordered arrays: the order is the registration order and the
-    // last matching rule wins, so reordering changes behavior.
-    readonly property bool dirty: canonical(pending) !== canonical(stored)
+    readonly property bool dirty: canonical(rules) !== canonical(stored)
     readonly property bool loaded: rulesFile.loaded
-
-    // Namespaces of layers vast-shell itself creates, offered as quick picks.
     readonly property var  ownNamespaces: ["shell:drawers", "shell:wallpaper", "shell:dynamicIsland", "shell:screenshot-overlay"]
     readonly property var  problems: {
         const map        = {};
         const nameCounts = {};
-        for (const rule of pending) {
+        for (const rule of rules) {
             const name = typeof rule.name === "string" ? rule.name : "";
             if (name !== "")
                 nameCounts[name] = (nameCounts[name] ?? 0) + 1;
         }
-        for (const rule of pending)
+        for (const rule of rules)
             map[rule.id] = ruleProblems(rule, nameCounts);
         return map;
     }
-    readonly property bool valid: pending.every(rule => (problems[rule.id] ?? []).length === 0)
+    readonly property bool valid: rules.every(rule => (problems[rule.id] ?? []).length === 0)
 
-    property var           pending: []
+    property var           rules: []
     property var           runningNamespaces: []
     property var           stored: []
 
     function               addRule(): void {
-        const next = pending.slice();
+        const next = rules.slice();
         next.push(newRule());
-        pending = next;
+        setRules(next);
     }
-
-    FileView {
-        id: rulesFile
-
-        path: Paths.shellDir + "/layerrules.json"
-        watchChanges: false
-        onLoaded: root.resetFromDisk()
-        onLoadFailed: err => {
-            if (err !== FileViewError.FileNotFound)
-                ToastService.show(qsTr("Failed to read layer rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
-        }
-        onSaveFailed: err => ToastService.show(qsTr("Failed to save layer rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
-        onSaved: HyprlandSetupServices.reloadHyprland()
-
-        JsonAdapter { // qmllint disable
-            id: adapter
-
-            property var rules: []
-        }
-    }
-
-    // Writes the whole draft into layerrules.json, then reloads Hyprland (onSaved).
 
     function               apply(): void {
-        stored        = deepCopy(pending);
-        adapter.rules = deepCopy(stored);
+        stored = deepCopy(rules);
         rulesFile.writeAdapter();
     }
-
-    // Stable string form (sorted keys) so drafts and parsed files compare
-    // order-independently; array order is kept because it is meaningful.
 
     function               canonical(value: var): string { // qmllint disable
         if (value === null || value === undefined)
@@ -92,39 +61,53 @@ Singleton {
     }
 
     function               deleteRule(id: string): void {
-        pending = pending.filter(rule => rule.id !== id);
+        setRules(rules.filter(rule => rule.id !== id));
     }
 
     function               discardAll(): void {
-        pending = deepCopy(stored);
+        setRules(deepCopy(stored));
     }
 
     function               duplicateRule(id: string): void {
         const index = ruleIndex(id);
         if (index < 0)
             return;
-        const copy = deepCopy(pending[index]);
+        const copy = deepCopy(rules[index]);
         copy.id    = newRuleId();
-        // The source name would trip the duplicate-name check until renamed.
         copy.name  = "";
-        const next = pending.slice();
+        const next = rules.slice();
         next.splice(index + 1, 0, copy);
-        pending = next;
+        setRules(next);
+    }
+
+    function               matchPickValues(descriptor: var): var { // qmllint disable
+        if (!descriptor || descriptor.type !== "regex")
+            return [];
+        return namespaceQuickPicks();
     }
 
     function               moveRule(id: string, delta: int): void {
         const from = ruleIndex(id);
         const to   = from + delta;
-        if (from < 0 || to < 0 || to >= pending.length)
+        if (from < 0 || to < 0 || to >= rules.length)
             return;
-        const next  = pending.slice();
+        const next  = rules.slice();
         const moved = next.splice(from, 1)[0];
         next.splice(to, 0, moved);
-        pending = next;
+        setRules(next);
     }
 
-    // New layer rules start with the namespace row because it is the only
-    // supported match property.
+    function               namespaceQuickPicks(): var {
+        const values = [];
+        const seen   = {};
+        for (const namespace of ownNamespaces.concat(runningNamespaces)) {
+            if (seen[namespace])
+                continue;
+            seen[namespace] = true;
+            values.push(namespace);
+        }
+        return values;
+    }
 
     function               newRule(): var {
         return {
@@ -142,31 +125,37 @@ Singleton {
         return `l-${Date.now().toString(36)}-${Math.floor(Math.random() * 1679616).toString(36)}`;
     }
 
-    // Pick-from-running values for a match property (regex props only).
-
-    function               matchPickValues(descriptor: var): var { // qmllint disable
-        if (!descriptor || descriptor.type !== "regex")
-            return [];
-        return namespaceQuickPicks();
+    function               parseLayers(text: string): void { // qmllint disable
+        let data = null;
+        try {
+            data = JSON.parse(text);
+        } catch (error) {
+            data = null;
+        }
+        if (!data || typeof data !== "object")
+            return;
+        const found = {};
+        for (const monitor of Object.values(data)) {
+            const levels = monitor?.levels ?? {};
+            for (const layers of Object.values(levels)) {
+                if (!Array.isArray(layers))
+                    continue;
+                for (const layer of layers) {
+                    const namespace = String(layer?.namespace ?? "");
+                    if (namespace !== "")
+                        found[namespace] = true;
+                }
+            }
+        }
+        runningNamespaces = Object.keys(found).sort();
     }
 
     function               refreshMatchPicks(): void {
         refreshRunningNamespaces();
     }
 
-    // Quick picks for the namespace field: vast-shell's own namespaces first,
-    // then everything currently running.
-
-    function               namespaceQuickPicks(): var {
-        const values = [];
-        const seen   = {};
-        for (const namespace of ownNamespaces.concat(runningNamespaces)) {
-            if (seen[namespace])
-                continue;
-            seen[namespace] = true;
-            values.push(namespace);
-        }
-        return values;
+    function               refreshRunningNamespaces(): void {
+        layersProbe.running = true;
     }
 
     function               removeEffect(id: string, key: string): void {
@@ -191,24 +180,20 @@ Singleton {
         });
     }
 
-    // Read-only query of the running layer surface namespaces; a fresh sample
-    // is taken whenever the picker opens.
-
-    function               refreshRunningNamespaces(): void {
-        layersProbe.running = true;
-    }
-
     function               resetFromDisk(): void {
-        stored  = deepCopy(adapter.rules ?? []);
-        pending = deepCopy(stored);
+        const loaded = deepCopy(adapter.rules ?? []);
+        setRules(loaded);
+        stored = deepCopy(loaded);
     }
 
-    function               ruleById(id: string): var { // qmllint disable
-        return pending.find(rule => rule.id === id) ?? null;
+    function               ruleById(id: string): var {
+        const snapshot = rules;
+        return snapshot.find(rule => rule.id === id) ?? null;
     }
 
-    function               ruleIndex(id: string): int { // qmllint disable
-        return pending.findIndex(rule => rule.id === id);
+    function               ruleIndex(id: string): int {
+        const snapshot = rules;
+        return snapshot.findIndex(rule => rule.id === id);
     }
 
     function               ruleProblems(rule: var, nameCounts: var): var { // qmllint disable
@@ -271,13 +256,18 @@ Singleton {
         });
     }
 
+    function               setRules(next: var): void {
+        rules         = deepCopy(next);
+        adapter.rules = deepCopy(next);
+    }
+
     function               updateRule(id: string, update: var): void { // qmllint disable
         const index = ruleIndex(id);
         if (index < 0)
             return;
-        const next  = pending.slice();
+        const next  = rules.slice();
         next[index] = Object.assign({}, next[index], update);
-        pending     = next;
+        setRules(next);
     }
 
     function               valueProblem(descriptor: var, value: var): string { // qmllint disable
@@ -302,32 +292,24 @@ Singleton {
         return "";
     }
 
-    // hyprctl layers -j nests layers per monitor under "levels"; only the
-    // namespace is needed here.
+    FileView {
+        id: rulesFile
 
-    function               parseLayers(text: string): void { // qmllint disable
-        let data = null;
-        try {
-            data = JSON.parse(text);
-        } catch (error) {
-            data = null;
+        path: Paths.shellDir + "/layerrules.json"
+        watchChanges: false
+        onLoaded: root.resetFromDisk()
+        onLoadFailed: err => {
+            if (err !== FileViewError.FileNotFound)
+                ToastService.show(qsTr("Failed to read layer rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
         }
-        if (!data || typeof data !== "object")
-            return;
-        const found = {};
-        for (const monitor of Object.values(data)) {
-            const levels = monitor?.levels ?? {};
-            for (const layers of Object.values(levels)) {
-                if (!Array.isArray(layers))
-                    continue;
-                for (const layer of layers) {
-                    const namespace = String(layer?.namespace ?? "");
-                    if (namespace !== "")
-                        found[namespace] = true;
-                }
-            }
+        onSaveFailed: err => ToastService.show(qsTr("Failed to save layer rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
+        onSaved: HyprlandSetupServices.reloadHyprland()
+
+        JsonAdapter { // qmllint disable
+            id: adapter
+
+            property var rules: []
         }
-        runningNamespaces = Object.keys(found).sort();
     }
 
     Process {

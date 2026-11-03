@@ -14,9 +14,7 @@ import "../../Components"
 SettingsPageBase {
     id: root
 
-    // Delegates are keyed by rule id; the list is only rebuilt when ids
-    // actually change, so text fields survive draft mutations.
-    readonly property var ruleIdSnapshot: LayerRuleServices.pending.map(rule => rule.id)
+    readonly property var ruleIdSnapshot: LayerRuleServices.rules.map(rule => rule.id)
 
     property string       ruleIdCache: ""
     property var          ruleIds: []

@@ -12,69 +12,40 @@ import qs.Services.Hyprland
 Singleton {
     id: root
 
-    // stored mirrors windowrules.json; pending holds the working draft.
-    // Both are ordered arrays: the order is the registration order and the
-    // last matching rule wins, so reordering changes behavior.
-    readonly property bool dirty: canonical(pending) !== canonical(stored)
+    readonly property bool dirty: canonical(rules) !== canonical(stored)
     readonly property bool loaded: rulesFile.loaded
-    readonly property var  runningWindows: Hypr.toplevels?.values ?? []
-
-    // Rule id -> list of structural problems; empty list means the rule is valid.
     readonly property var  problems: {
         const map        = {};
         const nameCounts = {};
-        for (const rule of pending) {
+        for (const rule of rules) {
             const name = typeof rule.name === "string" ? rule.name : "";
             if (name !== "")
                 nameCounts[name] = (nameCounts[name] ?? 0) + 1;
         }
-        for (const rule of pending)
+        for (const rule of rules)
             map[rule.id] = ruleProblems(rule, nameCounts);
         return map;
     }
-    readonly property bool valid: pending.every(rule => (problems[rule.id] ?? []).length === 0)
+    readonly property var  runningWindows: Hypr.toplevels?.values ?? []
+    readonly property bool valid: rules.every(rule => (problems[rule.id] ?? []).length === 0)
 
-    property var           pending: []
+    property var           rules: []
     property var           stored: []
 
     function               addRule(): void {
-        const next = pending.slice();
+        const next = rules.slice();
         next.push(newRule());
-        pending = next;
+        setRules(next);
     }
-
-    FileView {
-        id: rulesFile
-
-        path: Paths.shellDir + "/windowrules.json"
-        watchChanges: false
-        onLoaded: root.resetFromDisk()
-        onLoadFailed: err => {
-            if (err !== FileViewError.FileNotFound)
-                ToastService.show(qsTr("Failed to read window rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
-        }
-        onSaveFailed: err => ToastService.show(qsTr("Failed to save window rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
-        onSaved: HyprlandSetupServices.reloadHyprland()
-
-        JsonAdapter { // qmllint disable
-            id: adapter
-
-            property var rules: []
-        }
-    }
-
-    // Writes the whole draft into windowrules.json, then reloads Hyprland (onSaved).
 
     function               apply(): void {
-        stored        = deepCopy(pending);
-        adapter.rules = deepCopy(stored);
+        if (!valid)
+            return;
+        stored = deepCopy(rules);
         rulesFile.writeAdapter();
     }
 
-    // Stable string form (sorted keys) so drafts and parsed files compare
-    // order-independently; array order is kept because it is meaningful.
-
-    function               canonical(value: var): string { // qmllint disable
+    function               canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
         if (Array.isArray(value))
@@ -91,35 +62,40 @@ Singleton {
     }
 
     function               deleteRule(id: string): void {
-        pending = pending.filter(rule => rule.id !== id);
+        setRules(rules.filter(rule => rule.id !== id));
     }
 
     function               discardAll(): void {
-        pending = deepCopy(stored);
+        setRules(deepCopy(stored));
     }
 
     function               duplicateRule(id: string): void {
         const index = ruleIndex(id);
         if (index < 0)
             return;
-        const copy = deepCopy(pending[index]);
+        const copy = deepCopy(rules[index]);
         copy.id    = newRuleId();
-        // The source name would trip the duplicate-name check until renamed.
         copy.name  = "";
-        const next = pending.slice();
+        const next = rules.slice();
         next.splice(index + 1, 0, copy);
-        pending = next;
+        setRules(next);
+    }
+
+    function               matchPickValues(descriptor: var): var {
+        if (!descriptor || descriptor.type !== "regex")
+            return [];
+        return runningValues(descriptor.pickerField ?? "");
     }
 
     function               moveRule(id: string, delta: int): void {
         const from = ruleIndex(id);
         const to   = from + delta;
-        if (from < 0 || to < 0 || to >= pending.length)
+        if (from < 0 || to < 0 || to >= rules.length)
             return;
-        const next  = pending.slice();
+        const next  = rules.slice();
         const moved = next.splice(from, 1)[0];
         next.splice(to, 0, moved);
-        pending = next;
+        setRules(next);
     }
 
     function               newRule(): var {
@@ -134,19 +110,6 @@ Singleton {
 
     function               newRuleId(): string {
         return `r-${Date.now().toString(36)}-${Math.floor(Math.random() * 1679616).toString(36)}`;
-    }
-
-    // Pick-from-running values for a match property (regex props only).
-
-    function               matchPickValues(descriptor: var): var { // qmllint disable
-        if (!descriptor || descriptor.type !== "regex")
-            return [];
-        return runningValues(descriptor.pickerField ?? "");
-    }
-
-    // Running windows refresh themselves through the Hyprland event stream.
-
-    function               refreshMatchPicks(): void {
     }
 
     function               removeEffect(id: string, key: string): void {
@@ -172,19 +135,22 @@ Singleton {
     }
 
     function               resetFromDisk(): void {
-        stored  = deepCopy(adapter.rules ?? []);
-        pending = deepCopy(stored);
+        const loaded = deepCopy(adapter.rules ?? []);
+        setRules(loaded);
+        stored = deepCopy(loaded);
     }
 
-    function               ruleById(id: string): var { // qmllint disable
-        return pending.find(rule => rule.id === id) ?? null;
+    function               ruleById(id: string): var {
+        const snapshot = rules;
+        return snapshot.find(rule => rule.id === id) ?? null;
     }
 
-    function               ruleIndex(id: string): int { // qmllint disable
-        return pending.findIndex(rule => rule.id === id);
+    function               ruleIndex(id: string): int {
+        const snapshot = rules;
+        return snapshot.findIndex(rule => rule.id === id);
     }
 
-    function               ruleProblems(rule: var, nameCounts: var): var { // qmllint disable
+    function               ruleProblems(rule: var, nameCounts: var): var {
         const found = [];
         const match = typeof rule.match === "object" && rule.match !== null ? rule.match : {};
         if (Object.keys(match).length === 0)
@@ -216,10 +182,7 @@ Singleton {
         return found;
     }
 
-    // Distinct sorted values of a lastIpcObject field across running windows,
-    // used by the pick-from-running buttons.
-
-    function               runningValues(field: string): var { // qmllint disable
+    function               runningValues(field: string): var {
         const values = [];
         const seen   = {};
         for (const toplevel of runningWindows) {
@@ -263,16 +226,21 @@ Singleton {
         });
     }
 
-    function               updateRule(id: string, update: var): void { // qmllint disable
+    function               setRules(next: var): void {
+        rules         = deepCopy(next);
+        adapter.rules = deepCopy(next);
+    }
+
+    function               updateRule(id: string, update: var): void {
         const index = ruleIndex(id);
         if (index < 0)
             return;
-        const next  = pending.slice();
+        const next  = rules.slice();
         next[index] = Object.assign({}, next[index], update);
-        pending     = next;
+        setRules(next);
     }
 
-    function               valueProblem(descriptor: var, value: var): string { // qmllint disable
+    function               valueProblem(descriptor: var, value: var): string {
         if (descriptor.type === "int" || descriptor.type === "float") {
             if (typeof value !== "number" || isNaN(value))
                 return qsTr("Must be a number.");
@@ -292,5 +260,25 @@ Singleton {
         if (descriptor.type === "enum" && !(descriptor.values ?? []).includes(value))
             return qsTr("Must be one of: %1.").arg((descriptor.values ?? []).join(", "));
         return "";
+    }
+
+    FileView {
+        id: rulesFile
+
+        path: Paths.shellDir + "/windowrules.json"
+        watchChanges: false
+        onLoaded: root.resetFromDisk()
+        onLoadFailed: err => {
+            if (err !== FileViewError.FileNotFound)
+                ToastService.show(qsTr("Failed to read window rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
+        }
+        onSaveFailed: err => ToastService.show(qsTr("Failed to save window rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
+        onSaved: HyprlandSetupServices.reloadHyprland()
+
+        JsonAdapter { // qmllint disable
+            id: adapter
+
+            property var rules: []
+        }
     }
 }
