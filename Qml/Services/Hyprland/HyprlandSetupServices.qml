@@ -115,7 +115,7 @@ local function writeErrors(messages)
         return
     end
     if #messages > 0 then
-        file:write(table.concat(messages, "\n"))
+        file:write(table.concat(messages, "\\n"))
     end
     file:close()
 end
@@ -201,7 +201,7 @@ writeErrors(errors)`
     function                 checkCjson(): void {
         if (!onHyprland || cjsonState === "checking")
             return;
-        cjsonState    = "checking";
+        cjsonState         = "checking";
         cjsonCheck.running = true;
     }
 
