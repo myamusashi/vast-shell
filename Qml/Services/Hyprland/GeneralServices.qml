@@ -17,12 +17,59 @@ Singleton {
     property var           pending: ({})
     property var           stored: ({})
 
+    function               applyCategory(category: string): void {
+        const draft = root.pending[category];
+        if (draft === undefined)
+            return;
+        const next   = root.deepCopy(root.stored);
+        const nested = root.unflatten(draft);
+        if (Object.keys(nested).length === 0)
+            delete next[category];
+        else
+            next[category] = nested;
+        root.stored      = next;
+        adapter.generals = root.deepCopy(next);
+        generalsFile.writeAdapter();
+    }
+
+    function               canonical(value: var): string {
+        if (value === null || value === undefined)
+            return "null";
+        if (Array.isArray(value))
+            return `[${value.map(item => root.canonical(item)).join(",")}]`;
+        if (typeof value === "object") {
+            const keys = Object.keys(value).sort();
+            return `{${keys.map(key => `${JSON.stringify(key)}:${root.canonical(value[key])}`).join(",")}}`;
+        }
+        return JSON.stringify(value);
+    }
+
+    function               deepCopy(value: var): var {
+        return JSON.parse(JSON.stringify(value ?? {}));
+    }
+
+    function               flatten(value: var, prefix: string): var {
+        const flat = {};
+        for (const key of Object.keys(value ?? {})) {
+            const path = prefix === "" ? key : `${prefix}.${key}`;
+            if (value[key] !== null && typeof value[key] === "object" && !Array.isArray(value[key]))
+                Object.assign(flat, root.flatten(value[key], path));
+            else
+                flat[path] = value[key];
+        }
+        return flat;
+    }
+
     function               isCategoryDirty(category: string): bool {
         return root.canonical(root.pending[category] ?? {}) !== root.canonical(root.flatten(root.stored[category] ?? {}, ""));
     }
 
     function               pendingValue(category: string, leafPath: string): var {
         return root.pending[category]?.[leafPath];
+    }
+
+    function               reloadHyprland(): void {
+        HyprlandSetupServices.reloadHyprland();
     }
 
     function               resetFromDisk(): void {
@@ -47,6 +94,21 @@ Singleton {
         root.pending             = next;
     }
 
+    function               unflatten(flat: var): var {
+        const nested = {};
+        for (const path of Object.keys(flat ?? {})) {
+            const segments = path.split(".");
+            let cursor     = nested;
+            for (let i = 0; i < segments.length - 1; i++) {
+                if (cursor[segments[i]] === undefined || typeof cursor[segments[i]] !== "object")
+                    cursor[segments[i]] = {};
+                cursor = cursor[segments[i]];
+            }
+            cursor[segments[segments.length - 1]] = flat[path];
+        }
+        return nested;
+    }
+
     FileView {
         id: generalsFile
 
@@ -67,67 +129,5 @@ Singleton {
 
             property var generals: ({})
         }
-    }
-
-    function               applyCategory(category: string): void {
-        const draft = root.pending[category];
-        if (draft === undefined)
-            return;
-        const next   = root.deepCopy(root.stored);
-        const nested = root.unflatten(draft);
-        if (Object.keys(nested).length === 0)
-            delete next[category];
-        else
-            next[category] = nested;
-        root.stored      = next;
-        adapter.generals = root.deepCopy(next);
-        generalsFile.writeAdapter();
-    }
-
-    function               deepCopy(value: var): var {
-        return JSON.parse(JSON.stringify(value ?? {}));
-    }
-
-    function               flatten(value: var, prefix: string): var {
-        const flat = {};
-        for (const key of Object.keys(value ?? {})) {
-            const path = prefix === "" ? key : `${prefix}.${key}`;
-            if (value[key] !== null && typeof value[key] === "object" && !Array.isArray(value[key]))
-                Object.assign(flat, root.flatten(value[key], path));
-            else
-                flat[path] = value[key];
-        }
-        return flat;
-    }
-
-    function               unflatten(flat: var): var {
-        const nested = {};
-        for (const path of Object.keys(flat ?? {})) {
-            const segments = path.split(".");
-            let cursor     = nested;
-            for (let i = 0; i < segments.length - 1; i++) {
-                if (cursor[segments[i]] === undefined || typeof cursor[segments[i]] !== "object")
-                    cursor[segments[i]] = {};
-                cursor = cursor[segments[i]];
-            }
-            cursor[segments[segments.length - 1]] = flat[path];
-        }
-        return nested;
-    }
-
-    function               canonical(value: var): string {
-        if (value === null || value === undefined)
-            return "null";
-        if (Array.isArray(value))
-            return `[${value.map(item => root.canonical(item)).join(",")}]`;
-        if (typeof value === "object") {
-            const keys = Object.keys(value).sort();
-            return `{${keys.map(key => `${JSON.stringify(key)}:${root.canonical(value[key])}`).join(",")}}`;
-        }
-        return JSON.stringify(value);
-    }
-
-    function               reloadHyprland(): void {
-        HyprlandSetupServices.reloadHyprland();
     }
 }

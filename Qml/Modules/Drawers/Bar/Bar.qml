@@ -44,7 +44,6 @@ WrapperItem {
                 implicitHeight: parent.height
                 implicitWidth: parent.width / 6
                 monitor: root.border.window
-
             }
 
             Middle {

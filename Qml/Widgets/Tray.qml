@@ -16,18 +16,18 @@ StyledRect {
     id: root
     required property ShellScreen monitor
 
-    readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
-    readonly property real horizontalPadding: Appearance.spacing.normal
-    readonly property real shadowPadding: 12
+    readonly property real        barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
+    readonly property real        horizontalPadding: Appearance.spacing.normal
+    readonly property real        shadowPadding: 12
 
-    property var           activeIconItem: null
-    property var           activeMenu: null
-    property bool          menuMapped: false
-    property bool          menuShowing: false
-    property real          menuX: 0
-    property alias         widgetHeight: root.implicitHeight
+    property var                  activeIconItem: null
+    property var                  activeMenu: null
+    property bool                 menuMapped: false
+    property bool                 menuShowing: false
+    property real                 menuX: 0
+    property alias                widgetHeight: root.implicitHeight
 
-    function               closeMenu(): void {
+    function                      closeMenu(): void {
         closeT.stop();
         hideT.stop();
         if (!root.menuMapped)
@@ -36,14 +36,14 @@ StyledRect {
         hideT.restart();
     }
 
-    function               finishClose(): void {
+    function                      finishClose(): void {
         closeT.stop();
         root.menuMapped     = false;
         root.activeIconItem = null;
         root.activeMenu     = null;
     }
 
-    function               openMenuFor(item, iconItem): void {
+    function                      openMenuFor(item, iconItem): void {
         closeT.stop();
         hideT.stop();
         if (!item || !item.hasMenu) {
@@ -59,7 +59,7 @@ StyledRect {
         root.menuMapped  = true;
     }
 
-    function               scheduleClose(): void {
+    function                      scheduleClose(): void {
         if (!root.menuMapped)
             return;
         closeT.restart();
