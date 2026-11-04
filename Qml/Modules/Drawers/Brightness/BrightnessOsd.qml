@@ -11,7 +11,7 @@ import qs.Services
 Item {
     id: root
 
-    readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
+    readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
     readonly property int  pillHeight: 104
     readonly property int  pillWidth: 260
     readonly property bool shouldShow: Brightness.available && GlobalStates.isOSDVisible("brightness")

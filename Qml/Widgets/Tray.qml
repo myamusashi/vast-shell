@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Effects
+import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 
@@ -13,6 +14,7 @@ import qs.Services
 
 StyledRect {
     id: root
+    required property ShellScreen monitor
 
     readonly property real barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
     readonly property real horizontalPadding: Appearance.spacing.normal
@@ -48,7 +50,7 @@ StyledRect {
             root.closeMenu();
             return;
         }
-        root.menuX          = iconItem.mapToGlobal(0, 0).x;
+        root.menuX          = iconItem.mapToGlobal(0, 0).x - root.monitor.x;
         root.activeIconItem = iconItem;
         if (root.menuShowing && root.activeMenu === item.menu)
             return;
@@ -163,6 +165,7 @@ StyledRect {
     }
 
     TrayPanel {
+        screen: root.monitor
         trayRoot: root
         closeTimer: closeT
         hideTimer: hideT

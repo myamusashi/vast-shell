@@ -13,6 +13,7 @@ LazyLoader {
     id: root
 
     required property var trayRoot
+    required property ShellScreen screen
 
     property Timer        closeTimer
     property Timer        hideTimer
@@ -25,6 +26,7 @@ LazyLoader {
         aboveWindows: false
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
+        screen: root.screen
         mask: Region {
             item: root.trayRoot.menuMapped ? menuSurface : null
         }
