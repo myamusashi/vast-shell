@@ -7,6 +7,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 LazyLoader {
@@ -55,7 +56,7 @@ LazyLoader {
         }
 
         WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "shell:dynamicIsland"
+        WlrLayershell.namespace: LayerNamespaces.dynamicIsland
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
 

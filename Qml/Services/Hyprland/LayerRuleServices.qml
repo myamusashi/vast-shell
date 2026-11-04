@@ -14,7 +14,6 @@ Singleton {
 
     readonly property bool dirty: canonical(rules) !== canonical(stored)
     readonly property bool loaded: rulesFile.loaded
-    readonly property var  ownNamespaces: ["shell:drawers", "shell:wallpaper", "shell:dynamicIsland", "shell:screenshot-overlay"]
     readonly property var  problems: {
         const map        = {};
         const nameCounts = {};
@@ -29,6 +28,7 @@ Singleton {
     }
     readonly property bool valid: rules.every(rule => (problems[rule.id] ?? []).length === 0)
 
+    property var           lastGoodRules: []
     property var           rules: []
     property var           runningNamespaces: []
     property var           stored: []
@@ -40,11 +40,14 @@ Singleton {
     }
 
     function               apply(): void {
-        stored = deepCopy(rules);
+        if (!valid)
+            return;
+        lastGoodRules = deepCopy(stored);
+        stored        = deepCopy(rules);
         rulesFile.writeAdapter();
     }
 
-    function               canonical(value: var): string { 
+    function               canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
         if (Array.isArray(value))
@@ -80,7 +83,7 @@ Singleton {
         setRules(next);
     }
 
-    function               matchPickValues(descriptor: var): var { 
+    function               matchPickValues(descriptor: var): var {
         if (!descriptor || descriptor.type !== "regex")
             return [];
         return namespaceQuickPicks();
@@ -100,7 +103,7 @@ Singleton {
     function               namespaceQuickPicks(): var {
         const values = [];
         const seen   = {};
-        for (const namespace of ownNamespaces.concat(runningNamespaces)) {
+        for (const namespace of LayerNamespaces.ownNamespaces.concat(runningNamespaces)) {
             if (seen[namespace])
                 continue;
             seen[namespace] = true;
@@ -125,7 +128,7 @@ Singleton {
         return `l-${Date.now().toString(36)}-${Math.floor(Math.random() * 1679616).toString(36)}`;
     }
 
-    function               parseLayers(text: string): void { 
+    function               parseLayers(text: string): void {
         let data = null;
         try {
             data = JSON.parse(text);
@@ -181,7 +184,7 @@ Singleton {
     }
 
     function               resetFromDisk(): void {
-        const loaded = deepCopy(adapter.rules ?? []);
+        const loaded = sanitizeLoadedRules(adapter.rules);
         setRules(loaded);
         stored = deepCopy(loaded);
     }
@@ -196,7 +199,7 @@ Singleton {
         return snapshot.findIndex(rule => rule.id === id);
     }
 
-    function               ruleProblems(rule: var, nameCounts: var): var { 
+    function               ruleProblems(rule: var, nameCounts: var): var {
         const found = [];
         const match = typeof rule.match === "object" && rule.match !== null ? rule.match : {};
         if (Object.keys(match).length === 0)
@@ -226,6 +229,23 @@ Singleton {
                 found.push(`${LayerRuleSchema.labelFromKey(key)}: ${problem}`);
         }
         return found;
+    }
+
+    function               sanitizeLoadedRules(rawRules: var): var {
+        if (!Array.isArray(rawRules))
+            return [];
+        const validRules = [];
+        for (const entry of rawRules) {
+            if (entry === null || typeof entry !== "object" || Array.isArray(entry) || typeof entry.id !== "string")
+                continue;
+            const rule = Object.assign({}, entry);
+            if (rule.match === null || typeof rule.match !== "object" || Array.isArray(rule.match))
+                rule.match = {};
+            if (rule.effects === null || typeof rule.effects !== "object" || Array.isArray(rule.effects))
+                rule.effects = {};
+            validRules.push(rule);
+        }
+        return validRules;
     }
 
     function               setEffect(id: string, key: string, value: var): void {
@@ -261,7 +281,7 @@ Singleton {
         adapter.rules = deepCopy(next);
     }
 
-    function               updateRule(id: string, update: var): void { 
+    function               updateRule(id: string, update: var): void {
         const index = ruleIndex(id);
         if (index < 0)
             return;
@@ -270,7 +290,7 @@ Singleton {
         setRules(next);
     }
 
-    function               valueProblem(descriptor: var, value: var): string { 
+    function               valueProblem(descriptor: var, value: var): string {
         if (descriptor.type === "int" || descriptor.type === "float") {
             if (typeof value !== "number" || isNaN(value))
                 return qsTr("Must be a number.");
@@ -297,13 +317,17 @@ Singleton {
 
         path: Paths.shellDir + "/layerrules.json"
         watchChanges: false
+        atomicWrites: true
         onLoaded: root.resetFromDisk()
         onLoadFailed: err => {
             if (err !== FileViewError.FileNotFound)
                 ToastService.show(qsTr("Failed to read layer rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
         }
         onSaveFailed: err => ToastService.show(qsTr("Failed to save layer rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
-        onSaved: HyprlandSetupServices.reloadHyprland()
+        onSaved: {
+            HyprlandSetupServices.reloadHyprland();
+            ToastService.show(qsTr("Layer rules saved"), qsTr("Hyprland"), "dialog-information", 3000);
+        }
 
         JsonAdapter { // qmllint disable
             id: adapter

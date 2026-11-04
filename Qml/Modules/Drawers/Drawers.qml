@@ -61,7 +61,7 @@ Variants {
 
         HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.keyboardFocus: needFocusKeyboard && !yieldKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        WlrLayershell.namespace: "shell:drawers"
+        WlrLayershell.namespace: LayerNamespaces.drawers
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
         screen: modelData

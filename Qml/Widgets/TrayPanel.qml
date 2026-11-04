@@ -8,21 +8,22 @@ import Quickshell.Wayland
 import qs.Components.Base
 import qs.Components.Menu
 import qs.Core.Configs
+import qs.Core.Utils
 
 LazyLoader {
     id: root
 
-    required property var trayRoot
+    required property var         trayRoot
     required property ShellScreen screen
 
-    property Timer        closeTimer
-    property Timer        hideTimer
+    property Timer                closeTimer
+    property Timer                hideTimer
 
     loading: true
     component: PanelWindow {
         HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.layer: WlrLayer.Top
-        WlrLayershell.namespace: "shell:drawers"
+        WlrLayershell.namespace: LayerNamespaces.drawers
         aboveWindows: false
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore

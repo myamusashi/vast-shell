@@ -9,6 +9,7 @@ import Quickshell.Widgets
 
 import qs.Core.States
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Components.Base
 import qs.Services
 
@@ -593,7 +594,7 @@ Scope {
 
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.OnDemand
             WlrLayershell.layer: WlrLayer.Overlay
-            WlrLayershell.namespace: "shell:screenshot-overlay"
+            WlrLayershell.namespace: LayerNamespaces.screenshotOverlay
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
             screen: modelData

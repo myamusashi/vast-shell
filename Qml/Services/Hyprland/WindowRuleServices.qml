@@ -29,6 +29,7 @@ Singleton {
     readonly property var  runningWindows: Hypr.toplevels?.values ?? []
     readonly property bool valid: rules.every(rule => (problems[rule.id] ?? []).length === 0)
 
+    property var           lastGoodRules: []
     property var           rules: []
     property var           stored: []
 
@@ -41,7 +42,8 @@ Singleton {
     function               apply(): void {
         if (!valid)
             return;
-        stored = deepCopy(rules);
+        lastGoodRules = deepCopy(stored);
+        stored        = deepCopy(rules);
         rulesFile.writeAdapter();
     }
 
@@ -135,7 +137,7 @@ Singleton {
     }
 
     function               resetFromDisk(): void {
-        const loaded = deepCopy(adapter.rules ?? []);
+        const loaded = sanitizeLoadedRules(adapter.rules);
         setRules(loaded);
         stored = deepCopy(loaded);
     }
@@ -196,6 +198,23 @@ Singleton {
             values.push(text);
         }
         return values.sort();
+    }
+
+    function               sanitizeLoadedRules(rawRules: var): var {
+        if (!Array.isArray(rawRules))
+            return [];
+        const validRules = [];
+        for (const entry of rawRules) {
+            if (entry === null || typeof entry !== "object" || Array.isArray(entry) || typeof entry.id !== "string")
+                continue;
+            const rule = Object.assign({}, entry);
+            if (rule.match === null || typeof rule.match !== "object" || Array.isArray(rule.match))
+                rule.match = {};
+            if (rule.effects === null || typeof rule.effects !== "object" || Array.isArray(rule.effects))
+                rule.effects = {};
+            validRules.push(rule);
+        }
+        return validRules;
     }
 
     function               setEffect(id: string, key: string, value: var): void {
@@ -267,13 +286,17 @@ Singleton {
 
         path: Paths.shellDir + "/windowrules.json"
         watchChanges: false
+        atomicWrites: true
         onLoaded: root.resetFromDisk()
         onLoadFailed: err => {
             if (err !== FileViewError.FileNotFound)
                 ToastService.show(qsTr("Failed to read window rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
         }
         onSaveFailed: err => ToastService.show(qsTr("Failed to save window rules: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
-        onSaved: HyprlandSetupServices.reloadHyprland()
+        onSaved: {
+            HyprlandSetupServices.reloadHyprland();
+            ToastService.show(qsTr("Window rules saved"), qsTr("Hyprland"), "dialog-information", 3000);
+        }
 
         JsonAdapter { // qmllint disable
             id: adapter

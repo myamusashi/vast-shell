@@ -25,6 +25,7 @@ Singleton {
     property string          cjsonState: "unknown"
     // vast_shell.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
     property string          luaFileState: "unknown"
+    property bool            reloadPending: false
     // vast_shell_rules.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
     readonly property string luaTemplate: `
         -- Created once by vast-shell; yours to edit. Reads ~/.config/vast-shell/*.json.
@@ -238,7 +239,7 @@ Singleton {
     }
 
     function                 reloadHyprland(): void {
-        hyprctlReload.running = true;
+        reloadDebounceTimer.restart();
     }
 
     onOnHyprlandChanged: {
@@ -341,5 +342,23 @@ Singleton {
         id: hyprctlReload
 
         command: ["hyprctl", "reload"]
+        onExited: {
+            if (root.reloadPending) {
+                root.reloadPending    = false;
+                hyprctlReload.running = true;
+            }
+        }
+    }
+
+    Timer {
+        id: reloadDebounceTimer
+
+        interval: 500
+        onTriggered: {
+            if (hyprctlReload.running)
+                root.reloadPending = true;
+            else
+                hyprctlReload.running = true;
+        }
     }
 }

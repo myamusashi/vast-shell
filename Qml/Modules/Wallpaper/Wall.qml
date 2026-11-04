@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 
 import qs.Components.Base
+import qs.Core.Utils
 
 Variants {
     model: Quickshell.screens
@@ -14,7 +15,7 @@ Variants {
         required property ShellScreen modelData
 
         WlrLayershell.layer: WlrLayer.Background
-        WlrLayershell.namespace: "shell:wallpaper"
+        WlrLayershell.namespace: LayerNamespaces.wallpaper
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
         screen: modelData
