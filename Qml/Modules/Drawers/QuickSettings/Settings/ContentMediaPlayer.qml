@@ -39,7 +39,9 @@ RowLayout {
         Layout.margins: Appearance.margin.normal
 
         Loader {
-            active: true
+            id: playerControlsLoader
+
+            active: !Configs.mediaPlayer.showLyrics || opacity > 0
             anchors.fill: parent
             asynchronous: false
             enabled: !Configs.mediaPlayer.showLyrics
@@ -55,7 +57,9 @@ RowLayout {
         }
 
         Loader {
-            active: true
+            id: lyricsControlsLoader
+
+            active: Configs.mediaPlayer.showLyrics || opacity > 0
             anchors.fill: parent
             asynchronous: false
             enabled: Configs.mediaPlayer.showLyrics
@@ -113,6 +117,7 @@ RowLayout {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 10
                     activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+                    enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                     value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                     onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
 

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -8,36 +10,48 @@ import qs.Services
 import qs.Components.Base
 
 PopupWidget {
+    id: root
+
+    readonly property var appCounts: {
+        let graphicalCount = 0;
+        let terminalCount  = 0;
+        const entries      = DesktopEntries.applications.values;
+        for (let index = 0; index < entries.length; index++) {
+            if (entries[index].runInTerminal)
+                terminalCount++;
+            else
+                graphicalCount++;
+        }
+        return {
+            graphical: graphicalCount,
+            terminal: terminalCount
+        };
+    }
+
     icon: "apps"
     text: qsTr("Installed apps")
     content: ColumnLayout {
 
         PieChart {
-            graphicalAppCount: DesktopEntries.applications.values.filter(app => !app.runInTerminal).length
+            graphicalAppCount: root.appCounts.graphical
             implicitHeight: 200
             implicitWidth: parent.width
-            terminalAppCount: DesktopEntries.applications.values.filter(app => app.runInTerminal).length
+            terminalAppCount: root.appCounts.terminal
         }
 
         RowLayout {
             Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
 
             Repeater {
-                model: [
-                    {
-                        color: Colours.m3Colors.m3Green,
-                        text: qsTr("Graphic User Interfaces")
-                    },
-                    {
-                        color: Qt.alpha(Colours.m3Colors.m3Green, 0.5),
-                        text: qsTr("Terminal User Interfaces")
-                    }
-                ]
+                model: [qsTr("Graphic User Interfaces"), qsTr("Terminal User Interfaces")]
                 delegate: RowLayout {
-                    required property var modelData
+                    id: legendRow
+
+                    required property int    index
+                    required property string modelData
 
                     StyledRect {
-                        color: parent.modelData.color
+                        color: legendRow.index === 0 ? Colours.m3Colors.m3Green : Qt.alpha(Colours.m3Colors.m3Green, 0.5)
                         implicitHeight: 15
                         implicitWidth: 15
                     }
@@ -45,7 +59,7 @@ PopupWidget {
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: parent.modelData.text
+                        text: legendRow.modelData
                     }
                 }
             }

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 
@@ -35,20 +37,12 @@ PopupWidget {
         }
 
         Repeater {
-            model: [
-                {
-                    text: qsTr("Used"),
-                    value: (SystemUsage.memUsed / 1048576).toFixed(2) + " GB"
-                },
-                {
-                    text: qsTr("Free"),
-                    value: ((SystemUsage.memTotal - SystemUsage.memUsed) / 1048576).toFixed(2) + " GB"
-                }
-            ]
+            model: [qsTr("Used"), qsTr("Free")]
             delegate: RowLayout {
                 id: row
 
-                required property var modelData
+                required property int    index
+                required property string modelData
 
                 Layout.fillWidth: true
                 spacing: Appearance.spacing.small * 0.5
@@ -57,7 +51,7 @@ PopupWidget {
                     Layout.minimumWidth: 60
                     color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.7)
                     font.pixelSize: Appearance.fonts.size.normal
-                    text: row.modelData.text
+                    text: row.modelData
                 }
 
                 Item {
@@ -68,7 +62,7 @@ PopupWidget {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     horizontalAlignment: Text.AlignRight
-                    text: row.modelData.value
+                    text: row.index === 0 ? (SystemUsage.memUsed / 1048576).toFixed(2) + " GB" : ((SystemUsage.memTotal - SystemUsage.memUsed) / 1048576).toFixed(2) + " GB"
                 }
             }
         }

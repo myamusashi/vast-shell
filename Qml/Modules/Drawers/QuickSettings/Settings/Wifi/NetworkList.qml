@@ -13,58 +13,50 @@ import qs.Core.States
 ListView {
     id: root
 
-    required property var pskDialog
+    required property var        pskDialog
+
+    readonly property WifiDevice wifiDevice: Networking.devices.values.find(device => device.type === DeviceType.Wifi) ?? null
+
+    function                     syncScanner(): void {
+        if (wifiDevice)
+            wifiDevice.scannerEnabled = GlobalStates.isWifiScannerOpen;
+    }
 
     Layout.fillWidth: true
     Layout.preferredHeight: Math.min(contentHeight, 320)
     boundsBehavior: Flickable.StopAtBounds
+    cacheBuffer: 160
     clip: true
     implicitHeight: contentHeight
     interactive: contentHeight > height
-    model: Networking.devices
     spacing: Appearance.spacing.small
+    Component.onCompleted: syncScanner()
     ScrollBar.vertical: ScrollBar {
         policy: ScrollBar.AsNeeded
     }
-    delegate: ColumnLayout {
-        id: deviceDelegate
+    delegate: NetworkDelegate {
+        required property var modelData
 
-        required property WifiDevice modelData
-
+        network: modelData
+        pskDialog: root.pskDialog
         width: root.width
-        clip: true
-        Component.onCompleted: {
-            if (modelData)
-                modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
+    }
+    model: ScriptModel {
+        values: {
+            const device = root.wifiDevice;
+            if (!device || !device.networks)
+                return [];
+            return WifiUtils.sorted([...device.networks.values]);
+        }
+    }
+    onWifiDeviceChanged: syncScanner()
+
+    Connections {
+
+        function onIsWifiScannerOpenChanged() {
+            root.syncScanner();
         }
 
-        Connections {
-
-            function onIsWifiScannerOpenChanged() {
-                if (deviceDelegate.modelData)
-                    deviceDelegate.modelData.scannerEnabled = GlobalStates.isWifiScannerOpen;
-            }
-
-            target: GlobalStates
-        }
-
-        Repeater {
-            delegate: NetworkDelegate {
-                required property var modelData
-
-                network: modelData
-                pskDialog: root.pskDialog
-            }
-            model: ScriptModel {
-                values: {
-                    const device = deviceDelegate.modelData;
-                    if (!device || device.type !== DeviceType.Wifi) // qmllint disable
-                        return [];
-                    if (!device.networks)
-                        return [];
-                    return WifiUtils.sorted([...device.networks.values]);
-                }
-            }
-        }
+        target: GlobalStates
     }
 }

@@ -18,7 +18,7 @@ ClippingWrapperRectangle {
     required property var pskDialog
 
     function              tryConnect() {
-        WifiUtils.tryConnect(root.network, net => root.pskDialog.show(net));
+        WifiUtils.tryConnect(root.network, targetNetwork => root.pskDialog.show(targetNetwork));
     }
 
     Layout.alignment: Qt.AlignVCenter
@@ -36,7 +36,7 @@ ClippingWrapperRectangle {
     Connections {
 
         function onConnectionFailed(reason) {
-            WifiUtils.handleConnectionFailed(root.network, reason, net => root.pskDialog.show(net));
+            WifiUtils.handleConnectionFailed(root.network, reason, targetNetwork => root.pskDialog.show(targetNetwork));
         }
 
         target: root.network

@@ -13,14 +13,14 @@ PopupWidget {
     function syncFilesystems() {
         const list = SystemUsage.filesystemNames;
 
-        for (let i = filesystemModel.count - 1; i >= 0; i--) {
-            if (!list.some(entry => entry.name === filesystemModel.get(i).filesystem))
-                filesystemModel.remove(i, 1);
+        for (let modelIndex = filesystemModel.count - 1; modelIndex >= 0; modelIndex--) {
+            if (!list.some(entry => entry.name === filesystemModel.get(modelIndex).filesystem))
+                filesystemModel.remove(modelIndex, 1);
         }
 
-        for (let i = 0; i < list.length; i++) {
-            const entry = list[i];
-            const row   = {
+        for (let entryIndex = 0; entryIndex < list.length; entryIndex++) {
+            const entry       = list[entryIndex];
+            const row         = {
                 filesystem: entry.name,
                 filesystemType: entry.type,
                 mountPoint: entry.mountpoint,
@@ -30,15 +30,15 @@ PopupWidget {
                 usedValue: entry.usedKB / 1024 / 1024,
                 totalValue: entry.totalKB / 1024 / 1024
             };
-            let index   = -1;
-            for (let j = 0; j < filesystemModel.count; j++) {
-                if (filesystemModel.get(j).filesystem === entry.name) {
-                    index = j;
+            let existingIndex = -1;
+            for (let modelIndex = 0; modelIndex < filesystemModel.count; modelIndex++) {
+                if (filesystemModel.get(modelIndex).filesystem === entry.name) {
+                    existingIndex = modelIndex;
                     break;
                 }
             }
-            if (index >= 0)
-                filesystemModel.set(index, row);
+            if (existingIndex >= 0)
+                filesystemModel.set(existingIndex, row);
             else
                 filesystemModel.append(row);
         }
@@ -74,28 +74,15 @@ PopupWidget {
         }
 
         Repeater {
-            model: [
-                {
-                    color: Colours.m3Colors.m3Green,
-                    text: qsTr("Root"),
-                    value: SystemUsage.formatKB(SystemUsage.storageAppsData)
-                },
-                {
-                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.7),
-                    text: qsTr("Boot"),
-                    value: SystemUsage.formatKB(SystemUsage.storageSystem)
-                },
-                {
-                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.3),
-                    text: qsTr("Free"),
-                    value: SystemUsage.formatKB(SystemUsage.storageFree)
-                }
-            ]
+            model: [qsTr("Root"), qsTr("Boot"), qsTr("Free")]
             delegate: RowLayout {
-                required property var modelData
+                id: storageSummaryRow
+
+                required property int    index
+                required property string modelData
 
                 StyledRect {
-                    color: parent.modelData.color
+                    color: storageSummaryRow.index === 0 ? Colours.m3Colors.m3Green : storageSummaryRow.index === 1 ? Qt.alpha(Colours.m3Colors.m3Green, 0.7) : Qt.alpha(Colours.m3Colors.m3Green, 0.3)
                     implicitHeight: 15
                     implicitWidth: 15
                 }
@@ -103,7 +90,7 @@ PopupWidget {
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
-                    text: parent.modelData.text
+                    text: storageSummaryRow.modelData
                 }
 
                 Item {
@@ -113,7 +100,7 @@ PopupWidget {
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
-                    text: parent.modelData.value
+                    text: storageSummaryRow.index === 0 ? SystemUsage.formatKB(SystemUsage.storageAppsData) : storageSummaryRow.index === 1 ? SystemUsage.formatKB(SystemUsage.storageSystem) : SystemUsage.formatKB(SystemUsage.storageFree)
                 }
             }
         }
@@ -161,10 +148,6 @@ PopupWidget {
                         text: delegate.filesystemType
                         visible: delegate.filesystemType !== ""
                     }
-
-                    Item {
-                        Layout.preferredHeight: 10
-                    }
                 }
 
                 RowLayout {
@@ -173,7 +156,7 @@ PopupWidget {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         text: delegate.mountPoint
-                        visible: delegate.mountPoint !== "" || delegate.mountPoint !== ""
+                        visible: delegate.mountPoint !== ""
                     }
 
                     Item {
@@ -184,7 +167,7 @@ PopupWidget {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         text: delegate.totalMountPointData
-                        visible: delegate.totalMountPointData !== "" || delegate.totalMountPointData !== ""
+                        visible: delegate.totalMountPointData !== ""
                     }
                 }
 
@@ -194,7 +177,7 @@ PopupWidget {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         text: delegate.totalUsed
-                        visible: delegate.totalUsed !== "" || delegate.totalUsed !== ""
+                        visible: delegate.totalUsed !== ""
                     }
 
                     Item {
@@ -205,7 +188,7 @@ PopupWidget {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
                         text: delegate.freeSize
-                        visible: delegate.freeSize !== "" || delegate.freeSize !== ""
+                        visible: delegate.freeSize !== ""
                     }
                 }
 

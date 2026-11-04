@@ -17,31 +17,9 @@ import qs.Components.Base
 ScrollView {
     id: root
 
-    property var    audioCards: ({})
-    property string audioProfileDescription: ""
-    property string audioProfileName: ""
-    property int    currentSinkIndex: 0
-
     anchors.fill: parent
     clip: true
     contentWidth: availableWidth
-
-    Instantiator {
-        id: audioProfiles
-
-        model: AudioProfilesWatcher.cards
-        delegate: QtObject {
-            required property var    card
-            required property string description
-            required property string name
-
-            Component.onCompleted: {
-                root.audioCards              = card;
-                root.audioProfileName        = name;
-                root.audioProfileDescription = description;
-            }
-        }
-    }
 
     RowLayout {
         Layout.margins: 15
@@ -62,8 +40,10 @@ ScrollView {
                 delegate: RowLayout {
                     id: volumeEntryDelegate
 
-                    required property int index
-                    required property var modelData
+                    required property int    index
+                    required property PwNode modelData
+
+                    readonly property bool   isCurrentSink: Pipewire.defaultAudioSink?.id === modelData.id
 
                     spacing: Appearance.spacing.small
 
@@ -72,32 +52,28 @@ ScrollView {
 
                         border.color: Colours.m3Colors.m3Primary
                         border.width: 1
-                        color: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : "transparent"
+                        color: volumeEntryDelegate.isCurrentSink ? Colours.m3Colors.m3Primary : "transparent"
                         implicitHeight: 15
                         implicitWidth: 15
                     }
 
                     StyledText {
-                        color: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+                        color: volumeEntryDelegate.isCurrentSink ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
-                        font.weight: root.currentSinkIndex === volumeEntryDelegate.index ? Font.Medium : Font.Normal
+                        font.weight: volumeEntryDelegate.isCurrentSink ? Font.Medium : Font.Normal
                         text: volumeEntryDelegate.modelData.description ?? ""
                     }
 
                     TapHandler {
                         onTapped: {
-                            root.currentSinkIndex = volumeEntryDelegate.index;
                             AudioDevicesWatcher.setDefaultSink(volumeEntryDelegate.modelData.name);
                             Configs.audio.defaultSinkName = volumeEntryDelegate.modelData.name;
                         }
                     }
                 }
                 model: ScriptModel {
-                    values: Pipewire.nodes.values.filter(n => !n.isStream && n.audio && (n.type & PwNodeType.Sink)).map(n => ({
-                                nodeId: n.id,
-                                name: n.name,
-                                description: n.description
-                            }))
+                    objectProp: "id"
+                    values: Pipewire.nodes.values.filter(node => !node.isStream && node.audio && (node.type & PwNodeType.Sink))
                 }
             }
 
@@ -106,7 +82,6 @@ ScrollView {
                 useCustomProperties: true
                 customProperty: AudioProfiles {
                     Layout.fillWidth: true
-                    card: root.audioCards
                 }
             }
 

@@ -81,56 +81,44 @@ ClippingWrapperRectangle {
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
             color: "transparent"
-            enabled: !root.device?.pairing
-            icon.color: Colours.m3Colors.m3OnSurfaceVariant
-            icon.name: root.device?.pairing ? "close" : "bluetooth"
+            enabled: !root.showPairActions || !root.device?.pairing
+            icon.color: root.showPairActions ? Colours.m3Colors.m3OnSurfaceVariant : root.showBlockAction ? (root.device?.blocked ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant) : (root.device?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant)
+            icon.name: root.showPairActions ? (root.device?.pairing ? "close" : "bluetooth") : root.showBlockAction ? "block" : (root.device?.connected ? "link_off" : "link")
             implicitHeight: 32
             implicitWidth: 32
-            visible: root.showPairActions
-            onClicked: root.primaryAction()
+            onClicked: {
+                if (root.showBlockAction && !root.showPairActions)
+                    root.blockToggled();
+                else
+                    root.primaryAction();
+            }
         }
 
-        FloatingButton {
-            backgroundRadius: Appearance.rounding.normal
-            color: "transparent"
-            icon.name: "close"
-            implicitHeight: 32
-            implicitWidth: 32
-            visible: root.showPairActions && root.device?.pairing
-            onClicked: root.secondaryAction()
+        Loader {
+            active: root.showPairActions && (root.device?.pairing ?? false)
+            visible: active
+            sourceComponent: FloatingButton {
+                backgroundRadius: Appearance.rounding.normal
+                color: "transparent"
+                icon.name: "close"
+                implicitHeight: 32
+                implicitWidth: 32
+                onClicked: root.secondaryAction()
+            }
         }
 
-        FloatingButton {
-            backgroundRadius: Appearance.rounding.normal
-            color: "transparent"
-            icon.color: root.device?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
-            icon.name: root.device?.connected ? "link_off" : "link"
-            implicitHeight: 32
-            implicitWidth: 32
-            visible: !root.showPairActions && !root.showBlockAction
-            onClicked: root.primaryAction()
-        }
-
-        FloatingButton {
-            backgroundRadius: Appearance.rounding.normal
-            color: "transparent"
-            icon.color: root.device?.blocked ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
-            icon.name: "block"
-            implicitHeight: 32
-            implicitWidth: 32
-            visible: root.showBlockAction
-            onClicked: root.blockToggled()
-        }
-
-        FloatingButton {
-            backgroundRadius: Appearance.rounding.normal
-            color: "transparent"
-            icon.color: root.device?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
-            icon.name: "delete"
-            implicitHeight: 32
-            implicitWidth: 32
-            visible: root.showForgetAction
-            onClicked: root.forgetAction()
+        Loader {
+            active: root.showForgetAction
+            visible: active
+            sourceComponent: FloatingButton {
+                backgroundRadius: Appearance.rounding.normal
+                color: "transparent"
+                icon.color: root.device?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                icon.name: "delete"
+                implicitHeight: 32
+                implicitWidth: 32
+                onClicked: root.forgetAction()
+            }
         }
     }
 }

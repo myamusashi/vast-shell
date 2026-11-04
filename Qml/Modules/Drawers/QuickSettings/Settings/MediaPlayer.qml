@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 
 import qs.Core.Configs
-import qs.Core.States
 import qs.Services
 
 ClippingWrapperRectangle {
@@ -43,7 +42,7 @@ ClippingWrapperRectangle {
         Loader {
             id: contentLoader
 
-            active: GlobalStates.isQuickSettingsOpen
+            active: Players.active !== null
             anchors.fill: parent
             asynchronous: true
             sourceComponent: ContentMediaPlayer {

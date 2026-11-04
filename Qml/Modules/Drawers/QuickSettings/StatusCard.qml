@@ -13,7 +13,6 @@ StyledRect {
 
     required property string title
     required property var    zoomId
-    required property Item   zoomTarget
 
     default property alias   content: contentLayout.data
     property bool            isBottomLeft: false
@@ -32,6 +31,8 @@ StyledRect {
     topRightRadius: isTopRight ? Appearance.rounding.normal : radius
 
     ColumnLayout {
+        id: contentLayout
+
         anchors.fill: parent
         anchors.margins: Appearance.margin.normal
         spacing: Appearance.spacing.small
@@ -40,13 +41,6 @@ StyledRect {
             color: Colours.m3Colors.m3Green
             font.pixelSize: Appearance.fonts.size.large
             text: card.title
-        }
-
-        ColumnLayout {
-            id: contentLayout
-
-            Layout.fillWidth: true
-            spacing: Appearance.spacing.small
         }
     }
 

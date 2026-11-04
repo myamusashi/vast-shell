@@ -18,14 +18,6 @@ StyledRect {
     implicitHeight: 100
     implicitWidth: 100
 
-    TextMetrics {
-        id: textMetrics
-
-        font.bold: true
-        font.pixelSize: root.textSize
-        text: root.text
-    }
-
     Shape {
         id: indicatorShape
 

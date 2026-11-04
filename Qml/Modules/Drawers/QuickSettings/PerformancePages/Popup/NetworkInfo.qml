@@ -13,6 +13,25 @@ PopupWidget {
 
     readonly property bool isWired: SystemUsage.statusWiredInterface === "connected" && (Networking.wifiEnabled ?? null)
 
+    function               rowValue(rowIndex: int): string {
+        switch (rowIndex) {
+        case 0:
+            return root.isWired ? qsTr("Connected") : qsTr("Disconnected");
+        case 1:
+            return (root.isWired ? SystemUsage.wiredLinkSpeed : SystemUsage.wirelessLinkSpeed) + " Mbps";
+        case 2:
+            return root.isWired ? "0 dBm" : "-70 dBm";
+        case 3:
+            return SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage);
+        case 4:
+            return SystemUsage.formatUsage(SystemUsage.totalWiredUploadUsage);
+        case 5:
+            return SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage);
+        default:
+            return SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage);
+        }
+    }
+
     icon: isWired ? "lan" : "network_wifi"
     text: qsTr("Network")
     content: ColumnLayout {
@@ -24,53 +43,24 @@ PopupWidget {
         }
 
         Repeater {
-            model: [
-                {
-                    text: qsTr("Status"),
-                    value: root.isWired ? qsTr("Connected") : qsTr("Disconnected")
-                },
-                {
-                    text: qsTr("Link speed"),
-                    value: root.isWired ? SystemUsage.wiredLinkSpeed + " Mbps" : SystemUsage.wirelessLinkSpeed + " Mbps"
-                },
-                {
-                    text: qsTr("Signal strength"),
-                    value: root.isWired ? "0 dBm" : "-70 dBm"
-                },
-                {
-                    text: qsTr("Total wireless upload"),
-                    value: SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage)
-                },
-                {
-                    text: qsTr("Total wired upload"),
-                    value: SystemUsage.formatUsage(SystemUsage.totalWiredUploadUsage)
-                },
-                {
-                    text: qsTr("Total wireless download"),
-                    value: SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)
-                },
-                {
-                    text: qsTr("Total wired download"),
-                    value: SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)
-                }
-            ]
+            model: [qsTr("Status"), qsTr("Link speed"), qsTr("Signal strength"), qsTr("Total wireless upload"), qsTr("Total wired upload"), qsTr("Total wireless download"), qsTr("Total wired download")]
             delegate: RowLayout {
-                required property var    modelData
+                id: networkRow
 
-                readonly property string text: modelData.text
-                readonly property string value: modelData.value
+                required property int    index
+                required property string modelData
 
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
-                    text: parent.text + ": "
+                    text: networkRow.modelData + ": "
                 }
 
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
-                    text: parent.value
+                    text: root.rowValue(networkRow.index)
                 }
             }
         }

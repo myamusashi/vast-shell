@@ -19,19 +19,21 @@ ClippingWrapperRectangle {
     property int                contentMargin: Appearance.margin.small
     property bool               deferContent: true
     property bool               enableScroll: true
+    property Item               hostItem: parent
     property alias              icon: header.icon
     property bool               isVisible: false
     property alias              text: header.text
-    property real               zoomOriginX: parent.width / 2
-    property real               zoomOriginY: parent.height / 2
+    property real               zoomOriginX: (hostItem ? hostItem.width : 0) / 2
+    property real               zoomOriginY: (hostItem ? hostItem.height : 0) / 2
 
     signal                      closed
     signal                      opened
 
     function                    openFrom(sourceItem) {
-        if (!sourceItem || !parent)
+        const container = root.hostItem ?? root.parent;
+        if (!sourceItem || !container)
             return;
-        const p          = sourceItem.mapToItem(parent, sourceItem.width / 2, sourceItem.height / 2);
+        const p          = sourceItem.mapToItem(container, sourceItem.width / 2, sourceItem.height / 2);
         root.zoomOriginX = p.x;
         root.zoomOriginY = p.y;
         root.isVisible   = true;
@@ -44,9 +46,9 @@ ClippingWrapperRectangle {
 
     color: Colours.m3Colors.m3SurfaceContainer
     enabled: root.isVisible
-    implicitHeight: Math.min((header.visible ? header.implicitHeight + bodyColumn.spacing : 0) + (root.enableScroll ? scrollLoader.implicitHeight : staticLoader.implicitHeight) + root.contentMargin * 2, parent.height * 0.8)
-    implicitWidth: parent.width * 0.8
-    margin: Appearance.margin.small
+    implicitHeight: Math.min((header.visible ? header.implicitHeight + bodyColumn.spacing : 0) + (root.enableScroll ? scrollLoader.implicitHeight : staticLoader.implicitHeight) + root.contentMargin * 2, (hostItem ? hostItem.height : 0) * 0.8)
+    implicitWidth: (hostItem ? hostItem.width : 0) * 0.8
+    margin: root.contentMargin
     opacity: isVisible ? 1.0 : 0.0
     radius: Appearance.rounding.small
     scale: isVisible ? 1.0 : 0.5
@@ -102,11 +104,6 @@ ClippingWrapperRectangle {
 
         spacing: Appearance.spacing.small
 
-        anchors {
-            fill: parent
-            margins: root.contentMargin
-        }
-
         Header {
             id: header
 
@@ -139,7 +136,7 @@ ClippingWrapperRectangle {
                     asynchronous: true
                     clip: root.clipContent
                     sourceComponent: root.content
-                    width: scrollView.availableWidth
+                    width: bodyHost.width
                 }
             }
 
@@ -147,11 +144,11 @@ ClippingWrapperRectangle {
                 id: staticLoader
 
                 active: (root.deferContent ? root.isVisible : true) && !root.enableScroll
-                anchors.fill: parent
                 asynchronous: true
                 clip: root.clipContent
                 sourceComponent: root.content
                 visible: !root.enableScroll
+                width: parent.width
             }
         }
     }

@@ -13,23 +13,12 @@ import qs.Services
 Column {
     id: root
 
-    required property var  modelData
+    required property var modelData
 
-    readonly property bool replyFocused: replyField.activeFocus
+    property bool         isShowMoreBody: false
+    property bool         replyFocused: false
 
-    property bool          isShowMoreBody: false
-
-    function               sendReply() {
-        const text = replyField.text.trim();
-
-        if (text === "")
-            return;
-
-        modelData.sendInlineReply(text);
-        replyField.text = "";
-    }
-
-    function               syncInlineReplyFocus(): void {
+    function              syncInlineReplyFocus(): void {
         const hasReply = root.modelData?.hasInlineReply ?? false;
         if (root.replyFocused && hasReply)
             GlobalStates.inlineReplyOwner = root;
@@ -152,38 +141,57 @@ Column {
         }
     }
 
-    RowLayout {
-        spacing: Appearance.spacing.normal
-        visible: root.modelData.hasInlineReply
+    Loader {
+        id: replyLoader
+
+        active: root.modelData?.hasInlineReply ?? false
         width: parent.width
+        onActiveChanged: {
+            if (!active)
+                root.replyFocused = false;
+        }
+        sourceComponent: RowLayout {
+            id: replyRow
 
-        MaterialTextField {
-            id: replyField
+            function sendReply(): void {
+                const text = replyField.text.trim();
+                if (text === "")
+                    return;
+                root.modelData.sendInlineReply(text);
+                replyField.text = "";
+            }
 
-            Layout.fillWidth: true
-            placeholderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
-            onAccepted: root.sendReply()
-            Keys.onPressed: event => {
-                if (event.key === Qt.Key_Escape) {
-                    event.accepted = true;
-                    root.forceActiveFocus();
+            spacing: Appearance.spacing.normal
+
+            MaterialTextField {
+                id: replyField
+
+                Layout.fillWidth: true
+                placeholderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
+                onAccepted: replyRow.sendReply()
+                onActiveFocusChanged: root.replyFocused = activeFocus
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_Escape) {
+                        event.accepted = true;
+                        root.forceActiveFocus();
+                    }
                 }
             }
-        }
 
-        FloatingButton {
-            id: sendButton
+            FloatingButton {
+                id: sendButton
 
-            Layout.preferredHeight: 40
-            Layout.preferredWidth: 40
-            backgroundRadius: Appearance.rounding.full
-            color: Colours.m3Colors.m3SurfaceContainerHigh
-            icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.length > 0 ? 1 : 0.4)
-            icon.name: "send"
-            icon.size: Appearance.fonts.size.extraLarge
-            onClicked: {
-                if (replyField.length > 0)
-                    root.sendReply();
+                Layout.preferredHeight: 40
+                Layout.preferredWidth: 40
+                backgroundRadius: Appearance.rounding.full
+                color: Colours.m3Colors.m3SurfaceContainerHigh
+                icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.length > 0 ? 1 : 0.4)
+                icon.name: "send"
+                icon.size: Appearance.fonts.size.extraLarge
+                onClicked: {
+                    if (replyField.length > 0)
+                        replyRow.sendReply();
+                }
             }
         }
     }

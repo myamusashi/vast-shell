@@ -34,9 +34,24 @@ Item {
         ColumnLayout {
             id: root
 
+            readonly property var    appCounts: {
+                let graphicalCount = 0;
+                let terminalCount  = 0;
+                const entries      = DesktopEntries.applications.values;
+                for (let index = 0; index < entries.length; index++) {
+                    if (entries[index].runInTerminal)
+                        terminalCount++;
+                    else
+                        graphicalCount++;
+                }
+                return {
+                    graphical: graphicalCount,
+                    terminal: terminalCount
+                };
+            }
             readonly property string batteryRemaining: FormatTimeUtils.formatBattery(UPower.displayDevice.timeToEmpty ?? 0)
-            readonly property int    totalApps: DesktopEntries.applications.values.filter(e => !e.runInTerminal).length
-            readonly property int    totalTerminalApps: DesktopEntries.applications.values.filter(e => e.runInTerminal).length
+            readonly property int    totalApps: appCounts.graphical
+            readonly property int    totalTerminalApps: appCounts.terminal
 
             spacing: Appearance.spacing.small
             width: parent.width
@@ -67,15 +82,13 @@ Item {
                             rows: 4
 
                             Repeater {
+                                model: SystemUsage.cpuCores.length
                                 delegate: StyledText {
-                                    required property var modelData
+                                    required property int index
 
                                     color: Colours.m3Colors.m3OnSurfaceVariant
                                     font.pixelSize: Appearance.fonts.size.large
-                                    text: modelData.freqMHz.toFixed(0) + " MHz"
-                                }
-                                model: ScriptModel {
-                                    values: [...SystemUsage.cpuCores]
+                                    text: (SystemUsage.cpuCores[index]?.freqMHz ?? 0).toFixed(0) + " MHz"
                                 }
                             }
                         }
@@ -113,8 +126,6 @@ Item {
             GridLayout {
                 id: gridOverview
 
-                readonly property int cellHeight: 150
-
                 Layout.fillWidth: true
                 columnSpacing: 2
                 columns: 2
@@ -125,7 +136,6 @@ Item {
                     isTopLeft: true
                     title: qsTr("Battery")
                     zoomId: batteryInfoPopup
-                    zoomTarget: wrapper
 
                     RowLayout {
                         Layout.fillHeight: true
@@ -162,7 +172,7 @@ Item {
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
-                                text: Battery.charging ? qsTr("Charging") : qsTr("Discharging")
+                                text: UPower.displayDevice.state === UPowerDeviceState.Charging ? qsTr("Charging") : qsTr("Discharging")
                             }
 
                             StyledText {
@@ -184,7 +194,6 @@ Item {
                     isTopRight: true
                     title: qsTr("Network")
                     zoomId: networkInfoPopup
-                    zoomTarget: wrapper
 
                     RowLayout {
                         spacing: Appearance.spacing.normal
@@ -207,18 +216,12 @@ Item {
                             }
 
                             Repeater {
-                                model: [
-                                    {
-                                        label: qsTr("Download ↓"),
-                                        value: network.isWired ? SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed) : SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)
-                                    },
-                                    {
-                                        label: qsTr("Upload ↑"),
-                                        value: network.isWired ? SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed) : SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed)
-                                    }
-                                ]
+                                model: [qsTr("Download ↓"), qsTr("Upload ↑")]
                                 delegate: RowLayout {
-                                    required property var modelData
+                                    id: networkSpeedRow
+
+                                    required property int    index
+                                    required property string modelData
 
                                     spacing: Appearance.spacing.small * 0.4
 
@@ -229,7 +232,7 @@ Item {
                                         color: Colours.m3Colors.m3OnSurfaceVariant
                                         font.pixelSize: Appearance.fonts.size.normal
                                         font.weight: Font.DemiBold
-                                        text: parent.modelData.label
+                                        text: networkSpeedRow.modelData
 
                                         FontMetrics {
                                             id: netLabelMetrics
@@ -245,7 +248,7 @@ Item {
                                         font.weight: Font.DemiBold
                                         horizontalAlignment: Text.AlignRight
                                         maximumLineCount: 2
-                                        text: parent.modelData.value
+                                        text: networkSpeedRow.index === 0 ? (network.isWired ? SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed) : SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)) : (network.isWired ? SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed) : SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed))
                                         wrapMode: Text.WordWrap
                                     }
                                 }
@@ -267,7 +270,6 @@ Item {
                 StatusCard {
                     title: qsTr("Apps")
                     zoomId: appsInfoPopup
-                    zoomTarget: wrapper
 
                     RowLayout {
                         spacing: Appearance.spacing.normal
@@ -312,7 +314,6 @@ Item {
                 StatusCard {
                     title: qsTr("Display")
                     zoomId: displayInfoPopup
-                    zoomTarget: wrapper
 
                     RowLayout {
                         spacing: Appearance.spacing.normal
@@ -350,7 +351,6 @@ Item {
                     isBottomLeft: true
                     title: qsTr("RAM")
                     zoomId: ramInfoPopup
-                    zoomTarget: wrapper
 
                     RowLayout {
                         spacing: Appearance.spacing.normal
@@ -388,7 +388,6 @@ Item {
                     isBottomRight: true
                     title: qsTr("Disk")
                     zoomId: diskInfoPopup
-                    zoomTarget: wrapper
 
                     RowLayout {
                         spacing: Appearance.spacing.normal
@@ -436,14 +435,16 @@ Item {
                     RowLayout {
                         id: osLayout
 
+                        readonly property var matchedDistro: Distro.match(SystemUsage.osId, SystemUsage.osIdLike)
+
                         spacing: Appearance.spacing.normal
 
                         StyledText {
                             color: Colours.m3Colors.m3Green
-                            font.family: Distro.match(SystemUsage.osId, SystemUsage.osIdLike)?.name === "nixos" ? Fonts.mono : Fonts.sans
+                            font.family: osLayout.matchedDistro?.name === "nixos" ? Fonts.mono : Fonts.sans
                             font.pixelSize: Appearance.fonts.size.small * 0.5
                             lineHeight: 1.0
-                            text: Distro.ascii(SystemUsage.osId, SystemUsage.osIdLike)
+                            text: osLayout.matchedDistro?.ascii ?? Distro.ascii(SystemUsage.osId, SystemUsage.osIdLike)
                             textFormat: Text.PlainText
                             wrapMode: Text.NoWrap
                         }
@@ -504,53 +505,88 @@ Item {
         }
     }
 
-    POPUP.BatteryInfo {
+    LazyPopup {
         id: batteryInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.BatteryInfo {
+            hostItem: wrapper
+            isVisible: batteryInfoPopup.isVisible
+            zoomOriginX: batteryInfoPopup.zoomOriginX
+            zoomOriginY: batteryInfoPopup.zoomOriginY
+            onClosed: batteryInfoPopup.isVisible = false
+        }
     }
 
-    POPUP.NetworkInfo {
+    LazyPopup {
         id: networkInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.NetworkInfo {
+            hostItem: wrapper
+            isVisible: networkInfoPopup.isVisible
+            zoomOriginX: networkInfoPopup.zoomOriginX
+            zoomOriginY: networkInfoPopup.zoomOriginY
+            onClosed: networkInfoPopup.isVisible = false
+        }
     }
 
-    POPUP.DisplayInfo {
+    LazyPopup {
         id: displayInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.DisplayInfo {
+            hostItem: wrapper
+            isVisible: displayInfoPopup.isVisible
+            zoomOriginX: displayInfoPopup.zoomOriginX
+            zoomOriginY: displayInfoPopup.zoomOriginY
+            onClosed: displayInfoPopup.isVisible = false
+        }
     }
 
-    POPUP.AppsInfo {
+    LazyPopup {
         id: appsInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.AppsInfo {
+            hostItem: wrapper
+            isVisible: appsInfoPopup.isVisible
+            zoomOriginX: appsInfoPopup.zoomOriginX
+            zoomOriginY: appsInfoPopup.zoomOriginY
+            onClosed: appsInfoPopup.isVisible = false
+        }
     }
 
-    POPUP.RamInfo {
+    LazyPopup {
         id: ramInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.RamInfo {
+            hostItem: wrapper
+            isVisible: ramInfoPopup.isVisible
+            zoomOriginX: ramInfoPopup.zoomOriginX
+            zoomOriginY: ramInfoPopup.zoomOriginY
+            onClosed: ramInfoPopup.isVisible = false
+        }
     }
 
-    POPUP.DiskInfo {
+    LazyPopup {
         id: diskInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.DiskInfo {
+            hostItem: wrapper
+            isVisible: diskInfoPopup.isVisible
+            zoomOriginX: diskInfoPopup.zoomOriginX
+            zoomOriginY: diskInfoPopup.zoomOriginY
+            onClosed: diskInfoPopup.isVisible = false
+        }
     }
 
-    POPUP.OSInfo {
+    LazyPopup {
         id: osInfoPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: POPUP.OSInfo {
+            hostItem: wrapper
+            isVisible: osInfoPopup.isVisible
+            zoomOriginX: osInfoPopup.zoomOriginX
+            zoomOriginY: osInfoPopup.zoomOriginY
+            onClosed: osInfoPopup.isVisible = false
+        }
     }
 
     StyledRect {
@@ -562,10 +598,42 @@ Item {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
-            onClicked: (networkInfoPopup.isVisible = false) || (batteryInfoPopup.isVisible = false) || (displayInfoPopup.isVisible = false) || (appsInfoPopup.isVisible = false) || (ramInfoPopup.isVisible = false) || (diskInfoPopup.isVisible = false) || (osInfoPopup.isVisible = false)
+            onClicked: {
+                networkInfoPopup.close();
+                batteryInfoPopup.close();
+                displayInfoPopup.close();
+                appsInfoPopup.close();
+                ramInfoPopup.close();
+                diskInfoPopup.close();
+                osInfoPopup.close();
+            }
         }
     }
 
+    component LazyPopup: Loader {
+        property bool isVisible: false
+        property real zoomOriginX: parent ? parent.width / 2 : 0
+        property real zoomOriginY: parent ? parent.height / 2 : 0
+
+        function      close(): void {
+            isVisible = false;
+        }
+
+        function      openFrom(sourceItem: Item): void {
+            if (!sourceItem || !parent)
+                return;
+            const mappedPoint = sourceItem.mapToItem(parent, sourceItem.width / 2, sourceItem.height / 2);
+            zoomOriginX       = mappedPoint.x;
+            zoomOriginY       = mappedPoint.y;
+            active            = true;
+            isVisible         = true;
+        }
+
+        active: false
+        anchors.centerIn: parent
+        asynchronous: false
+        z: 99
+    }
     component CpuFrequencyGraphic: Item {
         id: graph
 
@@ -644,33 +712,14 @@ Item {
                 }
 
                 AreaSeries {
-                    borderWidth: 0
+                    borderColor: Colours.m3Colors.m3Green
+                    borderWidth: 2
                     color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
                     upperSeries: LineSeries {
                         id: dataPoints
                     }
                 }
-
-                LineSeries {
-                    id: borderLine
-
-                    color: Colours.m3Colors.m3Green
-                    width: 2
-                }
             }
-        }
-
-        Connections {
-
-            function onPointAdded(index) {
-                borderLine.append(dataPoints.at(index).x, dataPoints.at(index).y);
-            }
-
-            function onPointsRemoved(index, count) {
-                borderLine.removeMultiple(index, count);
-            }
-
-            target: dataPoints
         }
     }
 }

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 
@@ -11,30 +13,17 @@ PopupWidget {
     content: ColumnLayout {
 
         Repeater {
-            model: [
-                {
-                    text: qsTr("Distro version"),
-                    value: SystemUsage.osPrettyName
-                },
-                {
-                    text: qsTr("kernel name"),
-                    value: SystemUsage.kernelName
-                },
-                {
-                    text: qsTr("architecture design"),
-                    value: SystemUsage.archDesign
-                }
-            ]
+            model: [qsTr("Distro version"), qsTr("kernel name"), qsTr("architecture design")]
             delegate: RowLayout {
-                required property var    modelData
+                id: osRow
 
-                readonly property string text: modelData.text
-                readonly property string value: modelData.value
+                required property int    index
+                required property string modelData
 
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
-                    text: parent.text + ": "
+                    text: osRow.modelData + ": "
                 }
 
                 StyledText {
@@ -42,7 +31,7 @@ PopupWidget {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.DemiBold
-                    text: parent.value
+                    text: osRow.index === 0 ? SystemUsage.osPrettyName : osRow.index === 1 ? SystemUsage.kernelName : SystemUsage.archDesign
                     wrapMode: Text.WordWrap
                 }
             }

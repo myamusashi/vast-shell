@@ -19,9 +19,8 @@ StyledRect {
     color: Qt.alpha(Colours.m3Colors.m3SurfaceContainer, 0.4)
     radius: Appearance.rounding.normal
 
-    RowLayout {
-        implicitHeight: 50
-        implicitWidth: parent.width
+    Row {
+        height: 50
         spacing: Appearance.spacing.small
 
         anchors {
@@ -30,11 +29,8 @@ StyledRect {
             topMargin: 10
         }
 
-        Item {
-            Layout.fillWidth: true
-        }
-
         StyledRect {
+            anchors.verticalCenter: parent.verticalCenter
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: 30
             implicitWidth: clearMetrics.advanceWidth(textClear.text) + 100
@@ -63,6 +59,7 @@ StyledRect {
         }
 
         StyledRect {
+            anchors.verticalCenter: parent.verticalCenter
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: 30
             implicitWidth: 30
@@ -84,16 +81,12 @@ StyledRect {
                 onClicked: Notifs.dnd = !Notifs.dnd
             }
         }
-
-        Item {
-            Layout.fillWidth: true
-        }
     }
 
     Loader {
         id: loader
 
-        active: GlobalStates.isQuickSettingsOpen
+        active: true
         asynchronous: true
         sourceComponent: StyledRect {
             anchors.fill: parent
@@ -104,7 +97,7 @@ StyledRect {
                 id: notifListView
 
                 boundsBehavior: Flickable.StopAtBounds
-                cacheBuffer: 0
+                cacheBuffer: 200
                 spacing: Appearance.spacing.normal
                 delegate: WrapperItem {
                     id: root

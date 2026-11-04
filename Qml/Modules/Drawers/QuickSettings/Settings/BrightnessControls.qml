@@ -12,16 +12,16 @@ RowLayout {
     id: root
 
     readonly property bool multiDisplay: Brightness.displays.length > 1
-    readonly property var  selectedDisplay: Brightness.displays.find(d => d.id === targetId) ?? null
-    readonly property int  selectedIndex: targets.findIndex(t => t.value === targetId)
+    readonly property var  selectedDisplay: Brightness.displays.find(displayItem => displayItem.id === targetId) ?? null
+    readonly property int  selectedIndex: targets.findIndex(targetItem => targetItem.value === targetId)
     readonly property var  targets: multiDisplay ? [
         {
             display: qsTr("All"),
             value: ""
         },
-        ...Brightness.displays.map(d => ({
-                    display: d.isInternal ? qsTr("Internal") : String(d.name).split(" ")[0],
-                    value: d.id
+        ...Brightness.displays.map(displayItem => ({
+                    display: displayItem.isInternal ? qsTr("Internal") : String(displayItem.name).split(" ")[0],
+                    value: displayItem.id
                 }))] : []
 
     property string        targetId: ""
@@ -31,7 +31,7 @@ RowLayout {
     Connections {
 
         function onDisplaysChanged() {
-            if (root.targetId !== "" && !Brightness.displays.some(d => d.id === root.targetId))
+            if (root.targetId !== "" && !Brightness.displays.some(displayItem => displayItem.id === root.targetId))
                 root.targetId = "";
         }
 

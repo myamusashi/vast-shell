@@ -294,96 +294,107 @@ Slider {
             NAnim {}
         }
 
-        Item {
-            id: valuePopupRoot
+        Loader {
+            id: valuePopupLoader
 
-            height: valuePopupBubble.height + (root.isHorizontal ? caret.caretSize + 2 : 0)
-            opacity: visible ? 1.0 : 0.0
-            scale: visible ? 1.0 : 0.82
-            transformOrigin: root.isHorizontal ? Item.Bottom : Item.Right
-            visible: root.popupVisible
-            width: valuePopupBubble.width + (root.isVertical ? caret.caretSize + 2 : 0)
-            x: root.isHorizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
-            y: root.isHorizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
-            z: 20
-            Behavior on opacity {
-                enabled: root.animateChanges
+            property bool keepAlive: false
 
-                NAnim {
-                    duration: Appearance.animations.durations.small
-                }
+            active: root.popupVisible || keepAlive
+            onActiveChanged: {
+                if (root.popupVisible)
+                    keepAlive = true;
             }
-            Behavior on scale {
-                enabled: root.animateChanges
+            sourceComponent: Item {
+                id: valuePopupRoot
 
-                NAnim {
-                    duration: Appearance.animations.durations.small
+                height: valuePopupBubble.height + (root.isHorizontal ? caret.caretSize + 2 : 0)
+                opacity: visible ? 1.0 : 0.0
+                scale: visible ? 1.0 : 0.82
+                transformOrigin: root.isHorizontal ? Item.Bottom : Item.Right
+                visible: root.popupVisible
+                width: valuePopupBubble.width + (root.isVertical ? caret.caretSize + 2 : 0)
+                x: root.isHorizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
+                y: root.isHorizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
+                z: 20
+                Behavior on opacity {
+                    enabled: root.animateChanges
+
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
                 }
-            }
+                Behavior on scale {
+                    enabled: root.animateChanges
 
-            StyledRect {
-                id: valuePopupBubble
-
-                readonly property real horizontalPadding: 10
-                readonly property real verticalPadding: 6
-
-                color: Colours.m3Colors.m3InverseSurface
-                height: valueLabel.implicitHeight + verticalPadding * 2
-                radius: Appearance.rounding.small
-                width: valueLabel.implicitWidth + horizontalPadding * 2
-                x: 0
-                y: 0
-
-                StyledText {
-                    id: valueLabel
-
-                    anchors.centerIn: parent
-                    color: Colours.m3Colors.m3InverseOnSurface
-                    font.pixelSize: Appearance.fonts.size.small
-                    font.weight: Font.Medium
-                    text: root.popupValueFormat(root.value) // qmllint disable
-                }
-            }
-
-            Shape {
-                id: caret
-
-                readonly property int caretSize: 6
-
-                height: root.isHorizontal ? caretSize : caretSize * 2
-                preferredRendererType: Shape.CurveRenderer
-                width: root.isHorizontal ? caretSize * 2 : caretSize
-
-                anchors {
-                    horizontalCenter: root.isHorizontal ? valuePopupBubble.horizontalCenter : undefined
-                    left: root.isVertical ? valuePopupBubble.right : undefined
-                    top: root.isHorizontal ? valuePopupBubble.bottom : undefined
-                    verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
                 }
 
-                ShapePath {
-                    fillColor: Colours.m3Colors.m3InverseSurface
-                    startX: 0
-                    startY: 0
-                    strokeColor: "transparent"
-                    strokeWidth: 0
+                StyledRect {
+                    id: valuePopupBubble
 
-                    // Horizontal ▼: (0,0) → (12,0) → (6,6)
-                    // Vertical   ▶: (0,0) → (0,12) → (6,6)
+                    readonly property real horizontalPadding: 10
+                    readonly property real verticalPadding: 6
 
-                    PathLine {
-                        x: root.isHorizontal ? caret.caretSize * 2 : 0
-                        y: root.isHorizontal ? 0 : caret.caretSize * 2
+                    color: Colours.m3Colors.m3InverseSurface
+                    height: valueLabel.implicitHeight + verticalPadding * 2
+                    radius: Appearance.rounding.small
+                    width: valueLabel.implicitWidth + horizontalPadding * 2
+                    x: 0
+                    y: 0
+
+                    StyledText {
+                        id: valueLabel
+
+                        anchors.centerIn: parent
+                        color: Colours.m3Colors.m3InverseOnSurface
+                        font.pixelSize: Appearance.fonts.size.small
+                        font.weight: Font.Medium
+                        text: root.popupValueFormat(root.value) // qmllint disable
+                    }
+                }
+
+                Shape {
+                    id: caret
+
+                    readonly property int caretSize: 6
+
+                    height: root.isHorizontal ? caretSize : caretSize * 2
+                    preferredRendererType: Shape.CurveRenderer
+                    width: root.isHorizontal ? caretSize * 2 : caretSize
+
+                    anchors {
+                        horizontalCenter: root.isHorizontal ? valuePopupBubble.horizontalCenter : undefined
+                        left: root.isVertical ? valuePopupBubble.right : undefined
+                        top: root.isHorizontal ? valuePopupBubble.bottom : undefined
+                        verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
                     }
 
-                    PathLine {
-                        x: caret.caretSize
-                        y: caret.caretSize
-                    }
+                    ShapePath {
+                        fillColor: Colours.m3Colors.m3InverseSurface
+                        startX: 0
+                        startY: 0
+                        strokeColor: "transparent"
+                        strokeWidth: 0
 
-                    PathLine {
-                        x: 0
-                        y: 0
+                        // Horizontal ▼: (0,0) → (12,0) → (6,6)
+                        // Vertical   ▶: (0,0) → (0,12) → (6,6)
+
+                        PathLine {
+                            x: root.isHorizontal ? caret.caretSize * 2 : 0
+                            y: root.isHorizontal ? 0 : caret.caretSize * 2
+                        }
+
+                        PathLine {
+                            x: caret.caretSize
+                            y: caret.caretSize
+                        }
+
+                        PathLine {
+                            x: 0
+                            y: 0
+                        }
                     }
                 }
             }
@@ -395,9 +406,9 @@ Slider {
         cursorShape: root.pressed ? Qt.ClosedHandCursor : Qt.PointingHandCursor
         onPressed: mouse => {
             if (root.isVertical) {
-                var pos      = 1 - ((mouse.y - root.topPadding) / root.availableHeight);
-                pos          = Math.max(0, Math.min(1, pos));
-                var newValue = root.from + (pos * (root.to - root.from));
+                let positionRatio = 1 - ((mouse.y - root.topPadding) / root.availableHeight);
+                positionRatio     = Math.max(0, Math.min(1, positionRatio));
+                let newValue      = root.from + (positionRatio * (root.to - root.from));
                 if (root.stepSize > 0)
                     newValue = Math.round(newValue / root.stepSize) * root.stepSize;
                 root.value = newValue;

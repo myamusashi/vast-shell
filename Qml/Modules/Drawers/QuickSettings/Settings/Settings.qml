@@ -9,28 +9,38 @@ import qs.Components.Base
 import qs.Services
 
 Item {
-    id: content
+    id: root
+    readonly property bool        anyPopupVisible: wifiPopup.isVisible || ethernetPopup.isVisible || bluetoothPopup.isVisible
+    readonly property var         connectedWifiNetwork: wifiDevice?.networks.values.find(network => network.connected) ?? null
+    readonly property bool        isConnected: SystemUsage.statusWiredInterface === "connected"
+    readonly property string      wifiConnectedName: connectedWifiNetwork?.name ?? ""
+    readonly property WifiDevice  wifiDevice: Networking.devices.values.find(device => device.type === DeviceType.Wifi) ?? null
+    readonly property WiredDevice wiredDevice: SystemUsage.ethernetDevice
 
-    readonly property bool   isConnected: SystemUsage.statusWiredInterface === "connected"
-    readonly property string wifiConnectedName: {
-        const dev = Networking.devices.values.find(d => d.type === DeviceType.Wifi);
-        return dev?.networks.values.find(n => n.connected)?.name ?? "";
-    }
-
-    property alias           bluetooth: bluetooth
-    property alias           ethernet: ethernet
-    property alias           wifi: wifi
+    property alias                bluetooth: bluetoothPopup
+    property alias                ethernet: ethernetPopup
+    property alias                wifi: wifiPopup
 
     anchors.fill: parent
 
     ColumnLayout {
         anchors.fill: parent
-        enabled: !wifi.isVisible && !ethernet.isVisible && !bluetooth.isVisible
+        enabled: !root.anyPopupVisible
         spacing: Appearance.spacing.normal
 
         BrightnessControls {}
 
-        NetworkInfoColumn {}
+        NetworkInfoColumn {
+            bluetoothOpen: bluetoothPopup.isVisible
+            connectedWifiNetwork: root.connectedWifiNetwork
+            ethernetOpen: ethernetPopup.isVisible
+            wifiDevice: root.wifiDevice
+            wifiOpen: wifiPopup.isVisible
+            wiredDevice: root.wiredDevice
+            onBluetoothClicked: bluetoothPopup.toggle()
+            onEthernetClicked: ethernetPopup.toggle()
+            onWifiClicked: wifiPopup.toggle()
+        }
 
         RowLayout {
             Layout.alignment: Qt.AlignLeft
@@ -40,13 +50,13 @@ Item {
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.small
-                text: content.isConnected ? `${SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
+                text: root.isConnected ? `${SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
             }
 
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.small
-                text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${content.wifiConnectedName})` : "Not connected"
+                text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${root.wifiConnectedName})` : "Not connected"
             }
         }
 
@@ -59,47 +69,70 @@ Item {
         }
     }
 
-    WifiList {
-        id: wifi
+    LazyPopup {
+        id: wifiPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: WifiList {
+            hostItem: root
+            isVisible: wifiPopup.isVisible
+            onClosed: wifiPopup.isVisible = false
+        }
     }
 
-    EthernetList {
-        id: ethernet
+    LazyPopup {
+        id: ethernetPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: EthernetList {
+            hostItem: root
+            isVisible: ethernetPopup.isVisible
+            onClosed: ethernetPopup.isVisible = false
+        }
     }
 
-    BluetoothList {
-        id: bluetooth
+    LazyPopup {
+        id: bluetoothPopup
 
-        anchors.centerIn: parent
-        z: 99
+        sourceComponent: BluetoothList {
+            hostItem: root
+            isVisible: bluetoothPopup.isVisible
+            onClosed: bluetoothPopup.isVisible = false
+        }
     }
 
     StyledRect {
         anchors.fill: parent
         color: Qt.alpha(Colours.m3Colors.m3Surface, 0.7)
-        visible: wifi.isVisible || ethernet.isVisible || bluetooth.isVisible
-        z: 98
+        visible: root.anyPopupVisible
 
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
             onClicked: mouse => {
-                if (mouse.x < wifi.x || mouse.x > wifi.x + wifi.width || mouse.y < wifi.y || mouse.y > wifi.y + wifi.height) {
-                    wifi.isVisible = false;
-                }
-                if (mouse.x < ethernet.x || mouse.x > ethernet.x + ethernet.width || mouse.y < ethernet.y || mouse.y > ethernet.y + ethernet.height) {
-                    ethernet.isVisible = false;
-                }
-                if (mouse.x < bluetooth.x || mouse.x > bluetooth.x + bluetooth.width || mouse.y < bluetooth.y || mouse.y > bluetooth.y + bluetooth.height) {
-                    bluetooth.isVisible = false;
-                }
+                if (wifiPopup.isVisible && (mouse.x < wifiPopup.x || mouse.x > wifiPopup.x + wifiPopup.width || mouse.y < wifiPopup.y || mouse.y > wifiPopup.y + wifiPopup.height))
+                    wifiPopup.close();
+                if (ethernetPopup.isVisible && (mouse.x < ethernetPopup.x || mouse.x > ethernetPopup.x + ethernetPopup.width || mouse.y < ethernetPopup.y || mouse.y > ethernetPopup.y + ethernetPopup.height))
+                    ethernetPopup.close();
+                if (bluetoothPopup.isVisible && (mouse.x < bluetoothPopup.x || mouse.x > bluetoothPopup.x + bluetoothPopup.width || mouse.y < bluetoothPopup.y || mouse.y > bluetoothPopup.y + bluetoothPopup.height))
+                    bluetoothPopup.close();
             }
         }
+    }
+
+    component LazyPopup: Loader {
+        property bool isVisible: false
+
+        function      close(): void {
+            isVisible = false;
+        }
+
+        function      toggle(): void {
+            active    = true;
+            isVisible = !isVisible;
+        }
+
+        active: false
+        anchors.centerIn: parent
+        asynchronous: false
+        z: 99
     }
 }
