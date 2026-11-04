@@ -30,12 +30,15 @@ Singleton {
     function               canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
+
         if (Array.isArray(value))
             return `[${value.map(item => canonical(item)).join(",")}]`;
+
         if (typeof value === "object") {
             const keys = Object.keys(value).sort();
             return `{${keys.map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
         }
+
         return JSON.stringify(value);
     }
 
@@ -47,16 +50,19 @@ Singleton {
                 refreshRate: monitor?.lastIpcObject.refreshRate ?? 60.0,
                 width: monitor?.width ?? 1920
             };
+
         const width   = monitor?.width ?? -1;
         const height  = monitor?.height ?? -1;
         const refresh = monitor?.lastIpcObject.refreshRate ?? -1;
         const running = modes.find(mode => mode.width === width && mode.height === height && Math.abs(mode.refreshRate - refresh) < 0.05);
         if (running)
             return running;
+
         const byRefresh = modes.find(mode => Math.abs(mode.refreshRate - refresh) < 0.05);
         if (byRefresh)
             return byRefresh;
         const bySize = modes.find(mode => mode.width === width && mode.height === height);
+
         return bySize ?? modes[0];
     }
 
@@ -85,6 +91,7 @@ Singleton {
                 y: entry.y ?? 0
             });
         }
+
         return rects;
     }
 
@@ -94,6 +101,7 @@ Singleton {
             const key   = identityOf(monitor);
             counts[key] = (counts[key] ?? 0) + 1;
         }
+
         return Object.keys(counts).filter(key => counts[key] > 1);
     }
 
@@ -102,6 +110,7 @@ Singleton {
             return pending[key];
         if (stored[key] !== undefined)
             return deepCopy(stored[key]);
+
         return seedEntry(monitor);
     }
 
@@ -109,6 +118,7 @@ Singleton {
         const description = monitor?.description ?? "";
         if (description !== "")
             return description;
+
         return monitor?.lastIpcObject.model ?? monitor?.name ?? "";
     }
 
@@ -128,24 +138,29 @@ Singleton {
                 live: true
             });
         }
+
         for (const key of Object.keys(stored)) {
             if (seen[key])
                 continue;
+
             result.push({
                 entry: pending[key] ?? deepCopy(stored[key]),
                 key: key,
                 live: false
             });
         }
+
         for (const key of Object.keys(pending)) {
             if (seen[key] || stored[key] !== undefined)
                 continue;
+
             result.push({
                 entry: pending[key],
                 key: key,
                 live: false
             });
         }
+
         return result;
     }
 
@@ -153,6 +168,7 @@ Singleton {
         const match = /^(\d+)x(\d+)@([\d.]+)(Hz)?$/.exec(mode.trim());
         if (!match)
             return null;
+
         return {
             height: parseInt(match[2], 10),
             refreshRate: parseFloat(match[3]),
@@ -168,11 +184,11 @@ Singleton {
     function               resolveOverlaps(): void {
         for (let pass = 0; pass < 4; pass++) {
             let moved = false;
-            for (const rect of root.drawableRects()) {
-                const snapped = root.snappedPosition(rect.key, rect.x, rect.y, 0);
+            for (const rect of drawableRects()) {
+                const snapped = snappedPosition(rect.key, rect.x, rect.y, 0);
                 if (snapped.x !== rect.x || snapped.y !== rect.y) {
-                    root.setField(rect.key, "x", snapped.x);
-                    root.setField(rect.key, "y", snapped.y);
+                    setField(rect.key, "x", snapped.x);
+                    setField(rect.key, "y", snapped.y);
                     moved = true;
                 }
             }
@@ -193,6 +209,7 @@ Singleton {
     function               seedEntry(monitor: HyprlandMonitor): var {
         const ipc  = monitor?.lastIpcObject ?? {};
         const mode = currentMode(monitor);
+
         return {
             bitdepth: 8,
             cm: ipc.colorManagementPreset ?? "srgb",
@@ -225,26 +242,6 @@ Singleton {
         return transform === 1 || transform === 3 || transform === 5 || transform === 7;
     }
 
-    FileView {
-        id: monitorFile
-
-        path: Paths.shellDir + "/monitor.json"
-        watchChanges: false
-        onLoaded: root.resetFromDisk()
-        onLoadFailed: err => {
-            if (err !== FileViewError.FileNotFound)
-                ToastService.show(qsTr("Failed to read monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
-        }
-        onSaveFailed: err => ToastService.show(qsTr("Failed to save monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
-        onSaved: HyprlandSetupServices.reloadHyprland()
-
-        JsonAdapter { // qmllint disable
-            id: adapter
-
-            property var monitors: ({})
-        }
-    }
-
     // Logical (post-scale, transform-aware) size used by the layout canvas.
     function               logicalSize(entry: var): var {
         const scale = (typeof entry.scale === "number" && entry.scale > 0) ? entry.scale : 1;
@@ -255,6 +252,7 @@ Singleton {
             width      = height;
             height     = swap;
         }
+
         return {
             height: height,
             width: width
@@ -277,12 +275,14 @@ Singleton {
                 x: x,
                 y: y
             };
+
         const xCandidates = [0];
         const yCandidates = [0];
         for (const rect of others) {
             xCandidates.push(rect.x, rect.x + rect.width, rect.x - me.width);
             yCandidates.push(rect.y, rect.y + rect.height, rect.y - me.height);
         }
+
         let px    = x;
         let py    = y;
         let bestX = threshold;
@@ -294,6 +294,7 @@ Singleton {
                 px    = candidate;
             }
         }
+
         for (const candidate of yCandidates) {
             const distance = Math.abs(y - candidate);
             if (distance < bestY) {
@@ -301,6 +302,7 @@ Singleton {
                 py    = candidate;
             }
         }
+
         for (let pass = 0; pass < others.length + 1; pass++) {
             let resolved = true;
             for (const rect of others) {
@@ -317,9 +319,30 @@ Singleton {
             if (resolved)
                 break;
         }
+
         return {
             x: Math.round(px),
             y: Math.round(py)
         };
+    }
+
+    FileView {
+        id: monitorFile
+
+        path: Paths.shellDir + "/monitor.json"
+        watchChanges: false
+        onLoaded: root.resetFromDisk()
+        onLoadFailed: err => {
+            if (err !== FileViewError.FileNotFound)
+                ToastService.show(qsTr("Failed to read monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000);
+        }
+        onSaveFailed: err => ToastService.show(qsTr("Failed to save monitor settings: %1").arg(FileViewError.toString(err)), qsTr("Hyprland"), "warning", 3000)
+        onSaved: HyprlandSetupServices.reloadHyprland()
+
+        JsonAdapter { // qmllint disable
+            id: adapter
+
+            property var monitors: ({})
+        }
     }
 }

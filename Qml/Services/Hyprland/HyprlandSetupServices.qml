@@ -107,9 +107,6 @@ Singleton {
         applyMonitors()
         applyGenerals()
 
-        -- Other monitor automations may register rules on monitor events after this
-        -- file runs; re-asserting here keeps the stored layout winning (this listener
-        -- runs last because this file is required at the bottom of hyprland.lua).
         hl.on("monitor.added", applyMonitors)
         hl.on("monitor.removed", applyMonitors)
     `
@@ -156,9 +153,6 @@ Singleton {
             return value == nil or value == cjson.null
         end
 
-        -- Copies entries into the rule, skipping nulls so an omitted or null field
-        -- never reaches Hyprland. JSON false is kept: effects like float = false
-        -- and decorate = false are meaningful.
         local function fillTable(target, source)
             for key, value in pairs(source or {}) do
                 if not isNull(value) then
@@ -180,7 +174,6 @@ Singleton {
                 rule.enabled = false
             end
             rule.match = fillTable({}, entry.match)
-            -- Hyprland ignores rules without match properties, so skip them outright.
             if next(rule.match) == nil then
                 return nil
             end
@@ -193,8 +186,6 @@ Singleton {
             if not data or type(data.rules) ~= "table" then
                 return
             end
-            -- ipairs keeps the JSON array order; effects are applied top to bottom
-            -- and the last matching rule wins.
             for _, entry in ipairs(data.rules) do
                 local rule = buildRule(entry)
                 if rule then

@@ -18,29 +18,34 @@ Singleton {
     property var           stored: ({})
 
     function               applyCategory(category: string): void {
-        const draft = root.pending[category];
+        const draft = pending[category];
         if (draft === undefined)
             return;
-        const next   = root.deepCopy(root.stored);
-        const nested = root.unflatten(draft);
+
+        const next   = deepCopy(root.stored);
+        const nested = unflatten(draft);
         if (Object.keys(nested).length === 0)
             delete next[category];
         else
             next[category] = nested;
-        root.stored      = next;
-        adapter.generals = root.deepCopy(next);
+
+        stored           = next;
+        adapter.generals = deepCopy(next);
         generalsFile.writeAdapter();
     }
 
     function               canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
+
         if (Array.isArray(value))
-            return `[${value.map(item => root.canonical(item)).join(",")}]`;
+            return `[${value.map(item => canonical(item)).join(",")}]`;
+
         if (typeof value === "object") {
             const keys = Object.keys(value).sort();
-            return `{${keys.map(key => `${JSON.stringify(key)}:${root.canonical(value[key])}`).join(",")}}`;
+            return `{${keys.map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
         }
+
         return JSON.stringify(value);
     }
 
@@ -53,19 +58,20 @@ Singleton {
         for (const key of Object.keys(value ?? {})) {
             const path = prefix === "" ? key : `${prefix}.${key}`;
             if (value[key] !== null && typeof value[key] === "object" && !Array.isArray(value[key]))
-                Object.assign(flat, root.flatten(value[key], path));
+                Object.assign(flat, flatten(value[key], path));
             else
                 flat[path] = value[key];
         }
+
         return flat;
     }
 
     function               isCategoryDirty(category: string): bool {
-        return root.canonical(root.pending[category] ?? {}) !== root.canonical(root.flatten(root.stored[category] ?? {}, ""));
+        return canonical(root.pending[category] ?? {}) !== root.canonical(root.flatten(root.stored[category] ?? {}, ""));
     }
 
     function               pendingValue(category: string, leafPath: string): var {
-        return root.pending[category]?.[leafPath];
+        return pending[category]?.[leafPath];
     }
 
     function               reloadHyprland(): void {
@@ -74,24 +80,25 @@ Singleton {
 
     function               resetFromDisk(): void {
         const fromDisk = adapter.generals ?? {};
-        root.stored    = root.deepCopy(fromDisk);
+        stored         = root.deepCopy(fromDisk);
         const seeded   = {};
-        for (const category of Object.keys(root.stored))
-            seeded[category] = root.flatten(root.stored[category], "");
-        root.pending = seeded;
+        for (const category of Object.keys(stored))
+            seeded[category] = flatten(root.stored[category], "");
+
+        pending = seeded;
     }
 
     function               revertCategory(category: string): void {
-        const next     = Object.assign({}, root.pending);
-        next[category] = root.flatten(root.stored[category] ?? {}, "");
-        root.pending   = next;
+        const next     = Object.assign({}, pending);
+        next[category] = flatten(root.stored[category] ?? {}, "");
+        pending        = next;
     }
 
     function               setPendingValue(category: string, leafPath: string, value: var): void {
-        const next               = Object.assign({}, root.pending);
+        const next               = Object.assign({}, pending);
         next[category]           = Object.assign({}, next[category] ?? {});
         next[category][leafPath] = value;
-        root.pending             = next;
+        pending                  = next;
     }
 
     function               unflatten(flat: var): var {
@@ -104,8 +111,10 @@ Singleton {
                     cursor[segments[i]] = {};
                 cursor = cursor[segments[i]];
             }
+
             cursor[segments[segments.length - 1]] = flat[path];
         }
+
         return nested;
     }
 
