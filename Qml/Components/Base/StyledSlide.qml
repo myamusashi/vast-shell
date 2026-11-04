@@ -294,107 +294,96 @@ Slider {
             NAnim {}
         }
 
-        Loader {
-            id: valuePopupLoader
+        Item {
+            id: valuePopupRoot
 
-            property bool keepAlive: false
+            height: valuePopupBubble.height + (root.isHorizontal ? caret.caretSize + 2 : 0)
+            opacity: visible ? 1.0 : 0.0
+            scale: visible ? 1.0 : 0.82
+            transformOrigin: root.isHorizontal ? Item.Bottom : Item.Right
+            visible: root.popupVisible
+            width: valuePopupBubble.width + (root.isVertical ? caret.caretSize + 2 : 0)
+            x: root.isHorizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
+            y: root.isHorizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
+            z: 20
+            Behavior on opacity {
+                enabled: root.animateChanges
 
-            active: root.popupVisible || keepAlive
-            onActiveChanged: {
-                if (root.popupVisible)
-                    keepAlive = true;
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
             }
-            sourceComponent: Item {
-                id: valuePopupRoot
+            Behavior on scale {
+                enabled: root.animateChanges
 
-                height: valuePopupBubble.height + (root.isHorizontal ? caret.caretSize + 2 : 0)
-                opacity: visible ? 1.0 : 0.0
-                scale: visible ? 1.0 : 0.82
-                transformOrigin: root.isHorizontal ? Item.Bottom : Item.Right
-                visible: root.popupVisible
-                width: valuePopupBubble.width + (root.isVertical ? caret.caretSize + 2 : 0)
-                x: root.isHorizontal ? (handle.width - valuePopupBubble.width) / 2 : -(valuePopupBubble.width + caret.caretSize + 2)
-                y: root.isHorizontal ? -(valuePopupBubble.height + caret.caretSize + 2) : (handle.height - valuePopupBubble.height) / 2
-                z: 20
-                Behavior on opacity {
-                    enabled: root.animateChanges
-
-                    NAnim {
-                        duration: Appearance.animations.durations.small
-                    }
+                NAnim {
+                    duration: Appearance.animations.durations.small
                 }
-                Behavior on scale {
-                    enabled: root.animateChanges
+            }
 
-                    NAnim {
-                        duration: Appearance.animations.durations.small
-                    }
+            StyledRect {
+                id: valuePopupBubble
+
+                readonly property real horizontalPadding: 10
+                readonly property real verticalPadding: 6
+
+                color: Colours.m3Colors.m3InverseSurface
+                height: valueLabel.implicitHeight + verticalPadding * 2
+                radius: Appearance.rounding.small
+                width: valueLabel.implicitWidth + horizontalPadding * 2
+                x: 0
+                y: 0
+
+                StyledText {
+                    id: valueLabel
+
+                    anchors.centerIn: parent
+                    color: Colours.m3Colors.m3InverseOnSurface
+                    font.pixelSize: Appearance.fonts.size.small
+                    font.weight: Font.Medium
+                    text: root.popupValueFormat(root.value) // qmllint disable
                 }
+            }
 
-                StyledRect {
-                    id: valuePopupBubble
+            Shape {
+                id: caret
 
-                    readonly property real horizontalPadding: 10
-                    readonly property real verticalPadding: 6
+                readonly property int caretSize: 6
 
-                    color: Colours.m3Colors.m3InverseSurface
-                    height: valueLabel.implicitHeight + verticalPadding * 2
-                    radius: Appearance.rounding.small
-                    width: valueLabel.implicitWidth + horizontalPadding * 2
-                    x: 0
-                    y: 0
+                height: root.isHorizontal ? caretSize : caretSize * 2
+                preferredRendererType: Shape.CurveRenderer
+                width: root.isHorizontal ? caretSize * 2 : caretSize
 
-                    StyledText {
-                        id: valueLabel
-
-                        anchors.centerIn: parent
-                        color: Colours.m3Colors.m3InverseOnSurface
-                        font.pixelSize: Appearance.fonts.size.small
-                        font.weight: Font.Medium
-                        text: root.popupValueFormat(root.value) // qmllint disable
-                    }
+                anchors {
+                    horizontalCenter: root.isHorizontal ? valuePopupBubble.horizontalCenter : undefined
+                    left: root.isVertical ? valuePopupBubble.right : undefined
+                    top: root.isHorizontal ? valuePopupBubble.bottom : undefined
+                    verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
                 }
 
-                Shape {
-                    id: caret
+                ShapePath {
+                    fillColor: Colours.m3Colors.m3InverseSurface
+                    startX: 0
+                    startY: 0
+                    strokeColor: "transparent"
+                    strokeWidth: 0
 
-                    readonly property int caretSize: 6
+                    // Horizontal ▼: (0,0) → (12,0) → (6,6)
+                    // Vertical   ▶: (0,0) → (0,12) → (6,6)
 
-                    height: root.isHorizontal ? caretSize : caretSize * 2
-                    preferredRendererType: Shape.CurveRenderer
-                    width: root.isHorizontal ? caretSize * 2 : caretSize
-
-                    anchors {
-                        horizontalCenter: root.isHorizontal ? valuePopupBubble.horizontalCenter : undefined
-                        left: root.isVertical ? valuePopupBubble.right : undefined
-                        top: root.isHorizontal ? valuePopupBubble.bottom : undefined
-                        verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
+                    PathLine {
+                        x: root.isHorizontal ? caret.caretSize * 2 : 0
+                        y: root.isHorizontal ? 0 : caret.caretSize * 2
                     }
 
-                    ShapePath {
-                        fillColor: Colours.m3Colors.m3InverseSurface
-                        startX: 0
-                        startY: 0
-                        strokeColor: "transparent"
-                        strokeWidth: 0
+                    PathLine {
+                        x: caret.caretSize
+                        y: caret.caretSize
+                    }
 
-                        // Horizontal ▼: (0,0) → (12,0) → (6,6)
-                        // Vertical   ▶: (0,0) → (0,12) → (6,6)
-
-                        PathLine {
-                            x: root.isHorizontal ? caret.caretSize * 2 : 0
-                            y: root.isHorizontal ? 0 : caret.caretSize * 2
-                        }
-
-                        PathLine {
-                            x: caret.caretSize
-                            y: caret.caretSize
-                        }
-
-                        PathLine {
-                            x: 0
-                            y: 0
-                        }
+                    PathLine {
+                        x: 0
+                        y: 0
                     }
                 }
             }
