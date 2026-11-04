@@ -34,8 +34,6 @@ WlSessionLockSurface {
     property string                 maskedBuffer: ""
     property var                    maskEntries: []
     property bool                   showErrorMessage: false
-    property list<string>           stashedWindowPids: []
-    property string                 stashedWorkspaceName: ""
     property bool                   zoomedIn: false
 
     function                        jitterMaskEntry() {
@@ -65,31 +63,6 @@ WlSessionLockSurface {
 
     function                        randomMaskEntry() {
         return root.maskChars[Math.floor(Math.random() * root.maskChars.length)];
-    }
-
-    function                        restoreStashedWorkspaceWindows() {
-        const workspaceName = stashedWorkspaceName;
-        const windowPids    = stashedWindowPids;
-        for (const pids of windowPids) {
-            Quickshell.execDetached({
-                command: ["hyprctl", "dispatch", `hl.dsp.window.move({ window = 'pid:${pids}', workspace = '3', follow = false })`]
-            });
-        }
-    }
-
-    function                        stashFocusedWorkspaceWindows() {
-        const workspaceName = Hypr.focusedWorkspace?.name ?? "";
-        const toplevels     = (Hypr.toplevels.values ?? Hypr.toplevels).filter(toplevel => Hypr.toplevelWorkspaceAddress(toplevel) === workspaceName);
-        const windowPids    = toplevels.map(toplevel => String(toplevel.lastIpcObject?.pid ?? "")).filter(pid => pid !== "");
-        if (workspaceName === "")
-            return;
-        stashedWorkspaceName = workspaceName;
-        stashedWindowPids    = windowPids;
-        for (const pid of windowPids) {
-            Quickshell.execDetached({
-                command: ["hyprctl", "dispatch", `hl.dsp.window.move({ window = 'pid:${pid}', workspace = 'special:lockscreenshell', follow = false })`]
-            });
-        }
     }
 
     color: "transparent"
@@ -308,7 +281,6 @@ WlSessionLockSurface {
             ScriptAction {
                 script: {
                     GlobalStates.isLockscreenOpen = true;
-                    root.stashFocusedWorkspaceWindows();
                 }
             }
         }
@@ -368,7 +340,6 @@ WlSessionLockSurface {
                 script: {
                     bottomItem.lockIcon.color = Colours.m3Colors.m3Green;
                     bottomItem.iconName       = "lock_open_right";
-                    root.restoreStashedWorkspaceWindows();
                 }
             }
 
@@ -413,8 +384,6 @@ WlSessionLockSurface {
                     root.maskEntries              = [];
                     root.maskedBuffer             = "";
                     root.zoomedIn                 = false;
-                    root.stashedWorkspaceName     = "";
-                    root.stashedWindowPids        = [];
                 }
             }
         }
