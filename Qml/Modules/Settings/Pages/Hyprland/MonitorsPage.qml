@@ -19,12 +19,6 @@ SettingsPageBase {
     property string       monitorKeyCache: ""
     property var          monitorKeys: []
 
-    function              cjsonText(): string {
-        if (HyprlandSetupServices.cjsonState === "missing")
-            return qsTr("lua-cjson was not found in Hyprland's embedded Lua (5.5). vast_shell.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell.lua).");
-        return "";
-    }
-
     function              duplicateText(): string {
         const duplicates = MonitorServices.duplicateIdentities();
         return qsTr("Multiple connected monitors share the same description (%1). Hyprland matches rules by description prefix, so the stored settings apply to all of them.").arg(duplicates.join(", "));
@@ -66,14 +60,6 @@ SettingsPageBase {
     HyprlandNoticeCard {
         icon: "info"
         visible: HyprlandSetupServices.onHyprland
-
-        StyledText {
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            text: root.cjsonText()
-            visible: HyprlandSetupServices.cjsonState === "missing"
-            wrapMode: Text.Wrap
-            Layout.fillWidth: true
-        }
 
         RowLayout {
             Layout.fillWidth: true

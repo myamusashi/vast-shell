@@ -16,12 +16,6 @@ SettingsPageBase {
 
     property string category
 
-    function        cjsonText(): string {
-        if (HyprlandSetupServices.cjsonState === "missing")
-            return qsTr("lua-cjson was not found in Hyprland's embedded Lua (5.5). vast_shell.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell.lua).");
-        return "";
-    }
-
     function        luaFileText(): string {
         if (HyprlandSetupServices.luaFileState === "exists" || HyprlandSetupServices.luaFileState === "created")
             return qsTr("vast_shell.lua is set up.");
@@ -49,14 +43,6 @@ SettingsPageBase {
         icon: "info"
         visible: HyprlandSetupServices.onHyprland
 
-        StyledText {
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            text: root.cjsonText()
-            visible: HyprlandSetupServices.cjsonState === "missing"
-            wrapMode: Text.Wrap
-            Layout.fillWidth: true
-        }
-
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
@@ -80,13 +66,6 @@ SettingsPageBase {
                 icon.name: "content_copy"
                 onClicked: HyprlandSetupServices.copyRequireLine()
             }
-        }
-
-        StyledText {
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            text: qsTr("vast-shell never edits hyprland.lua. It only creates %1 once, if missing.").arg(HyprlandSetupServices.vastShellLuaPath)
-            wrapMode: Text.Wrap
-            Layout.fillWidth: true
         }
     }
 

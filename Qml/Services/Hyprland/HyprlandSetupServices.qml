@@ -12,17 +12,15 @@ import qs.Services
 Singleton {
     id: root
 
-    // lua-cjson availability inside Hyprland's embedded Lua: "unknown" | "checking" | "installed" | "missing"
-    readonly property string cjsonCheckFile: `${Paths.cacheDir}/vast-shell-cjson-check`
-    readonly property string cjsonEvalChunk: `local file = io.open("${Paths.cacheDir}/vast-shell-cjson-check", "w"); if file then file:write(tostring(select(1, pcall(require, "cjson")))); file:close() end`
     readonly property string hyprConfigDir: `${Paths.configDir}/hypr`
+    readonly property string jsonLuaPath: `${hyprConfigDir}/vast_shell_json.lua`
+    readonly property string jsonSourcePath: `${Paths.projectRoot}/lua/json.lua`
     readonly property string luaHeader: `-- Created once by vast-shell; yours to edit. Reads ~/.config/vast-shell/*.json.
--- Adjust it if your lua-cjson lives elsewhere.
-package.cpath = os.getenv("HOME") .. "/.config/hypr/?.so;" .. package.cpath
-local ok, cjson = pcall(require, "cjson")`
+-- JSON decoding comes from vast_shell_json.lua in this directory.
+local ok, json = pcall(require, "vast_shell_json")`
     readonly property string luaHelpers: `local configDirectory = os.getenv("HOME") .. "/.config/vast-shell/"
 
--- lua-cjson decodes every JSON number as a float; integer-typed fields reject those.
+-- JSON numbers such as 1.0 decode as floats; integer-typed fields reject those.
 local function normalizeNumbers(value)
     if type(value) == "table" then
         for key, item in pairs(value) do
@@ -43,7 +41,7 @@ local function readJson(fileName)
     end
     local content = file:read("*a")
     file:close()
-    local decodedOk, decoded = pcall(cjson.decode, content)
+    local decodedOk, decoded = pcall(json.decode, content)
     if not decodedOk then
         return nil, tostring(decoded)
     end
@@ -53,8 +51,9 @@ local function readJson(fileName)
     return normalizeNumbers(decoded), nil
 end
 
+-- vast_shell_json decodes JSON null as nil.
 local function isNull(value)
-    return value == nil or value == cjson.null
+    return value == nil
 end`
     readonly property string luaTemplate: `${luaHeader}
 if not ok or not hl or not hl.monitor or not hl.config or not hl.on then
@@ -121,7 +120,7 @@ local function writeErrors(messages)
 end
 
 if not ok then
-    writeErrors({ "lua-cjson is not available: " .. tostring(cjson) })
+    writeErrors({ "vast_shell_json.lua could not be loaded: " .. tostring(json) })
     return
 end
 if not hl or not hl.window_rule or not hl.layer_rule then
@@ -129,7 +128,7 @@ if not hl or not hl.window_rule or not hl.layer_rule then
     return
 end
 
-${root.luaHelpers}
+${luaHelpers}
 
 local errors = {}
 
@@ -191,19 +190,12 @@ writeErrors(errors)`
     readonly property string rulesRequireLine: "require(\"vast_shell_rules\")"
     readonly property string vastShellLuaPath: `${hyprConfigDir}/vast_shell.lua`
 
-    property string          cjsonState: "unknown"
+    property string          jsonLuaContent: ""
     // vast_shell.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
     property alias           luaFileState: luaBootstrap.fileState
     property bool            reloadPending: false
     // vast_shell_rules.lua lifecycle: "unknown" | "missing" | "creating" | "exists" | "created"
     property alias           rulesLuaFileState: rulesLuaBootstrap.fileState
-
-    function                 checkCjson(): void {
-        if (!onHyprland || cjsonState === "checking")
-            return;
-        cjsonState         = "checking";
-        cjsonCheck.running = true;
-    }
 
     function                 copyRequireLine(): void {
         luaBootstrap.copyRequireLine();
@@ -225,9 +217,21 @@ writeErrors(errors)`
         reloadDebounceTimer.restart();
     }
 
-    onOnHyprlandChanged: {
-        if (onHyprland && cjsonState === "unknown")
-            checkCjson();
+    FileView {
+        id: jsonSource
+
+        path: root.jsonSourcePath
+        watchChanges: false
+        onLoaded: root.jsonLuaContent = jsonSource.text()
+        onLoadFailed: errorCode => ToastService.show(qsTr("Failed to read lua/json.lua: %1").arg(FileViewError.toString(errorCode)), qsTr("Hyprland"), "warning", 3000)
+    }
+
+    LuaBootstrapFile {
+        id: jsonBootstrap
+
+        createFailedMessage: qsTr("Failed to create vast_shell_json.lua")
+        filePath: root.jsonLuaPath
+        templateContent: root.jsonLuaContent
     }
 
     LuaBootstrapFile {
@@ -246,33 +250,6 @@ writeErrors(errors)`
         filePath: root.rulesLuaPath
         requireLine: root.rulesRequireLine
         templateContent: root.rulesLuaTemplate
-    }
-
-    Process {
-        id: cjsonCheck
-
-        command: ["hyprctl", "eval", root.cjsonEvalChunk]
-        stdout: StdioCollector {
-            id: cjsonStdout
-        }
-        onExited: {
-            if (cjsonStdout.text.trim() === "ok")
-                cjsonResult.reload();
-            else
-                root.cjsonState = "unknown";
-        }
-    }
-
-    FileView {
-        id: cjsonResult
-
-        path: root.cjsonCheckFile
-        watchChanges: false
-        onLoaded: {
-            const result    = text().trim();
-            root.cjsonState = result === "true" ? "installed" : (result === "false" ? "missing" : "unknown");
-        }
-        onLoadFailed: root.cjsonState = "unknown"
     }
 
     FileView {
@@ -320,21 +297,23 @@ writeErrors(errors)`
 
         required property string createFailedMessage
         required property string filePath
-        required property string requireLine
         required property string templateContent
 
         property string          fileState: "unknown"
+        property string          requireLine: ""
 
         function                 copyRequireLine(): void {
             requireCopyProcess.running = true;
         }
 
         function                 ensureFile(): void {
-            if (bootstrap.fileState !== "missing")
+            if (bootstrap.fileState !== "missing" || bootstrap.templateContent === "")
                 return;
             bootstrap.fileState = "creating";
             targetFile.setText(bootstrap.templateContent);
         }
+
+        onTemplateContentChanged: bootstrap.ensureFile()
 
         FileView {
             id: targetFile

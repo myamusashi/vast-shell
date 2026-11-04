@@ -19,12 +19,6 @@ SettingsPageBase {
     property string       ruleIdCache: ""
     property var          ruleIds: []
 
-    function              cjsonText(): string {
-        if (HyprlandSetupServices.cjsonState === "missing")
-            return qsTr("lua-cjson was not found in Hyprland's embedded Lua (5.5). vast_shell_rules.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell_rules.lua).");
-        return "";
-    }
-
     function              refreshRuleIds(): void {
         const joined = ruleIdSnapshot.join("\u0002");
         if (joined === ruleIdCache)
@@ -61,21 +55,6 @@ SettingsPageBase {
     HyprlandNoticeCard {
         icon: "info"
         visible: HyprlandSetupServices.onHyprland
-
-        StyledText {
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            text: root.cjsonText()
-            visible: HyprlandSetupServices.cjsonState === "missing"
-            wrapMode: Text.Wrap
-            Layout.fillWidth: true
-        }
-
-        StyledText {
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            text: qsTr("Rules are read by vast_shell_rules.lua, created once next to vast_shell.lua. vast-shell never edits hyprland.lua, and never overwrites its own Lua files afterwards.")
-            wrapMode: Text.Wrap
-            Layout.fillWidth: true
-        }
 
         RowLayout {
             Layout.fillWidth: true
