@@ -4,7 +4,6 @@ import QtQuick.Layouts
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
-import qs.Components.Effects
 
 PopupWidget {
     icon: "memory"
@@ -101,8 +100,7 @@ PopupWidget {
         Rectangle {
             id: usedBar
 
-            property color target: Colours.m3Colors.m3Green
-
+            color: Colours.m3Colors.m3Green
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
             Behavior on implicitWidth {
@@ -110,11 +108,6 @@ PopupWidget {
                     damping: 0.5
                     spring: 2
                 }
-            }
-
-            BlendColor {
-                host: usedBar
-                target: usedBar.target
             }
 
             anchors {

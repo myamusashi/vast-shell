@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
-import qs.Components.Effects
 
 PopupWidget {
     id: diskInfo
@@ -255,8 +254,7 @@ PopupWidget {
         StyledRect {
             id: usedBar
 
-            property color target: Colours.m3Colors.m3Green
-
+            color: Colours.m3Colors.m3Green
             implicitWidth: parent.width * root.usedPercent
             radius: height / 2
             Behavior on implicitWidth {
@@ -264,11 +262,6 @@ PopupWidget {
                     damping: 0.5
                     spring: 2
                 }
-            }
-
-            BlendColor {
-                host: usedBar
-                target: usedBar.target
             }
 
             anchors {
@@ -301,8 +294,7 @@ PopupWidget {
         StyledRect {
             id: systemAppsBar
 
-            property color target: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
-
+            color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
             radius: height / 2
             width: parent.width * root.systemPlusAppsRatio
             z: 1
@@ -311,11 +303,6 @@ PopupWidget {
                     damping: 0.5
                     spring: 2
                 }
-            }
-
-            BlendColor {
-                host: systemAppsBar
-                target: systemAppsBar.target
             }
 
             anchors {
@@ -328,8 +315,7 @@ PopupWidget {
         StyledRect {
             id: appsBar
 
-            property color target: Colours.m3Colors.m3Green
-
+            color: Colours.m3Colors.m3Green
             radius: height / 2
             width: parent.width * root.appsRatio
             z: 2
@@ -338,11 +324,6 @@ PopupWidget {
                     damping: 0.5
                     spring: 2
                 }
-            }
-
-            BlendColor {
-                host: appsBar
-                target: appsBar.target
             }
 
             anchors {

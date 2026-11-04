@@ -3,7 +3,6 @@ import QtQuick.Layouts
 import Quickshell.Widgets
 
 import qs.Components.Base
-import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -58,21 +57,11 @@ WrapperRectangle {
         Icon {
             id: lockIcon
 
-            function blendTo(target) {
-                tintAnim.blendTo(target);
-            }
-
             Layout.alignment: Qt.AlignCenter
             color: Colours.m3Colors.m3OnSurface
             font.pixelSize: Appearance.fonts.size.large * 1.5
             icon: "lock"
             transformOrigin: Item.Bottom
-
-            BlendColor {
-                id: tintAnim
-
-                host: lockIcon
-            }
 
             SequentialAnimation {
                 id: shakeAnim
@@ -136,7 +125,7 @@ WrapperRectangle {
                 }
 
                 ScriptAction {
-                    script: lockIcon.color(Colours.m3Colors.m3Red)
+                    script: lockIcon.color = Colours.m3Colors.m3Red
                 }
             }
         }

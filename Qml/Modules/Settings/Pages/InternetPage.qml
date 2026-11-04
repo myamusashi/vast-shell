@@ -14,7 +14,6 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Core.States
 import qs.Services
-import qs.Components.Effects
 
 import "../Components"
 
@@ -225,15 +224,13 @@ Item {
 
                                     required property var modelData
 
-                                    property color        target: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-
                                     function              tryConnect() {
                                         WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
                                     }
 
                                     Layout.alignment: Qt.AlignVCenter
                                     Layout.fillWidth: true
-                                    color: "transparent"
+                                    color: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
                                     margin: Appearance.margin.small
                                     radius: Appearance.rounding.large
 
@@ -241,11 +238,6 @@ Item {
                                         id: networkTap
 
                                         onTapped: networkDelegate.tryConnect()
-                                    }
-
-                                    BlendColor {
-                                        host: networkDelegate
-                                        target: networkDelegate.target
                                     }
 
                                     Connections {

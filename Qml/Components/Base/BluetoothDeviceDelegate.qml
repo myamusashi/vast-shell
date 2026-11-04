@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Widgets
 
-import qs.Components.Effects
 import qs.Components.Button
 import qs.Components.Base
 import qs.Core.Configs
@@ -19,7 +18,6 @@ ClippingWrapperRectangle {
     property bool         showBlockAction: false
     property bool         showForgetAction: false
     property bool         showPairActions: false
-    property color        target: device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
 
     signal                blockToggled
     signal                forgetAction
@@ -30,14 +28,9 @@ ClippingWrapperRectangle {
     Layout.fillWidth: true
     border.color: Colours.m3Colors.m3OutlineVariant
     border.width: device?.connected ? 1 : 0
-    color: "transparent"
+    color: device?.connected ? Colours.m3Colors.m3PrimaryContainer : "transparent"
     margin: Appearance.margin.small
     radius: Appearance.rounding.large
-
-    BlendColor {
-        host: root
-        target: root.target
-    }
 
     RowLayout {
         spacing: Appearance.spacing.small

@@ -7,7 +7,6 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
-import qs.Components.Effects
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -18,22 +17,15 @@ ClippingWrapperRectangle {
     required property var network
     required property var pskDialog
 
-    property color        target: network.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-
     function              tryConnect() {
         WifiUtils.tryConnect(root.network, net => root.pskDialog.show(net));
     }
 
     Layout.alignment: Qt.AlignVCenter
     Layout.fillWidth: true
-    color: "transparent"
+    color: network.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
     margin: Appearance.margin.small
     radius: Appearance.rounding.large
-
-    BlendColor {
-        host: root
-        target: root.target
-    }
 
     TapHandler {
         id: networkTap

@@ -13,7 +13,6 @@ import qs.Core.Utils
 import qs.Widgets
 import qs.Services
 import qs.Components.Base
-import qs.Components.Effects
 
 ScrollView {
     id: root
@@ -71,17 +70,11 @@ ScrollView {
                     StyledRect {
                         id: sinkIndicator
 
-                        property color target: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : "transparent"
-
                         border.color: Colours.m3Colors.m3Primary
                         border.width: 1
+                        color: root.currentSinkIndex === volumeEntryDelegate.index ? Colours.m3Colors.m3Primary : "transparent"
                         implicitHeight: 15
                         implicitWidth: 15
-
-                        BlendColor {
-                            host: sinkIndicator
-                            target: sinkIndicator.target
-                        }
                     }
 
                     StyledText {

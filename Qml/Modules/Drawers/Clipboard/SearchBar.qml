@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Layouts
 import Vast.Clipboard
 
-import qs.Components.Effects
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
@@ -39,15 +38,9 @@ Item {
             Icon {
                 id: searchIcon
 
-                property color target: searchField.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-
+                color: searchField.activeFocus ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.larger
                 icon: "search"
-
-                BlendColor {
-                    host: searchIcon
-                    target: searchIcon.target
-                }
             }
 
             MaterialTextField {

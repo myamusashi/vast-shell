@@ -8,7 +8,6 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
-import qs.Components.Effects
 
 ColumnLayout {
     id: root
@@ -50,21 +49,14 @@ ColumnLayout {
         StyledRect {
             id: defaultIndicator
 
-            property color target: root.isCurrent ? Colours.m3Colors.m3Primary : "transparent"
-
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: 18
             Layout.preferredWidth: 18
             border.color: Colours.m3Colors.m3Primary
             border.width: 2
-            color: "transparent"
+            color: root.isCurrent ? Colours.m3Colors.m3Primary : "transparent"
             radius: width / 2
             visible: root.selectable
-
-            BlendColor {
-                host: defaultIndicator
-                target: defaultIndicator.target
-            }
 
             TapHandler {
                 onTapped: root.defaultRequested()

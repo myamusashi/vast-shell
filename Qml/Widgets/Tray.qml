@@ -6,7 +6,6 @@ import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 
-import qs.Components.Effects
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.Utils
@@ -95,16 +94,10 @@ StyledRect {
                 StyledRect {
                     id: bgTrayIcon
 
-                    property color target: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
-
+                    color: trayItemArea.containsMouse ? Colours.m3Colors.m3Primary : "transparent"
                     height: 25
                     radius: Appearance.rounding.normal
                     width: 25
-
-                    BlendColor {
-                        host: bgTrayIcon
-                        target: bgTrayIcon.target
-                    }
                 }
 
                 IconImage {
