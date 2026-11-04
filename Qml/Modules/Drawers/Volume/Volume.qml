@@ -13,7 +13,7 @@ Drawer {
 
     required property Drawer session
 
-    readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
+    readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isOSDVisible("volume") // qmllint disable
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
