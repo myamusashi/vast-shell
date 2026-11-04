@@ -210,6 +210,15 @@ WlSessionLockSurface {
             }
         }
 
+        Loader {
+            active: Configs.lockscreen.blurWindowsEnabled
+            anchors.fill: parent
+            z: 0
+            sourceComponent: WindowBlur {
+                screen: root.screen
+            }
+        }
+
         StyledText {
             id: passwordDisplay
 

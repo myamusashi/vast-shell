@@ -5,7 +5,7 @@
 Prioritize: correctness, no regressions, performance, API stability, readability. Flag: algorithmic regressions in hot paths, silent config-behavior breakage, and violations of the style/code/QML/Go/Qt guidelines below.
 
 # READ THIS CAREFULLY
-NEVER AND EVER SMOKE TEST THE QML AND NEVER EVER WRITING FILES FROM THE OUTSIDE OF THIS PROJECT EXCEPT /tmp.
+NEVER AND EVER SMOKE TEST THE QML
 
 ## Qt and C++ style
 
@@ -33,7 +33,7 @@ NEVER AND EVER SMOKE TEST THE QML AND NEVER EVER WRITING FILES FROM THE OUTSIDE 
 
 ## QML style
 
-- ALWAYS format with `.qmlformat.ini`; AND ALWAYS run LINTING with `Assets/shell/qmllint_qs.sh` EVERYTIME YOU FINISHED THE CODE. 
+- ALWAYS format `.qmlformat-rs.toml` (`qmlformat-rs`); AND ALWAYS run LINTING with `Assets/shell/qmllint_qs.sh` EVERYTIME YOU FINISHED THE CODE. 
 - Imports: `qs.<path_from_Qml_directory_root>` unless the target is in the same directory.
 - IDs: `camelCase`, descriptive (`root`, `rect`, `mouseArea` OK as defaults).
 - Local properties: `camelCase`, descriptive, NO abbreviations AND underscores.

@@ -22,6 +22,7 @@ Singleton {
     property alias idle: adapter.idle
     property alias kdeConnect: adapter.kdeConnect
     property alias language: adapter.language
+    property alias lockscreen: adapter.lockscreen
     property alias mediaPlayer: adapter.mediaPlayer
     property alias notification: adapter.notification
     property alias privacy: adapter.privacy
@@ -69,6 +70,7 @@ Singleton {
             property IdleConfig               idle: IdleConfig {}
             property KDEConnectConfig         kdeConnect: KDEConnectConfig {}
             property LocalizationConfig       language: LocalizationConfig {}
+            property LockscreenConfig         lockscreen: LockscreenConfig {}
             property MediaPlayerConfig        mediaPlayer: MediaPlayerConfig {}
             property NotificationConfig       notification: NotificationConfig {}
             property PrivacyIndicatorConfig   privacy: PrivacyIndicatorConfig {}

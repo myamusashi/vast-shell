@@ -248,6 +248,12 @@ Item {
             terms: ["Enable Depth Wallpaper", "Auto-process On Wallpaper Change"]
         },
         {
+            page: 19,
+            pageLabel: "Lockscreen",
+            card: "Window Privacy",
+            terms: ["Blur Windows", "Blur Radius"]
+        },
+        {
             page: 12,
             pageLabel: "Dock",
             card: "Layout & Behavior",

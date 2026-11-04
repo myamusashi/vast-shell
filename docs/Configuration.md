@@ -146,6 +146,10 @@ You generally do **not** need to copy the color files — the Material palette i
     "pollInterval": 15000
   },
   "language": { "language": "id_ID" },
+  "lockscreen": {
+    "blurRadius": 48,
+    "blurWindowsEnabled": false
+  },
   "mediaPlayer": {
     "dynamicColorsCover": true,
     "showLyrics": false,
@@ -415,6 +419,13 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 | Key | Default | Description |
 |---|---|---|
 | `language` | `"id_ID"` | Locale for the Qt translation catalogue. See [Translations](Translations.md). |
+
+### Lockscreen
+
+| Key | Default | Description |
+|---|---|---|
+| `blurWindowsEnabled` | `false` | Render active-workspace windows on each monitor blurred behind the lock screen. |
+| `blurRadius` | `48` | Blur radius applied to captured windows on the lock screen. |
 
 ---
 

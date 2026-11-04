@@ -54,4 +54,34 @@ SettingsPageBase {
             }
         }
     }
+
+    SettingsCard {
+        title: qsTr("Window Privacy")
+
+        SettingRow {
+            description: qsTr("Render windows on each monitor's active workspace blurred behind the lock screen.")
+            label: qsTr("Blur windows on lock:")
+
+            StyledSwitch {
+                Layout.preferredHeight: 32
+                Layout.preferredWidth: 52
+                checked: Configs.lockscreen.blurWindowsEnabled
+                onToggled: Configs.lockscreen.blurWindowsEnabled = checked
+            }
+        }
+
+        SettingRow {
+            label: qsTr("Blur radius:")
+
+            StyledSlide {
+                Layout.preferredWidth: 200
+                enabled: Configs.lockscreen.blurWindowsEnabled
+                from: 8
+                stepSize: 1
+                to: 128
+                value: Configs.lockscreen.blurRadius
+                onMoved: Configs.lockscreen.blurRadius = value
+            }
+        }
+    }
 }

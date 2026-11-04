@@ -97,6 +97,35 @@ Singleton {
         return workspaceAddress(tl.workspace);
     }
 
+    function                            visibleToplevelsOn(screen: var): var {
+        const monitor = monitorFor(screen);
+        if (!monitor)
+            return [];
+        const address = String(monitor.activeWorkspace?.address ?? monitor.lastIpcObject?.activeWorkspace?.address ?? "");
+        if (address === "")
+            return [];
+        const list = [];
+        for (const tl of root.toplevels.values ?? root.toplevels) {
+            if (toplevelWorkspaceAddress(tl) !== address || !tl.wayland)
+                continue;
+            const ipc  = tl.lastIpcObject;
+            const size = ipc?.size;
+            if (ipc?.mapped === false || ipc?.hidden === true || !size || size[0] <= 0 || size[1] <= 0)
+                continue;
+            list.push(tl);
+        }
+        // Hyprland does not expose z-order; approximate back-to-front by
+        // placing tiled before floating and older focus history first.
+        list.sort((a, b) => {
+            const floatA = a.lastIpcObject?.floating ? 1 : 0;
+            const floatB = b.lastIpcObject?.floating ? 1 : 0;
+            if (floatA !== floatB)
+                return floatA - floatB;
+            return (b.lastIpcObject?.focusHistoryID ?? 0) - (a.lastIpcObject?.focusHistoryID ?? 0);
+        });
+        return list;
+    }
+
     function                            workspaceAddress(ws: var): string {
         if (!ws)
             return "";
