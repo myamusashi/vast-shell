@@ -34,6 +34,7 @@ Singleton {
     readonly property string storedCanonical: root.canonical(root.stored)
     readonly property bool   valid: root.rules.every(rule => (root.problems[rule.id] ?? []).length === 0)
 
+    property bool            initialLoadFinished: false
     property var             lastGoodRules: []
     property var             rules: []
     property var             stored: []
@@ -45,7 +46,7 @@ Singleton {
     }
 
     function                 apply(): void {
-        if (!root.valid)
+        if (!root.initialLoadFinished || !root.valid)
             return;
         root.lastGoodRules = root.deepCopy(root.stored);
         root.stored        = root.deepCopy(root.rules);
@@ -140,7 +141,8 @@ Singleton {
     }
 
     function                 resetFromDisk(): void {
-        const loaded = root.sanitizeLoadedRules(adapter.rules);
+        const loaded             = root.sanitizeLoadedRules(root.deepCopy(adapter.rules));
+        root.initialLoadFinished = true;
         root.setRules(loaded);
         root.stored = root.deepCopy(loaded);
     }
@@ -250,7 +252,9 @@ Singleton {
         atomicWrites: true
         onLoaded: root.resetFromDisk()
         onLoadFailed: errorCode => {
-            if (errorCode !== FileViewError.FileNotFound)
+            if (errorCode === FileViewError.FileNotFound)
+                root.initialLoadFinished = true;
+            else
                 ToastService.show(root.loadFailedMessage.arg(FileViewError.toString(errorCode)), qsTr("Hyprland"), "warning", 3000);
         }
         onSaveFailed: errorCode => ToastService.show(root.saveFailedMessage.arg(FileViewError.toString(errorCode)), qsTr("Hyprland"), "warning", 3000)
