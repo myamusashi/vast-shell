@@ -26,7 +26,7 @@ import "BottomDrawers/Dock"
 Variants {
     model: Quickshell.screens
     delegate: PanelWindow {
-        id: window
+        id: panelWindow
 
         required property ShellScreen modelData
 
@@ -35,7 +35,7 @@ Variants {
         readonly property bool        needFocusKeyboard: {
             if (GlobalStates.isLauncherOpen)
                 return true;
-            if (GlobalStates.isSessionOpen && !session.showConfirmDialog)
+            if (GlobalStates.isSessionOpen && !sessionDrawer.showConfirmDialog)
                 return true;
             if (GlobalStates.isWallpaperSwitcherOpen)
                 return true;
@@ -53,13 +53,13 @@ Variants {
         property bool                 yieldKeyboardFocus: false
 
         function                      reclaimKeyboardFocus(): void {
-            window.yieldKeyboardFocus = true;
+            yieldKeyboardFocus = true;
             Qt.callLater(() => {
-                window.yieldKeyboardFocus = false;
+                yieldKeyboardFocus = false;
             });
         }
 
-        HyprlandWindow.visibleMask: window.mask // qmllint disable
+        HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.keyboardFocus: needFocusKeyboard && !yieldKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.namespace: "shell:drawers"
         color: "transparent"
@@ -92,14 +92,14 @@ Variants {
             id: screenBorder
 
             barHeight: Configs.bar.barHeight
-            dockHeight: window.dockVisible ? Configs.dock.dockHeight : 0
+            dockHeight: panelWindow.dockVisible ? Configs.dock.dockHeight : 0
             color: GlobalStates.drawerColors
             enableOuterBorder: GlobalStates.isLockscreenOpen ? 0 : Configs.generals.enableOuterBorder
             isBarOpen: GlobalStates.isBarOpen
-            isDockVisible: window.dockVisible
-            isFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(window.modelData.name)
+            isDockVisible: panelWindow.dockVisible
+            isFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name)
             outerBorderSize: Configs.generals.outerBorderSize
-            window: window.modelData
+            window: panelWindow.modelData
             visible: !GlobalStates.isLockscreenOpen
 
             Clipboard {}
@@ -136,13 +136,11 @@ Variants {
                 lengthRatio: dock.panelLengthRatio
             }
 
-            // Must stay last so the dock paints above the drawer shapes
-
             Dock {
                 id: dock
                 border: screenBorder
                 panelVisible: panelDrawer.visible
-                parentWindow: window
+                parentWindow: panelWindow
             }
         }
 
@@ -150,7 +148,7 @@ Variants {
             id: bar
 
             border: screenBorder
-            open: window.barOpen
+            open: panelWindow.barOpen
         }
     }
 }
