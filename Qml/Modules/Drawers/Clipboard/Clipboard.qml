@@ -21,7 +21,7 @@ WrapperRectangle {
     implicitHeight: GlobalStates.isClipboardOpen ? Configs.clipboard.height : 0
     implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
     radius: Appearance.rounding.normal
-    visible: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
+    visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -30,7 +30,7 @@ WrapperRectangle {
     }
 
     Loader {
-        active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
+        active: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
         asynchronous: true
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen
@@ -61,7 +61,7 @@ WrapperRectangle {
         title: qsTr("Clipboard")
         onActiveChanged: {
             if (!active && GlobalStates.isClipboardOpen)
-                window.reclaimKeyboardFocus(); // qmllint disable
+                panelWindow.reclaimKeyboardFocus(); // qmllint disable
         }
         onAccepted: ClipboardServices.uiState.confirmDelete()
         onRejected: ClipboardServices.uiState.cancelDelete()

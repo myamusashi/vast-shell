@@ -20,7 +20,7 @@ Drawer {
     id: root
 
     readonly property real   dockSpacing: Appearance.spacing.normal
-    readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) // qmllint disable
+    readonly property bool   shown: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
     readonly property string title: mode === 0 ? qsTr("Screen Recorder") : qsTr("Screenshot")
     readonly property string titleIcon: mode === 0 ? "screen_record" : "photo_camera"
 

@@ -29,7 +29,7 @@ Drawer {
     Loader {
         id: contentLoader
 
-        active: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && container.open // qmllint disable
+        active: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && container.open // qmllint disable
         anchors.fill: parent
         asynchronous: true
         onActiveChanged: {

@@ -15,7 +15,7 @@ import qs.Services
 Drawer {
     id: root
 
-    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(window.modelData.name) && GlobalStates.isSessionOpen // qmllint disable
+    readonly property bool shown: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isSessionOpen // qmllint disable
 
     property int           currentIndex: 0
     property alias         dialog: boxConfirmation

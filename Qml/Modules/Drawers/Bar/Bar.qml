@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell.Widgets
 
@@ -41,7 +43,7 @@ WrapperItem {
                 spacing: Appearance.spacing.normal
                 implicitHeight: parent.height
                 implicitWidth: parent.width / 6
-                monitor: window.modelData // qmllint disable
+                monitor: root.border.window
 
             }
 
@@ -63,6 +65,7 @@ WrapperItem {
                 spacing: Appearance.spacing.normal
                 implicitHeight: parent.height
                 implicitWidth: parent.width / 6
+                monitor: root.border.window
             }
         }
     }

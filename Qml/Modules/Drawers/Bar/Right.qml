@@ -2,11 +2,15 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 
 import qs.Core.Configs
 import qs.Widgets as Wid
 
 RowLayout {
+    id: root
+
+    required property ShellScreen monitor
 
     Wid.Clock {}
 
@@ -14,7 +18,9 @@ RowLayout {
         implicitHeight: parent.height
     }
 
-    Wid.Tray {}
+    Wid.Tray {
+        monitor: root.monitor
+    }
 
     Wid.KdeConnect {}
 
