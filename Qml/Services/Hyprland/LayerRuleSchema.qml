@@ -81,6 +81,7 @@ Singleton {
         {
             key: "namespace",
             type: "regex",
+            default: "",
             description: qsTr("Layer namespace, e.g. waybar or shell:drawers.")
         }
     ]

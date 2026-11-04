@@ -459,27 +459,32 @@ Singleton {
             key: "class",
             type: "regex",
             pickerField: "class",
+            default: "",
             description: qsTr("Window class.")
         },
         {
             key: "content",
             type: "enum",
             values: ["", "none", "photo", "video", "game"],
+            default: "",
             description: qsTr("Content type of the window.")
         },
         {
             key: "float",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window is floating.")
         },
         {
             key: "focus",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window currently has focus.")
         },
         {
             key: "fullscreen",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window is fullscreen (covering or not).")
         },
         {
@@ -487,6 +492,7 @@ Singleton {
             type: "enum",
             values: [0, 1, 2, 3],
             labels: ["none", "maximize", "fullscreen", "maximize and fullscreen"],
+            default: 0,
             description: qsTr("Fullscreen state the client requested.")
         },
         {
@@ -494,60 +500,71 @@ Singleton {
             type: "enum",
             values: [0, 1, 2, 3],
             labels: ["none", "maximize", "fullscreen", "maximize and fullscreen"],
+            default: 0,
             description: qsTr("Fullscreen state the compositor uses.")
         },
         {
             key: "group",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window is in a group.")
         },
         {
             key: "initial_class",
             type: "regex",
             pickerField: "initialClass",
+            default: "",
             description: qsTr("Class the window was created with.")
         },
         {
             key: "initial_title",
             type: "regex",
             pickerField: "initialTitle",
+            default: "",
             description: qsTr("Title the window was created with.")
         },
         {
             key: "modal",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window is modal (e.g. confirmation popups).")
         },
         {
             key: "pin",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window is pinned to all workspaces.")
         },
         {
             key: "tag",
             type: "string",
+            default: "",
             description: qsTr("Tag name. Dynamic tags end with *.")
         },
         {
             key: "title",
             type: "regex",
             pickerField: "title",
+            default: "",
             description: qsTr("Window title. Static effects only ever see the initial title.")
         },
         {
             key: "workspace",
             type: "string",
+            default: "",
             description: qsTr("Workspace selector, e.g. 3, name:web or special:magic.")
         },
         {
             key: "xdg_tag",
             type: "regex",
             pickerField: "xdgTag",
+            default: "",
             description: qsTr("XDG tag of the window.")
         },
         {
             key: "xwayland",
             type: "bool",
+            default: false,
             description: qsTr("Whether the window is an Xwayland window.")
         }
     ]
