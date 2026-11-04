@@ -1,93 +1,33 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Core.Configs
-import qs.Core.Utils
 import qs.Services
 
 Item {
     id: root
 
+    required property var  cellData
     required property int  cellHeight
     required property real cellWidth
     required property int  currentMonth
     required property int  index
-    required property var  modelData
-    required property var  openPopoverDate
-    required property var  selectedDate
 
-    readonly property date cellDate: modelData.date
     readonly property int  dayFontWeight: isToday ? 1000 : (isCurrentMonth ? 600 : 100)
-    readonly property int  dayOfWeek: cellDate.getDay()
+    readonly property int  dayOfWeek: cellData.dayOfWeek
     readonly property int  gridColumn: index % 7
     readonly property int  gridRow: Math.floor(index / 7)
-    readonly property bool isCurrentMonth: modelData.month === currentMonth
-    readonly property bool isPopoverOpen: openPopoverDate !== null && new Date(openPopoverDate).toDateString() === cellDate.toDateString()
-    readonly property bool isToday: modelData.today
-
-    property var           holidayEntries: {
-        if (!Configs.generals.showHolidays)
-            return [];
-        return HolidayModel.getHolidaysForDate(cellDate);
-    }
-    property string        holidayLabel: {
-        if (!Configs.generals.showHolidays)
-            return "";
-        return HolidayModel.nameForDate(cellDate);
-    }
-    property bool          showHoliday: {
-        if (!Configs.generals.showHolidays)
-            return false;
-        return HolidayModel.hasHoliday(cellDate);
-    }
-
-    signal                 closePopoverRequested
-    signal                 dateClicked(var date)
-    signal                 openPopoverRequested(var date)
+    readonly property var  holidayEntries: (Configs.generals.showHolidays && HolidayModel.loaded) ? (HolidayModel.holidaysByDate[cellData.isoDate] ?? []) : []
+    readonly property bool isCurrentMonth: cellData.month === currentMonth
+    readonly property bool isToday: cellData.today
+    readonly property bool showHoliday: holidayEntries.length > 0
 
     height: cellHeight
     width: cellWidth
     x: gridColumn * cellWidth
     y: gridRow * cellHeight
-
-    StyledRect {
-        id: background
-
-        anchors.fill: parent
-        color: {
-            if (root.isPopoverOpen)
-                return Colours.m3Colors.m3SurfaceContainerHigh;
-            if (mouseArea.containsMouse && root.isCurrentMonth)
-                return Colours.m3Colors.m3SurfaceVariant;
-            return "transparent";
-        }
-        radius: Appearance.rounding.small
-
-        MArea {
-            id: mouseArea
-
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            hoverEnabled: true
-            visible: root.isCurrentMonth
-            onClicked: {
-                root.dateClicked(root.cellDate);
-            }
-        }
-    }
-
-    StyledRect {
-        anchors.fill: parent
-        anchors.margins: 1
-        border.color: root.isToday ? Colours.m3Colors.m3Primary : "transparent"
-        border.width: root.isToday ? 1.5 : 0
-        color: "transparent"
-        radius: Appearance.rounding.small - 1
-        visible: root.isToday && !mouseArea.containsMouse
-    }
 
     Column {
         anchors.centerIn: parent
@@ -105,37 +45,42 @@ Item {
             font.pixelSize: Appearance.fonts.size.small * 1.3
             font.weight: root.dayFontWeight
             horizontalAlignment: Text.AlignHCenter
-            text: Qt.formatDate(root.cellDate, "d")
+            text: root.cellData.dayNumber
         }
 
-        RowLayout {
+        Loader {
+            active: root.showHoliday
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 3
-            visible: root.showHoliday
+            visible: active
+            sourceComponent: Row {
+                spacing: 3
 
-            Repeater {
-                model: Math.min(root.holidayEntries.length, 3)
+                Repeater {
+                    model: Math.min(root.holidayEntries.length, 3)
 
-                StyledRect {
-                    required property int index
+                    StyledRect {
+                        required property int index
 
-                    color: {
-                        const entry = root.holidayEntries[index];
-                        if (entry && entry.type === "leave")
-                            return Colours.m3Colors.m3Secondary;
-                        return Colours.m3Colors.m3Tertiary;
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: {
+                            const entry = root.holidayEntries[index];
+                            if (entry && entry.type === "leave")
+                                return Colours.m3Colors.m3Secondary;
+                            return Colours.m3Colors.m3Tertiary;
+                        }
+                        implicitHeight: 5
+                        implicitWidth: 5
+                        radius: 2.5
                     }
-                    implicitHeight: 5
-                    implicitWidth: 5
-                    radius: 2.5
                 }
-            }
 
-            StyledText {
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.small * 0.65
-                text: root.holidayEntries.length > 3 ? "+" + (root.holidayEntries.length - 3) : ""
-                visible: text !== ""
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small * 0.65
+                    text: root.holidayEntries.length > 3 ? "+" + (root.holidayEntries.length - 3) : ""
+                    visible: root.holidayEntries.length > 3
+                }
             }
         }
     }

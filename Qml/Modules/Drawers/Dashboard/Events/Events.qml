@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
@@ -22,20 +23,25 @@ WrapperRectangle {
     }
 
     property bool          addingTodo: false
+    property string        pendingTodoText: ""
     property var           selectedDate: new Date()
 
     function               addTodo(): void {
-        TodoModel.add(newTodoInput.text, root.selectedDate);
-        newTodoInput.text = "";
-        root.addingTodo   = false;
+        TodoModel.add(root.pendingTodoText, root.selectedDate);
+        root.pendingTodoText = "";
+        root.addingTodo      = false;
     }
 
     Layout.fillHeight: true
     Layout.fillWidth: true
-    onAddingTodoChanged: GlobalStates.isAddTodoListOpen = addingTodo
     color: Qt.alpha(Colours.m3Colors.m3Primary, 0.1)
     margin: Appearance.margin.normal
     radius: Appearance.rounding.normal
+    onAddingTodoChanged: {
+        if (!addingTodo)
+            pendingTodoText = "";
+        GlobalStates.isAddTodoListOpen = addingTodo;
+    }
 
     ColumnLayout {
         id: content
@@ -53,14 +59,18 @@ WrapperRectangle {
                 visible: !root.addingTodo
             }
 
-            MaterialTextField {
-                id: newTodoInput
-
+            Loader {
                 Layout.fillWidth: true
-                placeholderText: qsTr("Add todo…")
-                visible: root.addingTodo
-                Keys.onEscapePressed: root.addingTodo = false
-                onAccepted: root.addTodo()
+                active: root.addingTodo
+                visible: active
+                sourceComponent: MaterialTextField {
+                    placeholderText: qsTr("Add todo…")
+                    text: root.pendingTodoText
+                    Component.onCompleted: forceActiveFocus()
+                    Keys.onEscapePressed: root.addingTodo = false
+                    onAccepted: root.addTodo()
+                    onTextEdited: root.pendingTodoText = text
+                }
             }
 
             FloatingButton {
@@ -75,56 +85,61 @@ WrapperRectangle {
                         return;
                     }
                     root.addingTodo = true;
-                    newTodoInput.forceActiveFocus();
                 }
             }
         }
 
-        ColumnLayout {
+        Loader {
             Layout.fillWidth: true
-            spacing: Appearance.spacing.small
-            visible: root.holidayEntries.length > 0
+            active: root.holidayEntries.length > 0
+            visible: active
+            sourceComponent: ColumnLayout {
+                spacing: Appearance.spacing.small
 
-            Repeater {
-                model: root.holidayEntries
-                delegate: StyledRect {
-                    id: holidayItem
+                Repeater {
+                    model: root.holidayEntries
+                    delegate: StyledRect {
+                        id: holidayItem
 
-                    required property var    modelData
+                        required property var    modelData
 
-                    readonly property string label: modelData.type ? `${modelData.name} (${modelData.type})` : modelData.name
+                        readonly property string label: modelData.type ? `${modelData.name} (${modelData.type})` : modelData.name
 
-                    Layout.fillWidth: true
-                    color: Colours.m3Colors.m3SurfaceContainerHigh
-                    implicitHeight: holidayLabel.implicitHeight + Appearance.margin.small * 2
-                    radius: Appearance.rounding.small
+                        Layout.fillWidth: true
+                        color: Colours.m3Colors.m3SurfaceContainerHigh
+                        implicitHeight: holidayLabel.implicitHeight + Appearance.margin.small * 2
+                        radius: Appearance.rounding.small
 
-                    StyledText {
-                        id: holidayLabel
+                        StyledText {
+                            id: holidayLabel
 
-                        anchors.fill: parent
-                        anchors.margins: Appearance.margin.small
-                        color: Colours.m3Colors.m3OnSurface
-                        text: holidayItem.label
-                        wrapMode: Text.WordWrap
+                            anchors.fill: parent
+                            anchors.margins: Appearance.margin.small
+                            color: Colours.m3Colors.m3OnSurface
+                            text: holidayItem.label
+                            wrapMode: Text.WordWrap
+                        }
                     }
                 }
             }
         }
 
-        RowLayout {
-            visible: root.isDayEmpty
+        Loader {
+            active: root.isDayEmpty
+            visible: active
+            sourceComponent: RowLayout {
 
-            Icon {
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.larger
-                icon: "calendar"
-            }
+                Icon {
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.larger
+                    icon: "calendar"
+                }
 
-            StyledText {
-                color: Colours.m3Colors.m3OnSurface
-                font.pixelSize: Appearance.fonts.size.normal
-                text: qsTr("No events")
+                StyledText {
+                    color: Colours.m3Colors.m3OnSurface
+                    font.pixelSize: Appearance.fonts.size.normal
+                    text: qsTr("No events")
+                }
             }
         }
 
@@ -133,9 +148,13 @@ WrapperRectangle {
 
             Layout.fillHeight: true
             Layout.fillWidth: true
+            cacheBuffer: 120
             clip: true
-            model: root.todosForDate
             spacing: Appearance.spacing.small
+            model: ScriptModel {
+                objectProp: "id"
+                values: root.todosForDate
+            }
             delegate: RowLayout {
                 id: todoRow
 

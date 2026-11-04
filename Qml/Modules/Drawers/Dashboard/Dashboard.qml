@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 
@@ -15,6 +17,11 @@ import "WeatherSummary/"
 Drawer {
     id: container
 
+    readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
+    readonly property bool shouldBeActive: open && onFocusedMonitor
+
+    property bool          keepAlive: false
+
     alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -25,19 +32,31 @@ Drawer {
     filletRadius: 40
     length: parent.width * 0.4
     open: GlobalStates.isDashboardOpen
+    onOpenChanged: {
+        if (!open) {
+            GlobalStates.isEditTodoListOpen = false;
+            GlobalStates.isAddTodoListOpen  = false;
+        }
+    }
+    onShouldBeActiveChanged: {
+        if (shouldBeActive)
+            keepAlive = true;
+    }
+
+    Timer {
+        id: idleUnloadTimer
+
+        interval: 120000
+        running: container.keepAlive && !container.shouldBeActive
+        onTriggered: container.keepAlive = false
+    }
 
     Loader {
         id: contentLoader
 
-        active: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && container.open // qmllint disable
+        active: container.shouldBeActive || container.keepAlive
         anchors.fill: parent
         asynchronous: true
-        onActiveChanged: {
-            if (!active) {
-                GlobalStates.isEditTodoListOpen = false;
-                GlobalStates.isAddTodoListOpen  = false;
-            }
-        }
         sourceComponent: RowLayout {
 
             anchors {
@@ -53,7 +72,7 @@ Drawer {
                 Layout.preferredWidth: 1
                 spacing: Appearance.spacing.large
 
-                Date {}
+                DateHeader {}
 
                 Rectangle {
                     Layout.fillWidth: true

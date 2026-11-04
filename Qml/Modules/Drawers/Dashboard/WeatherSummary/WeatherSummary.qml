@@ -53,50 +53,53 @@ ColumnLayout {
     GridLayout {
         id: statsGrid
 
-        readonly property int   currentMinutes: clock.date.getHours() * 60 + clock.date.getMinutes()
+        readonly property int   currentMinutes: CelestialProgress.nowMinutes
         readonly property real  innerRadius: 4
-        readonly property bool  isSunriseDone: currentMinutes >= minutesOfDay(Weather.sunRise)
-        readonly property bool  isSunsetDone: currentMinutes >= minutesOfDay(Weather.sunSet)
+        readonly property bool  isSunriseDone: currentMinutes >= CelestialProgress.minutesOf(Weather.sunRise)
+        readonly property bool  isSunsetDone: currentMinutes >= CelestialProgress.minutesOf(Weather.sunSet)
         readonly property real  outerRadius: 28
         readonly property bool  showSunset: isSunriseDone && !isSunsetDone
-        readonly property var   statCells: [
-            {
-                icon: WeatherIcon.windy,
-                label: `${Weather.usAQI} AQI`
-            },
-            {
-                icon: WeatherIcon.humidity,
-                label: `${Weather.humidity}%`
-            },
-            {
-                icon: WeatherIcon.hot,
-                label: `${Weather.uvIndex} UVI`
-            },
-            {
-                icon: WeatherIcon.thermometer,
-                label: qsTr("Feels like %1°").arg(Weather.feelsLike)
-            },
-            {
-                icon: WeatherIcon.raindrops,
-                label: `${Weather.precipitationDaily} mm`
-            },
-            {
-                icon: statsGrid.showSunset ? WeatherIcon.sunset : WeatherIcon.sunrise,
-                iconColor: statsGrid.showSunset ? Colours.m3Colors.m3Orange : Colours.m3Colors.m3Yellow,
-                label: statsGrid.showSunset ? Weather.sunSet : Weather.sunRise
-            }
-        ]
+        readonly property int   statCount: 6
         readonly property color textColor: Colours.m3Colors.m3Primary
 
-        function                minutesOfDay(clockText: string): int {
-            const [hours, minutes] = clockText.split(":").map(Number);
-            return hours * 60 + minutes;
+        function                statIcon(cellIndex: int): string {
+            switch (cellIndex) {
+            case 0:
+                return WeatherIcon.windy;
+            case 1:
+                return WeatherIcon.humidity;
+            case 2:
+                return WeatherIcon.hot;
+            case 3:
+                return WeatherIcon.thermometer;
+            case 4:
+                return WeatherIcon.raindrops;
+            default:
+                return showSunset ? WeatherIcon.sunset : WeatherIcon.sunrise;
+            }
         }
 
-        SystemClock {
-            id: clock
+        function                statIconColor(cellIndex: int): color {
+            if (cellIndex === 5)
+                return showSunset ? Colours.m3Colors.m3Orange : Colours.m3Colors.m3Yellow;
+            return textColor;
+        }
 
-            precision: SystemClock.Minutes
+        function                statLabel(cellIndex: int): string {
+            switch (cellIndex) {
+            case 0:
+                return `${Weather.usAQI} AQI`;
+            case 1:
+                return `${Weather.humidity}%`;
+            case 2:
+                return `${Weather.uvIndex} UVI`;
+            case 3:
+                return qsTr("Feels like %1°").arg(Weather.feelsLike);
+            case 4:
+                return `${Weather.precipitationDaily} mm`;
+            default:
+                return showSunset ? Weather.sunSet : Weather.sunRise;
+            }
         }
 
         Layout.fillHeight: false
@@ -104,15 +107,14 @@ ColumnLayout {
         columnSpacing: 2
         columns: 3
         rowSpacing: 2
-        rows: Math.ceil(statCells.length / columns)
+        rows: 2
 
         Repeater {
-            model: statsGrid.statCells
+            model: statsGrid.statCount
             delegate: Rectangle {
                 id: cell
 
                 required property int  index
-                required property var  modelData
 
                 readonly property int  columnIndex: index % statsGrid.columns
                 readonly property bool isFirstColumn: columnIndex === 0
@@ -133,22 +135,25 @@ ColumnLayout {
                 topLeftRadius: cornerRadius(isFirstRow && isFirstColumn)
                 topRightRadius: cornerRadius(isFirstRow && isLastColumn)
 
-                RowLayout {
+                Row {
                     id: cellContent
 
                     anchors.centerIn: parent
+                    spacing: 4
 
                     Icon {
-                        color: cell.modelData.iconColor ?? statsGrid.textColor
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: statsGrid.statIconColor(cell.index)
                         font.pixelSize: Appearance.fonts.size.larger
-                        icon: cell.modelData.icon
+                        icon: statsGrid.statIcon(cell.index)
                         type: Icon.Weather
                     }
 
                     StyledText {
+                        anchors.verticalCenter: parent.verticalCenter
                         color: statsGrid.textColor
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: cell.modelData.label
+                        text: statsGrid.statLabel(cell.index)
                     }
                 }
             }
@@ -161,98 +166,92 @@ ColumnLayout {
         color: Qt.alpha(Colours.m3Colors.m3Primary, 0.1)
         radius: Appearance.rounding.normal
 
-        Flickable {
-            id: hourlyFlickable
+        ListView {
+            id: hourlyListView
 
+            readonly property real cardHeight: 100
             readonly property real topSpaceRatio: 0.2
 
             anchors.fill: parent
             boundsBehavior: Flickable.StopAtBounds
+            cacheBuffer: 140
             clip: true
-            contentHeight: height
-            contentWidth: Math.max(hourlyRow.implicitWidth, width)
-            flickableDirection: Flickable.HorizontalFlick
+            leftMargin: Math.max(0, (width - contentWidth) / 2)
+            orientation: ListView.Horizontal
+            spacing: 8
+            topMargin: Math.max(0, (height - cardHeight) * topSpaceRatio)
+            delegate: StyledRect {
+                id: forecastCard
 
-            RowLayout {
-                id: hourlyRow
+                required property var    modelData
 
-                spacing: 8
-                x: Math.max(0, (hourlyFlickable.width - implicitWidth) / 2)
-                y: (hourlyFlickable.height - implicitHeight) * hourlyFlickable.topSpaceRatio
+                readonly property string clockTime: {
+                    const rawTime = modelData.time || "";
+                    return FormatTimeUtils.convertTo12HourCompact(rawTime.split(" ")[1] || rawTime);
+                }
+                readonly property int    humidity: parseInt(modelData.humidity) || 0
+                readonly property bool   isCurrentHour: Weather.isCurrentForecastHour(modelData)
+                readonly property int    temperature: parseInt(modelData.temperature) || 0
 
-                Repeater {
-                    model: ScriptModel {
-                        values: Weather.hourlyFromNow(Weather.hourlyForecast)
-                    }
-                    delegate: StyledRect {
-                        id: forecastCard
+                implicitHeight: hourlyListView.cardHeight
+                implicitWidth: 70
+                radius: Appearance.rounding.normal
 
-                        required property var    modelData
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: Appearance.spacing.large
 
-                        readonly property string clockTime: {
-                            const rawTime = modelData.time || "";
-                            return FormatTimeUtils.convertTo12HourCompact(rawTime.split(" ")[1] || rawTime);
-                        }
-                        readonly property int    humidity: parseInt(modelData.humidity) || 0
-                        readonly property bool   isCurrentHour: Weather.isCurrentForecastHour(modelData)
-                        readonly property int    temperature: parseInt(modelData.temperature) || 0
+                    Item {
+                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredHeight: 40
+                        Layout.preferredWidth: 40
 
-                        implicitHeight: 100
-                        implicitWidth: 70
-                        radius: Appearance.rounding.normal
-
-                        ColumnLayout {
+                        Loader {
+                            active: forecastCard.isCurrentHour
                             anchors.fill: parent
-                            spacing: Appearance.spacing.large
-
-                            Item {
-                                Layout.alignment: Qt.AlignHCenter
-                                Layout.preferredHeight: 40
-                                Layout.preferredWidth: 40
-
-                                MaterialShape {
-                                    anchors.fill: parent
-                                    anchors.rightMargin: 3
-                                    color: Colours.m3Colors.m3Primary
-                                    shape: MaterialShape.Cookie4Sided
-                                    visible: forecastCard.isCurrentHour
-                                }
-
-                                StyledText {
-                                    anchors.centerIn: parent
-                                    color: forecastCard.isCurrentHour ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
-                                    font.pixelSize: Appearance.fonts.size.normal
-                                    font.weight: Font.Bold
-                                    text: `${forecastCard.temperature}°`
-                                }
-                            }
-
-                            StyledText {
-                                Layout.alignment: Qt.AlignHCenter
+                            anchors.rightMargin: 3
+                            sourceComponent: MaterialShape {
                                 color: Colours.m3Colors.m3Primary
-                                font.pixelSize: Appearance.fonts.size.small
-                                font.weight: Font.Bold
-                                text: `${forecastCard.humidity}%`
-                            }
-
-                            Icon {
-                                Layout.alignment: Qt.AlignHCenter
-                                color: Colours.m3Colors.m3Primary
-                                font.pixelSize: Appearance.fonts.size.large * 1.5
-                                icon: forecastCard.modelData.weatherIcon
-                                type: Icon.Weather
-                            }
-
-                            StyledText {
-                                Layout.alignment: Qt.AlignHCenter
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.small
-                                font.weight: Font.Bold
-                                text: forecastCard.clockTime
+                                shape: MaterialShape.Cookie4Sided
                             }
                         }
+
+                        StyledText {
+                            anchors.centerIn: parent
+                            color: forecastCard.isCurrentHour ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.normal
+                            font.weight: Font.Bold
+                            text: `${forecastCard.temperature}°`
+                        }
+                    }
+
+                    StyledText {
+                        Layout.alignment: Qt.AlignHCenter
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.small
+                        font.weight: Font.Bold
+                        text: `${forecastCard.humidity}%`
+                    }
+
+                    Icon {
+                        Layout.alignment: Qt.AlignHCenter
+                        color: Colours.m3Colors.m3Primary
+                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                        icon: forecastCard.modelData.weatherIcon
+                        type: Icon.Weather
+                    }
+
+                    StyledText {
+                        Layout.alignment: Qt.AlignHCenter
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.small
+                        font.weight: Font.Bold
+                        text: forecastCard.clockTime
                     }
                 }
+            }
+            model: ScriptModel {
+                values: Weather.hourlyFromNow(Weather.hourlyForecast)
             }
         }
     }

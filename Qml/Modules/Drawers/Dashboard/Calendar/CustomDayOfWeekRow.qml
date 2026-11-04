@@ -10,6 +10,10 @@ Item {
     property Component     delegate: null
     property int           firstDayOfWeek: Qt.locale().firstDayOfWeek
 
+    function               dayOfWeekAt(columnIndex: int): int {
+        return (firstDayOfWeek + columnIndex) % 7;
+    }
+
     implicitHeight: 28
 
     Row {
@@ -19,11 +23,7 @@ Item {
 
         Repeater {
             delegate: root.delegate
-            model: Array.from({
-                length: 7
-            }, (_, i) => ({
-                        shortName: Qt.locale().dayName((root.firstDayOfWeek + i) % 7, Locale.ShortFormat)
-                    }))
+            model: 7
         }
     }
 }

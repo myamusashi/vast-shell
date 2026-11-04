@@ -23,15 +23,29 @@ ColumnLayout {
         const locale = Qt.locale();
         return Array.from({
             length: 12
-        }, (_, i) => locale.monthName(i));
+        }, (unusedValue, monthIndex) => locale.monthName(monthIndex));
+    }
+
+    function      stepMonth(delta: int): void {
+        let targetMonth = currentMonth + delta;
+        let targetYear  = currentYear;
+        if (targetMonth > 11) {
+            targetMonth = 0;
+            targetYear += 1;
+        } else if (targetMonth < 0) {
+            targetMonth = 11;
+            targetYear -= 1;
+        }
+        if (targetYear !== currentYear)
+            currentYear = targetYear;
+        currentMonth = targetMonth;
     }
 
     spacing: Appearance.spacing.normal
-    Component.onCompleted: Qt.callLater(() => {
-        monthNames = buildMonthNames();
+    Component.onCompleted: {
         if (Configs.generals.showHolidays)
             HolidayModel.ensureYear(currentYear);
-    })
+    }
     onCurrentYearChanged: {
         if (Configs.generals.showHolidays)
             HolidayModel.ensureYear(currentYear);
@@ -78,26 +92,9 @@ ColumnLayout {
                 currentMonth: root.currentMonth
                 currentYear: root.currentYear
                 monthNames: root.monthNames
-                onNextClicked: {
-                    monthGrid.closePopover();
-                    root.currentMonth = root.currentMonth + 1;
-                    if (root.currentMonth > 11) {
-                        root.currentMonth = 0;
-                        root.currentYear  = root.currentYear + 1;
-                    }
-                }
-                onPrevClicked: {
-                    monthGrid.closePopover();
-                    root.currentMonth = root.currentMonth - 1;
-                    if (root.currentMonth < 0) {
-                        root.currentMonth = 11;
-                        root.currentYear  = root.currentYear - 1;
-                    }
-                }
-                onTitleClicked: {
-                    monthGrid.closePopover();
-                    root.showYearMonthPicker = !root.showYearMonthPicker;
-                }
+                onNextClicked: root.stepMonth(1)
+                onPrevClicked: root.stepMonth(-1)
+                onTitleClicked: root.showYearMonthPicker = !root.showYearMonthPicker
             }
 
             CustomDayOfWeekRow {
@@ -108,22 +105,20 @@ ColumnLayout {
                 delegate: Item {
                     id: dayOfWeekItem
 
-                    required property var modelData
+                    required property int index
+
+                    readonly property int dayOfWeek: dayOfWeekRow.dayOfWeekAt(index)
 
                     height: dayOfWeekRow.height
                     width: dayOfWeekRow.cellWidth
 
                     StyledText {
                         anchors.centerIn: parent
-                        color: {
-                            if (dayOfWeekItem.modelData.shortName === "Sun" || dayOfWeekItem.modelData.shortName === "Sat")
-                                return Colours.m3Colors.m3Error;
-                            return Colours.m3Colors.m3OnSurface;
-                        }
+                        color: (dayOfWeekItem.dayOfWeek === 0 || dayOfWeekItem.dayOfWeek === 6) ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.small * 1.2
                         font.weight: 600
                         horizontalAlignment: Text.AlignHCenter
-                        text: dayOfWeekItem.modelData.shortName
+                        text: Qt.locale().dayName(dayOfWeekItem.dayOfWeek, Locale.ShortFormat)
                     }
                 }
             }
@@ -142,36 +137,37 @@ ColumnLayout {
                     month: root.currentMonth
                     year: root.currentYear
                     delegate: DayCell {
+                        id: dayCellDelegate
+
+                        cellData: monthGrid.cells[dayCellDelegate.index]
                         cellHeight: monthGrid.cellHeight
                         cellWidth: monthGrid.cellWidth
                         currentMonth: root.currentMonth
-                        openPopoverDate: monthGrid.openPopoverDate
-                        selectedDate: root.selectedDate
-                        onClosePopoverRequested: monthGrid.closePopover()
-                        onDateClicked: date => root.selectedDate = date
-                        onOpenPopoverRequested: date => monthGrid.openPopoverDate = date
                     }
+                    onDateClicked: clickedDate => root.selectedDate = clickedDate
                 }
             }
         }
 
-        YearMonthPicker {
+        Loader {
+            active: root.showYearMonthPicker
             anchors.fill: parent
-            currentMonth: root.currentMonth
-            currentYear: root.currentYear
-            visible: root.showYearMonthPicker
             z: 10
-            background: StyledRect {
-                color: GlobalStates.drawerColors
-                radius: Appearance.rounding.medium // qmllint disable
-            }
-            onMonthPicked: function (month) {
-                root.currentMonth        = month;
-                root.showYearMonthPicker = false;
-            }
-            onYearPicked: function (year) {
-                root.currentYear         = year;
-                root.showYearMonthPicker = false;
+            sourceComponent: YearMonthPicker {
+                currentMonth: root.currentMonth
+                currentYear: root.currentYear
+                background: StyledRect {
+                    color: GlobalStates.drawerColors
+                    radius: Appearance.rounding.medium // qmllint disable
+                }
+                onMonthPicked: pickedMonth => {
+                    root.currentMonth        = pickedMonth;
+                    root.showYearMonthPicker = false;
+                }
+                onYearPicked: pickedYear => {
+                    root.currentYear         = pickedYear;
+                    root.showYearMonthPicker = false;
+                }
             }
         }
     }
