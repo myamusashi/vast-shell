@@ -57,9 +57,10 @@ Scope {
     }
 
     function                    scrollToCard(card) {
-        const y       = card.mapToItem(target.contentItem).y - Appearance.margin.large;
+        const y       = card.mapToItem(target.contentItem, 0, 0).y - Appearance.margin.large;
+        const maxY    = Math.max(0, target.contentHeight - target.height);
 
-        scrollAnim.to = Math.max(0, Math.min(y, target.contentHeight - target.height));
+        scrollAnim.to = Math.max(0, Math.min(y, maxY));
         scrollAnim.restart();
     }
 

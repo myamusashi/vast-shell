@@ -123,33 +123,27 @@ SettingsPageBase {
         }
     }
 
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
-
+    footer: [
         StyledText {
+            Layout.fillWidth: true
             color: Colours.m3Colors.m3Error
             text: qsTr("Fix the marked rules to apply.")
             visible: LayerRuleServices.dirty && !LayerRuleServices.valid
-            Layout.fillWidth: true
-        }
-
+        },
         Item {
             Layout.fillWidth: true
-        }
-
+        },
         ExtendedFloatingButton {
             enabled: LayerRuleServices.dirty
             outlined: true
             text: qsTr("Revert")
             textColor: Colours.m3Colors.m3OnSurface
             onClicked: LayerRuleServices.discardAll()
-        }
-
+        },
         ExtendedFloatingButton {
             enabled: LayerRuleServices.dirty && LayerRuleServices.valid
             text: qsTr("Apply")
             onClicked: LayerRuleServices.apply()
         }
-    }
+    ]
 }

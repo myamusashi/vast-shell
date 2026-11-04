@@ -169,7 +169,8 @@ SettingsPageBase {
     }
 
     SettingsCard {
-        title: ""
+        showTitle: false
+        title: qsTr("Available devices")
         visible: BluetoothServices.adapterEnabled
 
         Progress {

@@ -108,29 +108,6 @@ SettingsPageBase {
         }
     }
 
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
-
-        Item {
-            Layout.fillWidth: true
-        }
-
-        ExtendedFloatingButton {
-            enabled: MonitorServices.dirty
-            outlined: true
-            text: qsTr("Revert")
-            textColor: Colours.m3Colors.m3OnSurface
-            onClicked: MonitorServices.discardAll()
-        }
-
-        ExtendedFloatingButton {
-            enabled: MonitorServices.dirty
-            text: qsTr("Apply")
-            onClicked: MonitorServices.apply()
-        }
-    }
-
     SettingsCard {
         title: qsTr("Monitors")
 
@@ -147,4 +124,22 @@ SettingsPageBase {
             }
         }
     }
+
+    footer: [
+        Item {
+            Layout.fillWidth: true
+        },
+        ExtendedFloatingButton {
+            enabled: MonitorServices.dirty
+            outlined: true
+            text: qsTr("Revert")
+            textColor: Colours.m3Colors.m3OnSurface
+            onClicked: MonitorServices.discardAll()
+        },
+        ExtendedFloatingButton {
+            enabled: MonitorServices.dirty
+            text: qsTr("Apply")
+            onClicked: MonitorServices.apply()
+        }
+    ]
 }

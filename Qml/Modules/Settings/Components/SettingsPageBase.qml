@@ -13,7 +13,9 @@ Item {
     id: root
 
     default property alias content: contentLayout.data
+    property alias         footer: footerLayout.data
     property string        pageTitle
+    property alias         revealer: cardRevealer
 
     function               revealCard(cardTitle: string): bool {
         return cardRevealer.reveal(cardTitle);
@@ -60,6 +62,14 @@ Item {
                 spacing: Appearance.spacing.large
                 width: parent.width
             }
+        }
+
+        RowLayout {
+            id: footerLayout
+
+            Layout.fillWidth: true
+            spacing: Appearance.spacing.normal
+            visible: children.length > 0
         }
     }
 }

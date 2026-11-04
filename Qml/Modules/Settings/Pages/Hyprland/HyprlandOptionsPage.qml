@@ -89,6 +89,8 @@ SettingsPageBase {
 
             required property string modelData
 
+            title: cardDelegate.modelData
+
             Repeater {
                 model: HyprlandGeneralSchema.optionsForCard(root.category, cardDelegate.modelData)
                 delegate: HyprlandOptionRow {
@@ -102,26 +104,21 @@ SettingsPageBase {
         }
     }
 
-    RowLayout {
-        Layout.fillWidth: true
-        spacing: Appearance.spacing.normal
-
+    footer: [
         Item {
             Layout.fillWidth: true
-        }
-
+        },
         ExtendedFloatingButton {
             enabled: GeneralServices.isCategoryDirty(root.category)
             outlined: true
             text: qsTr("Revert")
             textColor: Colours.m3Colors.m3OnSurface
             onClicked: GeneralServices.revertCategory(root.category)
-        }
-
+        },
         ExtendedFloatingButton {
             enabled: GeneralServices.isCategoryDirty(root.category)
             text: qsTr("Apply")
             onClicked: GeneralServices.applyCategory(root.category)
         }
-    }
+    ]
 }

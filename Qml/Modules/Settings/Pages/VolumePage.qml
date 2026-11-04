@@ -14,6 +14,21 @@ SettingsPageBase {
 
     property int currentTab: 0
 
+    function     revealCard(cardTitle: string): bool {
+        const tabByCard = {
+            "Playback": 0,
+            "Output Devices": 1,
+            "Input Devices": 2,
+            "Configuration": 3,
+            "Level Meters": 3
+        };
+        if (tabByCard[cardTitle] !== undefined && root.currentTab !== tabByCard[cardTitle])
+            root.currentTab = tabByCard[cardTitle];
+
+        const targetCard = cardTitle === "Configuration" ? "Level Meters" : cardTitle;
+        return root.revealer.reveal(targetCard);
+    }
+
     pageTitle: qsTr("Volume")
 
     ColumnLayout {

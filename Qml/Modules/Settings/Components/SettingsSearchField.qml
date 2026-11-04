@@ -41,7 +41,13 @@ Item {
             page: 2,
             pageLabel: "Appearance",
             card: "Typography System",
-            terms: ["Sans Serif Font", "Monospace Font", "Material Icon Font", "Font Size Scale"]
+            terms: ["Sans Serif Font", "Monospace Font", "Nerd Font", "Material Icon Font", "Font Size Scale"]
+        },
+        {
+            page: 2,
+            pageLabel: "Appearance",
+            card: "Icons",
+            terms: ["Icon Set", "Icon Font", "Material Symbols", "Refresh Icons"]
         },
         {
             page: 2,
@@ -58,14 +64,8 @@ Item {
         {
             page: 3,
             pageLabel: "Wallpaper",
-            card: "Pick Wallpaper File",
-            terms: ["Select A Wallpaper Image File"]
-        },
-        {
-            page: 3,
-            pageLabel: "Wallpaper",
             card: "Wallpaper Picker",
-            terms: []
+            terms: ["Select A Wallpaper Image File", "Pick Wallpaper File", "Search Wallpapers", "Browse Wallpaper", "Static Wallpaper", "Video Wallpaper"]
         },
         {
             page: 3,
@@ -95,7 +95,7 @@ Item {
             page: 5,
             pageLabel: "Media Player",
             card: "Player Preferences",
-            terms: ["Lyrics", "Dynamic Colors From Cover Art", "Slider Type"]
+            terms: ["Lyrics", "Dynamic Colors From Cover Art", "Auto-switch Active Player", "Slider Type"]
         },
         {
             page: 6,
@@ -113,7 +113,7 @@ Item {
             page: 6,
             pageLabel: "Weather",
             card: "Sync & Overview",
-            terms: ["Quick Summary Widget"]
+            terms: ["Quick Summary Widget", "Weather Reload Time"]
         },
         {
             page: 7,
@@ -125,19 +125,19 @@ Item {
             page: 8,
             pageLabel: "Clipboard",
             card: "General Settings",
-            terms: ["Enable Clipboard", "Image Previews", "Vim Keybinds", "Keep Clipboard Open After Copy"]
+            terms: ["Enable Clipboard", "Image Previews", "Vim Keybinds", "Keep Clipboard Open After Copy", "Clipboard Width", "Clipboard Height", "List Entries", "Max Entries"]
         },
         {
             page: 8,
             pageLabel: "Clipboard",
             card: "Preview Dimensions",
-            terms: ["Preview Width", "Preview Height"]
+            terms: ["Preview Width"]
         },
         {
             page: 9,
-            pageLabel: "Screen Recorder",
+            pageLabel: "Capture Video",
             card: "Recording",
-            terms: ["Frame Rate", "Bitrate", "Video Codec", "Audio Codec", "Power Mode", "Show Cursor", "Replay Buffer"]
+            terms: ["Screen Recorder", "Frame Rate", "Bitrate", "Video Codec", "Audio Codec", "Power Mode", "Show Cursor", "Replay Buffer"]
         },
         {
             page: 10,
@@ -161,7 +161,19 @@ Item {
             page: 10,
             pageLabel: "Volume",
             card: "Configuration",
-            terms: ["Audio Profile", "Card Profile", "Off", "Pro Audio"]
+            terms: ["Level Meters", "Show Audio Level Meters", "Audio Profile", "Card Profile", "Off", "Pro Audio"]
+        },
+        {
+            page: 11,
+            pageLabel: "Privacy Nodes",
+            card: "Privacy nodes",
+            terms: ["Enable Privacy Indicator", "Privacy Indicator In Dynamic Island", "Show Icon For Privacy Indicator", "Pipewire Privacy"]
+        },
+        {
+            page: 11,
+            pageLabel: "Privacy Nodes",
+            card: "Privacy nodes block title",
+            terms: ["Block Title", "Add Title Blocked", "Remove Title Blocked", "Block Privacy List"]
         },
         {
             page: 14,
@@ -203,7 +215,7 @@ Item {
             page: 16,
             pageLabel: "KDE Connect",
             card: "Device Discovery",
-            terms: ["Enable Polling"]
+            terms: ["Enable Polling", "Poll Interval"]
         },
         {
             page: 16,
@@ -215,13 +227,13 @@ Item {
             page: 16,
             pageLabel: "KDE Connect",
             card: "Paired Devices",
-            terms: []
+            terms: ["Paired Devices", "Transfer", "Share File"]
         },
         {
             page: 16,
             pageLabel: "KDE Connect",
             card: "Available Devices",
-            terms: []
+            terms: ["Available Devices", "Pair"]
         },
         {
             page: 17,
@@ -239,13 +251,13 @@ Item {
             page: 18,
             pageLabel: "Idle",
             card: "Timeouts",
-            terms: []
+            terms: ["Timeout Seconds", "Command On Timeout", "Command On Resume", "Add Timeout"]
         },
         {
             page: 19,
             pageLabel: "Lockscreen",
-            card: "Depth Wallpaper",
-            terms: ["Enable Depth Wallpaper", "Auto-process On Wallpaper Change"]
+            card: "Preview",
+            terms: ["Lockscreen Preview", "Source"]
         },
         {
             page: 19,
@@ -262,8 +274,20 @@ Item {
         {
             page: 20,
             pageLabel: "About",
-            card: "About",
-            terms: ["Version", "Operating System", "Kernel", "Architecture"]
+            card: "System Information",
+            terms: ["About", "Version", "Operating System", "Kernel", "Architecture", "Processor", "Displays", "Maintainer", "Latest Update"]
+        },
+        {
+            page: 20,
+            pageLabel: "About",
+            card: "RAM & Storage",
+            terms: ["RAM", "Memory", "Storage", "Disk"]
+        },
+        {
+            page: 20,
+            pageLabel: "About",
+            card: "Battery",
+            terms: ["Battery", "Charge"]
         },
         {
             page: 21,
@@ -304,8 +328,74 @@ Item {
         {
             page: 23,
             pageLabel: "Hyprland Decoration",
+            card: "Blur Acrylic",
+            terms: ["Acrylic", "Aberration", "Bulb", "Clarity", "Refraction", "Tint"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Aurora",
+            terms: ["Aurora", "Color1", "Color2", "Intensity", "Speed"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Drops",
+            terms: ["Drops", "Speed"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Fluid Jar",
+            terms: ["Fluid Jar", "Distortion", "Fill Amount", "Mass", "Precision", "Speed", "Turbulence"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Glass",
+            terms: ["Glass", "Refraction", "Roughness", "Size"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Haze",
+            terms: ["Haze", "Intensity", "Iridescence"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Heat Shimmer",
+            terms: ["Heat Shimmer", "Speed"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Ripple",
+            terms: ["Ripple", "Duration", "Radius", "Strength", "Width"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Blur Water",
+            terms: ["Water", "Damping", "Duration", "Radius", "Speed", "Strength"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
             card: "Shadow",
             terms: ["Shadow Range", "Shadow Scale", "Shadow Sharp", "Render Power"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Glow",
+            terms: ["Glow", "Glow Color", "Glow Range", "Render Power"]
+        },
+        {
+            page: 23,
+            pageLabel: "Hyprland Decoration",
+            card: "Motion Blur",
+            terms: ["Motion Blur", "Samples"]
         },
         {
             page: 23,
@@ -328,8 +418,26 @@ Item {
         {
             page: 24,
             pageLabel: "Hyprland Input",
+            card: "Touch Devices",
+            terms: ["Touch Device", "Touch Output", "Touch Transform"]
+        },
+        {
+            page: 24,
+            pageLabel: "Hyprland Input",
+            card: "Virtual Keyboard",
+            terms: ["Virtual Keyboard", "Release Pressed On Close", "Share States"]
+        },
+        {
+            page: 24,
+            pageLabel: "Hyprland Input",
             card: "Tablet",
             terms: ["Tablet Output", "Relative Input", "Active Area"]
+        },
+        {
+            page: 24,
+            pageLabel: "Hyprland Input",
+            card: "Tablet Tools",
+            terms: ["Tablet Tool", "Eraser Button", "Pressure Range"]
         },
         {
             page: 25,
@@ -348,6 +456,12 @@ Item {
             pageLabel: "Hyprland Misc",
             card: "Misc",
             terms: ["Font Family", "VRR", "Swallow", "Focus On Activate", "Splash", "Force Default Wallpaper", "Middle Click Paste", "Disable Autoreload"]
+        },
+        {
+            page: 26,
+            pageLabel: "Hyprland Misc",
+            card: "Splash",
+            terms: ["Splash Color", "Col Splash"]
         },
         {
             page: 27,
@@ -376,20 +490,50 @@ Item {
         {
             page: 31,
             pageLabel: "Hyprland Advanced",
-            card: "Xwayland",
-            terms: ["Xwayland", "Force Zero Scaling", "Nearest Neighbor"]
+            card: "Layers",
+            terms: ["Layers Hog Keyboard Focus", "Allow New Top Layers Over Existing Fullscreen"]
         },
         {
             page: 31,
             pageLabel: "Hyprland Advanced",
-            card: "Layers",
-            terms: ["Layers Hog Keyboard Focus"]
+            card: "Layout",
+            terms: ["Single Window Aspect Ratio", "Aspect Ratio Tolerance"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Xwayland",
+            terms: ["Xwayland", "Force Zero Scaling", "Nearest Neighbor", "Create Abstract Socket"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "OpenGL",
+            terms: ["Nvidia Anti Flicker", "OpenGL"]
         },
         {
             page: 31,
             pageLabel: "Hyprland Advanced",
             card: "Ecosystem",
             terms: ["Enforce Permissions", "Donation Nag", "Update News"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Quirks",
+            terms: ["Prefer HDR", "Skip Non KMS Dmabuf Formats", "Quirks"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Input Capture",
+            terms: ["Input Capture", "Capture Modifiers", "Enforce Barriers"]
+        },
+        {
+            page: 31,
+            pageLabel: "Hyprland Advanced",
+            card: "Experimental",
+            terms: ["Experimental", "WP CM 1 2"]
         },
         {
             page: 32,

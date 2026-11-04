@@ -9,6 +9,7 @@ Rectangle {
     id: root
 
     default property alias content: contentLayout.data
+    property bool          showTitle: true
     property alias         title: titleText.text
 
     function               flash() {
@@ -56,7 +57,7 @@ Rectangle {
             color: Colours.m3Colors.m3Primary
             font.pixelSize: Appearance.fonts.size.large
             font.weight: Font.DemiBold
-            visible: text !== ""
+            visible: root.showTitle && text !== ""
         }
 
         ColumnLayout {
