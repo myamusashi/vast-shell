@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Base
@@ -9,7 +8,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-ItemDelegate {
+StyledRect {
     id: root
 
     required property string categoryId
@@ -24,50 +23,47 @@ ItemDelegate {
 
     signal                   categoryClicked(string categoryId)
 
+    color: root.selected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
     implicitHeight: 40
     implicitWidth: 160
-    background: Item {}
-    contentItem: StyledRect {
-        color: root.selected ? Colours.m3Colors.m3SecondaryContainer : "transparent"
-        radius: Appearance.rounding.large
-        Behavior on color {
-            CAnim {}
+    radius: Appearance.rounding.large
+    Behavior on color {
+        CAnim {}
+    }
+
+    RowLayout {
+        spacing: Appearance.spacing.normal
+
+        anchors {
+            fill: parent
+            leftMargin: Appearance.margin.normal
+            rightMargin: Appearance.margin.normal
         }
 
-        RowLayout {
-            spacing: Appearance.spacing.normal
-
-            anchors {
-                fill: parent
-                leftMargin: Appearance.margin.normal
-                rightMargin: Appearance.margin.normal
+        Icon {
+            Layout.minimumHeight: 24
+            Layout.minimumWidth: 24
+            color: root.secondaryTextColor
+            font.pixelSize: Appearance.fonts.size.larger
+            icon: root.glyph
+            Behavior on color {
+                CAnim {}
             }
+        }
 
-            Icon {
-                Layout.minimumHeight: 24
-                Layout.minimumWidth: 24
-                color: root.secondaryTextColor
-                font.pixelSize: Appearance.fonts.size.larger
-                icon: root.glyph
-                Behavior on color {
-                    CAnim {}
-                }
-            }
+        StyledText {
+            Layout.fillWidth: true
+            color: root.primaryTextColor
+            elide: Text.ElideRight
+            font.pixelSize: Appearance.fonts.size.normal
+            font.weight: root.selected ? Font.Medium : Font.Normal
+            text: root.label
+        }
 
-            StyledText {
-                Layout.fillWidth: true
-                color: root.primaryTextColor
-                elide: Text.ElideRight
-                font.pixelSize: Appearance.fonts.size.normal
-                font.weight: root.selected ? Font.Medium : Font.Normal
-                text: root.label
-            }
-
-            StyledText {
-                color: root.secondaryTextColor
-                font.pixelSize: Appearance.fonts.size.small
-                text: root.resultCount
-            }
+        StyledText {
+            color: root.secondaryTextColor
+            font.pixelSize: Appearance.fonts.size.small
+            text: root.resultCount
         }
     }
 

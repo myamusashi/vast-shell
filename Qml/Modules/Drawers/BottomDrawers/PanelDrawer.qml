@@ -23,6 +23,11 @@ Drawer {
     readonly property bool         isLauncherActive: GlobalStates.isLauncherOpen
     readonly property bool         isPanelActive: isLauncherActive || isWallpaperActive
     readonly property bool         isWallpaperActive: GlobalStates.isWallpaperSwitcherOpen
+    readonly property bool         launcherShouldBeActive: isFocusedMonitor && isLauncherActive
+    readonly property bool         wallpaperShouldBeActive: isFocusedMonitor && isWallpaperActive
+
+    property bool                  launcherKeepAlive: false
+    property bool                  wallpaperKeepAlive: false
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -47,11 +52,37 @@ Drawer {
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
     }
+    onLauncherShouldBeActiveChanged: {
+        if (launcherShouldBeActive)
+            launcherKeepAlive = true;
+    }
+    onWallpaperShouldBeActiveChanged: {
+        if (wallpaperShouldBeActive)
+            wallpaperKeepAlive = true;
+    }
+
+    Timer {
+        id: launcherUnloadTimer
+
+        interval: 120000
+        running: root.launcherKeepAlive && !root.launcherShouldBeActive
+        onTriggered: root.launcherKeepAlive = false
+    }
+
+    Timer {
+        id: wallpaperUnloadTimer
+
+        interval: 120000
+        running: root.wallpaperKeepAlive && !root.wallpaperShouldBeActive
+        onTriggered: root.wallpaperKeepAlive = false
+    }
 
     Loader {
-        active: root.isFocusedMonitor && root.isLauncherActive
+        active: root.launcherShouldBeActive || root.launcherKeepAlive
         anchors.fill: parent
         asynchronous: true
+        enabled: root.isLauncherActive
+        visible: root.isLauncherActive
         sourceComponent: Component {
 
             LauncherModule.Launcher {}
@@ -59,9 +90,11 @@ Drawer {
     }
 
     Loader {
-        active: root.isFocusedMonitor && root.isWallpaperActive
+        active: root.wallpaperShouldBeActive || root.wallpaperKeepAlive
         anchors.fill: parent
         asynchronous: true
+        enabled: root.isWallpaperActive
+        visible: root.isWallpaperActive
         sourceComponent: Component {
 
             WallpaperModule.WallpaperSelector {}

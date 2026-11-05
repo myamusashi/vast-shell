@@ -119,7 +119,7 @@ Item {
 
                         Layout.fillHeight: true
                         Layout.fillWidth: true
-                        cacheBuffer: implicitHeight
+                        cacheBuffer: 200
                         clip: true
                         highlightFollowsCurrentItem: true
                         highlightMoveDuration: 200
@@ -167,6 +167,7 @@ Item {
                             width: listView.width
                         }
                         model: ScriptModel {
+                            objectProp: "id"
                             values: LauncherServices.filteredItems
                         }
                         move: Transition {

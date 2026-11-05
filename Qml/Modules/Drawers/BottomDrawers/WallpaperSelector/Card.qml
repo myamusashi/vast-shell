@@ -12,15 +12,16 @@ import qs.Core.Utils
 Item {
     id: root
 
+    required property int  cardIndex
     required property real closeness
     required property var  controller
-    required property int  index
     required property bool isCurrent
     required property var  modelData
     required property var  thumbnailAvailability
     required property real viewportWidth
 
     readonly property real foldFraction: width > 0 ? visibleWidth / width : 0
+    readonly property bool isVideo: MediaKind.isVideo(modelData)
     readonly property real visibleWidth: Math.max(0, Math.min(x + width, viewportWidth) - Math.max(x, 0))
 
     signal                 activateRequested(var modelData)
@@ -30,7 +31,7 @@ Item {
     onIsCurrentChanged: {
         if (!isCurrent)
             return;
-        if (MediaKind.isVideo(modelData))
+        if (root.isVideo)
             controller.ensureThumbnail(modelData);
         else
             ImageCache.preload(modelData, Qt.size(Screen.width, Screen.height));
@@ -60,8 +61,9 @@ Item {
             asynchronous: true
             cache: true
             fillMode: Image.PreserveAspectCrop
-            source: root.visible && !MediaKind.isVideo(root.modelData) ? "file://" + root.modelData : ""
+            source: root.visible && !root.isVideo ? "file://" + root.modelData : ""
             sourceSize: Qt.size(200, 200)
+            visible: !root.isVideo
         }
 
         Image {
@@ -71,9 +73,9 @@ Item {
             asynchronous: true
             fillMode: Image.PreserveAspectCrop
             source: root.visible && root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
-            visible: status === Image.Ready && !videoPreview.active
+            visible: root.isVideo && status === Image.Ready && !videoPreview.active
             onStatusChanged: {
-                if (status === Image.Error && MediaKind.isVideo(root.modelData) && root.thumbnailAvailability[root.modelData])
+                if (status === Image.Error && root.isVideo && root.thumbnailAvailability[root.modelData])
                     root.controller.markThumbnail(root.modelData, false);
             }
         }
@@ -81,12 +83,13 @@ Item {
         Loader {
             id: videoPreview
 
-            active: root.isCurrent && MediaKind.isVideo(root.modelData)
+            active: root.isCurrent && root.isVideo
             anchors.fill: parent
             asynchronous: false
             sourceComponent: Component {
 
                 Item {
+                    anchors.fill: parent
 
                     MediaPlayer {
                         id: cardVideoPlayer
@@ -127,7 +130,7 @@ Item {
             cursorShape: Qt.PointingHandCursor
             onClicked: {
                 if (!root.isCurrent)
-                    root.selectRequested(root.index);
+                    root.selectRequested(root.cardIndex);
                 else
                     root.activateRequested(root.modelData);
             }

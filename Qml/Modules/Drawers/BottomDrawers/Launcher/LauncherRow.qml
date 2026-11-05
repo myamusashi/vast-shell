@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
@@ -11,19 +10,22 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
-ItemDelegate {
+Item {
     id: root
 
-    required property int index
-    required property var modelData
+    required property int  index
+    required property var  modelData
 
-    signal                rowClicked(var row)
-    signal                rowHovered(int rowIndex)
+    readonly property bool isPinned: DockServices.pinnedIds.includes(root.modelData.entry.id)
+
+    signal                 rowClicked(var row)
+    signal                 rowHovered(int rowIndex)
 
     implicitHeight: 50
     implicitWidth: 300
-    background: Item {}
-    contentItem: RowLayout {
+
+    RowLayout {
+        anchors.fill: parent
         spacing: Appearance.spacing.normal
 
         StyledRect {
@@ -42,29 +44,29 @@ ItemDelegate {
             }
         }
 
-        ColumnLayout {
-            Layout.fillHeight: true
+        Column {
+            Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
             Layout.rightMargin: Appearance.margin.normal
             spacing: 2
 
             HighlightText {
-                Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
                 fullText: root.modelData.name || ""
                 searchText: LauncherServices.rowSearchText
+                width: parent.width
             }
 
             StyledText {
-                Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.small
                 text: root.modelData.comment ?? ""
                 visible: text !== ""
+                width: parent.width
             }
         }
 
@@ -76,9 +78,9 @@ ItemDelegate {
 
             Icon {
                 anchors.centerIn: parent
-                color: DockServices.pinnedIds.includes(root.modelData.entry.id) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                color: root.isPinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.large
-                icon: DockServices.pinnedIds.includes(root.modelData.entry.id) ? "keep" : "keep_off"
+                icon: root.isPinned ? "keep" : "keep_off"
             }
 
             MArea {

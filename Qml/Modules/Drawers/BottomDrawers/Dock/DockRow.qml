@@ -34,7 +34,10 @@ Item {
             spacing: Appearance.spacing.small
 
             Repeater {
-                model: DockServices.pinnedEntries
+                model: ScriptModel {
+                    objectProp: "id"
+                    values: DockServices.pinnedEntries
+                }
                 delegate: DockIcon {
                     required property var modelData
 
@@ -43,8 +46,8 @@ Item {
                     toplevel: null
                     isPinned: true
                     iconSlot: Configs.dock.iconSlot
-                    screen: root.screen
                     onActivated: DockServices.activatePinned(modelData)
+                    onContextMenuRequested: (anchorX, anchorY) => dockContextMenu.openAt(anchorX, anchorY, modelData, null)
                     onHoverEntered: {
                         const point = mapToItem(null, 0, 0);
                         dockPreview.showForIcon(entryId, point.x, point.y, width, height);
@@ -71,16 +74,21 @@ Item {
             spacing: Appearance.spacing.small
 
             Repeater {
-                model: DockServices.activeToplevels
+                model: ScriptModel {
+                    objectProp: "address"
+                    values: DockServices.activeToplevels
+                }
                 delegate: DockIcon {
                     required property var modelData
 
-                    entryId: DockServices.entryForToplevel(modelData)?.id ?? ""
-                    entry: DockServices.entryForToplevel(modelData)
+                    readonly property var toplevelEntry: DockServices.entryForToplevel(modelData)
+
+                    entryId: toplevelEntry?.id ?? ""
+                    entry: toplevelEntry
                     toplevel: modelData
                     iconSlot: Configs.dock.iconSlot
-                    screen: root.screen
                     onActivated: DockServices.focusToplevel(modelData)
+                    onContextMenuRequested: (anchorX, anchorY) => dockContextMenu.openAt(anchorX, anchorY, toplevelEntry, modelData)
                     onHoverEntered: {
                         const point = mapToItem(null, 0, 0);
                         dockPreview.showForIcon(entryId, point.x, point.y, width, height);
@@ -118,6 +126,12 @@ Item {
                 }
             }
         }
+    }
+
+    DockContextMenu {
+        id: dockContextMenu
+
+        screen: root.screen
     }
 
     DockPreview {

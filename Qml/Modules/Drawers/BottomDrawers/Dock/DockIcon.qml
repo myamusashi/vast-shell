@@ -22,9 +22,9 @@ Item {
     property bool            hovered: false
     property real            iconSlot: 44
     property bool            isPinned: false
-    property ShellScreen     screen: null
 
     signal                   activated
+    signal                   contextMenuRequested(real anchorX, real anchorY)
     signal                   hoverEntered
     signal                   hoverExited
 
@@ -88,13 +88,7 @@ Item {
         enabled: root.entry !== null
         onClicked: mouse => {
             const point = root.mapToItem(null, mouse.x, 0);
-            dockContextMenu.openAt(point.x, point.y, root.entry, root.toplevel);
+            root.contextMenuRequested(point.x, point.y);
         }
-    }
-
-    DockContextMenu {
-        id: dockContextMenu
-
-        screen: root.screen
     }
 }

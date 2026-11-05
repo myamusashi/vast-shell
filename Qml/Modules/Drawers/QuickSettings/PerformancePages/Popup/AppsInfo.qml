@@ -35,7 +35,7 @@ PopupWidget {
         PieChart {
             graphicalAppCount: root.appCounts.graphical
             implicitHeight: 200
-            implicitWidth: parent.width
+            implicitWidth: root.width
             terminalAppCount: root.appCounts.terminal
         }
 

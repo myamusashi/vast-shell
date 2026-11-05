@@ -80,6 +80,7 @@ Singleton {
     ]
     readonly property string emptyText: qsTr("No applications found")
     readonly property var    filteredItems: appResults.filter(entry => matchesCategory(entry, activeCategory)).map(entry => ({
+                "id": entry.id,
                 "name": entry.name || "",
                 "comment": entry.comment,
                 "entry": entry

@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -18,6 +17,7 @@ Item {
 
     readonly property int  baseIndex: Math.max(0, Math.min(count - 1, Math.floor(position)))
     readonly property int  count: (visibleWallpapers ?? []).length
+    readonly property int  firstVisibleIndex: Math.max(0, baseIndex - windowRadius)
     readonly property real focusX: {
         const firstCenter  = leftEdgeOf(baseIndex) + widthOf(baseIndex) / 2;
         const secondCenter = leftEdgeOf(baseIndex + 1) + widthOf(baseIndex + 1) / 2;
@@ -25,8 +25,11 @@ Item {
     }
     readonly property real fraction: position - baseIndex
     readonly property real largeWidth: unitWidth * 1.2
+    readonly property int  lastVisibleIndex: Math.min(count - 1, baseIndex + windowRadius)
     readonly property real smallWidth: unitWidth * 0.72
     readonly property real unitWidth: width / (Configs.wallpaper.visibleWallpaper + 1)
+    readonly property int  windowCount: count > 0 ? Math.max(0, lastVisibleIndex - firstVisibleIndex + 1) : 0
+    readonly property int  windowRadius: Math.ceil((Configs.wallpaper.visibleWallpaper + 1) / 1.4) + 2
 
     property bool          applyOnClick: false
     property bool          closeDrawerOnEscape: true
@@ -91,21 +94,25 @@ Item {
     clip: true
 
     Repeater {
-        model: ScriptModel {
-            values: root.visibleWallpapers ?? []
-        }
+        model: root.windowCount
         delegate: Card {
             id: card
 
-            closeness: root.closenessOf(index)
+            required property int index
+
+            readonly property int itemIndex: root.firstVisibleIndex + index
+
+            cardIndex: itemIndex
+            closeness: root.closenessOf(itemIndex)
             controller: root.controller
             height: root.height
-            isCurrent: index === root.currentIndex
+            isCurrent: itemIndex === root.currentIndex
+            modelData: (root.visibleWallpapers ?? [])[itemIndex] ?? ""
             thumbnailAvailability: root.thumbnailAvailability
             viewportWidth: root.width
             visible: x + width > -root.unitWidth && x < root.width + root.unitWidth
-            width: root.widthOf(index)
-            x: root.width / 2 + root.leftEdgeOf(index) - root.focusX
+            width: root.widthOf(itemIndex)
+            x: root.width / 2 + root.leftEdgeOf(itemIndex) - root.focusX
             onActivateRequested: path => root.applyWallpaper(path)
             onSelectRequested: idx => {
                 root.currentIndex = idx;
@@ -179,5 +186,15 @@ Item {
         }
 
         target: WallpaperFileModels
+    }
+
+    Connections {
+
+        function onIsWallpaperSwitcherOpenChanged(): void {
+            if (GlobalStates.isWallpaperSwitcherOpen && root.closeDrawerOnEscape)
+                Qt.callLater(() => root.selectCurrentWallpaper());
+        }
+
+        target: GlobalStates
     }
 }
