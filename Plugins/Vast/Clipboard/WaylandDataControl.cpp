@@ -14,7 +14,6 @@
 #include <qregularexpression.h>
 #include <qsocketnotifier.h>
 #include <qstringview.h>
-#include <qtextdocument.h>
 
 #include <qtimer.h>
 #include <qtmetamacros.h>
@@ -49,6 +48,79 @@ namespace vast {
             const int flags = ::fcntl(fd, F_GETFL);
             if (flags >= 0)
                 ::fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+        }
+
+        [[nodiscard]] QString decodeHtmlEntities(const QString& input) {
+            if (!input.contains(u'&'))
+                return input;
+
+            QString result;
+            result.reserve(input.size());
+            const qsizetype len = input.size();
+
+            for (qsizetype i = 0; i < len;) {
+                if (input[i] == u'&') {
+                    const qsizetype semi = input.indexOf(u';', i + 1);
+                    if (semi != -1 && semi - i <= 10) {
+                        const QStringView entity = QStringView{input}.sliced(i + 1, semi - i - 1);
+                        if (entity == u"amp") {
+                            result.append(u'&');
+                            i = semi + 1;
+                            continue;
+                        }
+                        if (entity == u"lt") {
+                            result.append(u'<');
+                            i = semi + 1;
+                            continue;
+                        }
+                        if (entity == u"gt") {
+                            result.append(u'>');
+                            i = semi + 1;
+                            continue;
+                        }
+                        if (entity == u"quot") {
+                            result.append(u'"');
+                            i = semi + 1;
+                            continue;
+                        }
+                        if (entity == u"apos") {
+                            result.append(u'\'');
+                            i = semi + 1;
+                            continue;
+                        }
+                        if (entity == u"nbsp") {
+                            result.append(u'\u00A0');
+                            i = semi + 1;
+                            continue;
+                        }
+                        if (entity.startsWith(u'#')) {
+                            bool     ok        = false;
+                            char32_t codePoint = 0;
+                            if (entity.size() > 2 && (entity[1] == u'x' || entity[1] == u'X'))
+                                codePoint = entity.sliced(2).toUInt(&ok, 16);
+                            else if (entity.size() > 1)
+                                codePoint = entity.sliced(1).toUInt(&ok, 10);
+
+                            if (ok && QChar::requiresSurrogates(codePoint)) {
+                                result.append(QChar::highSurrogate(codePoint));
+                                result.append(QChar::lowSurrogate(codePoint));
+                                i = semi + 1;
+                                continue;
+                            }
+                            if (ok && codePoint > 0 && codePoint <= 0xFFFF) {
+                                result.append(QChar(static_cast<char16_t>(codePoint)));
+                                i = semi + 1;
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                result.append(input[i]);
+                ++i;
+            }
+
+            return result;
         }
     }
 
@@ -497,11 +569,9 @@ namespace vast {
         text.replace(blockRegex, QStringLiteral("\n"));
         text.remove(tagRegex);
 
-        // A preformatted context keeps the source spacing so pasted code
-        // keeps its indentation, while QTextDocument still decodes entities.
-        QTextDocument doc;
-        doc.setHtml(QStringLiteral("<pre>") + text + QStringLiteral("</pre>"));
-        QString plain = doc.toPlainText();
+        QString plain = decodeHtmlEntities(text);
+        plain.replace(QStringLiteral("\r\n"), QStringLiteral("\n"));
+        plain.replace(u'\r', u'\n');
         plain.replace(u'\u2028', u'\n');
         plain.replace(u'\u2029', u'\n');
         plain.replace(newlineRunRegex, QStringLiteral("\n"));

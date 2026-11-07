@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -24,9 +26,9 @@ ItemDelegate {
     required property string type
 
     readonly property string formattedTime: {
-        const d    = new Date(timestamp);
-        const now  = new Date();
-        const diff = now - d;
+        if (root.sourceApp === "")
+            return "";
+        const diff = Date.now() - Number(root.timestamp);
 
         if (diff < 60000)
             return qsTr("just now");
@@ -34,7 +36,7 @@ ItemDelegate {
             return qsTr("%1m ago").arg(Math.floor(diff / 60000));
         if (diff < 86400000)
             return qsTr("%1h ago").arg(Math.floor(diff / 3600000));
-        return d.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+        return new Date(Number(root.timestamp)).toLocaleDateString(Qt.locale(), Locale.ShortFormat);
     }
     readonly property bool   isFiles: type === "files"
     readonly property bool   isImage: type === "image"
@@ -70,13 +72,10 @@ ItemDelegate {
     contentItem: RowLayout {
         spacing: Appearance.spacing.smaller
 
-        Item {
-            Layout.preferredWidth: root.pinned ? Appearance.margin.large - Appearance.margin.normal : 0
-        }
-
         StyledText {
+            Layout.leftMargin: root.pinned ? Appearance.margin.large - Appearance.margin.normal : 0
             color: Colours.m3Colors.m3OnSurface
-            text: (root.index + 1).toString() + "."
+            text: `${root.index + 1}.`
         }
 
         Rectangle {
@@ -144,49 +143,36 @@ ItemDelegate {
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
 
-            RowLayout {
-                spacing: Appearance.spacing.small
+            StyledText {
+                Layout.fillWidth: true
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.small
+                text: root.sourceApp !== "" ? `${root.sourceApp} · ${root.formattedTime}` : ""
                 visible: root.sourceApp !== ""
-
-                StyledText {
-                    Layout.maximumWidth: 120
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    elide: Text.ElideRight
-                    font.pixelSize: Appearance.fonts.size.small
-                    text: root.sourceApp
-                }
-
-                StyledText {
-                    color: Colours.m3Colors.m3OutlineVariant
-                    font.pixelSize: Appearance.fonts.size.small
-                    text: "·"
-                }
-
-                StyledText {
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.small
-                    text: root.formattedTime
-                }
             }
         }
 
-        FloatingButton {
-            id: pinButton
-
+        Loader {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: 28
             Layout.preferredWidth: 28
-            backgroundRadius: Appearance.rounding.normal
-            color: "transparent"
-            icon.color: root.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-            icon.name: root.pinned ? "keep" : "keep_off"
-            icon.size: Appearance.fonts.size.large
-            opacity: pinButton.hovered ? 1.0 : 0.6
-            visible: root.hovered || root.pinned
-            Behavior on opacity {
-                NAnim {}
+            active: root.hovered || root.pinned
+            visible: active
+            sourceComponent: FloatingButton {
+                id: pinButton
+
+                backgroundRadius: Appearance.rounding.normal
+                color: "transparent"
+                icon.color: root.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                icon.name: root.pinned ? "keep" : "keep_off"
+                icon.size: Appearance.fonts.size.large
+                opacity: pinButton.hovered ? 1.0 : 0.6
+                Behavior on opacity {
+                    NAnim {}
+                }
+                onClicked: root.pinToggled(root.entryId, !root.pinned)
             }
-            onClicked: root.pinToggled(root.entryId, !root.pinned)
         }
     }
     onClicked: activated()

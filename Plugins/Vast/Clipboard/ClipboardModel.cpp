@@ -46,7 +46,7 @@ namespace vast {
         switch (static_cast<Roles>(role)) {
             case Roles::IdRole: return e.id;
             case Roles::TypeRole: return e.typeString();
-            case Roles::PreviewRole: return makePreview(e);
+            case Roles::PreviewRole: return !e.preview.isEmpty() || e.isImage() ? e.preview : makePreview(e);
             case Roles::TimestampRole: return e.timestamp;
             case Roles::PinnedRole: return e.pinned;
             case Roles::SourceAppRole: return e.sourceApp;
@@ -67,6 +67,10 @@ namespace vast {
 
     void ClipboardModel::reset(QList<ClipboardEntry> entries) {
         beginResetModel();
+        for (auto& entry : entries) {
+            if (entry.preview.isEmpty() && !entry.isImage())
+                entry.preview = makePreview(entry);
+        }
         mEntries   = std::move(entries);
         mFiltering = false;
         mFilterQuery.clear();
@@ -76,21 +80,25 @@ namespace vast {
     }
 
     void ClipboardModel::prepend(const ClipboardEntry& entry) {
+        ClipboardEntry cachedEntry = entry;
+        if (cachedEntry.preview.isEmpty() && !cachedEntry.isImage())
+            cachedEntry.preview = makePreview(cachedEntry);
+
         if (mFiltering) {
             beginResetModel();
-            const int existing = indexById(entry.id);
+            const int existing = indexById(cachedEntry.id);
             if (existing >= 0)
                 mEntries.removeAt(existing);
 
             const auto insertPos = std::ranges::find_if(mEntries, [&](const ClipboardEntry& e) {
-                if (entry.pinned && !e.pinned)
+                if (cachedEntry.pinned && !e.pinned)
                     return true;
-                if (!entry.pinned && e.pinned)
+                if (!cachedEntry.pinned && e.pinned)
                     return false;
-                return entry.timestamp >= e.timestamp;
+                return cachedEntry.timestamp >= e.timestamp;
             });
 
-            mEntries.insert(insertPos, entry);
+            mEntries.insert(insertPos, cachedEntry);
             rebuildFilter();
             endResetModel();
             Q_EMIT countChanged();
@@ -128,17 +136,17 @@ namespace vast {
         }
 
         const auto insertPos = std::ranges::find_if(mEntries, [&](const ClipboardEntry& e) {
-            if (entry.pinned && !e.pinned)
+            if (cachedEntry.pinned && !e.pinned)
                 return true;
-            if (!entry.pinned && e.pinned)
+            if (!cachedEntry.pinned && e.pinned)
                 return false;
-            return entry.timestamp >= e.timestamp;
+            return cachedEntry.timestamp >= e.timestamp;
         });
 
         const int  rawRow = static_cast<int>(std::distance(mEntries.begin(), insertPos));
 
         beginInsertRows({}, rawRow, rawRow);
-        mEntries.insert(insertPos, entry);
+        mEntries.insert(insertPos, cachedEntry);
         endInsertRows();
 
         Q_EMIT countChanged();
@@ -347,7 +355,7 @@ namespace vast {
             QVariantMap map;
             map.insert(QStringLiteral("entryId"), e.id);
             map.insert(QStringLiteral("type"), e.typeString());
-            map.insert(QStringLiteral("preview"), makePreview(e));
+            map.insert(QStringLiteral("preview"), !e.preview.isEmpty() || e.isImage() ? e.preview : makePreview(e));
             map.insert(QStringLiteral("timestamp"), e.timestamp);
             map.insert(QStringLiteral("pinned"), e.pinned);
             map.insert(QStringLiteral("sourceApp"), e.sourceApp);

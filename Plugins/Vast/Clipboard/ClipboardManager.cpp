@@ -456,7 +456,19 @@ namespace vast {
     void ClipboardManager::appendFullEntry(QVariantMap& map, ClipboardEntry entry) {
         map.insert(QStringLiteral("id"), entry.id);
         map.insert(QStringLiteral("type"), entry.typeString());
-        map.insert(QStringLiteral("content"), QVariant::fromValue(std::move(entry.content)));
+
+        constexpr qsizetype kMaxPreviewChars = 4096;
+        if (entry.type == ClipboardType::Html) {
+            const QString slice = ClipboardContentClassifier::extractHtmlSlice(entry.content, 16384);
+            QString       plain = QString::fromUtf8(WaylandDataControl::htmlToPlainText(slice.toUtf8()));
+            if (plain.size() > kMaxPreviewChars)
+                plain.truncate(kMaxPreviewChars);
+            map.insert(QStringLiteral("content"), QVariant::fromValue(std::move(plain)));
+        } else {
+            if (entry.content.size() > kMaxPreviewChars)
+                entry.content.truncate(kMaxPreviewChars);
+            map.insert(QStringLiteral("content"), QVariant::fromValue(std::move(entry.content)));
+        }
         map.insert(QStringLiteral("mimeType"), QVariant::fromValue(std::move(entry.mimeType)));
         map.insert(QStringLiteral("pinned"), entry.pinned);
         map.insert(QStringLiteral("sourceApp"), QVariant::fromValue(std::move(entry.sourceApp)));

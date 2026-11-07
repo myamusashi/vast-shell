@@ -27,6 +27,7 @@ namespace vast {
         qint64                       sizeBytes{0};
         qint64                       timestamp{0};
         QString                      fileName;
+        QString                      preview;
 
         [[nodiscard]] constexpr bool isImage() const noexcept {
             return type == ClipboardType::Image;

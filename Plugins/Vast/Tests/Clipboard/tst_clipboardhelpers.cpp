@@ -48,6 +48,7 @@ class TestClipboardHelpers : public QObject {
     void buildEntryHashesTheRightBytes();
     void buildPreviewPassesTextThrough();
     void buildPreviewStripsHtmlMarkup();
+    void buildPreviewHandlesLargeHtmlAndText();
 
     // vast::WaylandDataControl::htmlToPlainText
     void htmlToPlainTextStripsScriptAndStyle();
@@ -186,6 +187,23 @@ void TestClipboardHelpers::buildPreviewStripsHtmlMarkup() {
              QStringLiteral("a b"));
 }
 
+void TestClipboardHelpers::buildPreviewHandlesLargeHtmlAndText() {
+    using vast::ClipboardContentClassifier;
+    using vast::ClipboardType;
+
+    const QString largeText   = QStringLiteral("hello world repeat test ").repeated(20000);
+    const QString textPreview = ClipboardContentClassifier::buildPreview(ClipboardType::Text, largeText);
+    QVERIFY(textPreview.size() <= 1024);
+    QVERIFY(textPreview.startsWith(QStringLiteral("hello world")));
+
+    const QString largeHtml = QStringLiteral("<html><body><p>First Paragraph &amp; content</p>") + QStringLiteral("<div>nested content &amp; more</div>").repeated(10000) +
+        QStringLiteral("</body></html>");
+    const QString htmlPreview = ClipboardContentClassifier::buildPreview(ClipboardType::Html, largeHtml);
+    QVERIFY(htmlPreview.startsWith(QStringLiteral("First Paragraph & content")));
+    QVERIFY(!htmlPreview.contains(QStringLiteral("<div>")));
+    QVERIFY(!htmlPreview.contains(QStringLiteral("<p>")));
+}
+
 void TestClipboardHelpers::htmlToPlainTextStripsScriptAndStyle() {
     const QByteArray html = "<style>p{color:red}</style><script>x()</script>text";
     QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText(html)), QStringLiteral("text"));
@@ -211,7 +229,7 @@ void TestClipboardHelpers::htmlToPlainTextStripsSpanAttributes() {
 }
 
 void TestClipboardHelpers::htmlToPlainTextDecodesEntities() {
-    QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText("a &amp; b &lt;c&gt;")), QStringLiteral("a & b <c>"));
+    QCOMPARE(QString::fromUtf8(vast::WaylandDataControl::htmlToPlainText("a &amp; b &lt;c&gt; &quot;d&apos; &#65; &#x42;")), QStringLiteral("a & b <c> \"d' A B"));
 }
 
 void TestClipboardHelpers::htmlToPlainTextKeepsParagraphLines() {

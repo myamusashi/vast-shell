@@ -43,6 +43,7 @@ class TestClipboardModel : public QObject {
     void fileNameRoleReturnsBasenameOnly();
     void previewRoleEmptyForImages();
     void previewRoleTruncatesAt120Chars();
+    void previewRoleHandlesLargeHtmlAndTextFast();
     void resetReplacesEntriesAndClearsFilter();
     void prependInsertsNewestFirst();
     void prependPlacesPinnedAboveUnpinned();
@@ -115,6 +116,19 @@ void TestClipboardModel::previewRoleTruncatesAt120Chars() {
     const QString preview = model.data(model.index(0, 0), static_cast<int>(Roles::PreviewRole)).toString();
     QCOMPARE(preview.length(), 121);
     QVERIFY(preview.endsWith(QChar(0x2026)));
+}
+void TestClipboardModel::previewRoleHandlesLargeHtmlAndTextFast() {
+    vast::ClipboardModel model;
+    const QString        headStyle = QStringLiteral("<head><style>") + QStringLiteral("body { color: red; } ").repeated(500) + QStringLiteral("</style></head>");
+    const QString        largeHtml = QStringLiteral("<html>") + headStyle + QStringLiteral("<body><p>Hello world header</p>") +
+        QStringLiteral("<div>many tags with content</div>").repeated(15000) + QStringLiteral("</body></html>");
+    model.reset({entry(1, largeHtml, 1000, false, vast::ClipboardType::Html)});
+
+    using Roles           = vast::ClipboardModel::Roles;
+    const QString preview = model.data(model.index(0, 0), static_cast<int>(Roles::PreviewRole)).toString();
+    QVERIFY(preview.length() <= 121);
+    QVERIFY(preview.startsWith(QStringLiteral("Hello world header")));
+    QVERIFY(!preview.contains(QStringLiteral("color: red")));
 }
 
 void TestClipboardModel::resetReplacesEntriesAndClearsFilter() {

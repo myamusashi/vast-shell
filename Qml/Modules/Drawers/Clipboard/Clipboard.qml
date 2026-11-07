@@ -13,7 +13,22 @@ import qs.Components.Dialog
 WrapperRectangle {
     id: root
 
-    signal closeRequested
+    readonly property bool shouldBeActive: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
+
+    property bool          keepAlive: false
+
+    onShouldBeActiveChanged: {
+        if (shouldBeActive)
+            keepAlive = true;
+    }
+
+    Timer {
+        id: idleUnloadTimer
+
+        interval: 120000
+        running: root.keepAlive && !root.shouldBeActive
+        onTriggered: root.keepAlive = false
+    }
 
     anchors.centerIn: parent
     clip: true
@@ -30,7 +45,7 @@ WrapperRectangle {
     }
 
     Loader {
-        active: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
+        active: root.shouldBeActive || root.keepAlive
         asynchronous: true
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen

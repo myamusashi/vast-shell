@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -20,13 +22,17 @@ Item {
     signal       pinToggled(int id, bool newState)
 
     function     requestPreview(): void {
-        entryDetails.clear();
         previewTimeout.stop();
+        loadingIndicatorDelay.stop();
 
-        if (root.entryId < 0)
+        if (root.entryId < 0) {
+            entryDetails.clear();
             return;
+        }
 
         entryDetails.loading = true;
+        entryDetails.error   = false;
+        loadingIndicatorDelay.restart();
         previewTimeout.restart();
         ClipboardManager.requestFullEntry(root.entryId);
     }
@@ -38,15 +44,19 @@ Item {
         function onFullEntryFailed(id) {
             if (id !== root.entryId)
                 return;
+            loadingIndicatorDelay.stop();
             previewTimeout.stop();
-            entryDetails.loading = false;
-            entryDetails.error   = true;
+            entryDetails.showLoading = false;
+            entryDetails.loading     = false;
+            entryDetails.error       = true;
         }
 
         function onFullEntryReady(entry) {
             if (entry.id !== root.entryId)
                 return;
+            loadingIndicatorDelay.stop();
             previewTimeout.stop();
+            entryDetails.showLoading = false;
             entryDetails.error       = false;
             entryDetails.entryType   = entry.type ?? "text";
             entryDetails.isImage     = entry.type === "image";
@@ -68,24 +78,24 @@ Item {
     Timer {
         id: previewTimeout
 
-        property int retry: 0
-
-        interval: 150
-        repeat: true
+        interval: 500
+        repeat: false
         onTriggered: {
             if (entryDetails.loading) {
-                if (retry < entryDetails.previewLoadRetry) {
-                    retry++;
-                    root.requestPreview();
-                } else {
-                    stop();
-                    retry                = 0;
-                    entryDetails.loading = false;
-                    entryDetails.error   = true;
-                }
-            } else {
-                stop();
+                entryDetails.loading = false;
+                entryDetails.error   = true;
             }
+        }
+    }
+
+    Timer {
+        id: loadingIndicatorDelay
+
+        interval: 80
+        repeat: false
+        onTriggered: {
+            if (entryDetails.loading)
+                entryDetails.showLoading = true;
         }
     }
 
@@ -93,17 +103,9 @@ Item {
         id: entryDetails
 
         readonly property bool   isHtml: entryType === "html"
-        readonly property int    maxPreviewChars: 20000
-        readonly property string previewContent: {
-            if (!truncated)
-                return content;
-            if (!isHtml)
-                return content.slice(0, maxPreviewChars);
-            const cut = content.lastIndexOf(">", maxPreviewChars);
-            return content.slice(0, cut > 0 ? cut + 1 : maxPreviewChars);
-        }
-        readonly property int    previewLoadRetry: 3
-        readonly property bool   truncated: content.length > maxPreviewChars
+        readonly property int    maxPreviewChars: 2000
+        readonly property string previewContent: content.length > maxPreviewChars ? content.slice(0, maxPreviewChars) : content
+        readonly property bool   truncated: sizeBytes > maxPreviewChars || content.length > maxPreviewChars
 
         property string          content: ""
         property string          entryType: "text"
@@ -113,11 +115,13 @@ Item {
         property bool            loading: false
         property bool            pinned: false
         property string          previewPath: ""
+        property bool            showLoading: false
         property int             sizeBytes: 0
         property string          sourceApp: ""
         property string          timestamp: ""
 
         function                 clear() {
+            showLoading = false;
             loading     = false;
             error       = false;
             isImage     = false;
@@ -157,35 +161,38 @@ Item {
         contained: true
         implicitHeight: 30
         implicitWidth: 30
-        status: root.entryId >= 0 && entryDetails.loading
+        status: root.entryId >= 0 && entryDetails.showLoading
     }
 
-    Column {
+    Loader {
         anchors.centerIn: parent
-        spacing: Appearance.spacing.normal
-        visible: root.entryId >= 0 && !entryDetails.loading && entryDetails.error
+        active: root.entryId >= 0 && !entryDetails.loading && entryDetails.error
+        visible: active
+        sourceComponent: Column {
+            spacing: Appearance.spacing.normal
 
-        Icon {
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: Colours.m3Colors.m3Error
-            font.pixelSize: Appearance.fonts.size.extraLarge
-            icon: "error"
-        }
+            Icon {
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Colours.m3Colors.m3Error
+                font.pixelSize: Appearance.fonts.size.extraLarge
+                icon: "error"
+            }
 
-        StyledText {
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.normal
-            text: qsTr("Couldn't load preview")
-        }
+            StyledText {
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.normal
+                text: qsTr("Couldn't load preview")
+            }
 
-        ExtendedFloatingButton {
-            anchors.horizontalCenter: parent.horizontalCenter
-            color: Colours.m3Colors.m3SecondaryContainer
-            icon.name: "refresh"
-            text: qsTr("Retry")
-            textColor: Colours.m3Colors.m3OnSecondaryContainer
-            onClicked: root.requestPreview()
+            ExtendedFloatingButton {
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Colours.m3Colors.m3SecondaryContainer
+                icon.name: "refresh"
+                text: qsTr("Retry")
+                textColor: Colours.m3Colors.m3OnSecondaryContainer
+                onClicked: root.requestPreview()
+            }
         }
     }
 
@@ -193,7 +200,7 @@ Item {
         anchors.fill: parent
         anchors.margins: Appearance.margin.normal
         spacing: Appearance.spacing.large
-        visible: root.entryId >= 0 && !entryDetails.loading && !entryDetails.error
+        visible: root.entryId >= 0 && !entryDetails.showLoading && !entryDetails.error
 
         RowLayout {
             Layout.fillWidth: true
@@ -299,117 +306,110 @@ Item {
 
         // Text preview
 
-        ScrollView {
-            id: textScroll
+        Item {
+            id: textPreviewBox
 
             Layout.fillHeight: true
             Layout.fillWidth: true
-            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-            ScrollBar.vertical.policy: ScrollBar.AsNeeded
             clip: true
             visible: !entryDetails.isImage
-            Keys.onPressed: event => {
-                if (event.key === Qt.Key_PageUp) {
-                    contentItem.contentY = Math.max(0, contentItem.contentY - height); // qmllint disable
-                    event.accepted       = true;
-                }
-                if (event.key === Qt.Key_PageDown) {
-                    contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + height); // qmllint disable
-                    event.accepted       = true;
-                }
-                if (event.key === Qt.Key_Up) {
-                    contentItem.contentY = Math.max(0, contentItem.contentY - 40); // qmllint disable
-                    event.accepted       = true;
-                }
-                if (event.key === Qt.Key_Down) {
-                    contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + 40); // qmllint disable
-                    event.accepted       = true;
-                }
+
+            StyledText {
+                id: previewTextItem
+
+                anchors.bottom: truncatedNotice.top
+                anchors.bottomMargin: Appearance.spacing.small
+                anchors.left: parent.left
+                anchors.leftMargin: Appearance.padding.small
+                anchors.right: parent.right
+                anchors.rightMargin: Appearance.padding.small
+                anchors.top: parent.top
+                anchors.topMargin: Appearance.padding.small
+                color: Colours.m3Colors.m3OnSurface
+                elide: Text.ElideRight
+                font.family: Fonts.mono
+                font.pixelSize: Appearance.fonts.size.medium
+                text: entryDetails.previewContent
+                textFormat: Text.PlainText
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
             }
 
-            ColumnLayout {
-                spacing: Appearance.spacing.small
-                width: textScroll.width
+            StyledText {
+                id: truncatedNotice
 
-                TextEdit {
-                    Layout.fillWidth: true
-                    color: Colours.m3Colors.m3OnSurface
-                    font.family: entryDetails.isHtml ? Fonts.sans : Fonts.mono
-                    font.pixelSize: Appearance.fonts.size.medium
-                    padding: Appearance.padding.small
-                    readOnly: true
-                    selectByKeyboard: true
-                    selectByMouse: true
-                    selectedTextColor: Colours.m3Colors.m3OnSurface
-                    selectionColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.35)
-                    text: entryDetails.previewContent
-                    textFormat: entryDetails.isHtml ? TextEdit.RichText : TextEdit.PlainText
-                    wrapMode: TextEdit.Wrap
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.small
-                    text: qsTr("Preview truncated (%1 of %2 shown) — copy to get the full content").arg(FormatTimeUtils.formatSize(entryDetails.maxPreviewChars)).arg(FormatTimeUtils.formatSize(entryDetails.content.length))
-                    visible: entryDetails.truncated
-                }
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: Appearance.padding.small
+                anchors.left: parent.left
+                anchors.leftMargin: Appearance.padding.small
+                anchors.right: parent.right
+                anchors.rightMargin: Appearance.padding.small
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.small
+                text: qsTr("Preview truncated (%1) — copy to get the full content").arg(FormatTimeUtils.formatSize(entryDetails.sizeBytes))
+                visible: entryDetails.truncated || previewTextItem.truncated
             }
         }
 
-        ScrollView {
-            id: imageScroll
+        Loader {
+            id: imagePreviewLoader
 
             Layout.fillHeight: true
             Layout.fillWidth: true
-            ScrollBar.horizontal.policy: ScrollBar.AsNeeded
-            ScrollBar.vertical.policy: ScrollBar.AsNeeded
-            clip: true
-            visible: entryDetails.isImage
-            Keys.onDownPressed: contentItem.contentY += 40 // qmllint disable
-            Keys.onLeftPressed: contentItem.contentX -= 40 // qmllint disable
-            Keys.onRightPressed: contentItem.contentX += 40 // qmllint disable
-            Keys.onUpPressed: contentItem.contentY -= 40 // qmllint disable
+            active: entryDetails.isImage
+            visible: active
+            sourceComponent: ScrollView {
+                id: imageScroll
 
-            WheelHandler {
-                id: imageZoom
+                ScrollBar.horizontal.policy: ScrollBar.AsNeeded
+                ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                clip: true
+                Keys.onDownPressed: contentItem.contentY += 40 // qmllint disable
+                Keys.onLeftPressed: contentItem.contentX -= 40 // qmllint disable
+                Keys.onRightPressed: contentItem.contentX += 40 // qmllint disable
+                Keys.onUpPressed: contentItem.contentY -= 40 // qmllint disable
 
-                property real scale: 1.0
+                WheelHandler {
+                    id: imageZoom
 
-                acceptedModifiers: Qt.ControlModifier
-                onWheel: event => {
-                    const step = event.angleDelta.y / 120;
-                    scale      = Math.max(0.25, Math.min(4.0, scale + step * 0.15));
-                }
-            }
+                    property real scale: 1.0
 
-            Item {
-                height: Math.max(imageScroll.height, previewImage.paintedHeight * imageZoom.scale)
-                width: Math.max(imageScroll.width, previewImage.paintedWidth * imageZoom.scale)
-
-                Image {
-                    id: previewImage
-
-                    anchors.centerIn: parent
-                    asynchronous: true
-                    fillMode: Image.PreserveAspectFit
-                    height: imageScroll.height * imageZoom.scale
-                    opacity: status === Image.Ready ? 1.0 : 0.0
-                    smooth: true
-                    source: entryDetails.previewPath.length > 0 ? ("file://" + entryDetails.previewPath) : ""
-                    sourceSize: Qt.size(300, 300)
-                    width: imageScroll.width * imageZoom.scale
-                    Behavior on opacity {
-                        NAnim {}
+                    acceptedModifiers: Qt.ControlModifier
+                    onWheel: event => {
+                        const step = event.angleDelta.y / 120;
+                        scale      = Math.max(0.25, Math.min(4.0, scale + step * 0.15));
                     }
                 }
 
-                StyledText {
-                    anchors.centerIn: parent
-                    color: Colours.m3Colors.m3Secondary
-                    font.pixelSize: Appearance.fonts.size.medium
-                    text: qsTr("Loading…")
-                    visible: previewImage.status === Image.Loading
+                Item {
+                    height: Math.max(imageScroll.height, previewImage.paintedHeight * imageZoom.scale)
+                    width: Math.max(imageScroll.width, previewImage.paintedWidth * imageZoom.scale)
+
+                    Image {
+                        id: previewImage
+
+                        anchors.centerIn: parent
+                        asynchronous: true
+                        fillMode: Image.PreserveAspectFit
+                        height: imageScroll.height * imageZoom.scale
+                        opacity: status === Image.Ready ? 1.0 : 0.0
+                        smooth: true
+                        source: entryDetails.previewPath.length > 0 ? ("file://" + entryDetails.previewPath) : ""
+                        sourceSize: Qt.size(300, 300)
+                        width: imageScroll.width * imageZoom.scale
+                        Behavior on opacity {
+                            NAnim {}
+                        }
+                    }
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        color: Colours.m3Colors.m3Secondary
+                        font.pixelSize: Appearance.fonts.size.medium
+                        text: qsTr("Loading…")
+                        visible: previewImage.status === Image.Loading
+                    }
                 }
             }
         }

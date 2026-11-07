@@ -224,6 +224,22 @@ ColumnLayout {
         target: root.uiState
     }
 
+    Connections {
+
+        function onIsClipboardOpenChanged() {
+            if (GlobalStates.isClipboardOpen) {
+                if (entryGrid && entryGrid.entryList && entryGrid.entryList.count > 0)
+                    entryGrid.entryList.currentIndex = 0;
+                root.restoreFocus();
+            } else {
+                searchBar.searchField.text = "";
+                root.uiState.clearTransientState();
+            }
+        }
+
+        target: GlobalStates
+    }
+
     SearchBar {
         id: searchBar
 

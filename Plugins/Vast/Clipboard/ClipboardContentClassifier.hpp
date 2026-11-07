@@ -13,5 +13,6 @@ namespace vast {
         [[nodiscard]] static ClipboardEntry buildEntry(const QString& mimeType, const QByteArray& content, const QString& fileName, const QString& sourceApp);
 
         [[nodiscard]] static QString        buildPreview(ClipboardType type, const QString& content);
+        [[nodiscard]] static QString        extractHtmlSlice(const QString& content, qsizetype maxChars);
     };
 }
