@@ -92,7 +92,7 @@ Item {
                         asynchronous: true
                         backer.cache: true
                         height: 20
-                        source: root.modelData.icon
+                        source: root.modelData ? root.modelData.icon : ""
                         width: 20
                     }
                 }
@@ -104,7 +104,7 @@ Item {
                     elide: Text.ElideRight
                     font.pixelSize: Appearance.fonts.size.normal
                     font.weight: Font.Medium
-                    text: root.modelData.text
+                    text: root.modelData ? root.modelData.text : ""
                     verticalAlignment: Text.AlignVCenter
                 }
 
