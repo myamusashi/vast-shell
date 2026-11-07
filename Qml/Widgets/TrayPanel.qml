@@ -16,11 +16,10 @@ LazyLoader {
     required property var         trayRoot
     required property ShellScreen screen
 
-    property Timer                closeTimer
-    property Timer                hideTimer
-
     loading: true
     component: PanelWindow {
+        id: panelWindow
+
         HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.namespace: LayerNamespaces.drawers
@@ -43,53 +42,36 @@ LazyLoader {
             right: Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0
         }
 
-        Connections {
+        Item {
+            id: menuHost
 
-            function onActiveMenuChanged(): void {
-                if (root.trayRoot.activeMenu !== null)
-                    Qt.callLater(() => menuSurface.openMenu(root.trayRoot.activeMenu)); // qmllint disable
+            readonly property real maxX: panelWindow.width - menuSurface.width - root.trayRoot.shadowPadding
+            readonly property real maxY: panelWindow.height - menuSurface.height - root.trayRoot.shadowPadding
+
+            height: menuSurface.height + root.trayRoot.shadowPadding * 2
+            width: menuSurface.width + root.trayRoot.shadowPadding * 2
+            x: Math.max(root.trayRoot.shadowPadding, Math.min(root.trayRoot.menuX - root.trayRoot.shadowPadding - menuSurface.bodyInsetX, maxX))
+            y: Math.min(root.trayRoot.barBottom - root.trayRoot.shadowPadding, maxY)
+            Behavior on x {
+                enabled: root.trayRoot.menuMapped
+
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveDefaultSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                }
             }
 
-            target: root.trayRoot
-        }
+            TrayMenuStack {
+                id: menuSurface
 
-        Item {
-            id: panelroot
-
-            anchors.fill: parent
-
-            Item {
-                id: menuHost
-
-                readonly property real maxX: panelroot.width - menuSurface.width - root.trayRoot.shadowPadding
-                readonly property real maxY: panelroot.height - menuSurface.height - root.trayRoot.shadowPadding
-
-                height: menuSurface.height + root.trayRoot.shadowPadding * 2
-                width: menuSurface.width + root.trayRoot.shadowPadding * 2
-                x: Math.max(root.trayRoot.shadowPadding, Math.min(root.trayRoot.menuX - root.trayRoot.shadowPadding - menuSurface.bodyInsetX, maxX))
-                y: Math.min(root.trayRoot.barBottom - root.trayRoot.shadowPadding, maxY)
-                Behavior on x {
-                    enabled: root.trayRoot.menuMapped
-
-                    NAnim {
-                        duration: Appearance.animations.durations.expressiveDefaultSpatial
-                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                    }
-                }
-
-                TrayMenuStack {
-                    id: menuSurface
-
-                    open: root.trayRoot.menuShowing
-                    x: root.trayRoot.shadowPadding
-                    y: root.trayRoot.shadowPadding
-                    onEntered: {
-                        root.closeTimer.stop();
-                        root.hideTimer.stop();
-                    }
-                    onEntryActivated: root.trayRoot.closeMenu()
-                    onExited: root.trayRoot.scheduleClose()
-                }
+                activeMenu: root.trayRoot.activeMenu
+                menuMapped: root.trayRoot.menuMapped
+                open: root.trayRoot.menuShowing
+                x: root.trayRoot.shadowPadding
+                y: root.trayRoot.shadowPadding
+                onEntered: root.trayRoot.onMenuEntered()
+                onEntryActivated: root.trayRoot.closeMenu()
+                onExited: root.trayRoot.onMenuExited()
             }
         }
     }

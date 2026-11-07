@@ -13,20 +13,17 @@ Item {
     id: root
 
     readonly property bool backVisible: level > 0
-    readonly property real contentHeight: (backVisible ? headerRow.height : 0) + menuColumn.implicitHeight
+    readonly property real contentHeight: (backVisible ? headerLoader.height : 0) + menuColumn.implicitHeight
     readonly property int  distance: currentIndex - level
     readonly property real restScale: distance > 0 ? 1.08 : (distance < 0 ? 0.92 : 1)
 
     property int           currentIndex: 0
     property QsMenuHandle  handle: null
-    property var           highlightedEntry: null
     property int           level: 0
     property string        title: ""
 
     signal                 backRequested
-    signal                 entered
     signal                 entryActivated(var entry)
-    signal                 exited
     signal                 submenuRequested(var entry)
 
     function               handleEntryClicked(entry: var): void {
@@ -68,12 +65,12 @@ Item {
             }
         }
 
-        Row {
-            id: headerRow
+        Loader {
+            id: headerLoader
 
-            height: visible ? 40 : 0
-            spacing: Appearance.spacing.smaller
-            visible: root.backVisible
+            active: root.backVisible
+            height: active ? 40 : 0
+            visible: active
 
             anchors {
                 left: parent.left
@@ -83,37 +80,46 @@ Item {
                 top: parent.top
             }
 
-            Icon {
-                id: backIcon
+            sourceComponent: Item {
+                anchors.fill: parent
 
-                anchors.verticalCenter: parent.verticalCenter
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.large
-                height: 20
-                icon: "chevron_left"
-                width: 20
+                Row {
+                    id: headerRow
+
+                    anchors.fill: parent
+                    spacing: Appearance.spacing.smaller
+
+                    Icon {
+                        id: backIcon
+
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.large
+                        height: 20
+                        icon: "chevron_left"
+                        width: 20
+                    }
+
+                    StyledText {
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        elide: Text.ElideRight
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: Font.Medium
+                        height: parent.height
+                        text: root.title
+                        verticalAlignment: Text.AlignVCenter
+                        width: Math.max(headerRow.width - backIcon.width - headerRow.spacing, 0)
+                    }
+                }
+
+                MArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    layerRadius: Appearance.rounding.small
+                    onClicked: root.backRequested()
+                }
             }
-
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                elide: Text.ElideRight
-                font.family: Fonts.sans
-                font.pixelSize: Appearance.fonts.size.normal
-                font.weight: Font.Medium
-                height: parent.height
-                text: root.title
-                verticalAlignment: Text.AlignVCenter
-                width: Math.max(headerRow.width - backIcon.width - headerRow.spacing, 0)
-            }
-        }
-
-        MArea {
-            anchors.fill: headerRow
-            cursorShape: Qt.PointingHandCursor
-            layerRadius: Appearance.rounding.small
-            visible: headerRow.visible
-            onClicked: root.backRequested()
         }
 
         Flickable {
@@ -138,7 +144,7 @@ Item {
                 bottom: parent.bottom
                 left: parent.left
                 right: parent.right
-                top: root.backVisible ? headerRow.bottom : parent.top
+                top: root.backVisible ? headerLoader.bottom : parent.top
             }
 
             Column {
@@ -153,7 +159,6 @@ Item {
                     delegate: TrayMenuItem {
                         id: itemRow
 
-                        active: root.highlightedEntry === itemRow.modelData
                         width: menuColumn.width - menuColumn.padding * 2
                         onClicked: root.handleEntryClicked(itemRow.modelData)
                     }

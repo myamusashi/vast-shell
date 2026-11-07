@@ -10,22 +10,34 @@ import qs.Core.States
 Drawer {
     id: root
 
+    property var  activeMenu: null
+    property bool keepAlive: false
     property real maxHeight: 500
+    property bool menuMapped: false
     property real menuWidth: 280
-    property var  openMenu: menu => Qt.callLater(() => {
-            loader.item?.openMenu(menu); // qmllint disable
-        })
 
     signal        entered
     signal        entryActivated(var entry)
     signal        exited
 
+    function      syncMenu(): void {
+        if (root.open && root.activeMenu !== null && loader.item)
+            loader.item.openMenu(root.activeMenu); // qmllint disable missing-property
+    }
+
+    onActiveMenuChanged: root.syncMenu()
+    onOpenChanged: {
+        if (open) {
+            keepAlive = true;
+            root.syncMenu();
+        }
+    }
     alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
-    depth: Math.min(loader.item?.contentHeight, maxHeight) // qmllint disable
+    depth: Math.min(loader.item?.contentHeight ?? 0, maxHeight) // qmllint disable
     edge: Qt.TopEdge
     filletRadius: 40
     length: menuWidth
@@ -33,8 +45,16 @@ Drawer {
     Loader {
         id: loader
 
-        active: root.open
+        active: root.open || root.menuMapped || root.keepAlive
         anchors.fill: parent
+        onLoaded: root.syncMenu()
+
+        Timer {
+            interval: 120000
+            running: root.keepAlive && !root.open && !root.menuMapped
+            onTriggered: root.keepAlive = false
+        }
+
         sourceComponent: Item {
             id: itemLoader
 
@@ -63,7 +83,6 @@ Drawer {
                 for (let index = 0; index < pages.length; index++)
                     pages[index].handle = index === 0 ? handle : null;
                 page.title               = "";
-                page.highlightedEntry    = null;
                 stackLayout.currentIndex = 0;
             }
 
@@ -93,25 +112,15 @@ Drawer {
                 } else {
                     createPage(entry, entry.text ?? "");
                 }
-                if (parentPage)
-                    parentPage.highlightedEntry = entry;
                 stackLayout.currentIndex = level;
             }
 
             anchors.fill: parent
 
-            Item {
-                id: stackHost
+            StackLayout {
+                id: stackLayout
 
                 anchors.fill: parent
-                clip: true
-
-                StackLayout {
-                    id: stackLayout
-
-                    height: stackHost.height
-                    width: stackHost.width
-                }
             }
 
             HoverHandler {
@@ -131,9 +140,7 @@ Drawer {
                     Layout.maximumHeight: root.maxHeight
                     currentIndex: stackLayout.currentIndex
                     onBackRequested: itemLoader.popSubmenu()
-                    onEntered: root.entered()
                     onEntryActivated: entry => root.entryActivated(entry)
-                    onExited: root.exited()
                     onSubmenuRequested: entry => itemLoader.pushSubmenu(entry)
                 }
             }
