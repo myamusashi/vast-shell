@@ -116,8 +116,21 @@ SettingsPageBase {
     }
 
     SettingsCard {
-        title: qsTr("Preview Dimensions")
+        title: qsTr("Preview Settings")
         visible: Configs.clipboard.enablePreview
+
+        SettingRow {
+            description: qsTr("Show a notice at the bottom when preview text is truncated (default: true)")
+            label: qsTr("Show Truncated Notice:")
+
+            StyledSwitch {
+                checked: Configs.clipboard.showTruncatedText
+                onCheckedChanged: {
+                    Configs.clipboard.showTruncatedText = checked;
+                    Configs.clipboard.preview.showTruncatedText = checked;
+                }
+            }
+        }
 
         SettingRow {
             description: qsTr("Width of the clipboard preview in pixels (default: 300)")

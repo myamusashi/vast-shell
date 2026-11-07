@@ -16,12 +16,14 @@ import qs.Services
 Item {
     id: root
 
-    property int entryId: -1
+    readonly property bool showTruncatedText: Configs.clipboard.showTruncatedText && Configs.clipboard.preview.showTruncatedText
 
-    signal       copyRequested(int id)
-    signal       pinToggled(int id, bool newState)
+    property int           entryId: -1
 
-    function     requestPreview(): void {
+    signal                 copyRequested(int id)
+    signal                 pinToggled(int id, bool newState)
+
+    function               requestPreview(): void {
         previewTimeout.stop();
         loadingIndicatorDelay.stop();
 
@@ -312,19 +314,22 @@ Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
             clip: true
-            visible: !entryDetails.isImage
+            visible: root.showTruncatedText && !entryDetails.isImage
 
             StyledText {
                 id: previewTextItem
 
-                anchors.bottom: truncatedNotice.top
-                anchors.bottomMargin: Appearance.spacing.small
-                anchors.left: parent.left
-                anchors.leftMargin: Appearance.padding.small
-                anchors.right: parent.right
-                anchors.rightMargin: Appearance.padding.small
-                anchors.top: parent.top
-                anchors.topMargin: Appearance.padding.small
+                anchors {
+                    bottom: truncatedNotice.visible ? truncatedNotice.top : parent.bottom
+                    bottomMargin: truncatedNotice.visible ? Appearance.spacing.small : Appearance.padding.small
+                    left: parent.left
+                    leftMargin: Appearance.padding.small
+                    right: parent.right
+                    rightMargin: Appearance.padding.small
+                    top: parent.top
+                    topMargin: Appearance.padding.small
+                }
+
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.family: Fonts.mono
@@ -338,17 +343,72 @@ Item {
             StyledText {
                 id: truncatedNotice
 
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: Appearance.padding.small
-                anchors.left: parent.left
-                anchors.leftMargin: Appearance.padding.small
-                anchors.right: parent.right
-                anchors.rightMargin: Appearance.padding.small
+                anchors {
+                    bottom: parent.bottom
+                    bottomMargin: visible ? Appearance.padding.small : 0
+                    left: parent.left
+                    leftMargin: Appearance.padding.small
+                    right: parent.right
+                    rightMargin: Appearance.padding.small
+                }
+
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.small
+                height: visible ? implicitHeight : 0
                 text: qsTr("Preview truncated (%1) — copy to get the full content").arg(FormatTimeUtils.formatSize(entryDetails.sizeBytes))
-                visible: entryDetails.truncated || previewTextItem.truncated
+                visible: root.showTruncatedText && entryDetails.truncated
+            }
+        }
+
+        Loader {
+            id: scrollableTextLoader
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            active: !root.showTruncatedText && !entryDetails.isImage
+            visible: active
+            sourceComponent: ScrollView {
+                id: textScroll
+
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                ScrollBar.vertical.policy: ScrollBar.AsNeeded
+                clip: true
+                Keys.onPressed: event => {
+                    if (event.key === Qt.Key_PageUp) {
+                        contentItem.contentY = Math.max(0, contentItem.contentY - height); // qmllint disable
+                        event.accepted       = true;
+                    }
+                    if (event.key === Qt.Key_PageDown) {
+                        contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + height); // qmllint disable
+                        event.accepted       = true;
+                    }
+                    if (event.key === Qt.Key_Up) {
+                        contentItem.contentY = Math.max(0, contentItem.contentY - 40); // qmllint disable
+                        event.accepted       = true;
+                    }
+                    if (event.key === Qt.Key_Down) {
+                        contentItem.contentY = Math.min(contentItem.contentHeight - height, contentItem.contentY + 40); // qmllint disable
+                        event.accepted       = true;
+                    }
+                }
+
+                StyledText {
+                    id: scrollableText
+
+                    bottomPadding: Appearance.padding.small
+                    color: Colours.m3Colors.m3OnSurface
+                    font.family: Fonts.mono
+                    font.pixelSize: Appearance.fonts.size.medium
+                    leftPadding: Appearance.padding.small
+                    rightPadding: Appearance.padding.small
+                    text: entryDetails.previewContent
+                    textFormat: Text.PlainText
+                    topPadding: Appearance.padding.small
+                    verticalAlignment: Text.AlignTop
+                    width: textScroll.width
+                    wrapMode: Text.Wrap
+                }
             }
         }
 

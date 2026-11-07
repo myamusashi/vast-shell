@@ -10,9 +10,11 @@ JsonObject {
     property int     listEntries: 15
     property int     maxEntries: 300
     property Preview preview: Preview {}
+    property bool    showTruncatedText: true
     property real    width: 300
 
     component Preview: JsonObject {
+        property bool showTruncatedText: true
         property real sourceHeight: 300
         property real sourceWidth: 300
     }

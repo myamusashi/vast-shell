@@ -99,6 +99,7 @@ You generally do **not** need to copy the color files — the Material palette i
     "keepOpenAfterCopy": false,
     "listEntries": 15,
     "maxEntries": 300,
+    "showTruncatedText": true,
     "width": 300,
     "height": 400,
     "preview": { "sourceWidth": 300, "sourceHeight": 300 }
@@ -335,6 +336,7 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 | `maxEntries` | `300` | Maximum retained entries. |
 | `width` / `height` | `300` / `400` | Drawer size in pixels. |
 | `preview.sourceWidth` / `sourceHeight` | `300` / `300` | Source resolution used for the cached preview thumbnail. |
+| `showTruncatedText` | `true` | Show a notice at the bottom of the preview when text is truncated. |
 
 ### Capture Screen Video
 
