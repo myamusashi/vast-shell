@@ -78,36 +78,49 @@ SettingsPageBase {
             }
         }
 
-        Loader {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            active: root.currentTab === 0
-            visible: root.currentTab === 0
+        TabLoader {
+            tabIndex: 0
             sourceComponent: PlaybackTab {}
         }
 
-        Loader {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            active: root.currentTab === 1
-            visible: root.currentTab === 1
+        TabLoader {
+            tabIndex: 1
             sourceComponent: OutputDevicesTab {}
         }
 
-        Loader {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            active: root.currentTab === 2
-            visible: root.currentTab === 2
+        TabLoader {
+            tabIndex: 2
             sourceComponent: InputDevicesTab {}
         }
 
-        Loader {
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            active: root.currentTab === 3
-            visible: root.currentTab === 3
+        TabLoader {
+            tabIndex: 3
             sourceComponent: ConfigurationTab {}
+        }
+    }
+
+    component TabLoader: Loader {
+        id: tabLoader
+
+        required property int  tabIndex
+
+        readonly property bool isCurrentTab: root.currentTab === tabIndex
+
+        property bool          keepAlive: false
+
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        active: isCurrentTab || keepAlive
+        visible: isCurrentTab
+        onIsCurrentTabChanged: {
+            if (isCurrentTab)
+                keepAlive = true;
+        }
+
+        Timer {
+            interval: 60000
+            running: tabLoader.keepAlive && !tabLoader.isCurrentTab
+            onTriggered: tabLoader.keepAlive = false
         }
     }
 }

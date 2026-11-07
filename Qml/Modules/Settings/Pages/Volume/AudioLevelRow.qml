@@ -46,20 +46,23 @@ ColumnLayout {
         Layout.fillWidth: true
         spacing: Appearance.spacing.normal
 
-        StyledRect {
-            id: defaultIndicator
-
+        Loader {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: 18
-            Layout.preferredWidth: 18
-            border.color: Colours.m3Colors.m3Primary
-            border.width: 2
-            color: root.isCurrent ? Colours.m3Colors.m3Primary : "transparent"
-            radius: width / 2
-            visible: root.selectable
+            active: root.selectable
+            visible: active
+            sourceComponent: StyledRect {
+                id: defaultIndicator
 
-            TapHandler {
-                onTapped: root.defaultRequested()
+                Layout.preferredHeight: 18
+                Layout.preferredWidth: 18
+                border.color: Colours.m3Colors.m3Primary
+                border.width: 2
+                color: root.isCurrent ? Colours.m3Colors.m3Primary : "transparent"
+                radius: width / 2
+
+                TapHandler {
+                    onTapped: root.defaultRequested()
+                }
             }
         }
 

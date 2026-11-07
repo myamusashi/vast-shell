@@ -578,8 +578,8 @@ Item {
         const scored   = [];
 
         for (const entry of entries) {
-            let best = 0;
-            for (const text of [entry.card].concat(entry.terms)) {
+            let best = SearchEngine.score(query, entry.card);
+            for (const text of entry.terms) {
                 const s = SearchEngine.score(query, text);
                 if (s > best)
                     best = s;
@@ -669,12 +669,13 @@ Item {
             spacing: Appearance.spacing.smaller
 
             Repeater {
-                model: root.results
+                model: root.results.length
                 delegate: Rectangle {
                     id: resultDelegate
 
                     required property int index
-                    required property var modelData
+
+                    readonly property var resultData: root.results[index]
 
                     Layout.fillWidth: true
                     color: resultDelegate.index === root.selectedIndex ? Colours.m3Colors.m3SurfaceContainerHighest : "transparent"
@@ -685,11 +686,11 @@ Item {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
-                        onClicked: root.activate(resultDelegate.modelData)
+                        onClicked: root.activate(resultDelegate.resultData)
                         onEntered: root.selectedIndex = resultDelegate.index
                     }
 
-                    ColumnLayout {
+                    Column {
                         id: resultRow
 
                         anchors.fill: parent
@@ -697,20 +698,20 @@ Item {
                         spacing: 2
 
                         HighlightText {
-                            Layout.fillWidth: true
+                            width: parent.width
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Font.Medium
-                            fullText: resultDelegate.modelData.card
+                            fullText: resultDelegate.resultData?.card ?? ""
                             searchText: root.query
                         }
 
                         StyledText {
-                            Layout.fillWidth: true
+                            width: parent.width
                             color: Colours.m3Colors.m3OnSurfaceVariant
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.small
-                            text: resultDelegate.modelData.pageLabel
+                            text: resultDelegate.resultData?.pageLabel ?? ""
                         }
                     }
                 }

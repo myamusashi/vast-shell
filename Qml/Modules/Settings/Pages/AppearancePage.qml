@@ -351,55 +351,13 @@ Item {
         }
     }
 
-    component FilePathRow: RowLayout {
-        id: filePathRow
-
-        property string configValue
-        property string label
-        property var    nameFilters: ["*.json"]
-
-        signal          configChanged(string value)
-
-        Layout.fillWidth: true
-
-        StyledText {
-            Layout.fillWidth: true
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.large
-            text: filePathRow.label
-        }
-
-        MaterialTextField {
-            id: pathField
-
-            implicitWidth: 350
-            Component.onCompleted: text = filePathRow.configValue
-            onEditingFinished: filePathRow.configChanged(text)
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                hoverEnabled: true
-                onClicked: {
-                    pathField.forceActiveFocus();
-                    fileDialog.openFileDialog();
-                }
-            }
-        }
-
-        FileDialog {
-            id: fileDialog
-
-            nameFilters: filePathRow.nameFilters
-            showHidden: true
-            onFileSelected: path => filePathRow.configChanged(path)
-        }
-    }
     component FontPicker: Item {
         id: fontPicker
 
         property string configValue
         property var    filteredModel: {
+            if (!popupLoader.active)
+                return [];
             const query  = searchText.toLowerCase();
             const result = [];
             if (!query)
@@ -419,6 +377,11 @@ Item {
 
         signal          configChanged(string value)
 
+        function        openPopup() {
+            popupLoader.active = true;
+            (popupLoader.item as Popup).open();
+        }
+
         implicitHeight: input.implicitHeight
         implicitWidth: 250
 
@@ -429,86 +392,90 @@ Item {
             placeholderText: qsTr("Search font...")
             Component.onCompleted: text = fontPicker.configValue
             onActiveFocusChanged: {
-                if (activeFocus && !popup.visible)
-                    popup.open();
+                if (activeFocus)
+                    fontPicker.openPopup();
             }
             onTextChanged: {
                 fontPicker.searchText = text;
-                if (!popup.visible)
-                    popup.open();
+                fontPicker.openPopup();
             }
         }
 
-        Popup {
-            id: popup
+        Loader {
+            id: popupLoader
 
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-            implicitHeight: Math.min(listView.contentHeight + 16, 280)
-            width: input.width
-            y: input.height + 4
-            background: StyledRect {
-                color: Colours.m3Colors.m3SurfaceContainerLow
-                radius: Appearance.rounding.large
+            active: false
+            sourceComponent: Popup {
+                id: popup
 
-                Elevation {
-                    anchors.fill: parent
-                    level: 2
-                    radius: parent.radius
-                    z: -1
-                }
-            }
-            contentItem: ListView {
-                id: listView
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                implicitHeight: Math.min(listView.contentHeight + 16, 280)
+                width: input.width
+                y: input.height + 4
+                background: StyledRect {
+                    color: Colours.m3Colors.m3SurfaceContainerLow
+                    radius: Appearance.rounding.large
 
-                cacheBuffer: 0
-                clip: true
-                model: fontPicker.filteredModel
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
-                    contentItem: StyledRect {
-                        color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
-                        implicitWidth: 4
-                        radius: 2
+                    Elevation {
+                        anchors.fill: parent
+                        level: 2
+                        radius: parent.radius
+                        z: -1
                     }
                 }
-                delegate: ItemDelegate {
-                    id: fontDelegate
+                contentItem: ListView {
+                    id: listView
 
-                    required property int  index
-                    required property var  modelData
+                    cacheBuffer: 0
+                    clip: true
+                    model: fontPicker.filteredModel
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                        contentItem: StyledRect {
+                            color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
+                            implicitWidth: 4
+                            radius: 2
+                        }
+                    }
+                    delegate: ItemDelegate {
+                        id: fontDelegate
 
-                    readonly property bool itemActive: modelData.name === fontPicker.configValue
+                        required property int  index
+                        required property var  modelData
 
-                    bottomPadding: 0
-                    height: 52
-                    leftPadding: 16
-                    rightPadding: 16
-                    topPadding: 0
-                    width: listView.width
-                    background: StyledRect {
-                        color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
-                        radius: Appearance.rounding.large
+                        readonly property bool itemActive: modelData.name === fontPicker.configValue
+
+                        bottomPadding: 0
+                        height: 52
+                        leftPadding: 16
+                        rightPadding: 16
+                        topPadding: 0
+                        width: listView.width
+                        background: StyledRect {
+                            color: fontDelegate.itemActive ? Colours.m3Colors.m3TertiaryContainer : fontDelegate.highlighted ? Qt.alpha(Colours.m3Colors.m3OnSurface, 0.08) : "transparent"
+                            radius: Appearance.rounding.large
+                        }
+                        contentItem: StyledText {
+                            color: Colours.m3Colors.m3OnSurface
+                            elide: Text.ElideRight
+                            font.family: fontDelegate.itemActive || fontDelegate.highlighted ? fontDelegate.modelData.name : ""
+                            font.pixelSize: Appearance.fonts.size.normal
+                            text: fontDelegate.modelData.name || qsTr("System default")
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        onClicked: {
+                            fontPicker.configChanged(modelData.name);
+                            input.text            = modelData.name;
+                            fontPicker.searchText = "";
+                            popup.close();
+                        }
                     }
-                    contentItem: StyledText {
-                        color: Colours.m3Colors.m3OnSurface
-                        elide: Text.ElideRight
-                        font.family: fontDelegate.itemActive || fontDelegate.highlighted ? fontDelegate.modelData.name : ""
-                        font.pixelSize: Appearance.fonts.size.normal
-                        text: fontDelegate.modelData.name || qsTr("System default")
-                        verticalAlignment: Text.AlignVCenter
+                    footer: Item {
+                        height: 8
                     }
-                    onClicked: {
-                        fontPicker.configChanged(modelData.name);
-                        input.text            = modelData.name;
-                        fontPicker.searchText = "";
-                        popup.close();
+                    header: Item {
+                        height: 8
                     }
-                }
-                footer: Item {
-                    height: 8
-                }
-                header: Item {
-                    height: 8
                 }
             }
         }

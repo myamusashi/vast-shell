@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 
 import qs.Core.Configs
 import qs.Components.Base
@@ -69,18 +70,19 @@ SettingsPageBase {
         ColumnLayout {
             spacing: Appearance.spacing.normal
 
-            Loader {
+            StyledText {
                 Layout.alignment: Qt.AlignHCenter
-                active: KDEConnect.allDevices.length === 0
-                sourceComponent: StyledText {
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.normal
-                    text: qsTr("No devices paired")
-                }
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.normal
+                text: qsTr("No devices paired")
+                visible: KDEConnect.allDevices.length === 0
             }
 
             Repeater {
-                model: KDEConnect.allDevices
+                model: ScriptModel {
+                    objectProp: "id"
+                    values: KDEConnect.allDevices
+                }
                 delegate: KdeDeviceRow {
                     required property var modelData
 
@@ -101,18 +103,19 @@ SettingsPageBase {
         ColumnLayout {
             spacing: Appearance.spacing.normal
 
-            Loader {
+            StyledText {
                 Layout.alignment: Qt.AlignHCenter
-                active: KDEConnect.availableDevices.length === 0
-                sourceComponent: StyledText {
-                    color: Colours.m3Colors.m3OnSurfaceVariant
-                    font.pixelSize: Appearance.fonts.size.normal
-                    text: qsTr("No devices available")
-                }
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.normal
+                text: qsTr("No devices available")
+                visible: KDEConnect.availableDevices.length === 0
             }
 
             Repeater {
-                model: KDEConnect.availableDevices
+                model: ScriptModel {
+                    objectProp: "id"
+                    values: KDEConnect.availableDevices
+                }
                 delegate: KdeDeviceRow {
                     required property var modelData
 

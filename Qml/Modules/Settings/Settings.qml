@@ -57,7 +57,6 @@ LazyLoader {
                         anchors.top: parent.top
                         backgroundColor: "transparent"
                         currentIndex: settingsLoader.currentPage
-                        expanded: true
                         model: [
                             {
                                 label: qsTr("General"),
@@ -260,12 +259,15 @@ LazyLoader {
 
                     ColumnLayout {
                         id: pagesColumn
+                        readonly property string currentHyprlandCategory: (hyprlandCategoryOffset >= 0 && hyprlandCategoryOffset < hyprlandCategories.length) ? hyprlandCategories[hyprlandCategoryOffset] : ""
+                        readonly property var    hyprlandCategories: ["general", "decoration", "input", "group", "misc", "binds", "render", "cursor", "debug", "advanced"]
+                        readonly property int    hyprlandCategoryOffset: settingsLoader.currentPage - 22
 
-                        function revealCard(cardTitle: string) {
+                        function                 revealCard(cardTitle: string) {
                             const kids = pagesColumn.children;
 
                             for (let i = 0; i < kids.length; i++) {
-                                if (!(kids[i] instanceof Loader) || !kids[i].active || !kids[i].item || !kids[i].item.revealCard)
+                                if (!(kids[i] instanceof Loader) || !kids[i].visible || !kids[i].item || !kids[i].item.revealCard)
                                     continue;
 
                                 kids[i].item.revealCard(cardTitle);
@@ -275,330 +277,204 @@ LazyLoader {
 
                         anchors.fill: parent
 
-                        RowLayout {
+                        SettingsSearchField {
+                            id: settingsSearchField
+
+                            Layout.alignment: Qt.AlignVCenter
                             Layout.fillWidth: true
-                            spacing: Appearance.spacing.normal
                             z: 2
-
-                            FloatingButton {
-                                id: expandToggle
-
-                                Layout.alignment: Qt.AlignVCenter
-                                Layout.preferredHeight: 40
-                                Layout.preferredWidth: 40
-                                backgroundRadius: Appearance.rounding.small
-                                icon.color: Colours.m3Colors.m3SurfaceVariant
-                                icon.name: navRail.expanded ? "menu_open" : "menu"
-                                icon.size: Appearance.fonts.size.larger
-                                onClicked: navRail.expanded = !navRail.expanded
-                            }
-
-                            SettingsSearchField {
-                                id: settingsSearchField
-
-                                Layout.alignment: Qt.AlignVCenter
-                                Layout.fillWidth: true
-                                onActivated: (page, card) => {
-                                    settingsLoader.currentPage = page;
-                                    Qt.callLater(() => pagesColumn.revealCard(card));
-                                }
+                            onActivated: (page, card) => {
+                                settingsLoader.currentPage = page;
+                                Qt.callLater(() => pagesColumn.revealCard(card));
                             }
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 0
-                            visible: settingsLoader.currentPage === 0
+                        PageLoader {
+                            pageIndex: 0
                             sourceComponent: GeneralPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 1
-                            visible: settingsLoader.currentPage === 1
+                        PageLoader {
+                            pageIndex: 1
                             sourceComponent: LanguagePage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 2
-                            visible: settingsLoader.currentPage === 2
+                        PageLoader {
+                            pageIndex: 2
                             sourceComponent: AppearancePage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 3
-                            visible: settingsLoader.currentPage === 3
+                        PageLoader {
+                            pageIndex: 3
                             sourceComponent: WallpaperPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 4
-                            visible: settingsLoader.currentPage === 4
+                        PageLoader {
+                            pageIndex: 4
                             sourceComponent: BarPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 5
-                            visible: settingsLoader.currentPage === 5
+                        PageLoader {
+                            pageIndex: 5
                             sourceComponent: MediaPlayerPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 6
-                            visible: settingsLoader.currentPage === 6
+                        PageLoader {
+                            pageIndex: 6
                             sourceComponent: WeatherPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 7
-                            visible: settingsLoader.currentPage === 7
+                        PageLoader {
+                            pageIndex: 7
                             sourceComponent: NotificationPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 8
-                            visible: settingsLoader.currentPage === 8
+                        PageLoader {
+                            pageIndex: 8
                             sourceComponent: ClipboardPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 9
-                            visible: settingsLoader.currentPage === 9
+                        PageLoader {
+                            pageIndex: 9
                             sourceComponent: CaptureScreenVideoPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 10
-                            visible: settingsLoader.currentPage === 10
+                        PageLoader {
+                            pageIndex: 10
                             sourceComponent: VolumePage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 11
-                            visible: settingsLoader.currentPage === 11
+                        PageLoader {
+                            pageIndex: 11
                             sourceComponent: PrivacyNodesPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 12
-                            visible: settingsLoader.currentPage === 12
+                        PageLoader {
+                            pageIndex: 12
                             sourceComponent: DockPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 13
-                            visible: settingsLoader.currentPage === 13
+                        PageLoader {
+                            pageIndex: 13
                             sourceComponent: TemplatesPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 14
-                            visible: settingsLoader.currentPage === 14
+                        PageLoader {
+                            pageIndex: 14
                             sourceComponent: InternetPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 15
-                            visible: settingsLoader.currentPage === 15
+                        PageLoader {
+                            pageIndex: 15
                             sourceComponent: BluetoothPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 16
-                            visible: settingsLoader.currentPage === 16
+                        PageLoader {
+                            pageIndex: 16
                             sourceComponent: KDEConnectPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 17
-                            visible: settingsLoader.currentPage === 17
+                        PageLoader {
+                            pageIndex: 17
                             sourceComponent: GreeterPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 18
-                            visible: settingsLoader.currentPage === 18
+                        PageLoader {
+                            pageIndex: 18
                             sourceComponent: IdlePage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 19
-                            visible: settingsLoader.currentPage === 19
+                        PageLoader {
+                            pageIndex: 19
                             sourceComponent: LockscreenPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 20
-                            visible: settingsLoader.currentPage === 20
+                        PageLoader {
+                            pageIndex: 20
                             sourceComponent: AboutPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 21
-                            visible: settingsLoader.currentPage === 21
+                        PageLoader {
+                            pageIndex: 21
                             sourceComponent: MonitorsPage {}
                         }
 
                         Loader {
+                            id: hyprlandOptionsLoader
+
+                            readonly property bool isCurrentPage: settingsLoader.currentPage >= 22 && settingsLoader.currentPage <= 31
+
+                            property string        activeCategory: "general"
+                            property bool          keepAlive: false
+
                             Layout.fillHeight: true
                             Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 22
-                            visible: settingsLoader.currentPage === 22
+                            active: isCurrentPage || keepAlive
+                            visible: isCurrentPage
+                            onIsCurrentPageChanged: {
+                                if (isCurrentPage) {
+                                    keepAlive      = true;
+                                    activeCategory = pagesColumn.currentHyprlandCategory;
+                                }
+                            }
+
+                            Connections {
+
+                                function onCurrentPageChanged() {
+                                    if (hyprlandOptionsLoader.isCurrentPage)
+                                        hyprlandOptionsLoader.activeCategory = pagesColumn.currentHyprlandCategory;
+                                }
+
+                                target: settingsLoader
+                            }
+
+                            Timer {
+                                interval: 60000
+                                running: hyprlandOptionsLoader.keepAlive && !hyprlandOptionsLoader.isCurrentPage
+                                onTriggered: hyprlandOptionsLoader.keepAlive = false
+                            }
+
                             sourceComponent: HyprlandOptionsPage {
-                                category: "general"
+                                category: hyprlandOptionsLoader.activeCategory
                             }
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 23
-                            visible: settingsLoader.currentPage === 23
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "decoration"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 24
-                            visible: settingsLoader.currentPage === 24
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "input"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 25
-                            visible: settingsLoader.currentPage === 25
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "group"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 26
-                            visible: settingsLoader.currentPage === 26
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "misc"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 27
-                            visible: settingsLoader.currentPage === 27
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "binds"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 28
-                            visible: settingsLoader.currentPage === 28
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "render"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 29
-                            visible: settingsLoader.currentPage === 29
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "cursor"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 30
-                            visible: settingsLoader.currentPage === 30
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "debug"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 31
-                            visible: settingsLoader.currentPage === 31
-                            sourceComponent: HyprlandOptionsPage {
-                                category: "advanced"
-                            }
-                        }
-
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 32
-                            visible: settingsLoader.currentPage === 32
+                        PageLoader {
+                            pageIndex: 32
                             sourceComponent: WindowRulesPage {}
                         }
 
-                        Loader {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                            active: settingsLoader.currentPage === 33
-                            visible: settingsLoader.currentPage === 33
+                        PageLoader {
+                            pageIndex: 33
                             sourceComponent: LayerRulesPage {}
                         }
                     }
                 }
             }
+        }
+    }
+    component PageLoader: Loader {
+        id: pageLoader
+
+        required property int  pageIndex
+
+        readonly property bool isCurrentPage: settingsLoader.currentPage === pageIndex
+
+        property bool          keepAlive: false
+
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        active: isCurrentPage || keepAlive
+        visible: isCurrentPage
+        onIsCurrentPageChanged: {
+            if (isCurrentPage)
+                keepAlive = true;
+        }
+
+        Timer {
+            interval: 60000
+            running: pageLoader.keepAlive && !pageLoader.isCurrentPage
+            onTriggered: pageLoader.keepAlive = false
         }
     }
 }

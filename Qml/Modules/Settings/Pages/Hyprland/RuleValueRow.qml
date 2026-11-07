@@ -37,41 +37,48 @@ SettingRow {
 
     description: descriptionText()
 
-    Rectangle {
+    Loader {
         Layout.alignment: Qt.AlignVCenter
-        implicitHeight: badgeText.implicitHeight + 8
-        implicitWidth: badgeText.implicitWidth + 12
-        color: Colours.m3Colors.m3SurfaceContainerHighest
-        radius: height / 2
-        visible: root.showBadge && root.descriptor !== null
+        active: root.showBadge && root.descriptor !== null
+        visible: active
+        sourceComponent: Rectangle {
+            implicitHeight: badgeText.implicitHeight + 8
+            implicitWidth: badgeText.implicitWidth + 12
+            color: Colours.m3Colors.m3SurfaceContainerHighest
+            radius: height / 2
 
-        StyledText {
-            id: badgeText
+            StyledText {
+                id: badgeText
 
-            anchors.centerIn: parent
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.small
-            text: root.descriptor?.dynamic ? qsTr("dynamic") : qsTr("static")
+                anchors.centerIn: parent
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.small
+                text: root.descriptor?.dynamic ? qsTr("dynamic") : qsTr("static")
+            }
         }
     }
 
-    SplitButton {
-        id: pickButton
+    Loader {
+        Layout.alignment: Qt.AlignVCenter
+        active: root.pickValues.length > 0
+        visible: active
+        sourceComponent: SplitButton {
+            id: pickButton
 
-        visible: root.pickValues.length > 0
-        text: qsTr("Pick from running")
-        icon.name: "list_alt"
-        model: root.pickValues.map(value => {
-            return {
-                text: value
-            };
-        })
-        showScrollBar: true
-        onClicked: {
-            root.pickRequested();
-            pickButton.openMenu();
+            text: qsTr("Pick from running")
+            icon.name: "list_alt"
+            model: root.pickValues.map(value => {
+                return {
+                    text: value
+                };
+            })
+            showScrollBar: true
+            onClicked: {
+                root.pickRequested();
+                pickButton.openMenu();
+            }
+            onMenuItemActivated: index => root.valueChanged(root.pickValues[index])
         }
-        onMenuItemActivated: index => root.valueChanged(root.pickValues[index])
     }
 
     RuleValueEditor {

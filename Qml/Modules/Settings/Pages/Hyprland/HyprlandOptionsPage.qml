@@ -14,9 +14,11 @@ import "../../Components"
 SettingsPageBase {
     id: root
 
-    property string category
+    readonly property bool categoryDirty: GeneralServices.isCategoryDirty(root.category)
 
-    function        luaFileText(): string {
+    property string        category
+
+    function               luaFileText(): string {
         if (HyprlandSetupServices.luaFileState === "exists" || HyprlandSetupServices.luaFileState === "created")
             return qsTr("vast_shell.lua is set up.");
         if (HyprlandSetupServices.luaFileState === "missing")
@@ -24,6 +26,7 @@ SettingsPageBase {
         return "";
     }
 
+    onCategoryChanged: root.revealer.target.contentY = 0
     pageTitle: qsTr("Hyprland ") + HyprlandGeneralSchema.pageLabel(category)
 
     HyprlandNoticeCard {
@@ -109,14 +112,14 @@ SettingsPageBase {
             Layout.fillWidth: true
         },
         ExtendedFloatingButton {
-            enabled: GeneralServices.isCategoryDirty(root.category)
+            enabled: root.categoryDirty
             outlined: true
             text: qsTr("Revert")
             textColor: Colours.m3Colors.m3OnSurface
             onClicked: GeneralServices.revertCategory(root.category)
         },
         ExtendedFloatingButton {
-            enabled: GeneralServices.isCategoryDirty(root.category)
+            enabled: root.categoryDirty
             text: qsTr("Apply")
             onClicked: GeneralServices.applyCategory(root.category)
         }

@@ -14,6 +14,8 @@ Rectangle {
     required property int    index
     required property string modelData
 
+    readonly property var    availableEffectList: root.schema.effects.filter(effect => root.effects[effect.key] === undefined)
+    readonly property var    availableMatchList: root.schema.matchProps.filter(prop => root.match[prop.key] === undefined)
     readonly property var    effects: root.rule !== null && typeof root.rule.effects === "object" && root.rule.effects !== null ? root.rule.effects : {}
     readonly property bool   invalid: root.ruleProblems.length > 0
     readonly property var    match: root.rule !== null && typeof root.rule.match === "object" && root.rule.match !== null ? root.rule.match : {}
@@ -29,11 +31,11 @@ Rectangle {
     property var             services
 
     function                 availableEffects(): var {
-        return root.schema.effects.filter(effect => root.effects[effect.key] === undefined);
+        return root.availableEffectList;
     }
 
     function                 availableMatchProps(): var {
-        return root.schema.matchProps.filter(prop => root.match[prop.key] === undefined);
+        return root.availableMatchList;
     }
 
     function                 effectSectionHint(): string {
@@ -189,16 +191,16 @@ Rectangle {
             SplitButton {
                 id: addPropButton
 
-                visible: root.availableMatchProps().length > 0
+                visible: root.availableMatchList.length > 0
                 text: qsTr("Add property")
-                model: root.availableMatchProps().map(prop => {
+                model: root.availableMatchList.map(prop => {
                     return {
                         text: root.schema.labelFromKey(prop.key)
                     };
                 })
                 onClicked: addPropButton.openMenu()
                 onMenuItemActivated: index => {
-                    const prop = root.availableMatchProps()[index];
+                    const prop = root.availableMatchList[index];
                     root.services.setMatchProp(root.modelData, prop.key, prop.default);
                 }
             }
@@ -250,9 +252,9 @@ Rectangle {
             SplitButton {
                 id: addEffectButton
 
-                visible: root.availableEffects().length > 0
+                visible: root.availableEffectList.length > 0
                 text: qsTr("Add effect")
-                model: root.availableEffects().map(effect => {
+                model: root.availableEffectList.map(effect => {
                     return {
                         text: root.schema.labelFromKey(effect.key)
                     };
@@ -260,7 +262,7 @@ Rectangle {
                 showScrollBar: true
                 onClicked: addEffectButton.openMenu()
                 onMenuItemActivated: index => {
-                    const effect = root.availableEffects()[index];
+                    const effect = root.availableEffectList[index];
                     root.services.setEffect(root.modelData, effect.key, effect.default);
                 }
             }

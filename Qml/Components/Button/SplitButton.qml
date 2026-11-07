@@ -26,7 +26,7 @@ Item {
 
     property color             containerColor: Colours.m3Colors.m3SecondaryContainer
     property color             contentColor: Colours.m3Colors.m3OnSecondaryContainer
-    property alias             currentIndex: menu.currentIndex
+    property int               currentIndex: -1
     property var               disabledLabel: modelData => ""
     property bool              fillWidth: false
     property IconComponent     icon: IconComponent {}
@@ -44,17 +44,19 @@ Item {
     signal                     menuItemActivated(int index)
 
     function                   openMenu() {
-        if (enabled && hasMenu)
-            menu.open();
+        if (!enabled || !hasMenu)
+            return;
+        menuLoader.active = true;
+        (menuLoader.item as DropdownMenu).open();
     }
 
     function                   toggleMenu() {
         if (!enabled || !hasMenu)
             return;
-        if (menu.visible)
-            menu.close();
+        if (root.menuOpen)
+            (menuLoader.item as DropdownMenu)?.close();
         else
-            menu.open();
+            openMenu();
     }
 
     implicitHeight: segmentHeight
@@ -78,22 +80,28 @@ Item {
         }
     }
 
-    DropdownMenu {
-        id: menu
+    Loader {
+        id: menuLoader
 
-        anchorItem: mainSegment
-        closePolicy: Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
-        disabledLabel: root.disabledLabel
-        isItemEnabled: root.isItemEnabled
-        maxWidth: mainSegment.width
-        model: root.model
-        showScrollBar: root.showScrollBar
-        textRole: root.textRole
-        onAboutToHide: root.menuOpen = false
-        onAboutToShow: root.menuOpen = true
-        onActivated: index => {
-            root.menuItemActivated(index);
-            close();
+        active: false
+        sourceComponent: DropdownMenu {
+            anchorItem: mainSegment
+            closePolicy: Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
+            popupParent: root
+            currentIndex: root.currentIndex
+            disabledLabel: root.disabledLabel
+            isItemEnabled: root.isItemEnabled
+            maxWidth: mainSegment.width
+            model: root.model
+            showScrollBar: root.showScrollBar
+            textRole: root.textRole
+            onAboutToHide: root.menuOpen = false
+            onAboutToShow: root.menuOpen = true
+            onActivated: index => {
+                root.currentIndex = index;
+                root.menuItemActivated(index);
+                close();
+            }
         }
     }
 
@@ -312,17 +320,8 @@ Item {
         TapHandler {
             id: menuTapHandler
 
-            property bool wasOpen: false
-
             enabled: root.enabled
-            onPressedChanged: if (pressed)
-                wasOpen = menu.visible
-            onTapped: {
-                if (wasOpen)
-                    menu.close();
-                else
-                    menu.open();
-            }
+            onTapped: root.toggleMenu()
         }
     }
 

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Widgets
 
@@ -37,7 +38,10 @@ SettingsCard {
         }
 
         Repeater {
-            model: root.streamNodes
+            model: ScriptModel {
+                objectProp: "id"
+                values: root.streamNodes
+            }
             delegate: RowLayout {
                 id: streamDelegate
 

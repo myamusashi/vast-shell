@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Bluetooth
 
 import qs.Components.Base
@@ -153,7 +154,10 @@ SettingsPageBase {
             Repeater {
                 id: pairedRepeater
 
-                model: BluetoothServices.pairedDevices
+                model: ScriptModel {
+                    objectProp: "address"
+                    values: BluetoothServices.pairedDevices
+                }
                 delegate: BluetoothDeviceDelegate {
                     required property var modelData
 
@@ -230,7 +234,10 @@ SettingsPageBase {
             Repeater {
                 id: availableRepeater
 
-                model: BluetoothServices.availableDevices
+                model: ScriptModel {
+                    objectProp: "address"
+                    values: BluetoothServices.availableDevices
+                }
                 delegate: BluetoothDeviceDelegate {
                     required property var modelData
 

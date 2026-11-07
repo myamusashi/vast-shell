@@ -11,15 +11,13 @@ import qs.Services
 Item {
     id: root
 
-    readonly property real compactWidth: 80
     readonly property real expandedWidth: 220
 
     property string        actionButtonIcon: ""
     property string        actionButtonLabel: ""
-    property real          animatedRailWidth: expanded ? expandedWidth : compactWidth
     property color         backgroundColor: Colours.m3Colors.m3SurfaceContainerLow
     property int           currentIndex: 0
-    property bool          expanded: false
+    property bool          expanded: true
     property var           model: []
 
     signal                 actionButtonTriggered
@@ -33,14 +31,7 @@ Item {
     }
 
     implicitHeight: parent ? parent.height : 480
-    implicitWidth: animatedRailWidth
-    Behavior on animatedRailWidth {
-        SpringAnimation {
-            damping: 0.3
-            mass: 1
-            spring: 3
-        }
-    }
+    implicitWidth: expandedWidth
 
     StyledRect {
         anchors.fill: parent
@@ -58,87 +49,92 @@ Item {
 
         Item {
             height: Appearance.spacing.large - Appearance.spacing.small * 2
-            visible: actionButtonItem.visible
+            visible: actionButtonLoader.active
             width: 1
         }
 
-        WrapperItem {
-            id: actionButtonItem
+        Loader {
+            id: actionButtonLoader
 
+            active: root.actionButtonIcon !== ""
             anchors.left: parent.left
             anchors.leftMargin: Appearance.margin.normal
-            implicitHeight: 56
-            visible: root.actionButtonIcon !== ""
-            states: [
-                State {
-                    name: "compact"
-                    when: !root.expanded
+            visible: active
+            sourceComponent: WrapperItem {
+                id: actionButtonItem
 
-                    // qmllint disable Quick.property-changes-parsed
+                implicitHeight: 56
+                states: [
+                    State {
+                        name: "compact"
+                        when: !root.expanded
 
-                    PropertyChanges {
-                        implicitWidth: 56
-                        target: actionButtonItem
+                        // qmllint disable Quick.property-changes-parsed
+
+                        PropertyChanges {
+                            implicitWidth: 56
+                            target: actionButtonItem
+                        }
+                    },
+                    State {
+                        name: "expanded"
+                        when: root.expanded
+
+                        PropertyChanges {
+                            implicitWidth: railColumn.width - Appearance.margin.normal * 2
+                            target: actionButtonItem
+                        }
                     }
-                },
-                State {
-                    name: "expanded"
-                    when: root.expanded
+                    // qmllint enable Quick.property-changes-parsed
 
-                    PropertyChanges {
-                        implicitWidth: railColumn.width - Appearance.margin.normal * 2
-                        target: actionButtonItem
+
+                ]
+                transitions: Transition {
+
+                    ParallelAnimation {
+
+                        NAnim {
+                            properties: "implicitWidth"
+                        }
                     }
                 }
-                // qmllint enable Quick.property-changes-parsed
 
+                MArea {
+                    layerRadius: Appearance.rounding.large
+                    layerRect.opacity: 0.0
+                    onClicked: root.actionButtonTriggered()
 
-            ]
-            transitions: Transition {
+                    StyledRect {
+                        anchors.fill: parent
+                        color: Colours.m3Colors.m3PrimaryContainer
+                        radius: Appearance.rounding.large
 
-                ParallelAnimation {
+                        Icon {
+                            id: actionButtonLeadingIcon
 
-                    NAnim {
-                        properties: "implicitWidth"
-                    }
-                }
-            }
+                            anchors.left: parent.left
+                            anchors.leftMargin: Appearance.margin.normal
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: Colours.m3Colors.m3OnPrimaryContainer
+                            font.pixelSize: Appearance.fonts.size.larger
+                            icon: root.actionButtonIcon
+                        }
 
-            MArea {
-                layerRadius: Appearance.rounding.large
-                layerRect.opacity: 0.0
-                onClicked: root.actionButtonTriggered()
-
-                StyledRect {
-                    anchors.fill: parent
-                    color: Colours.m3Colors.m3PrimaryContainer
-                    radius: Appearance.rounding.large
-
-                    Icon {
-                        id: actionButtonLeadingIcon
-
-                        anchors.left: parent.left
-                        anchors.leftMargin: Appearance.margin.normal
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: Colours.m3Colors.m3OnPrimaryContainer
-                        font.pixelSize: Appearance.fonts.size.larger
-                        icon: root.actionButtonIcon
-                    }
-
-                    StyledText {
-                        anchors.left: actionButtonLeadingIcon.right
-                        anchors.leftMargin: Appearance.spacing.normal
-                        anchors.right: parent.right
-                        anchors.rightMargin: Appearance.margin.normal
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: Colours.m3Colors.m3OnPrimaryContainer
-                        elide: Text.ElideRight
-                        font.pixelSize: Appearance.fonts.size.normal
-                        font.weight: Font.Medium
-                        opacity: root.expanded ? 1 : 0
-                        text: root.actionButtonLabel
-                        Behavior on opacity {
-                            NAnim {}
+                        StyledText {
+                            anchors.left: actionButtonLeadingIcon.right
+                            anchors.leftMargin: Appearance.spacing.normal
+                            anchors.right: parent.right
+                            anchors.rightMargin: Appearance.margin.normal
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: Colours.m3Colors.m3OnPrimaryContainer
+                            elide: Text.ElideRight
+                            font.pixelSize: Appearance.fonts.size.normal
+                            font.weight: Font.Medium
+                            opacity: root.expanded ? 1 : 0
+                            text: root.actionButtonLabel
+                            Behavior on opacity {
+                                NAnim {}
+                            }
                         }
                     }
                 }
@@ -193,11 +189,8 @@ Item {
                         Item {
                             id: sectionHeader
 
-                            height: root.expanded ? sectionColumn.topGap + headerLabel.implicitHeight + Appearance.spacing.small : 0
+                            height: sectionColumn.topGap + headerLabel.implicitHeight + Appearance.spacing.small
                             width: parent.width
-                            Behavior on height {
-                                NAnim {}
-                            }
 
                             StyledText {
                                 id: headerLabel
@@ -211,11 +204,7 @@ Item {
                                 elide: Text.ElideRight
                                 font.pixelSize: Appearance.fonts.size.large
                                 font.weight: Font.Medium
-                                opacity: root.expanded ? 1 : 0
                                 text: sectionColumn.modelData.label ?? ""
-                                Behavior on opacity {
-                                    NAnim {}
-                                }
                             }
                         }
 
@@ -232,8 +221,8 @@ Item {
                                 icon: modelData.icon ?? ""
                                 label: modelData.label ?? ""
                                 selected: sectionColumn.baseIndex + index === root.currentIndex
-                                width: destinationsColumn.width - (root.expanded ? Appearance.margin.normal : Appearance.margin.smaller) * 2
-                                x: (destinationsColumn.width - width) / 2
+                                width: destinationsColumn.width - Appearance.margin.normal * 2
+                                x: Appearance.margin.normal
                                 onTriggered: {
                                     root.currentIndex = sectionColumn.baseIndex + index;
                                     root.activated(sectionColumn.baseIndex + index);

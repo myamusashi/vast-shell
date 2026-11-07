@@ -15,12 +15,14 @@ Popup {
     property Item          anchorItem: null
     property int           currentIndex: -1
     property var           disabledLabel: modelData => ""
-    property var           isItemActive: (modelData, itemIndex) => itemIndex === currentIndex
+    property var           isItemActive: (modelData, itemIndex) => itemIndex === root.currentIndex
     property var           isItemEnabled: modelData => true
     property real          maxWidth: 280
+    property bool          menuBuilt: false
     property int           minVisibleRows: 3
-    property alias         model: itemRepeater.model
+    property var           model: []
     property bool          openUpward: false
+    property Item          popupParent: null
     property string        preferredDirection: "auto"
     property real          resolvedMaxHeight: 336
     property bool          resolveGuard: false
@@ -88,10 +90,17 @@ Popup {
     exit: MenuTransitions {
         opening: false
     }
-    onAboutToShow: resolvePlacement()
+    onAboutToShow: {
+        root.menuBuilt = true;
+        root.resolvePlacement();
+    }
     onAnchorItemChanged: {
-        if (anchorItem)
+        if (!popupParent && anchorItem)
             parent = anchorItem;
+    }
+    onPopupParentChanged: {
+        if (popupParent)
+            parent = popupParent;
     }
     onOpened: resolvePlacement()
 
@@ -128,7 +137,7 @@ Popup {
         Repeater {
             id: itemRepeater
 
-            model: root.model
+            model: (root.visible || root.menuBuilt) ? root.model : null
             delegate: MenuItem {
                 required property int index
                 required property var modelData

@@ -203,120 +203,103 @@ Item {
                         condition: GlobalStates.isWifiScannerOpen
                     }
 
-                    ListView {
-                        id: wifiListView
-
-                        Layout.fillWidth: true
-                        implicitHeight: contentHeight
-                        interactive: false
-                        model: Networking.devices
-                        spacing: Appearance.spacing.small
-                        delegate: ColumnLayout {
-                            id: deviceDelegate
+                    Repeater {
+                        model: ScriptModel {
+                            objectProp: "name"
+                            values: {
+                                const dev = Networking.devices.values.find(d => d.type === DeviceType.Wifi);
+                                return dev ? WifiUtils.sorted([...dev.networks.values]) : [];
+                            }
+                        }
+                        delegate: WrapperRectangle {
+                            id: networkDelegate
 
                             required property var modelData
 
-                            width: wifiListView.width
+                            function              tryConnect() {
+                                WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
+                            }
 
-                            Repeater {
-                                delegate: WrapperRectangle {
-                                    id: networkDelegate
+                            Layout.alignment: Qt.AlignVCenter
+                            Layout.fillWidth: true
+                            color: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
+                            margin: Appearance.margin.small
+                            radius: Appearance.rounding.large
 
-                                    required property var modelData
+                            TapHandler {
+                                id: networkTap
 
-                                    function              tryConnect() {
-                                        WifiUtils.tryConnect(networkDelegate.modelData, net => wifiPskDialog.show(net));
+                                onTapped: networkDelegate.tryConnect()
+                            }
+
+                            Connections {
+
+                                function onConnectionFailed(reason) {
+                                    WifiUtils.handleConnectionFailed(networkDelegate.modelData, reason, net => wifiPskDialog.show(net));
+                                }
+
+                                target: networkDelegate.modelData
+                            }
+
+                            RowLayout {
+                                spacing: Appearance.spacing.small
+
+                                Item {
+                                    implicitHeight: 28
+                                    implicitWidth: 28
+
+                                    Icon {
+                                        anchors.fill: parent
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                                        icon: "signal_wifi_0_bar"
                                     }
 
-                                    Layout.alignment: Qt.AlignVCenter
-                                    Layout.fillWidth: true
-                                    color: modelData.connected ? Colours.m3Colors.m3Primary : networkTap.pressed ? Colours.m3Colors.m3SurfaceContainerHigh : "transparent"
-                                    margin: Appearance.margin.small
-                                    radius: Appearance.rounding.large
-
-                                    TapHandler {
-                                        id: networkTap
-
-                                        onTapped: networkDelegate.tryConnect()
-                                    }
-
-                                    Connections {
-
-                                        function onConnectionFailed(reason) {
-                                            WifiUtils.handleConnectionFailed(networkDelegate.modelData, reason, net => wifiPskDialog.show(net));
-                                        }
-
-                                        target: networkDelegate.modelData
-                                    }
-
-                                    RowLayout {
-                                        spacing: Appearance.spacing.small
-
-                                        Item {
-                                            implicitHeight: 28
-                                            implicitWidth: 28
-
-                                            Icon {
-                                                anchors.fill: parent
-                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
-                                                font.pixelSize: Appearance.fonts.size.large * 1.5
-                                                icon: "signal_wifi_0_bar"
-                                            }
-
-                                            Icon {
-                                                anchors.fill: parent
-                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
-                                                font.pixelSize: Appearance.fonts.size.large * 1.5
-                                                icon: WifiUtils.iconFor(networkDelegate.modelData?.signalStrength ?? 0, networkDelegate.modelData ? !networkDelegate.modelData.known : false)
-                                            }
-                                        }
-
-                                        ColumnLayout {
-                                            Layout.fillWidth: true
-                                            spacing: Appearance.spacing.small * 0.5
-
-                                            StyledText {
-                                                Layout.fillWidth: true
-                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
-                                                elide: Text.ElideRight
-                                                font.pixelSize: Appearance.fonts.size.normal
-                                                text: networkDelegate.modelData?.name ?? ""
-                                            }
-
-                                            StyledText {
-                                                color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
-                                                font.pixelSize: Appearance.fonts.size.small
-                                                text: ConnectionState.toString(networkDelegate.modelData.state)
-                                            }
-                                        }
-
-                                        FloatingButton {
-                                            backgroundRadius: Appearance.rounding.normal
-                                            icon.color: Colours.m3Colors.m3SurfaceVariant
-                                            icon.name: networkDelegate.modelData?.connected ? "link_off" : "wifi_add"
-                                            icon.size: Appearance.fonts.size.large * 1.5
-                                            implicitHeight: 28
-                                            implicitWidth: 28
-                                            onClicked: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.tryConnect()
-                                        }
-
-                                        FloatingButton {
-                                            backgroundRadius: Appearance.rounding.normal
-                                            icon.color: Colours.m3Colors.m3SurfaceVariant
-                                            icon.name: "delete"
-                                            icon.size: Appearance.fonts.size.large * 1.5
-                                            implicitHeight: 28
-                                            implicitWidth: 28
-                                            onClicked: networkDelegate.modelData?.forget()
-                                        }
+                                    Icon {
+                                        anchors.fill: parent
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        font.pixelSize: Appearance.fonts.size.large * 1.5
+                                        icon: WifiUtils.iconFor(networkDelegate.modelData?.signalStrength ?? 0, networkDelegate.modelData ? !networkDelegate.modelData.known : false)
                                     }
                                 }
-                                model: ScriptModel {
-                                    values: {
-                                        if (deviceDelegate.modelData.type !== DeviceType.Wifi) // qmllint disable
-                                            return [];
-                                        return WifiUtils.sorted([...deviceDelegate.modelData.networks.values]);
+
+                                ColumnLayout {
+                                    Layout.fillWidth: true
+                                    spacing: Appearance.spacing.small * 0.5
+
+                                    StyledText {
+                                        Layout.fillWidth: true
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+                                        elide: Text.ElideRight
+                                        font.pixelSize: Appearance.fonts.size.normal
+                                        text: networkDelegate.modelData?.name ?? ""
                                     }
+
+                                    StyledText {
+                                        color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant
+                                        font.pixelSize: Appearance.fonts.size.small
+                                        text: ConnectionState.toString(networkDelegate.modelData.state)
+                                    }
+                                }
+
+                                FloatingButton {
+                                    backgroundRadius: Appearance.rounding.normal
+                                    icon.color: Colours.m3Colors.m3SurfaceVariant
+                                    icon.name: networkDelegate.modelData?.connected ? "link_off" : "wifi_add"
+                                    icon.size: Appearance.fonts.size.large * 1.5
+                                    implicitHeight: 28
+                                    implicitWidth: 28
+                                    onClicked: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.tryConnect()
+                                }
+
+                                FloatingButton {
+                                    backgroundRadius: Appearance.rounding.normal
+                                    icon.color: Colours.m3Colors.m3SurfaceVariant
+                                    icon.name: "delete"
+                                    icon.size: Appearance.fonts.size.large * 1.5
+                                    implicitHeight: 28
+                                    implicitWidth: 28
+                                    onClicked: networkDelegate.modelData?.forget()
                                 }
                             }
                         }

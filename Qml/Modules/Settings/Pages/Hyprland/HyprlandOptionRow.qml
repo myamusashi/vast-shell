@@ -18,13 +18,11 @@ SettingRow {
     required property var    descriptor
 
     readonly property var    choices: HyprlandGeneralSchema.choicesFor(descriptor.path)
-    readonly property var    currentValue: {
-        const pending = GeneralServices.pendingValue(category, leafPath);
-        return pending === undefined ? defaultValue : pending;
-    }
+    readonly property var    currentValue: pendingEntry === undefined ? defaultValue : pendingEntry
     readonly property var    defaultValue: descriptor.default
     readonly property string leafPath: descriptor.path.substring(descriptor.path.indexOf(".") + 1)
-    readonly property bool   modified: GeneralServices.pendingValue(category, leafPath) !== undefined
+    readonly property bool   modified: pendingEntry !== undefined
+    readonly property var    pendingEntry: GeneralServices.pending[category]?.[leafPath]
 
     property string          category
 

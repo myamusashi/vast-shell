@@ -7,6 +7,28 @@ import Quickshell
 Singleton {
     id: root
 
+    readonly property var categoryIndex: {
+        const index = {};
+        for (const option of root.options) {
+            const cat = option.category;
+            if (!index[cat])
+                index[cat] = {
+                    cards: [],
+                    byCard: {},
+                    all: []
+                };
+
+            index[cat].all.push(option);
+
+            const card = option.card;
+            if (!index[cat].byCard[card]) {
+                index[cat].cards.push(card);
+                index[cat].byCard[card] = [];
+            }
+            index[cat].byCard[card].push(option);
+        }
+        return index;
+    }
     readonly property var options: [
         // general
         {
@@ -2766,14 +2788,7 @@ Singleton {
     ]
 
     function              cardsForCategory(category: string): var {
-        const cards = [];
-        for (const option of root.options) {
-            if (option.category !== category)
-                continue;
-            if (!cards.includes(option.card))
-                cards.push(option.card);
-        }
-        return cards;
+        return root.categoryIndex[category]?.cards ?? [];
     }
 
     function              choicesFor(path: string): var {
@@ -2791,11 +2806,11 @@ Singleton {
     }
 
     function              optionsForCard(category: string, card: string): var {
-        return root.options.filter(option => option.category === category && option.card === card);
+        return root.categoryIndex[category]?.byCard[card] ?? [];
     }
 
     function              optionsForCategory(category: string): var {
-        return root.options.filter(option => option.category === category);
+        return root.categoryIndex[category]?.all ?? [];
     }
 
     function              pageLabel(key: string): string {

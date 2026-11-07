@@ -12,8 +12,22 @@ import qs.Components.Base
 import "../Components"
 
 SettingsPageBase {
+    id: pageRoot
 
-    function cleanExec(exec) {
+    readonly property var allApps: {
+        const apps   = [...DesktopEntries.applications.values];
+        const mapped = apps.map(e => ({
+                    categories: e.categories,
+                    display: pageRoot.cleanExec(e.execString)
+                }));
+        return [...new Map(mapped.map(item => [item.display, item])).values()];
+    }
+
+    function              appsForCategories(cats: var): var {
+        return allApps.filter(app => cats.every(c => app.categories.includes(c)));
+    }
+
+    function              cleanExec(exec) {
         return exec.replace(/%[uUfFdDnNickvm]/g, "").replace(/--\S+/g, "").replace(/--/g, "").trim();
     }
 
@@ -199,17 +213,18 @@ SettingsPageBase {
     component AppSettingRow: SettingRow {
         id: appSettingRow
 
-        property var    categories: []
-        property string configValue
+        readonly property var appChoices: pageRoot.appsForCategories(appSettingRow.categories)
+        readonly property int selectedIndex: appChoices.findIndex(item => item.display === appSettingRow.configValue)
 
-        signal          configChanged(string value)
+        property var          categories: []
+        property string       configValue
 
-        onConfigValueChanged: appCombo.currentIndex = appModel.values.findIndex(item => item.display === configValue)
+        signal                configChanged(string value)
 
         SplitButton {
             id: appCombo
 
-            currentIndex: appModel.values.findIndex(item => item.display === appSettingRow.configValue)
+            currentIndex: appSettingRow.selectedIndex
             icon.name: appSettingRow.categories.reduce((acc, item) => {
                 switch (item) {
                 case "TerminalEmulator":
@@ -226,22 +241,10 @@ SettingsPageBase {
                     return acc;
                 }
             }, "apps")
-            text: appModel.values[currentIndex]?.display ?? appSettingRow.configValue
+            model: appSettingRow.appChoices
+            text: appSettingRow.appChoices[appSettingRow.selectedIndex]?.display ?? appSettingRow.configValue
             textRole: "display"
-            model: ScriptModel {
-                id: appModel
-
-                values: {
-                    const apps     = [...DesktopEntries.applications.values];
-                    const filtered = apps.filter(e => appSettingRow.categories.every(c => e.categories.includes(c)));
-                    const mapped   = filtered.map(e => ({
-                                e,
-                                display: e.execString.replace(/%[uUfFdDnNickvm]/g, "").replace(/--\S+/g, "").replace(/--/g, "").trim()
-                            }));
-                    return [...new Map(mapped.map(e => [e.display, e])).values()];
-                }
-            }
-            onMenuItemActivated: index => appSettingRow.configChanged(appModel.values[index].display)
+            onMenuItemActivated: index => appSettingRow.configChanged(appSettingRow.appChoices[index].display)
         }
     }
 }

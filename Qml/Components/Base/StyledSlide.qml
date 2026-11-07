@@ -52,10 +52,15 @@ Slider {
         XL = 96
     }
     Layout.alignment: isHorizontal ? Qt.AlignHCenter : Qt.AlignVCenter
+    bottomPadding: 0
     hoverEnabled: true
     implicitHeight: valueHeight
     implicitWidth: valueWidth
+    leftPadding: 0
+    padding: 0
+    rightPadding: 0
     snapMode: (snapEnabled && stepSize > 0) ? Slider.SnapAlways : Slider.NoSnap
+    topPadding: 0
     background: Item {
         height: root.availableHeight
         implicitHeight: root.valueHeight
@@ -275,14 +280,12 @@ Slider {
     handle: StyledRect {
         id: handle
 
-        anchors.horizontalCenter: root.isVertical ? parent.horizontalCenter : undefined
-        anchors.verticalCenter: root.isHorizontal ? parent.verticalCenter : undefined
         color: Colours.m3Colors.m3Primary
         height: root.isHorizontal ? root.height : root.handleSize
         opacity: 1.0
-        width: root.isHorizontal ? root.handleSize : root.width
-        x: root.isHorizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - width / 2 : 0
-        y: root.isVertical ? root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - height / 2 : 0
+        width: root.isHorizontal ? root.handleSize : root.trackSize
+        x: root.leftPadding + (root.isHorizontal ? root.handleGap + (root.visualPosition * root.availableTrackSize) - width / 2 : (root.availableWidth - width) / 2)
+        y: root.topPadding + (root.isVertical ? root.handleGap + ((1 - root.invertedVisualPosition) * root.availableTrackSize) - height / 2 : (root.availableHeight - height) / 2)
         Behavior on height {
             enabled: root.animateChanges
 

@@ -144,7 +144,7 @@ SettingsPageBase {
                     icon.name: "delete"
                     text: qsTr("Remove title blocked")
                     textColor: Colours.m3Colors.m3Surface
-                    onClicked: root.removeEntry()
+                    onClicked: root.removeEntry(rootDelegate.index)
                 }
             }
         }

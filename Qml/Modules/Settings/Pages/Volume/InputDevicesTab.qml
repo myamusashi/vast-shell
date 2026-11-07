@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Services.Pipewire
 
 import qs.Core.Configs
@@ -36,7 +37,10 @@ SettingsCard {
         }
 
         Repeater {
-            model: root.sourceNodes
+            model: ScriptModel {
+                objectProp: "id"
+                values: root.sourceNodes
+            }
             delegate: AudioLevelRow {
                 id: sourceDelegate
 

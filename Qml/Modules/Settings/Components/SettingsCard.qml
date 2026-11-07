@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 
@@ -13,7 +15,8 @@ Rectangle {
     property alias         title: titleText.text
 
     function               flash() {
-        flashSeq.restart();
+        flashLoader.active = false;
+        flashLoader.active = true;
     }
 
     Layout.fillWidth: true
@@ -28,15 +31,45 @@ Rectangle {
         z: -1
     }
 
-    Rectangle {
-        id: flashBorder
+    Loader {
+        id: flashLoader
 
+        active: false
         anchors.fill: parent
-        border.color: Colours.m3Colors.m3Primary
-        border.width: 2
-        color: "transparent"
-        opacity: 0
-        radius: root.radius
+        sourceComponent: Rectangle {
+            id: flashBorder
+
+            border.color: Colours.m3Colors.m3Primary
+            border.width: 2
+            color: "transparent"
+            opacity: 0
+            radius: root.radius
+
+            SequentialAnimation {
+                id: flashSeq
+
+                running: true
+                onStopped: flashLoader.active = false
+
+                NumberAnimation {
+                    duration: 150
+                    property: "opacity"
+                    target: flashBorder
+                    to: 1
+                }
+
+                PauseAnimation {
+                    duration: 900
+                }
+
+                NumberAnimation {
+                    duration: 450
+                    property: "opacity"
+                    target: flashBorder
+                    to: 0
+                }
+            }
+        }
     }
 
     ColumnLayout {
@@ -65,28 +98,6 @@ Rectangle {
 
             Layout.fillWidth: true
             spacing: Appearance.spacing.normal
-        }
-    }
-
-    SequentialAnimation {
-        id: flashSeq
-
-        NumberAnimation {
-            duration: 150
-            property: "opacity"
-            target: flashBorder
-            to: 1
-        }
-
-        PauseAnimation {
-            duration: 900
-        }
-
-        NumberAnimation {
-            duration: 450
-            property: "opacity"
-            target: flashBorder
-            to: 0
         }
     }
 }

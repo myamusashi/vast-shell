@@ -38,14 +38,17 @@ Item {
         anchors.leftMargin: root.horizontalInset
         anchors.rightMargin: root.horizontalInset
 
-        Icon {
+        Loader {
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: 24
             Layout.preferredWidth: 24
-            color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.large
-            icon: root.leadingIcon
-            visible: root.leadingIcon !== ""
+            active: root.leadingIcon !== ""
+            visible: active
+            sourceComponent: Icon {
+                color: root.selected ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.large
+                icon: root.leadingIcon
+            }
         }
 
         Text {
@@ -74,32 +77,38 @@ Item {
             visible: root.selected
         }
 
-        Text {
+        Loader {
             Layout.alignment: Qt.AlignVCenter
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.family: Fonts.sans
-            font.pixelSize: Appearance.fonts.size.normal
-            text: root.trailingText
-            verticalAlignment: Text.AlignVCenter
-            visible: root.trailingText !== ""
+            active: root.trailingText !== ""
+            visible: active
+            sourceComponent: Text {
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.family: Fonts.sans
+                font.pixelSize: Appearance.fonts.size.normal
+                text: root.trailingText
+                verticalAlignment: Text.AlignVCenter
+            }
         }
 
-        StyledRect {
+        Loader {
             Layout.alignment: Qt.AlignVCenter
-            Layout.minimumWidth: badgeText.implicitWidth + 10
-            Layout.preferredHeight: 24
-            Layout.preferredWidth: badgeText.implicitWidth + 10
-            radius: Appearance.rounding.normal
-            visible: !root.enabled && root.disabledLabel !== ""
+            active: !root.enabled && root.disabledLabel !== ""
+            visible: active
+            sourceComponent: StyledRect {
+                Layout.minimumWidth: badgeText.implicitWidth + 10
+                Layout.preferredHeight: 24
+                Layout.preferredWidth: badgeText.implicitWidth + 10
+                radius: Appearance.rounding.normal
 
-            StyledText {
-                id: badgeText
+                StyledText {
+                    id: badgeText
 
-                anchors.centerIn: parent
-                color: Colours.m3Colors.m3Error
-                font.pixelSize: Appearance.fonts.size.small
-                font.weight: Font.Medium
-                text: root.disabledLabel
+                    anchors.centerIn: parent
+                    color: Colours.m3Colors.m3Error
+                    font.pixelSize: Appearance.fonts.size.small
+                    font.weight: Font.Medium
+                    text: root.disabledLabel
+                }
             }
         }
     }
