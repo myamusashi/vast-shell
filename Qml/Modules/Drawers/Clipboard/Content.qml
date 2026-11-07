@@ -14,9 +14,11 @@ ColumnLayout {
     required property var  uiState
 
     readonly property int  currentId: {
-        if (!entryGrid || !entryGrid.entryList || entryGrid.entryList.currentIndex < 0 || !entryGrid.entryList.currentItem)
+        if (!entryGrid || !entryGrid.entryList || entryGrid.entryList.currentIndex < 0)
             return -1;
-        return entryGrid.entryList.currentItem.entryId; // qmllint disable
+        if (entryGrid.entryList.currentItem)
+            return entryGrid.entryList.currentItem.entryId; // qmllint disable
+        return ClipboardManager.model.idAtRow(entryGrid.entryList.currentIndex);
     }
     readonly property Item defaultFocusItem: Configs.clipboard.enableVimKeybinds ? root : searchBar.searchField
 
@@ -182,6 +184,12 @@ ColumnLayout {
     spacing: Appearance.spacing.large
     Keys.onPressed: event => handleKey(event)
     Component.onDestruction: root.uiState.clearTransientState()
+    Component.onCompleted: {
+        if (GlobalStates.isClipboardOpen) {
+            entryGrid.resetToBeginning();
+            root.restoreFocus();
+        }
+    }
 
     Timer {
         id: focusRestore
@@ -228,12 +236,12 @@ ColumnLayout {
 
         function onIsClipboardOpenChanged() {
             if (GlobalStates.isClipboardOpen) {
-                if (entryGrid && entryGrid.entryList && entryGrid.entryList.count > 0)
-                    entryGrid.entryList.currentIndex = 0;
+                entryGrid.resetToBeginning();
                 root.restoreFocus();
             } else {
                 searchBar.searchField.text = "";
                 root.uiState.clearTransientState();
+                entryGrid.resetToBeginning();
             }
         }
 
@@ -285,7 +293,11 @@ ColumnLayout {
                     Layout.fillHeight: true
                     Layout.preferredWidth: root.uiState.previewWidth
                     entryId: root.currentId
-                    onCopyRequested: id => ClipboardManager.copyToClipboard(id)
+                    onCopyRequested: id => {
+                        ClipboardManager.copyToClipboard(id);
+                        if (!Configs.clipboard.keepOpenAfterCopy)
+                            GlobalStates.isClipboardOpen = false;
+                    }
                     onPinToggled: (id, pinned) => ClipboardManager.pin(id, pinned)
                 }
             }

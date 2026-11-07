@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import Vast.Clipboard
 
+import qs.Core.States
 import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
@@ -16,6 +17,16 @@ Item {
 
     property alias           entryList: gridEntryList
     property alias           verticalFlick: verticalFlick
+
+    function                 resetToBeginning(): void {
+        gridEntryList.contentX = 0;
+        verticalFlick.contentY = 0;
+        if (gridEntryList.count > 0) {
+            gridEntryList.currentIndex = 0;
+            gridEntryList.positionViewAtIndex(0, GridView.Beginning);
+        }
+        gridEntryList.ensureCurrentVisible();
+    }
 
     implicitHeight: gridEntryList.height
 
@@ -35,6 +46,7 @@ Item {
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
+        onHeightChanged: gridEntryList.ensureCurrentVisible()
 
         GridView {
             id: gridEntryList
@@ -62,8 +74,14 @@ Item {
             function              ensureCurrentVisible() {
                 if (currentIndex < 0)
                     return;
-                const itemY    = (currentIndex % itemsPerPage) * cellHeight;
+
                 const viewport = verticalFlick.height;
+                if (viewport <= cellHeight || currentIndex % itemsPerPage === 0) {
+                    verticalFlick.contentY = 0;
+                    return;
+                }
+
+                const itemY    = (currentIndex % itemsPerPage) * cellHeight;
                 const currentY = verticalFlick.contentY;
                 let targetY    = -1;
                 if (itemY < currentY)
@@ -166,7 +184,12 @@ Item {
                 type: modelData.type
                 visible: index < Configs.clipboard.maxEntries
                 width: GridView.view.cellWidth // qmllint disable
-                onActivated: ClipboardManager.copyToClipboard(entryId)
+                onActivated: {
+                    gridEntryList.currentIndex = index;
+                    ClipboardManager.copyToClipboard(entryId);
+                    if (!Configs.clipboard.keepOpenAfterCopy)
+                        GlobalStates.isClipboardOpen = false;
+                }
                 onPinToggled: (id, s) => ClipboardManager.pin(id, s)
                 onRemoveRequested: id => ClipboardManager.remove(id)
             }
@@ -180,7 +203,8 @@ Item {
             }
             highlight: StyledRect {
                 color: Colours.m3Colors.m3SurfaceContainerHigh
-                height: gridEntryList.cellHeight
+                height: 64
+                radius: Appearance.rounding.small
                 width: gridEntryList.cellWidth
             }
             move: Transition {
