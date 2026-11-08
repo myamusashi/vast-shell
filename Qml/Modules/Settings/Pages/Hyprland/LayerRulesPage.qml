@@ -5,7 +5,6 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
-import qs.Core.Configs
 import qs.Services
 import qs.Services.Hyprland
 
@@ -27,14 +26,6 @@ SettingsPageBase {
         ruleIds     = ruleIdSnapshot.slice();
     }
 
-    function              rulesLuaText(): string {
-        if (HyprlandSetupServices.rulesLuaFileState === "exists" || HyprlandSetupServices.rulesLuaFileState === "created")
-            return qsTr("vast_shell_rules.lua is set up.");
-        if (HyprlandSetupServices.rulesLuaFileState === "missing" || HyprlandSetupServices.rulesLuaFileState === "creating")
-            return qsTr("vast_shell_rules.lua will be created.");
-        return "";
-    }
-
     Component.onCompleted: root.refreshRuleIds()
     onRuleIdSnapshotChanged: root.refreshRuleIds()
     pageTitle: qsTr("Layer Rules")
@@ -49,36 +40,6 @@ SettingsPageBase {
             text: qsTr("Hyprland with Lua configuration was not detected. Rules are saved, but only Hyprland applies them.")
             wrapMode: Text.Wrap
             Layout.fillWidth: true
-        }
-    }
-
-    HyprlandNoticeCard {
-        icon: "info"
-        visible: HyprlandSetupServices.onHyprland
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Appearance.spacing.normal
-
-            StyledText {
-                Layout.fillWidth: true
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                elide: Text.ElideRight
-                text: qsTr("Add at the bottom of hyprland.lua: %1").arg(HyprlandSetupServices.rulesRequireLine)
-            }
-
-            StyledText {
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                text: root.rulesLuaText()
-                visible: text !== ""
-                wrapMode: Text.Wrap
-                Layout.maximumWidth: 260
-            }
-
-            ExtendedFloatingButton {
-                icon.name: "content_copy"
-                onClicked: HyprlandSetupServices.copyRulesRequireLine()
-            }
         }
     }
 
@@ -107,20 +68,6 @@ SettingsPageBase {
                 services: LayerRuleServices
             }
         }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            ExtendedFloatingButton {
-                icon.name: "add"
-                text: qsTr("Add rule")
-                onClicked: LayerRuleServices.addRule()
-            }
-        }
     }
 
     footer: [
@@ -144,6 +91,13 @@ SettingsPageBase {
             enabled: LayerRuleServices.dirty && LayerRuleServices.valid
             text: qsTr("Apply")
             onClicked: LayerRuleServices.apply()
+        },
+        ExtendedFloatingButton {
+            icon.name: "add"
+            text: qsTr("Add rule")
+            textColor: Colours.m3Colors.m3OnSecondaryContainer
+            color: Colours.m3Colors.m3SecondaryContainer
+            onClicked: LayerRuleServices.addRule()
         }
     ]
 }

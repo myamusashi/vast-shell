@@ -16,11 +16,13 @@ Rectangle {
     readonly property var    rectData: MonitorServices.rectForKey(modelData)
 
     property bool            draggable: false
+    property bool            isSelected: false
     property real            originX: 0
     property real            originY: 0
     property real            pxPerLogical: 1
     property real            snapThreshold: 8
 
+    signal                   clicked
     signal                   dragStateChanged(bool active)
 
     function                 finalizePosition(): void {
@@ -34,10 +36,10 @@ Rectangle {
     y: rectData === null ? 0 : originY + rectData.y * pxPerLogical
     width: rectData === null ? 0 : rectData.width * pxPerLogical
     height: rectData === null ? 0 : rectData.height * pxPerLogical
-    color: dragActive ? Colours.m3Colors.m3SecondaryContainer : Colours.m3Colors.m3PrimaryContainer
+    color: dragActive ? Colours.m3Colors.m3SecondaryContainer : (root.isSelected ? Colours.m3Colors.m3PrimaryContainer : Colours.m3Colors.m3SurfaceContainerHigh)
     radius: Appearance.rounding.small
-    border.color: Colours.m3Colors.m3Primary
-    border.width: dragActive ? 2 : 1
+    border.color: (root.isSelected || dragActive) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3Outline
+    border.width: (root.isSelected || dragActive) ? 2 : 1
     onDragActiveChanged: dragStateChanged(dragActive)
     Component.onDestruction: {
         if (dragActive)
@@ -86,22 +88,33 @@ Rectangle {
         property real grabOffsetY: 0
 
         anchors.fill: parent
-        cursorShape: Qt.SizeAllCursor
-        enabled: root.draggable && root.rectData !== null
+        cursorShape: root.draggable ? Qt.SizeAllCursor : Qt.PointingHandCursor
+        enabled: root.rectData !== null
         preventStealing: true
         onPressed: mouse => {
-            grabOffsetX = mouse.x / root.pxPerLogical;
-            grabOffsetY = mouse.y / root.pxPerLogical;
-            root.forceActiveFocus();
+            root.clicked();
+            if (root.draggable) {
+                grabOffsetX = mouse.x / root.pxPerLogical;
+                grabOffsetY = mouse.y / root.pxPerLogical;
+                root.forceActiveFocus();
+            }
         }
         onPositionChanged: mouse => {
+            if (!root.draggable)
+                return;
             const rawX    = (root.x + mouse.x - root.originX) / root.pxPerLogical - grabOffsetX;
             const rawY    = (root.y + mouse.y - root.originY) / root.pxPerLogical - grabOffsetY;
             const snapped = MonitorServices.snappedPosition(root.modelData, rawX, rawY, root.snapThreshold);
             MonitorServices.setField(root.modelData, "x", snapped.x);
             MonitorServices.setField(root.modelData, "y", snapped.y);
         }
-        onReleased: root.finalizePosition()
-        onCanceled: root.finalizePosition()
+        onReleased: {
+            if (root.draggable)
+                root.finalizePosition();
+        }
+        onCanceled: {
+            if (root.draggable)
+                root.finalizePosition();
+        }
     }
 }

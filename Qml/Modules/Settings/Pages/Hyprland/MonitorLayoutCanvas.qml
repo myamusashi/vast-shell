@@ -26,6 +26,9 @@ Item {
     property var           frozenWorld: null
     property string        rectKeyCache: ""
     property var           rectKeys: []
+    property string        selectedKey: ""
+
+    signal                 monitorSelected(string key)
 
     function               computeWorld(rects: var): var {
         let xMin = 0;
@@ -79,6 +82,8 @@ Item {
         model: root.rectKeys
         delegate: MonitorCanvasMonitor {
             draggable: root.rects.length > 1
+            isSelected: modelData === root.selectedKey
+            onClicked: root.monitorSelected(modelData)
             onDragStateChanged: active => root.activeDrags += active ? 1 : -1
             originX: root.originX
             originY: root.originY

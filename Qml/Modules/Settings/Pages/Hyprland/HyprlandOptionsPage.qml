@@ -5,7 +5,6 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
-import qs.Core.Configs
 import qs.Services
 import qs.Services.Hyprland
 
@@ -17,14 +16,6 @@ SettingsPageBase {
     readonly property bool categoryDirty: GeneralServices.isCategoryDirty(root.category)
 
     property string        category
-
-    function               luaFileText(): string {
-        if (HyprlandSetupServices.luaFileState === "exists" || HyprlandSetupServices.luaFileState === "created")
-            return qsTr("vast_shell.lua is set up.");
-        if (HyprlandSetupServices.luaFileState === "missing")
-            return qsTr("vast_shell.lua will be created.");
-        return "";
-    }
 
     onCategoryChanged: root.revealer.target.contentY = 0
     pageTitle: qsTr("Hyprland ") + HyprlandGeneralSchema.pageLabel(category)
@@ -39,36 +30,6 @@ SettingsPageBase {
             text: qsTr("Hyprland with Lua configuration was not detected. Values are saved, but only Hyprland applies them.")
             wrapMode: Text.Wrap
             Layout.fillWidth: true
-        }
-    }
-
-    HyprlandNoticeCard {
-        icon: "info"
-        visible: HyprlandSetupServices.onHyprland
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Appearance.spacing.normal
-
-            StyledText {
-                Layout.fillWidth: true
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                elide: Text.ElideRight
-                text: qsTr("Add at the bottom of hyprland.lua: %1").arg(HyprlandSetupServices.requireLine)
-            }
-
-            StyledText {
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                text: root.luaFileText()
-                visible: text !== ""
-                wrapMode: Text.Wrap
-                Layout.maximumWidth: 260
-            }
-
-            ExtendedFloatingButton {
-                icon.name: "content_copy"
-                onClicked: HyprlandSetupServices.copyRequireLine()
-            }
         }
     }
 

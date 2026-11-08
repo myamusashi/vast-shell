@@ -20,6 +20,7 @@ LazyLoader {
     readonly property int contentWidth: 640
 
     property int          currentPage: 0
+    property real         railScrollPosition: 0
 
     activeAsync: GlobalStates.isSettingsOpen
     component: FloatingWindow {
@@ -57,6 +58,8 @@ LazyLoader {
                         anchors.top: parent.top
                         backgroundColor: "transparent"
                         currentIndex: settingsLoader.currentPage
+                        scrollPosition: settingsLoader.railScrollPosition
+                        onScrollPositionChanged: settingsLoader.railScrollPosition = scrollPosition
                         model: [
                             {
                                 label: qsTr("General"),
