@@ -19,6 +19,7 @@ Item {
     property int           currentIndex: 0
     property bool          expanded: true
     property var           model: []
+    property real          scrollPosition: 0
 
     signal                 actionButtonTriggered
     signal                 activated(int index)
@@ -30,6 +31,7 @@ Item {
         return sum;
     }
 
+    onScrollPositionChanged: destinationsFlick.restoreScroll()
     implicitHeight: parent ? parent.height : 480
     implicitWidth: expandedWidth
 
@@ -149,6 +151,15 @@ Item {
         Flickable {
             id: destinationsFlick
 
+            function restoreScroll(): void {
+                if (destinationsFlick.moving || destinationsFlick.contentHeight <= destinationsFlick.height || destinationsFlick.height <= 0)
+                    return;
+                const maxY    = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
+                const targetY = Math.min(maxY, Math.max(0, root.scrollPosition));
+                if (Math.abs(destinationsFlick.contentY - targetY) > 0.5)
+                    destinationsFlick.contentY = targetY;
+            }
+
             boundsBehavior: Flickable.StopAtBounds
             boundsMovement: Flickable.StopAtBounds
             clip: true
@@ -157,12 +168,22 @@ Item {
             flickableDirection: Flickable.VerticalFlick
             height: railColumn.height - y
             width: railColumn.width
+            onContentHeightChanged: destinationsFlick.restoreScroll()
+            onContentYChanged: {
+                if (destinationsFlick.moving)
+                    root.scrollPosition = destinationsFlick.contentY;
+                else
+                    destinationsFlick.restoreScroll();
+            }
+            onHeightChanged: destinationsFlick.restoreScroll()
 
             WheelHandler {
                 target: destinationsFlick
                 onWheel: event => {
                     const maxY                 = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
-                    destinationsFlick.contentY = Math.max(0, Math.min(maxY, destinationsFlick.contentY - event.angleDelta.y));
+                    const nextY                = Math.max(0, Math.min(maxY, destinationsFlick.contentY - event.angleDelta.y));
+                    root.scrollPosition        = nextY;
+                    destinationsFlick.contentY = nextY;
                 }
             }
 
